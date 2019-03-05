@@ -2,151 +2,143 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD66C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C00C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FAF2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L//TbXO2"
+	by mail.kernel.org (Postfix) with ESMTP id 1AB3F2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfCEHHk (ORCPT
+        id S1727007AbfCEHJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 02:07:40 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37650 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfCEHHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:07:39 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s22so4993450pfh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 23:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tE1o9iX8L+r84IgpiaHI1OuxaKLOrxKaDGgiYst47qI=;
-        b=L//TbXO2bjFzqJeeuQvXqaqZl1Sw6JzCN4Ovu1osXQa6rU3RwCUbnQs7R+YGJtMcrZ
-         RNQiipUuGD1rwtQ3ING+0BFvLpKZCE0CLTCElxWi69dxHqwrpTeVlhGLBW9shgHN7WpB
-         GCNj3uUcnXRoNLjD5kV3HFrmpwU16nTbISOd1t6sboHB3EFLc3ugSucswsgXt/L3M7E+
-         KiWDVfUFrZJW9BwW7CIuASCja/IqvT6GLy3aihDzllQWJKSXFTr8erQVF9+93tsHdinj
-         YCNV89Up4PsFO5VMzTwxEIC1rGLEwVdsaybtNo/F3PS1B/D50c6QHx2Al+d6PTNhVpAr
-         a/XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tE1o9iX8L+r84IgpiaHI1OuxaKLOrxKaDGgiYst47qI=;
-        b=emAfCfOD3GHxbk0XgNdawtwzhIEF2ErASrDeZtTwJdfIJCAYBaKdWVXoN/Bgej1tFp
-         cb3IZHH9+/ADDv/freSGjTU4KxiBHb0M6RrgGyPkRMLiiNknUwx1gIeiHh0+Vka/qUtG
-         hx4Cn425x/508ZyHGlMZHNyjBUqnZ1yvG/tnNdewMCDN61rA4Iqs5V+eJ4krDH9xJLui
-         MD0p1eX+tPIB4sQ9UXL1JEPXVXQR4W6YoPCvZ5OxkFC2Qexr1gL3EKFsUstkPBzJ67bY
-         DhN5h4z6KGG8fZst03NMwvkNxWSvExhTq+BUULYY4TTkMNxX38w4czFLyve1urKMv+8Y
-         kqrA==
-X-Gm-Message-State: APjAAAW9SHtzGH6z/nAemOGmi+7x1qdO7Q8nqZo1YaM+EPH435uoFcdU
-        zVE5+nteVl6trltrscRGK6CLZQ==
-X-Google-Smtp-Source: APXvYqwQFZxzjb9tKfZVkx/ZhjNJGU5vBD0E8VuRwqw/g3naJ9+9VJ7lnkCzvfyQw5Bx55dQonPHfg==
-X-Received: by 2002:a17:902:8504:: with SMTP id bj4mr24026725plb.200.1551769658649;
-        Mon, 04 Mar 2019 23:07:38 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l7sm30367662pfj.162.2019.03.04.23.07.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 23:07:38 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: qcs404-evb: Enable uart3 and add Bluetooth
-Date:   Mon,  4 Mar 2019 23:08:23 -0800
-Message-Id: <20190305070823.11845-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Tue, 5 Mar 2019 02:09:07 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:47148 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbfCEHJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 02:09:07 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B08693082A32;
+        Tue,  5 Mar 2019 07:09:06 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E5AB1001E61;
+        Tue,  5 Mar 2019 07:09:06 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7846141F3C;
+        Tue,  5 Mar 2019 07:09:06 +0000 (UTC)
+Date:   Tue, 5 Mar 2019 02:09:06 -0500 (EST)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, amit@kernel.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org, xiaohli@redhat.com,
+        Gal Hammer <ghammer@redhat.com>
+Message-ID: <444210313.9669582.1551769746169.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190304142506-mutt-send-email-mst@kernel.org>
+References: <20190304130511.14450-1-pagupta@redhat.com> <20190304142506-mutt-send-email-mst@kernel.org>
+Subject: Re: [PATCH] virtio_console: free unused buffers with virtio port
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.161.16, 10.4.195.4]
+Thread-Topic: virtio_console: free unused buffers with virtio port
+Thread-Index: BFmvrGbWTg6avNTfy7ONAyFjOsQPeg==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 05 Mar 2019 07:09:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable blsp1_uart3, define its pinconf and add the bluetooth node.
 
-It seems provisioning is lacking a valid BD address, preventing the
-interface from initializing, so provide a dummy for now.
+Hello Michael,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 45 ++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Thanks for your reply.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 536f735243d2..5c502e6db424 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -7,6 +7,7 @@
- / {
- 	aliases {
- 		serial0 = &blsp1_uart2;
-+		serial1 = &blsp1_uart3;
- 	};
- 
- 	chosen {
-@@ -19,6 +20,32 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 	};
-+
-+	vdd_ch0_3p3:
-+	vdd_esmps3_3p3: vdd-esmps3-3p3-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "eSMPS3_3P3";
-+
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&blsp1_uart3 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+		vddio-supply = <&vreg_l6_1p8>;
-+		vddxo-supply = <&vreg_l5_1p8>;
-+		vddrf-supply = <&vreg_l1_1p3>;
-+		vddch0-supply = <&vdd_ch0_3p3>;
-+
-+		local-bd-address = [ 02 00 00 00 5a ad ];
-+
-+		max-speed = <3200000>;
-+	};
- };
- 
- &remoteproc_adsp {
-@@ -205,3 +232,21 @@
- 		bias-disable;
- 	};
- };
-+
-+&blsp1_uart3_default {
-+	cts {
-+		pins = "gpio84";
-+		bias-disable;
-+	};
-+
-+	rts-tx {
-+		pins = "gpio85", "gpio82";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	rx {
-+		pins = "gpio83";
-+		bias-pull-up;
-+	};
-+};
--- 
-2.18.0
+> 
+> On Mon, Mar 04, 2019 at 06:35:11PM +0530, Pankaj Gupta wrote:
+> >   The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> >   deffered detaching of unused buffer to virtio device unplug time.
+> > 
+> >   This causes unplug/replug of single port in virtio device with an
+> >   error "Error allocating inbufs\n". As we don't free the unused buffers
+> >   attached with the port. Re-plug the same port tries to allocate new
+> >   buffers in virtqueue and results in this error if queue is full.
+> > 
+> >   This patch removes the unused buffers in vq's when we unplug the port.
+> >   This is the best we can do as we cannot call device_reset because virtio
+> >   device is still active. This was the working behaviour before the change
+> >   introduced in commit b3258ff1d6.
+> > 
+> >   Reported-by: Xiaohui Li <xiaohli@redhat.com>
+> >   Fixes: b3258ff1d6 ("virtio_console: free buffers after reset")
+> >   Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> 
+> I think if you do this you need to add support
+> in the packed ring.
 
+o.k. I will look at the implementation details for "support
+of packed ring" for virtio_console. This will take some time.
+
+Meanwhile "virtio_console" port hotplug/unplug is broken in upstream.
+Can we accept this patch as it fixes the upstream and together
+with parent patch(b3258ff1d6) does nice cleanups as well.
+
+Thanks,
+Pankaj  
+
+> 
+> > ---
+> >  drivers/char/virtio_console.c | 14 +++++++++++---
+> >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+> > index fbeb71953526..5fbf2ac73111 100644
+> > --- a/drivers/char/virtio_console.c
+> > +++ b/drivers/char/virtio_console.c
+> > @@ -1506,15 +1506,25 @@ static void remove_port(struct kref *kref)
+> >          kfree(port);
+> >  }
+> >  
+> > +static void remove_unused_bufs(struct virtqueue *vq)
+> > +{
+> > +        struct port_buffer *buf;
+> > +
+> > +        while ((buf = virtqueue_detach_unused_buf(vq)))
+> > +                free_buf(buf, true);
+> > +}
+> > +
+> >  static void remove_port_data(struct port *port)
+> >  {
+> >          spin_lock_irq(&port->inbuf_lock);
+> >          /* Remove unused data this port might have received. */
+> >          discard_port_data(port);
+> > +        remove_unused_bufs(port->in_vq);
+> >          spin_unlock_irq(&port->inbuf_lock);
+> >  
+> >          spin_lock_irq(&port->outvq_lock);
+> >          reclaim_consumed_buffers(port);
+> > +        remove_unused_bufs(port->out_vq);
+> >          spin_unlock_irq(&port->outvq_lock);
+> >  }
+> >  
+> > @@ -1950,11 +1960,9 @@ static void remove_vqs(struct ports_device *portdev)
+> >          struct virtqueue *vq;
+> >  
+> >          virtio_device_for_each_vq(portdev->vdev, vq) {
+> > -                struct port_buffer *buf;
+> >  
+> >                  flush_bufs(vq, true);
+> > -                while ((buf = virtqueue_detach_unused_buf(vq)))
+> > -                        free_buf(buf, true);
+> > +                remove_unused_bufs(vq);
+> >          }
+> >          portdev->vdev->config->del_vqs(portdev->vdev);
+> >          kfree(portdev->in_vqs);
+> > --
+> > 2.20.1
+> 
