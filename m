@@ -2,203 +2,144 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5A6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776D8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2873206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C89206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfCEDJn (ORCPT
+        id S1726957AbfCEDMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 22:09:43 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50088 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726522AbfCEDJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 22:09:42 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E6E5A78FC08EBD592D31;
-        Tue,  5 Mar 2019 11:09:39 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 5 Mar 2019
- 11:09:36 +0800
-Message-ID: <5C7DE86F.1000702@huawei.com>
-Date:   Tue, 5 Mar 2019 11:09:35 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Mon, 4 Mar 2019 22:12:03 -0500
+Received: from mga05.intel.com ([192.55.52.43]:30000 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbfCEDMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 22:12:03 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 19:12:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,442,1544515200"; 
+   d="scan'208";a="304412221"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2019 19:12:02 -0800
+Date:   Mon, 4 Mar 2019 19:12:02 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
+        wei.w.wang@intel.com, weijiang.yang@inte.com
+Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20190305031202.GI17120@linux.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-7-weijiang.yang@intel.com>
+ <20190228161715.GF6166@linux.intel.com>
+ <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
+ <20190301145819.GC22584@linux.intel.com>
+ <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
+ <20190304184307.GC17120@linux.intel.com>
+ <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
 MIME-Version: 1.0
-To:     Matthew Wilcox <willy@infradead.org>,
-        Andrea Arcangeli <aarcange@redhat.com>
-CC:     syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        <mhocko@kernel.org>, <cgroups@vger.kernel.org>,
-        <hannes@cmpxchg.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <syzkaller-bugs@googlegroups.com>,
-        <vdavydov.dev@gmail.com>, David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-References: <00000000000006457e057c341ff8@google.com> <5C7BFE94.6070500@huawei.com> <20190304215111.GA13380@bombadil.infradead.org>
-In-Reply-To: <20190304215111.GA13380@bombadil.infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/5 5:51, Matthew Wilcox wrote:
-> On Mon, Mar 04, 2019 at 12:19:32AM +0800, zhong jiang wrote:
->> I also hit the following issue. but it fails to reproduce the issue by the log.
->>
->> it seems to the case that we access the mm->owner and deference it will result in the UAF.
->> But it should not be possible that we specify the incomplete process to be the mm->owner.
-> OK, so we've got thread 9325 calling fork() and failing due to the PID
-> controller saying "no".  9325 calls free_task(), but somehow thread 9332
-> has a reference to the struct task_struct.  There are two possibilities
-> here: one is that 9332 really did manage to get a reference to the larval
-> child of 9325, and the other is that 9332 has a stale reference to some
-> memory which was reallocated to 9325's child.
+On Mon, Mar 04, 2019 at 05:56:40PM +0800, Yang Weijiang wrote:
+> On Mon, Mar 04, 2019 at 10:43:07AM -0800, Sean Christopherson wrote:
+> > On Sun, Mar 03, 2019 at 08:26:08PM +0800, Yang Weijiang wrote:
+> > > On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
+> > > > On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
+> > > > > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
+> > > > > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
+> > > > > > > "Load Guest CET state" bit controls whether guest CET states
+> > > > > > > will be loaded at Guest entry. Before doing that, KVM needs
+> > > > > > > to check if CPU CET feature is available.
+> > > > > > > 
+> > > > > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > > > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > > > > > > ---
+> > > > > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
+> > > > > > >  1 file changed, 32 insertions(+)
+> > > > > > > 
+> > > > > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > > > > > index 89ee086e1729..d32cee9ee079 100644
+> > > > > > > --- a/arch/x86/kvm/vmx.c
+> > > > > > > +++ b/arch/x86/kvm/vmx.c
+> > > > > > > @@ -55,6 +55,7 @@
+> > > > > > >  #include <asm/mmu_context.h>
+> > > > > > >  #include <asm/spec-ctrl.h>
+> > > > > > >  #include <asm/mshyperv.h>
+> > > > > > > +#include <asm/cet.h>
+> > > > > > >  
+> > > > > > >  #include "trace.h"
+> > > > > > >  #include "pmu.h"
+> > > > > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
+> > > > > > >  	return !(val & ~valid_bits);
+> > > > > > >  }
+> > > > > > >  
+> > > > > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
+> > > > > > > +{
+> > > > > > > +	u32 eax, ebx, ecx, edx;
+> > > > > > > +
+> > > > > > > +	/*
+> > > > > > > +	 * Guest CET can work as long as HW supports the feature, independent
+> > > > > > > +	 * to Host SW enabling status.
+> > > > > > > +	 */
+> > > > > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > > > > > > +
+> > > > > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
+> > > > > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
+> > > > > > 
+> > > > > > Given the holes in the (current) architecture/spec, I think KVM has to
+> > > > > > require both features to be supported in the guest to allow CR4.CET to
+> > > > > > be enabled.
+> > > > > The reason why I use a "OR" here is to keep CET enabling control the
+> > > > > same as that on host, right now on host, users can select to enable  SHSTK or IBT
+> > > > > feature by disabling the unexpected one. It's free to select SHSTK & IBT
+> > > > > or SHSTK | IBT.
+> > > > 
+> > > > Which is not the same as SHSTK != IBT in *hardware*, which is effectively
+> > > > what this is allowing for the guest.  The problem is that the architecture
+> > > > doesn't cleanly separate the two features, i.e. we'd have a virtualization
+> > > > hole where the guest could touch state for a disabled feature.
+> > > > 
+> > > > Regardless, the guest would still be able to selectively enable each CET
+> > > > feature, it would just never see a model where SHSTK != IBT.
+> > > Hi, Sean,
+> > > I'd like to understand your concerns. From my point of view, e.g., 
+> > > when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
+> > > this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
+> > > configured. Could you detail your concerns?
+> > 
+> > In your approach, IA32_{S,U}_CET can be written if SHSTK or IBT is exposed
+> > to the guest.  If only SHSTK is exposed, a devious guest can still use IBT
+> > because it can set CR4.CET as well as the enable bits in IA32_{S,U}_CET.
+> > Preventing the guest from using IBT in this scenario is infeasible as it
+> > would require trapping and emulating the XSAVE as well as the relevent CET
+> > MSRs.
+> Cannot agree with you more!
+> This is some design limitation, but from my point of view, once vmm
+> exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
+> which features to be enabled, we don't need to add extra constraints on
+> the usage.
 
-Good guess and analysis.   IMO,   9332 can not handle the task_struct directly in the code flow.
-But It can get a reference of mm_struct.  Maybe I miss something important.
+But if KVM allows SHSTK and IBT to be toggled independently then the VMM
+has only exposed SHSTK or IBT, not CET as whole.
 
-> Andrea, is there any way for a UFFD thread to get access to the child's
-> task_struct during the copy_process() call?  If so, I think copy_process()
-> needs to call mm_update_next_owner().
-
-Yep,  Hope andrea  have time to  look at this. 
-
-Thanks,
-zhong jiang
-> If there's no way for that to happen, then we have quite a bug-hunt ahead
-> of us looking for who is missing a call to mm_update_next_owner().
-
->> On 2018/12/4 23:43, syzbot wrote:
->>> syzbot has found a reproducer for the following crash on:
->>>
->>> HEAD commit:    0072a0c14d5b Merge tag 'media/v4.20-4' of git://git.kernel..
->>> git tree:       upstream
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=11c885a3400000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b9cc5a440391cbfd
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=cbb52e396df3e565ab02
->>> compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12835e25400000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
->>>
->>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>> Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
->>>
->>> cgroup: fork rejected by pids controller in /syz2
->>> ==================================================================
->>> BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:182 [inline]
->>> BUG: KASAN: use-after-free in task_css include/linux/cgroup.h:477 [inline]
->>> BUG: KASAN: use-after-free in mem_cgroup_from_task mm/memcontrol.c:815 [inline]
->>> BUG: KASAN: use-after-free in get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
->>> Read of size 8 at addr ffff8881b72af310 by task syz-executor198/9332
->>>
->>> CPU: 0 PID: 9332 Comm: syz-executor198 Not tainted 4.20.0-rc5+ #142
->>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->>> Call Trace:
->>>  __dump_stack lib/dump_stack.c:77 [inline]
->>>  dump_stack+0x244/0x39d lib/dump_stack.c:113
->>>  print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
->>>  kasan_report_error mm/kasan/report.c:354 [inline]
->>>  kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
->>>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
->>>  __read_once_size include/linux/compiler.h:182 [inline]
->>>  task_css include/linux/cgroup.h:477 [inline]
->>>  mem_cgroup_from_task mm/memcontrol.c:815 [inline]
->>>  get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
->>>  get_mem_cgroup_from_mm mm/memcontrol.c:834 [inline]
->>>  mem_cgroup_try_charge+0x608/0xe20 mm/memcontrol.c:5888
->>>  mcopy_atomic_pte mm/userfaultfd.c:71 [inline]
->>>  mfill_atomic_pte mm/userfaultfd.c:418 [inline]
->>>  __mcopy_atomic mm/userfaultfd.c:559 [inline]
->>>  mcopy_atomic+0xb08/0x2c70 mm/userfaultfd.c:609
->>>  userfaultfd_copy fs/userfaultfd.c:1705 [inline]
->>>  userfaultfd_ioctl+0x29fb/0x5610 fs/userfaultfd.c:1851
->>>  vfs_ioctl fs/ioctl.c:46 [inline]
->>>  file_ioctl fs/ioctl.c:509 [inline]
->>>  do_vfs_ioctl+0x1de/0x1790 fs/ioctl.c:696
->>>  ksys_ioctl+0xa9/0xd0 fs/ioctl.c:713
->>>  __do_sys_ioctl fs/ioctl.c:720 [inline]
->>>  __se_sys_ioctl fs/ioctl.c:718 [inline]
->>>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
->>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>> RIP: 0033:0x44c7e9
->>> Code: 5d c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->>> RSP: 002b:00007f906b69fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->>> RAX: ffffffffffffffda RBX: 00000000006e4a08 RCX: 000000000044c7e9
->>> RDX: 0000000020000100 RSI: 00000000c028aa03 RDI: 0000000000000004
->>> RBP: 00000000006e4a00 R08: 0000000000000000 R09: 0000000000000000
->>> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e4a0c
->>> R13: 00007ffdfd47813f R14: 00007f906b6a09c0 R15: 000000000000002d
->>>
->>> Allocated by task 9325:
->>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
->>>  set_track mm/kasan/kasan.c:460 [inline]
->>>  kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
->>>  kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:490
->>>  kmem_cache_alloc_node+0x144/0x730 mm/slab.c:3644
->>>  alloc_task_struct_node kernel/fork.c:158 [inline]
->>>  dup_task_struct kernel/fork.c:843 [inline]
->>>  copy_process+0x2026/0x87a0 kernel/fork.c:1751
->>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
->>>  __do_sys_clone kernel/fork.c:2323 [inline]
->>>  __se_sys_clone kernel/fork.c:2317 [inline]
->>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
->>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>
->>> Freed by task 9325:
->>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
->>>  set_track mm/kasan/kasan.c:460 [inline]
->>>  __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
->>>  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
->>>  __cache_free mm/slab.c:3498 [inline]
->>>  kmem_cache_free+0x83/0x290 mm/slab.c:3760
->>>  free_task_struct kernel/fork.c:163 [inline]
->>>  free_task+0x16e/0x1f0 kernel/fork.c:457
->>>  copy_process+0x1dcc/0x87a0 kernel/fork.c:2148
->>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
->>>  __do_sys_clone kernel/fork.c:2323 [inline]
->>>  __se_sys_clone kernel/fork.c:2317 [inline]
->>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
->>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>
->>> The buggy address belongs to the object at ffff8881b72ae240
->>>  which belongs to the cache task_struct(81:syz2) of size 6080
->>> The buggy address is located 4304 bytes inside of
->>>  6080-byte region [ffff8881b72ae240, ffff8881b72afa00)
->>> The buggy address belongs to the page:
->>> page:ffffea0006dcab80 count:1 mapcount:0 mapping:ffff8881d2dce0c0 index:0x0 compound_mapcount: 0
->>> flags: 0x2fffc0000010200(slab|head)
->>> raw: 02fffc0000010200 ffffea00074a1f88 ffffea0006ebbb88 ffff8881d2dce0c0
->>> raw: 0000000000000000 ffff8881b72ae240 0000000100000001 ffff8881d87fe580
->>> page dumped because: kasan: bad access detected
->>> page->mem_cgroup:ffff8881d87fe580
->>>
->>> Memory state around the buggy address:
->>>  ffff8881b72af200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>  ffff8881b72af280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>> ffff8881b72af300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>                          ^
->>>  ffff8881b72af380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>  ffff8881b72af400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>> ==================================================================
->>>
->>>
->>> .
->>>
->>
-> .
->
-
-
+Even if SHSTK and IBT are bundled together the guest still has to opt-in
+to enabling each feature.  I don't see what we gain by pretending that
+SHSTK/IBT can be individually exposed to the guest, and on the flip side
+doing so creates a virtualization hole.
