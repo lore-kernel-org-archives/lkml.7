@@ -2,137 +2,174 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B46C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55C5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FD520661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA9D20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bdSIvSwH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bt1mMHWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfCEWVn (ORCPT
+        id S1727833AbfCEWZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 17:21:43 -0500
-Received: from mail-eopbgr40053.outbound.protection.outlook.com ([40.107.4.53]:24645
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726210AbfCEWVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 17:21:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jqzy6r6QFMDaL6qdlDaGpiZxp26Kqvf5uJ/UECu/fYw=;
- b=bdSIvSwHq9zVgKg8uZCyyHE6j4VlX2p4d2AfOxdAoi1g2L8BlJXhLyGtCxjqhEgdcKwoagoLc20Fxnt4n6ISNY6NaMl0NJf49rbeLQTcEvhH9yBG2Ncxak/a651pOcy2DpMhdZ/PgCVxoWQH+sY6ZCN5Xt1nuk0JkjFjHy+/Gm4=
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com (20.179.9.32) by
- DB8PR05MB6076.eurprd05.prod.outlook.com (20.179.11.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.18; Tue, 5 Mar 2019 22:21:39 +0000
-Received: from DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::28ed:92cd:4075:b660]) by DB8PR05MB5898.eurprd05.prod.outlook.com
- ([fe80::28ed:92cd:4075:b660%2]) with mapi id 15.20.1665.020; Tue, 5 Mar 2019
- 22:21:39 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     Roi Dayan <roid@mellanox.com>, "leon@kernel.org" <leon@kernel.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        Eli Britstein <elibr@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] net/mlx5e: Remove redundant assignment
-Thread-Topic: [PATCH][next] net/mlx5e: Remove redundant assignment
-Thread-Index: AQHU0S+tjWF8L6Ijf0eajSu7+CzZyqX6BweAgAD9E4CAAp0gAA==
-Date:   Tue, 5 Mar 2019 22:21:39 +0000
-Message-ID: <176546c027a13f39c0dd8d5915b2d16b98637782.camel@mellanox.com>
-References: <20190302193933.GA13467@embeddedor.com>
-         <da1f1300-20f4-2929-078b-71ac1772a933@mellanox.com>
-         <20190304062645.GZ15253@mtr-leonro.mtl.com>
-In-Reply-To: <20190304062645.GZ15253@mtr-leonro.mtl.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 32406c20-014e-4261-8f78-08d6a1b8f059
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB8PR05MB6076;
-x-ms-traffictypediagnostic: DB8PR05MB6076:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtEQjhQUjA1TUI2MDc2OzIzOjFGRSsyendxZmR0OTlJQ2NxR0NlRy9pSlF4?=
- =?utf-8?B?MXlqNlhyeHNaM1hSVjNzeGRVbDhIMmlUc3c2VDhMbmFENHJWNldneHl6VU9x?=
- =?utf-8?B?aTBYck9jR0VzSCtlbFNCaEQ4ZUp3YkY0c1RHR3Z2eTFHNGJMTnk0cmk2MktK?=
- =?utf-8?B?Y2RCWndKbFd4MjA4NS9vR1VPdzNJZ1pxbDVPcUU1d3F5NWdRWmI5Z1JuTVhP?=
- =?utf-8?B?ZkFIdmoyeFVTREdnbmRKNDJ4a2FTWWJ5aHNPVTdGelhZQVo4bHNETDZ2TTUy?=
- =?utf-8?B?aUorSWlpTEVYNGhXZWZiRWU0eFVMOUt6M3RCZFlUcjFJWDFsdDN4VTJ4R2sx?=
- =?utf-8?B?aFRjTkF5UXJYWWtYSWx3c3NPVXE1c0kzVmk5NWQzUmRZd29HbklEdExzdzJB?=
- =?utf-8?B?T3NUM21Gd1JrWnF1Y1dsdXNxMVpjUGZzN1pPaVhvdlVGd1BkM3cwYm1HNExT?=
- =?utf-8?B?MGFURjZrSlpyazRKcmJ5M1Fwb2dPUG1qejNXMVVMYXBzTnQrMkFmQnlvT0gz?=
- =?utf-8?B?UmQvbndGMG84QjNLMlQyeDlIUURRYWpaZW1wV0tZd1U0RWNjVks4R2NUb3NW?=
- =?utf-8?B?SWdoT0IyRTlsdlVzZmM3b2JLdWxXZ3cydlVFOFB6eEQ1N29xemRsYmovc2Fx?=
- =?utf-8?B?MEp1VUtwUFhDWHVWN1JLajFvU3pjMjlPWFdiYm1jTlIxcloyRVVhRUVTSjcv?=
- =?utf-8?B?VG5jWHNnSWlZa3BmRVE5OERiNnVBZW9sbjBxa09KUUpRUmZheWVlTVJuTGZS?=
- =?utf-8?B?d0QyNzYyM3FvWnJRb0UvYUhFKzg2OCsyQVhseisvQk1oZnRKbVpadFB1Tnl4?=
- =?utf-8?B?cmNBMTl3U1d4RHF2ZG94aFhlbFNZT0daNXQxU0Z5VXRlM3VjSlJSTTdlZFlM?=
- =?utf-8?B?dzhZVTNMWEdnQVdpTlFRMW0yUk5OaEtxSlpIdnZ3QUhrQ2VLMHNsQm5CUGtl?=
- =?utf-8?B?ZGp5cjQvSGlBayt4Ym53U1FPNXo5c2F4emF3YVg1cEYzeUpkSWhjK2ZrM1RW?=
- =?utf-8?B?d3NEaU5HZDVhOU85WjhjQjhqaXpaR0hRZEpLd3E4YlQ1eFZOMXpEbHQ2NVRE?=
- =?utf-8?B?S2MwT1RIeG9HQ3hoTW5TY0FiU2MvTHk0MFlnNE9OTXRpdzhPRWp0eGc2REZo?=
- =?utf-8?B?SE1wMTMyN0Z0aVY2TURoYjV4YzdIUElpZjhtSUY4Wkh6cXN2WFdwQjlkcSsr?=
- =?utf-8?B?RTZvNXlnKy9MZmc3SEo0dkdBeDdrbEFsZ05iUlJXWVBRWFlvSnREWDU4QS8w?=
- =?utf-8?B?TVJETllJKzZyaHcrS29Ca25VMHhhbEdETmxxcUhEajRlQmZVNE9pZ1poN0ll?=
- =?utf-8?B?S1RKZHh6UXhQalc1a0E5dGEzTXZ4ZzduT1JvbnBIak1NeXB1MjExMFdHeGRz?=
- =?utf-8?B?QzB3ZVdmRHE3dUZjNERYRGdZRkUvQy9NdkVPLy85Vm45bUR3c2M1WHR2dWlz?=
- =?utf-8?B?QU9GN0QwZW1mNG9BSUpaeTFMME9PdzZ2eVVyN3Q1ZFhIUCs4TUd5R1RFQk81?=
- =?utf-8?B?K1h3aGZFcWlNSjVVUTVGZWpoVUxTT1RMNiszYm1ZdmY0RFVHaTNuNEphMXA4?=
- =?utf-8?B?ZWZJcWhxTGNOOXptTHpEWFdhVkhXL1ZRSTBZSHdwZlR1TWJhcUc5NXlqSDdi?=
- =?utf-8?B?amlxRzZ1dzRUVHdnYnFkMUUyWW1TUG00Q25PWUZiRFFRSUVCQVI5VGU4MlNG?=
- =?utf-8?B?bWlKZ3UyYTBHRVBPb1A3R0t3aFVGRHFnb0VrbkF4QitYRDlCbDBSVkVwTElW?=
- =?utf-8?B?eHhaa294NGxzSHcyVFJqdz09?=
-x-microsoft-antispam-prvs: <DB8PR05MB607668E7F3D14C182C7004F2BE720@DB8PR05MB6076.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0967749BC1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(478600001)(102836004)(14454004)(68736007)(105586002)(106356001)(4326008)(6486002)(6512007)(66066001)(186003)(6506007)(26005)(4744005)(118296001)(8936002)(5660300002)(71190400001)(97736004)(305945005)(53546011)(7736002)(71200400001)(486006)(36756003)(54906003)(2501003)(316002)(86362001)(110136005)(6116002)(3846002)(11346002)(446003)(229853002)(76176011)(81156014)(2906002)(6246003)(25786009)(58126008)(476003)(2616005)(256004)(6436002)(14444005)(99286004)(53936002)(8676002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR05MB6076;H:DB8PR05MB5898.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LlIijBUL9/xV7BeZ/MdXJgEUABPs2I5g70PLOFjMpLNpYC7hRI+ZX2dvd2ER+DeE0hBNM+tjp/KpFtCSetu+7LmpIX7spgbExV2eQpWe5SNyEmPSTkrYwo2ZJt5CV6YJoAiDZygGiL1dNwHtf4UO9J047uiMuSG5Jt3npKuIlxd0pp1cZnf07b0xU6mVIbzKdf2gzyHOb/SmPELJQUjBDlISsbPzuxs1foqTjxG5Ty22fQXqlaNR7hL6UvY/PS3CV7dpSgi4kqrx4xtCYo/JXplkS3WLqM7waXCH86y7YP5lXWYYvdDTl4qoy9rouSu6j9+PfY+dEc9rRPRh9C2qHvd4gNhfJ3vByROlBtPwaFK0SGjzPCcES2Ni8dOUwukaL7c+xTt/VdUPHI1DQwO6ERUiv35BEOwIhJIHikOakR8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D29EA8F177736B419C08F6EDF67AFBAC@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 5 Mar 2019 17:25:31 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46588 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfCEWZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 17:25:30 -0500
+Received: by mail-qt1-f195.google.com with SMTP id z25so10695373qti.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 14:25:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PGoWjj5ooYH5rGp2EYHR0JqeMyqSYmk37bo/l9iSFjo=;
+        b=Bt1mMHWOMGsDABWxjGvxlo4fwpe2GWJQ5EhqnPZ3i1cwbIdmz2WebSlbJPqFeqFx+M
+         6aO07QlOITX3xqYYIzJGZg123WKpSJSPVCku1cssI0Dz8tJllEByjlUhX+DbiHUDh51X
+         4b+J+croKdvw07XJ7IqIV6gP8t9hoTDn6ba2ZG0biHHqcJYjmN8ysqp1vuBMJTRmKbzS
+         GO8ot2luewskvHOXRO2UCdoKovgFpeG0i7xXGXP07TTp3RybQE28jGnkaLt3xv8KSPip
+         C1HsPR2YEIpU61tmH7iD4tBqB43whNSDX4zPMp4rc1LiwshPU0E/r0Qass08qClw4dvW
+         5/Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PGoWjj5ooYH5rGp2EYHR0JqeMyqSYmk37bo/l9iSFjo=;
+        b=CtUExd8Wyd+gML//UuU5HEs3+EpIaS90ve4BDL9V32EipNLINnRGteYugj35TC6r8T
+         sZhgAYbxQI+U9idr7d+OYe7mM4CocPtn/VUg6mb/fQne1yhMdAwBScz6RGA1AjeZppKi
+         sgqcGA0M+fQ2oMWpicilquL9Pij3i7L53MsO97vvLXEpiN6vUqEw81e4BQnz8CmvU8jy
+         l8S2+7eZdFFGRbBjcgW9nlsf1cWEfGg9w6dj0NcEavr0XA1YiQgLL4Fmx/97f1OQpphy
+         kYXfMAkrZmamFbjQvu/tAqsGptZxzfVuKCjTaH7I90xChyXaKEY7m1sxn/YVz6j8Onie
+         BXrw==
+X-Gm-Message-State: APjAAAWzsZPYStPcwEmzwVJst8JLXepth6aUHK+fTA1+rS7BC2GXS5RJ
+        Bff1Zk1IALbB/clgYeSB/zhxkdhGG8MT2jpNTD+DCw==
+X-Google-Smtp-Source: APXvYqxBTZzPlsFbhFTARE+H/UtChk/eNEsrjCrYZQxFJyVThdkpskptMnc/5TvJiCol7F2kYJalugaZpYBMaZFWal4=
+X-Received: by 2002:ac8:1789:: with SMTP id o9mr3371213qtj.234.1551824729217;
+ Tue, 05 Mar 2019 14:25:29 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32406c20-014e-4261-8f78-08d6a1b8f059
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2019 22:21:39.6648
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB6076
+References: <1408683219-7939-1-git-send-email-srinivas.kandagatla@linaro.org> <1408683272-7984-1-git-send-email-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1408683272-7984-1-git-send-email-srinivas.kandagatla@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Mar 2019 23:25:16 +0100
+Message-ID: <CACRpkdZtUJim0d0iC26d-Z8xBckdCX7uwh_v4PhJSKkHEcmmrw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] mmc: mmci: Support any block sizes for ux500v2 and
+ qcom variant
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        Chris Ball <chris@printf.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTAzLTA0IGF0IDA4OjI2ICswMjAwLCBMZW9uIFJvbWFub3Zza3kgd3JvdGU6
-DQo+IE9uIFN1biwgTWFyIDAzLCAyMDE5IGF0IDAzOjIwOjU3UE0gKzAwMDAsIFJvaSBEYXlhbiB3
-cm90ZToNCj4gPiANCj4gPiBPbiAwMi8wMy8yMDE5IDIxOjM5LCBHdXN0YXZvIEEuIFIuIFNpbHZh
-IHdyb3RlOg0KPiA+ID4gUmVtb3ZlIHJlZHVuZGFudCBhc3NpZ25tZW50IHRvIHR1bl9lbnRyb3B5
-LT5lbmFibGVkLg0KPiA+ID4gDQo+ID4gPiBBZGRlc3Nlcy1Db3Zlcml0eS1JRDogMTQ3NzMyOCAo
-IlVudXNlZCB2YWx1ZSIpDQo+ID4gPiBGaXhlczogOTc0MTdmNjE4MmY4ICgibmV0L21seDVlOiBG
-aXggR1JFIGtleSBieSBjb250cm9sbGluZyBwb3J0DQo+ID4gPiB0dW5uZWwgZW50cm9weSBjYWxj
-dWxhdGlvbiIpDQo+ID4gDQo+ID4gdGhlIGNvbW1pdCBkb2Vzbid0IGZpeCBhbnkgcmVhbCBpc3N1
-ZSBidXQgaXMgbW9yZSBvZiBhIGNsZWFudXAuDQo+ID4gc28gSSdtIG5vdCBzdXJlIGlmIGZpeGVz
-IGxpbmUgaXMgcmVsZXZhbnQgb3Igbm90Lg0KPiA+IGJlc2lkZSB0aGF0IGxvb2tzIG9rLg0KPiAN
-Cj4gSXQgZG9lc24ndCBtYXR0ZXIgaWYgaXQgaXMgcmVhbCBpc3N1ZSBvciBub3QsIHRoZSBjb2Rl
-IGlzIHdyb25nIGFuZA0KPiBzaG91bGQgYmUgZml4ZWQuIFRoaXMgYWxvbmUgaXMgZW5vdWdoIHRv
-IHNlZSB0aGUgRml4ZXMgbGluZS4NCj4gDQo+IFRoYW5rcywNCj4gQWNrZWQtYnk6IExlb24gUm9t
-YW5vdnNreSA8bGVvbnJvQG1lbGxhbm94LmNvbT4NCg0KQWNrZWQtYnk6IFNhZWVkIE1haGFtZWVk
-IDxzYWVlZG1AbWVsbGFub3guY29tPg0KRGF2ZSwgRG8geW91IHRoaW5rIHN1Y2ggcGF0Y2ggc2hv
-dWxkIGdvIHRvIG5ldCwgb3IgZG8geW91IHdhbnQgbWUgdG8NCnNlbmQgaXQgaW4gbXkgbmV4dCBw
-dWxsIHJlcXVlc3QgdG8gbmV0LW5leHQsIG9uY2UgaXQgaXMgb3BlbiBvZiBjb3Vyc2UNCj8NCg==
+Sorry for top-posting, patch included for context.
+
+I saw today that Brian has the Nexus 5 working with Broadcom/Cypress
+4339 over SDIO on the MMCI.
+
+Brian are you managing to use the WLAN without this patch or is this
+something you stacked up to make it work? (If you want context I
+can forward the rest of the conversation where we discuss how to
+fix it properly.)
+
+I discussed this patch several times with Ulf and I think Niklas looked
+at it too, but we never got around to fix it up properly.
+
+Yours,
+Linus Walleij
+
+
+On Fri, Aug 22, 2014 at 6:54 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+
+> From: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> For the ux500v2 variant of the PL18x block, any block sizes are
+> supported. This will make it possible to decrease data overhead
+> for SDIO transfers.
+>
+> This patch is based on Ulf Hansson patch
+> http://www.spinics.net/lists/linux-mmc/msg12160.html
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>         enabled this support on qcom variant.
+>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/mmc/host/mmci.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index c11cb05..533ad2b 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -77,6 +77,7 @@ static unsigned int fmax = 515633;
+>   * @qcom_fifo: enables qcom specific fifo pio read logic.
+>   * @reversed_irq_handling: handle data irq before cmd irq.
+>   * @qcom_dml: enables qcom specific dma glue for dma transfers.
+> + * @any_blksize: true if block any sizes are supported
+>   */
+>  struct variant_data {
+>         unsigned int            clkreg;
+> @@ -102,6 +103,7 @@ struct variant_data {
+>         bool                    qcom_fifo;
+>         bool                    reversed_irq_handling;
+>         bool                    qcom_dml;
+> +       bool                    any_blksize;
+>  };
+>
+>  static struct variant_data variant_arm = {
+> @@ -194,6 +196,7 @@ static struct variant_data variant_ux500v2 = {
+>         .pwrreg_clkgate         = true,
+>         .busy_detect            = true,
+>         .pwrreg_nopower         = true,
+> +       .any_blksize            = true,
+>  };
+>
+>  static struct variant_data variant_qcom = {
+> @@ -212,6 +215,7 @@ static struct variant_data variant_qcom = {
+>         .explicit_mclk_control  = true,
+>         .qcom_fifo              = true,
+>         .qcom_dml               = true,
+> +       .any_blksize            = true,
+>  };
+>
+>  static int mmci_card_busy(struct mmc_host *mmc)
+> @@ -239,10 +243,11 @@ static int mmci_card_busy(struct mmc_host *mmc)
+>  static int mmci_validate_data(struct mmci_host *host,
+>                               struct mmc_data *data)
+>  {
+> +       struct variant_data *variant = host->variant;
+> +
+>         if (!data)
+>                 return 0;
+> -
+> -       if (!is_power_of_2(data->blksz)) {
+> +       if (!is_power_of_2(data->blksz) && !variant->any_blksize) {
+>                 dev_err(mmc_dev(host->mmc),
+>                         "unsupported block size (%d bytes)\n", data->blksz);
+>                 return -EINVAL;
+> @@ -796,7 +801,6 @@ static void mmci_start_data(struct mmci_host *host, struct mmc_data *data)
+>         writel(host->size, base + MMCIDATALENGTH);
+>
+>         blksz_bits = ffs(data->blksz) - 1;
+> -       BUG_ON(1 << blksz_bits != data->blksz);
+>
+>         if (variant->blksz_datactrl16)
+>                 datactrl = MCI_DPSM_ENABLE | (data->blksz << 16);
+> --
+> 1.9.1
+>
