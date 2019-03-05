@@ -2,103 +2,94 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FFBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B341C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAC220684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5018820684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551745408;
+	bh=PewehnSq3c3k8NIBiD7/hHc8GAvtJcUxcQ+QCIK57/k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fg3Kp1fcN12VgM1in1qgzT9RBXzGSyecxiIqlN1Jq7emZZMmB2sQZeCg2XU2w9njY
+	 wIObBxOEfk02JOvoDKuLtTqC21d2Eq0QsLXcngvKi1uPSl4IswftNo9S2NZssYtGcF
+	 5G2BTbWXKoiLr4vviY1WGlhjGs6kyNagPrsh1q2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfCEAWE (ORCPT
+        id S1726774AbfCEAX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:22:04 -0500
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:28879 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726066AbfCEAWE (ORCPT
+        Mon, 4 Mar 2019 19:23:27 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42587 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726117AbfCEAX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:22:04 -0500
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x250KMj2014854;
-        Tue, 5 Mar 2019 08:20:22 +0800 (GMT-8)
-        (envelope-from vincentc@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Tue, 5 Mar 2019
- 08:21:20 +0800
-Date:   Tue, 5 Mar 2019 08:21:17 +0800
-From:   Vincent Chen <vincentc@andestech.com>
-To:     Palmer Dabbelt <palmer@sifive.com>
-CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        Jim Wilson <jimw@sifive.com>, Arnd Bergmann <arnd@arndb.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "deanbo422@gmail.com" <deanbo422@gmail.com>
-Subject: Re: [PATCH 0/3] riscv: Fix debug instruction check and support
- trap-based WARN()
-Message-ID: <20190305002116.GA5887@andestech.com>
-References: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
- <mhng-76c68381-da6b-4b8c-97c9-e38d503b93bc@palmer-si-x1c4>
+        Mon, 4 Mar 2019 19:23:26 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d14so5972721ljl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:23:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1fBZMds7fXJxOxATQ64cCYfev5cnLGxAAszQ8/tSaDI=;
+        b=gY5qfcjytdBe/Oq3SVD5wBlfKUg42yBqqdrSCguMLmfDfA51eHijV2fj0IEWKVHOJY
+         sjkrO3nJzWh0f2HUh6gBwl6/8oIwHSOxAaRFUeMAz0mid79qpmcwELMQPcbxQ/UpS21f
+         szAI3XL4/qAo1SWxvLZkboaNNqdI6YPtI+CHg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1fBZMds7fXJxOxATQ64cCYfev5cnLGxAAszQ8/tSaDI=;
+        b=S7g3Lr+tIIdQQ57p7Y08cnVrwb47tR25mqD9YHO7ceyv8qJp/Usd3OA7NQLIP4cbAY
+         5b/myj/RWOv4HI81CzWRk65HoHgr+M7xNJ1RY4aoKhEP1YMgzju2xX8q/QiqvgSdqKLj
+         VO/jEnlgM3c7lxZF29NCo2wIDSn5nejlxSNuFWma9N/WDtcbQd7pOPsbnbeXWW9W8oYc
+         jLqCtX89UMiu8A3+oKf3Jcx/vTZxPNin0smp+pqv0/ZB5h3oeEmO+lcy5YUNfIY8RFcN
+         0AjMwsdnBzCZamRuWUrQdoZCH2dQu4WTaLsobSsvL7SixINTgeEa7u5tvAoSCRQPHMV/
+         MFBQ==
+X-Gm-Message-State: APjAAAXDipyosdjIpQ/WpSAhjJ1eGiMGerUhK339g5uMbgrFRxzDi8RI
+        g6qpro+v5ej5hFCHJo2y24U2WwHbogM=
+X-Google-Smtp-Source: APXvYqyYOPYTtvKfUAD8biJSO+FGYbmSyYcw/peOX1uniAER5498kVMgHUeOXqis/fz8VdVM/Mqb0g==
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr12808477ljg.146.1551745403614;
+        Mon, 04 Mar 2019 16:23:23 -0800 (PST)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id m77sm594414lfe.23.2019.03.04.16.23.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 16:23:22 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id z23so4870872lfe.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:23:22 -0800 (PST)
+X-Received: by 2002:ac2:5542:: with SMTP id l2mr155684lfk.136.1551745402316;
+ Mon, 04 Mar 2019 16:23:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <mhng-76c68381-da6b-4b8c-97c9-e38d503b93bc@palmer-si-x1c4>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x250KMj2014854
+References: <20190301200835.18286-1-jannh@google.com> <20190302034017.GM2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190302034017.GM2217@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 4 Mar 2019 16:23:06 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjJ1vY9Gte01+YhEOuKHbd=u4zwPxRCOfuiHw-kMvE26Q@mail.gmail.com>
+Message-ID: <CAHk-=wjJ1vY9Gte01+YhEOuKHbd=u4zwPxRCOfuiHw-kMvE26Q@mail.gmail.com>
+Subject: Re: [PATCH] fs: use KERNEL_DS instead of get_ds()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jann Horn <jannh@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 04:35:08AM +0800, Palmer Dabbelt wrote:
-> On Thu, 28 Feb 2019 02:31:28 PST (-0800), vincentc@andestech.com wrote:
-> > The handler for the debug exception will call is_valid_bugaddr(bugaddr) to
-> > check if the instruction in bugaddr is a real debug instruction. However,
-> > the expected instruction, ebreak, is possibly translated to c.ebreak by
-> > assmebler when C extension is supported. This patchset will add c.ebreak
-> > into the check mechanism. In addition, BUG() is currently unable to work in
-> > the kernel module due to an inappropriated condition in is_valid_bugaddr().
-> > This issue will be fixed in this patchset. Finally, this patchset enables
-> > WARN() related functions to trap the code to help developers debug it.
-> >
-> >
-> >
-> >
-> >
-> > Vincent Chen (3):
-> >   riscv: Add the support for c.ebreak check in is_valid_bugaddr()
-> >   riscv: Support BUG() in kernel module
-> >   riscv: Make WARN() related functions able to trigger a trap exception
-> 
-> I'm finding this patch set a bit hard to follow, and I think it has more diff 
-> than is necessary.  For example, the first patch introduces a new die() only to 
-> have it removed by the third patch.  There's also some unnecessary 
-> non-functional diff, like
-> 
->     @@ -149,12 +161,13 @@ int is_valid_bugaddr(unsigned long pc)
->             if (probe_kernel_address((bug_insn_t *)pc, insn))
->                     return 0;
->             if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
->     -               return insn == __BUG_INSN_32;
->     +               return (insn == __BUG_INSN_32);
->             else
->     -               return (insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16;
->     +               return ((insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16);
->      }
->      #endif /* CONFIG_GENERIC_BUG */
->     
->     +
->      void __init trap_init(void)
->      {
->             /*
-> 
+On Fri, Mar 1, 2019 at 7:40 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> No objections, but that kind of stuff might be better done in a different
+> way: ask Linus to run this
 
-> I like the idea of the patch set, though.  Do you have time to clean it up and 
-> submit a v2?
+Your script is disgusting, and I will not quote it for posterity for
+that reason. I will just say that git has a "path exclusion" thing
+that you can use to make it much more streamlined.
 
+And I ended up going a bit further, and just got rid of it all in
+commit 736706bee329 ("get rid of legacy 'get_ds()' function")
 
-OK, I will improve it and submit a v2 patch.
+                  Linus
