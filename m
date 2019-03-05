@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1420C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4947FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C968D20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2464720663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfCEFPK (ORCPT
+        id S1727110AbfCEFPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 00:15:10 -0500
+        Tue, 5 Mar 2019 00:15:15 -0500
 Received: from mga05.intel.com ([192.55.52.43]:61924 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfCEFPH (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 00:15:07 -0500
+        id S1726946AbfCEFPF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 00:15:05 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 21:15:06 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 21:15:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,442,1544515200"; 
-   d="scan'208";a="139173328"
+   d="scan'208";a="139173316"
 Received: from skl.sh.intel.com ([10.239.159.132])
-  by orsmga002.jf.intel.com with ESMTP; 04 Mar 2019 21:15:05 -0800
+  by orsmga002.jf.intel.com with ESMTP; 04 Mar 2019 21:15:03 -0800
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4 3/3] perf diff: Support --pid/--tid filter options
-Date:   Tue,  5 Mar 2019 21:05:43 +0800
-Message-Id: <1551791143-10334-4-git-send-email-yao.jin@linux.intel.com>
+Subject: [PATCH v4 2/3] perf diff: Support --cpu filter option
+Date:   Tue,  5 Mar 2019 21:05:42 +0800
+Message-Id: <1551791143-10334-3-git-send-email-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551791143-10334-1-git-send-email-yao.jin@linux.intel.com>
 References: <1551791143-10334-1-git-send-email-yao.jin@linux.intel.com>
@@ -46,53 +46,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For better filtering support for perf diff, it would be useful to
-add --pid and --tid filter options.
+For better support for perf diff, it would be useful to add --cpu filter
+option.
+
+Multiple CPUs can be provided as a comma-separated list with no space: 0,1.
+Ranges of CPUs are specified with -: 0-2. Default is to report samples on
+all CPUs.
 
 For example,
-perf diff --tid 13965
 
-It only diff the samples for thread 13965.
+perf diff --cpu 0,1
+
+It only diff the samples for CPU0 and CPU1.
 
  v4:
  ---
- No logical changes.
+ No logical changes
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/Documentation/perf-diff.txt | 6 ++++++
- tools/perf/builtin-diff.c              | 4 ++++
- 2 files changed, 10 insertions(+)
+ tools/perf/Documentation/perf-diff.txt |  5 +++++
+ tools/perf/builtin-diff.c              | 16 ++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
 diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-index ed13b3f..83c9496 100644
+index 5bfe876..ed13b3f 100644
 --- a/tools/perf/Documentation/perf-diff.txt
 +++ b/tools/perf/Documentation/perf-diff.txt
-@@ -164,6 +164,12 @@ OPTIONS
- 	CPUs are specified with -: 0-2. Default is to report samples on all
- 	CPUs.
+@@ -159,6 +159,11 @@ OPTIONS
+ 	the end of perf.data.old and analyzes the perf.data from the
+ 	timestamp 3971.150589 to the end of perf.data.
  
-+--pid=::
-+	Only diff samples for given process ID (comma separated list).
-+
-+--tid=::
-+	Only diff samples for given thread ID (comma separated list).
++--cpu:: Only diff samples for the list of CPUs provided. Multiple CPUs can
++	be provided as a comma-separated list with no space: 0,1. Ranges of
++	CPUs are specified with -: 0-2. Default is to report samples on all
++	CPUs.
 +
  COMPARISON
  ----------
  The comparison is governed by the baseline file. The baseline perf.data
 diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index dfe6c76..6e79207 100644
+index 17cd898..dfe6c76 100644
 --- a/tools/perf/builtin-diff.c
 +++ b/tools/perf/builtin-diff.c
-@@ -985,6 +985,10 @@ static const struct option options[] = {
+@@ -83,6 +83,9 @@ static unsigned int sort_compute = 1;
+ static s64 compute_wdiff_w1;
+ static s64 compute_wdiff_w2;
+ 
++static const char		*cpu_list;
++static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
++
+ enum {
+ 	COMPUTE_DELTA,
+ 	COMPUTE_RATIO,
+@@ -354,6 +357,11 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 		return -1;
+ 	}
+ 
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap)) {
++		ret = 0;
++		goto out_put;
++	}
++
+ 	if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample, true)) {
+ 		pr_warning("problem incrementing symbol period, skipping event\n");
+ 		goto out_put;
+@@ -892,6 +900,13 @@ static int __cmd_diff(void)
+ 				goto out_delete;
+ 		}
+ 
++		if (cpu_list) {
++			ret = perf_session__cpu_bitmap(d->session, cpu_list,
++						       cpu_bitmap);
++			if (ret < 0)
++				goto out_delete;
++		}
++
+ 		ret = perf_session__process_events(d->session);
+ 		if (ret) {
+ 			pr_err("Failed to process %s\n", d->data.path);
+@@ -969,6 +984,7 @@ static const struct option options[] = {
+ 		     "How to display percentage of filtered entries", parse_filter_percentage),
  	OPT_STRING(0, "time", &pdiff.time_str, "str",
  		   "Time span (time percent or absolute timestamp)"),
- 	OPT_STRING(0, "cpu", &cpu_list, "cpu", "list of cpus to profile"),
-+	OPT_STRING(0, "pid", &symbol_conf.pid_list_str, "pid[,pid...]",
-+		   "only consider symbols in these pids"),
-+	OPT_STRING(0, "tid", &symbol_conf.tid_list_str, "tid[,tid...]",
-+		   "only consider symbols in these tids"),
++	OPT_STRING(0, "cpu", &cpu_list, "cpu", "list of cpus to profile"),
  	OPT_END()
  };
  
