@@ -2,100 +2,247 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6656C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AC1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8605F20652
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D4920663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rB+r4tuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfCEX0B (ORCPT
+        id S1727573AbfCEX3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 18:26:01 -0500
-Received: from dcvr.yhbt.net ([64.71.152.64]:47144 "EHLO dcvr.yhbt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfCEX0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 18:26:00 -0500
-Received: from localhost (dcvr.yhbt.net [127.0.0.1])
-        by dcvr.yhbt.net (Postfix) with ESMTP id 5D6E120248;
-        Tue,  5 Mar 2019 23:26:00 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 23:26:00 +0000
-From:   Eric Wong <e@80x24.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Joey Pabalinas <joeypabalinas@gmail.com>,
-        linux-kernel@vger.kernel.org, kernelnewbies@kernelnewbies.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jasper Spaans <j@jasper.es>
-Subject: Re: [RFC] LKML Archive in Maildir Format
-Message-ID: <20190305232600.GA12110@dcvr>
-References: <20181216190639.6safwjqwdphkce67@gmail.com>
- <20181216194649.GA7732@pure.paranoia.local>
- <20181216195343.idnt2y5y5wjky5gu@gmail.com>
- <20190104013522.stng6gwauwnr6wbi@starla>
- <CAErSpo5a2oO=5byEuA5AouS=kBmj7ihw2EVYAvJcdti29Tf1HQ@mail.gmail.com>
+        Tue, 5 Mar 2019 18:29:54 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40452 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfCEX3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 18:29:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CvNw3Mc11eG/OJakIIqaGe9VzNMqIdaRIyqQgDX8UAo=; b=rB+r4tuzREkGyH3vkYFTX+7rR
+        +I41kqugJXeMC9eM0wGrSzqqpbFYSG3/a1EeU8NyI5nlgK11lJpPuKgTV52JDoNGyPHTLHCNhYLDQ
+        MHa5/JOlKpiKZmWOcRGolNnriJX65DKTJ0j7B+SQGBwLpbuv0G/lVxMf3bVLn8ayQcujZAIKdul3V
+        AlhNHJkI8UbfgOg1Mp6ow2nyrMQkfRtSaQQ3ejy73YKU1LpZk8R6BcgtcchxPw66d3BLMNZbBlWr+
+        1nzNmoYhlJhefZPBSsOMYWGGeRo6zBlKtwbXZg7Fv4m/+sV9ec5JM9mZ3LA+2V2SUXpcvV+aQHgf7
+        AuR60oLSg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1JVQ-00018K-Cv; Tue, 05 Mar 2019 23:29:52 +0000
+Subject: Re: [PATCH v2] tty/serial: Add a serial port simulator
+To:     minyard@acm.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
+References: <20190305171231.22133-1-minyard@acm.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <eea0ad95-8344-371a-1dd0-58c8366a355b@infradead.org>
+Date:   Tue, 5 Mar 2019 15:29:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAErSpo5a2oO=5byEuA5AouS=kBmj7ihw2EVYAvJcdti29Tf1HQ@mail.gmail.com>
+In-Reply-To: <20190305171231.22133-1-minyard@acm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn Helgaas <bhelgaas@google.com> wrote:
-> OK, so I understand how to clone archives from lore.kernel.org and how
-> to convert a git archive to a maildir (thanks, Konstantin!)
-> 
-> What I *don't* understand is how to effectively read this locally.
-> Ideally I'd like to run mutt, possibly with notmuch for indexing.  But
-> a maildir with 3M files seems impractical.  I did actually try it
-> (without notmuch), but it takes mutt about 5 minutes to start up.  And
-> the maildir is about 23G, compared with 7.5G for the git archive.
+Hi Corey,
 
-Right, relying on Maildir for long-term storage of giant archives
-is not a usable solution with any general purpose FSes I know about.
-git itself had the same problem with loose object scalability in
-the old days and packs were invented as a result.
+Just some doc comments.
 
-> Any pointers?  I guess there's no mutt backend that can read a
-> public-inbox archive directly?
+On 3/5/19 9:12 AM, minyard@acm.org wrote:
+> diff --git a/Documentation/serial/serialsim.rst b/Documentation/serial/serialsim.rst
+> new file mode 100644
+> index 000000000000..655e10b4908e
+> --- /dev/null
+> +++ b/Documentation/serial/serialsim.rst
+> @@ -0,0 +1,149 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +=====================================
+> +serialsim - A kernel serial simualtor
+                               xxxxxxxxx
+                        serial device simulator
 
-There's mutt patches to support reading over NNTP, so that
-works:
+> +=====================================
+> +
+> +:Author: Corey Minyard <minyard@mvista.com> / <minyard@acm.org>
+> +
+> +The serialsim device is a serial simulator with echo and pipe devices.
+> +It is quite useful for testing programs that use serial ports.
+> +
+> +This attempts to emulate a basic serial device.  It uses the baud rate
+> +and sends the bytes through the loopback or pipe at approximately the
+> +speed it would on a normal serial device.
+> +
+> +There is a python interface to the special ioctls for controlling the
+> +remote end of the termios in addition to the standard ioctl interface
+> +documented below.  See https://github.com/cminyard/serialsim
+> +
+> +=====
+> +Using
+> +=====
+> +
+> +The serialsim.ko module creates two types of devices.  Echo devices
+> +simply echo back the data to the same device.  These devices will
+> +appear as /dev/ttyEcho<n>.
+> +
+> +Pipe devices will transfer the data between two devices.  The
+> +devices will appear as /dev/ttyPipeA<n> and /dev/ttyPipeB<n>.  And
 
-	mutt -f news://$INBOX_HOST/$INBOX_NEWSGROUP
+                                                                  Any
 
-I don't think mutt handles mboxrd 100% correctly, but it's close
-enough that you can can download the gzipped mboxrd of a search
-query and open it via "mutt -f /path/to/downloaded/mbox.gz"
+> +data written to PipeA reads from PipeB, and vice-versa.
+> +
+> +You may create an arbitrary number of devices by setting the
+> +nr_echo ports and nr_pipe_ports module parameters.  The default is
 
-  curl -XPOST -OJ "$INBOX_URL/?q=$SEARCH_QUERY&x=m"
+   nr_echo_ports
 
-POST is required(*), and -OJ lets it use the
-Content-Disposition: header for a meaningful server-generated
-name, but you can also redirect the result to whatever you want.
+> +four for both.
 
-For all messages since March 1, you could use:
+or for each.
 
-	SEARCH_QUERY=d:20190301..
+> +
+> +This driver supports modifying the modem control lines and
+> +injecting various serial errors.  It also supports a simulated null
+> +modem between the two pipes, or in a loopback on the echo device.
+> +
+> +By default a pipe or echo comes up in null modem configuration,
+> +meaning that the DTR line is hooked to the DSR and CD lines on the
+> +other side and the RTS line on one side is hooked to the CTS line
+> +on the other side.
+> +
+> +The RTS and CTS lines don't currently do anything for flow control.
+> +
+> +You can modify null modem and control the lines individually
+> +through an interface in /sys/class/tty/ttyECHO<n>/ctrl,
+> +/sys/class/tty/ttyPipeA<n>/ctrl, and
+> +/sys/class/tty/ttyPipeB<n>/ctrl.  The following may be written to
+> +those files:
+> +
+> +[+-]nullmodem
+> +    enable/disable null modem
+> +
+> +[+-]cd
+> +    enable/disable Carrier Detect (no effect if +nullmodem)
+> +
+> +[+-]dsr
+> +    enable/disable Data Set Ready (no effect if +nullmodem)
+> +
+> +[+-]cts
+> +    enable/disable Clear To Send (no effect if +nullmodem)
+> +
+> +[+-]ring
+> +    enable/disable Ring
+> +
+> +frame
+> +    inject a frame error on the next byte
+> +
+> +parity
+> +    inject a parity error on the next byte
+> +
+> +overrun
+> +    inject an overrun error on the next byte
+> +
+> +The contents of the above files has the following format:
 
-All the supported search queries are documented in
-$INBOX_URL/_/text/help/ and the search prefixes (e.g. "d:",
-"s:", "b:") are modeled after what's in mairix.  You'll need to
-escape the queries for URIs (e.g. " " => "+", and so on).
-Xapian requires date ranges to be denoted with ".." whereas
-mairix uses "-" for ranges.
+                                   have
+
+> +
+> +tty[Echo|PipeA|PipeB]<n>
+> +    <mctrl values>
+> +
+> +where <mctrl values> is the modem control values above (not frame,
+> +parity, or overrun) with the following added:
+> +
+> +[+-]dtr
+> +    value of the Data Terminal Ready
+> +
+> +[+-]rts
+> +    value of the Request To Send
+> +
+> +The above values are not settable through this interface, they are
+> +set through the serial port interface itself.
+> +
+> +So, for instance, ttyEcho0 comes up in the following state::
+> +
+> +   # cat /sys/class/tty/ttyEcho0/ctrl
+> +   ttyEcho0: +nullmodem -cd -dsr -cts -ring -dtr -rts
+> +
+> +If something connects, it will become::
+> +
+> +   ttyEcho0: +nullmodem +cd +dsr +cts -ring +dtr +rts
+> +
+> +To enable ring::
+> +
+> +   # echo "+ring" >/sys/class/tty/ttyEcho0/ctrl
+> +   # cat /sys/class/tty/ttyEcho0/ctrl
+> +   ttyEcho0: +nullmodem +cd +dsr +cts +ring +dtr +rts
+> +
+> +Now disable NULL modem and the CD line::
+> +
+> +   # echo "-nullmodem -cd" >/sys/class/tty/ttyEcho0/ctrl
+> +   # cat /sys/class/tty/ttyEcho0/ctrl
+> +   ttyEcho0: -nullmodem -cd -dsr -cts +ring -dtr -rts
+> +
+> +Note that these settings are for the side you are modifying.  So if
+> +you set nullmodem on ttyPipeA0, that controls whether the DTR/RTS
+> +lines from ttyPipeB0 affect ttyPipeA0.  It doesn't affect ttyPipeB's
+> +modem control lines.
+> +
+> +The PIPEA and PIPEB devices also have the ability to set these
+> +values for the other end via an ioctl.  The following ioctls are
+> +available:
+> +
+> +TIOCSERSNULLMODEM
+> +    Set the null modem value, the arg is a boolean.
+> +
+> +TIOCSERSREMMCTRL
+> +    Set the modem control lines, bits 16-31 of the arg is
+
+                                                          are
+
+> +    a 16-bit mask telling which values to set, bits 0-15 are the
+> +    actual values.  Settable values are TIOCM_CAR, TIOCM_CTS,
+> +    TIOCM_DSR, and TIOC_RNG.  If NULLMODEM is set to true, then only
+> +    TIOC_RNG is settable.  The DTR and RTS lines are not here, you can
+> +    set them through the normal interface.
+> +
+> +TIOCSERSREMERR
+> +    Send an error or errors on the next sent byte.  arg is
+> +    a bitwise OR of (1 << TTY_xxx).  Allowed errors are TTY_BREAK,
+
+is this better: (or I don't understand?)
+       a bitwise OR of (1 << TTY_xxx) and one (or more of) the
+       allowed error flags TTY_BREAK, TTY_FRAME, TTY_PARITY, and TTY_OVERRUN.
+
+> +    TTY_FRAME, TTY_PARITY, and TTY_OVERRUN.
+> +
+> +TIOCSERGREMTERMIOS
+> +    Return the termios structure for the other side of the pipe.
+> +    arg is a pointer to a standard termios struct.
+> +
+> +TIOCSERGREMRS485
+> +    Return the remote RS485 settings, arg is a pointer to a struct
+> +    serial_rs485.
+> +
+> +Note that unlike the sysfs interface, these ioctls affect the other
+> +end.  So setting nullmodem on the ttyPipeB0 interface sets whether
+> +the DTR/RTS lines on ttyPipeB0 affect ttyPipeA0.
 
 
-The main thing public-inbox search misses from mairix is support
-for "-t" which grabs non-matching messages from the same thread.
-I would like to support that someday, but don't have enough time
-(or funding) to make it happen at the moment.
-
-
-(*) to reliably avoid wasting resources from spiders/prefetchers
+cheers.
+-- 
+~Randy
