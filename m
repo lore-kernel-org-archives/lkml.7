@@ -2,221 +2,108 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937EFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24067C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D8B2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551794813;
-	bh=e3Wr9HrogkL/ne2p57sdmRzwLACLzbdIpR5KTVjLh2Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GkxVZZETUXXZD+VKES13eHJi2Zcfc4R8vLqcAt7FSiwYaTxCARnW4T5LsNz7QHjiY
-	 vDuPFKFUq7oZZWf1IP2eAKY2iA5XnCNm+2Xqgw0J8z4AO7HoxGPRafickPfuYBRnOv
-	 sg9eSgCHreX/GCUpJGrbKBskH494ZiGDi9xVRWq8=
+	by mail.kernel.org (Postfix) with ESMTP id D681A2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:07:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gqWFXEUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfCEOGv (ORCPT
+        id S1728180AbfCEOHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:06:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfCEOGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:06:51 -0500
-Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2FE20842;
-        Tue,  5 Mar 2019 14:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551794809;
-        bh=e3Wr9HrogkL/ne2p57sdmRzwLACLzbdIpR5KTVjLh2Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oigU/+87daxe3Hg6DNcE40wBDm2YRhmsHHaxkTgm6y7/tjU+wcmOHoAwW6aP8Po/A
-         eooaR2JnoQuXjS59lZrwZwtnlf4XSslB34Z2JwPTm43ztDteeKsi9out8gN4w1h4NB
-         mND1NN52mbIABHnqQ+G9GCPylHsipJ/KSghxMrVI=
-Date:   Tue, 5 Mar 2019 23:06:46 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
-Message-Id: <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
-In-Reply-To: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-X-Mailer: Sylpheed 3.5.0 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 5 Mar 2019 09:07:10 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11093 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfCEOHK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:07:10 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7e828d0000>; Tue, 05 Mar 2019 06:07:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 05 Mar 2019 06:07:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 05 Mar 2019 06:07:09 -0800
+Received: from [10.26.11.29] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Mar
+ 2019 14:07:05 +0000
+Subject: Re: [PATCH 4.19 00/78] 4.19.27-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190304081625.508788074@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <26e2c6e4-2dca-5083-6c6d-0759842a40d1@nvidia.com>
+Date:   Tue, 5 Mar 2019 14:07:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551794830; bh=/UjstpJaXRDLc1CfqrC3pg8LvxgZ85wg1MzzFCQ4Ndo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gqWFXEUjFZEQk5OgkaHls54fsBAptL+ttvp8b28HCvRegUSKVk9jjGFL7hH4besfV
+         M1LM85tALzjNIdRlwEFHpXwcpYrVQpPQ4HS0KMW852lZEERZsedMrlROoHPL0QTehm
+         J2h7/TBRkMN+3n/XlseiM0zTXVcMg3lEd1e8Kvb4jaD8+RMMKXDqW3URMQrFlRnVXy
+         MOvz+rOfZpkOYTXhtEetRy0OyqAjxhaW0JLzLtoFx949P9SHMaawA6atmae72kO1HK
+         hu3zYAgrZSzhS9I8m2ozcTACmVIxA+obVYtg2qZloRv0VAAEXjYlx58uobjQW3zteb
+         Gl0KeYt28AsDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 17:36:43 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
 
-> From: Tom Zanussi <tom.zanussi@linux.intel.com>
+On 04/03/2019 08:21, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.27 release.
+> There are 78 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Hi,
+> Responses should be made by Wed Mar  6 08:16:00 UTC 2019.
+> Anything received after that time might be too late.
 > 
-> This is v3 of the frace error_log RFC patchset, which is the same as
-> the previous version but adds the numbering Masami suggested before
-> each item in the log.  Masami also said he was going to take over the
-> kprobe events patch, but I left it in for now for completeness as it
-> still provides a useful example of possible usage, for evaluation of
-> the overall scheme.  I'll remove it when it's no longer an RFC.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.27-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+All tests are passing for Tegra ...
 
-Ahh, sorry, I'm forcusing on fixing user-space access issue.
-I'll take a look.
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    28 tests:	28 pass, 0 fail
 
-> 
-> Changes from v2:
-> 
->   - Added [n] numbering as suggested by Masami
+Linux version:	4.19.27-rc1-geac8c14
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-That's very good too me, thank you!
-
-
-Thank you,
-
-
-> 
-> 
-> Text from original post:
-> 
-> Last April, I posted an RFC patchset [1] implementing a common
-> error_log interface as suggested by Masami [2].  We were supposed to
-> discuss it at Plumbers but that never happened, and Steve recently
-> asked about patches for a follow-on discussion [3], so here they are.
-> 
-> I incorporated comments from the previous discussion, the most
-> important of which are:
-> 
->  - Incorporated Steve's suggestion of using static strings as in the
->    existing trace event filter code, along with err_info indexing into
->    the string arrays and a position for the error caret.
-> 
->  - Converted all the hist trigger errors and the existing trace event
->    filter parse errors to use the new interface.
-> 
->  - Converted a few kprobe_event errors to the new interface as
->    examples, but these will require more work - I didn't spend much
->    time figuring out how to get the full kprobe command into the error
->    info, for instance.
-> 
->  - Got rid of the custom single-page ring buffer and used standard
->    lists instead.
-> 
-> For now, this is implemented on top of the latest 'hist trigger
-> snapshot and onchange additions' patchset [4].
-> 
-> Below is an example session of a few failed commands and the
-> corresponding error_log contents:
-> 
->   # echo > /sys/kernel/debug/tracing/error_log
-> 
->   # echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
->   # echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
->   -su: echo: write error: Invalid argument
-> 
->   #  cat /sys/kernel/debug/tracing/error_log
->   [1] hist:sched:sched_wakeup: error: Variable already defined
->     Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
->                       ^
-> 
->   # echo 'hist:key=comm:p=prio:onchange($q).snapshot()' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
->   -su: echo: write error: Invalid argument
-> 
->   # cat /sys/kernel/debug/tracing/error_log
->   [1] hist:sched:sched_wakeup: error: Variable already defined
->     Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
->                       ^
->   [2] hist:sched:sched_waking: error: Couldn't find onmax or onchange variable
->     Command: key=comm:p=prio:onchange($q).snapshot()
->                                        ^
-> 
->   # echo 'hist:keys=pid' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
->   # echo 'hist:keys=pid' >> /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
->   -su: echo: write error: File exists
->   # echo 'comm="cyclictest"' > /sys/kernel/debug/tracing/events/sched/sched_wakeup/filter
->   -su: echo: write error: Invalid argument
-> 
->   # cat /sys/kernel/debug/tracing/error_log
->   [1] hist:sched:sched_wakeup: error: Variable already defined
->     Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
->                       ^
->   [2] hist:sched:sched_waking: error: Couldn't find onmax or onchange variable
->     Command: key=comm:p=prio:onchange($q).snapshot()
->                                        ^
->   [3] hist:sched:sched_wakeup: error: Hist trigger already exists
->     Command: keys=pid
->              ^
->   [4] event filter parse error: error: Invalid operator
->     Command: comm="cyclictest"
->                   ^
-> 
->   # echo "((sig >= 10 && sig < 15) || dsig == 17) && comm != bash" > /sys/kernel/debug/tracing/events/signal/signal_generate/filter
->   -su: echo: write error: Invalid argument
-> 
->   # cat /sys/kernel/debug/tracing/error_log
->   [1] hist:sched:sched_wakeup: error: Variable already defined
->     Command: keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"
->                       ^
->   [2] hist:sched:sched_waking: error: Couldn't find onmax or onchange variable
->     Command: key=comm:p=prio:onchange($q).snapshot()
->                                        ^
->   [3] hist:sched:sched_wakeup: error: Hist trigger already exists
->     Command: keys=pid
->              ^
->   [4] event filter parse error: error: Invalid operator
->     Command: comm="cyclictest"
->                   ^
->   [5] event filter parse error: error: Field not found
->     Command: ((sig >= 10 && sig < 15) || dsig == 17) && comm != bash
->                                               ^  
-> 
-> 
-> Thanks,
-> 
-> Tom
-> 
-> [1] https://lore.kernel.org/lkml/cover.1523545519.git.tom.zanussi@linux.intel.com/
-> [2] https://lore.kernel.org/lkml/20180406105309.b50ea1a21d2cbd9b0e39dbfd@kernel.org/
-> [3] https://lore.kernel.org/lkml/e885d1fd02e76f121d6cc2bb28e58b523e2434a7.camel@linux.intel.com/
-> [4] https://lore.kernel.org/lkml/cover.1549403369.git.tom.zanussi@linux.intel.com/
-> 
-> 
-> The following changes since commit 9e5a36a3371f48fef0ebea6826d1d66f6201c522:
-> 
->   tracing: Fix spelling mistake: "analagous" -> "analogous" (2019-02-20 13:51:08 -0500)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/error_log_v3
-> 
-> Tom Zanussi (5):
->   tracing: Add tracing error log
->   tracing: Save the last hist command's associated event name
->   tracing: Use tracing error_log with hist triggers
->   tracing: Use tracing error_log with kprobe events (incomplete)
->   tracing: Use tracing error_log with trace event filters
-> 
->  kernel/trace/trace.c               | 217 ++++++++++++++++++++++++++++++++++++
->  kernel/trace/trace.h               |   4 +
->  kernel/trace/trace_events_filter.c |   7 +-
->  kernel/trace/trace_events_hist.c   | 221 ++++++++++++++++++++-----------------
->  kernel/trace/trace_probe.c         |  24 +++-
->  5 files changed, 368 insertions(+), 105 deletions(-)
-> 
-> -- 
-> 2.14.1
-> 
-
+Cheers
+Jon
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+nvpublic
