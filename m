@@ -2,141 +2,175 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89668C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2104C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F46020684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C704B20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfCEBTm (ORCPT
+        id S1726926AbfCEBTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 20:19:42 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:60357 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726066AbfCEBTl (ORCPT
+        Mon, 4 Mar 2019 20:19:54 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:28403 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726066AbfCEBTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 20:19:41 -0500
-X-UUID: 355412a86d774a2fba8f40eb322bfcd0-20190305
-X-UUID: 355412a86d774a2fba8f40eb322bfcd0-20190305
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <min.guo@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1665920540; Tue, 05 Mar 2019 09:19:33 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 5 Mar
- 2019 09:19:31 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 5 Mar 2019 09:19:31 +0800
-Message-ID: <1551748771.12020.36.camel@mhfsdcap03>
-Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-From:   Min Guo <min.guo@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Chunfeng Yun" <chunfeng.yun@mediatek.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Date:   Tue, 5 Mar 2019 09:19:31 +0800
-In-Reply-To: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
-References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
-         <1550561795-31132-2-git-send-email-min.guo@mediatek.com>
-         <20190222164923.GA26413@bogus> <1551058604.12020.34.camel@mhfsdcap03>
-         <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 4 Mar 2019 20:19:53 -0500
+X-IronPort-AV: E=Sophos;i="5.58,441,1544457600"; 
+   d="scan'208";a="55912118"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 05 Mar 2019 09:19:50 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 8CC954C7F2B1;
+        Tue,  5 Mar 2019 09:19:34 +0800 (CST)
+Received: from ubuntu.g08.fujitsu.local (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 5 Mar 2019 09:19:53 +0800
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     <davem@davemloft.net>, <steffen.klassert@secunet.com>,
+        <fw@strlen.de>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <suyj.fnst@cn.fujitsu.com>
+Subject: [PATCH v2] net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+Date:   Mon, 4 Mar 2019 20:19:14 -0500
+Message-ID: <1551748754-16895-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 8CC954C7F2B1.A0A48
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+For rcu protected pointers, we'd better add '__rcu' for them.
 
-On Mon, 2019-03-04 at 11:42 -0600, Rob Herring wrote:
-> On Sun, Feb 24, 2019 at 7:36 PM Min Guo <min.guo@mediatek.com> wrote:
-> >
-> > Hi Rob,
-> > On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
-> > > On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
-> > > > From: Min Guo <min.guo@mediatek.com>
-> > > >
-> > > > This adds support for MediaTek musb controller in
-> > > > host, peripheral and otg mode.
-> > > >
-> > > > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > > > ---
-> > > > changes in v5:
-> > > > suggested by Rob:
-> > > > 1. Modify compatible as
-> > > > - compatible : should be one of:
-> > > >                "mediatek,mt-2701"
-> > > >                ...
-> > > >                followed by "mediatek,mtk-musb"
-> > > > 2. Add usb connector child node
-> > > >
-> > > > changes in v4:
-> > > > suggested by Sergei:
-> > > > 1. String alignment
-> > > >
-> > > > changes in v3:
-> > > > 1. no changes
-> > > >
-> > > > changes in v2:
-> > > > suggested by Bin:
-> > > > 1. Modify DRC to DRD
-> > > > suggested by Rob:
-> > > > 2. Drop the "<soc-model>-musb" in compatible
-> > > > 3. Remove phy-names
-> > > > 4. Add space after comma in clock-names
-> > > > ---
-> > > >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
-> > > >  1 file changed, 54 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > > new file mode 100644
-> > > > index 0000000..0632e6e
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > > @@ -0,0 +1,54 @@
-> > > > +MediaTek musb DRD/OTG controller
-> > > > +-------------------------------------------
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible      : should be one of:
-> > > > +                     "mediatek,mt-2701"
-> > >
-> > > That looks like a top-level SoC compatible and doesn't match the
-> > > example.
-> > "mediatek,mt-2701" is an example, just to describe a specific SOC.
-> > May I modify compatibel like:
-> > compatible : should be "mediatek,mtk-musb"
-> 
-> No, you should fix the example adding "mediatek,mtk-musb".
-OK.
+Once added '__rcu' tag for rcu protected pointer, the sparse tool reports
+warnings.
 
-> Rob
+net/xfrm/xfrm_user.c:1198:39: sparse:    expected struct sock *sk
+net/xfrm/xfrm_user.c:1198:39: sparse:    got struct sock [noderef] <asn:4> *nlsk
+[...]
 
-Regards,
-Min.
+So introduce a new wrapper function of nlmsg_unicast  to handle type
+conversions.
+
+No functional change.
+
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+---
+Changes from v1:
+- fix spelling mistakes and the sparse tool' warnings
+
+ include/net/netns/xfrm.h |  2 +-
+ net/xfrm/xfrm_user.c     | 30 +++++++++++++++++++++++-------
+ 2 files changed, 24 insertions(+), 8 deletions(-)
+
+diff --git a/include/net/netns/xfrm.h b/include/net/netns/xfrm.h
+index 59f45b1..d2a36fb 100644
+--- a/include/net/netns/xfrm.h
++++ b/include/net/netns/xfrm.h
+@@ -57,7 +57,7 @@ struct netns_xfrm {
+ 	struct list_head	inexact_bins;
+ 
+ 
+-	struct sock		*nlsk;
++	struct sock		__rcu *nlsk;
+ 	struct sock		*nlsk_stash;
+ 
+ 	u32			sysctl_aevent_etime;
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index d832783..e8f23e4 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1071,6 +1071,22 @@ static inline int xfrm_nlmsg_multicast(struct net *net, struct sk_buff *skb,
+ 	return nlmsg_multicast(nlsk, skb, pid, group, GFP_ATOMIC);
+ }
+ 
++/* A similar wrapper like xfrm_nlmsg_multicast checking that nlsk is still
++ * available.
++ */
++static inline int xfrm_nlmsg_unicast(struct net *net, struct sk_buff *skb,
++				     u32 pid)
++{
++	struct sock *nlsk = rcu_dereference(net->xfrm.nlsk);
++
++	if (!nlsk) {
++		kfree_skb(skb);
++		return -EPIPE;
++	}
++
++	return nlmsg_unicast(nlsk, skb, pid);
++}
++
+ static inline unsigned int xfrm_spdinfo_msgsize(void)
+ {
+ 	return NLMSG_ALIGN(4)
+@@ -1195,7 +1211,7 @@ static int xfrm_get_spdinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	err = build_spdinfo(r_skb, net, sportid, seq, *flags);
+ 	BUG_ON(err < 0);
+ 
+-	return nlmsg_unicast(net->xfrm.nlsk, r_skb, sportid);
++	return xfrm_nlmsg_unicast(net, r_skb, sportid);
+ }
+ 
+ static inline unsigned int xfrm_sadinfo_msgsize(void)
+@@ -1254,7 +1270,7 @@ static int xfrm_get_sadinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	err = build_sadinfo(r_skb, net, sportid, seq, *flags);
+ 	BUG_ON(err < 0);
+ 
+-	return nlmsg_unicast(net->xfrm.nlsk, r_skb, sportid);
++	return xfrm_nlmsg_unicast(net, r_skb, sportid);
+ }
+ 
+ static int xfrm_get_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
+@@ -1274,7 +1290,7 @@ static int xfrm_get_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	if (IS_ERR(resp_skb)) {
+ 		err = PTR_ERR(resp_skb);
+ 	} else {
+-		err = nlmsg_unicast(net->xfrm.nlsk, resp_skb, NETLINK_CB(skb).portid);
++		err = xfrm_nlmsg_unicast(net, resp_skb, NETLINK_CB(skb).portid);
+ 	}
+ 	xfrm_state_put(x);
+ out_noput:
+@@ -1337,7 +1353,7 @@ static int xfrm_alloc_userspi(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		goto out;
+ 	}
+ 
+-	err = nlmsg_unicast(net->xfrm.nlsk, resp_skb, NETLINK_CB(skb).portid);
++	err = xfrm_nlmsg_unicast(net, resp_skb, NETLINK_CB(skb).portid);
+ 
+ out:
+ 	xfrm_state_put(x);
+@@ -1903,8 +1919,8 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		if (IS_ERR(resp_skb)) {
+ 			err = PTR_ERR(resp_skb);
+ 		} else {
+-			err = nlmsg_unicast(net->xfrm.nlsk, resp_skb,
+-					    NETLINK_CB(skb).portid);
++			err = xfrm_nlmsg_unicast(net, resp_skb,
++						 NETLINK_CB(skb).portid);
+ 		}
+ 	} else {
+ 		xfrm_audit_policy_delete(xp, err ? 0 : 1, true);
+@@ -2062,7 +2078,7 @@ static int xfrm_get_ae(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	err = build_aevent(r_skb, x, &c);
+ 	BUG_ON(err < 0);
+ 
+-	err = nlmsg_unicast(net->xfrm.nlsk, r_skb, NETLINK_CB(skb).portid);
++	err = xfrm_nlmsg_unicast(net, r_skb, NETLINK_CB(skb).portid);
+ 	spin_unlock_bh(&x->lock);
+ 	xfrm_state_put(x);
+ 	return err;
+-- 
+2.7.4
 
 
 
