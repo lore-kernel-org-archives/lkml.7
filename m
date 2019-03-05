@@ -2,90 +2,89 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F95BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 04:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95973C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5572082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 04:52:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgJELu8R"
+	by mail.kernel.org (Postfix) with ESMTP id 6FE5620675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfCEEwA (ORCPT
+        id S1726444AbfCEFGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 23:52:00 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39488 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfCEEwA (ORCPT
+        Tue, 5 Mar 2019 00:06:06 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32013 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725835AbfCEFGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 23:52:00 -0500
-Received: by mail-lf1-f67.google.com with SMTP id r123so5191857lff.6;
-        Mon, 04 Mar 2019 20:51:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=frYHgw3IZ1LsO57/C9zS4Gz46LeSjqxsEU0ROaeCfzw=;
-        b=YgJELu8R6fxgzPU3x5TdXGg5zgeBNtAeK0hLoqWioFFyW50fF1h0wDSaPmzUsdO47z
-         JsxGf48ElpwWG9LtTdV6DZ2lTnKzh1jysnBRv3fcb2AUYlKr0J+QdV4EY5EfRwRZmc4/
-         qahOc26xLT8bd2Jt2kPhG+W+Kd72t53Bk4Jl6kT02EaSX25ZDiI0p7+5H1ks1h3EoAv3
-         kryvWBEL53vamx2v+r1nnrnYFrl+y3huDdKUn6x5mI1P8d8C5oYGUyQyRQS6L9qCZRpH
-         EwN516dFUD/1R+TGhpUf4M1PrYsFYYEV9DVAXx2jFX3LKPPeEYhiSM+XGb74U+KnS8BL
-         X8ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=frYHgw3IZ1LsO57/C9zS4Gz46LeSjqxsEU0ROaeCfzw=;
-        b=dI1O6Ll3kCqtMcTbasyZ1FUYdzlEUuTX8yWlpMgHnHKkB6Tq1uI6LxRvODAUCXoj18
-         jhklFQKsU0CX1VRp26bAwJJmLE0QcKL4dw/BO997uxamopslciijOD27tFh1zTLWtMXP
-         JrRPEvCG8LWWVFsyvdcEiUumQfn7jekpJwf0aj/XWdPb+Y8cy3R5oV7qDyNvcNu5O3uC
-         T5EVhMB7hNN+u+g25K7Q4hlqrXWZIy8nfpg5t6ce/2kmvuVhwVzstptOAOYdyKudY9PC
-         2UbDKBfnWdUtGnVCojZ2YTOg45rm/lJ9mglPAJNWZ2QLLJKmMVeSh9Z5WsyFL0QFMVRt
-         U5oA==
-X-Gm-Message-State: APjAAAXYLmyS7VhZr/dfIKuIkO2NqlO5axMHXKqBxEMhaUoO7lg6I73H
-        q+ZRvQFn+qw1M+dIR8/yj4heb00RDX+8g2MNZ8A=
-X-Google-Smtp-Source: APXvYqyS7xDdfX5QcavfFKmNCiXjhyC2Nxu85nMNDsfQK8Eol4g1rtx1nTWsTZ6suvdQLjxmEo2jEc+dJLjCkNY4ErY=
-X-Received: by 2002:a19:2d44:: with SMTP id t4mr11772719lft.90.1551761517629;
- Mon, 04 Mar 2019 20:51:57 -0800 (PST)
+        Tue, 5 Mar 2019 00:06:05 -0500
+X-UUID: 9ef4e0cc91f7426caf9848dd059fbda4-20190305
+X-UUID: 9ef4e0cc91f7426caf9848dd059fbda4-20190305
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2080179081; Tue, 05 Mar 2019 13:05:56 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 5 Mar 2019 13:05:54 +0800
+Received: from mtkslt210.mediatek.inc (10.21.14.14) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 5 Mar 2019 13:05:54 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Rob Herring <robh@kernel.org>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>
+Subject: [PATCH v5 0/9] Mediatek MT8183 clock support 
+Date:   Tue, 5 Mar 2019 13:05:36 +0800
+Message-ID: <20190305050546.23431-1-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20190304182719.GA6606@jordon-HP-15-Notebook-PC> <20190304163739.fbd2e5a508cfcf087a117620@linux-foundation.org>
-In-Reply-To: <20190304163739.fbd2e5a508cfcf087a117620@linux-foundation.org>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 5 Mar 2019 10:21:46 +0530
-Message-ID: <CAFqt6zYX4TEv7wT3iYB6gbzHmTEg6ap09EU1CmpSP7xwDOQVFw@mail.gmail.com>
-Subject: Re: [PATCH] selftest/proc: Remove duplicate header
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>, shuah@kernel.org,
-        Sabyasachi Gupta <sabyasachi.linux@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: FF3FA39934E852BE72392F8167135E682072D306C46C4F1CF16FF3BDCF9EE7E82000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 6:07 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Mon, 4 Mar 2019 23:57:19 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> > Remove duplicate header which is included twice.
-> >
-> > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
->
-> This signoff order makes me suspect that Sabyasachi was the author.  If
-> so, the patch should have had Sabyasachi's From: line at the start of
-> the changelog.
->
-> Please clafify?
+Resend clock patches from v4 based on v5.0-rc1.
 
-yes, sabyasachi was the author, but due to some email client issue
-I am posting on behalf of him.
-Ok, I will add Sabyasachi's From: line and post v2.
+The whole series now is composed of
+a fix for PLL tuner (PATCH 1),
+clock common changes for both MT8183 & MT6765 (PATCH 2-3),
+clock support of MT8183 (PATCH 4-8) and
+resend a clock patch long time ago(PTACH 9).
+
+changes since v4:
+- refine for the fix of PLL tuner(PATCH 1).
+- add configurable pcw_chg_reg for MT8183 and the following IC(PATCH 7).
+
+changes sinve v3:
+- add fix tag.
+- small change of mtk_clk_mux data structure.
+- use of_property_for_each_string to iterate dependent subsys clock of power domain.
+- document critical clocks.
+- reduce some clock register error log.
+- few coding style fix.
+
+changes sinve v2:
+- refine for implementation consistency of mtk clk mux.
+- separate the onoff API into enable/disable API for mtk scpsys.
+- resend a patch about PLL rate changing.
+
+changes since v1:
+- refine for better code quality.
+- some minor bug fix of clock part, like incorrect control address
+  and missing clocks.
+
+
