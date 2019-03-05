@@ -2,112 +2,117 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638C4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8DDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3266A20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CED20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LnEEbcFm"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rapqTwKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfCEVfz (ORCPT
+        id S1727171AbfCEVg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:35:55 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:53606 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfCEVfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:35:55 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x25LTUQt021430;
-        Tue, 5 Mar 2019 21:35:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=dd0IhN9cI+1i2Tp8erb3U8cREidlOlbPPgACu+UVMlU=;
- b=LnEEbcFmRjn9Eyva4qBxkxP6nVJGbhJ0Iezd7O7yPYHdt9hb/SUawSbfgF5t9ZT/ka7l
- mL2Xt3qRR1DYoW5TU5Zaiq0y3q5s2H3CNsnUOc12umVam0eXHSwuGTdZO2G3Ke9+ROnx
- GoZUxdYDWergnvUuC1BFy23Ioo2TUBfodfM/zqLPI1ygJ4BgGRGsSRTrNRsYGtQLl5P+
- VTsEIs3L7BVwQYGOgbBjTnIjrbsckh343xgtvuKiJnVfoVEJLk/vq0bIny6a4sTAlx2Q
- F/ZtBwmYDef8x6/JBaOAE+tDSwBPq+/5jwMZ/keGXV+Tv0OZrVfYJeIRKIILXKKNfjEh 5g== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2130.oracle.com with ESMTP id 2qyh8u87vt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Mar 2019 21:35:36 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x25LZZlc012622
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Mar 2019 21:35:35 GMT
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x25LZYg9015103;
-        Tue, 5 Mar 2019 21:35:34 GMT
-Received: from [192.168.1.164] (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Mar 2019 13:35:34 -0800
-Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
- __nr_hugepages_store_common()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Rientjes <rientjes@google.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "hughd@google.com" <hughd@google.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>
-References: <388cbbf5-7086-1d04-4c49-049021504b9d@oracle.com>
- <alpine.DEB.2.21.1902241913000.34632@chino.kir.corp.google.com>
- <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
- <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
- <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
- <5C74A2DA.1030304@huawei.com>
- <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
- <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
- <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
- <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
- <20190305000402.GA4698@hori.linux.bs1.fc.nec.co.jp>
- <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
- <20190305131643.94aa32165fecdb53a1109028@linux-foundation.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <9a23edc9-b2e5-839e-30d6-0723cb98246d@oracle.com>
-Date:   Tue, 5 Mar 2019 13:35:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 5 Mar 2019 16:36:56 -0500
+Received: from ozlabs.org ([203.11.71.1]:40341 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfCEVgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 16:36:55 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44DVb91z6pz9sBF;
+        Wed,  6 Mar 2019 08:36:53 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551821813;
+        bh=MTBGuORnKbmGMDj7OZUQ9GPFGkgs7/K2y35EZwqI79A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rapqTwKBvtjlxuYRx3fxQsQGo7RqSCojL5GrLoEqJxB6KbSS3/D4uuFW4NqK2Z8Bw
+         zsAmlcxYWHVC1ZzklAWOxdF814Df/Tj67UKSMKvnETfcDqq5h3PwgXv9Yw5JTUhwH8
+         YX0hgF4amSWj9xGaY8r1wxeMG+aAnC3Gi+WeOarYvzYGNVy/ETdDLKfC/uJxrxeYdc
+         q1doDymaLCKf/ORUlJVa0Inlc/yU8WVtbaQBKY+UPO5XyNXH8bxwsl287mSIwgz/LM
+         L3HzEPyAZPmp7nS3jyQmDyMEaLovUqW+0m9TxKKtt6W3r2MaeSLHSl/iBCfVRE95tx
+         doHxRQWLNiE9A==
+Date:   Wed, 6 Mar 2019 08:36:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: linux-next: manual merge of the dma-mapping tree with Linus' tree
+Message-ID: <20190306083651.6670648b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190305131643.94aa32165fecdb53a1109028@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9186 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903050138
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/v1vOyBJJA5R=Tdj5kr6T=qm"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/19 1:16 PM, Andrew Morton wrote:
-> On Mon, 4 Mar 2019 20:15:40 -0800 Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> 
->> Andrew, this is on top of Alexandre Ghiti's "hugetlb: allow to free gigantic
->> pages regardless of the configuration" patch.  Both patches modify
->> __nr_hugepages_store_common().  Alex's patch is going to change slightly
->> in this area.
-> 
-> OK, thanks, I missed that.  Are the changes significant?
-> 
+--Sig_/v1vOyBJJA5R=Tdj5kr6T=qm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No, changes should be minor.  IIRC, just checking for a condition in an
-error path.
+Hi all,
 
--- 
-Mike Kravetz
+Today's linux-next merge of the dma-mapping tree got a conflict in:
+
+  arch/x86/Kconfig
+
+between commit:
+
+  eac616557050 ("x86: Deprecate a.out support")
+
+from Linus' tree and commit:
+
+  ff4c25f26a71 ("dma-mapping: improve selection of dma_declare_coherent ava=
+ilability")
+
+from the dma-mapping tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/Kconfig
+index ade12ec4224b,0e33dede053e..000000000000
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@@ -14,7 -14,7 +14,6 @@@ config X86_3
+  	select ARCH_WANT_IPC_PARSE_VERSION
+  	select CLKSRC_I8253
+  	select CLONE_BACKWARDS
+- 	select HAVE_GENERIC_DMA_COHERENT
+ -	select HAVE_AOUT
+  	select MODULES_USE_ELF_REL
+  	select OLD_SIGACTION
+ =20
+
+--Sig_/v1vOyBJJA5R=Tdj5kr6T=qm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx+6/MACgkQAVBC80lX
+0Gy0sQf/f1qIoI2QcYN8Ng9uTeCpY6cuhwm5vWZjfG4kFyW1Mwc5LCsWdBukj7PS
+/3IRuIvhb4wm1RgEmLo/sL0P+LJIi2vDMFigiUpu+3wq9CGMPxTUjDMMtXWT6xuZ
+6cSpZBZ2vo8p0bKug8l7QRppPg0jxUOKQ3XixTc91VdPINBhweDPtP8pfTOsiYxt
+r6lBrJvZJaeX3nFdReiLG2ZF8ejrpMiktiLx17BAPvBlXrZUItynsvgHmdjZu5Ca
+Lw6xyrwGfQp2GTJm7vDaPEERJyCRBY0kZ8t4npDozSpYG74BxSVSVMhJQu4FLF4f
+6p8iITEM3zwD7t1dNluQ5XTX64ylsA==
+=FeMr
+-----END PGP SIGNATURE-----
+
+--Sig_/v1vOyBJJA5R=Tdj5kr6T=qm--
