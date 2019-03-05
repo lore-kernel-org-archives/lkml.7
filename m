@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C135DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C868AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A80A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F48D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfCEOtN (ORCPT
+        id S1728660AbfCEOtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:49:13 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
+        Tue, 5 Mar 2019 09:49:12 -0500
+Received: from mga07.intel.com ([134.134.136.100]:28784 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728184AbfCEOsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728164AbfCEOsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Mar 2019 09:48:16 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,19 +25,19 @@ Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="121150032"
+   d="scan'208";a="121150041"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
   by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 5F64F301BC9; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
+        id 961CE301BC6; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 04/15] perf tools report: Support nano seconds
-Date:   Tue,  5 Mar 2019 06:47:47 -0800
-Message-Id: <20190305144758.12397-5-andi@firstfloor.org>
+Subject: [PATCH v4 11/15] perf tools report: Implement browsing of individual samples
+Date:   Tue,  5 Mar 2019 06:47:54 -0800
+Message-Id: <20190305144758.12397-12-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
@@ -50,130 +50,435 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Upcoming changes add timestamp output in perf report. Add a --ns
-argument similar to perf script to support nanoseconds resolution
-when needed.
+Now report can show whole time periods with perf script,
+but the user still has to find individual samples of interest
+manually.
+
+It would be expensive and complicated to search for the
+right samples in the whole perf file. Typically users
+only need to look at a small number of samples for useful
+analysis.
+
+Also the full scripts tend to show samples of all CPUs and all
+threads mixed up, which can be very confusing on larger systems.
+
+Add a new --samples option to save a small random number of samples
+per hist entry
+
+Use a reservoir sample technique to select a representatve
+number of samples.
+
+Then allow browsing the samples using perf script
+as part of the hist entry context menu. This automatically
+adds the right filters, so only the thread or cpu of the sample
+is displayed. Then we use less' search functionality
+to directly jump the to the time stamp of the selected
+sample.
+
+It uses different menus for assembler and source display.
+Assembler needs xed installed and source needs debuginfo.
+
+Currently it only supports as many samples as fit on
+the screen due to some limitations in the slang ui code.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 v2:
-Move flag into symbol_conf and change all users
+Free names on error path
+Pass --inline and --show-*-event to child perf as needed.
+v3:
+Don't use num_res to keep track of total samples
+Don't pass -1 cpus to perf script.
+Don't pass extra event option with tid filtering.
+Fix sampling bug.
 ---
- tools/perf/Documentation/perf-report.txt |  3 +++
- tools/perf/builtin-report.c              |  1 +
- tools/perf/builtin-script.c              | 11 +++++------
+ tools/perf/Documentation/perf-report.txt |  4 ++
+ tools/perf/builtin-report.c              |  2 +
+ tools/perf/ui/browsers/Build             |  1 +
+ tools/perf/ui/browsers/hists.c           | 45 +++++++++++++
+ tools/perf/ui/browsers/res_sample.c      | 81 ++++++++++++++++++++++++
+ tools/perf/ui/browsers/scripts.c         |  2 +-
+ tools/perf/util/hist.c                   | 36 +++++++++++
+ tools/perf/util/hist.h                   | 19 ++++++
+ tools/perf/util/sort.h                   |  8 +++
  tools/perf/util/symbol.c                 |  1 +
  tools/perf/util/symbol_conf.h            |  1 +
- 5 files changed, 11 insertions(+), 6 deletions(-)
+ 11 files changed, 199 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/ui/browsers/res_sample.c
 
 diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 1a27bfe05039..51dbc519dbce 100644
+index 546d87221ad8..f441baa794ce 100644
 --- a/tools/perf/Documentation/perf-report.txt
 +++ b/tools/perf/Documentation/perf-report.txt
-@@ -477,6 +477,9 @@ include::itrace.txt[]
- 	Please note that not all mmaps are stored, options affecting which ones
- 	are include 'perf record --data', for instance.
+@@ -461,6 +461,10 @@ include::itrace.txt[]
+ --socket-filter::
+ 	Only report the samples on the processor socket that match with this filter
  
-+--ns::
-+	Show time stamps in nanoseconds.
++--samples=N::
++	Save N individual samples for each histogram entry to show context in perf
++	report tui browser.
 +
- --stats::
- 	Display overall events statistics without any further processing.
- 	(like the one at the end of the perf report -D command)
+ --raw-trace::
+ 	When displaying traceevent output, do not use print fmt or plugins.
+ 
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1532ebde6c4b..09180e559ad6 100644
+index c19952072a3a..05ca1378132f 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -1147,6 +1147,7 @@ int cmd_report(int argc, const char **argv)
- 	OPT_CALLBACK(0, "percent-type", &report.annotation_opts, "local-period",
- 		     "Set percent type local/global-period/hits",
- 		     annotate_parse_percent_type),
-+	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
- 	OPT_END()
- 	};
- 	struct perf_data data = {
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 3813f60d1dc0..d5e819b68970 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -60,7 +60,6 @@ static bool			no_callchain;
- static bool			latency_format;
- static bool			system_wide;
- static bool			print_flags;
--static bool			nanosecs;
- static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- static struct perf_stat_config	stat_config;
-@@ -691,7 +690,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 		secs = nsecs / NSEC_PER_SEC;
- 		nsecs -= secs * NSEC_PER_SEC;
+@@ -1158,6 +1158,8 @@ int cmd_report(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+ 		    "Enable kernel symbol demangling"),
+ 	OPT_BOOLEAN(0, "mem-mode", &report.mem_mode, "mem access profile"),
++	OPT_INTEGER(0, "samples", &symbol_conf.res_sample,
++		    "Number of samples to save per histogram entry for individual browsing"),
+ 	OPT_CALLBACK(0, "percent-limit", &report, "percent",
+ 		     "Don't show entries under that percent", parse_percent_limit),
+ 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+diff --git a/tools/perf/ui/browsers/Build b/tools/perf/ui/browsers/Build
+index 8fee56b46502..fdf86f7981ca 100644
+--- a/tools/perf/ui/browsers/Build
++++ b/tools/perf/ui/browsers/Build
+@@ -3,6 +3,7 @@ perf-y += hists.o
+ perf-y += map.o
+ perf-y += scripts.o
+ perf-y += header.o
++perf-y += res_sample.o
  
--		if (nanosecs)
-+		if (symbol_conf.nanosecs)
- 			printed += fprintf(fp, "%5lu.%09llu: ", secs, nsecs);
- 		else {
- 			char sample_time[32];
-@@ -3268,7 +3267,7 @@ static int parse_insn_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "+insn,-event,-period", 0);
- 	itrace_parse_synth_opts(opt, "i0ns", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
+ CFLAGS_annotate.o += -DENABLE_SLFUTURE_CONST
+ CFLAGS_hists.o    += -DENABLE_SLFUTURE_CONST
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 9c7b5fa9df39..364f5c577d00 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2344,6 +2344,7 @@ struct popup_action {
+ 	struct map_symbol 	ms;
+ 	int			socket;
+ 	struct perf_evsel	*evsel;
++	enum rstype		rstype;
+ 
+ 	int (*fn)(struct hist_browser *browser, struct popup_action *act);
+ };
+@@ -2571,6 +2572,17 @@ do_run_script(struct hist_browser *browser __maybe_unused,
  	return 0;
  }
  
-@@ -3286,7 +3285,7 @@ static int parse_call_trace(const struct option *opt __maybe_unused,
++static int
++do_res_sample_script(struct hist_browser *browser __maybe_unused,
++		     struct popup_action *act)
++{
++	struct hist_entry *he;
++
++	he = hist_browser__selected_entry(browser);
++	res_sample_browse(he->res_samples, he->num_res, act->evsel, act->rstype);
++	return 0;
++}
++
+ static int
+ add_script_opt_2(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act, char **optstr,
+@@ -2628,6 +2640,27 @@ add_script_opt(struct hist_browser *browser,
+ 	return n;
+ }
+ 
++static int
++add_res_sample_opt(struct hist_browser *browser __maybe_unused,
++		   struct popup_action *act, char **optstr,
++		   struct res_sample *res_sample,
++		   struct perf_evsel *evsel,
++		   enum rstype type)
++{
++	if (!res_sample)
++		return 0;
++
++	if (asprintf(optstr, "Show context for individual samples %s",
++		type == A_ASM ? "with assembler" :
++		type == A_SOURCE ? "with source" : "") < 0)
++		return 0;
++
++	act->fn = do_res_sample_script;
++	act->evsel = evsel;
++	act->rstype = type;
++	return 1;
++}
++
+ static int
+ do_switch_data(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act __maybe_unused)
+@@ -3114,6 +3147,18 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
+ 		}
+ 		nr_options += add_script_opt(browser, &actions[nr_options],
+ 					     &options[nr_options], NULL, NULL, evsel);
++		nr_options += add_res_sample_opt(browser, &actions[nr_options],
++						 &options[nr_options],
++				 hist_browser__selected_entry(browser)->res_samples,
++				 evsel, A_NORMAL);
++		nr_options += add_res_sample_opt(browser, &actions[nr_options],
++						 &options[nr_options],
++				 hist_browser__selected_entry(browser)->res_samples,
++				 evsel, A_ASM);
++		nr_options += add_res_sample_opt(browser, &actions[nr_options],
++						 &options[nr_options],
++				 hist_browser__selected_entry(browser)->res_samples,
++				 evsel, A_SOURCE);
+ 		nr_options += add_switch_opt(browser, &actions[nr_options],
+ 					     &options[nr_options]);
+ skip_scripting:
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+new file mode 100644
+index 000000000000..8b045482744e
+--- /dev/null
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Display a menu with individual samples to browse with perf script */
++#include "util.h"
++#include "hist.h"
++#include "evsel.h"
++#include "hists.h"
++#include "sort.h"
++#include "time-utils.h"
++
++/* In ns. Could make configurable. */
++#define CONTEXT_LEN 100000000
++
++int res_sample_browse(struct res_sample *res_samples, int num_res,
++		      struct perf_evsel *evsel, enum rstype rstype)
++{
++	char **names;
++	int i, n;
++	int choice;
++	char *cmd;
++	char pbuf[256], tidbuf[32], cpubuf[32];
++	const char *perf = perf_exe(pbuf, sizeof pbuf);
++	char trange[128], tsample[64];
++	struct res_sample *r;
++	char extra_format[256];
++
++	/* For now since ui__popup_menu doesn't like lists that don't fit */
++	num_res = max(min(SLtt_Screen_Rows - 4, num_res), 0);
++
++	names = calloc(num_res, sizeof(char *));
++	if (!names)
++		return -1;
++	for (i = 0; i < num_res; i++) {
++		char tbuf[64];
++
++		timestamp__scnprintf_nsec(res_samples[i].time, tbuf, sizeof tbuf);
++		if (asprintf(&names[i], "%s: CPU %d tid %d", tbuf,
++			     res_samples[i].cpu, res_samples[i].tid) < 0) {
++			while (--i >= 0)
++				free(names[i]);
++			free(names);
++			return -1;
++		}
++	}
++	choice = ui__popup_menu(num_res, names);
++	for (i = 0; i < num_res; i++)
++		free(names[i]);
++	free(names);
++
++	if (choice < 0 || choice >= num_res)
++		return -1;
++	r = &res_samples[choice];
++
++	n = timestamp__scnprintf_nsec(r->time - CONTEXT_LEN, trange, sizeof trange);
++	trange[n++] = ',';
++	timestamp__scnprintf_nsec(r->time + CONTEXT_LEN, trange + n, sizeof trange - n);
++
++	timestamp__scnprintf_nsec(r->time, tsample, sizeof tsample);
++
++	attr_to_script(extra_format, &evsel->attr);
++
++	if (asprintf(&cmd, "%s script %s%s --time %s %s%s %s%s --ns %s %s %s %s %s | less +/%s",
++		     perf,
++		     input_name ? "-i " : "",
++		     input_name ? input_name : "",
++		     trange,
++		     r->cpu >= 0 ? "--cpu " : "",
++		     r->cpu >= 0 ? (sprintf(cpubuf, "%d", r->cpu), cpubuf) : "",
++		     r->tid ? "--tid " : "",
++		     r->tid ? (sprintf(tidbuf, "%d", r->tid), tidbuf) : "",
++		     extra_format,
++		     rstype == A_ASM ? "-F +insn --xed" :
++		     rstype == A_SOURCE ? "-F +srcline,+srccode" : "",
++		     symbol_conf.inline_name ? "--inline" : "",
++		     "--show-lost-events ",
++		     r->tid ? "--show-switch-events --show-task-events " : "",
++		     tsample) < 0)
++		return -1;
++	run_script(cmd);
++	free(cmd);
++	return 0;
++}
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 9e5f87558af6..cdba58447b85 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -125,7 +125,7 @@ static int list_scripts(char *script_name, bool *custom,
+ 	return ret;
+ }
+ 
+-static void run_script(char *cmd)
++void run_script(char *cmd)
  {
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent", 0);
- 	itrace_parse_synth_opts(opt, "cewp", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
+ 	pr_debug("Running %s\n", cmd);
+ 	SLang_reset_tty();
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 6040eb49ea23..1460450f47c4 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -444,6 +444,14 @@ static int hist_entry__init(struct hist_entry *he,
+ 			return -ENOMEM;
+ 		}
+ 	}
++
++	if (symbol_conf.res_sample) {
++		he->res_samples = calloc(sizeof(struct res_sample),
++					symbol_conf.res_sample);
++		if (!he->res_samples)
++			return -ENOMEM;
++	}
++
+ 	INIT_LIST_HEAD(&he->pairs.node);
+ 	thread__get(he->thread);
+ 	he->hroot_in  = RB_ROOT_CACHED;
+@@ -593,6 +601,32 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 	return he;
+ }
+ 
++static unsigned random_max(unsigned high)
++{
++	unsigned thresh = -high % high;
++	for (;;) {
++		unsigned r = random();
++		if (r >= thresh)
++			return r % high;
++	}
++}
++
++static void hists__res_sample(struct hist_entry *he, struct perf_sample *sample)
++{
++	struct res_sample *r;
++	int j;
++
++	if (he->num_res < symbol_conf.res_sample) {
++		j = he->num_res++;
++	} else {
++		j = random_max(symbol_conf.res_sample);
++	}
++	r = &he->res_samples[j];
++	r->time = sample->time;
++	r->cpu = sample->cpu;
++	r->tid = sample->tid;
++}
++
+ static struct hist_entry*
+ __hists__add_entry(struct hists *hists,
+ 		   struct addr_location *al,
+@@ -640,6 +674,8 @@ __hists__add_entry(struct hists *hists,
+ 
+ 	if (!hists->has_callchains && he && he->callchain_size != 0)
+ 		hists->has_callchains = true;
++	if (he && symbol_conf.res_sample)
++		hists__res_sample(he, sample);
+ 	return he;
+ }
+ 
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 2113a6639cea..67b9b91e92df 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -433,6 +433,13 @@ struct hist_browser_timer {
+ };
+ 
+ struct annotation_options;
++struct res_sample;
++
++enum rstype {
++	A_NORMAL,
++	A_ASM,
++	A_SOURCE
++};
+ 
+ #ifdef HAVE_SLANG_SUPPORT
+ #include "../ui/keysyms.h"
+@@ -454,6 +461,10 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
+ 				  struct annotation_options *annotation_options);
+ 
+ int script_browse(const char *script_opt, struct perf_evsel *evsel);
++
++void run_script(char *cmd);
++int res_sample_browse(struct res_sample *res_samples, int num_res,
++		      struct perf_evsel *evsel, enum rstype rstype);
+ #else
+ static inline
+ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist __maybe_unused,
+@@ -488,6 +499,14 @@ static inline int script_browse(const char *script_opt __maybe_unused,
  	return 0;
  }
  
-@@ -3296,7 +3295,7 @@ static int parse_callret_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent,+flags", 0);
- 	itrace_parse_synth_opts(opt, "crewp", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
++static inline int res_sample_browse(struct res_sample *res_samples __maybe_unused,
++				    int num_res __maybe_unused,
++				    struct perf_evsel *evsel __maybe_unused,
++				    enum rstype rstype __maybe_unused)
++{
++	return 0;
++}
++
+ #define K_LEFT  -1000
+ #define K_RIGHT -2000
+ #define K_SWITCH_INPUT_DATA -3000
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 19dceb7f6145..bb9442ab7a0c 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -47,6 +47,12 @@ extern struct sort_entry sort_srcline;
+ extern enum sort_type sort__first_dimension;
+ extern const char default_mem_sort_order[];
  
-@@ -3432,7 +3431,7 @@ int cmd_script(int argc, const char **argv)
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
- 	OPT_INTEGER(0, "max-blocks", &max_blocks,
- 		    "Maximum number of code blocks to dump with brstackinsn"),
--	OPT_BOOLEAN(0, "ns", &nanosecs,
-+	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs,
- 		    "Use 9 decimal places when displaying time"),
- 	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
- 			    "Instruction Tracing options\n" ITRACE_HELP,
++struct res_sample {
++	u64 time;
++	int cpu;
++	int tid;
++};
++
+ struct he_stat {
+ 	u64			period;
+ 	u64			period_sys;
+@@ -140,6 +146,8 @@ struct hist_entry {
+ 	struct mem_info		*mem_info;
+ 	void			*raw_data;
+ 	u32			raw_size;
++	int			num_res;
++	struct res_sample	*res_samples;
+ 	void			*trace_output;
+ 	struct perf_hpp_list	*hpp_list;
+ 	struct hist_entry	*parent_he;
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 758bf5f74e6e..eb873ea1c405 100644
+index 0f80743a1c25..754f7f2c1650 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -39,6 +39,7 @@ int vmlinux_path__nr_entries;
- char **vmlinux_path;
+@@ -50,6 +50,7 @@ struct symbol_conf symbol_conf = {
+ 	.symfs			= "",
+ 	.event_group		= true,
+ 	.inline_name		= true,
++	.res_sample		= 0,
+ };
  
- struct symbol_conf symbol_conf = {
-+	.nanosecs		= false,
- 	.use_modules		= true,
- 	.try_vmlinux_path	= true,
- 	.demangle		= true,
+ static enum dso_binary_type binary_type_symtab[] = {
 diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index fffea68c1203..095a297c8b47 100644
+index a5684a71b78e..6c55fa6fccec 100644
 --- a/tools/perf/util/symbol_conf.h
 +++ b/tools/perf/util/symbol_conf.h
-@@ -8,6 +8,7 @@ struct strlist;
- struct intlist;
+@@ -68,6 +68,7 @@ struct symbol_conf {
+ 	struct intlist	*pid_list,
+ 			*tid_list;
+ 	const char	*symfs;
++	int		res_sample;
+ };
  
- struct symbol_conf {
-+	bool		nanosecs;
- 	unsigned short	priv_size;
- 	bool		try_vmlinux_path,
- 			init_annotation,
+ extern struct symbol_conf symbol_conf;
 -- 
 2.20.1
 
