@@ -2,77 +2,94 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0DCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95016C10F09
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713DF205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551820665;
-	bh=3AUGwLf/Df49AYpnX8SBEQhJfE9uHoW4NaAcdgHMYJQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SFCfDZT9qj/hR3ma2qDJ4mMC7TOhe0PITI0OFE+1mXUi+r1lX2Qyi5uOUTUsdkcKD
-	 Uq2iAlD0Lcb5cIXLhAARQ5wRuPw6OqUzMg5EuZwYUI8JygEoLim3S9JO1skGlG/20V
-	 YWau74etkj6hRnAGAlZSCAi/RlpsxlCzqHllgV+0=
+	by mail.kernel.org (Postfix) with ESMTP id 6260C205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCEVRn (ORCPT
+        id S1728732AbfCEVRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:17:43 -0500
-Received: from mail.linuxfoundation.org ([140.211.169.12]:54182 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfCEVQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:16:45 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 5AB6CF89B;
-        Tue,  5 Mar 2019 21:16:44 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 13:16:43 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Rientjes <rientjes@google.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "hughd@google.com" <hughd@google.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
- __nr_hugepages_store_common()
-Message-Id: <20190305131643.94aa32165fecdb53a1109028@linux-foundation.org>
-In-Reply-To: <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
-References: <388cbbf5-7086-1d04-4c49-049021504b9d@oracle.com>
-        <alpine.DEB.2.21.1902241913000.34632@chino.kir.corp.google.com>
-        <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
-        <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
-        <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
-        <5C74A2DA.1030304@huawei.com>
-        <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
-        <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
-        <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
-        <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
-        <20190305000402.GA4698@hori.linux.bs1.fc.nec.co.jp>
-        <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
-X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 5 Mar 2019 16:17:46 -0500
+Received: from gofer.mess.org ([88.97.38.141]:42821 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfCEVRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 16:17:45 -0500
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 0DA9560E4D; Tue,  5 Mar 2019 21:17:44 +0000 (GMT)
+Date:   Tue, 5 Mar 2019 21:17:43 +0000
+From:   Sean Young <sean@mess.org>
+To:     Matthias Schwarzott <zzam@gentoo.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, pakki001@umn.edu,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] media: si2165: fix a missing check of return value
+Message-ID: <20190305211743.vi6zksuw2eltusif@gofer.mess.org>
+References: <20181221045403.59303-1-kjlu@umn.edu>
+ <7a5d505d-692b-f067-51f6-815787cffba3@gentoo.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a5d505d-692b-f067-51f6-815787cffba3@gentoo.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Mar 2019 20:15:40 -0800 Mike Kravetz <mike.kravetz@oracle.com> wrote:
+On Fri, Dec 21, 2018 at 09:24:46AM +0100, Matthias Schwarzott wrote:
+> Am 21.12.18 um 05:54 schrieb Kangjie Lu:
+> > si2165_readreg8() may fail. Looking into si2165_readreg8(), we will find
+> > that "val_tmp" will be an uninitialized value when regmap_read() fails.
+> > "val_tmp" is then assigned to "val". So if si2165_readreg8() fails,
+> > "val" will be a random value. Further use will lead to undefined
+> > behaviors. The fix checks if si2165_readreg8() fails, and if so, returns
+> > its error code upstream.
+> > 
+> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> 
+> Reviewed-by: Matthias Schwarzott <zzam@gentoo.org>
 
-> Andrew, this is on top of Alexandre Ghiti's "hugetlb: allow to free gigantic
-> pages regardless of the configuration" patch.  Both patches modify
-> __nr_hugepages_store_common().  Alex's patch is going to change slightly
-> in this area.
+Unless it is tested on the actual hardware we can't apply this. This could
+introduce regressions.
 
-OK, thanks, I missed that.  Are the changes significant?
+Sean
+
+> 
+> > ---
+> >  drivers/media/dvb-frontends/si2165.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/media/dvb-frontends/si2165.c b/drivers/media/dvb-frontends/si2165.c
+> > index feacd8da421d..d55d8f169dca 100644
+> > --- a/drivers/media/dvb-frontends/si2165.c
+> > +++ b/drivers/media/dvb-frontends/si2165.c
+> > @@ -275,18 +275,20 @@ static u32 si2165_get_fe_clk(struct si2165_state *state)
+> >  
+> >  static int si2165_wait_init_done(struct si2165_state *state)
+> >  {
+> > -	int ret = -EINVAL;
+> > +	int ret;
+> >  	u8 val = 0;
+> >  	int i;
+> >  
+> >  	for (i = 0; i < 3; ++i) {
+> > -		si2165_readreg8(state, REG_INIT_DONE, &val);
+> > +		ret = si2165_readreg8(state, REG_INIT_DONE, &val);
+> > +		if (ret < 0)
+> > +			return ret;
+> >  		if (val == 0x01)
+> >  			return 0;
+> >  		usleep_range(1000, 50000);
+> >  	}
+> >  	dev_err(&state->client->dev, "init_done was not set\n");
+> > -	return ret;
+> > +	return -EINVAL;
+> >  }
+> >  
+> >  static int si2165_upload_firmware_block(struct si2165_state *state,
+> > 
