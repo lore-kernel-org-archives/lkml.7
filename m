@@ -2,172 +2,84 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4888EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3269DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070812054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLgHYvbk"
+	by mail.kernel.org (Postfix) with ESMTP id EB52A20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfCEQiw (ORCPT
+        id S1726882AbfCEQkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:38:52 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37805 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfCEQiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:38:51 -0500
-Received: by mail-ed1-f68.google.com with SMTP id m12so7767745edv.4;
-        Tue, 05 Mar 2019 08:38:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xnhcV/ZyxNZgbNPWXuYc7A3itDoQsLSS3KxRarlrvEk=;
-        b=rLgHYvbk9kbVovFsFpJJbvCS4/CQz2cl1G5pR6iZ1ZbAcj3BIawr2pQTfRjObfyCRx
-         LWECCxJiPMdo6IES5GWrdd9UwPpu/FtDtnbTqFZxG/qHJ4NQMphY5Suo59FiP142cUu2
-         RmbCtRa2uC1HGSZ6GWSODa2Pu2lJnvB4Tm4YFYrJnxyXY0xXcEdBLpBWuOZ3V1BG48Lu
-         maLGMCAGpz3jFwxe8oVT6p/x0bl5U/gD49jcxTLrFduu9pIQFB/3KZtkCiiNQvDRBhvU
-         EWb8hgfiF/RPq912c82zow+mRMDifQrHkDg9U44SY27ffZSvhzJb8w6PeCh+uXGic7MB
-         FsZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=xnhcV/ZyxNZgbNPWXuYc7A3itDoQsLSS3KxRarlrvEk=;
-        b=JBMMnXkWAIyVTQewq1nynFlx8PBd0THdy4IXTftGV6pWfusIVxRqGwOmpy+bj0aEFW
-         hcqW3I860vQ/K6q14Xd3vr/wmawLuKIf6i0mGve8raoh0CMRzlaFVThQHWqWDOSQ4YwZ
-         QAbPrDCoAZoEwrxxETEl55iTUjYBHlPIW/lVjgC4fB2m2vEYXRPWr9AaMj15wGMSsYPX
-         DlSP5APZjB2rwmQP0eizK56AX2uLqRfL1eHC05GE5Xpd3I2eMZStOX7i9BmEHONIOZSp
-         a/r0uKiH5OnylDn1DoBmWkeY/pjOa7aIxg21b5gv6eB3wY8Wk1bOIOWIoc5/wicTYBaw
-         cKcg==
-X-Gm-Message-State: APjAAAVbrm/u7Knq+U6A/goDd299+mzIzHHjbmo87XuO9Fq0zpOKSU2b
-        W+nqJAX2/UP4oc574agk9zw=
-X-Google-Smtp-Source: APXvYqziPr814jkBPyFmvztJlFuiIKCRo/j8R9Sp952DeKKQrrmm2Up1B2DuLoIGh6OY9qp/4x+SDg==
-X-Received: by 2002:a17:906:5781:: with SMTP id k1mr904007ejq.34.1551803928911;
-        Tue, 05 Mar 2019 08:38:48 -0800 (PST)
-Received: from localhost.localdomain (ip5b402483.dynamic.kabel-deutschland.de. [91.64.36.131])
-        by smtp.gmail.com with ESMTPSA id g24sm3159825edc.67.2019.03.05.08.38.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 Mar 2019 08:38:48 -0800 (PST)
-From:   Alban Crequy <alban.crequy@gmail.com>
-X-Google-Original-From: Alban Crequy <alban@kinvolk.io>
-To:     ast@kernel.org, daniel@iogearbox.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alban@kinvolk.io, iago@kinvolk.io
-Subject: [PATCH bpf-next v1] tools/bpftool: create map of maps
-Date:   Tue,  5 Mar 2019 17:38:03 +0100
-Message-Id: <20190305163803.18915-1-alban@kinvolk.io>
-X-Mailer: git-send-email 2.20.1
+        Tue, 5 Mar 2019 11:40:19 -0500
+Received: from mga11.intel.com ([192.55.52.93]:3749 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbfCEQkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:40:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 08:40:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
+   d="scan'208";a="162434491"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga001.jf.intel.com with ESMTP; 05 Mar 2019 08:40:17 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 8B168301BC4; Tue,  5 Mar 2019 08:40:17 -0800 (PST)
+Date:   Tue, 5 Mar 2019 08:40:17 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH 5/8] perf tools: Get precise_ip from the pmu config
+Message-ID: <20190305164017.GD17272@tassilo.jf.intel.com>
+References: <20190305152536.21035-1-jolsa@kernel.org>
+ <20190305152536.21035-6-jolsa@kernel.org>
+ <20190305161319.GC17272@tassilo.jf.intel.com>
+ <20190305162854.GB4533@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190305162854.GB4533@krava>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alban Crequy <alban@kinvolk.io>
+On Tue, Mar 05, 2019 at 05:28:54PM +0100, Jiri Olsa wrote:
+> On Tue, Mar 05, 2019 at 08:13:19AM -0800, Andi Kleen wrote:
+> > On Tue, Mar 05, 2019 at 04:25:33PM +0100, Jiri Olsa wrote:
+> > > Getting precise_ip field from the perf_pmu::max_precise
+> > > config read from sysfs. If it's not available falling
+> > > back to current detection function.
+> > 
+> > max_precise depends on the event.  This won't work for all
+> > events. For example only instructions and cycles support
+> > ppp
+> 
+> I'm getting  precise_ip=3 on mem-* events as well, that's why I
+> was fixing this.. now it's not working for any event
 
-Before this patch, there was no way to fill attr.inner_map_fd, necessary
-for array_of_maps or hash_of_maps.
+I don't think it means anything for mem-*
 
-This patch adds keyword 'innermap' to pass the innermap, either as an id
-or as a pinned map.
+There's some support for it on Goldmont plus for other events,
+but it doesn't support mem-*. On big core it's only
+for instructions and cycles, all implemented with the same
+event. All other PEBS events only have two levels
+switching between the two IPs.
 
-Example of commands:
-
-$ sudo bpftool map create /sys/fs/bpf/innermap type hash \
-        key 8 value 8 entries 64 name innermap flags 1
-$ sudo bpftool map create /sys/fs/bpf/outermap type hash_of_maps \
-        innermap pinned /sys/fs/bpf/innermap key 64 value 4 \
-        entries 64 name myoutermap flags 1
-$ sudo bpftool map show pinned /sys/fs/bpf/outermap
-47: hash_of_maps  name myoutermap  flags 0x1
-	key 64B  value 4B  max_entries 64  memlock 12288B
-
-Documentation and bash completion updated as well.
-
-Signed-off-by: Alban Crequy <alban@kinvolk.io>
----
- tools/bpf/bpftool/Documentation/bpftool-prog.rst |  2 +-
- tools/bpf/bpftool/bash-completion/bpftool        | 13 +++++++++++++
- tools/bpf/bpftool/map.c                          |  5 ++++-
- 3 files changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-index 9386bd6e0396..35902ab95cc5 100644
---- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-+++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-@@ -25,7 +25,7 @@ PROG COMMANDS
- |	**bpftool** **prog dump xlated** *PROG* [{**file** *FILE* | **opcodes** | **visual** | **linum**}]
- |	**bpftool** **prog dump jited**  *PROG* [{**file** *FILE* | **opcodes** | **linum**}]
- |	**bpftool** **prog pin** *PROG* *FILE*
--|	**bpftool** **prog { load | loadall }** *OBJ* *PATH* [**type** *TYPE*] [**map** {**idx** *IDX* | **name** *NAME*} *MAP*] [**dev** *NAME*]
-+|	**bpftool** **prog { load | loadall }** *OBJ* *PATH* [**type** *TYPE*] [**map** {**idx** *IDX* | **name** *NAME*} *MAP*] [**dev** *NAME*] [**innermap** MAP]
- |	**bpftool** **prog attach** *PROG* *ATTACH_TYPE* [*MAP*]
- |	**bpftool** **prog detach** *PROG* *ATTACH_TYPE* [*MAP*]
- |	**bpftool** **prog tracelog**
-diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
-index b803827d01e8..dcdc39510dc3 100644
---- a/tools/bpf/bpftool/bash-completion/bpftool
-+++ b/tools/bpf/bpftool/bash-completion/bpftool
-@@ -461,6 +461,18 @@ _bpftool()
-                             _sysfs_get_netdevs
-                             return 0
-                             ;;
-+                        innermap)
-+                            COMPREPLY+=( $( compgen -W "id pinned" -- "$cur" ) )
-+                            return 0
-+                            ;;
-+                        id)
-+                            _bpftool_get_map_ids
-+                            return 0
-+                            ;;
-+                        pinned)
-+                            _filedir
-+                            return 0
-+                            ;;
-                         *)
-                             _bpftool_once_attr 'type'
-                             _bpftool_once_attr 'key'
-@@ -469,6 +481,7 @@ _bpftool()
-                             _bpftool_once_attr 'name'
-                             _bpftool_once_attr 'flags'
-                             _bpftool_once_attr 'dev'
-+                            _bpftool_once_attr 'innermap'
-                             return 0
-                             ;;
-                     esac
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index e0c650d91784..7d8ce903a471 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -1151,6 +1151,9 @@ static int do_create(int argc, char **argv)
- 				return -1;
- 			}
- 			NEXT_ARG();
-+		} else if (is_prefix(*argv, "innermap")) {
-+			NEXT_ARG();
-+			attr.inner_map_fd = map_parse_fd(&argc, &argv);
- 		}
- 	}
- 
-@@ -1231,7 +1234,7 @@ static int do_help(int argc, char **argv)
- 		"Usage: %s %s { show | list }   [MAP]\n"
- 		"       %s %s create     FILE type TYPE key KEY_SIZE value VALUE_SIZE \\\n"
- 		"                              entries MAX_ENTRIES name NAME [flags FLAGS] \\\n"
--		"                              [dev NAME]\n"
-+		"                              [dev NAME] [innermap MAP]\n"
- 		"       %s %s dump       MAP\n"
- 		"       %s %s update     MAP [key DATA] [value VALUE] [UPDATE_FLAGS]\n"
- 		"       %s %s lookup     MAP [key DATA]\n"
--- 
-2.20.1
-
+-Andi
