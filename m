@@ -2,105 +2,449 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F6AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59EDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375B220684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF3520684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P16xeb3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfCEJbn (ORCPT
+        id S1727426AbfCEJgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 04:31:43 -0500
-Received: from mga01.intel.com ([192.55.52.88]:32110 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfCEJbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 04:31:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 01:31:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
-   d="scan'208";a="279855853"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 05 Mar 2019 01:31:42 -0800
-Received: from [10.125.252.140] (abudanko-mobl.ccr.corp.intel.com [10.125.252.140])
-        by linux.intel.com (Postfix) with ESMTP id 45CCD5805FC;
-        Tue,  5 Mar 2019 01:31:40 -0800 (PST)
-Subject: [PATCH v6 10/10] perf tests: implement Zstd comp/decomp integration
- test
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <8b8a4f51-9606-1940-7cc9-40c2c67bfc92@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <53ae1b62-d959-64b1-97ce-2f4dc10a3ec8@linux.intel.com>
-Date:   Tue, 5 Mar 2019 12:31:39 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 5 Mar 2019 04:36:12 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39751 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfCEJgL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 04:36:11 -0500
+Received: by mail-lj1-f193.google.com with SMTP id g80so6982235ljg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 01:36:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=9jh2ZBb9TfMrKGq0/RAT1iUnJuqtytyvYozua1AQBW4=;
+        b=P16xeb3AoCc9aMgzrGMvJzbodyn4w/CWU73ennp4OmxZzpvH68/BQYw299I7Z/RbFJ
+         or0XWH91au5TRofTu8XTauq62IGIw6c4IwQN5oiyBF9I7XhABVDnpUz7khvBGIqLfNR+
+         Q2dgVJdd7ZjvxY9pzHZtKlNECbgrsvIIyYQ1rR7yYUys35Oe/QTu9r4h9BuQ0NA6cMvh
+         PjgTLWZSjkasQgyELUEP0SDN94oqq6MVuhqkCF9OJOmHAaCSIbcAYJllYgDq/W2ianrc
+         azK97FCvvfP7vIzemJoSuZ4UX9DICYRZMTHCSBjGXYCPpYwXMXDEGXHeeSNnroY470zl
+         H5Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=9jh2ZBb9TfMrKGq0/RAT1iUnJuqtytyvYozua1AQBW4=;
+        b=NLmiaKP9wt84i6+H2DIGT0OFzr3/07fWd2kV/t+jGqmQ6uY/5CNksxM51QlGOVytgA
+         SeI5tw83Nhk0UjTJy9yQO78Xq+iq+MI/M63Gq9JO5L64xWUqE0p7FKVJJgjPYIQwiFYf
+         /lWIta5hptS8SNEkjJUv1hKfqtOJhCccR0MdBoAgEvSb69lMFvs6AIB/CDx6cAhCNJWX
+         VD+NZZG0KqUvoRyaZp5KW4egA50SQcNEV6Z6pyRNsoXhu3heDE2l6KCwSVSlAYTO6/AM
+         LgKd6bCxdnuJ/ARA4+xFGq5OBMRDtNV9+wLtXsp4yPSOCfsnKrWBYdqvTmYguYB+b2Tv
+         5DFw==
+X-Gm-Message-State: APjAAAVLpaPqcSby9goeSMIJJtli/4VzOcrACha7hRbgbPgVZgxe7ae2
+        kf9zCwGnzGaID6hhLZgpfR9qP8hkJdnHn8DVMFfBKXRbxM8=
+X-Google-Smtp-Source: APXvYqxkuCHweMO3r7gqoLHIX8uozcsn1CaGgO4LG6v2EHLJxiuRBDsLzojrq/Fv1EL60C/SeJt2DFj3xxJSmoAZynk=
+X-Received: by 2002:a2e:2ce:: with SMTP id y75mr12900748lje.126.1551778568323;
+ Tue, 05 Mar 2019 01:36:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <8b8a4f51-9606-1940-7cc9-40c2c67bfc92@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Mar 2019 10:35:57 +0100
+Message-ID: <CACRpkdYcT3zkSUo74i=WXS4AhHtKEDF2K8o1wttsZeGMK9cvCQ@mail.gmail.com>
+Subject: [GIT PULL] Bulk GPIO changes for the v5.1 kernel cycle
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Brian Masney <masneyb@onstation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-Implemented basic integration test for Zstd based trace
-compression/decompression in record and report modes.
+here is the bulk of the GPIO changes for the v5.1 kernel cycle.
+I'm very happy to get this merged now because the development
+has been all over the place, all is properly ACKed as far as possible
+and has been merging and compiling nicely in linux-next but it
+still makes me nervous to have it lying around on different immutable
+branches and what not.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- .../tests/shell/record+zstd_comp_decomp.sh    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
+The signed tag describes what the changes are about. We have
+some hunks hitting x86 platform code, generic irqchip, ARM device
+trees and machines, pin control and even device core. The respective
+subsystem maintainers have been involved and ACKed the patches.
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-new file mode 100755
-index 000000000000..5cb2ab8e2112
---- /dev/null
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -0,0 +1,28 @@
-+#!/bin/sh
-+# record trace Zstd compression/decompression
-+
-+trace_file=$(mktemp /tmp/perf.data.XXX)
-+perf_tool=perf
-+output=/dev/null
-+
-+skip_if_no_z_record() {
-+	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level <n>'
-+}
-+
-+collect_z_record() {
-+	echo "Collecting compressed record trace file:"
-+	$perf_tool record -o $trace_file -a -z 1 -F 25000 -e cycles -- \
-+		dd count=2000 if=/dev/random of=/dev/null > $output 2>&1
-+}
-+
-+check_compressed_stats() {
-+	echo "Checking compressed events stats:"
-+	$perf_tool report -i $trace_file --header --stats | \
-+		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
-+}
-+
-+skip_if_no_z_record || exit 2
-+collect_z_record && check_compressed_stats
-+err=$?
-+rm -f $trace_file
-+exit $err
--- 
-2.20.1
+Please pull it in for v5.1!
 
+Yours,
+Linus Walleij
+
+
+The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9=
+:
+
+  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.1-1
+
+for you to fetch changes up to c378b3aa015931a46c91d6ccc2fe04d97801d060:
+
+  gpio: pca953x: Fix dereference of irq data in shutdown (2019-03-01
+11:55:32 +0100)
+
+----------------------------------------------------------------
+This is the bulk of GPIO changes for the v5.1 cycle:
+
+Core changes:
+
+- The big change this time around is the irqchip handling in
+  the qualcomm pin controllers, closely coupled with the
+  gpiochip. This rework, in a classic fall-between-the-chairs
+  fashion has been sidestepped for too long. The Qualcomm
+  IRQchips using the SPMI and SSBI transport mechanisms have
+  been rewritten to use hierarchical irqchip. This creates
+  the base from which I intend to gradually pull support for
+  hierarchical irqchips into the gpiolib irqchip helpers to
+  cut down on duplicate code. We have too many hacks in the
+  kernel because people have been working around the missing
+  hierarchical irqchip for years, and once it was there,
+  noone understood it for a while. We are now slowly adapting
+  to using it. This is why this pull requests include changes
+  to MFD, SPMI, IRQchip core and some ARM Device Trees
+  pertaining to the Qualcomm chip family. Since Qualcomm have
+  so many chips and such large deployments it is paramount
+  that this platform gets this right, and now it (hopefully)
+  does.
+
+- Core support for pull-up and pull-down configuration, also
+  from the device tree. When a simple GPIO chip support a
+  "off or on" pull-up or pull-down resistor, we provide a
+  way to set this up using machine descriptors or device tree.
+  If more elaborate control of pull up/down (such as
+  resistance shunt setting) is required, drivers should be
+  phased over to use pin control. We do not yet provide a
+  userspace ABI for this pull up-down setting but I suspect
+  the makers are going to ask for it soon enough. PCA953x
+  is the first user of this new API.
+
+- The GPIO mockup driver has been revamped after some
+  discussion improving the IRQ simulator in the process.
+  The idea is to make it possible to use the mockup for
+  both testing and virtual prototyping, e.g. when you do
+  not yet have a GPIO expander to play with but really
+  want to get something to develop code around before
+  hardware is available. It's neat. The blackbox testing
+  usecase is currently making its way into kernelci.
+
+- ACPI GPIO core preserves non direction flags when updating
+  flags.
+
+- A new device core helper for devm_platform_ioremap_resource()
+  is funneled through the GPIO tree with Greg's ACK.
+
+New drivers:
+
+- TQ-Systems QTMX86 GPIO controllers (using port-mapped
+  I/O)
+
+- Gateworks PLD GPIO driver (vaccumed up from OpenWrt)
+
+- AMD G-Series PCH (Platform Controller Hub) GPIO driver.
+
+- Fintek F81804 & F81966 subvariants.
+
+- PCA953x now supports NXP PCAL6416.
+
+Driver improvements:
+
+- IRQ support on the Nintendo Wii (Hollywood) GPIO.
+
+- get_direction() support for the MVEBU driver.
+
+- Set the right output level on SAMA5D2.
+
+- Drop the unused irq trigger setting on the Spreadtrum
+  driver.
+
+- Wakeup support for PCA953x.
+
+- A slew of cleanups in the various Intel drivers.
+
+----------------------------------------------------------------
+Andrew Lunn (1):
+      gpio: tqmx86: Add GPIO from for this IO controller
+
+Andy Shevchenko (11):
+      gpiolib: acpi: Correct kernel doc of struct acpi_gpio_event
+      gpio: crystalcove: Use for_each_set_bit() in IRQ handler
+      gpio: wcove: Allow return negative error code from to_reg()
+      gpio: msic: Remove duplicate check in IRQ handler
+      gpio: crystalcove: Sort headers alphabetically
+      gpio: msic: Sort headers alphabetically
+      gpio: wcove: Sort headers alphabetically
+      gpio: wcove: Fix indentation
+      gpio: crystalcove: Convert to use SPDX identifier
+      gpio: msic: Convert to use SPDX identifier
+      gpio: wcove: Convert to use SPDX identifier
+
+Anson Huang (1):
+      gpio: mxc: add check to return defer probe if clock tree NOT ready
+
+Axel Lin (3):
+      gpio: sama5d2-piobu: Set proper output level for direction_output
+      gpio: altera-a10sr: Trivial coding style fix
+      gpio: tqmx86: Set proper output level for direction_output
+
+Baolin Wang (3):
+      gpio: sprd: Remove unused irq trigger setting
+      gpio: sprd: Use SoC compatible string instead of wildcard string
+      gpio: sprd: Change to use SoC compatible string
+
+Bartosz Golaszewski (10):
+      irq/irq_sim: add irq_set_type() callback
+      gpio: mockup: add locking
+      gpio: mockup: implement get_multiple()
+      gpio: mockup: don't create the debugfs link named after the label
+      gpio: mockup: change the type of 'offset' to unsigned int
+      gpio: mockup: change the signature of unlocked get/set helpers
+      gpio: mockup: rework debugfs interface
+      drivers: provide devm_platform_ioremap_resource()
+      gpio: davinci: use devm_platform_ioremap_resource()
+      drivers: depend on HAS_IOMEM for devm_platform_ioremap_resource()
+
+Baruch Siach (1):
+      gpio: mvebu: implement get_direction
+
+Bjorn Andersson (1):
+      qcom: spmi-gpio: Fix boundary conditions IRQ domain translate
+
+Brian Masney (30):
+      dt-bindings: pinctrl: qcom-pmic-gpio: add qcom,pmi8998-gpio binding
+      pinctrl: qcom: spmi-gpio: add support for three new variants
+      pinctrl: qcom: spmi-gpio: hardcode IRQ counts
+      spmi: pmic-arb: convert to v2 irq interfaces to support
+hierarchical IRQ chips
+      gpio: add irq domain activate/deactivate functions
+      spmi: pmic-arb: disassociate old virq if hwirq mapping already exists
+      qcom: spmi-gpio: add support for hierarchical IRQ chip
+      ARM: dts: qcom: pm8941: add interrupt controller properties
+      ARM: dts: qcom: pma8084: add interrupt controller properties
+      arm64: dts: qcom: pm8005: add interrupt controller properties
+      arm64: dts: qcom: pm8998: add interrupt controller properties
+      arm64: dts: qcom: pmi8994: add interrupt controller properties
+      arm64: dts: qcom: pmi8998: add interrupt controller properties
+      spmi: pmic-arb: validate type when mapping IRQ
+      spmi: pmic-arb: revert "disassociate old virq if hwirq mapping
+already exists"
+      genirq: export irq_chip_set_wake_parent symbol
+      pinctrl: qcom: spmi-gpio: select IRQ_DOMAIN_HIERARCHY in Kconfig
+      spmi: pmic-arb: revert "validate type when mapping IRQ"
+      pinctrl: qcom: ssbi-gpio: hardcode IRQ counts
+      genirq: introduce irq_domain_translate_twocell
+      mfd: pm8xxx: convert to v2 irq interfaces to support
+hierarchical IRQ chips
+      mfd: pm8xxx: disassociate old virq if hwirq mapping already exists
+      qcom: ssbi-gpio: add support for hierarchical IRQ chip
+      arm: dts: qcom: apq8064: add interrupt controller properties
+      arm: dts: qcom: msm8660: add interrupt controller properties
+      arm: dts: qcom: mdm9615: add interrupt controller properties
+      mfd: pm8xxx: revert "disassociate old virq if hwirq mapping
+already exists"
+      spmi: pmic-arb: select IRQ_DOMAIN_HIERARCHY in Kconfig
+      mfd: pm8xxx: select IRQ_DOMAIN_HIERARCHY in Kconfig
+      qcom: ssbi-gpio: correct boundary conditions in pm8xxx_domain_transla=
+te
+
+Charles Keepax (1):
+      gpio: madera: Add missing const
+
+Enrico Weigelt, metux IT consult (2):
+      gpio: AMD G-Series PCH gpio driver
+      x86: pcengines apuv2 gpio/leds/keys platform driver
+
+Geert Uytterhoeven (2):
+      gpio: pcf857x: Simpify wake-up handling
+      gpio: pca953x: Add wake-up support
+
+Gustavo A. R. Silva (1):
+      gpio: sprd: Add missing break in switch statement
+
+Hans de Goede (1):
+      gpiolib-acpi: Preserve non direction flags when updating gpiod_flags
+
+Jonathan Neusch=C3=A4fer (2):
+      gpio: hlwd: Add basic IRQ support
+      gpio: hlwd: Implement edge trigger emulation
+
+Linus Walleij (16):
+      Merge branch 'ib-qcom-spmi' into devel
+      dt-bindings: Add a prefix for Gateworks Corporation
+      gpio: Add DT bindings for Gateworks PLD GPIO
+      gpio: Add a Gateworks PLD GPIO driver
+      genirq: introduce irq_chip_mask_ack_parent()
+      ARM: dts: qcom-apq8060: Fix up interrupt parents
+      Merge branch 'ib-pca953x-config' into devel
+      Merge tag 'gpio-v5.1-updates-for-linus' of
+git://git.kernel.org/.../brgl/linux into devel
+      Merge tag 'intel-gpio-v5.1-1' of
+git://git.kernel.org/.../andy/linux-gpio-intel into devel
+      gpio: tegra: Fix offset of pinctrl calls
+      Merge tag 'gpio-v5.1-updates-for-linus-part-2' of
+git://git.kernel.org/.../brgl/linux into devel
+      Merge branch 'ib-qcom-ssbi' into devel
+      gpio: ixp4xx: Add DT bindings
+      gpio: ftgpio: Register per-instance irqchip
+      gpio: amd-fch: Drop const from resource
+      gpio: amd-fch: Fix type error found by sparse
+
+Marek Vasut (2):
+      gpio: of: Apply regulator-gpio quirk only to enable-gpios
+      gpio: of: Handle both enable-gpio{,s}
+
+Mark Walton (1):
+      gpio: pca953x: Fix dereference of irq data in shutdown
+
+Nikolaus Voss (2):
+      gpio: adp5588: Add device tree support
+      gpio: adp5588.c: Switch to events system
+
+Phil Reid (1):
+      gpio: altera: Fixup block comment style
+
+Randy Dunlap (1):
+      Documenation: driver-api: fix gpio/board.rst warning
+
+Souptick Joarder (1):
+      arm/mach-sa1100/simpad.c: Remove duplicate header
+
+Steffen Kothe (1):
+      gpio-f7188x: add support Fintek F81804 & F81966
+
+Thierry Reding (2):
+      gpio: tegra186: Use TEGRA186_ prefix for GPIO names
+      gpio: of: Restrict enable-gpio quirk to regulator-gpio
+
+Thomas Petazzoni (10):
+      gpio: pca953x: reduce indentation level in pca953x_irq_setup()
+      gpio: pca953x: use a per instance irq_chip structure
+      dt-bindings: gpio: document the new pull-up/pull-down flags
+      gpio: rename gpio_set_drive_single_ended() to gpio_set_config()
+      gpio: use new gpio_set_config() helper in more places
+      gpio: add core support for pull-up/pull-down configuration
+      gpio: pca953x: add ->set_config implementation
+      gpio: zynq: properly support runtime PM for GPIO used as interrupts
+      dt-bindings: gpio: pca953x: document the nxp,pcal6416
+      gpio: pca953x: add support for pcal6416 type
+
+Uwe Kleine-K=C3=B6nig (1):
+      Documentation: gpio: legacy: Don't use POLLERR for poll(2)
+
+Vladimir Zapolskiy (1):
+      gpio: rcar: select General Output Register to set output states
+
+Wei Yongjun (1):
+      gpio: tqmx86: Drop unnecessary gpiochip_remove in tqmx86_gpio_probe()
+
+Wolfram Sang (1):
+      Documentation: gpio: driver: fix wire name for I2C
+
+ .../bindings/gpio/gateworks,pld-gpio.txt           |  20 ++
+ .../devicetree/bindings/gpio/gpio-eic-sprd.txt     |   4 +-
+ .../devicetree/bindings/gpio/gpio-pca953x.txt      |   1 +
+ Documentation/devicetree/bindings/gpio/gpio.txt    |  12 +
+ .../devicetree/bindings/gpio/intel,ixp4xx-gpio.txt |  38 +++
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ Documentation/driver-api/gpio/board.rst            |   1 +
+ Documentation/driver-api/gpio/driver.rst           |   2 +-
+ Documentation/driver-api/gpio/legacy.rst           |   9 +-
+ MAINTAINERS                                        |  12 +
+ arch/arm/boot/dts/qcom-apq8060-dragonboard.dts     |  21 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |  46 +--
+ arch/arm/boot/dts/qcom-mdm9615.dtsi                |   9 +-
+ arch/arm/boot/dts/qcom-msm8660.dtsi                |  47 +--
+ arch/arm/boot/dts/qcom-pm8941.dtsi                 |  38 +--
+ arch/arm/boot/dts/qcom-pma8084.dtsi                |  24 +-
+ arch/arm/mach-sa1100/simpad.c                      |   1 -
+ arch/arm64/boot/dts/qcom/pm8005.dtsi               |   6 +-
+ arch/arm64/boot/dts/qcom/pm8998.dtsi               |  28 +-
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi              |  12 +-
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi              |  16 +-
+ drivers/base/platform.c                            |  20 ++
+ drivers/gpio/Kconfig                               |  24 ++
+ drivers/gpio/Makefile                              |   3 +
+ drivers/gpio/gpio-adp5588.c                        | 234 ++++++---------
+ drivers/gpio/gpio-altera-a10sr.c                   |  17 +-
+ drivers/gpio/gpio-altera.c                         |   4 +-
+ drivers/gpio/gpio-amd-fch.c                        | 185 ++++++++++++
+ drivers/gpio/gpio-crystalcove.c                    |  30 +-
+ drivers/gpio/gpio-davinci.c                        |   4 +-
+ drivers/gpio/gpio-eic-sprd.c                       |   1 +
+ drivers/gpio/gpio-f7188x.c                         |  24 +-
+ drivers/gpio/gpio-ftgpio010.c                      |  20 +-
+ drivers/gpio/gpio-gw-pld.c                         | 137 +++++++++
+ drivers/gpio/gpio-hlwd.c                           | 192 +++++++++++-
+ drivers/gpio/gpio-madera.c                         |   2 +-
+ drivers/gpio/gpio-mockup.c                         | 189 ++++++++++--
+ drivers/gpio/gpio-msic.c                           |  34 +--
+ drivers/gpio/gpio-mvebu.c                          |  11 +
+ drivers/gpio/gpio-mxc.c                            |   5 +-
+ drivers/gpio/gpio-pca953x.c                        | 182 +++++++----
+ drivers/gpio/gpio-pcf857x.c                        |  15 +-
+ drivers/gpio/gpio-pmic-eic-sprd.c                  |   3 +-
+ drivers/gpio/gpio-rcar.c                           |  12 +-
+ drivers/gpio/gpio-sama5d2-piobu.c                  |  20 +-
+ drivers/gpio/gpio-tegra.c                          |  25 +-
+ drivers/gpio/gpio-tegra186.c                       |  70 ++---
+ drivers/gpio/gpio-tqmx86.c                         | 332 +++++++++++++++++=
+++++
+ drivers/gpio/gpio-wcove.c                          |  29 +-
+ drivers/gpio/gpio-zynq.c                           |  24 ++
+ drivers/gpio/gpiolib-acpi.c                        |   7 +-
+ drivers/gpio/gpiolib-of.c                          |   9 +-
+ drivers/gpio/gpiolib.c                             |  87 +++++-
+ drivers/gpio/gpiolib.h                             |   2 +
+ drivers/mfd/Kconfig                                |   2 +-
+ drivers/mfd/qcom-pm8xxx.c                          |  75 ++---
+ drivers/pinctrl/qcom/Kconfig                       |   2 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 141 +++++++--
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           | 157 ++++++++--
+ drivers/platform/x86/Kconfig                       |  12 +
+ drivers/platform/x86/Makefile                      |   1 +
+ drivers/platform/x86/pcengines-apuv2.c             | 261 ++++++++++++++++
+ drivers/spmi/Kconfig                               |   2 +-
+ drivers/spmi/spmi-pmic-arb.c                       |  67 +++--
+ include/dt-bindings/gpio/gpio.h                    |   6 +
+ include/linux/gpio/driver.h                        |   5 +
+ include/linux/gpio/machine.h                       |   2 +
+ include/linux/irq.h                                |   1 +
+ include/linux/irqdomain.h                          |   5 +
+ include/linux/of_gpio.h                            |   2 +
+ include/linux/platform_data/gpio/gpio-amd-fch.h    |  46 +++
+ include/linux/platform_device.h                    |   3 +
+ kernel/irq/chip.c                                  |  12 +
+ kernel/irq/irq_sim.c                               |  12 +
+ kernel/irq/irqdomain.c                             |  45 ++-
+ 76 files changed, 2416 insertions(+), 745 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/intel,ixp4xx-gpi=
+o.txt
+ create mode 100644 drivers/gpio/gpio-amd-fch.c
+ create mode 100644 drivers/gpio/gpio-gw-pld.c
+ create mode 100644 drivers/gpio/gpio-tqmx86.c
+ create mode 100644 drivers/platform/x86/pcengines-apuv2.c
+ create mode 100644 include/linux/platform_data/gpio/gpio-amd-fch.h
