@@ -2,231 +2,86 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC464C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61675C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812902082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:32:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bHjeTqBy"
+	by mail.kernel.org (Postfix) with ESMTP id 3008A2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfCEIcO (ORCPT
+        id S1727150AbfCEIev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:32:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54832 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfCEIcN (ORCPT
+        Tue, 5 Mar 2019 03:34:51 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37208 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfCEIev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:32:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=77jwDy4RuX2sI8qieFmBtvqB/BzJSMkzZw/neayWxy0=; b=bHjeTqByDqHyijEnFKftHLRUX
-        VPbvv3J4GDCvHDbmFeano0OzK+UFjfiC7c9vH0E6uzqZMbBHbxk6+XwZICRIUDIz3H5yEsJCJb6Qn
-        oXkSZa1pNS8Ui6vBa8ifMjWYHb4bIfStFx7DYfIj4PHSEebFBbi2wEQ0ITUur6zjbW4m+Ik7/1oIA
-        ctWeU5CCzFQMTCA+ylEcxILPbp4Mgjp+lIizWNQmj6QJwGuspTB1YhGXmfK8AVpxRz80e6g8v1qBD
-        t542w2Ma0inS8+c2IdQ5QlDkVot9hqdYBiOSvurCN2DK2Gvazb9HZXhF/QUmtOdshZskBo1fHlq0h
-        9Hq12EDQA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h15Ub-0007wN-02; Tue, 05 Mar 2019 08:32:05 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8A6832007278A; Tue,  5 Mar 2019 09:32:02 +0100 (CET)
-Date:   Tue, 5 Mar 2019 09:32:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     =?utf-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
-        <Vincent.Wang@unisoc.com>,
-        =?utf-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
-        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH] sched/cpufreq: Fix 32bit math overflow
-Message-ID: <20190305083202.GU32494@hirez.programming.kicks-ass.net>
-References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
- <20190222105957.wxhlcmoag5f3i4fi@queper01-lin>
- <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
- <20190304135810.rq2ojnbn5vezrab3@queper01-lin>
- <20190304152616.GM32494@hirez.programming.kicks-ass.net>
- <20190304164816.4fnxxesjwzdoqria@queper01-lin>
- <20190304174028.GO32494@hirez.programming.kicks-ass.net>
- <20190304175030.4slf247y2eftkmu4@queper01-lin>
- <20190304184708.GQ32494@hirez.programming.kicks-ass.net>
- <20190304191059.mzwid3udqwtzejww@queper01-lin>
+        Tue, 5 Mar 2019 03:34:51 -0500
+Received: by mail-qt1-f193.google.com with SMTP id a48so8161411qtb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 00:34:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BMVtnd/QdJ4T1acw/rhWxMKJH0y8Q1v97kzTlEz+Tt0=;
+        b=A5xeuZIthFBxA7g2Y1AMnmiUNYJJ/TgmgI688EGxhz1BxkuKlTghe7LX72ZBfOtKio
+         gjicvSpWhkK9Z8OsCoCjai/UHvNwIaIN2YZCWZIQV/W1csFBhx6SslWePYbNCoadtBrs
+         7uI2vMGt831V8e0d8Hg6blEQrCFU5UueIzjEJ1jE/b5yVsGoo/QJLWlk8WGuvaKqd1TK
+         3WnxWg1gyvd3lROIEMAbj1aGkE2wBsOrIw6cT//ZLxavOZMpRmaFONiuyD2fF8nD0LyS
+         +6B+1HHRV4zDaqb3dZm9R2SsPhazCWR3WgzB0HZ0EkcW+cHnGBmUlK4XhlSGGo3vcOLH
+         o1Vg==
+X-Gm-Message-State: APjAAAWKXCwMA5cp9K3RdyaFnjzWlcp2bDakhEtevNddiMb7/XqYB99e
+        tyjjdP8r7h1gHrF+/0zUQLviBb6V1ILvgWUGS4o=
+X-Google-Smtp-Source: APXvYqyBpD51V8udl30qZBl/wWku3sP8Nm6IvFcbto/waT2UazECHOgBlD08rK9TVKJ3d2YOctQ8lsVaiUmkgY2uxeY=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr1154386qve.149.1551774890097;
+ Tue, 05 Mar 2019 00:34:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304191059.mzwid3udqwtzejww@queper01-lin>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190304204826.2414365-1-arnd@arndb.de> <0eaa0d35-0be8-0053-1dcb-feb61d441bd2@suse.com>
+In-Reply-To: <0eaa0d35-0be8-0053-1dcb-feb61d441bd2@suse.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 Mar 2019 09:34:33 +0100
+Message-ID: <CAK8P3a3vbjOzKAD6zce09Gc438tW=nYuMAJCE0MrODhBjO71xg@mail.gmail.com>
+Subject: Re: [PATCH] xen: avoid link error on ARM
+To:     Juergen Gross <jgross@suse.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Paul Durrant <paul.durrant@citrix.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 07:11:01PM +0000, Quentin Perret wrote:
+On Tue, Mar 5, 2019 at 7:39 AM Juergen Gross <jgross@suse.com> wrote:
 
-> So yeah, that works for me.
+>
+> Can we avoid that ifdef in the Makefile?
+>
+> I'd rather have an architecture independant builtin driver added which
+> is always included for CONFIG_XEN. This would allow to move redundant
+> stuff from arch/*/xen/ into it (e.g. xen_vcpu_id).
+>
+> So: rename mm.c to xen-builtin.c, use:
+>
+> obj-$(CONFIG_XEN) += xen-builtin.o
 
-Chunyan, Vincent; can you verify the below cures your ill?
+Sure, I'm happy to change the naming and the Makefile logic. The way you
+suggested sounds fine to me, but it will make the xen code slightly bigger
+even if that code is not used. We could also have a silent Kconfig symbol
+that turns this on and still avoid the ifdef:
 
----
-Subject: sched/cpufreq: Fix 32bit math overflow
+obj-$(CONFIG_XEN_BUILTIN) += xen-builtin.o
 
-Vincent Wang reported that get_next_freq() has a mult overflow issue on
-32bit platforms in the IOWAIT boost case, since in that case {util,max}
-are in freq units instead of capacity units.
+(or using any other symbol name that makes more sense than that.
 
-Solve this by moving the IOWAIT boost to capacity units. And since this
-means @max is constant; simplify the code.
+Let me know your preference and I'll resubmit.
 
-Cc: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Reported-by: Vincent Wang <vincent.wang@unisoc.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/sched/cpufreq_schedutil.c | 58 +++++++++++++++++-----------------------
- 1 file changed, 24 insertions(+), 34 deletions(-)
-
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 2efe629425be..72b62ac1c7c2 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -48,10 +48,10 @@ struct sugov_cpu {
- 
- 	bool			iowait_boost_pending;
- 	unsigned int		iowait_boost;
--	unsigned int		iowait_boost_max;
- 	u64			last_update;
- 
- 	unsigned long		bw_dl;
-+	unsigned long		min;
- 	unsigned long		max;
- 
- 	/* The field below is for single-CPU policies only: */
-@@ -303,8 +303,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
- 	if (delta_ns <= TICK_NSEC)
- 		return false;
- 
--	sg_cpu->iowait_boost = set_iowait_boost
--		? sg_cpu->sg_policy->policy->min : 0;
-+	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
- 	sg_cpu->iowait_boost_pending = set_iowait_boost;
- 
- 	return true;
-@@ -344,14 +343,12 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
- 
- 	/* Double the boost at each request */
- 	if (sg_cpu->iowait_boost) {
--		sg_cpu->iowait_boost <<= 1;
--		if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
--			sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
-+		sg_cpu->iowait_boost = min(sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
- 		return;
- 	}
- 
- 	/* First wakeup after IO: start with minimum boost */
--	sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
-+	sg_cpu->iowait_boost = sg_cpu->min;
- }
- 
- /**
-@@ -373,47 +370,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
-  * This mechanism is designed to boost high frequently IO waiting tasks, while
-  * being more conservative on tasks which does sporadic IO operations.
-  */
--static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
--			       unsigned long *util, unsigned long *max)
-+static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
-+					unsigned long util, unsigned long max)
- {
--	unsigned int boost_util, boost_max;
-+	unsigned long boost;
- 
- 	/* No boost currently required */
- 	if (!sg_cpu->iowait_boost)
--		return;
-+		return util;
- 
- 	/* Reset boost if the CPU appears to have been idle enough */
- 	if (sugov_iowait_reset(sg_cpu, time, false))
--		return;
-+		return util;
- 
--	/*
--	 * An IO waiting task has just woken up:
--	 * allow to further double the boost value
--	 */
--	if (sg_cpu->iowait_boost_pending) {
--		sg_cpu->iowait_boost_pending = false;
--	} else {
-+	if (!sg_cpu->iowait_boost_pending) {
- 		/*
--		 * Otherwise: reduce the boost value and disable it when we
--		 * reach the minimum.
-+		 * No boost pending; reduce the boost value.
- 		 */
- 		sg_cpu->iowait_boost >>= 1;
--		if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
-+		if (sg_cpu->iowait_boost < sg_cpu->min) {
- 			sg_cpu->iowait_boost = 0;
--			return;
-+			return util;
- 		}
- 	}
- 
-+	sg_cpu->iowait_boost_pending = false;
-+
- 	/*
--	 * Apply the current boost value: a CPU is boosted only if its current
--	 * utilization is smaller then the current IO boost level.
-+	 * @util is already in capacity scale; convert iowait_boost
-+	 * into the same scale so we can compare.
- 	 */
--	boost_util = sg_cpu->iowait_boost;
--	boost_max = sg_cpu->iowait_boost_max;
--	if (*util * boost_max < *max * boost_util) {
--		*util = boost_util;
--		*max = boost_max;
--	}
-+	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
-+	return max(boost, util);
- }
- 
- #ifdef CONFIG_NO_HZ_COMMON
-@@ -460,7 +448,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
- 
- 	util = sugov_get_util(sg_cpu);
- 	max = sg_cpu->max;
--	sugov_iowait_apply(sg_cpu, time, &util, &max);
-+	util = sugov_iowait_apply(sg_cpu, time, util, max);
- 	next_f = get_next_freq(sg_policy, util, max);
- 	/*
- 	 * Do not reduce the frequency if the CPU has not been idle
-@@ -500,7 +488,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
- 
- 		j_util = sugov_get_util(j_sg_cpu);
- 		j_max = j_sg_cpu->max;
--		sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
-+		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
- 
- 		if (j_util * max > j_max * util) {
- 			util = j_util;
-@@ -837,7 +825,9 @@ static int sugov_start(struct cpufreq_policy *policy)
- 		memset(sg_cpu, 0, sizeof(*sg_cpu));
- 		sg_cpu->cpu			= cpu;
- 		sg_cpu->sg_policy		= sg_policy;
--		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
-+		sg_cpu->min			=
-+			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
-+			policy->cpuinfo.max_freq;
- 	}
- 
- 	for_each_cpu(cpu, policy->cpus) {
+      Arnd
