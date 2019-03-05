@@ -2,182 +2,116 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35B0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2273C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C4F206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF8F206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZst/F9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfCEBGI (ORCPT
+        id S1726896AbfCEBHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 20:06:08 -0500
-Received: from mga06.intel.com ([134.134.136.31]:30661 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfCEBGH (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 20:06:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 17:06:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
-   d="scan'208";a="152039537"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.159.76]) ([10.239.159.76])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2019 17:06:05 -0800
-Subject: Re: [PATCH v3 1/3] perf diff: Support --time filter option
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1551703960-28957-1-git-send-email-yao.jin@linux.intel.com>
- <1551703960-28957-2-git-send-email-yao.jin@linux.intel.com>
- <20190304154101.GN30476@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <2e1114ce-424a-d795-589a-67d1807e26d4@linux.intel.com>
-Date:   Tue, 5 Mar 2019 09:06:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 4 Mar 2019 20:07:15 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37598 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCEBHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 20:07:15 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q206so4341358pgq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 17:07:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X08UU1rb6v3NKQ4XfD3Fm0wBIUETYOgkWCKnSjdIGIk=;
+        b=kZst/F9lKEVfE/lOWPPFjtSqbv34WNhAjVhG824j/M0LMuRqM8YksVzQ8kR+aF3RtL
+         I43qPDCY39DvnBcPqnWN/5ieKvb/geWNiTH+mdQWE2j3IXpMdn2/4gQaML9I7hHBjo86
+         DN+ZD6sMZbtno1cIsy5HXojFX2zCRPiGoFIJJS9ox9JmC6/TPN/l5a/1TBGUBFBdy1rU
+         eIm0T2VQk9dKZPp+yM0YDexMl/sEsWzlkCOoKSIO1hSUghRgTUnkuUkkkNB7jRP9a89J
+         8bcZlCIKVY5pLQQJiBUlDWb0/zQcOD1uJ68ogWMVfDGNSEdXZ28KocElS+qdW3LR1ucA
+         bXMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X08UU1rb6v3NKQ4XfD3Fm0wBIUETYOgkWCKnSjdIGIk=;
+        b=STNA645dIynJ54K2rNSmv3LwK6bxSGtMqd9UXfEXuI6kGW0bJ1wLfJimRO1puhN1GR
+         U2En7bMX4xuM0KOFGfBtNKOBljipIcMVcM02vv4FG/9PJ65DUKS1gSQCXFafcr6BzS2c
+         l+CHR8L42TSJNDkkW5UEwYbOhHQWfR5um3twLDto0l3G0RHJq3eRMSMeN/T+paAkbTYq
+         zbxmepuH6pfd5cFBcXhjZzf6Ndq6SLKwbdsZP3W75qdLcp2Kf3fZHKOEEsU1383vrER9
+         POcNl2iusGAyJKQA+yNU2Lj7cexA3wEk5c71Lv8kWRj3WcY3RHU/YG0NeWh4YiT6QHgI
+         DERg==
+X-Gm-Message-State: APjAAAXyjDoA//FPlsozR8ri1pToj5PJiuS+RX5whVGsN0mPuJN85RHs
+        tXcm+tr8uJLlSOK96DPYnnTbHg==
+X-Google-Smtp-Source: APXvYqyNkW1NmDxwO7A7zFRXv1Wv9wxYw+TVsqu7bW3Mn8LFhevu3JseU95TbT3Mqhdm/cx2gHjExg==
+X-Received: by 2002:a17:902:d203:: with SMTP id t3mr5807416ply.310.1551748034399;
+        Mon, 04 Mar 2019 17:07:14 -0800 (PST)
+Received: from leoy-ThinkPad-X240s (li1206-191.members.linode.com. [45.79.107.191])
+        by smtp.gmail.com with ESMTPSA id n4sm17327716pfh.8.2019.03.04.17.07.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Mar 2019 17:07:13 -0800 (PST)
+Date:   Tue, 5 Mar 2019 09:07:07 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, shiwanglai@hisilicon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, john.stultz@linaro.org,
+        xuwei5@huawei.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, suzhuangluan@hisilicon.com
+Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
+Message-ID: <20190305010707.GA9544@leoy-ThinkPad-X240s>
+References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
+ <20190302125955.GA11385@leoy-ThinkPad-X240s>
+ <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
+ <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190304154101.GN30476@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 04, 2019 at 05:29:22PM +0000, Suzuki K Poulose wrote:
 
+[...]
 
-On 3/4/2019 11:41 PM, Jiri Olsa wrote:
-> On Mon, Mar 04, 2019 at 08:52:38PM +0800, Jin Yao wrote:
->> For better support for perf diff, it would be useful to add --time filter
->> option to diff the samples within given time window.
->>
->> It supports time percent with multipe time ranges. Time string is
->> 'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
->>
->> For example:
->>
->> Select the second 10% time slice to diff:
->> perf diff --time 10%/2
->>
->> Select from 0% to 10% time slice to diff:
->> perf diff --time 0%-10%
->>
->> Select the first and the second 10% time slices to diff:
->> perf diff --time 10%/1,10%/2
->>
->> Select from 0% to 10% and 30% to 40% slices to diff:
->> perf diff --time 0%-10%,30%-40%
->>
->> It also supports to analyze samples within given time window as:
->> <start>,<stop>. Times have the format seconds.microseconds. If start
->> is not given (i.e., time string is ',x.y') then analysis starts at
->> the beginning of the file. If stop time is not given (i.e, time
->> string is 'x.y,') then analysis goes to end of file. Time string is
->> 'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
->> perf.data files.
->>
->> For example, we get the timestamp information from perf script.
->>
->> perf script -i perf.data.old
->>    mgen 13940 [000]  3946.361400: ...
->>
->> perf script -i perf.data
->>    mgen 13940 [000]  3971.150589 ...
->>
->> perf diff --time 3946.361400,:3971.150589,
->>
->> It analyzes the perf.data.old from the timestamp 3946.361400 to
->> the end of perf.data.old and analyzes the perf.data from the
->> timestamp 3971.150589 to the end of perf.data.
->>
->>   v3:
->>   ---
->>   Don't parse the time string if --time option is not set.
->>   Refactor the code to make it simpler.
-> 
-> it's much clearer now, thanks for doing this, some nits below
-> 
+> > > To support for a funnel without any register address range (we have
+> > > support replicator like this mode), we also need to extend the driver
+> > > drivers/hwtracing/coresight/coresight-funnel.c.
+> > > 
+> > > Mathieu, Mike, Suzuki, could you help confirm this is the right
+> > > direction we should move forward to?
+> > 
+> > Leo, thanks for testing this out.  Shiwanglai, please add Suzuki and
+> > myself to future revision of this set - this will help you getting a
+> > timely response for your work.
 
-Thanks!
+Yeah, I didn't give a good example for this; just remind to Wanglai,
+usually we can add maintainers' email address in the "To:" list so
+this will be more friendly for email filters.
 
-> SNIP
+> > As Leo pointed out we already have support for replicators that don't
+> > have a register map and the same thing should be done in this case.
+> > But contrary to what was done for replicators, I think we should keep
+> > the drivers in the same file as Russell did here[1].  That way we can
+> > keep all things funnel at the same place and reduce the amount of
+> > kernel configuration options.
 > 
->> +
->>   static int __cmd_diff(void)
->>   {
->>   	struct data__file *d;
->>   	int ret = -EINVAL, i;
->> +	char *abstime_ostr, *abstime_tmp;
->> +
->> +	abstime_ostr = abstime_str_dup();
->> +	abstime_tmp = abstime_ostr;
-> 
-> could be just one line:
-> 
-> 	abstime_ostr = abstime_tmp = abstime_str_dup();
-> 
-> also please fail if the allocation fails
-> 
+> I back that. I have already merged the static and programmable replicators
+> into one and this should be out here soon. So, I back the single driver
+> approach for funnels.
 
-OK, I will fix that.
+That's great!  Thanks for advices, Mathieu & Suzuki.
 
->>   
->>   	data__for_each_file(i, d) {
->> -		d->session = perf_session__new(&d->data, false, &tool);
->> +		d->session = perf_session__new(&d->data, false, &pdiff.tool);
->>   		if (!d->session) {
->>   			pr_err("Failed to open %s\n", d->data.path);
->>   			ret = -1;
->>   			goto out_delete;
->>   		}
->>   
->> +		if (pdiff.time_str) {
->> +			ret = parse_time_str(d, abstime_ostr, &abstime_tmp);
->> +			if (ret < 0)
->> +				goto out_delete;
->> +		}
->> +
->>   		ret = perf_session__process_events(d->session);
->>   		if (ret) {
->>   			pr_err("Failed to process %s\n", d->data.path);
->> @@ -791,6 +889,9 @@ static int __cmd_diff(void)
->>   		}
->>   
->>   		perf_evlist__collapse_resort(d->session->evlist);
->> +
->> +		if (pdiff.ptime_range)
->> +			zfree(&pdiff.ptime_range);
->>   	}
->>   
->>   	data_process();
->> @@ -802,6 +903,13 @@ static int __cmd_diff(void)
->>   	}
->>   
->>   	free(data__files);
->> +
->> +	if (pdiff.ptime_range)
->> +		zfree(&pdiff.ptime_range);
-> 
-> is this zfree needed? you free it in a loop for every data above
-> 
+Will sync with you offline for proceeding.
 
-Yes, we need this zfree. Because if we read the __cmd_diff() in 
-uiltin-diff.c directly (not only read from this patch), we may see other 
-"goto out_delete" cases, the zfree in loop may be not called. So we need 
-an additional zfree checking in error handling.
-
-Thanks
-Jin Yao
-
-> jirka
-> 
-> 
-> SNIP
-> 
+Thanks,
+Leo Yan
