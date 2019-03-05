@@ -2,126 +2,100 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B042BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9755C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E59C206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72AFE206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JIIfx6d5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xiGEiKkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbfCEAx5 (ORCPT
+        id S1726716AbfCEA5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:53:57 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33965 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfCEAx5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:53:57 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 98so5984342oty.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uXNLc6F0UiYjfZcRt3SiykY+FnlXWp8zrd0IEyVbGiI=;
-        b=JIIfx6d5jU0HVabG0/g0ik1Fe7QSg+9fGC07k5C6VRy0q1yecBDje6+CPuHLvvRNfU
-         XmOvRGbXGAIoEnRpU0yB9iNcJe9K0mD5Jnqi0q8QDN+p7gV5zMJsgqd34+ztj+5QRHjI
-         McXf+NiYMqtTaGXGWnqB9k9sNjB0yDLZi4J70=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uXNLc6F0UiYjfZcRt3SiykY+FnlXWp8zrd0IEyVbGiI=;
-        b=eGTyS1tvRfcFGPRqZ6deMDyHVBnxPNb2e9zZdDBOfFJdGzXJyf9PtuB/r6i+5rCF9t
-         g7GkhJAVfVGCnSib/Z4bjd+41P8ltDQimb5HZu6DgrDSs5gpQo+EqoO8mN5g68YziAWx
-         zL0SWHKeQ5Bk3yOtUOe3Mxk/DhnEsARuUFym4HwZhT3+9nH9otxhIidLqeub2FhG/H6g
-         GzKq1vinDjmI7IbMuFoe+VuNP/P86N8s5nbMRnLYVkQlEhR6iN8qUW57OwEDJPGIAgeD
-         mYNdckkzsp0Q4yUOgys8ZWIDuqt2DDO7/S19QXFlhGwJ3J7dzfZ2tsZ6k4ITioa6ZS4X
-         yrVw==
-X-Gm-Message-State: APjAAAVaAQjbTJ/ICVKOEnzyR3T3p/B1ZRYaF74xwfD5EdNk09D0wLxS
-        ACFw/lQ+zAN99vrkTBxtyJjYvf65hHg=
-X-Google-Smtp-Source: APXvYqz5ceFge7c3yz8m9PxP4TKNUBF7bAV6Yu0Ud3X4c72BJD1E7zvg/wC7Pd7w1UTWA35LjFa4sw==
-X-Received: by 2002:a9d:1991:: with SMTP id k17mr14574180otk.20.1551747235557;
-        Mon, 04 Mar 2019 16:53:55 -0800 (PST)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
-        by smtp.gmail.com with ESMTPSA id q6sm3029092oia.4.2019.03.04.16.53.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 16:53:54 -0800 (PST)
-Received: by mail-oi1-f182.google.com with SMTP id t206so5481363oib.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:53 -0800 (PST)
-X-Received: by 2002:aca:d803:: with SMTP id p3mr372933oig.111.1551747233600;
- Mon, 04 Mar 2019 16:53:53 -0800 (PST)
+        Mon, 4 Mar 2019 19:57:37 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:46604 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbfCEA5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 19:57:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9/HkbvfsZhsGC83D/DHLkvbKCUxRfZZgJRuKR+Q595U=; b=xiGEiKkmcdAcBBb2VB++MWBpyW
+        dX0NJP73TjZoiUj/Rlot82LN35fMhqajszUfU9+9JcscN/ylzX9sweGt4eIBt7oUM6Zf1Ch85hrUF
+        xlYW9md5tKvw3isq4E2o0xWeR22adTuoOLjge+97eFVINE49U96WmO7p0Nlf0AGcljEI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1h0yOM-00024T-37; Tue, 05 Mar 2019 01:57:10 +0100
+Date:   Tue, 5 Mar 2019 01:57:10 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     linux@roeck-us.net, gregory.clement@bootlin.com,
+        jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] watchdog: orion_wdt: use timer1 as a pretimeout
+Message-ID: <20190305005710.GL26378@lunn.ch>
+References: <20190227230707.GA28635@roeck-us.net>
+ <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
+ <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20190304200719.1382717-1-arnd@arndb.de>
-In-Reply-To: <20190304200719.1382717-1-arnd@arndb.de>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 4 Mar 2019 17:53:42 -0700
-X-Gmail-Original-Message-ID: <CAHX4x842P-V7VGTqRwuVfxk-zBOwMWGh5yLx6tnxEamj-Wt5SA@mail.gmail.com>
-Message-ID: <CAHX4x842P-V7VGTqRwuVfxk-zBOwMWGh5yLx6tnxEamj-Wt5SA@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: fix wilco-ec dependencies
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 1:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> When CROS_EC_LPC is set to =m, we get a link failure for a
-> builtin wilco-ec module:
->
-> drivers/platform/chrome/wilco_ec/core.o: In function `wilco_ec_remove':
-> core.c:(.text+0x26): undefined reference to `cros_ec_lpc_mec_destroy'
-> drivers/platform/chrome/wilco_ec/core.o: In function `wilco_ec_probe':
-> core.c:(.text+0x18c): undefined reference to `cros_ec_lpc_mec_init'
-> core.c:(.text+0x224): undefined reference to `cros_ec_lpc_mec_destroy'
-> drivers/platform/chrome/wilco_ec/mailbox.o: In function `wilco_ec_mailbox':
-> mailbox.c:(.text+0x104): undefined reference to `cros_ec_lpc_io_bytes_mec'
->
-> The problem with the existing CROS_EC_LPC_MEC dependency is that this
-> is only for a 'bool' symbol, so the information about the exported
-> functions being in a module is lost on the way, and we actually have
-> to depend on both CROS_EC_LPC and CROS_EC_LPC_MEC.
+On Tue, Mar 05, 2019 at 11:51:52AM +1300, Chris Packham wrote:
+> The orion watchdog can either reset the CPU or generate an interrupt.
+> The interrupt would be useful for debugging as it provides panic()
+> output about the watchdog expiry, however if the interrupt is used the
+> watchdog can't reset the CPU in the event of being stuck in a loop with
+> interrupts disabled or if the CPU is prevented from accessing memory
+> (e.g. an unterminated DMA).
+> 
+> All of the orion based CPU cores (at least back as far as Kirkwood) have
+> spare timers that aren't currently used by the Linux kernel. We can use
+> timer1 to provide a pre-timeout ahead of the watchdog timer and provide
+> the possibility of gathering debug before the reset triggers.
 
-Thanks for the catch Arnd. This looks like a workable solution, although it
-brings up a different question to me: Is it weird for a bool option
-(such as CROS_EC_LPC_MEC)
-to depend upon a tristate option (such as CROS_EC_LPC)? It seems like
-CROS_EC_LPC_MEC
-should be tristate as well. Would changing this be a better solution?
+Hi Chris
 
->
-> Fixes: 7b3d4f44abf0 ("platform/chrome: Add new driver for Wilco EC")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/chrome/wilco_ec/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-> index 4a119ced4d0c..e09e4cebe9b4 100644
-> --- a/drivers/platform/chrome/wilco_ec/Kconfig
-> +++ b/drivers/platform/chrome/wilco_ec/Kconfig
-> @@ -1,6 +1,6 @@
->  config WILCO_EC
->         tristate "ChromeOS Wilco Embedded Controller"
-> -       depends on ACPI && X86 && CROS_EC_LPC_MEC
-> +       depends on ACPI && X86 && CROS_EC_LPC && CROS_EC_LPC_MEC
->         help
->           If you say Y here, you get support for talking to the ChromeOS
->           Wilco EC over an eSPI bus. This uses a simple byte-level protocol
-> --
-> 2.20.0
->
+I had a quick look at other drivers implementing pre-timeout. They
+seem to call watchdog_notify_pretimeout(). I don't see that here? What
+happens when timer1 fires?
+
+> @@ -169,38 +174,46 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
+>  	}
+>  
+>  	/* Enable the fixed watchdog clock input */
+> -	atomic_io_modify(dev->reg + TIMER_CTRL,
+> -			 WDT_AXP_FIXED_ENABLE_BIT,
+> -			 WDT_AXP_FIXED_ENABLE_BIT);
+> +	val = WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
+> +	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
+>  
+>  	dev->clk_rate = clk_get_rate(dev->clk);
+> +
+> +
+
+One blank line is sufficient,
+
+
+>  	return 0;
+>  }
+
+   Andrew
