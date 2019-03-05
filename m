@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68057C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61845C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3366920675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CFD20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F9HZQyPH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QxQcp+/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfCEAvo (ORCPT
+        id S1726839AbfCEAxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:51:44 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46862 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCEAvo (ORCPT
+        Mon, 4 Mar 2019 19:53:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35231 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCEAxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:51:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id g6so4261671pfh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:51:43 -0800 (PST)
+        Mon, 4 Mar 2019 19:53:08 -0500
+Received: by mail-pg1-f193.google.com with SMTP id e17so4323401pgd.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xtFDP0NyHQVf3wQ/4BEnM3Byem+j8CITtmysXnmiB+w=;
-        b=F9HZQyPH/FylBavycB1ngHKkskFl7KqfC6tJvyeKfQPkqZhStmLiSUhgK8Opu4E7mM
-         P7Yy4m3jgNB3eSwNr8gFY7pNfmiCJQUPe6ysye6mIKiwm/6+f5uQU1jcpBJ0CbJmZKbd
-         lXJ2OXqNDr1GKjExiKOQSwBHzcBO0ge07CyTg=
+        bh=z0G4lu4Oy+9bnec0MeOSPu0m1GerKTNq+AVRoAJ4Q/k=;
+        b=QxQcp+/ffDul5ZlgoCvLH0QU5ELnGI3MCKttVW8fRleETGH6MbT77qsB3yDyj8LKwh
+         Ay1LAnIV9gc1MvXFzyHtFwGEpC/8lAj/0zXu2geT34P9uNrvpVm01bZqgMvbu2U4p+8q
+         CdNSQZXSRAEOLugQaySeJ8275b9jFncosaBZA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xtFDP0NyHQVf3wQ/4BEnM3Byem+j8CITtmysXnmiB+w=;
-        b=mmEwlFYWh2RShVyIFZnklE31BXsgWjTPxcEf4zKIixEEXqacjuPf3vAlnierTAX6Rl
-         b+kfnQ9scpRUqZXARkG4QQTC2ECcL95CJ4T26/icWR8IFFRjjiFXOvUG2RwJajtiYLpv
-         OJDi+e/U0Sr8HgdPCABcujJlBRooqegdyJm0doUIzaJCcmJz6fPDCredphcz9z9fMDOj
-         DdaEhily423WWcdLxCgR+mZqPGLaZh8DfzOZ0eRXEQkr9nhENgOZN2Z7H/ySV/ozeH5I
-         Jm+dZNrZ1XPEBwAATVvWqsyGChwJQCbMu59AyeaAMqZxcdfCjAkTjcy/cH71qDz3/Bqf
-         v0zw==
-X-Gm-Message-State: APjAAAUVN8OKIBVstc75JLw30w+JSsusSZ3TYp/eV+eyLSDMqYjjImfx
-        B8iG1cqt4g0f3qUPbQtQ+4y/jg==
-X-Google-Smtp-Source: AHgI3IaR4TmnOEJH+UgkGwQd/ONyl/qtoVZUu4gsIBQICVOjgb8FPJRFo/PUoey7JSe/JtdsnFRPzQ==
-X-Received: by 2002:aa7:8205:: with SMTP id k5mr22338888pfi.86.1551747103252;
-        Mon, 04 Mar 2019 16:51:43 -0800 (PST)
+        bh=z0G4lu4Oy+9bnec0MeOSPu0m1GerKTNq+AVRoAJ4Q/k=;
+        b=c+qynXIrGErVrBoJXUs4hKg81lt/o8JLsr7V2jCIs9sgv2+mKoXyjUGT91loKDLn1v
+         5jRySfETUiGFb5x8dKSjDRJzV0tyOS7pV7R5z+pDKmy9cATCI+QUmhGzYquKtclNv0gm
+         PR2JtzP8A7FcoUIS9mnl2V3QWajq22a+7pt3t+GKJJYIBWHGReuaz0k/Tiy5TtmCZk1w
+         vtxGMAtVlEejUffDN3Hf3fts23ATG72BISo3aAKO9WSSR/jLIKtQfyqyoWyzPBq5JZxO
+         Iu7jOk2Aul5W4+8euYOvOGaCr+ABctppqL53wYYfnApOLXqe1p9xsKIInfKLCaAtGV4T
+         nxqg==
+X-Gm-Message-State: APjAAAVLX3KSDeUTLvgovUIOj5wr6hirnb+ixFyY6d2zP2USsbti+0cJ
+        cDfzWOyQrzguWHOMBl0BLoSXRw==
+X-Google-Smtp-Source: APXvYqwsmRzmhhSAIUncxJymgjooB3M9ca1OlB+wT8fsGcVgjTbFZ7HIIN1zb4sR8vy1HbJwaS1o9Q==
+X-Received: by 2002:a65:6548:: with SMTP id a8mr21216702pgw.103.1551747187674;
+        Mon, 04 Mar 2019 16:53:07 -0800 (PST)
 Received: from ravisadineni0.mtv.corp.google.com ([2620:15c:202:1:98d2:1663:78dd:3593])
-        by smtp.gmail.com with ESMTPSA id c130sm14800562pfb.145.2019.03.04.16.51.42
+        by smtp.gmail.com with ESMTPSA id g71sm14102911pfg.157.2019.03.04.16.53.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 04 Mar 2019 16:51:42 -0800 (PST)
+        Mon, 04 Mar 2019 16:53:07 -0800 (PST)
 From:   RaviChandra Sadineni <ravisadineni@chromium.org>
 To:     ravisadineni@chromium.org
 Cc:     Benson Leung <bleung@chromium.org>,
@@ -60,8 +60,8 @@ Cc:     Benson Leung <bleung@chromium.org>,
         Guenter Roeck <groeck@chromium.org>,
         linux-kernel@vger.kernel.org, tbroch@google.com, dnojiri@google.com
 Subject: [PATCH V3] cros_ec: Expose sysfile to force battery cut-off on shutdown.
-Date:   Mon,  4 Mar 2019 16:51:38 -0800
-Message-Id: <20190305005138.129020-1-ravisadineni@chromium.org>
+Date:   Mon,  4 Mar 2019 16:53:00 -0800
+Message-Id: <20190305005300.129464-1-ravisadineni@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <CABXOdTdvMKGHoE5JQBLca_6V+ihRiUedgnyb2or8GraBDsKYWQ@mail.gmail.com>
 References: <CABXOdTdvMKGHoE5JQBLca_6V+ihRiUedgnyb2or8GraBDsKYWQ@mail.gmail.com>
@@ -183,4 +183,3 @@ index f34a50121064..6ef6b860c818 100644
  	&dev_attr_version.attr,
 -- 
 2.20.1
-story | grep send-email
