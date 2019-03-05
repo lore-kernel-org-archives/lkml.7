@@ -2,95 +2,102 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850CAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42446C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCF22082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2C920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cPHp3dPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfCEM06 (ORCPT
+        id S1728158AbfCEM2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 07:26:58 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:52362 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728126AbfCEM06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 07:26:58 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3555081DF1;
-        Tue,  5 Mar 2019 12:26:58 +0000 (UTC)
-Received: from krava (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 81F8D60BEE;
-        Tue,  5 Mar 2019 12:26:56 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 13:26:55 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 09/10] perf inject: enable COMPRESSED records
- decompression
-Message-ID: <20190305122655.GM16615@krava>
-References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
- <fa393ac2-f9ae-288b-ff0b-9218b8270775@linux.intel.com>
+        Tue, 5 Mar 2019 07:28:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37992 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbfCEM2e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 07:28:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Dfo+YBvmhGNA0Vn/iIr+M+O2pxNRsMjh1OVoXQ8GwjY=; b=cPHp3dPEP8manSvpW3rGZl2RZ
+        hiJZInS4AcPTKa7Sv77QQaysXfXgXoE1VWdDhIFs0J46OVIaFRnkbpkuY/GvHJaOXuJgO25q4BiNL
+        b3agOxXjyX+ais+b/48c2JE2E0dOiSBW898hZQURg+Y0bbOiWJrrwP2hlgwTjlQ4DHTIAfLGrzdhG
+        XrPpkLslB9voI4k6HzaESzRLlNS7iI/LGJDyFznwaMvQybtik+YeJvPbhinxhUtHBCzfVTPLhKwez
+        b/LwujeCFozdNcsOxDbHFrk54f4LWaS1xOesGRaLq12oCSZee4TIXo4ioh44tpIXd/6jO8bW95sbt
+        glWh5GMoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h19BM-0001TX-TF; Tue, 05 Mar 2019 12:28:29 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 475CF29B18E38; Tue,  5 Mar 2019 13:28:27 +0100 (CET)
+Date:   Tue, 5 Mar 2019 13:28:27 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        devel@linuxdriverproject.org
+Subject: Re: [RFC PATCH] x86, hyperv: fix kernel panic when kexec on HyperV VM
+Message-ID: <20190305122827.GJ32477@hirez.programming.kicks-ass.net>
+References: <20190226155615.16724-1-kasong@redhat.com>
+ <20190227120141.GN32494@hirez.programming.kicks-ass.net>
+ <CACPcB9c86eT=kXcXkBkUjZnifk5bZ71SogfW2tyNudrVmWbnDQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa393ac2-f9ae-288b-ff0b-9218b8270775@linux.intel.com>
+In-Reply-To: <CACPcB9c86eT=kXcXkBkUjZnifk5bZ71SogfW2tyNudrVmWbnDQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 05 Mar 2019 12:26:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 07:07:49PM +0300, Alexey Budankov wrote:
+On Wed, Feb 27, 2019 at 10:55:46PM +0800, Kairui Song wrote:
+> On Wed, Feb 27, 2019 at 8:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Tue, Feb 26, 2019 at 11:56:15PM +0800, Kairui Song wrote:
+> > >  arch/x86/hyperv/hv_init.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > > index 7abb09e2eeb8..92291c18d716 100644
+> > > --- a/arch/x86/hyperv/hv_init.c
+> > > +++ b/arch/x86/hyperv/hv_init.c
+> > > @@ -406,6 +406,10 @@ void hyperv_cleanup(void)
+> > >       /* Reset our OS id */
+> > >       wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+> > >
+> > > +     /* Cleanup page reference before reset the page */
+> > > +     hv_hypercall_pg = NULL;
+> > > +     wmb();
+> >
+> > What do we need that SFENCE for? Any why does it lack a comment?
 > 
-> Initialized decompression API so COMPRESSED record would be
-> decompressed into the resulting output data file.
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  tools/perf/builtin-inject.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 24086b7f1b14..8e0e06d3edfc 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -837,6 +837,9 @@ int cmd_inject(int argc, const char **argv)
->  	if (inject.session == NULL)
->  		return -1;
->  
-> +	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
-> +		pr_warning("Decompression initialization failed.\n");
+> Hi, that's for ensuring the hv_hypercall_pg is reset to NULL before
+> the following wrmsr call. The wrmsr call will make the pointer address
+> invalid.
 
-hum, I wonder we should put this inside perf_session__new/perf_session__delete
+WRMSR is a serializing instruction (except for TSC_DEADLINE and the
+X2APIC).
 
-jirka
+> I can add some comment in V2 if this is OK.
 
-> +
->  	if (inject.build_ids) {
->  		/*
->  		 * to make sure the mmap records are ordered correctly
-> @@ -867,6 +870,7 @@ int cmd_inject(int argc, const char **argv)
->  	ret = __cmd_inject(&inject);
->  
->  out_delete:
-> +	zstd_fini(&(inject.session->zstd_data));
->  	perf_session__delete(inject.session);
->  	return ret;
->  }
-> -- 
-> 2.20.1
-> 
+Barriers must always have a comment.
+
