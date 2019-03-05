@@ -2,121 +2,158 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47080C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9250C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146F62087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551789453;
-	bh=SIQj+VHq4Z6NlEdDQ9yK00lYzXSMvalkc6XEov7GPXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wn8qcSonCBesoysFL5P3nIYoogO2N9NA0jjfekxgvGyJGQkfcBMzzjkr/kIh7BfTp
-	 Hpn7iP2aS2wZ3JjFf/juEe0dj5+zLXANmiXfJQgYmFWseFpDI7mS+6p5QzGBzdxrPu
-	 YawXlsw5dZcPDVxE+WmtE/8VCY0xnB03ToTkJ2Dw=
+	by mail.kernel.org (Postfix) with ESMTP id 95EED2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDwHzRXU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfCEMhb (ORCPT
+        id S1728284AbfCEMiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 07:37:31 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42168 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbfCEMha (ORCPT
+        Tue, 5 Mar 2019 07:38:06 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46931 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728155AbfCEMiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 07:37:30 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r5so9275965wrg.9;
-        Tue, 05 Mar 2019 04:37:29 -0800 (PST)
+        Tue, 5 Mar 2019 07:38:06 -0500
+Received: by mail-io1-f66.google.com with SMTP id k21so6886553ior.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 04:38:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7QokLhVRiXMfRg+ZFW4EZloog6wgQwAh3snVLb8Xlx0=;
-        b=gxFd2FaW4iI8cuSGuC6Wq/5L3tTQZTBzveg/t5UAmJ7+7531WxXu46KgB2tX3sr7lz
-         XlfhOemzABM1Hx67bAQytsea4bbs171AT5THcnNtVO5qVPsEovl/DPk0DK23JabPOIYx
-         Xc1duSGsTYAP3DU3CD2lHSSB3jbLiTdRLVH2zrd1fmEG5lIKlK9GVx+Z7+hwbnfyke8W
-         IOez+nLNWjp1awQSpussx96gSnJcqg/Bfsi45KFY1NaRG2J0rRPHAn8tvcDtufyHT0XA
-         kAq2oP048Z3+TJ6VF9MQD7E0li4WfCfxdQktvKKLN9H6sOELW7vN5at4gWJbq8wjeTZG
-         ftPg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FMKOX00b5geW59JCGmiWRpcFMC5xVj2cRPCdif1RMXE=;
+        b=mDwHzRXUWveyC/rQfyGhDOJ22LHtVB1S02PYABYVmLiRI1a30O5fc4HY/Y3ZaiEfjP
+         VYMEikk9vGBnQv62Ur93hDOoLvqAWng5CCCUWEXojBACMFSbonbsb1L494j8P9Rf94Vf
+         s3BqBeXhtRx9z9RWtHf2Tr+UeYeedW5a1GZ+DesVPwsbIopTb6F2G5KgT9r8uX7ppxFK
+         h1wKbrxKPTtVcQrwYAZPpCzEQiOvhBBPIUOSQlMXxP81qztvmEEihxouHqP1nIzvYHg2
+         C4wRasXBamA8EaHurPmoDsMtomXZmBjlNEzMP5cjsu6xQGRub87w4jV6T0ugAxLgfAxm
+         a7gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7QokLhVRiXMfRg+ZFW4EZloog6wgQwAh3snVLb8Xlx0=;
-        b=NUj4kGPreJR1Y+M2CitBEsqVF68hTHnxNc8f3nyytC9mBftBEPDELNoS+LDGm1mEW8
-         xm8qNlVxto0182MJKUmB9vs8lAdfAsq5oIBJs4hpqw/L/SrUE1Zxw7+23M25IRc4iH4s
-         mkjkmJF27vDeueH7NERweNmeuT9MLuf7j/pwsbO3SRdlyIcxJr7Uu74t8QiEq7E3fFQX
-         C74xJqhSdhZzZvyD5VHSrLiDMDDziytV11S8qU6gHxPfHBvqF2x85yemj6L0r1Cjo0SJ
-         nxeJbQuJi6vIs8AMCM7k97X6W87XXrEROJ0Nc+w+UgCt/qP2L3EG5DASUhRXfmqEniDx
-         7QJA==
-X-Gm-Message-State: APjAAAWoCwX2xltiiF9MMijxBfMRnE+QO6RGTguCknenbyA2sXZXFkZ+
-        Epo7LX0ct6ylcMcZ0yd0PPI=
-X-Google-Smtp-Source: APXvYqx+4Fkd0SQKCQuFZLbtCf4PQy18HNTYg95JdDf4naBpwptaxrxSsi7Fo1KPZOTTijbB36pLVA==
-X-Received: by 2002:a5d:574b:: with SMTP id q11mr15555406wrw.41.1551789448783;
-        Tue, 05 Mar 2019 04:37:28 -0800 (PST)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id d21sm27040962wrc.44.2019.03.05.04.37.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 Mar 2019 04:37:27 -0800 (PST)
-Date:   Tue, 5 Mar 2019 13:37:25 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] EFI changes for v5.1
-Message-ID: <20190305123725.GA42141@gmail.com>
-References: <20190305122038.GA2472@gmail.com>
- <CAKv+Gu_P-tmM-tFCDuxy+6mE-tGUUbcFoCUbJMAsitMk5Ahstw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FMKOX00b5geW59JCGmiWRpcFMC5xVj2cRPCdif1RMXE=;
+        b=N0p7IX1OkyN08Yu5XrkSL0Xcbqqkpxcxt6f3u5M3fHju/kKPieqTobomSCdJ2YPFDj
+         Frpa15DZnEy9aYDNevSFYe6mAnV9i000rtT6IjTeGxNeCC4HChsz2UZkfGCh7eXTNUia
+         SIZL9TSDPlOFWhUzoe8X9fPw2eczzP/SoH5v1o4pu/9RkF6Aa/n89LuxN2QCNj09B7/5
+         RehT9zhDyb30SbyPIrc+PsPzjhkGDCBSBEdJrufFM8oujaF9CyHyrs3oFc2Z5Sv9ckNl
+         5HJFcKJyDSk2xoBpCqvwzN0Dyj+c6YAC0Hk5HPVDrxHMohJLSxXeLlvQ8IvNK+VJ4Keb
+         fTmg==
+X-Gm-Message-State: APjAAAW/x/Jgn2g7oUUiA+BJ9htUPfs1Ny6JRwWYmIqfNXJEZsv2fgcF
+        Ral5iLuOWW5Yly06AGspe/pN1fAjg0i5JFehrQ==
+X-Google-Smtp-Source: APXvYqwwWSOjiqVVI8C5wZg5+Upov/7T8/LsOOUiMH3bKLM132URHzOkTSpW54ZBSMPW0EXkhyZHCCxXZhWZ2xpfvhU=
+X-Received: by 2002:a5d:8251:: with SMTP id n17mr13793382ioo.259.1551789485259;
+ Tue, 05 Mar 2019 04:38:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_P-tmM-tFCDuxy+6mE-tGUUbcFoCUbJMAsitMk5Ahstw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1551011649-30103-1-git-send-email-kernelfans@gmail.com>
+ <20190225160358.GW10588@dhcp22.suse.cz> <CAFgQCTuD9MMdXRjyu1w5s3QSupWWtdcCOR6LhdSEP=1xGONWjQ@mail.gmail.com>
+ <20190226120919.GY10588@dhcp22.suse.cz>
+In-Reply-To: <20190226120919.GY10588@dhcp22.suse.cz>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Tue, 5 Mar 2019 20:37:53 +0800
+Message-ID: <CAFgQCTs5uW9baypGbW5z=KyC7Vd9-QjTSKLFAJC5c2Jd6_ow_Q@mail.gmail.com>
+Subject: Re: [PATCH 0/6] make memblock allocator utilize the node's fallback info
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     x86@kernel.org, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Daniel Vacek <neelx@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-
-> Hi ingo,
-> 
-> On Tue, 5 Mar 2019 at 13:20, Ingo Molnar <mingo@kernel.org> wrote:
+On Tue, Feb 26, 2019 at 8:09 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 26-02-19 13:47:37, Pingfan Liu wrote:
+> > On Tue, Feb 26, 2019 at 12:04 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Sun 24-02-19 20:34:03, Pingfan Liu wrote:
+> > > > There are NUMA machines with memory-less node. At present page allocator builds the
+> > > > full fallback info by build_zonelists(). But memblock allocator does not utilize
+> > > > this info. And for memory-less node, memblock allocator just falls back "node 0",
+> > > > without utilizing the nearest node. Unfortunately, the percpu section is allocated
+> > > > by memblock, which is accessed frequently after bootup.
+> > > >
+> > > > This series aims to improve the performance of per cpu section on memory-less node
+> > > > by feeding node's fallback info to memblock allocator on x86, like we do for page
+> > > > allocator. On other archs, it requires independent effort to setup node to cpumask
+> > > > map ahead.
+> > >
+> > > Do you have any numbers to tell us how much does this improve the
+> > > situation?
 > >
-> > Linus,
-> >
-> > Please pull the latest efi-core-for-linus git tree from:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-core-for-linus
-> >
-> >    # HEAD: 5c418dc789a3898717ebf2caa5716ba91a7150b2 efi: Fix build error due to enum collision between efi.h and ima.h
-> >
-> > The main EFI changes in this cycle were:
-> >
-> >  - Move BGRT table handling to earlier in the boot so we don't overwrite it
-> 
-> This one actually got reverted because it broke x86. I haven't heard 
-> back from the Intel engineers that reported the issue, so i will 
-> revisit this at a later date.
+> > Not yet. At present just based on the fact that we prefer to allocate
+> > per cpu area on local node.
+>
+> Yes, we _usually_ do. But the additional complexity should be worth it.
+> And if we find out that the final improvement is not all that great and
+> considering that memory-less setups are crippled anyway then it might
+> turn out we just do not care all that much.
+> --
+I had finished some test on a "Dell Inc. PowerEdge R7425/02MJ3T"
+machine, which owns 8 numa node. and the topology is:
+L1d cache:           32K
+L1i cache:           64K
+L2 cache:            512K
+L3 cache:            4096K
+NUMA node0 CPU(s):   0,8,16,24
+NUMA node1 CPU(s):   2,10,18,26
+NUMA node2 CPU(s):   4,12,20,28
+NUMA node3 CPU(s):   6,14,22,30
+NUMA node4 CPU(s):   1,9,17,25
+NUMA node5 CPU(s):   3,11,19,27
+NUMA node6 CPU(s):   5,13,21,29
+NUMA node7 CPU(s):   7,15,23,31
 
-Indeed, and I applied the revert and then promptly forgot about it...
+Here is the basic info about the NUMA machine. cpu 0 and 16 share the
+same L3 cache. Only node 1 and 5 own memory. Using local node as
+baseline, the memory write performance suffer 25% drop to nearest node
+(i.e. writing data from node 0 to 1), and 78% drop to farthest node
+(i.e. writing from 0 to 5).
 
-So the real changelog is:
+I used a user space test case to get the performance difference
+between the nearest node and the farthest. The case pins two tasks on
+cpu 0 and 16. The case used two memory chunks, A which emulates a
+small footprint of per cpu section, and B which emulates a large
+footprint. Chunk B is always allocated on nearest node, while chunk A
+switch between nearest node and the farthest to render comparable
+result. To emulate around 2.5% access to per cpu area, the case
+composes two groups of writing, 1 time to memory chunk A, then 40
+times to chunk B.
 
- - Use 32-bit alignment for efi_guid_t
- - Allow the SetVirtualAddressMap() call to be omitted
- - Implement earlycon=efifb based on existing earlyprintk code
- - Various minor fixes and code cleanups from Sai, Ard and me
+On the nearest node, I used 4MB foot print, which is the same size as
+L3 cache. And varying foot print from 2K -> 4K ->8K to emulate the
+access to the per cpu section. For 2K and 4K, perf result can not tell
+the difference exactly, due to the difference is smaller than the
+variance. For 8K: 1.8% improvement, then the larger footprint, the
+higher improvement in performance. But 8K means that a module
+allocates 4K/per cpu in the section. This is not in practice.
 
-Sorry and thanks,
+So the changes may be not need.
 
-	Ingo
+Regards,
+Pingfan
