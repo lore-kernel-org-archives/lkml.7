@@ -2,94 +2,122 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4DDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080F2C10F09
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0270F20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD5C20643
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="I+Ef0zg6"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="KGLPKqPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbfCESSK (ORCPT
+        id S1727304AbfCES1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 13:18:10 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:46376 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbfCESSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 13:18:08 -0500
-Received: from zn.tnic (p200300EC2BCD6B00ECFD1928E9AB0C1D.dip0.t-ipconnect.de [IPv6:2003:ec:2bcd:6b00:ecfd:1928:e9ab:c1d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C0A91EC014B;
-        Tue,  5 Mar 2019 19:18:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1551809885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=zSTufVaUCZI5YOnwsLc4xAHOFWxe5Am/nC0+VF8ZJDw=;
-        b=I+Ef0zg6AYvh7HiH9FNlmTq/5+6zqnWoBmW8rGMIA3/ujnurhJDKrY9sfAxajzzKrGgudJ
-        dUNYdGDavT7f3UmdEp0DiYVcovDE06ycrPDjizgfEUsX/dS9X/Hia1keUuyytII+F8YpAI
-        Vm8DiUKIS4V0PQEON/i+ev0/eO3yhoM=
-Date:   Tue, 5 Mar 2019 19:18:08 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH] x86: Deprecate a.out support
-Message-ID: <20190305181808.GH8256@zn.tnic>
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic>
- <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop>
- <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
- <20190305173134.GE8256@zn.tnic>
- <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
- <20190305181138.GG8256@zn.tnic>
+        Tue, 5 Mar 2019 13:27:36 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36715 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfCES1g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 13:27:36 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n22so6338072pfa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 10:27:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Xqn+Yf+5gP/Zaqja+Mz3g2jhch0LiFfd+n+wsWAt/6A=;
+        b=KGLPKqPpx9wi4Hrhx6oW22RKrj95iWOfLj1SKFe/bPEgs8Bxtee/rRMVHbFhxJKiFR
+         25vweCDQ56eWUv1tYK34TUXim4jCfODDjCzD/dqes4fg0+7iwjn4EOHUwLCj0e9QrsT5
+         bPy9Thrq72xihaScYweclCNhdvZpOZBm+Cu4bbD94LRx9i86cyQkA5ZKdPL0MBfLGyrT
+         dqHL0szhZmNjq1B0I2awgQjje6desCrJf9TWiV2de0lZu5QUKNhQjTFQFE/kjAB9O2xH
+         5dCPg5SA7A6u/Jm4Gtee4TFePmQsEuwEkArF37+qNBUGxV/5sTivu7ILbHlvC2BNulmA
+         4NPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Xqn+Yf+5gP/Zaqja+Mz3g2jhch0LiFfd+n+wsWAt/6A=;
+        b=CnRN9w37neOJYQyy74ofnmpEpznigtwbZgJ08fNeNA7Ciam4P8carslQxByWmEKvqW
+         myi09ePCh5ZdLQzMQsGUUHLt5jOmcgESsryFzJW+uzXxXvTLyWihEiVzBgx0MqWWN6sj
+         95Zy4by5Koht/qZHjagDs1to4/vh1K7sdbfBC5uLs0pX2CKnGZ8Dos2883Sy0DTQnrW1
+         qJuz/7aWH0wKW23EBtCOIiATc0so8vrAvciebhaRPw9w9ZA9zsXg7vTBGH8J3itJ30im
+         OaA7e3sH/O+MOkaNsHE2jir6PpIedxDLLN+gb322CNDVkjxehK/vcmPL4EzXtJkloG4/
+         ljfQ==
+X-Gm-Message-State: APjAAAXU0HAIF9att0myjq5yDcvZgUiSFkFpv+fqKPS/gkOZhBnKNOBZ
+        jboI5fX2P0FM2q5t4+VcHlhIGA==
+X-Google-Smtp-Source: APXvYqzrpQZg1n82nmEhHNyq5fq8ItBMmGNBXZdJ4Z9iuRfUiErmuSbgRGyLwYBJ25NHvS5ZenLLHw==
+X-Received: by 2002:a17:902:ea06:: with SMTP id cu6mr2569398plb.187.1551810455001;
+        Tue, 05 Mar 2019 10:27:35 -0800 (PST)
+Received: from shemminger-XPS-13-9360 ([167.220.56.187])
+        by smtp.gmail.com with ESMTPSA id 73sm16653605pga.19.2019.03.05.10.27.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 Mar 2019 10:27:34 -0800 (PST)
+Date:   Tue, 5 Mar 2019 10:27:33 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>
+Subject: Re: [PATCH 0/3] pci-hyperv: fix memory leak and add
+ pci_destroy_slot()
+Message-ID: <20190305102733.30e25dae@shemminger-XPS-13-9360>
+In-Reply-To: <20190304213357.16652-1-decui@microsoft.com>
+References: <20190304213357.16652-1-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190305181138.GG8256@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 07:11:38PM +0100, Borislav Petkov wrote:
-> I guess you could Cc arch maintainers with the a.out-core.h removal
-> patch to see if anyone screams.
+On Mon, 4 Mar 2019 21:34:47 +0000
+Dexuan Cui <decui@microsoft.com> wrote:
 
-And they're like two for which we need confirmation:
+> Patch #1 fixes a memory leak caused by incorrectly-maintained hpdev->refs.
+> 
+> Patch #2 and #3 make sure the "slot" is removed in all the scenarios.
+> Without them, in the quick hot-add/hot-remove test, systemd-dev may easily
+> crash when trying to access a dangling sys file in /sys/bus/pci/slots/:
+> "BUG: unable to handle kernel paging request".
+> 
+> BTW, Patch #2 was posted on Feb 7, 2019, and this is the v2: the change
+> to hv_eject_device_work() in v1 is removed, as the change is only needed
+> when we hot-remove the device and remove the pci-hyperv driver at the 
+> same time. It looks more work is required to make this scenaro work
+> correctly, and since removing the driver is not really a "usual" usage,
+> we can address this scenario in the future.
+> 
+> Please review the patchset.
+> 
+> Dexuan Cui (3):
+>   PCI: hv: Fix a memory leak in hv_eject_device_work()
+>   PCI: hv: Add hv_pci_remove_slots() when we unload the driver
+>   PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if
+>     necessary
+> 
+>  drivers/pci/controller/pci-hyperv.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 
-$ git ls-files | grep a.out-core.h
-arch/alpha/include/asm/a.out-core.h
-arch/m68k/include/asm/a.out-core.h
-arch/um/include/asm/a.out-core.h
-arch/x86/include/asm/a.out-core.h
 
-um and x86 are clear.
+Thanks for fixing this.
 
-Adding alpha and m68k MLs to Cc.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
