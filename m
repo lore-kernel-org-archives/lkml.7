@@ -2,95 +2,89 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A171AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954A9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F77F20652
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C14920652
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="djKJH7fR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A2IsnPcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfCEVsL (ORCPT
+        id S1727674AbfCEVug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:48:11 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41580 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfCEVsL (ORCPT
+        Tue, 5 Mar 2019 16:50:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50244 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfCEVuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:48:11 -0500
-Received: by mail-pf1-f196.google.com with SMTP id d25so6710073pfn.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 13:48:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aQsxaISu/W3opupnzBaegT3WfDuFtqbsF6km0GsJEGU=;
-        b=djKJH7fREduXmgSGVzfISuJ4YdAxlSZ9B/FkKMNZVG1AXettOC+1evKpnqlFF2gBCA
-         wjDp1t9xa55oJBzix2xK4APKLRX/PnRCwSgID4efqPu6DhKsgoQM6CF4Iw1JX3FHPGo1
-         Hij4UmrfdCBpJCSBARplhIbofY0A45+McXkI39twfo+Ru2V1B5j+FAgydgu3Ab59IyZY
-         LYKSJO8X8/Gx4ByL+TKoW+JY4wBi0syTDQYJunGuZry/kHxUNZpMwuZl1hA/aeigUwEL
-         O0lU4YkwhS4KY/Y7rUzd2BMI0EIAKG9O+gaiU7yThsVjvgHpNqDxIbWevwdelSiruTTV
-         noRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aQsxaISu/W3opupnzBaegT3WfDuFtqbsF6km0GsJEGU=;
-        b=NwGGbx8EbVMvhZV6NNLoaU3IGHtCYRv4O+J4HpGfo1xiBlPM9ITJDiJU/9A+cu9z/W
-         vlX2YNL2z4toagWdjH2zD+zOflCV8hlRi+p7bVsSRHx8Wb+1ZnlOjeptKmWAA8Bi+DkT
-         clvI9KVdwvAVt8qzs1sTmJfL7XB++cm1z6YX9LMZiFYSBvkUTDBEbhefTuesgtuewUfZ
-         OdGbOHIv94BxU+KpJ0PSd21q4qskliNkWAwiGZ1vj8N2fswSu6eepm4V2fgPoA0jWf42
-         91Io9AXn5jRK5PArZOn23yZ28q/TxJoP8SlkawH6FcTnqbIvAzwsKgTXBisVWa1Y7TR9
-         fCLA==
-X-Gm-Message-State: APjAAAUumzn2RYaM3Yt482D9gdGGi8czPC3e4OrxxBiTFNkiccseeZYe
-        bCXQeUZWbTcbNuRsrNCa3MH6yajNjQCpApZPY3wHLg==
-X-Google-Smtp-Source: APXvYqyN6SUybp/uOKKrzd5nr+1q0kNAXA+C/rwkYQjBk50VWrfmlP1YixE5R4GALDvwUJM5UcczhpzI3EsIolxOCbA=
-X-Received: by 2002:a62:398d:: with SMTP id u13mr3909771pfj.32.1551822490098;
- Tue, 05 Mar 2019 13:48:10 -0800 (PST)
+        Tue, 5 Mar 2019 16:50:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IYF06Fn89jbE735n2truln7RThJkUdQZkfi5xUO771w=; b=A2IsnPcRincOTOVQpBK20Pucm
+        jgfaX6aTQ+O/78psILE5gqXxtwTiWXak+VRYvmBzMhIA9bbXB55tn681VlG/4l5MVHyhC6efcb8Zc
+        WVbJPpv3ep/oQ18A8pK2501LNnVd44T2K0A4f8o6nudqqqMBBJvnqR/NR+KLhVonfiOW1y+rv6F+y
+        sc56jbp0eouUejiALdyTNjVMOKywK/nxgEHiPLuGfGpEQmQoNdhgiqLVCmYnNAbyU+AIPA6ZT4j/8
+        TpRFZJIz9aT/zYXy29u+6fuppTMZSnDpLbDC/e8VywoGF66yR8Iu3FHe1cuR1wfmwnr7KW7plz6h5
+        +3UyPkKsg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1Hwm-0003Vc-NN; Tue, 05 Mar 2019 21:50:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 09CF120288BA3; Tue,  5 Mar 2019 22:49:59 +0100 (CET)
+Date:   Tue, 5 Mar 2019 22:49:59 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
+        Ben Maurer <bmaurer@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>
+Subject: Re: [PATCH for 5.1 0/3] Restartable Sequences updates for 5.1
+Message-ID: <20190305214958.GP32477@hirez.programming.kicks-ass.net>
+References: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-References: <20190305103014.25847-1-kieran.bingham@ideasonboard.com>
-In-Reply-To: <20190305103014.25847-1-kieran.bingham@ideasonboard.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 5 Mar 2019 13:47:58 -0800
-Message-ID: <CAKwvOdnOuXhkwizSnp6qOwJkisHKEBs=2xSvHaus3Yhdx2xE-w@mail.gmail.com>
-Subject: Re: [PATCH v3] scripts/gdb: replace flags (MS_xyz -> SB_xyz)
-To:     stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Dan Robertson <danlrobertson89@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 2:30 AM Kieran Bingham
-<kieran.bingham@ideasonboard.com> wrote:
->
-> From: Jackie Liu <liuyun01@kylinos.cn>
->
-> Since commit 1751e8a6cb93 ("Rename superblock flags (MS_xyz -> SB_xyz)"),
-> scripts/gdb should be updated to replace MS_xyz with SB_xyz.
->
-> This change didn't directly affect the running operation of scripts/gdb until
-> commit e262e32d6bde "vfs: Suppress MS_* flag defs within the kernel unless
+On Tue, Mar 05, 2019 at 02:47:52PM -0500, Mathieu Desnoyers wrote:
+> Mathieu Desnoyers (3):
+>   rseq: cleanup: Reflect removal of event counter in comments
+>   rseq: cleanup: remove rseq_len from task_struct
+>   rseq/selftests: Adapt number of threads to the number of detected cpus
+> 
+>  arch/arm/kernel/signal.c                       | 3 +--
+>  arch/x86/kernel/signal.c                       | 5 +----
+>  include/linux/sched.h                          | 4 ----
+>  kernel/rseq.c                                  | 9 +++------
+>  tools/testing/selftests/rseq/run_param_test.sh | 7 +++++--
+>  5 files changed, 10 insertions(+), 18 deletions(-)
 
-Note to stable, e262e32d6bde landed in v5.0-rc1 (which was just
-released), so we'll want this picked back to 5.0 stable once this
-patch hits mainline (akpm just picked it up).
-
-Just following up to say that without this, debugging a kernel a
-kernel via GDB+QEMU is broken in the 5.0 release.
--- 
-Thanks,
-~Nick Desaulniers
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
