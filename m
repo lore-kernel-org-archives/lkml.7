@@ -2,95 +2,103 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5CBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CE6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1ACE2084F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="hmfMJQUx"
+	by mail.kernel.org (Postfix) with ESMTP id 97B2320842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfCELcW (ORCPT
+        id S1727840AbfCELck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:32:22 -0500
-Received: from smtp113.ord1d.emailsrvr.com ([184.106.54.113]:39122 "EHLO
-        smtp113.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727305AbfCELcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:32:21 -0500
-Received: from smtp23.relay.ord1d.emailsrvr.com (localhost [127.0.0.1])
-        by smtp23.relay.ord1d.emailsrvr.com (SMTP Server) with ESMTP id B207A201BD;
-        Tue,  5 Mar 2019 06:32:20 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1551785540;
-        bh=aTS+w9vaCrfJLA/t7vBQ3ycgmUsOm+Ymcbo0/vx4F30=;
-        h=Subject:To:From:Date:From;
-        b=hmfMJQUx0i4L5GyKJ4brP+n7SuCeH333xl1GePUo8+XFL0AgwGFvPKdmIB1EQ9Eud
-         O9CfLgBLGiApaiPbRstidn4rp6HzilLTN0H3cxo8i+6LFH8D1DkELod29xFkfbfKPG
-         tLpophMNne4qosoIHUxJfW2clqOU702deQRqvGwU=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp23.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id CFC20201E7;
-        Tue,  5 Mar 2019 06:32:19 -0500 (EST)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.185] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Tue, 05 Mar 2019 06:32:20 -0500
-Subject: Re: [PATCH] staging: comedi: ni_mio_common: Fix divide-by-zero for
- DIO cmdtest
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Spencer E . Olson" <olsonse@umich.edu>
-References: <20190304143354.4964-1-abbotti@mev.co.uk>
- <20190305081629.GA13474@kadam>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <261cec72-ed19-7092-5307-76481e9f20ba@mev.co.uk>
-Date:   Tue, 5 Mar 2019 11:32:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 5 Mar 2019 06:32:40 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4213 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727305AbfCELcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:32:39 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5BC7AFAAC87E93D5D0E5;
+        Tue,  5 Mar 2019 19:32:37 +0800 (CST)
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 5 Mar 2019 19:32:30 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to adapt small inline xattr space in __find_inline_xattr()
+Date:   Tue, 5 Mar 2019 19:32:26 +0800
+Message-ID: <20190305113226.124873-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190305081629.GA13474@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/2019 11:10, Dan Carpenter wrote:
-> On Mon, Mar 04, 2019 at 02:33:54PM +0000, Ian Abbott wrote:
->> The problem was reported on the COMEDI mailing list here:
->> https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
->>
-> 
-> Can you give Ivan a Reported-by tag?  It's a public mailing list so
-> that shouldn't be a problem.
+With below testcase, we will fail to find existed xattr entry:
 
-I can do, but I don't know his full name.  Will that be a problem?
+1. mkfs.f2fs -O extra_attr -O flexible_inline_xattr /dev/zram0
+2. mount -t f2fs -o inline_xattr_size=1 /dev/zram0 /mnt/f2fs/
+3. touch /mnt/f2fs/file
+4. setfattr -n "user.name" -v 0 /mnt/f2fs/file
+5. getfattr -n "user.name" /mnt/f2fs/file
 
-> 
->> Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
->> Cc: <stable@vger.kernel.org> # 4.6+
->> Cc: Spencer E. Olson <olsonse@umich.edu>
->> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
->> ---
-> 
-> regards,
-> dan carpenter
-> 
-> 
+/mnt/f2fs/file: user.name: No such attribute
 
+The reason is for inode which has very small inline xattr size,
+__find_inline_xattr() will fail to traverse any entry due to first
+entry may not be loaded from xattr node yet, later, we may skip to
+check entire xattr datas in __find_xattr(), result in such wrong
+condition.
 
+This patch adds condition to check such case to avoid this issue.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/xattr.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index ca47224d78ab..848a785abe25 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -224,11 +224,11 @@ static struct f2fs_xattr_entry *__find_inline_xattr(struct inode *inode,
+ {
+ 	struct f2fs_xattr_entry *entry;
+ 	unsigned int inline_size = inline_xattr_size(inode);
++	void *max_addr = base_addr + inline_size;
+ 
+ 	list_for_each_xattr(entry, base_addr) {
+-		if ((void *)entry + sizeof(__u32) > base_addr + inline_size ||
+-			(void *)XATTR_NEXT_ENTRY(entry) + sizeof(__u32) >
+-			base_addr + inline_size) {
++		if ((void *)entry + sizeof(__u32) > max_addr ||
++			(void *)XATTR_NEXT_ENTRY(entry) > max_addr) {
+ 			*last_addr = entry;
+ 			return NULL;
+ 		}
+@@ -239,6 +239,13 @@ static struct f2fs_xattr_entry *__find_inline_xattr(struct inode *inode,
+ 		if (!memcmp(entry->e_name, name, len))
+ 			break;
+ 	}
++
++	/* inline xattr header or entry across max inline xattr size */
++	if (IS_XATTR_LAST_ENTRY(entry) &&
++		(void *)entry + sizeof(__u32) > max_addr) {
++		*last_addr = entry;
++		return NULL;
++	}
+ 	return entry;
+ }
+ 
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+2.18.0.rc1
+
