@@ -2,93 +2,107 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7561C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A0620661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44BC20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tWl3OtUc"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZStjiC91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfCERb0 (ORCPT
+        id S1728310AbfCERbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:31:26 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:46614 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfCERbW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:31:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NtBcnjSm0T7KhO3ATpEfCz8Tr1Odp+WUtOVD7jNdUOo=; b=tWl3OtUcsU9r/D5gkDlEzGZjS
-        SKAqJF8yd7+gMtk2mhE6MU8mb3/Cb4hG82V0e9Gh169qKKEat6VTWQUq/11+9WR9K7DlBt2tL9T8X
-        CKG+QIPdI560+yG6D35meAhyvnAf/dwV25wPIkzIKhZzRxx5ecgRk45yE33j5Plq+HxQccWs6WEeu
-        6DjwzdoWq7bmXNN8sHzkJMI1oLTn33oS5/ZFBMnFFLmVhJ8g2ynz+wPCNzJIepnOlMh9M3Kol8bmC
-        oa2Uwug/oNqfXb9DJBqvg4PGltiqk9I9SYAOVlaqdmvnxSNS+M9op9FwrxX0l/a4HbCWqPZCjv//i
-        XQtAMkb0A==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37262)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1h1DuP-0002ad-EY; Tue, 05 Mar 2019 17:31:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1h1DuK-0003NW-45; Tue, 05 Mar 2019 17:31:12 +0000
-Date:   Tue, 5 Mar 2019 17:31:12 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Peng Hao <peng.hao2@zte.com.cn>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Smarter Kconfig help
-Message-ID: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
+        Tue, 5 Mar 2019 12:31:39 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:38738 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbfCERbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 12:31:38 -0500
+Received: from zn.tnic (p200300EC2BCD6B0038F240D7E20AD2C8.dip0.t-ipconnect.de [IPv6:2003:ec:2bcd:6b00:38f2:40d7:e20a:d2c8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 78EAA1EC08EF;
+        Tue,  5 Mar 2019 18:31:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1551807096;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=12xV4AtewluQmMXfUFGYit00bMr6sAztmgDzL+S33LI=;
+        b=ZStjiC91KVFYJNXPhbEMC1pNO98Lyvi5++6OwQtiHEmd63KdzO508wrpbQxf9g+ZUOrnPM
+        A32AkvGO8mjtW4pydtzxpM9QHb3RZAw5Ka0xmi/sOofikYjEyP29sOlpkffvepiHDRYUoz
+        y4EuArTt2xXYQg9nksItpGci607iOrc=
+Date:   Tue, 5 Mar 2019 18:31:34 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: Re: [PATCH] x86: Deprecate a.out support
+Message-ID: <20190305173134.GE8256@zn.tnic>
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+ <20190305091904.GB8256@zn.tnic>
+ <20190305122218.GD13380@bombadil.infradead.org>
+ <20190305134347.4be2449c@alans-desktop>
+ <20190305145717.GD8256@zn.tnic>
+ <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guys,
+On Tue, Mar 05, 2019 at 08:22:21AM -0800, Linus Torvalds wrote:
+> Because I think all the known *bugs* we had were with the core dumping
+> code, weren't they?
 
-We need to be smarter when writing Kconfig help.  I'm just going
-through updating my build trees with the results of 5.0 development,
-and a number of the help texts are next to useless.  For example,
+Well, I'm aware of only this one I fixed but who knows what else has
+bitrotten out there through the years...
 
-PVPANIC - is this something that should be enabled for a host or
-guest kernel?  Answer: you have to read the driver code to find out.
+> Removing it looks trivial. Untested patch attached.
+> 
+> Then I'd be much happier with your "let's deprecate a.out entirely" as
+> a second patch, because I think it's a unrelated issue and much more
+> likely to have somebody pipe up and say "hey, I have this sequence
+> that generates executables dynamically, and I use a.out because it's
+> much simpler than ELF, and now it's broken". Or something.
 
-IMX_IRQSTEER - which i.MX SoCs does this apply to?  The help text
-just says:
+Hohumm, yap, it all makes sense to me. That's definitely the safer
+approach without us having to revert patches later.
 
-  "Support for the i.MX IRQSTEER interrupt multiplexer/remapper."
+So how do you wanna handle this?
 
-which doesn't say which SoCs this should be enabled for - it turns
-out that grepping for the driver's DT compatible string, none of
-the 32-bit ARM cores have support for this, yet we still default
-it to enabled there.  It seems the help text should at the very
-least tell the user that this is not applicable to i.MX SoCs with
-32-bit ARM cores.
+I guess the easiest would be if you apply your patch directly now and
+add the a.out phase-out strategy we're going for in its commit message
+so that people are aware of what we're doing.
 
-I'm sure there's many other instances of this... I suspect that
-it's caused by review concentrating mostly on the technical aspects
-of the code and the Kconfig help text just gets forgotten about.
+This will allow for other arch maintainers to delete
+arch/*/include/asm/a.out-core.h, Jann mentions in the other mail, after
+-rc1 is cut.
 
-Can we at least improve these two options please?
+And then I'll carry any other patches through the tip tree ontop of -rc1
+too.
+
+Thx.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
