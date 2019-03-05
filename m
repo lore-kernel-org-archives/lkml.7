@@ -2,115 +2,214 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED67C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DF1C10F09
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE57D20652
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MPR0IdkG"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB9B20652
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551822287;
+	bh=k/UxhkjfL8M4bhECI5GbVAFTerk1jG9pwIxCOMlGNkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xlYJZTknO77jygHhqPcdBNWHnxFSCBSThwBxep7k5Y3G6KIA3cyoaSx3umpbo9PR4
+	 WO1rcNNbDi6Hpm67JP8dtCJ/DPRVwntYB9fbKsnMy53dBMtH3RAuF0UP/1wlY5MRl3
+	 fcXDMyP49OogCjgzCEfKPaVK4dPToGGfPPo5fhD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfCEVmw (ORCPT
+        id S1726695AbfCEVop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:42:52 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43634 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfCEVmv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:42:51 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i8so8106396oib.10;
-        Tue, 05 Mar 2019 13:42:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MOD4jyjI8RMFk80xHkOoeeVuPubtDARVBzjuJNAgK4o=;
-        b=MPR0IdkGj4UN618A/kk4Ofm6oKt6cIm92w+9YkBPwuXZa4wTC8IMyFqc5VPGp1Djbs
-         3HSn7GDs8RCcjspqgGIpCagtaYXUcy2ar4talSTXkCxTpIaMMjMp28QiVeMx8wY5K+dU
-         m6iKCzn844MRmSZHacQv2tTyVxjlX8AGbrzxhK36UqcEtoqkoqxPuoiaD1hiAdw3tgu8
-         eFkERHTFqfDA41me3AJcYLlvYhAhQqWssgiYaKET+fk7i5hEcZ20q2mBQtlgIsY/hQvD
-         oVJj2QSOduixlnLnY6qxLD8kZxvDJ5tLcYwGDkwUA0OnIugmJovzhVmiB12KV4HznzhG
-         DjrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MOD4jyjI8RMFk80xHkOoeeVuPubtDARVBzjuJNAgK4o=;
-        b=png6lon+g+ds9oeQVbM+2QqL/x1nR47Umf37u8Zb7RARleMuCEGvnT/0Z5sV3kwTxw
-         i0aGh9mipjhA5Al66CqwYIZ7NYk+EvClXDu4Qd7tvL02sh5HvoJN88RLHA738SWE9zdx
-         EjdciIEi7XGHVZ71tzypSHQOjze2Y6Fa3Z6BD85UMaT2sahEe9uqRofck4vV1z9awPkm
-         NTn1NOdNhCFD+8WrIF90KmkRDPkgMrBIzQwQlZrUKqLoZSEkuerJbaS4effhOgC65rP6
-         sbbL5VjA0lbHJLE1gDy6sm2D9XJZ1KCxP005o2cLqFOQJMCGXTSgrhKQT2KfyMKdXUee
-         ezvA==
-X-Gm-Message-State: APjAAAVJcQ4siC99761hsNLzIUV3tdH/ZgYoBGR4S6ORJ3YmRa+f9YqZ
-        I0h4IhIkhxfgh1M1tY+coWtKg33MSPcDQBYAucY=
-X-Google-Smtp-Source: APXvYqyksJ+0KlMrRx3GQbccih1Q/btUaH8LrNjn7p+luy/KhmX/NYYTT5zc0TpVuieiYusskOeMxSyLDsy/oMRuFAA=
-X-Received: by 2002:aca:c286:: with SMTP id s128mr379757oif.39.1551822170308;
- Tue, 05 Mar 2019 13:42:50 -0800 (PST)
+        Tue, 5 Mar 2019 16:44:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbfCEVop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 16:44:45 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8756A20652;
+        Tue,  5 Mar 2019 21:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551822283;
+        bh=k/UxhkjfL8M4bhECI5GbVAFTerk1jG9pwIxCOMlGNkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VpwAYZJBbM7vymnVQ0+20hrruM9l1QlZbDy7w+H/lxEGE/dpGN9x9zVdyX7BRPNcw
+         54xiyKxoChTldMfayHgF47yVVQwqoO/VAeXBa+R/dfm5LZ5bGi+HLfXy8H8po9n/eH
+         TGsHhzkKb4ObHi0dE4aOzrYT99KsgGyZ8td3xKXU=
+Date:   Tue, 5 Mar 2019 15:44:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, okaya@kernel.org, myron.stowe@redhat.com
+Subject: Re: [PATCH v2] PCI: Fix "try" semantics of bus and slot reset
+Message-ID: <20190305214442.GA215617@google.com>
+References: <155051908423.10656.10601490787034368635.stgit@gimli.home>
 MIME-Version: 1.0
-References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-3-narmstrong@baylibre.com>
-In-Reply-To: <20190304103846.2060-3-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 5 Mar 2019 22:42:39 +0100
-Message-ID: <CAFBinCCp+bME0fnWRJx0L1E5aazUh1Hw-svsP7+D_QU4dP08nw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE Combo
- PHY Bindings
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
-        kishon@ti.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155051908423.10656.10601490787034368635.stgit@gimli.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Mon, Feb 18, 2019 at 12:46:46PM -0700, Alex Williamson wrote:
+> The commit referenced below introduced device locking around save and
+> restore of state for each device during a PCI bus "try" reset, making
+> it decidely non-"try" and prone to deadlock in the event that a device
+> is already locked.  Restore __pci_reset_bus() and __pci_reset_slot()
+> to their advertised locking semantics by pushing the save and restore
+> functions into the branch where the entire tree is already locked.
+> Extend the helper function names with "_locked" and update the comment
+> to reflect this calling requirement.
+> 
+> Fixes: b014e96d1abb ("PCI: Protect pci_error_handlers->reset_notify() usage with device_lock()")
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-On Mon, Mar 4, 2019 at 11:38 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
->
-> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Applied with Sinan's reviewed-by to pci/misc for v5.1, thanks, Alex!
+
 > ---
->  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> new file mode 100644
-> index 000000000000..7cfc17e2df31
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
-> @@ -0,0 +1,22 @@
-> +* Amlogic G12A USB3 + PCIE Combo PHY binding
-> +
-> +Required properties:
-> +- compatible:  Should be "amlogic,meson-g12a-usb3-pcie-phy"
-> +- #phys-cells: must be 1. The cell number is used to select the phy mode
-> +  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
-> +- reg:         The base address and length of the registers
-> +- clocks:      a phandle to the 100MHz reference clock of this PHY
-> +- clock-names: must be "ref_clk"
-> +- resets:      phandle to the reset lines for the PHY control
-> +- reset-names: must be "phy"
-one question on the resets:
-- in v1 you had three reset lines: RESET_PCIE_CTRL_A, RESET_PCIE_PHY,
-RESET_PCIE_APB
-- in v2 you only have the "phy" reset line.
-is this because the other two are connected to the PCIe controller
-(Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt) instead
-of the PHY?
-
-
-Regards
-Martin
+>  drivers/pci/pci.c |   54 ++++++++++++++++++++++++++---------------------------
+>  1 file changed, 26 insertions(+), 28 deletions(-)
+> 
+> v2: White space only fix suggested by Myron Stowe, removing an additional
+>     empty line from __pci_reset_slot() after the restore call is moved.
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index c25acace7d91..2fb149216cde 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5058,39 +5058,42 @@ static int pci_slot_trylock(struct pci_slot *slot)
+>  	return 0;
+>  }
+>  
+> -/* Save and disable devices from the top of the tree down */
+> -static void pci_bus_save_and_disable(struct pci_bus *bus)
+> +/*
+> + * Save and disable devices from the top of the tree down while holding
+> + * the @dev mutex lock for the entire tree.
+> + */
+> +static void pci_bus_save_and_disable_locked(struct pci_bus *bus)
+>  {
+>  	struct pci_dev *dev;
+>  
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+> -		pci_dev_lock(dev);
+>  		pci_dev_save_and_disable(dev);
+> -		pci_dev_unlock(dev);
+>  		if (dev->subordinate)
+> -			pci_bus_save_and_disable(dev->subordinate);
+> +			pci_bus_save_and_disable_locked(dev->subordinate);
+>  	}
+>  }
+>  
+>  /*
+> - * Restore devices from top of the tree down - parent bridges need to be
+> - * restored before we can get to subordinate devices.
+> + * Restore devices from top of the tree down while holding @dev mutex lock
+> + * for the entire tree.  Parent bridges need to be restored before we can
+> + * get to subordinate devices.
+>   */
+> -static void pci_bus_restore(struct pci_bus *bus)
+> +static void pci_bus_restore_locked(struct pci_bus *bus)
+>  {
+>  	struct pci_dev *dev;
+>  
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+> -		pci_dev_lock(dev);
+>  		pci_dev_restore(dev);
+> -		pci_dev_unlock(dev);
+>  		if (dev->subordinate)
+> -			pci_bus_restore(dev->subordinate);
+> +			pci_bus_restore_locked(dev->subordinate);
+>  	}
+>  }
+>  
+> -/* Save and disable devices from the top of the tree down */
+> -static void pci_slot_save_and_disable(struct pci_slot *slot)
+> +/*
+> + * Save and disable devices from the top of the tree down while holding
+> + * the @dev mutex lock for the entire tree.
+> + */
+> +static void pci_slot_save_and_disable_locked(struct pci_slot *slot)
+>  {
+>  	struct pci_dev *dev;
+>  
+> @@ -5099,26 +5102,25 @@ static void pci_slot_save_and_disable(struct pci_slot *slot)
+>  			continue;
+>  		pci_dev_save_and_disable(dev);
+>  		if (dev->subordinate)
+> -			pci_bus_save_and_disable(dev->subordinate);
+> +			pci_bus_save_and_disable_locked(dev->subordinate);
+>  	}
+>  }
+>  
+>  /*
+> - * Restore devices from top of the tree down - parent bridges need to be
+> - * restored before we can get to subordinate devices.
+> + * Restore devices from top of the tree down while holding @dev mutex lock
+> + * for the entire tree.  Parent bridges need to be restored before we can
+> + * get to subordinate devices.
+>   */
+> -static void pci_slot_restore(struct pci_slot *slot)
+> +static void pci_slot_restore_locked(struct pci_slot *slot)
+>  {
+>  	struct pci_dev *dev;
+>  
+>  	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
+>  		if (!dev->slot || dev->slot != slot)
+>  			continue;
+> -		pci_dev_lock(dev);
+>  		pci_dev_restore(dev);
+> -		pci_dev_unlock(dev);
+>  		if (dev->subordinate)
+> -			pci_bus_restore(dev->subordinate);
+> +			pci_bus_restore_locked(dev->subordinate);
+>  	}
+>  }
+>  
+> @@ -5177,17 +5179,15 @@ static int __pci_reset_slot(struct pci_slot *slot)
+>  	if (rc)
+>  		return rc;
+>  
+> -	pci_slot_save_and_disable(slot);
+> -
+>  	if (pci_slot_trylock(slot)) {
+> +		pci_slot_save_and_disable_locked(slot);
+>  		might_sleep();
+>  		rc = pci_reset_hotplug_slot(slot->hotplug, 0);
+> +		pci_slot_restore_locked(slot);
+>  		pci_slot_unlock(slot);
+>  	} else
+>  		rc = -EAGAIN;
+>  
+> -	pci_slot_restore(slot);
+> -
+>  	return rc;
+>  }
+>  
+> @@ -5273,17 +5273,15 @@ static int __pci_reset_bus(struct pci_bus *bus)
+>  	if (rc)
+>  		return rc;
+>  
+> -	pci_bus_save_and_disable(bus);
+> -
+>  	if (pci_bus_trylock(bus)) {
+> +		pci_bus_save_and_disable_locked(bus);
+>  		might_sleep();
+>  		rc = pci_bridge_secondary_bus_reset(bus->self);
+> +		pci_bus_restore_locked(bus);
+>  		pci_bus_unlock(bus);
+>  	} else
+>  		rc = -EAGAIN;
+>  
+> -	pci_bus_restore(bus);
+> -
+>  	return rc;
+>  }
+>  
+> 
