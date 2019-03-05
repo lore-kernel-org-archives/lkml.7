@@ -2,186 +2,111 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DF9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A81A2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E042082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfCELNb (ORCPT
+        id S1727678AbfCELOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:13:31 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46622 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbfCELNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:13:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B29931596;
-        Tue,  5 Mar 2019 03:13:30 -0800 (PST)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4F143F71D;
-        Tue,  5 Mar 2019 03:13:28 -0800 (PST)
-Subject: Re: [RFC PATCH] KVM: arm64: Force a PTE mapping when logging is
- enabled
-To:     yuzenghui@huawei.com, marc.zyngier@arm.com, zenghuiyu96@gmail.com
-Cc:     christoffer.dall@arm.com, punit.agrawal@arm.com,
-        julien.thierry@arm.com, linux-kernel@vger.kernel.org,
-        james.morse@arm.com, wanghaibin.wang@huawei.com,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <1551497728-12576-1-git-send-email-yuzenghui@huawei.com>
- <CAKcZhuWa4UcsoFPRkZg=M3WeUJibX8T0_R+JHS3=cyd51N9cgQ@mail.gmail.com>
- <20190304171320.GA3984@en101> <32f302eb-ef89-7de4-36b4-3c3df907c732@arm.com>
- <865b8b0b-e42e-fe03-e3b4-ae2cc5b1b424@huawei.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <c3d64d23-991e-b199-9168-38f37d533afc@arm.com>
-Date:   Tue, 5 Mar 2019 11:13:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <865b8b0b-e42e-fe03-e3b4-ae2cc5b1b424@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 5 Mar 2019 06:14:40 -0500
+Received: from mx57.baidu.com ([61.135.168.57]:40931 "EHLO
+        tc-sys-mailedm04.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727348AbfCELOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:14:40 -0500
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm04.tc.baidu.com (Postfix) with ESMTP id B62E1236C03A;
+        Tue,  5 Mar 2019 19:14:26 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     paul@paul-moore.com, eparis@redhat.com, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] audit: fix a memleak caused by auditing load module
+Date:   Tue,  5 Mar 2019 19:14:26 +0800
+Message-Id: <1551784466-15610-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+we should always free context->module.name, since it will be
+allocated unconditionally and audit_log_start() can fail with
+other reasons, and audit_log_exit maybe not called
 
-On 05/03/2019 11:09, Zenghui Yu wrote:
-> Hi Marc, Suzuki,
-> 
-> On 2019/3/5 1:34, Marc Zyngier wrote:
->> Hi Zenghui, Suzuki,
->>
->> On 04/03/2019 17:13, Suzuki K Poulose wrote:
->>> Hi Zenghui,
->>>
->>> On Sun, Mar 03, 2019 at 11:14:38PM +0800, Zenghui Yu wrote:
->>>> I think there're still some problems in this patch... Details below.
->>>>
->>>> On Sat, Mar 2, 2019 at 11:39 AM Zenghui Yu <yuzenghui@huawei.com> wrote:
->>>>>
->>>>> The idea behind this is: we don't want to keep tracking of huge pages when
->>>>> logging_active is true, which will result in performance degradation.  We
->>>>> still need to set vma_pagesize to PAGE_SIZE, so that we can make use of it
->>>>> to force a PTE mapping.
->>>
->>> Yes, you're right. We are indeed ignoring the force_pte flag.
->>>
->>>>>
->>>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>>> Cc: Punit Agrawal <punit.agrawal@arm.com>
->>>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->>>>>
->>>>> ---
->>>>> Atfer looking into https://patchwork.codeaurora.org/patch/647985/ , the
->>>>> "vma_pagesize = PAGE_SIZE" logic was not intended to be deleted. As far
->>>>> as I can tell, we used to have "hugetlb" to force the PTE mapping, but
->>>>> we have "vma_pagesize" currently instead. We should set it properly for
->>>>> performance reasons (e.g, in VM migration). Did I miss something important?
->>>>>
->>>>> ---
->>>>>    virt/kvm/arm/mmu.c | 7 +++++++
->>>>>    1 file changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>>>> index 30251e2..7d41b16 100644
->>>>> --- a/virt/kvm/arm/mmu.c
->>>>> +++ b/virt/kvm/arm/mmu.c
->>>>> @@ -1705,6 +1705,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->>>>>                (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
->>>>>               !force_pte) {
->>>>>                   gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
->>>>> +       } else {
->>>>> +               /*
->>>>> +                * Fallback to PTE if it's not one of the stage2
->>>>> +                * supported hugepage sizes or the corresponding level
->>>>> +                * doesn't exist, or logging is enabled.
->>>>
->>>> First, Instead of "logging is enabled", it should be "force_pte is true",
->>>> since "force_pte" will be true when:
->>>>
->>>>           1) fault_supports_stage2_pmd_mappings() return false; or
->>>>           2) "logging is enabled" (e.g, in VM migration).
->>>>
->>>> Second, fallback some unsupported hugepage sizes (e.g, 64K hugepage with
->>>> 4K pages) to PTE is somewhat strange. And it will then _unexpectedly_
->>>> reach transparent_hugepage_adjust(), though no real adjustment will happen
->>>> since commit fd2ef358282c ("KVM: arm/arm64: Ensure only THP is candidate
->>>> for adjustment"). Keeping "vma_pagesize" there as it is will be better,
->>>> right?
->>>>
->>>> So I'd just simplify the logic like:
->>>
->>> We could fix this right in the beginning. See patch below:
->>>
->>>>
->>>>           } else if (force_pte) {
->>>>                   vma_pagesize = PAGE_SIZE;
->>>>           }
->>>>
->>>>
->>>> Will send a V2 later and waiting for your comments :)
->>>
->>>
->>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>> index 30251e2..529331e 100644
->>> --- a/virt/kvm/arm/mmu.c
->>> +++ b/virt/kvm/arm/mmu.c
->>> @@ -1693,7 +1693,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->>>    		return -EFAULT;
->>>    	}
->>>    
->>> -	vma_pagesize = vma_kernel_pagesize(vma);
->>> +	/* If we are forced to map at page granularity, force the pagesize here */
->>> +	vma_pagesize = force_pte ? PAGE_SIZE : vma_kernel_pagesize(vma);
->>> +
->>>    	/*
->>>    	 * The stage2 has a minimum of 2 level table (For arm64 see
->>>    	 * kvm_arm_setup_stage2()). Hence, we are guaranteed that we can
->>> @@ -1701,11 +1703,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->>>    	 * As for PUD huge maps, we must make sure that we have at least
->>>    	 * 3 levels, i.e, PMD is not folded.
->>>    	 */
->>> -	if ((vma_pagesize == PMD_SIZE ||
->>> -	     (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
->>> -	    !force_pte) {
->>> +	if (vma_pagesize == PMD_SIZE ||
->>> +	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
->>>    		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
->>> -	}
->>> +
->>>    	up_read(&current->mm->mmap_sem);
->>>    
->>>    	/* We need minimum second+third level pages */
-> 
-> A nicer implementation and easier to understand, thanks!
-> 
->> That's pretty interesting, because this is almost what we already have
->> in the NV code:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/tree/virt/kvm/arm/mmu.c?h=kvm-arm64/nv-wip-v5.0-rc7#n1752
->>
->> (note that force_pte is gone in that branch).
-> 
-> haha :-) sorry about that. I haven't looked into the NV code yet, so ...
-> 
-> But I'm still wondering: should we fix this wrong mapping size problem
-> before NV is introduced? Since this problem has not much to do with NV,
-> and 5.0 has already been released with this problem (and 5.1 will
-> without fix ...).
+unreferenced object 0xffff88af90837d20 (size 8):
+  comm "modprobe", pid 1036, jiffies 4294704867 (age 3069.138s)
+  hex dump (first 8 bytes):
+    69 78 67 62 65 00 ff ff                          ixgbe...
+  backtrace:
+    [<0000000008da28fe>] __audit_log_kern_module+0x33/0x80
+    [<00000000c1491e61>] load_module+0x64f/0x3850
+    [<000000007fc9ae3f>] __do_sys_init_module+0x218/0x250
+    [<0000000000d4a478>] do_syscall_64+0x117/0x400
+    [<000000004924ded8>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<000000007dc331dd>] 0xffffffffffffffff
 
-Yes, we must fix it. I will soon send out a patch copying on it.
-Its just that I find some more issues around forcing the PTE
-mappings with PUD huge pages. I will send something out soon.
+Fixes: ca86cad7380e3 ("audit: log module name on init_module")
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ kernel/auditsc.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-Cheers
-Suzuki
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index b2d1f043f..2bd80375f 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1186,8 +1186,13 @@ static void show_special(struct audit_context *context, int *call_panic)
+ 	int i;
+ 
+ 	ab = audit_log_start(context, GFP_KERNEL, context->type);
+-	if (!ab)
++	if (!ab) {
++		if (context->type == AUDIT_KERN_MODULE) {
++			kfree(context->module.name);
++			context->module.name = NULL;
++		}
+ 		return;
++	}
+ 
+ 	switch (context->type) {
+ 	case AUDIT_SOCKETCALL: {
+@@ -1354,8 +1359,15 @@ static void audit_log_exit(struct audit_context *context, struct task_struct *ts
+ 	context->personality = tsk->personality;
+ 
+ 	ab = audit_log_start(context, GFP_KERNEL, AUDIT_SYSCALL);
+-	if (!ab)
++
++	if (!ab) {
++		if (context->type == AUDIT_KERN_MODULE) {
++			kfree(context->module.name);
++			context->module.name = NULL;
++		}
+ 		return;		/* audit_panic has been called */
++	}
++
+ 	audit_log_format(ab, "arch=%x syscall=%d",
+ 			 context->arch, context->major);
+ 	if (context->personality != PER_LINUX)
+@@ -1576,6 +1588,12 @@ void __audit_syscall_exit(int success, long return_code)
+ 
+ 	if (context->in_syscall && context->current_state == AUDIT_RECORD_CONTEXT)
+ 		audit_log_exit(context, current);
++	else {
++		if (context->type == AUDIT_KERN_MODULE) {
++			kfree(context->module.name);
++			context->module.name = NULL;
++		}
++	}
+ 
+ 	context->in_syscall = 0;
+ 	context->prio = context->state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
+-- 
+2.16.2
 
