@@ -3,78 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE0AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFCBC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A6920842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C802082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbfCEIhi (ORCPT
+        id S1727306AbfCEIkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:37:38 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39147 "EHLO
+        Tue, 5 Mar 2019 03:40:43 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42770 "EHLO
         mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfCEIhh (ORCPT
+        with ESMTP id S1726597AbfCEIkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:37:37 -0500
-Received: by mail-qt1-f193.google.com with SMTP id o6so8161352qtk.6;
-        Tue, 05 Mar 2019 00:37:37 -0800 (PST)
+        Tue, 5 Mar 2019 03:40:42 -0500
+Received: by mail-qt1-f193.google.com with SMTP id u7so8164997qtg.9;
+        Tue, 05 Mar 2019 00:40:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Tnxnpf8kZGLiuVVHIrOVQ0i6UzbMU+wg4g+ni8NrgX0=;
-        b=I+u51rCzqLTUtlcOck4FuxmhcHZIttVACAJrxlacdIDN1dsRXgTlIztus/xj4SKrsP
-         PRtYXZREauVXrNTwjNhRFst8edeurp997+fAtw8IChx7oEEYN0/M8xm53P4SHJPejYbl
-         fC3BezjrwXD/1d6x+RfGppQd0PaV22oCcKJvJDHjAw0oeI5jpNZDIjbRUO+MFSIZczYy
-         eILnmqWzRa4ynka7V8kifE7F4cUfJ/zVFT0/kPsZdnuNs5SzYrGiLcWsKsH22/+6TBJz
-         TnNsHHBPNPeWiZKzPGyIKTAZes6lMZw19WfEZcjvyjCfzM793CgwfoINVrX+HY4iN+R1
-         mzoA==
-X-Gm-Message-State: APjAAAX4JzVhjgtH01mwCLIVIbRr8V6eIUsJqfTjj8GvHCPElpVHCsCh
-        /AYnBDZ2I+PVDLX6e0QsXd49qnr6ssz2IpcUjVw=
-X-Google-Smtp-Source: APXvYqx6K6Vl8MPjob+tIas8+HkU2jqa8boSAVFD1SP3GUddIF+PzfNcNEvI6J08dmi/hYi09EH1UCRaHheVPoCmBbs=
-X-Received: by 2002:a0c:b758:: with SMTP id q24mr1160498qve.149.1551775056617;
- Tue, 05 Mar 2019 00:37:36 -0800 (PST)
+        bh=yenxM1KHEOaUzkNWsEW3RfBPXAcIH6jtrNaR/UemryI=;
+        b=oghEYFCQzu+MiKuIjGm0V/Rx0I9IcLiIGpHBhdKVDcgwCZsL9pXInRgjVCWHT65ahp
+         CczjBfuo//NJtwq3Q7GbNYtc7ndtBhiu3SUT2fIL8w5CUOPBaDdmgIaet4vpbl1FcTC3
+         W+w5adSCDuMBeik0dHImGzv74ikuKeCzIIx/7kATcHStlVNUutPcLuralPF8tzLK/mSu
+         Eb6c43F1208smwMZ03t+MsOmg2NBlkCaokKoCpAPHoOHoRPMHbOl8wY3Po7knFNmfTrF
+         loP+w1YzCw83edArpWSEXR/NeUxpVSINJ7hiU0wePwpUa11qBGShc2CyXOLE0l5kbR/a
+         hO9g==
+X-Gm-Message-State: APjAAAVQtPhrRGcsHgCSguGPZeelwhcfHZ4Eb2TYyTWR9k6AnCxBVoHH
+        1pr89EaWKvZLLV84ErgVs0FahEIx8XyeeUAYWlo=
+X-Google-Smtp-Source: APXvYqxnWSN4EGPZ5sWLBus61NtbajBTOh4nZsNJ/Zv6nQx/twi+DcY3cBt/o7fDVtdqMbwWVagwUgABhDrLefT8uoQ=
+X-Received: by 2002:ac8:3251:: with SMTP id y17mr584822qta.152.1551775241213;
+ Tue, 05 Mar 2019 00:40:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20190304203924.2111146-1-arnd@arndb.de> <ec4e92fa787a7db1caf39920a62c3721849baee9.camel@intel.com>
-In-Reply-To: <ec4e92fa787a7db1caf39920a62c3721849baee9.camel@intel.com>
+References: <20190304202758.1802417-1-arnd@arndb.de> <EE45BB6704246A4E914B70E8B61FB42A15C131D5@SHSMSX104.ccr.corp.intel.com>
+ <20190305075317.4t32uyyhzftuoebp@kekkonen.localdomain>
+In-Reply-To: <20190305075317.4t32uyyhzftuoebp@kekkonen.localdomain>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 Mar 2019 09:37:20 +0100
-Message-ID: <CAK8P3a3ziTxhEW5ea828jNjktR9qH-T2OknON5RVBrbiXT4kBw@mail.gmail.com>
-Subject: Re: [PATCH] iwlwifi: fix 64-bit division
-To:     Luciano Coelho <luciano.coelho@intel.com>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Avraham Stern <avraham.stern@intel.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 5 Mar 2019 09:40:24 +0100
+Message-ID: <CAK8P3a17qNvFvEVpjd5W0gwDn-HocW_ChDyeukiqHBbJbyAedQ@mail.gmail.com>
+Subject: Re: [PATCH] media: staging/intel-ipu3: reduce kernel stack usage
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     "Cao, Bingbu" <bingbu.cao@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Zhi, Yong" <yong.zhi@intel.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 7:44 AM Luciano Coelho <luciano.coelho@intel.com> wrote:
-> On Mon, 2019-03-04 at 21:38 +0100, Arnd Bergmann wrote:
-> This was already fixed with this patch:
->
-> https://patchwork.kernel.org/patch/10823267/
->
-> ...but it hasn't reached the mainline yet.
->
-> I'm planning to send it to the v5.1-rc series as soon as the merge
-> window closes.  Is that quick enough for you?
+On Tue, Mar 5, 2019 at 8:53 AM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> On Tue, Mar 05, 2019 at 12:25:18AM +0000, Cao, Bingbu wrote:
 
-That's fine, I just want it to reach 5.1 so it does not regress against 5.0.
+> > >     struct v4l2_pix_format_mplane *const in =
+> > >                                     &q[IPU3_CSS_QUEUE_IN].fmt.mpix;
+> > >     struct v4l2_pix_format_mplane *const out = @@ -1753,6 +1754,11 @@
+> > > int imgu_css_fmt_try(struct imgu_css *css,
+> > >                                     &q[IPU3_CSS_QUEUE_VF].fmt.mpix;
+> > >     int i, s, ret;
+> > >
+> > > +   if (!q) {
+> > > +           ret = -ENOMEM;
+> > > +           goto out;
+> > > +   }
+> > [Cao, Bingbu]
+> > The goto here is wrong, you can just report an error, and I prefer it is next to the alloc.
+>
+> I agree, the goto is just not needed.
 
-Sorry for the slightly bad timing of my submission. I had just restarted
-my randconfig tests the other day and wanted to get my 60 new patches
-out as quickly as possible.
+Should I remove all the gotos then and do an explicit kfree() in each
+error path?
 
-       Arnd
+I'd prefer not to mix the two styles, as that can lead to subtle mistakes
+when the code is refactored again.
+
+      Arnd
