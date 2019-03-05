@@ -2,89 +2,78 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E36AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C14920652
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A2IsnPcR"
+	by mail.kernel.org (Postfix) with ESMTP id 08ACA20645
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfCEVug (ORCPT
+        id S1727736AbfCEV6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:50:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50244 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfCEVuf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:50:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IYF06Fn89jbE735n2truln7RThJkUdQZkfi5xUO771w=; b=A2IsnPcRincOTOVQpBK20Pucm
-        jgfaX6aTQ+O/78psILE5gqXxtwTiWXak+VRYvmBzMhIA9bbXB55tn681VlG/4l5MVHyhC6efcb8Zc
-        WVbJPpv3ep/oQ18A8pK2501LNnVd44T2K0A4f8o6nudqqqMBBJvnqR/NR+KLhVonfiOW1y+rv6F+y
-        sc56jbp0eouUejiALdyTNjVMOKywK/nxgEHiPLuGfGpEQmQoNdhgiqLVCmYnNAbyU+AIPA6ZT4j/8
-        TpRFZJIz9aT/zYXy29u+6fuppTMZSnDpLbDC/e8VywoGF66yR8Iu3FHe1cuR1wfmwnr7KW7plz6h5
-        +3UyPkKsg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1Hwm-0003Vc-NN; Tue, 05 Mar 2019 21:50:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 09CF120288BA3; Tue,  5 Mar 2019 22:49:59 +0100 (CET)
-Date:   Tue, 5 Mar 2019 22:49:59 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
-        Ben Maurer <bmaurer@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>
-Subject: Re: [PATCH for 5.1 0/3] Restartable Sequences updates for 5.1
-Message-ID: <20190305214958.GP32477@hirez.programming.kicks-ass.net>
-References: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
+        Tue, 5 Mar 2019 16:58:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbfCEV6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 16:58:50 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C371204EC;
+        Tue,  5 Mar 2019 21:58:49 +0000 (UTC)
+Date:   Tue, 5 Mar 2019 16:58:46 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
+Message-ID: <20190305165846.075a0e6c@gandalf.local.home>
+In-Reply-To: <cover.1551741458.git.tom.zanussi@linux.intel.com>
+References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 02:47:52PM -0500, Mathieu Desnoyers wrote:
-> Mathieu Desnoyers (3):
->   rseq: cleanup: Reflect removal of event counter in comments
->   rseq: cleanup: remove rseq_len from task_struct
->   rseq/selftests: Adapt number of threads to the number of detected cpus
-> 
->  arch/arm/kernel/signal.c                       | 3 +--
->  arch/x86/kernel/signal.c                       | 5 +----
->  include/linux/sched.h                          | 4 ----
->  kernel/rseq.c                                  | 9 +++------
->  tools/testing/selftests/rseq/run_param_test.sh | 7 +++++--
->  5 files changed, 10 insertions(+), 18 deletions(-)
+On Mon,  4 Mar 2019 17:36:43 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> From: Tom Zanussi <tom.zanussi@linux.intel.com>
+> 
+> Hi,
+> 
+> This is v3 of the frace error_log RFC patchset, which is the same as
+> the previous version but adds the numbering Masami suggested before
+> each item in the log.  Masami also said he was going to take over the
+> kprobe events patch, but I left it in for now for completeness as it
+> still provides a useful example of possible usage, for evaluation of
+> the overall scheme.  I'll remove it when it's no longer an RFC.
+> 
+> Changes from v2:
+> 
+>   - Added [n] numbering as suggested by Masami
+> 
+>
+
+Hi Tom,
+
+Thanks for doing this!
+
+Note, I'm marking this as TODO, as the merge window has opened and this
+will have to wait till it closes. But that means it may get buried by
+other patches and such marked as TODO. :-p
+
+Can you send me a friendly reminder in two weeks if you don't hear from
+me?
+
+Thanks!
+
+-- Steve
