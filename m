@@ -2,115 +2,150 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35368C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C83C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA5320848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NN9un9tz"
+	by mail.kernel.org (Postfix) with ESMTP id 971122087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfCEPVm (ORCPT
+        id S1728729AbfCEPYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 10:21:42 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57878 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfCEPVl (ORCPT
+        Tue, 5 Mar 2019 10:24:09 -0500
+Received: from mail-out.m-online.net ([212.18.0.9]:47708 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfCEPYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 10:21:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IW/MFqNmMOpjtrIeswXa7KjxSyC87aDyEneaZ4voho8=; b=NN9un9tzjNMHwTYjbn9TB4q0v
-        6dJwDD97doQCkEwCF8WtHXr75+QCGjPViO/zpcjiAr7QI5XpOTir8TyKixznjv5qQWnJs9eaoe3Et
-        Q0+bytXdeWsDy3hYCmLDsYaJjwcQbgJEQL8B9QLJsxhHKmVxUHEVAqiGqmkWxc2qh2SmlylpcWMGs
-        DZV+m0nZ+/TBVILIKRQ0V/YL3N0mGJRA9ZzTlEc61YUhnWU+fRkQF5Dbl/5dg8Yt9ANPvxJaOjv+f
-        utNrS5FhZdsJhPC8O9LSEmkA5X2tRB9eOr5trarY8BvdkIwB5BYc87fZaVIrXSvVyfdTW2NkDV/91
-        BTdlDTDFA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1Bst-0003nJ-KW; Tue, 05 Mar 2019 15:21:35 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 04D1D202C2DAE; Tue,  5 Mar 2019 16:21:34 +0100 (CET)
-Date:   Tue, 5 Mar 2019 16:21:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        devel@linuxdriverproject.org
-Subject: Re: [PATCH v2] x86, hyperv: fix kernel panic when kexec on HyperV
-Message-ID: <20190305152133.GM32477@hirez.programming.kicks-ass.net>
-References: <20190305121703.29769-1-kasong@redhat.com>
- <20190305123329.GK32477@hirez.programming.kicks-ass.net>
- <CACPcB9c=M26J8V7S_SzuccCTcPkr1DOUqK6w01esieJYYeBpEA@mail.gmail.com>
+        Tue, 5 Mar 2019 10:24:09 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 44DLK02DXYz1rfMk;
+        Tue,  5 Mar 2019 16:24:04 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 44DLK01jw8z1qvXV;
+        Tue,  5 Mar 2019 16:24:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 5wMNqAfVZar3; Tue,  5 Mar 2019 16:24:02 +0100 (CET)
+X-Auth-Info: BvxictbL9H7KgMLVAgjhtzmAJqwFYBst81mD9Fwq7KU=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue,  5 Mar 2019 16:24:02 +0100 (CET)
+Date:   Tue, 5 Mar 2019 16:23:51 +0100
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Joseph Myers <joseph@codesourcery.com>,
+        libc-alpha@sourceware.org
+Subject: [Y2038] Question regarding support of old time interfaces beyond
+ y2038
+Message-ID: <20190305162351.5aadde66@jawa>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPcB9c=M26J8V7S_SzuccCTcPkr1DOUqK6w01esieJYYeBpEA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/U6Mt1c/ACWt.uM4j5lcQ_X_"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 09:34:13PM +0800, Kairui Song wrote:
-> On Tue, Mar 5, 2019 at 8:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Tue, Mar 05, 2019 at 08:17:03PM +0800, Kairui Song wrote:
-> > > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > > index 7abb09e2eeb8..34aa1e953dfc 100644
-> > > --- a/arch/x86/hyperv/hv_init.c
-> > > +++ b/arch/x86/hyperv/hv_init.c
-> > > @@ -406,6 +406,12 @@ void hyperv_cleanup(void)
-> > >       /* Reset our OS id */
-> > >       wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
-> > >
-> > > +     /* Cleanup hypercall page reference before reset the page */
-> > > +     hv_hypercall_pg = NULL;
-> > > +
-> > > +     /* Make sure page reference is cleared before wrmsr */
-> >
-> > This comment forgets to tell us who cares about this. And why the wrmsr
-> > itself isn't serializing enough.
-> >
-> > > +     wmb();
-> > > +
-> > >       /* Reset the hypercall page */
-> > >       hypercall_msr.as_uint64 = 0;
-> > >       wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> >
-> > That looks like a fake MSR; and you're telling me that VMEXIT doesn't
-> > serialize?
-> 
-> Thanks for the review, seem I being a bit paranoid on this. Will drop
-> it and send a v3 if no one has any other complaint.
+--Sig_/U6Mt1c/ACWt.uM4j5lcQ_X_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Also; our wrmsr implementation has a "memory" clobber on, which means
-you don't even need a compiler barrier to force emit that store before
-the wrmsr.
+Dear Arnd,
 
-You might want to retain the comment that explains this ordering though.
+In your "playground" repository [1] (branch: y2038), the time functions
+(stime, settimeofday, etc) are not converted in Linux to be Y2038 aware
+(as for example clock_settime{64}() is).
 
-	hv_hypercall_pg = NULL;
-	/*
-	 * text that explains why hv_hypercall_pg must be set NULL
-	 * before the wrmsr
-	 */
-	wrmsrl(...);
+I've also searched on the Internet and I've found some old discussions
+regarding them:
 
+SHA1:  d33c577cccd0b3e5bb2425f85037f26714a59363 [2]
+=46rom commit message:
+
+"The time, stime, utime, utimes, and futimesat system calls are only
+used on older architectures, and we do not provide y2038 safe variants
+of them, as they are replaced by clock_gettime64, clock_settime64,
+and utimensat_time64."
+
+Moreover, the stime has been even explicitly marked as obsolete [3].
+
+
+=46rom other discussion [4] - regarding the following system calls:
+ time, stime, gettimeofday, settimeofday, adjtimex, nanosleep, alarm,
+ getitimer, setitimer, select, utime, utimes, futimesat, and
+ {old,new}{l,f,}stat{,64}.
+
+"These all pass 32-bit time_t arguments on 32-bit
+ architectures and are replaced by other interfaces (e.g. posix
+ timers and clocks, statx). C libraries implementing 64-bit time_t in
+ 32-bit architectures have to implement the handles by wrapping
+ around the newer interfaces."
+
+
+
+
+Has something changed since then? Has any new idea for conversion
+emerged?
+
+
+
+After observing the development of y2038 on playground [1], I can deduce
+that new interfaces are only going to be supported and converted
+(clock_settime64/clock_gettime64, etc.)
+
+Considering the above - would it be best to drop Y2038 support on 32
+bit machines for old syscalls (stime and friends) and for some others
+(settimeofday/gettimeofday) write Y2038 wrappers based on new time
+kernel API (clock_gettime/settime) in the C library (i.e. glibc)?
+
+
+
+
+Note:
+
+[1] -
+https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/tree/ke=
+rnel/time/time.c?h=3Dy2038
+[2] - git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
+[3] -=20
+https://elixir.bootlin.com/linux/v2.6.32/source/arch/arm/include/asm/unistd=
+.h#L419
+[4] - https://lists.linaro.org/pipermail/y2038/2017-November/002387.html
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/U6Mt1c/ACWt.uM4j5lcQ_X_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlx+lIgACgkQAR8vZIA0
+zr32BQgAyxT4NNpx0F9Xj1EXXunxDrKEsCni69+pBPwGifM+zkOtJShFOCLOefRR
+KXFblSM21PpnoknEXmc2WO/Q13fuu2wmACwaQVNQLKOdEGKfkeRfR1lM3Hk17l6y
+TIBcSLnMu7Vco4UVOQAXJ5rre85U4fJioaLg9BbcUFkFI7Y2uFXHTRJ9rA8mEsaa
+YQDOyZd+B3dRe8Oeu/d7lt+/fL4SEl4CSj92OulXSZ/fD+EOuuos6bT09TUarX9w
+xepmsOahJ/vT1b6RAS5RW1bsBiG0ESN/S4Pk7bEZmAP6l8ZDzsMV3tJfMSIfMs4W
+XuZmbZV6fLudrFXDzuROwtqQ6DeVvg==
+=PzDo
+-----END PGP SIGNATURE-----
+
+--Sig_/U6Mt1c/ACWt.uM4j5lcQ_X_--
