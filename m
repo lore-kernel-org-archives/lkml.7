@@ -2,120 +2,110 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FD9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D36C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A937720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C6720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IbpQgqpu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwDZjIv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfCEGhK (ORCPT
+        id S1727045AbfCEGhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 01:37:10 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:44881 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfCEGhK (ORCPT
+        Tue, 5 Mar 2019 01:37:31 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41665 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfCEGha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 01:37:10 -0500
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x256b0Qe025608
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Mar 2019 15:37:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x256b0Qe025608
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551767821;
-        bh=JbIazAa1ZSJRKnDzcfc5Qsq/YvL6BKExSfpDOizLBOM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IbpQgqpuQIyIm4w3dGAF2QD9J64Y+sWrwC1TigKqFKCmbPyT0/4hm1piC6QOnINe0
-         1Vxm84JAQQxxmErBSzifjSTnkdkj1Mk2aE9twlx/KkpgsiF8IN/64p4A9stI+6mlGR
-         Dh+nKe56SdHYRmzm7u6g/KyfNFUvuAFkx7U+tzHCX8n9CCzcP7WUDNX08hNkz7r95A
-         sVkBW4M13chUMELQbyQacCqdunvKpih2kqfN2H8wum+Bx7L4bIruREStolV+16VdVL
-         9jIw2vLL2r5a5MJ7ZCBGXH9tSFPhSlg501QAFkTLcvpC9DIK82QRB9AeIcSOJh5sN7
-         XZIZSP6NvxA0Q==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id s15so6774524uap.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 22:37:00 -0800 (PST)
-X-Gm-Message-State: APjAAAXdWyfg4bTsmmG2ehVCl6mS3Egf3/UupTwkMrRRJAYhEsMAS4Vf
-        YlmiuCRz4R6npkk86HBiFLrGfT9qdXQgRxm/YuM=
-X-Google-Smtp-Source: APXvYqylV0ZTHhoN/LtvtPh6WbpZJq6c2NEePNdBGGxxDLZ3+qkE3EhSp3as7/KkS18Pu71R6Ddhs+Z6wqxpyC22LAg=
-X-Received: by 2002:a67:7bd3:: with SMTP id w202mr339247vsc.179.1551767819908;
- Mon, 04 Mar 2019 22:36:59 -0800 (PST)
+        Tue, 5 Mar 2019 01:37:30 -0500
+Received: by mail-lj1-f195.google.com with SMTP id z25so6559430ljk.8;
+        Mon, 04 Mar 2019 22:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R4yrRR7J7zqt10xqHI8cyZI+wDW4RxTttxjdnNGZntk=;
+        b=JwDZjIv02Du31UY5W404iavqNbGEVrgqpjtPLlYGBaIAcfH7on9LD7VgvqqbV4fTJe
+         bOZCzCCIV/EC2PgaPksFnpGhM0aaEXku2gxEqu99MCYCY/Fhz3LT9O0VH0xSSrzT7WBm
+         6Ygj29wQdLphOPhmfOu2Gg/Sou/BmbE8w4qVu660Ds413duso5BLixGrjKjiHcldzFqh
+         YDZ7C1OtS0m1OVmq1vzf1ctla2gXxDnpepS+zNOrZ2rpQLoof/l73sw02Xzn88f4Um54
+         bJCFUfgdHKBL4lrPoHPo0x9WHLDWZv34EAV/NDJozg8Q/So2k7Ywz31YfgWAVdw1TsuH
+         6Z0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R4yrRR7J7zqt10xqHI8cyZI+wDW4RxTttxjdnNGZntk=;
+        b=GLEvafIWaPOEV8DbGFv2uTVLd2817UScX2VKIOmVFOj2FTc7peJL3UKnbb7eyBrIue
+         j2mUFDjmwZB2YBBRx6uovXQldXLqxMwM2MimMT59ILl/P887BqEOmjWksDz+A15IKedd
+         HDRfjzAKJLRd8bqqW5soVPErIsmKzyYEoKy9T4IzGh3Ns2kmmDarZwlKkJJqQ5eX6yDB
+         00FzCsdGKu3E923P7Wary1SPyTykdg0WHdzlD2HLSSuDaelpusVAnGUGxYBjky0v1zg7
+         YveIwhmlwxhK4srFQu3J7yr7fqpARm0/mjUfPmYsTsehh5kELOi0bVocDhNyPuae2h5G
+         KtMg==
+X-Gm-Message-State: APjAAAVNurtcgymdK1O7o68RX/0fVMcEPMOeE2i4HJnQaY6tblzkREn9
+        zUoM0YlOyRrHPl5c0cK1Y5toqovJ41g4vUfdmr0=
+X-Google-Smtp-Source: APXvYqz6TmoZO2MrPOA+ubm4pGfBMrGRQIRqABIa3+0zeVZT0pexc30CogV83erPPOTdi/16UsioMIC59Ix9opkW76w=
+X-Received: by 2002:a2e:240a:: with SMTP id k10mr12710232ljk.31.1551767848562;
+ Mon, 04 Mar 2019 22:37:28 -0800 (PST)
 MIME-Version: 1.0
-References: <1549955582-30346-1-git-send-email-yamada.masahiro@socionext.com>
- <1549955582-30346-6-git-send-email-yamada.masahiro@socionext.com> <20190304094346.3b62e6cd@xps13>
-In-Reply-To: <20190304094346.3b62e6cd@xps13>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 5 Mar 2019 15:36:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ4cxLHB_iVZvKdon--4x69HUh0_uJ_zAw89S4XN6aDcg@mail.gmail.com>
-Message-ID: <CAK7LNAQ4cxLHB_iVZvKdon--4x69HUh0_uJ_zAw89S4XN6aDcg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] mtd: rawnand: denali: use more precise timeout
- for NAND_OP_WAITRDT_INSTR
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
+References: <20190304183827.GA6809@jordon-HP-15-Notebook-PC>
+ <20190304184958.GR32494@hirez.programming.kicks-ass.net> <CAFqt6zarwg3NnkbNYKEO-jrdHUw8GwMqUrLDTqgQV3D1dux-qQ@mail.gmail.com>
+ <712691085.1137.1551729467392.JavaMail.zimbra@efficios.com>
+In-Reply-To: <712691085.1137.1551729467392.JavaMail.zimbra@efficios.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 5 Mar 2019 12:07:16 +0530
+Message-ID: <CAFqt6zaNsiMdq_XxYrEdFxJigW3v8unSbFys+B3d-vBGWEj4+Q@mail.gmail.com>
+Subject: Re: [PATCH] selftest/rseq: Remove duplicate header
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>, shuah <shuah@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
-
-
-
-On Mon, Mar 4, 2019 at 5:44 PM Miquel Raynal <miquel.raynal@bootlin.com> wr=
-ote:
+On Tue, Mar 5, 2019 at 1:27 AM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
 >
-> Hi Masahiro,
+> ----- On Mar 4, 2019, at 1:53 PM, Souptick Joarder jrdr.linux@gmail.com wrote:
 >
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Feb
-> 2019 16:12:57 +0900:
->
-> > Currently, wait_for_completion_timeout() is always passed in the
-> > hard-coded msec_to_jiffies(1000). There is no specific reason for
-> > 1000 msec, but it was chosen to be long enough.
+> > On Tue, Mar 5, 2019 at 12:20 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >>
+> >> On Tue, Mar 05, 2019 at 12:08:27AM +0530, Souptick Joarder wrote:
+> >> > Remove duplicate header which is included twice
+> >> >
+> >> > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+> >> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> >>
+> >> That SoB chain is invalid.
 > >
-> > With the exec_op() conversion, NAND_OP_WAITRDY_INSTR provides more
-> > precise timeout value, depending on the preceding command. Let's use
-> > it (+ 100 msec) to bail out earlier in error case. The 100 msec extra
-> > is in case the heavy load on the system.
-> >
-> > I am still keeping the hard-coded values for other higher level hooks
-> > such as page_read, page_write, etc. We know the value of tR, tPROG, but
-> > we have unknowledge about the data transfer speed of the DMA engine.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > I didn't get why it is invalid ?
 >
-> I really am not convinced by this change. Please just define a timeout
-> big enough for most cases (1000 is okay) and use it systematically.
+> I think it's about having the author of the patch (From) as first
+> Signed-off-by, and then apply following Signed-off-by by maintainers
+> who pick up the patch. (That's what I am used to see)
+>
+> What is the intent behind the second Signed-off-by by Sabyasachi Gupta ?
 
-
-OK, I will drop this patch.
-and ignore ctx.waitrdy.timeout_ms.
-
-
-
-
-
+Sabyasachi is the author and I am posting his patches as his email client
+has some issue. I think I need to add Sabyasachi's From: @ the
+beginning of change log.
+Andrew suggested the same in another thread.
+>
 > Thanks,
-> Miqu=C3=A8l
 >
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
-
---
-Best Regards
-Masahiro Yamada
+> Mathieu
+>
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
