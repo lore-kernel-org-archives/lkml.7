@@ -2,159 +2,78 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE832C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297D6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B313A2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4912082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qoV6uaaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfCEVBn (ORCPT
+        id S1728681AbfCEVBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:01:43 -0500
-Received: from Galois.linutronix.de ([146.0.238.70]:47316 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfCEVBn (ORCPT
+        Tue, 5 Mar 2019 16:01:50 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35580 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbfCEVBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:01:43 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1h1HBO-0006fN-Vo; Tue, 05 Mar 2019 22:01:03 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
-        <20190212143003.48446-9-john.ogness@linutronix.de>
-        <20190304073856.GA552@jagdpanzerIV>
-        <20190304100044.GC21004@jagdpanzerIV>
-        <20190304110703.GA960@tigerII.localdomain>
-Date:   Tue, 05 Mar 2019 22:00:58 +0100
-In-Reply-To: <20190304110703.GA960@tigerII.localdomain> (Sergey Senozhatsky's
-        message of "Mon, 4 Mar 2019 20:07:03 +0900")
-Message-ID: <87o96p9gtx.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 5 Mar 2019 16:01:50 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z19so8711565otm.2;
+        Tue, 05 Mar 2019 13:01:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pQxNOt7Dl/cW1ademESBOfmMiyHsuFlzWvnhwBEZDI0=;
+        b=qoV6uaaKzb6LbYw679YS1Rp7x806UHwEheF9TeDFisLvCJUWBP4qle3cqi3bFAKVH7
+         PvTmeG7qRquzuZzlEAO6Umu5koxp1+OBtj2hgj8a30A4LjHSgX2ykzDELWopddRJCAgX
+         yq25YCqIoy9NYKxrNesCUXZgVOOcgMbloppEmoA//Evb2XrizEiKVNcMAI5Nz59SrVpZ
+         +MiNqbEkg/g2cd/x0nZkBVysNbnXzM+SiG/PDxnf1tr8cYrkjY2Qzr1xLGua2MiZq7XH
+         rABa79XULwKiwDPqkAElJJx8QQs1XCy1/T6f5oopiBSF/5EXfRKzJQ+VtTMEogmT2iAI
+         +1Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pQxNOt7Dl/cW1ademESBOfmMiyHsuFlzWvnhwBEZDI0=;
+        b=gMfJgHrURY8Gyma31oBDI195K7d6oQM79QchvY3eH5nsgmCfGFST3l2T3cYuvfhTlV
+         HwtgbVBUPPy3qIYCa2HnkZVT3gb2KNZQ8QFjPCh2RBSZuA1hLxvVDaytp16BSiI08unX
+         nFrMphAi4l3rXaiXVW2tingieiOeSeYwWYGvfq79THjmdmW7xAxpRbAd+287JK1M0Rw7
+         upb3aVV5M6NbEBWVXBp8OVPmJsBb/gZUbRClodHFV6q8KOUJTByoLUzPCFyAxZONExIX
+         9LcgSblfRcuZvtskEBMPjDTqQQTQH83D4fu3YZgAS034uMTZ9igxe4Z4OweKZswQsJ9m
+         RFFw==
+X-Gm-Message-State: APjAAAXo1HCtJyPwXKWW1QgN4UL8PMAk/KZDgOjVnZ66zz9uWlxdMjUr
+        ddZEfrCKZujKh3O2sbSy+1tS2e3G9Y47YteP3+h3SPLe
+X-Google-Smtp-Source: APXvYqwh0EFjcTO32Iu7jLF7A++H1omTrsdnhrVXfIYwLrbcKiBm3h3lwnvsPYP1URFkDv/E+OOfFzk+0w6nyLlZ7vE=
+X-Received: by 2002:a9d:5906:: with SMTP id t6mr2233013oth.308.1551819709301;
+ Tue, 05 Mar 2019 13:01:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20190304111217.882-1-narmstrong@baylibre.com> <20190304111217.882-2-narmstrong@baylibre.com>
+In-Reply-To: <20190304111217.882-2-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 5 Mar 2019 22:01:38 +0100
+Message-ID: <CAFBinCA_bGFDOA5sLt26z++=LCtD_3xuaChQWDYJY2D0s2nHZQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: document the Meson G12A support
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
-
-Thanks for your feedback.
-
-I am responding to this comment ahead of your previous comments because
-it really cuts at the heart of the proposed design. After addressing
-this point it will make it easier for me to respond to your other
-comments.
-
-NOTE: This is a lengthy response.
-
-On 2019-03-04, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
->> But in general, channels which depend on preemptible printk will
->> become totally useless in some cases.
+On Mon, Mar 4, 2019 at 12:12 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> Which brings me to a question - what are those messages/channels? Not
-> important enough to be printed on consoles immediately, yet important
-> enough to pass the suppress_message_printing() check.
+> Update the documentation to expicitly support the Meson-G12A SoC.
+typo: explicitly
 
-I would like to clarify that message supression (i.e. console loglevel)
-is a method of reducing what is printed. It does nothing to address the
-issues related to console printing. My proposal focusses on addressing
-the issues related to console printing.
-
-Console printing is a convenient feature to allow a kernel to
-communicate information to a user without any reliance on
-userspace. IMHO there are 2 categories of messages that the kernel will
-communicate. The first is informational (usb events, wireless and
-ethernet connectivity, filesystem events, etc.). Since this category of
-messages occurs during normal runtime, we should expect that it does not
-cause adverse effects to the rest of the system (such as latencies and
-non-deterministic behavior).
-
-The second category is for emergency situations, where the kernel needs
-to report something unusual (panic, BUG, WARN, etc.). In some of these
-situations, it may be the last thing the kernel ever does. We should
-expect this category to focus on getting the message out as reliably as
-possible. Even if it means disturbing the system with large latencies.
-
-_Both_ categories are important for the user, but their requirements are
-different:
-
-   informational: non-disturbing
-   emergency:     reliable
-
-But what if a console doesn't support the write_atomic() that the
-emergency category requires? Then implement it. We currently have about
-80 console drivers.
-
-But what if can't be implemented? vt console, for example? Yes, the vt
-console would be tricky. It doesn't even support the current
-bust_spinlocks/oops_in_progress. But since the emergency category has a
-clear requirement (reliability), it means that a vt write_atomic() does
-not need to be concerned with system disturbance. That could help to
-find an implementation that will work, even for vt.
-
-> We may wave those semi-important messages good bye, I'm afraid,
-> preemptible printk will take care of it.
-
-You are talking about a system that is overloaded with messages to print
-to the console. The current printk implementation will do a better job
-of getting the informational messages out, but at an enormous cost to
-all the tasks on the system (including the realtime tasks). I am
-proposing a printk implementation where the tasks are not affected by
-console printing floods. When the CPU is allowed to dedicate itself to
-tasks, this obviously reduces the CPU available for console printing,
-and thus more messages will be lost. It is a choice to clarify printk's
-role (non-disturbance) and at the same time guarantee more determinism
-for the kernel and its tasks.
-
-As I've said, the messages of the informational category are also
-important. There are things that can be done to help get these messages
-out. For example:
-
-- Creating printk-kthreads per console (and thus per-console locks) so
-  that printk-buffer readers are not slowing each other down.
-
-- Having printk-threads use priority-buckets based on loglevels so that
-  (like the rt scheduler) more important messages are printed first.
-
-- Assigning the printk-kthread of more important consoles an appropriate
-  realtime priority.
-
-> So... do we have a case here? Do we really need printk-kthread?
-
-Obviously I answer yes to that.
-
-I want messages of the information category to cause no disturbance to
-the system. Give the kernel the freedom to communicate to users without
-destroying its own performance. This can only be achieved if the
-messages are printed from a _fully_ preemptible context.
-
-And I want messages of the emergency category to be as reliable as
-possible, regardless of the costs to the system. Give the kernel a clear
-mechanism to _reliably_ communicate critical information. Such messages
-should never appear on a correctly functioning system.
-
-And again, both of the above have nothing to do with message
-suppression. Here I am addressing the console printing issues:
-reliability and disturbance.
-
-John Ogness
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+apart from that:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
