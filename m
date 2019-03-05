@@ -2,82 +2,87 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04393C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEA6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99F3206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2FC206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JsXOElIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfCELnA (ORCPT
+        id S1727750AbfCELoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:43:00 -0500
-Received: from foss.arm.com ([217.140.101.70]:47316 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbfCELnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:43:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89553A78;
-        Tue,  5 Mar 2019 03:42:57 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31B4A3F71D;
-        Tue,  5 Mar 2019 03:42:56 -0800 (PST)
-Date:   Tue, 5 Mar 2019 11:42:54 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
+        Tue, 5 Mar 2019 06:44:13 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52710 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfCELoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:44:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4d3uPbgoW9Ou/9nQNRQtXaXcNQF6nLUyGCwHg1/4rbA=; b=JsXOElIlqmnYFV7/f8EQm/0lB
+        mcOr44rCm5GcYTWMkoOC7/i3AIIbYAGT7INJ/hZ+fWi1XgX/6AOcE43wx8SaRFyAnu/hXp6tUzAa1
+        MTx9qvH9wzpaDMTYq2I3BjBZSzTAqs2j8226yVi3xoNsqHR5VPPik0pzNfLywCWWGf94ztsb8NuUK
+        ioVu07TgUGOcToGvJ1bTiMyMCxzEv0hxXuXoEBMJMTzhpnmcfkILFADYHoA1JHqo81Sk4FJ8CnmU2
+        TmKn8mw9Cdd38vtv97nUGUBEbB+DBuJapQoQQGOtRUDLydetHx3O4S5Dt7x4OEIiYg9bWzMUFxLWI
+        ddIHCJdxw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h18US-0002av-MM; Tue, 05 Mar 2019 11:44:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7285B202883B6; Tue,  5 Mar 2019 12:44:06 +0100 (CET)
+Date:   Tue, 5 Mar 2019 12:44:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
+Cc:     Quentin Perret <quentin.perret@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Chen Yu <yu.c.chen@intel.com>,
         Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH v2 3/3] cpufreq: intel_pstate: Update max frequency on
- global turbo changes
-Message-ID: <20190305114252.wu55upnrzb5j2g7j@queper01-lin>
-References: <1755407.S0oJirvq9V@aspire.rjw.lan>
- <258653930.nEdAsQ7rt7@aspire.rjw.lan>
+Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
+ frequency on global turbo changes
+Message-ID: <20190305114406.GV32494@hirez.programming.kicks-ass.net>
+References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
+ <20190305104256.7kvedlttuovmptpc@queper01-lin>
+ <2336151.IZk3Z8DVvP@aspire.rjw.lan>
+ <6357319.Iupbu3ldGQ@aspire.rjw.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <258653930.nEdAsQ7rt7@aspire.rjw.lan>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <6357319.Iupbu3ldGQ@aspire.rjw.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 05 Mar 2019 at 11:42:06 (+0100), Rafael J. Wysocki wrote:
-> +static void intel_pstate_update_max_freq(unsigned int cpu)
-> +{
-> +	struct cpufreq_policy *policy = cpufreq_cpu_acquire(cpu);
-> +	struct cpufreq_policy new_policy;
-> +	struct cpudata *cpudata;
-> +
-> +	if (!policy)
-> +		return;
-> +
-> +	cpudata = all_cpu_data[cpu];
-> +	policy->cpuinfo.max_freq = global.turbo_disabled_mf ?
-> +			cpudata->pstate.max_freq : cpudata->pstate.turbo_freq;
+On Tue, Mar 05, 2019 at 11:58:37AM +0100, Rafael J. Wysocki wrote:
+> So after the Peter's patch "sched/cpufreq: Fix 32bit math overflow"
+> I will need to recompute sg_cpu->min in sugov_limits().
 
-I'm not too familiar with how the Intel turbo stuff so bear with me but
-is this 'pstate.turbo_freq' constant ?
+So there's still an open question; do we want that ->min thing to depend
+on available frequencies _at_all_ ?
 
-Why not just write it unconditionally into cpuinfo.max_freq ? It's not
-guaranteed to always be reachable anyways no ? So maybe that's OK to always
-report that one regardless of the boost availability ?
+I'm thinking it might be a good thing to have the iowait boost curve be
+independent of all that.
 
-> +	memcpy(&new_policy, policy, sizeof(*policy));
-> +	new_policy.max = min(policy->user_policy.max, policy->cpuinfo.max_freq);
-> +	new_policy.min = min(policy->user_policy.min, new_policy.max);
-> +
-> +	cpufreq_set_policy(policy, &new_policy);
-> +
-> +	cpufreq_cpu_release(policy);
-> +}
+Like said; if we set it at 128 (static), it takes 9 consequtive wake-ups
+for it to reach 1024 (max). While now the curve depends on how wide the
+gap is between min_freq and max_freq. And it seems weird to have this
+behaviour depend on that. To me at least.
 
-Thanks,
-Quentin
+Now, I don't know if 128/9 is the right curve, it is just a random
+number I pulled out of a hat. But it seems to make more sense than
+depending on frequencies.
+
+
