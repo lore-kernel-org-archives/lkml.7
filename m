@@ -2,121 +2,136 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37432C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222DFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04C0206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="vSOWIOdF"
+	by mail.kernel.org (Postfix) with ESMTP id EA6F6206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfCEOSP (ORCPT
+        id S1728575AbfCEOYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:18:15 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40260 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbfCEOSO (ORCPT
+        Tue, 5 Mar 2019 09:24:49 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1837 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727940AbfCEOYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:18:14 -0500
-Received: by mail-lj1-f194.google.com with SMTP id w6so7730152ljd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 06:18:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yU8UZ5gXBpppu/3qAECTdK+2nhUb58EoBGf70qQ+PIs=;
-        b=vSOWIOdFJ2B/VQ8F+ev3eoT3oKsSR2kCbagChwC2h/jMmwHIEGTQGZjOwnIg/c9Fyy
-         PhoKt+OutwE5IGYMP9L+JQDxmC3fOv2G05DvIOuiEt+Rzfz4u+E5vWYX2vTADbJqiEIe
-         94WVXfkj2mgQO0Ru/MOm4jgnRbWSQHIsZbimC9iiWHHWwuCibrrtryGuto8WUbqD+vDo
-         0z5c3RDiOyd02xEAK5JqXcx0IlI7oBmhVjsaE4mGKilRZmeX/fdGTbUd/peaa9fA5mTR
-         6m1A9eExjLJkN0krYW1SOJxghhIn8GvVfRmCaYvXB7H8N0iQ5cx5jogrd63c92s04J2m
-         Fmog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yU8UZ5gXBpppu/3qAECTdK+2nhUb58EoBGf70qQ+PIs=;
-        b=pKPArMja2E/w4EDwXT74Zm2QY+AZFrKbJJQTpXTkUN584xF7Z4NLgzSCpsDtSE6IeY
-         p1Rf4We+SqF9e2koHpiO3z7R8FMVLVApe8UJmWjPChvDVMbZbl244Fsx+8u+r3H/fYww
-         hDenJ2/nrsCwwvf0UDvJw75W7xG2/wgKVqaUeRbsh0grHslVCNGadWGpuo8lOHWQzkbm
-         1hTV0ZdovOaqbUMudwbxl20RBCQ5DWctNGNqvVFQVD4CScJZ5FMk/UafHEQWBZPaZf2n
-         IG/sAt5Tokf5Vbz5O+A+AYV8qbj8G1rPeEjhbwGo2BS2Fnae5SkXR31GAxxIsZxNYv1W
-         1sJQ==
-X-Gm-Message-State: APjAAAU0nOKCnL+OnCTToF66VczYjHzyrnKCHzOVK29jL3l3Pl+3yJhd
-        pUlG3GpfFuUwwRTfPpIchP7wg/THsmKC0DlMwSEr
-X-Google-Smtp-Source: APXvYqwmbxDpDVwM3gizIsIQmopZCqC8ctKrY7zt8fmolo8EEZZlemDbl+XI7pBwwMTuit1hTHfGfBoltOkIddPM+Fs=
-X-Received: by 2002:a2e:9001:: with SMTP id h1mr14114855ljg.5.1551795492340;
- Tue, 05 Mar 2019 06:18:12 -0800 (PST)
+        Tue, 5 Mar 2019 09:24:43 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x25EGZpE016050;
+        Tue, 5 Mar 2019 15:24:32 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2r0ju8tk72-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 05 Mar 2019 15:24:32 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CCE831;
+        Tue,  5 Mar 2019 14:24:32 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DD5142CF7;
+        Tue,  5 Mar 2019 14:24:31 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
+ 15:24:31 +0100
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 15:24:31
+ +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        "Ludovic Barre" <ludovic.barre@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+Date:   Tue, 5 Mar 2019 15:24:06 +0100
+Message-ID: <1551795849-13672-6-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-References: <1551784466-15610-1-git-send-email-lirongqing@baidu.com>
-In-Reply-To: <1551784466-15610-1-git-send-email-lirongqing@baidu.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 5 Mar 2019 09:18:01 -0500
-Message-ID: <CAHC9VhQaoWM1nuvm_UeX_np_y0QAenQeWE8XWDUVh1oAOsy9XA@mail.gmail.com>
-Subject: Re: [PATCH] audit: fix a memleak caused by auditing load module
-To:     Li RongQing <lirongqing@baidu.com>
-Cc:     Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 6:14 AM Li RongQing <lirongqing@baidu.com> wrote:
-> we should always free context->module.name, since it will be
-> allocated unconditionally and audit_log_start() can fail with
-> other reasons, and audit_log_exit maybe not called
->
-> unreferenced object 0xffff88af90837d20 (size 8):
->   comm "modprobe", pid 1036, jiffies 4294704867 (age 3069.138s)
->   hex dump (first 8 bytes):
->     69 78 67 62 65 00 ff ff                          ixgbe...
->   backtrace:
->     [<0000000008da28fe>] __audit_log_kern_module+0x33/0x80
->     [<00000000c1491e61>] load_module+0x64f/0x3850
->     [<000000007fc9ae3f>] __do_sys_init_module+0x218/0x250
->     [<0000000000d4a478>] do_syscall_64+0x117/0x400
->     [<000000004924ded8>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->     [<000000007dc331dd>] 0xffffffffffffffff
->
-> Fixes: ca86cad7380e3 ("audit: log module name on init_module")
-> Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> ---
->  kernel/auditsc.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index b2d1f043f..2bd80375f 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -1186,8 +1186,13 @@ static void show_special(struct audit_context *context, int *call_panic)
->         int i;
->
->         ab = audit_log_start(context, GFP_KERNEL, context->type);
-> -       if (!ab)
-> +       if (!ab) {
-> +               if (context->type == AUDIT_KERN_MODULE) {
-> +                       kfree(context->module.name);
-> +                       context->module.name = NULL;
-> +               }
->                 return;
-> +       }
+Declare reserved memories shared by the processors for STM32MP157c-ed1
+board.
 
-Hello.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-Thanks for the patch, but I have to ask if you've considered freeing
-the module name in audit_free_context()?  That seems like the correct
-way to solve this issue.
-
--Paul
-
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 626ceb3..acfc5cd 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -21,6 +21,48 @@
+ 		reg = <0xC0000000 0x40000000>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		mcuram2: mcuram2@10000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10000000 0x40000>;
++			no-map;
++		};
++
++		vdev0vring0: vdev0vring0@10040000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10040000 0x1000>;
++			no-map;
++		};
++
++		vdev0vring1: vdev0vring1@10041000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10041000 0x1000>;
++			no-map;
++		};
++
++		vdev0buffer: vdev0buffer@10042000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10042000 0x4000>;
++			no-map;
++		};
++
++		mcuram: mcuram@30000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x30000000 0x40000>;
++			no-map;
++		};
++
++		retram: retram@38000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x38000000 0x10000>;
++			no-map;
++		};
++	};
++
+ 	aliases {
+ 		serial0 = &uart4;
+ 	};
 -- 
-paul moore
-www.paul-moore.com
+2.7.4
+
