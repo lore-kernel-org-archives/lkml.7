@@ -2,93 +2,106 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD207C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09326C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF9720830
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551744152;
-	bh=Ux8/YbJjP9yh30Q8QH+q7zD0Qdj3rgun+Bf6UGmdC+U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=WAZ3kjlRZLGWv4lzQpIrCMISi3IG+5lKyWbH25YV+U23tyqHlXslk0pzu+l6hYex0
-	 WANr+D6kMe7sjcWdPr2YZfEwRoqOPMTVZy7Wct10LHZ5Bsnu/wShZgJrtfvlV89sYd
-	 htKNzR4tBRTeZBCxtOHP7dAYNHFBkBfvuB7FOkVM=
+	by mail.kernel.org (Postfix) with ESMTP id D5F80206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfCEACb (ORCPT
+        id S1726867AbfCEADd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:02:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfCEAC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:02:29 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A994E206B8;
-        Tue,  5 Mar 2019 00:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551744149;
-        bh=Ux8/YbJjP9yh30Q8QH+q7zD0Qdj3rgun+Bf6UGmdC+U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FQtzdd+mnLuMe3A/bTRJFCG+rIo2z0HbPd/PWsHPeICKRjVjtK3xwJkgwhvgagOhu
-         jLxiVxd7ZfmyW5G7GrtggWtZ+90SN3nIXVcudFCjZwt3fz06rntU4VTTo8bfh3BXq4
-         f11YYUhb6h8piFeX6LM9wxnkAfESNu51W9/VWHtQ=
-Message-ID: <1551744147.3771.0.camel@kernel.org>
-Subject: Re: [PATCH 2/2] tracing: Use strncpy instead of memcpy for string
- keys in hist triggers
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 04 Mar 2019 18:02:27 -0600
-In-Reply-To: <20190304184530.7e819698@gandalf.local.home>
-References: <cover.1549309756.git.tom.zanussi@linux.intel.com>
-         <50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com>
-         <20190304165000.0ce0fbdd@gandalf.local.home>
-         <20190304165653.17699f9f@gandalf.local.home>
-         <5643a1971831ce2d01a947f0f07cefa002bbdc25.camel@linux.intel.com>
-         <5c978b4b0d629e5a914c512c14f99f6a24241407.camel@linux.intel.com>
-         <20190304184530.7e819698@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
+        Mon, 4 Mar 2019 19:03:33 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:37721 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCEADd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 19:03:33 -0500
+Received: from [192.168.1.110] ([77.2.115.28]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MLzWL-1gj9gQ0wt7-00I01S; Tue, 05 Mar 2019 01:03:15 +0100
+Subject: Re: [PATCH 3/3] x86: apuv2: select LEDS_CLASS
+To:     Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Linus Walleij <linusw@kernel.org>, Enrico Weigelt <info@metux.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190304201930.1622839-1-arnd@arndb.de>
+ <20190304201930.1622839-3-arnd@arndb.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <24c191e1-f607-1320-2474-3db92383e383@metux.net>
+Date:   Tue, 5 Mar 2019 01:03:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190304201930.1622839-3-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:UV5mHVxPagaTWcSyiLVuzJhvKSnnqijoZqcj4r1gITnwH5T4PyW
+ yNMTpIU90CzFeD2Mvu6yGTGqFdISuPdMNNVLkNVMZ3q7/8mDZdxnuNY4m+N6svkB0l5TBcc
+ OufNHatM2bsjLqJ+KyJGIfXEePQss1ORfruFpKqgVI5mAOz3BYqCwwuU/mocR2sAwcgS/6N
+ HGMoCinHFwHUit4e3m0sA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nfbxny+BIac=:cS4F5el7YhEuOmVLE7Ibzq
+ p4Jv+jM8+cxUAmFWBbQ6+mFJVdSoxtZHML61NSSLryTiKYKNib4BBAzNEhHAQtyp+xm0R75n3
+ PRK8Hg73ilNq/7CPaY8T9dgaM15+hy8ga2yqXBMblX4V8a8chkovVMC/8mcFRHOk+8OnI9dYM
+ oAmGHokeGSdsi4aqHHIwZZD1dNkAYXG/VpNvSm4cvUaUmc86pYmFdjs4CWzlJsxcB/PF/wOP6
+ aa2IzT8uhB379IZ07zOpCH34IXPnNJGPZq84rJcTQmARpEp0Em+mOXQ9nPcpIoydUPvgpFV4f
+ PWxXP88bTsJjIQz/oGfaSFqbyqqNDhw1KEGnmF6sTTCyWDyLWH4d/CS9/V4Z0iRh/vUGG9Oq6
+ 6/kswb6wgilQnEUGyCkFbH2UXnHdPhxTEnFag+9t1zM6rkUdcysP06GhhIYeoTj3tVJ6CvXpJ
+ DfkAXI0Ue6DrWHp/lLAdtLvb8ZouEUqhqpeAzX6TMwmvxRWmdtR86E+WC8RmxOD8HdLQXbuKV
+ 7ytdoP1oj8ugfLerDwx28MtFFIZrBFZii6gYzbFGr5lYXGxGmjgulfly1yREaj0H5NRXwxhKV
+ crx8yqmKqbuV/d/V3ehtdh9OKPDfzUTJXwgPmN9nmfTULJTsARpbKoXn7hlJNNYV64wdfqw+B
+ PjHJpOooNgnl0gMXkcg0MjDgUrXy7dyqHW16R6zxNngRk00yh4YEtSHkQFLVLSwRYzGRDJdFf
+ 3ETViNe7Wj2w61thhYmTCsYy19bwTzD2o45zmLPPUJLJXMAKZg9W3gs3yi4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-04 at 18:45 -0500, Steven Rostedt wrote:
-> On Mon, 04 Mar 2019 16:31:40 -0600
-> Tom Zanussi <tom.zanussi@linux.intel.com> wrote:
+On 04.03.19 21:19, Arnd Bergmann wrote:
+> LEDS_GPIO can only be selected when LEDS_CLASS is already enabled:
 > 
-> > > Hmm, I don't think it's really necessary - it's not used in a key
-> > > so
-> > > don't care about anything after the null, and TASK_COMM_LEN is
-> > > used
-> > > in
-> > > the memcpy.  
-> > 
-> > Never mind, yeah, it would make sense to do this, will create
-> > another
-> > patch...
+> WARNING: unmet direct dependencies detected for LEDS_GPIO
+>   Depends on [m]: NEW_LEDS [=y] && LEDS_CLASS [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
+>   Selected by [y]:
+>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT_KEYBOARD [=y]
 > 
-> And probably should change the memcpy() of comm in
-> kernel/trace/trace.c
-> too. It could be that memcpy() is a little bit faster than strncpy(),
-> and this is done on scheduling switches when tracing is active, but
-> still, I'm starting to think that isn't a good choice.
+> Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/platform/x86/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 4d65d37b0c86..d64529352a9c 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1308,6 +1308,7 @@ config PCENGINES_APU2
+>  	depends on INPUT && INPUT_KEYBOARD
+>  	select GPIO_AMD_FCH
+>  	select KEYBOARD_GPIO_POLLED
+> +	select LEDS_CLASS
+>  	select LEDS_GPIO
+>  	help
+>  	  This driver provides support for the front button and LEDs on
 > 
 
-OK, will add that too.
+ACK. Just was about to post the same :)
 
-Tom
+Reviewed-by: Enrico Weigelt, metux It consult <info@metux.net>
 
 
-> -- Steve
+thx.
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
