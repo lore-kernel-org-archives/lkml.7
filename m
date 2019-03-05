@@ -2,94 +2,201 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B341C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07835C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5018820684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551745408;
-	bh=PewehnSq3c3k8NIBiD7/hHc8GAvtJcUxcQ+QCIK57/k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fg3Kp1fcN12VgM1in1qgzT9RBXzGSyecxiIqlN1Jq7emZZMmB2sQZeCg2XU2w9njY
-	 wIObBxOEfk02JOvoDKuLtTqC21d2Eq0QsLXcngvKi1uPSl4IswftNo9S2NZssYtGcF
-	 5G2BTbWXKoiLr4vviY1WGlhjGs6kyNagPrsh1q2I=
+	by mail.kernel.org (Postfix) with ESMTP id C685C206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfCEAX1 (ORCPT
+        id S1726713AbfCEAZx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:23:27 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42587 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbfCEAX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:23:26 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d14so5972721ljl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:23:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1fBZMds7fXJxOxATQ64cCYfev5cnLGxAAszQ8/tSaDI=;
-        b=gY5qfcjytdBe/Oq3SVD5wBlfKUg42yBqqdrSCguMLmfDfA51eHijV2fj0IEWKVHOJY
-         sjkrO3nJzWh0f2HUh6gBwl6/8oIwHSOxAaRFUeMAz0mid79qpmcwELMQPcbxQ/UpS21f
-         szAI3XL4/qAo1SWxvLZkboaNNqdI6YPtI+CHg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1fBZMds7fXJxOxATQ64cCYfev5cnLGxAAszQ8/tSaDI=;
-        b=S7g3Lr+tIIdQQ57p7Y08cnVrwb47tR25mqD9YHO7ceyv8qJp/Usd3OA7NQLIP4cbAY
-         5b/myj/RWOv4HI81CzWRk65HoHgr+M7xNJ1RY4aoKhEP1YMgzju2xX8q/QiqvgSdqKLj
-         VO/jEnlgM3c7lxZF29NCo2wIDSn5nejlxSNuFWma9N/WDtcbQd7pOPsbnbeXWW9W8oYc
-         jLqCtX89UMiu8A3+oKf3Jcx/vTZxPNin0smp+pqv0/ZB5h3oeEmO+lcy5YUNfIY8RFcN
-         0AjMwsdnBzCZamRuWUrQdoZCH2dQu4WTaLsobSsvL7SixINTgeEa7u5tvAoSCRQPHMV/
-         MFBQ==
-X-Gm-Message-State: APjAAAXDipyosdjIpQ/WpSAhjJ1eGiMGerUhK339g5uMbgrFRxzDi8RI
-        g6qpro+v5ej5hFCHJo2y24U2WwHbogM=
-X-Google-Smtp-Source: APXvYqyYOPYTtvKfUAD8biJSO+FGYbmSyYcw/peOX1uniAER5498kVMgHUeOXqis/fz8VdVM/Mqb0g==
-X-Received: by 2002:a2e:81c7:: with SMTP id s7mr12808477ljg.146.1551745403614;
-        Mon, 04 Mar 2019 16:23:23 -0800 (PST)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id m77sm594414lfe.23.2019.03.04.16.23.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 16:23:22 -0800 (PST)
-Received: by mail-lf1-f47.google.com with SMTP id z23so4870872lfe.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:23:22 -0800 (PST)
-X-Received: by 2002:ac2:5542:: with SMTP id l2mr155684lfk.136.1551745402316;
- Mon, 04 Mar 2019 16:23:22 -0800 (PST)
+        Mon, 4 Mar 2019 19:25:53 -0500
+Received: from mga04.intel.com ([192.55.52.120]:58216 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfCEAZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 19:25:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 16:25:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
+   d="scan'208";a="148586669"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2019 16:25:52 -0800
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 4 Mar 2019 16:25:51 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 4 Mar 2019 16:25:51 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.74]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.26]) with mapi id 14.03.0415.000;
+ Tue, 5 Mar 2019 08:25:19 +0800
+From:   "Cao, Bingbu" <bingbu.cao@intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "Zhi, Yong" <yong.zhi@intel.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] media: staging/intel-ipu3: reduce kernel stack usage
+Thread-Topic: [PATCH] media: staging/intel-ipu3: reduce kernel stack usage
+Thread-Index: AQHU0sjI/9ys7oMm70KxNpya8bdOOaX8LDeg
+Date:   Tue, 5 Mar 2019 00:25:18 +0000
+Message-ID: <EE45BB6704246A4E914B70E8B61FB42A15C131D5@SHSMSX104.ccr.corp.intel.com>
+References: <20190304202758.1802417-1-arnd@arndb.de>
+In-Reply-To: <20190304202758.1802417-1-arnd@arndb.de>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzM2ZjM5Y2ItNmNhOC00ZTFmLWFmMGQtMzUwOTZkMzUyZDcyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVVBTMHBvVGdaN1F4ZVpxM0JBRWxDeGcwR1l4VmVzczNoOVQ3MGI4K2lMeDZ2eTdVVnMzMXdzVEYrVTQ2bkd2SiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190301200835.18286-1-jannh@google.com> <20190302034017.GM2217@ZenIV.linux.org.uk>
-In-Reply-To: <20190302034017.GM2217@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 4 Mar 2019 16:23:06 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjJ1vY9Gte01+YhEOuKHbd=u4zwPxRCOfuiHw-kMvE26Q@mail.gmail.com>
-Message-ID: <CAHk-=wjJ1vY9Gte01+YhEOuKHbd=u4zwPxRCOfuiHw-kMvE26Q@mail.gmail.com>
-Subject: Re: [PATCH] fs: use KERNEL_DS instead of get_ds()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jann Horn <jannh@google.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 7:40 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> No objections, but that kind of stuff might be better done in a different
-> way: ask Linus to run this
 
-Your script is disgusting, and I will not quote it for posterity for
-that reason. I will just say that git has a "path exclusion" thing
-that you can use to make it much more streamlined.
 
-And I ended up going a bit further, and just got rid of it all in
-commit 736706bee329 ("get rid of legacy 'get_ds()' function")
+__________________________
+BRs,
+Cao, Bingbu
 
-                  Linus
+
+
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Tuesday, March 5, 2019 4:28 AM
+> To: Sakari Ailus <sakari.ailus@linux.intel.com>; Mauro Carvalho Chehab
+> <mchehab@kernel.org>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>; Zhi, Yong <yong.zhi@intel.com>; Cao,
+> Bingbu <bingbu.cao@intel.com>; linux-media@vger.kernel.org;
+> devel@driverdev.osuosl.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH] media: staging/intel-ipu3: reduce kernel stack usage
+> 
+> The imgu_css_queue structure is too large to be put on the kernel stack,
+> as we can see in 32-bit builds:
+> 
+> drivers/staging/media/ipu3/ipu3-css.c: In function 'imgu_css_fmt_try':
+> drivers/staging/media/ipu3/ipu3-css.c:1863:1: error: the frame size of
+> 1172 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> 
+> By dynamically allocating this array, the stack usage goes down to an
+> acceptable 140 bytes for the same x86-32 configuration.
+> 
+> Fixes: f5f2e4273518 ("media: staging/intel-ipu3: Add css pipeline
+> programming")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/staging/media/ipu3/ipu3-css.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/media/ipu3/ipu3-css.c
+> b/drivers/staging/media/ipu3/ipu3-css.c
+> index 15ab77e4b766..664c14b7a518 100644
+> --- a/drivers/staging/media/ipu3/ipu3-css.c
+> +++ b/drivers/staging/media/ipu3/ipu3-css.c
+> @@ -3,6 +3,7 @@
+> 
+>  #include <linux/device.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/slab.h>
+> 
+>  #include "ipu3-css.h"
+>  #include "ipu3-css-fw.h"
+> @@ -1744,7 +1745,7 @@ int imgu_css_fmt_try(struct imgu_css *css,
+>  	struct v4l2_rect *const bds = &r[IPU3_CSS_RECT_BDS];
+>  	struct v4l2_rect *const env = &r[IPU3_CSS_RECT_ENVELOPE];
+>  	struct v4l2_rect *const gdc = &r[IPU3_CSS_RECT_GDC];
+> -	struct imgu_css_queue q[IPU3_CSS_QUEUES];
+> +	struct imgu_css_queue *q = kcalloc(IPU3_CSS_QUEUES, sizeof(struct
+> +imgu_css_queue), GFP_KERNEL);
+
+Could you use the devm_kcalloc()? 
+>  	struct v4l2_pix_format_mplane *const in =
+>  					&q[IPU3_CSS_QUEUE_IN].fmt.mpix;
+>  	struct v4l2_pix_format_mplane *const out = @@ -1753,6 +1754,11 @@
+> int imgu_css_fmt_try(struct imgu_css *css,
+>  					&q[IPU3_CSS_QUEUE_VF].fmt.mpix;
+>  	int i, s, ret;
+> 
+> +	if (!q) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+[Cao, Bingbu] 
+The goto here is wrong, you can just report an error, and I prefer it is next to the alloc.
+> +
+>  	/* Adjust all formats, get statistics buffer sizes and formats */
+>  	for (i = 0; i < IPU3_CSS_QUEUES; i++) {
+>  		if (fmts[i])
+> @@ -1766,7 +1772,8 @@ int imgu_css_fmt_try(struct imgu_css *css,
+>  					IPU3_CSS_QUEUE_TO_FLAGS(i))) {
+>  			dev_notice(css->dev, "can not initialize queue %s\n",
+>  				   qnames[i]);
+> -			return -EINVAL;
+> +			ret = -EINVAL;
+> +			goto out;
+>  		}
+>  	}
+>  	for (i = 0; i < IPU3_CSS_RECTS; i++) { @@ -1788,7 +1795,8 @@ int
+> imgu_css_fmt_try(struct imgu_css *css,
+>  	if (!imgu_css_queue_enabled(&q[IPU3_CSS_QUEUE_IN]) ||
+>  	    !imgu_css_queue_enabled(&q[IPU3_CSS_QUEUE_OUT])) {
+>  		dev_warn(css->dev, "required queues are disabled\n");
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto out;
+>  	}
+> 
+>  	if (!imgu_css_queue_enabled(&q[IPU3_CSS_QUEUE_OUT])) { @@ -1829,7
+> +1837,8 @@ int imgu_css_fmt_try(struct imgu_css *css,
+>  	ret = imgu_css_find_binary(css, pipe, q, r);
+>  	if (ret < 0) {
+>  		dev_err(css->dev, "failed to find suitable binary\n");
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto out;
+>  	}
+>  	css->pipes[pipe].bindex = ret;
+> 
+> @@ -1843,7 +1852,8 @@ int imgu_css_fmt_try(struct imgu_css *css,
+>  						IPU3_CSS_QUEUE_TO_FLAGS(i))) {
+>  				dev_err(css->dev,
+>  					"final resolution adjustment failed\n");
+> -				return -EINVAL;
+> +				ret = -EINVAL;
+> +				goto out;
+>  			}
+>  			*fmts[i] = q[i].fmt.mpix;
+>  		}
+> @@ -1859,7 +1869,10 @@ int imgu_css_fmt_try(struct imgu_css *css,
+>  		 bds->width, bds->height, gdc->width, gdc->height,
+>  		 out->width, out->height, vf->width, vf->height);
+> 
+> -	return 0;
+> +	ret = 0;
+> +out:
+> +	kfree(q);
+> +	return ret;
+>  }
+> 
+>  int imgu_css_fmt_set(struct imgu_css *css,
+> --
+> 2.20.0
+
