@@ -2,28 +2,27 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9DAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34334C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AD020684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EB8206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfCECzv (ORCPT
+        id S1726953AbfCEC6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 21:55:51 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44932 "EHLO
+        Mon, 4 Mar 2019 21:58:50 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44984 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfCECzv (ORCPT
+        with ESMTP id S1726522AbfCEC6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 21:55:51 -0500
+        Mon, 4 Mar 2019 21:58:49 -0500
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 1730329D6B;
-        Mon,  4 Mar 2019 21:55:44 -0500 (EST)
-Date:   Tue, 5 Mar 2019 13:56:00 +1100 (AEDT)
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 945A529D6B;
+        Mon,  4 Mar 2019 21:58:47 -0500 (EST)
+Date:   Tue, 5 Mar 2019 13:59:03 +1100 (AEDT)
 From:   Finn Thain <fthain@telegraphics.com.au>
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
@@ -32,9 +31,9 @@ cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25:
  warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
-In-Reply-To: <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
-Message-ID: <alpine.LNX.2.21.1903051154200.135@nippy.intranet>
-References: <201903042049.npxcZzps%fengguang.wu@intel.com> <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
+In-Reply-To: <alpine.LNX.2.21.1903051154200.135@nippy.intranet>
+Message-ID: <alpine.LNX.2.21.1903051357410.135@nippy.intranet>
+References: <201903042049.npxcZzps%fengguang.wu@intel.com> <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com> <alpine.LNX.2.21.1903051154200.135@nippy.intranet>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,159 +41,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Mar 2019, Geert Uytterhoeven wrote:
+On Tue, 5 Mar 2019, Finn Thain wrote:
 
-> On Mon, Mar 4, 2019 at 1:44 PM kbuild test robot <lkp@intel.com> wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git master
-> > head:   e223cadc191661c67cb419b3a53c7854ecc39e8b
-> > commit: e223cadc191661c67cb419b3a53c7854ecc39e8b [1174/1174] Merge tag 'v5.0'
-> > config: m68k-allmodconfig (attached as .config)
-> > compiler: m68k-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout e223cadc191661c67cb419b3a53c7854ecc39e8b
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=8.2.0 make.cross ARCH=m68k
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> >    In file included from include/linux/string.h:20,
-> >                     from include/linux/bitmap.h:9,
-> >                     from include/linux/nodemask.h:95,
-> >                     from include/linux/mmzone.h:17,
-> >                     from include/linux/gfp.h:6,
-> >                     from include/linux/umh.h:4,
-> >                     from include/linux/kmod.h:22,
-> >                     from include/linux/module.h:13,
-> >                     from drivers/nvme/target/admin-cmd.c:15:
-> >    In function 'memcpy_and_pad',
-> >        inlined from 'nvmet_execute_identify_ctrl' at drivers/nvme/target/admin-cmd.c:309:2:
-> > >> arch/m68k/include/asm/string.h:72:25: warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7] [-Warray-bounds]
-> >     #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
-> >                             ^~~~~~~~~~~~~~~~~~~~~~~~~
-> >    include/linux/string.h:456:3: note: in expansion of macro 'memcpy'
-> >       memcpy(dest, src, dest_len);
-> >       ^~~~~~
-> >
-> > vim +/__builtin_memcpy +72 arch/m68k/include/asm/string.h
-> >
-> > ea61bc46 Greg Ungerer 2010-09-07  69
-> > ea61bc46 Greg Ungerer 2010-09-07  70  #define __HAVE_ARCH_MEMCPY
-> > ea61bc46 Greg Ungerer 2010-09-07  71  extern void *memcpy(void *, const void *, __kernel_size_t);
-> > ea61bc46 Greg Ungerer 2010-09-07 @72  #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
-> > ea61bc46 Greg Ungerer 2010-09-07  73
-> >
-> > :::::: The code at line 72 was first introduced by commit
-> > :::::: ea61bc461d09e8d331a307916530aaae808c72a2 m68k/m68knommu: merge MMU and non-MMU string.h
-> >
-> > :::::: TO: Greg Ungerer <gerg@snapgear.com>
-> > :::::: CC: Geert Uytterhoeven <geert@linux-m68k.org>
 > 
-> Yep, that's a funny one, which I saw myself this morning, and decided
-> to dive into.
-> Apparently this is due 1) the recently added -ffreestanding and
-> 2) the kernel version being shorter than 8 characters (indeed, it
-> didn't happen with allmodconfig on v5.0.0-rcX).
+> Looks bogus to me.
 > 
-> The offending code is:
+> If you change memcpy to __builtin_memcpy, then we avoid the macro and the 
+> warning changes to,
 > 
->         memcpy_and_pad(id->fr, sizeof(id->fr),
->                        UTS_RELEASE, strlen(UTS_RELEASE), ' ');
+> ./include/linux/string.h:456:3: warning: '__builtin_memcpy' forming offset [7, 8] is out of the bounds [0, 6] [-Warray-bounds]
+>    __builtin_memcpy(dest, src, dest_len);
 > 
-> with UTS_RELEASE being "5.0.0+", which calls into:
+> The compiler has nothing to complain about here. dest is known to be 
+> id->fr and dest_len is known to be sizeof(id->fr).
 > 
->     static inline void memcpy_and_pad(void *dest, size_t dest_len,
->                                       const void *src, size_t count, int pad)
->     {
->             if (dest_len > count) {
-> 
-> Of course this branch is taken, right?
+> The error message indicates that gcc has applied the bounds [0, 6] to dest 
+> when in fact those are the bounds for src.
 > 
 
-Apparently that's not known at compile time. The compiler knows dest_len 
-is 8 but apparently doesn't know what count is, because -ffreestanding 
-means it can't evaluate strlen(UTS_RELEASE). If you change that to 
-__builtin_strlen(UTS_RELEASE), the problem goes away.
-
->                     memcpy(dest, src, count);
->                     memset(dest + count, pad,  dest_len - count);
->             } else
->                     memcpy(dest, src, dest_len);
->     }
-> 
-> This assembles to:
-> 
->     .LC1:
->             .string     "5.0.0+"
-> 
->     | drivers/nvme/target/admin-cmd.c:311:      memcpy_and_pad(id->fr,
-> sizeof(id->fr),
->             pea .LC1            |
->             jsr strlen          |
-> 
-> Woops, gcc no longer optimizes this away, due to -ffreestanding.
-> 
->     | drivers/nvme/target/admin-cmd.c:311:      memcpy_and_pad(id->fr,
-> sizeof(id->fr),
->             lea (64,%a3),%a1    |, ret, _7
->     | include/linux/string.h:452:       if (dest_len > count) {
->             lea (16,%sp),%sp    |,
->             moveq #7,%d1        |,
->             cmp.l %d0,%d1       | _6,
->             jcs .L53            |
-> 
-> And we end up with retaining both branches:
-> 
->     | include/linux/string.h:453:               memcpy(dest, src, count);
->             move.l %d0,-(%sp)   | _6,
->             pea .LC1            |
->             move.l %a1,-(%sp)   | _7,
->             move.l %d0,-12(%fp) |,
->             move.l %a1,-16(%fp) |,
->             jsr memcpy          |
->     | include/linux/string.h:454:               memset(dest + count,
-> pad,  dest_len - count);
->             move.l -12(%fp),%d0 |,
->             moveq #8,%d1        |,
->             sub.l %d0,%d1       | _6,
->             move.l %d1,-(%sp)   |,
->             pea 32.w            |
->             move.l -16(%fp),%a1 |,
->             pea (%a1,%d0.l)             |
->             jsr memset          |
->             lea (24,%sp),%sp    |,
->             jra .L54            |
->     .L53:
->     | include/linux/string.h:456:               memcpy(dest, src, dest_len);
->             move.l .LC1,(%a1)   | MEM[(void *)"5.0.0+"], MEM[(void *)_7]
->             move.l .LC1+4,4(%a1)        | MEM[(void *)"5.0.0+"], MEM[(void *)_7]
-> 
-> But given the warning, the compiler must have devised that taking the
-> second branch would read beyond the source buffer???
-> 
-
-Looks bogus to me.
-
-If you change memcpy to __builtin_memcpy, then we avoid the macro and the 
-warning changes to,
-
-./include/linux/string.h:456:3: warning: '__builtin_memcpy' forming offset [7, 8] is out of the bounds [0, 6] [-Warray-bounds]
-   __builtin_memcpy(dest, src, dest_len);
-
-The compiler has nothing to complain about here. dest is known to be 
-id->fr and dest_len is known to be sizeof(id->fr).
-
-The error message indicates that gcc has applied the bounds [0, 6] to dest 
-when in fact those are the bounds for src.
+My mistake. GCC is right, it seems memcpy will read past the end of 
+"5.0.0+".
 
 -- 
-
->     .L54:
-> 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
