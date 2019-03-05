@@ -6,36 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66167C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8732082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0768C2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727596AbfCEJwu (ORCPT
+        id S1727610AbfCEJwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 04:52:50 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4770 "EHLO huawei.com"
+        Tue, 5 Mar 2019 04:52:55 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4771 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726179AbfCEJwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726300AbfCEJwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Mar 2019 04:52:50 -0500
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1DB74868EC648C63CD9E;
+        by Forcepoint Email with ESMTP id 18380B5D36AD31FFA8EB;
         Tue,  5 Mar 2019 17:52:48 +0800 (CST)
 Received: from szvp000201624.huawei.com (10.120.216.130) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 5 Mar 2019 17:52:38 +0800
+ 14.3.408.0; Tue, 5 Mar 2019 17:52:37 +0800
 From:   Chao Yu <yuchao0@huawei.com>
 To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 2/2] f2fs: fix to use kvfree instead of kzfree
-Date:   Tue, 5 Mar 2019 17:52:33 +0800
-Message-ID: <20190305095233.126601-2-yuchao0@huawei.com>
+Subject: [PATCH 1/2] f2fs: fix to add refcount once page is tagged PG_private
+Date:   Tue, 5 Mar 2019 17:52:32 +0800
+Message-ID: <20190305095233.126601-1-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20190305095233.126601-1-yuchao0@huawei.com>
-References: <20190305095233.126601-1-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.120.216.130]
@@ -45,75 +43,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Jiqun Li reported in bugzilla:
+As Gao Xiang reported in bugzilla:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=202747
+https://bugzilla.kernel.org/show_bug.cgi?id=202749
 
-System can panic due to using wrong allocate/free function pair
-in xattr interface:
-- use kvmalloc to allocate memory
-- use kzfree to free memory
+f2fs may skip pageout() due to incorrect page reference count.
 
-Let's fix to use kvfree instead of kzfree, BTW, we are safe to
-get rid of kzfree, since there is no such confidential data stored
-as xattr, we don't need to zero it before free memory.
+The problem here is that MM defined the rule [1] very clearly that
+once page was set with PG_private flag, we should increment the
+refcount in that page, also main flows like pageout(), migrate_page()
+will assume there is one additional page reference count if
+page_has_private() returns true.
 
-Fixes: 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed")
-Reported-by: Jiqun Li <jiqun.li@unisoc.com>
+But currently, f2fs won't add/del refcount when changing PG_private
+flag. Anyway, f2fs should follow MM's rule to make MM's related flows
+running as expected.
+
+[1] https://lore.kernel.org/lkml/2b19b3c4-2bc4-15fa-15cc-27a13e5c7af1@aol.com/
+
+Reported-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- fs/f2fs/xattr.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/f2fs/checkpoint.c | 11 +++++++++--
+ fs/f2fs/data.c       | 32 ++++++++++++++++++++------------
+ fs/f2fs/dir.c        |  6 +++++-
+ fs/f2fs/node.c       |  6 +++++-
+ fs/f2fs/segment.c    | 23 +++++++++++++++++------
+ 5 files changed, 56 insertions(+), 22 deletions(-)
 
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index fa620d31ea5f..ca47224d78ab 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -340,7 +340,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 	*base_addr = txattr_addr;
- 	return 0;
- out:
--	kzfree(txattr_addr);
-+	kvfree(txattr_addr);
- 	return err;
- }
- 
-@@ -383,7 +383,7 @@ static int read_all_xattrs(struct inode *inode, struct page *ipage,
- 	*base_addr = txattr_addr;
- 	return 0;
- fail:
--	kzfree(txattr_addr);
-+	kvfree(txattr_addr);
- 	return err;
- }
- 
-@@ -510,7 +510,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index c65a1e8e1e95..4e0e93af5ce0 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -406,7 +406,11 @@ static int f2fs_set_meta_page_dirty(struct page *page)
+ 	if (!PageDirty(page)) {
+ 		__set_page_dirty_nobuffers(page);
+ 		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_META);
+-		SetPagePrivate(page);
++
++		if (!PagePrivate(page)) {
++			get_page(page);
++			SetPagePrivate(page);
++		}
+ 		f2fs_trace_pid(page);
+ 		return 1;
  	}
- 	error = size;
- out:
--	kzfree(base_addr);
-+	kvfree(base_addr);
- 	return error;
+@@ -957,7 +961,10 @@ void f2fs_update_dirty_page(struct inode *inode, struct page *page)
+ 	inode_inc_dirty_pages(inode);
+ 	spin_unlock(&sbi->inode_lock[type]);
+ 
+-	SetPagePrivate(page);
++	if (!PagePrivate(page)) {
++		get_page(page);
++		SetPagePrivate(page);
++	}
+ 	f2fs_trace_pid(page);
  }
  
-@@ -556,7 +556,7 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 3f3becd46362..46924d4f69d0 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2715,8 +2715,11 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return f2fs_drop_inmem_page(inode, page);
+ 
+-	set_page_private(page, 0);
+-	ClearPagePrivate(page);
++	if (PagePrivate(page)) {
++		set_page_private(page, 0);
++		ClearPagePrivate(page);
++		f2fs_put_page(page, 0);
++	}
+ }
+ 
+ int f2fs_release_page(struct page *page, gfp_t wait)
+@@ -2730,8 +2733,11 @@ int f2fs_release_page(struct page *page, gfp_t wait)
+ 		return 0;
+ 
+ 	clear_cold_data(page);
+-	set_page_private(page, 0);
+-	ClearPagePrivate(page);
++	if (PagePrivate(page)) {
++		set_page_private(page, 0);
++		ClearPagePrivate(page);
++		f2fs_put_page(page, 0);
++	}
+ 	return 1;
+ }
+ 
+@@ -2799,12 +2805,8 @@ int f2fs_migrate_page(struct address_space *mapping,
+ 			return -EAGAIN;
  	}
- 	error = buffer_size - rest;
- cleanup:
--	kzfree(base_addr);
-+	kvfree(base_addr);
- 	return error;
- }
  
-@@ -687,7 +687,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 	if (!error && S_ISDIR(inode->i_mode))
- 		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
- exit:
--	kzfree(base_addr);
-+	kvfree(base_addr);
- 	return error;
- }
+-	/*
+-	 * A reference is expected if PagePrivate set when move mapping,
+-	 * however F2FS breaks this for maintaining dirty page counts when
+-	 * truncating pages. So here adjusting the 'extra_count' make it work.
+-	 */
+-	extra_count = (atomic_written ? 1 : 0) - page_has_private(page);
++	/* one extra reference was held for atomic_write page */
++	extra_count = atomic_written ? 1 : 0;
+ 	rc = migrate_page_move_mapping(mapping, newpage,
+ 				page, mode, extra_count);
+ 	if (rc != MIGRATEPAGE_SUCCESS) {
+@@ -2825,9 +2827,15 @@ int f2fs_migrate_page(struct address_space *mapping,
+ 		get_page(newpage);
+ 	}
  
+-	if (PagePrivate(page))
++	if (PagePrivate(page)) {
++		get_page(newpage);
+ 		SetPagePrivate(newpage);
+-	set_page_private(newpage, page_private(page));
++		set_page_private(newpage, page_private(page));
++
++		set_page_private(page, 0);
++		ClearPagePrivate(page);
++		f2fs_put_page(page, 0);
++	}
+ 
+ 	if (mode != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 103f3686a045..fbbafb04a431 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -728,7 +728,11 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
+ 		!f2fs_truncate_hole(dir, page->index, page->index + 1)) {
+ 		f2fs_clear_page_cache_dirty_tag(page);
+ 		clear_page_dirty_for_io(page);
+-		ClearPagePrivate(page);
++		if (PagePrivate(page)) {
++			set_page_private(page, 0);
++			ClearPagePrivate(page);
++			f2fs_put_page(page, 0);
++		}
+ 		ClearPageUptodate(page);
+ 		clear_cold_data(page);
+ 		inode_dec_dirty_pages(dir);
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index f6ff84e29749..ce97a9885105 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1961,7 +1961,11 @@ static int f2fs_set_node_page_dirty(struct page *page)
+ 	if (!PageDirty(page)) {
+ 		__set_page_dirty_nobuffers(page);
+ 		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_NODES);
+-		SetPagePrivate(page);
++
++		if (!PagePrivate(page)) {
++			get_page(page);
++			SetPagePrivate(page);
++		}
+ 		f2fs_trace_pid(page);
+ 		return 1;
+ 	}
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index e730c334abba..2d77dd133a4e 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -191,8 +191,11 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
+ 
+ 	f2fs_trace_pid(page);
+ 
+-	set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
+-	SetPagePrivate(page);
++	if (!PagePrivate(page)) {
++		get_page(page);
++		SetPagePrivate(page);
++		set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
++	}
+ 
+ 	new = f2fs_kmem_cache_alloc(inmem_entry_slab, GFP_NOFS);
+ 
+@@ -280,8 +283,11 @@ static int __revoke_inmem_pages(struct inode *inode,
+ 			ClearPageUptodate(page);
+ 			clear_cold_data(page);
+ 		}
+-		set_page_private(page, 0);
+-		ClearPagePrivate(page);
++		if (PagePrivate(page)) {
++			set_page_private(page, 0);
++			ClearPagePrivate(page);
++			f2fs_put_page(page, 0);
++		}
+ 		f2fs_put_page(page, 1);
+ 
+ 		list_del(&cur->list);
+@@ -370,8 +376,13 @@ void f2fs_drop_inmem_page(struct inode *inode, struct page *page)
+ 	kmem_cache_free(inmem_entry_slab, cur);
+ 
+ 	ClearPageUptodate(page);
+-	set_page_private(page, 0);
+-	ClearPagePrivate(page);
++
++	if (PagePrivate(page)) {
++		set_page_private(page, 0);
++		ClearPagePrivate(page);
++		f2fs_put_page(page, 0);
++	}
++
+ 	f2fs_put_page(page, 0);
+ 
+ 	trace_f2fs_commit_inmem_page(page, INMEM_INVALIDATE);
 -- 
 2.18.0.rc1
 
