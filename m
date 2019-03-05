@@ -2,110 +2,126 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D36C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EB9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C6720675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwDZjIv0"
+	by mail.kernel.org (Postfix) with ESMTP id B527E20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfCEGhb (ORCPT
+        id S1726755AbfCEGjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 01:37:31 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41665 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfCEGha (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 01:37:30 -0500
-Received: by mail-lj1-f195.google.com with SMTP id z25so6559430ljk.8;
-        Mon, 04 Mar 2019 22:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R4yrRR7J7zqt10xqHI8cyZI+wDW4RxTttxjdnNGZntk=;
-        b=JwDZjIv02Du31UY5W404iavqNbGEVrgqpjtPLlYGBaIAcfH7on9LD7VgvqqbV4fTJe
-         bOZCzCCIV/EC2PgaPksFnpGhM0aaEXku2gxEqu99MCYCY/Fhz3LT9O0VH0xSSrzT7WBm
-         6Ygj29wQdLphOPhmfOu2Gg/Sou/BmbE8w4qVu660Ds413duso5BLixGrjKjiHcldzFqh
-         YDZ7C1OtS0m1OVmq1vzf1ctla2gXxDnpepS+zNOrZ2rpQLoof/l73sw02Xzn88f4Um54
-         bJCFUfgdHKBL4lrPoHPo0x9WHLDWZv34EAV/NDJozg8Q/So2k7Ywz31YfgWAVdw1TsuH
-         6Z0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R4yrRR7J7zqt10xqHI8cyZI+wDW4RxTttxjdnNGZntk=;
-        b=GLEvafIWaPOEV8DbGFv2uTVLd2817UScX2VKIOmVFOj2FTc7peJL3UKnbb7eyBrIue
-         j2mUFDjmwZB2YBBRx6uovXQldXLqxMwM2MimMT59ILl/P887BqEOmjWksDz+A15IKedd
-         HDRfjzAKJLRd8bqqW5soVPErIsmKzyYEoKy9T4IzGh3Ns2kmmDarZwlKkJJqQ5eX6yDB
-         00FzCsdGKu3E923P7Wary1SPyTykdg0WHdzlD2HLSSuDaelpusVAnGUGxYBjky0v1zg7
-         YveIwhmlwxhK4srFQu3J7yr7fqpARm0/mjUfPmYsTsehh5kELOi0bVocDhNyPuae2h5G
-         KtMg==
-X-Gm-Message-State: APjAAAVNurtcgymdK1O7o68RX/0fVMcEPMOeE2i4HJnQaY6tblzkREn9
-        zUoM0YlOyRrHPl5c0cK1Y5toqovJ41g4vUfdmr0=
-X-Google-Smtp-Source: APXvYqz6TmoZO2MrPOA+ubm4pGfBMrGRQIRqABIa3+0zeVZT0pexc30CogV83erPPOTdi/16UsioMIC59Ix9opkW76w=
-X-Received: by 2002:a2e:240a:: with SMTP id k10mr12710232ljk.31.1551767848562;
- Mon, 04 Mar 2019 22:37:28 -0800 (PST)
+        Tue, 5 Mar 2019 01:39:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46790 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725924AbfCEGjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 01:39:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A5BA9AD4C;
+        Tue,  5 Mar 2019 06:39:17 +0000 (UTC)
+Subject: Re: [PATCH] xen: avoid link error on ARM
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Paul Durrant <paul.durrant@citrix.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+References: <20190304204826.2414365-1-arnd@arndb.de>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0eaa0d35-0be8-0053-1dcb-feb61d441bd2@suse.com>
+Date:   Tue, 5 Mar 2019 07:39:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-References: <20190304183827.GA6809@jordon-HP-15-Notebook-PC>
- <20190304184958.GR32494@hirez.programming.kicks-ass.net> <CAFqt6zarwg3NnkbNYKEO-jrdHUw8GwMqUrLDTqgQV3D1dux-qQ@mail.gmail.com>
- <712691085.1137.1551729467392.JavaMail.zimbra@efficios.com>
-In-Reply-To: <712691085.1137.1551729467392.JavaMail.zimbra@efficios.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 5 Mar 2019 12:07:16 +0530
-Message-ID: <CAFqt6zaNsiMdq_XxYrEdFxJigW3v8unSbFys+B3d-vBGWEj4+Q@mail.gmail.com>
-Subject: Re: [PATCH] selftest/rseq: Remove duplicate header
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>, shuah <shuah@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190304204826.2414365-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 1:27 AM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> ----- On Mar 4, 2019, at 1:53 PM, Souptick Joarder jrdr.linux@gmail.com wrote:
->
-> > On Tue, Mar 5, 2019 at 12:20 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >>
-> >> On Tue, Mar 05, 2019 at 12:08:27AM +0530, Souptick Joarder wrote:
-> >> > Remove duplicate header which is included twice
-> >> >
-> >> > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-> >> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> >>
-> >> That SoB chain is invalid.
-> >
-> > I didn't get why it is invalid ?
->
-> I think it's about having the author of the patch (From) as first
-> Signed-off-by, and then apply following Signed-off-by by maintainers
-> who pick up the patch. (That's what I am used to see)
->
-> What is the intent behind the second Signed-off-by by Sabyasachi Gupta ?
+On 04/03/2019 21:47, Arnd Bergmann wrote:
+> Building the privcmd code as a loadable module on ARM, we get
+> a link error due to the private cache management functions:
+> 
+> ERROR: "__sync_icache_dcache" [drivers/xen/xen-privcmd.ko] undefined!
+> 
+> Move the code into a new file that is built along with privcmd.o
+> but is always built-in, even when the latter is a loadable module.
+> 
+> xen_remap_vma_range() may not be the best name here, if someone
+> comes up with a better one, let me know.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/xen/Makefile  |  3 +++
+>  drivers/xen/mm.c      | 41 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/xen/privcmd.c | 30 +-----------------------------
+>  include/xen/xen-ops.h |  3 +++
+>  4 files changed, 48 insertions(+), 29 deletions(-)
+>  create mode 100644 drivers/xen/mm.c
+> 
+> diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
+> index ad3844d9f876..7124f9e749b4 100644
+> --- a/drivers/xen/Makefile
+> +++ b/drivers/xen/Makefile
+> @@ -29,6 +29,9 @@ obj-$(CONFIG_SWIOTLB_XEN)		+= swiotlb-xen.o
+>  obj-$(CONFIG_XEN_MCE_LOG)		+= mcelog.o
+>  obj-$(CONFIG_XEN_PCIDEV_BACKEND)	+= xen-pciback/
+>  obj-$(CONFIG_XEN_PRIVCMD)		+= xen-privcmd.o
+> +ifdef CONFIG_XEN_PRIVCMD
+> +obj-y					+= mm.o
+> +endif
 
-Sabyasachi is the author and I am posting his patches as his email client
-has some issue. I think I need to add Sabyasachi's From: @ the
-beginning of change log.
-Andrew suggested the same in another thread.
->
-> Thanks,
->
-> Mathieu
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
+Can we avoid that ifdef in the Makefile?
+
+I'd rather have an architecture independant builtin driver added which
+is always included for CONFIG_XEN. This would allow to move redundant
+stuff from arch/*/xen/ into it (e.g. xen_vcpu_id).
+
+So: rename mm.c to xen-builtin.c, use:
+
+obj-$(CONFIG_XEN) += xen-builtin.o
+
+
+Juergen
