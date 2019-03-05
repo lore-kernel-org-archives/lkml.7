@@ -4,86 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8B5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88935C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC2A20652
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A97C20652
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HkL4i1Mk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lJV8jtHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfCETDj (ORCPT
+        id S1728134AbfCETEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 14:03:39 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42647 "EHLO
+        Tue, 5 Mar 2019 14:04:20 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39692 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbfCETDi (ORCPT
+        with ESMTP id S1727168AbfCETEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 14:03:38 -0500
-Received: by mail-lf1-f68.google.com with SMTP id p1so6989800lfk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 11:03:36 -0800 (PST)
+        Tue, 5 Mar 2019 14:04:20 -0500
+Received: by mail-lf1-f68.google.com with SMTP id r123so6995218lff.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 11:04:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9eV+w1rVq47KEm/c+5FT1lKhow3a5EjOUVBdcY7lcDw=;
-        b=HkL4i1MkL55mfllBwyKBifkM7QxVHKETERcfYHMqrhCEB9Vkjtn5cF4QhK20H03m/w
-         NB89+Fz9hnc4+SoUycQdBxlFbClHwxiIZ9T2JUgXFiZCtCkNvcwVvi93WQ/c0l5IW+nG
-         Vtp6MGDQWfdBTOmcWzmRxp9k4deVneQyxckXs=
+        bh=uluI8MIsJOeLu5eYIawXB0+49Ik0tPZfROdOhX5Bi1s=;
+        b=lJV8jtHpED/XEnivaCDEhMF3qemjcbzDdRHCfYZ5zLRFH+nc9GSAOsmd1Ez8roODDn
+         VeJ6jwHx7mDIj3ljM7s0+5eEABvH72b37MhDl/61RR0YY2yM+ZQG8Br9Dk2L+5iDv+fy
+         cyhaW6Gt+LwurgcPDlsODUxypbCR1PezGa+Yo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9eV+w1rVq47KEm/c+5FT1lKhow3a5EjOUVBdcY7lcDw=;
-        b=JYg6Fr34eUfHOFmJgDG4bkHFKKpvkYGdLqEOG/DAG8A7wWo7oHC4jCKaybPhNr0dKN
-         tWMVQE1JxkYYTLil6PIwgpQtujGoCZzR63ztBr6iwYv6H7ihwDaFuWaHhK5RrzUrIhwg
-         fNpdU0QqPhMEquSNa9vAnn9Z3YF1aEAS0HKFht+mpMksDdpCFXIuPbHJhAILWNk6ko5e
-         EpyBkZNVEPvXVA/1czEMOGrrVs71O2qFGXAZMd4Ls03kn7R/Y6cQbqyjuJeRrxLLPaBR
-         ke+WHTE9VDgBkArlWGcMQvjYusVBaM7veWMJ7vDUGw4uEFdJ9SEpPg212rMX9TmGf6gl
-         5puQ==
-X-Gm-Message-State: APjAAAX5Lk0sro/XiLdHpsAvRhwqVsdgfxQlJpF35C6wtzmTGf756d13
-        44rBIzEXO38xF9OXYDXRaaQdQ/Pal48=
-X-Google-Smtp-Source: APXvYqwihmMbTjPb+1q4QVcoh2I6MQrsbbSrf97ddOnIOW8ev1xc3GmFVhiL7omlGw5pE5jaqJbe1Q==
-X-Received: by 2002:a19:d502:: with SMTP id m2mr1631533lfg.128.1551812615974;
-        Tue, 05 Mar 2019 11:03:35 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id a5sm2309621lfk.12.2019.03.05.11.03.34
+        bh=uluI8MIsJOeLu5eYIawXB0+49Ik0tPZfROdOhX5Bi1s=;
+        b=Wa3i5fbMHmFX0UlzZ0jUMpvFMAico9QIrMAV2TZ+I3MF3kEcZLwdUrsm8VeRPT9elz
+         ls7rlDORETRrYfoDWuTEvQA1rYjt+BJHyaDg/RhQ69QyKBWLkK/3MCIfhRojNlEid/9Y
+         dsvT0lIMatO9Oi2oCRcIJ/WGGIDJ94yOwyACpNltnxwlA8lO1bXk7wJo8o/CPAmeY0tP
+         Qr/aLiOh2p4jhdGOyb9GeuOwAEw34H6QZPPXQ9qSXtPE57PhWrkINXfidTzpt98rWDKX
+         L8g0FoZ64kxY/hQ+w9jSFugn+jQvkHFeTo+q1Sdl2lRg+jAmKXAAU1VymCv62D8cMdJh
+         PLJw==
+X-Gm-Message-State: APjAAAVywC682T9xDQpLt+ZxU94KehgZ9dE+gXvOp9u3EWwbTW/iBPu2
+        RfU13AdQ0I3AzgsRbWsPzRTNJ1nETuA=
+X-Google-Smtp-Source: APXvYqx2lsxfEYB6WmrR4nBZm20u4MUXN+WfnsT6HFnMM5eOuDWI6wAUnuczUxzfvtYuI3h7PqLL5Q==
+X-Received: by 2002:ac2:55b2:: with SMTP id y18mr1638225lfg.72.1551812657825;
+        Tue, 05 Mar 2019 11:04:17 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id v1sm2305285lfg.13.2019.03.05.11.04.17
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 11:03:35 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id z7so8581716lji.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 11:03:34 -0800 (PST)
-X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr118058ljj.30.1551812614556;
- Tue, 05 Mar 2019 11:03:34 -0800 (PST)
+        Tue, 05 Mar 2019 11:04:17 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id z7so8583467lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 11:04:17 -0800 (PST)
+X-Received: by 2002:a2e:93cf:: with SMTP id p15mr96879ljh.184.1551812656932;
+ Tue, 05 Mar 2019 11:04:16 -0800 (PST)
 MIME-Version: 1.0
 References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
- <1546318276-18993-6-git-send-email-yong.wu@mediatek.com> <CAE=gft71J+5ui_FFm4D+62uSy6KHYzT7wru_NNdPsvrCDV3ekw@mail.gmail.com>
- <1551277985.17917.48.camel@mhfsdcap03>
-In-Reply-To: <1551277985.17917.48.camel@mhfsdcap03>
+ <1546318276-18993-12-git-send-email-yong.wu@mediatek.com> <CAE=gft4Z_C0NRmP0A_rnDzvB3txt3cGV=rvZhJOQZk_1qahiQQ@mail.gmail.com>
+ <1551278012.17917.51.camel@mhfsdcap03>
+In-Reply-To: <1551278012.17917.51.camel@mhfsdcap03>
 From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 5 Mar 2019 11:02:58 -0800
-X-Gmail-Original-Message-ID: <CAE=gft4=VjbQut0vGVJ=ViqBCva00tdq1K-QnyJKSkzA4f0rUw@mail.gmail.com>
-Message-ID: <CAE=gft4=VjbQut0vGVJ=ViqBCva00tdq1K-QnyJKSkzA4f0rUw@mail.gmail.com>
-Subject: Re: [PATCH 05/13] memory: mtk-smi: Add device-link between smi-larb
- and smi-common
+Date:   Tue, 5 Mar 2019 11:03:40 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7ZQ36mKozYBmSJ9j9k4gcQyHMuEZsH0Kems2T6+=GtSg@mail.gmail.com>
+Message-ID: <CAE=gft7ZQ36mKozYBmSJ9j9k4gcQyHMuEZsH0Kems2T6+=GtSg@mail.gmail.com>
+Subject: Re: [PATCH 11/13] iommu/mediatek: Use builtin_platform_driver
 To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+Cc:     youlin.pei@mediatek.com,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
-        yingjoe.chen@mediatek.com, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>
+        <devicetree@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, srv_heupstream@mediatek.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@google.com>,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        yingjoe.chen@mediatek.com, Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -92,62 +92,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Feb 27, 2019 at 6:33 AM Yong Wu <yong.wu@mediatek.com> wrote:
 >
-> On Mon, 2019-02-25 at 15:54 -0800, Evan Green wrote:
-> > On Mon, Dec 31, 2018 at 8:52 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> On Mon, 2019-02-25 at 15:56 -0800, Evan Green wrote:
+> > On Mon, Dec 31, 2018 at 8:53 PM Yong Wu <yong.wu@mediatek.com> wrote:
 > > >
-> > > Normally, If the smi-larb HW need work, we should enable the smi-common
-> > > HW power and clock firstly.
-> > > This patch adds device-link between the smi-larb dev and the smi-common
-> > > dev. then If pm_runtime_get_sync(smi-larb-dev), the pm_runtime_get_sync
-> > > (smi-common-dev) will be called automatically.
+> > > MediaTek IOMMU should wait for smi larb which need wait for the
+> > > power domain(mtk-scpsys.c) and the multimedia ccf who both are
+> > > module init. Thus, subsys_initcall for MediaTek IOMMU is not helpful.
+> > > Switch to builtin_platform_driver.
 > > >
-> > > Since smi is built-in driver like IOMMU and never unbound,
-> > > DL_FLAG_AUTOREMOVE_* is not needed.
+> > > Meanwhile, the ".remove" can be removed. Move its content to
+> > > ".shutdown".
 > > >
-> > > CC: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Suggested-by: Tomasz Figa <tfiga@chromium.org>
 > > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 > > > ---
-> > >  drivers/memory/mtk-smi.c | 16 +++++++---------
-> > >  1 file changed, 7 insertions(+), 9 deletions(-)
+> > >  drivers/iommu/mtk_iommu.c    | 23 ++---------------------
+> > >  drivers/iommu/mtk_iommu_v1.c | 16 ++--------------
+> > >  2 files changed, 4 insertions(+), 35 deletions(-)
 > > >
-> > > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> > > index 9688341..30930e4 100644
-> > > --- a/drivers/memory/mtk-smi.c
-> > > +++ b/drivers/memory/mtk-smi.c
-> > > @@ -271,6 +271,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
-> > >         struct device *dev = &pdev->dev;
-> > >         struct device_node *smi_node;
-> > >         struct platform_device *smi_pdev;
-> > > +       struct device_link *link;
+> > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > > index 735ae8d..2798b12 100644
+> > > --- a/drivers/iommu/mtk_iommu.c
+> > > +++ b/drivers/iommu/mtk_iommu.c
+> > > @@ -690,7 +690,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+> > >         return component_master_add_with_match(dev, &mtk_iommu_com_ops, match);
+> > >  }
 > > >
-> > >         larb = devm_kzalloc(dev, sizeof(*larb), GFP_KERNEL);
-> > >         if (!larb)
-> > > @@ -310,6 +311,12 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
-> > >                 if (!platform_get_drvdata(smi_pdev))
-> > >                         return -EPROBE_DEFER;
-> > >                 larb->smi_common_dev = &smi_pdev->dev;
-> > > +               link = device_link_add(dev, larb->smi_common_dev,
-> > > +                                      DL_FLAG_PM_RUNTIME);
+> > > -static int mtk_iommu_remove(struct platform_device *pdev)
+> > > +static void mtk_iommu_shutdown(struct platform_device *pdev)
+> > >  {
+> > >         struct mtk_iommu_data *data = platform_get_drvdata(pdev);
+> > >
+> > > @@ -703,12 +703,6 @@ static int mtk_iommu_remove(struct platform_device *pdev)
+> > >         clk_disable_unprepare(data->bclk);
+> > >         devm_free_irq(&pdev->dev, data->irq, data);
+> > >         component_master_del(&pdev->dev, &mtk_iommu_com_ops);
+> > > -       return 0;
+> > > -}
+> > > -
+> > > -static void mtk_iommu_shutdown(struct platform_device *pdev)
+> > > -{
+> > > -       mtk_iommu_remove(pdev);
 > >
-> > Doesn't this need to be torn down in remove()? You mention that it's
-> > built-in and never removed, but it does seem to have a remove()
+> > Is there a reason all these things are happening in shutdown()? Don't
+> > we normally just not clean things up and let the machine turn off?
+> > Normally I'm a big advocate of proper symmetric teardown, so it hurts
+> > a little to ask.
 >
-> The MTK IOMMU driver need depend on this SMI driver. the IOMMU is a
-> builtin driver, thus the SMI also should be a builtin driver.
+> In this patch I change the driver to builtin driver. I guess the
+> "_remove" is not helpful now. thus I remove it.
 >
-> Technically, If the driver is builtin, then the "remove" function can be
-> removed? If yes, I could use a new patch do it.
+> About the shutdown, I don't have a special reason for it. I only want to
+> mute the m4u log when something go wrong in the shutdown flow.
+>
 
-Yeah, I guess so. It's always sad to see cleanup code getting removed,
-but it makes sense to me.
-
-
->
-> It looks the MACRO(builtin_platform_driver) only support one driver, but
-> we have two driver(smi-common and smi-larb) here.
->
-> > function that tears down everything else, so it seemed a shame to
-> > start leaking now. Maybe the AUTOREMOVE flag would do it.
->
->
+Wouldn't you want to see the logs when something goes wrong in
+shutdown? Or is there a lot of noise that gets generated if you don't
+do this during a graceful shutdown? I guess if there's some real
+reason you're doing all this stuff in shutdown then it's fine, but if
+it was just a default shuttling of code from remove to shutdown
+because remove was going away then it could be deleted.
+-Evan
