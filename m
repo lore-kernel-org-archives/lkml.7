@@ -2,102 +2,246 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6280FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFECC00319
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319B52133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551811779;
-	bh=k+Iq3xwBIbt9ZPAisBgeg2pj+qY/jWn5gCD7h7gjDnA=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=vMywXozFI1SOPHNjFy3rCQ3lYSTnM5PqdH7EjMI6/IhooGCfu5qv0BEzutWwobZQD
-	 rSE9fIl5jOcSfCnstGrR1+oz/ZtN6mhr2U26uNtpCjfWlve8gCj5qLveZzxZSt+qWD
-	 z1lz5XYIhv14s7hTsivej2S1mOFg9exdfzNvU5fI=
+	by mail.kernel.org (Postfix) with ESMTP id C7FC32064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCESth (ORCPT
+        id S1726904AbfCES5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 13:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44788 "EHLO mail.kernel.org"
+        Tue, 5 Mar 2019 13:57:05 -0500
+Received: from namei.org ([65.99.196.166]:55540 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfCEStg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 13:49:36 -0500
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CBF208E4;
-        Tue,  5 Mar 2019 18:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551811776;
-        bh=k+Iq3xwBIbt9ZPAisBgeg2pj+qY/jWn5gCD7h7gjDnA=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=mC6lKazT6lIrm9i+G1AcAWAwRkMzT8/Ne7BEWwXlNXjNPYIOYPwlaerFACuAP2N03
-         X9CvpctEsfCQmrSSWm6IOqDTjv7d6VVZ4oGqXbf0ZrgJOd/XLwzYm3joGozHT8cp9A
-         gYfeXENWzH1wYz6K9nVJbSL2DeYeMr5Zxvx68/Eo=
-Content-Type: text/plain; charset="utf-8"
+        id S1726088AbfCES5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 13:57:05 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x25Iv3ig020498;
+        Tue, 5 Mar 2019 18:57:03 GMT
+Date:   Wed, 6 Mar 2019 05:57:03 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: [GIT PULL] security subsystem changes for v5.1
+Message-ID: <alpine.LRH.2.21.1903060540160.19551@namei.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190305044936.22267-2-dbasehore@chromium.org>
-References: <20190305044936.22267-1-dbasehore@chromium.org> <20190305044936.22267-2-dbasehore@chromium.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 1/6] clk: Remove recursion in clk_core_{prepare,enable}()
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-doc@vger.kernel.org,
-        mturquette@baylibre.com, heiko@sntech.de, aisheng.dong@nxp.com,
-        mchehab+samsung@kernel.org, corbet@lwn.net, jbrunet@baylibre.com,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Derek Basehore <dbasehore@chromium.org>
-To:     Derek Basehore <dbasehore@chromium.org>,
-        linux-kernel@vger.kernel.org
-Message-ID: <155181177527.20095.15680753964583935841@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Tue, 05 Mar 2019 10:49:35 -0800
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Derek Basehore (2019-03-04 20:49:31)
-> From: Stephen Boyd <sboyd@codeaurora.org>
->=20
-> Enabling and preparing clocks can be written quite naturally with
-> recursion. We start at some point in the tree and recurse up the
-> tree to find the oldest parent clk that needs to be enabled or
-> prepared. Then we enable/prepare and return to the caller, going
-> back to the clk we started at and enabling/preparing along the
-> way. This also unroll the recursion in unprepare,disable which can
-> just be done in the order of walking up the clk tree.
->=20
-> The problem is recursion isn't great for kernel code where we
-> have a limited stack size. Furthermore, we may be calling this
-> code inside clk_set_rate() which also has recursion in it, so
-> we're really not looking good if we encounter a tall clk tree.
->=20
-> Let's create a stack instead by looping over the parent chain and
-> collecting clks of interest. Then the enable/prepare becomes as
-> simple as iterating over that list and calling enable.
->=20
-> Modified verison of https://lore.kernel.org/patchwork/patch/814369/
-> -Fixed kernel warning
-> -unrolled recursion in unprepare/disable too
->=20
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
+Please pull these changes for the security subsystem.
 
-From the original post:
+Summary:
 
-"I have some vague fear that this may not work if a clk op is framework=20
-reentrant and attemps to call consumer clk APIs from within the clk ops.
-If the reentrant call tries to add a clk that's already in the list then
-we'll corrupt the list. Ugh."
+- Extend LSM stacking to allow sharing of cred, file, ipc, inode, and task 
+blobs. This paves the way for more full-featured LSMs to be merged, and is 
+specifically aimed at LandLock and SARA LSMs. This work is from Casey and 
+Kees.
 
-Do we have this sort of problem here? Or are you certain that we don't
-have clks that prepare or enable something that is already in the
-process of being prepared or enabled?
+- There's a new LSM from Micah Morton: "SafeSetID gates the setid family 
+of syscalls to restrict UID/GID transitions from a given UID/GID to only 
+those approved by a system-wide whitelist."  This feature is currently 
+shipping in ChromeOS.
 
+
+
+---
+
+The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
+
+  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-general
+
+for you to fetch changes up to 468e91cecb3218afd684b8c422490dfebe0691bb:
+
+  keys: fix missing __user in KEYCTL_PKEY_QUERY (2019-03-04 15:48:37 -0800)
+
+----------------------------------------------------------------
+Ben Dooks (1):
+      keys: fix missing __user in KEYCTL_PKEY_QUERY
+
+Casey Schaufler (19):
+      LSM: Add all exclusive LSMs to ordered initialization
+      procfs: add smack subdir to attrs
+      Smack: Abstract use of cred security blob
+      SELinux: Abstract use of cred security blob
+      SELinux: Remove cred security blob poisoning
+      SELinux: Remove unused selinux_is_enabled
+      AppArmor: Abstract use of cred security blob
+      TOMOYO: Abstract use of cred security blob
+      Infrastructure management of the cred security blob
+      SELinux: Abstract use of file security blob
+      Smack: Abstract use of file security blob
+      LSM: Infrastructure management of the file security
+      SELinux: Abstract use of inode security blob
+      Smack: Abstract use of inode security blob
+      LSM: Infrastructure management of the inode security
+      LSM: Infrastructure management of the task security
+      SELinux: Abstract use of ipc security blobs
+      Smack: Abstract use of ipc security blobs
+      LSM: Infrastructure management of the ipc security blob
+
+Gustavo A. R. Silva (1):
+      security: mark expected switch fall-throughs and add a missing break
+
+James Morris (3):
+      Merge tag 'v5.0-rc1' into next-general
+      Merge tag 'blob-stacking-security-next' of https://git.kernel.org/.../kees/linux into next-general
+      Merge tag 'v5.0-rc3' into next-general
+
+Kees Cook (20):
+      LSM: Introduce LSM_FLAG_LEGACY_MAJOR
+      LSM: Provide separate ordered initialization
+      LSM: Plumb visibility into optional "enabled" state
+      LSM: Lift LSM selection out of individual LSMs
+      LSM: Build ordered list of LSMs to initialize
+      LSM: Introduce CONFIG_LSM
+      LSM: Introduce "lsm=" for boottime LSM selection
+      LSM: Tie enabling logic to presence in ordered list
+      LSM: Prepare for reorganizing "security=" logic
+      LSM: Refactor "security=" in terms of enable/disable
+      LSM: Separate idea of "major" LSM from "exclusive" LSM
+      apparmor: Remove SECURITY_APPARMOR_BOOTPARAM_VALUE
+      selinux: Remove SECURITY_SELINUX_BOOTPARAM_VALUE
+      LSM: Split LSM preparation from initialization
+      LoadPin: Initialize as ordered LSM
+      Yama: Initialize as ordered LSM
+      LSM: Introduce enum lsm_order
+      capability: Initialize as LSM_ORDER_FIRST
+      TOMOYO: Update LSM flags to no longer be exclusive
+      LSM: Ignore "security=" when "lsm=" is specified
+
+Mathieu Malaterre (4):
+      capabilities:: annotate implicit fall through
+      security: keys: annotate implicit fall through
+      security: keys: annotate implicit fall throughs
+      security: keys: annotate implicit fall throughs
+
+Micah Morton (8):
+      LSM: generalize flag passing to security_capable
+      LSM: add SafeSetID module that gates setid calls
+      LSM: add SafeSetID module that gates setid calls
+      LSM: Add 'name' field for SafeSetID in DEFINE_LSM
+      LSM: SafeSetID: 'depend' on CONFIG_SECURITY
+      LSM: SafeSetID: remove unused include
+      LSM: SafeSetID: add selftest
+      LSM: Update function documentation for cap_capable
+
+Petr Vorel (1):
+      LSM: Update list of SECURITYFS users in Kconfig
+
+Tetsuo Handa (6):
+      LSM: Make lsm_early_cred() and lsm_early_task() local functions.
+      apparmor: Adjust offset when accessing task blob.
+      tomoyo: Swicth from cred->security to task_struct->security.
+      tomoyo: Coding style fix.
+      tomoyo: Allow multiple use_group lines.
+      tomoyo: Bump version.
+
+Wei Yongjun (2):
+      LSM: Make some functions static
+      LSM: fix return value check in safesetid_init_securityfs()
+
+ Documentation/admin-guide/LSM/SafeSetID.rst        | 107 ++++
+ Documentation/admin-guide/LSM/index.rst            |  14 +-
+ Documentation/admin-guide/kernel-parameters.txt    |  12 +-
+ MAINTAINERS                                        |  11 +-
+ fs/proc/base.c                                     |  64 +-
+ fs/proc/internal.h                                 |   1 +
+ include/linux/capability.h                         |   5 +
+ include/linux/cred.h                               |   1 -
+ include/linux/lsm_hooks.h                          |  45 +-
+ include/linux/security.h                           |  43 +-
+ include/linux/selinux.h                            |  35 --
+ kernel/capability.c                                |  45 +-
+ kernel/cred.c                                      |  13 -
+ kernel/seccomp.c                                   |   4 +-
+ kernel/sys.c                                       |  10 +-
+ security/Kconfig                                   |  45 +-
+ security/Makefile                                  |   2 +
+ security/apparmor/Kconfig                          |  16 -
+ security/apparmor/capability.c                     |  14 +-
+ security/apparmor/domain.c                         |   4 +-
+ security/apparmor/include/capability.h             |   2 +-
+ security/apparmor/include/cred.h                   |  16 +-
+ security/apparmor/include/file.h                   |   5 +-
+ security/apparmor/include/lib.h                    |   4 +
+ security/apparmor/include/task.h                   |  18 +-
+ security/apparmor/ipc.c                            |   3 +-
+ security/apparmor/lsm.c                            |  67 +--
+ security/apparmor/resource.c                       |   2 +-
+ security/apparmor/task.c                           |   6 +-
+ security/commoncap.c                               |  28 +-
+ security/integrity/ima/ima_appraise.c              |   1 +
+ security/integrity/ima/ima_policy.c                |   4 +
+ security/integrity/ima/ima_template_lib.c          |   1 +
+ security/keys/keyctl.c                             |   2 +-
+ security/keys/keyring.c                            |   1 +
+ security/keys/process_keys.c                       |   3 +
+ security/keys/request_key.c                        |   4 +
+ security/loadpin/loadpin.c                         |   8 +-
+ security/safesetid/Kconfig                         |  14 +
+ security/safesetid/Makefile                        |   7 +
+ security/safesetid/lsm.c                           | 277 +++++++++
+ security/safesetid/lsm.h                           |  33 ++
+ security/safesetid/securityfs.c                    | 193 ++++++
+ security/security.c                                | 648 ++++++++++++++++++---
+ security/selinux/Kconfig                           |  15 -
+ security/selinux/Makefile                          |   2 +-
+ security/selinux/exports.c                         |  23 -
+ security/selinux/hooks.c                           | 362 +++---------
+ security/selinux/include/audit.h                   |   3 -
+ security/selinux/include/objsec.h                  |  38 +-
+ security/selinux/selinuxfs.c                       |   4 +-
+ security/selinux/ss/services.c                     |   1 -
+ security/selinux/xfrm.c                            |   4 +-
+ security/smack/smack.h                             |  44 +-
+ security/smack/smack_access.c                      |   6 +-
+ security/smack/smack_lsm.c                         | 317 ++++------
+ security/smack/smackfs.c                           |  18 +-
+ security/tomoyo/audit.c                            |  31 +-
+ security/tomoyo/common.c                           | 199 +++++--
+ security/tomoyo/common.h                           |  51 +-
+ security/tomoyo/condition.c                        |  59 +-
+ security/tomoyo/domain.c                           |  76 ++-
+ security/tomoyo/file.c                             |  20 +
+ security/tomoyo/gc.c                               |  19 +
+ security/tomoyo/group.c                            |   5 +
+ security/tomoyo/load_policy.c                      |   8 +-
+ security/tomoyo/memory.c                           |   9 +-
+ security/tomoyo/mount.c                            |   2 +
+ security/tomoyo/realpath.c                         |  18 +-
+ security/tomoyo/securityfs_if.c                    |  30 +-
+ security/tomoyo/tomoyo.c                           | 160 +++--
+ security/tomoyo/util.c                             |  23 +-
+ security/yama/yama_lsm.c                           |   8 +-
+ tools/testing/selftests/safesetid/.gitignore       |   1 +
+ tools/testing/selftests/safesetid/Makefile         |   8 +
+ tools/testing/selftests/safesetid/config           |   2 +
+ tools/testing/selftests/safesetid/safesetid-test.c | 334 +++++++++++
+ .../testing/selftests/safesetid/safesetid-test.sh  |  26 +
+ 78 files changed, 2674 insertions(+), 1090 deletions(-)
+ create mode 100644 Documentation/admin-guide/LSM/SafeSetID.rst
+ delete mode 100644 include/linux/selinux.h
+ create mode 100644 security/safesetid/Kconfig
+ create mode 100644 security/safesetid/Makefile
+ create mode 100644 security/safesetid/lsm.c
+ create mode 100644 security/safesetid/lsm.h
+ create mode 100644 security/safesetid/securityfs.c
+ delete mode 100644 security/selinux/exports.c
+ create mode 100644 tools/testing/selftests/safesetid/.gitignore
+ create mode 100644 tools/testing/selftests/safesetid/Makefile
+ create mode 100644 tools/testing/selftests/safesetid/config
+ create mode 100644 tools/testing/selftests/safesetid/safesetid-test.c
+ create mode 100755 tools/testing/selftests/safesetid/safesetid-test.sh
