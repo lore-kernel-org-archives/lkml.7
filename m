@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA63FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA78C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BA720842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D802087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfCEOsk (ORCPT
+        id S1728618AbfCEOst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:48:40 -0500
+        Tue, 5 Mar 2019 09:48:49 -0500
 Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbfCEOsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728242AbfCEOsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Mar 2019 09:48:18 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,19 +25,19 @@ Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="121150046"
+   d="scan'208";a="121150044"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
   by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id B3FB0301BC6; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
+        id A530F301BC6; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 15/15] perf tools ui: Fix ui popup browser for many entries
-Date:   Tue,  5 Mar 2019 06:47:58 -0800
-Message-Id: <20190305144758.12397-16-andi@firstfloor.org>
+Subject: [PATCH v4 13/15] perf tools report: Add custom scripts to script menu
+Date:   Tue,  5 Mar 2019 06:47:56 -0800
+Message-Id: <20190305144758.12397-14-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
@@ -50,70 +50,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Fix the argv ui browser code to correctly display more entries
-than fit on the screen without crashing. The problem was some type
-confusion with pointer types in the ->seek function. Do
-the argv arithmetic correctly with char ** pointers. Also
-add some asserts to find overruns and limit the display function
-correctly.
-
-Then finally remove a workaround for this in the res sample
-browser.
+Add a way to define custom scripts through ~/.perfconfig, which
+are then added to the scripts menu. The scripts get the same
+arguments as perf script, in particular -i, --cpu, --tid.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/ui/browser.c             | 10 +++++++---
- tools/perf/ui/browsers/res_sample.c |  3 ---
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ tools/perf/Documentation/perf-config.txt |  8 ++++++++
+ tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index 4f75561424ed..4ad37d8c7d6a 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -611,14 +611,16 @@ void ui_browser__argv_seek(struct ui_browser *browser, off_t offset, int whence)
- 		browser->top = browser->entries;
- 		break;
- 	case SEEK_CUR:
--		browser->top = browser->top + browser->top_idx + offset;
-+		browser->top = (char **)browser->top + offset;
- 		break;
- 	case SEEK_END:
--		browser->top = browser->top + browser->nr_entries - 1 + offset;
-+		browser->top = (char **)browser->entries + browser->nr_entries - 1 + offset;
- 		break;
- 	default:
- 		return;
- 	}
-+	assert((char **)browser->top < (char **)browser->entries + browser->nr_entries);
-+	assert((char **)browser->top >= (char **)browser->entries);
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 86f3dcc15f83..dc1009e334e8 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -584,6 +584,14 @@ llvm.*::
+ 	llvm.opts::
+ 		Options passed to llc.
+ 
++script.*::
++
++	Any option defines a script that is added to the scripts menu
++	in the interactive perf browser and whose output is displayed.
++	The name of the option is the name, the value is a script command line.
++	The script gets the same options passed as a full perf script,
++	in particular -i perfdata file, --cpu, --tid
++
+ SEE ALSO
+ --------
+ linkperf:perf[1]
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index cdba58447b85..5d407ab834b5 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -6,6 +6,7 @@
+ #include "../../util/symbol.h"
+ #include "../browser.h"
+ #include "../libslang.h"
++#include "config.h"
+ 
+ #define SCRIPT_NAMELEN	128
+ #define SCRIPT_MAX_NO	64
+@@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
+ 	return 0;
  }
  
- unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
-@@ -630,7 +632,9 @@ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
- 		browser->top = browser->entries;
- 
- 	pos = (char **)browser->top;
--	while (idx < browser->nr_entries) {
-+	while (idx < browser->nr_entries &&
-+	       row < (unsigned)SLtt_Screen_Rows - 1) {
-+		assert(pos < (char **)browser->entries + browser->nr_entries);
- 		if (!browser->filter || !browser->filter(browser, *pos)) {
- 			ui_browser__gotorc(browser, row, 0);
- 			browser->write(browser, pos, row);
-diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
-index 8b045482744e..62775efc32b4 100644
---- a/tools/perf/ui/browsers/res_sample.c
-+++ b/tools/perf/ui/browsers/res_sample.c
-@@ -23,9 +23,6 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
- 	struct res_sample *r;
- 	char extra_format[256];
- 
--	/* For now since ui__popup_menu doesn't like lists that don't fit */
--	num_res = max(min(SLtt_Screen_Rows - 4, num_res), 0);
--
- 	names = calloc(num_res, sizeof(char *));
- 	if (!names)
- 		return -1;
++static int scripts_config(const char *var, const char *value, void *data)
++{
++	struct script_config *c = data;
++
++	if (!strstarts(var, "script."))
++		return -1;
++	if (c->index >= SCRIPT_MAX_NO)
++		return -1;
++	c->names[c->index] = strdup(var + 7);
++	if (!c->names[c->index])
++		return -1;
++	if (asprintf(&c->paths[c->index], "%s %s", value,
++		     c->extra_format) < 0)
++		return -1;
++	c->index++;
++	return 0;
++}
++
+ /*
+  * When success, will copy the full path of the selected script
+  * into  the buffer pointed by script_name, and return 0.
+@@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
+ 			  &scriptc);
+ 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
+ 			  &scriptc);
++	perf_config(scripts_config, &scriptc);
+ 	custom_perf = scriptc.index;
+ 	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
+ 	i = scriptc.index;
 -- 
 2.20.1
 
