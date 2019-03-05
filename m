@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499DFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35193C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E6020848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FFA2147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551799554;
-	bh=5Yakl3TE5tbIDaojmMNWxzalNsCiM8L9NpwJ5iZSm1s=;
+	s=default; t=1551799556;
+	bh=hnOJ68a2Sq1uqWQaPID2Z8gz6Zi2WR6MfqJ7COyojCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+j0t8maNXM1AZrmC6XlGCm1wyqBR3OagVDVeRPEQKlCI5gnX+c/5tyylsWK1HnV5
-	 6gOfWgtJh/cD3jboLu1CLPOt9beq2dUKBVWXotP6t576on/V0lysGep6xWt0qL1Kix
-	 t3e41WIpRYWrYmfrvuOr6CMXu8z1Ciyodcamla7A=
+	b=MW/CujiN3FwCSsa/JQ7cGwYIehRnnP/Sq2kzv6aKq5GIu0Zm9hy8ymKltEYYxOVi9
+	 rURvfbPKMict8PP7atQo0Zxw4M6vq3LW5O9LNpC+6Y2qrYhwdgvlJObVl1SsNkQHaW
+	 sHnSkv5Emu4R3M2n4L0BOlP+00BVGPzC9oy5i67o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfCEPZw (ORCPT
+        id S1728824AbfCEPZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 10:25:52 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:35676 "EHLO mx1.redhat.com"
+        Tue, 5 Mar 2019 10:25:54 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:44468 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbfCEPZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 10:25:50 -0500
+        id S1728809AbfCEPZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 10:25:52 -0500
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F357CC057F44;
-        Tue,  5 Mar 2019 15:25:49 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79F5F3092656;
+        Tue,  5 Mar 2019 15:25:52 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C2A171001E67;
-        Tue,  5 Mar 2019 15:25:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4AB311001DF0;
+        Tue,  5 Mar 2019 15:25:50 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,73 +46,97 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Nageswara R Sastry <nasastry@in.ibm.com>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 4/8] perf tools: Read and store caps/max_precise in perf_pmu
-Date:   Tue,  5 Mar 2019 16:25:32 +0100
-Message-Id: <20190305152536.21035-5-jolsa@kernel.org>
+Subject: [PATCH 5/8] perf tools: Get precise_ip from the pmu config
+Date:   Tue,  5 Mar 2019 16:25:33 +0100
+Message-Id: <20190305152536.21035-6-jolsa@kernel.org>
 In-Reply-To: <20190305152536.21035-1-jolsa@kernel.org>
 References: <20190305152536.21035-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 05 Mar 2019 15:25:50 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 05 Mar 2019 15:25:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read the caps/max_precise value and store it in struct
-perf_pmu to be used when setting the maximum precise_ip
-field in following patch.
+Getting precise_ip field from the perf_pmu::max_precise
+config read from sysfs. If it's not available falling
+back to current detection function.
 
-Link: http://lkml.kernel.org/n/tip-y47h37fzs5t8hy9t0j5g9pyj@git.kernel.org
+This fixes perf c2c usage of 'P' modifier on memory events,
+where the standard detection fails, because of way too many
+new perf_event_attr features added recently.
+
+Use PYTHON_MOD to distinguish python perf module build
+to exclude pmu.o object call being compiled in. There's
+the flex/bison (and other) object dependencies, that
+we'd need to teach setup.py about.
+
+Link: http://lkml.kernel.org/n/tip-zyegnaq8xlkhh4sgfl4tnvui@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/util/pmu.c | 14 ++++++++++++++
- tools/perf/util/pmu.h |  1 +
- 2 files changed, 15 insertions(+)
+ tools/perf/util/evsel.c  | 28 +++++++++++++++++++++++++++-
+ tools/perf/util/setup.py |  2 +-
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 51d437f55d18..6199a3174ab9 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -752,6 +752,19 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- 	return NULL;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dfe2958e6287..eec542bab815 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -870,6 +870,32 @@ static bool is_dummy_event(struct perf_evsel *evsel)
+ 	       (evsel->attr.config == PERF_COUNT_SW_DUMMY);
  }
  
-+static int pmu_max_precise(const char *name)
++#ifndef PYTHON_MOD
++static int pmu_get_precise(const char *pmu_name)
 +{
-+	char path[PATH_MAX];
-+	int max_precise = -1;
++	struct perf_pmu *pmu = pmu_name ? perf_pmu__find(pmu_name) : NULL;
 +
-+	scnprintf(path, PATH_MAX,
-+		 "bus/event_source/devices/%s/caps/max_precise",
-+		 name);
++	/* If unsupported pmu->max_precise is -1. */
++	return pmu ? pmu->max_precise : -1;
++}
++#else
++static int pmu_get_precise(const char *pmu_name __maybe_unused)
++{
++	return 0;
++}
++#endif
 +
-+	sysfs__read_int(path, &max_precise);
-+	return max_precise;
++static void perf_evsel__set_max_precise_ip(struct perf_evsel *evsel)
++{
++	int max_precise = pmu_get_precise(evsel->pmu_name);
++	struct perf_event_attr *attr = &evsel->attr;
++
++	if (max_precise >= 0)
++		attr->precise_ip = max_precise;
++	else
++		perf_event_attr__set_max_precise_ip(attr);
 +}
 +
- static struct perf_pmu *pmu_lookup(const char *name)
- {
- 	struct perf_pmu *pmu;
-@@ -784,6 +797,7 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 	pmu->name = strdup(name);
- 	pmu->type = type;
- 	pmu->is_uncore = pmu_is_uncore(name);
-+	pmu->max_precise = pmu_max_precise(name);
- 	pmu_add_cpu_aliases(&aliases, pmu);
+ /*
+  * The enable_on_exec/disabled value strategy:
+  *
+@@ -1091,7 +1117,7 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
+ 	}
  
- 	INIT_LIST_HEAD(&pmu->format);
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 47253c3daf55..bd9ec2704a57 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -26,6 +26,7 @@ struct perf_pmu {
- 	__u32 type;
- 	bool selectable;
- 	bool is_uncore;
-+	int max_precise;
- 	struct perf_event_attr *default_config;
- 	struct cpu_map *cpus;
- 	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+ 	if (evsel->precise_max)
+-		perf_event_attr__set_max_precise_ip(attr);
++		perf_evsel__set_max_precise_ip(evsel);
+ 
+ 	if (opts->all_user) {
+ 		attr->exclude_kernel = 1;
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 5b5a167b43ce..9eee3467ac5d 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -37,7 +37,7 @@ class install_lib(_install_lib):
+ 
+ cflags = getenv('CFLAGS', '').split()
+ # switch off several checks (need to be at the end of cflags list)
+-cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
++cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls', '-DPYTHON_MOD' ]
+ if cc != "clang":
+     cflags += ['-Wno-cast-function-type' ]
+ 
 -- 
 2.17.2
 
