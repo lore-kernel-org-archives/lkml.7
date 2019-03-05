@@ -2,145 +2,87 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED571C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADFBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A7F2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB40F2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SHTjsy96"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CAfUhGQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfCEHzq (ORCPT
+        id S1727343AbfCEHzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 02:55:46 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:52428 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfCEHzp (ORCPT
+        Tue, 5 Mar 2019 02:55:52 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35183 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfCEHzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:55:45 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x257s1qu089065;
-        Tue, 5 Mar 2019 07:55:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=5EgQtO9dM3pUMoWARn+BpYfichpL9PwjEVaSPS2KExs=;
- b=SHTjsy96+vgnlZnFb7k9UP+D2FygYPksPCJBIMOY5Rh+UnZzaRn3PvtE+sOGcyIFuq9d
- /3Ta7v/g+Hnyw2uSNgL66001/a08aDrzA+KJnpZ8kIVBQKyogf3qXfIRXbn0mDVawyw7
- PU0E2K/y6Br8IAOPrLMxMIIQCqENXpK59cQRbugUPoGUS0rjAIKtM4UvLsmWrkN8/oyV
- iHkKz4TE4tGScX/YHf60pz8JkgZeLctYXE5rTkco3jcbX4mPcOcMjZqawLlHEpBxboD7
- ZVKaiJ2GlFKkCFWeS5Pe0oh9tMU8jEzKRgWAG5uo2if3ljTsCucDChymBpg1eDnPFMAY DQ== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2qyfbe3wv7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Mar 2019 07:55:26 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x257tPW1000753
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Mar 2019 07:55:25 GMT
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x257tPee016496;
-        Tue, 5 Mar 2019 07:55:25 GMT
-Received: from linux.cn.oracle.com (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Mar 2019 23:55:24 -0800
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     stable@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
-        jgross@suse.com, tglx@linutronix.de, sboyd@kernel.org,
-        john.stultz@linaro.org, frederic@kernel.org, joe.jin@oracle.com,
-        herbert.van.den.bergh@oracle.com
-Subject: [PATCH v4.9 1/1] jiffies: use jiffies64_to_nsecs() to fix 100% steal usage for xen vcpu hotplug
-Date:   Tue,  5 Mar 2019 15:59:04 +0800
-Message-Id: <1551772744-524-1-git-send-email-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9185 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=984 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903050059
+        Tue, 5 Mar 2019 02:55:51 -0500
+Received: by mail-lj1-f195.google.com with SMTP id t13so6740369lji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 23:55:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o4JoOtWsDVIWKo3LXJZTdF15lyL5cvzo08ovpPUuibE=;
+        b=CAfUhGQpSpfCEgG9HKhZkY+LZoHs6N0eSdoTv2IG40dRBSq5dL3o/610ynw8JbU2dD
+         OBkE3v/Pd9Wq4/brGNByhxiYfkgcS45/U+21WySOpZzdBdrTcmqrx5cw0n6APwjpzYH4
+         8SlbYsJBd3lour5bXd9iz6tYPq5YOmSf2+mRQbVgowLOFXLR3WRT9kwqwhImOyPNIfrN
+         ppNVeW4R1DuNW3BdXGP/SNNTsjINGAXSwmMh3Ej+W74SnhKX/mUdgPfivwIWhFI9vcDf
+         eMNtO71Lkz0uBY1FNHzrxP8v3iv5NVTPsXJMDGXPnLeKt7toFkLd0pFFm3li65PWgPJo
+         qUvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o4JoOtWsDVIWKo3LXJZTdF15lyL5cvzo08ovpPUuibE=;
+        b=Md/tLRgiLofuQ4FXBPPaZEh4U/3JPzuOuEpg8NQcbfAAppV1fLLsifjRkyM13G/FFz
+         sCuuHv5xBaP0OnKCn/yH7BLrXbGMvxo8CMOYkPdSZsairaODg8ujXBPnMPQw8gFpPy2W
+         Gg1bejf6Xt/NAcPKuTRM4yJfoiSdlMA1b0HMachKi6em/ODpa6PPjP99lvsoCqEL01B2
+         Yy7zVYWFY6dmvRSacRlhQzOCTnTnaM6NzmFUWK+HukYEREOAYwLvbMZXjKpeMV7Jy2ed
+         +k5JUvSN6HNfRm6liDF6wBEDrpwUlWzLsO2fxnYC8w4GfRqKT6OFXQwQ7YQPTnSF+EMw
+         uTog==
+X-Gm-Message-State: APjAAAUR3hTP28g7mew6nkJ1ZJVzS8VCl9np3Ha2YgNC97xC9sIc3zXh
+        VKS5M35tm0WiaykzEohuV4O6ShkGr/jFw00+BqbFow==
+X-Google-Smtp-Source: APXvYqwJMi0VEPS0pFCuLHexkt935//bOy9YgOLrtaY53lm2dQiH4VR0pCqGl7ru/PtXh5YbEAlRCs6pOFgmRFr0404=
+X-Received: by 2002:a2e:131a:: with SMTP id 26-v6mr12469879ljt.107.1551772549595;
+ Mon, 04 Mar 2019 23:55:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org> <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Mar 2019 08:55:38 +0100
+Message-ID: <CACRpkdaNvH7LwvkfWOtHQvWW=94ZtXCL8vEcdee2eSP5xbRSiw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: bitmain: Add GPIO Line names for Sophon
+ Edge board
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Not relevant upstream, therefore no upstream commit. ]
+On Tue, Feb 26, 2019 at 12:50 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-To fix, use jiffies64_to_nsecs() directly instead of deriving the result
-according to jiffies_to_usecs().
+> Add GPIO line names for Sophon Edge board based on BM1880 SoC from
+> Bitmain. Line names are based on the board schematics as well as the
+> 96Boards Consumer Edition specification v1.0.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-As the return type of jiffies_to_usecs() is 'unsigned int', when the return
-value is more than the size of 'unsigned int', the leading 32 bits would be
-discarded.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Suppose USEC_PER_SEC=1000000L and HZ=1000, below are the expected and
-actual incorrect result of jiffies_to_usecs(0x7770ef70):
-
-- expected  : jiffies_to_usecs(0x7770ef70) = 0x000001d291274d80
-- incorrect : jiffies_to_usecs(0x7770ef70) = 0x0000000091274d80
-
-The leading 0x000001d200000000 is discarded.
-
-After xen vcpu hotplug and when the new vcpu steal clock is calculated for
-the first time, the result of this_rq()->prev_steal_time in
-steal_account_process_tick() would be far smaller than the expected
-value, due to that jiffies_to_usecs() discards the leading 32 bits.
-
-As a result, the diff between current steal and this_rq()->prev_steal_time
-is always very large. Steal usage would become 100% when the initial steal
-clock obtained from xen hypervisor is very large during xen vcpu hotplug,
-that is, when the guest is already up for a long time.
-
-The bug can be detected by doing the following:
-
-* Boot xen guest with vcpus=2 and maxvcpus=4
-* Leave the guest running for a month so that the initial steal clock for
-  the new vcpu would be very large
-* Hotplug 2 extra vcpus
-* The steal time of new vcpus in /proc/stat would increase abnormally and
-  sometimes steal usage in top can become 100%
-
-This was incidentally fixed in the patch set starting by
-commit 93825f2ec736 ("jiffies: Reuse TICK_NSEC instead of NSEC_PER_JIFFY")
-and ended with
-commit b672592f0221 ("sched/cputime: Remove generic asm headers").
-
-This version applies to the v4.9 series.
-
-Link: https://lkml.org/lkml/2019/2/28/1373
-Suggested-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- include/linux/jiffies.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-index 734377a..94aff43 100644
---- a/include/linux/jiffies.h
-+++ b/include/linux/jiffies.h
-@@ -287,13 +287,13 @@ extern unsigned long preset_lpj;
- extern unsigned int jiffies_to_msecs(const unsigned long j);
- extern unsigned int jiffies_to_usecs(const unsigned long j);
- 
-+extern u64 jiffies64_to_nsecs(u64 j);
-+
- static inline u64 jiffies_to_nsecs(const unsigned long j)
- {
--	return (u64)jiffies_to_usecs(j) * NSEC_PER_USEC;
-+	return jiffies64_to_nsecs(j);
- }
- 
--extern u64 jiffies64_to_nsecs(u64 j);
--
- extern unsigned long __msecs_to_jiffies(const unsigned int m);
- #if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
- /*
--- 
-2.7.4
-
+Yours,
+Linus Walleij
