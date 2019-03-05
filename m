@@ -2,86 +2,83 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B2FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175A0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CC120842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AED21019
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551802315;
-	bh=kyoptJdtsUD0bu7BBCfxDFskMQXGvh7ho0laORoURj8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=WobbXbz0XMZyafr60aP1LNe5mHICMNU5eDO9Vef7olgVGUW7dcjFkiVex9Mir486c
-	 NRMG2oL3wBWgcnh9nGuzkTjLOJAutUWHXEi76+oHtFn+linf33SjjDrb5Di0OsKIYo
-	 iz/G7o9UY4HbT40D/KdmHdLhHBh3GEg5fSWbC61s=
+	s=default; t=1551802328;
+	bh=cV2IHjc+UuulyiZCLRIHnnYpgzEDC2AqZY085JQ3foY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=eqoHlztNj8FxLiSfWShcV5AcwxF7rC0V2Duf7ajcbXbQcIvZn7WIb2hPq/7ws2yUF
+	 83rdOsiL68lkOMdK0Mrxvn0TGI9XJtkB0839nTuXO0cHpY5W9PBgVGY8M9Xgbqbjxk
+	 1UdVidWJ2+tVV3QrS9dP+kj4ni5bIeD8ediRe72o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfCEQLx (ORCPT
+        id S1726407AbfCEQMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:11:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
+        Tue, 5 Mar 2019 11:12:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727653AbfCEQLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:11:53 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        id S1726121AbfCEQMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:12:06 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C0AB20449;
-        Tue,  5 Mar 2019 16:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2298420661;
+        Tue,  5 Mar 2019 16:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551802313;
-        bh=kyoptJdtsUD0bu7BBCfxDFskMQXGvh7ho0laORoURj8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HyV90HUGPSsrCFEpq9nXhSq8dy/Lel6edaxgstjytKZNqXnK6+ULQVzXrT0Rafbc/
-         1VLuH9Gx2SfCu7H9oWIZ1ywfg4Kx8nyya9iArH2UsAbKzRPDI7XDEcBEu22Cj1jdo3
-         mBQKuCNO6psgffY85ypjl6PGdHkVT44KGalfZClU=
-Subject: Re: [PATCH 4.14 00/52] 4.14.105-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190304081617.159014799@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <abc898f4-1bc3-1cf1-ae3e-fe3be67bdfab@kernel.org>
-Date:   Tue, 5 Mar 2019 09:11:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        s=default; t=1551802326;
+        bh=cV2IHjc+UuulyiZCLRIHnnYpgzEDC2AqZY085JQ3foY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=K1SV9iGGqwD24hzPmRrMLCLZtr+A7fGZZtIFuzWFxVL/Nq5PD2pxgB4x5kK6o2KFU
+         GpJpMWg65BbOmBGzNQ2WBbqpFY+6qZIODGEmJoGMUedXNfpc1ub/IBIOOidXFTMqJt
+         9FEthqbpuzd/iQy7gS9SUeh4kyWKqAstcn1ugJcI=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     rostedt@goodmis.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tracing: memcpy->strncpy changes for comm strings
+Date:   Tue,  5 Mar 2019 10:11:58 -0600
+Message-Id: <cover.1551802084.git.tom.zanussi@linux.intel.com>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 1:21 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.105 release.
-> There are 52 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Mar  6 08:15:55 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.105-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Compiled and booted on my test system. No dmesg regressions.
+Hi Steve,
 
-thanks,
--- Shuah
+Here are a couple patches as discussed, replacing memcpy with strncpy
+for comm strings in trace.c and trace_events_hist.c.
+
+Thanks,
+
+Tom
+
+The following changes since commit 9f0bbf3115ca9f91f43b7c74e9ac7d79f47fc6c2:
+
+  tracing: Use strncpy instead of memcpy for string keys in hist triggers (2019-03-05 08:47:46 -0500)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/comm-strncpy
+
+Tom Zanussi (2):
+  tracing: Use strncpy instead of memcpy when copying comm for hist
+    triggers
+  tracing: Use strncpy instead of memcpy when copying comm in trace.c
+
+ kernel/trace/trace.c             | 4 ++--
+ kernel/trace/trace_events_hist.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+-- 
+2.14.1
+
