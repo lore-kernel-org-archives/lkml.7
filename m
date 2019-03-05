@@ -2,186 +2,298 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60404C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93F5C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5A42075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC192075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551822341;
+	bh=x83onjYOaHlTdiP86ngwtIGtV5PKGwUwz2YOHyIqxIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VS6onb8fZmumtmJasmdUSEnPwhROO07b7xAk+Hha0c09g36zRLgaxW22JiOxGS4F7
+	 Le44ROyyID0tAyGCvZ75oOYxR1EgXKrias1D9E9I8FPa86dt2yWJiK0m6S096hSArf
+	 biZSZ2J1fibeNVJV9Ai//CprAoP0MPJDRrv8A9ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfCEVpU (ORCPT
+        id S1727089AbfCEVpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:45:20 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726347AbfCEVpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:45:19 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x25Lciug039144
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Mar 2019 16:45:18 -0500
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r1xwmf48j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 16:45:17 -0500
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
-        Tue, 5 Mar 2019 21:45:17 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Mar 2019 21:45:14 -0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x25LjD7318219118
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Mar 2019 21:45:13 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA12F28060;
-        Tue,  5 Mar 2019 21:45:13 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34AE92805A;
-        Tue,  5 Mar 2019 21:45:13 +0000 (GMT)
-Received: from [9.80.227.125] (unknown [9.80.227.125])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Mar 2019 21:45:13 +0000 (GMT)
-Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org,
-        Andrew Jeffery <andrew@aj.id.au>,
-        gregkh <gregkh@linuxfoundation.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
- <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
- <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Date:   Tue, 5 Mar 2019 15:45:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 5 Mar 2019 16:45:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbfCEVpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 16:45:39 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D9C20652;
+        Tue,  5 Mar 2019 21:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551822338;
+        bh=x83onjYOaHlTdiP86ngwtIGtV5PKGwUwz2YOHyIqxIU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EO/X5aUFebQmM8vowWIJzCpkyc2wdvihmvC7Q9zCut1Pfy6HznvUrQtD73XTooT0o
+         GSctaM8x40TSremv8KzO3FCsLYWdckUWUCPiLAHnQG/b8Y2jG/f6krW5Z4WIKdDV/m
+         g6YZFwXAC0mk1oWWOpGHqz0OARbGp2qFXiZ66OPE=
+Date:   Tue, 5 Mar 2019 15:45:37 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Oza Pawandeep <poza@codeaurora.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Young <youngcdev@gmail.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: portdrv: Report degraded links via link
+ bandwidth notification
+Message-ID: <20190305214537.GB215617@google.com>
+References: <20190227205840.26898-1-mr.nuke.me@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19030521-0072-0000-0000-000004050CCA
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010711; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01170134; UDB=6.00611523; IPR=6.00950768;
- MB=3.00025847; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-05 21:45:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030521-0073-0000-0000-00004B639F55
-Message-Id: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903050139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190227205840.26898-1-mr.nuke.me@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 27, 2019 at 02:58:17PM -0600, Alexandru Gagniuc wrote:
+> A warning is generated when a PCIe device is probed with a degraded
+> link, but there was no similar mechanism to warn when the link becomes
+> degraded after probing. The Link Bandwidth Notification provides this
+> mechanism.
+> 
+> Use the link bandwidth notification interrupt to detect bandwidth
+> changes, and rescan the bandwidth, looking for the weakest point. This
+> is the same logic used in probe().
+> 
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 
-On 3/5/19 2:01 AM, Arnd Bergmann wrote:
-> On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
->> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
->> between the SOC (acting as a BMC) and a host processor in a server.
->>
->> This commit adds a driver to control the XDMA engine and adds functions
->> to initialize the hardware and memory and start DMA operations.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Hi Eddie,
->
-> Thanks for your submission! Overall this looks well-implemented, but
-> I fear we already have too many ways of doing the same thing at
-> the moment, and I would hope to avoid adding yet another user space
-> interface for a specific hardware that does this.
->
-> Your interface appears to be a fairly low-level variant, just doing
-> single DMA transfers through ioctls, but configuring the PCIe
-> endpoint over sysfs.
+Nice work!  Applied with Lukas' reviewed-by to pci/portdrv for v5.1,
+thanks!
 
-Hi, thanks for the quick response!
-
-There is actually no PCIe configuration done in this driver. The two 
-sysfs entries control the system control unit (SCU) on the AST2500 
-purely to enable and disable entire PCIe devices. It might be possible 
-to control those devices more finely with a PCI endpoint driver, but 
-there is no need to do so. The XDMA engine does that by itself to 
-perform DMA fairly automatically.
-
-If the sysfs entries are really troublesome, we can probably remove 
-those and find another way to control the SCU.
-
->
-> Please have a look at the drivers/pci/endpoint framework first
-> and see if you can work on top of that interface instead.
-> Even if it doesn't quite do what you need here, we may be
-> able to extend it in a way that works for you, and lets others
-> use the same user interface extensions in the future.
->
-> It may also be necessary to split out the DMA engine portion
-> into a regular drivers/dma/ back-end to make that fit in with
-> the PCIe endpoint framework.
-
-Right, I did look into the normal DMA framework. There were a couple of 
-problems. First and foremost, the "device" (really, host processor) 
-address that we use is 64 bit, but the AST2500 is of course 32 bit. So I 
-couldn't find a good way to get the address through the DMA API into the 
-driver. It's entirely possible I missed something there though.
-
-The other issue was that the vast majority of the DMA framework was 
-unused, resulting in a large amount of boilerplate that did nothing 
-except satisfy the API... I thought simplicity would be better in this case.
-
-Let me know what you think... I could certainly switch to ioctl instead 
-of the write() if that's better. Or if you really think the DMA 
-framework is required here, let me know.
-
-Thanks,
-
-Eddie
-
->
-> If you have already tried this without success, please let us
-> know in the description what problems you have hit, and why you
-> decided to create a new framework instead.
->
->> +/*
->> + * aspeed_xdma_op
->> + *
->> + * upstream: boolean indicating the direction of the DMA operation; upstream
->> + *           means a transfer from the BMC to the host
->> + *
->> + * host_addr: the DMA address on the host side, typically configured by PCI
->> + *            subsystem
->> + *
->> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
->> + */
->> +struct aspeed_xdma_op {
->> +       __u8 upstream;
->> +       __u64 host_addr;
->> +       __u32 len;
->> +} __packed;
-> Side-note: packed structures are generally not great user space
-> interfaces. Regardless of where we end up with this, I'd recommend
-> naturally aligning each member inside of the structure, and using
-> explicit padding here.
-
-Understood, thanks.
-
->
->
->       Arnd
->
-
+> ---
+>  drivers/pci/pcie/Makefile          |   1 +
+>  drivers/pci/pcie/bw_notification.c | 109 +++++++++++++++++++++++++++++
+>  drivers/pci/pcie/portdrv.h         |   6 +-
+>  drivers/pci/pcie/portdrv_core.c    |  17 +++--
+>  drivers/pci/pcie/portdrv_pci.c     |   1 +
+>  5 files changed, 128 insertions(+), 6 deletions(-)
+>  create mode 100644 drivers/pci/pcie/bw_notification.c
+> 
+> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+> index ab514083d5d4..f1d7bc1e5efa 100644
+> --- a/drivers/pci/pcie/Makefile
+> +++ b/drivers/pci/pcie/Makefile
+> @@ -3,6 +3,7 @@
+>  # Makefile for PCI Express features and port driver
+>  
+>  pcieportdrv-y			:= portdrv_core.o portdrv_pci.o err.o
+> +pcieportdrv-y			+= bw_notification.o
+>  
+>  obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
+>  
+> diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
+> new file mode 100644
+> index 000000000000..05bbef38dbbd
+> --- /dev/null
+> +++ b/drivers/pci/pcie/bw_notification.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * PCI Express Bandwidth notification services driver
+> + * Author: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> + *
+> + * Copyright (C) 2019, Dell Inc
+> + *
+> + * The PCIe bandwidth notification provides a way to notify the operating system
+> + * when the link width or data rate changes. This capability is required for all
+> + * root ports and downstream ports supporting links wider than x1 and/or
+> + * multiple link speeds.
+> + *
+> + * This service port driver hooks into the bandwidth notification interrupt and
+> + * warns when links become degraded in operation.
+> + */
+> +
+> +#include <linux/module.h>
+> +
+> +#include "../pci.h"
+> +#include "portdrv.h"
+> +
+> +static bool pcie_link_bandwidth_notification_supported(struct pci_dev *dev)
+> +{
+> +	int ret;
+> +	u32 lnk_cap;
+> +
+> +	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnk_cap);
+> +	return (ret == PCIBIOS_SUCCESSFUL) && (lnk_cap & PCI_EXP_LNKCAP_LBNC);
+> +}
+> +
+> +static void pcie_enable_link_bandwidth_notification(struct pci_dev *dev)
+> +{
+> +	u16 lnk_ctl;
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnk_ctl);
+> +	lnk_ctl |= PCI_EXP_LNKCTL_LBMIE;
+> +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
+> +}
+> +
+> +static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
+> +{
+> +	u16 lnk_ctl;
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnk_ctl);
+> +	lnk_ctl &= ~PCI_EXP_LNKCTL_LBMIE;
+> +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
+> +}
+> +
+> +static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
+> +{
+> +	struct pcie_device *srv = context;
+> +	struct pci_dev *port = srv->port;
+> +	struct pci_dev *dev;
+> +	u16 link_status, events;
+> +	int ret;
+> +
+> +	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
+> +	events = link_status & PCI_EXP_LNKSTA_LBMS;
+> +
+> +	if (!events || ret != PCIBIOS_SUCCESSFUL)
+> +		return IRQ_NONE;
+> +
+> +	down_read(&pci_bus_sem);
+> +	/* Print status from upstream link partner, not this downstream port. */
+> +	list_for_each_entry(dev, &port->subordinate->devices, bus_list)
+> +		__pcie_print_link_status(dev, false);
+> +	up_read(&pci_bus_sem);
+> +
+> +	pcie_update_link_speed(port->subordinate, link_status);
+> +	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
+> +{
+> +	int ret;
+> +
+> +	/* Single-width or single-speed ports do not have to support this. */
+> +	if (!pcie_link_bandwidth_notification_supported(srv->port))
+> +		return -ENODEV;
+> +
+> +	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
+> +				   IRQF_SHARED, "PCIe BW notif", srv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pcie_enable_link_bandwidth_notification(srv->port);
+> +
+> +	return 0;
+> +}
+> +
+> +static void pcie_bandwidth_notification_remove(struct pcie_device *srv)
+> +{
+> +	pcie_disable_link_bandwidth_notification(srv->port);
+> +	free_irq(srv->irq, srv);
+> +}
+> +
+> +static struct pcie_port_service_driver pcie_bandwidth_notification_driver = {
+> +	.name		= "pcie_bw_notification",
+> +	.port_type	= PCIE_ANY_PORT,
+> +	.service	= PCIE_PORT_SERVICE_BWNOTIF,
+> +	.probe		= pcie_bandwidth_notification_probe,
+> +	.remove		= pcie_bandwidth_notification_remove,
+> +};
+> +
+> +int __init pcie_bandwidth_notification_init(void)
+> +{
+> +	return pcie_port_service_register(&pcie_bandwidth_notification_driver);
+> +}
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index fbbf00b0992e..1d50dc58ac40 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -20,8 +20,10 @@
+>  #define PCIE_PORT_SERVICE_HP		(1 << PCIE_PORT_SERVICE_HP_SHIFT)
+>  #define PCIE_PORT_SERVICE_DPC_SHIFT	3	/* Downstream Port Containment */
+>  #define PCIE_PORT_SERVICE_DPC		(1 << PCIE_PORT_SERVICE_DPC_SHIFT)
+> +#define PCIE_PORT_SERVICE_BWNOTIF_SHIFT	4	/* Bandwidth notification */
+> +#define PCIE_PORT_SERVICE_BWNOTIF	(1 << PCIE_PORT_SERVICE_BWNOTIF_SHIFT)
+>  
+> -#define PCIE_PORT_DEVICE_MAXSERVICES   4
+> +#define PCIE_PORT_DEVICE_MAXSERVICES   5
+>  
+>  #ifdef CONFIG_PCIEAER
+>  int pcie_aer_init(void);
+> @@ -47,6 +49,8 @@ int pcie_dpc_init(void);
+>  static inline int pcie_dpc_init(void) { return 0; }
+>  #endif
+>  
+> +int pcie_bandwidth_notification_init(void);
+> +
+>  /* Port Type */
+>  #define PCIE_ANY_PORT			(~0)
+>  
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index f458ac9cb70c..7d04f9d087a6 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -99,7 +99,7 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
+>   */
+>  static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+>  {
+> -	int nr_entries, nvec;
+> +	int nr_entries, nvec, pcie_irq;
+>  	u32 pme = 0, aer = 0, dpc = 0;
+>  
+>  	/* Allocate the maximum possible number of MSI/MSI-X vectors */
+> @@ -135,10 +135,13 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
+>  			return nr_entries;
+>  	}
+>  
+> -	/* PME and hotplug share an MSI/MSI-X vector */
+> -	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP)) {
+> -		irqs[PCIE_PORT_SERVICE_PME_SHIFT] = pci_irq_vector(dev, pme);
+> -		irqs[PCIE_PORT_SERVICE_HP_SHIFT] = pci_irq_vector(dev, pme);
+> +	/* PME, hotplug and bandwidth notification share an MSI/MSI-X vector */
+> +	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
+> +		    PCIE_PORT_SERVICE_BWNOTIF)) {
+> +		pcie_irq = pci_irq_vector(dev, pme);
+> +		irqs[PCIE_PORT_SERVICE_PME_SHIFT] = pcie_irq;
+> +		irqs[PCIE_PORT_SERVICE_HP_SHIFT] = pcie_irq;
+> +		irqs[PCIE_PORT_SERVICE_BWNOTIF_SHIFT] = pcie_irq;
+>  	}
+>  
+>  	if (mask & PCIE_PORT_SERVICE_AER)
+> @@ -250,6 +253,10 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
+>  		services |= PCIE_PORT_SERVICE_DPC;
+>  
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+> +		services |= PCIE_PORT_SERVICE_BWNOTIF;
+> +
+>  	return services;
+>  }
+>  
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index 0acca3596807..a9dac4a8b017 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -238,6 +238,7 @@ static void __init pcie_init_services(void)
+>  	pcie_pme_init();
+>  	pcie_dpc_init();
+>  	pcie_hp_init();
+> +	pcie_bandwidth_notification_init();
+>  }
+>  
+>  static int __init pcie_portdrv_init(void)
+> -- 
+> 2.19.2
+> 
