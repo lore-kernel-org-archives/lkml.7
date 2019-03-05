@@ -3,384 +3,286 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2B0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F2420842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="leU1gnFV"
+	by mail.kernel.org (Postfix) with ESMTP id 5106C20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551785770;
+	bh=XFUes7GdOksQM4mA+OSH4FC7XXt5+0KgBMovc5w26Vs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PULiweEEKWBxKShsOcLQdmZk5sB4WwTVAAp0JfHPM+yMmgNVIXT58ZGxmpA2+1BqM
+	 SVf5IqfdTIQ+XoXO9jsEHqZswRK5EvSXzxkzP7piE52HjLpnwRAhF/4PR+3HyXn2w5
+	 +KlQTaVgrvzuSVfgwhYKA9upJ4Umo9UvZjEbsiJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfCELfp (ORCPT
+        id S1727725AbfCELgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:35:45 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41100 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbfCELfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:35:45 -0500
-Received: by mail-ed1-f68.google.com with SMTP id x7so6943035eds.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 03:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=tV6dXyfAzeVPDaytwddnrjaCtPWmSBXhfZi07V2sghQ=;
-        b=leU1gnFVbuJwcNTaOPg5khsyBQIfc1Rx5nJ8iOpa6DxvK2eAJmQWQXSAxx0USGNcec
-         unOgApHZRSi2fLJcRFvlo4GwMYKUMCvkh1ul6g20+AEss/s9m2PJCy2v+xnXS0hGdmPp
-         oaCi+wvWujjQN81l4wKB2Rl3xSvJtB1tR9eUwP5AgBA4JYBdTpDHUMpk3TT0XPcBocYS
-         tbLfB2u+pTTH/lw9sjjv3egTFSEeNT6CT7+Qlb7CA3oSuwcjOs8nFNQDVZk38kx4K8Eg
-         4lO3wlBdvqn3CkrOTKzPAqHt8fGkU0FLnm2Ig98bisW+EHynN1fY6jJOO2lLDQ7rctTL
-         WcPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=tV6dXyfAzeVPDaytwddnrjaCtPWmSBXhfZi07V2sghQ=;
-        b=sjZLPBrdFalTknCehGZkcgnvyrcw65Gn0BG9hikh6ipYMfRLK/ULk9t07SbbGbEwDd
-         3r5gYytCnbn5IVPLVbpIyT6FMUbSSUIzNS8BicdhfJLr6SYKBnAkL8q6tcam9Md8kQD1
-         uBSwMjJKusoqV6MLeuOqAbMRbLhpHedi7SbzVGk0K7KUsETRtP+mdTLcFc/9TG9j7vxi
-         agN6rmj/bSqezUc65vjZ63C8x+g+gnePIjU5/auIaJvq4qrZ/9T3k1DeH7GlVKmrJ84T
-         WiZ4Bi2KU+N7h+SnZcyyUkfvmvOxdeg+jPTUBm8tE39oeVXgUS23B3S/NfPsr5iPLZ6q
-         zHkg==
-X-Gm-Message-State: APjAAAWdZkcaR/azJnH8kpcOtuSITtenPKZhwPQ1mXn5pYZzK5HfgCS3
-        tnpQoI1fPbL+DQdLo9VDm9mJjQ==
-X-Google-Smtp-Source: APXvYqyJ+lQatOCbpEjjZtevaGjj4yHho0RGCvG483DHg3X8jl9TEzVHcSK/xh5DNfHCMO21e/2buw==
-X-Received: by 2002:a50:a545:: with SMTP id z5mr19444189edb.208.1551785742016;
-        Tue, 05 Mar 2019 03:35:42 -0800 (PST)
-Received: from [10.83.32.113] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x7sm1739584eju.12.2019.03.05.03.35.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 03:35:41 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 3/4] iommu/vt-d: Allow IOMMU_DOMAIN_DMA and
- IOMMU_DOMAIN_IDENTITY to be allocated
-From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <78df6013-bdcb-abfa-d86a-6460b17dc924@linux.intel.com>
-Date:   Tue, 5 Mar 2019 11:34:41 +0000
-Cc:     iommu@lists.linux-foundation.org, Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6C9B5243-3DF8-47DB-BA5B-F201E9808874@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <2C75F46E-78FE-45E9-9E7D-280B3138EA13@arista.com>
- <F83456DB-81DD-4E9B-9204-12ED9972D2FA@arista.com>
- <78df6013-bdcb-abfa-d86a-6460b17dc924@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Tue, 5 Mar 2019 06:36:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727100AbfCELgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:36:08 -0500
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6654D2087C;
+        Tue,  5 Mar 2019 11:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551785766;
+        bh=XFUes7GdOksQM4mA+OSH4FC7XXt5+0KgBMovc5w26Vs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rvRzBScn51P+UO8qfFGkJ/HTANQTddrk/YOmlMQ+EJdl2zJ6yCj+F44ZXZ2WVV5Nu
+         xo3eUKK+KaMEsioc+xD2+ZWvDn6W+tnBTiD3a3WfNntqq8gaQ9Z4rGqSuDAEtQA/BV
+         SNP3mRPy5N9PZB5JZE/3/Yb0DemK2u0lD015dLNM=
+Received: by mail-lj1-f175.google.com with SMTP id g80so7293570ljg.6;
+        Tue, 05 Mar 2019 03:36:06 -0800 (PST)
+X-Gm-Message-State: APjAAAU4RMsjbNeRX8yRaf6yASYSsCH00flqjpkUZ3o9MrrbpNkAEImI
+        DonSFD/qXIt/F1wKf4gl4pulribNQjDRSPdV7hE=
+X-Google-Smtp-Source: APXvYqwGosdS+RYN6DWUWjvMuoJ5XMkSgJDEYM1Led7cpHQ2W/u3KebTogM3O5sGVQ9zPIHcjQFmgveYvlwDBTwjXds=
+X-Received: by 2002:a2e:2c3:: with SMTP id y64mr13712590lje.131.1551785764433;
+ Tue, 05 Mar 2019 03:36:04 -0800 (PST)
+MIME-Version: 1.0
+References: <CGME20190305101926eucas1p2eee36b9cb50cbcf511fab7bae59e24bb@eucas1p2.samsung.com>
+ <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com> <1551781151-5562-5-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <1551781151-5562-5-git-send-email-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 5 Mar 2019 12:35:53 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPchn1nFH2FvvCTKoEen2+9EgTfHKbmzEfgKFxGmKGH8Pw@mail.gmail.com>
+Message-ID: <CAJKOXPchn1nFH2FvvCTKoEen2+9EgTfHKbmzEfgKFxGmKGH8Pw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] dt-bindings: devfreq: add Exynos5422 DMC device description
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Lu,
+On Tue, 5 Mar 2019 at 11:19, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> The patch adds description for DT binding for a new Exynos5422 Dynamic
+> Memory Controller device.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../devicetree/bindings/devfreq/exynos5422-dmc.txt | 177 +++++++++++++++++++++
+>  1 file changed, 177 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt b/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+> new file mode 100644
+> index 0000000..0e73e98
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+> @@ -0,0 +1,177 @@
+> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+> +
+> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+> +memory chips are connected. The driver is to monitor the controller in runtime
+> +and switch frequency and voltage. To monitor the usage of the controller in
+> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+> +is able to measure the current load of the memory.
+> +When 'userspace' governor is used for the driver, an application is able to
+> +switch the DMC frequency.
+> +
+> +Required properties for DMC device for Exynos5422:
+> +- compatible: Should be "samsung,exynos5422-bus".
+> +- clock-names : the name of clock used by the bus, "bus".
+> +- clocks : phandles for clock specified in "clock-names" property.
+> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +
+> +The example definition of a DMC and PPMU devices declared in DT is shown below:
+> +
+> +       ppmu_dmc0_0: ppmu@10d00000 {
+> +               compatible = "samsung,exynos-ppmu";
+> +               reg = <0x10d00000 0x2000>;
+> +               clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+> +               clock-names = "ppmu";
+> +               status = "okay";
+> +               events {
+> +                       ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+> +                               event-name = "ppmu-event3-dmc0_0";
+> +                       };
+> +               };
+> +       };
+> +
+> +
+> +       ppmu_dmc0_1: ppmu@10d10000 {
+> +               compatible = "samsung,exynos-ppmu";
+> +               reg = <0x10d10000 0x2000>;
+> +               clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
+> +               clock-names = "ppmu";
+> +               status = "okay";
+> +               events {
+> +                       ppmu_event_dmc0_1: ppmu-event3-dmc0_1 {
+> +                               event-name = "ppmu-event3-dmc0_1";
+> +                       };
+> +               };
+> +       };
+> +
+> +       ppmu_dmc1_0: ppmu@10d10000 {
+> +               compatible = "samsung,exynos-ppmu";
+> +               reg = <0x10d60000 0x2000>;
+> +               clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
+> +               clock-names = "ppmu";
+> +               status = "okay";
+> +               events {
+> +                       ppmu_event_dmc1_0: ppmu-event3-dmc1_0 {
+> +                               event-name = "ppmu-event3-dmc1_0";
+> +                       };
+> +               };
+> +       };
+> +
+> +       ppmu_dmc1_1: ppmu@10d70000 {
+> +               compatible = "samsung,exynos-ppmu";
+> +               reg = <0x10d70000 0x2000>;
+> +               clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
+> +               clock-names = "ppmu";
+> +               status = "okay";
+> +               events {
+> +                       ppmu_event_dmc1_1: ppmu-event3-dmc1_1 {
+> +                               event-name = "ppmu-event3-dmc1_1";
+> +                       };
+> +               };
+> +       };
+> +
+> +       dmc: memory-controller@10c20000 {
+> +               compatible = "samsung,exynos5422-dmc";
+> +               reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
+> +                       <0x10000000 0x1000>;
+> +               clocks =        <&clock CLK_FOUT_SPLL>,
+> +                               <&clock CLK_MOUT_SCLK_SPLL>,
+> +                               <&clock CLK_FF_DOUT_SPLL2>,
+> +                               <&clock CLK_FOUT_BPLL>,
+> +                               <&clock CLK_MOUT_BPLL>,
+> +                               <&clock CLK_SCLK_BPLL>,
+> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+> +                               <&clock CLK_MOUT_MCLK_CDREX>,
+> +                               <&clock CLK_DOUT_CLK2X_PHY0>,
+> +                               <&clock CLK_CLKM_PHY0>,
+> +                               <&clock CLK_CLKM_PHY1>,
+> +                               <&clock CLK_CDREX_PAUSE>,
+> +                               <&clock CLK_CDREX_TIMING_SET>;
+> +               clock-names =   "fout_spll",
+> +                               "mout_sclk_spll",
+> +                               "ff_dout_spll2",
+> +                               "fout_bpll",
+> +                               "mout_bpll",
+> +                               "sclk_bpll",
+> +                               "mout_mx_mspll_ccore",
+> +                               "mout_mx_mspll_ccore_phy",
+> +                               "mout_mclk_cdrex",
+> +                               "dout_clk2x_phy0",
+> +                               "clkm_phy0",
+> +                               "clkm_phy1",
+> +                               "clk_cdrex_pause",
+> +                               "clk_cdrex_timing_set";
+> +               status = "okay";
+> +               operating-points-v2 = <&dmc_opp_table>;
+> +               devfreq-events = <&ppmu_dmc0_0>, <&ppmu_dmc0_1>,
+> +                               <&ppmu_dmc1_0>, <&ppmu_dmc1_1>;
+> +       };
+> +
+> +The needed timings of DRAM memory are stored in dedicated nodes.
+> +There are two nodes with regular timings and for bypass mode.
+> +
+> +       dmc_bypass_mode: bypass_mode {
+> +               compatible = "samsung,dmc-bypass-mode";
 
-> On 5 Mar 2019, at 06:46, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->=20
-> Hi,
->=20
-> On 3/4/19 11:46 PM, James Sewart wrote:
->> Allowing IOMMU_DOMAIN_DMA type IOMMU domain to be allocated allows =
-the
->> default_domain of an iommu_group to be set. This delegates =
-device-domain
->> relationships to the generic IOMMU code.
->> Signed-off-by: James Sewart <jamessewart@arista.com>
->> ---
->>  drivers/iommu/intel-iommu.c | 113 =
-+++++++++++++++++++++++++++---------
->>  1 file changed, 84 insertions(+), 29 deletions(-)
->> diff --git a/drivers/iommu/intel-iommu.c =
-b/drivers/iommu/intel-iommu.c
->> index 8e0a4e2ff77f..71cd6bbfec05 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -309,6 +309,14 @@ static int hw_pass_through =3D 1;
->>  /* si_domain contains mulitple devices */
->>  #define DOMAIN_FLAG_STATIC_IDENTITY	(1 << 1)
->>  +/* Domain managed externally, don't cleanup if it isn't attached
->> + * to any devices. */
->> +#define DOMAIN_FLAG_MANAGED_EXTERNALLY	(1 << 2)
->> +
->> +/* Set after domain initialisation. Used when allocating dma domains =
-to
->> + * defer domain initialisation until it is attached to a device */
->> +#define DOMAIN_FLAG_INITIALISED	(1 << 4)
->=20
-> Why do you skip bit 3?
+This looks like an example, not bindings.
 
-This was an oversight, I will update to use bit 3.
+> +
+> +               freq-hz = <400000000>;
+> +               volt-uv = <887500>;
 
->=20
->> +
->>  #define for_each_domain_iommu(idx, domain)			\
->>  	for (idx =3D 0; idx < g_num_of_iommus; idx++)		\
->>  		if (domain->iommu_refcnt[idx])
->> @@ -558,6 +566,16 @@ static inline int domain_type_is_vm_or_si(struct =
-dmar_domain *domain)
->>  				DOMAIN_FLAG_STATIC_IDENTITY);
->>  }
->>  +static inline int domain_managed_externally(struct dmar_domain =
-*domain)
->> +{
->> +	return domain->flags & DOMAIN_FLAG_MANAGED_EXTERNALLY;
->> +}
->> +
->> +static inline int domain_is_initialised(struct dmar_domain *domain)
->> +{
->> +	return domain->flags & DOMAIN_FLAG_INITIALISED;
->> +}
->> +
->>  static inline int domain_pfn_supported(struct dmar_domain *domain,
->>  				       unsigned long pfn)
->>  {
->> @@ -1662,7 +1680,7 @@ static void disable_dmar_iommu(struct =
-intel_iommu *iommu)
->>    		__dmar_remove_one_dev_info(info);
->>  -		if (!domain_type_is_vm_or_si(domain)) {
->> +		if (!domain_managed_externally(domain)) {
->>  			/*
->>  			 * The domain_exit() function  can't be called =
-under
->>  			 * device_domain_lock, as it takes this lock =
-itself.
->> @@ -1895,6 +1913,7 @@ static int domain_init(struct dmar_domain =
-*domain, struct intel_iommu *iommu,
->>  	domain->pgd =3D (struct dma_pte =
-*)alloc_pgtable_page(domain->nid);
->>  	if (!domain->pgd)
->>  		return -ENOMEM;
->> +	domain->flags |=3D DOMAIN_FLAG_INITIALISED;
->>  	__iommu_flush_cache(iommu, domain->pgd, PAGE_SIZE);
->>  	return 0;
->>  }
->> @@ -2807,14 +2826,10 @@ static inline void iommu_prepare_isa(void)
->>    static int md_domain_init(struct dmar_domain *domain, int =
-guest_width);
->>  -static int __init si_domain_init(int hw)
->> +static int __init si_domain_init(struct dmar_domain *si_domain, int =
-hw)
->>  {
->>  	int nid, ret =3D 0;
->>  -	si_domain =3D alloc_domain(DOMAIN_FLAG_STATIC_IDENTITY);
->> -	if (!si_domain)
->> -		return -EFAULT;
->> -
->>  	if (md_domain_init(si_domain, DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
->>  		domain_exit(si_domain);
->>  		return -EFAULT;
->> @@ -3417,9 +3432,16 @@ static int __init init_dmars(void)
->>  	check_tylersburg_isoch();
->>    	if (iommu_identity_mapping) {
->> -		ret =3D si_domain_init(hw_pass_through);
->> -		if (ret)
->> +		si_domain =3D alloc_domain(DOMAIN_FLAG_STATIC_IDENTITY);
->=20
-> Where will this si_domain be used? We still need to keep the global
-> si_domain?
+-microvolt
+Documentation/devicetree/bindings/property-units.txt
 
-I am unsure of the best thing to do here. The si_domain can be =
-initialised=20
-as a hardware passthrough which means it doesn=E2=80=99t have any =
-mappings applied.=20
-I think any user allocating a domain here will always want a software=20
-passthrough domain. I=E2=80=99m not sure if/how to consolidate these =
-two.
+> +               dram-timing-row = <0x365a9713>;
+> +               dram-timing-data = <0x4740085e>;
+> +               dram-timing-power = <0x543a0446>;
+> +       };
+> +
+> +       dram_timing: timing {
+> +               compatible = "samsung,dram-timing";
 
->=20
->> +		if (!si_domain) {
->> +			ret =3D -EFAULT;
->>  			goto free_iommu;
->> +		}
->> +		ret =3D si_domain_init(si_domain, hw_pass_through);
->> +		if (ret) {
->> +			domain_exit(si_domain);
->> +			goto free_iommu;
->> +		}
->>  	}
->>    @@ -4575,7 +4597,7 @@ static int device_notifier(struct =
-notifier_block *nb,
->>  		return 0;
->>    	dmar_remove_one_dev_info(domain, dev);
->> -	if (!domain_type_is_vm_or_si(domain) && =
-list_empty(&domain->devices))
->> +	if (!domain_managed_externally(domain) && =
-list_empty(&domain->devices))
->>  		domain_exit(domain);
->>    	return 0;
->> @@ -5020,6 +5042,7 @@ static int md_domain_init(struct dmar_domain =
-*domain, int guest_width)
->>  	domain->pgd =3D (struct dma_pte =
-*)alloc_pgtable_page(domain->nid);
->>  	if (!domain->pgd)
->>  		return -ENOMEM;
->> +	domain->flags |=3D DOMAIN_FLAG_INITIALISED;
->>  	domain_flush_cache(domain, domain->pgd, PAGE_SIZE);
->>  	return 0;
->>  }
->> @@ -5028,28 +5051,54 @@ static struct iommu_domain =
-*intel_iommu_domain_alloc(unsigned type)
->>  {
->>  	struct dmar_domain *dmar_domain;
->>  	struct iommu_domain *domain;
->> +	int flags =3D DOMAIN_FLAG_MANAGED_EXTERNALLY;
->>  -	if (type !=3D IOMMU_DOMAIN_UNMANAGED)
->> -		return NULL;
->> -
->> -	dmar_domain =3D alloc_domain(DOMAIN_FLAG_VIRTUAL_MACHINE);
->> -	if (!dmar_domain) {
->> -		pr_err("Can't allocate dmar_domain\n");
->> -		return NULL;
->> -	}
->> -	if (md_domain_init(dmar_domain, DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
->> -		pr_err("Domain initialization failed\n");
->> -		domain_exit(dmar_domain);
->> +	switch (type) {
->> +	case IOMMU_DOMAIN_UNMANAGED:
->> +		flags |=3D DOMAIN_FLAG_VIRTUAL_MACHINE | =
-DOMAIN_FLAG_INITIALISED;
->> +		dmar_domain =3D alloc_domain(flags);
->> +		if (!dmar_domain) {
->> +			pr_err("Can't allocate dmar_domain\n");
->> +			return NULL;
->> +		}
->> +		if (md_domain_init(dmar_domain, =
-DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
->> +			pr_err("Domain initialization failed\n");
->> +			domain_exit(dmar_domain);
->> +			return NULL;
->> +		}
->> +		domain_update_iommu_cap(dmar_domain);
->> +		domain =3D &dmar_domain->domain;
->> +		domain->geometry.aperture_start =3D 0;
->> +		domain->geometry.aperture_end   =3D =
-__DOMAIN_MAX_ADDR(dmar_domain->gaw);
->> +		domain->geometry.force_aperture =3D true;
->> +		break;
->> +	case IOMMU_DOMAIN_DMA:
->> +		dmar_domain =3D alloc_domain(flags);
->> +		if (!dmar_domain) {
->> +			pr_err("Can't allocate dmar_domain\n");
->=20
-> Not necessary for memory allocation failure.
+Probably you should use timings from Documentation/devicetree/bindings/lpddr2/
+If not, all the fields below should be described.
 
-I=E2=80=99ll update in the next revision
+All these bindings (memory-controller, timings) look like description
+of memory controller so maybe they should go into
+Documentation/devicetree/bindings/memory-controllers ?
 
->=20
->> +			return NULL;
->> +		}
->> +		// init domain in device attach when we know IOMMU =
-capabilities
->=20
-> Use /* */ for comments, please.
+Best regards,
+Krzysztof
 
-I=E2=80=99ll update in the next revision
-
->=20
->> +		break;
->> +	case IOMMU_DOMAIN_IDENTITY:
->> +		flags |=3D DOMAIN_FLAG_STATIC_IDENTITY | =
-DOMAIN_FLAG_INITIALISED;
->> +		dmar_domain =3D alloc_domain(flags);
->> +		if (!dmar_domain) {
->> +			pr_err("Can't allocate dmar_domain\n");
->> +			return NULL;
->> +		}
->> +		if (si_domain_init(dmar_domain, 0)) {
->> +			pr_err("Domain initialization failed\n");
->> +			domain_exit(dmar_domain);
->> +			return NULL;
->> +		}
->> +		break;
->=20
-> How about moving si domain allocation into a separated patch? There =
-are
-> two significant changes here, so it worth a new patch for discussion.
->=20
-> 1) a shared single si domain vs. per group si domain;
-> 2) previously vt-d drivers determines what kind of devices should use
->   identity domain; Now, it turns to iommu generic layer, behavior will
->   be changed.
-
-I=E2=80=99ll move it into another patch. Do you think the global =
-si_domain should=20
-be returned here?
-
->> +	default:
->>  		return NULL;
->>  	}
->> -	domain_update_iommu_cap(dmar_domain);
->> -
->> -	domain =3D &dmar_domain->domain;
->> -	domain->geometry.aperture_start =3D 0;
->> -	domain->geometry.aperture_end   =3D =
-__DOMAIN_MAX_ADDR(dmar_domain->gaw);
->> -	domain->geometry.force_aperture =3D true;
->>  -	return domain;
->> +	dmar_domain->domain.type =3D type;
->=20
-> Is it necessary to set this?
-
-It isn=E2=80=99t I=E2=80=99ll remove this for the next revision.
-
->=20
->> +	return &dmar_domain->domain;
->>  }
->>    static void intel_iommu_domain_free(struct iommu_domain *domain)
->> @@ -5080,8 +5129,8 @@ static int intel_iommu_attach_device(struct =
-iommu_domain *domain,
->>  			dmar_remove_one_dev_info(old_domain, dev);
->>  			rcu_read_unlock();
->>  -			if (!domain_type_is_vm_or_si(old_domain) &&
->> -			     list_empty(&old_domain->devices))
->> +			if (list_empty(&old_domain->devices) &&
->> +			     !domain_managed_externally(old_domain))
->>  				domain_exit(old_domain);
->>  		}
->>  	}
->> @@ -5090,6 +5139,12 @@ static int intel_iommu_attach_device(struct =
-iommu_domain *domain,
->>  	if (!iommu)
->>  		return -ENODEV;
->>  +	// Initialise domain with IOMMU capabilities if it isn't already =
-initialised
->=20
-> Ditto.
->=20
->> +	if (!domain_is_initialised(dmar_domain)) {
->> +		if (domain_init(dmar_domain, iommu, =
-DEFAULT_DOMAIN_ADDRESS_WIDTH))
->> +			return -ENOMEM;
->> +	}
->=20
-> Each domain, not matter the DMA domain or UNMANAGED domain, is =
-allocated
-> first and then gets initialized during device attaching, right? If so,
-> why do we need to have a special DOMAIN_FLAG_INITIALISED flag for DMA
-> domains?
-
-Only the DMA domain is initialised on attach, UNMANAGED and IDENTITY=20
-initialises with the lowest common denominator of the parameters of all=20=
-
-attached IOMMUs using domain_update_iommu_cap.
-
->=20
->> +
->>  	/* check if this iommu agaw is sufficient for max mapped address =
-*/
->>  	addr_width =3D agaw_to_width(iommu->agaw);
->>  	if (addr_width > cap_mgaw(iommu->cap))
->=20
-> Best regards,
-> Lu Baolu
-
-Cheers,
-James.=
+> +
+> +               dram-timing-names = "165MHz", "206MHz", "275MHz", "413MHz",
+> +                                   "543MHz", "633MHz", "728MHz", "825MHz";
+> +               dram-timing-row = <0x11223185>, <0x112331C6>, <0x12244287>,
+> +                                 <0x1B35538A>, <0x244764CD>, <0x2A48758F>,
+> +                                 <0x30598651>, <0x365A9713>;
+> +               dram-timing-data = <0x2720085E>, <0x2720085E>, <0x2720085E>,
+> +                                  <0x2720085E>, <0x3730085E>, <0x3730085E>,
+> +                                  <0x3730085E>, <0x4740085E>;
+> +               dram-timing-power = <0x140C0225>, <0x180F0225>, <0x1C140225>,
+> +                                   <0x2C1D0225>, <0x38270335>, <0x402D0335>,
+> +                                   <0x4C330336>, <0x543A0446>;
+> +       };
+> +
+> +The frequencies supported by the DMC are stored in OPP table v2.
+> +
+> +       dmc_opp_table: opp_table2 {
+> +               compatible = "operating-points-v2";
+> +
+> +               opp00 {
+> +                       opp-hz = /bits/ 64 <165000000>;
+> +                       opp-microvolt = <875000>;
+> +               };
+> +               opp01 {
+> +                       opp-hz = /bits/ 64 <206000000>;
+> +                       opp-microvolt = <875000>;
+> +               };
+> +               opp02 {
+> +                       opp-hz = /bits/ 64 <275000000>;
+> +                       opp-microvolt = <875000>;
+> +               };
+> +               opp03 {
+> +                       opp-hz = /bits/ 64 <413000000>;
+> +                       opp-microvolt = <887500>;
+> +               };
+> +               opp04 {
+> +                       opp-hz = /bits/ 64 <543000000>;
+> +                       opp-microvolt = <937500>;
+> +               };
+> +               opp05 {
+> +                       opp-hz = /bits/ 64 <633000000>;
+> +                       opp-microvolt = <1012500>;
+> +               };
+> +               opp06 {
+> +                       opp-hz = /bits/ 64 <728000000>;
+> +                       opp-microvolt = <1037500>;
+> +               };
+> +               opp07 {
+> +                       opp-hz = /bits/ 64 <825000000>;
+> +                       opp-microvolt = <1050000>;
+> +               };
+> +       };
+> +
+> --
+> 2.7.4
+>
