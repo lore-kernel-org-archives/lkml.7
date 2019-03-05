@@ -2,114 +2,118 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFE0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B16C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBB22082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:48:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WY3RjWX6"
+	by mail.kernel.org (Postfix) with ESMTP id 26ADB2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfCENsM (ORCPT
+        id S1728519AbfCENuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 08:48:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46795 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbfCENsM (ORCPT
+        Tue, 5 Mar 2019 08:50:46 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:35633 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727575AbfCENup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 08:48:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id g6so5736396pfh.13;
-        Tue, 05 Mar 2019 05:48:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B+D5XhN5s0MfTAN4ukLHZWqs3VDiDahZYvFB7Q5VuAg=;
-        b=WY3RjWX6Z2BcW8DzwxuWPvTOUfB7MhkchcaTP93PBcmzt+k6UzTflOV6Uz82CRm5xk
-         h4nDpmFj3M5S2mtOHmWdWBcDU3uRe3XhrqCy6kCUhy18EKen7fqgEQUBwUUYdYe42PM+
-         9hX6UoE4a+RQP3DlANaaGoL7zFN6aZ06xqLYgfwZ29S/7P0zJ0dDKds9zfVe4TWiask/
-         K7w8o2RRT3G5e1hu1B9ioDyqtBac2draIwUN5kKtZy6xlzqwr6IWV73SltIaH1xclWoC
-         EYyaaf4ju12LrnihjUbLATyizE7onn93D629APoZMItZ3xe8XZ4z/p2yGb05vIQPAx0d
-         FFuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B+D5XhN5s0MfTAN4ukLHZWqs3VDiDahZYvFB7Q5VuAg=;
-        b=QZCaKIndRoQwx91r5I07DIePxa5vdWZOHgsSwSr3A95k83kcONwOAx9k7kNcAtdL7P
-         GaRW1X+zZ2gK/kPXpYJ5oGP5Xlp+c/AAcsSuiMI1mOtbEmSOchglhIi/C0smxT5k0I57
-         utiueCP4FhcsgEmLeYX/N0M0KMqiXRgbF/I9APsHuEGO+zwRY3xQjOe+G9XUVPigUbkd
-         WQzRIRsKADnLlZa/7d1zxPqz7QNL9ESPJkE8yj+N2oaxjSXRrPeoenAduomGrjTD9Mi+
-         jv5St7l9iIbA3gqd29Zkn65J009X3zGZ09bI5WXBNhAhiFDoqG5H+dNK7nN0xZwlngUC
-         bgbw==
-X-Gm-Message-State: APjAAAVBOQf+kUvCakPXdtzdWdRcT6JhZ42dQmg/mQps9tQYqKml2imO
-        aCWNnwhJPUYqDyM03mQfzytaAGuroVWxI/CHS2A=
-X-Google-Smtp-Source: APXvYqyfwE1fEDr8dYFn/x+nDE2eJILCR8FYXgoLI5tUkE/EGZFFJ79yGqRxbllbQpzleIiV2N7eT+JsrxD2HE7v2Zw=
-X-Received: by 2002:a63:2907:: with SMTP id p7mr1464885pgp.161.1551793691471;
- Tue, 05 Mar 2019 05:48:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20190305085521.25304-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20190305085521.25304-1-kai.heng.feng@canonical.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 Mar 2019 15:48:00 +0200
-Message-ID: <CAHp75VfRGeJnggyMonVaUo-pEZV9zN-JV1rBU+ZtajDtOrAD1w@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add Ideapad 530S-14ARR to
- no_hw_rfkill list
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Ike Panhc <ike.pan@canonical.com>,
-        Darren Hart <dvhart@infradead.org>,
+        Tue, 5 Mar 2019 08:50:45 -0500
+Received: from [192.168.1.110] ([95.118.29.230]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MP2zs-1gblrD1IwG-00PLVf; Tue, 05 Mar 2019 14:50:35 +0100
+Subject: Re: [PATCH 2/3] x86: apuv2: fix input dependencies
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Enrico Weigelt <info@metux.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org
+References: <20190304201930.1622839-1-arnd@arndb.de>
+ <20190304201930.1622839-2-arnd@arndb.de>
+ <a94c3c6a-481e-96a5-74e1-8c3299c74129@metux.net>
+ <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <54a7d035-155f-c47b-1db1-acb851b3aec6@metux.net>
+Date:   Tue, 5 Mar 2019 14:50:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:5w8Oy1QUP5D8GKRoukweESEcD6DrQtd2KJaYl22I70X3OHYBMTb
+ LYNcnx78pwsxP3bbohY6Rd8mtJ6IMRmxC2h1MRbYEthPUNWUDVLx24QpLQhlxJvhvv01bUc
+ +5Fm4v1E0Q5bW7PSrNoTqGHS4vsrdWeBxAdoOSRCjCSt4mXBjJgyAIOUnsGGCWK2LRnwQQq
+ VXnhIKNqI8dZLpifeoiMQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2+NYjR/F27U=:KC1JLCWyWr8aUFntvuTwJX
+ pMlLvNWQYn8lIgL7OT0q0tDjJbBZH4L20zLO4jgIT70bfXU+tQF+1e7IA7cObDXDrvD9b1aFq
+ lVcYlKxdXZ8dM5Nf44+EcLaTK80o8S8cBwo3jQZno3nHp4kQrknON3M8Q/smtal8/a741OpEy
+ ew9ZOqaEptQEldEHFCAd6ZgnW9NxiaDlam5umdsSJIrAgZcceBssoJKJM+LljQdLeIM6+CZeZ
+ ghRB0lpTPePKqPr+2sVmddew4tX+zRxCRwXrrUXKFF7hCBfzU2D8Fw+zeLlMbRbxdCkVPPRsS
+ VJ0UxDnfko+LXXUrWJM5ypbmteb5fwZIrVldh8KDSJBXKHffKRC7TviGOaIXtrqVj2YHYdEux
+ iST5onXQ5KW2jEzB+G0poZ3vXt0XADtOYHvcGE5Wdkl6pKkER4nhJ3CF8ZqtlIPUvP4wojTaI
+ FXsSg0V6uz+LK8kDY8g4fbPIUS/n+3LYb5LEnpbhwPHZ8UDGFItTSJw7ELFEm/17v6P50ybAl
+ qrYKmVqKrUU6J9TP9dVpCxIaGV3pLDAnbgmcLKSAqCMKARQitG5i6znSLO9pc7j8LYzYth6Zg
+ OpuOzkjeJmJ9APvPyujdrTB8gEZ/6GdfDnXy6FSmfjIPgeJcNOBxwr0ji8P0QO2rmjhD/62q3
+ vmgtB+SGG1m8PqE0p507eb6sV39hEszuPR5fbWr/3wJwFAvLl6pK6/3gVlnakEpYwBXtAwA1X
+ qk8SBT7vlaUjxSLyVZhsYtPd798WBU8nUqZdBep5UWaj49VuUJ8X+LPVg3g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 10:55 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> This platform doesn't have hardware switch for rfkill, so add it to
-> no_hw_rfkill list to prevent wireless gets hard-blocked.
->
-> https://bugs.launchpad.net/bugs/1818204
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On 05.03.19 09:23, Arnd Bergmann wrote:
 
-Pushed to my review and testing queue, thanks!
+(CC'ing kbuild maintainer + list, hoping for better ideas :)
 
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 1589dffab9fa..037970a1800a 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1090,6 +1090,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->                         DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
->                 },
->         },
-> +       {
-> +               .ident = "Lenovo ideapad 530S-14ARR",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 530S-14ARR"),
-> +               },
-> +       },
->         {
->                 .ident = "Lenovo ideapad Y700-14ISK",
->                 .matches = {
-> --
-> 2.17.1
->
 
+> No, that wouldn't be good here. In effect that means that with INPUT disabled,
+> most of the x86 platform drivers are disabled, until you enable the
+> PCENGINES_APU2 symbol, which then ends up showing all the other
+> symbols at once, and changing them to their default states.
+
+Okay, I didn't consider the defaults.
+
+Maybe we should talk about step by step getting away from these defaults
+(perhaps move them to the defconfigs ?) on a broader scale ... but yeah,
+that's far out of scope now.
+
+So, you've conviced me.
+Add me to Reviewed-By to your patches and forget about mine.
+
+> Another problem is that you likely run into circular dependency chains
+> after trying that. The best practice for select vs. depends are
+
+hmm, if circular deps happen, wouldn't that mean we've got some deeper
+problems in here ? IMHO, dependencies should always form a DAG (except
+for some really rare cases).
+
+Do you recall any actual problem w/ input vs gpio vs. drivers ?
+I'd like to have a closer look at it.
+
+> 1. try to use 'depends on' if you can
+
+Well, this has the unpleasant side effect that we often have to enable
+a lot of things, just to even see the individual driver. For people who
+just wanna configure a kernel for their board, this is a bit nasty.
+
+But, okay, I'm going to do this w/ my own tool - I've written a small
+tool that allows easy kernel reconfiguration on a higher level: you
+can just pick some board templates and enable high level features like
+eth, gpu, etc - it automatically creates a .config for you. I'm going
+announce it on lkml soon.
+
+
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
