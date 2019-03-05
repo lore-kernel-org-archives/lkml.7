@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306A2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853FBC00319
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2AD2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0CB20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfCEIaO (ORCPT
+        id S1727436AbfCEIaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:30:14 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25465 "EHLO
+        Tue, 5 Mar 2019 03:30:22 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25349 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726101AbfCEI36 (ORCPT
+        by vger.kernel.org with ESMTP id S1726995AbfCEI35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:29:58 -0500
+        Tue, 5 Mar 2019 03:29:57 -0500
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258BVoC008401;
-        Tue, 5 Mar 2019 09:29:37 +0100
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258BVoE008401;
+        Tue, 5 Mar 2019 09:29:43 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhgar6ky-1
+        by mx08-00178001.pphosted.com with ESMTP id 2qyhgar6mk-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 05 Mar 2019 09:29:37 +0100
+        Tue, 05 Mar 2019 09:29:43 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 533DA3D;
-        Tue,  5 Mar 2019 08:29:36 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4430C3F;
+        Tue,  5 Mar 2019 08:29:42 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 01A501675;
-        Tue,  5 Mar 2019 08:29:35 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 21FAC1675;
+        Tue,  5 Mar 2019 08:29:42 +0000 (GMT)
 Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
  (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
- 09:29:35 +0100
+ 09:29:42 +0100
 Received: from localhost (10.201.23.166) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:35
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:41
  +0100
 From:   Christophe Roullier <christophe.roullier@st.com>
 To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
@@ -47,9 +47,9 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V3 1/6] net: ethernet: stmmac: manage Ethernet WoL for stm32mp157c.
-Date:   Tue, 5 Mar 2019 09:29:23 +0100
-Message-ID: <1551774568-11732-2-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V3 6/6] ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it for eval and disco boards
+Date:   Tue, 5 Mar 2019 09:29:28 +0100
+Message-ID: <1551774568-11732-7-git-send-email-christophe.roullier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
 References: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
@@ -63,79 +63,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add glue codes to support magic packet on stm32mp157c
+Synopsys GMAC 4.10 is used. And Phy mode for eval and disco is RMII
+with PHY SMSC LAN8742
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 30 ++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/stm32h743.dtsi         | 13 +++++++++++++
+ arch/arm/boot/dts/stm32h743i-disco.dts   | 17 +++++++++++++++++
+ arch/arm/boot/dts/stm32h743i-eval.dts    | 17 +++++++++++++++++
+ 4 files changed, 62 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index 7e2e79d..d1cf145 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -42,6 +42,7 @@ struct stm32_dwmac {
- 	struct clk *clk_ethstp;
- 	struct clk *syscfg_clk;
- 	bool int_phyclk;	/* Clock from RCC to drive PHY */
-+	int irq_pwr_wakeup;
- 	u32 mode_reg;		/* MAC glue-logic mode register */
- 	struct regmap *regmap;
- 	u32 speed;
-@@ -232,7 +233,9 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
- static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 			       struct device *dev)
- {
-+	struct platform_device *pdev = to_platform_device(dev);
- 	struct device_node *np = dev->of_node;
-+	int err = 0;
+diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
+index 24be8e6..980b276 100644
+--- a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
+@@ -173,6 +173,21 @@
+ 				};
+ 			};
  
- 	dwmac->int_phyclk = of_property_read_bool(np, "st,int-phyclk");
- 
-@@ -260,7 +263,26 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 		return PTR_ERR(dwmac->syscfg_clk);
- 	}
- 
--	return 0;
-+	/* Get IRQ information early to have an ability to ask for deferred
-+	 * probe if needed before we went too far with resource allocation.
-+	 */
-+	dwmac->irq_pwr_wakeup = platform_get_irq_byname(pdev,
-+							"stm32_pwr_wakeup");
-+	if (!dwmac->int_phyclk && dwmac->irq_pwr_wakeup >= 0) {
-+		err = device_init_wakeup(&pdev->dev, true);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to init wake up irq\n");
-+			return err;
-+		}
-+		err = dev_pm_set_dedicated_wake_irq(&pdev->dev,
-+						    dwmac->irq_pwr_wakeup);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to set wake up irq\n");
-+			device_init_wakeup(&pdev->dev, false);
-+		}
-+		device_set_wakeup_enable(&pdev->dev, false);
-+	}
-+	return err;
- }
- 
- static int stm32_dwmac_probe(struct platform_device *pdev)
-@@ -326,9 +348,15 @@ static int stm32_dwmac_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	int ret = stmmac_dvr_remove(&pdev->dev);
-+	struct stm32_dwmac *dwmac = priv->plat->bsp_priv;
- 
- 	stm32_dwmac_clk_disable(priv->plat->bsp_priv);
- 
-+	if (dwmac->irq_pwr_wakeup >= 0) {
-+		dev_pm_clear_wake_irq(&pdev->dev);
-+		device_init_wakeup(&pdev->dev, false);
-+	}
++			ethernet_rmii: rmii@0 {
++				pins {
++					pinmux = <STM32_PINMUX('G', 11, AF11)>,
++						 <STM32_PINMUX('G', 13, AF11)>,
++						 <STM32_PINMUX('G', 12, AF11)>,
++						 <STM32_PINMUX('C', 4, AF11)>,
++						 <STM32_PINMUX('C', 5, AF11)>,
++						 <STM32_PINMUX('A', 7, AF11)>,
++						 <STM32_PINMUX('C', 1, AF11)>,
++						 <STM32_PINMUX('A', 2, AF11)>,
++						 <STM32_PINMUX('A', 1, AF11)>;
++					slew-rate = <2>;
++				};
++			};
 +
- 	return ret;
- }
+ 			usart1_pins: usart1@0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('B', 14, AF4)>; /* USART1_TX */
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index cbdd69c..e103b29 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -511,6 +511,19 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		mac: ethernet@40028000 {
++			compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
++			reg = <0x40028000 0x8000>;
++			reg-names = "stmmaceth";
++			interrupts = <61>;
++			interrupt-names = "macirq";
++			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
++			clocks = <&rcc ETH1MAC_CK>, <&rcc ETH1TX_CK>, <&rcc ETH1RX_CK>;
++			st,syscon = <&syscfg 0x4>;
++			snps,pbl = <8>;
++			status = "disabled";
++		};
+ 	};
+ };
  
+diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
+index 45e088c..83ef63d 100644
+--- a/arch/arm/boot/dts/stm32h743i-disco.dts
++++ b/arch/arm/boot/dts/stm32h743i-disco.dts
+@@ -66,6 +66,23 @@
+ 	clock-frequency = <25000000>;
+ };
+ 
++&mac {
++	status = "disabled";
++	pinctrl-0	= <&ethernet_rmii>;
++	pinctrl-names	= "default";
++	phy-mode	= "rmii";
++	phy-handle	= <&phy0>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0: ethernet-phy@0 {
++			reg = <0>;
++		};
++	};
++};
++
+ &usart2 {
+ 	pinctrl-0 = <&usart2_pins>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
+index 3f8e0c4..383c5bb 100644
+--- a/arch/arm/boot/dts/stm32h743i-eval.dts
++++ b/arch/arm/boot/dts/stm32h743i-eval.dts
+@@ -104,6 +104,23 @@
+ 	status = "okay";
+ };
+ 
++&mac {
++	status = "disabled";
++	pinctrl-0	= <&ethernet_rmii>;
++	pinctrl-names	= "default";
++	phy-mode	= "rmii";
++	phy-handle	= <&phy0>;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0: ethernet-phy@0 {
++			reg = <0>;
++		};
++	};
++};
++
+ &usart1 {
+ 	pinctrl-0 = <&usart1_pins>;
+ 	pinctrl-names = "default";
 -- 
 2.7.4
 
