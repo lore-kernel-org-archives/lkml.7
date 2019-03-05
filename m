@@ -2,114 +2,127 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628CDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255C120684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C6820684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfCELBk (ORCPT
+        id S1727579AbfCELDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:01:40 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46472 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbfCELBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:01:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48D5DA78;
-        Tue,  5 Mar 2019 03:01:40 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C19713F71D;
-        Tue,  5 Mar 2019 03:01:38 -0800 (PST)
-Date:   Tue, 5 Mar 2019 11:01:37 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-        peterz@infradead.org
-Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
- frequency on global turbo changes
-Message-ID: <20190305110135.jdgc6vtdivs5rdjv@queper01-lin>
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
- <3017597.CVkTxgYgAs@aspire.rjw.lan>
- <20190305104256.7kvedlttuovmptpc@queper01-lin>
- <2336151.IZk3Z8DVvP@aspire.rjw.lan>
+        Tue, 5 Mar 2019 06:03:34 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:47280 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbfCELDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:03:34 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CA90C8667A;
+        Tue,  5 Mar 2019 11:03:33 +0000 (UTC)
+Received: from krava (unknown [10.43.17.112])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C083C60261;
+        Tue,  5 Mar 2019 11:03:31 +0000 (UTC)
+Date:   Tue, 5 Mar 2019 12:03:30 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Networking <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: Re: [PATCH v4 perf,bpf 14/15] perf: introduce side band thread
+Message-ID: <20190305110330.GA16022@krava>
+References: <20190226002019.3748539-1-songliubraving@fb.com>
+ <20190226002019.3748539-15-songliubraving@fb.com>
+ <20190227132105.GC18893@krava>
+ <15CE7BE1-9D48-404D-BF09-847C09C4300E@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2336151.IZk3Z8DVvP@aspire.rjw.lan>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <15CE7BE1-9D48-404D-BF09-847C09C4300E@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 05 Mar 2019 11:03:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 05 Mar 2019 at 11:50:56 (+0100), Rafael J. Wysocki wrote:
-> On Tuesday, March 5, 2019 11:42:59 AM CET Quentin Perret wrote:
-> > > +static void intel_pstate_update_max_freq(unsigned int cpu)
-> > > +{
-> > > +	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > > +	struct cpufreq_policy new_policy;
-> > > +	struct cpudata *cpudata;
-> > > +
-> > > +	if (!policy)
-> > > +		return;
-> > > +
-> > > +	down_write(&policy->rwsem);
-> > > +
-> > > +	if (policy_is_inactive(policy))
-> > > +		goto unlock;
-> > > +
-> > > +	cpudata = all_cpu_data[cpu];
-> > > +	policy->cpuinfo.max_freq = global.turbo_disabled_upd ?
-> > > +			cpudata->pstate.max_freq : cpudata->pstate.turbo_freq;
-> > > +
-> > > +	memcpy(&new_policy, policy, sizeof(*policy));
-> > > +	new_policy.max = min(policy->user_policy.max, policy->cpuinfo.max_freq);
-> > > +	new_policy.min = min(policy->user_policy.min, new_policy.max);
-> > > +
-> > > +	cpufreq_set_policy(policy, &new_policy);
+On Mon, Mar 04, 2019 at 09:40:07PM +0000, Song Liu wrote:
+> 
+> 
+> > On Feb 27, 2019, at 5:21 AM, Jiri Olsa <jolsa@redhat.com> wrote:
 > > 
-> > Do you want to force-restart the governor here ?
+> > On Mon, Feb 25, 2019 at 04:20:18PM -0800, Song Liu wrote:
+> > 
+> > SNIP
+> > 
+> >> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> >> index 8c902276d4b4..61b87c8111e6 100644
+> >> --- a/tools/perf/util/evlist.c
+> >> +++ b/tools/perf/util/evlist.c
+> >> @@ -19,6 +19,7 @@
+> >> #include "debug.h"
+> >> #include "units.h"
+> >> #include "asm/bug.h"
+> >> +#include "bpf-event.h"
+> >> #include <signal.h>
+> >> #include <unistd.h>
+> >> 
+> >> @@ -1841,3 +1842,102 @@ struct perf_evsel *perf_evlist__reset_weak_group(struct perf_evlist *evsel_list,
+> >> 	}
+> >> 	return leader;
+> >> }
+> >> +
+> >> +static struct perf_evlist *sb_evlist;
+> >> +pthread_t poll_thread;
+> > 
+> > so some of the things are static and some like poll_args
+> > you alloced on the stack.. I dont like this interface,
+> > could we come up with something generic? perhaps
+> > encapsulated in perf_evlist, like:
+> > 
+> > struct perf_evlist {
+> > 	...
+> > 	struct {
+> > 		pthread_t	th;
+> > 		int		state;
+> > 	} thread;
+> > };
+> > 
+> > typedef int (perf_evlist__thread_cb_t)(perf_evlist, union perf_event *event,....)
+> > 
+> > perf_evlist__start_thread(perf_evlist, perf_evlist__thread_cb_t cb);
+> > perf_evlist__stop_thread(perf_evlist);
+> > 
+> > 
+> > jirka
 > 
-> cpufreq_set_policy() is expected to take care of the governor.
-> If it doesn't, there is a bug somewhere.
-
-Yes, it does something when there is a governor change, but that's not
-the case here IIUC.
-
-> > Schedutil caches cpuinfo.max_freq for the iowait stuff in sugov_start() [1].
+> More questions on this proposal: 
 > 
-> If it does so, it should update the cached value in sugov_limits().
+> IIUC, this approach creates one perf_evlist and one thread for each side band
+> event (only bpf for now, more afterwards). Each of these perf_evlists will 
+> create its own ring buffer. 
 > 
-> I guess I can add a patch updating it to this series.
+> On the other hand, current patch allows different events to share the thread, 
+> the perf_evlist, and the ring buffer. 
 
-Right, I think we've been under the assumption that unlike policy->max,
-cpuinfo.max_freq should be constant, so there was no need to update the
-value at run time. But if that assumption doesn't hold any more, then
-yeah we'll need something more dynamic I guess.
+you can have those events in single evlist no?
 
 > 
-> > I'm not sure about the other governors.
-> 
-> They don't do that AFAICS.
+> If my understanding is correct, current patch would be more efficient down the 
+> road? Did I miss some downsides of current patch?
 
-OK
+I'd just like something configurable and with single handle
+not scattered around the code, so it's easy to add new callback 
 
-> > And just removing sg_cpu->iowait_boost_max to use the cpuinfo struct
-> > instead will conflict with [2], I think.
-> 
-> Thanks for pointing this out.
-
-N/p :-)
-
-Thanks,
-Quentin
+jirka
