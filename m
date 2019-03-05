@@ -2,211 +2,106 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D70C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06519C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7120663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a9n6pS40"
+	by mail.kernel.org (Postfix) with ESMTP id CC21220663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfCEXcM (ORCPT
+        id S1728147AbfCEXjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 18:32:12 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34416 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbfCEXcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 18:32:10 -0500
-Received: by mail-pg1-f195.google.com with SMTP id i130so6757321pgd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 15:32:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fNFW5yIZll5cOjHqM/Myiq8X7O8OqPGbii/df9gqpZ4=;
-        b=a9n6pS40yXAkzmNTP1jL+ydcDpUJMTpq86NaoSzGZW4WFhaspTja+PzBOOlhZ97cqD
-         8uKGbX9Q1ysjR6JuKtgaJSo5H8j6+kUF1WeG3i5CZ+qAyoGLXN0tQH68qjzpfShDYp59
-         r3k+L3fu1GYdCocRK87S6yI7UQBdElnqEhspU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fNFW5yIZll5cOjHqM/Myiq8X7O8OqPGbii/df9gqpZ4=;
-        b=ozT+u1i/l9TkT0I88mdC5xqfELpSLQqXRn/LGDch/ExC2DtGjOKizRoJ7737qze/rs
-         lZMDDfxkoeXrWkTWCTPNqizdB/xCvdeepTxxnstdfhUhOeHHcZqGj/HldgSuJh7ecAzf
-         NHR2q8brt1aonw2FXokTCyBWoNsYrauwT+dAKTgWS5RHGJvXh+gXdAAM0KMMGIVZB8oy
-         /fcoLHdNzlh4iGSEHFf6xfzu9+lYlOf31F5e1jrpv36vNEyTK4uLD5ZrcQGmB82TNLhQ
-         dsKf8uXPSy8Kh18bqCUh2DuduaDip18uXCHTRIddOY4qEYRVygvhqlI+9kTeSQgtWmGN
-         zTog==
-X-Gm-Message-State: APjAAAX13Iq1MksWivtKXCCXTsy57Z/9aSFtZoITR+HcYm3mehV/r563
-        xbjZJwRq+aketqKvEicl0mdbyQ==
-X-Google-Smtp-Source: APXvYqz4/Ra19RlsykuaUKDB4jifRcxpbTrOb7J3qKYIm+WCRGENCrSZh/lCqC4bE8D0d6TCP6lxpA==
-X-Received: by 2002:a63:8048:: with SMTP id j69mr3583249pgd.432.1551828729843;
-        Tue, 05 Mar 2019 15:32:09 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id j1sm20345pgp.84.2019.03.05.15.32.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 15:32:09 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tracing: kdb: Allow ftdump to skip all but the last few lines
-Date:   Tue,  5 Mar 2019 15:31:50 -0800
-Message-Id: <20190305233150.159633-2-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-In-Reply-To: <20190305233150.159633-1-dianders@chromium.org>
-References: <20190305233150.159633-1-dianders@chromium.org>
+        Tue, 5 Mar 2019 18:39:31 -0500
+Received: from foss.arm.com ([217.140.101.70]:54332 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbfCEXja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 18:39:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52BFDA78;
+        Tue,  5 Mar 2019 15:39:30 -0800 (PST)
+Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBB1A3F703;
+        Tue,  5 Mar 2019 15:39:21 -0800 (PST)
+Subject: Re: [PATCH 1/2] ARM: drop unnecessary WASM
+To:     Stefan Agner <stefan@agner.ch>, linux@armlinux.org.uk
+Cc:     nicolas.pitre@linaro.org, mark.rutland@arm.com, arnd@arndb.de,
+        ard.biesheuvel@linaro.org, will.deacon@arm.com,
+        julien.thierry@arm.com, ndesaulniers@google.com,
+        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        natechancellor@gmail.com, linux-arm-kernel@lists.infradead.org
+References: <13835555f8ef44b21d1b7ddfe1c4203d0981f77e.1551824161.git.stefan@agner.ch>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <cdf451c0-3947-9be1-3bee-2366577c4c5f@arm.com>
+Date:   Tue, 5 Mar 2019 23:39:13 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <13835555f8ef44b21d1b7ddfe1c4203d0981f77e.1551824161.git.stefan@agner.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'ftdump' command in kdb is currently a bit of a last resort, at
-least if you have lots of traces turned on.  It's going to print a
-whole boatload of lines out your serial port which is probably running
-at 115200.  This could easily take many, many minutes.
+Hi Stefan,
 
-Usually you're most interested in what's at the _end_ of the ftrace
-buffer, AKA what happened most recently.  That means you've got to
-wait the full time for the dump.  The 'ftdump' command does attempt to
-help you a little bit by allowing you to skip a fixed number of lines.
-Unfortunately it provides no way for you to know how many lines you
-should skip.
+On 2019-03-05 10:18 pm, Stefan Agner wrote:
+> The W macro for generating wide instructions when targeting Thumb-2
+> is not required for the preload data instructions (pld, pldw) since
+> they are only available as wide instructions. The GNU assembler seems
+> to work with or without the .w appended when compiling an Thumb-2
+> kernel. However, Clang's integrated assembler does not consider the
+> .w variants as valid instructions:
+> 
+>    ./arch/arm/include/asm/processor.h:133:5: error: invalid instruction
+>                            "pldw.w\t%a0 \n"
+>                             ^
+>    <inline asm>:2:1: note: instantiated into assembly here
+>    pldw.w  [r0]
+>    ^
+>    1 error generated.
 
-Let's do similar to python and allow you to use a negative number to
-indicate that you want to skip all lines except the last few.  This
-allows you to quickly see what you want.
+Have you filed a bug against Clang for that? Something like "pldwal.w" 
+may be super-redundant, but it's still perfectly valid syntax. The 
+"Standard assembler syntax fields" section of the Arm ARM even calls out 
+that "...the .W qualifier has no effect" on ARM/A32 instructions since 
+they are inherently 32-bit; that should equally apply for 32-bit only 
+Thumb/T32 instructions. There are certainly a few instructions which 
+don't allow a condition code (even "AL"), but off-hand I don't remember 
+any not having the optional {<q>} field in their syntax.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+That said, obviously the patch itself is no problem since the syntax 
+*is* redundant here, but it really is just a workaround for an assembler 
+bug.
 
- kernel/trace/trace_kdb.c | 51 ++++++++++++++++++++++++++--------------
- 1 file changed, 34 insertions(+), 17 deletions(-)
+Robin.
 
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index be84fa1ded35..40844e168a8c 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -17,7 +17,7 @@
- #include "trace.h"
- #include "trace_output.h"
- 
--static void ftrace_dump_buf(int skip_lines, long cpu_file)
-+static int ftrace_dump_buf(int skip_lines, long cpu_file, bool quiet)
- {
- 	/* use static because iter can be a bit big for the stack */
- 	static struct trace_iterator iter;
-@@ -39,7 +39,9 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 	/* don't look at user memory in panic mode */
- 	tr->trace_flags &= ~TRACE_ITER_SYM_USEROBJ;
- 
--	kdb_printf("Dumping ftrace buffer:\n");
-+	if (!quiet)
-+		kdb_printf("Dumping ftrace buffer (skipping %d lines):\n",
-+			   skip_lines);
- 
- 	/* reset all but tr, trace, and overruns */
- 	memset(&iter.seq, 0,
-@@ -66,25 +68,29 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 	}
- 
- 	while (trace_find_next_entry_inc(&iter)) {
--		if (!cnt)
--			kdb_printf("---------------------------------\n");
--		cnt++;
--
--		if (!skip_lines) {
--			print_trace_line(&iter);
--			trace_printk_seq(&iter.seq);
--		} else {
--			skip_lines--;
-+		if (!quiet) {
-+			if (!cnt)
-+				kdb_printf("---------------------------------\n");
-+
-+			if (!skip_lines) {
-+				print_trace_line(&iter);
-+				trace_printk_seq(&iter.seq);
-+			} else {
-+				skip_lines--;
-+			}
- 		}
-+		cnt++;
- 
- 		if (KDB_FLAG(CMD_INTERRUPT))
- 			goto out;
- 	}
- 
--	if (!cnt)
--		kdb_printf("   (ftrace buffer empty)\n");
--	else
--		kdb_printf("---------------------------------\n");
-+	if (!quiet) {
-+		if (!cnt)
-+			kdb_printf("   (ftrace buffer empty)\n");
-+		else
-+			kdb_printf("---------------------------------\n");
-+	}
- 
- out:
- 	tr->trace_flags = old_userobj;
-@@ -99,6 +105,8 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 			iter.buffer_iter[cpu] = NULL;
- 		}
- 	}
-+
-+	return cnt;
- }
- 
- /*
-@@ -109,6 +117,7 @@ static int kdb_ftdump(int argc, const char **argv)
- 	int skip_lines = 0;
- 	long cpu_file;
- 	char *cp;
-+	int count;
- 
- 	if (argc > 2)
- 		return KDB_ARGCOUNT;
-@@ -129,7 +138,14 @@ static int kdb_ftdump(int argc, const char **argv)
- 	}
- 
- 	kdb_trap_printk++;
--	ftrace_dump_buf(skip_lines, cpu_file);
-+
-+	/* A negative skip_lines means skip all but the last lines */
-+	if (skip_lines < 0) {
-+		count = ftrace_dump_buf(0, cpu_file, true);
-+		skip_lines = max(count + skip_lines, 0);
-+	}
-+
-+	count = ftrace_dump_buf(skip_lines, cpu_file, false);
- 	kdb_trap_printk--;
- 
- 	return 0;
-@@ -138,7 +154,8 @@ static int kdb_ftdump(int argc, const char **argv)
- static __init int kdb_ftrace_register(void)
- {
- 	kdb_register_flags("ftdump", kdb_ftdump, "[skip_#lines] [cpu]",
--			    "Dump ftrace log", 0, KDB_ENABLE_ALWAYS_SAFE);
-+			    "Dump ftrace log; -skip dumps last #lines", 0,
-+			    KDB_ENABLE_ALWAYS_SAFE);
- 	return 0;
- }
- 
--- 
-2.21.0.352.gf09ad66450-goog
-
+> Drop the macro to make sure non-wide variants of pld and pldw are
+> emitted in all cases.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>   arch/arm/include/asm/processor.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
+> index 120f4c9bbfde..042d77cf686d 100644
+> --- a/arch/arm/include/asm/processor.h
+> +++ b/arch/arm/include/asm/processor.h
+> @@ -131,8 +131,8 @@ static inline void prefetchw(const void *ptr)
+>   	__asm__ __volatile__(
+>   		".arch_extension	mp\n"
+>   		__ALT_SMP_ASM(
+> -			WASM(pldw)		"\t%a0",
+> -			WASM(pld)		"\t%a0"
+> +			"pldw\t%a0",
+> +			"pld\t%a0"
+>   		)
+>   		:: "p" (ptr));
+>   }
+> 
