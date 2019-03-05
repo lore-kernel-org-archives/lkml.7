@@ -2,184 +2,105 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61845C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF948C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26CFD20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4DB20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QxQcp+/f"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cIbA4txX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfCEAxI (ORCPT
+        id S1726887AbfCEAxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:53:08 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35231 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCEAxI (ORCPT
+        Mon, 4 Mar 2019 19:53:42 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33706 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCEAxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:53:08 -0500
-Received: by mail-pg1-f193.google.com with SMTP id e17so4323401pgd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:08 -0800 (PST)
+        Mon, 4 Mar 2019 19:53:42 -0500
+Received: by mail-qt1-f196.google.com with SMTP id z39so7301397qtz.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z0G4lu4Oy+9bnec0MeOSPu0m1GerKTNq+AVRoAJ4Q/k=;
-        b=QxQcp+/ffDul5ZlgoCvLH0QU5ELnGI3MCKttVW8fRleETGH6MbT77qsB3yDyj8LKwh
-         Ay1LAnIV9gc1MvXFzyHtFwGEpC/8lAj/0zXu2geT34P9uNrvpVm01bZqgMvbu2U4p+8q
-         CdNSQZXSRAEOLugQaySeJ8275b9jFncosaBZA=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XVYt//8tLSfx+WH6Lmq9iHXTEUimc3qP6GGB8yuMZP4=;
+        b=cIbA4txXePxhYRMosF0K4Lf0pYeh5EsSFPuqs/QO/VWfnll6mD6fAdE5bLAsxDDV8b
+         pMcaqaJ3cAphmez5ynHwcu+nAOnX0lNGpa7CfwAzx/1IBdJnNYHnEs0njSfozkQkDnv/
+         /BDWuTYiFElCsWZmnR2f6Eftcm3hsGd/oyx8aEzIscAlTcejvxOn6sJPgios4EMa8IiL
+         l4INWPvsR6ZjJr6mAb5ZQR8azH8ilI7Fvz8bLkbr+OXB0/VIqrZFmE581eaxUEa3760i
+         o773UgVIyzIPBn4hPNDtc3ZZbNSV3pZYH07dyPgrK9oDQdUm6/M/bazP0dozLWDejXAZ
+         kJEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z0G4lu4Oy+9bnec0MeOSPu0m1GerKTNq+AVRoAJ4Q/k=;
-        b=c+qynXIrGErVrBoJXUs4hKg81lt/o8JLsr7V2jCIs9sgv2+mKoXyjUGT91loKDLn1v
-         5jRySfETUiGFb5x8dKSjDRJzV0tyOS7pV7R5z+pDKmy9cATCI+QUmhGzYquKtclNv0gm
-         PR2JtzP8A7FcoUIS9mnl2V3QWajq22a+7pt3t+GKJJYIBWHGReuaz0k/Tiy5TtmCZk1w
-         vtxGMAtVlEejUffDN3Hf3fts23ATG72BISo3aAKO9WSSR/jLIKtQfyqyoWyzPBq5JZxO
-         Iu7jOk2Aul5W4+8euYOvOGaCr+ABctppqL53wYYfnApOLXqe1p9xsKIInfKLCaAtGV4T
-         nxqg==
-X-Gm-Message-State: APjAAAVLX3KSDeUTLvgovUIOj5wr6hirnb+ixFyY6d2zP2USsbti+0cJ
-        cDfzWOyQrzguWHOMBl0BLoSXRw==
-X-Google-Smtp-Source: APXvYqwsmRzmhhSAIUncxJymgjooB3M9ca1OlB+wT8fsGcVgjTbFZ7HIIN1zb4sR8vy1HbJwaS1o9Q==
-X-Received: by 2002:a65:6548:: with SMTP id a8mr21216702pgw.103.1551747187674;
-        Mon, 04 Mar 2019 16:53:07 -0800 (PST)
-Received: from ravisadineni0.mtv.corp.google.com ([2620:15c:202:1:98d2:1663:78dd:3593])
-        by smtp.gmail.com with ESMTPSA id g71sm14102911pfg.157.2019.03.04.16.53.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 04 Mar 2019 16:53:07 -0800 (PST)
-From:   RaviChandra Sadineni <ravisadineni@chromium.org>
-To:     ravisadineni@chromium.org
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, tbroch@google.com, dnojiri@google.com
-Subject: [PATCH V3] cros_ec: Expose sysfile to force battery cut-off on shutdown.
-Date:   Mon,  4 Mar 2019 16:53:00 -0800
-Message-Id: <20190305005300.129464-1-ravisadineni@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CABXOdTdvMKGHoE5JQBLca_6V+ihRiUedgnyb2or8GraBDsKYWQ@mail.gmail.com>
-References: <CABXOdTdvMKGHoE5JQBLca_6V+ihRiUedgnyb2or8GraBDsKYWQ@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XVYt//8tLSfx+WH6Lmq9iHXTEUimc3qP6GGB8yuMZP4=;
+        b=cNzf7beVUWM19WPI4mY4mPuItwTOKR+ioVh7VfLUpGsKkY/p5qeYBIO+ePmLPw/kVW
+         qO8DT6kJ4ihJjLotFh/ZSJgKcQg/XUOjYQ0psGGGdVo3QJVmcHuknk0/dZOXJzKBD0Y0
+         pdgr7f8RQZRhQnwDW++WJE1LXHUiejsGUesTev0bnru1DtYtZkt3kezNWFNvTptmGVpC
+         6mXOhZYDrWQbIsVrVjFkHQjsaunj791YimGdr/VIGAOixC1x5MtYekNpJQ6DJSnoEEKL
+         +0SqzGPEmUlnu7r9gJ0EG9daRV95WxUFYHsm5H4gchHwhXcYbk2hErdxKbUmZyGilwqW
+         /QaQ==
+X-Gm-Message-State: APjAAAUzU1CrbRjHBorR67mrqSZqNHPajed3SB66qtGLEorfy+2NFCJq
+        HkcaDq0IsLpybRIZcrSNXwKyUg==
+X-Google-Smtp-Source: APXvYqwgYquIrGrypPfGh12coX509Dw+mf6crd2NMr+KYucqtQsXeX7lvPZECuSr4ZCtq072yEeFpw==
+X-Received: by 2002:ac8:2b2e:: with SMTP id 43mr16897084qtu.33.1551747221098;
+        Mon, 04 Mar 2019 16:53:41 -0800 (PST)
+Received: from ziepe.ca ([24.137.65.181])
+        by smtp.gmail.com with ESMTPSA id d80sm4140972qkg.83.2019.03.04.16.53.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Mar 2019 16:53:40 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h0yKw-0002jB-Vl; Mon, 04 Mar 2019 20:53:38 -0400
+Date:   Mon, 4 Mar 2019 20:53:38 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error
+ handling paths
+Message-ID: <20190305005338.GK8613@ziepe.ca>
+References: <20190302032726.11769-2-jhubbard@nvidia.com>
+ <20190302202435.31889-1-jhubbard@nvidia.com>
+ <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
+ <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
+ <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
+ <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On chromebooks, power_manager daemon normally shutsdown(S5) the device
-when the battery charge falls below 4% threshold. Chromeos EC then
-normally spends an hour in S5 before hibernating. If the battery charge
-falls below critical threshold in the mean time, EC does a battery cutoff
-instead of hibernating. On some chromebooks, S5 is optimal enough
-resulting in EC hibernating without battery cut-off. This results in
-battery deep-discharging. This is a bad user experience as battery
-has to trickle charge before booting when the A.C is plugged in the next
-time.
+On Mon, Mar 04, 2019 at 03:11:05PM -0800, John Hubbard wrote:
 
-This patch exposes a sysfs file for an userland daemon to suggest EC if it
-has to do a battery cut-off instead of hibernating when the system enters
-S5 next time.
+> get_user_page(): increments page->_refcount by a large amount (1024)
+> 
+> put_user_page(): decrements page->_refcount by a large amount (1024)
+> 
+> ...and just stop doing the odd (to me) technique of incrementing once for
+> each tail page. I cannot see any reason why that's actually required, as
+> opposed to just "raise the page->_refcount enough to avoid losing the head
+> page too soon".
 
-Signed-off-by: RaviChandra Sadineni <ravisadineni@chromium.org>
----
+I'd very much like to see this in the infiniband umem code - the extra
+work and cost of touching every page in a huge page is very much
+undesired.
 
-V3: Make battery-cutoff generic and expose 'at-shutdown' flag.
-V2: Use kstrtobool() instead of kstrtou8() and add documentation.
-
-
-.../ABI/testing/sysfs-class-chromeos          | 10 ++++
- drivers/platform/chrome/cros_ec_sysfs.c       | 48 +++++++++++++++++++
- 2 files changed, 58 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-chromeos
-
-diff --git a/Documentation/ABI/testing/sysfs-class-chromeos b/Documentation/ABI/testing/sysfs-class-chromeos
-new file mode 100644
-index 000000000000..d5ab22c44977
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-chromeos
-@@ -0,0 +1,10 @@
-+What:           /sys/class/chromeos/cros_ec/battery-cuttoff
-+Date:           February 2019
-+Contact:        Ravi Chandra Sadineni <ravisadineni@chromium.org>
-+Description:
-+                cros_ec battery cuttoff configuration. Only option
-+                currently exposed is 'at-shutdown'.
-+
-+                'at-shutdown' sends a host command to EC requesting
-+                battery cutoff on next shutdown. If AC is plugged
-+                in before next shutdown, EC ignores the request.
-diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
-index f34a50121064..6ef6b860c818 100644
---- a/drivers/platform/chrome/cros_ec_sysfs.c
-+++ b/drivers/platform/chrome/cros_ec_sysfs.c
-@@ -322,14 +322,62 @@ static ssize_t kb_wake_angle_store(struct device *dev,
- 	return count;
- }
- 
-+/* Battery cut-off control */
-+static ssize_t battery_cutoff_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	struct ec_params_battery_cutoff *param;
-+	struct cros_ec_command *msg;
-+	int ret;
-+	struct cros_ec_dev *ec =
-+		container_of(dev, struct cros_ec_dev, class_dev);
-+	char *p;
-+	int len;
-+
-+	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	param = (struct ec_params_battery_cutoff *)msg->data;
-+	msg->command = EC_CMD_BATTERY_CUT_OFF + ec->cmd_offset;
-+	msg->version = 1;
-+	msg->outsize = sizeof(*param);
-+	msg->insize = 0;
-+
-+	p = memchr(buf, '\n', count);
-+	len = p ? p - buf : count;
-+
-+	if (len == 11 && !strncmp(buf, "at-shutdown", len)) {
-+		param->flags = EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN;
-+	} else {
-+		kfree(msg);
-+		return -EINVAL;
-+	}
-+
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	kfree(msg);
-+	if (ret < 0)
-+		return ret;
-+	return count;
-+}
-+
- /* Module initialization */
- 
- static DEVICE_ATTR_RW(reboot);
- static DEVICE_ATTR_RO(version);
- static DEVICE_ATTR_RO(flashinfo);
- static DEVICE_ATTR_RW(kb_wake_angle);
-+/*
-+ * Currently EC does not expose a host command to read the status of
-+ * battery cut-off configuration. Also there is no requirement to read
-+ * the status of these flags from userland. So marking this attribute as
-+ *  write-only.
-+ */
-+static DEVICE_ATTR_WO(battery_cutoff);
- 
- static struct attribute *__ec_attrs[] = {
-+	&dev_attr_battery_cutoff.attr,
- 	&dev_attr_kb_wake_angle.attr,
- 	&dev_attr_reboot.attr,
- 	&dev_attr_version.attr,
--- 
-2.20.1
+Jason
