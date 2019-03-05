@@ -2,136 +2,78 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35A5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B964F2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEBF2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfCEMRu (ORCPT
+        id S1728069AbfCEMSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 07:17:50 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:55248 "EHLO mx1.redhat.com"
+        Tue, 5 Mar 2019 07:18:07 -0500
+Received: from foss.arm.com ([217.140.101.70]:47694 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfCEMRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 07:17:49 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 06768309264C;
-        Tue,  5 Mar 2019 12:17:49 +0000 (UTC)
-Received: from kasong-laptop-rh.nay.redhat.com (unknown [10.66.128.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 09586171AC;
-        Tue,  5 Mar 2019 12:17:41 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dave Young <dyoung@redhat.com>, x86@kernel.org,
-        devel@linuxdriverproject.org, Kairui Song <kasong@redhat.com>
-Subject: [PATCH v2] x86, hyperv: fix kernel panic when kexec on HyperV
-Date:   Tue,  5 Mar 2019 20:17:03 +0800
-Message-Id: <20190305121703.29769-1-kasong@redhat.com>
+        id S1726150AbfCEMSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 07:18:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C155A78;
+        Tue,  5 Mar 2019 04:18:06 -0800 (PST)
+Received: from [10.163.1.8] (unknown [10.163.1.8])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C73A3F706;
+        Tue,  5 Mar 2019 04:18:01 -0800 (PST)
+Subject: Re: [PATCH] mm/hmm: fix unused variable warnings
+To:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190304200026.1140281-1-arnd@arndb.de>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <be817f74-3441-47c1-6958-233d6e1172c4@arm.com>
+Date:   Tue, 5 Mar 2019 17:48:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 05 Mar 2019 12:17:49 +0000 (UTC)
+In-Reply-To: <20190304200026.1140281-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments"),
-kexec will fail with a kernel panic like this:
 
-kexec_core: Starting new kernel
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-PGD 8000000057995067 P4D 8000000057995067 PUD 57990067 PMD 0
-Oops: 0002 [#1] SMP PTI
-CPU: 0 PID: 1016 Comm: kexec Not tainted 4.18.16-300.fc29.x86_64 #1
-Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v3.0 03/02/2018
-RIP: 0010:0xffffc9000001d000
-Code: Bad RIP value.
-RSP: 0018:ffffc9000495bcf0 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffc9000001d000 RCX: 0000000000020015
-RDX: 000000007f553000 RSI: 0000000000000000 RDI: ffffc9000495bd28
-RBP: 0000000000000002 R08: 0000000000000000 R09: ffffffff8238aaf8
-R10: ffffffff8238aae0 R11: 0000000000000000 R12: ffff88007f553008
-R13: 0000000000000001 R14: ffff8800ff553000 R15: 0000000000000000
-FS:  00007ff5c0e67b80(0000) GS:ffff880078e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc9000001cfd6 CR3: 000000004f678006 CR4: 00000000003606f0
-Call Trace:
- ? __send_ipi_mask+0x1c6/0x2d0
- ? hv_send_ipi_mask_allbutself+0x6d/0xb0
- ? mp_save_irq+0x70/0x70
- ? __ioapic_read_entry+0x32/0x50
- ? ioapic_read_entry+0x39/0x50
- ? clear_IO_APIC_pin+0xb8/0x110
- ? native_stop_other_cpus+0x6e/0x170
- ? native_machine_shutdown+0x22/0x40
- ? kernel_kexec+0x136/0x156
- ? __do_sys_reboot+0x1be/0x210
- ? kmem_cache_free+0x1b1/0x1e0
- ? __dentry_kill+0x10b/0x160
- ? _cond_resched+0x15/0x30
- ? dentry_kill+0x47/0x170
- ? dput.part.34+0xc6/0x100
- ? __fput+0x147/0x220
- ? _cond_resched+0x15/0x30
- ? task_work_run+0x38/0xa0
- ? do_syscall_64+0x5b/0x160
- ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Modules linked in: ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 xt_conntrack ebtable_nat ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat iptable_mangle iptable_raw iptable_security nf_conntrack ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables sunrpc vfat fat crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_rapl_perf hv_balloon joydev xfs libcrc32c hv_storvsc serio_raw scsi_transport_fc hv_netvsc hyperv_keyboard hyperv_fb hid_hyperv crc32c_intel hv_vmbus
 
-That's because now we may use hypercall for sending IPI, the
-hypercall page will be reset very early upon kexec reboot, but kexec
-will need to send IPI for stopping CPUs, and it will reference this
-no longer usable page, then kernel panics.
+On 03/05/2019 01:30 AM, Arnd Bergmann wrote:
+> When CONFIG_HUGETLB_PAGE is disabled, the only use of the variable 'h'
+> is compiled out, and the compiler thinks it is unnecessary:
+> 
+> mm/hmm.c: In function 'hmm_range_snapshot':
+> mm/hmm.c:1015:19: error: unused variable 'h' [-Werror=unused-variable]
+>     struct hstate *h = hstate_vma(vma);
 
-To fix it, simply reset hv_hypercall_pg to NULL before the page is
-reset to avoid any misuse, IPI sending will fallback to use non
-hypercall based method. This only happens on kexec / kdump so setting to
-NULL should be good enough.
+After doing some Kconfig hacks like (ARCH_WANT_GENERAL_HUGETLB = n) on an
+X86 system I got (HUGETLB_PAGE = n and HMM = y) config. But was unable to
+hit the build error. Helper is_vm_hugetlb_page() seems to always return
+false when HUGETLB_PAGE = n. Would not the compiler remove the entire code
+block including the declaration for 'h' ?
 
-Fixes: 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
-Signed-off-by: Kairui Song <kasong@redhat.com>
-
----
-
-Update from V1:
-- Add comment for the barrier.
-
- arch/x86/hyperv/hv_init.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 7abb09e2eeb8..34aa1e953dfc 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -406,6 +406,12 @@ void hyperv_cleanup(void)
- 	/* Reset our OS id */
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
- 
-+	/* Cleanup hypercall page reference before reset the page */
-+	hv_hypercall_pg = NULL;
-+
-+	/* Make sure page reference is cleared before wrmsr */
-+	wmb();
-+
- 	/* Reset the hypercall page */
- 	hypercall_msr.as_uint64 = 0;
- 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
--- 
-2.20.1
-
+#ifdef CONFIG_HUGETLB_PAGE
+#include <linux/mm.h>
+static inline bool is_vm_hugetlb_page(struct vm_area_struct *vma)
+{
+        return !!(vma->vm_flags & VM_HUGETLB);
+}
+#else
+static inline bool is_vm_hugetlb_page(struct vm_area_struct *vma)
+{
+        return false;
+}
+#endif
