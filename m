@@ -2,171 +2,129 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9991C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36342C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA712082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551788445;
-	bh=muAqBsuLuMeGCrENnTLtvwXex78LHDkDTnH2rKVx9Kc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=sFJp3x3f34tuXdLhBQG+nWL8y8sSDx0zumP48FHVXrMPFGgnVhdl43BoPPzX8ALaO
-	 5MRqHSQEHDIyRmCI7amiNkRzWkNroSOePGSPAu1Y3Hu1QpgcMIoMWSLHHLQSBNSsgg
-	 ieolkU7cFGjwClFLOId1dveMjm/G9YpxmE/rYi+I=
+	by mail.kernel.org (Postfix) with ESMTP id 063E72084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 12:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVXSiItx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfCEMUo (ORCPT
+        id S1728099AbfCEMU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 07:20:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52198 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfCEMUo (ORCPT
+        Tue, 5 Mar 2019 07:20:56 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55023 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbfCEMU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 07:20:44 -0500
-Received: by mail-wm1-f65.google.com with SMTP id n19so2351054wmi.1;
-        Tue, 05 Mar 2019 04:20:42 -0800 (PST)
+        Tue, 5 Mar 2019 07:20:56 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f3so2355475wmj.4;
+        Tue, 05 Mar 2019 04:20:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=N68KO+sCa7P/F5b+Qp6ZNtG9acCN/uh+O56Yfe5tpsg=;
-        b=QkATOvVGZgIvkoqCB7qbooUEAYaMGBQeCbLxkC7eB2FqaJzlMfuWl8g0uonSosum+w
-         hQgOD4dXdNDlyLZR8dAQPLCSfg/onUliZRT+CTqv1Iehqb3bT+QRggDEjh5irUPD2GXA
-         x/SG3KNr17NyLKaCneyQpRgE9DNEUo8okb2gSBogfupPJR9v/2P+ntfiFBLsbbiq5Hbz
-         +aD/v76SsgXVqL4ocobilgWdS37PINpw49qRUqE50R3PUWKHBdEukvZJHJ+9rs5CzqA0
-         S87cEE27xLvJ7PjAsHTPcf3d+PJ8qCkxkyP0MzO4KkyhYc7RgPMo+/SgpmGNM+VZSBSR
-         g2BA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AzGKN9mRN7Sys++hUYI4HR+6qh88BN0q4zlDb1Sk86c=;
+        b=jVXSiItxNDDMRyUm1bOz9UAC47xNO+2IR4pvNf/HeBvu4F/SxKY38iEZu/aPl1zSYk
+         w8qtl+UmOg8LHAUq4fOljjYSE4YS4ic0ze00HJccQdagkFVCVwrnjABQtW8yx63F4dX5
+         m6jEpznvGoVR4OByAkZTnipYDOtnM9jorXc1eYYrbsXJjvv7Tyu3jD22E94AXcLv6DGk
+         cdhZTsXa7vaAfyPw4pqgvFBF6RXex8cOngReonARC+wso8+0mvk6EV+VMwdtZCEsbo+N
+         IUoWRipwnjbUqx71I0vPj2irA5+O6CqvHNJg6TQQ7/paVdmglvVRZy/C+Qap2fA9cJ5n
+         g0QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=N68KO+sCa7P/F5b+Qp6ZNtG9acCN/uh+O56Yfe5tpsg=;
-        b=Aw6hpkcMORoBwYluyczKkOfmcfMwxEKBOc54h4rHYuo5S6GCriLvJVHThOp4IzMGOS
-         oDbdTZwFbZUpxt2jvaKC4K0cTK01S0GFoTQ5wdax9uUnOgUCKkZFNUGEXBsakf6dAXbe
-         LRdVzoXjc4u/+wzUz8S4TRB+KlYBTJLqnNQEKjEC3f53dlTEBFziNUCjtFJuoc2TH23o
-         8Rt8PGtudjJQfd61yXGRbVJp6eW/XhNyJ2CKDYRwXkpDRBwngt5yfKBFmRRksRPUT6bw
-         nfJTW1y80u6lbb4gtXQW3fM20ecPdhPwaktsfEw0hx1iKuscX9Zt8BPogN14ipP0KpNu
-         sAFg==
-X-Gm-Message-State: APjAAAU5LWPZl2iIxveioVm2frM0FbSXiU5DCTDgbOvdnZ81yKYMTgfI
-        cG+/Pi2Xx0I5KCrph9ugqHc=
-X-Google-Smtp-Source: APXvYqyaizEtD0i+u8NP7juiud/kH/egUV4kjDKR0z19ge68E2kmVN22McoITI5Q+l2navCxCjt/JQ==
-X-Received: by 2002:a1c:2dd1:: with SMTP id t200mr2496808wmt.148.1551788441394;
-        Tue, 05 Mar 2019 04:20:41 -0800 (PST)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id q78sm7105166wme.43.2019.03.05.04.20.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AzGKN9mRN7Sys++hUYI4HR+6qh88BN0q4zlDb1Sk86c=;
+        b=XrOlrgdo6UzUqCalZ6MB+DIYANAMouPITiaxFKvSadbqnK4lopku7DYNbEdfbQhRTi
+         8TQBv4yeNV39daEZUAjEQs8XrV9i/xdRfEx6/nq//hXoaeI8lipmGTgLzfQFKbUzRPW9
+         RqhTvR9J0ExCfC676HuK/U7KWSlnVnzgovY2RY/2bNj0YjmI37JgzlJDX1rx8de/n2T1
+         +GK3xSyGxUSrkb1/avNVPRCs3QykzrDR17/pHQyJrkKnwrYu63WWiptagSFtTVxes9of
+         coan9Lu0lnODDKaBVvABL4AhuUKX2kUL+vRdJ5HTNophJpZ2/YvZZawKSJy489BYDLlk
+         jRQw==
+X-Gm-Message-State: APjAAAWSWHkAg0qgIBXY8cQSSZdGpgXhlE1Hqo3SsffDFRVVfaVU+FvO
+        5pIqRlNlYqLx/z88jKWfUdPcKGCV
+X-Google-Smtp-Source: APXvYqzyuCQUOyJZAoWZYp3LZjwrUmGwzKfgjIfwyoCrMMkrjLzRQ1u0suJv/GEDXL5VVV6rYC/tBA==
+X-Received: by 2002:a1c:dc8a:: with SMTP id t132mr2795629wmg.48.1551788453692;
+        Tue, 05 Mar 2019 04:20:53 -0800 (PST)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id b17sm9688806wrt.39.2019.03.05.04.20.52
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 Mar 2019 04:20:40 -0800 (PST)
-Date:   Tue, 5 Mar 2019 13:20:38 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] EFI changes for v5.1
-Message-ID: <20190305122038.GA2472@gmail.com>
+        Tue, 05 Mar 2019 04:20:52 -0800 (PST)
+Date:   Tue, 5 Mar 2019 13:20:52 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Mohan Kumar D <mkumard@nvidia.com>,
+        Ravindra Lokhande <rlokhande@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/tegra: avoid build error without CONFIG_PM
+Message-ID: <20190305122052.GG26369@ulmo>
+References: <20190304203337.1968705-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bO4vSxwwZtUjUWHo"
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190304203337.1968705-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
 
-Please pull the latest efi-core-for-linus git tree from:
+--bO4vSxwwZtUjUWHo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-core-for-linus
+On Mon, Mar 04, 2019 at 09:33:25PM +0100, Arnd Bergmann wrote:
+> The #ifdef protection around the PM functions is wrong, leading to
+> a failed reference in some configurations:
+>=20
+> sound/pci/hda/hda_tegra.c: In function 'hda_tegra_runtime_suspend':
+> sound/pci/hda/hda_tegra.c:273:2: error: implicit declaration of function =
+'hda_tegra_disable_clocks'; did you mean 'hda_tegra_enable_clocks'? [-Werro=
+r=3Dimplicit-function-declaration]
+>=20
+> Better remove the #ifdefs entirely and rely on the compiler silently
+> dropping unused functions marked __maybe_unused.
+>=20
+> Fixes: 707e0759f2f4 ("ALSA: hda/tegra: implement runtime suspend/resume")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  sound/pci/hda/hda_tegra.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
 
-   # HEAD: 5c418dc789a3898717ebf2caa5716ba91a7150b2 efi: Fix build error due to enum collision between efi.h and ima.h
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-The main EFI changes in this cycle were:
+--bO4vSxwwZtUjUWHo
+Content-Type: application/pgp-signature; name="signature.asc"
 
- - Move BGRT table handling to earlier in the boot so we don't overwrite it
- - Use 32-bit alignment for efi_guid_t
- - Allow the SetVirtualAddressMap() call to be omitted
- - Implement earlycon=efifb based on existing earlyprintk code
- - Various minor fixes and code cleanups from Sai, Ard and me
+-----BEGIN PGP SIGNATURE-----
 
- Thanks,
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx+aaMACgkQ3SOs138+
+s6H6WA//WB4N33fMs8yvZ6WJzt5fQx13eFdt+uBUbxiSVQ7R9DlGEpBImbJN1O56
+ypMbJuL4K6EsgkaiYCtbJz8PKEdW3ccMFzw00LZG1F2EDCs8NwBGTKNgEPrmcip6
+7rZO+wL9lmJbjQrZwGkEOi1UlZww/Xx0puMqr/fveIzjGpwFLYuG3HY/TIqmfbNP
+sosgOQvvAwMoXFBXR/du8+cFkLXJTP9oDhTqJhS5wpwfkqdR4So4Rh3fcwmvLfHq
+ZWm4zSDzNbmebCamq5Zx9wFUnWl2jYF1pvTTFauPJrWS4PGaO2Mvz8AtIvVK8cXU
+9ziFNJTq8Fsf7t7twd/O4u+bGyVnDgYK+jFWhml/WG30VIfDCi1mrdZ32ThsTssA
+5WBPTOlnzMpK8/37LMyZPkh6Zx0U7d0xlrr0BrAAs4xEueVfOKhjs90V8Y0HqAot
+5wTkwhkp3bhNhgNUFtADKVleyRQYDMPj0V2J1fJnlYwtxDWLxX2gMTke+AEdng+A
+5z8tubJhu3sBtlLShdB1m3SxeKyr/nBqqF3Qw7Tnc3HOGTmzE1ZJvw4u5IlauwOb
+R7rJDMNF3pjP5rxMnIkNsCjq12VgOFAxigrpRKpILzem3Ay6nrW/wJSix+HABfmv
+kO9fbYEhIUvwWoBCU90ot30cUF6nUbHaE1DqO6i8LOEVn6RoJrw=
+=jU4C
+-----END PGP SIGNATURE-----
 
-	Ingo
-
------------------->
-Anders Roxell (1):
-      efi: Fix build error due to enum collision between efi.h and ima.h
-
-Ard Biesheuvel (6):
-      efi/memattr: Don't bail on zero VA if it equals the region's PA
-      efi: Use 32-bit alignment for efi_guid_t
-      efi: Replace GPL license boilerplate with SPDX headers
-      efi/arm/arm64: Allow SetVirtualAddressMap() to be omitted
-      x86: Make ARCH_USE_MEMREMAP_PROT a generic Kconfig symbol
-      efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation
-
-Ingo Molnar (1):
-      efi/fdt: Apply more cleanups
-
-Sai Praneeth Prakhya (1):
-      x86/efi: Mark can_free_region() as an __init function
-
-
- Documentation/admin-guide/kernel-parameters.txt |   8 +-
- arch/Kconfig                                    |   3 +
- arch/x86/Kconfig                                |   5 +-
- arch/x86/Kconfig.debug                          |  10 -
- arch/x86/include/asm/efi.h                      |   1 -
- arch/x86/kernel/early_printk.c                  |   4 -
- arch/x86/mm/ioremap.c                           |   4 +-
- arch/x86/platform/efi/Makefile                  |   1 -
- arch/x86/platform/efi/early_printk.c            | 240 ------------------------
- arch/x86/platform/efi/quirks.c                  |   6 +-
- drivers/firmware/efi/Kconfig                    |   6 +
- drivers/firmware/efi/Makefile                   |   1 +
- drivers/firmware/efi/apple-properties.c         |  13 +-
- drivers/firmware/efi/arm-init.c                 |   6 +-
- drivers/firmware/efi/arm-runtime.c              |   6 +-
- drivers/firmware/efi/capsule-loader.c           |   4 +-
- drivers/firmware/efi/capsule.c                  |   4 +-
- drivers/firmware/efi/cper-arm.c                 |  14 +-
- drivers/firmware/efi/cper.c                     |  14 +-
- drivers/firmware/efi/dev-path-parser.c          |   9 +-
- drivers/firmware/efi/earlycon.c                 | 206 ++++++++++++++++++++
- drivers/firmware/efi/efi-bgrt.c                 |   5 +-
- drivers/firmware/efi/efi-pstore.c               |   2 +
- drivers/firmware/efi/efibc.c                    |  10 +-
- drivers/firmware/efi/efivars.c                  |  58 +-----
- drivers/firmware/efi/esrt.c                     |   1 +
- drivers/firmware/efi/fake_mem.c                 |  16 +-
- drivers/firmware/efi/libstub/Makefile           |   4 +-
- drivers/firmware/efi/libstub/arm-stub.c         |   5 +
- drivers/firmware/efi/libstub/arm32-stub.c       |   6 +-
- drivers/firmware/efi/libstub/arm64-stub.c       |   6 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c  |  15 +-
- drivers/firmware/efi/libstub/efistub.h          |  12 ++
- drivers/firmware/efi/libstub/fdt.c              | 115 ++++++------
- drivers/firmware/efi/libstub/gop.c              |   4 +-
- drivers/firmware/efi/libstub/random.c           |   6 +-
- drivers/firmware/efi/libstub/secureboot.c       |   4 +-
- drivers/firmware/efi/libstub/tpm.c              |   4 +-
- drivers/firmware/efi/memattr.c                  |   7 +-
- drivers/firmware/efi/runtime-map.c              |   3 +-
- drivers/firmware/efi/runtime-wrappers.c         |  48 ++---
- drivers/firmware/efi/test/efi_test.c            |   1 +
- drivers/firmware/efi/test/efi_test.h            |   2 +-
- drivers/firmware/efi/tpm.c                      |   5 +-
- drivers/firmware/efi/vars.c                     |  15 +-
- include/linux/efi.h                             |  41 ++--
- 46 files changed, 393 insertions(+), 567 deletions(-)
- delete mode 100644 arch/x86/platform/efi/early_printk.c
- create mode 100644 drivers/firmware/efi/earlycon.c
-
+--bO4vSxwwZtUjUWHo--
