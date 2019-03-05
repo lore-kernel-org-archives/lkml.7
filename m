@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D77C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666A9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F5620842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F1720675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="psm7CSLg"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DW2LOFla"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfCEFvN (ORCPT
+        id S1727125AbfCEFvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 00:51:13 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:38856 "EHLO
+        Tue, 5 Mar 2019 00:51:17 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:38923 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfCEFvN (ORCPT
+        with ESMTP id S1726026AbfCEFvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 00:51:13 -0500
+        Tue, 5 Mar 2019 00:51:15 -0500
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x255mOrT002400;
-        Tue, 5 Mar 2019 14:48:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x255mOrT002400
+        by conuserg-07.nifty.com with ESMTP id x255mOrU002400;
+        Tue, 5 Mar 2019 14:48:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x255mOrU002400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551764905;
-        bh=upricv6fVewsTKjghecoorebp9rRB3J2zizg4F0dOiY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=psm7CSLg9BijV5QYpGE7GbBhhpCAe6mQnyl8ySC3xeg5QAvvvV2LEjloeMRip4SuO
-         2kD4bgx5yeh6gsItH3WqMtheJsOinOTNWDSkqCaCHdapoi7PslPNlh1UyUqJQt42z3
-         fp0gYP6WGCbaZ7BtpQU0jH2CseNNfhqaCEdYBkjtGob5ziN5Lrq086s0RBMFlKaJWf
-         wIsne5C7SFaF2Rrw26bvyNF2+KySQs3JU2Ckj2qIEsEEO1n2WLsH3MS+RDuw+DJ0Y0
-         AHoB6iwdxKKOQ2bjdDLI1Befkmb4Zqm2Ga+H85C09Z8gGDazZNktbbsBOjIZPd1CkG
-         KeIp+b3UH59Fg==
+        s=dec2015msa; t=1551764906;
+        bh=DlyhqYro9PRu0qrY7RWF8lCRod8hQNrPuAp+sT2sllM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DW2LOFlaDxv4HLHO4dev3+zueBOI0AgAkAWHqnfdgLujx4ciMN8idX70sVMkt5BS0
+         7BMpWchM8gUCFhZEzrH0Jk8ARcHP/wt2BQRbf/NC7iPNmM62l5bF6JCdTViV0cVIvS
+         Kde05GQtYFo74TFpNcp+zhV5ofeU9XMQ+/lRE60JCgL9d8i1fJH7TCKAgqKK7OR5AW
+         JxHp9Np6/Kckbfs4500erUUOB8/TCGGkgICqvcKexzCxMxJDDt2GuScve0TxRbVYhA
+         3aX3SKmXCfufEfgcaGtKc+qKBVLA9Qn1LqPlh1PhgxOudD28vBH6j/l0mka+dcp+9i
+         b/OjsfjWTq4Pw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Ingo Molnar <mingo@redhat.com>,
@@ -49,66 +49,47 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sam Ravnborg <sam@ravnborg.org>, linux-kbuild@vger.kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] tools: move initial declarations out of 'for' loop
-Date:   Tue,  5 Mar 2019 14:48:14 +0900
-Message-Id: <1551764896-8453-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH 2/3] objtool: move stack-validation.txt to Documentation/
+Date:   Tue,  5 Mar 2019 14:48:15 +0900
+Message-Id: <1551764896-8453-2-git-send-email-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1551764896-8453-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1551764896-8453-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I was trying to compile this code for hostprogs-y notation of
-Kbuild, I was hit by the following error.
-
-  error: ‘for’ loop initial declarations are only allowed in C99 or C11 mode
-
-This is because KBUILD_HOSTCFLAGS specifies -std=gnu89 whereas the tools
-Makefile compiles it with -std=gnu99.
-
-Of course, it would be possible to pass -std=gnu99 per file, but it
-shouldn't hurt to fix the C code.
+Move the document to the standard Documentation/ directory instead of
+creating the same directory structure under objtool/.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- tools/lib/subcmd/parse-options.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ {tools/objtool/Documentation => Documentation}/stack-validation.txt | 0
+ Documentation/x86/orc-unwinder.txt                                  | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename {tools/objtool/Documentation => Documentation}/stack-validation.txt (100%)
 
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index dbb9efb..1bd858a2 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -630,6 +630,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
- 			const char *const subcommands[], const char *usagestr[], int flags)
- {
- 	struct parse_opt_ctx_t ctx;
-+	int i;
+diff --git a/tools/objtool/Documentation/stack-validation.txt b/Documentation/stack-validation.txt
+similarity index 100%
+rename from tools/objtool/Documentation/stack-validation.txt
+rename to Documentation/stack-validation.txt
+diff --git a/Documentation/x86/orc-unwinder.txt b/Documentation/x86/orc-unwinder.txt
+index cd4b29b..3aeff80 100644
+--- a/Documentation/x86/orc-unwinder.txt
++++ b/Documentation/x86/orc-unwinder.txt
+@@ -137,7 +137,7 @@ Unwinder implementation details
  
- 	/* build usage string if it's not provided */
- 	if (subcommands && !usagestr[0]) {
-@@ -637,7 +638,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
- 
- 		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
- 
--		for (int i = 0; subcommands[i]; i++) {
-+		for (i = 0; subcommands[i]; i++) {
- 			if (i)
- 				astrcat(&buf, "|");
- 			astrcat(&buf, subcommands[i]);
-@@ -663,7 +664,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
- 		exit(130);
- 	case PARSE_OPT_LIST_SUBCMDS:
- 		if (subcommands) {
--			for (int i = 0; subcommands[i]; i++)
-+			for (i = 0; subcommands[i]; i++)
- 				printf("%s ", subcommands[i]);
- 		}
- 		putchar('\n');
+ Objtool generates the ORC data by integrating with the compile-time
+ stack metadata validation feature, which is described in detail in
+-tools/objtool/Documentation/stack-validation.txt.  After analyzing all
++Documentation/stack-validation.txt.  After analyzing all
+ the code paths of a .o file, it creates an array of orc_entry structs,
+ and a parallel array of instruction addresses associated with those
+ structs, and writes them to the .orc_unwind and .orc_unwind_ip sections
 -- 
 2.7.4
 
