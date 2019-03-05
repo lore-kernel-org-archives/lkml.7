@@ -2,75 +2,103 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFF1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB29C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296B4208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DEF206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfCEORW (ORCPT
+        id S1728302AbfCEOR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:17:22 -0500
-Received: from mga05.intel.com ([192.55.52.43]:2902 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfCEORW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:17:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:17:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="131412466"
-Received: from schmiger-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.45.12])
-  by orsmga003.jf.intel.com with ESMTP; 05 Mar 2019 06:17:18 -0800
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id C12C621E54; Tue,  5 Mar 2019 16:17:15 +0200 (EET)
-Date:   Tue, 5 Mar 2019 16:17:15 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yong Zhi <yong.zhi@intel.com>,
-        Tian Shu Qiu <tian.shu.qiu@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] media: staging/intel-ipu3: reduce kernel stack usage
-Message-ID: <20190305141714.u7tj46cvacnmmg4d@kekkonen.localdomain>
-References: <20190305132924.3889416-1-arnd@arndb.de>
+        Tue, 5 Mar 2019 09:17:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727659AbfCEOR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:17:56 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x25EENul003665
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Mar 2019 09:17:56 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r1tdfhad3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 09:17:55 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <oberpar@linux.ibm.com>;
+        Tue, 5 Mar 2019 14:07:46 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 5 Mar 2019 14:07:42 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x25E7fwI59965606
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Mar 2019 14:07:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A62D0A405F;
+        Tue,  5 Mar 2019 14:07:41 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58254A405B;
+        Tue,  5 Mar 2019 14:07:41 +0000 (GMT)
+Received: from [9.152.212.90] (unknown [9.152.212.90])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Mar 2019 14:07:41 +0000 (GMT)
+Subject: Re: [PATCH v3 3/3] gcov: docs: add a note on GCC vs Clang differences
+To:     Tri Vo <trong@android.com>
+Cc:     ghackmann@android.com, ndesaulniers@google.com,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        yamada.masahiro@socionext.com
+References: <20190122233749.42220-1-trong@android.com>
+ <20190122233749.42220-4-trong@android.com>
+From:   Peter Oberparleiter <oberpar@linux.ibm.com>
+Date:   Tue, 5 Mar 2019 15:07:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190305132924.3889416-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190122233749.42220-4-trong@android.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030514-0008-0000-0000-000002C8CCF3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030514-0009-0000-0000-00002234D399
+Message-Id: <018fe29b-bad5-e789-1fe7-73f42a90a65e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903050096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 02:26:29PM +0100, Arnd Bergmann wrote:
-> The imgu_css_queue structure is too large to be put on the kernel
-> stack, as we can see in 32-bit builds:
-> 
-> drivers/staging/media/ipu3/ipu3-css.c: In function 'imgu_css_fmt_try':
-> drivers/staging/media/ipu3/ipu3-css.c:1863:1: error: the frame size of 1172 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> 
-> By dynamically allocating this array, the stack usage goes down to an
-> acceptable 140 bytes for the same x86-32 configuration.
-> 
-> Fixes: f5f2e4273518 ("media: staging/intel-ipu3: Add css pipeline programming")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: restructure to use 'return -ENOMEM' instead of goto for failed
->     allocation.
+On 23.01.2019 00:37, Tri Vo wrote:
+> Document some things of note to gcov users:
+> 1. GCC gcov and Clang llvm-cov tools are not compatible.
+> 2. The use of GCC vs Clang is transparent at build-time.
 
-Thanks, Arnd! All three applied.
+For completeness sake please also add something like the following to
+the commit message:
+
+Also adjust the documentation to account for the removal of config
+symbol CONFIG_GCOV_FORMAT_AUTODETECT by commit 6a61b70b43c9
+("gcov: remove CONFIG_GCOV_FORMAT_AUTODETECT").
+
+> 
+> Signed-off-by: Tri Vo <trong@android.com>
+> ---
+>  Documentation/dev-tools/gcov.rst | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Peter Oberparleiter
+Linux on Z Development - IBM Germany
+
