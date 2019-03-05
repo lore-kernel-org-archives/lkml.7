@@ -2,92 +2,88 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44257C00319
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEDDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F782082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E342082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfCEIaB (ORCPT
+        id S1727371AbfCEIaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:30:01 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31861 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726085AbfCEI36 (ORCPT
+        Tue, 5 Mar 2019 03:30:05 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45393 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727325AbfCEIaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:29:58 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258QPdb005139;
-        Tue, 5 Mar 2019 09:29:40 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2qygfxg2sy-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 05 Mar 2019 09:29:40 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DBBBA31;
-        Tue,  5 Mar 2019 08:29:39 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B88331674;
-        Tue,  5 Mar 2019 08:29:39 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
- 09:29:39 +0100
-Received: from localhost (10.201.23.166) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:39
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V3 4/6] net: ethernet: stmmac: add management of clk_csr property
-Date:   Tue, 5 Mar 2019 09:29:26 +0100
-Message-ID: <1551774568-11732-5-git-send-email-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
-References: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+        Tue, 5 Mar 2019 03:30:01 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so8130262qtg.12;
+        Tue, 05 Mar 2019 00:30:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DW4hMhVOXcoGIUO0/Ao+GynSdYYHc794RGehIvtBeVQ=;
+        b=IN6nDZc+nWGWEmbbeg+kTWCN3KqF8XWynZRcTCn/WaA/jujGEA6qEwGYdOX7elzYZv
+         yjAkuM/cr4Rst9U4fsNWD6R2CGJ6VyQXXnNSBOk/9mv/y6dvAnde4xFl0IPM9t7otzAE
+         Sy1+0FoR1OrO4Cg5AhLPR6HtdnPn31Wzgc74IfmCE6VVf7oZ8zJ+rRATamPaW1SPZrEO
+         tKNdOtWJ9nI0CWQqOvFzXpwGs9Wz7zMXg+5Zttn5GhBebwkEz3oRDqBGc/nUWyk2oc/T
+         WyOmTgjOCzvaNfwLEG0Iqtyh76bqfmloms9mSap1YJMy7mkaCfBUwVsRnLru/FSlmxUY
+         NciA==
+X-Gm-Message-State: APjAAAUBP3aPlTefgIStN5NvTX+6VDuyWCt+iNpdDlYtlLxHKCi/WbRQ
+        KpNWB6TsreuICh50MnaZzlHkGFeLeB9QJe38D4o=
+X-Google-Smtp-Source: APXvYqxlIsRIUcVnUVtZEW/SLR7S1VH/rDIv3tjZdM48+STgLkBwy1fSV5VVPRUvc6ylbnaYpqvKmSCwZmsqahcrpqI=
+X-Received: by 2002:ac8:3251:: with SMTP id y17mr557556qta.152.1551774596380;
+ Tue, 05 Mar 2019 00:29:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.166]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_04:,,
- signatures=0
+References: <20190304202640.1765847-1-arnd@arndb.de> <AM0PR04MB42119B4C4FE9DE3A352A0FB480720@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB42119B4C4FE9DE3A352A0FB480720@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 Mar 2019 09:29:40 +0100
+Message-ID: <CAK8P3a2jAc_5A1cTF8BEmmqNRVDp0vAhcKTcPT7eK4GQYn-tOw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: freescale: fix link errors
+To:     Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Documentation stmmac.txt there is possibility to
-fixed CSR Clock range selection with property clk_csr.
-This patch add the management of this property
-For example to use it, add in your ethernet node DT:
-	clk_csr = <3>;
+On Tue, Mar 5, 2019 at 4:00 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> Hi Arnd,
+>
+> > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > Sent: Tuesday, March 5, 2019 4:26 AM
+> >
+> > Submitted by Anders Roxell already
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> How would suggest to handle this patch?
+>
+> I've already given an Ack to Andres' v3 patch with a few additional comments,
+> but seems did not see any follow ups.
+>
+> https://lore.kernel.org/patchwork/patch/1034330/
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 2b800ce..3031f2b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -408,6 +408,9 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 	/* Default to phy auto-detection */
- 	plat->phy_addr = -1;
- 
-+	/* Get clk_csr from device tree */
-+	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
-+
- 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
- 	 * and warn of its use. Remove this when phy node support is added.
- 	 */
--- 
-2.7.4
+Sorry about that, I sent this out as part of a long set of bugfixes, and the
+comment in my patch was supposed to tell me not to send it. Please just
+ignore my submission, and let's go on with his version.
 
+       Arnd
