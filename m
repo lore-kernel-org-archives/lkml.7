@@ -2,42 +2,43 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E248DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79102087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44CC20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfCEOsQ (ORCPT
+        id S1728292AbfCEOsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:48:16 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
+        Tue, 5 Mar 2019 09:48:19 -0500
+Received: from mga12.intel.com ([192.55.52.136]:1357 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbfCEOsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728056AbfCEOsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Mar 2019 09:48:15 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="121150033"
+   d="scan'208";a="152217738"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 672EF301BCA; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
+        id 50457301BC8; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 05/15] perf tools report: Parse time quantum
-Date:   Tue,  5 Mar 2019 06:47:48 -0800
-Message-Id: <20190305144758.12397-6-andi@firstfloor.org>
+Subject: [PATCH v4 02/15] perf tools script: Support insn output for normal samples
+Date:   Tue,  5 Mar 2019 06:47:45 -0800
+Message-Id: <20190305144758.12397-3-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
@@ -50,134 +51,180 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Many workloads change over time. perf report currently aggregates
-the whole time range reported in perf.data.
+perf script -F +insn was only working for PT traces because
+the PT instruction decoder was filling in the insn/insn_len
+sample attributes. Support it for non PT samples too on x86
+using the existing x86 instruction decoder.
 
-This patch adds an option for a time quantum to quantisize the
-perf.data over time.
+This adds some extra checking to ensure that we don't try
+to decode instructions when using perf.data from a different
+architecture.
 
-This just adds the option, will be used in follow on patches
-for a time sort key.
+% perf record -a sleep 1
+% perf script -F ip,sym,insn --xed
+ ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+ ffffffff8100bb50 intel_bts_enable_local                retq
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff810f1f79 generic_exec_single           xor %eax, %eax
+ ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+ ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
+ ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
+...
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 v2:
-Move time_quantum to symbol_conf. check for zero time quantum
-v3:
-Document s unit
+Avoid printing instruction when empty
+Only decode when perf.data file was collected on same architecture
 ---
- tools/perf/Documentation/perf-report.txt |  4 +++
- tools/perf/builtin-report.c              | 41 ++++++++++++++++++++++++
- tools/perf/util/symbol.c                 |  1 +
- tools/perf/util/symbol_conf.h            |  1 +
- 4 files changed, 47 insertions(+)
+ tools/perf/arch/x86/util/Build      |  1 +
+ tools/perf/arch/x86/util/archinsn.c | 28 ++++++++++++++++++++++++++++
+ tools/perf/builtin-script.c         | 21 ++++++++++++++++++++-
+ tools/perf/util/archinsn.h          | 12 ++++++++++++
+ 4 files changed, 61 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/x86/util/archinsn.c
+ create mode 100644 tools/perf/util/archinsn.h
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 51dbc519dbce..9ec1702bccdd 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -497,6 +497,10 @@ include::itrace.txt[]
- 	The period/hits keywords set the base the percentage is computed
- 	on - the samples period or the number of samples (hits).
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 7aab0be5fc5f..7b8e69bbbdfe 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -6,6 +6,7 @@ perf-y += perf_regs.o
+ perf-y += group.o
+ perf-y += machine.o
+ perf-y += event.o
++perf-y += archinsn.o
  
-+--time-quantum::
-+	Configure time quantum for time sort key. Default 100ms.
-+	Accepts s, us, ms, ns units.
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
+diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
+new file mode 100644
+index 000000000000..10b3c2a08b8f
+--- /dev/null
++++ b/tools/perf/arch/x86/util/archinsn.c
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "perf.h"
++#include "archinsn.h"
++#include "fetch.h"
++#include "util/intel-pt-decoder/insn.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
 +
- include::callchain-overhead-calculation.txt[]
- 
- SEE ALSO
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 09180e559ad6..c19952072a3a 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -47,6 +47,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <regex.h>
-+#include "sane_ctype.h"
- #include <signal.h>
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine)
++{
++	struct insn insn;
++	int len;
++	bool is64bit = false;
++
++	if (!sample->ip)
++		return;
++	len = fetch_exe(sample->ip, thread, machine, sample->insn,
++			sizeof(sample->insn), &is64bit);
++	if (len <= 0)
++		return;
++	insn_init(&insn, sample->insn, len, is64bit);
++	insn_get_length(&insn);
++	if (insn_complete(&insn) && insn.length <= len)
++		sample->insn_len = insn.length;
++}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 2d8cb1d1682c..fbc440bdf880 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -29,10 +29,12 @@
+ #include "util/time-utils.h"
+ #include "util/path.h"
+ #include "print_binary.h"
++#include "archinsn.h"
  #include <linux/bitmap.h>
+ #include <linux/kernel.h>
  #include <linux/stringify.h>
-@@ -926,6 +927,43 @@ report_parse_callchain_opt(const struct option *opt, const char *arg, int unset)
- 	return parse_callchain_report_opt(arg);
+ #include <linux/time64.h>
++#include <sys/utsname.h>
+ #include "asm/bug.h"
+ #include "util/mem-events.h"
+ #include "util/dump-insn.h"
+@@ -63,6 +65,7 @@ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+ static struct perf_stat_config	stat_config;
+ static int			max_blocks;
++static bool			native_arch;
+ 
+ unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+ 
+@@ -1227,6 +1230,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
+ 	return len + dlen;
  }
  
-+static int
-+parse_time_quantum(const struct option *opt, const char *arg,
-+		   int unset __maybe_unused)
++__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
++			    struct thread *thread __maybe_unused,
++			    struct machine *machine __maybe_unused)
 +{
-+	unsigned long *time_q = opt->value;
-+	char *end;
-+
-+	*time_q = strtoul(arg, &end, 0);
-+	if (end == arg)
-+		goto parse_err;
-+	if (*time_q == 0) {
-+		pr_err("time quantum cannot be 0");
-+		return -1;
-+	}
-+	while (isspace(*end))
-+		end++;
-+	if (*end == 0)
-+		return 0;
-+	if (!strcmp(end, "s")) {
-+		*time_q *= 1000000000;
-+		return 0;
-+	}
-+	if (!strcmp(end, "ms")) {
-+		*time_q *= 1000000;
-+		return 0;
-+	}
-+	if (!strcmp(end, "us")) {
-+		*time_q *= 1000;
-+		return 0;
-+	}
-+	if (!strcmp(end, "ns"))
-+		return 0;
-+parse_err:
-+	pr_err("Cannot parse time quantum `%s'\n", arg);
-+	return -1;
 +}
 +
- int
- report_parse_ignore_callees_opt(const struct option *opt __maybe_unused,
- 				const char *arg, int unset __maybe_unused)
-@@ -1148,6 +1186,9 @@ int cmd_report(int argc, const char **argv)
- 		     "Set percent type local/global-period/hits",
- 		     annotate_parse_percent_type),
- 	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
-+	OPT_CALLBACK(0, "time-quantum", &symbol_conf.time_quantum, "time (ms|us|ns|s)",
-+		     "Set time quantum for time sort key (default 100ms)",
-+		     parse_time_quantum),
- 	OPT_END()
+ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 				     struct perf_event_attr *attr,
+ 				     struct thread *thread,
+@@ -1234,9 +1243,12 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ {
+ 	int printed = 0;
+ 
++	if (sample->insn_len == 0 && native_arch)
++		arch_fetch_insn(sample, thread, machine);
++
+ 	if (PRINT_FIELD(INSNLEN))
+ 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+-	if (PRINT_FIELD(INSN)) {
++	if (PRINT_FIELD(INSN) && sample->insn_len) {
+ 		int i;
+ 
+ 		printed += fprintf(fp, " insn:");
+@@ -3277,6 +3289,7 @@ int cmd_script(int argc, const char **argv)
+ 		.set = false,
+ 		.default_no_sample = true,
  	};
- 	struct perf_data data = {
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index eb873ea1c405..0f80743a1c25 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -45,6 +45,7 @@ struct symbol_conf symbol_conf = {
- 	.demangle		= true,
- 	.demangle_kernel	= false,
- 	.cumulate_callchain	= true,
-+	.time_quantum		= 100000000, /* 100ms */
- 	.show_hist_headers	= true,
- 	.symfs			= "",
- 	.event_group		= true,
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index 095a297c8b47..a5684a71b78e 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -56,6 +56,7 @@ struct symbol_conf {
- 			*sym_list_str,
- 			*col_width_list_str,
- 			*bt_stop_list_str;
-+	unsigned long	time_quantum;
-        struct strlist	*dso_list,
- 			*comm_list,
- 			*sym_list,
++	struct utsname uts;
+ 	char *script_path = NULL;
+ 	const char **__argv;
+ 	int i, j, err = 0;
+@@ -3615,6 +3628,12 @@ int cmd_script(int argc, const char **argv)
+ 	if (symbol__init(&session->header.env) < 0)
+ 		goto out_delete;
+ 
++	uname(&uts);
++	if (!strcmp(uts.machine, session->header.env.arch) ||
++		(!strcmp(uts.machine, "x86_64") &&
++		 !strcmp(session->header.env.arch, "i386")))
++		native_arch = true;
++
+ 	script.session = session;
+ 	script__setup_sample_type(&script);
+ 
+diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
+new file mode 100644
+index 000000000000..448cbb6b8d7e
+--- /dev/null
++++ b/tools/perf/util/archinsn.h
+@@ -0,0 +1,12 @@
++#ifndef INSN_H
++#define INSN_H 1
++
++struct perf_sample;
++struct machine;
++struct thread;
++
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine);
++
++#endif
 -- 
 2.20.1
 
