@@ -2,92 +2,87 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EA4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1793C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D4F20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07D120675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfCEIoQ (ORCPT
+        id S1727402AbfCEIqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:44:16 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55711 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfCEIoQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:44:16 -0500
-X-Originating-IP: 90.88.147.150
-Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id AB3F920018;
-        Tue,  5 Mar 2019 08:44:13 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 09:44:13 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
+        Tue, 5 Mar 2019 03:46:15 -0500
+Received: from mga14.intel.com ([192.55.52.115]:58659 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfCEIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 03:46:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 00:46:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
+   d="scan'208";a="121078788"
+Received: from kphartnx-mobl1.ger.corp.intel.com ([10.252.28.244])
+  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 00:46:11 -0800
+Message-ID: <82688839050d37fa1567205c236328da91a092e9.camel@intel.com>
+Subject: Re: [PATCH] iwlwifi: fix 64-bit division
+From:   Luciano Coelho <luciano.coelho@intel.com>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] phy: allwinner: allow compile testing
-Message-ID: <20190305084413.hthto7doaafwb2xy@flea>
-References: <20190304202406.1716350-1-arnd@arndb.de>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Avraham Stern <avraham.stern@intel.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 05 Mar 2019 10:46:09 +0200
+In-Reply-To: <CAK8P3a3ziTxhEW5ea828jNjktR9qH-T2OknON5RVBrbiXT4kBw@mail.gmail.com>
+References: <20190304203924.2111146-1-arnd@arndb.de>
+         <ec4e92fa787a7db1caf39920a62c3721849baee9.camel@intel.com>
+         <CAK8P3a3ziTxhEW5ea828jNjktR9qH-T2OknON5RVBrbiXT4kBw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5fkhtwgzlyzgrweh"
-Content-Disposition: inline
-In-Reply-To: <20190304202406.1716350-1-arnd@arndb.de>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2019-03-05 at 09:37 +0100, Arnd Bergmann wrote:
+> On Tue, Mar 5, 2019 at 7:44 AM Luciano Coelho <
+> luciano.coelho@intel.com> wrote:
+> > On Mon, 2019-03-04 at 21:38 +0100, Arnd Bergmann wrote:
+> > This was already fixed with this patch:
+> > 
+> > https://patchwork.kernel.org/patch/10823267/
+> > 
+> > ...but it hasn't reached the mainline yet.
+> > 
+> > I'm planning to send it to the v5.1-rc series as soon as the merge
+> > window closes.  Is that quick enough for you?
+> 
+> That's fine, I just want it to reach 5.1 so it does not regress
+> against 5.0.
 
---5fkhtwgzlyzgrweh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay, I'll push it to 5.1-rc series for sure.
 
-On Mon, Mar 04, 2019 at 09:23:56PM +0100, Arnd Bergmann wrote:
-> Some allwinner specific drivers can be built for testing purposes
-> on non-sunxi configurations, which then results in a harmless
-> warning:
->=20
-> WARNING: unmet direct dependencies detected for PHY_SUN6I_MIPI_DPHY
->   Depends on [n]: ARCH_SUNXI [=3Dn] && HAS_IOMEM [=3Dy] && OF [=3Dy] && R=
-ESET_CONTROLLER [=3Dy]
->   Selected by [y]:
->   - DRM_SUN6I_DSI [=3Dy] && HAS_IOMEM [=3Dy] && DRM_SUN4I [=3Dy]
->=20
-> Allow compile-test here as well to avoid the warning, and improve
-> overall build coverage.
->=20
-> Fixes: 5d134abf9530 ("phy: Move Allwinner A31 D-PHY driver to drivers/phy=
-/")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Sorry for the slightly bad timing of my submission. I had just
+> restarted
+> my randconfig tests the other day and wanted to get my 60 new patches
+> out as quickly as possible.
 
-Thanks!
-Maxime
+No problem! I really appreciate your sending patches and reviews.
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Cheers,
+Luca.
 
---5fkhtwgzlyzgrweh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH423QAKCRDj7w1vZxhR
-xc97AP0bPZcAC2urOyp0po9XTB6JSTOwcZ7+GW1s/1Uyool3XAEA7BE14/8tuZsF
-/O0vGi2OBt5jcFC6D6QW8pGHHNXM8AY=
-=ZYKd
------END PGP SIGNATURE-----
-
---5fkhtwgzlyzgrweh--
