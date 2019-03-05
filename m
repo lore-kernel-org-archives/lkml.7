@@ -2,108 +2,86 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB3BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06BAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AF8206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FcAUd0LN"
+	by mail.kernel.org (Postfix) with ESMTP id C7996206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfCELoR (ORCPT
+        id S1727792AbfCELqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:44:17 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5340 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCELoP (ORCPT
+        Tue, 5 Mar 2019 06:46:36 -0500
+Received: from paleale.coelho.fi ([176.9.41.70]:40552 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726150AbfCELqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:44:15 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7e610f0001>; Tue, 05 Mar 2019 03:44:15 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 05 Mar 2019 03:44:14 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 05 Mar 2019 03:44:14 -0800
-Received: from [10.21.26.179] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Mar
- 2019 11:44:12 +0000
-Subject: Re: [PATCH] gpu: host1x: avoid IOMMU_API build error
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190304195338.989221-1-arnd@arndb.de>
-From:   Mikko Perttunen <mperttunen@nvidia.com>
-Message-ID: <b966e099-d908-c5a6-6080-beced36a39d9@nvidia.com>
-Date:   Tue, 5 Mar 2019 13:44:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 5 Mar 2019 06:46:36 -0500
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.91)
+        (envelope-from <luca@coelho.fi>)
+        id 1h18Wi-00050B-Tw; Tue, 05 Mar 2019 13:46:29 +0200
+Message-ID: <2213e2f0199d8165efcbb9a9ee14b99b2e0f5fc5.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Kalle Valo <kvalo@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Avraham Stern <avraham.stern@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 05 Mar 2019 13:46:27 +0200
+In-Reply-To: <87a7i9fuef.fsf@kamboji.qca.qualcomm.com>
+References: <20190304203924.2111146-1-arnd@arndb.de>
+         <87a7i9fuef.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-In-Reply-To: <20190304195338.989221-1-arnd@arndb.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551786255; bh=ufJ1OfEmAWiLDLY1sYbxqQ/CUmKibqR2ymASNMyZjXU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FcAUd0LNSfebuintIHHryj0t7+pbws+b+734Y6gFpgAAwtm5fAKIBczssMRCrQtE1
-         E0XUuyHEnSLb1UNioLhaSLFrCc1n7fcBgyU3w+R0xDwL6Cj5el7/ZiDIf/GvkmQaJo
-         51gdFf8Mxje6hU4LGIT+ukgGC76vSdztph3Om+lF7ZXEaN+QEoOcatYkhFxdDK1RF0
-         dCgkNkb8+nDy6PWT5sxGzUb3rUCX78+xdlOW2OtU0VYcpoHnYBMttBR9y+wkgnr3fb
-         Pe1xqFnYhZplC58nJDebdg0OpglKfB2xz75W2HZkS47oNY9QqWBNJFCZwqC9Vxj83A
-         wmGSi7PyHbqRw==
+Subject: Re: [PATCH] iwlwifi: fix 64-bit division
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4.3.2019 21.53, Arnd Bergmann wrote:
-> drivers/gpu/host1x/hw/channel_hw.c: In function 'host1x_channel_set_streamid':
-> drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit declaration of function 'dev_iommu_fwspec_get'; did you mean 'iommu_fwspec_free'? [-Werror=implicit-function-declaration]
->    struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
->                                ^~~~~~~~~~~~~~~~~~~~
->                                iommu_fwspec_free
-> drivers/gpu/host1x/hw/channel_hw.c:118:30: error: initialization of 'struct iommu_fwspec *' from 'int' makes pointer from integer without a cast [-Werror=int-conversion]
-> drivers/gpu/host1x/hw/channel_hw.c:119:23: error: 'struct iommu_fwspec' has no member named 'ids'
->    u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
->                         ^~
-> cc1: all warnings being treated as errors
+On Tue, 2019-03-05 at 13:11 +0200, Kalle Valo wrote:
+> Arnd Bergmann <arnd@arndb.de> writes:
 > 
-> Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/gpu/host1x/hw/channel_hw.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> > do_div() expects unsigned operands and otherwise triggers a warning
+> > like:
+> > 
+> > drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c:465:2:
+> > error: comparison of distinct pointer types ('typeof ((rtt_avg)) *'
+> > (aka 'long long *') and 'uint64_t *' (aka 'unsigned long long *'))
+> > [-Werror,-Wcompare-distinct-pointer-types]
+> >         do_div(rtt_avg, 6666);
+> >         ^~~~~~~~~~~~~~~~~~~~~
+> > include/asm-generic/div64.h:222:28: note: expanded from macro
+> > 'do_div'
+> >         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+> >                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
+> > 1 error generated.
+> > 
+> > Change the do_div() to the simpler div_s64() that can handle
+> > negative inputs correctly.
+> > 
+> > Fixes: 937b10c0de68 ("iwlwifi: mvm: add debug prints for FTM")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > 
-> diff --git a/drivers/gpu/host1x/hw/channel_hw.c b/drivers/gpu/host1x/hw/channel_hw.c
-> index 27101c04a827..738dccf4ee3f 100644
-> --- a/drivers/gpu/host1x/hw/channel_hw.c
-> +++ b/drivers/gpu/host1x/hw/channel_hw.c
-> @@ -114,7 +114,7 @@ static inline void synchronize_syncpt_base(struct host1x_job *job)
->   
->   static void host1x_channel_set_streamid(struct host1x_channel *channel)
->   {
-> -#if HOST1X_HW >= 6
-> +#if HOST1X_HW >= 6 && defined(CONFIG_IOMMU_API)
->   	struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
->   	u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
->   
-> 
+> Luca, can I take this directly?
 
-We should always program the stream ID - if IOMMU API is not enabled 
-then 0x7f (SMMU bypass) should always be programmed.
+Yeah, I guess to make things simpler, and since you're planning to send
+fixes to 5.1 already anyway, you can just take this one.  I'll assign
+it to you in patchwork.
 
-Mikko
+Arnd, this way you'll get it earlier. ;)
+
+--
+Cheers,
+Luca.
+
