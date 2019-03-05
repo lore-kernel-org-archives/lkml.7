@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8A6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256BDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A7C206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE2820848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfCENcR (ORCPT
+        id S1728417AbfCENeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 08:32:17 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46612 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfCENcQ (ORCPT
+        Tue, 5 Mar 2019 08:34:25 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37570 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfCENeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 08:32:16 -0500
-Received: by mail-io1-f66.google.com with SMTP id k21so7015494ior.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 05:32:16 -0800 (PST)
+        Tue, 5 Mar 2019 08:34:25 -0500
+Received: by mail-it1-f195.google.com with SMTP id z124so4451630itc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 05:34:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fPL+mFcnFk2fiGgyvGc6vDBsgRlRRz/RaTsBeOLEc94=;
-        b=mYVsaz4NYoeFolbK1/2Y+/yKwEUALM6gUxMCgzKEEfCHttCMOSY/Wzq4W/K91tVzr7
-         G6Lzg+PqzP98nXxUSxPEhZniRPhM5Jy+/X1nrtrQqsvFA91kvNKHqcpPpgtTas/3T1Uw
-         Yzuwu9o4z39ZvOuwxA3mOlYRr0SEOxi4d+1Yh2etdewj7QlUuhWA6DaDWSlbvFD3HRgj
-         cZmbWJtSDqpHjPcbxiXpqpmZ3HprgLygqSleykx8U8OS7Zqxh0fB3+UCSrH3/92lDdab
-         bk7FMKBo4kRKaFCVCR8e+Am8Kb3JfE5SiPRhz/I5FS8BKmB/2PVYBLjIpQ89BOulHrpJ
-         nuUQ==
-X-Gm-Message-State: APjAAAXu/zfDyMzH4Cbx82OFwvduBwz2d9epZin2zqoY4zQmWi7WzoSc
-        SYj1OOIYWpgYp6grrhrAQctiOkek0+zp0JZDOVujFg==
-X-Google-Smtp-Source: APXvYqwWlJhsKFyJO0H7b0uFjzW5/GM2/w6sO+J2UainYEThrBbAlUb7ax/rHQ4L3QKD40e72qi8zZlsoEdgt0/VfpM=
-X-Received: by 2002:a6b:37d4:: with SMTP id e203mr13072860ioa.137.1551792736186;
- Tue, 05 Mar 2019 05:32:16 -0800 (PST)
+        bh=h1HuBxsxpVtJ+RVyOZrjsj4BRmjBSB53lrOmIhikXCQ=;
+        b=mMZesd4WnJu/58mUFBiI0gbEbK07XUS/kJKClycfl8GL4I3ixVR3jy8mF91vCKLYbO
+         jF77gArVPuQ3drzgf3PciUhS94TDCkciqLR8VlpBdglxD/683HTlhvOnFbpQy+Orn9Vo
+         8R4Qv82STbASOdSPm8eubVWhCB0w6/XS/pSHKLyYI5Rv4uHjizbHgNNN/duix5kqrMpU
+         14v5TS2xaQmABAlB+0kTRH0cYG62nqShEncDWzYC4fVc9JQnS/XNmtBl0bKfm4ZE+Eb+
+         wTrAYEY65Z1U5pMj/WK9uWOpH4d7G09pcJvzZzzL/QMY+MnkNgb+LATIaFsLolW03Rvy
+         4F6g==
+X-Gm-Message-State: APjAAAWNyf8C/YaZgCOlScU8YjFzkWKn4wyvJoQQuLcK0FmhN/vB0b2J
+        dCMqZEQL7T5B8nJph8dJGpxFV8mDP7Yk6jpTK5dieA==
+X-Google-Smtp-Source: APXvYqwGdMtkiUFdjT6+uIAcGP0qutDvYS+iK0MmFCUJ5HG8jWUa2HOfCQGI2DgRQ082pX2WBtCA6y4pzUK8y2eGnwc=
+X-Received: by 2002:a24:73c5:: with SMTP id y188mr2653344itb.147.1551792864344;
+ Tue, 05 Mar 2019 05:34:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20190226155615.16724-1-kasong@redhat.com> <20190227120141.GN32494@hirez.programming.kicks-ass.net>
- <CACPcB9c86eT=kXcXkBkUjZnifk5bZ71SogfW2tyNudrVmWbnDQ@mail.gmail.com> <20190305122827.GJ32477@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190305122827.GJ32477@hirez.programming.kicks-ass.net>
+References: <20190305121703.29769-1-kasong@redhat.com> <20190305123329.GK32477@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190305123329.GK32477@hirez.programming.kicks-ass.net>
 From:   Kairui Song <kasong@redhat.com>
-Date:   Tue, 5 Mar 2019 21:32:05 +0800
-Message-ID: <CACPcB9dwKK2YRU+xDvp8AEKDikjJF6Y047MoJ-RxVM49G6rwQg@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86, hyperv: fix kernel panic when kexec on HyperV VM
+Date:   Tue, 5 Mar 2019 21:34:13 +0800
+Message-ID: <CACPcB9c=M26J8V7S_SzuccCTcPkr1DOUqK6w01esieJYYeBpEA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86, hyperv: fix kernel panic when kexec on HyperV
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -65,40 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 8:28 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Mar 5, 2019 at 8:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Wed, Feb 27, 2019 at 10:55:46PM +0800, Kairui Song wrote:
-> > On Wed, Feb 27, 2019 at 8:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Tue, Feb 26, 2019 at 11:56:15PM +0800, Kairui Song wrote:
-> > > >  arch/x86/hyperv/hv_init.c | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > > >
-> > > > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > > > index 7abb09e2eeb8..92291c18d716 100644
-> > > > --- a/arch/x86/hyperv/hv_init.c
-> > > > +++ b/arch/x86/hyperv/hv_init.c
-> > > > @@ -406,6 +406,10 @@ void hyperv_cleanup(void)
-> > > >       /* Reset our OS id */
-> > > >       wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
-> > > >
-> > > > +     /* Cleanup page reference before reset the page */
-> > > > +     hv_hypercall_pg = NULL;
-> > > > +     wmb();
-> > >
-> > > What do we need that SFENCE for? Any why does it lack a comment?
+> On Tue, Mar 05, 2019 at 08:17:03PM +0800, Kairui Song wrote:
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index 7abb09e2eeb8..34aa1e953dfc 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -406,6 +406,12 @@ void hyperv_cleanup(void)
+> >       /* Reset our OS id */
+> >       wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
 > >
-> > Hi, that's for ensuring the hv_hypercall_pg is reset to NULL before
-> > the following wrmsr call. The wrmsr call will make the pointer address
-> > invalid.
+> > +     /* Cleanup hypercall page reference before reset the page */
+> > +     hv_hypercall_pg = NULL;
+> > +
+> > +     /* Make sure page reference is cleared before wrmsr */
 >
-> WRMSR is a serializing instruction (except for TSC_DEADLINE and the
-> X2APIC).
+> This comment forgets to tell us who cares about this. And why the wrmsr
+> itself isn't serializing enough.
 >
+> > +     wmb();
+> > +
+> >       /* Reset the hypercall page */
+> >       hypercall_msr.as_uint64 = 0;
+> >       wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+>
+> That looks like a fake MSR; and you're telling me that VMEXIT doesn't
+> serialize?
 
-Many thanks for the info, I'm not aware of the exception condition, V2
-is sent, will drop the barrier in V3 then.
+Thanks for the review, seem I being a bit paranoid on this. Will drop
+it and send a v3 if no one has any other complaint.
 
--- 
+--
 Best Regards,
 Kairui Song
