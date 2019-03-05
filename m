@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F08DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834D4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10B820842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD78206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="S4OiWjOT"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="JaR3WV/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfCEKH6 (ORCPT
+        id S1727684AbfCEKIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 05:07:58 -0500
+        Tue, 5 Mar 2019 05:08:02 -0500
 Received: from esa3.microchip.iphmx.com ([68.232.153.233]:2681 "EHLO
         esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfCEKH4 (ORCPT
+        with ESMTP id S1726300AbfCEKIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 05:07:56 -0500
+        Tue, 5 Mar 2019 05:08:00 -0500
 X-IronPort-AV: E=Sophos;i="5.58,443,1544511600"; 
-   d="scan'208";a="27662201"
+   d="scan'208";a="27662207"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 05 Mar 2019 03:07:55 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 05 Mar 2019 03:08:00 -0700
 Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Tue, 5 Mar 2019 03:07:54 -0700
+ email.microchip.com (10.10.76.105) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Tue, 5 Mar 2019 03:07:59 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector1-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xwSGtbK7YlE0MWXaYss8ytXvS2vK4pfauPtmUYIt3K0=;
- b=S4OiWjOTQQUS/r97f0/cTv5NqLzXQM/dbqcgXGbsKZebZyfgycz2y0d4CSi5UteF7GuNHbHLufmQ2f7X+hLhE7hgvMhd8h78aYxrT8QB1yIKu/Zgy7vYsN88FbGmOQ+vLPRZLRxsHsV95WMzYMoTrkNRbZYMM+8ki5m+HZtQag0=
+ bh=Ea+EBmSvyJnwQOyzXeojEjHa9w+k/SkMz8JYNE+A73o=;
+ b=JaR3WV/HWiWlr7BXrAG0ews33dEXtF9f0Z28r9260FEj3LC40KVgi9f7PgJRyuj08051jWt52o1eXtqU32pukSisYQjc4lb/Q9VyAPmlfAQYV3fmMqML/j/yK0VCBy/inC6gGjeO/3XzvbHQzeGJuPvRmGB4ziNBqLwq3eaZR/c=
 Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
  MWHPR11MB1647.namprd11.prod.outlook.com (10.172.55.12) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.21; Tue, 5 Mar 2019 10:07:52 +0000
+ 15.20.1643.21; Tue, 5 Mar 2019 10:07:57 +0000
 Received: from MWHPR11MB1549.namprd11.prod.outlook.com
  ([fe80::54fe:95ed:b0cf:55a6]) by MWHPR11MB1549.namprd11.prod.outlook.com
  ([fe80::54fe:95ed:b0cf:55a6%9]) with mapi id 15.20.1665.020; Tue, 5 Mar 2019
- 10:07:52 +0000
+ 10:07:57 +0000
 From:   <Claudiu.Beznea@microchip.com>
 To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>,
         <mark.rutland@arm.com>, <Nicolas.Ferre@microchip.com>,
@@ -54,13 +54,13 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
         <linux-pwm@vger.kernel.org>, <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v2 4/7] mfd: atmel-hlcdc: add compatible for SAM9X60 HLCD
- controller
-Thread-Topic: [PATCH v2 4/7] mfd: atmel-hlcdc: add compatible for SAM9X60 HLCD
- controller
-Thread-Index: AQHU0ztLr+BS5iaIUki6hLCocD7pbQ==
-Date:   Tue, 5 Mar 2019 10:07:52 +0000
-Message-ID: <1551780434-4580-5-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 5/7] pwm: atmel-hlcdc: add compatible for SAM9X60 HLCDC's
+ PWM
+Thread-Topic: [PATCH v2 5/7] pwm: atmel-hlcdc: add compatible for SAM9X60
+ HLCDC's PWM
+Thread-Index: AQHU0ztO/XA/ucaOTEyHzcBvHIJYzw==
+Date:   Tue, 5 Mar 2019 10:07:57 +0000
+Message-ID: <1551780434-4580-6-git-send-email-claudiu.beznea@microchip.com>
 References: <1551780434-4580-1-git-send-email-claudiu.beznea@microchip.com>
 In-Reply-To: <1551780434-4580-1-git-send-email-claudiu.beznea@microchip.com>
 Accept-Language: en-US
@@ -76,45 +76,45 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.7.4
 x-originating-ip: [94.177.32.154]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b034f4a1-0913-4f36-4520-08d6a1526dcf
+x-ms-office365-filtering-correlation-id: 204ebf02-85d9-4e9c-4438-08d6a152707d
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR11MB1647;
 x-ms-traffictypediagnostic: MWHPR11MB1647:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;MWHPR11MB1647;23:GK04IigYwTsybLcWzuE7WonZrUvHR8skz34jQB7?=
- =?iso-8859-1?Q?xZ3UI4RQ+MynlM+icCfusb8GDTYxAIu7ezIjlRRPGMjm25l+2dGoulNsy1?=
- =?iso-8859-1?Q?piwEWd9pTKTxGwEObTXLrhPyyFbg6/Zdrg+5+mr/w8mclbt/mOLgqbCVcl?=
- =?iso-8859-1?Q?Jxm/4/h1ncaszLEEUM0CcAq0KZ40ztyIV8OauNWCGeaaidtyihqMRghB2d?=
- =?iso-8859-1?Q?PgY0hnqHVd3PUjqz0QUg0nwWb75UoL4nGYEPRt9ezGAMUtbdWAaTQfdyxI?=
- =?iso-8859-1?Q?UB3o2H+1PzFht71ju03D2sGme5bEcL60cP0yKR0berwtnIgXLpXJxp/BzV?=
- =?iso-8859-1?Q?qDYOwGxtjKabrGDBVJqe1VZXo/N64n4Zd5ML4tuInEsVb8DMTs2Jn/ymrT?=
- =?iso-8859-1?Q?Fo74K+n9IFIFnx0qDm3+cPYzuJ0OuYXx4ToAjSphTKY1sUYTxRyhql0Jfl?=
- =?iso-8859-1?Q?fk074fCihMT4NHF+mMeik7vusIDmqMYbkkPgi4EkGqHK522d2OGaMK9fxf?=
- =?iso-8859-1?Q?LWD3UTea4DpyK+yQtvqDtfhMbupPjJ7JsCJVDEMUWlo0ZRsxLMlUe9cWkc?=
- =?iso-8859-1?Q?HXBh/Wkx/PbjNFilEOF3SpJd6s7jqW6yx8li+o+I7aWYbqikk5ALToUV+2?=
- =?iso-8859-1?Q?GBCEZ58cigl7ulQnBNXOqzMDNP5C72BOvDJ4U7bV5CtBGhCikgEra9E0js?=
- =?iso-8859-1?Q?e62XaKjg+GNqTUksORkjWBkT76/77pZyyZf2HIkGYhSnMDk9K9/TRMKxvJ?=
- =?iso-8859-1?Q?fFpt7jqc/nBztQQZoSuK9QLQFghJpG40TyHsRkm4IRaNAOBz+8+VvLZPdO?=
- =?iso-8859-1?Q?BPYT2G3YwqgQFTcNpKmFVfVwCyjfs3uYneJx6YK1nDw+0Adh9EXimKMqjc?=
- =?iso-8859-1?Q?vZnptoLUJqSGjGio0QdmVkBNNWxBkJFiEswZME0A3wp7iF4TqVllQpbNqV?=
- =?iso-8859-1?Q?c3q/qUgibrk4RXCoXX+6ruo803zCihf5qKJ/TB2x1wdxsXIpsx5mj8/Cm+?=
- =?iso-8859-1?Q?4hCay2nO6NBIS0nHunu+EVBDcDw+LKcp9AZD+nof6sMWErR/doka82XPSN?=
- =?iso-8859-1?Q?TJWWOH8uG9lN05uGEKTqPoJ4xYZ3P2mgPIUR28k27ZBuDMf0MUfADTUaMz?=
- =?iso-8859-1?Q?ipW9gqM9S02KzEjLus+n+WHcH1x7K07BMzxcLyRmrV38JGWKwxygEin+SN?=
- =?iso-8859-1?Q?egvEfjz3gX3A+wxpbs+DgdaU7qtOE+NLoZZ/n5HamhPDh3xtx6ylqpS0Ij?=
- =?iso-8859-1?Q?fA0/C//tQ4QjO53t3JjM8tpxzRcRSgMr4vnM15ST80johPB4J8MQ7eIpel?=
- =?iso-8859-1?Q?wh8Sb6mOMFsRqzd/+6Ofh5rjO/3+v3lwWzpzjRICNNSkAaR10dgM/TSlUx?=
- =?iso-8859-1?Q?dEdMh2vWonz7fv8WonLyQ+L1fBgZA?=
-x-microsoft-antispam-prvs: <MWHPR11MB164771CD654A5FB6E4C70F1887720@MWHPR11MB1647.namprd11.prod.outlook.com>
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;MWHPR11MB1647;23:ZJQrA1LdURKRxp49Ny4T8ZIQ8/JKqrWAqvrTv3s?=
+ =?iso-8859-1?Q?faTQTI3ReyNtsbZ+JqoMzd+HGUQYP9Q5OYaYuX7+eV1QddxDINUm8D3OKk?=
+ =?iso-8859-1?Q?pNvDPXZeWyyE075QS/+0WX1AHQxWn5ZZhs4Ut5BaIPMEDE+p0Y6vI0yXTk?=
+ =?iso-8859-1?Q?3t+rnoDWlV1PmECDZx3An5rt6JL6T5wSTrJwe3edVZOprmUjz84lzXWNrp?=
+ =?iso-8859-1?Q?5ARz0Md4pftP7NNAjbzYq8RfVo23FBkHz5RdonUpwBgpwexNHYj12rIV3M?=
+ =?iso-8859-1?Q?gxyX2Wh1HgbiNKHUWWhX21Fq1moT5mRJQnHoPp5MemOY7XgTLPNNLT9hgz?=
+ =?iso-8859-1?Q?VRP4QMK5gR63vL5iO+tdqjaz7LWgpZlCIN3olHCZBd0MZk8ehemITtHsym?=
+ =?iso-8859-1?Q?sNLvJ65MfBt7INS2LC/l1rXM/ny9UXM12jX2QeUdyM7ZNawNmWmcVBh8g9?=
+ =?iso-8859-1?Q?AO7wijEt1mbrYQHOYWcze6HKcThhFipBOdPlN4zU8Re8rQ5Z/1CQUn0LHo?=
+ =?iso-8859-1?Q?2XXQn+A1DsHWzbR2iHoJlqYjAI9gFN5e1Yl5rDiLPgqDvknbREw1dUhTmZ?=
+ =?iso-8859-1?Q?FGlHM7z7ERL4c71tq3qzGpAQVVRUrtwlG9m7JI9Gz2C0jGB5QEjQuEghSV?=
+ =?iso-8859-1?Q?LJ3Svzq8iBGJ5mQSCaeJMkteTuMRfmRiugG3Hqpv+aBD6DBhKgERo5GgJx?=
+ =?iso-8859-1?Q?ARF14NqfouogZdJqFB36Y5nPTjRftXZmKysl1f5S5lINLOxMOjIR2CM1om?=
+ =?iso-8859-1?Q?y7eIX7OmuCWDXgeOyCDS913cEkNQCSTHUMGlq8Cj1WwuujW4b8rAtX6o7g?=
+ =?iso-8859-1?Q?6BjV3Y3VWuvJmA+MSVJS5stLmGLMPlGk3zdjHzYxuYcOMWZ1Wyw57gb3MJ?=
+ =?iso-8859-1?Q?yREvwBr93N3eyff8kKgykaf7abJ8UnhkopQ5tqhGL5rvNFJ4DHR3WUf01G?=
+ =?iso-8859-1?Q?Z9fbVULyehRLCngRC7LE30asjpaHXYG0WmeuOkzJr5s6iYyL/P119Nhyhu?=
+ =?iso-8859-1?Q?I1F4qTKUOTDLZ0DCoA0rQlyX/CGeaLH8O/7WzLHHkP2K+aiOhygUZ/O1MU?=
+ =?iso-8859-1?Q?2GawVDEhZ7YYfFGu1lghz4WBDvk69ODQOd1xD9TAjwDlJry4f8F6mz+Q6j?=
+ =?iso-8859-1?Q?dWCGJGA+ehjhS/Xwo/ULEE2OuOSuyP1Hi0IphBcRka3XN/i+uDa9wC+Pbq?=
+ =?iso-8859-1?Q?orNoVSl8hn1U+OswXMnEn87QqEtHpfvHUIAthw6iClRjBcTi2zM/Jk3nGb?=
+ =?iso-8859-1?Q?ghLFXWpj2hQ0t/YbGwg5+CwWEOfacFtchztxQLA7mROsl/LZhNvAPJSCV7?=
+ =?iso-8859-1?Q?ux9epvP4yDNlvK5Ewawv0U0g/W/9kH2rQiJH2hmxYL9fZM/UEpzVNdW4/D?=
+ =?iso-8859-1?Q?uix/Xjemksfgh3YxZk1npjgwKc8Bl?=
+x-microsoft-antispam-prvs: <MWHPR11MB1647F5198940C70E77DEE85387720@MWHPR11MB1647.namprd11.prod.outlook.com>
 x-forefront-prvs: 0967749BC1
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(346002)(136003)(366004)(199004)(189003)(106356001)(72206003)(4744005)(3846002)(99286004)(81156014)(52116002)(36756003)(76176011)(14454004)(81166006)(66066001)(8676002)(110136005)(6116002)(105586002)(6486002)(7736002)(5660300002)(8936002)(305945005)(25786009)(102836004)(54906003)(97736004)(316002)(2906002)(7416002)(2501003)(2616005)(186003)(71190400001)(6506007)(386003)(256004)(476003)(68736007)(11346002)(71200400001)(6512007)(2201001)(107886003)(53936002)(446003)(50226002)(486006)(4326008)(86362001)(6436002)(478600001)(26005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1647;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VfxHHWhqZZY65kz95Ff0WS6AepOGF67LLanSFkgfx5XcjahpFpFJKgJr1BFfKPLYh3rrkFbwRztlfuupgYtdZ4BNpl5Tu4q6tPKr41zb2E4XFpI7KzHU/+JRhkJWRedurVJJ0el1PE9lQbN+jFpqX90wQbxDmhpIe1wPhoDwv5GFy/y6xOkjUg0J3WH675lJuSsHDYAQFUUIfXNsg1sc3+/haK3XoApLe8x2L2dwGCvtBXA6RvfmEqiQ+TTvQRhNN/EZJaHlLXGH35sTTdPImIVPBNnxsJCeIsvxzJPZ/xAaMl50zsliB2lnptuTuhk75Wk9o+WFU9HHWQRNva4MpweS0ESDssImMYTU7i3fhCZ/jCoYYq2TNL0508tLbAbMMF7uYfmRV5HTKELb08N4PyNukgUcp4oEcutDgQclvE4=
+x-microsoft-antispam-message-info: 0SSp634xCIvfUEC303a7jTIiOq/qUrExccqxTy8kzL/8k+9qNjlr7nTtpCDbM2m1D47Xbnwso6hGt64YLMy9lW/9YQRAmI7HpaX7tQQpm3Mikja6KPOpcZyjKjVM4FMqJDYrw2oOP8nd/GPEQrf5SGhtKEyw4NWGrsIw4bCgX4/vIpGdWpfeeLvfI9C9sqYUTLJVgTKqy607j2XnsPeAHX5DMWZOpDmMlNr/F3z5aU4CWMX3lOpZxFEYt3Zx4JzZYgsa14ZrtqSDrkuT3bpk9yFo7ktiMs6y3CKDJAPgOt789V46FT2LD3h0x7u5X6nKJFsd6+5IMRRcj2sWR8XMd2O13XvQSau2PO40fM7nHf3Gt0pTK8GWoH0jr2wCbQuY5mTte/SKyJjVxzy/j0wRp8AGr+REa3QhGJQJgDmflN4=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b034f4a1-0913-4f36-4520-08d6a1526dcf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2019 10:07:52.6458
+X-MS-Exchange-CrossTenant-Network-Message-Id: 204ebf02-85d9-4e9c-4438-08d6a152707d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2019 10:07:57.5159
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
@@ -128,26 +128,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Add compatible for SAM9X60 HLCD controller.
+Add compatible string for SAM9X60 HLCDC's PWM.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 ---
- drivers/mfd/atmel-hlcdc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-atmel-hlcdc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
-index e82543bcfdc8..35a9e16f9902 100644
---- a/drivers/mfd/atmel-hlcdc.c
-+++ b/drivers/mfd/atmel-hlcdc.c
-@@ -141,6 +141,7 @@ static const struct of_device_id atmel_hlcdc_match[] =
+diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+index 54c6633d9b5d..331ca0233d9e 100644
+--- a/drivers/pwm/pwm-atmel-hlcdc.c
++++ b/drivers/pwm/pwm-atmel-hlcdc.c
+@@ -246,6 +246,9 @@ static const struct of_device_id atmel_hlcdc_dt_ids[] =
 =3D {
- 	{ .compatible =3D "atmel,sama5d2-hlcdc" },
- 	{ .compatible =3D "atmel,sama5d3-hlcdc" },
- 	{ .compatible =3D "atmel,sama5d4-hlcdc" },
-+	{ .compatible =3D "microchip,sam9x60-hlcdc" },
+ 		.compatible =3D "atmel,sama5d4-hlcdc",
+ 		.data =3D &atmel_hlcdc_pwm_sama5d3_errata,
+ 	},
++	{
++		.compatible =3D "microchip,sam9x60-hlcdc",
++	},
  	{ /* sentinel */ },
  };
- MODULE_DEVICE_TABLE(of, atmel_hlcdc_match);
+ MODULE_DEVICE_TABLE(of, atmel_hlcdc_dt_ids);
 --=20
 2.7.4
 
