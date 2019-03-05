@@ -3,41 +3,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1905C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA63FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C642087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BA720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfCEOsV (ORCPT
+        id S1728588AbfCEOsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:48:21 -0500
-Received: from mga18.intel.com ([134.134.136.126]:3385 "EHLO mga18.intel.com"
+        Tue, 5 Mar 2019 09:48:40 -0500
+Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728062AbfCEOsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:48:15 -0500
+        id S1728265AbfCEOsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:48:18 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="131418833"
+   d="scan'208";a="121150046"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga003.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
+  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 6EEA1301BC9; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
+        id B3FB0301BC6; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 06/15] perf tools report: Support time sort key
-Date:   Tue,  5 Mar 2019 06:47:49 -0800
-Message-Id: <20190305144758.12397-7-andi@firstfloor.org>
+Subject: [PATCH v4 15/15] perf tools ui: Fix ui popup browser for many entries
+Date:   Tue,  5 Mar 2019 06:47:58 -0800
+Message-Id: <20190305144758.12397-16-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
@@ -50,192 +50,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add a time sort key to perf report to display samples for
-different time quantums separately. This allows easier
-analysis of workloads that change over time, and also
-will allow looking at the context of samples.
+Fix the argv ui browser code to correctly display more entries
+than fit on the screen without crashing. The problem was some type
+confusion with pointer types in the ->seek function. Do
+the argv arithmetic correctly with char ** pointers. Also
+add some asserts to find overruns and limit the display function
+correctly.
 
-% perf record ...
-% perf report --sort time,overhead,symbol --time-quantum 1ms --stdio
-...
-     0.67%  277061.87300  [.] _dl_start
-     0.50%  277061.87300  [.] f1
-     0.50%  277061.87300  [.] f2
-     0.33%  277061.87300  [.] main
-     0.29%  277061.87300  [.] _dl_lookup_symbol_x
-     0.29%  277061.87300  [.] dl_main
-     0.29%  277061.87300  [.] do_lookup_x
-     0.17%  277061.87300  [.] _dl_debug_initialize
-     0.17%  277061.87300  [.] _dl_init_paths
-     0.08%  277061.87300  [.] check_match
-     0.04%  277061.87300  [.] _dl_count_modids
-     1.33%  277061.87400  [.] f1
-     1.33%  277061.87400  [.] f2
-     1.33%  277061.87400  [.] main
-     1.17%  277061.87500  [.] main
-     1.08%  277061.87500  [.] f1
-     1.08%  277061.87500  [.] f2
-     1.00%  277061.87600  [.] main
-     0.83%  277061.87600  [.] f1
-     0.83%  277061.87600  [.] f2
-     1.00%  277061.87700  [.] main
+Then finally remove a workaround for this in the res sample
+browser.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
 ---
-v2:
-Use symbol_conf.time_quantum
----
- tools/perf/Documentation/perf-report.txt |  2 ++
- tools/perf/util/hist.c                   | 10 +++++++
- tools/perf/util/hist.h                   |  1 +
- tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
- tools/perf/util/sort.h                   |  2 ++
- 5 files changed, 53 insertions(+)
+ tools/perf/ui/browser.c             | 10 +++++++---
+ tools/perf/ui/browsers/res_sample.c |  3 ---
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 9ec1702bccdd..546d87221ad8 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -105,6 +105,8 @@ OPTIONS
- 	guest machine
- 	- sample: Number of sample
- 	- period: Raw number of event count of sample
-+	- time: Separate the samples by time stamp with the resolution specified by
-+	--time-quantum (default 100ms). Specify with overhead and before it.
- 
- 	By default, comm, dso and symbol keys are used.
- 	(i.e. --sort comm,dso,symbol)
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 669f961316f0..6040eb49ea23 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -192,6 +192,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
- 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
- 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
-+	hists__new_col_len(hists, HISTC_TIME, 12);
- 
- 	if (h->srcline) {
- 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
-@@ -246,6 +247,14 @@ static void he_stat__add_cpumode_period(struct he_stat *he_stat,
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index 4f75561424ed..4ad37d8c7d6a 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -611,14 +611,16 @@ void ui_browser__argv_seek(struct ui_browser *browser, off_t offset, int whence)
+ 		browser->top = browser->entries;
+ 		break;
+ 	case SEEK_CUR:
+-		browser->top = browser->top + browser->top_idx + offset;
++		browser->top = (char **)browser->top + offset;
+ 		break;
+ 	case SEEK_END:
+-		browser->top = browser->top + browser->nr_entries - 1 + offset;
++		browser->top = (char **)browser->entries + browser->nr_entries - 1 + offset;
+ 		break;
+ 	default:
+ 		return;
  	}
++	assert((char **)browser->top < (char **)browser->entries + browser->nr_entries);
++	assert((char **)browser->top >= (char **)browser->entries);
  }
  
-+static long hist_time(unsigned long time)
-+{
-+	unsigned long time_quantum = symbol_conf.time_quantum;
-+	if (time_quantum)
-+		return (time / time_quantum) * time_quantum;
-+	return (time / 1000000) * 1000000;
-+}
-+
- static void he_stat__add_period(struct he_stat *he_stat, u64 period,
- 				u64 weight)
- {
-@@ -626,6 +635,7 @@ __hists__add_entry(struct hists *hists,
- 		.raw_data = sample->raw_data,
- 		.raw_size = sample->raw_size,
- 		.ops = ops,
-+		.time = hist_time(sample->time),
- 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
+@@ -630,7 +632,9 @@ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
+ 		browser->top = browser->entries;
  
- 	if (!hists->has_callchains && he && he->callchain_size != 0)
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4af27fbab24f..6279eca56409 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -31,6 +31,7 @@ enum hist_filter {
+ 	pos = (char **)browser->top;
+-	while (idx < browser->nr_entries) {
++	while (idx < browser->nr_entries &&
++	       row < (unsigned)SLtt_Screen_Rows - 1) {
++		assert(pos < (char **)browser->entries + browser->nr_entries);
+ 		if (!browser->filter || !browser->filter(browser, *pos)) {
+ 			ui_browser__gotorc(browser, row, 0);
+ 			browser->write(browser, pos, row);
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index 8b045482744e..62775efc32b4 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -23,9 +23,6 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 	struct res_sample *r;
+ 	char extra_format[256];
  
- enum hist_column {
- 	HISTC_SYMBOL,
-+	HISTC_TIME,
- 	HISTC_DSO,
- 	HISTC_THREAD,
- 	HISTC_COMM,
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index d2299e912e59..22f24bb2bf8a 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -15,6 +15,7 @@
- #include <traceevent/event-parse.h>
- #include "mem-events.h"
- #include "annotate.h"
-+#include "time-utils.h"
- #include <linux/kernel.h>
- 
- regex_t		parent_regex;
-@@ -654,6 +655,42 @@ struct sort_entry sort_socket = {
- 	.se_width_idx	= HISTC_SOCKET,
- };
- 
-+/* --sort time */
-+
-+static int64_t
-+sort__time_cmp(struct hist_entry *left, struct hist_entry *right)
-+{
-+	return right->time - left->time;
-+}
-+
-+static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
-+				    size_t size, unsigned int width)
-+{
-+	unsigned long secs;
-+	unsigned long long nsecs;
-+	char he_time[32];
-+
-+	nsecs = he->time;
-+	secs = nsecs / 1000000000;
-+	nsecs -= secs * 1000000000;
-+
-+	if (symbol_conf.nanosecs)
-+		snprintf(he_time, sizeof he_time, "%5lu.%09llu: ",
-+			 secs, nsecs);
-+	else
-+		timestamp__scnprintf_usec(he->time, he_time,
-+					  sizeof(he_time));
-+
-+	return repsep_snprintf(bf, size, "%-.*s", width, he_time);
-+}
-+
-+struct sort_entry sort_time = {
-+	.se_header      = "Time",
-+	.se_cmp	        = sort__time_cmp,
-+	.se_snprintf    = hist_entry__time_snprintf,
-+	.se_width_idx	= HISTC_TIME,
-+};
-+
- /* --sort trace */
- 
- static char *get_trace_output(struct hist_entry *he)
-@@ -1634,6 +1671,7 @@ static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_DSO_SIZE, "dso_size", sort_dso_size),
- 	DIM(SORT_CGROUP_ID, "cgroup_id", sort_cgroup_id),
- 	DIM(SORT_SYM_IPC_NULL, "ipc_null", sort_sym_ipc_null),
-+	DIM(SORT_TIME, "time", sort_time),
- };
- 
- #undef DIM
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 2fbee0b1011c..19dceb7f6145 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -135,6 +135,7 @@ struct hist_entry {
- 	char			*srcfile;
- 	struct symbol		*parent;
- 	struct branch_info	*branch_info;
-+	long			time;
- 	struct hists		*hists;
- 	struct mem_info		*mem_info;
- 	void			*raw_data;
-@@ -231,6 +232,7 @@ enum sort_type {
- 	SORT_DSO_SIZE,
- 	SORT_CGROUP_ID,
- 	SORT_SYM_IPC_NULL,
-+	SORT_TIME,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
+-	/* For now since ui__popup_menu doesn't like lists that don't fit */
+-	num_res = max(min(SLtt_Screen_Rows - 4, num_res), 0);
+-
+ 	names = calloc(num_res, sizeof(char *));
+ 	if (!names)
+ 		return -1;
 -- 
 2.20.1
 
