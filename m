@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19480C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458F5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31452082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC342082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfCEG6k (ORCPT
+        id S1727201AbfCEG6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 01:58:40 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:47811 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725782AbfCEG6j (ORCPT
+        Tue, 5 Mar 2019 01:58:49 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:33620 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727112AbfCEG6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 01:58:39 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TM.btbz_1551769110;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TM.btbz_1551769110)
+        Tue, 5 Mar 2019 01:58:43 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TM.WBFg_1551769113;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TM.WBFg_1551769113)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 05 Mar 2019 14:58:30 +0800
+          Tue, 05 Mar 2019 14:58:34 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         harryxiyou@gmail.com, corbet@lwn.net, leoyang.li@nxp.com
 Cc:     colyli@suse.de, fengguang.wu@intel.com, shawn.guo@linaro.org,
-        lizefan@huawei.com, Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v2 03/27] docs/zh_CN: change Chinese index to know process dir
-Date:   Tue,  5 Mar 2019 14:57:50 +0800
-Message-Id: <20190305065815.157964-4-alex.shi@linux.alibaba.com>
+        lizefan@huawei.com, Alex Shi <alex.shi@linux.alibaba.com>,
+        TripleX Chung <xxx.phy@gmail.com>
+Subject: [PATCH v2 08/27] docs/zh_CN: format the submitting-patches doc to rst
+Date:   Tue,  5 Mar 2019 14:57:55 +0800
+Message-Id: <20190305065815.157964-9-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190305065815.157964-1-alex.shi@linux.alibaba.com>
 References: <20190305065815.157964-1-alex.shi@linux.alibaba.com>
@@ -43,47 +44,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And add some description translation in index file.
+And remove Enghlish explainations in the docs, which it isn't
+necessary in Chinese doc.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: TripleX Chung <xxx.phy@gmail.com>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 ---
- Documentation/translations/zh_CN/index.rst | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ .../zh_CN/process/submitting-patches.rst      | 36 +++++++------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
-index 75956d669962..dbc77a646530 100644
---- a/Documentation/translations/zh_CN/index.rst
-+++ b/Documentation/translations/zh_CN/index.rst
-@@ -3,10 +3,19 @@
- 	\renewcommand\thesection*
- 	\renewcommand\thesubsection*
+diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
+index e9098da8f1a4..2a2989733c8d 100644
+--- a/Documentation/translations/zh_CN/process/submitting-patches.rst
++++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
+@@ -1,31 +1,21 @@
+-Chinese translated version of Documentation/process/submitting-patches.rst
++.. _cn_process_submittingpatches:
  
--Chinese translations
--====================
-+中文翻译
-+========
-+
-+这些手册包含有关如何开发内核的整体信息。内核社区非常庞大，一年下来有数千名开发
-+人员做出贡献。 与任何大型社区一样，知道如何完成任务将使得更改合并的过程变得更
-+加容易。
+-If you have any comment or update to the content, please contact the
+-original document maintainer directly.  However, if you have a problem
+-communicating in English you can also ask the Chinese maintainer for
+-help.  Contact the Chinese maintainer if this translation is outdated
+-or if there is a problem with the translation.
++.. include:: ../disclaimer-zh_CN.rst
  
- .. toctree::
--   :maxdepth: 1
-+   :maxdepth: 2
-+
-+   process/index
-+
-+目录和表格
-+==========
+-Chinese maintainer: TripleX Chung <triplex@zh-kernel.org>
+----------------------------------------------------------------------
+-Documentation/process/submitting-patches.rst 的中文翻译
++:Original: :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
  
--   coding-style
-+* :ref:`genindex`
+ 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
+ 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
+-译存在问题，请联系中文版维护者。
++译存在问题，请联系中文版维护者::
+ 
+-中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
+-中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
+-中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
+-               王聪 Wang Cong <xiyou.wangcong@gmail.com>
++        中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
++        中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
++        中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
++                       王聪 Wang Cong <xiyou.wangcong@gmail.com>
+ 
+-以下为正文
+----------------------------------------------------------------------
+ 
+-   如何让你的改动进入内核
+-     或者
+-  获得亲爱的 Linus Torvalds 的关注和处理
+-----------------------------------
++如何让你的改动进入内核
++======================
+ 
+ 对于想要将改动提交到 Linux 内核的个人或者公司来说，如果不熟悉“规矩”，
+ 提交的流程会让人畏惧。本文档收集了一系列建议，这些建议可以大大的提高你
+@@ -35,12 +25,12 @@ Documentation/process/submitting-patches.rst 的中文翻译
+ Documentation/process/submitting-drivers.rst 。
+ 
+ 
+---------------------------
++---------------------------
+ 第一节 - 创建并发送你的改动
+---------------------------
++---------------------------
+ 
+ 1) "diff -up"
+------------
++-------------
+ 
+ 使用 "diff -up" 或者 "diff -uprN" 来创建补丁。
+ 
 -- 
 2.19.1.856.g8858448bb
 
