@@ -2,192 +2,123 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D82CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E128C00319
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4860F20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3073B208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2Y8hdNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfCERkk (ORCPT
+        id S1730110AbfCERrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:40:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726925AbfCERkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:40:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 08F08B8B5;
-        Tue,  5 Mar 2019 17:40:38 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hendrik Peyerl <hpeyerl@plusline.net>
-Subject: Re: [RFC PATCH 2/2] ceph: quota: fix quota subdir mounts
-References: <20190301175752.17808-1-lhenriques@suse.com>
-        <20190301175752.17808-3-lhenriques@suse.com>
-        <CAAM7YAmPSoEaJ6tXUtp+f56SV-Tqr6VKP4RquV0FA+LYkR8Rxg@mail.gmail.com>
-Date:   Tue, 05 Mar 2019 17:40:35 +0000
-In-Reply-To: <CAAM7YAmPSoEaJ6tXUtp+f56SV-Tqr6VKP4RquV0FA+LYkR8Rxg@mail.gmail.com>
-        (Zheng Yan's message of "Mon, 4 Mar 2019 15:40:22 +0800")
-Message-ID: <87d0n5b4oc.fsf@suse.com>
+        Tue, 5 Mar 2019 12:47:51 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36336 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730075AbfCERrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 12:47:49 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r124so6127965pgr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 09:47:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gHJM1QM5EJjUOY2FDdaKsqaFOXK3eKenoExJbNcqN4g=;
+        b=p2Y8hdNnqthiWdPWaqmFy7b/8k5R5/BmM19TtexhhrWTduZyd1hXY4SAlsKdKjdcPI
+         sat72+hX+ZkqOFLb8LdG6frRV2OtpqnIvtHde17vUlUIvR5ceD/KeoyIS1GlzP+N5xK/
+         u9EerRuH/goJiFrHsvZzQvnJBSrIj70uKlg5qfpjpHnK+3pQf5iWM67T1SrG4ybBTvVt
+         nLxM02ayT0Y0fMLUulujQe30SOR0DSgftsFb1H6mDwY74OgZRJx4phYor6WZSVxbIsDK
+         myhDVYqAdqOKhriLkvtPoMwKzAS1kM6d+LD+r4uhhuiNhJStX3Y7uIGJ0qshrYteS8OD
+         MDIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gHJM1QM5EJjUOY2FDdaKsqaFOXK3eKenoExJbNcqN4g=;
+        b=m2pAuc7BWlGIWW6bO4+6khcXFGg/JLfGBg/CjHNhGXWaIBJpibr00aJ9rY/nthDRwh
+         rJHWz0A+e1d9ci77kVR8ZsvA/m/NlQXjHtHDTJ5dRpouxSGhZyKgKVDIrm0EpYWCzLQR
+         oHSo1GG9PQqHgmwtY95TK8983Lhej9wrHgxWvGHy5ca1rn/hFGV2GutMgbFjah66ovs/
+         ynt13c8PxjQm0s7xQHD2Ai3LSQ1KwB/cCKpFfkH8FS/oN0n5yLsirLfGl25qwKS5gd3H
+         BBbCFL3FnITdtO3M1nQeYrpyGaU54ZFTS0eWE8wmH+I9/eU2fB89g9N9zJPUab1bklMi
+         imRw==
+X-Gm-Message-State: APjAAAWl0XPbhA5g8X33BJo2Ol8LfqjHZ3b6k+d1OVIarOJ2z3qqLR69
+        kP//v2XX1fNlqQeU+pFrbUpjWIpRsrrDRj7q7Ou3ow==
+X-Google-Smtp-Source: APXvYqwDj3NnoGrQ2kCWYrAH9v9f6KsnKIVl5PHMyojxupslR+Vg36DkEhtUHfsEu9xerxBBdBjMih96qnmG5qP52o4=
+X-Received: by 2002:a65:6651:: with SMTP id z17mr2299629pgv.95.1551808068440;
+ Tue, 05 Mar 2019 09:47:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1550839937.git.andreyknvl@google.com> <8343cd77ca301df15839796f3b446b75ce5ffbbf.1550839937.git.andreyknvl@google.com>
+ <73f2f3fe-9a66-22a1-5aae-c282779a75f5@intel.com> <CAAeHK+yQU8khtOoyDKqmHterCa16P7oWe9AMiPnrxE+Gyb_7aw@mail.gmail.com>
+ <20190301165908.GA130541@arrakis.emea.arm.com> <fb721f0b-fad7-2310-4f17-8bf046413d40@intel.com>
+In-Reply-To: <fb721f0b-fad7-2310-4f17-8bf046413d40@intel.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 5 Mar 2019 18:47:37 +0100
+Message-ID: <CAAeHK+ydurtkoVtvyoQdfcXuR3ZnZ+=ixoZkXEFRTZARg+GtRQ@mail.gmail.com>
+Subject: Re: [PATCH v10 07/12] fs, arm64: untag user pointers in fs/userfaultfd.c
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Yan, Zheng" <ukernel@gmail.com> writes:
-
-> On Sat, Mar 2, 2019 at 3:13 AM Luis Henriques <lhenriques@suse.com> wrote:
->>
->> The CephFS kernel client doesn't enforce quotas that are set in a
->> directory that isn't visible in the mount point.  For example, given the
->> path '/dir1/dir2', if quotas are set in 'dir1' and the mount is done in with
->>
->>   mount -t ceph <server>:<port>:/dir1/ /mnt
->>
->> then the client can't access the 'dir1' inode from the quota realm dir2
->> belongs to.
->>
->> This patch fixes this by simply doing an MDS LOOKUPINO Op and grabbing a
->> reference to it (so that it doesn't disappear again).  This also requires an
->> extra field in ceph_snap_realm so that we know we have to release that
->> reference when destroying the realm.
->>
+On Fri, Mar 1, 2019 at 7:37 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> This may cause circle reference if somehow an inode owned by snaprealm
-> get moved into mount subdir (other clients do rename).  how about
-> holding these inodes in mds_client?
-
-It seems to make sense.  But this means that this inode reference will
-live until the filesystem is umounted.  And what if another client
-deletes that inode?  Will we know about that?  /me needs to think about
-that a bit more.
-
-Cheers,
--- 
-Luis
-
+> On 3/1/19 8:59 AM, Catalin Marinas wrote:
+> >>> So, we have to patch all these sites before the tagged values get to the
+> >>> point of hitting the vma lookup functions.  Dumb question: Why don't we
+> >>> just patch the vma lookup functions themselves instead of all of these
+> >>> callers?
+> >> That might be a working approach as well. We'll still need to fix up
+> >> places where the vma fields are accessed directly. Catalin, what do
+> >> you think?
+> > Most callers of find_vma*() always follow it by a check of
+> > vma->vma_start against some tagged address ('end' in the
+> > userfaultfd_(un)register()) case. So it's not sufficient to untag it in
+> > find_vma().
 >
->> Links: https://tracker.ceph.com/issues/3848
->> Reported-by: Hendrik Peyerl <hpeyerl@plusline.net>
->> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> ---
->>  fs/ceph/caps.c  |  2 +-
->>  fs/ceph/quota.c | 30 +++++++++++++++++++++++++++---
->>  fs/ceph/snap.c  |  3 +++
->>  fs/ceph/super.h |  2 ++
->>  4 files changed, 33 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->> index bba28a5034ba..e79994ff53d6 100644
->> --- a/fs/ceph/caps.c
->> +++ b/fs/ceph/caps.c
->> @@ -1035,7 +1035,7 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->>         list_del_init(&ci->i_snap_realm_item);
->>         ci->i_snap_realm_counter++;
->>         ci->i_snap_realm = NULL;
->> -       if (realm->ino == ci->i_vino.ino)
->> +       if ((realm->ino == ci->i_vino.ino) && !realm->own_inode)
->>                 realm->inode = NULL;
->>         spin_unlock(&realm->inodes_with_caps_lock);
->>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
->> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
->> index 9455d3aef0c3..f6b972d222e4 100644
->> --- a/fs/ceph/quota.c
->> +++ b/fs/ceph/quota.c
->> @@ -22,7 +22,16 @@ void ceph_adjust_quota_realms_count(struct inode *inode, bool inc)
->>  static inline bool ceph_has_realms_with_quotas(struct inode *inode)
->>  {
->>         struct ceph_mds_client *mdsc = ceph_inode_to_client(inode)->mdsc;
->> -       return atomic64_read(&mdsc->quotarealms_count) > 0;
->> +       struct super_block *sb = mdsc->fsc->sb;
->> +
->> +       if (atomic64_read(&mdsc->quotarealms_count) > 0)
->> +               return true;
->> +       /* if root is the real CephFS root, we don't have quota realms */
->> +       if (sb->s_root->d_inode &&
->> +           (sb->s_root->d_inode->i_ino == CEPH_INO_ROOT))
->> +               return false;
->> +       /* otherwise, we can't know for sure */
->> +       return true;
->>  }
->>
->>  void ceph_handle_quota(struct ceph_mds_client *mdsc,
->> @@ -166,6 +175,7 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
->>                 return false;
->>
->>         down_read(&mdsc->snap_rwsem);
->> +restart:
->>         realm = ceph_inode(inode)->i_snap_realm;
->>         if (realm)
->>                 ceph_get_snap_realm(mdsc, realm);
->> @@ -176,8 +186,22 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
->>                 spin_lock(&realm->inodes_with_caps_lock);
->>                 in = realm->inode ? igrab(realm->inode) : NULL;
->>                 spin_unlock(&realm->inodes_with_caps_lock);
->> -               if (!in)
->> -                       break;
->> +               if (!in) {
->> +                       up_read(&mdsc->snap_rwsem);
->> +                       in = ceph_lookup_inode(inode->i_sb, realm->ino);
->> +                       down_read(&mdsc->snap_rwsem);
->> +                       if (IS_ERR(in)) {
->> +                               pr_warn("Can't lookup inode %llx (err: %ld)\n",
->> +                                       realm->ino, PTR_ERR(in));
->> +                               break;
->> +                       }
->> +                       spin_lock(&realm->inodes_with_caps_lock);
->> +                       realm->inode = in;
->> +                       realm->own_inode = true;
->> +                       spin_unlock(&realm->inodes_with_caps_lock);
->> +                       ceph_put_snap_realm(mdsc, realm);
->> +                       goto restart;
->> +               }
->>
->>                 ci = ceph_inode(in);
->>                 spin_lock(&ci->i_ceph_lock);
->> diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
->> index f74193da0e09..c84ed8e8526a 100644
->> --- a/fs/ceph/snap.c
->> +++ b/fs/ceph/snap.c
->> @@ -117,6 +117,7 @@ static struct ceph_snap_realm *ceph_create_snap_realm(
->>
->>         atomic_set(&realm->nref, 1);    /* for caller */
->>         realm->ino = ino;
->> +       realm->own_inode = false;
->>         INIT_LIST_HEAD(&realm->children);
->>         INIT_LIST_HEAD(&realm->child_item);
->>         INIT_LIST_HEAD(&realm->empty_item);
->> @@ -184,6 +185,8 @@ static void __destroy_snap_realm(struct ceph_mds_client *mdsc,
->>         kfree(realm->prior_parent_snaps);
->>         kfree(realm->snaps);
->>         ceph_put_snap_context(realm->cached_context);
->> +       if (realm->own_inode && realm->inode)
->> +               iput(realm->inode);
->>         kfree(realm);
->>  }
->>
->> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
->> index ce51e98b08ec..3f0d74d2150f 100644
->> --- a/fs/ceph/super.h
->> +++ b/fs/ceph/super.h
->> @@ -764,6 +764,8 @@ struct ceph_snap_realm {
->>         atomic_t nref;
->>         struct rb_node node;
->>
->> +       bool own_inode;     /* true if we hold a ref to the inode */
->> +
->>         u64 created, seq;
->>         u64 parent_ino;
->>         u64 parent_since;   /* snapid when our current parent became so */
->
+> If that's truly the common case, sounds like we should have a find_vma()
+> that does the vma_end checking as well.  Then at least the common case
+> would not have to worry about tagging.
+
+It seems that a lot of find_vma() callers indeed do different kinds of
+checking/subtractions of vma->vma_start and a tagged address, which
+look hardly unifiable. So untagging the addresses in find_vma()
+callers looks like a more suitable solution.
