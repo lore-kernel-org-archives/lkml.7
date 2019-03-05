@@ -2,76 +2,93 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9562EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD207C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C382206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF9720830
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551744152;
+	bh=Ux8/YbJjP9yh30Q8QH+q7zD0Qdj3rgun+Bf6UGmdC+U=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=WAZ3kjlRZLGWv4lzQpIrCMISi3IG+5lKyWbH25YV+U23tyqHlXslk0pzu+l6hYex0
+	 WANr+D6kMe7sjcWdPr2YZfEwRoqOPMTVZy7Wct10LHZ5Bsnu/wShZgJrtfvlV89sYd
+	 htKNzR4tBRTeZBCxtOHP7dAYNHFBkBfvuB7FOkVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfCEACY (ORCPT
+        id S1726856AbfCEACb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:02:24 -0500
-Received: from anholt.net ([50.246.234.109]:56898 "EHLO anholt.net"
+        Mon, 4 Mar 2019 19:02:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfCEACW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:02:22 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 4C95910A2DEE;
-        Mon,  4 Mar 2019 16:02:22 -0800 (PST)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 4hfPdx2TM_pS; Mon,  4 Mar 2019 16:02:20 -0800 (PST)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id E677510A2A7A;
-        Mon,  4 Mar 2019 16:02:19 -0800 (PST)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 844442FE464D; Mon,  4 Mar 2019 16:02:18 -0800 (PST)
-From:   Eric Anholt <eric@anholt.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Subject: [GIT PULL 2/2] bcm2835-drivers-next-2019-03-04
-Date:   Mon,  4 Mar 2019 16:02:18 -0800
-Message-Id: <20190305000218.15180-2-eric@anholt.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190305000218.15180-1-eric@anholt.net>
-References: <20190305000218.15180-1-eric@anholt.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726716AbfCEAC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 19:02:29 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A994E206B8;
+        Tue,  5 Mar 2019 00:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551744149;
+        bh=Ux8/YbJjP9yh30Q8QH+q7zD0Qdj3rgun+Bf6UGmdC+U=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=FQtzdd+mnLuMe3A/bTRJFCG+rIo2z0HbPd/PWsHPeICKRjVjtK3xwJkgwhvgagOhu
+         jLxiVxd7ZfmyW5G7GrtggWtZ+90SN3nIXVcudFCjZwt3fz06rntU4VTTo8bfh3BXq4
+         f11YYUhb6h8piFeX6LM9wxnkAfESNu51W9/VWHtQ=
+Message-ID: <1551744147.3771.0.camel@kernel.org>
+Subject: Re: [PATCH 2/2] tracing: Use strncpy instead of memcpy for string
+ keys in hist triggers
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 04 Mar 2019 18:02:27 -0600
+In-Reply-To: <20190304184530.7e819698@gandalf.local.home>
+References: <cover.1549309756.git.tom.zanussi@linux.intel.com>
+         <50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com>
+         <20190304165000.0ce0fbdd@gandalf.local.home>
+         <20190304165653.17699f9f@gandalf.local.home>
+         <5643a1971831ce2d01a947f0f07cefa002bbdc25.camel@linux.intel.com>
+         <5c978b4b0d629e5a914c512c14f99f6a24241407.camel@linux.intel.com>
+         <20190304184530.7e819698@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit e1dc2b2e1bef7237fd8fc055fe1ec2a6ff001f91:
+On Mon, 2019-03-04 at 18:45 -0500, Steven Rostedt wrote:
+> On Mon, 04 Mar 2019 16:31:40 -0600
+> Tom Zanussi <tom.zanussi@linux.intel.com> wrote:
+> 
+> > > Hmm, I don't think it's really necessary - it's not used in a key
+> > > so
+> > > don't care about anything after the null, and TASK_COMM_LEN is
+> > > used
+> > > in
+> > > the memcpy.  
+> > 
+> > Never mind, yeah, it would make sense to do this, will create
+> > another
+> > patch...
+> 
+> And probably should change the memcpy() of comm in
+> kernel/trace/trace.c
+> too. It could be that memcpy() is a little bit faster than strncpy(),
+> and this is done on scheduling switches when tracing is active, but
+> still, I'm starting to think that isn't a good choice.
+> 
 
-  ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware. (2019-02-01 10:34:32 +0100)
+OK, will add that too.
 
-are available in the Git repository at:
+Tom
 
-  git://github.com/anholt/linux tags/bcm2835-drivers-next-2019-03-04
 
-for you to fetch changes up to 4deabfae643d8852c643664d9088a647abfaa5d0:
-
-  soc: bcm: bcm2835-pm: Fix error paths of initialization. (2019-03-04 15:33:14 -0800)
-
-----------------------------------------------------------------
-This pull request brings in two fixes for the new native bcm2835 power
-domains driver.
-
-----------------------------------------------------------------
-Eric Anholt (2):
-      soc: bcm: bcm2835-pm: Fix PM_IMAGE_PERI power domain support.
-      soc: bcm: bcm2835-pm: Fix error paths of initialization.
-
- drivers/soc/bcm/bcm2835-power.c | 49 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 7 deletions(-)
+> -- Steve
