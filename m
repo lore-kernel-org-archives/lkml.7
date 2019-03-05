@@ -2,100 +2,106 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9755C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79118C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AFE206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:57:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xiGEiKkm"
+	by mail.kernel.org (Postfix) with ESMTP id 51024206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfCEA5h (ORCPT
+        id S1726883AbfCEA57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:57:37 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:46604 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbfCEA5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:57:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=9/HkbvfsZhsGC83D/DHLkvbKCUxRfZZgJRuKR+Q595U=; b=xiGEiKkmcdAcBBb2VB++MWBpyW
-        dX0NJP73TjZoiUj/Rlot82LN35fMhqajszUfU9+9JcscN/ylzX9sweGt4eIBt7oUM6Zf1Ch85hrUF
-        xlYW9md5tKvw3isq4E2o0xWeR22adTuoOLjge+97eFVINE49U96WmO7p0Nlf0AGcljEI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h0yOM-00024T-37; Tue, 05 Mar 2019 01:57:10 +0100
-Date:   Tue, 5 Mar 2019 01:57:10 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linux@roeck-us.net, gregory.clement@bootlin.com,
-        jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] watchdog: orion_wdt: use timer1 as a pretimeout
-Message-ID: <20190305005710.GL26378@lunn.ch>
-References: <20190227230707.GA28635@roeck-us.net>
- <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
- <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
+        Mon, 4 Mar 2019 19:57:59 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726066AbfCEA57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 19:57:59 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4620FA4B828D87ACBE96;
+        Tue,  5 Mar 2019 08:57:56 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Tue, 5 Mar 2019
+ 08:57:53 +0800
+Subject: Re: [PATCH -next] net: dsa: mv88e6xxx: Fix build warning when
+ CONFIG_NET_DSA_LEGACY is n
+To:     Andrew Lunn <andrew@lunn.ch>
+References: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20190304132617.GB26378@lunn.ch>
+ <bc528808-2ad5-90ae-4bc0-afa47a7c4f42@hisilicon.com>
+ <20190304145710.GA17097@lunn.ch>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+From:   Zhangshaokun <zhangshaokun@hisilicon.com>
+Message-ID: <df65d515-7a04-22d6-d99d-55f119a9116d@hisilicon.com>
+Date:   Tue, 5 Mar 2019 08:57:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190304145710.GA17097@lunn.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 11:51:52AM +1300, Chris Packham wrote:
-> The orion watchdog can either reset the CPU or generate an interrupt.
-> The interrupt would be useful for debugging as it provides panic()
-> output about the watchdog expiry, however if the interrupt is used the
-> watchdog can't reset the CPU in the event of being stuck in a loop with
-> interrupts disabled or if the CPU is prevented from accessing memory
-> (e.g. an unterminated DMA).
+Hi Andrew,
+
+On 2019/3/4 22:57, Andrew Lunn wrote:
+> On Mon, Mar 04, 2019 at 10:16:08PM +0800, Zhangshaokun wrote:
+>> Hi Andrew,
+>>
+>> On 2019/3/4 21:26, Andrew Lunn wrote:
+>>> On Mon, Mar 04, 2019 at 08:43:01PM +0800, Shaokun Zhang wrote:
+>>>> When CONFIG_NET_DSA_LEGACY is n, there is a GCC bulid warning:
+>>>> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: warning: ‘mv88e6xxx_ports_cmode_init’ defined but not used [-Wunused-function]
+>>>> static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
+>>>> Let's fix it.
+>>>
+>>> Hi Shaokun, Heiner
+>>>
+>>> Although this fixes the warning, i suspect there i something wrong
+>>> with the original patch adding mv88e6390x_port_set_cmode(). It should
+>>> also be used without CONFIG_NET_DSA_LEGACY.
+>>
+>> I checked the commit-id 2a93c1a3651f ("net: dsa: Allow compiling out legacy support") by Florian.
+>> Do you mean that CONFIG_NET_DSA_LEGACY shall be removed completely? :-)
 > 
-> All of the orion based CPU cores (at least back as far as Kirkwood) have
-> spare timers that aren't currently used by the Linux kernel. We can use
-> timer1 to provide a pre-timeout ahead of the watchdog timer and provide
-> the possibility of gathering debug before the reset triggers.
+> No, i suspect mv88e6390x_ports_cmode_init() is being called from the
+> wrong place, or needs to be called from a second location.
+> 
 
-Hi Chris
+Ok, I didn't check it carefully.
 
-I had a quick look at other drivers implementing pre-timeout. They
-seem to call watchdog_notify_pretimeout(). I don't see that here? What
-happens when timer1 fires?
+> [Goes and looks at the code]
+> 
+> Yes, it should also be called in mv88e6xxx_probe(). I would call it
+> just after the call to mv88e6xxx_detect(), so that it is the same as
+> in mv88e6xxx_drv_probe().
+> 
+> There are two ways DSA drivers can be probed. The legacy way, which is
+> optional, and is slowly getting removed, and the current way. Heiner
+> is new to DSA and probably missed that, and only handled the legacy
+> probe method. I also missed checking when i reviewed to patch :-(
+> 
 
-> @@ -169,38 +174,46 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
->  	}
->  
->  	/* Enable the fixed watchdog clock input */
-> -	atomic_io_modify(dev->reg + TIMER_CTRL,
-> -			 WDT_AXP_FIXED_ENABLE_BIT,
-> -			 WDT_AXP_FIXED_ENABLE_BIT);
-> +	val = WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-> +	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
->  
->  	dev->clk_rate = clk_get_rate(dev->clk);
-> +
-> +
+Hmm, I am not familiar wit it, please feel free to fix it.
 
-One blank line is sufficient,
+Thanks,
+Shaokun
 
+>    Andrew
+> 
+> 
+> 
+> 
+> .
+> 
 
->  	return 0;
->  }
-
-   Andrew
