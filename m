@@ -2,85 +2,117 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A39C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8053C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2708820675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4E620643
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="eVJQ7BLC"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="jnz0IGkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfCEWRi (ORCPT
+        id S1728294AbfCEWRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 17:17:38 -0500
-Received: from mail.kmu-office.ch ([178.209.48.109]:57056 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbfCEWRi (ORCPT
+        Tue, 5 Mar 2019 17:17:48 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43550 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728220AbfCEWRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 17:17:38 -0500
-Received: from zyt.lan (unknown [IPv6:2a02:169:3465:0:5054:ff:fe4f:85bd])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id BE9695C08B1;
-        Tue,  5 Mar 2019 23:17:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1551824256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p+eboShcgvztnnZso7ULbf4ZTfxu3Hs1q35ka2VmUpE=;
-        b=eVJQ7BLCsz9I4ilF1ARylQYujjZmGeBWrNHc0cy95Q/0QmvhkpDdL0/qiQ66QXTmRXrwIy
-        PwFkTDiXMZH77xAHNb2X2BJVUsAdFJxYWs8Avk0RwGaU35jnmUSPRbw4H4O/MtHty7+8ZD
-        03w0jCImMh9RXrZpHQVErQDBdHMbvuY=
-From:   Stefan Agner <stefan@agner.ch>
-To:     linux@armlinux.org.uk
-Cc:     will.deacon@arm.com, ndesaulniers@google.com,
-        natechancellor@gmail.com, arnd@arndb.de, ard.biesheuvel@linaro.org,
-        nicolas.pitre@linaro.org, thierry.reding@gmail.com,
-        julien.thierry@arm.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/2] ARM: drop -mauto-it
-Date:   Tue,  5 Mar 2019 23:18:27 +0100
-Message-Id: <7b70b64738db468ab3b830c503524058163b5c3f.1551824161.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <13835555f8ef44b21d1b7ddfe1c4203d0981f77e.1551824161.git.stefan@agner.ch>
-References: <13835555f8ef44b21d1b7ddfe1c4203d0981f77e.1551824161.git.stefan@agner.ch>
+        Tue, 5 Mar 2019 17:17:44 -0500
+Received: by mail-lf1-f66.google.com with SMTP id p73so6768132lfe.10
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 14:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=gycZSpHeEzm9Bb+y6ZInD4EPay3X1lr+WOAbT2jGc3w=;
+        b=jnz0IGkDAH3EbUDaoZRjIOIEFDuv5NkUhJiEvdccT9ZFXoGek84jVvPWz62nB56xzt
+         u7jWaFQPXkmeXoHX3aJIwIoOl3odyEtLJ7AOWwB/Qe7xgOX/e9csreQ1Ix9r5lgjVlV+
+         nELWXUq0Fb/BnX925sGYRn2GzV082ZO5evwAZFpw0pA9m8VusSmeW+TIlClYT3qZUV8/
+         2PHujH5ycFO4yAihsmEmumLXVtdtq23UAGVLJXnzt0VRMO6llxqMPiBNT+SW76QFLaZR
+         3YaoNBpMTvSN+lGWpW2AHN28OOqBqmS//AM4tYP8YnRRVdpo9/wDjrpO8GdKvmstBJup
+         5Zhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=gycZSpHeEzm9Bb+y6ZInD4EPay3X1lr+WOAbT2jGc3w=;
+        b=lSzwfKo3DGZxUnV0uL0A0yqhXui2e8KanqQan3KHicFArOZ7DZrZlVssMj907sDTiZ
+         HhcRzl+39WwG+/gZW/zdA5AHu4iOZNLp8lXxH8yyYteOlM2bTRVsVausGaUHlWHCS3kz
+         JbwrADCkpDqf7hUBDmbeoKLx6GGpNyXJgT/hm7BEpWn9teL3HsPXGelM/93iPio3/IVx
+         3NSu921PAVsmMY0ghyYFKrZVHN6GFI9KA7/uHX8+OqqdM2ktyCXihHFZiqRprFrhbN5L
+         QtOaLFb7dUb/ghbE31tE9n/R/AVIh45JQvgyrb27UDIwmuRXIYlb9wZUDB/vEXXYoZwg
+         GdUQ==
+X-Gm-Message-State: APjAAAW69KBxYnOc2RdqcT/X8Nt4QO0CXA19qXccXZhZis//P7dNAiEU
+        mf3K7Liy9VT+/KE1YtWy5w9qnmHfvJCTV1PWe1ZE
+X-Google-Smtp-Source: APXvYqz+rQBVNGS/1z9Vj6Y6ApudFtOTIYLDjwQEImtklgp7JGieOFj+YbzWRUPkHSuW+sDikWUng7YJe8jq6KrE5Ek=
+X-Received: by 2002:ac2:55b2:: with SMTP id y18mr2020169lfg.72.1551824261666;
+ Tue, 05 Mar 2019 14:17:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 5 Mar 2019 17:17:30 -0500
+Message-ID: <CAHC9VhRbDONFkYe5J2KtFSRdKcz5Z3vdJFuiZCi_EQiJHFaNtA@mail.gmail.com>
+Subject: [GIT PULL] SELinux patches for v5.1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The assembler option -mauto-it is no longer a valid option. It has
-been removed from the documentation in July 2009, which is well
-before the release date of the currently supported binutils version
-2.20.
+Hi Linus,
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/Makefile | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Nine SELinux patches for v5.1, all bug fixes.  As far as I'm
+concerned, nothing really jumps out as risky or special to me, but
+each commit has a decent description so you can judge for yourself.
+As usual, everything passes the selinux-testsuite; please merge for
+v5.1.
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 9561325c5201..ebf67bebe73d 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -113,8 +113,7 @@ CFLAGS_ABI	+=-funwind-tables
- endif
- 
- ifeq ($(CONFIG_THUMB2_KERNEL),y)
--AFLAGS_AUTOIT	:=$(call as-option,-Wa$(comma)-mimplicit-it=always,-Wa$(comma)-mauto-it)
--CFLAGS_ISA	:=-mthumb $(AFLAGS_AUTOIT)
-+CFLAGS_ISA	:=-mthumb -Wa$(comma)-mimplicit-it=always
- AFLAGS_ISA	:=$(CFLAGS_ISA) -Wa$(comma)-mthumb
- # Work around buggy relocation from gas if requested:
- ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
+Thanks,
+-Paul
+
+--
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
+
+ Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+   tags/selinux-pr-20190305
+
+for you to fetch changes up to 45189a1998e00f6375ebd49d1e18161acddd73de:
+
+ selinux: fix avc audit messages (2019-02-05 12:34:33 -0500)
+
+----------------------------------------------------------------
+selinux/stable-5.1 PR 20190305
+
+----------------------------------------------------------------
+Ondrej Mosnacek (6):
+     selinux: never allow relabeling on context mounts
+     selinux: do not override context on context mounts
+     selinux: inline some AVC functions used only once
+     selinux: replace some BUG_ON()s with a WARN_ON()
+     selinux: log invalid contexts in AVCs
+     selinux: replace BUG_ONs with WARN_ONs in avc.c
+
+Stephen Smalley (3):
+     selinux: avoid silent denials in permissive mode under RCU walk
+     selinux: stop passing MAY_NOT_BLOCK to the AVC upon follow_link
+     selinux: fix avc audit messages
+
+security/selinux/avc.c              | 199 +++++++++++++++++-------------------
+security/selinux/hooks.c            |  58 ++++++++---
+security/selinux/include/avc.h      |   6 +-
+security/selinux/include/security.h |   3 +
+security/selinux/ss/services.c      |  37 ++++++-
+5 files changed, 176 insertions(+), 127 deletions(-)
+
 -- 
-2.20.1
-
+paul moore
+www.paul-moore.com
