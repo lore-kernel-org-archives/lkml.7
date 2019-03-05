@@ -2,71 +2,101 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32405C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EBFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0556020842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E1820842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LsMn7FTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfCELjf (ORCPT
+        id S1727794AbfCELju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:39:35 -0500
-Received: from foss.arm.com ([217.140.101.70]:47260 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727271AbfCELjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:39:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0CFDA78;
-        Tue,  5 Mar 2019 03:39:34 -0800 (PST)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67E3B3F71D;
-        Tue,  5 Mar 2019 03:39:33 -0800 (PST)
-Date:   Tue, 5 Mar 2019 11:39:30 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 12/15] ARM: vexpress: fix a leaked reference by adding
- missing of_node_put
-Message-ID: <20190305113930.GB2066@e107155-lin>
-References: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
- <1551785646-46173-12-git-send-email-wen.yang99@zte.com.cn>
+        Tue, 5 Mar 2019 06:39:50 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:60928 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbfCELju (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:39:50 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x25BcXn4085327;
+        Tue, 5 Mar 2019 11:39:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=Wif6yycougY83WhBkZh1+1999fWZYtnKErplzcP1YUE=;
+ b=LsMn7FTQnkDTnmJ7vCPzkkZpLDQN6ZcCGIdNn96xZsIYJBbL9QPriJ2eCAYW+vdCzRgI
+ MBDRYjpbvVJSEWdscGq1+wZvF8Y4wLE7vq62o0pyYmyn193wCIxuhHYB7gYH20UvzdJC
+ JQyE5HSP0cxtbCgceC//2KEVKLvXjfWxwHTBHe3OMDFrQG/MUQS52THZKsvcuYGd6vh8
+ iWqg6NM4hHvlpTQTrvAlbJVytXf8z8Hyz7WY/ZMQoDRX83HqYJW8nk7ihBgI9BSfpM7V
+ k2LnLE0FSYK4nPStmkk70dUNn6asgpBQQrhzdU5wCuoQM2eHe488YvpXWA3LczPDLP6D 0Q== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2qyjfrcp5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Mar 2019 11:39:42 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x25Bdf0u022921
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Mar 2019 11:39:41 GMT
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x25Bde5k010797;
+        Tue, 5 Mar 2019 11:39:40 GMT
+Received: from kadam (/197.157.34.180)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 Mar 2019 03:39:39 -0800
+Date:   Tue, 5 Mar 2019 14:39:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Spencer E . Olson" <olsonse@umich.edu>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] staging: comedi: ni_mio_common: Fix divide-by-zero for
+ DIO cmdtest
+Message-ID: <20190305113915.GB13474@kadam>
+References: <20190304143354.4964-1-abbotti@mev.co.uk>
+ <20190305081629.GA13474@kadam>
+ <261cec72-ed19-7092-5307-76481e9f20ba@mev.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1551785646-46173-12-git-send-email-wen.yang99@zte.com.cn>
+In-Reply-To: <261cec72-ed19-7092-5307-76481e9f20ba@mev.co.uk>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9185 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=898 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903050081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 07:34:03PM +0800, Wen Yang wrote:
-> The call to of_get_next_child returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
+On Tue, Mar 05, 2019 at 11:32:18AM +0000, Ian Abbott wrote:
+> On 05/03/2019 11:10, Dan Carpenter wrote:
+> > On Mon, Mar 04, 2019 at 02:33:54PM +0000, Ian Abbott wrote:
+> > > The problem was reported on the COMEDI mailing list here:
+> > > https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
+> > > 
+> > 
+> > Can you give Ivan a Reported-by tag?  It's a public mailing list so
+> > that shouldn't be a problem.
 > 
-> Detected by coccinelle with the following warnings:
-> ./arch/arm/mach-vexpress/dcscb.c:150:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 145, but without a corresponding object release within this function.
-> ./arch/arm/mach-vexpress/dcscb.c:160:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 145, but without a corresponding object release within this function.
-> ./arch/arm/mach-vexpress/dcscb.c:171:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 145, but without a corresponding object release within this function.
+> I can do, but I don't know his full name.  Will that be a problem?
 > 
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
 
-I already Acked assuming you have plans to take this as series. There's
-no cover letter mentioning your plans to merge this or note to individual
-platform maintainers. Please let us know.
+Nah, it's not a problem.  People should fix their email headers to
+reflect what they want to be called.
 
---
-Regards,
-Sudeep
+Or you could ask but I don't think I have ever asked for someone's name
+I've always just gone with their email header name.
+
+regards,
+dan carpenter
+
