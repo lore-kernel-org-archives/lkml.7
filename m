@@ -2,270 +2,94 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050A3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4DDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A0220645
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0270F20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="I+Ef0zg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbfCESPP (ORCPT
+        id S1731038AbfCESSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 13:15:15 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:59942 "EHLO mx1.redhat.com"
+        Tue, 5 Mar 2019 13:18:10 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46376 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbfCESPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 13:15:14 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726902AbfCESSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 13:18:08 -0500
+Received: from zn.tnic (p200300EC2BCD6B00ECFD1928E9AB0C1D.dip0.t-ipconnect.de [IPv6:2003:ec:2bcd:6b00:ecfd:1928:e9ab:c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C077D3087BAE;
-        Tue,  5 Mar 2019 18:15:13 +0000 (UTC)
-Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 928E45C207;
-        Tue,  5 Mar 2019 18:15:03 +0000 (UTC)
-Subject: Re: [PATCH v4 04/22] iommu: Introduce attach/detach_pasid_table API
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@linux.intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
-        kevin.tian@intel.com, ashok.raj@intel.com, christoffer.dall@arm.com
-References: <20190218135504.25048-1-eric.auger@redhat.com>
- <20190218135504.25048-5-eric.auger@redhat.com>
- <17894c69-7d64-b85a-be91-0755aeb08ca3@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <65e7e722-61b4-be70-8b8b-0a5047ced1f5@redhat.com>
-Date:   Tue, 5 Mar 2019 19:15:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C0A91EC014B;
+        Tue,  5 Mar 2019 19:18:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1551809885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=zSTufVaUCZI5YOnwsLc4xAHOFWxe5Am/nC0+VF8ZJDw=;
+        b=I+Ef0zg6AYvh7HiH9FNlmTq/5+6zqnWoBmW8rGMIA3/ujnurhJDKrY9sfAxajzzKrGgudJ
+        dUNYdGDavT7f3UmdEp0DiYVcovDE06ycrPDjizgfEUsX/dS9X/Hia1keUuyytII+F8YpAI
+        Vm8DiUKIS4V0PQEON/i+ev0/eO3yhoM=
+Date:   Tue, 5 Mar 2019 19:18:08 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-alpha@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH] x86: Deprecate a.out support
+Message-ID: <20190305181808.GH8256@zn.tnic>
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+ <20190305091904.GB8256@zn.tnic>
+ <20190305122218.GD13380@bombadil.infradead.org>
+ <20190305134347.4be2449c@alans-desktop>
+ <20190305145717.GD8256@zn.tnic>
+ <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
+ <20190305173134.GE8256@zn.tnic>
+ <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
+ <20190305181138.GG8256@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <17894c69-7d64-b85a-be91-0755aeb08ca3@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 05 Mar 2019 18:15:13 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20190305181138.GG8256@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+On Tue, Mar 05, 2019 at 07:11:38PM +0100, Borislav Petkov wrote:
+> I guess you could Cc arch maintainers with the a.out-core.h removal
+> patch to see if anyone screams.
 
-On 3/5/19 4:23 PM, Jean-Philippe Brucker wrote:
-> On 18/02/2019 13:54, Eric Auger wrote:
->> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>
->> In virtualization use case, when a guest is assigned
->> a PCI host device, protected by a virtual IOMMU on the guest,
->> the physical IOMMU must be programmed to be consistent with
->> the guest mappings. If the physical IOMMU supports two
->> translation stages it makes sense to program guest mappings
->> onto the first stage/level (ARM/Intel terminology) while the host
->> owns the stage/level 2.
->>
->> In that case, it is mandated to trap on guest configuration
->> settings and pass those to the physical iommu driver.
->>
->> This patch adds a new API to the iommu subsystem that allows
->> to set/unset the pasid table information.
->>
->> A generic iommu_pasid_table_config struct is introduced in
->> a new iommu.h uapi header. This is going to be used by the VFIO
->> user API.
->>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
->> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->>
->> This patch generalizes the API introduced by Jacob & co-authors in
->> https://lwn.net/Articles/754331/
->>
->> v3 -> v4:
->> - s/set_pasid_table/attach_pasid_table
->> - restore detach_pasid_table. Detach can be used on unwind path.
->> - add padding
->> - remove @abort
->> - signature used for config and format
->> - add comments for fields in the SMMU struct
->>
->> v2 -> v3:
->> - replace unbind/bind by set_pasid_table
->> - move table pointer and pasid bits in the generic part of the struct
->>
->> v1 -> v2:
->> - restore the original pasid table name
->> - remove the struct device * parameter in the API
->> - reworked iommu_pasid_smmuv3
->> ---
->>  drivers/iommu/iommu.c      | 19 +++++++++++++++
->>  include/linux/iommu.h      | 22 ++++++++++++++++++
->>  include/uapi/linux/iommu.h | 47 ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 88 insertions(+)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index c297cdcf7f89..b3adb77cb14c 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -1545,6 +1545,25 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
->>  }
->>  EXPORT_SYMBOL_GPL(iommu_attach_device);
->>  
->> +int iommu_attach_pasid_table(struct iommu_domain *domain,
->> +			     struct iommu_pasid_table_config *cfg)
->> +{
->> +	if (unlikely(!domain->ops->attach_pasid_table))
->> +		return -ENODEV;
->> +
->> +	return domain->ops->attach_pasid_table(domain, cfg);
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_attach_pasid_table);
->> +
->> +void iommu_detach_pasid_table(struct iommu_domain *domain)
->> +{
->> +	if (unlikely(!domain->ops->detach_pasid_table))
->> +		return;
->> +
->> +	domain->ops->detach_pasid_table(domain);
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_detach_pasid_table);
->> +
->>  static void __iommu_detach_device(struct iommu_domain *domain,
->>  				  struct device *dev)
->>  {
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index b38e0c100940..7045e26f3a7d 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -187,6 +187,8 @@ struct iommu_resv_region {
->>   * @domain_window_disable: Disable a particular window for a domain
->>   * @of_xlate: add OF master IDs to iommu grouping
->>   * @pgsize_bitmap: bitmap of all possible supported page sizes
->> + * @attach_pasid_table: attach a pasid table
->> + * @detach_pasid_table: detach the pasid table
-> 
-> Should go before pgsize_bitmap
-sure
-> 
->>   */
->>  struct iommu_ops {
->>  	bool (*capable)(enum iommu_cap);
->> @@ -229,6 +231,10 @@ struct iommu_ops {
->>  	int (*of_xlate)(struct device *dev, struct of_phandle_args *args);
->>  	bool (*is_attach_deferred)(struct iommu_domain *domain, struct device *dev);
->>  
->> +	int (*attach_pasid_table)(struct iommu_domain *domain,
->> +				  struct iommu_pasid_table_config *cfg);
->> +	void (*detach_pasid_table)(struct iommu_domain *domain);
->> +
->>  	unsigned long pgsize_bitmap;
->>  };
->>  
->> @@ -339,6 +345,9 @@ extern int iommu_attach_device(struct iommu_domain *domain,
->>  			       struct device *dev);
->>  extern void iommu_detach_device(struct iommu_domain *domain,
->>  				struct device *dev);
->> +extern int iommu_attach_pasid_table(struct iommu_domain *domain,
->> +				    struct iommu_pasid_table_config *cfg);
->> +extern void iommu_detach_pasid_table(struct iommu_domain *domain);
->>  extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
->>  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
->>  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
->> @@ -777,6 +786,19 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
->>  	return NULL;
->>  }
->>  
->> +static inline
->> +int iommu_attach_pasid_table(struct iommu_domain *domain,
->> +			     struct iommu_pasid_table_config *cfg)
->> +{
->> +	return -ENODEV;
->> +}
->> +
->> +static inline
->> +void iommu_detach_pasid_table(struct iommu_domain *domain)
->> +{
->> +	return -ENODEV;
-> 
-> No return here. With that fixed:
-oups
-> 
-> Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Thanks!
+And they're like two for which we need confirmation:
 
-Eric
+$ git ls-files | grep a.out-core.h
+arch/alpha/include/asm/a.out-core.h
+arch/m68k/include/asm/a.out-core.h
+arch/um/include/asm/a.out-core.h
+arch/x86/include/asm/a.out-core.h
 
-> 
->> +}
->> +
->>  #endif /* CONFIG_IOMMU_API */
->>  
->>  #ifdef CONFIG_IOMMU_DEBUGFS
->> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->> index 7ebf23ed6ccb..e9065bfa5b24 100644
->> --- a/include/uapi/linux/iommu.h
->> +++ b/include/uapi/linux/iommu.h
->> @@ -112,4 +112,51 @@ struct iommu_fault {
->>  		struct iommu_fault_page_request prm;
->>  	};
->>  };
->> +
->> +/**
->> + * SMMUv3 Stream Table Entry stage 1 related information
->> + * The PASID table is referred to as the context descriptor (CD) table.
->> + *
->> + * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
->> +   or 2-level table)
->> + * @s1dss: STE s1dss (specifies the behavior when pasid_bits != 0
->> +   and no pasid is passed along with the incoming transaction)
->> + * Please refer to the smmu 3.x spec (ARM IHI 0070A) for full details
->> + */
->> +struct iommu_pasid_smmuv3 {
->> +#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
->> +	__u32	version;
->> +	__u8 s1fmt;
->> +	__u8 s1dss;
->> +	__u8 padding[2];
->> +};
->> +
->> +/**
->> + * PASID table data used to bind guest PASID table to the host IOMMU
->> + * Note PASID table corresponds to the Context Table on ARM SMMUv3.
->> + *
->> + * @version: API version to prepare for future extensions
->> + * @format: format of the PASID table
->> + * @base_ptr: guest physical address of the PASID table
->> + * @pasid_bits: number of PASID bits used in the PASID table
->> + * @config: indicates whether the guest translation stage must
->> + * be translated, bypassed or aborted.
->> + */
->> +struct iommu_pasid_table_config {
->> +#define PASID_TABLE_CFG_VERSION_1 1
->> +	__u32	version;
->> +#define IOMMU_PASID_FORMAT_SMMUV3	1
->> +	__u32	format;
->> +	__u64	base_ptr;
->> +	__u8	pasid_bits;
->> +#define IOMMU_PASID_CONFIG_TRANSLATE	1
->> +#define IOMMU_PASID_CONFIG_BYPASS	2
->> +#define IOMMU_PASID_CONFIG_ABORT	3
->> +	__u8	config;
->> +	__u8    padding[6];
->> +	union {
->> +		struct iommu_pasid_smmuv3 smmuv3;
->> +	};
->> +};
->> +
->>  #endif /* _UAPI_IOMMU_H */
->>
-> 
+um and x86 are clear.
+
+Adding alpha and m68k MLs to Cc.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
