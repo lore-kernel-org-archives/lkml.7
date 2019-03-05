@@ -2,120 +2,100 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF89C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA671C00319
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB4C20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9679820675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfCEIBb (ORCPT
+        id S1727036AbfCEIE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:01:31 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40192 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbfCEIBa (ORCPT
+        Tue, 5 Mar 2019 03:04:59 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:42765 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfCEIE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:01:30 -0500
-Received: by mail-qt1-f193.google.com with SMTP id j36so8085737qta.7;
-        Tue, 05 Mar 2019 00:01:29 -0800 (PST)
+        Tue, 5 Mar 2019 03:04:59 -0500
+Received: by mail-ua1-f66.google.com with SMTP id s26so6935102uao.9;
+        Tue, 05 Mar 2019 00:04:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oKhbe60C0wirjNE5o0bqdU75fTBTp1R5NQugGO5JnjE=;
-        b=fW9tZ/PbgHHa7jX+p2GkN0nxzhx3NX/V4OAo8fRwcL+N/2GSF7RnH0eEoBEbZfJRx3
-         8R3x2tGjL4jfClctDmR61nq8207Z4xnO0yzBTjhyvD6JQDvZB1lMIXgkT5JIWpiNjE79
-         gp5qHVuQc8fL0wOv0EYT1oP6WyPb8bxG04av/jDexCyiuT3S13/gdiNZ+ei8Jgb84AHo
-         DQaKLg1AYA8mXKuycSR8EwmfyOum+goVwWXjW++IehSoaVrGwGqLrGIt4UZP3Bl8m/Rn
-         QqRgeShLyxWQBeG64+FzzjsUzKljUk53pOJl6HzkIJ8eWcfEGb/zq/souteLIEDckOs4
-         TmUw==
-X-Gm-Message-State: APjAAAUGgeeCtEHSLsFInNCEb8+VoMshNJjPuF4Ddnp2XkkBXCNh2jrS
-        8lOEgcX7nhoN3EuzCNpOICqwStBFCuQhN4sqQ0I=
-X-Google-Smtp-Source: APXvYqy7q9l6qrpjo7S5rvtT3cJ6qPYReoNCFI2qXqaavDktMpwKMRD8d3Mz2rkyjWmF6VTZSl3Ida2RMI0n7NLJ9W4=
-X-Received: by 2002:ac8:237b:: with SMTP id b56mr441086qtb.343.1551772889379;
- Tue, 05 Mar 2019 00:01:29 -0800 (PST)
+        bh=M6LpDQmBzSRwAPxQU2WaLr09kOypn9kKAvee3P1SlOk=;
+        b=hhL0y65M8XwG7SnkkGwXAvgPFDvXXqde3AUhgiGbacL8wFf/yvdmJCeDR31L23TpJE
+         QRvD+rP2id8znzgAWQaF7nWDN9GifJRg9GB9BR4CtO2BGD7E5vVPB8AqbTnXDBMNZCQe
+         yUxbQ7ZQx2wlTO8bkHdbamOjLaVtAPhrmC0TeLDcaRIp3u7wpiAfXeOiqACPqAdfmeSk
+         VG+F2GaXCPgiIe72qjlv8PEU+uCxOCOUnjNXPUo0LUDwXMfoyyJpE7dWkzXSP08ZxVRo
+         qo7G3qpgNWIY49Of51N89o90mmFcc+6wuHqqqSXj+GKvSRvvuNh6BC15Diz6MI6rwv8h
+         ak3A==
+X-Gm-Message-State: APjAAAWWehPUN5ncQqC1Uw+uur+sYf+t1/cy60+WGeG4qAC49WcBunFf
+        tAFKm3XPnYC8cSuaTZ0YpDrl1Z6eGbnxSu9Ph1deGw==
+X-Google-Smtp-Source: APXvYqzL6VpTYLqqcJgZRHlngn/K0Ri0haEHah+GEZ2RFvsud1ZvXykps55bOHf1lbWXE+r+CosG469yS5sbJQfO6Zs=
+X-Received: by 2002:a67:fc9a:: with SMTP id x26mr527610vsp.166.1551773097693;
+ Tue, 05 Mar 2019 00:04:57 -0800 (PST)
 MIME-Version: 1.0
-References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com> <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
-In-Reply-To: <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 Mar 2019 09:01:13 +0100
-Message-ID: <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed@lists.ozlabs.org, DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        gregkh <gregkh@linuxfoundation.org>, Jeremy Kerr <jk@ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+References: <20190304203003.1862052-1-arnd@arndb.de>
+In-Reply-To: <20190304203003.1862052-1-arnd@arndb.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Mar 2019 09:04:46 +0100
+Message-ID: <CAMuHMdVELnQ5STP_AG=VQddZPewCpg8NgBds8OPh2t+_W7QEHw@mail.gmail.com>
+Subject: Re: [PATCH] media: staging: davinci_vpfe: disallow building with COMPILE_TEST
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
+Hi Arnd,
+
+On Mon, Mar 4, 2019 at 9:30 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> The driver should really call dm365_isif_setup_pinmux() through a callback,
+> but it runs platform specific code by itself, which never actually compiled:
 >
-> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
-> between the SOC (acting as a BMC) and a host processor in a server.
->
-> This commit adds a driver to control the XDMA engine and adds functions
-> to initialize the hardware and memory and start DMA operations.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:2: error: implicit declaration of function 'davinci_cfg_reg' [-Werror,-Wimplicit-function-declaration]
+>         davinci_cfg_reg(DM365_VIN_CAM_WEN);
+>         ^
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:18: error: use of undeclared identifier 'DM365_VIN_CAM_WEN'
+>         davinci_cfg_reg(DM365_VIN_CAM_WEN);
+>                         ^
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2029:18: error: use of undeclared identifier 'DM365_VIN_CAM_VD'
+>         davinci_cfg_reg(DM365_VIN_CAM_VD);
+>                         ^
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2030:18: error: use of undeclared identifier 'DM365_VIN_CAM_HD'
+>         davinci_cfg_reg(DM365_VIN_CAM_HD);
+>                         ^
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:18: error: use of undeclared identifier 'DM365_VIN_YIN4_7_EN'
+>         davinci_cfg_reg(DM365_VIN_YIN4_7_EN);
+>                         ^
+> /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:2032:18: error: use of undeclared identifier 'DM365_VIN_YIN0_3_EN'
+>         davinci_cfg_reg(DM365_VIN_YIN0_3_EN);
+>                         ^
+> 7 errors generated.
 
-Hi Eddie,
+Which tree and which config is this?
+This driver compiles fine with m68k/allmodconfig on v5.0?
 
-Thanks for your submission! Overall this looks well-implemented, but
-I fear we already have too many ways of doing the same thing at
-the moment, and I would hope to avoid adding yet another user space
-interface for a specific hardware that does this.
+Gr{oetje,eeting}s,
 
-Your interface appears to be a fairly low-level variant, just doing
-single DMA transfers through ioctls, but configuring the PCIe
-endpoint over sysfs.
+                        Geert
 
-Please have a look at the drivers/pci/endpoint framework first
-and see if you can work on top of that interface instead.
-Even if it doesn't quite do what you need here, we may be
-able to extend it in a way that works for you, and lets others
-use the same user interface extensions in the future.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-It may also be necessary to split out the DMA engine portion
-into a regular drivers/dma/ back-end to make that fit in with
-the PCIe endpoint framework.
-
-If you have already tried this without success, please let us
-know in the description what problems you have hit, and why you
-decided to create a new framework instead.
-
-> +/*
-> + * aspeed_xdma_op
-> + *
-> + * upstream: boolean indicating the direction of the DMA operation; upstream
-> + *           means a transfer from the BMC to the host
-> + *
-> + * host_addr: the DMA address on the host side, typically configured by PCI
-> + *            subsystem
-> + *
-> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
-> + */
-> +struct aspeed_xdma_op {
-> +       __u8 upstream;
-> +       __u64 host_addr;
-> +       __u32 len;
-> +} __packed;
-
-Side-note: packed structures are generally not great user space
-interfaces. Regardless of where we end up with this, I'd recommend
-naturally aligning each member inside of the structure, and using
-explicit padding here.
-
-
-     Arnd
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
