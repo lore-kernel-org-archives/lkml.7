@@ -2,203 +2,103 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE65FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8A6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A430A206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A7C206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfCENbu (ORCPT
+        id S1728405AbfCENcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 08:31:50 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:35473 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfCENbt (ORCPT
+        Tue, 5 Mar 2019 08:32:17 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46612 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfCENcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 08:31:49 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MuDPf-1hFnri07NV-00ud1Q; Tue, 05 Mar 2019 14:30:59 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Paul Durrant <paul.durrant@citrix.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: [PATCH] [v2] xen: avoid link error on ARM
-Date:   Tue,  5 Mar 2019 14:30:23 +0100
-Message-Id: <20190305133057.3998926-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 5 Mar 2019 08:32:16 -0500
+Received: by mail-io1-f66.google.com with SMTP id k21so7015494ior.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 05:32:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fPL+mFcnFk2fiGgyvGc6vDBsgRlRRz/RaTsBeOLEc94=;
+        b=mYVsaz4NYoeFolbK1/2Y+/yKwEUALM6gUxMCgzKEEfCHttCMOSY/Wzq4W/K91tVzr7
+         G6Lzg+PqzP98nXxUSxPEhZniRPhM5Jy+/X1nrtrQqsvFA91kvNKHqcpPpgtTas/3T1Uw
+         Yzuwu9o4z39ZvOuwxA3mOlYRr0SEOxi4d+1Yh2etdewj7QlUuhWA6DaDWSlbvFD3HRgj
+         cZmbWJtSDqpHjPcbxiXpqpmZ3HprgLygqSleykx8U8OS7Zqxh0fB3+UCSrH3/92lDdab
+         bk7FMKBo4kRKaFCVCR8e+Am8Kb3JfE5SiPRhz/I5FS8BKmB/2PVYBLjIpQ89BOulHrpJ
+         nuUQ==
+X-Gm-Message-State: APjAAAXu/zfDyMzH4Cbx82OFwvduBwz2d9epZin2zqoY4zQmWi7WzoSc
+        SYj1OOIYWpgYp6grrhrAQctiOkek0+zp0JZDOVujFg==
+X-Google-Smtp-Source: APXvYqwWlJhsKFyJO0H7b0uFjzW5/GM2/w6sO+J2UainYEThrBbAlUb7ax/rHQ4L3QKD40e72qi8zZlsoEdgt0/VfpM=
+X-Received: by 2002:a6b:37d4:: with SMTP id e203mr13072860ioa.137.1551792736186;
+ Tue, 05 Mar 2019 05:32:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:sNlZ/b0+5Z/i5IIGurUjpq7SGMkqDoEc7Kli9mP2zHRVY6zy7Pq
- GpwlCSNJw4l2Q5F3qnB1i1dEFXbShvrFq/JGK22bcacVZeIHz6YpWQ+9X7r7Mbx3+g+Am30
- rhMf+DT4UQlrvBYeUKNw4KNnsN+FOCUdH9tCzKrwf/qOykBXZd97yqEwg/2Jay6ov2qqzP2
- rMP5bN64iQp2BP772ZZww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p+OyvcstQ+I=:pb+iPZafoFiViGrcMRi5sL
- kA0PpSYU2+sIvVJHgQUKhX9Y9QwWbmX2+AeFkcyQrmdpyNG2A/7/cZOChnSrBrr3lIzWAKBSs
- wQ1w1vLoiSppF8iQFPQfOdkeQ+fHH122ZvDHNwwL1cboEtB1IPjQlWh6dm2utMhwn++vxUjBo
- I/MnYLXupCPD2WlL9pEDWA7PN6ZNPmtpElZ0pUB2FzTzpFLR0AR3Gp9D4wrVmdXQfFuL01Rew
- nhd9VhePq3qdi4yqznYHHxRiv+9IeD5mAfXugiPliu/Y6xRxHpi9ED3WDx5qADN6rPIloFsvu
- wyl+Mr6EzXrpngqp71YE0p46aXs80Kt2njTBU9fwIFZh/1CNtotKASDOg/DXpdB3U0Oe1OJmv
- qA8Gi9KoSnJUk1I2cw9B/4eQkuIlb4qcKjnxP7QCOFdGF5mIWkwXbOUrCDK0i6/mjCIOUWyP3
- 5CephnASm99BiC7HAT7sCjPPzH1mPDdPDEJn58RvfflJIecHgzS22867v1kZo3bB/TZ9qLegI
- TPywYIW+ulhZDFC3MUfGjio0LApsuR5nhaFeUoih/7lZ3lsLIAZaFy9l9O+vad0D5CGVAmDfa
- x7O66lFpwqmdFDUTxWI4AJUHMAnLdV6oWdqxaGIzZBKPbT++Aaqt0F6ZGWIYlE45hwI26QnBy
- 7xJHrYfpNNVBQgS2tTToOUxyW5JQ+P+aAoZoMR8Zu5BWcwVMVTu49zVUHzjoKWtKa9yHAotWc
- KBTSk9U9IV7YOwecBnIrlEXeU6x7tytUnKhOZw==
+References: <20190226155615.16724-1-kasong@redhat.com> <20190227120141.GN32494@hirez.programming.kicks-ass.net>
+ <CACPcB9c86eT=kXcXkBkUjZnifk5bZ71SogfW2tyNudrVmWbnDQ@mail.gmail.com> <20190305122827.GJ32477@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190305122827.GJ32477@hirez.programming.kicks-ass.net>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Tue, 5 Mar 2019 21:32:05 +0800
+Message-ID: <CACPcB9dwKK2YRU+xDvp8AEKDikjJF6Y047MoJ-RxVM49G6rwQg@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86, hyperv: fix kernel panic when kexec on HyperV VM
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        devel@linuxdriverproject.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building the privcmd code as a loadable module on ARM, we get
-a link error due to the private cache management functions:
+On Tue, Mar 5, 2019 at 8:28 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Feb 27, 2019 at 10:55:46PM +0800, Kairui Song wrote:
+> > On Wed, Feb 27, 2019 at 8:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Tue, Feb 26, 2019 at 11:56:15PM +0800, Kairui Song wrote:
+> > > >  arch/x86/hyperv/hv_init.c | 4 ++++
+> > > >  1 file changed, 4 insertions(+)
+> > > >
+> > > > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > > > index 7abb09e2eeb8..92291c18d716 100644
+> > > > --- a/arch/x86/hyperv/hv_init.c
+> > > > +++ b/arch/x86/hyperv/hv_init.c
+> > > > @@ -406,6 +406,10 @@ void hyperv_cleanup(void)
+> > > >       /* Reset our OS id */
+> > > >       wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+> > > >
+> > > > +     /* Cleanup page reference before reset the page */
+> > > > +     hv_hypercall_pg = NULL;
+> > > > +     wmb();
+> > >
+> > > What do we need that SFENCE for? Any why does it lack a comment?
+> >
+> > Hi, that's for ensuring the hv_hypercall_pg is reset to NULL before
+> > the following wrmsr call. The wrmsr call will make the pointer address
+> > invalid.
+>
+> WRMSR is a serializing instruction (except for TSC_DEADLINE and the
+> X2APIC).
+>
 
-ERROR: "__sync_icache_dcache" [drivers/xen/xen-privcmd.ko] undefined!
+Many thanks for the info, I'm not aware of the exception condition, V2
+is sent, will drop the barrier in V3 then.
 
-Move the code into a new file that is always built in when Xen
-is enabled, as suggested by Juergen Gross. Additional code will
-be moved into this file later.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: rename mm.o to xen-builtin.o, make it unconditional
----
- drivers/xen/Makefile      |  1 +
- drivers/xen/privcmd.c     | 30 +---------------------------
- drivers/xen/xen-builtin.c | 41 +++++++++++++++++++++++++++++++++++++++
- include/xen/xen-ops.h     |  3 +++
- 4 files changed, 46 insertions(+), 29 deletions(-)
- create mode 100644 drivers/xen/xen-builtin.c
-
-diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
-index ad3844d9f876..c3cbfcf30d38 100644
---- a/drivers/xen/Makefile
-+++ b/drivers/xen/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_HOTPLUG_CPU)		+= cpu_hotplug.o
- obj-y	+= grant-table.o features.o balloon.o manage.o preempt.o time.o
- obj-y	+= mem-reservation.o
-+obj-y	+= xen-builtin.o
- obj-y	+= events/
- obj-y	+= xenbus/
- 
-diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index b24ddac1604b..290b6aca7e1d 100644
---- a/drivers/xen/privcmd.c
-+++ b/drivers/xen/privcmd.c
-@@ -723,26 +723,6 @@ static long privcmd_ioctl_restrict(struct file *file, void __user *udata)
- 	return 0;
- }
- 
--struct remap_pfn {
--	struct mm_struct *mm;
--	struct page **pages;
--	pgprot_t prot;
--	unsigned long i;
--};
--
--static int remap_pfn_fn(pte_t *ptep, pgtable_t token, unsigned long addr,
--			void *data)
--{
--	struct remap_pfn *r = data;
--	struct page *page = r->pages[r->i];
--	pte_t pte = pte_mkspecial(pfn_pte(page_to_pfn(page), r->prot));
--
--	set_pte_at(r->mm, addr, ptep, pte);
--	r->i++;
--
--	return 0;
--}
--
- static long privcmd_ioctl_mmap_resource(struct file *file, void __user *udata)
- {
- 	struct privcmd_data *data = file->private_data;
-@@ -809,15 +789,7 @@ static long privcmd_ioctl_mmap_resource(struct file *file, void __user *udata)
- 		goto out;
- 
- 	if (xen_feature(XENFEAT_auto_translated_physmap)) {
--		struct remap_pfn r = {
--			.mm = vma->vm_mm,
--			.pages = vma->vm_private_data,
--			.prot = vma->vm_page_prot,
--		};
--
--		rc = apply_to_page_range(r.mm, kdata.addr,
--					 kdata.num << PAGE_SHIFT,
--					 remap_pfn_fn, &r);
-+		rc = xen_remap_vma_range(vma, kdata.addr, kdata.num << PAGE_SHIFT);
- 	} else {
- 		unsigned int domid =
- 			(xdata.flags & XENMEM_rsrc_acq_caller_owned) ?
-diff --git a/drivers/xen/xen-builtin.c b/drivers/xen/xen-builtin.c
-new file mode 100644
-index 000000000000..8ad0d4900588
---- /dev/null
-+++ b/drivers/xen/xen-builtin.c
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Architecture independent helper functions for memory management
-+ *
-+ * Written by Paul Durrant <paul.durrant@citrix.com>
-+ */
-+#include <linux/mm.h>
-+#include <linux/export.h>
-+
-+struct remap_pfn {
-+	struct mm_struct *mm;
-+	struct page **pages;
-+	pgprot_t prot;
-+	unsigned long i;
-+};
-+
-+static int remap_pfn_fn(pte_t *ptep, pgtable_t token, unsigned long addr,
-+			void *data)
-+{
-+	struct remap_pfn *r = data;
-+	struct page *page = r->pages[r->i];
-+	pte_t pte = pte_mkspecial(pfn_pte(page_to_pfn(page), r->prot));
-+
-+	set_pte_at(r->mm, addr, ptep, pte);
-+	r->i++;
-+
-+	return 0;
-+}
-+
-+/* Used by the privcmd module, but has to be built-in on ARM */
-+int xen_remap_vma_range(struct vm_area_struct *vma, unsigned long addr, unsigned long len)
-+{
-+	struct remap_pfn r = {
-+		.mm = vma->vm_mm,
-+		.pages = vma->vm_private_data,
-+		.prot = vma->vm_page_prot,
-+	};
-+
-+	return apply_to_page_range(vma->vm_mm, addr, len, remap_pfn_fn, &r);
-+}
-+EXPORT_SYMBOL_GPL(xen_remap_vma_range);
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index 4969817124a8..98b30c1613b2 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -109,6 +109,9 @@ static inline int xen_xlate_unmap_gfn_range(struct vm_area_struct *vma,
- }
- #endif
- 
-+int xen_remap_vma_range(struct vm_area_struct *vma, unsigned long addr,
-+			unsigned long len);
-+
- /*
-  * xen_remap_domain_gfn_array() - map an array of foreign frames by gfn
-  * @vma:     VMA to map the pages into
 -- 
-2.20.0
-
+Best Regards,
+Kairui Song
