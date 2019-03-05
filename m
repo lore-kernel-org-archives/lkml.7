@@ -6,112 +6,88 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2273C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B424AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF8F206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79BE620684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 01:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZst/F9l"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="umHSlhFe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PutSnnGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfCEBHP (ORCPT
+        id S1726697AbfCEBOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 20:07:15 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37598 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCEBHP (ORCPT
+        Mon, 4 Mar 2019 20:14:17 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35013 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726066AbfCEBOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 20:07:15 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q206so4341358pgq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 17:07:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X08UU1rb6v3NKQ4XfD3Fm0wBIUETYOgkWCKnSjdIGIk=;
-        b=kZst/F9lKEVfE/lOWPPFjtSqbv34WNhAjVhG824j/M0LMuRqM8YksVzQ8kR+aF3RtL
-         I43qPDCY39DvnBcPqnWN/5ieKvb/geWNiTH+mdQWE2j3IXpMdn2/4gQaML9I7hHBjo86
-         DN+ZD6sMZbtno1cIsy5HXojFX2zCRPiGoFIJJS9ox9JmC6/TPN/l5a/1TBGUBFBdy1rU
-         eIm0T2VQk9dKZPp+yM0YDexMl/sEsWzlkCOoKSIO1hSUghRgTUnkuUkkkNB7jRP9a89J
-         8bcZlCIKVY5pLQQJiBUlDWb0/zQcOD1uJ68ogWMVfDGNSEdXZ28KocElS+qdW3LR1ucA
-         bXMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X08UU1rb6v3NKQ4XfD3Fm0wBIUETYOgkWCKnSjdIGIk=;
-        b=STNA645dIynJ54K2rNSmv3LwK6bxSGtMqd9UXfEXuI6kGW0bJ1wLfJimRO1puhN1GR
-         U2En7bMX4xuM0KOFGfBtNKOBljipIcMVcM02vv4FG/9PJ65DUKS1gSQCXFafcr6BzS2c
-         l+CHR8L42TSJNDkkW5UEwYbOhHQWfR5um3twLDto0l3G0RHJq3eRMSMeN/T+paAkbTYq
-         zbxmepuH6pfd5cFBcXhjZzf6Ndq6SLKwbdsZP3W75qdLcp2Kf3fZHKOEEsU1383vrER9
-         POcNl2iusGAyJKQA+yNU2Lj7cexA3wEk5c71Lv8kWRj3WcY3RHU/YG0NeWh4YiT6QHgI
-         DERg==
-X-Gm-Message-State: APjAAAXyjDoA//FPlsozR8ri1pToj5PJiuS+RX5whVGsN0mPuJN85RHs
-        tXcm+tr8uJLlSOK96DPYnnTbHg==
-X-Google-Smtp-Source: APXvYqyNkW1NmDxwO7A7zFRXv1Wv9wxYw+TVsqu7bW3Mn8LFhevu3JseU95TbT3Mqhdm/cx2gHjExg==
-X-Received: by 2002:a17:902:d203:: with SMTP id t3mr5807416ply.310.1551748034399;
-        Mon, 04 Mar 2019 17:07:14 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li1206-191.members.linode.com. [45.79.107.191])
-        by smtp.gmail.com with ESMTPSA id n4sm17327716pfh.8.2019.03.04.17.07.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 17:07:13 -0800 (PST)
-Date:   Tue, 5 Mar 2019 09:07:07 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mathieu.poirier@linaro.org, shiwanglai@hisilicon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, john.stultz@linaro.org,
-        xuwei5@huawei.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, suzhuangluan@hisilicon.com
-Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
-Message-ID: <20190305010707.GA9544@leoy-ThinkPad-X240s>
-References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
- <20190302125955.GA11385@leoy-ThinkPad-X240s>
- <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
- <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
+        Mon, 4 Mar 2019 20:14:16 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4B3B023147;
+        Mon,  4 Mar 2019 20:14:16 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 04 Mar 2019 20:14:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=J8YnpTjRuGYpJgQexk+hQ0iDOgd
+        CxTXkbcFcUambKyg=; b=umHSlhFeibCUEbMNf/UB4x2lb7YEdIGeJAoLHPdjYkk
+        D0LHxmG359+gW6De8ZK95Bd7t3QlgcgGTq3xBTM47wJ5t6/UOgmPXSeEipwOV1MN
+        gNIZ3o3lrKxmSAF/CnMLgS8PkA7p0QCWxI/Hr0t/JME57s0jGAApJpjf2YSq9xvz
+        pzjnecchkpBw1zsulJW1p+BmAewL5CPl0bX9yN/2ouzisOG/o4MX8gLBYaZSPSCF
+        53jQNwbiZNQy4wPxfdCVwqF6yYwDNeykt8Df9O9Y12DD6fodZ7EgGUW+jWjDFCWZ
+        2xprTZUDhzxyKeEkdzFStuvwpqqypALiljcxIH7P4fw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=J8YnpT
+        jRuGYpJgQexk+hQ0iDOgdCxTXkbcFcUambKyg=; b=PutSnnGh7kfPBi7Tpp5Ezu
+        4llMSGaj7SlzStLBInsTt2IuSThJU0MTOHkPoTbFR6FEaLAcWlicqHbLNqPrVw4U
+        VXw34iteri19bjHRXkrrXCczbSMv2gWBzgnRyO5ZsIOSoDOFEtfXURz1805bZiLs
+        T7kyLrKiTUwQT7hQ+W/+6bLVTiG66SDjnsO6pQt11agXgkkBpOmjxJdT2R5RGHjE
+        l/0MaSCbmKZoJcn82bfl783lPl7mtEIcZUsl5iSl4lVFdUgsKlsNtRkFMdIvZaot
+        i2M23sM19u64ralEaSlCS7SlmNTLS5fyi7cUAeJM/VudupBXL1/pdTpKlJE9Zdyg
+        ==
+X-ME-Sender: <xms:Z819XHtYKoxokvFg5VPpBhuQq7rwdGZwEjATQP2xTpwPZ9XGvFyTaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfedvgdefvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdeftddmnecujfgurhepfffhvf
+    fukfhfgggtuggjofgfsehttdertdforedvnecuhfhrohhmpedfvfhosghinhcuvedrucfj
+    rghrughinhhgfdcuoehmvgesthhosghinhdrtggtqeenucfkphepuddvgedrudeiledrtd
+    drudegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehl
+    uhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:Z819XEe43CHoQzsl47Dm-ReBqkWE_dwdSpfqXm6oegUxfYUUj3zVaQ>
+    <xmx:Z819XNYDskwUQSGwN049hIOLWlvsjXwPnTpt7bCqRkiboAfpDLZj-g>
+    <xmx:Z819XEaux-XW3ftRcKSzvsR9WuDARfrM-aOUbdw-udG66xI7R7c1CQ>
+    <xmx:aM19XAI3oTOdi_rtZtdv0DXrHDTz91qb4T8Wov4Jtd-UqX2N4mxYuA>
+Received: from localhost (124-169-0-14.dyn.iinet.net.au [124.169.0.14])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BDE4BE44A5;
+        Mon,  4 Mar 2019 20:14:14 -0500 (EST)
+Date:   Tue, 5 Mar 2019 12:13:55 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+Cc:     kernelnewbies@kernelnewbies.org, linux-kernel@vger.kernel.org
+Subject: Re: make modules_install install is failing
+Message-ID: <20190305011355.GA10576@eros.localdomain>
+References: <20190205060053.GA309@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190205060053.GA309@bharath12345-Inspiron-5559>
+X-Mailer: Mutt 1.11.3 (2019-02-01)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 05:29:22PM +0000, Suzuki K Poulose wrote:
-
-[...]
-
-> > > To support for a funnel without any register address range (we have
-> > > support replicator like this mode), we also need to extend the driver
-> > > drivers/hwtracing/coresight/coresight-funnel.c.
-> > > 
-> > > Mathieu, Mike, Suzuki, could you help confirm this is the right
-> > > direction we should move forward to?
-> > 
-> > Leo, thanks for testing this out.  Shiwanglai, please add Suzuki and
-> > myself to future revision of this set - this will help you getting a
-> > timely response for your work.
-
-Yeah, I didn't give a good example for this; just remind to Wanglai,
-usually we can add maintainers' email address in the "To:" list so
-this will be more friendly for email filters.
-
-> > As Leo pointed out we already have support for replicators that don't
-> > have a register map and the same thing should be done in this case.
-> > But contrary to what was done for replicators, I think we should keep
-> > the drivers in the same file as Russell did here[1].  That way we can
-> > keep all things funnel at the same place and reduce the amount of
-> > kernel configuration options.
+On Tue, Feb 05, 2019 at 11:30:53AM +0530, Bharath Vedartham wrote:
+> Hi all,
 > 
-> I back that. I have already merged the static and programmable replicators
-> into one and this should be out here soon. So, I back the single driver
-> approach for funnels.
+> I am unable to execute make modules_install install. 
+> I get the following error:
 
-That's great!  Thanks for advices, Mathieu & Suzuki.
+Could you show the complete commands you are trying please
 
-Will sync with you offline for proceeding.
-
-Thanks,
-Leo Yan
+thanks,
+Tobin.
