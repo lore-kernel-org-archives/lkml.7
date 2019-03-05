@@ -2,86 +2,115 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61675C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD61C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3008A2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F992082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfCEIev (ORCPT
+        id S1727232AbfCEIfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:34:51 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37208 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfCEIev (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:34:51 -0500
-Received: by mail-qt1-f193.google.com with SMTP id a48so8161411qtb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 00:34:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BMVtnd/QdJ4T1acw/rhWxMKJH0y8Q1v97kzTlEz+Tt0=;
-        b=A5xeuZIthFBxA7g2Y1AMnmiUNYJJ/TgmgI688EGxhz1BxkuKlTghe7LX72ZBfOtKio
-         gjicvSpWhkK9Z8OsCoCjai/UHvNwIaIN2YZCWZIQV/W1csFBhx6SslWePYbNCoadtBrs
-         7uI2vMGt831V8e0d8Hg6blEQrCFU5UueIzjEJ1jE/b5yVsGoo/QJLWlk8WGuvaKqd1TK
-         3WnxWg1gyvd3lROIEMAbj1aGkE2wBsOrIw6cT//ZLxavOZMpRmaFONiuyD2fF8nD0LyS
-         +6B+1HHRV4zDaqb3dZm9R2SsPhazCWR3WgzB0HZ0EkcW+cHnGBmUlK4XhlSGGo3vcOLH
-         o1Vg==
-X-Gm-Message-State: APjAAAWKXCwMA5cp9K3RdyaFnjzWlcp2bDakhEtevNddiMb7/XqYB99e
-        tyjjdP8r7h1gHrF+/0zUQLviBb6V1ILvgWUGS4o=
-X-Google-Smtp-Source: APXvYqyBpD51V8udl30qZBl/wWku3sP8Nm6IvFcbto/waT2UazECHOgBlD08rK9TVKJ3d2YOctQ8lsVaiUmkgY2uxeY=
-X-Received: by 2002:a0c:b758:: with SMTP id q24mr1154386qve.149.1551774890097;
- Tue, 05 Mar 2019 00:34:50 -0800 (PST)
+        Tue, 5 Mar 2019 03:35:11 -0500
+Received: from mga12.intel.com ([192.55.52.136]:37942 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbfCEIfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 03:35:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 00:35:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
+   d="scan'208";a="324304554"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Mar 2019 00:35:08 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jack@suse.cz, dan.j.williams@intel.com, bp@suse.de,
+        bhelgaas@google.com, mingo@kernel.org, akpm@linux-foundation.org,
+        tiwai@suse.de, rdunlap@infradead.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [RESEND PATCH] kernel, resource: use resource_overlaps() to simplify region_intersects()
+Date:   Tue,  5 Mar 2019 16:34:32 +0800
+Message-Id: <20190305083432.23675-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20190304204826.2414365-1-arnd@arndb.de> <0eaa0d35-0be8-0053-1dcb-feb61d441bd2@suse.com>
-In-Reply-To: <0eaa0d35-0be8-0053-1dcb-feb61d441bd2@suse.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 Mar 2019 09:34:33 +0100
-Message-ID: <CAK8P3a3vbjOzKAD6zce09Gc438tW=nYuMAJCE0MrODhBjO71xg@mail.gmail.com>
-Subject: Re: [PATCH] xen: avoid link error on ARM
-To:     Juergen Gross <jgross@suse.com>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Paul Durrant <paul.durrant@citrix.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 7:39 AM Juergen Gross <jgross@suse.com> wrote:
+The three checks in region_intersects() is to see whether two resources
+overlap. This means it could be simplified with one resource_overlaps().
 
->
-> Can we avoid that ifdef in the Makefile?
->
-> I'd rather have an architecture independant builtin driver added which
-> is always included for CONFIG_XEN. This would allow to move redundant
-> stuff from arch/*/xen/ into it (e.g. xen_vcpu_id).
->
-> So: rename mm.c to xen-builtin.c, use:
->
-> obj-$(CONFIG_XEN) += xen-builtin.o
+Also fix two typo in related function.
 
-Sure, I'm happy to change the naming and the Makefile logic. The way you
-suggested sounds fine to me, but it will make the xen code slightly bigger
-even if that code is not used. We could also have a silent Kconfig symbol
-that turns this on and still avoid the ifdef:
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Reviewed-by: Like Xu <like.xu@linux.intel.com>
+Reviewed-by: Yuan Yao <yuan.yao@linux.intel.com>
+---
+ kernel/iomem.c    |  4 ++--
+ kernel/resource.c | 11 +++++------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-obj-$(CONFIG_XEN_BUILTIN) += xen-builtin.o
+diff --git a/kernel/iomem.c b/kernel/iomem.c
+index f7525e14ebc6..93c264444510 100644
+--- a/kernel/iomem.c
++++ b/kernel/iomem.c
+@@ -55,7 +55,7 @@ static void *try_ram_remap(resource_size_t offset, size_t size,
+  *
+  * MEMREMAP_WB - matches the default mapping for System RAM on
+  * the architecture.  This is usually a read-allocate write-back cache.
+- * Morever, if MEMREMAP_WB is specified and the requested remap region is RAM
++ * Moreover, if MEMREMAP_WB is specified and the requested remap region is RAM
+  * memremap() will bypass establishing a new mapping and instead return
+  * a pointer into the direct map.
+  *
+@@ -86,7 +86,7 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
+ 	/* Try all mapping types requested until one returns non-NULL */
+ 	if (flags & MEMREMAP_WB) {
+ 		/*
+-		 * MEMREMAP_WB is special in that it can be satisifed
++		 * MEMREMAP_WB is special in that it can be satisfied
+ 		 * from the direct map.  Some archs depend on the
+ 		 * capability of memremap() to autodetect cases where
+ 		 * the requested range is potentially in System RAM.
+diff --git a/kernel/resource.c b/kernel/resource.c
+index b0fbf685c77a..34dfb94305bb 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -521,21 +521,20 @@ EXPORT_SYMBOL_GPL(page_is_ram);
+ int region_intersects(resource_size_t start, size_t size, unsigned long flags,
+ 		      unsigned long desc)
+ {
+-	resource_size_t end = start + size - 1;
++	struct resource res;
+ 	int type = 0; int other = 0;
+ 	struct resource *p;
+ 
++	res.start = start;
++	res.end = start + size - 1;
++
+ 	read_lock(&resource_lock);
+ 	for (p = iomem_resource.child; p ; p = p->sibling) {
+ 		bool is_type = (((p->flags & flags) == flags) &&
+ 				((desc == IORES_DESC_NONE) ||
+ 				 (desc == p->desc)));
+ 
+-		if (start >= p->start && start <= p->end)
+-			is_type ? type++ : other++;
+-		if (end >= p->start && end <= p->end)
+-			is_type ? type++ : other++;
+-		if (p->start >= start && p->end <= end)
++		if (resource_overlaps(p, &res))
+ 			is_type ? type++ : other++;
+ 	}
+ 	read_unlock(&resource_lock);
+-- 
+2.19.1
 
-(or using any other symbol name that makes more sense than that.
-
-Let me know your preference and I'll resubmit.
-
-      Arnd
