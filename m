@@ -2,198 +2,263 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494D0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E739C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A33E20684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6C6206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="F4kiFERI"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Q8nfKFUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfCEQIM (ORCPT
+        id S1728379AbfCEQJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:08:12 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39275 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfCEQIM (ORCPT
+        Tue, 5 Mar 2019 11:09:19 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:55003 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbfCEQJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:08:12 -0500
-Received: by mail-io1-f68.google.com with SMTP id x3so7473904ior.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 08:08:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+/U2CDL/W95ENCeyah388mBN8GQ//SqGFlcRGEgMdV0=;
-        b=F4kiFERInLGpipDyYM2zmE1EAYdfC/AcPUwiFq5lbUHoBpfJobBg10NVCb+ZidqhM5
-         Z6r6kDtdqRTjWOB4hggmuuupltWgt3BTCq79o2LbjRBYKrondKf5mOLGMvTKIxKLlA6d
-         dDHO9u4L1+GbhLZ4zfk3ppahbjrnLwMt4RanQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+/U2CDL/W95ENCeyah388mBN8GQ//SqGFlcRGEgMdV0=;
-        b=raWQZ8bE7lpPN7zLwJoWaIs1DZKNFwDUoEnFcYfIK9uP/oiKvDvXU1lM6PgYYY/UUx
-         P3minje4W4LyUD8bkcoWIwaFSZERnxgdkGy+SPlPD/2djpR78HnFKRPxPUSHDAGR0dX8
-         Zva/UVgmhxGE4Bnb8pB+KbBFnICVxEM0D+VmCRrzEJv0wUwtj3U79dQGxK0WFLsMhyrL
-         aImuWIXrPEC4fKtgVcm8p4mKy3akKVNE+JAjMqiccbGSGZ2NKTRFQ6dGwRTxPwqyEGPO
-         ogRIt5mK7XuIavJkReEqGawQHPxqr9LaBs7ugx34QtAHuGg4Fxb4dfFOicELEa5tP3E7
-         gVRA==
-X-Gm-Message-State: APjAAAWns9LBgYKsBfRhPN1bAb2Aim5jRXnVlND1jvr82m46AtY5tvso
-        st58VZeONnQNRo/eraqdu7Yuftonki+NjGubDpx4JA==
-X-Google-Smtp-Source: APXvYqxK/gpWj1B4CQoRgjm3yBUUbxiPTYhNEYv/ZiRDUdaHhBQsO1FJ+fp+xdenmEQQpzm9AcwprJM4c5TxhdQNYTQ=
-X-Received: by 2002:a5e:c605:: with SMTP id f5mr483237iok.252.1551802091138;
- Tue, 05 Mar 2019 08:08:11 -0800 (PST)
+        Tue, 5 Mar 2019 11:09:19 -0500
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x25G94Ge004459;
+        Wed, 6 Mar 2019 01:09:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x25G94Ge004459
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1551802145;
+        bh=lL/vr7WzFFbs3ehKX38udeZ0q4oD/E4sPcEzYdBZiyk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q8nfKFUQesJvO4QspW2yHd/hBZUylauPnGDvMFNJ73U47+MvWczMGFJUybTBoCR8Z
+         wS8+b6uR8gNWck6Vy/fN3PHbcqOV2FFiqK3uoN56M8GSKQ8K2CEGcj9YjS83RD0ZG/
+         9eBJRhbANuIYH7wmtAIePua51HiUAbzcSBGEprfPXvE7z985jVEyBkg82o7jvbPS2R
+         rMLRQ1mUGoonWQ7iRu8FVOdi9JOH9mPEQ+YaD8vpPPWr7hnJcce6+Plh7hAf+aCSs6
+         PefkvgvuYMeeFTa/86ap0uU6f8wy26GBw/YJoLpJiKi0JQevz6pSvi61U/D/CZYUFR
+         GJ2Rdlm5d0sXA==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id i15so343728vsd.10;
+        Tue, 05 Mar 2019 08:09:04 -0800 (PST)
+X-Gm-Message-State: APjAAAVYvbIKBQjN9iosNvyqxNrBaCpmdj2C5nmAMnEs3zQaNvkKZ+2o
+        FOHH+pcEZZi6zyklNfgdM0CY8sVkxe6xQ8fgSCE=
+X-Google-Smtp-Source: APXvYqx2B4fMD6+4xitLEYGw7uKdI+tZasbfe7++mJtnhcFJVM0Cy73NRLMmTTCe9Xq+HKf7ZCvHq5TWyIP6qK4KSSY=
+X-Received: by 2002:a67:7c04:: with SMTP id x4mr1515164vsc.155.1551802143472;
+ Tue, 05 Mar 2019 08:09:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20190226060240.8783-1-jagan@amarulasolutions.com>
- <20190226060240.8783-2-jagan@amarulasolutions.com> <20190227153346.dwd3stsbsvf7rwly@flea>
- <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
- <20190301145724.vhvyoqkkxdflg2g7@flea> <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
- <20190305155919.cm3yrve3vqp7jimh@flea>
-In-Reply-To: <20190305155919.cm3yrve3vqp7jimh@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 5 Mar 2019 21:37:59 +0530
-Message-ID: <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD initial support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ryan Pannell <ryan@osukl.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula@amarulasolutions.com
+References: <1551764896-8453-1-git-send-email-yamada.masahiro@socionext.com>
+ <1551764896-8453-3-git-send-email-yamada.masahiro@socionext.com> <20190305144625.bjmkr6ebufbly5ba@treble>
+In-Reply-To: <20190305144625.bjmkr6ebufbly5ba@treble>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 6 Mar 2019 01:08:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=K2Hp+idOsHQBCYwk5YndzSdHL=GmJZRxsF6De3isNA@mail.gmail.com>
+Message-ID: <CAK7LNAS=K2Hp+idOsHQBCYwk5YndzSdHL=GmJZRxsF6De3isNA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] objtool: move tools/objtool/ to scripts/objtool/
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Robin Meijboom <robin@meijboom.info>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 9:29 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Tue, Mar 5, 2019 at 11:46 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> On Fri, Mar 01, 2019 at 10:27:14PM +0530, Jagan Teki wrote:
-> > On Fri, Mar 1, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Wed, Feb 27, 2019 at 09:49:23PM +0530, Jagan Teki wrote:
-> > > > On Wed, Feb 27, 2019 at 9:03 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Tue, Feb 26, 2019 at 11:32:40AM +0530, Jagan Teki wrote:
-> > > > > > Oceanic A64-5inMFD is a 5 inch Multi function display baseboard
-> > > > > > designed to mount SoPine SOM.
-> > > > > >
-> > > > > > Key features:
-> > > > > > - Allwinner A64 Cortex-A53
-> > > > > > - Mali-400MP2 GPU
-> > > > > > - AXP803 PMIC
-> > > > > > - 2GB DDR3 RAM
-> > > > > > - SD Slot
-> > > > > > - SPI-NOR flash
-> > > > > > - EMAC, RTL8211E
-> > > > > > - MCP2515 CAN
-> > > > > > - MIPI-DSI
-> > > > > > - Goodix 911 CTP
-> > > > > > - USB Host
-> > > > > > - 12V DC power supply
-> > > > > >
-> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > ---
-> > > > > >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
-> > > > > >  .../allwinner/sun50i-a64-oceanic-5inmfd.dts   | 46 +++++++++++++++++++
-> > > > > >  2 files changed, 47 insertions(+)
-> > > > > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > > > > >
-> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> > > > > > index a5fb1eaa8acf..ec39fe856117 100644
-> > > > > > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > > > > > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > > > > > @@ -2,6 +2,7 @@
-> > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-amarula-relic.dtb
-> > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb sun50i-a64-bananapi-m64-icn6211.dtb
-> > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
-> > > > > > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-oceanic-5inmfd.dtb
-> > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
-> > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
-> > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
-> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..d73d1f55acb9
-> > > > > > --- /dev/null
-> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > > > > > @@ -0,0 +1,46 @@
-> > > > > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > > > +/*
-> > > > > > + * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
-> > > > > > + * Copyright (C) 2019 Amarula Solutions B.V.
-> > > > > > + * Author: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > + */
-> > > > > > +
-> > > > > > +/dts-v1/;
-> > > > > > +
-> > > > > > +#include "sun50i-a64-sopine.dtsi"
-> > > > > > +
-> > > > > > +/ {
-> > > > > > +     model = "Oceanic A64-5inMFD";
-> > > > > > +     compatible = "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
-> > > > >
-> > > > > The name of the DT is Oceanic 5inMFD, while you call the board
-> > > > > A64-5inMFD here, which name is the actual name?
-> > > >
-> > > > Yes, this is something that we discussed during "Amarula A64-Relic"
-> > > > naming convention.
-> > > >
-> > > > Since these boards are not famous like teres-i we agreed to add vendor
-> > > > name after sun50i-a64- followed by real board name.
-> > > >
-> > > > Here A64 already covered during sun50i-a64- so the dts name simply the
-> > > > <vendor_name>-<real_board_name>
-> > >
-> > > For the DT name, yeah, we want that pattern.
-> > >
-> > > For the compatible and model, we want to use the model name.
+> On Tue, Mar 05, 2019 at 02:48:16PM +0900, Masahiro Yamada wrote:
+> > Tools that are globally needed for building the kernel are supposed to
+> > be put in the scripts/ directory, but objtool is the exceptional one.
 > >
-> > Entire model name after <vendor_name>, ?
+> > People were confused by objtool's Makefile since most of tools run on
+> > the target whereas objtool runs on the host machine. Some time ago,
+> > Douglas Anderson suggested to move tools/objtool/ to scripts/tools/
+> > (https://patchwork.kernel.org/patch/9983535/#20996057), but we did
+> > not go as far as submitting a patch at that time.
 > >
-> > model = "Oceanic A64-5inMFD";
-> > compatible = "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
+> > Recently, Robin Meijboom reported that the generated files for objtool
+> > were never cleaned up. (https://patchwork.kernel.org/patch/10813797/)
 > >
-> > is this not sufficient?
+> > So, I looked into this to fix the distortion. Move tools/objtool/ to
+> > scripts/objtool/, and rewrite Makefiles in the Kbuild-ish manner.
 > >
-> > Let me understand with respective few existing stuff.
+> > I also cleaned up the top-level Makefile by moving the libelf check
+> > scripts/objtool/Makefile.
 > >
-> > model = "Amarula A64-Relic";
-> > compatible = "amarula,a64-relic", "allwinner,sun50i-a64";
+> > I see some benefits in this.
 > >
-> > model = "Olimex A64 Teres-I"
-> > compatible = "olimex,a64-teres-i", "allwinner,sun50i-a64";
+> > [1] generated files under scripts/ are cleaned up by 'make mrproper'
+> >
+> > Currently, the generated files under tools/objtool/ are not cleaned up
+> > since the build system under tools/ is a complete different world.
+> >
+> > If we want to clean them up, it should be done by 'make mrproper'
+> > instead of 'make clean' since objtool is needed for building external
+> > modules.
+> >
+> > This commit naturally solves the issue since Kbuild cleans under
+> > scripts/ by 'make mrproper'.
 >
-> This one is called the TERES-A64:
-> https://www.olimex.com/Products/DIY-Laptop/KITS/TERES-A64-WHITE/open-source-hardware
+> Yes, but this can be solved instead with a one-line patch.
 >
-> The laptop is the Teres-I, it can have an A64
+> > [2] build log looks nicer
+> >
+> > Currently, the build log under tools/objtool/ shows absolute paths, and
+> > displays 'DESCEND  objtool' every time for incremental building.
+> >
+> > Switching over to the standard Kbuild scheme will improve the log.
+> >
+> >   Before:
+> >
+> >   DESCEND  objtool
+> >   HOSTCC   /home/masahiro/workspace/linux/tools/objtool/fixdep.o
+> >   HOSTLD   /home/masahiro/workspace/linux/tools/objtool/fixdep-in.o
+> >   LINK     /home/masahiro/workspace/linux/tools/objtool/fixdep
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/exec-cmd.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/help.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/pager.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/parse-options.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/run-command.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/sigchain.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/subcmd-config.o
+> >   LD       /home/masahiro/workspace/linux/tools/objtool/libsubcmd-in.o
+> >   AR       /home/masahiro/workspace/linux/tools/objtool/libsubcmd.a
+> >   GEN      /home/masahiro/workspace/linux/tools/objtool/arch/x86/lib/inat-tables.c
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/arch/x86/decode.o
+> >   LD       /home/masahiro/workspace/linux/tools/objtool/arch/x86/objtool-in.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/builtin-check.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/builtin-orc.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/check.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/orc_gen.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/orc_dump.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/elf.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/special.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/objtool.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/libstring.o
+> >   CC       /home/masahiro/workspace/linux/tools/objtool/str_error_r.o
+> >   LD       /home/masahiro/workspace/linux/tools/objtool/objtool-in.o
+> >   LINK     /home/masahiro/workspace/linux/tools/objtool/objtool
+> >
+> >   After:
+> >
+> >   HOSTCC  scripts/objtool/builtin-check.o
+> >   HOSTCC  scripts/objtool/builtin-orc.o
+> >   HOSTCC  scripts/objtool/check.o
+> >   HOSTCC  scripts/objtool/orc_gen.o
+> >   HOSTCC  scripts/objtool/orc_dump.o
+> >   HOSTCC  scripts/objtool/elf.o
+> >   HOSTCC  scripts/objtool/special.o
+> >   HOSTCC  scripts/objtool/objtool.o
+> >   HOSTCC  scripts/objtool/libstring.o
+> >   HOSTCC  scripts/objtool/str_error_r.o
+> >   HOSTCC  scripts/objtool/exec-cmd.o
+> >   HOSTCC  scripts/objtool/pager.o
+> >   HOSTCC  scripts/objtool/parse-options.o
+> >   HOSTCC  scripts/objtool/run-command.o
+> >   HOSTCC  scripts/objtool/sigchain.o
+> >   HOSTCC  scripts/objtool/subcmd-config.o
+> >   AWK     scripts/objtool/arch/x86/lib/inat-tables.c
+> >   HOSTCC  scripts/objtool/arch/x86/decode.o
+> >   HOSTLD  scripts/objtool/objtool
 >
-> > model = "FriendlyARM NanoPi A64";
-> > compatible = "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
+> That does look better.
 >
-> NanoPi A64 is the name of the board: http://nanopi.io/nanopi-a64.html
+> > [3] simplify distro package script
+> >
+> > The special handling in scripts/package/buildeb is no longer needed
+> > since all host programs are copied to linux-headers packages.
 >
-> > model = "Olimex A64-Olinuxino";
-> > compatible = "olimex,a64-olinuxino", "allwinner,sun50i-a64"
+> I do see the benefits.  In many ways objtool is a more natural fit in
+> the scripts dir.  But there are also some downsides to this change:
 >
-> A64-Olinuxino is the name of the board too:
-> https://www.olimex.com/Products/OLinuXino/A64/A64-OLinuXino/open-source-hardware
->
-> > Would you comment, what is the different with respect to my change?
->
-> If the name of the product is 5inMFD, then the model should be Oceanic
-> 5inMFD, and its compatible oceanic,5inmfd
+> - This will make it harder to package objtool as a standalone tool.  It
+>   has a lot of functionality that could be useful to other non-kernel
+>   projects.
 
-Oceanic seems to have some multiple Multi Function Devices, ie reason
-we prefer the product as 'A64-5inMFD' since it is A64 based. In this
-case the model and compatible should be fine I think?
+
+If it is really useful for other projects,
+I'd like to see it as a real standalone tool,
+i.e. split as a separate project.
+
+
+> - It shares libsubcmd with perf.  Including the subcmd .c files from
+>   tools is hacky.
+
+Yes, hacky. We are shifting the ugliness between C and Build system.
+
+But, this hack can be solved; if subcmd library is useful, you can copy
+only necessary code into the objtool directory. You do not need all
+helpers from libsubcmd.
+
+
+> - It's disruptive: it will break all the out-of-tree distro kernel
+>   packaging scripts which now look for objtool in tools.
+
+All artifacts under scripts/ should be contained in the package.
+So, it should work.
+
+
+> You're right that objtool isn't a natural fit in tools, because it's
+> also used as part of the build.  But it's not a natural fit in scripts
+> either.  I think we've resolved most of those issues and it seems to be
+> working well these days.
+>
+> So instead of disrupting everything because "make mrproper" doesn't
+> work, I think I'd rather just do the following:
+>
+> diff --git a/Makefile b/Makefile
+> index ac5ac28a24e9..7e6696c9b862 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1364,7 +1364,7 @@ PHONY += $(mrproper-dirs) mrproper
+>  $(mrproper-dirs):
+>         $(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
+>
+> -mrproper: clean $(mrproper-dirs)
+> +mrproper: clean $(mrproper-dirs) tools/objtool_clean
+>         $(call cmd,rmdirs)
+>         $(call cmd,rmfiles)
+>
+
+Works, and the clean log is also brilliant.
+
+I see the same log even when
+there is nothing to clean.
+
+
+masahiro@grover:~/ref/linux$ make mrproper
+  CLEAN   .
+  CLEAN   arch/x86/entry/vdso
+  CLEAN   usr
+  CLEAN   arch/x86/tools
+  CLEAN   .tmp_versions
+  CLEAN   scripts/basic
+  CLEAN   scripts/kconfig
+  CLEAN   scripts/mod
+  CLEAN   scripts/selinux/genheaders
+  CLEAN   scripts/selinux/mdp
+  CLEAN   scripts
+  DESCEND  objtool
+  CLEAN    objtool
+  CLEAN   include/config include/generated arch/x86/include/generated
+  CLEAN   .config
+masahiro@grover:~/ref/linux$ make mrproper
+  DESCEND  objtool
+  CLEAN    objtool
+masahiro@grover:~/ref/linux$ make mrproper
+  DESCEND  objtool
+  CLEAN    objtool
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
