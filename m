@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3F7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99492C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A5A208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BF120842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551802334;
-	bh=kMyvZn/EeojJXgkRvBvUeq4iRMH9ghlPFbl/FskKIIE=;
+	s=default; t=1551802336;
+	bh=VyxlFOHWEBGp50g+Djc6qvIaA6Xp+Rsq6/BLXFESN9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=ot03XrDuuu43rBXjBUgE1p4yPKcFPKg+weHw/QJCx9t/lK+VucLk9yO4u0xv19XX0
-	 mkm3jhm7xdL4J60R7kl7yQ6ajZtp5rV3D5pebKcwi+Hss2VT5xku7Pv4HTtguUV9vA
-	 BqEFILEmdEUzIcuNzZWsa0W2ZwifrfNm1NktRJWc=
+	b=1NpMY/RG3bLPhhTH43Wp4PH0NnF/1et+FnHSt54OJ0IZjRtSATgyauAph+QhsCm/t
+	 bhKQiBLiieD+tRIaUGMuLE3mhf6e1E6EQ30qchvRUZfM0vE1JHnyw3pgzYYWYIEExQ
+	 zja6sJjHm5yB0EYwERmdyLzeFnfLWVv9HAKD7XGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfCEQMM (ORCPT
+        id S1726498AbfCEQMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:12:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
+        Tue, 5 Mar 2019 11:12:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfCEQMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:12:09 -0500
+        id S1726121AbfCEQMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:12:08 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0349D2171F;
-        Tue,  5 Mar 2019 16:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D24A2087C;
+        Tue,  5 Mar 2019 16:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551802329;
-        bh=kMyvZn/EeojJXgkRvBvUeq4iRMH9ghlPFbl/FskKIIE=;
+        s=default; t=1551802327;
+        bh=VyxlFOHWEBGp50g+Djc6qvIaA6Xp+Rsq6/BLXFESN9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=EObyEvXWQrEWaTF5kGTaly7COdu/ra7o60ix+Y0kjw+gCST6jOTMZZv4CLSdtdET+
-         mBhbg3B1x6gdnJ8MEoXQ5zbrrrjFoqWIEbTY/appWiA1QSJbKOsZMX4sRQrpTXZf9u
-         jBrgwCsiLf63QNMeSK2r7YLpqNOO66mEV8+2d1Bc=
+        b=HtxrFjOD0+lGMQZfhobLo7ctdPlJ6xxz5k1obUurGcPmJj60flLG4oG+4rVm9eKXG
+         OiHAijy0dXBrqfQvidjGgeDf2kDW0QkrdJkYpgm1U/xGbW04t9N25JB89WQkvOffYX
+         5wO9lkjIlUL588mEWk7CzLXje3XS7lMlvzlh2pa0=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tracing: Use strncpy instead of memcpy when copying comm in trace.c
-Date:   Tue,  5 Mar 2019 10:12:00 -0600
-Message-Id: <1d6ebac26570c2a29ce9fb575379f17ef5c8b81b.1551802084.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 1/2] tracing: Use strncpy instead of memcpy when copying comm for hist triggers
+Date:   Tue,  5 Mar 2019 10:11:59 -0600
+Message-Id: <1eb9f096a8086c3c82c7fc087c900005143cec54.1551802084.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1551802084.git.tom.zanussi@linux.intel.com>
 References: <cover.1551802084.git.tom.zanussi@linux.intel.com>
@@ -64,33 +64,32 @@ give unexpected results if that garbage is copied in too, so avoid
 that possibility by using strncpy instead of memcpy.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 4 ++--
+ kernel/trace/trace_events_hist.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 3835f7ed3293..e9cc47e59d25 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1497,7 +1497,7 @@ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
- 	max_data->critical_start = data->critical_start;
- 	max_data->critical_end = data->critical_end;
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index c7774fa119a7..ca46339f3009 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2141,7 +2141,7 @@ static inline void save_comm(char *comm, struct task_struct *task)
+ 		return;
+ 	}
  
--	memcpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
-+	strncpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
- 	max_data->pid = tsk->pid;
- 	/*
- 	 * If tsk == current, then use current_uid(), as that does not use
-@@ -1923,7 +1923,7 @@ static inline char *get_saved_cmdlines(int idx)
- 
- static inline void set_cmdline(int idx, const char *cmdline)
- {
--	memcpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
-+	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
+-	memcpy(comm, task->comm, TASK_COMM_LEN);
++	strncpy(comm, task->comm, TASK_COMM_LEN);
  }
  
- static int allocate_cmdlines_buffer(unsigned int val,
+ static void hist_elt_data_free(struct hist_elt_data *elt_data)
+@@ -3557,7 +3557,7 @@ static bool cond_snapshot_update(struct trace_array *tr, void *cond_data)
+ 	elt_data = context->elt->private_data;
+ 	track_elt_data = track_data->elt.private_data;
+ 	if (elt_data->comm)
+-		memcpy(track_elt_data->comm, elt_data->comm, TASK_COMM_LEN);
++		strncpy(track_elt_data->comm, elt_data->comm, TASK_COMM_LEN);
+ 
+ 	track_data->updated = true;
+ 
 -- 
 2.14.1
 
