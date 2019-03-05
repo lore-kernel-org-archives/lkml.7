@@ -2,84 +2,177 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3269DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902E8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB52A20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587222064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfCEQkT (ORCPT
+        id S1726928AbfCEQkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:40:19 -0500
-Received: from mga11.intel.com ([192.55.52.93]:3749 "EHLO mga11.intel.com"
+        Tue, 5 Mar 2019 11:40:35 -0500
+Received: from mail.osukl.com ([81.134.89.156]:18504 "EHLO mail.osukl.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfCEQkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:40:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 08:40:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="162434491"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga001.jf.intel.com with ESMTP; 05 Mar 2019 08:40:17 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 8B168301BC4; Tue,  5 Mar 2019 08:40:17 -0800 (PST)
-Date:   Tue, 5 Mar 2019 08:40:17 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Nageswara R Sastry <nasastry@in.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH 5/8] perf tools: Get precise_ip from the pmu config
-Message-ID: <20190305164017.GD17272@tassilo.jf.intel.com>
-References: <20190305152536.21035-1-jolsa@kernel.org>
- <20190305152536.21035-6-jolsa@kernel.org>
- <20190305161319.GC17272@tassilo.jf.intel.com>
- <20190305162854.GB4533@krava>
+        id S1726896AbfCEQke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:40:34 -0500
+X-Greylist: delayed 324 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Mar 2019 11:40:33 EST
+Received: from OS01.os.local ([fe80::dd48:92d6:34f3:22da]) by OS01.os.local
+ ([fe80::dd48:92d6:34f3:22da%16]) with mapi id 14.03.0389.001; Tue, 5 Mar 2019
+ 16:35:07 +0000
+From:   Ryan Pannell <ryan@osukl.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+CC:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-amarula@amarulasolutions.com" 
+        <linux-amarula@amarulasolutions.com>
+Subject: RE: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
+ initial support
+Thread-Topic: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
+ initial support
+Thread-Index: AQHUzZj1PzRBqQmkXEOapWN/my/XQKXzyHUAgAAMv4CAAw3CAIAAIXsAgAY5JYCAAAJsgIAABYNg
+Date:   Tue, 5 Mar 2019 16:35:04 +0000
+Message-ID: <7AB137701821F94BAF7B06C1747BA691011A3FE123@OS01.os.local>
+References: <20190226060240.8783-1-jagan@amarulasolutions.com>
+ <20190226060240.8783-2-jagan@amarulasolutions.com>
+ <20190227153346.dwd3stsbsvf7rwly@flea>
+ <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
+ <20190301145724.vhvyoqkkxdflg2g7@flea>
+ <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
+ <20190305155919.cm3yrve3vqp7jimh@flea>
+ <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
+In-Reply-To: <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.16.61]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190305162854.GB4533@krava>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 05:28:54PM +0100, Jiri Olsa wrote:
-> On Tue, Mar 05, 2019 at 08:13:19AM -0800, Andi Kleen wrote:
-> > On Tue, Mar 05, 2019 at 04:25:33PM +0100, Jiri Olsa wrote:
-> > > Getting precise_ip field from the perf_pmu::max_precise
-> > > config read from sysfs. If it's not available falling
-> > > back to current detection function.
-> > 
-> > max_precise depends on the event.  This won't work for all
-> > events. For example only instructions and cycles support
-> > ppp
-> 
-> I'm getting  precise_ip=3 on mem-* events as well, that's why I
-> was fixing this.. now it's not working for any event
-
-I don't think it means anything for mem-*
-
-There's some support for it on Goldmont plus for other events,
-but it doesn't support mem-*. On big core it's only
-for instructions and cycles, all implemented with the same
-event. All other PEBS events only have two levels
-switching between the two IPs.
-
--Andi
+V2UgZG9uJ3QgbWluZCBpZiBpdCBoYXMgdG8gYmU6DQpjb21wYXRpYmxlID0gIm9jZWFuaWMsNWlu
+bWZkIiwgImFsbHdpbm5lcixzdW41MGktYTY0IjsNCg0KSG93ZXZlciwgdG8gYXZvaWQgY29uZnVz
+aW9uLCBtaWdodCBpdCBiZSB3b3J0aCBpbmNsdWRpbmcgdGhlIHBhcnQgbnVtYmVyIChXZSBsaXN0
+IHRoaXMgYXMgJzUyMDUgNSIgTUZEJykgc28gdGhpcyB3b3VsZCBiZWNvbWU6DQpjb21wYXRpYmxl
+ID0gIm9jZWFuaWMsNTIwNS01aW5tZmQiLCAiYWxsd2lubmVyLHN1bjUwaS1hNjQiOw0KDQpQZXJo
+YXBzIHRoaXMgc29sdmVzIHRoZSBpc3N1ZS4gUGxlYXNlIGxldCBtZSBrbm93IHRob3VnaHRzLg0K
+DQpSeWFuIFBhbm5lbGwNCkRldmVsb3BtZW50IFRlYW0gTGVhZA0KT2NlYW5pYyBTeXN0ZW1zIChV
+SykgTHRkDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKYWdhbiBUZWtpIDxq
+YWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4gDQpTZW50OiAwNSBNYXJjaCAyMDE5IDE2OjA4DQpU
+bzogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4NCkNjOiBDaGVuLVl1
+IFRzYWkgPHdlbnNAY3NpZS5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsg
+TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJ5YW4gUGFubmVsbCA8cnlhbkBv
+c3VrbC5jb20+OyBNaWNoYWVsIFRyaW1hcmNoaSA8bWljaGFlbEBhbWFydWxhc29sdXRpb25zLmNv
+bT47IGxpbnV4LWFybS1rZXJuZWwgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+Zz47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2VybmVs
+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYW1hcnVsYUBhbWFydWxhc29s
+dXRpb25zLmNvbQ0KU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGFybTY0OiBhbGx3aW5uZXI6IGE2
+NDogQWRkIE9jZWFuaWMgQTY0LTVpbk1GRCBpbml0aWFsIHN1cHBvcnQNCg0KT24gVHVlLCBNYXIg
+NSwgMjAxOSBhdCA5OjI5IFBNIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5j
+b20+IHdyb3RlOg0KPg0KPiBPbiBGcmksIE1hciAwMSwgMjAxOSBhdCAxMDoyNzoxNFBNICswNTMw
+LCBKYWdhbiBUZWtpIHdyb3RlOg0KPiA+IE9uIEZyaSwgTWFyIDEsIDIwMTkgYXQgODoyNyBQTSBN
+YXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPiB3cm90ZToNCj4gPiA+DQo+
+ID4gPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCAwOTo0OToyM1BNICswNTMwLCBKYWdhbiBUZWtp
+IHdyb3RlOg0KPiA+ID4gPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCA5OjAzIFBNIE1heGltZSBS
+aXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+IHdyb3RlOg0KPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gSGksDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBUdWUsIEZlYiAyNiwgMjAxOSBhdCAx
+MTozMjo0MEFNICswNTMwLCBKYWdhbiBUZWtpIHdyb3RlOg0KPiA+ID4gPiA+ID4gT2NlYW5pYyBB
+NjQtNWluTUZEIGlzIGEgNSBpbmNoIE11bHRpIGZ1bmN0aW9uIGRpc3BsYXkgDQo+ID4gPiA+ID4g
+PiBiYXNlYm9hcmQgZGVzaWduZWQgdG8gbW91bnQgU29QaW5lIFNPTS4NCj4gPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gPiBLZXkgZmVhdHVyZXM6DQo+ID4gPiA+ID4gPiAtIEFsbHdpbm5lciBBNjQgQ29y
+dGV4LUE1Mw0KPiA+ID4gPiA+ID4gLSBNYWxpLTQwME1QMiBHUFUNCj4gPiA+ID4gPiA+IC0gQVhQ
+ODAzIFBNSUMNCj4gPiA+ID4gPiA+IC0gMkdCIEREUjMgUkFNDQo+ID4gPiA+ID4gPiAtIFNEIFNs
+b3QNCj4gPiA+ID4gPiA+IC0gU1BJLU5PUiBmbGFzaA0KPiA+ID4gPiA+ID4gLSBFTUFDLCBSVEw4
+MjExRQ0KPiA+ID4gPiA+ID4gLSBNQ1AyNTE1IENBTg0KPiA+ID4gPiA+ID4gLSBNSVBJLURTSQ0K
+PiA+ID4gPiA+ID4gLSBHb29kaXggOTExIENUUA0KPiA+ID4gPiA+ID4gLSBVU0IgSG9zdA0KPiA+
+ID4gPiA+ID4gLSAxMlYgREMgcG93ZXIgc3VwcGx5DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
+U2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+DQo+
+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5l
+ci9NYWtlZmlsZSAgICAgICAgfCAgMSArDQo+ID4gPiA+ID4gPiAgLi4uL2FsbHdpbm5lci9zdW41
+MGktYTY0LW9jZWFuaWMtNWlubWZkLmR0cyAgIHwgNDYgKysrKysrKysrKysrKysrKysrKw0KPiA+
+ID4gPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IA0KPiA+ID4gPiA+ID4gYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBp
+LWE2NC1vY2VhbmljLTVpbm1mZC5kdHMNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvTWFrZWZpbGUgDQo+ID4gPiA+ID4g
+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL01ha2VmaWxlDQo+ID4gPiA+ID4gPiBp
+bmRleCBhNWZiMWVhYThhY2YuLmVjMzlmZTg1NjExNyAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBh
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL01ha2VmaWxlDQo+ID4gPiA+ID4gPiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gQEAg
+LTIsNiArMiw3IEBADQo+ID4gPiA+ID4gPiAgZHRiLSQoQ09ORklHX0FSQ0hfU1VOWEkpICs9IHN1
+bjUwaS1hNjQtYW1hcnVsYS1yZWxpYy5kdGINCj4gPiA+ID4gPiA+ICBkdGItJChDT05GSUdfQVJD
+SF9TVU5YSSkgKz0gc3VuNTBpLWE2NC1iYW5hbmFwaS1tNjQuZHRiIA0KPiA+ID4gPiA+ID4gc3Vu
+NTBpLWE2NC1iYW5hbmFwaS1tNjQtaWNuNjIxMS5kdGINCj4gPiA+ID4gPiA+ICBkdGItJChDT05G
+SUdfQVJDSF9TVU5YSSkgKz0gc3VuNTBpLWE2NC1uYW5vcGktYTY0LmR0Yg0KPiA+ID4gPiA+ID4g
+K2R0Yi0kKENPTkZJR19BUkNIX1NVTlhJKSArPSBzdW41MGktYTY0LW9jZWFuaWMtNWlubWZkLmR0
+Yg0KPiA+ID4gPiA+ID4gIGR0Yi0kKENPTkZJR19BUkNIX1NVTlhJKSArPSBzdW41MGktYTY0LW9s
+aW51eGluby5kdGINCj4gPiA+ID4gPiA+ICBkdGItJChDT05GSUdfQVJDSF9TVU5YSSkgKz0gc3Vu
+NTBpLWE2NC1vcmFuZ2VwaS13aW4uZHRiDQo+ID4gPiA+ID4gPiAgZHRiLSQoQ09ORklHX0FSQ0hf
+U1VOWEkpICs9IHN1bjUwaS1hNjQtcGluZTY0LWx0cy5kdGIgZGlmZiANCj4gPiA+ID4gPiA+IC0t
+Z2l0IA0KPiA+ID4gPiA+ID4gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGkt
+YTY0LW9jZWFuaWMtNWlubWZkLmR0DQo+ID4gPiA+ID4gPiBzIA0KPiA+ID4gPiA+ID4gYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LW9jZWFuaWMtNWlubWZkLmR0DQo+
+ID4gPiA+ID4gPiBzDQo+ID4gPiA+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiA+
+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kNzNkMWY1NWFjYjkNCj4gPiA+ID4gPiA+IC0tLSAvZGV2
+L251bGwNCj4gPiA+ID4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1
+bjUwaS1hNjQtb2NlYW5pYy01aW5tZg0KPiA+ID4gPiA+ID4gKysrIGQuZHRzDQo+ID4gPiA+ID4g
+PiBAQCAtMCwwICsxLDQ2IEBADQo+ID4gPiA+ID4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZp
+ZXI6IChHUEwtMi4wKyBPUiBNSVQpDQo+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiBD
+b3B5cmlnaHQgKEMpIDIwMTkgT2NlYW5pYyBTeXN0ZW1zIChVSykgTHRkLg0KPiA+ID4gPiA+ID4g
+KyAqIENvcHlyaWdodCAoQykgMjAxOSBBbWFydWxhIFNvbHV0aW9ucyBCLlYuDQo+ID4gPiA+ID4g
+PiArICogQXV0aG9yOiBKYWdhbiBUZWtpIDxqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4gICov
+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArL2R0cy12MS87DQo+ID4gPiA+ID4gPiArDQo+
+ID4gPiA+ID4gPiArI2luY2x1ZGUgInN1bjUwaS1hNjQtc29waW5lLmR0c2kiDQo+ID4gPiA+ID4g
+PiArDQo+ID4gPiA+ID4gPiArLyB7DQo+ID4gPiA+ID4gPiArICAgICBtb2RlbCA9ICJPY2Vhbmlj
+IEE2NC01aW5NRkQiOw0KPiA+ID4gPiA+ID4gKyAgICAgY29tcGF0aWJsZSA9ICJvY2VhbmljLGE2
+NC01aW5tZmQiLCANCj4gPiA+ID4gPiA+ICsiYWxsd2lubmVyLHN1bjUwaS1hNjQiOw0KPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gVGhlIG5hbWUgb2YgdGhlIERUIGlzIE9jZWFuaWMgNWluTUZELCB3aGls
+ZSB5b3UgY2FsbCB0aGUgYm9hcmQgDQo+ID4gPiA+ID4gQTY0LTVpbk1GRCBoZXJlLCB3aGljaCBu
+YW1lIGlzIHRoZSBhY3R1YWwgbmFtZT8NCj4gPiA+ID4NCj4gPiA+ID4gWWVzLCB0aGlzIGlzIHNv
+bWV0aGluZyB0aGF0IHdlIGRpc2N1c3NlZCBkdXJpbmcgIkFtYXJ1bGEgQTY0LVJlbGljIg0KPiA+
+ID4gPiBuYW1pbmcgY29udmVudGlvbi4NCj4gPiA+ID4NCj4gPiA+ID4gU2luY2UgdGhlc2UgYm9h
+cmRzIGFyZSBub3QgZmFtb3VzIGxpa2UgdGVyZXMtaSB3ZSBhZ3JlZWQgdG8gYWRkIA0KPiA+ID4g
+PiB2ZW5kb3IgbmFtZSBhZnRlciBzdW41MGktYTY0LSBmb2xsb3dlZCBieSByZWFsIGJvYXJkIG5h
+bWUuDQo+ID4gPiA+DQo+ID4gPiA+IEhlcmUgQTY0IGFscmVhZHkgY292ZXJlZCBkdXJpbmcgc3Vu
+NTBpLWE2NC0gc28gdGhlIGR0cyBuYW1lIA0KPiA+ID4gPiBzaW1wbHkgdGhlIDx2ZW5kb3JfbmFt
+ZT4tPHJlYWxfYm9hcmRfbmFtZT4NCj4gPiA+DQo+ID4gPiBGb3IgdGhlIERUIG5hbWUsIHllYWgs
+IHdlIHdhbnQgdGhhdCBwYXR0ZXJuLg0KPiA+ID4NCj4gPiA+IEZvciB0aGUgY29tcGF0aWJsZSBh
+bmQgbW9kZWwsIHdlIHdhbnQgdG8gdXNlIHRoZSBtb2RlbCBuYW1lLg0KPiA+DQo+ID4gRW50aXJl
+IG1vZGVsIG5hbWUgYWZ0ZXIgPHZlbmRvcl9uYW1lPiwgPw0KPiA+DQo+ID4gbW9kZWwgPSAiT2Nl
+YW5pYyBBNjQtNWluTUZEIjsNCj4gPiBjb21wYXRpYmxlID0gIm9jZWFuaWMsYTY0LTVpbm1mZCIs
+ICJhbGx3aW5uZXIsc3VuNTBpLWE2NCI7DQo+ID4NCj4gPiBpcyB0aGlzIG5vdCBzdWZmaWNpZW50
+Pw0KPiA+DQo+ID4gTGV0IG1lIHVuZGVyc3RhbmQgd2l0aCByZXNwZWN0aXZlIGZldyBleGlzdGlu
+ZyBzdHVmZi4NCj4gPg0KPiA+IG1vZGVsID0gIkFtYXJ1bGEgQTY0LVJlbGljIjsNCj4gPiBjb21w
+YXRpYmxlID0gImFtYXJ1bGEsYTY0LXJlbGljIiwgImFsbHdpbm5lcixzdW41MGktYTY0IjsNCj4g
+Pg0KPiA+IG1vZGVsID0gIk9saW1leCBBNjQgVGVyZXMtSSINCj4gPiBjb21wYXRpYmxlID0gIm9s
+aW1leCxhNjQtdGVyZXMtaSIsICJhbGx3aW5uZXIsc3VuNTBpLWE2NCI7DQo+DQo+IFRoaXMgb25l
+IGlzIGNhbGxlZCB0aGUgVEVSRVMtQTY0Og0KPiBodHRwczovL3d3dy5vbGltZXguY29tL1Byb2R1
+Y3RzL0RJWS1MYXB0b3AvS0lUUy9URVJFUy1BNjQtV0hJVEUvb3Blbi1zDQo+IG91cmNlLWhhcmR3
+YXJlDQo+DQo+IFRoZSBsYXB0b3AgaXMgdGhlIFRlcmVzLUksIGl0IGNhbiBoYXZlIGFuIEE2NA0K
+Pg0KPiA+IG1vZGVsID0gIkZyaWVuZGx5QVJNIE5hbm9QaSBBNjQiOw0KPiA+IGNvbXBhdGlibGUg
+PSAiZnJpZW5kbHlhcm0sbmFub3BpLWE2NCIsICJhbGx3aW5uZXIsc3VuNTBpLWE2NCI7DQo+DQo+
+IE5hbm9QaSBBNjQgaXMgdGhlIG5hbWUgb2YgdGhlIGJvYXJkOiBodHRwOi8vbmFub3BpLmlvL25h
+bm9waS1hNjQuaHRtbA0KPg0KPiA+IG1vZGVsID0gIk9saW1leCBBNjQtT2xpbnV4aW5vIjsNCj4g
+PiBjb21wYXRpYmxlID0gIm9saW1leCxhNjQtb2xpbnV4aW5vIiwgImFsbHdpbm5lcixzdW41MGkt
+YTY0Ig0KPg0KPiBBNjQtT2xpbnV4aW5vIGlzIHRoZSBuYW1lIG9mIHRoZSBib2FyZCB0b286DQo+
+IGh0dHBzOi8vd3d3Lm9saW1leC5jb20vUHJvZHVjdHMvT0xpbnVYaW5vL0E2NC9BNjQtT0xpbnVY
+aW5vL29wZW4tc291cmMNCj4gZS1oYXJkd2FyZQ0KPg0KPiA+IFdvdWxkIHlvdSBjb21tZW50LCB3
+aGF0IGlzIHRoZSBkaWZmZXJlbnQgd2l0aCByZXNwZWN0IHRvIG15IGNoYW5nZT8NCj4NCj4gSWYg
+dGhlIG5hbWUgb2YgdGhlIHByb2R1Y3QgaXMgNWluTUZELCB0aGVuIHRoZSBtb2RlbCBzaG91bGQg
+YmUgT2NlYW5pYyANCj4gNWluTUZELCBhbmQgaXRzIGNvbXBhdGlibGUgb2NlYW5pYyw1aW5tZmQN
+Cg0KT2NlYW5pYyBzZWVtcyB0byBoYXZlIHNvbWUgbXVsdGlwbGUgTXVsdGkgRnVuY3Rpb24gRGV2
+aWNlcywgaWUgcmVhc29uIHdlIHByZWZlciB0aGUgcHJvZHVjdCBhcyAnQTY0LTVpbk1GRCcgc2lu
+Y2UgaXQgaXMgQTY0IGJhc2VkLiBJbiB0aGlzIGNhc2UgdGhlIG1vZGVsIGFuZCBjb21wYXRpYmxl
+IHNob3VsZCBiZSBmaW5lIEkgdGhpbms/DQo=
