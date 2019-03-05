@@ -2,333 +2,237 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CDEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB66BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAEE2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B281C2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="xZ0vneJy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="byS1Jc3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfCER6G (ORCPT
+        id S1728521AbfCER7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:58:06 -0500
-Received: from mail-eopbgr30073.outbound.protection.outlook.com ([40.107.3.73]:11335
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726182AbfCER6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:58:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HNL2PJU2VTCJ9kCQLtqfsrYqQCEpiCVPpaRc1i1tivk=;
- b=xZ0vneJyyK/uxEJwCC71e/WfGq2MKLiHscqi2hr4ICSZLf1jDNC46MzoXoBxI5uXnSBBXERyU06Vw+PzZOOV3U6Q8KPlixioPg6De2+HvzhznzN/3wypIkfdRvd5zJZLkJPymTQ2PQxm0Y07RqYltj6KHwyV6gK5Q5J5r0rabdc=
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.135.8) by
- VI1PR0501MB2558.eurprd05.prod.outlook.com (10.168.136.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.19; Tue, 5 Mar 2019 17:57:59 +0000
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0b8:7ed8:d657:2f59]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0b8:7ed8:d657:2f59%6]) with mapi id 15.20.1665.020; Tue, 5 Mar 2019
- 17:57:59 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: RE: [RFC net-next 8/8] net/mlx5: Add subdev driver to bind to subdev
- devices
-Thread-Topic: [RFC net-next 8/8] net/mlx5: Add subdev driver to bind to subdev
- devices
-Thread-Index: AQHUz/EC2njdeQVegE6Mw8pbS3FanaX2XwcAgACa0LCABawngIAAm4yA
-Date:   Tue, 5 Mar 2019 17:57:58 +0000
-Message-ID: <VI1PR0501MB2271AA91B5D29CA69778268BD1720@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <1551418672-12822-1-git-send-email-parav@mellanox.com>
- <1551418672-12822-9-git-send-email-parav@mellanox.com>
- <20190301072158.GC8975@kroah.com>
- <AM4PR0501MB22603530A59C625CDF48D978D1760@AM4PR0501MB2260.eurprd05.prod.outlook.com>
- <20190305071331.GA2060@kroah.com>
-In-Reply-To: <20190305071331.GA2060@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ddea6bad-9373-4177-8528-08d6a1941a7a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0501MB2558;
-x-ms-traffictypediagnostic: VI1PR0501MB2558:
-x-ms-exchange-purlcount: 1
-x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;VI1PR0501MB2558;23:TArtHYUFM967kvJ9Rc0C1IDM8Yn8ZrXkdeYBcu4?=
- =?us-ascii?Q?CajVNf6t4OPmacRhzWKqFhSYGntj+HdYX6ixPqnaeG/lYjEEno0Fb5RWS655?=
- =?us-ascii?Q?ImvQGLghQxYQirByv0XDw0J2AtbglTyDYXXDb5iaScJMm+vcZnm0SDwgseU9?=
- =?us-ascii?Q?kuJvAKQTwqP8avnGeEW0dHXIoVVGRg1vZdPNuBVroSS8357v/nZpi/Hf5rPQ?=
- =?us-ascii?Q?1/G0yRJcQMNFBaL8Ra5k4+lisdpHetDzAUT+b4xBLPhUNj7yRXBrl4IpqhkL?=
- =?us-ascii?Q?n0THrSoiWttUkXWhar1W80yMmtvcSz6fNIzG+DG1dcObD8x3NIC5rRjCOdNi?=
- =?us-ascii?Q?5SPEYZyHo5M+ymdTGSTF82oEXnNyJY8sMTD2Lo33IW5xCXGM4QAmTYc0aFsU?=
- =?us-ascii?Q?gjAwYRXmn361bjLowlmFCNX0AReDTBo1ULAeX50uThekULWUbwV6FScZt6gE?=
- =?us-ascii?Q?iRLYg5ZBvsgc/wZMUhgQzehCJcnfgXb6Hc9jxccaxGkEOwB2q513sbo45bKj?=
- =?us-ascii?Q?RVWH/60v2EibwtBEFCb/D9gLuFX6qPUJDo7dUKstjYE/+FT1rNcIKgFgydvN?=
- =?us-ascii?Q?Qttpzi5v2Sd9Bybc4W9RBU1WOKDH/5xkViAwE2ABjL/7sTBlWTjhChWbnO7/?=
- =?us-ascii?Q?lx2q3roOxVdnGpecH0ftOD6wdorRVuwr4BIV4yurSOB6r5zRIYRM7YsvaG3V?=
- =?us-ascii?Q?3kwjtC5rkxUUBbIhFeDU6HEUr0kkWyW1GGPeGzfkk9BwcFRg22DgypmkTm8L?=
- =?us-ascii?Q?HrmYKkbdMiFVYss7WLd+AcpVutTp4fXdMO1BidfPf5HZExKwfbBgyvnn5bcw?=
- =?us-ascii?Q?CmBHvqnmvO9I0iiwjyKMwPsQbf6ko97h9K8SfGKtlYwo8J8Nc52B5QJP4OJx?=
- =?us-ascii?Q?jS6umatuBTrYydWlmg3jAC7xWYECPryJt4hpLwOivwepX6l+nNlKUrjHP9mY?=
- =?us-ascii?Q?qRejwiBaNp38bnI1x0B46WPSINmOWL9bkxqmiRCQ9G/D9R+vCtV+LtooWOpx?=
- =?us-ascii?Q?dDxVtMrfe+JgkAEzVwQTJlifMx+Lwao3hkF+Drn7N9AJqzWz0MrGx80FU/uL?=
- =?us-ascii?Q?AIAp0s/nQs8XbuBAOzp/WSmN9jMtgpv8NxE0nbQiEPQgiTCfgBaMiK4Bqo4z?=
- =?us-ascii?Q?WdCtcedpTGBGjEOauZronB+G+IS7tGqM86sDHjFX3HSujRc7VRSxPuvM910a?=
- =?us-ascii?Q?Z6WTLCrmVHHqGhap/uI3OFAlSYSjznPIbAqRq/3nVZNUH3c5aV1BTf1ftJ8O?=
- =?us-ascii?Q?3GxHq5b4/VmYe2+tCWHkO9/jly7/hybPfMWxe18CwKnL3r0KpaVDPrhdWyRD?=
- =?us-ascii?Q?DFDCBC7AmouVQgHMlsjvmFLfS8Wak0BBUFvHL049U94V1roYooH8P/xEvkeC?=
- =?us-ascii?Q?FguuEXA4d4evexJlcqirNoOzCeBE=3D?=
-x-microsoft-antispam-prvs: <VI1PR0501MB2558D3C91A8F0DC284B0DEFBD1720@VI1PR0501MB2558.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0967749BC1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(376002)(136003)(396003)(13464003)(199004)(189003)(71200400001)(93886005)(71190400001)(6116002)(6916009)(3846002)(486006)(14454004)(7696005)(66066001)(76176011)(966005)(7736002)(476003)(478600001)(11346002)(53546011)(6506007)(105586002)(106356001)(561944003)(33656002)(99286004)(54906003)(446003)(68736007)(186003)(316002)(81156014)(81166006)(102836004)(5660300002)(26005)(5024004)(256004)(14444005)(52536013)(97736004)(8676002)(55016002)(86362001)(9686003)(74316002)(6306002)(229853002)(2906002)(8936002)(4326008)(53936002)(6436002)(6246003)(25786009)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2558;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AvNb9PfWlknTj1nkzDq+lGFFsFlAON94yVc6bY/k190oATNX3VFyohCK9+qXjFTOQcqNWyHZCrZdXa+5fMkdQ1CygZOClF2vpqvYpv0y7GhppVEMSlqQwDp4rxwereKqdTHD65KTxobz4XQ6yMQZy6d3f6Bsej6kKbxkFv97S57Cwi9Lol+2KHyycViL5ktIYRozXyH4Y0NuRofXPk98u8MdtNM5Ga3QFmEUTTFIQ0bPAIxZB1/hYKzFp8bppZuvN1wrKzXo+slxzNKh1YPtdQVEhw48VT+/Qs7D6bQb78/fqrBFB+VEM8LdZAgJ/tcFr2AjZZLJSQAY38gRjwxbVd9SjKlPmaiMqCUqY+rV82rhu6N4W+R15E3+s1shir9eXk/HbojbkrVzq4iWGiCr4P5LXvT1H0dmil+9qR8yddw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Mar 2019 12:59:42 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36383 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfCER7l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 12:59:41 -0500
+Received: by mail-qt1-f196.google.com with SMTP id p25so9894585qtb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 09:59:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ducrTQy4EJ6b45euawMl32eWMLfVfvh+YIze124RKAE=;
+        b=byS1Jc3YZCkHmPzAXOXf0hgX/LRn16mjOZgtGzEyvr/W3sJ6EnRpsUzIR9KK+LmDy1
+         hC1bicRY6oxYLPZ4OHe0WBI6uZRYD8yOKOhDevJYokVy8nul5LS+lagSxqH5AsMN6+4/
+         dODYLyAceJPEi1n+Th9bweSNkSa4/w2smxAew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ducrTQy4EJ6b45euawMl32eWMLfVfvh+YIze124RKAE=;
+        b=gUgPrAKShxTgBnv5T0oMAG6+D2+ogBfMnpglZpwJK2GmEQuEkQnUff0IgTeeHo+ri2
+         3y3taMRyHTFeLFeHnFFyXcR78MIKpoIdWU8fK0H2J9jaUOSZDOOqmD2OdL3ulvROeO16
+         htaKAyJAPMpkWIpGzR/R+/amDKkBSf6mszpYiQ+XRnlIm78VXL1gNVRD+j9KHRxpmJqA
+         4CnIwmDiQKhMCK8XYk09ak1RNZabd+TJj2iKNOqDbAxwzxZPF4O9NkoKzE0CgiGCg3lM
+         nsF9Izorm6XOirElb+IZKb+zs1w5A6WZbfAeL3i20nDaR7wShFUAPFRu+qj0nK6bgmeH
+         BiCA==
+X-Gm-Message-State: APjAAAU6si9qX/ofST9M5CSTvqi6mlzmBzIdPORdlMjJlQZ3313XOvKA
+        U2E4KiYrs3yb80puMC/qbORpWSD/hZtivmuclrFK1g==
+X-Google-Smtp-Source: APXvYqxQY+KLgD0JnQMxt/jOSQroH8Qt+K8LVaCvJEgcDw8pc3dDDia0aHz4TljrQh/IxCU3YNXOZ0d3uLxdERAou9M=
+X-Received: by 2002:a0c:d968:: with SMTP id t37mr3025612qvj.195.1551808780420;
+ Tue, 05 Mar 2019 09:59:40 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddea6bad-9373-4177-8528-08d6a1941a7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2019 17:57:58.9341
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2558
+References: <CABXOdTdXcCeqkqcH69dG62mLmurbDOcrhhVGm6BgnBzR-1KETg@mail.gmail.com>
+ <20190304005414.218310-1-ravisadineni@chromium.org> <CABXOdTdvMKGHoE5JQBLca_6V+ihRiUedgnyb2or8GraBDsKYWQ@mail.gmail.com>
+ <CAEZbON6PtNKpLQB+B5S6rRKjnvBo2dHtdaSQzVCsk3aP9U9wVw@mail.gmail.com> <CAC0y+AgmxjQv5gm4Bc5mMhnX_PwrixGfraHxg+EGvZXhi2mGPg@mail.gmail.com>
+In-Reply-To: <CAC0y+AgmxjQv5gm4Bc5mMhnX_PwrixGfraHxg+EGvZXhi2mGPg@mail.gmail.com>
+From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Date:   Tue, 5 Mar 2019 09:59:29 -0800
+Message-ID: <CAEZbON6Lcj2a4hVeQ-7BwmiCg-B-=ujeQ1aG+SKmWgjbT=aA9w@mail.gmail.com>
+Subject: Re: [PATCH V2] cros_ec: Expose sysfile to force battery cut-off on shutdown.
+To:     Daisuke Nojiri <dnojiri@google.com>
+Cc:     Guenter Roeck <groeck@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Todd Broch <tbroch@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Daisuke,
 
+On Tue, Mar 5, 2019 at 9:29 AM Daisuke Nojiri <dnojiri@google.com> wrote:
+>>
+>> +       if (len =3D=3D 11 && !strncmp(buf, "at-shutdown", len)) {
+>> +               param->flags =3D EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN;
+>> +       } else {
+>> +               kfree(msg);
+>> +               return -EINVAL;
+>> +       }
+>
+>
+> Why don't we just let the EC decide what flag is legal or illegal? If you=
+ hard code 'at-shutdown', other calls to the sysfs will be blocked even if =
+the EC supports other flags.
+That might not be a wise option. Allowing random values can have
+unintended effects. For example consider what would happen if write
+random values to EC today.  Any flag value other than
+EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN will cause the battery to cutoff
+immediately before the system shutdowns.
+In future, if EC exposes more attributes, it will not be that
+difficult to add support here.
+>
+> On Mon, Mar 4, 2019 at 5:00 PM Ravi Chandra Sadineni <ravisadineni@chromi=
+um.org> wrote:
+>>
+>> Hi Guenter,
+>>
+>> On Sun, Mar 3, 2019 at 5:13 PM Guenter Roeck <groeck@google.com> wrote:
+>> >
+>> > On Sun, Mar 3, 2019 at 4:54 PM RaviChandra Sadineni <ravisadineni@chro=
+mium.org> wrote:
+>> >>
+>> >> On chromebooks, power_manager daemon normally shutsdown(S5) the devic=
+e
+>> >> when the battery charge falls below 4% threshold. Chromeos EC then
+>> >> normally spends an hour in S5 before hibernating. If the battery char=
+ge
+>> >> falls below critical threshold in the mean time, EC does a battery cu=
+toff
+>> >> instead of hibernating. On some chromebooks, S5 is optimal enough
+>> >> resulting in EC hibernating without battery cut-off. This results in
+>> >> battery deep-discharging. This is a bad user experience as battery
+>> >> has to trickle charge before booting when the A.C is plugged in the n=
+ext
+>> >> time.
+>> >>
+>> >> This patch exposes a sysfs file for an userland daemon to suggest EC =
+if it
+>> >> has to do a battery cut-off instead of hibernating when the system en=
+ters
+>> >> S5 next time.
+>> >>
+>> >> Signed-off-by: RaviChandra Sadineni <ravisadineni@chromium.org>
+>> >> ---
+>> >> V2: Use kstrtobool() instead of kstrtou8() and add documentation.
+>> >>
+>> >>  .../ABI/testing/sysfs-class-chromeos          |  8 ++++
+>> >>  drivers/platform/chrome/cros_ec_sysfs.c       | 37 +++++++++++++++++=
+++
+>> >>  2 files changed, 45 insertions(+)
+>> >>  create mode 100644 Documentation/ABI/testing/sysfs-class-chromeos
+>> >>
+>> >> diff --git a/Documentation/ABI/testing/sysfs-class-chromeos b/Documen=
+tation/ABI/testing/sysfs-class-chromeos
+>> >> new file mode 100644
+>> >> index 000000000000..44d3cee6e7ae
+>> >> --- /dev/null
+>> >> +++ b/Documentation/ABI/testing/sysfs-class-chromeos
+>> >> @@ -0,0 +1,8 @@
+>> >> +What:           /sys/class/chromeos/cros_ec/cutoff_at_shutdown
+>> >> +Date:           February 2019
+>> >> +Contact:        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+>> >> +Description:
+>> >> +                On writing '[Yy1]' to cutoff_at_shutdown property,
+>> >> +                kernel sends a host command to EC requesting battery
+>> >> +                cutoff on next shutdown. If AC is plugged in before
+>> >> +                next shutdown, EC resets this flag.
+>> >> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platfo=
+rm/chrome/cros_ec_sysfs.c
+>> >> index f34a50121064..f5168ce8bfc7 100644
+>> >> --- a/drivers/platform/chrome/cros_ec_sysfs.c
+>> >> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
+>> >> @@ -322,14 +322,51 @@ static ssize_t kb_wake_angle_store(struct devic=
+e *dev,
+>> >>         return count;
+>> >>  }
+>> >>
+>> >> +/* Battery cut-off control */
+>> >> +static ssize_t cutoff_at_shutdown_store(struct device *dev,
+>> >> +                                  struct device_attribute *attr,
+>> >> +                                  const char *buf, size_t count)
+>> >> +{
+>> >> +       struct ec_params_battery_cutoff *param;
+>> >> +       struct cros_ec_command *msg;
+>> >> +       int ret;
+>> >> +       struct cros_ec_dev *ec =3D container_of(
+>> >> +                       dev, struct cros_ec_dev, class_dev);
+>> >> +       bool cutoff_battery;
+>> >> +
+>> >> +       if (kstrtobool(buf, &cutoff_battery))
+>> >> +               return -EINVAL;
+>> >> +
+>> >> +       if (!cutoff_battery)
+>> >> +               return count;
+>> >> +
+>> >
+>> >
+>> > It is quite unusual to only be able to set this option, but not to be =
+able to reset it. I think that warrants an explanation and reasoning. Also,=
+ if clearing the flag is not supported, I would expect an attempt to do so =
+to return an error. There should also be an explanation in the code explain=
+ing why the attribute is write-only.
+>> Added documentation for the reason behind making this flag write only.
+>> Instead of taking a boolean value, made this attribute more generic
+>> and took 'at-shutdown' as an option. This way it will be easy to
+>> extend this sysfs api in the future (if EC exposes more attributes for
+>> this host command).
+>> >
+>> > Guenter
+>> >
+>> >>
+>> >> +       msg =3D kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL=
+);
+>> >> +       if (!msg)
+>> >> +               return -ENOMEM;
+>> >> +
+>> >> +       param =3D (struct ec_params_battery_cutoff *)msg->data;
+>> >> +       msg->command =3D EC_CMD_BATTERY_CUT_OFF + ec->cmd_offset;
+>> >> +       msg->version =3D 1;
+>> >> +       param->flags =3D EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN;
+>> >> +       msg->outsize =3D sizeof(*param);
+>> >> +       msg->insize =3D 0;
+>> >> +       ret =3D cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+>> >> +       kfree(msg);
+>> >> +       if (ret < 0)
+>> >> +               return ret;
+>> >> +       return count;
+>> >> +}
+>> >> +
+>> >>  /* Module initialization */
+>> >>
+>> >>  static DEVICE_ATTR_RW(reboot);
+>> >>  static DEVICE_ATTR_RO(version);
+>> >>  static DEVICE_ATTR_RO(flashinfo);
+>> >>  static DEVICE_ATTR_RW(kb_wake_angle);
+>> >> +static DEVICE_ATTR_WO(cutoff_at_shutdown);
+>> >>
+>> >>  static struct attribute *__ec_attrs[] =3D {
+>> >> +       &dev_attr_cutoff_battery_at_shutdown.attr,
+>> >>         &dev_attr_kb_wake_angle.attr,
+>> >>         &dev_attr_reboot.attr,
+>> >>         &dev_attr_version.attr,
+>> >> --
+>> >> 2.20.1
+>> >>
+>> Thanks,
+>
+>
+>>
+>> Ravi
 
-> -----Original Message-----
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Tuesday, March 5, 2019 1:14 AM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> michal.lkml@markovi.net; davem@davemloft.net; Jiri Pirko
-> <jiri@mellanox.com>; Jakub Kicinski <jakub.kicinski@netronome.com>
-> Subject: Re: [RFC net-next 8/8] net/mlx5: Add subdev driver to bind to
-> subdev devices
->=20
-> On Fri, Mar 01, 2019 at 05:21:13PM +0000, Parav Pandit wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Greg KH <gregkh@linuxfoundation.org>
-> > > Sent: Friday, March 1, 2019 1:22 AM
-> > > To: Parav Pandit <parav@mellanox.com>
-> > > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > michal.lkml@markovi.net; davem@davemloft.net; Jiri Pirko
-> > > <jiri@mellanox.com>
-> > > Subject: Re: [RFC net-next 8/8] net/mlx5: Add subdev driver to bind
-> > > to subdev devices
-> > >
-> > > On Thu, Feb 28, 2019 at 11:37:52PM -0600, Parav Pandit wrote:
-> > > > Add a subdev driver to probe the subdev devices and create fake
-> > > > netdevice for it.
-> > >
-> > > So I'm guessing here is the "meat" of the whole goal here?
-> > >
-> > > You just want multiple netdevices per PCI device?  Why can't you do
-> > > that today in your PCI driver?
-> > >
-> > Yes, but it just not multiple netdevices.
-> > Let me please elaborate in detail.
-> >
-> > There is a swichdev mode of a PCI function for netdevices.
-> > In this mode a given netdev has additional control netdev (called
-> representor netdevice =3D rep-ndev).
-> > This rep-ndev is attached to OVS for adding rules, offloads etc using
-> standard tc, netfilter infra.
-> > Currently this rep-ndev controls switch side of the settings, but not t=
-he
-> host side of netdev.
-> > So there is discussion to create another netdev or devlink port..
-> >
-> > Additionally this subdev has optional rdma device too.
-> >
-> > And when we are in switchdev mode, this rdma dev has similar rdma rep
-> device for control.
-> >
-> > In some cases we actually don't create netdev when it is in InfiniBand
-> mode.
-> > Here there is PCI device->rdma_device.
-> >
-> > In other case, a given sub device for rdma is dual port device, having
-> netdevice for each that can use existing netdev->dev_port.
-> >
-> > Creating 4 devices of two different classes using one iproute2/ip or
-> iproute2/rdma command is horrible thing to do.
->=20
-> Why is that?
->=20
-When user creates the device, user tool needs to return a device handle tha=
-t got created.
-Creating multiple devices doesn't make sense. I haven't seen any tool doing=
- such crazy thing.
-
-> > In case if this sub device has to be a passthrough device, ip link comm=
-and
-> will fail badly that day, because we are creating some sub device which i=
-s not
-> even a netdevice.
->=20
-> But it is a network device, right?
->=20
-When there is passthrough subdevice, there won't be netdevice created.
-We don't want to create passthrough subdevice using iproute2/ip tool which =
-primarily works on netdevices.
-
-> > So iproute2/devlink which works on bus+device, mainly PCI today, seems
-> right abstraction point to create sub devices.
-> > This also extends to map ports of the device, health, registers debug, =
-etc
-> rich infrastructure that is already built.
-> >
-> > Additionally, we don't want mlx driver and other drivers to go through =
-its
-> child devices (split logic in netdev and rdma) for power management.
->=20
-> And how is power management going to work with your new devices?  All
-> you have here is a tiny shim around a driver bus,=20
-So subdevices power management is done before their parent's.
-Vendor driver doesn't need to iterate its child devices to suspend/resume i=
-t.
-
-> I do not see any new
-> functionality, and as others have said, no way to actually share, or spli=
-t up,
-> the PCI resources.
->=20
-devlink tool create command will be able to accept more parameters during d=
-evice creation time to share and split PCI resources.
-This is just the start of the development and RFC is to agree on direction.
-devlink tool has parameters options that can be queried/set and existing in=
-fra will be used for granular device config.
-
-> > Kernel core code does that well today, that we like to leverage through
-> subdev bus or mfd pm callbacks.
-> >
-> > So it is lot more than just creating netdevices.
->=20
-> But that's all you are showing here :)
->=20
-Starting use case is netdev and rdma, but we don't want to create new tools=
- few months/a year later for passthrough mode or for different link layers =
-etc.
-
-> > > What problem are you trying to solve that others also are having
-> > > that requires all of this?
-> > >
-> > > Adding a new bus type and subsystem is fine, but usually we want
-> > > more than just one user of it, as this does not really show how it
-> > > is exercised very well.
-> > This subdev and devlink infrastructure solves this problem of creating
-> smaller sub devices out of one PCI device.
-> > Someone has to start.. :-)
->=20
-> That is what a mfd should allow you to do.
->=20
-I did cursory look at mfd.
-It lacks removing specific devices, but that is small. It can be enhanced t=
-o remove specific mfd device.
-
-> > To my knowledge, currently Netronome, Broadcom and Mellanox are
-> actively using this devlink and switchdev infra today.
->=20
-> Where are they "using it"?  This patchset does not show that.
->=20
-devlink and swhichdev mode for SRIOV is common among these vendors and more=
-.
-The code is in,
-drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-drivers/net/ethernet/netronome/nfp/nfp_net_main.c
-drivers/net/ethernet/mellanox/mlx5/core/main.c
-
-This patchset covers only mlx5, but other vendors who also intent to create=
- subdevices will be able to reuse it.
-This RFC doesn't cover other vendors.
-Jakub and netdev list in CC. We are discussing with Jakub in this patchset =
-discussion.
-
-> > > Ideally 3 users would be there as that is when it proves itself that
-> > > it is flexible enough.
-> > >
-> >
-> > We were looking at drivers/visorbus if we can repurpose it, but GUID
-> device naming scheme is just not user friendly.
->=20
-> You can always change the naming scheme if needed.  But why isn't a GUID
-> ok?=20
-I think it was ok.
-vendor-device id scheme seems more user friendly and in kernels control, al=
-so fits with existing modpost tools.
-GUID can be used instead of vendor, device id.
-However visorbus is tied to acpi and device life cycle is very different un=
-der workqueue handlering.
-It is also meant for a vendor s-Par devices.
-Its guest drivers are in staging without a clear roadmap for more than year=
- now.
-So do not want to depend on it. mfd or dedicated bus seems better fit.
-
-> It's very easy to reserve properly, and you do not need a central naming
-> "authority".
->=20
-> > > Would just using the mfd subsystem work better for you?  That
-> > > provides core support for "multi-function" drivers/devices already.
-> > > What is missing from that subsystem that does not work for you here?
-> > >
-> > We were not aware of mfd until now. I looked at very high level now. It=
-'s a
-> wrapper to platform devices and seems widely use.
-> > Before subdev proposal, Jason suggested an alternative is to create
-> platform devices and driver attach to it.
-> >
-> > When I read kernel documentation [1], it says "platform devices typical=
-ly
-> appear as autonomous entities"
-> > Here instead of autonomy, it is in user's control.
-> > Platform devices probably don't disappear a lot in live system as oppos=
-ed
-> to subdevices which are created and removed dynamically a lot often.
-> >
-> > Not sure if platform device is abuse for this purpose or not.
->=20
-> No, do not abuse a platform device.=20
-Yes. that is my point mfd devices are platform devices.
-mfd creates platform devices. and to match to it, platfrom_register_driver(=
-) have to be called to bind to it.
-I do not know currently if we have the flexibility to say that instead of b=
-inding X driver, bind Y driver for platform devices.
-
-> You should be able to just use a normal
-> PCI device for this just fine, and if not, we should be able to make the
-> needed changes to mfd for that.
->=20
-Ok. so parent pci device and mfd devices.
-mfd seems to fit this use case.
-Do you think 'Platform devices' section is stale in [1] for autonomy, host =
-bridge, soc platform etc points?
-Should we update the documentation to indicate that it can be used for non-=
-autonomous, user created devices and it can be used for creating devices on=
- top of PCI parent device etc?
-
- [1] https://www.kernel.org/doc/Documentation/driver-model/platform.txt
+Thanks,
+Ravi
