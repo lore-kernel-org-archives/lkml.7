@@ -2,118 +2,95 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B3DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5CBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B64A20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1ACE2084F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="hmfMJQUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfCELb6 (ORCPT
+        id S1727829AbfCELcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:31:58 -0500
-Received: from out1.zte.com.cn ([202.103.147.172]:40562 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727305AbfCELb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:31:57 -0500
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id EC47D1D4CC034625443C;
-        Tue,  5 Mar 2019 19:31:55 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x25BVpff071141;
-        Tue, 5 Mar 2019 19:31:51 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019030519320448-3290744 ;
-          Tue, 5 Mar 2019 19:32:04 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/4] ARM: mvebu: fix a leaked reference by adding missing of_node_put
-Date:   Tue, 5 Mar 2019 19:32:55 +0800
-Message-Id: <1551785577-45896-2-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1551785577-45896-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1551785577-45896-1-git-send-email-wen.yang99@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-05 19:32:04,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-05 19:31:47,
-        Serialize complete at 2019-03-05 19:31:47
-X-MAIL: mse01.zte.com.cn x25BVpff071141
+        Tue, 5 Mar 2019 06:32:22 -0500
+Received: from smtp113.ord1d.emailsrvr.com ([184.106.54.113]:39122 "EHLO
+        smtp113.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727305AbfCELcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:32:21 -0500
+Received: from smtp23.relay.ord1d.emailsrvr.com (localhost [127.0.0.1])
+        by smtp23.relay.ord1d.emailsrvr.com (SMTP Server) with ESMTP id B207A201BD;
+        Tue,  5 Mar 2019 06:32:20 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1551785540;
+        bh=aTS+w9vaCrfJLA/t7vBQ3ycgmUsOm+Ymcbo0/vx4F30=;
+        h=Subject:To:From:Date:From;
+        b=hmfMJQUx0i4L5GyKJ4brP+n7SuCeH333xl1GePUo8+XFL0AgwGFvPKdmIB1EQ9Eud
+         O9CfLgBLGiApaiPbRstidn4rp6HzilLTN0H3cxo8i+6LFH8D1DkELod29xFkfbfKPG
+         tLpophMNne4qosoIHUxJfW2clqOU702deQRqvGwU=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp23.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id CFC20201E7;
+        Tue,  5 Mar 2019 06:32:19 -0500 (EST)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.185] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Tue, 05 Mar 2019 06:32:20 -0500
+Subject: Re: [PATCH] staging: comedi: ni_mio_common: Fix divide-by-zero for
+ DIO cmdtest
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Spencer E . Olson" <olsonse@umich.edu>
+References: <20190304143354.4964-1-abbotti@mev.co.uk>
+ <20190305081629.GA13474@kadam>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <261cec72-ed19-7092-5307-76481e9f20ba@mev.co.uk>
+Date:   Tue, 5 Mar 2019 11:32:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190305081629.GA13474@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_get_next_child returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+On 05/03/2019 11:10, Dan Carpenter wrote:
+> On Mon, Mar 04, 2019 at 02:33:54PM +0000, Ian Abbott wrote:
+>> The problem was reported on the COMEDI mailing list here:
+>> https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
+>>
+> 
+> Can you give Ivan a Reported-by tag?  It's a public mailing list so
+> that shouldn't be a problem.
 
-Detected by coccinelle with the following warnings:
-./arch/arm/mach-mvebu/pm-board.c:135:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 88, but without a corresponding object release within this functio
+I can do, but I don't know his full name.  Will that be a problem?
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/mach-mvebu/pm-board.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+>> Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
+>> Cc: <stable@vger.kernel.org> # 4.6+
+>> Cc: Spencer E. Olson <olsonse@umich.edu>
+>> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+>> ---
+> 
+> regards,
+> dan carpenter
+> 
+> 
 
-diff --git a/arch/arm/mach-mvebu/pm-board.c b/arch/arm/mach-mvebu/pm-board.c
-index db17121..1e2c17c 100644
---- a/arch/arm/mach-mvebu/pm-board.c
-+++ b/arch/arm/mach-mvebu/pm-board.c
-@@ -79,7 +79,7 @@ static void mvebu_armada_pm_enter(void __iomem *sdram_reg, u32 srcmd)
- static int __init mvebu_armada_pm_init(void)
- {
- 	struct device_node *np;
--	struct device_node *gpio_ctrl_np;
-+	struct device_node *gpio_ctrl_np = NULL;
- 	int ret = 0, i;
- 
- 	if (!of_machine_is_compatible("marvell,axp-gp"))
-@@ -126,18 +126,23 @@ static int __init mvebu_armada_pm_init(void)
- 			goto out;
- 		}
- 
-+		if(gpio_ctrl_np)
-+			of_node_put(gpio_ctrl_np);
- 		gpio_ctrl_np = args.np;
- 		pic_raw_gpios[i] = args.args[0];
- 	}
- 
- 	gpio_ctrl = of_iomap(gpio_ctrl_np, 0);
--	if (!gpio_ctrl)
--		return -ENOMEM;
-+	if (!gpio_ctrl) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 
- 	mvebu_pm_suspend_init(mvebu_armada_pm_enter);
- 
- out:
- 	of_node_put(np);
-+	of_node_put(gpio_ctrl_np);
- 	return ret;
- }
- 
+
 -- 
-2.9.5
-
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
