@@ -2,142 +2,105 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D03C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09702C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD271206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551746024;
-	bh=1uqGiYWmQbzjgGG96niXhdENB8bnQDuYxmogfpL5eAc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OvMtiJiFIOCndTLYh/p22wJsxqJFj4gHBViffakv/nVf8eauttDAnzWgLA0t58nbl
-	 qa19Dq6RNK9RlLtQDVgPaCX1OtD32WTlM1i4TaWWZIqfuDB+n6rRAAzRZMfFSGJOhl
-	 e9+lCj/wklFtadAKU53ZhodrSZRLIBn/Lwk0orCc=
+	by mail.kernel.org (Postfix) with ESMTP id C9455206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:34:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EtRQFInj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfCEAdn (ORCPT
+        id S1726834AbfCEAeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:33:43 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37955 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfCEAdn (ORCPT
+        Mon, 4 Mar 2019 19:34:13 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48732 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfCEAeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:33:43 -0500
-Received: by mail-lj1-f193.google.com with SMTP id 199so5994223ljj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:33:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LSf70cL2RGgyOc3zQT9hIPFMQ6rAGhCNNZF5Ejd4GOA=;
-        b=A8t1IllR2PbXTGURjyyxZj5rCqF2+9DuN5zp+9Y/HO2WcIoHb9KfNsKQu+kDY5QsTF
-         vfLCBXBqE6Oc9FwAx/VrPBdS5CGDnktCs6Cb54qK4wp82LhJBdQaKrXw9F6qO7eh0Zdo
-         N54jWx8xeWcgf/iFpUsIcHcjUbkdDNO2DEmdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LSf70cL2RGgyOc3zQT9hIPFMQ6rAGhCNNZF5Ejd4GOA=;
-        b=CHgJBd8WPKdH4OTfY8xTjoXIO00ZhCVn7PZZocDT+LowuFEOnsf9tkTNybrzsSB2TM
-         HZ9skjLyMnNrcXatPQ9WTAvyNqR4OxNHLrdl0K1deqKkwHBq3S8z2NTtN0S90GeFrPxu
-         0vAbiwL9dy/DL2Js2Npciu7gd+OZ9RqAybHfrJWy29PbdFYtcKLVSjnCRx3Qo+13/esc
-         G6oRcDYoTOQHqiX99gqLGrLZyEVTmmeM9yis1pOdZcM0yV5ZMsVosLbRplcHc39ylc/n
-         B5qv7BdZbiGow2xnHslQfTu8CMexUtfs9ZVc2bSXZNJnrYRA1CKcV6c3Eg9j3qJUBIhn
-         c11w==
-X-Gm-Message-State: APjAAAUIQlgiC/WjIaAotJXvGhDFao7WYJKJMWCei9AN83W3j1fh6NqM
-        hm/8SFjhxaIRBUZyw7PsyBy3FWRLiic=
-X-Google-Smtp-Source: APXvYqw0gE57pecWsysGDPUjQCKUlgElqyvuDO4ig/wFOaHqWroU7o1+YzBAlWH7xDV0UBJy7TJaYw==
-X-Received: by 2002:a2e:964b:: with SMTP id z11mr10918113ljh.138.1551746020378;
-        Mon, 04 Mar 2019 16:33:40 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id t11sm1756331ljj.92.2019.03.04.16.33.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 16:33:39 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id z20so5981203ljj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:33:38 -0800 (PST)
-X-Received: by 2002:a2e:8510:: with SMTP id j16mr11977194lji.2.1551746018426;
- Mon, 04 Mar 2019 16:33:38 -0800 (PST)
+        Mon, 4 Mar 2019 19:34:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Rh/f1hTexU+yxm6S3Ylqpof6qWIK8SB2LJhSZirAoE4=; b=EtRQFInjtlQWc9PZwmQtAL0LA
+        C65IXG0NJSJxWi2n9NlWHfW45oFZsyHuA0/6uXtfrH1bV+Im9G1dPObQ08KAILGjoTW8O+/t8GPbI
+        ZNJ1LnU+bOHVQork4tYbR2UtL510UXSXTAW7fz1uaTx38B7iRM8a5y4ItMbhThExtHylMme/ccDP0
+        a7s+uAAe5jLMO4+a2p1iK+/gQaTZM3JyISKPjKx/s/kdeKnj1OJs5oxDyZnTtmKbPGQJh8Wj+o7JI
+        6p7Mbi2NmeTQqh0ihxZmJWYXZZi1k23kk0JaCBt5BzV5taniI3GDo1gECgVrVTJij1lZnUzyWqf+j
+        yOVlnkCwg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h0y26-0008S1-Nr; Tue, 05 Mar 2019 00:34:10 +0000
+Subject: Re: [PATCH] drivers: x86: pcengines-apuv2: fix dependencies
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, arnd@arndb.de
+References: <1551745499-6687-1-git-send-email-info@metux.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <14e2b3bd-b3cd-54f2-e8c6-73c81e89e456@infradead.org>
+Date:   Mon, 4 Mar 2019 16:34:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-References: <20190301140348.25175-1-will.deacon@arm.com> <20190301140348.25175-2-will.deacon@arm.com>
- <1551575210.6lwpiqtg5k.astroid@bobo.none> <CAHk-=whxaYGTmHyoWeegL=ihHMDW_FJehUJVN_nP++Su=foL+g@mail.gmail.com>
- <1551583190.duzqnmfnvg.astroid@bobo.none> <CAHk-=whVN58nWh29jvXx+X-Yx9dCC6BeAZOtKak+d01y_UVg=A@mail.gmail.com>
- <1551606848.8cceyn7nhv.astroid@bobo.none> <CAHk-=wi9ZnP_17qwPB_b3hJ+C7DP3oxcRAPuDBCoEbe2QrbQew@mail.gmail.com>
- <1551743521.hogpbicfcz.astroid@bobo.none>
-In-Reply-To: <1551743521.hogpbicfcz.astroid@bobo.none>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 4 Mar 2019 16:33:22 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi4aAzhvPBon1wLS0zdzzg-_GQhkteBiQZE8KuotThToQ@mail.gmail.com>
-Message-ID: <CAHk-=wi4aAzhvPBon1wLS0zdzzg-_GQhkteBiQZE8KuotThToQ@mail.gmail.com>
-Subject: Re: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of
- mmiowb() tracking
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rich Felker <dalias@libc.org>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1551745499-6687-1-git-send-email-info@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 4:21 PM Nicholas Piggin <npiggin@gmail.com> wrote:
->
-> Well you don't have to talk about it but why do you want me to stop?
-> I don't understand. It's an open topic still after this series. I
-> can post a new thread about it if that would upset you less, I just
-> thought it would kind of fit here because we're talking about mmiowb,
-> I'm not trying to derail this series.
+On 3/4/19 4:24 PM, Enrico Weigelt, metux IT consult wrote:
+> pcengines-apuv2 board driver needs to explicitly select LEDS_CLASS,
+> INPUT, INPUT_KEYBOARD, so these are automatically defined correctly
+> (eg. LEDS_CLASS=y if PCENGINES_APU2=y)
+> 
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linus.walleij@linaro.org
+> Cc: andy.shevchenko@gmail.com
+> Cc: arnd@arndb.de
+> Cc: rdunlap@infradead.org
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: arnd@arndb.de
+> Reported-by: rdunlap@infradead.org
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/platform/x86/Kconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 851ea92..7d53380 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1307,7 +1307,10 @@ config PCENGINES_APU2
+>  	tristate "PC Engines APUv2/3 front button and LEDs driver"
+>  	select GPIO_AMD_FCH
+>  	select KEYBOARD_GPIO_POLLED
+> +	select LEDS_CLASS
+>  	select LEDS_GPIO
+> +	select INPUT
 
-Because if anybody is doing lockless programming with IO, they deserve
-whatever they get.
+Nak.  We don't select entire subsystems.  You should do:
 
-In other words, the whole "wmb()" issue is basically not an issue.
+	depends on INPUT
+	select INPUT_KEYBOARD
 
-We already have rules like:
+> +	select INPUT_KEYBOARD
 
- - mmio is ordered wrt itself
 
- - mmio is ordered wrt previous memory ops (because of dma)
+>  	help
+>  	  This driver provides support for the front button and LEDs on
+>  	  PC Engines APUv2/APUv3 board.
+> 
 
-and while it turned out that at least alpha had broken those rules at
-some point, and we had a discussion about it, that was just a bug.
 
-So there's basically no real reason to ever use "wmb()" with any of
-the normal mmio stuff.
-
-Now, we do have __raw_writel() etc, which are explicitly not ordered,
-but they also haven't been really standardized. And in fact, people
-who use them often seem to want to use them together with various weak
-memory remappings.
-
-And yes, "wmb()" has been the traditional way to order those, to the
-point where "wmb()" on x86 is actually a "sfence" because once you do
-IO on those kinds of unordered mappings, the usual SMP rules go out
-the window (a normal "smp_wmb()" is just a compiler barrier on x86).
-
-But notice how this is *entirely* independent of the spinlock issue,
-and has absolutely *nothing* to do with the whole mmiowb() thing that
-was always about "normal IO vs normal RAM" (due to the ia64 breakage).
-
-                 Linus
+-- 
+~Randy
