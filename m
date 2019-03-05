@@ -2,109 +2,112 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46E6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3317EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF7B204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551823288;
-	bh=TAckDVuuwhxnYYY3WFegT1rA9jwVZ3kVUlFudMIqLOw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kLXbKLQrqbaSDGuAJ1DI2/4G9a+b6nyhg5OSm844TrFdD+sHbKJeBUx8agIF5tJcl
-	 SUrNQUepuTv5Ql4lcYKzviX//fr6IUuCy0VkQ65TtduYPBevKciMadrtu24nZrsck9
-	 ghKdHvKwDQRIX0jOpA4uim2GcKVW0yMVPTo4Kga4=
+	by mail.kernel.org (Postfix) with ESMTP id 70621204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rPvcM/T3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfCEWB1 (ORCPT
+        id S1727871AbfCEWC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 17:01:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfCEWB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 17:01:26 -0500
-Received: from earth.universe (unknown [185.216.33.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B78AA204EC;
-        Tue,  5 Mar 2019 22:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551823285;
-        bh=TAckDVuuwhxnYYY3WFegT1rA9jwVZ3kVUlFudMIqLOw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SQyOENHjt1ol0I/vW7CByvqxVuQmCpiMlnmTdWlOD3KiIdeZJqpZeXiMyMqobGAg2
-         m0IFq9qT7THKO5IjAymaPDJ94a4gNn3u6zJ4Ce63xFzdqXV/aUq6BdU7emgBrzXP+d
-         Q7qA9FTSIqJMhzZ/7FY7/MWbKrjFv+pMWRwPZUUM=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 96AD23C0AE0; Tue,  5 Mar 2019 23:01:23 +0100 (CET)
-Date:   Tue, 5 Mar 2019 23:01:23 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hsi changes for hsi-5.1
-Message-ID: <20190305220123.vxjgvbow2gcejxlw@earth.universe>
+        Tue, 5 Mar 2019 17:02:58 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42831 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfCEWC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 17:02:57 -0500
+Received: by mail-ot1-f66.google.com with SMTP id i5so8844082oto.9;
+        Tue, 05 Mar 2019 14:02:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XDuXQsCaigZVdUoEjQk7N6E//pnQjrXnjYStu66ogns=;
+        b=rPvcM/T3MNVyM2nZIM2Su4JZ+sON5tpVo5shJRkNvDFmQ5kca1l5f7YJ1wJMdrB5ku
+         C7Ml96D5i6pUIoVPtTcwYspfWgbHNQv3cWtqhFCYrsngzr1laDw+VWdqoRNqzaIGhr6+
+         /iP8OwfvJc5tO5nIwz1P8sdUKBLJA6RqzPX0aktTmyT8gOWwyFdkZ26e5emlv406wr2b
+         RpQY6hsvx6DkD/kavXGjkL2mb/tqlsX5PE4p9Z0f+c6kRtianHrz4A/+pTxD7NMwXock
+         XtEhntWQ8r3vf4Met1w8657hSN4rzsCH3Z9aNq7fuHXwCv9K29JbDXjFHwV2pCD1lJQZ
+         KzSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XDuXQsCaigZVdUoEjQk7N6E//pnQjrXnjYStu66ogns=;
+        b=rDbUCsMm2gmk7m0is8p3CxuAvWmCpczUkMACMAJhdcsmrcrgZfmhfgdD3GyF7E69RA
+         kg6z4lDoNKPNxyTPnccEIG2GhzZNqbE9MELT7HGhVw4G6Q4OXe6r39Zb6ie9QHRBPfVO
+         6M7qMpRq0tbNtmCJWfwxygGFRFM910qZCzfs7CRa7YUWg4Q2L4mq8FG3lnibyIks+9uo
+         ElMpMwTB6k2pHpcm0UuCCc5/IhmnnYMnxKwYI1OFrKxphf4b3QsgnPZwl/ruesSNoiky
+         N0AJjyILHJ5UsRMUUgL+T+rIEKEba+mmEChYNzyQ7X2aSYVshP8zdfVqcdZFjZvNAy74
+         +hHg==
+X-Gm-Message-State: APjAAAV0NQacOpynySLJ4F95/0xdqdGlxldmiDqlSKlaKd7f7NhJq8zi
+        Mwy+ZvjztC2WZEgFkSjZP4uJTIg5JCInK1PR5HcRErtg
+X-Google-Smtp-Source: APXvYqwSuvIrjMyWTYmxCDvwYh2qNIiDpIEXGC3ZZ7AoUWyWRH/eOEmxllLqutGxbyiAbe6e0IiILAfsZUSmkJ6M6QA=
+X-Received: by 2002:a9d:5906:: with SMTP id t6mr2390395oth.308.1551823376548;
+ Tue, 05 Mar 2019 14:02:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qs6etgsvd5a7s3gu"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+References: <20190304104916.3937-1-narmstrong@baylibre.com>
+In-Reply-To: <20190304104916.3937-1-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 5 Mar 2019 23:02:45 +0100
+Message-ID: <CAFBinCAkMSeMuXj++cWBYP4WFwAMEwm-EFHtLA5X85oe6kekTw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: reset: meson-g12a: Add missing USB2 PHY resets
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     p.zabel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 4, 2019 at 11:49 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> The G12A Documentation lacked these 2 reset lines, but they are present and
+> used for each USB 2 PHYs.
+>
+> Add them to the dt-bindings for the upcoming USB support.
+>
+> Fixes: dbfc54534dfc ("dt-bindings: reset: meson: add g12a bindings")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
---qs6etgsvd5a7s3gu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> ---
+>  include/dt-bindings/reset/amlogic,meson-g12a-reset.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+> index 8063e8314eef..6d487c5eba2c 100644
+> --- a/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+> +++ b/include/dt-bindings/reset/amlogic,meson-g12a-reset.h
+> @@ -51,7 +51,10 @@
+>  #define RESET_SD_EMMC_A                        44
+>  #define RESET_SD_EMMC_B                        45
+>  #define RESET_SD_EMMC_C                        46
+> -/*                                     47-60 */
+> +/*                                     47      */
+> +#define RESET_USB_PHY20                        48
+> +#define RESET_USB_PHY21                        49
+because it's always hard to look up, here's the reference to that
+information Amlogic's buildroot kernel
+(buildroot_openlinux_kernel_4.9_fbdev_20180706):
+kernel/aml-4.9/drivers/amlogic/usb/phy/phy-aml-new-usb2-v2.c uses:
+writel((val | (0x3 << 16)), (void __iomem *) ((unsigned
+long)phy->reset_regs + (0x21 * 4 - 0x8)));
 
-Hi Linus,
+this translates to:
+- (0x21 * 4 - 0x8) = RESET1 register / reset line ID 32 and above
+(reset line 0 is at "0x20 * 4 - 0x08")
+- bits 16 and 17 = add 32 to that gives us reset IDs 48 and 49
 
-The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
 
-  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git tags/hsi-for-5.1
-
-for you to fetch changes up to 1ff85bfa1614df6cacec780cd5922dc0b1c340c7:
-
-  HSI: omap_ssi_port: fix debugfs_simple_attr.cocci warnings (2019-02-14 12:36:21 +0100)
-
-----------------------------------------------------------------
-HSI changes for the 5.1 series
-
-* replace DEFINE_SIMPLE_ATTRIBUTE with DEFINE_DEBUGFS_ATTRIBUTE
-
-----------------------------------------------------------------
-YueHaibing (1):
-      HSI: omap_ssi_port: fix debugfs_simple_attr.cocci warnings
-
- drivers/hsi/controllers/omap_ssi_port.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---qs6etgsvd5a7s3gu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlx+8bMACgkQ2O7X88g7
-+pr8dA//cJh7r+mKIhMi60feOyjTn7kxWeRS7u32rVj8rhIT5zb89FBIbYgvtEvx
-NXYqEy6q64X+0R5XUHy5EoEzDTHC7kkleUnywRKpAaGV4oaIywMixHgPcPNo1edM
-+kZyn6LqO0bcC1d9Cvuo7wIvmLlQd3eALDpOk1rfrrthGnh6raRRecq8x+dyRNLs
-sBz+afzGb6VwVStx4ONZK14s/Zoqw/OIZ1dHnvJQMZewOHkKgiLxrFOS0v//F7T7
-NtCuFDeK/BzTaXegThkH7matlbwUHDQwtudbB25nTm0Xc1eJSQFoetNUnPI+A2BG
-yYKuNto0ZOHw+5pKazzGLoXW4X1nDZt9JNnCRkmEbc8nHJ80ypSVDCdCVHIZCQIF
-RwUO7ShrB4AAk1019b9yjyqyCmD0klnXw+9CP9Sz9ZwmJ6/TSmQdYjqMFgvGJ7mn
-DoGvasKJYAxa8GTX+kJ1WeokXUhDyVZwdo6/yVV/bjNFGNwgyKNPfjTFK5K9mdYm
-dQhmhbkmdgGVMZWiT+Zj9mUgzNamz3memn4jHbbf1Cm8Uzp5imIRvL6rZO+vDUTv
-4yDbiRtaPRe6K+70jySQzrvyAqxxR4ecDcEYVL0fwxWMe1gmaC0qSNAez5gM1Qks
-ZGsUkdE267ueGnQQ2hiDxI6zCJBUrKeNkvSCzSRXNM7wu5Hi430=
-=0c2w
------END PGP SIGNATURE-----
-
---qs6etgsvd5a7s3gu--
+Regards
+Martin
