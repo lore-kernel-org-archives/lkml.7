@@ -2,177 +2,192 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902E8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4095BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587222064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A3320661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfCEQkf (ORCPT
+        id S1726991AbfCEQmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:40:35 -0500
-Received: from mail.osukl.com ([81.134.89.156]:18504 "EHLO mail.osukl.com"
+        Tue, 5 Mar 2019 11:42:45 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:36744 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfCEQke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:40:34 -0500
-X-Greylist: delayed 324 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Mar 2019 11:40:33 EST
-Received: from OS01.os.local ([fe80::dd48:92d6:34f3:22da]) by OS01.os.local
- ([fe80::dd48:92d6:34f3:22da%16]) with mapi id 14.03.0389.001; Tue, 5 Mar 2019
- 16:35:07 +0000
-From:   Ryan Pannell <ryan@osukl.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-amarula@amarulasolutions.com" 
-        <linux-amarula@amarulasolutions.com>
-Subject: RE: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
- initial support
-Thread-Topic: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
- initial support
-Thread-Index: AQHUzZj1PzRBqQmkXEOapWN/my/XQKXzyHUAgAAMv4CAAw3CAIAAIXsAgAY5JYCAAAJsgIAABYNg
-Date:   Tue, 5 Mar 2019 16:35:04 +0000
-Message-ID: <7AB137701821F94BAF7B06C1747BA691011A3FE123@OS01.os.local>
-References: <20190226060240.8783-1-jagan@amarulasolutions.com>
- <20190226060240.8783-2-jagan@amarulasolutions.com>
- <20190227153346.dwd3stsbsvf7rwly@flea>
- <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
- <20190301145724.vhvyoqkkxdflg2g7@flea>
- <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
- <20190305155919.cm3yrve3vqp7jimh@flea>
- <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
-In-Reply-To: <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.16.61]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726896AbfCEQmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:42:44 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C5AA83082207;
+        Tue,  5 Mar 2019 16:42:43 +0000 (UTC)
+Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63D1F17574;
+        Tue,  5 Mar 2019 16:42:34 +0000 (UTC)
+Subject: Re: [PATCH v4 00/22] SMMUv3 Nested Stage Setup
+To:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@linux.intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, robin.murphy@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org
+References: <20190218135504.25048-1-eric.auger@redhat.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <b7990ab6-e286-0aee-b15c-4a05fe4eed78@redhat.com>
+Date:   Tue, 5 Mar 2019 17:42:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20190218135504.25048-1-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 05 Mar 2019 16:42:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2UgZG9uJ3QgbWluZCBpZiBpdCBoYXMgdG8gYmU6DQpjb21wYXRpYmxlID0gIm9jZWFuaWMsNWlu
-bWZkIiwgImFsbHdpbm5lcixzdW41MGktYTY0IjsNCg0KSG93ZXZlciwgdG8gYXZvaWQgY29uZnVz
-aW9uLCBtaWdodCBpdCBiZSB3b3J0aCBpbmNsdWRpbmcgdGhlIHBhcnQgbnVtYmVyIChXZSBsaXN0
-IHRoaXMgYXMgJzUyMDUgNSIgTUZEJykgc28gdGhpcyB3b3VsZCBiZWNvbWU6DQpjb21wYXRpYmxl
-ID0gIm9jZWFuaWMsNTIwNS01aW5tZmQiLCAiYWxsd2lubmVyLHN1bjUwaS1hNjQiOw0KDQpQZXJo
-YXBzIHRoaXMgc29sdmVzIHRoZSBpc3N1ZS4gUGxlYXNlIGxldCBtZSBrbm93IHRob3VnaHRzLg0K
-DQpSeWFuIFBhbm5lbGwNCkRldmVsb3BtZW50IFRlYW0gTGVhZA0KT2NlYW5pYyBTeXN0ZW1zIChV
-SykgTHRkDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKYWdhbiBUZWtpIDxq
-YWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4gDQpTZW50OiAwNSBNYXJjaCAyMDE5IDE2OjA4DQpU
-bzogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4NCkNjOiBDaGVuLVl1
-IFRzYWkgPHdlbnNAY3NpZS5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsg
-TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJ5YW4gUGFubmVsbCA8cnlhbkBv
-c3VrbC5jb20+OyBNaWNoYWVsIFRyaW1hcmNoaSA8bWljaGFlbEBhbWFydWxhc29sdXRpb25zLmNv
-bT47IGxpbnV4LWFybS1rZXJuZWwgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-Zz47IGRldmljZXRyZWUgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2VybmVs
-IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYW1hcnVsYUBhbWFydWxhc29s
-dXRpb25zLmNvbQ0KU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGFybTY0OiBhbGx3aW5uZXI6IGE2
-NDogQWRkIE9jZWFuaWMgQTY0LTVpbk1GRCBpbml0aWFsIHN1cHBvcnQNCg0KT24gVHVlLCBNYXIg
-NSwgMjAxOSBhdCA5OjI5IFBNIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5j
-b20+IHdyb3RlOg0KPg0KPiBPbiBGcmksIE1hciAwMSwgMjAxOSBhdCAxMDoyNzoxNFBNICswNTMw
-LCBKYWdhbiBUZWtpIHdyb3RlOg0KPiA+IE9uIEZyaSwgTWFyIDEsIDIwMTkgYXQgODoyNyBQTSBN
-YXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPiB3cm90ZToNCj4gPiA+DQo+
-ID4gPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCAwOTo0OToyM1BNICswNTMwLCBKYWdhbiBUZWtp
-IHdyb3RlOg0KPiA+ID4gPiBPbiBXZWQsIEZlYiAyNywgMjAxOSBhdCA5OjAzIFBNIE1heGltZSBS
-aXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+IHdyb3RlOg0KPiA+ID4gPiA+DQo+ID4g
-PiA+ID4gSGksDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBUdWUsIEZlYiAyNiwgMjAxOSBhdCAx
-MTozMjo0MEFNICswNTMwLCBKYWdhbiBUZWtpIHdyb3RlOg0KPiA+ID4gPiA+ID4gT2NlYW5pYyBB
-NjQtNWluTUZEIGlzIGEgNSBpbmNoIE11bHRpIGZ1bmN0aW9uIGRpc3BsYXkgDQo+ID4gPiA+ID4g
-PiBiYXNlYm9hcmQgZGVzaWduZWQgdG8gbW91bnQgU29QaW5lIFNPTS4NCj4gPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiBLZXkgZmVhdHVyZXM6DQo+ID4gPiA+ID4gPiAtIEFsbHdpbm5lciBBNjQgQ29y
-dGV4LUE1Mw0KPiA+ID4gPiA+ID4gLSBNYWxpLTQwME1QMiBHUFUNCj4gPiA+ID4gPiA+IC0gQVhQ
-ODAzIFBNSUMNCj4gPiA+ID4gPiA+IC0gMkdCIEREUjMgUkFNDQo+ID4gPiA+ID4gPiAtIFNEIFNs
-b3QNCj4gPiA+ID4gPiA+IC0gU1BJLU5PUiBmbGFzaA0KPiA+ID4gPiA+ID4gLSBFTUFDLCBSVEw4
-MjExRQ0KPiA+ID4gPiA+ID4gLSBNQ1AyNTE1IENBTg0KPiA+ID4gPiA+ID4gLSBNSVBJLURTSQ0K
-PiA+ID4gPiA+ID4gLSBHb29kaXggOTExIENUUA0KPiA+ID4gPiA+ID4gLSBVU0IgSG9zdA0KPiA+
-ID4gPiA+ID4gLSAxMlYgREMgcG93ZXIgc3VwcGx5DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-U2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+DQo+
-ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5l
-ci9NYWtlZmlsZSAgICAgICAgfCAgMSArDQo+ID4gPiA+ID4gPiAgLi4uL2FsbHdpbm5lci9zdW41
-MGktYTY0LW9jZWFuaWMtNWlubWZkLmR0cyAgIHwgNDYgKysrKysrKysrKysrKysrKysrKw0KPiA+
-ID4gPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IA0KPiA+ID4gPiA+ID4gYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvc3VuNTBp
-LWE2NC1vY2VhbmljLTVpbm1mZC5kdHMNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbGx3aW5uZXIvTWFrZWZpbGUgDQo+ID4gPiA+ID4g
-PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL01ha2VmaWxlDQo+ID4gPiA+ID4gPiBp
-bmRleCBhNWZiMWVhYThhY2YuLmVjMzlmZTg1NjExNyAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL01ha2VmaWxlDQo+ID4gPiA+ID4gPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gQEAg
-LTIsNiArMiw3IEBADQo+ID4gPiA+ID4gPiAgZHRiLSQoQ09ORklHX0FSQ0hfU1VOWEkpICs9IHN1
-bjUwaS1hNjQtYW1hcnVsYS1yZWxpYy5kdGINCj4gPiA+ID4gPiA+ICBkdGItJChDT05GSUdfQVJD
-SF9TVU5YSSkgKz0gc3VuNTBpLWE2NC1iYW5hbmFwaS1tNjQuZHRiIA0KPiA+ID4gPiA+ID4gc3Vu
-NTBpLWE2NC1iYW5hbmFwaS1tNjQtaWNuNjIxMS5kdGINCj4gPiA+ID4gPiA+ICBkdGItJChDT05G
-SUdfQVJDSF9TVU5YSSkgKz0gc3VuNTBpLWE2NC1uYW5vcGktYTY0LmR0Yg0KPiA+ID4gPiA+ID4g
-K2R0Yi0kKENPTkZJR19BUkNIX1NVTlhJKSArPSBzdW41MGktYTY0LW9jZWFuaWMtNWlubWZkLmR0
-Yg0KPiA+ID4gPiA+ID4gIGR0Yi0kKENPTkZJR19BUkNIX1NVTlhJKSArPSBzdW41MGktYTY0LW9s
-aW51eGluby5kdGINCj4gPiA+ID4gPiA+ICBkdGItJChDT05GSUdfQVJDSF9TVU5YSSkgKz0gc3Vu
-NTBpLWE2NC1vcmFuZ2VwaS13aW4uZHRiDQo+ID4gPiA+ID4gPiAgZHRiLSQoQ09ORklHX0FSQ0hf
-U1VOWEkpICs9IHN1bjUwaS1hNjQtcGluZTY0LWx0cy5kdGIgZGlmZiANCj4gPiA+ID4gPiA+IC0t
-Z2l0IA0KPiA+ID4gPiA+ID4gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGkt
-YTY0LW9jZWFuaWMtNWlubWZkLmR0DQo+ID4gPiA+ID4gPiBzIA0KPiA+ID4gPiA+ID4gYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5lci9zdW41MGktYTY0LW9jZWFuaWMtNWlubWZkLmR0DQo+
-ID4gPiA+ID4gPiBzDQo+ID4gPiA+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiA+
-ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kNzNkMWY1NWFjYjkNCj4gPiA+ID4gPiA+IC0tLSAvZGV2
-L251bGwNCj4gPiA+ID4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYWxsd2lubmVyL3N1
-bjUwaS1hNjQtb2NlYW5pYy01aW5tZg0KPiA+ID4gPiA+ID4gKysrIGQuZHRzDQo+ID4gPiA+ID4g
-PiBAQCAtMCwwICsxLDQ2IEBADQo+ID4gPiA+ID4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZp
-ZXI6IChHUEwtMi4wKyBPUiBNSVQpDQo+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiBD
-b3B5cmlnaHQgKEMpIDIwMTkgT2NlYW5pYyBTeXN0ZW1zIChVSykgTHRkLg0KPiA+ID4gPiA+ID4g
-KyAqIENvcHlyaWdodCAoQykgMjAxOSBBbWFydWxhIFNvbHV0aW9ucyBCLlYuDQo+ID4gPiA+ID4g
-PiArICogQXV0aG9yOiBKYWdhbiBUZWtpIDxqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4gICov
-DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArL2R0cy12MS87DQo+ID4gPiA+ID4gPiArDQo+
-ID4gPiA+ID4gPiArI2luY2x1ZGUgInN1bjUwaS1hNjQtc29waW5lLmR0c2kiDQo+ID4gPiA+ID4g
-PiArDQo+ID4gPiA+ID4gPiArLyB7DQo+ID4gPiA+ID4gPiArICAgICBtb2RlbCA9ICJPY2Vhbmlj
-IEE2NC01aW5NRkQiOw0KPiA+ID4gPiA+ID4gKyAgICAgY29tcGF0aWJsZSA9ICJvY2VhbmljLGE2
-NC01aW5tZmQiLCANCj4gPiA+ID4gPiA+ICsiYWxsd2lubmVyLHN1bjUwaS1hNjQiOw0KPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gVGhlIG5hbWUgb2YgdGhlIERUIGlzIE9jZWFuaWMgNWluTUZELCB3aGls
-ZSB5b3UgY2FsbCB0aGUgYm9hcmQgDQo+ID4gPiA+ID4gQTY0LTVpbk1GRCBoZXJlLCB3aGljaCBu
-YW1lIGlzIHRoZSBhY3R1YWwgbmFtZT8NCj4gPiA+ID4NCj4gPiA+ID4gWWVzLCB0aGlzIGlzIHNv
-bWV0aGluZyB0aGF0IHdlIGRpc2N1c3NlZCBkdXJpbmcgIkFtYXJ1bGEgQTY0LVJlbGljIg0KPiA+
-ID4gPiBuYW1pbmcgY29udmVudGlvbi4NCj4gPiA+ID4NCj4gPiA+ID4gU2luY2UgdGhlc2UgYm9h
-cmRzIGFyZSBub3QgZmFtb3VzIGxpa2UgdGVyZXMtaSB3ZSBhZ3JlZWQgdG8gYWRkIA0KPiA+ID4g
-PiB2ZW5kb3IgbmFtZSBhZnRlciBzdW41MGktYTY0LSBmb2xsb3dlZCBieSByZWFsIGJvYXJkIG5h
-bWUuDQo+ID4gPiA+DQo+ID4gPiA+IEhlcmUgQTY0IGFscmVhZHkgY292ZXJlZCBkdXJpbmcgc3Vu
-NTBpLWE2NC0gc28gdGhlIGR0cyBuYW1lIA0KPiA+ID4gPiBzaW1wbHkgdGhlIDx2ZW5kb3JfbmFt
-ZT4tPHJlYWxfYm9hcmRfbmFtZT4NCj4gPiA+DQo+ID4gPiBGb3IgdGhlIERUIG5hbWUsIHllYWgs
-IHdlIHdhbnQgdGhhdCBwYXR0ZXJuLg0KPiA+ID4NCj4gPiA+IEZvciB0aGUgY29tcGF0aWJsZSBh
-bmQgbW9kZWwsIHdlIHdhbnQgdG8gdXNlIHRoZSBtb2RlbCBuYW1lLg0KPiA+DQo+ID4gRW50aXJl
-IG1vZGVsIG5hbWUgYWZ0ZXIgPHZlbmRvcl9uYW1lPiwgPw0KPiA+DQo+ID4gbW9kZWwgPSAiT2Nl
-YW5pYyBBNjQtNWluTUZEIjsNCj4gPiBjb21wYXRpYmxlID0gIm9jZWFuaWMsYTY0LTVpbm1mZCIs
-ICJhbGx3aW5uZXIsc3VuNTBpLWE2NCI7DQo+ID4NCj4gPiBpcyB0aGlzIG5vdCBzdWZmaWNpZW50
-Pw0KPiA+DQo+ID4gTGV0IG1lIHVuZGVyc3RhbmQgd2l0aCByZXNwZWN0aXZlIGZldyBleGlzdGlu
-ZyBzdHVmZi4NCj4gPg0KPiA+IG1vZGVsID0gIkFtYXJ1bGEgQTY0LVJlbGljIjsNCj4gPiBjb21w
-YXRpYmxlID0gImFtYXJ1bGEsYTY0LXJlbGljIiwgImFsbHdpbm5lcixzdW41MGktYTY0IjsNCj4g
-Pg0KPiA+IG1vZGVsID0gIk9saW1leCBBNjQgVGVyZXMtSSINCj4gPiBjb21wYXRpYmxlID0gIm9s
-aW1leCxhNjQtdGVyZXMtaSIsICJhbGx3aW5uZXIsc3VuNTBpLWE2NCI7DQo+DQo+IFRoaXMgb25l
-IGlzIGNhbGxlZCB0aGUgVEVSRVMtQTY0Og0KPiBodHRwczovL3d3dy5vbGltZXguY29tL1Byb2R1
-Y3RzL0RJWS1MYXB0b3AvS0lUUy9URVJFUy1BNjQtV0hJVEUvb3Blbi1zDQo+IG91cmNlLWhhcmR3
-YXJlDQo+DQo+IFRoZSBsYXB0b3AgaXMgdGhlIFRlcmVzLUksIGl0IGNhbiBoYXZlIGFuIEE2NA0K
-Pg0KPiA+IG1vZGVsID0gIkZyaWVuZGx5QVJNIE5hbm9QaSBBNjQiOw0KPiA+IGNvbXBhdGlibGUg
-PSAiZnJpZW5kbHlhcm0sbmFub3BpLWE2NCIsICJhbGx3aW5uZXIsc3VuNTBpLWE2NCI7DQo+DQo+
-IE5hbm9QaSBBNjQgaXMgdGhlIG5hbWUgb2YgdGhlIGJvYXJkOiBodHRwOi8vbmFub3BpLmlvL25h
-bm9waS1hNjQuaHRtbA0KPg0KPiA+IG1vZGVsID0gIk9saW1leCBBNjQtT2xpbnV4aW5vIjsNCj4g
-PiBjb21wYXRpYmxlID0gIm9saW1leCxhNjQtb2xpbnV4aW5vIiwgImFsbHdpbm5lcixzdW41MGkt
-YTY0Ig0KPg0KPiBBNjQtT2xpbnV4aW5vIGlzIHRoZSBuYW1lIG9mIHRoZSBib2FyZCB0b286DQo+
-IGh0dHBzOi8vd3d3Lm9saW1leC5jb20vUHJvZHVjdHMvT0xpbnVYaW5vL0E2NC9BNjQtT0xpbnVY
-aW5vL29wZW4tc291cmMNCj4gZS1oYXJkd2FyZQ0KPg0KPiA+IFdvdWxkIHlvdSBjb21tZW50LCB3
-aGF0IGlzIHRoZSBkaWZmZXJlbnQgd2l0aCByZXNwZWN0IHRvIG15IGNoYW5nZT8NCj4NCj4gSWYg
-dGhlIG5hbWUgb2YgdGhlIHByb2R1Y3QgaXMgNWluTUZELCB0aGVuIHRoZSBtb2RlbCBzaG91bGQg
-YmUgT2NlYW5pYyANCj4gNWluTUZELCBhbmQgaXRzIGNvbXBhdGlibGUgb2NlYW5pYyw1aW5tZmQN
-Cg0KT2NlYW5pYyBzZWVtcyB0byBoYXZlIHNvbWUgbXVsdGlwbGUgTXVsdGkgRnVuY3Rpb24gRGV2
-aWNlcywgaWUgcmVhc29uIHdlIHByZWZlciB0aGUgcHJvZHVjdCBhcyAnQTY0LTVpbk1GRCcgc2lu
-Y2UgaXQgaXMgQTY0IGJhc2VkLiBJbiB0aGlzIGNhc2UgdGhlIG1vZGVsIGFuZCBjb21wYXRpYmxl
-IHNob3VsZCBiZSBmaW5lIEkgdGhpbms/DQo=
+Hi,
+
+On 2/18/19 2:54 PM, Eric Auger wrote:
+> This series allows a virtualizer to program the nested stage mode.
+> This is useful when both the host and the guest are exposed with
+> an SMMUv3 and a PCI device is assigned to the guest using VFIO.
+> 
+> In this mode, the physical IOMMU must be programmed to translate
+> the two stages: the one set up by the guest (IOVA -> GPA) and the
+> one set up by the host VFIO driver as part of the assignment process
+> (GPA -> HPA).
+> 
+> On Intel, this is traditionnaly achieved by combining the 2 stages
+> into a single physical stage. However this relies on the capability
+> to trap on each guest translation structure update. This is possible
+> by using the VTD Caching Mode. Unfortunately the ARM SMMUv3 does
+> not offer a similar mechanism.
+> 
+> However, the ARM SMMUv3 architecture supports 2 physical stages! Those
+> were devised exactly with that use case in mind. Assuming the HW
+> implements both stages (optional), the guest now can use stage 1
+> while the host uses stage 2.
+> 
+> This assumes the virtualizer has means to propagate guest settings
+> to the host SMMUv3 driver. This series brings this VFIO/IOMMU
+> infrastructure.  Those services are:
+> - bind the guest stage 1 configuration to the stream table entry
+> - propagate guest TLB invalidations
+> - bind MSI IOVAs
+> - propagate faults collected at physical level up to the virtualizer
+> 
+> This series largely reuses the user API and infrastructure originally
+> devised for SVA/SVM and patches submitted by Jacob, Yi Liu, Tianyu in
+> [1-2] and Jean-Philippe [3-4].
+> 
+> Best Regards
+> 
+> Eric
+> 
+> This series can be found at:
+> https://github.com/eauger/linux/tree/v5.0-rc7-2stage-v4
+For those interested in testing this kernel branch, you can use the
+following qemu branch:
+
+https://github.com/eauger/qemu/tree/v3.1.0-2stage-prev3-for-patchv4-testing
+
+I will send an official QEMU RFCv3 asap.
+
+Thanks
+
+Eric
+> 
+> References:
+> [1] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
+>     Address (SVA)
+>     https://lwn.net/Articles/754331/
+> [2] [RFC PATCH 0/8] Shared Virtual Memory virtualization for VT-d
+>     (VFIO part)
+>     https://lists.linuxfoundation.org/pipermail/iommu/2017-April/021475.html
+> [3] [v2,00/40] Shared Virtual Addressing for the IOMMU
+>     https://patchwork.ozlabs.org/cover/912129/
+> [4] [PATCH v3 00/10] Shared Virtual Addressing for the IOMMU
+>     https://patchwork.kernel.org/cover/10608299/
+> 
+> History:
+> v3 -> v4:
+> - took into account Alex, jean-Philippe and Robin's comments on v3
+> - rework of the smmuv3 driver integration
+> - add tear down ops for msi binding and PASID table binding
+> - fix S1 fault propagation
+> - put fault reporting patches at the beginning of the series following
+>   Jean-Philippe's request
+> - update of the cache invalidate and fault API uapis
+> - VFIO fault reporting rework with 2 separate regions and one mmappable
+>   segment for the fault queue
+> - moved to PATCH
+> 
+> v2 -> v3:
+> - When registering the S1 MSI binding we now store the device handle. This
+>   addresses Robin's comment about discimination of devices beonging to
+>   different S1 groups and using different physical MSI doorbells.
+> - Change the fault reporting API: use VFIO_PCI_DMA_FAULT_IRQ_INDEX to
+>   set the eventfd and expose the faults through an mmappable fault region
+> 
+> v1 -> v2:
+> - Added the fault reporting capability
+> - asid properly passed on invalidation (fix assignment of multiple
+>   devices)
+> - see individual change logs for more info
+> 
+> Eric Auger (13):
+>   iommu: Introduce bind/unbind_guest_msi
+>   vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+>   iommu/smmuv3: Get prepared for nested stage support
+>   iommu/smmuv3: Implement attach/detach_pasid_table
+>   iommu/smmuv3: Implement cache_invalidate
+>   dma-iommu: Implement NESTED_MSI cookie
+>   iommu/smmuv3: Implement bind/unbind_guest_msi
+>   iommu/smmuv3: Report non recoverable faults
+>   vfio-pci: Add a new VFIO_REGION_TYPE_NESTED region type
+>   vfio-pci: Register an iommu fault handler
+>   vfio_pci: Allow to mmap the fault queue
+>   vfio-pci: Add VFIO_PCI_DMA_FAULT_IRQ_INDEX
+>   vfio: Document nested stage control
+> 
+> Jacob Pan (4):
+>   driver core: add per device iommu param
+>   iommu: introduce device fault data
+>   iommu: introduce device fault report API
+>   iommu: Introduce attach/detach_pasid_table API
+> 
+> Jean-Philippe Brucker (2):
+>   iommu/arm-smmu-v3: Link domains and devices
+>   iommu/arm-smmu-v3: Maintain a SID->device structure
+> 
+> Liu, Yi L (3):
+>   iommu: Introduce cache_invalidate API
+>   vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE
+>   vfio: VFIO_IOMMU_CACHE_INVALIDATE
+> 
+>  Documentation/vfio.txt              |  83 ++++
+>  drivers/iommu/arm-smmu-v3.c         | 580 ++++++++++++++++++++++++++--
+>  drivers/iommu/dma-iommu.c           | 145 ++++++-
+>  drivers/iommu/iommu.c               | 221 ++++++++++-
+>  drivers/vfio/pci/vfio_pci.c         | 214 ++++++++++
+>  drivers/vfio/pci/vfio_pci_intrs.c   |  19 +
+>  drivers/vfio/pci/vfio_pci_private.h |  20 +
+>  drivers/vfio/pci/vfio_pci_rdwr.c    |  73 ++++
+>  drivers/vfio/vfio_iommu_type1.c     | 158 ++++++++
+>  include/linux/device.h              |   3 +
+>  include/linux/dma-iommu.h           |  18 +
+>  include/linux/iommu.h               | 142 +++++++
+>  include/uapi/linux/iommu.h          | 233 +++++++++++
+>  include/uapi/linux/vfio.h           | 102 +++++
+>  14 files changed, 1977 insertions(+), 34 deletions(-)
+>  create mode 100644 include/uapi/linux/iommu.h
+> 
