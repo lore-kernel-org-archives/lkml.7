@@ -2,100 +2,92 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FFAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F27BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BBB2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:49:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dTaTRPUE"
+	by mail.kernel.org (Postfix) with ESMTP id EA9042082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfCEHtQ (ORCPT
+        id S1727233AbfCEHtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 02:49:16 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32944 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbfCEHtQ (ORCPT
+        Tue, 5 Mar 2019 02:49:49 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:36102 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727190AbfCEHts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:49:16 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z23so5475675lfe.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 23:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vSiSFvGkiOmapjm2KoeSbhNtRpSk54DNnf01ewQD2ec=;
-        b=dTaTRPUEhaXAndF8SdsHGPH4aUkAED/Lnfd5VlmitYiXDKzXEjHS61250y7gwfqogL
-         oOw9MKpqU6MbHIGBm8dsJYU32mk7ZzGFCBHUQV0GWK3YiwY74zuSuuv+3EStIMDeNd4e
-         7fgXlvP11QSV13nUw1scZT6vWBlXlU8gR7bYMCuxqnjkvtraGwuDR+jYoR1/JwqEqFVm
-         7yKAR+uiN5ftZ0Xqw0gI47I1S7qbNQFtVdg9S7tq+FGrxRzVc18ujZtp+0Mw6yjE4dvD
-         Q+GmD9GaOvcTQgV/NFenmrMTc/zXbM5DFu7QPV0FYcXozivY2VArT7miOAz1ShIXOD6k
-         Py6A==
+        Tue, 5 Mar 2019 02:49:48 -0500
+Received: by mail-vk1-f195.google.com with SMTP id v131so1757846vkd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 23:49:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vSiSFvGkiOmapjm2KoeSbhNtRpSk54DNnf01ewQD2ec=;
-        b=U0rgEebSba6UwerxF+DExeyrgp+fDX86iVZT3zouPmNy30PQpuSs7o4WM1vm9hiyt9
-         1vuVqj6PMLrXBCtZK4wtg0MUd/nQeXcjWY1B1mZ0Ed/rp4K6y56WVI0YxFU6QMwQMmd3
-         upqpBiS8W64Q7gwIofgkp9XSOv8T0YhWvxgWtrR7C5vNIrt6iWUCXJMulzuamBordUYt
-         D8La/JFlOVmvPuLGwueJIfbNX4ZfcDU/PcUGreAg2+t/NJjiGSGjNiRhdGOpk76bWnMi
-         jKEgsmJfme2bND64Yb+zwUek2Cod/Xt+Z5DR/ncECv8VdCOtAV152ZisQCgondBXg16N
-         mNtA==
-X-Gm-Message-State: APjAAAX9mE9anK+W56FTDUy1BWFN5Bs23KixNHdpkqQqiNODnl5bJHrR
-        D0AZeHjzIPotPLXGG8YO2A/XKdXPMoZ004Yivy2nOw==
-X-Google-Smtp-Source: APXvYqwLS+50EffwDm50/GZj1wxtqUHxQqpa+bRTfQUD9jAmw7kv3zTvdvwligVEGdL+goWOxwoq+fbf+VGZ01NujQE=
-X-Received: by 2002:a19:ed19:: with SMTP id y25mr7013234lfy.51.1551772154322;
- Mon, 04 Mar 2019 23:49:14 -0800 (PST)
+        bh=vGxkzNFi32YNEmyF1SWEwggqFSdVpxap6plubpH4mrs=;
+        b=dwsJkI3HeVNTcKMNvfAYTngi8cZm5gelz8gaaSlp5icg/v31RxMiua6RX/GD21visG
+         WMwndYyEkfm2iOKPaTwfNxqDmB+HC6P88SSpJWI0mdJeKYz/g+BN9bc3pOUUtZRcbl/Y
+         0ik+NsPb3n1WLF1uxFC0gTGTDGXZUe+kl9u8OVgBde0njfHtNIT1GtKwR8d21Tw8On9B
+         KeWSVUz7Ekzwm84DFSh7jJPp+R08XIxmNGEE5rHLknc0KTOdmutuOBgm7OKlL5iZPZcP
+         nehGQt+cUrD9eLXelsoaZtIP8DwcsbscRLN0zQBp2to8k6WHyY11EVyZ0sw0lzCtkuNY
+         /vfw==
+X-Gm-Message-State: APjAAAXS6zc9yIFd9St9NGRrM67nfIuPBOAshjU6DvkPn+T2YBAsA8JR
+        oFCv6WxFHBgeJiT/eQXy8ZBzybv1zz2W2yZFWkU=
+X-Google-Smtp-Source: APXvYqz6PTVCJqBVGrE2NzahicvqXtfk+HOL7GLJVdEpRoQATVmajyL4vXW1IGTuvWjcwDuYbnfA+sPit+w3jjwzJQY=
+X-Received: by 2002:a1f:711:: with SMTP id 17mr12649292vkh.65.1551772187790;
+ Mon, 04 Mar 2019 23:49:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20190304195734.1070109-1-arnd@arndb.de>
-In-Reply-To: <20190304195734.1070109-1-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Mar 2019 08:49:01 +0100
-Message-ID: <CACRpkdaq9YzFSSXp7HSOf+RC2PGxv0N-m+iV99tn-0xTeEZr=Q@mail.gmail.com>
-Subject: Re: [PATCH] Input: msm-vibrator: use correct gpio header
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <201903042049.npxcZzps%fengguang.wu@intel.com> <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
+ <alpine.LNX.2.21.1903051154200.135@nippy.intranet> <alpine.LNX.2.21.1903051357410.135@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.21.1903051357410.135@nippy.intranet>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Mar 2019 08:49:35 +0100
+Message-ID: <CAMuHMdUuwudbk15GUPPxL+-Gt4zhhSomk-wMAHeTOkoaDOCUAA@mail.gmail.com>
+Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25:
+ warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 8:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Finn,
 
-> When CONFIG_GPIOLIB is not set, we get a couple of build
-> errors during test building:
+On Tue, Mar 5, 2019 at 3:58 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+> On Tue, 5 Mar 2019, Finn Thain wrote:
+> > Looks bogus to me.
+> >
+> > If you change memcpy to __builtin_memcpy, then we avoid the macro and the
+> > warning changes to,
+> >
+> > ./include/linux/string.h:456:3: warning: '__builtin_memcpy' forming offset [7, 8] is out of the bounds [0, 6] [-Warray-bounds]
+> >    __builtin_memcpy(dest, src, dest_len);
+> >
+> > The compiler has nothing to complain about here. dest is known to be
+> > id->fr and dest_len is known to be sizeof(id->fr).
+> >
+> > The error message indicates that gcc has applied the bounds [0, 6] to dest
+> > when in fact those are the bounds for src.
+> >
 >
-> drivers/input/misc/msm-vibrator.c: In function 'msm_vibrator_start':
-> drivers/input/misc/msm-vibrator.c:79:3: error: implicit declaration of function 'gpiod_set_value_cansleep'; did you mean 'gpio_set_value_cansleep'? [-Werror=implicit-function-declaration]
->    gpiod_set_value_cansleep(vibrator->enable_gpio, 1);
->    ^~~~~~~~~~~~~~~~~~~~~~~~
->    gpio_set_value_cansleep
-> drivers/input/misc/msm-vibrator.c: In function 'msm_vibrator_probe':
-> drivers/input/misc/msm-vibrator.c:176:26: error: implicit declaration of function 'devm_gpiod_get'; did you mean 'devm_gpio_free'? [-Werror=implicit-function-declaration]
->   vibrator->enable_gpio = devm_gpiod_get(&pdev->dev, "enable",
->                           ^~~~~~~~~~~~~~
->                           devm_gpio_free
-> drivers/input/misc/msm-vibrator.c:177:13: error: 'GPIOD_OUT_LOW' undeclared (first use in this function); did you mean 'GPIOF_INIT_LOW'?
->              GPIOD_OUT_LOW);
->              ^~~~~~~~~~~~~
->              GPIOF_INIT_LOW
-> drivers/input/misc/msm-vibrator.c:177:13: note: each undeclared identifier is reported only once for each function it appears in
->
-> This is easy to avoid when we use gpio/consumer.h as the documented interface.
->
-> Fixes: 0f681d09e66e ("Input: add new vibrator driver for various MSM SOCs")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> My mistake. GCC is right, it seems memcpy will read past the end of
+> "5.0.0+".
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+But only if the else branch is taken, which is not the case.
 
-Yours,
-Linus Walleij
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
