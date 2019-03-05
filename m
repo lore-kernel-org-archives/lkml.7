@@ -2,90 +2,199 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC693C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9DAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18CD2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08AD020684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 02:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfCECtE (ORCPT
+        id S1726941AbfCECzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 21:49:04 -0500
-Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:40169 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726553AbfCECtD (ORCPT
+        Mon, 4 Mar 2019 21:55:51 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44932 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfCECzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 21:49:03 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 96096100E86C8;
-        Tue,  5 Mar 2019 02:49:01 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: toe73_1469bae26ef47
-X-Filterd-Recvd-Size: 2507
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  5 Mar 2019 02:49:00 +0000 (UTC)
-Message-ID: <fafe78cbb34dc8acd31f873bcd55af879311d839.camel@perches.com>
-Subject: Re: [PATCH v6 1/4] can: m_can: Create a m_can platform framework
-From:   Joe Perches <joe@perches.com>
-To:     Dan Murphy <dmurphy@ti.com>,
-        Wolfgang Grandegger <wg@grandegger.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 04 Mar 2019 18:48:58 -0800
-In-Reply-To: <cc3d0c0c-f56f-0bb5-e90b-a09cdf761f3c@ti.com>
-References: <20190301185043.9037-1-dmurphy@ti.com>
-         <7ffc0639-de4a-87da-68e0-2d170c241824@grandegger.com>
-         <5b0959b9-58b7-cc3c-7014-b7cdb883a7cf@ti.com>
-         <2863c42d-065d-39e8-ed20-8279f76f00ae@grandegger.com>
-         <cc3d0c0c-f56f-0bb5-e90b-a09cdf761f3c@ti.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 4 Mar 2019 21:55:51 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 1730329D6B;
+        Mon,  4 Mar 2019 21:55:44 -0500 (EST)
+Date:   Tue, 5 Mar 2019 13:56:00 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25:
+ warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
+In-Reply-To: <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
+Message-ID: <alpine.LNX.2.21.1903051154200.135@nippy.intranet>
+References: <201903042049.npxcZzps%fengguang.wu@intel.com> <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-04 at 13:12 -0600, Dan Murphy wrote:
-> On 3/4/19 12:13 PM, Wolfgang Grandegger wrote:
-> > Am 04.03.19 um 18:22 schrieb Dan Murphy:
-> > > > > +	int pm_clock_support;
-> > > > 
-> > > > A "bool" would be more appropriate, I think.
-> > > 
-> > > I was abiding by this checkpatch warning I got on the is_peripherial.
-> > > 
-> > > CHECK: Avoid using bool structure members because of possible alignment issues - see: https://lkml.org/lkml/2017/11/21/384
-> > > #94: FILE: drivers/net/can/m_can/m_can.h:94:
-> > > +	bool is_peripherial;
-> > > 
-> > 
-> > Ah, right! I was also surprised to get that warning. The kernel is full
-> > of bool's, but well, we should make "checkpatch" happy (and Linus).
+On Mon, 4 Mar 2019, Geert Uytterhoeven wrote:
 
-That check has been removed from checkpatch by
+> On Mon, Mar 4, 2019 at 1:44 PM kbuild test robot <lkp@intel.com> wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git master
+> > head:   e223cadc191661c67cb419b3a53c7854ecc39e8b
+> > commit: e223cadc191661c67cb419b3a53c7854ecc39e8b [1174/1174] Merge tag 'v5.0'
+> > config: m68k-allmodconfig (attached as .config)
+> > compiler: m68k-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         git checkout e223cadc191661c67cb419b3a53c7854ecc39e8b
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=8.2.0 make.cross ARCH=m68k
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> >    In file included from include/linux/string.h:20,
+> >                     from include/linux/bitmap.h:9,
+> >                     from include/linux/nodemask.h:95,
+> >                     from include/linux/mmzone.h:17,
+> >                     from include/linux/gfp.h:6,
+> >                     from include/linux/umh.h:4,
+> >                     from include/linux/kmod.h:22,
+> >                     from include/linux/module.h:13,
+> >                     from drivers/nvme/target/admin-cmd.c:15:
+> >    In function 'memcpy_and_pad',
+> >        inlined from 'nvmet_execute_identify_ctrl' at drivers/nvme/target/admin-cmd.c:309:2:
+> > >> arch/m68k/include/asm/string.h:72:25: warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7] [-Warray-bounds]
+> >     #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
+> >                             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >    include/linux/string.h:456:3: note: in expansion of macro 'memcpy'
+> >       memcpy(dest, src, dest_len);
+> >       ^~~~~~
+> >
+> > vim +/__builtin_memcpy +72 arch/m68k/include/asm/string.h
+> >
+> > ea61bc46 Greg Ungerer 2010-09-07  69
+> > ea61bc46 Greg Ungerer 2010-09-07  70  #define __HAVE_ARCH_MEMCPY
+> > ea61bc46 Greg Ungerer 2010-09-07  71  extern void *memcpy(void *, const void *, __kernel_size_t);
+> > ea61bc46 Greg Ungerer 2010-09-07 @72  #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
+> > ea61bc46 Greg Ungerer 2010-09-07  73
+> >
+> > :::::: The code at line 72 was first introduced by commit
+> > :::::: ea61bc461d09e8d331a307916530aaae808c72a2 m68k/m68knommu: merge MMU and non-MMU string.h
+> >
+> > :::::: TO: Greg Ungerer <gerg@snapgear.com>
+> > :::::: CC: Geert Uytterhoeven <geert@linux-m68k.org>
+> 
+> Yep, that's a funny one, which I saw myself this morning, and decided
+> to dive into.
+> Apparently this is due 1) the recently added -ffreestanding and
+> 2) the kernel version being shorter than 8 characters (indeed, it
+> didn't happen with allmodconfig on v5.0.0-rcX).
+> 
+> The offending code is:
+> 
+>         memcpy_and_pad(id->fr, sizeof(id->fr),
+>                        UTS_RELEASE, strlen(UTS_RELEASE), ' ');
+> 
+> with UTS_RELEASE being "5.0.0+", which calls into:
+> 
+>     static inline void memcpy_and_pad(void *dest, size_t dest_len,
+>                                       const void *src, size_t count, int pad)
+>     {
+>             if (dest_len > count) {
+> 
+> Of course this branch is taken, right?
+> 
 
-commit 7967656ffbfa493f5546c0f18bf8a28f702c4baa
-Author: Jason Gunthorpe <jgg@ziepe.ca>
-Date:   Fri Jan 18 15:50:47 2019 -0700
+Apparently that's not known at compile time. The compiler knows dest_len 
+is 8 but apparently doesn't know what count is, because -ffreestanding 
+means it can't evaluate strlen(UTS_RELEASE). If you change that to 
+__builtin_strlen(UTS_RELEASE), the problem goes away.
 
-    coding-style: Clarify the expectations around bool
-    
-    There has been some confusion since checkpatch started warning about bool
-    use in structures, and people have been avoiding using it.
-    
-    Many people feel there is still a legitimate place for bool in structures,
-    so provide some guidance on bool usage derived from the entire thread that
-    spawned the checkpatch warning.
-    
-    Link: https://lkml.kernel.org/r/CA+55aFwVZk1OfB9T2v014PTAKFhtVan_Zj2dOjnCy3x6E4UJfA@mail.gmail.com
+>                     memcpy(dest, src, count);
+>                     memset(dest + count, pad,  dest_len - count);
+>             } else
+>                     memcpy(dest, src, dest_len);
+>     }
+> 
+> This assembles to:
+> 
+>     .LC1:
+>             .string     "5.0.0+"
+> 
+>     | drivers/nvme/target/admin-cmd.c:311:      memcpy_and_pad(id->fr,
+> sizeof(id->fr),
+>             pea .LC1            |
+>             jsr strlen          |
+> 
+> Woops, gcc no longer optimizes this away, due to -ffreestanding.
+> 
+>     | drivers/nvme/target/admin-cmd.c:311:      memcpy_and_pad(id->fr,
+> sizeof(id->fr),
+>             lea (64,%a3),%a1    |, ret, _7
+>     | include/linux/string.h:452:       if (dest_len > count) {
+>             lea (16,%sp),%sp    |,
+>             moveq #7,%d1        |,
+>             cmp.l %d0,%d1       | _6,
+>             jcs .L53            |
+> 
+> And we end up with retaining both branches:
+> 
+>     | include/linux/string.h:453:               memcpy(dest, src, count);
+>             move.l %d0,-(%sp)   | _6,
+>             pea .LC1            |
+>             move.l %a1,-(%sp)   | _7,
+>             move.l %d0,-12(%fp) |,
+>             move.l %a1,-16(%fp) |,
+>             jsr memcpy          |
+>     | include/linux/string.h:454:               memset(dest + count,
+> pad,  dest_len - count);
+>             move.l -12(%fp),%d0 |,
+>             moveq #8,%d1        |,
+>             sub.l %d0,%d1       | _6,
+>             move.l %d1,-(%sp)   |,
+>             pea 32.w            |
+>             move.l -16(%fp),%a1 |,
+>             pea (%a1,%d0.l)             |
+>             jsr memset          |
+>             lea (24,%sp),%sp    |,
+>             jra .L54            |
+>     .L53:
+>     | include/linux/string.h:456:               memcpy(dest, src, dest_len);
+>             move.l .LC1,(%a1)   | MEM[(void *)"5.0.0+"], MEM[(void *)_7]
+>             move.l .LC1+4,4(%a1)        | MEM[(void *)"5.0.0+"], MEM[(void *)_7]
+> 
+> But given the warning, the compiler must have devised that taking the
+> second branch would read beyond the source buffer???
+> 
 
+Looks bogus to me.
 
+If you change memcpy to __builtin_memcpy, then we avoid the macro and the 
+warning changes to,
+
+./include/linux/string.h:456:3: warning: '__builtin_memcpy' forming offset [7, 8] is out of the bounds [0, 6] [-Warray-bounds]
+   __builtin_memcpy(dest, src, dest_len);
+
+The compiler has nothing to complain about here. dest is known to be 
+id->fr and dest_len is known to be sizeof(id->fr).
+
+The error message indicates that gcc has applied the bounds [0, 6] to dest 
+when in fact those are the bounds for src.
+
+-- 
+
+>     .L54:
+> 
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> 
