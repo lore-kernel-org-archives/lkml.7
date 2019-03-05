@@ -2,143 +2,69 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C00C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69962C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB3F2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374622082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfCEHJH (ORCPT
+        id S1727106AbfCEHK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 02:09:07 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:47148 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbfCEHJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:09:07 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B08693082A32;
-        Tue,  5 Mar 2019 07:09:06 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E5AB1001E61;
-        Tue,  5 Mar 2019 07:09:06 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7846141F3C;
-        Tue,  5 Mar 2019 07:09:06 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 02:09:06 -0500 (EST)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
+        Tue, 5 Mar 2019 02:10:29 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:41865 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725782AbfCEHK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 02:10:28 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04389;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TM.oBq1_1551769821;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TM.oBq1_1551769821)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 05 Mar 2019 15:10:21 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Harry Wei <harryxiyou@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-kernel@vger.kernel.org (open list)
 Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, amit@kernel.org,
-        arnd@arndb.de, gregkh@linuxfoundation.org, xiaohli@redhat.com,
-        Gal Hammer <ghammer@redhat.com>
-Message-ID: <444210313.9669582.1551769746169.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190304142506-mutt-send-email-mst@kernel.org>
-References: <20190304130511.14450-1-pagupta@redhat.com> <20190304142506-mutt-send-email-mst@kernel.org>
-Subject: Re: [PATCH] virtio_console: free unused buffers with virtio port
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Zhang Wei <wezhang@outlook.com>, Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH v2 28/28] docs/zh_CN: update Zhang Wei's email address
+Date:   Tue,  5 Mar 2019 15:10:15 +0800
+Message-Id: <20190305071015.164475-1-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.161.16, 10.4.195.4]
-Thread-Topic: virtio_console: free unused buffers with virtio port
-Thread-Index: BFmvrGbWTg6avNTfy7ONAyFjOsQPeg==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 05 Mar 2019 07:09:06 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+to replace the obsolete email address with new one.
 
-Hello Michael,
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Zhang Wei <wezhang@outlook.com>
+Cc: Li Yang <leoyang.li@nxp.com>
+---
+ Documentation/translations/zh_CN/process/submitting-drivers.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for your reply.
+diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+index d29032007112..3be51d998c80 100644
+--- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
++++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+@@ -13,7 +13,7 @@
+         中文版翻译者： 李阳  Li Yang <leoyang.li@nxp.com>
+         中文版校译者： 陈琦 Maggie Chen <chenqi@beyondsoft.com>
+                        王聪 Wang Cong <xiyou.wangcong@gmail.com>
+-                       张巍 Zhang Wei <Wei.Zhang@freescale.com>
++                       张巍 Zhang Wei <wezhang@outlook.com>
+ 
+ 如何向 Linux 内核提交驱动程序
+ =============================
+-- 
+2.19.1.856.g8858448bb
 
-> 
-> On Mon, Mar 04, 2019 at 06:35:11PM +0530, Pankaj Gupta wrote:
-> >   The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> >   deffered detaching of unused buffer to virtio device unplug time.
-> > 
-> >   This causes unplug/replug of single port in virtio device with an
-> >   error "Error allocating inbufs\n". As we don't free the unused buffers
-> >   attached with the port. Re-plug the same port tries to allocate new
-> >   buffers in virtqueue and results in this error if queue is full.
-> > 
-> >   This patch removes the unused buffers in vq's when we unplug the port.
-> >   This is the best we can do as we cannot call device_reset because virtio
-> >   device is still active. This was the working behaviour before the change
-> >   introduced in commit b3258ff1d6.
-> > 
-> >   Reported-by: Xiaohui Li <xiaohli@redhat.com>
-> >   Fixes: b3258ff1d6 ("virtio_console: free buffers after reset")
-> >   Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> 
-> I think if you do this you need to add support
-> in the packed ring.
-
-o.k. I will look at the implementation details for "support
-of packed ring" for virtio_console. This will take some time.
-
-Meanwhile "virtio_console" port hotplug/unplug is broken in upstream.
-Can we accept this patch as it fixes the upstream and together
-with parent patch(b3258ff1d6) does nice cleanups as well.
-
-Thanks,
-Pankaj  
-
-> 
-> > ---
-> >  drivers/char/virtio_console.c | 14 +++++++++++---
-> >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-> > index fbeb71953526..5fbf2ac73111 100644
-> > --- a/drivers/char/virtio_console.c
-> > +++ b/drivers/char/virtio_console.c
-> > @@ -1506,15 +1506,25 @@ static void remove_port(struct kref *kref)
-> >          kfree(port);
-> >  }
-> >  
-> > +static void remove_unused_bufs(struct virtqueue *vq)
-> > +{
-> > +        struct port_buffer *buf;
-> > +
-> > +        while ((buf = virtqueue_detach_unused_buf(vq)))
-> > +                free_buf(buf, true);
-> > +}
-> > +
-> >  static void remove_port_data(struct port *port)
-> >  {
-> >          spin_lock_irq(&port->inbuf_lock);
-> >          /* Remove unused data this port might have received. */
-> >          discard_port_data(port);
-> > +        remove_unused_bufs(port->in_vq);
-> >          spin_unlock_irq(&port->inbuf_lock);
-> >  
-> >          spin_lock_irq(&port->outvq_lock);
-> >          reclaim_consumed_buffers(port);
-> > +        remove_unused_bufs(port->out_vq);
-> >          spin_unlock_irq(&port->outvq_lock);
-> >  }
-> >  
-> > @@ -1950,11 +1960,9 @@ static void remove_vqs(struct ports_device *portdev)
-> >          struct virtqueue *vq;
-> >  
-> >          virtio_device_for_each_vq(portdev->vdev, vq) {
-> > -                struct port_buffer *buf;
-> >  
-> >                  flush_bufs(vq, true);
-> > -                while ((buf = virtqueue_detach_unused_buf(vq)))
-> > -                        free_buf(buf, true);
-> > +                remove_unused_bufs(vq);
-> >          }
-> >          portdev->vdev->config->del_vqs(portdev->vdev);
-> >          kfree(portdev->in_vqs);
-> > --
-> > 2.20.1
-> 
