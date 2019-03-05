@@ -2,132 +2,249 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C04C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251BEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00A22075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RBNWZUpu";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BdYSe4hz"
+	by mail.kernel.org (Postfix) with ESMTP id E23FB2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfCEUCu (ORCPT
+        id S1727870AbfCEUF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 15:02:50 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43498 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfCEUCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 15:02:50 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x25K1OLl012880;
-        Tue, 5 Mar 2019 12:02:14 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=WwtA9msDoxaKPjQgylPz7d3y3iWQwNSTNvGNgMGPpu8=;
- b=RBNWZUpuP59ZSYnEQTLzQrpHTGeovSXyrN79AwN9sya7Z0lK8LLo8TkOIJPdPYJ2TTlG
- UM7yxsu4PaP3as75aXWOeqUMuW2z/bX+4keEz6Zj0LKREenlcM1gY+HjQriEuqnmEsvW
- zvieWbDS3Do8vkdwjz/AdwBA02m6pyFDUbc= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r1wmprj01-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 05 Mar 2019 12:02:13 -0800
-Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
- frc-hub05.TheFacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 5 Mar 2019 12:01:17 -0800
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 5 Mar 2019 12:01:16 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WwtA9msDoxaKPjQgylPz7d3y3iWQwNSTNvGNgMGPpu8=;
- b=BdYSe4hzk3lqNORq+qP6KWPntTUgol5u3NMbqPb8yXYVD5h4Rf62DX9tL6+s5WRILX7jubO0J7m3wM5O+5HJs0ZxtvOIsWHiOJJM0JFX138bTiQC1mLEaCuCUX8f8+1CR6YEU4wpZuIZ+OSjMm1mLQfnH4c1TlBjLg09KRCL39k=
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
- CY4PR15MB1608.namprd15.prod.outlook.com (10.175.119.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.15; Tue, 5 Mar 2019 20:01:02 +0000
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::c47c:32d3:4b03:adea]) by CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::c47c:32d3:4b03:adea%3]) with mapi id 15.20.1665.020; Tue, 5 Mar 2019
- 20:01:02 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH] ARM: dts: aspeed: tiogapass: Enable VUART
-Thread-Topic: [PATCH] ARM: dts: aspeed: tiogapass: Enable VUART
-Thread-Index: AQHUuMemZJYThVA8H0+uGcmnPW39RKX9JKSA
-Date:   Tue, 5 Mar 2019 20:01:02 +0000
-Message-ID: <DAA424C9-E096-40A3-8287-CE4C8E9ABD61@fb.com>
-References: <20190130181427.2469674-1-vijaykhemka@fb.com>
-In-Reply-To: <20190130181427.2469674-1-vijaykhemka@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::3:907c]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cb85a199-3401-4d93-17ff-08d6a1a54b49
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:CY4PR15MB1608;
-x-ms-traffictypediagnostic: CY4PR15MB1608:
-x-microsoft-exchange-diagnostics: 1;CY4PR15MB1608;20:1hwXr6e8UcOEKkdoEzSzpIpfpXpVPdkzLSwxSXe8i/ZLOo/PbDpiCWOESuiyDKCFSs86sHN+vYxEj90SWyFP2dDDP4qx4a+jZTu5KUY2ZSj9BYzMEN714m8cFxc5oB6nujHqGr+fUmaw1UaL+E6XaCmO42zH0hmVobK7+jzgfbw=
-x-microsoft-antispam-prvs: <CY4PR15MB1608FB69D795F4D37CF441F6DD720@CY4PR15MB1608.namprd15.prod.outlook.com>
-x-forefront-prvs: 0967749BC1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(346002)(136003)(39860400002)(199004)(189003)(2906002)(68736007)(106356001)(6436002)(105586002)(6486002)(256004)(186003)(46003)(14454004)(2501003)(486006)(476003)(2616005)(229853002)(446003)(11346002)(53936002)(6512007)(5660300002)(6506007)(6116002)(81156014)(2201001)(305945005)(8676002)(81166006)(478600001)(110136005)(36756003)(82746002)(316002)(86362001)(8936002)(76176011)(7736002)(71200400001)(6246003)(33656002)(102836004)(99286004)(71190400001)(97736004)(4326008)(83716004)(6346003)(25786009)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1608;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y+m1ZOAyIbaLjAxLDEC6BypFEewJU8ynbvVtYqpLMZ0QUgoGti+yVxNYX7feZlULsFKSaZgxtHRYwwMDmoBexeM81GP4Sl1YcFE2HmPBucBPSKuGfkrYFYBI8kxmPAi6kUGKh0ffUkozwfN6/x85n8jR3RVoFEhJMpuwJwE+H92tIe2I0tw0f7DQwbKOCUtACtXEHQU7anpE6o1Seqcds55uGk35aJ1jw1/vcrtjW7CuJcyFL/OtICIfkdsGuH8ahHuBMBdQN4X+DxDcUdDp+0U7OQf/X+c0iQA3F/+tBZsXtjgA9o8AKfeTrsbCQl443L9AAia/7nr8xnvaQWl1a+loBCqPIgHB9aWCV18CjOF2fXawuQY6re0hvc4RMUiW6ItFNhr4uzunEMcz7hlDHyEez3m+6Dqe3Sk0Mv1gZ8A=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C26BD7655BD783459EAE8B3F04F3AEA3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 5 Mar 2019 15:05:57 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:41366 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfCEUF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 15:05:57 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DA42E308FF32;
+        Tue,  5 Mar 2019 20:05:56 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45AC55D71A;
+        Tue,  5 Mar 2019 20:05:56 +0000 (UTC)
+Date:   Tue, 5 Mar 2019 15:05:54 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     bsegall@google.com
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
+Message-ID: <20190305200554.GA8786@pauld.bos.csb>
+References: <20190301145209.GA9304@pauld.bos.csb>
+ <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
+ <20190304190510.GB5366@lorien.usersys.redhat.com>
+ <xm268sxtyx5u.fsf@bsegall-linux.svl.corp.google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb85a199-3401-4d93-17ff-08d6a1a54b49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2019 20:01:02.3280
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1608
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_10:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xm268sxtyx5u.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 05 Mar 2019 20:05:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGxlYXNlIHJldmlldyBiZWxvdyBwYXRjaC4NCg0KUmVnYXJkcw0KLVZpamF5DQoNCu+7v09uIDEv
-MzAvMTksIDEwOjE0IEFNLCAiVmlqYXkgS2hlbWthIiA8dmlqYXlraGVta2FAZmIuY29tPiB3cm90
-ZToNCg0KICAgIEVuYWJsaW5nIHZ1YXJ0IGZvciBGYWNlYm9vayB0aW9nYXBhc3MNCiAgICANCiAg
-ICBTaWduZWQtb2ZmLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZiLmNvbT4NCiAgICAt
-LS0NCiAgICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3Mu
-ZHRzIHwgNSArKysrKw0KICAgICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQogICAg
-DQogICAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2st
-dGlvZ2FwYXNzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlv
-Z2FwYXNzLmR0cw0KICAgIGluZGV4IDQyZTBkN2E4ZThkMC4uYTA1OGZiMjk4NWY3IDEwMDY0NA0K
-ICAgIC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNz
-LmR0cw0KICAgICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlv
-Z2FwYXNzLmR0cw0KICAgIEBAIC02NCw2ICs2NCwxMSBAQA0KICAgICAJc3RhdHVzID0gIm9rYXki
-Ow0KICAgICB9Ow0KICAgICANCiAgICArJnZ1YXJ0IHsNCiAgICArCS8vIFZVQVJUIEhvc3QgQ29u
-c29sZQ0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICt9Ow0KICAgICsNCiAgICAgJnVhcnQx
-IHsNCiAgICAgCS8vIEhvc3QgQ29uc29sZQ0KICAgICAJc3RhdHVzID0gIm9rYXkiOw0KICAgIC0t
-IA0KICAgIDIuMTcuMQ0KICAgIA0KICAgIA0KDQo=
+On Tue, Mar 05, 2019 at 10:49:01AM -0800 bsegall@google.com wrote:
+> Phil Auld <pauld@redhat.com> writes:
+> 
+> >> >
+> >> > 	raw_spin_lock(&cfs_b->lock);
+> >> > 	for (;;) {
+> >> > 		overrun = hrtimer_forward_now(timer, cfs_b->period);
+> >> > 		if (!overrun)
+> >> > 			break;
+> >> >
+> >> > 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+> >> > 	}
+> >> > 	if (idle)
+> >> > 		cfs_b->period_active = 0;
+> >> > 	raw_spin_unlock(&cfs_b->lock);
+> >> >
+> >> >
+> >> > There's no guarantee that hrtimer_forward_now() will ever return 0 and also 
+> >> > do_sched_cfs_period_timer() will drop and re-acquire the cfs_b->lock to call 
+> >> > distribute_cfs_runtime. 
+> >> >
+> >> > I considered code to tune the period and quota up (proportionally so they have the same 
+> >> > relative effect) but I did not like that because of the above statement and the fact that 
+> >> > it would be changing the valid values the user configured. I have two versions that do that 
+> >> > differently but they both still call out for protection from the forever loop. I think they 
+> >> > add complexity for no real gain.
+> >> >
+> >> > For my current testing I'm using a more direct but less elegant approach of simply limiting 
+> >> > the number of times the loop can execute. This has the potential to skip handling a period 
+> >> > I think but will prevent the problem reliably. I'm not sure how many iterations this loop 
+> >> > was expected to take. I'm seeing numbers in the low thousands at times.
+> >> 
+> >> I mean the answer should be "do_sched_cfs_period_timer runs once" the
+> >> vast majority of the time; if it's not then your machine/setup can't
+> >> handle whatever super low period you've set, or there's some bad
+> >> behavior somewhere in the period timer handling.
+> >> CFS_PERIOD_TIMER_EXIT_COUNT could reasonably be like 2 or 3 - this would
+> >> mean that you've already spent an entire period inside the handler.
+> >>
+> >
+> > Thanks for looking at this.
+> >
+> > That's sort of what I though, too. Would it not make more sense to get rid
+> > of the loop? I find forever loops inherently suspect.
+> 
+> I mean, probably better to have a loop than copy paste the code a couple
+> of times; you could rework the condition in your patch to be part of the
+> loop condition in general, though it might not be any clearer (heck,
+> the loop /could/ be for (;overrun = hrtimer_forward_now(...);) { ... },
+> it's just that's kinda questionable about whether it's clearer).
+> 
+
+So I'm not clear on this loop thing, though.  If it's okay for the loop
+to run 2-3 times that implies it's okay for do_sched_cfs_period_timer() 
+to take longer than a period to run.  So if that's expected twice or 
+thrice what would ensure it does not continually take that long?
+
+
+> >
+> > I think the fact that we drop the lock to do the distribue is the real cuplrit.
+> > It's not do_sched_cfs_period_timer()'s code itself that takes the time,
+> > I think, it's the re-acquire of the cfs_b->lock and the contention on it due
+> > to all the cgroups. Lock_stat smaples during that run show pretty high contention
+> > on that lock and some really long wait times.
+> 
+> Tons of cgroups shouldn't increase contention; cfs_b->lock is
+> per-cgroup, and I don't see or remember anything offhand where it even
+> should be worse for deep nesting. Large machines with many cpus where
+> threads in the cgroup are running on each make it worse of course, and
+> tons of cgroups with throttling enabled have O(log n) cost on hrtimers
+> insertion and of course O(n) cost in actual runtime in irq handlers.
+
+The lock is per cgroup but it's taken in assign_cfs_rq_runtime() via 
+__account_cfs_rq_runtime() from every non-idle cpu, I think.
+
+> 
+> If you're seeing increasing contention as the cgroup depth or cgroup
+> count increases, that may be a good thing to fix regardless.
+
+I'll look at it some more. 
+
+Interestingly, if I limit the number of child cgroups to the number of 
+them I'm actually putting processes into (16 down from 2500) the problem
+does not reproduce. 
+
+Fwiw this is a 80 cpu (incl. smt) 4-numa system. So there are a lot 
+of cfs_rqs that might be doing __account_cfs_rq_runtime().
+
+Here is lock_stat output from a short bit of the run when the pr_warn has come a couple of times. 
+Edited for screen width. This is the 8th lock on the list. (I wonder in this case of the really long 
+holds are the pr_warn firing.)
+ 
+class name       &cfs_b->lock:
+con-bounces      33770
+contentions      33776
+waittime-min         0.10
+waittime-max     48088.04
+waittime-total  856027.70
+waittime-avg        25.34  
+acq-bounces     148379
+acquisitions    162184 
+holdtime-min         0.00 
+holdtime-max     48240.79
+holdtime-total  354683.04  
+holdtime-avg         2.19
+                 
+             ------------
+             &cfs_b->lock          29414          [<00000000cfc57971>] __account_cfs_rq_runtime+0xd5/0x1a0
+             &cfs_b->lock           4195          [<00000000754af0b8>] throttle_cfs_rq+0x193/0x2c0
+             &cfs_b->lock            166          [<00000000b6333ad0>] unthrottle_cfs_rq+0x54/0x1d0
+             &cfs_b->lock              1          [<00000000fc0c15d2>] sched_cfs_period_timer+0xe6/0x1d0
+             ------------
+             &cfs_b->lock          28602          [<00000000cfc57971>] __account_cfs_rq_runtime+0xd5/0x1a0
+             &cfs_b->lock           3215          [<00000000754af0b8>] throttle_cfs_rq+0x193/0x2c0
+             &cfs_b->lock           1938          [<00000000b6333ad0>] unthrottle_cfs_rq+0x54/0x1d0
+             &cfs_b->lock             21          [<00000000fc0c15d2>] sched_cfs_period_timer+0xe6/0x1d0
+
+
+> 
+> The lock has to be dropped due to lock ordering vs rq locks, and the
+> reverse order wouldn't be possible. That said, each cfs_rq unthrottle in
+> distribute grabs the lock, and then that cpu will grab the lock when it
+> wakes up, which can be while we're still in distribute. I'm not sure if
+> it would be possible to move the resched_curr calls until after doing
+> all the rest of unthrottle, and even if we did then we'd be taking each
+> rq lock twice, which wouldn't be great either. It might at least be
+> possible to coalesce all the cfs_b accounting in unthrottle to be done
+> in a single locked section, but I don't know if that would actually
+> help; it would still all have to be serialized regardless after all.
+
+Yeah, that makes sense, thanks.
+
+Cheers,
+Phil
+
+> 
+> >
+> > My reproducer is artificial, but is designed to trigger the issue as has
+> > been hit in various customer workloads. So yes, it's exaggerated, but only
+> > so I don't have to wait weeks between hits :)
+> >
+> >
+> > Thanks,
+> > Phil
+> >
+> >> >
+> >> > A more complete fix to make sure do_sched_cfs_period_timer never takes longer than period 
+> >> > would be good but I'm not sure what that would be and we still have this potential forever
+> >> > loop. 
+> >> >
+> >> > Below is the bandaid version. 
+> >> >   
+> >> > Thoughts? 
+> >> >
+> >> >
+> >> > Cheers,
+> >> > Phil
+> >> >
+> >> > ---
+> >> >
+> >> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >> > index 310d0637fe4b..33e55620f891 100644
+> >> > --- a/kernel/sched/fair.c
+> >> > +++ b/kernel/sched/fair.c
+> >> > @@ -4859,12 +4859,16 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+> >> >         return HRTIMER_NORESTART;
+> >> >  }
+> >> >  
+> >> > +/* This is pretty arbitrary just to escape the "forever" loop before the watchdog
+> >> > + * kills us as there is no guarantee hrtimer_forward_now ever returns 0. */
+> >> > +#define CFS_PERIOD_TIMER_EXIT_COUNT 100
+> >> >  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+> >> >  {
+> >> >         struct cfs_bandwidth *cfs_b =
+> >> >                 container_of(timer, struct cfs_bandwidth, period_timer);
+> >> >         int overrun;
+> >> >         int idle = 0;
+> >> > +       int count = 0;
+> >> >  
+> >> >         raw_spin_lock(&cfs_b->lock);
+> >> >         for (;;) {
+> >> > @@ -4872,6 +4876,14 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+> >> >                 if (!overrun)
+> >> >                         break;
+> >> >  
+> >> > +               if (++count > CFS_PERIOD_TIMER_EXIT_COUNT) {
+> >> > +                       pr_warn_ratelimited("cfs_period_timer(%d): too many overruns. Consider raising cfs_period_us (%lld)\n",
+> >> > +                               smp_processor_id(), cfs_b->period/NSEC_PER_USEC);
+> >> > +                       // Make sure we restart the timer.
+> >> > +                       idle = 0;
+> >> > +                       break;
+> >> > +               }
+> >> > +
+> >> >                 idle = do_sched_cfs_period_timer(cfs_b, overrun);
+> >> >         }
+> >> >         if (idle)
+
+-- 
