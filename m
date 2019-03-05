@@ -2,102 +2,188 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5609FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F95C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FFB20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:56:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otcOw1+H"
+	by mail.kernel.org (Postfix) with ESMTP id ECFBB2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfCEN41 (ORCPT
+        id S1727984AbfCEN6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 08:56:27 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36726 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfCEN41 (ORCPT
+        Tue, 5 Mar 2019 08:58:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59134 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727751AbfCEN6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 08:56:27 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n22so5767557pfa.3;
-        Tue, 05 Mar 2019 05:56:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zyHJxLOBQ4frqWL9g0iXwMnceGr6NZV0LB0uzcou9Y8=;
-        b=otcOw1+HvDRlikBukTO9Q9esahSEQVjhMASu5si5MB7WtOksfmaPHTEQrfxjrTlt/z
-         WrlFPkeryJ4WyHCIt7/4pxR98cuq/tqN4I9DNHRt/15+7b5caC2YM9jpV4qzpedHK5KV
-         TVLg8WOEoALzGa4VuXrEMtLV4mBTk6yD4/QOWD8XIgrxg9K3vbxfpFd042ZzIvtW2g98
-         uiatLKxVv6a0WhGZ70VNFY/FDvoVE0aKHq/4UggYfNVarthtEhmO7g6vEQrcF+wkQiL8
-         1RbxB7kQNjBjMftZj5sz0FBvY5yzq4GV/XuCtFWI38bDJxswDL3PpVrfabtNpjeW5jaI
-         5t3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zyHJxLOBQ4frqWL9g0iXwMnceGr6NZV0LB0uzcou9Y8=;
-        b=e5dmgJBan5DDZhNn2e5ZOSQA9PfGJ0dlNI5ek8r+X1/E21yZxntM8HawkZV/LvC3rZ
-         q3XNIhPOySaSiqFMBPfflkgYxjzgTHtk0PYvzM6NyCzFEqm7oJm4qr6cED+TeqxuDEXB
-         Xbw+ZOaOoRRr81UomCdp0sXvss/eGHa3jJ1UcJ7wiHTH6kINfVT3nLE8EaCli8fmVs0p
-         O9fXJA2UUvIRT/ELyVHI70PYn/BpO4RnFIB90hji8agmVpLieudF94P34Bmwzs+ok/Q+
-         elV9k3uIKTWE+vBFl4Ebp63WcX/25r0LG5f7LUrH8rGZ7pbg3QJCsuOvYNQ8WAQfyOD7
-         gOqg==
-X-Gm-Message-State: APjAAAV61AaO0nJx4uxkRlSo6Cf64Fx9kyd2ivQKs42L6Nh1ZLsRE6ii
-        HLs4gzR0PwjpasDULYWurN63YeSWJi5t9JacV9c=
-X-Google-Smtp-Source: APXvYqy11wVC+NllZaRyAEkAHCP0N4I/P63coZlpUaIX7CeZZUoPFeXMW43h5g4lt4IPMAl/irKRU0lZiy+MmlWJeuI=
-X-Received: by 2002:a17:902:728d:: with SMTP id d13mr1377687pll.12.1551794186365;
- Tue, 05 Mar 2019 05:56:26 -0800 (PST)
+        Tue, 5 Mar 2019 08:58:04 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x25DnSVq137405
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Mar 2019 08:58:03 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r1sc23gqg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 08:58:03 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <oberpar@linux.ibm.com>;
+        Tue, 5 Mar 2019 13:58:01 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 5 Mar 2019 13:57:56 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x25Dvt6m47644682
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Mar 2019 13:57:55 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7B78A4068;
+        Tue,  5 Mar 2019 13:57:55 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 42BF0A405F;
+        Tue,  5 Mar 2019 13:57:55 +0000 (GMT)
+Received: from [9.152.212.90] (unknown [9.152.212.90])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Mar 2019 13:57:55 +0000 (GMT)
+Subject: Re: [PATCH v3 2/3] gcov: Clang support
+To:     Tri Vo <trong@android.com>
+Cc:     ghackmann@android.com, ndesaulniers@google.com,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        yamada.masahiro@socionext.com, Trilok Soni <tsoni@quicinc.com>,
+        Prasad Sodagudi <psodagud@quicinc.com>,
+        Daniel Mentz <danielmentz@google.com>,
+        Petri Gynther <pgynther@google.com>
+References: <20190122233749.42220-1-trong@android.com>
+ <20190122233749.42220-3-trong@android.com>
+From:   Peter Oberparleiter <oberpar@linux.ibm.com>
+Date:   Tue, 5 Mar 2019 14:57:55 +0100
 MIME-Version: 1.0
-References: <20190304201930.1622839-1-arnd@arndb.de> <20190304201930.1622839-2-arnd@arndb.de>
- <a94c3c6a-481e-96a5-74e1-8c3299c74129@metux.net> <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
- <54a7d035-155f-c47b-1db1-acb851b3aec6@metux.net>
-In-Reply-To: <54a7d035-155f-c47b-1db1-acb851b3aec6@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 Mar 2019 15:56:15 +0200
-Message-ID: <CAHp75Vcd0eNCBtxb1huMBGFF9JXmropHv2YA1eh-yK3iMFfuFQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] x86: apuv2: fix input dependencies
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Linus Walleij <linusw@kernel.org>,
-        Enrico Weigelt <info@metux.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190122233749.42220-3-trong@android.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030513-0028-0000-0000-000003503060
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030513-0029-0000-0000-0000240E9A4E
+Message-Id: <faa5a621-1f21-3136-58e7-9215c4f4d079@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903050093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 3:50 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
-> On 05.03.19 09:23, Arnd Bergmann wrote:
+On 23.01.2019 00:37, Tri Vo wrote:
+> From: Greg Hackmann <ghackmann@android.com>
+> 
+> LLVM uses profiling data that's deliberately similar to GCC, but has a very
+> different way of exporting that data.  LLVM calls llvm_gcov_init() once per
+> module, and provides a couple of callbacks that we can use to ask for more
+> data.
+> 
+> We care about the "writeout" callback, which in turn calls back into
+> compiler-rt/this module to dump all the gathered coverage data to disk:
+> 
+>    llvm_gcda_start_file()
+>      llvm_gcda_emit_function()
+>      llvm_gcda_emit_arcs()
+>      llvm_gcda_emit_function()
+>      llvm_gcda_emit_arcs()
+>      [... repeats for each function ...]
+>    llvm_gcda_summary_info()
+>    llvm_gcda_end_file()
+> 
+> This design is much more stateless and unstructured than gcc's, and is
+> intended to run at process exit.  This forces us to keep some local state
+> about which module we're dealing with at the moment.  On the other hand, it
+> also means we don't depend as much on how LLVM represents profiling data
+> internally.
+> 
+> See LLVM's lib/Transforms/Instrumentation/GCOVProfiling.cpp for more
+> details on how this works, particularly GCOVProfiler::emitProfileArcs(),
+> GCOVProfiler::insertCounterWriteout(), and GCOVProfiler::insertFlush().
+> 
+> Co-authored-by: Nick Desaulniers <ndesaulniers@google.com>
+> Co-authored-by: Tri Vo <trong@android.com>
+> Signed-off-by: Greg Hackmann <ghackmann@android.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Tri Vo <trong@android.com>
+> Tested-by: Trilok Soni <tsoni@quicinc.com>
+> Tested-by: Prasad Sodagudi <psodagud@quicinc.com>
+> Tested-by: Tri Vo <trong@android.com>
+> Tested-by: Daniel Mentz <danielmentz@google.com>
+> Tested-by: Petri Gynther <pgynther@google.com>
+> ---
+>  kernel/gcov/Kconfig  |   3 +-
+>  kernel/gcov/Makefile |   1 +
+>  kernel/gcov/clang.c  | 555 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 558 insertions(+), 1 deletion(-)
+>  create mode 100644 kernel/gcov/clang.c
+> 
 
-> > 1. try to use 'depends on' if you can
->
-> Well, this has the unpleasant side effect that we often have to enable
-> a lot of things, just to even see the individual driver. For people who
-> just wanna configure a kernel for their board, this is a bit nasty.
->
-> But, okay, I'm going to do this w/ my own tool - I've written a small
-> tool that allows easy kernel reconfiguration on a higher level: you
-> can just pick some board templates and enable high level features like
-> eth, gpu, etc - it automatically creates a .config for you. I'm going
-> announce it on lkml soon.
+[...]
 
-Darren gave a talk about merging kernel configs to get something like
-you want to.
-This tool is quite long already lying around. merge_config.sh in your
-kernel source tree.
+> diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
+> new file mode 100644
+> index 000000000000..f9acdee3d578
+> --- /dev/null
+> +++ b/kernel/gcov/clang.c
+> @@ -0,0 +1,555 @@
+
+[...]
+
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/printk.h>
+> +#include <linux/ratelimit.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/slab.h>
+> +#include <linux/vmalloc.h>
+> +#include "gcov.h"
+> +
+> +#define GCOV_TAG_FUNCTION_LENGTH	3
+
+This define seems to be unused and should be removed.
+
+[...]
+
+> +/**
+> + * gcov_info_unlink - unlink/remove profiling data set from the list
+> + * @prev: previous profiling data set
+> + * @info: profiling data set
+> + */
+> +void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+> +{
+> +	if (info)
+> +		list_del(&info->head);
+
+The if-clause can be removed since @info is always non-NULL.
+
+[...]
+
+> +static struct gcov_fn_info *gcov_fn_info_dup(struct gcov_fn_info *fn)
+> +{
+> +	size_t cv_size; /* counter values size */
+> +
+
+This empty line should be removed.
+
+[...]
+
+Rest looks good! With these minor changes applied:
+
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Peter Oberparleiter
+Linux on Z Development - IBM Germany
+
