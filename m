@@ -2,107 +2,159 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D46C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE832C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 246002082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oApk3sEd"
+	by mail.kernel.org (Postfix) with ESMTP id B313A2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 21:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfCEVAo (ORCPT
+        id S1728635AbfCEVBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 16:00:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60524 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfCEVAo (ORCPT
+        Tue, 5 Mar 2019 16:01:43 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:47316 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfCEVBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 16:00:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fd7HlNj4BVhChnF/JU6V3ls1u236HBTBzQQ0AiL7ksM=; b=oApk3sEdw6pOQx4uuwXXezXtm
-        haHQr0xy2HC+k8crumF4HNyoA8W/gHu64PlFaN/msolLByx+F1dpSHvkoVHmp5224Z8tKHf6RchZ1
-        mrqddJedxx7UyWlyFhrr5KjHuOzFyqXo43xVvVwvZJC/9OrjOk3d+z8zV96FF1R5J2wS/hXdy9OTS
-        KX4AUUopiXbitJJU/ajTw4G/QRGR3xXDILLdo0t6tgE9yt6qmw4sVwuNl60oPhljvsjpgdQnXJVvH
-        0pCNuuxyr6L5/JVBGqV/OLUgGuBI1qYKIftih+pq4xYGJhLyLTEnLb/97g5jfRzi6m3PCZMowB34Q
-        jWf/4bZTw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1HB4-0002IR-Bk; Tue, 05 Mar 2019 21:00:42 +0000
-Subject: Re: [PATCH] docs: add extra integer types to printk-formats
-To:     Joe Perches <joe@perches.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Louis Taylor <louis@kragniz.eu>, Jonathan Corbet <corbet@lwn.net>,
-        pmladek@suse.com, geert+renesas@glider.be,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Jon Flatley <jflat@chromium.org>
-References: <20190303123647.22020-1-louis@kragniz.eu>
- <20190303201016.GO9224@smile.fi.intel.com>
- <CAKwvOdm4uCWCtSMVQDVTSKavpT0dCo+ayuwvoXtewmk+ksn5sA@mail.gmail.com>
- <e244390e3d245c94d6d2fb036943e63111ada86d.camel@perches.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a13c431c-5bfe-1bef-78c8-dbac942ca02b@infradead.org>
-Date:   Tue, 5 Mar 2019 13:00:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 5 Mar 2019 16:01:43 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1h1HBO-0006fN-Vo; Tue, 05 Mar 2019 22:01:03 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+        <20190212143003.48446-9-john.ogness@linutronix.de>
+        <20190304073856.GA552@jagdpanzerIV>
+        <20190304100044.GC21004@jagdpanzerIV>
+        <20190304110703.GA960@tigerII.localdomain>
+Date:   Tue, 05 Mar 2019 22:00:58 +0100
+In-Reply-To: <20190304110703.GA960@tigerII.localdomain> (Sergey Senozhatsky's
+        message of "Mon, 4 Mar 2019 20:07:03 +0900")
+Message-ID: <87o96p9gtx.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <e244390e3d245c94d6d2fb036943e63111ada86d.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/19 11:59 AM, Joe Perches wrote:
-> On Mon, 2019-03-04 at 09:59 -0800, Nick Desaulniers wrote:
->> On Sun, Mar 3, 2019 at 12:10 PM Andy Shevchenko
->> <andriy.shevchenko@linux.intel.com> wrote:
->>> On Sun, Mar 03, 2019 at 12:36:47PM +0000, Louis Taylor wrote:
->>>> A few commonly used integer types were absent from this table, so add
->>>> them.
->>>
->>> I'm not against the patch, but isn't obvious by reading POSIX and / or man
->>> printf(3)?
->>
->> You'd think; but based on the sheer number of -Wformat warnings
->> (~450), I'm not so sure.
-> 
-> <shrug>  software defects are always present.
-> 
-> Many of the -Wformat warnings are bogus too.
-> 
-> There's nothing wrong with using %x for a unsigned int
-> of less than long size. (u8/u16)
-> 
->>   At least with this patch they're "above the
->> fold."
-> 
-> I'd personally go with
-> "posix plus kernel specific deletions and extensions"
+Hi Sergey,
 
-Yeah, I don't think that all of the "standard" types/formats need
-to be in there.  Just the differences.
+Thanks for your feedback.
 
->> The kernel also has its own format flag extensions, and does not
->> implement %n (for good reason), so it's better to be explicit than
->> imply posix or glibc compat.
-> 
-> %i is also supported and used a few hundred times
-> 
-> 
+I am responding to this comment ahead of your previous comments because
+it really cuts at the heart of the proposed design. After addressing
+this point it will make it easier for me to respond to your other
+comments.
 
+NOTE: This is a lengthy response.
 
--- 
-~Randy
+On 2019-03-04, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+>> But in general, channels which depend on preemptible printk will
+>> become totally useless in some cases.
+>
+> Which brings me to a question - what are those messages/channels? Not
+> important enough to be printed on consoles immediately, yet important
+> enough to pass the suppress_message_printing() check.
+
+I would like to clarify that message supression (i.e. console loglevel)
+is a method of reducing what is printed. It does nothing to address the
+issues related to console printing. My proposal focusses on addressing
+the issues related to console printing.
+
+Console printing is a convenient feature to allow a kernel to
+communicate information to a user without any reliance on
+userspace. IMHO there are 2 categories of messages that the kernel will
+communicate. The first is informational (usb events, wireless and
+ethernet connectivity, filesystem events, etc.). Since this category of
+messages occurs during normal runtime, we should expect that it does not
+cause adverse effects to the rest of the system (such as latencies and
+non-deterministic behavior).
+
+The second category is for emergency situations, where the kernel needs
+to report something unusual (panic, BUG, WARN, etc.). In some of these
+situations, it may be the last thing the kernel ever does. We should
+expect this category to focus on getting the message out as reliably as
+possible. Even if it means disturbing the system with large latencies.
+
+_Both_ categories are important for the user, but their requirements are
+different:
+
+   informational: non-disturbing
+   emergency:     reliable
+
+But what if a console doesn't support the write_atomic() that the
+emergency category requires? Then implement it. We currently have about
+80 console drivers.
+
+But what if can't be implemented? vt console, for example? Yes, the vt
+console would be tricky. It doesn't even support the current
+bust_spinlocks/oops_in_progress. But since the emergency category has a
+clear requirement (reliability), it means that a vt write_atomic() does
+not need to be concerned with system disturbance. That could help to
+find an implementation that will work, even for vt.
+
+> We may wave those semi-important messages good bye, I'm afraid,
+> preemptible printk will take care of it.
+
+You are talking about a system that is overloaded with messages to print
+to the console. The current printk implementation will do a better job
+of getting the informational messages out, but at an enormous cost to
+all the tasks on the system (including the realtime tasks). I am
+proposing a printk implementation where the tasks are not affected by
+console printing floods. When the CPU is allowed to dedicate itself to
+tasks, this obviously reduces the CPU available for console printing,
+and thus more messages will be lost. It is a choice to clarify printk's
+role (non-disturbance) and at the same time guarantee more determinism
+for the kernel and its tasks.
+
+As I've said, the messages of the informational category are also
+important. There are things that can be done to help get these messages
+out. For example:
+
+- Creating printk-kthreads per console (and thus per-console locks) so
+  that printk-buffer readers are not slowing each other down.
+
+- Having printk-threads use priority-buckets based on loglevels so that
+  (like the rt scheduler) more important messages are printed first.
+
+- Assigning the printk-kthread of more important consoles an appropriate
+  realtime priority.
+
+> So... do we have a case here? Do we really need printk-kthread?
+
+Obviously I answer yes to that.
+
+I want messages of the information category to cause no disturbance to
+the system. Give the kernel the freedom to communicate to users without
+destroying its own performance. This can only be achieved if the
+messages are printed from a _fully_ preemptible context.
+
+And I want messages of the emergency category to be as reliable as
+possible, regardless of the costs to the system. Give the kernel a clear
+mechanism to _reliably_ communicate critical information. Such messages
+should never appear on a correctly functioning system.
+
+And again, both of the above have nothing to do with message
+suppression. Here I am addressing the console printing issues:
+reliability and disturbance.
+
+John Ogness
