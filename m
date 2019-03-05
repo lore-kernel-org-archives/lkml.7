@@ -2,372 +2,263 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4675EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB23EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED29D20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66E720661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pD4e+Zbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfCEWyQ (ORCPT
+        id S1728580AbfCEXHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 17:54:16 -0500
-Received: from sauhun.de ([88.99.104.3]:38416 "EHLO pokefinder.org"
+        Tue, 5 Mar 2019 18:07:19 -0500
+Received: from ozlabs.org ([203.11.71.1]:59145 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfCEWyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 17:54:16 -0500
-Received: from localhost (p54B3334F.dip0.t-ipconnect.de [84.179.51.79])
-        by pokefinder.org (Postfix) with ESMTPSA id 40B592E3551;
-        Tue,  5 Mar 2019 23:54:12 +0100 (CET)
-Date:   Tue, 5 Mar 2019 23:54:11 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.1
-Message-ID: <20190305225407.GA16211@kunai>
+        id S1726217AbfCEXHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 18:07:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44DXbQ0MZdz9sBr;
+        Wed,  6 Mar 2019 10:07:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551827235;
+        bh=AzdPskMVQEDzVgaO5uowL1TLBY0Eej3zKeShD2MxVT8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pD4e+Zbrz2VNRbqDyF+uxsv0Bjg1oCtNvkV1mG8u12fJFN149YWgebvrOQtvtywah
+         KS8QT80gsbtRLkHjKMQDeWcc3V5FUlTLIW23STs25y3wDf9V0fu7RAhSeLhO+QSJud
+         XHThOWffOVm62cQokGaV4DBUXLFLNFrm/mzj2S0Va3rfNMMULt9bqqjzZ9ZkIkVd5T
+         ZUCrt5ZtMiLl5mp0AP2v9imS2MxZHTZyQM0jUsN8poxyJpBRRMAuuZBKNjS4pFOuWM
+         2fQx052IcCVaT8qp4AdbdDkd+8H3rrxthZNUZ4tyLFiCSVkbSKBa7O6fcrF9VcAFcb
+         J3zHaOhjOF/mA==
+Date:   Wed, 6 Mar 2019 10:07:13 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     torvalds@linux-foundation.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, arnd@arndb.de,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [GIT PULL] pidfd patches for v5.1-rc1
+Message-ID: <20190306100713.09b519ea@canb.auug.org.au>
+In-Reply-To: <20190305171301.23147-1-christian@brauner.io>
+References: <20190305171301.23147-1-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/KPREksubWrZ8yGTbc9b2Ig0"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/KPREksubWrZ8yGTbc9b2Ig0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi all,
 
-Linus,
+On Tue,  5 Mar 2019 18:13:01 +0100 Christian Brauner <christian@brauner.io>=
+ wrote:
+>
+> This is the first direct pr I had to send so I hope I didn't make any
+> horrible mistakes.
 
-The I2C pull request contains this time:
+One thing: you probably should have mentioned that these changes
+conflict with changes in the block and tip trees:
 
-* the I2C core gained helpers to assist drivers in handling their
-  suspended state, and drivers were converted to use it
-* two new fault-injectors for stress-testing
-* bigger refactoring and feature improvements for the ocores, sh_mobile,
-  and tegra drivers
-* platform_data removal for the at24 EEPROM driver
-* and various improvements and bugfixes all over the subsystem
+> On Tue, 22 Jan 2019 14:10:27 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > Today's linux-next merge of the pidfd tree got conflicts in:
+> >=20
+> >   arch/x86/entry/syscalls/syscall_32.tbl
+> >   arch/x86/entry/syscalls/syscall_64.tbl
+> >   include/uapi/asm-generic/unistd.h
+> >=20
+> > between commits:
+> >=20
+> >   63a96220ad45 ("arch: add split IPC system calls where needed")
+> >   0bd4bb9c5612 ("y2038: add 64-bit time_t syscalls to all 32-bit archit=
+ectures")
+> >=20
+> > from the y2038 tree and commit:
+> >=20
+> >   3d2991bc7a67 ("signal: add pidfd_send_signal() syscall")
+> >=20
+> > from the pidfd tree. =20
+>=20
+> This is now a conflict between the block, tip and pidfd trees.  The
+> resolution now looks like below.
+>=20
+> diff --cc arch/x86/entry/syscalls/syscall_32.tbl
+> index 8da78595d69d,234d91df8ca6..000000000000
+> --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> @@@ -396,39 -396,6 +396,40 @@@
+>   382	i386	pkey_free		sys_pkey_free			__ia32_sys_pkey_free
+>   383	i386	statx			sys_statx			__ia32_sys_statx
+>   384	i386	arch_prctl		sys_arch_prctl			__ia32_compat_sys_arch_prctl
+>  -385	i386	io_pgetevents		sys_io_pgetevents		__ia32_compat_sys_io_pgeteve=
+nts
+>  +385	i386	io_pgetevents		sys_io_pgetevents_time32	__ia32_compat_sys_io_p=
+getevents
+>   386	i386	rseq			sys_rseq			__ia32_sys_rseq
+>  +# don't use numbers 387 through 392, add new calls at the end
+>  +393	i386	semget			sys_semget    			__ia32_sys_semget
+>  +394	i386	semctl			sys_semctl    			__ia32_compat_sys_semctl
+>  +395	i386	shmget			sys_shmget    			__ia32_sys_shmget
+>  +396	i386	shmctl			sys_shmctl    			__ia32_compat_sys_shmctl
+>  +397	i386	shmat			sys_shmat     			__ia32_compat_sys_shmat
+>  +398	i386	shmdt			sys_shmdt     			__ia32_sys_shmdt
+>  +399	i386	msgget			sys_msgget    			__ia32_sys_msgget
+>  +400	i386	msgsnd			sys_msgsnd    			__ia32_compat_sys_msgsnd
+>  +401	i386	msgrcv			sys_msgrcv    			__ia32_compat_sys_msgrcv
+>  +402	i386	msgctl			sys_msgctl    			__ia32_compat_sys_msgctl
+>  +403	i386	clock_gettime64		sys_clock_gettime		__ia32_sys_clock_gettime
+>  +404	i386	clock_settime64		sys_clock_settime		__ia32_sys_clock_settime
+>  +405	i386	clock_adjtime64		sys_clock_adjtime		__ia32_sys_clock_adjtime
+>  +406	i386	clock_getres_time64	sys_clock_getres		__ia32_sys_clock_getres
+>  +407	i386	clock_nanosleep_time64	sys_clock_nanosleep		__ia32_sys_clock_n=
+anosleep
+>  +408	i386	timer_gettime64		sys_timer_gettime		__ia32_sys_timer_gettime
+>  +409	i386	timer_settime64		sys_timer_settime		__ia32_sys_timer_settime
+>  +410	i386	timerfd_gettime64	sys_timerfd_gettime		__ia32_sys_timerfd_gett=
+ime
+>  +411	i386	timerfd_settime64	sys_timerfd_settime		__ia32_sys_timerfd_sett=
+ime
+>  +412	i386	utimensat_time64	sys_utimensat			__ia32_sys_utimensat
+>  +413	i386	pselect6_time64		sys_pselect6			__ia32_compat_sys_pselect6_tim=
+e64
+>  +414	i386	ppoll_time64		sys_ppoll			__ia32_compat_sys_ppoll_time64
+>  +416	i386	io_pgetevents_time64	sys_io_pgetevents		__ia32_sys_io_pgeteven=
+ts
+>  +417	i386	recvmmsg_time64		sys_recvmmsg			__ia32_compat_sys_recvmmsg_tim=
+e64
+>  +418	i386	mq_timedsend_time64	sys_mq_timedsend		__ia32_sys_mq_timedsend
+>  +419	i386	mq_timedreceive_time64	sys_mq_timedreceive		__ia32_sys_mq_time=
+dreceive
+>  +420	i386	semtimedop_time64	sys_semtimedop			__ia32_sys_semtimedop
+>  +421	i386	rt_sigtimedwait_time64	sys_rt_sigtimedwait		__ia32_compat_sys_=
+rt_sigtimedwait_time64
+>  +422	i386	futex_time64		sys_futex			__ia32_sys_futex
+>  +423	i386	sched_rr_get_interval_time64	sys_sched_rr_get_interval	__ia32_=
+sys_sched_rr_get_interval
+> + 424	i386	pidfd_send_signal	sys_pidfd_send_signal		__ia32_sys_pidfd_send=
+_signal
+>  +425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
+>  +426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
+>  +427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_r=
+egister
+> diff --cc arch/x86/entry/syscalls/syscall_64.tbl
+> index c768447f97ec,58f4b3ad4fe0..000000000000
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@@ -343,11 -343,7 +343,12 @@@
+>   332	common	statx			__x64_sys_statx
+>   333	common	io_pgetevents		__x64_sys_io_pgetevents
+>   334	common	rseq			__x64_sys_rseq
+>  +# don't use numbers 387 through 423, add new calls after the last
+>  +# 'common' entry
+> + 424	common	pidfd_send_signal	__x64_sys_pidfd_send_signal
+>  +425	common	io_uring_setup		__x64_sys_io_uring_setup
+>  +426	common	io_uring_enter		__x64_sys_io_uring_enter
+>  +427	common	io_uring_register	__x64_sys_io_uring_register
+>  =20
+>   #
+>   # x32-specific system call numbers start at 512 to avoid cache impact
+> diff --cc include/uapi/asm-generic/unistd.h
+> index 94fde9a14830,c861e7d1053b..000000000000
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@@ -740,58 -740,11 +740,60 @@@ __SC_COMP_3264(__NR_io_pgetevents, sys_
+>   __SYSCALL(__NR_rseq, sys_rseq)
+>   #define __NR_kexec_file_load 294
+>   __SYSCALL(__NR_kexec_file_load,     sys_kexec_file_load)
+>  +/* 295 through 402 are unassigned to sync up with generic numbers, don'=
+t use */
+>  +#if __BITS_PER_LONG =3D=3D 32
+>  +#define __NR_clock_gettime64 403
+>  +__SYSCALL(__NR_clock_gettime64, sys_clock_gettime)
+>  +#define __NR_clock_settime64 404
+>  +__SYSCALL(__NR_clock_settime64, sys_clock_settime)
+>  +#define __NR_clock_adjtime64 405
+>  +__SYSCALL(__NR_clock_adjtime64, sys_clock_adjtime)
+>  +#define __NR_clock_getres_time64 406
+>  +__SYSCALL(__NR_clock_getres_time64, sys_clock_getres)
+>  +#define __NR_clock_nanosleep_time64 407
+>  +__SYSCALL(__NR_clock_nanosleep_time64, sys_clock_nanosleep)
+>  +#define __NR_timer_gettime64 408
+>  +__SYSCALL(__NR_timer_gettime64, sys_timer_gettime)
+>  +#define __NR_timer_settime64 409
+>  +__SYSCALL(__NR_timer_settime64, sys_timer_settime)
+>  +#define __NR_timerfd_gettime64 410
+>  +__SYSCALL(__NR_timerfd_gettime64, sys_timerfd_gettime)
+>  +#define __NR_timerfd_settime64 411
+>  +__SYSCALL(__NR_timerfd_settime64, sys_timerfd_settime)
+>  +#define __NR_utimensat_time64 412
+>  +__SYSCALL(__NR_utimensat_time64, sys_utimensat)
+>  +#define __NR_pselect6_time64 413
+>  +__SC_COMP(__NR_pselect6_time64, sys_pselect6, compat_sys_pselect6_time6=
+4)
+>  +#define __NR_ppoll_time64 414
+>  +__SC_COMP(__NR_ppoll_time64, sys_ppoll, compat_sys_ppoll_time64)
+>  +#define __NR_io_pgetevents_time64 416
+>  +__SYSCALL(__NR_io_pgetevents_time64, sys_io_pgetevents)
+>  +#define __NR_recvmmsg_time64 417
+>  +__SC_COMP(__NR_recvmmsg_time64, sys_recvmmsg, compat_sys_recvmmsg_time6=
+4)
+>  +#define __NR_mq_timedsend_time64 418
+>  +__SYSCALL(__NR_mq_timedsend_time64, sys_mq_timedsend)
+>  +#define __NR_mq_timedreceive_time64 419
+>  +__SYSCALL(__NR_mq_timedreceive_time64, sys_mq_timedreceive)
+>  +#define __NR_semtimedop_time64 420
+>  +__SYSCALL(__NR_semtimedop_time64, sys_semtimedop)
+>  +#define __NR_rt_sigtimedwait_time64 421
+>  +__SC_COMP(__NR_rt_sigtimedwait_time64, sys_rt_sigtimedwait, compat_sys_=
+rt_sigtimedwait_time64)
+>  +#define __NR_futex_time64 422
+>  +__SYSCALL(__NR_futex_time64, sys_futex)
+>  +#define __NR_sched_rr_get_interval_time64 423
+>  +__SYSCALL(__NR_sched_rr_get_interval_time64, sys_sched_rr_get_interval)
+>  +#endif
+> + #define __NR_pidfd_send_signal 424
+> + __SYSCALL(__NR_pidfd_send_signal, sys_pidfd_send_signal)
+>  +#define __NR_io_uring_setup 425
+>  +__SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
+>  +#define __NR_io_uring_enter 426
+>  +__SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
+>  +#define __NR_io_uring_register 427
+>  +__SYSCALL(__NR_io_uring_register, sys_io_uring_register)
+>  =20
+>   #undef __NR_syscalls
+>  -#define __NR_syscalls 425
+>  +#define __NR_syscalls 428
+>  =20
+>   /*
+>    * 32 bit systems traditionally used different
 
-Please pull.
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
-
-  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.1
-
-for you to fetch changes up to 93b6604c5a669d84e45fe5129294875bf82eb1ff:
-
-  i2c: Allow recovery of the initial IRQ by an I2C client device. (2019-02-24 14:43:22 +0100)
-
-----------------------------------------------------------------
-Andrew Lunn (2):
-      i2c: ocores: Add support for IO mapper registers.
-      i2c: ocores: Add support for bus clock via platform data
-
-Andy Shevchenko (1):
-      i2c: acpi: Move I2C bits from acpi.h to i2c.h
-
-Bartosz Golaszewski (15):
-      ARM: davinci: da850-evm: remove dead MTD code
-      ARM: davinci: mityomapl138: don't read the MAC address from machine code
-      ARM: davinci: dm365-evm: use device properties for at24 eeprom
-      ARM: davinci: da830-evm: use device properties for at24 eeprom
-      ARM: davinci: dm644x-evm: use device properties for at24 eeprom
-      ARM: davinci: dm646x-evm: use device properties for at24 eeprom
-      ARM: davinci: sffsdr: fix the at24 eeprom device name
-      ARM: davinci: sffsdr: use device properties for at24 eeprom
-      ARM: davinci: remove dead code related to MAC address reading
-      ARM: davinci: mityomapl138: use nvmem notifiers
-      ARM: davinci: mityomapl138: use device properties for at24 eeprom
-      Merge branch 'v5.1/eeprom-for-bartosz' of git://git.kernel.org/.../nsekhar/linux-davinci into at24/for-next
-      eeprom: at24: remove at24_platform_data
-      dt-bindings: at24: add the 'num-addresses' property
-      eeprom: at24: implement support for 'num-addresses' property
-
-Chengguang Xu (1):
-      i2c: expand minor range when registering chrdev region
-
-Colin Ian King (1):
-      i2c: tegra: change phrasing, "fallbacking" to "falling back"
-
-Federico Vaga (5):
-      i2c: ocores: stop transfer on timeout
-      i2c: ocores: do not handle IRQ if IF is not set
-      i2c: ocores: add polling interface
-      i2c: ocores: add SPDX tag
-      i2c: ocores: checkpatch fixes
-
-Geert Uytterhoeven (1):
-      i2c: rcar: Fix clients using i2c from suspend callback
-
-Hans de Goede (1):
-      i2c: designware: Do not allow i2c_dw_xfer() calls while suspended
-
-Jae Hyun Yoo (2):
-      i2c: aspeed: Remove hard-coded bus timeout value setting
-      i2c: aspeed: Add multi-master use case support
-
-Jim Broadus (1):
-      i2c: Allow recovery of the initial IRQ by an I2C client device.
-
-John Sperbeck (1):
-      i2c: core-smbus: don't trace smbus_reply data on errors
-
-Jonathan Hunter (1):
-      i2c: tegra: Only display error messages if DMA setup fails
-
-Linus Walleij (3):
-      i2c: Add DT bindings for Xscale I2C masters
-      i2c: iop3xx: Add device tree probing
-      i2c: cbus-gpio: Switch to use GPIO descriptors
-
-Oleksij Rempel (2):
-      i2c: imx: notify about real errors on dma i2c_imx_dma_request
-      i2c: imx: improve the error handling in i2c_imx_dma_request()
-
-Sowjanya Komatineni (9):
-      i2c: tegra: sort all the include headers alphabetically
-      i2c: tegra: add bus clear Master Support
-      i2c: tegra: fix maximum transfer size
-      i2c: tegra: update maximum transfer size
-      i2c: tegra: Add DMA support
-      i2c: tegra: update transfer timeout
-      i2c: tegra: add i2c interface timing support
-      i2c: tegra: remove master fifo support on tegra186
-      i2c: tegra: remove multi-master support
-
-Thierry Reding (1):
-      i2c: of: Try to find an I2C adapter matching the parent
-
-Wolfram Sang (32):
-      i2c: add suspended flag and accessors for i2c adapters
-      i2c: synquacer: remove unused is_suspended flag
-      i2c: brcmstb: use core helper to mark adapter suspended
-      i2c: zx2967: use core helper to mark adapter suspended
-      i2c: sprd: don't use pdev as variable name for struct device *
-      i2c: sprd: use core helper to mark adapter suspended
-      i2c: exynos5: use core helper to mark adapter suspended
-      i2c: s3c2410: use core helper to mark adapter suspended
-      i2c: rcar: add suspend/resume support
-      i2c: sh_mobile: simplify sending address for RX
-      i2c: sh_mobile: remove get_data function
-      i2c: sh_mobile: drop 'data' argument from i2c_op function
-      i2c: sh_mobile: remove is_first_byte function
-      i2c: sh_mobile: replace break; with if-block
-      i2c: sh_mobile: refactor rx isr
-      i2c: sh_mobile: update copyright and comments
-      i2c: algo-bit: include main i2c header
-      i2c: algo-bit: convert to SPDX header
-      i2c: gpio: sort includes
-      i2c: gpio: fault-injector: sort debugfs files alphabetically
-      i2c: gpio: fault-injector: better SPHINX style in docs
-      i2c: rcar: comment maintenance
-      i2c: sh_mobile: sort compatible entries
-      i2c: sh_mobile: use new clock calculation formulas for Gen3
-      i2c: sh_mobile: use new clock calculation formulas for Gen2
-      i2c: gpio: merge two very similar comments
-      i2c: rcar: refactor TCYC handling
-      Merge branch 'i2c/for-current' into i2c/for-5.1
-      Merge tag 'at24-5.1-updates-for-wolfram' of git://git.kernel.org/.../brgl/linux into i2c/for-5.1
-      i2c: gpio: fault-injector: add 'lose_arbitration' injector
-      i2c: gpio: fault-injector: add 'inject_panic' injector
-      i2c: ocores: turn incomplete kdoc into a comment
-
-YueHaibing (1):
-      i2c: imx: Fix inconsistent IS_ERR and PTR_ERR in i2c_imx_dma_request()
-
-qii wang (3):
-      dt-bindings: i2c: Add Mediatek MT7629 i2c binding
-      i2c: mediatek: speeds is replaced by macros definitions
-      i2c: mediatek: remove completion_done()
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Aaro Koskinen (1):
-      (Test) i2c: cbus-gpio: Switch to use GPIO descriptors
-
-Andrew Lunn (6):
-      (Rev.) i2c: ocores: turn incomplete kdoc into a comment
-      (Rev.) i2c: ocores: checkpatch fixes
-      (Rev.) i2c: ocores: add SPDX tag
-      (Test) i2c: ocores: add polling interface
-      (Rev.) i2c: ocores: do not handle IRQ if IF is not set
-      (Rev.) i2c: ocores: stop transfer on timeout
-
-Andy Shevchenko (6):
-      (Rev.) i2c: designware: Do not allow i2c_dw_xfer() calls while suspended
-      (Rev.) ARM: davinci: sffsdr: use device properties for at24 eeprom
-      (Rev.) ARM: davinci: dm646x-evm: use device properties for at24 eeprom
-      (Rev.) ARM: davinci: dm644x-evm: use device properties for at24 eeprom
-      (Rev.) ARM: davinci: da830-evm: use device properties for at24 eeprom
-      (Rev.) ARM: davinci: dm365-evm: use device properties for at24 eeprom
-
-Baolin Wang (2):
-      (Rev.) i2c: sprd: use core helper to mark adapter suspended
-      (Rev.) i2c: sprd: don't use pdev as variable name for struct device *
-
-Benjamin Tissoires (1):
-      (Rev.) i2c: Allow recovery of the initial IRQ by an I2C client device.
-
-Brendan Higgins (2):
-      (Rev.) i2c: aspeed: Add multi-master use case support
-      (Rev.) i2c: aspeed: Remove hard-coded bus timeout value setting
-
-Charles Keepax (1):
-      (Rev.) i2c: Allow recovery of the initial IRQ by an I2C client device.
-
-Dmitry Osipenko (10):
-      (Rev.) i2c: tegra: Only display error messages if DMA setup fails
-      (Rev.) i2c: tegra: add i2c interface timing support
-      (Test) i2c: tegra: add i2c interface timing support
-      (Rev.) i2c: tegra: update transfer timeout
-      (Rev.) i2c: tegra: Add DMA support
-      (Test) i2c: tegra: Add DMA support
-      (Rev.) i2c: tegra: update maximum transfer size
-      (Rev.) i2c: tegra: fix maximum transfer size
-      (Rev.) i2c: tegra: add bus clear Master Support
-      (Rev.) i2c: tegra: sort all the include headers alphabetically
-
-Geert Uytterhoeven (10):
-      (Rev.) i2c: gpio: merge two very similar comments
-      (Rev.) i2c: sh_mobile: use new clock calculation formulas for Gen2
-      (Rev.) i2c: sh_mobile: use new clock calculation formulas for Gen3
-      (Rev.) i2c: sh_mobile: sort compatible entries
-      (Rev.) i2c: sh_mobile: refactor rx isr
-      (Rev.) i2c: sh_mobile: replace break; with if-block
-      (Rev.) i2c: sh_mobile: remove is_first_byte function
-      (Rev.) i2c: sh_mobile: drop 'data' argument from i2c_op function
-      (Rev.) i2c: sh_mobile: remove get_data function
-      (Rev.) i2c: sh_mobile: simplify sending address for RX
-
-Joel Stanley (1):
-      (Rev.) i2c: aspeed: Remove hard-coded bus timeout value setting
-
-Kamal Dasu (1):
-      (Rev.) i2c: brcmstb: use core helper to mark adapter suspended
-
-Marek Szyprowski (2):
-      (Test) i2c: s3c2410: use core helper to mark adapter suspended
-      (Test) i2c: exynos5: use core helper to mark adapter suspended
-
-Nicolas Boichat (1):
-      (Rev.) i2c: mediatek: speeds is replaced by macros definitions
-
-Oleksij Rempel (1):
-      (Rev.) i2c: imx: Fix inconsistent IS_ERR and PTR_ERR in i2c_imx_dma_request()
-
-Rob Herring (1):
-      (Rev.) dt-bindings: i2c: Add Mediatek MT7629 i2c binding
-
-Simon Horman (7):
-      (Rev.) i2c: rcar: refactor TCYC handling
-      (Rev.) i2c: sh_mobile: use new clock calculation formulas for Gen3
-      (Rev.) i2c: sh_mobile: sort compatible entries
-      (Rev.) i2c: rcar: comment maintenance
-      (Rev.) i2c: gpio: sort includes
-      (Rev.) i2c: algo-bit: convert to SPDX header
-      (Rev.) i2c: algo-bit: include main i2c header
-
-Steven Rostedt (VMware) (1):
-      (Rev.) i2c: core-smbus: don't trace smbus_reply data on errors
-
-Tristan Bastian (1):
-      (Test) i2c: of: Try to find an I2C adapter matching the parent
-
-Uwe Kleine-K??nig (1):
-      (Rev.) i2c: imx: Fix inconsistent IS_ERR and PTR_ERR in i2c_imx_dma_request()
-
- Documentation/devicetree/bindings/eeprom/at24.txt  |   3 +
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt  |   1 +
- .../devicetree/bindings/i2c/i2c-xscale.txt         |  20 +
- Documentation/i2c/fault-codes                      |   4 +
- Documentation/i2c/gpio-fault-injection             |  61 +-
- MAINTAINERS                                        |   1 -
- arch/arm/mach-davinci/board-da830-evm.c            |  13 +-
- arch/arm/mach-davinci/board-da850-evm.c            |  28 -
- arch/arm/mach-davinci/board-dm365-evm.c            |  13 +-
- arch/arm/mach-davinci/board-dm644x-evm.c           |  13 +-
- arch/arm/mach-davinci/board-dm646x-evm.c           |  13 +-
- arch/arm/mach-davinci/board-mityomapl138.c         |  38 +-
- arch/arm/mach-davinci/board-sffsdr.c               |  13 +-
- arch/arm/mach-davinci/common.c                     |  15 -
- arch/arm/mach-omap1/board-nokia770.c               |  18 +-
- drivers/i2c/algos/i2c-algo-bit.c                   |  25 +-
- drivers/i2c/busses/i2c-aspeed.c                    | 120 +++-
- drivers/i2c/busses/i2c-brcmstb.c                   |  13 +-
- drivers/i2c/busses/i2c-cbus-gpio.c                 |  80 +--
- drivers/i2c/busses/i2c-designware-core.h           |   2 +
- drivers/i2c/busses/i2c-designware-master.c         |   6 +
- drivers/i2c/busses/i2c-designware-pcidrv.c         |   7 +-
- drivers/i2c/busses/i2c-designware-platdrv.c        |   3 +
- drivers/i2c/busses/i2c-exynos5.c                   |  11 +-
- drivers/i2c/busses/i2c-gpio.c                      | 134 +++-
- drivers/i2c/busses/i2c-imx.c                       |  37 +-
- drivers/i2c/busses/i2c-iop3xx.c                    |   8 +
- drivers/i2c/busses/i2c-mt65xx.c                    |   6 +-
- drivers/i2c/busses/i2c-ocores.c                    | 308 +++++++--
- drivers/i2c/busses/i2c-rcar.c                      |  49 +-
- drivers/i2c/busses/i2c-s3c2410.c                   |   8 +-
- drivers/i2c/busses/i2c-sh_mobile.c                 | 121 ++--
- drivers/i2c/busses/i2c-sprd.c                      |  34 +-
- drivers/i2c/busses/i2c-synquacer.c                 |   5 -
- drivers/i2c/busses/i2c-tegra.c                     | 740 ++++++++++++++++++---
- drivers/i2c/busses/i2c-zx2967.c                    |   8 +-
- drivers/i2c/i2c-core-base.c                        |  12 +-
- drivers/i2c/i2c-core-of.c                          |  14 +-
- drivers/i2c/i2c-core-smbus.c                       |   2 +-
- drivers/i2c/i2c-dev.c                              |   2 +-
- drivers/misc/eeprom/at24.c                         | 169 +++--
- include/linux/acpi.h                               |  11 -
- include/linux/davinci_emac.h                       |   1 -
- include/linux/i2c-algo-bit.h                       |  33 +-
- include/linux/i2c.h                                |  45 ++
- include/linux/platform_data/at24.h                 |  60 --
- include/linux/platform_data/i2c-cbus-gpio.h        |  27 -
- include/linux/platform_data/i2c-ocores.h           |   6 +-
- include/trace/events/smbus.h                       |   6 +-
- 49 files changed, 1607 insertions(+), 760 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-xscale.txt
- delete mode 100644 include/linux/platform_data/at24.h
- delete mode 100644 include/linux/platform_data/i2c-cbus-gpio.h
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/KPREksubWrZ8yGTbc9b2Ig0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlx+/goACgkQFA3kzBSg
-KbYqHQ/5AZPK8VoQi7QrKx0J2yqpShcBsfGc4UMHaiGMn5cib+3ko4QShQq4NWbW
-YdZNFPmwUVbpC1A4U8NV2ZoeQx+Sj6ops1gztQq9Li5nFDyKU3TOxTU6cDEKUX15
-Tm6mJ3AoqR7IBAkzhoHGc4OwtWLHs+/J07DCB3VGSYAtLmNjyut5G0py4v8MoFzC
-lEDtmC2ZNVr78S4DFqU9zPziby1T8LRyJtkuLI5x4cG3z1B5++t33oDP5mO0CIyp
-WlmnvxJQ6dum/07fn7PdLpPw4CdBTRVEermcYgaspwh3mQ/h+EPcqHFct627A9MS
-wmRozXPLyLdsdCOyqN1N8VC3+wEKxdd9m+ot3d2Kr8b1s+nWGXat+ceeOrd8ZGd8
-lrUTJ7s6wVWCwBb3L6yNUx0MQVN54TCuy9wmFlzCcHTSxvysKPHZb3JuUTuxv+Lr
-cpZ3o5Phjd/RFOfm3fSKVdUqJLjtDQ44miFjeUnrN8nmy1a4hvmxStEI7a1Maq+B
-lrSTeis2bOfG94D2ttXY0tt1yxcILL+aLT+AFGM2UCCY1lb69l3+IKHnkMJUCtD4
-pXCvb3GWd2PJ89rRBKQI6T0wlu2xO7We4O59mTC6q3qFJ3MnlfIOrE0uhXMHgirb
-/JcodHG33f5xHpCfEWa/jx0gmEnqfOZVhCvgvp7rm+/py2sHwdI=
-=YX6C
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx/ASEACgkQAVBC80lX
+0GzpFwf/e6WYhR7vW3MT+dANAIoeKQX7EBiZlePbHsTWW098UW2wS55vSdJMj/+J
+dihiCGhaE1CJLykB6gLGj6t9pROFLajGTG+IURhu5Cg4DMmv8vFs8V6mhHUvPWHL
+ghh+12e5y4m3U68iv4aFw08GBN0XsbB3xN57F4BWBCN6FOhV745Y783GrYlWYJYb
+Xxc1BzS12RsigPF4k/qF+GTs6gQFU8sZY0iOs4SHpLyVXMj2oMVTToYhgvPPA+5Q
+u/OPAAQnAiwdWaCzh/MhBsAcRbOK2oczPIQrel4ntpXkD8q0mDYloSbTLQvBxQFL
+0XLctX7zihc+nuikNS3vCD9DhyE7DQ==
+=Is73
 -----END PGP SIGNATURE-----
 
---YiEDa0DAkWCtVeE4--
+--Sig_/KPREksubWrZ8yGTbc9b2Ig0--
