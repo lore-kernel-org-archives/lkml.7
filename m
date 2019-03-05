@@ -2,63 +2,108 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED7CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA5CC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AB2206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551746263;
-	bh=4Od1j1lKepXt/hZj9gSV6dD64DRZLbxq1gZPJIG6wYU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Jr/9ezFtVqQI2mYvhLnk6xvSqqSM+r0P6HJXiqmgeN9ycwdyXSsTzWuXaMb4lDvd/
-	 pnGCKHeF1LUVOyTC7Nx5t3oLlmNThMYEop3oDLq+QV2mtgeeAJ3tT3qsuta501tMPY
-	 g8eGAisetBnYVFujxd9DKx3aCkFBHVG9GtJQdL2c=
+	by mail.kernel.org (Postfix) with ESMTP id 8CF19206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YT8us2NR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfCEAhl (ORCPT
+        id S1726750AbfCEAqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:37:41 -0500
-Received: from mail.linuxfoundation.org ([140.211.169.12]:50906 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCEAhl (ORCPT
+        Mon, 4 Mar 2019 19:46:31 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:44222 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCEAqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:37:41 -0500
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id ABE99ECE0;
-        Tue,  5 Mar 2019 00:37:40 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 16:37:39 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     adobriyan@gmail.com, shuah@kernel.org, sabyasachi.linux@gmail.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftest/proc: Remove duplicate header
-Message-Id: <20190304163739.fbd2e5a508cfcf087a117620@linux-foundation.org>
-In-Reply-To: <20190304182719.GA6606@jordon-HP-15-Notebook-PC>
-References: <20190304182719.GA6606@jordon-HP-15-Notebook-PC>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Mon, 4 Mar 2019 19:46:31 -0500
+Received: by mail-pg1-f201.google.com with SMTP id 23so6700227pgr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=QfpMaV94+0wgT+OuqRPo5XEGlcPZK1e4dqOorDrF3ZY=;
+        b=YT8us2NRgFHYgT4mRU4IW96mK04cQbPtnO1IAE/tauoXqLg0jDxK4WQR1RitCpDODe
+         D8fuQMxT3db3pVPvpH+hbXAP15B4iRY7fA98xVdITwfiW/I20fHiFla/hYSfdIK32VO0
+         zcEiGH9Fq96ZjWzZuyQkQRr4Ny3mAaZ1NN6t5c2yF+grVCZc7Tw1VBjOtTq6+5+ou1CL
+         752/bsRVT2elbSZXium+72a6MWvq7DVgeGje5UZ60WISsyVGYyQCitw2gebWn5PkwIOg
+         Nmp3zT1nkSvorDnmS8lIRGhFPu7SxJ/GZb5itspuceQJQHmG8aEYcjxDyAwl/Xrq3TTo
+         p5cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=QfpMaV94+0wgT+OuqRPo5XEGlcPZK1e4dqOorDrF3ZY=;
+        b=KvVcVLezDeYPQ5p8n001ZyfAE+hUg1XHNeoNEnSvnmyZHSMlmo9M6hZNNZpob60r8s
+         SPipUjFZ9ivSCGLt2tPTHy5DBMh0wpJualIXkIJtEDmSSdOWX71ZT5Sq32llUlUcYVfZ
+         JrT4V/lRQ0UXvzoKhzuYn8vo8xltY6PR+IcQIVqLB6HAgmmtoz150kEFH7FDruBxan7z
+         4OAhJ7uv/waPFMdbkHsNurDTLzW6X7Jnk7bYgHYnaujqVMa+DpaHoECnn6+e7Nac5FmT
+         KhqLjzdg6LTz19Lyp2BuVxf8Z5Dqa/C4dexk2lZSr1tJKvt7t0X0PzAAHak5M2GRjIKb
+         Fi4w==
+X-Gm-Message-State: APjAAAW5uHngKBHaCpP4abKy4L4Mewj2zHmT/cMKMnKYtnGCgBEr//sf
+        NF9req0hut5aS3rvayZ5LCj8Kg1EtYaz
+X-Google-Smtp-Source: APXvYqxlyZF9zMvOdEA5eS1pFBL7W2vAqV7/HcaChTdd6/KURqoPkhMPJPP5T4fyPGMYe7KVvr89whKIEkSj
+X-Received: by 2002:a17:902:2c83:: with SMTP id n3mr1914198plb.105.1551746789992;
+ Mon, 04 Mar 2019 16:46:29 -0800 (PST)
+Date:   Mon,  4 Mar 2019 16:46:17 -0800
+Message-Id: <20190305004617.142590-1-gthelen@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
+Subject: [PATCH] writeback: fix inode cgroup switching comment
+From:   Greg Thelen <gthelen@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Greg Thelen <gthelen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Mar 2019 23:57:19 +0530 Souptick Joarder <jrdr.linux@gmail.com> wrote:
+Commit 682aa8e1a6a1 ("writeback: implement unlocked_inode_to_wb
+transaction and use it for stat updates") refers to
+inode_switch_wb_work_fn() which never got merged.  Switch the comments
+to inode_switch_wbs_work_fn().
 
-> Remove duplicate header which is included twice.
-> 
-> Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Fixes: 682aa8e1a6a1 ("writeback: implement unlocked_inode_to_wb transaction and use it for stat updates")
+Signed-off-by: Greg Thelen <gthelen@google.com>
+---
+ include/linux/backing-dev.h | 2 +-
+ include/linux/fs.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-This signoff order makes me suspect that Sabyasachi was the author.  If
-so, the patch should have had Sabyasachi's From: line at the start of
-the changelog.
-
-Please clafify?
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index c28a47cbe355..f9b029180241 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -365,7 +365,7 @@ unlocked_inode_to_wb_begin(struct inode *inode, struct wb_lock_cookie *cookie)
+ 	rcu_read_lock();
+ 
+ 	/*
+-	 * Paired with store_release in inode_switch_wb_work_fn() and
++	 * Paired with store_release in inode_switch_wbs_work_fn() and
+ 	 * ensures that we see the new wb if we see cleared I_WB_SWITCH.
+ 	 */
+ 	cookie->locked = smp_load_acquire(&inode->i_state) & I_WB_SWITCH;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index fd423fec8d83..08f26046233e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2091,7 +2091,7 @@ static inline void init_sync_kiocb(struct kiocb *kiocb, struct file *filp)
+  * I_WB_SWITCH		Cgroup bdi_writeback switching in progress.  Used to
+  *			synchronize competing switching instances and to tell
+  *			wb stat updates to grab the i_pages lock.  See
+- *			inode_switch_wb_work_fn() for details.
++ *			inode_switch_wbs_work_fn() for details.
+  *
+  * I_OVL_INUSE		Used by overlayfs to get exclusive ownership on upper
+  *			and work dirs among overlayfs mounts.
+-- 
+2.21.0.352.gf09ad66450-goog
 
