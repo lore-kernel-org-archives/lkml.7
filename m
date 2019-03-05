@@ -2,105 +2,126 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF948C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B042BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4DB20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E59C206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cIbA4txX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JIIfx6d5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfCEAxm (ORCPT
+        id S1726904AbfCEAx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:53:42 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33706 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCEAxm (ORCPT
+        Mon, 4 Mar 2019 19:53:57 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33965 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfCEAx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:53:42 -0500
-Received: by mail-qt1-f196.google.com with SMTP id z39so7301397qtz.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:41 -0800 (PST)
+        Mon, 4 Mar 2019 19:53:57 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 98so5984342oty.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XVYt//8tLSfx+WH6Lmq9iHXTEUimc3qP6GGB8yuMZP4=;
-        b=cIbA4txXePxhYRMosF0K4Lf0pYeh5EsSFPuqs/QO/VWfnll6mD6fAdE5bLAsxDDV8b
-         pMcaqaJ3cAphmez5ynHwcu+nAOnX0lNGpa7CfwAzx/1IBdJnNYHnEs0njSfozkQkDnv/
-         /BDWuTYiFElCsWZmnR2f6Eftcm3hsGd/oyx8aEzIscAlTcejvxOn6sJPgios4EMa8IiL
-         l4INWPvsR6ZjJr6mAb5ZQR8azH8ilI7Fvz8bLkbr+OXB0/VIqrZFmE581eaxUEa3760i
-         o773UgVIyzIPBn4hPNDtc3ZZbNSV3pZYH07dyPgrK9oDQdUm6/M/bazP0dozLWDejXAZ
-         kJEg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uXNLc6F0UiYjfZcRt3SiykY+FnlXWp8zrd0IEyVbGiI=;
+        b=JIIfx6d5jU0HVabG0/g0ik1Fe7QSg+9fGC07k5C6VRy0q1yecBDje6+CPuHLvvRNfU
+         XmOvRGbXGAIoEnRpU0yB9iNcJe9K0mD5Jnqi0q8QDN+p7gV5zMJsgqd34+ztj+5QRHjI
+         McXf+NiYMqtTaGXGWnqB9k9sNjB0yDLZi4J70=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XVYt//8tLSfx+WH6Lmq9iHXTEUimc3qP6GGB8yuMZP4=;
-        b=cNzf7beVUWM19WPI4mY4mPuItwTOKR+ioVh7VfLUpGsKkY/p5qeYBIO+ePmLPw/kVW
-         qO8DT6kJ4ihJjLotFh/ZSJgKcQg/XUOjYQ0psGGGdVo3QJVmcHuknk0/dZOXJzKBD0Y0
-         pdgr7f8RQZRhQnwDW++WJE1LXHUiejsGUesTev0bnru1DtYtZkt3kezNWFNvTptmGVpC
-         6mXOhZYDrWQbIsVrVjFkHQjsaunj791YimGdr/VIGAOixC1x5MtYekNpJQ6DJSnoEEKL
-         +0SqzGPEmUlnu7r9gJ0EG9daRV95WxUFYHsm5H4gchHwhXcYbk2hErdxKbUmZyGilwqW
-         /QaQ==
-X-Gm-Message-State: APjAAAUzU1CrbRjHBorR67mrqSZqNHPajed3SB66qtGLEorfy+2NFCJq
-        HkcaDq0IsLpybRIZcrSNXwKyUg==
-X-Google-Smtp-Source: APXvYqwgYquIrGrypPfGh12coX509Dw+mf6crd2NMr+KYucqtQsXeX7lvPZECuSr4ZCtq072yEeFpw==
-X-Received: by 2002:ac8:2b2e:: with SMTP id 43mr16897084qtu.33.1551747221098;
-        Mon, 04 Mar 2019 16:53:41 -0800 (PST)
-Received: from ziepe.ca ([24.137.65.181])
-        by smtp.gmail.com with ESMTPSA id d80sm4140972qkg.83.2019.03.04.16.53.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 16:53:40 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1h0yKw-0002jB-Vl; Mon, 04 Mar 2019 20:53:38 -0400
-Date:   Mon, 4 Mar 2019 20:53:38 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error
- handling paths
-Message-ID: <20190305005338.GK8613@ziepe.ca>
-References: <20190302032726.11769-2-jhubbard@nvidia.com>
- <20190302202435.31889-1-jhubbard@nvidia.com>
- <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
- <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
- <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
- <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uXNLc6F0UiYjfZcRt3SiykY+FnlXWp8zrd0IEyVbGiI=;
+        b=eGTyS1tvRfcFGPRqZ6deMDyHVBnxPNb2e9zZdDBOfFJdGzXJyf9PtuB/r6i+5rCF9t
+         g7GkhJAVfVGCnSib/Z4bjd+41P8ltDQimb5HZu6DgrDSs5gpQo+EqoO8mN5g68YziAWx
+         zL0SWHKeQ5Bk3yOtUOe3Mxk/DhnEsARuUFym4HwZhT3+9nH9otxhIidLqeub2FhG/H6g
+         GzKq1vinDjmI7IbMuFoe+VuNP/P86N8s5nbMRnLYVkQlEhR6iN8qUW57OwEDJPGIAgeD
+         mYNdckkzsp0Q4yUOgys8ZWIDuqt2DDO7/S19QXFlhGwJ3J7dzfZ2tsZ6k4ITioa6ZS4X
+         yrVw==
+X-Gm-Message-State: APjAAAVaAQjbTJ/ICVKOEnzyR3T3p/B1ZRYaF74xwfD5EdNk09D0wLxS
+        ACFw/lQ+zAN99vrkTBxtyJjYvf65hHg=
+X-Google-Smtp-Source: APXvYqz5ceFge7c3yz8m9PxP4TKNUBF7bAV6Yu0Ud3X4c72BJD1E7zvg/wC7Pd7w1UTWA35LjFa4sw==
+X-Received: by 2002:a9d:1991:: with SMTP id k17mr14574180otk.20.1551747235557;
+        Mon, 04 Mar 2019 16:53:55 -0800 (PST)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id q6sm3029092oia.4.2019.03.04.16.53.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 16:53:54 -0800 (PST)
+Received: by mail-oi1-f182.google.com with SMTP id t206so5481363oib.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 16:53:53 -0800 (PST)
+X-Received: by 2002:aca:d803:: with SMTP id p3mr372933oig.111.1551747233600;
+ Mon, 04 Mar 2019 16:53:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190304200719.1382717-1-arnd@arndb.de>
+In-Reply-To: <20190304200719.1382717-1-arnd@arndb.de>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Mon, 4 Mar 2019 17:53:42 -0700
+X-Gmail-Original-Message-ID: <CAHX4x842P-V7VGTqRwuVfxk-zBOwMWGh5yLx6tnxEamj-Wt5SA@mail.gmail.com>
+Message-ID: <CAHX4x842P-V7VGTqRwuVfxk-zBOwMWGh5yLx6tnxEamj-Wt5SA@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: fix wilco-ec dependencies
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 03:11:05PM -0800, John Hubbard wrote:
+On Mon, Mar 4, 2019 at 1:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> When CROS_EC_LPC is set to =m, we get a link failure for a
+> builtin wilco-ec module:
+>
+> drivers/platform/chrome/wilco_ec/core.o: In function `wilco_ec_remove':
+> core.c:(.text+0x26): undefined reference to `cros_ec_lpc_mec_destroy'
+> drivers/platform/chrome/wilco_ec/core.o: In function `wilco_ec_probe':
+> core.c:(.text+0x18c): undefined reference to `cros_ec_lpc_mec_init'
+> core.c:(.text+0x224): undefined reference to `cros_ec_lpc_mec_destroy'
+> drivers/platform/chrome/wilco_ec/mailbox.o: In function `wilco_ec_mailbox':
+> mailbox.c:(.text+0x104): undefined reference to `cros_ec_lpc_io_bytes_mec'
+>
+> The problem with the existing CROS_EC_LPC_MEC dependency is that this
+> is only for a 'bool' symbol, so the information about the exported
+> functions being in a module is lost on the way, and we actually have
+> to depend on both CROS_EC_LPC and CROS_EC_LPC_MEC.
 
-> get_user_page(): increments page->_refcount by a large amount (1024)
-> 
-> put_user_page(): decrements page->_refcount by a large amount (1024)
-> 
-> ...and just stop doing the odd (to me) technique of incrementing once for
-> each tail page. I cannot see any reason why that's actually required, as
-> opposed to just "raise the page->_refcount enough to avoid losing the head
-> page too soon".
+Thanks for the catch Arnd. This looks like a workable solution, although it
+brings up a different question to me: Is it weird for a bool option
+(such as CROS_EC_LPC_MEC)
+to depend upon a tristate option (such as CROS_EC_LPC)? It seems like
+CROS_EC_LPC_MEC
+should be tristate as well. Would changing this be a better solution?
 
-I'd very much like to see this in the infiniband umem code - the extra
-work and cost of touching every page in a huge page is very much
-undesired.
-
-Jason
+>
+> Fixes: 7b3d4f44abf0 ("platform/chrome: Add new driver for Wilco EC")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/platform/chrome/wilco_ec/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
+> index 4a119ced4d0c..e09e4cebe9b4 100644
+> --- a/drivers/platform/chrome/wilco_ec/Kconfig
+> +++ b/drivers/platform/chrome/wilco_ec/Kconfig
+> @@ -1,6 +1,6 @@
+>  config WILCO_EC
+>         tristate "ChromeOS Wilco Embedded Controller"
+> -       depends on ACPI && X86 && CROS_EC_LPC_MEC
+> +       depends on ACPI && X86 && CROS_EC_LPC && CROS_EC_LPC_MEC
+>         help
+>           If you say Y here, you get support for talking to the ChromeOS
+>           Wilco EC over an eSPI bus. This uses a simple byte-level protocol
+> --
+> 2.20.0
+>
