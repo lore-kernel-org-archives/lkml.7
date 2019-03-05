@@ -3,35 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32A2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78847C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FC420684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480BE20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfCEJa5 (ORCPT
+        id S1727471AbfCEJbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 04:30:57 -0500
-Received: from mga02.intel.com ([134.134.136.20]:31076 "EHLO mga02.intel.com"
+        Tue, 5 Mar 2019 04:31:14 -0500
+Received: from mga18.intel.com ([134.134.136.126]:51076 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfCEJa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 04:30:57 -0500
+        id S1726098AbfCEJbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 04:31:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 01:30:56 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 01:27:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
-   d="scan'208";a="325518698"
+   d="scan'208";a="324314595"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Mar 2019 01:30:55 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 05 Mar 2019 01:27:10 -0800
 Received: from [10.125.252.140] (abudanko-mobl.ccr.corp.intel.com [10.125.252.140])
-        by linux.intel.com (Postfix) with ESMTP id D36935805FC;
-        Tue,  5 Mar 2019 01:30:53 -0800 (PST)
-Subject: [PATCH v6 09/10] perf inject: enable COMPRESSED records decompression
+        by linux.intel.com (Postfix) with ESMTP id B07A758079D;
+        Tue,  5 Mar 2019 01:27:08 -0800 (PST)
+Subject: [PATCH v6 05/10] perf mmap: implement dedicated memory buffer for
+ data compression
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -42,8 +43,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <8b8a4f51-9606-1940-7cc9-40c2c67bfc92@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <9eba8c12-7334-cb61-6cae-40a3d849fc57@linux.intel.com>
-Date:   Tue, 5 Mar 2019 12:30:52 +0300
+Message-ID: <b5133678-3910-f68c-dafe-fada6c8ae3c2@linux.intel.com>
+Date:   Tue, 5 Mar 2019 12:27:07 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
@@ -57,36 +58,182 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Initialized decompression API so COMPRESSED record would be
-decompressed into the resulting output data file.
+Implemented mmap data buffer that is used as the memory to operate
+on when compressing sampling data in case of serial trace streaming.
+
+In case of AIO trace streaming AIO buffers are used to implement
+sampling data compression.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/builtin-inject.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-record.c |  6 +++++-
+ tools/perf/util/evlist.c    |  8 +++++---
+ tools/perf/util/evlist.h    |  2 +-
+ tools/perf/util/mmap.c      | 30 ++++++++++++++++++++++++++++--
+ tools/perf/util/mmap.h      |  4 +++-
+ 5 files changed, 42 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 24086b7f1b14..8e0e06d3edfc 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -837,6 +837,9 @@ int cmd_inject(int argc, const char **argv)
- 	if (inject.session == NULL)
- 		return -1;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 9eae28d77291..954141c491b0 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -572,7 +572,7 @@ static int record__mmap_evlist(struct record *rec,
+ 				 opts->auxtrace_mmap_pages,
+ 				 opts->auxtrace_snapshot_mode,
+ 				 opts->nr_cblocks, opts->affinity,
+-				 opts->mmap_flush) < 0) {
++				 opts->mmap_flush, opts->comp_level) < 0) {
+ 		if (errno == EPERM) {
+ 			pr_err("Permission error mapping pages.\n"
+ 			       "Consider increasing "
+@@ -2241,6 +2241,10 @@ int cmd_record(int argc, const char **argv)
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
+ 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
  
-+	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
-+		pr_warning("Decompression initialization failed.\n");
++	if (rec->opts.comp_level > 22)
++		rec->opts.comp_level = 0;
++	pr_debug("comp level: %d\n", rec->opts.comp_level);
 +
- 	if (inject.build_ids) {
- 		/*
- 		 * to make sure the mmap records are ordered correctly
-@@ -867,6 +870,7 @@ int cmd_inject(int argc, const char **argv)
- 	ret = __cmd_inject(&inject);
+ 	err = __cmd_record(&record, argc, argv);
+ out:
+ 	perf_evlist__delete(rec->evlist);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 937039faac59..a13458b43dc1 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1022,7 +1022,8 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+  */
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+-			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
++			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush,
++			 int comp_level)
+ {
+ 	struct perf_evsel *evsel;
+ 	const struct cpu_map *cpus = evlist->cpus;
+@@ -1032,7 +1033,8 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 	 * Its value is decided by evsel's write_backward.
+ 	 * So &mp should not be passed through const pointer.
+ 	 */
+-	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
++	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush,
++				  .comp_level = comp_level };
  
- out_delete:
-+	zstd_fini(&(inject.session->zstd_data));
- 	perf_session__delete(inject.session);
- 	return ret;
+ 	if (!evlist->mmap)
+ 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
+@@ -1064,7 +1066,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
+ {
+-	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
++	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1, 0);
  }
+ 
+ int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index edf18811e39f..77c11dac4a63 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -166,7 +166,7 @@ unsigned long perf_event_mlock_kb_in_pages(void);
+ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+ 			 bool auxtrace_overwrite, int nr_cblocks,
+-			 int affinity, int flush);
++			 int affinity, int flush, int comp_level);
+ int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
+ void perf_evlist__munmap(struct perf_evlist *evlist);
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index ef3d79b2c90b..d85e73fc82e2 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -157,6 +157,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
+ }
+ 
+ #ifdef HAVE_AIO_SUPPORT
++static int perf_mmap__aio_enabled(struct perf_mmap *map)
++{
++	return map->aio.nr_cblocks > 0;
++}
+ 
+ #ifdef HAVE_LIBNUMA_SUPPORT
+ static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
+@@ -198,7 +202,7 @@ static int perf_mmap__aio_bind(struct perf_mmap *map, int idx, int cpu, int affi
+ 
+ 	return 0;
+ }
+-#else
++#else /* !HAVE_LIBNUMA_SUPPORT */
+ static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
+ {
+ 	map->aio.data[idx] = malloc(perf_mmap__mmap_len(map));
+@@ -359,7 +363,12 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+ 
+ 	return rc;
+ }
+-#else
++#else /* !HAVE_AIO_SUPPORT */
++static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
++{
++	return 0;
++}
++
+ static int perf_mmap__aio_mmap(struct perf_mmap *map __maybe_unused,
+ 			       struct mmap_params *mp __maybe_unused)
+ {
+@@ -374,6 +383,10 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map __maybe_unused)
+ void perf_mmap__munmap(struct perf_mmap *map)
+ {
+ 	perf_mmap__aio_munmap(map);
++	if (map->data != NULL) {
++		munmap(map->data, perf_mmap__mmap_len(map));
++		map->data = NULL;
++	}
+ 	if (map->base != NULL) {
+ 		munmap(map->base, perf_mmap__mmap_len(map));
+ 		map->base = NULL;
+@@ -442,6 +455,19 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
+ 
+ 	map->flush = mp->flush;
+ 
++	map->comp_level = mp->comp_level;
++
++	if (map->comp_level && !perf_mmap__aio_enabled(map)) {
++		map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ|PROT_WRITE,
++				 MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
++		if (map->data == MAP_FAILED) {
++			pr_debug2("failed to mmap data buffer, error %d\n",
++					errno);
++			map->data = NULL;
++			return -1;
++		}
++	}
++
+ 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
+ 				&mp->auxtrace_mp, map->base, fd))
+ 		return -1;
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index b82f8c2d55c4..a02427d609c0 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -40,6 +40,8 @@ struct perf_mmap {
+ #endif
+ 	cpu_set_t	affinity_mask;
+ 	u64		flush;
++	void 		*data;
++	int		comp_level;
+ };
+ 
+ /*
+@@ -71,7 +73,7 @@ enum bkw_mmap_state {
+ };
+ 
+ struct mmap_params {
+-	int			    prot, mask, nr_cblocks, affinity, flush;
++	int prot, mask, nr_cblocks, affinity, flush, comp_level;
+ 	struct auxtrace_mmap_params auxtrace_mp;
+ };
+ 
 -- 
 2.20.1
 
