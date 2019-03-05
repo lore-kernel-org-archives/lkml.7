@@ -2,150 +2,85 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF2BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B18C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECBD20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1F02082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbBItcwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfCEHxY (ORCPT
+        id S1727225AbfCEHzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 02:53:24 -0500
-Received: from mga18.intel.com ([134.134.136.126]:44398 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfCEHxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:53:24 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 23:53:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
-   d="scan'208";a="304463482"
-Received: from schmiger-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.45.12])
-  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2019 23:53:20 -0800
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id C30A321E9B; Tue,  5 Mar 2019 09:53:18 +0200 (EET)
-Date:   Tue, 5 Mar 2019 09:53:18 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Cao, Bingbu" <bingbu.cao@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Zhi, Yong" <yong.zhi@intel.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: staging/intel-ipu3: reduce kernel stack usage
-Message-ID: <20190305075317.4t32uyyhzftuoebp@kekkonen.localdomain>
-References: <20190304202758.1802417-1-arnd@arndb.de>
- <EE45BB6704246A4E914B70E8B61FB42A15C131D5@SHSMSX104.ccr.corp.intel.com>
+        Tue, 5 Mar 2019 02:55:16 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43600 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfCEHzQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 02:55:16 -0500
+Received: by mail-lj1-f195.google.com with SMTP id z20so6717226ljj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 23:55:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=El5/IOpQW3DaHrXc6Y6xm24wKtnN6rgAAQR6xTcsMiw=;
+        b=TbBItcwmkvQ5nCLng3GfkWi2VaDC51ljF7/9s7G+HE7gfdETNNlpZdz/8il73N7EZR
+         7PgBy5b4BRwCubyJxbkEvB3QeXI5wTch5Purl14/4m4wLmm/CxtICavycenDcTPGHGEb
+         kOGCdbVKINa8/s3QpRggX3VCpw6f00trELHKbIUF0/34gfzEUxvRkgwX5Mr0FT23apI2
+         horCUJ03ct95qONuKkki+QNIQHfqR/RgbmfKJmvdMA/UobptxQvqTb+xsjeRH6ln/BzZ
+         pkCaAK43cvydelY3+NQC30lMCHW7z0tGO8pSmzy0KupsQvwuhCDcRsNmAtwhO1Frc4c4
+         w8ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=El5/IOpQW3DaHrXc6Y6xm24wKtnN6rgAAQR6xTcsMiw=;
+        b=ZjF3BKyDZO9aHN2DOZ+/SMYtz9wDRNZ9P/qzx3YJCYbFtMNgFgZGCA9llS+HxH3p/r
+         NO8vAjhA4rpydE2RRjvrnWc/RW7eM4gLaP4FeDu3dcnbROMoqgjDvUDYFzT7GY2A5aHV
+         XvFsJPMrcD+mQTmIt0hTUO6LwWi5de791LUD7q725nB59bhZ5HjrGyhp2B//QyGT+Zvu
+         OIs7VnHGnhjf57SnVuPVgPJpEdafk38l55PwoK9T1uNPN2ZA9BXjGYzw3Dn1GbChBa9G
+         SQTx8lrlr/nMupY+BIsZQ2Z8RHrzPT87c1bEEjypeN4fDuV10/mZhUT2dwjKbmmVTOmk
+         8I9w==
+X-Gm-Message-State: APjAAAXEfey34gcXj8K5DSlVh31FspTNkSLMf0inM3j/9gcAhDV11/BF
+        a2chiNIWfMyClBZFyzx7OT77Ap6EMHXXAtln9swgeDqc
+X-Google-Smtp-Source: APXvYqxcSz1a6vx9SQwewBsmnPctK7bVZz4TAjIrufkepCp679KmhJYir0Z+UQYZ277AVnk8+EniOZqi1+2vaCn8CaQ=
+X-Received: by 2002:a2e:9217:: with SMTP id k23mr3041728ljg.159.1551772514158;
+ Mon, 04 Mar 2019 23:55:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <EE45BB6704246A4E914B70E8B61FB42A15C131D5@SHSMSX104.ccr.corp.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Mar 2019 08:55:02 +0100
+Message-ID: <CACRpkdbzhAZUjJYLPnaoOsWzHNXzPGvxYHz0b3fZGd38e_i-dw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: bitmain: Add GPIO support for BM1880 SoC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bingbu, Arnd,
+On Tue, Feb 26, 2019 at 12:50 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-On Tue, Mar 05, 2019 at 12:25:18AM +0000, Cao, Bingbu wrote:
-...
-> > @@ -1744,7 +1745,7 @@ int imgu_css_fmt_try(struct imgu_css *css,
-> >  	struct v4l2_rect *const bds = &r[IPU3_CSS_RECT_BDS];
-> >  	struct v4l2_rect *const env = &r[IPU3_CSS_RECT_ENVELOPE];
-> >  	struct v4l2_rect *const gdc = &r[IPU3_CSS_RECT_GDC];
-> > -	struct imgu_css_queue q[IPU3_CSS_QUEUES];
-> > +	struct imgu_css_queue *q = kcalloc(IPU3_CSS_QUEUES, sizeof(struct
-> > +imgu_css_queue), GFP_KERNEL);
-> 
-> Could you use the devm_kcalloc()? 
+> Add GPIO support for Bitmain BM1880 SoC based on Designware APB GPIO
+> controller IP. IP exposes 3 GPIO controllers with a total of 72 pins.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-No, because this is not related to the device, called instead on
-e.g. VIDIOC_TRY_FMT.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> >  	struct v4l2_pix_format_mplane *const in =
-> >  					&q[IPU3_CSS_QUEUE_IN].fmt.mpix;
-> >  	struct v4l2_pix_format_mplane *const out = @@ -1753,6 +1754,11 @@
-> > int imgu_css_fmt_try(struct imgu_css *css,
-> >  					&q[IPU3_CSS_QUEUE_VF].fmt.mpix;
-> >  	int i, s, ret;
-> > 
-> > +	if (!q) {
-> > +		ret = -ENOMEM;
-> > +		goto out;
-> > +	}
-> [Cao, Bingbu] 
-> The goto here is wrong, you can just report an error, and I prefer it is next to the alloc.
-
-I agree, the goto is just not needed.
-
-> > +
-> >  	/* Adjust all formats, get statistics buffer sizes and formats */
-> >  	for (i = 0; i < IPU3_CSS_QUEUES; i++) {
-> >  		if (fmts[i])
-> > @@ -1766,7 +1772,8 @@ int imgu_css_fmt_try(struct imgu_css *css,
-> >  					IPU3_CSS_QUEUE_TO_FLAGS(i))) {
-> >  			dev_notice(css->dev, "can not initialize queue %s\n",
-> >  				   qnames[i]);
-> > -			return -EINVAL;
-> > +			ret = -EINVAL;
-> > +			goto out;
-> >  		}
-> >  	}
-> >  	for (i = 0; i < IPU3_CSS_RECTS; i++) { @@ -1788,7 +1795,8 @@ int
-> > imgu_css_fmt_try(struct imgu_css *css,
-> >  	if (!imgu_css_queue_enabled(&q[IPU3_CSS_QUEUE_IN]) ||
-> >  	    !imgu_css_queue_enabled(&q[IPU3_CSS_QUEUE_OUT])) {
-> >  		dev_warn(css->dev, "required queues are disabled\n");
-> > -		return -EINVAL;
-> > +		ret = -EINVAL;
-> > +		goto out;
-> >  	}
-> > 
-> >  	if (!imgu_css_queue_enabled(&q[IPU3_CSS_QUEUE_OUT])) { @@ -1829,7
-> > +1837,8 @@ int imgu_css_fmt_try(struct imgu_css *css,
-> >  	ret = imgu_css_find_binary(css, pipe, q, r);
-> >  	if (ret < 0) {
-> >  		dev_err(css->dev, "failed to find suitable binary\n");
-> > -		return -EINVAL;
-> > +		ret = -EINVAL;
-> > +		goto out;
-> >  	}
-> >  	css->pipes[pipe].bindex = ret;
-> > 
-> > @@ -1843,7 +1852,8 @@ int imgu_css_fmt_try(struct imgu_css *css,
-> >  						IPU3_CSS_QUEUE_TO_FLAGS(i))) {
-> >  				dev_err(css->dev,
-> >  					"final resolution adjustment failed\n");
-> > -				return -EINVAL;
-> > +				ret = -EINVAL;
-> > +				goto out;
-> >  			}
-> >  			*fmts[i] = q[i].fmt.mpix;
-> >  		}
-> > @@ -1859,7 +1869,10 @@ int imgu_css_fmt_try(struct imgu_css *css,
-> >  		 bds->width, bds->height, gdc->width, gdc->height,
-> >  		 out->width, out->height, vf->width, vf->height);
-> > 
-> > -	return 0;
-> > +	ret = 0;
-> > +out:
-> > +	kfree(q);
-> > +	return ret;
-> >  }
-> > 
-> >  int imgu_css_fmt_set(struct imgu_css *css,
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Yours,
+Linus Walleij
