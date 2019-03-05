@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-13.0 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE7BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9562EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E09206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C382206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfCEACW (ORCPT
+        id S1726781AbfCEACY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:02:22 -0500
-Received: from anholt.net ([50.246.234.109]:56892 "EHLO anholt.net"
+        Mon, 4 Mar 2019 19:02:24 -0500
+Received: from anholt.net ([50.246.234.109]:56898 "EHLO anholt.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfCEACW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726716AbfCEACW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Mar 2019 19:02:22 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 61E1B10A2DEF;
-        Mon,  4 Mar 2019 16:02:21 -0800 (PST)
+        by anholt.net (Postfix) with ESMTP id 4C95910A2DEE;
+        Mon,  4 Mar 2019 16:02:22 -0800 (PST)
 X-Virus-Scanned: Debian amavisd-new at anholt.net
 Received: from anholt.net ([127.0.0.1])
         by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id dMUnKTnjLPIR; Mon,  4 Mar 2019 16:02:20 -0800 (PST)
+        with LMTP id 4hfPdx2TM_pS; Mon,  4 Mar 2019 16:02:20 -0800 (PST)
 Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id EB09B10A2DEE;
+        by anholt.net (Postfix) with ESMTP id E677510A2A7A;
         Mon,  4 Mar 2019 16:02:19 -0800 (PST)
 Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 817482FE464E; Mon,  4 Mar 2019 16:02:18 -0800 (PST)
+        id 844442FE464D; Mon,  4 Mar 2019 16:02:18 -0800 (PST)
 From:   Eric Anholt <eric@anholt.net>
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     linux-rpi-kernel@lists.infradead.org,
@@ -39,10 +39,12 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Stefan Wahren <stefan.wahren@i2se.com>,
         bcm-kernel-feedback-list@broadcom.com,
         Eric Anholt <eric@anholt.net>
-Subject: [GIT PULL 1/2] bcm2835-dt-next-2019-03-04
-Date:   Mon,  4 Mar 2019 16:02:17 -0800
-Message-Id: <20190305000218.15180-1-eric@anholt.net>
+Subject: [GIT PULL 2/2] bcm2835-drivers-next-2019-03-04
+Date:   Mon,  4 Mar 2019 16:02:18 -0800
+Message-Id: <20190305000218.15180-2-eric@anholt.net>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190305000218.15180-1-eric@anholt.net>
+References: <20190305000218.15180-1-eric@anholt.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,26 +52,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+The following changes since commit e1dc2b2e1bef7237fd8fc055fe1ec2a6ff001f91:
 
-The following changes since commit ab1b4ef966af90ad79fa3c4c124e47915cddde10:
-
-  ARM: dts: bcm2835-rpi-zero-w: Drop unnecessary pinctrl (2019-02-01 11:56:32 +0100)
+  ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware. (2019-02-01 10:34:32 +0100)
 
 are available in the Git repository at:
 
-  git://github.com/anholt/linux tags/bcm2835-dt-next-2019-03-04
+  git://github.com/anholt/linux tags/bcm2835-drivers-next-2019-03-04
 
-for you to fetch changes up to 544e784188f1dd7c797c70b213385e67d92005b6:
+for you to fetch changes up to 4deabfae643d8852c643664d9088a647abfaa5d0:
 
-  ARM: dts: bcm283x: Fix hdmi hpd gpio pull (2019-03-04 15:50:10 -0800)
-
-----------------------------------------------------------------
-This pull request brings in a fix for detecting HDMI on the Pi B rev 2.
+  soc: bcm: bcm2835-pm: Fix error paths of initialization. (2019-03-04 15:33:14 -0800)
 
 ----------------------------------------------------------------
-Helen Koike (1):
-      ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+This pull request brings in two fixes for the new native bcm2835 power
+domains driver.
 
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+----------------------------------------------------------------
+Eric Anholt (2):
+      soc: bcm: bcm2835-pm: Fix PM_IMAGE_PERI power domain support.
+      soc: bcm: bcm2835-pm: Fix error paths of initialization.
+
+ drivers/soc/bcm/bcm2835-power.c | 49 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 7 deletions(-)
