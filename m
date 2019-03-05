@@ -2,101 +2,152 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EBFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8652C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E1820842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9149220848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LsMn7FTQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dL+AEf9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfCELju (ORCPT
+        id S1727830AbfCELky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:39:50 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60928 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbfCELju (ORCPT
+        Tue, 5 Mar 2019 06:40:54 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:42606 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbfCELky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:39:50 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x25BcXn4085327;
-        Tue, 5 Mar 2019 11:39:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Wif6yycougY83WhBkZh1+1999fWZYtnKErplzcP1YUE=;
- b=LsMn7FTQnkDTnmJ7vCPzkkZpLDQN6ZcCGIdNn96xZsIYJBbL9QPriJ2eCAYW+vdCzRgI
- MBDRYjpbvVJSEWdscGq1+wZvF8Y4wLE7vq62o0pyYmyn193wCIxuhHYB7gYH20UvzdJC
- JQyE5HSP0cxtbCgceC//2KEVKLvXjfWxwHTBHe3OMDFrQG/MUQS52THZKsvcuYGd6vh8
- iWqg6NM4hHvlpTQTrvAlbJVytXf8z8Hyz7WY/ZMQoDRX83HqYJW8nk7ihBgI9BSfpM7V
- k2LnLE0FSYK4nPStmkk70dUNn6asgpBQQrhzdU5wCuoQM2eHe488YvpXWA3LczPDLP6D 0Q== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2120.oracle.com with ESMTP id 2qyjfrcp5x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Mar 2019 11:39:42 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x25Bdf0u022921
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Mar 2019 11:39:41 GMT
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x25Bde5k010797;
-        Tue, 5 Mar 2019 11:39:40 GMT
-Received: from kadam (/197.157.34.180)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Mar 2019 03:39:39 -0800
-Date:   Tue, 5 Mar 2019 14:39:15 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ian Abbott <abbotti@mev.co.uk>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Spencer E . Olson" <olsonse@umich.edu>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] staging: comedi: ni_mio_common: Fix divide-by-zero for
- DIO cmdtest
-Message-ID: <20190305113915.GB13474@kadam>
-References: <20190304143354.4964-1-abbotti@mev.co.uk>
- <20190305081629.GA13474@kadam>
- <261cec72-ed19-7092-5307-76481e9f20ba@mev.co.uk>
+        Tue, 5 Mar 2019 06:40:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cjsHhJalwzEJjk0J0bDWA/Eixzr743EMPJ6TG/6uaXs=; b=dL+AEf9MLmtrfMMiukk7SACDO
+        Xd07FMEw79yWf6CYjG69/qBVG7zIuC9JYfHaUlIYuw/gWjYREw/g2Lx9+ZaV5WNMjRZ2eip8Hrp4/
+        aEHOXbsN648ABsa27LNJJW6mZSVGZocnqqtLrKDecC3GShXt1iDI2P9SDUvxwiSsWSHbIBSV9z4Cy
+        4RCMRnDaCwpXwQiwT6fYFkdT7zEDqN4wZTqjf4mMegLec+ex3FQ64IPHbbqhHjqj0HvgHNeGsuuGw
+        yc5PO9iTgi5GJmIpTiX400d52UMiN2zRBT21HdSkP4EP6Tqgg04FbL5rTsZGkOH0B7mNqoGikeqex
+        Nv3hp4Gtw==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54946)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1h18RH-0000yE-2J; Tue, 05 Mar 2019 11:40:51 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1h18RF-0003AN-13; Tue, 05 Mar 2019 11:40:49 +0000
+Date:   Tue, 5 Mar 2019 11:40:48 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 01/15] ARM: actions: fix a leaked reference by adding
+ missing of_node_put
+Message-ID: <20190305114048.egpbeddy4pqbwl5b@shell.armlinux.org.uk>
+References: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <261cec72-ed19-7092-5307-76481e9f20ba@mev.co.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9185 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=898 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903050081
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 11:32:18AM +0000, Ian Abbott wrote:
-> On 05/03/2019 11:10, Dan Carpenter wrote:
-> > On Mon, Mar 04, 2019 at 02:33:54PM +0000, Ian Abbott wrote:
-> > > The problem was reported on the COMEDI mailing list here:
-> > > https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
-> > > 
-> > 
-> > Can you give Ivan a Reported-by tag?  It's a public mailing list so
-> > that shouldn't be a problem.
+On Tue, Mar 05, 2019 at 07:33:52PM +0800, Wen Yang wrote:
+> The call to of_get_next_child returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
 > 
-> I can do, but I don't know his full name.  Will that be a problem?
+> Detected by coccinelle with the following warnings:
+> ./arch/arm/mach-actions/platsmp.c:112:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 103, but without a corresponding object release within this function.
+> ./arch/arm/mach-actions/platsmp.c:124:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 115, but without a corresponding object release within this function.
+> ./arch/arm/mach-actions/platsmp.c:137:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 128, but without a corresponding object release within this function.
+
+I question this.  Your reasoning is that the node is no longer used
+so the reference count needs to be put.
+
+However, in all these cases, data is read from the nodes properties
+and the device remains in-use for the life of the kernel.  There is
+a big difference here.
+
+With normal drivers, each device is bound to their associated device
+node associated with the device.  When the device node goes away, then
+the corresponding device goes away too, which causes the driver to be
+unbound from the device.
+
+However, there is another class of "driver" which are the ones below,
+where they are "permanent" devices.  These can never go away, even if
+the device node refcount hits zero and the device node is freed - the
+device is still present and in-use in the system.  So, having the
+device node refcount hit zero is actually a bug: what that's saying
+is the system device (eg, SCU) has gone away.  If you somehow were to
+remove the SCU from the system, you'd end up severing the connection
+between the CPU cores and the rest of the system - obviously resulting
+in a dead system!
+
+So, what is the point of dropping these refcounts for devices that can
+never go away - and thus their associated device_node should also never
+go away?
+
+> 
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: "Andreas Färber" <afaerber@suse.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v2->v1: add a missing space between "adding" and "missing"
+> 
+>  arch/arm/mach-actions/platsmp.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/mach-actions/platsmp.c b/arch/arm/mach-actions/platsmp.c
+> index 4fd479c..1a8e078 100644
+> --- a/arch/arm/mach-actions/platsmp.c
+> +++ b/arch/arm/mach-actions/platsmp.c
+> @@ -107,6 +107,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+>  	}
+>  
+>  	timer_base_addr = of_iomap(node, 0);
+> +	of_node_put(node);
+>  	if (!timer_base_addr) {
+>  		pr_err("%s: could not map timer registers\n", __func__);
+>  		return;
+> @@ -119,6 +120,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+>  	}
+>  
+>  	sps_base_addr = of_iomap(node, 0);
+> +	of_node_put(node);
+>  	if (!sps_base_addr) {
+>  		pr_err("%s: could not map sps registers\n", __func__);
+>  		return;
+> @@ -132,6 +134,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+>  		}
+>  
+>  		scu_base_addr = of_iomap(node, 0);
+> +		of_node_put(node);
+>  		if (!scu_base_addr) {
+>  			pr_err("%s: could not map scu registers\n", __func__);
+>  			return;
+> -- 
+> 2.9.5
+> 
 > 
 
-Nah, it's not a problem.  People should fix their email headers to
-reflect what they want to be called.
-
-Or you could ask but I don't think I have ever asked for someone's name
-I've always just gone with their email header name.
-
-regards,
-dan carpenter
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
