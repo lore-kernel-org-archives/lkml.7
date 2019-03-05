@@ -2,121 +2,105 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36B8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689FCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB6E20652
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CF020652
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="zBfDqpB/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0bEQTF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfCERFi (ORCPT
+        id S1727740AbfCERIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:05:38 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35531 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbfCERFi (ORCPT
+        Tue, 5 Mar 2019 12:08:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36079 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfCERIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:05:38 -0500
-Received: by mail-lj1-f193.google.com with SMTP id t13so8269743lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 09:05:36 -0800 (PST)
+        Tue, 5 Mar 2019 12:08:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r124so6054575pgr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 09:08:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qHJMNVcMs+xsVplhG30B/1P6IVaUubM0ykSVg1P0wD8=;
-        b=zBfDqpB/+zbwM7OTTTsch/52dM/Mgf/K/fw3vfLcIy5So+V4PxcfglurN8prwUiq4r
-         l9d2/+UE/FRRD9SSp4tiMhd1+PhS31vMFIeswZCrnWMPuXBsuyjrckhT+izoahtSHMZj
-         oabR8JUDKs3Jg71N96IsMbE0HzboxzcGTh4pHZHTZSCPYUOiPllD6uzBPpsFRFwRr0Jp
-         JP7gOQCzez8ZVnBRuCiUQtZ6oMrot1WruvmOG/vtYOt4XOOiypn+bx23V716/K5UOsar
-         cgD67wyRKtUJnvs39q1ITaUy6GcaYre1C7feTpeZcKoINC58/7Evb32yKm0DFLSNuftC
-         +yJg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ca2rmhIFMYZx78AJXHwnEFBC/h0eDECzkenDaFp6yfw=;
+        b=e0bEQTF8824UrXYG6I1AqofOYb09SEQphN/ygG01rDbAZ8c6dfuhCuZstVC5eidvoh
+         slTRCzrDTaAXRPx7LpD4TnzvZtF5ny1Xjs5sKzOBOHlqMSImHPhy/14x/ln+hm6cj2us
+         Dk3YlTtjpa1yJSygXMrCPXKOkKH3zJcV2ngLgVWVHme32rMf9G0IIc/8/SsDO4nwMYNm
+         klVgM0xxlmBYHaNY0SgSnuB7YN3dSOs+6Hauig39tMFMotqBhl9WyQu6JJJD3UoDSNUV
+         G8WqJz4UST/IhIinQ+/0IkQ6DibJAK6rOjWPa+6/nNqH3VOw5qWnwo3z2jv2yidR69Lw
+         kz6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qHJMNVcMs+xsVplhG30B/1P6IVaUubM0ykSVg1P0wD8=;
-        b=dkJft0aQqBf2sMBMPoiF7NIyrGGgnaLySbcnS5Sym+EMr/F3Pan338dw8r0aCpzYfy
-         mTqP/iYuHx+VbZLmNK4oVIl1b6sqacKrJeIDxJk2MgaeHXC6bo4EwliapQl8bfbWuinl
-         QNG6fEKTYhzO31UO4yE0E4YFHpogIysTkncDwxRiMjsOMf8r0nW69y5PH6vpDO4ZO9s1
-         YWXXv+EUEW/Bl43mB2I0w2LLL3QxbvRgjR+9RIGEh5IkJ7dpzbbJwmlAtF6GWlwcoz5G
-         T1P1VWhlPSY1HJA7iKBZcbZdWBM9lbWQVrLSpjNKf0qfaB7WZLy0LlkRmO0cOxVUJZMb
-         KkOQ==
-X-Gm-Message-State: APjAAAXM+imUdniLktCn+GyQMG596s9McsgSOs74yg25BdarO9qEuO8Y
-        ONnCL57f+0dyaUhyPkKhiQhJ4vbbLOg=
-X-Google-Smtp-Source: APXvYqx/zwSQS45StrREoB8OlluOlCDLUWaqu1Y2XESegWHg106KQUwmC8buPpoL92VW7fffOWRJeQ==
-X-Received: by 2002:a2e:9150:: with SMTP id q16mr530686ljg.18.1551805536016;
-        Tue, 05 Mar 2019 09:05:36 -0800 (PST)
-Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
-        by smtp.gmail.com with ESMTPSA id u15sm2249119lja.73.2019.03.05.09.05.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ca2rmhIFMYZx78AJXHwnEFBC/h0eDECzkenDaFp6yfw=;
+        b=bjh8APpRnHFDtJCsKhx8ZEVafi+TI1zzqHKQF+l9eSh0mAMl8uWzj/cbAOMXG43r47
+         2EoAaoHh6tRU61+mVDNzzOwCq/XtjQRWJH0eWMvbEzm22Fy+1nkqdWmPB7svi/sZsO3B
+         KRgJ+v/5QLoqbROlUf2+5vwVdEYGkrXvaSyuKTDcHPqqViUG26teN2+eT5yFsESkjWd2
+         ta+rFMS0e2bAv2josSXO5UdwtpUqgazsorvkVsMkBZTW2GdgMsbq1jp6k2LcpTbz5iQz
+         RpNqxXvLRkOKQ/tdy5N0g0r354UQ4V4tL8NFIJ3blOozlNKSn8l640rzttHnT/nRgtc+
+         0+hg==
+X-Gm-Message-State: APjAAAWhc2jM3S0RNtG1DLIi1pYgpa5qamox2ql30xuVUGJv8TUIGN/q
+        821n0ngoNkZ2xsTYEG+JwBE=
+X-Google-Smtp-Source: APXvYqx/yxa2HqJmCWar1480l/gI8YQoZMQuYi8b/WyivebOtjAbwpOJEnf6UV38qUX/70q62u1EPg==
+X-Received: by 2002:a63:4607:: with SMTP id t7mr2255888pga.306.1551805734025;
+        Tue, 05 Mar 2019 09:08:54 -0800 (PST)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id u11sm12530648pfh.23.2019.03.05.09.08.52
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 Mar 2019 09:05:35 -0800 (PST)
-From:   "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
-X-Google-Original-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Date:   Tue, 5 Mar 2019 18:05:34 +0100
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: i2c: adv748x: select V4L2_FWNODE
-Message-ID: <20190305170534.GD9239@bigcity.dyn.berto.se>
-References: <20190305132332.3788205-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190305132332.3788205-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 05 Mar 2019 09:08:53 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     mark.rutland@arm.com, marc.zyngier@arm.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] clocksource: arm_arch_timer: remove unneeded pr_fmt macro
+Date:   Tue,  5 Mar 2019 12:08:51 -0500
+Message-Id: <20190305170851.24643-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+After this commit ded24019b6b6f(clocksource: arm_arch_timer: clean up
+printk usage), the previous macro is redundant, so delete it.
 
-Thanks for your work.
+And move the new macro to the previous position.
 
-On 2019-03-05 14:23:13 +0100, Arnd Bergmann wrote:
-> Building adv748x fails now unless V4L2_FWNODE is selected:
-> 
-> drivers/media/i2c/adv748x/adv748x-core.o: In function `adv748x_probe':
-> adv748x-core.c:(.text+0x1b2c): undefined reference to `v4l2_fwnode_endpoint_parse'
-> 
-> Fixes: 6a18865da8e3 ("media: i2c: adv748x: store number of CSI-2 lanes described in device tree")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/clocksource/arm_arch_timer.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  drivers/media/i2c/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 6d32f8dcf83b..3f5dd80e14f8 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -221,6 +221,7 @@ config VIDEO_ADV748X
->  	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API
->  	depends on OF
->  	select REGMAP_I2C
-> +	select V4L2_FWNODE
->  	---help---
->  	  V4L2 subdevice driver for the Analog Devices
->  	  ADV7481 and ADV7482 HDMI/Analog video decoders.
-> -- 
-> 2.20.0
-> 
-
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 9a7d4dc00b6e..675243eb8cd4 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -9,7 +9,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
+-#define pr_fmt(fmt)	"arm_arch_timer: " fmt
++#define pr_fmt(fmt) 	"arch_timer: " fmt
+ 
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -33,9 +33,6 @@
+ 
+ #include <clocksource/arm_arch_timer.h>
+ 
+-#undef pr_fmt
+-#define pr_fmt(fmt) "arch_timer: " fmt
+-
+ #define CNTTIDR		0x08
+ #define CNTTIDR_VIRT(n)	(BIT(1) << ((n) * 4))
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.17.0
+
