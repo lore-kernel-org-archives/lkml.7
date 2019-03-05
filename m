@@ -2,95 +2,138 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48950C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3A0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24399206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD0E206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfCEAE7 (ORCPT
+        id S1726650AbfCEAGo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:04:59 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:34545 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfCEAE6 (ORCPT
+        Mon, 4 Mar 2019 19:06:44 -0500
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:36509 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCEAGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:04:58 -0500
-Received: from [192.168.1.110] ([77.2.115.28]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MiaHf-1hUm9e106h-00fhib; Tue, 05 Mar 2019 01:04:49 +0100
-Subject: Re: [PATCH 1/3] x86: apuv2: remove unused variable
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Linus Walleij <linusw@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190304201930.1622839-1-arnd@arndb.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <25276a71-2d50-0039-226c-3066a3767c0d@metux.net>
-Date:   Tue, 5 Mar 2019 01:04:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 4 Mar 2019 19:06:43 -0500
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2505DvQ001559
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 5 Mar 2019 09:05:13 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2505D98029259;
+        Tue, 5 Mar 2019 09:05:13 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2504r7K005945;
+        Tue, 5 Mar 2019 09:05:13 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.149] [10.38.151.149]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-3007610; Tue, 5 Mar 2019 09:04:01 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC21GP.gisp.nec.co.jp ([10.38.151.149]) with mapi id 14.03.0319.002; Tue, 5
+ Mar 2019 09:04:00 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "hughd@google.com" <hughd@google.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
+ __nr_hugepages_store_common()
+Thread-Topic: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
+ __nr_hugepages_store_common()
+Thread-Index: AQHUzKNmJ08QFadITkadXECqBzMSPaXvQTOAgADisACAABkvAIAAEDUAgAB2wwCAAEK9AIAA3REAgAAzZACAABhSgIAJbiwA
+Date:   Tue, 5 Mar 2019 00:03:59 +0000
+Message-ID: <20190305000402.GA4698@hori.linux.bs1.fc.nec.co.jp>
+References: <388cbbf5-7086-1d04-4c49-049021504b9d@oracle.com>
+ <alpine.DEB.2.21.1902241913000.34632@chino.kir.corp.google.com>
+ <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
+ <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
+ <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
+ <5C74A2DA.1030304@huawei.com>
+ <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
+ <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
+ <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
+ <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
+In-Reply-To: <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <853429AEAD48A04F86B60F723266BFD0@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20190304201930.1622839-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Uo4FtpIIbUhZz+OyP3KWRgKtWnbSdowDlWmiNrcgxptJMAiyoFd
- 6BuxuV1Jbn+Ogi+lmhguMTeEd76eAKfmn3bo0R/L9kzEBb/cmZha/5gL7KajiY4y7DeO+/p
- nocE+uhsHQI9NuZ3icLTPlalt4vSRIeLs2OJAmSucRKdPdzXo/Cis7SdNo7kFrt44NDxGrA
- AFPpmNXH9B3krLA0XYKAg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3DUjr4YUfLg=:mXMQqD5RXR01yQvIqcAvX8
- Y2++GE2JdZ2ESHGPV3qWDy0+I0yN4rdfcN9uF5wxV+bWbBq6pp2fEZO6QWLq9gme8SqiAMkCZ
- qTMc5TmyzwYZVjlpBquYFnySrahtPfHRh8RMVkIQVzQU24mjsvbYwjUJ18jtCt3jJSG8vsbRG
- Js0Uaj58b4t0yX3/wdldau5MGexJ0pT8a2l9eeJvrn8I1oPyB7KNH1Oe7pxvCcev8A2Nil0Mf
- 3nb9kMmTDZXaAiyTHhLo9kwUVjHYsRcbsVa8nW1bQMVjWxQ3x/bAbsVT9zkV63pZfEdgX5+nx
- pObRm9DUjIPH62FLazNn8feFLK8aw4ZkQH9sQPOTxaiDwR5kYErXmF45b+7TN1DP6vk00dy/b
- 0+IyYPle4eRplia5/aBIAbymwLMsQ3V3/YZ4KcXr2RU6krDPqtsBnlPmyDk/YjJWBKGvSWvft
- 5+ZTUV5/8O7aNy0Vam8/fwLwT93XRcs6rVr2tdLcz0OU6rBC0J3OkUiO+JW4xb8iiMpJ6nlld
- F5LqsB2bXWBwfDtItyuI6BgHQ11Yr4f0crRqpScHzgjlcUr7FJPVtcYGWOzMDPHbKGmO+Dt+6
- 6mjQDU84ajcbnjMxJNsRg8mU7VmcasoMITuXM271E00WfqOALQ9ELUZq+2YI1xjVMmKc6k2Sg
- cZIDAI5SUpYZ2b7CrEUsJ68vg52iBOtdejV+WYlCTAdMm+0Y7OSMYFhVQ+ZV/ihNJ48Mwv6xg
- dMEz6SIJiJF+GHrEgXJJ2hkOm6vpNonl6wVEpK3n4DQPKSLx2MhL+boFWWw=
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.03.19 21:19, Arnd Bergmann wrote:
+On Tue, Feb 26, 2019 at 04:03:23PM -0800, Mike Kravetz wrote:
+> On 2/26/19 2:36 PM, Andrew Morton wrote:
+...
+> >>
+> >> +	} else {
+> >>  		/*
+> >> -		 * per node hstate attribute: adjust count to global,
+> >> -		 * but restrict alloc/free to the specified node.
+> >> +		 * Node specific request, but we could not allocate
+> >> +		 * node mask.  Pass in ALL nodes, and clear nid.
+> >>  		 */
+> > 
+> > Ditto here, somewhat.
 
-> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-> index dcb084f6b892..c1ca931e1fab 100644
-> --- a/drivers/platform/x86/pcengines-apuv2.c
-> +++ b/drivers/platform/x86/pcengines-apuv2.c
-> @@ -208,7 +208,6 @@ static struct platform_device * __init apu_create_pdev(
->  
->  static int __init apu_board_init(void)
->  {
-> -	int rc;
->  	const struct dmi_system_id *id;
->  
->  	id = dmi_first_match(apu_gpio_dmi_table);
+# I missed this part when reviewing yesterday for some reason, sorry.
+
 > 
+> I was just going to update the comments and send you a new patch, but
+> but your comment got me thinking about this situation.  I did not really
+> change the way this code operates.  As a reminder, the original code is like:
+> 
+> NODEMASK_ALLOC(nodemask_t, nodes_allowed, GFP_KERNEL | __GFP_NORETRY);
+> 
+> if (nid == NUMA_NO_NODE) {
+> 	/* do something */
+> } else if (nodes_allowed) {
+> 	/* do something else */
+> } else {
+> 	nodes_allowed = &node_states[N_MEMORY];
+> }
+> 
+> So, the only way we get to that final else if if we can not allocate
+> a node mask (kmalloc a few words).  Right?  I wonder why we should
+> even try to continue in this case.  Why not just return right there?
 
-ACK.
+Simply returning on allocation failure looks better to me.
+As you mentioned below, current behavior for this 'else' case is not
+helpful for anyone.
 
-Reviewed-By: Enrico Weigelt, metux IT consult <info@metux.net>
+Thanks,
+Naoya Horiguchi
 
-
-thx
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> 
+> The specified count value is either a request to increase number of
+> huge pages or decrease.  If we can't allocate a few words, we certainly
+> are not going to find memory to create huge pages.  There 'might' be
+> surplus pages which can be converted to permanent pages.  But remember
+> this is a 'node specific' request and we can't allocate a mask to pass
+> down to the conversion routines.  So, chances are good we would operate
+> on the wrong node.  The same goes for a request to 'free' huge pages.
+> Since, we can't allocate a node mask we are likely to free them from
+> the wrong node.
+> 
+> Unless my reasoning above is incorrect, I think that final else block
+> in __nr_hugepages_store_common() is wrong.
+> 
+> Any additional thoughts?
+> -- 
+> Mike Kravetz
+> 
