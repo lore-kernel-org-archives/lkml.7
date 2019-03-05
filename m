@@ -2,142 +2,82 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B22C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B36C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD68208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551804339;
-	bh=G2mnA6MtdEgoJaaEDw5X3sG6WrPVPZUPF7LejKLxKSE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vGbmJhpMWzNURXZBKbOEES9sF0SOBRKSaaa/LxsrT1wjKt1lK7+c47Ks094mGc4ep
-	 k3h/bHnh656Ij9IH2tTxhXf6+sFsd9ssvJLtcTo3pBw3nhe/o5IYZdtoK5GQhYNM/9
-	 MddQ+0m/aF19eOWLtdw9SNcVYwq+LYThMzdtSJIE=
+	by mail.kernel.org (Postfix) with ESMTP id 0E72720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfCEQph (ORCPT
+        id S1727103AbfCEQqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:45:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbfCEQph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:45:37 -0500
-Received: from localhost (unknown [77.138.135.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E984220661;
-        Tue,  5 Mar 2019 16:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551804336;
-        bh=G2mnA6MtdEgoJaaEDw5X3sG6WrPVPZUPF7LejKLxKSE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1qTO0K1iMlnmWuM9Zp8xmUDg8XvzvsCD5xK/oFqPeKqcFoD+QPFU8nyIXWCJNo2Fp
-         XvM5kWcK4CNBa77A/7sfftOhjyZSVif3+VQUPmBOeV3xKdwz2FxHweUusfxhb7wAWn
-         a4ZICKZWqPJMcKyaT+UwjaLFqc88qM9YmlyNBkE4=
-Date:   Tue, 5 Mar 2019 18:45:30 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Yuval Shaia <yuval.shaia@oracle.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, john.hubbard@gmail.com,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v3] RDMA/umem: minor bug fix in error handling path
-Message-ID: <20190305164530.GO15253@mtr-leonro.mtl.com>
-References: <20190304194645.10422-1-jhubbard@nvidia.com>
- <20190304194645.10422-2-jhubbard@nvidia.com>
- <20190304115814.GE30058@iweiny-DESK2.sc.intel.com>
- <20190305150406.GA12098@lap1>
+        Tue, 5 Mar 2019 11:46:36 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40549 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfCEQqf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:46:35 -0500
+Received: by mail-qk1-f195.google.com with SMTP id h28so5113666qkk.7;
+        Tue, 05 Mar 2019 08:46:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2nFeIVZZ0YkP5tatfiz9qqm4VERh5YEjLKrII81znkU=;
+        b=T/QVGHf8qfJ2k81W5LGOzEyE1kDaAjR5uY9ux3PMoh0e+FUPT7OPDKO5rq5EregHOQ
+         /SQV0JXsLDv7M5rtFUaxIkXCt6lowVgM3bCRthhdQRQRT3ZgPnBCjjmYSd2766Vhctcf
+         Din4RVGDo6uHKWuqCStNZ5bmP6+HYktnVu8oL+zNfcdg32/kpX2EPVFQz0b45Hzt12FS
+         WR6hRsikgIk+/c0YYsROfGow3+NOFPdZNvcJhK1NJq4Aox8LruROs9P3on6v2nYrPFb+
+         iGcPfbPooQRx6HTJUZu42SHPxTIzSp/hIlMKjMhuFmt5v5RbYNcKpcIptZXAPJgzY9EE
+         FGeg==
+X-Gm-Message-State: APjAAAUrYcE/MI4V6lLb6R1Ex+0dRbkTGMh5fIP+ZmrwaCZH/fJ3w+FW
+        dLEDTRsLVH4/dMAW5zT3dhRlSwc9fZ733YHAQSrhoA==
+X-Google-Smtp-Source: APXvYqwaZpVjfN0p5nB6VQv5gsLMHhyw6pUvBkmaXP8XJVn6zIrc25tulh33B1hnEOxRiqR9BFiKCVmmmiJJy7YjfZA=
+X-Received: by 2002:ae9:dec2:: with SMTP id s185mr2296406qkf.107.1551804394373;
+ Tue, 05 Mar 2019 08:46:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="o5hfEDzsoqw8wJwC"
-Content-Disposition: inline
-In-Reply-To: <20190305150406.GA12098@lap1>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190304201930.1622839-1-arnd@arndb.de> <20190304201930.1622839-2-arnd@arndb.de>
+ <a94c3c6a-481e-96a5-74e1-8c3299c74129@metux.net> <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
+ <54a7d035-155f-c47b-1db1-acb851b3aec6@metux.net>
+In-Reply-To: <54a7d035-155f-c47b-1db1-acb851b3aec6@metux.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 Mar 2019 17:46:17 +0100
+Message-ID: <CAK8P3a1-AYWtNEqwb4ZMpXKDwGB_ZGLj==uBakh0+L=5g=BQQw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] x86: apuv2: fix input dependencies
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Enrico Weigelt <info@metux.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---o5hfEDzsoqw8wJwC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 05, 2019 at 05:04:06PM +0200, Yuval Shaia wrote:
-> On Mon, Mar 04, 2019 at 03:58:15AM -0800, Ira Weiny wrote:
-> > On Mon, Mar 04, 2019 at 11:46:45AM -0800, john.hubbard@gmail.com wrote:
-> > > From: John Hubbard <jhubbard@nvidia.com>
-> > >
-> > > 1. Bug fix: fix an off by one error in the code that
-> > > cleans up if it fails to dma-map a page, after having
-> > > done a get_user_pages_remote() on a range of pages.
-> > >
-> > > 2. Refinement: for that same cleanup code, release_pages()
-> > > is better than put_page() in a loop.
-> > >
-> > > Cc: Leon Romanovsky <leon@kernel.org>
-> > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Doug Ledford <dledford@redhat.com>
-> > > Cc: linux-rdma@vger.kernel.org
-> > > Cc: linux-mm@kvack.org
-> > > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> >
-> > I meant...
-> >
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> >
-> > <sigh>  just a bit too quick on the keyboard before lunch...  ;-)
-> >
-> > Ira
+On Tue, Mar 5, 2019 at 2:50 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
 >
-> I have this mapping in vimrc so i just have to do shift+!
+> On 05.03.19 09:23, Arnd Bergmann wrote:
 >
-> map ! o=0DReviewed-by: Yuval Shaia <yuval.shaia@oracle.com>=0D=1B
+> hmm, if circular deps happen, wouldn't that mean we've got some deeper
+> problems in here ? IMHO, dependencies should always form a DAG (except
+> for some really rare cases).
+>
+> Do you recall any actual problem w/ input vs gpio vs. drivers ?
+> I'd like to have a closer look at it.
 
-I have something similar, but limited to responses through mail client only
-and mapped to "rt" key combination.
+Not with gpio. Most of the circular dependencies I've seen tend to
+revolve around drivers/gpu/drm, which uses more 'select' statements
+than most other subsystems. Those dependencies often touch
+backlight, acpi, fbdev and other things then.
 
-in my .vimrc:
-
-augroup filetypedetect
-	" Mail
-	autocmd BufRead,BufNewFile *mutt-* setfiletype mail
-	 " Add Reviewed-by tag and delete rest of the email
-	function! RBtag()
-		r~/.vim/mutt/rb-tag.txt
-	endfunction
-	nmap rt :call RBtag()<CR>2j<CR>dG<CR>
-augroup END
-
-Thanks
-
---o5hfEDzsoqw8wJwC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcfqeqAAoJEORje4g2clinMKQP/1gRoq+qz5xGqSzz+mJjU+4C
-PJBCXt4vZF7+Gu/HfveIlS7wAB0jNAAd71Sg7rrO8U2iCBAzBopL98o2UK45vBvX
-d5FNoMi1WpbiiY3of2d2NbnWu+IhgjUNrixW257UjjBBCllXaxnnpgTsXtBspnFP
-wztRSNdIIksIlJBZJEBI/PqvbIs81vdGyQrN3Iiz64uRRinb6GAx75Rspk5M/YFq
-WDLMv1+ImDeG2GHOaaQHPK0n5Uaf6gU65vLOqGZp5haZK3lrG1RtcFIFhplqGNUh
-xRy+Q5Alsy9RO1E4gfg43bQs8yFgESuhYUHeQwUgENIMLYMwel5sMca6DQEbq1qo
-yupHSId4i4oLjujXjJoAsYJilxsjrMxTSAgc44EVhFzf5gYOYgVAccjBj6m7IZMQ
-i0E6KROm+XxOPXWXYYXGzO1r9h6RFDA70dH06xCl3011WnC28T4QoMeFRPiRdIX+
-sdQtVUEo1HG+x9hF3pmjj2eDCYQNh7olKJC+kIxA9bn9Luo8/Ipoxrohjuvhpmie
-52Ekt8ks6TteBjM9E0+msNLpYLL0nF45nvKpUxGW2q6tXTgLnf4epuDGbxTNmZmo
-ktbselHH74/nux7OYVG3pUd8w+4guXzmLky1w5aNfnbLsPNSv0shvQ1eJregy2JU
-bMNmng/g87i+g5NnWge+
-=lxM4
------END PGP SIGNATURE-----
-
---o5hfEDzsoqw8wJwC--
+       Arnd
