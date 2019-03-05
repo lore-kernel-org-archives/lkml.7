@@ -2,142 +2,113 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE85C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C33FC00319
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9960020661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551806858;
-	bh=6EehNyW1yG8bvJ/Ya1ADludhyDeXFdpRa6lUQxUcTxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pxP3+G6RcZophhm4rWQDehJvXV6qm9jDQlbT0wPGKTgnI9ZCsCYuZAXe1nsaMT+vZ
-	 kDALCKyl2JtCEcEOXtdq5REYchGm00PM1cqSZH9qUzfq9/zAzEM0m+KetS6hmX917y
-	 6NP9oEU8hf+1siomPDVBoKQhN9iew70RMCeRa8nM=
+	by mail.kernel.org (Postfix) with ESMTP id 3CF9E20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="tDJLPYS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbfCER1h (ORCPT
+        id S1728228AbfCER1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:27:37 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42397 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbfCER1g (ORCPT
+        Tue, 5 Mar 2019 12:27:43 -0500
+Received: from forwardcorp1o.cmail.yandex.net ([37.9.109.47]:43405 "EHLO
+        forwardcorp1o.cmail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728172AbfCER1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:27:36 -0500
-Received: by mail-yw1-f67.google.com with SMTP id v201so7572661ywa.9;
-        Tue, 05 Mar 2019 09:27:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mNi2wcs42w6UeX4ek2kNcWvb2MWYPhhWXQr+BTcHWzA=;
-        b=WGvmDns+blbuyso53uWHKhRtDGSCgonJqeV/qv36MQf+5wzAILLS9xN/7V1A5oKJYC
-         5p2rYbnI4yHmrwWtXSCzWvVUjtSsgAk1eZUUcKbS3rJO0Bpeb22uLSBw3duLCHZTcc9d
-         VyIkNTGwR7bzeBkNy66nBFRpn2AQzDpNvkjKGdKTDBM9NAiA8b5sjPmjIFOdK370b7tB
-         O7OmjnWOa2zPniVkNA/bUUFr+WTIktjJiaO2YksyzzTjxaoutu1ToFUOngyifduCGHqi
-         umCHTuczoamZ7P4KTFESx8p6VeI3ZGh3TOAGrPl2SvLVfWxCaIhCm/85udUMsIcaYnKh
-         wV4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mNi2wcs42w6UeX4ek2kNcWvb2MWYPhhWXQr+BTcHWzA=;
-        b=KpbguuTnMZHNyEjymVpV0xs6CSHGNd+COM8Sj+1kFjm4XApVBrh6fYFEz86zSjR+sr
-         +BY+6uMtBL7jPBDNXKCMJnOH9Ar5+8QTQmDfAq2C4Fus8XVmCUD4XjwV9a31pN8aN4ZF
-         tWKJ6+tFlm2+FmqkyMQDyiqtTqKXgb631ZjXrobB1VWDlOp/Q5HOryG/yIeZBqJq9ZPU
-         KT/zaxdNQT086tFDpAfa9g0tY62JHYfUymxFVQj/upU24gcZdwvB2kJLwYelGLDcRzIu
-         rA+kwoaSnq1V9Y+uLyuJbqpvic6g15CZm+8BzUMcC/xclAPWwqaScW4fu4QD40w2A8rm
-         8jgw==
-X-Gm-Message-State: APjAAAWprz7hCLIxGEOK+FHevlPybUC45t1o/gCy2UYCP8RwjRYxskLX
-        r1IuTkrwi0oG1maxv4niHD4=
-X-Google-Smtp-Source: APXvYqyeKr78a4dEfjAAMr0jp5YtITHKYQ96ml729Nmp/eeJKDy+vpvLfcWUGNI/0Uwf6CNYOz9Teg==
-X-Received: by 2002:a0d:e105:: with SMTP id k5mr1883870ywe.196.1551806855057;
-        Tue, 05 Mar 2019 09:27:35 -0800 (PST)
-Received: from localhost ([2620:10d:c091:200::1676])
-        by smtp.gmail.com with ESMTPSA id w127sm1858621ywf.97.2019.03.05.09.27.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 09:27:34 -0800 (PST)
-Date:   Tue, 5 Mar 2019 09:27:32 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Roman Gushchin <guro@fb.com>, Roman Gushchin <guroan@gmail.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 0/7] freezer for cgroup v2
-Message-ID: <20190305172711.GE50184@devbig004.ftw2.facebook.com>
-References: <20190219220252.4906-1-guro@fb.com>
- <20190220143748.GA9477@redhat.com>
- <20190220220020.GA16335@castle.DHCP.thefacebook.com>
- <20190221162923.GA26064@redhat.com>
- <20190221173422.GY50184@devbig004.ftw2.facebook.com>
- <20190222163441.GA5596@redhat.com>
- <20190222181740.GZ50184@devbig004.ftw2.facebook.com>
- <20190225155725.GA8096@redhat.com>
+        Tue, 5 Mar 2019 12:27:42 -0500
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.cmail.yandex.net (Yandex) with ESMTP id E744721672;
+        Tue,  5 Mar 2019 20:27:38 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id OU0qeWHHGu-RchOasM2;
+        Tue, 05 Mar 2019 20:27:38 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1551806858; bh=SHMSe0BDUm7rTH2OZfSxE/ZaTpJiliYBzSWNaqaUXTY=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=tDJLPYS1loEp0aC1r9BJoM6xeYPqeLJOrgmqsG8vRcRtgBk1E0k/nDjfoMJUlgLOq
+         +0LV8oZVsopSRE51WPExwANwgaLbQKLsWD3ThUy8Z8xC/a6kXL3+QQztJXshP7T0L5
+         gVKtaISq7uPC0Dk05k3RUthG1UckTGlmEaPA6ccw=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:f9d0:8381:2ca:ee7b])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id gGUl5T8ZmN-Rc2WQFak;
+        Tue, 05 Mar 2019 20:27:38 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] blk-throttle: verify format of bandwidth limit and detect
+ overflows
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+References: <155125474480.292717.11530762471075713387.stgit@buzz>
+ <20190305155631.GC50184@devbig004.ftw2.facebook.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <8854733a-8724-d4d1-da37-48717b05a42a@yandex-team.ru>
+Date:   Tue, 5 Mar 2019 20:27:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190225155725.GA8096@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190305155631.GC50184@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Oleg.
-
-Sorry about the delay.
-
-On Mon, Feb 25, 2019 at 04:57:25PM +0100, Oleg Nesterov wrote:
-> > As long as the task is
-> > guaranteed to be trapped by signal stop afterwards (and they are), we
-> > likely can use them the same way.  The only thing to be careful about
-> > would be ensuring that we don't end up flipping group level frozen
-> > state inbetween.  Would something like that work?
+On 05.03.2019 18:56, Tejun Heo wrote:
+> Hello, Konstantin.
 > 
-> I have no idea because I do not understand what exactly do you mean ;)
-
-Heh, sorry about that.  What I meant was that we can consider a task
-which is blocked in vfork wait as already frozen and that if we do so
-we need to be careful so that frozen state doesn't do a flip between
-vfork wait ending and the task getting parked again in a jobctl stop.
-
-> However. Thinking more about this, I am not sure my concerns were valid.
-> Yes, cg freezer can "hang" if it races with vfork(). But probably we should
-> blame vfork(), not freezer.
-
-I think we'd need to cover that ground regardless of where blame lies.
-It's weird if freezing doesn't complete cuz one of the tasks messed up
-while vforking.
-
-> The problem is, even ^Z can "hang" if the foreground process does vfork()
-> and the new child stops before exit/exec. Now I recall that I even tried
-> to make a patch to fix this using ERESTART_RESTARTBLOCK, but had some nasty
-> problems with blocked signals...
-
-Ugh... yeah, these wait non-interruptible wait sites which can be
-exposed to userspace are nasty.  They end up adding a unique wait
-state visible to userspace which comes with a bunch of corner cases.
-
-> de_thread() should use freezable_schedule() in TASK_KILLABLE too. Currently
-> it doesn't, but only because we have other (much more serious) problems with
-> cred_guard_mutex/exec. However, this is is fine wrt cg freezer, other threads
-> can't be frozen exactly because it is killable.
+> On Wed, Feb 27, 2019 at 11:05:44AM +0300, Konstantin Khlebnikov wrote:
+>> Unlike to memory cgroup blkio throttler does not support value suffixes.
+>>
+>> It silently ignores everything after last digit. For example this command
+>> will set rate limit 1 byte per second rather than 1 megabyte per second:
+>>
+>> # echo "7:0 1M" > blkio.throttle.read_bps_device
+>> # cat blkio.throttle.read_bps_device
+>> 7:0 1
+>>
+>> Cgroup2 interface has the same flaw:
+>>
+>> # echo "7:0 rbps=1M" > io.max
+>> # cat io.max
+>> 7:0 rbps=1 wbps=max riops=max wiops=max
+>>
+>> Also sscanf does not care much about overflows.
+>>
+>> This patch uses modern function kstrtou64 for parsing.
+>> It rejects trailing garbage and detects integer overflows.
+>>
+>> Also this patch handles iops limit overflows for cgroup-v1 in the same as
+>> cgroup-v2: limits >= UINT_MAX becomes unlimited.
+>>
+>> Fixes: 2ee867dcfa2e ("blkcg: implement interface for the unified hierarchy")
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 > 
-> Anything else does freezer_do_not_count() in TASK_KILLABLE and waits for
-> another freezable process?
+> So, I'd much rather keep the parsing implementations simple.  Unless
+> there's a correctness problem (you mentioned overflowing, how would
+> that happen?), the simpler the better.  I don't think the kernel needs
+> to be in the business of strict input verification here.
 
-Can't find any.  Hopefully, that was it?
+This is inconsistency between controllers. IO controller should either
+accept size suffixes or reject them. Ignoring garbage is not an option.
+To be honest, I've successfully shot in the foot by bps limit "1M".
 
-> So it seems I have to take my words back, perhaps we can forget about
-> freezable_schedule/etc.
+Integer overflows are happens when userspace software uses floats for data
+representation and calculations. This way values bigger than 2^32-1 or
+2^64-1 could appear easily in text representation.
 
-I think it'd be great to be able to handle these if at all possible.
+Almost all integer knobs in sysctl and sysfs use modern kstrtoXX functions
+with strict validation of format and overflows.
 
-Thanks.
-
--- 
-tejun
+> 
+> Thanks.
+> 
