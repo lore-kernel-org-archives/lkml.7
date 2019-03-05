@@ -2,149 +2,134 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87077C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9383BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE4220842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6799E20675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfCEFm2 (ORCPT
+        id S1726971AbfCEFpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 00:42:28 -0500
-Received: from mga06.intel.com ([134.134.136.31]:12655 "EHLO mga06.intel.com"
+        Tue, 5 Mar 2019 00:45:36 -0500
+Received: from mga02.intel.com ([134.134.136.20]:5813 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfCEFm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 00:42:28 -0500
-X-Amp-Result: UNSCANNABLE
+        id S1725909AbfCEFpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 00:45:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 21:42:27 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 21:45:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,442,1544515200"; 
-   d="scan'208";a="148645342"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2019 21:42:24 -0800
-Date:   Mon, 4 Mar 2019 20:36:55 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
-        wei.w.wang@intel.com, weijiang.yang@inte.com
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190304123655.GB4185@local-michael-cet-test.sh.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
- <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
- <20190301145819.GC22584@linux.intel.com>
- <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
- <20190304184307.GC17120@linux.intel.com>
- <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
- <20190305031202.GI17120@linux.intel.com>
+   d="scan'208";a="139178045"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.180]) ([10.239.196.180])
+  by orsmga002.jf.intel.com with ESMTP; 04 Mar 2019 21:45:32 -0800
+Subject: Re: [PATCH] kernel, resource: use resource_overlaps() to simplify
+ region_intersects()
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, jack@suse.cz,
+        dan.j.williams@intel.com
+References: <20190121012028.3913-1-richardw.yang@linux.intel.com>
+ <20190212001308.GA27906@richard>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <8d01ff6c-94bb-8b94-5f51-5d229b3e24e5@linux.intel.com>
+Date:   Tue, 5 Mar 2019 13:45:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190305031202.GI17120@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190212001308.GA27906@richard>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 07:12:02PM -0800, Sean Christopherson wrote:
-> On Mon, Mar 04, 2019 at 05:56:40PM +0800, Yang Weijiang wrote:
-> > On Mon, Mar 04, 2019 at 10:43:07AM -0800, Sean Christopherson wrote:
-> > > On Sun, Mar 03, 2019 at 08:26:08PM +0800, Yang Weijiang wrote:
-> > > > On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
-> > > > > On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
-> > > > > > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
-> > > > > > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
-> > > > > > > > "Load Guest CET state" bit controls whether guest CET states
-> > > > > > > > will be loaded at Guest entry. Before doing that, KVM needs
-> > > > > > > > to check if CPU CET feature is available.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > > > > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > > > > > > ---
-> > > > > > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
-> > > > > > > >  1 file changed, 32 insertions(+)
-> > > > > > > > 
-> > > > > > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > > > > > > > index 89ee086e1729..d32cee9ee079 100644
-> > > > > > > > --- a/arch/x86/kvm/vmx.c
-> > > > > > > > +++ b/arch/x86/kvm/vmx.c
-> > > > > > > > @@ -55,6 +55,7 @@
-> > > > > > > >  #include <asm/mmu_context.h>
-> > > > > > > >  #include <asm/spec-ctrl.h>
-> > > > > > > >  #include <asm/mshyperv.h>
-> > > > > > > > +#include <asm/cet.h>
-> > > > > > > >  
-> > > > > > > >  #include "trace.h"
-> > > > > > > >  #include "pmu.h"
-> > > > > > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
-> > > > > > > >  	return !(val & ~valid_bits);
-> > > > > > > >  }
-> > > > > > > >  
-> > > > > > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
-> > > > > > > > +{
-> > > > > > > > +	u32 eax, ebx, ecx, edx;
-> > > > > > > > +
-> > > > > > > > +	/*
-> > > > > > > > +	 * Guest CET can work as long as HW supports the feature, independent
-> > > > > > > > +	 * to Host SW enabling status.
-> > > > > > > > +	 */
-> > > > > > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-> > > > > > > > +
-> > > > > > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
-> > > > > > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
-> > > > > > > 
-> > > > > > > Given the holes in the (current) architecture/spec, I think KVM has to
-> > > > > > > require both features to be supported in the guest to allow CR4.CET to
-> > > > > > > be enabled.
-> > > > > > The reason why I use a "OR" here is to keep CET enabling control the
-> > > > > > same as that on host, right now on host, users can select to enable  SHSTK or IBT
-> > > > > > feature by disabling the unexpected one. It's free to select SHSTK & IBT
-> > > > > > or SHSTK | IBT.
-> > > > > 
-> > > > > Which is not the same as SHSTK != IBT in *hardware*, which is effectively
-> > > > > what this is allowing for the guest.  The problem is that the architecture
-> > > > > doesn't cleanly separate the two features, i.e. we'd have a virtualization
-> > > > > hole where the guest could touch state for a disabled feature.
-> > > > > 
-> > > > > Regardless, the guest would still be able to selectively enable each CET
-> > > > > feature, it would just never see a model where SHSTK != IBT.
-> > > > Hi, Sean,
-> > > > I'd like to understand your concerns. From my point of view, e.g., 
-> > > > when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
-> > > > this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
-> > > > configured. Could you detail your concerns?
-> > > 
-> > > In your approach, IA32_{S,U}_CET can be written if SHSTK or IBT is exposed
-> > > to the guest.  If only SHSTK is exposed, a devious guest can still use IBT
-> > > because it can set CR4.CET as well as the enable bits in IA32_{S,U}_CET.
-> > > Preventing the guest from using IBT in this scenario is infeasible as it
-> > > would require trapping and emulating the XSAVE as well as the relevent CET
-> > > MSRs.
-> > Cannot agree with you more!
-> > This is some design limitation, but from my point of view, once vmm
-> > exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
-> > which features to be enabled, we don't need to add extra constraints on
-> > the usage.
+On 2019/2/12 8:13, Wei Yang wrote:
+> On Mon, Jan 21, 2019 at 09:20:28AM +0800, Wei Yang wrote:
+>> The three checks in region_intersects() is to see whether two resources
+>> overlap. This means it could be simplified with one resource_overlaps().
+>>
+>> Also fix two typo in related function.
+>>
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 > 
-> But if KVM allows SHSTK and IBT to be toggled independently then the VMM
-> has only exposed SHSTK or IBT, not CET as whole.
+> Hello~
 > 
-> Even if SHSTK and IBT are bundled together the guest still has to opt-in
-> to enabling each feature.  I don't see what we gain by pretending that
-> SHSTK/IBT can be individually exposed to the guest, and on the flip side
-> doing so creates a virtualization hole.
-you almost convinced me ;-), maybe I'll make the feature as a bundle in
-next release after check with kernel team. BTW, what do you mean by
-saying "create a virtualization hole"? Is it what you stated in above
-reply?
+> Would someone like to take a look?
+
+No semantic change and it looks good to me.
+
+Reviewed-by: Like Xu <like.xu@linux.intel.com>
+
+You may use scripts/get_maintainer.pl to cc more maintainers.
+
+> 
+>> ---
+>> kernel/iomem.c    |  4 ++--
+>> kernel/resource.c | 11 +++++------
+>> 2 files changed, 7 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/kernel/iomem.c b/kernel/iomem.c
+>> index f7525e14ebc6..93c264444510 100644
+>> --- a/kernel/iomem.c
+>> +++ b/kernel/iomem.c
+>> @@ -55,7 +55,7 @@ static void *try_ram_remap(resource_size_t offset, size_t size,
+>>   *
+>>   * MEMREMAP_WB - matches the default mapping for System RAM on
+>>   * the architecture.  This is usually a read-allocate write-back cache.
+>> - * Morever, if MEMREMAP_WB is specified and the requested remap region is RAM
+>> + * Moreover, if MEMREMAP_WB is specified and the requested remap region is RAM
+>>   * memremap() will bypass establishing a new mapping and instead return
+>>   * a pointer into the direct map.
+>>   *
+>> @@ -86,7 +86,7 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
+>> 	/* Try all mapping types requested until one returns non-NULL */
+>> 	if (flags & MEMREMAP_WB) {
+>> 		/*
+>> -		 * MEMREMAP_WB is special in that it can be satisifed
+>> +		 * MEMREMAP_WB is special in that it can be satisfied
+>> 		 * from the direct map.  Some archs depend on the
+>> 		 * capability of memremap() to autodetect cases where
+>> 		 * the requested range is potentially in System RAM.
+>> diff --git a/kernel/resource.c b/kernel/resource.c
+>> index b0fbf685c77a..34dfb94305bb 100644
+>> --- a/kernel/resource.c
+>> +++ b/kernel/resource.c
+>> @@ -521,21 +521,20 @@ EXPORT_SYMBOL_GPL(page_is_ram);
+>> int region_intersects(resource_size_t start, size_t size, unsigned long flags,
+>> 		      unsigned long desc)
+>> {
+>> -	resource_size_t end = start + size - 1;
+>> +	struct resource res;
+>> 	int type = 0; int other = 0;
+>> 	struct resource *p;
+>>
+>> +	res.start = start;
+>> +	res.end = start + size - 1;
+>> +
+>> 	read_lock(&resource_lock);
+>> 	for (p = iomem_resource.child; p ; p = p->sibling) {
+>> 		bool is_type = (((p->flags & flags) == flags) &&
+>> 				((desc == IORES_DESC_NONE) ||
+>> 				 (desc == p->desc)));
+>>
+>> -		if (start >= p->start && start <= p->end)
+>> -			is_type ? type++ : other++;
+>> -		if (end >= p->start && end <= p->end)
+>> -			is_type ? type++ : other++;
+>> -		if (p->start >= start && p->end <= end)
+>> +		if (resource_overlaps(p, &res))
+>> 			is_type ? type++ : other++;
+>> 	}
+>> 	read_unlock(&resource_lock);
+>> -- 
+>> 2.19.1
+> 
+
