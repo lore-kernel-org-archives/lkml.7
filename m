@@ -2,198 +2,336 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44717C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331A2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B092075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF0A20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 19:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=wiesinger.com header.i=@wiesinger.com header.b="nVoJLu0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfCETTx (ORCPT
+        id S1726614AbfCETVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 14:19:53 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37292 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfCETTx (ORCPT
+        Tue, 5 Mar 2019 14:21:31 -0500
+Received: from vps01.wiesinger.com ([46.36.37.179]:46716 "EHLO
+        vps01.wiesinger.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfCETVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 14:19:53 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w6so10734868wrs.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 11:19:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ebIffOzgw1gcDxDwSsNcpzafzqkDB6OFdfl6NaYckyo=;
-        b=dLr7wV4stWX++CHwcfOLu1t/RTVi+G6JTDfTSmKv8LvnRNL3oFvHEtDkRCuo6rhYiZ
-         aBI1AT1ABhxiS5pf1eOqxu9RWQYw2DnD+hyOdJ2iVMP5FlJ/vZMkbsAOOsegKjc+p7vG
-         dWXUG6sWc3cM/MMJrGkV0dT3/kQrGNEwEV72JOLjS0Kutdxh9jah5ksVXWYYtcNrSidZ
-         2Ij/7+TDZXV4x0hTPCnNDcwzXWidHloiYbOEebxbO5eVIe7WbIbTjXFk4jk9u8KfsEfc
-         U+/kVRDgwcZONuK9yzO8piyu1R43ZvLzKd5+tPqaakpx/fwNuP1DTEKQHoMKdgI3HXNh
-         1A2w==
-X-Gm-Message-State: APjAAAVK0V36pWsDJ3C+g3zyskOvqUA04t3ZJBIY021UmyKHVVvRsMI8
-        eGRa/KolFWUGTfY6NILC8fh0bQ==
-X-Google-Smtp-Source: APXvYqzygWSpI1CgGDy5YWKokoYMn5idWnU/srxjJpBpLs8mrYcOU+i31O0kfBgoXUz0+xTj8Gz48A==
-X-Received: by 2002:adf:f711:: with SMTP id r17mr330295wrp.38.1551813591179;
-        Tue, 05 Mar 2019 11:19:51 -0800 (PST)
-Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id 132sm607952wmd.27.2019.03.05.11.19.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 11:19:50 -0800 (PST)
-Subject: Re: False positive "do_IRQ: #.55 No irq handler for vector" messages
- on AMD ryzen based laptops
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Borislav Petkov <bp@alien8.de>
-References: <95e76875-f6b2-cbea-cd74-dc14ee77b2f8@redhat.com>
- <alpine.DEB.2.21.1902192144390.1644@nanos.tec.linutronix.de>
- <13dbe818-a364-4cd4-3ac4-78bd7e8d28e3@amd.com>
- <9f17f1aa-f258-fb18-0736-04a5c03cf40e@redhat.com>
- <cef82f75-8dc6-8198-ac41-492c200f6d57@redhat.com>
- <57b32bc1-8ef2-1e1e-a70f-04444f5919a2@amd.com>
- <6fbcd261-f9e2-1685-1ef7-f148007aab9d@redhat.com>
-Message-ID: <51078b59-161a-0e13-6d8d-87d37c3375f2@redhat.com>
-Date:   Tue, 5 Mar 2019 20:19:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 5 Mar 2019 14:21:31 -0500
+Received: from wiesinger.com (wiesinger.com [84.113.44.87])
+        by vps01.wiesinger.com (Postfix) with ESMTPS id EE7759F2CD;
+        Tue,  5 Mar 2019 20:21:25 +0100 (CET)
+Received: from [192.168.0.14] ([192.168.0.14])
+        (authenticated bits=0)
+        by wiesinger.com (8.15.2/8.15.2) with ESMTPSA id x25JL3qH029344
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 5 Mar 2019 20:21:04 +0100
+DKIM-Filter: OpenDKIM Filter v2.11.0 wiesinger.com x25JL3qH029344
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiesinger.com;
+        s=default; t=1551813666;
+        bh=BrX1PaqBse0hKFu1bH5rAaYwUyCi8PruHlOBsds4J/0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nVoJLu0aB5edoSLTlurPTRQ0xDnQV4htBo3g58FFGoewEW6lSNstrnoqFptr61HpT
+         XoIT/+bBvsoYfxUD0Ep9wtyAxum9khO6MEW0CpO1Kdrgbday+ymLvkyghWTLXlWdgJ
+         w7othGtJEFnPuxtNqHunIXNtP4t+uIQSa/FhXqcPtPldG/SZqjZ0iVOr5A3ThBudIo
+         ykaG6SqRPDT5gZgaLKFa+9W2icol/2X7141BcgFROvYSGzcd53YvFgZP0C1uAdO2f+
+         5AZeZlyRbwe8BjmgBYM3RtiwwxkXHBxIGredehQv7LUPo1Is8jCXhikjNG9XCBd4sv
+         rLz8xovM3JLPEcxObmUQeiL8TuxqdmtGHkfd4kO2cPM0oLCPVHSHycyskDn0JWMyI8
+         Pn+HURdiVCQQ+jvPiX9ivlwxTSKDDtri0gvu8LCEJ1oilvRqEtKBjBB29Ry4LP6CuE
+         N5G2At1aMQOeybH6QKm7ESfCxxTZ7QsfKqvuvWIqIRh8ghSjDsYhxDes0+bEssJmPx
+         DAucQfMMp3CKbQ/7IWjVev/XsbXGz5OwHqeF/KnoXwPUXm+xQlIJ7LsADvvrKWHz5N
+         E4ImYxbVcH7vtne3GWJLD5olk8WeE+bYX58+UuxeUgjhncDZNoreZNXxK6Y5+beTNY
+         MRFR742e71WEVLq66FXlN7LE=
+Subject: Re: Banana Pi-R1 stabil
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
+References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
+ <20190227092023.nvr34byfjranujfm@flea>
+ <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
+ <20190228093516.abual3564dkvx6un@flea>
+ <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
+ <20190301093038.oz56z22ivpntdcfw@flea>
+ <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
+ <20190305092830.ef45kxzhdnxlh63g@flea>
+From:   Gerhard Wiesinger <lists@wiesinger.com>
+Message-ID: <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
+Date:   Tue, 5 Mar 2019 20:21:02 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <6fbcd261-f9e2-1685-1ef7-f148007aab9d@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190305092830.ef45kxzhdnxlh63g@flea>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 05-03-19 17:02, Hans de Goede wrote:
-> Hi,
-> 
-> On 05-03-19 15:06, Lendacky, Thomas wrote:
->> On 3/3/19 4:57 AM, Hans de Goede wrote:
->>> Hi,
+On 05.03.2019 10:28, Maxime Ripard wrote:
+> On Sat, Mar 02, 2019 at 09:42:08AM +0100, Gerhard Wiesinger wrote:
+>> On 01.03.2019 10:30, Maxime Ripard wrote:
+>>> On Thu, Feb 28, 2019 at 08:41:53PM +0100, Gerhard Wiesinger wrote:
+>>>> On 28.02.2019 10:35, Maxime Ripard wrote:
+>>>>> On Wed, Feb 27, 2019 at 07:58:14PM +0100, Gerhard Wiesinger wrote:
+>>>>>> On 27.02.2019 10:20, Maxime Ripard wrote:
+>>>>>>> On Sun, Feb 24, 2019 at 09:04:57AM +0100, Gerhard Wiesinger wrote:
+>>>>>>>> Hello,
+>>>>>>>>
+>>>>>>>> I've 3 Banana Pi R1, one running with self compiled kernel
+>>>>>>>> 4.7.4-200.BPiR1.fc24.armv7hl and old Fedora 25 which is VERY STABLE, the 2
+>>>>>>>> others are running with Fedora 29 latest, kernel 4.20.10-200.fc29.armv7hl. I
+>>>>>>>> tried a lot of kernels between of around 4.11
+>>>>>>>> (kernel-4.11.10-200.fc25.armv7hl) until 4.20.10 but all had crashes without
+>>>>>>>> any output on the serial console or kernel panics after a short time of
+>>>>>>>> period (minutes, hours, max. days)
+>>>>>>>>
+>>>>>>>> Latest known working and stable self compiled kernel: kernel
+>>>>>>>> 4.7.4-200.BPiR1.fc24.armv7hl:
+>>>>>>>>
+>>>>>>>> https://www.wiesinger.com/opensource/fedora/kernel/BananaPi-R1/
+>>>>>>>>
+>>>>>>>> With 4.8.x the DSA b53 switch infrastructure has been introduced which
+>>>>>>>> didn't work (until ca8931948344c485569b04821d1f6bcebccd376b and kernel
+>>>>>>>> 4.18.x):
+>>>>>>>>
+>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/dsa/b53?h=v4.20.12
+>>>>>>>>
+>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/drivers/net/dsa/b53?h=v4.20.12
+>>>>>>>>
+>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/net/dsa/b53?h=v4.20.12&id=ca8931948344c485569b04821d1f6bcebccd376b
+>>>>>>>>
+>>>>>>>> I has been fixed with kernel 4.18.x:
+>>>>>>>>
+>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/drivers/net/dsa/b53?h=linux-4.18.y
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> So current status is, that kernel crashes regularly, see some samples below.
+>>>>>>>> It is typically a "Unable to handle kernel paging request at virtual addres"
+>>>>>>>>
+>>>>>>>> Another interesting thing: A Banana Pro works well (which has also an
+>>>>>>>> Allwinner A20 in the same revision) running same Fedora 29 and latest
+>>>>>>>> kernels (e.g. kernel 4.20.10-200.fc29.armv7hl.).
+>>>>>>>>
+>>>>>>>> Since it happens on 2 different devices and with different power supplies
+>>>>>>>> (all with enough power) and also the same type which works well on the
+>>>>>>>> working old kernel) a hardware issue is very unlikely.
+>>>>>>>>
+>>>>>>>> I guess it has something to do with virtual memory.
+>>>>>>>>
+>>>>>>>> Any ideas?
+>>>>>>>> [47322.960193] Unable to handle kernel paging request at virtual addres 5675d0
+>>>>>>> That line is a bit suspicious
+>>>>>>>
+>>>>>>> Anyway, cpufreq is known to cause those kind of errors when the
+>>>>>>> voltage / frequency association is not correct.
+>>>>>>>
+>>>>>>> Given the stack trace and that the BananaPro doesn't have cpufreq
+>>>>>>> enabled, my first guess would be that it's what's happening. Could you
+>>>>>>> try using the performance governor and see if it's more stable?
+>>>>>>>
+>>>>>>> If it is, then using this:
+>>>>>>> https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-test
+>>>>>>>
+>>>>>>> will help you find the offending voltage-frequency couple.
+>>>>>> For me it looks like they have all the same config regarding cpu governor
+>>>>>> (Banana Pro, old kernel stable one, new kernel unstable ones)
+>>>>> The Banana Pro doesn't have a regulator set up, so it will only change
+>>>>> the frequency, not the voltage.
+>>>>>
+>>>>>> They all have the ondemand governor set:
+>>>>>>
+>>>>>> I set on the 2 unstable "new kernel Banana Pi R1":
+>>>>>>
+>>>>>> # Set to max performance
+>>>>>> echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+>>>>>> echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+>>>>> What are the results?
+>>>> Stable since more than around 1,5 days. Normally they have been crashed for
+>>>> such a long uptime. So it looks that the performance governor fixes it.
+>>>>
+>>>> I guess crashes occour because of changing CPU voltage and clock changes and
+>>>> invalid data (e.g. also invalid RAM contents might be read, register
+>>>> problems, etc).
+>>>>
+>>>> Any ideas how to fix it for ondemand mode, too?
+>>> Run https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-test
 >>>
->>> On 21-02-19 13:30, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 19-02-19 22:47, Lendacky, Thomas wrote:
->>>>> On 2/19/19 3:01 PM, Thomas Gleixner wrote:
->>>>>> Hans,
->>>>>>
->>>>>> On Tue, 19 Feb 2019, Hans de Goede wrote:
->>>>>>
->>>>>> Cc+: ACPI/AMD folks
->>>>>>
->>>>>>> Various people are reporting false positive "do_IRQ: #.55 No irq
->>>>>>> handler for
->>>>>>> vector"
->>>>>>> messages on AMD ryzen based laptops, see e.g.:
->>>>>>>
->>>>>>> https://bugzilla.redhat.com/show_bug.cgi?id=1551605
->>>>>>>
->>>>>>> Which contains this dmesg snippet:
->>>>>>>
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: smp: Bringing up
->>>>>>> secondary CPUs
->>>>>>> ...
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: x86: Booting SMP
->>>>>>> configuration:
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: .... nodeÂ  #0,
->>>>>>> CPUs:Â Â Â Â Â  #1
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: do_IRQ: 1.55 No irq
->>>>>>> handler for
->>>>>>> vector
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel:Â  #2
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: do_IRQ: 2.55 No irq
->>>>>>> handler for
->>>>>>> vector
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel:Â  #3
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: do_IRQ: 3.55 No irq
->>>>>>> handler for
->>>>>>> vector
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: smp: Brought up 1 node,
->>>>>>> 4 CPUs
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: smpboot: Max logical
->>>>>>> packages: 1
->>>>>>> Feb 07 20:14:29 localhost.localdomain kernel: smpboot: Total of 4
->>>>>>> processors
->>>>>>> activated (15968.49 BogoMIPS)
->>>>>>>
->>>>>>> It seems that we get an IRQ for each CPU as we bring it online,
->>>>>>> which feels to me like it is some sorta false-positive.
->>>>>>
->>>>>> Sigh, that looks like BIOS value add again.
->>>>>>
->>>>>> It's not a false positive. Something _IS_ sending a vector 55 to these
->>>>>> CPUs
->>>>>> for whatever reason.
->>>>>>
->>>>>
->>>>> I remember seeing something like this in the past and it turned out to be
->>>>> a BIOS issue.Â  BIOS was enabling the APs to interact with the legacy 8259
->>>>> interrupt controller when only the BSP should. During POST the APs were
->>>>> exposed to ExtINT/INTR events as a result of the mis-configuration
->>>>> (probably due to a UEFI timer-tick using the 8259) and this left a pending
->>>>> ExtINT/INTR interrupt latched on the APs.
->>>>>
->>>>> When the APs were started by the OS, the latched ExtINT/INTR interrupt is
->>>>> processed shortly after the OS enables interrupts. The AP then queries the
->>>>> 8259 to identify the vector number (which is the value of the 8259's ICW2
->>>>> register + the IRQ level). The master 8259's ICW2 was set to 0x30 and,
->>>>> since no interrupts are actually pending, the 8259 will respond with IRQ7
->>>>> (spurious interrupt) yielding a vector of 0x37 or 55.
->>>>>
->>>>> The OS was not expecting vector 55 and printed the message.
->>>>>
->>>>> Â Â From the Intel Developer's Manual: Vol 3a, Section 10.5.1:
->>>>> "Only one processor in the system should have an LVT entry configured to
->>>>> use the ExtINT delivery mode."
->>>>>
->>>>> Not saying this is the problem, but very well could be.
->>>>
->>>> That sounds like a likely candidate, esp. also since this only happens
->>>> once per CPU when we first only the CPU.
->>>>
->>>> Can you provide me with a patch with some printk-s / pr_debugs to
->>>> test for this, then I can build a kernel with that patch added and
->>>> we can see if your hypothesis is right.
+>>>> But it doesn't explaing that it works with kernel 4.7.4 without any
+>>>> problems.
+>>> My best guess would be that cpufreq wasn't enabled at that time, or
+>>> without voltage scaling.
 >>>
->>> Ping? I like your theory, can you provide some help with debugging this
->>> further (to prove that your theory is correct ) ?
+>> Where can I see the voltage scaling parameters?
 >>
->> It's been a very long time since I dealt with this and I was only on the
->> periphery. You might be able to print the LVT entries from the APIC and
->> see if any of them have an un-masked ExtINT delivery mode.Â  You would need
->> to do this very early before Linux modifies any values.
-> 
-> I'm afraid I'm not familiar enough with the interrupt / APIC parts of
-> the kernel to do something like this myself.
-> 
->> Or you can report the issue to the OEM and have them check their BIOS
->> code to see if they are doing this.
-> 
-> I will try to go this route, but I'm not really hopeful that will
-> lead to a solution.
+>> on DTS I don't see any difference between kernel 4.7.4 and 4.20.10 regarding
+>> voltage:
+>>
+>> dtc -I dtb -O dts -o
+>> /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dts
+>> /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dtb
+> This can be also due to configuration being changed, driver support, etc.
 
-A similar issue is also reported here:
+Where will the voltages for scaling then be set in detail (drivers, etc.)?
 
-https://bugzilla.redhat.com/show_bug.cgi?id=1551605
 
-There are multiple people with different vectors (so likely / possibly
-different bugs) commenting on that bug, but I just got confirmation
-that the vector 55 issue is also happening on an Acer system with an AMD
-A8 processor (I suspect a Ryzen, but that still needs to be confirmed).
+>
+>> There is another strange thing (tested with
+>> kernel-5.0.0-0.rc8.git1.1.fc31.armv7hl, kernel-4.19.8-300.fc29.armv7hl,
+>> kernel-4.20.13-200.fc29.armv7hl, kernel-4.20.10-200.fc29.armv7hl):
+>>
+>> There is ALWAYS high CPU of around 10% in kworker:
+>>
+>>    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM TIME+ COMMAND
+>> 18722 root      20   0       0      0      0 I   9.5   0.0 0:47.52
+>> [kworker/1:3-events_freezable_power_]
+>>
+>>    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM TIME+ COMMAND
+>>    776 root      20   0       0      0      0 I   8.6   0.0 0:02.77
+>> [kworker/0:4-events]
+> The first one looks like it's part of the workqueue code.
 
-So this seems to be a generic issue with (some) AMD laptops and
-not specific to one OEM.
 
-Regards,
+Any guessed reason for that?
 
-Hans
+
+>
+>> Therefore CPU doesn't switch to low frequencies (see below).
+> You said previously that those crashes were happening when the board
+> was changing frequency, so I'm confused?
+
+
+For the ondemand setting: due to the high load of kworker, the frequency 
+is not changing often to lower values (but does some time and crashes 
+also regularly)
+
+For the performance setting: frequency is fixed (to maximum in the 
+current configuration) and is stable
+
+
+>
+>> Any ideas?
+> Run the cpustress program I told you to use already twice.
+
+Had no time to try it yet. Will do. See also my comment below regarding 
+idle CPU and high CPU.
+
+
+>
+>> BTW: Still stable at aboout 2,5days on both devices. So solution IS the
+>> performance governor.
+> No, the performance governor prevents any change in frequency. My
+> guess is that a lower frequency operating point is not working and is
+> crashing the CPU.
+>
+
+Yes, there might at least 2 scenarios:
+
+1.) Frequency switching itself is the problem
+
+2.) lower frequency/voltage operating points are not stable.
+
+For both scenarios: it might be possible that the crash happens on idle 
+CPU, high CPU load or just randomly. Therefore just "waiting" might be 
+better than 100% CPU utilization.But will test also 100% CPU.
+
+Therefore it would be good to see where the voltages for different 
+frequencies for the SoC are defined (to compare).
+
+
+I'm currently testing 2 different settings on the 2 new Banana Pi R1 
+with newest kernel (see below), so 2 static frequencies:
+
+# Set to specific frequency 144000 (currently testing on Banana Pi R1 #1)
+
+# Set to specific frequency 312000 (currently testing on Banana Pi R1 #2)
+
+If that's fine I'll test also further frequencies (with different loads).
+
+Thnx.
+
+Ciao,
+
+Gerhard
+
+
+# Set to max performance (stable)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "144000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "960000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "144000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "960000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to ondemand (not stable)
+echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "ondemand" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "144000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "960000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "144000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "960000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 144000 (currently testing on Banana Pi R1 #1)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "144000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "144000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "144000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "144000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 312000 (currently testing on Banana Pi R1 #2)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "312000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "312000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "312000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "312000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 528000 (untested)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "528000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "528000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "528000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "528000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 720000 (untested)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "720000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "720000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "720000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "720000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 864000 (untested)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "864000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "864000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "864000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "864000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 912000 (untested)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "912000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "912000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "912000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "912000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+# Set to specific frequency 960000 (untested)
+echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "960000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo "960000" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo "960000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo "960000" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+
+
