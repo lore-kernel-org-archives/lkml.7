@@ -6,48 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C54C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AF3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFCF20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAC420675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfCFWIu (ORCPT
+        id S1726444AbfCFWLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:08:50 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:53201 "EHLO
+        Wed, 6 Mar 2019 17:11:53 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:45927 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFWIu (ORCPT
+        with ESMTP id S1725747AbfCFWLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:08:50 -0500
+        Wed, 6 Mar 2019 17:11:53 -0500
 Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Md66H-1gTQIG0I9D-00aF2H; Wed, 06 Mar 2019 23:08:47 +0100
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mk0a0-1gddcb3Xse-00kMiL; Wed, 06 Mar 2019 23:11:33 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     linux-rdma@vger.kernel.org
-Subject: [PATCH v2] drivers: infiniband: Kconfig: pedantic formatting
-Date:   Wed,  6 Mar 2019 23:08:45 +0100
-Message-Id: <1551910125-26368-1-git-send-email-info@metux.net>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        ooo@electrozaur.com, linux-scsi@vger.kernel.org,
+        esc.storagedev@microsemi.com
+Subject: [PATCH v2] drivers: scsi: Kconfig: pedantic formatting
+Date:   Wed,  6 Mar 2019 23:11:32 +0100
+Message-Id: <1551910292-27628-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1551898167-18310-1-git-send-email-info@metux.net>
-References: <1551898167-18310-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:SMPlWpx7GizanHM6xccGqGFznQKTa/lCdGm9oYUZA3mHhWvifHi
- 45tgihsCXaglCV9eWOttzFqcVkF/HXdo4wrdoVVyKoOaxusWshBJgA5RDKgCfK8GzAqitMA
- SxpfYALdjnrSsycOVlQlGX2fICJIMu0zBA6CWLDs3/Xl7U0M0PAkSt+bTQMckLVcqrHD/WM
- PV/fp1a7AVgTxH9QBtNPA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hK1QVTLFZo4=:Y0NMaPe2S+57ePX8nC40uD
- K2RcEDZx6qFge4Y+1NneKmNr6sM99rRPw+Iez9i1SRIkBQ+oUrE2FSHu7EODF6uns9knrxEi0
- Toe3QQ4n7Wtq3dCvQvA5pLLzPt2HA0I5n5Adbr2NwxBthCdeLLnEgDOxhqFQbyGHtUszJr4K+
- F8fUsr7UlS9cAkWI05avBLT8mEu/cEUlfUZcw6M0fHAG98e306CRX5Nd1jrnJh1jw4r3mXKss
- KTTF4Z19dOai+08jbVBVf6UNDjdDSCIhho8BsX9O00rgyICq0jS3G3BIpxPPcaaFJurJ482zI
- 8VZ6WVeqC8R8HJyTUuE+8W0i7AotjPPivRVDoSgQDxzkC8xVEYGdSG737myqc8pwtlT4dlM6B
- ZpZW4AvSFa/HBDYqgYTIZNmrUf/igExa0WOHjE9/ZCBEtRrGjGE51BuzWifl3RtiGn7PVyyDD
- YS6Tvon/VZRKoDuAblRGCPiMbfty4JMBoFVdVpsg2LEzC39bUwLBEsUrA0o8yxz6loUffUuQq
- kVAHqsJeUCS2npWX3YAYujcbPl9ggjakyP979LVQUB/hzBTBocyPFZ0RgJNXIa4Uf2WzMT46Z
- eZFIyOMha2vueQv02hWQjYeP7tzhjvly0QGFT6Yl09NsjEePQc1vGixXL7AvC3eABJ6yJBkh+
- BQssFxUUpzAeGz5pFueKMwYcDKmojfeo0U6NscXTH7WxknOmp2XNNjgr/NBropsC5m4X9/Vab
- tiOWd23DUvlgK+OA86aABEruwDKCKHKKULIQvg==
+In-Reply-To: <1551898384-19624-1-git-send-email-info@metux.net>
+References: <1551898384-19624-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:4VHbknKkctzeGKn5+wybZd0pNrEI7oRO+s7nlK+YAcuQDGQVbfx
+ abUFDOnVuRQo31U5GG8ekg3TjvkWmq9sKBbM2H8dTrjJo+HuXNd77uyRmjAeuBHzmGbcwg4
+ A6wN47Y2vdJquBxOyXYbu+K5+XNzJrKZEADhnklMEJxaNBd/mRKT2k6HNcIvWn8Y7XPgo6F
+ UxSEGaa6e6u/SD/wm5IGw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5lcQWWMxi4A=:rIYPoumU8eu4U25X+sV9Ai
+ epvao5VKa7jwNBiaZGIveOW51BgAd5gSehje8Uwu7ncY58nTNkQhduq+SzTMC7BhYYSQGOUAt
+ opDjCDNxvY2foK/CLrcUKtNRBcCgMsX5KxE8YtvzPJSKM1XNZ7aIydfQuToP4721YgY1gkWxA
+ UrElkW71tXRk5rRxUOJTcsKBjYRW2VXdzbF7hdQAdIFd25mvmfNJgNv9IwgYxL9c3FKr7WgMK
+ TvOaTvF7vGTFxKZsOycpfYF1fJCw4q+pY9cNgjEVCekYSscNcYEB6HV3tylrztkyaUrUpl+Sm
+ YVK9htW3xsxr7XmLdskby6DQ/ZZg+ee8dNhiXQvpw3BkbgL3TDizh9KnGVK5qi+la+mOhxFLd
+ jfsEUnw0QuOaWMW0XZgYVm8uRvBcxEPHnzvQbIhmvcxqsE8jVfPWTgWGqJkTbpIDJm2r1WF77
+ 0lUOvup3yiAhrF27K3M2Bj4DjqzviNrthkvd081nCyqMy7veByFufId/aXyfviKEJPz/a8JPh
+ p4qhPNINzfJLY7heRpLcCRu0qLnkUdPzKAjrXRE+LOmwYQ6G5te2P5gxf22Q1gh39fiQSz5gF
+ krh9ljkCm5FMudR8DMbuJLCRA216A0q3/kXSOSqdCcr1WtWM6nfgJqDwRHWLIkpZFsKXq04C5
+ hknMR+U6IGuVTMvZ661s9PUehP+xBRCGfiNSTmCvmeoC78m76H1t26PrcV5Kzf7+LMCdQ6Ucv
+ b131Qh+5ROsSdEqQz8Zu+lVJNI1IAp1B5dQPPQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,44 +60,275 @@ take damp cloth and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/infiniband/hw/bnxt_re/Kconfig | 10 +++++-----
- drivers/infiniband/ulp/iser/Kconfig   |  4 ++--
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/scsi/Kconfig          | 63 +++++++++++++++++++++----------------------
+ drivers/scsi/osd/Kconfig      | 38 +++++++++++++-------------
+ drivers/scsi/pcmcia/Kconfig   |  2 +-
+ drivers/scsi/qedf/Kconfig     |  8 +++---
+ drivers/scsi/smartpqi/Kconfig | 16 +++++------
+ 5 files changed, 63 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/Kconfig b/drivers/infiniband/hw/bnxt_re/Kconfig
-index 19982a4..05aa9fa 100644
---- a/drivers/infiniband/hw/bnxt_re/Kconfig
-+++ b/drivers/infiniband/hw/bnxt_re/Kconfig
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index f38882f..7a9eab1 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
 @@ -1,9 +1,9 @@
- config INFINIBAND_BNXT_RE
--    tristate "Broadcom Netxtreme HCA support"
--    depends on ETHERNET && NETDEVICES && PCI && INET && DCB
--    select NET_VENDOR_BROADCOM
--    select BNXT
--    ---help---
-+	tristate "Broadcom Netxtreme HCA support"
-+	depends on ETHERNET && NETDEVICES && PCI && INET && DCB
-+	select NET_VENDOR_BROADCOM
-+	select BNXT
-+	---help---
- 	  This driver supports Broadcom NetXtreme-E 10/25/40/50 gigabit
- 	  RoCE HCAs.  To compile this driver as a module, choose M here:
- 	  the module will be called bnxt_re.
-diff --git a/drivers/infiniband/ulp/iser/Kconfig b/drivers/infiniband/ulp/iser/Kconfig
-index d00af71..299268f 100644
---- a/drivers/infiniband/ulp/iser/Kconfig
-+++ b/drivers/infiniband/ulp/iser/Kconfig
-@@ -4,8 +4,8 @@ config INFINIBAND_ISER
- 	select SCSI_ISCSI_ATTRS
- 	---help---
- 	  Support for the iSCSI Extensions for RDMA (iSER) Protocol
--          over InfiniBand. This allows you to access storage devices
--          that speak iSCSI over iSER over InfiniBand.
-+	  over InfiniBand. This allows you to access storage devices
-+	  that speak iSCSI over iSER over InfiniBand.
+ menu "SCSI device support"
  
- 	  The iSER protocol is defined by IETF.
- 	  See <http://www.ietf.org/rfc/rfc5046.txt>
+ config SCSI_MOD
+-       tristate
+-       default y if SCSI=n || SCSI=y
+-       default m if SCSI=m
++	tristate
++	default y if SCSI=n || SCSI=y
++	default m if SCSI=m
+ 
+ config RAID_ATTRS
+ 	tristate "RAID Transport Class"
+@@ -47,7 +47,7 @@ config SCSI_ESP_PIO
+ 
+ config SCSI_NETLINK
+ 	bool
+-	default	n
++	default n
+ 	depends on NET
+ 
+ config SCSI_PROC_FS
+@@ -307,25 +307,25 @@ config ISCSI_TCP
+ 	select CRYPTO_CRC32C
+ 	select SCSI_ISCSI_ATTRS
+ 	help
+-	 The iSCSI Driver provides a host with the ability to access storage
+-	 through an IP network. The driver uses the iSCSI protocol to transport
+-	 SCSI requests and responses over a TCP/IP network between the host
+-	 (the "initiator") and "targets".  Architecturally, the iSCSI driver
+-	 combines with the host's TCP/IP stack, network drivers, and Network
+-	 Interface Card (NIC) to provide the same functions as a SCSI or a
+-	 Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
++	  The iSCSI Driver provides a host with the ability to access storage
++	  through an IP network. The driver uses the iSCSI protocol to transport
++	  SCSI requests and responses over a TCP/IP network between the host
++	  (the "initiator") and "targets".  Architecturally, the iSCSI driver
++	  combines with the host's TCP/IP stack, network drivers, and Network
++	  Interface Card (NIC) to provide the same functions as a SCSI or a
++	  Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
+ 
+-	 To compile this driver as a module, choose M here: the
+-	 module will be called iscsi_tcp.
++	  To compile this driver as a module, choose M here: the
++	  module will be called iscsi_tcp.
+ 
+-	 The userspace component needed to initialize the driver, documentation,
+-	 and sample configuration files can be found here:
++	  The userspace component needed to initialize the driver, documentation,
++	  and sample configuration files can be found here:
+ 
+-	 http://open-iscsi.org
++	  http://open-iscsi.org
+ 
+ config ISCSI_BOOT_SYSFS
+ 	tristate "iSCSI Boot Sysfs Interface"
+-	default	n
++	default n
+ 	help
+ 	  This option enables support for exposing iSCSI boot information
+ 	  via sysfs to userspace. If you wish to export this information,
+@@ -340,7 +340,7 @@ source "drivers/scsi/cxlflash/Kconfig"
+ config SGIWD93_SCSI
+ 	tristate "SGI WD93C93 SCSI Driver"
+ 	depends on SGI_HAS_WD93 && SCSI
+-  	help
++	help
+ 	  If you have a Western Digital WD93 SCSI controller on
+ 	  an SGI MIPS system, say Y.  Otherwise, say N.
+ 
+@@ -455,7 +455,6 @@ config SCSI_AACRAID
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called aacraid.
+ 
+-
+ source "drivers/scsi/aic7xxx/Kconfig.aic7xxx"
+ source "drivers/scsi/aic7xxx/Kconfig.aic79xx"
+ source "drivers/scsi/aic94xx/Kconfig"
+@@ -475,7 +474,7 @@ config SCSI_DPT_I2O
+ 	tristate "Adaptec I2O RAID support "
+ 	depends on SCSI && PCI && VIRT_TO_BUS
+ 	help
+-	  This driver supports all of Adaptec's I2O based RAID controllers as 
++	  This driver supports all of Adaptec's I2O based RAID controllers as
+ 	  well as the DPT SmartRaid V cards.  This is an Adaptec maintained
+ 	  driver by Deanna Bonds.  See <file:Documentation/scsi/dpti.txt>.
+ 
+@@ -669,7 +668,7 @@ config SCSI_GDTH
+ 	---help---
+ 	  Formerly called GDT SCSI Disk Array Controller Support.
+ 
+-	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI) 
++	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI)
+ 	  manufactured by Intel Corporation/ICP vortex GmbH. It is documented
+ 	  in the kernel source in <file:drivers/scsi/gdth.c> and
+ 	  <file:drivers/scsi/gdth.h>.
+@@ -1152,8 +1151,8 @@ config SCSI_LPFC
+ 	depends on NVME_FC || NVME_FC=n
+ 	select CRC_T10DIF
+ 	---help---
+-          This lpfc driver supports the Emulex LightPulse
+-          Family of Fibre Channel PCI host adapters.
++	  This lpfc driver supports the Emulex LightPulse
++	  Family of Fibre Channel PCI host adapters.
+ 
+ config SCSI_LPFC_DEBUG_FS
+ 	bool "Emulex LightPulse Fibre Channel debugfs Support"
+@@ -1468,14 +1467,14 @@ config ZFCP
+ 	depends on S390 && QDIO && SCSI
+ 	depends on SCSI_FC_ATTRS
+ 	help
+-          If you want to access SCSI devices attached to your IBM eServer
+-          zSeries by means of Fibre Channel interfaces say Y.
+-          For details please refer to the documentation provided by IBM at
+-          <http://oss.software.ibm.com/developerworks/opensource/linux390>
++	  If you want to access SCSI devices attached to your IBM eServer
++	  zSeries by means of Fibre Channel interfaces say Y.
++	  For details please refer to the documentation provided by IBM at
++	  <http://oss.software.ibm.com/developerworks/opensource/linux390>
+ 
+-          This driver is also available as a module. This module will be
+-          called zfcp. If you want to compile it as a module, say M here
+-          and read <file:Documentation/kbuild/modules.txt>.
++	  This driver is also available as a module. This module will be
++	  called zfcp. If you want to compile it as a module, say M here
++	  and read <file:Documentation/kbuild/modules.txt>.
+ 
+ config SCSI_PMCRAID
+ 	tristate "PMC SIERRA Linux MaxRAID adapter support"
+@@ -1506,8 +1505,8 @@ config SCSI_VIRTIO
+ 	tristate "virtio-scsi support"
+ 	depends on VIRTIO
+ 	help
+-          This is the virtual HBA driver for virtio.  If the kernel will
+-          be used in a virtual machine, say Y or M.
++	  This is the virtual HBA driver for virtio.  If the kernel will
++	  be used in a virtual machine, say Y or M.
+ 
+ source "drivers/scsi/csiostor/Kconfig"
+ 
+diff --git a/drivers/scsi/osd/Kconfig b/drivers/scsi/osd/Kconfig
+index 347cc5e..90b08c3 100644
+--- a/drivers/scsi/osd/Kconfig
++++ b/drivers/scsi/osd/Kconfig
+@@ -15,35 +15,35 @@ config SCSI_OSD_INITIATOR
+ 	tristate "OSD-Initiator library"
+ 	depends on SCSI
+ 	help
+-		Enable the OSD-Initiator library (libosd.ko).
+-		NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
+-		dependencies
++	  Enable the OSD-Initiator library (libosd.ko).
++	  NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
++	  dependencies
+ 
+ config SCSI_OSD_ULD
+ 	tristate "OSD Upper Level driver"
+ 	depends on SCSI_OSD_INITIATOR
+ 	help
+-		Build a SCSI upper layer driver that exports /dev/osdX devices
+-		to user-mode for testing and controlling OSD devices. It is also
+-		needed by exofs, for mounting an OSD based file system.
++	  Build a SCSI upper layer driver that exports /dev/osdX devices
++	  to user-mode for testing and controlling OSD devices. It is also
++	  needed by exofs, for mounting an OSD based file system.
+ 
+ config SCSI_OSD_DPRINT_SENSE
+-    int "(0-2) When sense is returned, DEBUG print all sense descriptors"
+-    default 1
+-    depends on SCSI_OSD_INITIATOR
+-    help
+-        When a CHECK_CONDITION status is returned from a target, and a
+-        sense-buffer is retrieved, turning this on will dump a full
+-        sense-decoding message. Setting to 2 will also print recoverable
+-        errors that might be regularly returned for some filesystem
+-        operations.
++	int "(0-2) When sense is returned, DEBUG print all sense descriptors"
++	default 1
++	depends on SCSI_OSD_INITIATOR
++	help
++	  When a CHECK_CONDITION status is returned from a target, and a
++	  sense-buffer is retrieved, turning this on will dump a full
++	  sense-decoding message. Setting to 2 will also print recoverable
++	  errors that might be regularly returned for some filesystem
++	  operations.
+ 
+ config SCSI_OSD_DEBUG
+ 	bool "Compile All OSD modules with lots of DEBUG prints"
+ 	default n
+ 	depends on SCSI_OSD_INITIATOR
+ 	help
+-		OSD Code is populated with lots of OSD_DEBUG(..) printouts to
+-		dmesg. Enable this if you found a bug and you want to help us
+-		track the problem (see also MAINTAINERS). Setting this will also
+-		force SCSI_OSD_DPRINT_SENSE=2.
++	  OSD Code is populated with lots of OSD_DEBUG(..) printouts to
++	  dmesg. Enable this if you found a bug and you want to help us
++	  track the problem (see also MAINTAINERS). Setting this will also
++	  force SCSI_OSD_DPRINT_SENSE=2.
+diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
+index 2d435f1..b63b34d 100644
+--- a/drivers/scsi/pcmcia/Kconfig
++++ b/drivers/scsi/pcmcia/Kconfig
+@@ -32,7 +32,7 @@ config PCMCIA_NINJA_SCSI
+ 	  NinjaSCSI-3: (version string: "WBT","NinjaSCSI-3","R1.0")
+ 	    IO-DATA     PCSC-FP
+ 	    ALPHA DATA  AD-PCS201
+-	    CyQ've      SFC-201  
++	    CyQ've      SFC-201
+ 	    LOGITECH    LPM-SCSI2E
+ 	    Pioneer PCR-PR24's card
+ 	    I-O DATA CDPS-PX24's card (PCSC-F)
+diff --git a/drivers/scsi/qedf/Kconfig b/drivers/scsi/qedf/Kconfig
+index 943f5ee..e2693db 100644
+--- a/drivers/scsi/qedf/Kconfig
++++ b/drivers/scsi/qedf/Kconfig
+@@ -2,10 +2,10 @@ config QEDF
+ 	tristate "QLogic QEDF 25/40/100Gb FCoE Initiator Driver Support"
+ 	depends on PCI && SCSI
+ 	depends on QED
+-        depends on LIBFC
+-        depends on LIBFCOE
++	depends on LIBFC
++	depends on LIBFCOE
+ 	select QED_LL2
+ 	select QED_FCOE
+ 	---help---
+-	This driver supports FCoE offload for the QLogic FastLinQ
+-	41000 Series Converged Network Adapters.
++	  This driver supports FCoE offload for the QLogic FastLinQ
++	  41000 Series Converged Network Adapters.
+diff --git a/drivers/scsi/smartpqi/Kconfig b/drivers/scsi/smartpqi/Kconfig
+index 97e159c..fafc7f7 100644
+--- a/drivers/scsi/smartpqi/Kconfig
++++ b/drivers/scsi/smartpqi/Kconfig
+@@ -41,14 +41,14 @@ config SCSI_SMARTPQI
+ 	select SCSI_SAS_ATTRS
+ 	select RAID_ATTRS
+ 	---help---
+-	This driver supports Microsemi PQI controllers.
++	  This driver supports Microsemi PQI controllers.
+ 
+-	<http://www.microsemi.com>
++	  <http://www.microsemi.com>
+ 
+-	To compile this driver as a module, choose M here: the
+-	module will be called smartpqi.
++	  To compile this driver as a module, choose M here: the
++	  module will be called smartpqi.
+ 
+-        Note: the aacraid driver will not manage a smartpqi
+-              controller. You need to enable smartpqi for smartpqi
+-              controllers. For more information, please see
+-              Documentation/scsi/smartpqi.txt
++	  Note: the aacraid driver will not manage a smartpqi
++	        controller. You need to enable smartpqi for smartpqi
++	        controllers. For more information, please see
++	        Documentation/scsi/smartpqi.txt
 -- 
 1.9.1
 
