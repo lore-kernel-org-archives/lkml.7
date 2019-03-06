@@ -2,89 +2,78 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F593C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7AEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E437820663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF38320663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbfCFUPV (ORCPT
+        id S1730977AbfCFUPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:15:21 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:47081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfCFUPV (ORCPT
+        Wed, 6 Mar 2019 15:15:31 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40786 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfCFUPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:15:21 -0500
-Received: from [192.168.1.110] ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M6pck-1h9t4j42c2-008MXo for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019
- 21:15:20 +0100
-To:     LKML <linux-kernel@vger.kernel.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Announce: kernel meta config tool
-Organization: metux IT consult
-Message-ID: <40fc7cdf-8940-49c0-7570-25c6d479c7f7@metux.net>
-Date:   Wed, 6 Mar 2019 21:15:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 6 Mar 2019 15:15:31 -0500
+Received: by mail-qk1-f194.google.com with SMTP id h28so7610926qkk.7;
+        Wed, 06 Mar 2019 12:15:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s8vUM2dDzUO4JJB7vWL6CinrzSK68AXeVE5JXTfM1VM=;
+        b=K46RDHkwmN9uiV7v80q9rAeDgJowc9NudZxeWOqJciAwNJSiAlHnQB6VHhMiqH2tXh
+         SpSk/aHp3L0JJvBDqF8yFThrPODP1tmCreqHuGh21iuF1fqgbafjQzqAYBSc6j0PPMGy
+         qV+h9uMFYW/BnVvOvMJdLGGJgE6kh/BjsgFI3or1ONyhNdvJfLrdwS5xUBAJnTFipVPl
+         mHCkmhMj316d1EjIu6vy7Co/DRr1ibwjHHUbyEVrcM9zxdb6xXT+0MxUuZeXOIM00u8Y
+         6EULMnIl4eUtUjF/25v2IZafH8FzQkFnu7auEK2BCXxengVOF/OSB34yI+ON/NPvawPF
+         OhWQ==
+X-Gm-Message-State: APjAAAWegHXL1cWg9dZGARoM7ZImNfbb4DWC49HG+SE2MgkaECSxAB8x
+        yMbL9V0GOFNWdyyEfe6IpCJV7TbJeXM2qbREuSg=
+X-Google-Smtp-Source: APXvYqy2nT6YuZJWhwfnNpI0VqjIbugoFDZZKmPYkg7ecq/5Ixqri+zGB2lME6JJF+zUpVHwN1/PRVBNUYAJoMkft4M=
+X-Received: by 2002:ae9:dec2:: with SMTP id s185mr6862931qkf.107.1551903330048;
+ Wed, 06 Mar 2019 12:15:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Y40NEL2FVdPzxW4hEZVYjP9sTlpzqaHucU8QT34608T/gNtyzWt
- 5Umz/v127ywiX8mvL94DHxiw+9Jh+RZxLcUKB56vov8r9/Z/gspKXdnG0sG1Sy2BR9aTq/4
- C0l6UtQtF4BNIbf8WW6yaH3nyquV4xhXaUL/WBGLXRcoqNSCqpePNgNuzROTN63BJn3SvRf
- EYBVszTib50VY366eH8sQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6w7VGEziF4g=:lpyV3+XEWRa4CPjXw/pjFZ
- rrFWXy++EolxF99nXJjGli8czrOddSnpisgJC34Ln8XSVkMlCASkbi4Ok18HfeB+jNCvbr0wq
- Q4DcRzndkMj6eLmKri315DYnIZVaRuZyab3XR/8Jht3LjZ8r+IvtLsM33msxPUNtMMWAkvtdJ
- uNbf3BFEE15mRIWcBm4FgxU04p01M1Kic1yZ8/QLieIhkVlaGKa4Vrk6bANiLSIV2e6B64ZO4
- u13h+eN9m/W2WXN8fvJ7fCKAgJ6xvdCRMjz5Hi7NmMF0JISif69uz6KVba/V1DLJXvCT0YWz0
- Z/HKmu3WrxYa4b6oxOlBotRs9hnF0Z8U01uMemOUzaqrvKQCl2vKB7PD87NX2tBrI/JItfq9e
- 7DYT1CzJ+PEaRyBv6/T+9OYBBDNo681GuUdhi+pUPL8V4OHShd53mUWTtMwH6UICp1t2/LSIz
- /r05rwEUrc9Yt9GUSj8fKX9nclq7Fmj4M/oesY93xIcX8w0O0D2P3fW5S219CdW32cIDAijM3
- b9whETVQyF+Gjk2h5jZZeMPTVwM/Le/lk2g5gIM1cczrOTlDOLqK9E7sfnUDnGrm+dOX6HTi9
- I3XAxKFmnQdl+iGSfqkgr9PWdW1L+GGyu93f9q7Sh1qGu05xq7v/60r21a1KMUYQ/XixZMtfA
- nAehORu5h79ZFeh3NgPzzC3KpfHbccDEin2fmZmJhIZ+1bROfOj6OhL+6XBiyOyuG8BvHuCUV
- TYDOOhiwacyNqnMGman5f9QrxvLotaVKjyH6t6b9bJJwtQZJGFd6UQZLjtc=
+References: <20190305132147.3739133-1-arnd@arndb.de> <20190305143453.GC8256@zn.tnic>
+ <CAK8P3a2kSrTkTespcBGr6oYi8nvriS9pwtM2nQ7gCxVB+TzLog@mail.gmail.com> <20190306175808.GA30016@agluck-desk>
+In-Reply-To: <20190306175808.GA30016@agluck-desk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 6 Mar 2019 21:15:13 +0100
+Message-ID: <CAK8P3a3MV=0BbOpjwM+2q+7Oehc=4B+u0hka1YdBnJmikfqCig@mail.gmail.com>
+Subject: Re: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-edac@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On Wed, Mar 6, 2019 at 6:58 PM Luck, Tony <tony.luck@intel.com> wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>
+> This seems cleaner than adding all the EXPORTs to skx_common.c
+> I also tried a build with the 0x8A152468-config.gz that Arnd
+> supplied.
 
+It's still a bit fragile since you do something that kbuild doesn't
+expect with having a file in both a module and built-in code
+in some configurations. I'm fairly sure this version works today,
+but it would break the next time that file gets changed to include
+a reference to THIS_MODULE, or anything else that is different
+between built-in and modular code.
 
-I'd like to announce a little tool for helping w/ creating .config's:
+Another alternative would be to mark all symbols in this file
+'static' and then include skx_common.c from the other two files.
+Of course that is also ugly and it increases the overall code size,
+so I don't see a way to win this.
 
-I often have to spend lots of time to find out which configs to enable
-on a specific board, to get certain features (eg. network, sata,
-display, gpu, ...). Even worse: many options require other stuff enabled
-before even showing up. And when disabling unneeded stuff, it leaves
-lots of other things enabled. (we don't have some `apt autoremove`
-kconfig counterpart :().
-
-I've decided to cope w/ that on a higher level and written a little
-config generator tool for that - here you can enable high level
-features (eg. 'network' or 'display', etc) and it will generate the
-actual .config:
-
-	https://github.com/metux/kmct
-
-
-*MAYBE* this could become a good alternative to defconfig's ?
-
-
-have fun.
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+     Arnd
