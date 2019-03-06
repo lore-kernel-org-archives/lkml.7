@@ -2,128 +2,102 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B0BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CF9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B114B20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1D520663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="un5XrjC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfCFR0L (ORCPT
+        id S1730383AbfCFR2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:26:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37510 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726608AbfCFR0K (ORCPT
+        Wed, 6 Mar 2019 12:28:45 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46815 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfCFR2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:26:10 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x26HOXEw071631
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Mar 2019 12:26:09 -0500
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r2g9a85s3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 12:26:08 -0500
-Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 6 Mar 2019 17:26:08 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Mar 2019 17:26:03 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x26HQ2ld25100380
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Mar 2019 17:26:02 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CBE9B205F;
-        Wed,  6 Mar 2019 17:26:02 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6BC47B2066;
-        Wed,  6 Mar 2019 17:26:02 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Mar 2019 17:26:02 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E2DDC16C1F8E; Wed,  6 Mar 2019 09:26:08 -0800 (PST)
-Date:   Wed, 6 Mar 2019 09:26:08 -0800
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Akira Yokosawa <akiyks@gmail.com>, Borislav Petkov <bp@alien8.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [RFC PATCH] tools/memory-model: Remove (dep ; rfi) from ppo
-Reply-To: paulmck@linux.ibm.com
-References: <20190226104551.GF32534@hirez.programming.kicks-ass.net>
- <20190226112133.GG32534@hirez.programming.kicks-ass.net>
- <20190226112521.GH32534@hirez.programming.kicks-ass.net>
- <20190226113008.GI32534@hirez.programming.kicks-ass.net>
- <20190226113813.GA14753@zn.tnic>
- <20190226134906.GG32494@hirez.programming.kicks-ass.net>
- <20190226142845.GK4072@linux.ibm.com>
- <20190226150450.GW32477@hirez.programming.kicks-ass.net>
- <ab631777-7cbd-4658-fb99-05d60ec5a1ea@gmail.com>
- <20190306165831.GZ32477@hirez.programming.kicks-ass.net>
+        Wed, 6 Mar 2019 12:28:44 -0500
+Received: by mail-yw1-f66.google.com with SMTP id n12so10625676ywn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:28:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fpuLNU2Kuec6CYG2jcXVc/5+sYpINIjuPXPul/4MwGI=;
+        b=un5XrjC5oPNUb99gN5qDnHU/FiBgsnQ5briB0mcxtM/Ob+T4Q0W91XSjLWmCXFATIW
+         FqMAs5hKrInYdxgSJh+zyAJbyGz2HObY1HdBT5Def5cHuAhtUrEBRM+W14zqu5Kf75Ga
+         Ff/dzd5jaGahn+1Mj6LZEfyra02COr+fS+5atSq3ZFQLx9JcD2lPabIFtnGDVmn05963
+         nxWvvI68JH6DGKRsUgQQ9IF5sFW88+21vP5ydRRBlOJmMjBVibD9ARsM3IdDfVybrIEw
+         ThQ4qaqzLigZl9y7//GhCJSR9kIRNoo68tP7Zwp+MytflJJzk1ESku1LtbfERnjQSyhs
+         N2ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fpuLNU2Kuec6CYG2jcXVc/5+sYpINIjuPXPul/4MwGI=;
+        b=Z3HE2uB9FM5Mh0aujmMhPGsSTZUqttjAww21b5Z1l2HVmHBs3fyNSLA5kKkaXNanCF
+         BFiU44oZDAJ/dxuqmE0KTzX/qQsIyrIFzgs9ORxPDSib+Fz25W1EryEEHrrHBRnh41m+
+         zbBF1ZZ1abjzZ4x9XE1KgIPN5HifAXZurUVvu4UzcdCoeiek/hERLZMxYDjE5t1Lfb6m
+         ulh3k+DJ8v2KmlkuSu0pNp207jg6NBp7WZm/+PLjdQvYrgxGT0ob1EhDxW1G1FKwy/vV
+         GVT+D07Q32hBfXBCuGa6i8WprX3IfnyPmkDIoSlZuLJurVDgDsr9+JF9sCY/yQttd9AM
+         e5EA==
+X-Gm-Message-State: APjAAAW1T3RFeOu9YaMkBpCvLAdHY5abVYiN87mB+4OKh+vqBCyjwiF4
+        cidUQuNVbIeNsCJ3cwaDpQKFKWNbwqGoHkmaLHYsDA==
+X-Google-Smtp-Source: APXvYqyyeA2+Cm4bXd0ODcR59c+cSaKJ5kh1RrLInpl3Q3r7AAOsq8IIhWFrGvSYQKshIqJNsu9H9esVm00FTsU0c40=
+X-Received: by 2002:a81:5987:: with SMTP id n129mr6417958ywb.95.1551893323782;
+ Wed, 06 Mar 2019 09:28:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306165831.GZ32477@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19030617-0040-0000-0000-000004CD7830
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010715; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01170522; UDB=6.00606765; IPR=6.00951161;
- MB=3.00025861; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-06 17:26:07
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030617-0041-0000-0000-000008D8847C
-Message-Id: <20190306172608.GF13351@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903060121
+References: <CADYN=9KkjPSP4KJ+AzG=Njq49zJ5fbWNZ4V_jOvHkq_kt0biyA@mail.gmail.com>
+ <20190304153714.GD13452@kadam>
+In-Reply-To: <20190304153714.GD13452@kadam>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Wed, 6 Mar 2019 18:28:33 +0100
+Message-ID: <CADYN=9+9UrN9R=M5ode43ZkebaDrm8a9m5t1eyAmR+wNhWypMA@mail.gmail.com>
+Subject: Re: BUG: KASAN: i2c dev use after free
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     erico.nunes@datacom.ind.br, wsa@the-dreams.de,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 05:58:31PM +0100, Peter Zijlstra wrote:
-> On Thu, Mar 07, 2019 at 12:46:05AM +0900, Akira Yokosawa wrote:
-> > So, I'm looking at the macro RELOC_HIDE() defined in include/linux/compiler-gcc.h.
-> 
-> > Am I the only one who was not aware of this gcc-specific macro?
-> 
-> It's one I regularly see, but had forgotten about in this context.
-> 
-> However; you can also fix things by adding asm volatile ("":::"memory");
-> in places.
-> 
-> But that's not really the point; I would really rather have a cmdline
-> knob to fix things. That way we can compile the kernel with and without
-> and look for differences. -fno-unicorns or something :-)
-> 
-> While I understand some compiler people revel in UB and love to make
-> unicorns happen, I think in this case the produces result is utterly
-> insane.
+On Mon, 4 Mar 2019 at 16:37, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> I wasn't trying to fix anything so complicated as this, it was a
+> more obvious use after free.  It does feel intuitively that we should
+> call device_destroy() before the cdev_del() so that it's in the reverse
+> order from how it was allocated but I don't see any reason to think
+> that will make a difference.
 
-Because I couldn't resist...
+No that didn't make any difference... =/
 
-https://raphlinus.github.io/assets/Anything_is_Possible_scaled.jpg
-
-							Thanx, Paul
-
+>
+> ---
+>  drivers/i2c/i2c-dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+> index 3f7b9af11137..7e85e2cf26c1 100644
+> --- a/drivers/i2c/i2c-dev.c
+> +++ b/drivers/i2c/i2c-dev.c
+> @@ -687,9 +687,9 @@ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
+>         if (!i2c_dev) /* attach_adapter must have failed */
+>                 return 0;
+>
+> +       device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
+>         cdev_del(&i2c_dev->cdev);
+>         put_i2c_dev(i2c_dev);
+> -       device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
+>
+>         pr_debug("i2c-dev: adapter [%s] unregistered\n", adap->name);
+>         return 0;
+> --
+> 2.17.1
+>
