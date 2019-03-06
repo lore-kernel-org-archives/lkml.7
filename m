@@ -2,152 +2,102 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BF1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCC8206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A3A20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551885064;
+	bh=5dVHp/EPiYjEHccokkFz+PjeEIyLbpYbKGxTOZKBTDg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=tbeISQlmORPlc+/K8V1I5OIzQXquLMg9qXpicZ2h1cND59xoGDLtXWp74MEb0GwyH
+	 mlucc2ZcD8TXOAKfrEnp9+ZSLIT+lNPFjxl0USj3vXd31ZKAWlV4r9cBj7ev4LpRiG
+	 YGqMMvagDVRwQIzb3hw25Ynf+7besdYzJgOxU6Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfCFPId convert rfc822-to-8bit (ORCPT
+        id S1729234AbfCFPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:08:33 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:59306 "EHLO unicorn.mansr.com"
+        Wed, 6 Mar 2019 10:11:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfCFPId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:08:33 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id CE00E14CEA; Wed,  6 Mar 2019 15:08:31 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Geert Uytterhoeven <geert.uytterhoeven@gmail.com>
-Subject: Re: [PATCH 1/3] auxdisplay: deconfuse configuration
-References: <20190301184816.784-1-mans@mansr.com>
-        <CANiq72=H1Gubbr+eoEKUR+m49fkcC7Sr_hsyP3azzpk=i-au+Q@mail.gmail.com>
-Date:   Wed, 06 Mar 2019 15:08:31 +0000
-In-Reply-To: <CANiq72=H1Gubbr+eoEKUR+m49fkcC7Sr_hsyP3azzpk=i-au+Q@mail.gmail.com>
-        (Miguel Ojeda's message of "Wed, 6 Mar 2019 11:14:45 +0100")
-Message-ID: <yw1xtvgg3us0.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1728092AbfCFPLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:11:02 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75FFD20675;
+        Wed,  6 Mar 2019 15:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551885061;
+        bh=5dVHp/EPiYjEHccokkFz+PjeEIyLbpYbKGxTOZKBTDg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cAGRWAXqlC3KTwaK623YThX0Dt4H2LWO3IULYphLzpTnKjCWR6tkJdmliNWJUCVAg
+         dt0Z/5YLRzyx2uewDctHFs6u+IpSQevTFU8rkROpZcNMcXlxskts/shsucd+XtZkZE
+         zvAmTUtNcTJ8+TA6gKmeEXYth5vIPCdYPzSuToXE=
+Subject: Re: [PATCH] usbip: Remove unnecessary null check
+To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190305151110.4366-1-suwan.kim027@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d40255b3-5f87-c6a5-ebe2-c499dc858b76@kernel.org>
+Date:   Wed, 6 Mar 2019 08:11:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190305151110.4366-1-suwan.kim027@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> writes:
+Hi Suwan,
 
-> On Fri, Mar 1, 2019 at 7:48 PM Mans Rullgard <mans@mansr.com> wrote:
->>
->> The auxdisplay Kconfig is confusing.  It creates two separate menus
->> even though the settings are closely related.  Moreover, the options
->> for setting the boot message depend on CONFIG_PARPORT even though they
->> are used by drivers that do not.
->>
->> Clear up the confustion by moving the "Parallel port LCD/Keypad" menu
->
-> "confustion" -> "confusion"
+On 3/5/19 8:11 AM, Suwan Kim wrote:
+> "vdev" points to vhci_hcd->vdev[] array and vhci_hcd->vdev[] array
+> is not a pointer array but a structure array and it is already used
+> in vhci_urb_enqueue() and then passed to vhci_tx_urb() as an argument.
+> vhci_tx_urb() is not called except vhci_urb_enqueue(). So, "vdev"
+> can not be null pointer. This null check statement is meaningless.
+> 
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> ---
+>   drivers/usb/usbip/vhci_hcd.c | 8 +-------
+>   1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> index f46ee1fefe02..667d9c0ec905 100644
+> --- a/drivers/usb/usbip/vhci_hcd.c
+> +++ b/drivers/usb/usbip/vhci_hcd.c
+> @@ -654,15 +654,9 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+>   static void vhci_tx_urb(struct urb *urb, struct vhci_device *vdev)
+>   {
+>   	struct vhci_priv *priv;
+> -	struct vhci_hcd *vhci_hcd;
+> +	struct vhci_hcd *vhci_hcd = vdev_to_vhci_hcd(vdev);
+>   	unsigned long flags;
+>   
+> -	if (!vdev) {
+> -		pr_err("could not get virtual device");
+> -		return;
+> -	}
+> -	vhci_hcd = vdev_to_vhci_hcd(vdev);
+> -
+>   	priv = kzalloc(sizeof(struct vhci_priv), GFP_ATOMIC);
+>   	if (!priv) {
+>   		usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_MALLOC);
+> 
 
-Darn, must have been confused while typing.
+Thanks for the patch. Looks good to me.
 
->> under auxdisplay where it logically belongs.  Change the boot message
->> options to depend only on CONFIG_CHARLCD, making them accessible also
->> when only the HD44780 is selected.
->>
->> Since the "Parallel port LCD/Keypad" driver now has a new dependency
->> on CONFIG_AUXDISPLAY, rename its Kconfig symbol and keep the old one
->> such that make oldconfig will not disable the driver.
->>
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> ---
->>  drivers/auxdisplay/Kconfig  | 17 ++++++++++++-----
->>  drivers/auxdisplay/Makefile |  2 +-
->>  2 files changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
->> index 57410f9c5d44..7d3fe27d6868 100644
->> --- a/drivers/auxdisplay/Kconfig
->> +++ b/drivers/auxdisplay/Kconfig
->> @@ -164,9 +164,7 @@ config ARM_CHARLCD
->>           line and the Linux version on the second line, but that's
->>           still useful.
->>
->> -endif # AUXDISPLAY
->> -
->> -menuconfig PANEL
->> +menuconfig PARPORT_PANEL
->
-> Do we want the PARPORT_ prefix here but not on the suboptions?
+Acked-by: Shuah Khan <shuah@kernel.org>
 
-I was trying to bring some sanity to it without changing more than
-necessary.
-
-> Also, having PANEL_PARPORT and PARPORT_PANEL seems confusing...
-
-It is...
-
->>         tristate "Parallel port LCD/Keypad Panel support"
->>         depends on PARPORT
->>         select CHARLCD
->> @@ -178,7 +176,7 @@ menuconfig PANEL
->>           compiled as a module, or linked into the kernel and started at boot.
->>           If you don't understand what all this is about, say N.
->>
->> -if PANEL
->> +if PARPORT_PANEL
->>
->>  config PANEL_PARPORT
->>         int "Default parallel port number (0=LPT1)"
->> @@ -419,8 +417,11 @@ config PANEL_LCD_PIN_BL
->>
->>           Default for the 'BL' pin in custom profile is '0' (uncontrolled).
->>
->> +endif # PARPORT_PANEL
->> +
->>  config PANEL_CHANGE_MESSAGE
->>         bool "Change LCD initialization message ?"
->> +       depends on CHARLCD
->>         default "n"
->>         ---help---
->>           This allows you to replace the boot message indicating the kernel version
->> @@ -444,7 +445,13 @@ config PANEL_BOOT_MESSAGE
->>           An empty message will only clear the display at driver init time. Any other
->>           printf()-formatted message is valid with newline and escape codes.
->>
->> -endif # PANEL
->> +endif # AUXDISPLAY
->> +
->> +config PANEL
->> +       tristate "Parallel port LCD/Keypad Panel support (OLD OPTION)"
->
-> Hm... what do you mean by "OLD OPTION"? Should we keep it? (I don't
-> see any other place using this marking).
-
-The option is there so 'make oldconfig' on existing configurations
-doesn't silently drop that driver since it now depends on AUXDISPLAY.
-There have been similar cases when shuffling options.  Maybe they used a
-different tag.  We could of course let the three people using that
-driver deal with it themselves.
-
->> +       depends on PARPORT
->> +       select AUXDISPLAY
->> +       select PARPORT_PANEL
->
-> I agree the menu was a bit convoluted and we didn't get to clean it.
->
-> Since you are touching the panel.c options, CC'ing the maintainers
-> (please do run get_maintainer.pl in that case!)
-
-I always run get_maintainer.pl on patches.  Sometimes it isn't clever
-enough to figure out all the people who might be interested.
-
--- 
-Måns Rullgård
+thanks,
+-- Shuah
