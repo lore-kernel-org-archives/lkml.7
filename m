@@ -2,199 +2,106 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BEBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6B7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82C6920661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACYxicgu"
+	by mail.kernel.org (Postfix) with ESMTP id 301C820663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfCFPqO (ORCPT
+        id S1728844AbfCFPtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:46:14 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40951 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfCFPqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:46:14 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u9so8712824pgo.7;
-        Wed, 06 Mar 2019 07:46:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BMNquzZ7LCKcc4KxDMrDMb83ZG4KwGAqon0uKkeZEyI=;
-        b=ACYxicgue5JCZwd/qlIJuStp6zl0+75jIs1RQY3bVI/AKVkAzxFBeLt/5iEQHz8kra
-         xc+6ykp5+UlXczY57jndzxSHNf+x3DiP4/dKZzypUbG30ujCA/dFvVzDpqoqV0J7LVqC
-         cruEsZIDS8eApIfvKZt3H2wdKlp2rBYI51cWrpgZS5ues60exR5EZjSkGOms4zJWiQ93
-         /cZJ9tX+tTpTMrLTbOLf11RX6BIsAwqohzBfcavpZ94EjxDBvmBS83N9n8YIwg1Sb8Oz
-         I+6mrfGIC8xcvZiONVcyXzGSQ9U6nmMAh0llTPnfRL4OwVtKwyF3UF0KmeFAXW0KywMm
-         d5DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BMNquzZ7LCKcc4KxDMrDMb83ZG4KwGAqon0uKkeZEyI=;
-        b=Nxh0H5sLcN6ElFL/CPbdJWMmapAlzwhhCRuwTriEoN/jIpu8zxM4IUg/e0jtQ2vG+C
-         fQ4njJ5/9GSU3vudcK8xgflJuKlZdz2rsy1Tvc79AbdkizHvUdXipUBp7BtA3Z3mVgps
-         ek4o9ZvdS2ewVeI5q5QdVJzD5HlRdPW97rq/otgpFQy43/qA6LjJAFWlbsrNSPpLH/au
-         MEEXknqiH/3MO/SVBs6UJMqjM8s42pgTY7VuIcC2qlt46RpQeUzdflP3Iqtk2qARjpzS
-         NTWNxdnb+5qC/+ufIhqB/3Ux5DvymfgI3d86/nRMctQuP3NaFXsANPK/4vCPsO6yQi0H
-         XJlA==
-X-Gm-Message-State: APjAAAUcjIysCHyttItkT2bCWg4sLZcTBIPPYCL6GMfKFAy8HG6Y6Jh+
-        SGURd/sA4sdws5W2HCwoD+E=
-X-Google-Smtp-Source: APXvYqxx0iM2bjfMpu/q8i3EFcxU44yiKWC1Ti35fVfyHbeUe1xbwLxIwzUHcQkbYwlQtPmpPAoCHw==
-X-Received: by 2002:a17:902:7798:: with SMTP id o24mr7682531pll.212.1551887172957;
-        Wed, 06 Mar 2019 07:46:12 -0800 (PST)
-Received: from [192.168.11.4] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id p2sm5740358pfi.95.2019.03.06.07.46.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 07:46:12 -0800 (PST)
-Subject: Re: [RFC PATCH] tools/memory-model: Remove (dep ; rfi) from ppo
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>
-References: <20190222130014.GY32494@hirez.programming.kicks-ass.net>
- <20190225175517.GK4072@linux.ibm.com>
- <20190226093009.GS32477@hirez.programming.kicks-ass.net>
- <20190226104551.GF32534@hirez.programming.kicks-ass.net>
- <20190226112133.GG32534@hirez.programming.kicks-ass.net>
- <20190226112521.GH32534@hirez.programming.kicks-ass.net>
- <20190226113008.GI32534@hirez.programming.kicks-ass.net>
- <20190226113813.GA14753@zn.tnic>
- <20190226134906.GG32494@hirez.programming.kicks-ass.net>
- <20190226142845.GK4072@linux.ibm.com>
- <20190226150450.GW32477@hirez.programming.kicks-ass.net>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <ab631777-7cbd-4658-fb99-05d60ec5a1ea@gmail.com>
-Date:   Thu, 7 Mar 2019 00:46:05 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 6 Mar 2019 10:49:07 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:57716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfCFPtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:49:07 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2141B3092653;
+        Wed,  6 Mar 2019 15:49:07 +0000 (UTC)
+Received: from redhat.com (ovpn-125-142.rdu2.redhat.com [10.10.125.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 27B3C611B6;
+        Wed,  6 Mar 2019 15:49:06 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 10:49:04 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-ID: <20190306154903.GA3230@redhat.com>
+References: <CAPcyv4gkYTZ-_Et1ZriAcoHwhtPEftOt2LnR_kW+hQM5-0G4HA@mail.gmail.com>
+ <20190129212150.GP3176@redhat.com>
+ <CAPcyv4hZMcJ6r0Pw5aJsx37+YKx4qAY0rV4Ascc9LX6eFY8GJg@mail.gmail.com>
+ <20190130030317.GC10462@redhat.com>
+ <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
+ <20190130183616.GB5061@redhat.com>
+ <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+ <20190131041641.GK5061@redhat.com>
+ <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190226150450.GW32477@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 06 Mar 2019 15:49:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Feb 2019 16:04:50 +0100, Peter Zijlstra wrote:
-> On Tue, Feb 26, 2019 at 06:28:45AM -0800, Paul E. McKenney wrote:
+On Tue, Mar 05, 2019 at 02:16:35PM -0800, Andrew Morton wrote:
+> On Wed, 30 Jan 2019 21:44:46 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
 > 
->> Yes, this all is a bit on the insane side from a kernel viewpoint.
->> But the paper you found does not impose this; it has instead been there
->> for about 20 years, back before C and C++ admitted to the existence
->> of concurrency.  But of course compilers are getting more aggressive,
->> and yes, some of the problems show up in single-threaded code.
+> > >
+> > > > Another way to help allay these worries is commit to no new exports
+> > > > without in-tree users. In general, that should go without saying for
+> > > > any core changes for new or future hardware.
+> > >
+> > > I always intend to have an upstream user the issue is that the device
+> > > driver tree and the mm tree move a different pace and there is always
+> > > a chicken and egg problem. I do not think Andrew wants to have to
+> > > merge driver patches through its tree, nor Linus want to have to merge
+> > > drivers and mm trees in specific order. So it is easier to introduce
+> > > mm change in one release and driver change in the next. This is what
+> > > i am doing with ODP. Adding things necessary in 5.1 and working with
+> > > Mellanox to have the ODP HMM patch fully tested and ready to go in
+> > > 5.2 (the patch is available today and Mellanox have begin testing it
+> > > AFAIK). So this is the guideline i will be following. Post mm bits
+> > > with driver patches, push to merge mm bits one release and have the
+> > > driver bits in the next. I do hope this sound fine to everyone.
+> > 
+> > The track record to date has not been "merge HMM patch in one release
+> > and merge the driver updates the next". If that is the plan going
+> > forward that's great, and I do appreciate that this set came with
+> > driver changes, and maintain hope the existing exports don't go
+> > user-less for too much longer.
 > 
-> But that paper is from last year!! It has Peter Sewell on, I'm sure he's
-> heard of concurrency.
+> Decision time.  Jerome, how are things looking for getting these driver
+> changes merged in the next cycle?
+
+nouveau is merge already.
+
 > 
->> The usual response is "then cast the pointers to intptr_t!" but of
->> course that breaks type checking.
+> Dan, what's your overall take on this series for a 5.1-rc1 merge?
 > 
-> I tried laundering the pointer through intptr_t, but I can't seem to
-> unbreak it.
-> 
-> 
-> root@ivb-ep:~/tmp# gcc-8 -O2 -fno-strict-aliasing  -o ptr ptr.c ; ./ptr
-> p=0x55aacdc80034 q=0x55aacdc80034
-> x=1 y=2 *p=11 *q=2
-> root@ivb-ep:~/tmp# cat ptr.c
-> #include <stdio.h>
-> #include <string.h>
-> #include <stdint.h>
-> int y = 2, x = 1;
-> int main (int argc, char **argv) {
-> 	intptr_t P = (intptr_t)&x;
-> 	intptr_t Q = (intptr_t)&y;
-> 	P += sizeof(int);
-> 	int *q = &y;
-> 	printf("p=%p q=%p\n", (int*)P, (int*)Q);
-> 	if (P == Q) {
-> 		int *p = (int *)P;
-> 		*p = 11;
-> 		printf("x=%d y=%d *p=%d *q=%d\n", x, y, *p, *q);
-> 	}
-> }
-> 
+> Jerome, what would be the risks in skipping just this [09/10] patch?
 
-So, I'm looking at the macro RELOC_HIDE() defined in include/linux/compiler-gcc.h.
+As nouveau is a new user it does not regress anything but for RDMA
+mlx5 (which i expect to merge new window) it would regress that
+driver.
 
-It says:
-
---------
-/*
- * This macro obfuscates arithmetic on a variable address so that gcc
- * shouldn't recognize the original var, and make assumptions about it.
- *
- * This is needed because the C standard makes it undefined to do
- * pointer arithmetic on "objects" outside their boundaries and the
- * gcc optimizers assume this is the case. In particular they
- * assume such arithmetic does not wrap.
- *
-   [...]
- */
-#define RELOC_HIDE(ptr, off)						\
-({									\
-	unsigned long __ptr;						\
-	__asm__ ("" : "=r"(__ptr) : "0"(ptr));				\
-	(typeof(ptr)) (__ptr + (off));					\
-})
---------
-
-Looks like this macro has existed ever since the origin of Linus' git repo.
-
-And the optimization "bug" discussed in this thread can be suppressed by
-this macro.
-
-For example,
-
-$ gcc -O2 -o reloc_hide reloc_hide.c; ./reloc_hide
-x=1 y=11 *p=11 *q=11
-$ cat reloc_hide.c
-#include <stdio.h>
-#include <stdint.h>
-
-#define RELOC_HIDE(ptr, off)						\
-({									\
-	uintptr_t __ptr;						\
-	__asm__ ("" : "=r"(__ptr) : "0"(ptr));				\
-	(typeof(ptr)) (__ptr + (off));					\
-})
-
-int y = 2, x = 1;
-int main (int argc, char **argv) {
-	int *p = RELOC_HIDE(&x, sizeof(*p));
-	int *q = RELOC_HIDE(&y, 0);
-	if (p == q) {
-		*p = 11;
-		printf("x=%d y=%d *p=%d *q=%d\n", x, y, *p, *q);
-	}
-}
-
-Note that "uintptr_t" is used in this version of RELOC_HIDE() for user-land
-code.
-
-Am I the only one who was not aware of this gcc-specific macro?
-
-        Thanks, Akira
+Cheers,
+Jérôme
