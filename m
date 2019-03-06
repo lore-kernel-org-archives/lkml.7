@@ -2,160 +2,329 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0348C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA17C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C004820828
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7F420684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b2F7jM51"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoaW0qNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbfCFKpM (ORCPT
+        id S1729823AbfCFKpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:45:12 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42864 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbfCFKpL (ORCPT
+        Wed, 6 Mar 2019 05:45:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41647 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727367AbfCFKpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:45:11 -0500
-Received: by mail-qt1-f195.google.com with SMTP id u7so12244619qtg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:45:10 -0800 (PST)
+        Wed, 6 Mar 2019 05:45:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n2so12824347wrw.8;
+        Wed, 06 Mar 2019 02:45:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KNSPJGPmkoollA8NTevZ2GaPbN7nenvhe4n6FeTqTvA=;
-        b=b2F7jM51eWgcHZ4B+fOyHa1OOUeIGW5UMdjDNGVAUvN/5N8O0R2o+o/AppdUBOKDC/
-         GXMJ/LMNtMtGyL6bSOdf8IjC9Bj+xY2jE2lBsTgINXDGI+4nzeD9s85wjTQ37VhaAPLY
-         omddHBUZWqIukLE2pXKEtke+qF19oZt892bRc=
+        d=gmail.com; s=20161025;
+        h=from:mime-version:subject:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aL12gokwnY/RlIfz3R2182VWDKZfCIP367EeuUje6XU=;
+        b=CoaW0qNzUzWMxtN+jbfpFdWcWmQCowIfDQGfekSPODQHE2p3I9F4NW3h0s7Ts7v+Iy
+         cwnkqMVgswcZkgEdMsGSj64lgIy1wYpg+Q5ImfTzgEy5nG46CJYYAkEFXCSRVECJePRf
+         T9wvXMcRwn+x1VotNd+9Z6P1XUNw3T94XGiKNGaUL2rgyC6ZBPduRDONjvv2Susgu+g6
+         myLVfE5lWVPOn60YWBjLndmTzlckHvtr8j/6n6+OWKmkP4TLRGM4o4lU8mqkg1Rb7Yc2
+         ztQ7Bn6DuJN30Qv1QoVg46fOKPsiANRB5x62phFbh5f64rBk19MsRAMKw/v7yvKj9Yc5
+         FWKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KNSPJGPmkoollA8NTevZ2GaPbN7nenvhe4n6FeTqTvA=;
-        b=Qvy1pWBzpxdH10bN7zxBmaLVF+s4urJIsTSkTvr3ot7SQLXk5w9ZOG92ZFVuJzS1V+
-         sriFWRQkg724B7i75ROcyldgmm1Ttea1PLjLoMxb4qkoa09VIYfXQipIKgEmo+wLr4E8
-         1xDWiyMxwW8G8qe0v5irb1sFjrIi9++kr/tbzcw2wrJQoclQ1gK6lr+LzJfsebu28mDJ
-         49dQwFLr+XgBlKglsyqt/owpFlJOZZTQxjg9JYwXEJP0PrOcN8cLx6CqoRbxHqtGrdB7
-         va/M0slS6jRJI+o7Nk2ZmgYWPiF25cRlqWcch1hwTUYbD5vrJQubCdamxQoy3W299FUV
-         S8vQ==
-X-Gm-Message-State: APjAAAVHjsmP7XzJs+h3xt4Gps2hc8xPUNkhPIabvrj7+yD/x3CVa1I5
-        ZXbcX+XrXJ7v+RllASISG6rd+ZDhtG3m/x+fm878Pw==
-X-Google-Smtp-Source: APXvYqyjhbrsB/5FeE+smE+ukOXlgZ7BkENj+OagbKJ2p173fHbJojnP21h+i7hbZ6+ydpUlUIUmOxEdRoLScviQ50M=
-X-Received: by 2002:aed:2a2f:: with SMTP id c44mr5171308qtd.144.1551869109701;
- Wed, 06 Mar 2019 02:45:09 -0800 (PST)
-MIME-Version: 1.0
-References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com> <1551186660-16902-5-git-send-email-qii.wang@mediatek.com>
-In-Reply-To: <1551186660-16902-5-git-send-email-qii.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 6 Mar 2019 18:44:58 +0800
-Message-ID: <CANMq1KDc9mvhAhUg5Cdv5zQN8Rbv884vSCy4kVK81tES4rMCJw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] i2c: mediatek: Add i2c and apdma sync in i2c driver
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Leilk Liu <leilk.liu@mediatek.com>, xinping.qian@mediatek.com,
-        liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:mime-version:subject:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aL12gokwnY/RlIfz3R2182VWDKZfCIP367EeuUje6XU=;
+        b=DnB9mmy1Qxj+pZ0H6mao76N5lruwNw6C7yyWgv/Z0TXSPN20k1sr29v7tags7z9pBR
+         5ar6U58JILOZOqKaWJFXx3y7X2+rQd25PoLDRmTfT23P3TP2XcPAtx3RfRFj4SlO2n7K
+         C5Ir5GlNSseB6QbCMoL062W3jve0DHoRmWE1qNq8Fx7AmStYjjeuIgdvy0ki5BL3M6V+
+         rnKrgp2GlAU7LyNueTB61nYEgnHy4mH2diJgBPT6/DrdE9g6mlQrLBKSDsPEJ6UBJPxc
+         xWzY69sNL2YQvKQ9Zw6RTyDKf19fhL6O92GhHeztObQTvXxbO/Kjhqggfw7OqSJh9oTN
+         Y9bg==
+X-Gm-Message-State: APjAAAU9w47mIDbqQB0TsdODUkKJTJUGYfhVCq7MbMHdipN1QFZ3RW0A
+        f7aqTomSguEU+pohNvX/W9TunaEc
+X-Google-Smtp-Source: APXvYqx9zua042qRfe/GPv/TKmGCWyH5EI/UCpAzDDgLxcfBW1J6XhJ/fKaDqLjv2S1JmNx1nzz0Ug==
+X-Received: by 2002:adf:f70c:: with SMTP id r12mr2671333wrp.54.1551869139488;
+        Wed, 06 Mar 2019 02:45:39 -0800 (PST)
+Received: from [192.168.77.22] (val06-1-88-182-161-34.fbx.proxad.net. [88.182.161.34])
+        by smtp.gmail.com with ESMTPSA id z8sm1027945wmi.28.2019.03.06.02.45.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 02:45:38 -0800 (PST)
+From:   Christophe de Dinechin <christophe.de.dinechin@gmail.com>
+X-Google-Original-From: Christophe de Dinechin <christophe@dinechin.org>
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [RFC PATCH V2 2/5] vhost: fine grain userspace memory accessors
+In-Reply-To: <1551856692-3384-3-git-send-email-jasowang@redhat.com>
+Date:   Wed, 6 Mar 2019 11:45:31 +0100
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        netdev@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+        Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+        aarcange@redhat.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4C1386C5-F153-43DD-8B14-CC752FA5A07A@dinechin.org>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-3-git-send-email-jasowang@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
->
-> When i2c and apdma use different source clocks, we should enable
-> synchronization between them.
->
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 
+> On 6 Mar 2019, at 08:18, Jason Wang <jasowang@redhat.com> wrote:
+>=20
+> This is used to hide the metadata address from virtqueue helpers. This
+> will allow to implement a vmap based fast accessing to metadata.
+>=20
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
 > ---
->  drivers/i2c/busses/i2c-mt65xx.c |   11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index 14d6b38..75d88e1 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -77,6 +77,8 @@
->  #define I2C_CONTROL_DIR_CHANGE          (0x1 << 4)
->  #define I2C_CONTROL_ACKERR_DET_EN       (0x1 << 5)
->  #define I2C_CONTROL_TRANSFER_LEN_CHANGE (0x1 << 6)
-> +#define I2C_CONTROL_DMAACK_EN           (0x1 << 8)
-> +#define I2C_CONTROL_ASYNC_MODE          (0x1 << 9)
->  #define I2C_CONTROL_WRAPPER             (0x1 << 0)
->
->  #define I2C_DRV_NAME           "i2c-mt65xx"
-> @@ -169,6 +171,7 @@ struct mtk_i2c_compatible {
->         unsigned char aux_len_reg: 1;
->         unsigned char support_33bits: 1;
->         unsigned char timing_adjust: 1;
-> +       unsigned char dma_sync: 1;
->  };
->
->  struct mtk_i2c {
-> @@ -218,6 +221,7 @@ struct mtk_i2c {
->         .aux_len_reg = 1,
->         .support_33bits = 1,
->         .timing_adjust = 1,
-> +       .dma_sync = 0,
->  };
->
->  static const struct mtk_i2c_compatible mt6577_compat = {
-> @@ -229,6 +233,7 @@ struct mtk_i2c {
->         .aux_len_reg = 0,
->         .support_33bits = 0,
->         .timing_adjust = 0,
-> +       .dma_sync = 0,
->  };
->
->  static const struct mtk_i2c_compatible mt6589_compat = {
-> @@ -240,6 +245,7 @@ struct mtk_i2c {
->         .aux_len_reg = 0,
->         .support_33bits = 0,
->         .timing_adjust = 0,
-> +       .dma_sync = 0,
->  };
->
->  static const struct mtk_i2c_compatible mt7622_compat = {
-> @@ -251,6 +257,7 @@ struct mtk_i2c {
->         .aux_len_reg = 1,
->         .support_33bits = 0,
->         .timing_adjust = 0,
-> +       .dma_sync = 0,
->  };
->
->  static const struct mtk_i2c_compatible mt8173_compat = {
-> @@ -261,6 +268,7 @@ struct mtk_i2c {
->         .aux_len_reg = 1,
->         .support_33bits = 1,
->         .timing_adjust = 0,
-> +       .dma_sync = 0,
->  };
->
->  static const struct of_device_id mtk_i2c_of_match[] = {
-> @@ -360,6 +368,9 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
->
->         control_reg = I2C_CONTROL_ACKERR_DET_EN |
->                       I2C_CONTROL_CLK_EXT_EN | I2C_CONTROL_DMA_EN;
-> +       if (i2c->dev_comp->dma_sync)
-> +               control_reg |= I2C_CONTROL_DMAACK_EN | I2C_CONTROL_ASYNC_MODE;
+> drivers/vhost/vhost.c | 94 =
++++++++++++++++++++++++++++++++++++++++++----------
+> 1 file changed, 77 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 400aa78..29709e7 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -869,6 +869,34 @@ static inline void __user =
+*__vhost_get_user(struct vhost_virtqueue *vq,
+> 	ret; \
+> })
+>=20
+> +static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+> +{
+> +	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->avail_idx),
+> +			      vhost_avail_event(vq));
+> +}
 > +
->         mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
->         mtk_i2c_writew(i2c, I2C_DELAY_LEN, OFFSET_DELAY_LEN);
->
-> --
-> 1.7.9.5
->
+> +static inline int vhost_put_used(struct vhost_virtqueue *vq,
+> +				 struct vring_used_elem *head, int idx,
+> +				 int count)
+> +{
+> +	return vhost_copy_to_user(vq, vq->used->ring + idx, head,
+> +				  count * sizeof(*head));
+> +}
+> +
+> +static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+> +
+> +{
+> +	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->used_flags),
+> +			      &vq->used->flags);
+> +}
+> +
+> +static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+> +
+> +{
+> +	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->last_used_idx),
+> +			      &vq->used->idx);
+> +}
+> +
+> #define vhost_get_user(vq, x, ptr, type)		\
+> ({ \
+> 	int ret; \
+> @@ -907,6 +935,43 @@ static void vhost_dev_unlock_vqs(struct vhost_dev =
+*d)
+> 		mutex_unlock(&d->vqs[i]->mutex);
+> }
+>=20
+> +static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+> +				      __virtio16 *idx)
+> +{
+> +	return vhost_get_avail(vq, *idx, &vq->avail->idx);
+> +}
+> +
+> +static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+> +				       __virtio16 *head, int idx)
+> +{
+> +	return vhost_get_avail(vq, *head,
+> +			       &vq->avail->ring[idx & (vq->num - 1)]);
+> +}
+> +
+> +static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+> +					__virtio16 *flags)
+> +{
+> +	return vhost_get_avail(vq, *flags, &vq->avail->flags);
+> +}
+> +
+> +static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+> +				       __virtio16 *event)
+> +{
+> +	return vhost_get_avail(vq, *event, vhost_used_event(vq));
+> +}
+> +
+> +static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+> +				     __virtio16 *idx)
+> +{
+> +	return vhost_get_used(vq, *idx, &vq->used->idx);
+> +}
+> +
+> +static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+> +				 struct vring_desc *desc, int idx)
+> +{
+> +	return vhost_copy_from_user(vq, desc, vq->desc + idx, =
+sizeof(*desc));
+> +}
+> +
+> static int vhost_new_umem_range(struct vhost_umem *umem,
+> 				u64 start, u64 size, u64 end,
+> 				u64 userspace_addr, int perm)
+> @@ -1840,8 +1905,7 @@ int vhost_log_write(struct vhost_virtqueue *vq, =
+struct vhost_log *log,
+> static int vhost_update_used_flags(struct vhost_virtqueue *vq)
+> {
+> 	void __user *used;
+> -	if (vhost_put_user(vq, cpu_to_vhost16(vq, vq->used_flags),
+> -			   &vq->used->flags) < 0)
+> +	if (vhost_put_used_flags(vq))
+> 		return -EFAULT;
+> 	if (unlikely(vq->log_used)) {
+> 		/* Make sure the flag is seen before log. */
+> @@ -1858,8 +1922,7 @@ static int vhost_update_used_flags(struct =
+vhost_virtqueue *vq)
+>=20
+> static int vhost_update_avail_event(struct vhost_virtqueue *vq, u16 =
+avail_event)
+> {
+> -	if (vhost_put_user(vq, cpu_to_vhost16(vq, vq->avail_idx),
+> -			   vhost_avail_event(vq)))
+> +	if (vhost_put_avail_event(vq))
+> 		return -EFAULT;
+> 	if (unlikely(vq->log_used)) {
+> 		void __user *used;
+> @@ -1895,7 +1958,7 @@ int vhost_vq_init_access(struct vhost_virtqueue =
+*vq)
+> 		r =3D -EFAULT;
+> 		goto err;
+> 	}
+> -	r =3D vhost_get_used(vq, last_used_idx, &vq->used->idx);
+> +	r =3D vhost_get_used_idx(vq, &last_used_idx);
+> 	if (r) {
+> 		vq_err(vq, "Can't access used idx at %p\n",
+> 		       &vq->used->idx);
+
+=46rom the error case, it looks like you are not entirely encapsulating
+knowledge of what the accessor uses, i.e. it=E2=80=99s not:
+
+		vq_err(vq, "Can't access used idx at %p\n",
+		       &last_user_idx);
+
+Maybe move error message within accessor?
+
+> @@ -2094,7 +2157,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue =
+*vq,
+> 	last_avail_idx =3D vq->last_avail_idx;
+>=20
+> 	if (vq->avail_idx =3D=3D vq->last_avail_idx) {
+> -		if (unlikely(vhost_get_avail(vq, avail_idx, =
+&vq->avail->idx))) {
+> +		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+> 			vq_err(vq, "Failed to access avail idx at %p\n",
+> 				&vq->avail->idx);
+> 			return -EFAULT;
+
+Same here.
+
+> @@ -2121,8 +2184,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue =
+*vq,
+>=20
+> 	/* Grab the next descriptor number they're advertising, and =
+increment
+> 	 * the index we've seen. */
+> -	if (unlikely(vhost_get_avail(vq, ring_head,
+> -		     &vq->avail->ring[last_avail_idx & (vq->num - 1)]))) =
+{
+> +	if (unlikely(vhost_get_avail_head(vq, &ring_head, =
+last_avail_idx))) {
+> 		vq_err(vq, "Failed to read head: idx %d address %p\n",
+> 		       last_avail_idx,
+> 		       &vq->avail->ring[last_avail_idx % vq->num]);
+> @@ -2157,8 +2219,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue =
+*vq,
+> 			       i, vq->num, head);
+> 			return -EINVAL;
+> 		}
+> -		ret =3D vhost_copy_from_user(vq, &desc, vq->desc + i,
+> -					   sizeof desc);
+> +		ret =3D vhost_get_desc(vq, &desc, i);
+> 		if (unlikely(ret)) {
+> 			vq_err(vq, "Failed to get descriptor: idx %d =
+addr %p\n",
+> 			       i, vq->desc + i);
+> @@ -2251,7 +2312,7 @@ static int __vhost_add_used_n(struct =
+vhost_virtqueue *vq,
+>=20
+> 	start =3D vq->last_used_idx & (vq->num - 1);
+> 	used =3D vq->used->ring + start;
+> -	if (vhost_copy_to_user(vq, used, heads, count * sizeof *used)) {
+> +	if (vhost_put_used(vq, heads, start, count)) {
+> 		vq_err(vq, "Failed to write used");
+> 		return -EFAULT;
+> 	}
+> @@ -2293,8 +2354,7 @@ int vhost_add_used_n(struct vhost_virtqueue *vq, =
+struct vring_used_elem *heads,
+>=20
+> 	/* Make sure buffer is written before we update index. */
+> 	smp_wmb();
+> -	if (vhost_put_user(vq, cpu_to_vhost16(vq, vq->last_used_idx),
+> -			   &vq->used->idx)) {
+> +	if (vhost_put_used_idx(vq)) {
+> 		vq_err(vq, "Failed to increment used idx");
+> 		return -EFAULT;
+> 	}
+> @@ -2327,7 +2387,7 @@ static bool vhost_notify(struct vhost_dev *dev, =
+struct vhost_virtqueue *vq)
+>=20
+> 	if (!vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX)) {
+> 		__virtio16 flags;
+> -		if (vhost_get_avail(vq, flags, &vq->avail->flags)) {
+> +		if (vhost_get_avail_flags(vq, &flags)) {
+> 			vq_err(vq, "Failed to get flags");
+> 			return true;
+> 		}
+> @@ -2341,7 +2401,7 @@ static bool vhost_notify(struct vhost_dev *dev, =
+struct vhost_virtqueue *vq)
+> 	if (unlikely(!v))
+> 		return true;
+>=20
+> -	if (vhost_get_avail(vq, event, vhost_used_event(vq))) {
+> +	if (vhost_get_used_event(vq, &event)) {
+> 		vq_err(vq, "Failed to get used event idx");
+> 		return true;
+> 	}
+> @@ -2386,7 +2446,7 @@ bool vhost_vq_avail_empty(struct vhost_dev *dev, =
+struct vhost_virtqueue *vq)
+> 	if (vq->avail_idx !=3D vq->last_avail_idx)
+> 		return false;
+>=20
+> -	r =3D vhost_get_avail(vq, avail_idx, &vq->avail->idx);
+> +	r =3D vhost_get_avail_idx(vq, &avail_idx);
+> 	if (unlikely(r))
+> 		return false;
+> 	vq->avail_idx =3D vhost16_to_cpu(vq, avail_idx);
+> @@ -2422,7 +2482,7 @@ bool vhost_enable_notify(struct vhost_dev *dev, =
+struct vhost_virtqueue *vq)
+> 	/* They could have slipped one in as we were doing that: make
+> 	 * sure it's written, then check again. */
+> 	smp_mb();
+> -	r =3D vhost_get_avail(vq, avail_idx, &vq->avail->idx);
+> +	r =3D vhost_get_avail_idx(vq, &avail_idx);
+> 	if (r) {
+> 		vq_err(vq, "Failed to check avail idx at %p: %d\n",
+> 		       &vq->avail->idx, r);
+> --=20
+> 1.8.3.1
+>=20
+
