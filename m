@@ -2,125 +2,106 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650AAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A93C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399B020663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82CDF20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:00:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IjQr5S8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfCFU7g (ORCPT
+        id S1727833AbfCFVAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:59:36 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:37902 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbfCFU7f (ORCPT
+        Wed, 6 Mar 2019 16:00:52 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39641 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbfCFVAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:59:35 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1h1ddR-0001sD-47; Wed, 06 Mar 2019 20:59:29 +0000
-Received: from ben by deadeye with local (Exim 4.92-RC6)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1h1ddQ-0005ys-V8; Wed, 06 Mar 2019 20:59:28 +0000
-Message-ID: <bc3f60f43fc7973dfffcf63aa037439462a6ce38.camel@decadent.org.uk>
-Subject: Re: [PATCH] kbuild: add workaround for Debian make-kpkg
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Liz Zhang <lizzha@microsoft.com>, Lili Deng <v-lide@microsoft.com>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org,
-        Manoj Srivastava <srivasta@debian.org>
-Date:   Wed, 06 Mar 2019 20:59:28 +0000
-In-Reply-To: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
-References: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-w5+o3n/XPmwSrq8p9zRZ"
-User-Agent: Evolution 3.30.5-1 
+        Wed, 6 Mar 2019 16:00:51 -0500
+Received: by mail-oi1-f194.google.com with SMTP id b4so11066393oif.6;
+        Wed, 06 Mar 2019 13:00:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WkZ4HEOJZFJ5tvEsQ4ywiwfaW/8mEqhWWpAAzk9aizg=;
+        b=IjQr5S8gwfPe+w9yvuXdiT+V+jsiia4rARi/vB88Q5xKvTp8AIaK/D6CG3920dUhG2
+         NSk3tujLvxjCe4D4ndxu6c+tg17hSyu5qwV3IXH53hEZm8Cfqa2/e8tp1aKkZir2bi4l
+         kZT5jssK5fudG5pIakE4tXpKG0bU5Blw15M6yKCvIe092BBakxRgDgkcQ5vCxfenoHJ9
+         BjCuTSBX1/Xjg4oQKdjekVqUV3pNnDm+d8Y3cRI2nulsOpW3lHVNYZgYlHRqrHJkszZP
+         uv38j4CkNgqIOILJut9FV97s0yaVETJXSuNdp5W3k0GtHVPrJyit1XQqlcDbRrUpJKaL
+         utbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WkZ4HEOJZFJ5tvEsQ4ywiwfaW/8mEqhWWpAAzk9aizg=;
+        b=kxz5bIvPe+W0EEzWgl/gYnueYGHG6xTpmT6Q+tPGjzbCQuFvSxHmhIY+4MfxKnAYlg
+         fbFRUPgj6HjqDeRysbU31uJSfT3twi3xxFkf9dzRE+nNgFhhSxy2bj5mrYOhVU9zLV/D
+         yRWKpgVBSPpS0eeZlsniexjMR6URCHi9TCyOYMQC0I9Xq7d76/r4CrybzCVBnjoQj5mt
+         qxroBgMvCFkWRrApwrPizm9dKRaKeYb0un3iXtwgOBdrvxQMH9TjK94OlGXYt/Fk6JF8
+         4OBY6Q16NcQ2S27HHWA2Nq27z8EYNL89Z8f73enffeYIVQUZy43e/46AUAdzri93GTk4
+         uqXw==
+X-Gm-Message-State: APjAAAU6K37BAAkR74yoesDmNRlDaxqmDjlDEWwVYGKcVr4LcFWdVrRZ
+        pE3jo2uQLwAt5byuBaw1S+RgnF8XFRHEJhaYYUc=
+X-Google-Smtp-Source: APXvYqzjgug8DoTlX4m1L/JICwfzoFheIp+0TFPFevCk+4vLgK+k7KoG9TZ6GSBWv2cc2lBWJcDy70x3XEVKsDwnyj0=
+X-Received: by 2002:aca:aacb:: with SMTP id t194mr2996977oie.129.1551906050696;
+ Wed, 06 Mar 2019 13:00:50 -0800 (PST)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-6-narmstrong@baylibre.com>
+In-Reply-To: <20190304103846.2060-6-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 6 Mar 2019 22:00:39 +0100
+Message-ID: <CAFBinCAacdsjwtg_RK=e=Lnep7oLF+eTBmkb1FB4nFR129z1jA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] phy: amlogic: add Amlogic G12A USB2 PHY Driver
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Neil,
 
---=-w5+o3n/XPmwSrq8p9zRZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-kernel-package is maintained by Manoj Srivastava (cc'd), not by the
-Debian kernel team.
-
-On Thu, 2019-03-07 at 01:00 +0900, Masahiro Yamada wrote:
-> Since commit 3812b8c5c5d5 ("kbuild: make -r/-R effective in top
-> Makefile for old Make versions"), make-kpkg is not working.
->=20
-> make-kpkg directly includes the top Makefile of Linux kernel, and
-> appends some debian_* targets.
->=20
->   /usr/share/kernel-package/ruleset/kernel_version.mk:
->=20
->     # Include the kernel makefile
->     override dot-config :=3D 1
->     include Makefile
->     dot-config :=3D 1
->=20
-> I did not know the kernel Makefile was used in that way, and it is
-> hard to guarantee the behavior when the kernel Makefile is included
-> by another Makefile from a different project.
->=20
-> Looks like Debian Stretch stopped providing make-kpkg (except PowerPC).
-
-kernel-package is not included in stretch at all.  I'm not sure where
-you're seeing it as being present on powerpc - that architecture wasn't
-included in the stretch release.
-
-> Maybe it is obsolete and being replaced with 'make deb-pkg' etc.
-> but still widely used.
+On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 [...]
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+there's a "regmap" include right above. this driver doesn't use syscon
+so this include can be dropped
 
-kernel-package is currently planned to be included in the next release,
-though I'm not sure whether it should be.
+[...]
+> +static int phy_meson_g12a_usb2_exit(struct phy *phy)
+> +{
+> +       struct phy_meson_g12a_usb2_priv *priv = phy_get_drvdata(phy);
+> +
+> +       return reset_control_reset(priv->reset);
+do you know whether we should reset_control_assert here instead of
+reset_control_reset?
+the probe function below already uses reset_control_deassert, so the
+current implementation is inconsistent. in v1 you replied with "Maybe
+it would be better, indeed." - if there's a reason why
+reset_control_assert doesn't work here then I would like to have a
+comment stating why
 
-There is another bug report about kernel-package with current kernel
-versions <https://bugs.debian.org/890817> but I don't know whether it
-has been worked around already.
-
-Ben.
-
---=20
-Ben Hutchings
-friends: People who know you well, but like you anyway.
+Apart from these two this is looking good!
+Human readable BIT/GENMASK #defines for the register bits would be
+nice, but I'm not sure if you have the details to add these.
 
 
---=-w5+o3n/XPmwSrq8p9zRZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlyANLAACgkQ57/I7JWG
-EQlq4BAAs3PVO6fnoDn8YsrVsdvzsI6iC3Uykah/CIHhz0BL+HpGBR9rNDIBLPDO
-sTe0RMsq38fps+zKtKVk5AyNtlvyyvo+VXIStv15FFNLfGJJi4ZbCSgJRN6IxNpX
-bfjd6yXCkBVzzaY/5qqEMgcn0wHD8VUtHDNXpqm6OuGNpOBx4j7C1Ge76RTGeyAj
-MLc7PSkFYnOdD8aztSt8vAEtm/9vr4dutplyqe0l+s1jkzfwqk2oRVSgCRFt3+eB
-NQ6dhZqwBg/GV4WIxQTiw3azQcxNcobZyd5RziHRAMAE6STE5TJRTtw+AU0Vr9C+
-N0B71F1vxXMEg7I7wix6wCj/b3ZXP+CZ6USM0JCqU/tte2w7O5loYi5sKaJh2q3V
-LMw6cenZNKUSJHWXYbF6TNwKflb0Gz8ulOWbgA+81F56Sa/RMUviMi5hQxRIMy2+
-ZWxgbgNRkC0fd8gMbc/n7ryOy18+NdgaYDLkmTCz5xdszgm4dK66t5UUOzCmqU67
-vgYszrPhZoI0K7mJerIMsUs9uuxHPEun2LFZ+fc4ZaUUgivjbTYjhOdeQQltRMnT
-GgGTY1KDx6dHZWod/Q0EytURaGu6T+NfYTFYcXDxehjr8Wu4sVJ1C3aecxJRMEvV
-mTTE6mv7NtAVwdKQF6EHGCam1ospdHv8O02Yn3e8DXx6BYJkw10=
-=u0KM
------END PGP SIGNATURE-----
-
---=-w5+o3n/XPmwSrq8p9zRZ--
+Regards
+Martin
