@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88519C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B91C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60315206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF02206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbfCFNce (ORCPT
+        id S1729330AbfCFNdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 08:32:34 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:44557 "EHLO
+        Wed, 6 Mar 2019 08:33:07 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:38673 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfCFNca (ORCPT
+        with ESMTP id S1726969AbfCFNdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 08:32:30 -0500
+        Wed, 6 Mar 2019 08:33:07 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26DVvpZ1724219
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26DWZQS1724311
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 05:31:57 -0800
+        Wed, 6 Mar 2019 05:32:36 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26DVurj1724215;
-        Wed, 6 Mar 2019 05:31:56 -0800
-Date:   Wed, 6 Mar 2019 05:31:56 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26DWZDa1724300;
+        Wed, 6 Mar 2019 05:32:35 -0800
+Date:   Wed, 6 Mar 2019 05:32:35 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Kees Cook <tipbot@zytor.com>
-Message-ID: <tip-d884bc119c4ebe7ac53b61fc0750bbc89b4d63db@git.kernel.org>
-Cc:     solar@openwall.com, keescook@chromium.org,
-        gregkh@linuxfoundation.org, linux@dominikbrodowski.net,
-        tglx@linutronix.de, sean.j.christopherson@intel.com, hpa@zytor.com,
-        mingo@kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        jannh@google.com
-Reply-To: linux@dominikbrodowski.net, solar@openwall.com,
-          gregkh@linuxfoundation.org, keescook@chromium.org,
-          tglx@linutronix.de, sean.j.christopherson@intel.com,
-          hpa@zytor.com, jannh@google.com,
-          kernel-hardening@lists.openwall.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          peterz@infradead.org
-In-Reply-To: <20190227200132.24707-2-keescook@chromium.org>
-References: <20190227200132.24707-2-keescook@chromium.org>
+Message-ID: <tip-1e9b238bb4c1f22b5db77e9e17af0abd5578fa10@git.kernel.org>
+Cc:     solar@openwall.com, peterz@infradead.org, jannh@google.com,
+        tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        sean.j.christopherson@intel.com, linux@dominikbrodowski.net,
+        keescook@chromium.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+          sean.j.christopherson@intel.com, linux@dominikbrodowski.net,
+          keescook@chromium.org, kernel-hardening@lists.openwall.com,
+          hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
+          solar@openwall.com, peterz@infradead.org, jannh@google.com
+In-Reply-To: <20190227200132.24707-4-keescook@chromium.org>
+References: <20190227200132.24707-4-keescook@chromium.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/asm] x86/asm: Pin sensitive CR0 bits
-Git-Commit-ID: d884bc119c4ebe7ac53b61fc0750bbc89b4d63db
+Subject: [tip:x86/asm] lkdtm: Check for SMEP clearing protections
+Git-Commit-ID: 1e9b238bb4c1f22b5db77e9e17af0abd5578fa10
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -63,86 +61,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d884bc119c4ebe7ac53b61fc0750bbc89b4d63db
-Gitweb:     https://git.kernel.org/tip/d884bc119c4ebe7ac53b61fc0750bbc89b4d63db
+Commit-ID:  1e9b238bb4c1f22b5db77e9e17af0abd5578fa10
+Gitweb:     https://git.kernel.org/tip/1e9b238bb4c1f22b5db77e9e17af0abd5578fa10
 Author:     Kees Cook <keescook@chromium.org>
-AuthorDate: Wed, 27 Feb 2019 12:01:30 -0800
+AuthorDate: Wed, 27 Feb 2019 12:01:32 -0800
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Wed, 6 Mar 2019 13:25:55 +0100
 
-x86/asm: Pin sensitive CR0 bits
+lkdtm: Check for SMEP clearing protections
 
-With sensitive CR4 bits pinned now, it's possible that the WP bit for CR0
-might become a target as well. Following the same reasoning for the CR4
-pinning, pin CR0's WP bit (but this can be done with a static value).
+This adds an x86-specific test for pinned cr4 bits. A successful test
+will validate pinning and check the ROP-style call-middle-of-function
+defense, if needed. For example, in the case of native_write_cr4()
+looking like this:
 
-As before, to convince the compiler to not optimize away the check for the
-WP bit after the set, mark "val" as an output from the asm() block.  This
-protects against just jumping into the function past where the masking
-happens; we must check that the mask was applied after we do the set). Due
-to how this function can be built by the compiler (especially due to the
-removal of frame pointers), jumping into the middle of the function
-frequently doesn't require stack manipulation to construct a stack frame
-(there may only a retq without pops, which is sufficient for use with
-exploits like timer overwrites).
+ffffffff8171bce0 <native_write_cr4>:
+ffffffff8171bce0:       48 8b 35 79 46 f2 00    mov    0xf24679(%rip),%rsi
+ffffffff8171bce7:       48 09 f7                or     %rsi,%rdi
+ffffffff8171bcea:       0f 22 e7                mov    %rdi,%cr4
+...
+ffffffff8171bd5a:       c3                      retq
 
-Additionally, this avoids WARN()ing before resetting the bit, just to
-minimize any race conditions with leaving the bit unset.
+The UNSET_SMEP test will jump to ffffffff8171bcea (the mov to cr4)
+instead of ffffffff8171bce0 (native_write_cr4() entry) to simulate a
+direct-call bypass attempt.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Expected successful results:
+
+  # echo UNSET_SMEP > /sys/kernel/debug/provoke-crash/DIRECT
+  # dmesg
+  [   79.594433] lkdtm: Performing direct entry UNSET_SMEP
+  [   79.596459] lkdtm: trying to clear SMEP normally
+  [   79.598406] lkdtm: ok: SMEP did not get cleared
+  [   79.599981] lkdtm: trying to clear SMEP with call gadget
+  [   79.601810] ------------[ cut here ]------------
+  [   79.603421] Attempt to unpin cr4 bits: 100000; bypass attack?!
+  ...
+  [   79.650170] ---[ end trace 2452ca0f6126242e ]---
+  [   79.650937] lkdtm: ok: SMEP removal was reverted
+
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Solar Designer <solar@openwall.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Jann Horn <jannh@google.com>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Dominik Brodowski <linux@dominikbrodowski.net>
 Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Link: https://lkml.kernel.org/r/20190227200132.24707-2-keescook@chromium.org
+Link: https://lkml.kernel.org/r/20190227200132.24707-4-keescook@chromium.org
 
 ---
- arch/x86/include/asm/special_insns.h | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/misc/lkdtm/bugs.c  | 61 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/misc/lkdtm/core.c  |  1 +
+ drivers/misc/lkdtm/lkdtm.h |  1 +
+ 3 files changed, 63 insertions(+)
 
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 99607f142cad..7fa4fe880395 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -5,6 +5,7 @@
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 7eebbdfbcacd..6176384b4f85 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -255,3 +255,64 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
  
- #ifdef __KERNEL__
- 
-+#include <asm/processor-flags.h>
- #include <asm/nops.h>
- 
- /*
-@@ -25,7 +26,28 @@ static inline unsigned long native_read_cr0(void)
- 
- static inline void native_write_cr0(unsigned long val)
- {
--	asm volatile("mov %0,%%cr0": : "r" (val), "m" (__force_order));
-+	bool warn = false;
-+
-+again:
-+	val |= X86_CR0_WP;
-+	/*
-+	 * In order to have the compiler not optimize away the check
-+	 * after the cr4 write, mark "val" as being also an output ("+r")
-+	 * by this asm() block so it will perform an explicit check, as
-+	 * if it were "volatile".
-+	 */
-+	asm volatile("mov %0,%%cr0" : "+r" (val) : "m" (__force_order) : );
-+	/*
-+	 * If the MOV above was used directly as a ROP gadget we can
-+	 * notice the lack of pinned bits in "val" and start the function
-+	 * from the beginning to gain the WP bit for sure. And do it
-+	 * without first taking the exception for a WARN().
-+	 */
-+	if ((val & X86_CR0_WP) != X86_CR0_WP) {
-+		warn = true;
-+		goto again;
-+	}
-+	WARN_ONCE(warn, "Attempt to unpin X86_CR0_WP, cr0 bypass attack?!\n");
+ 	pr_err("FAIL: accessed page after stack!\n");
  }
++
++void lkdtm_UNSET_SMEP(void)
++{
++#ifdef CONFIG_X86_64
++#define MOV_CR4_DEPTH	64
++	void (*direct_write_cr4)(unsigned long val);
++	unsigned char *insn;
++	unsigned long cr4;
++	int i;
++
++	cr4 = native_read_cr4();
++
++	if ((cr4 & X86_CR4_SMEP) != X86_CR4_SMEP) {
++		pr_err("FAIL: SMEP not in use\n");
++		return;
++	}
++	cr4 &= ~(X86_CR4_SMEP);
++
++	pr_info("trying to clear SMEP normally\n");
++	native_write_cr4(cr4);
++	if (cr4 == native_read_cr4()) {
++		pr_err("FAIL: pinning SMEP failed!\n");
++		cr4 |= X86_CR4_SMEP;
++		pr_info("restoring SMEP\n");
++		native_write_cr4(cr4);
++		return;
++	}
++	pr_info("ok: SMEP did not get cleared\n");
++
++	/*
++	 * To test the post-write pinning verification we need to call
++	 * directly into the the middle of native_write_cr4() where the
++	 * cr4 write happens, skipping the pinning. This searches for
++	 * the cr4 writing instruction.
++	 */
++	insn = (unsigned char *)native_write_cr4;
++	for (i = 0; i < MOV_CR4_DEPTH; i++) {
++		/* mov %rdi, %cr4 */
++		if (insn[i] == 0x0f && insn[i+1] == 0x22 && insn[i+2] == 0xe7)
++			break;
++	}
++	if (i >= MOV_CR4_DEPTH) {
++		pr_info("ok: cannot locate cr4 writing call gadget\n");
++		return;
++	}
++	direct_write_cr4 = (void *)(insn + i);
++
++	pr_info("trying to clear SMEP with call gadget\n");
++	direct_write_cr4(cr4);
++	if (native_read_cr4() & X86_CR4_SMEP) {
++		pr_info("ok: SMEP removal was reverted\n");
++	} else {
++		pr_err("FAIL: cleared SMEP not detected!\n");
++		cr4 |= X86_CR4_SMEP;
++		pr_info("restoring SMEP\n");
++		native_write_cr4(cr4);
++	}
++#else
++	pr_err("FAIL: this test is x86_64-only\n");
++#endif
++}
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index 2837dc77478e..fd668776414b 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -132,6 +132,7 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(CORRUPT_LIST_ADD),
+ 	CRASHTYPE(CORRUPT_LIST_DEL),
+ 	CRASHTYPE(CORRUPT_USER_DS),
++	CRASHTYPE(UNSET_SMEP),
+ 	CRASHTYPE(CORRUPT_STACK),
+ 	CRASHTYPE(CORRUPT_STACK_STRONG),
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 3c6fd327e166..9c78d7e21c13 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -26,6 +26,7 @@ void lkdtm_CORRUPT_LIST_DEL(void);
+ void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
++void lkdtm_UNSET_SMEP(void);
  
- static inline unsigned long native_read_cr2(void)
+ /* lkdtm_heap.c */
+ void lkdtm_OVERWRITE_ALLOCATION(void);
