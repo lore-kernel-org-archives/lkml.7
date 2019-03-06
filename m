@@ -2,640 +2,109 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02068C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EB0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2541206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6F7206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfCFQb3 (ORCPT
+        id S1729798AbfCFQcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:31:29 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36776 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCFQb2 (ORCPT
+        Wed, 6 Mar 2019 11:32:25 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726804AbfCFQcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:31:28 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p25so13513781qtb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:31:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vWjDEiShTtYZHLzV3ow5JATlpVpFdKwiiEiACkztbXc=;
-        b=DYHrBvTWxiBv6QDwc8gF1ziaoKeYvV/t4KLIIZQKaJc81WXal7nQ2/5KhZpG11TrB0
-         IIU6dDYW0gcA4NhF8iQBEbM4ZKC/IPjFN8ZVDHH7niREjshO2aXR6JoyKc2DGC9Oa8CU
-         7gh8G7r+E4C48uYJLObJQaxYkGyvmHFX5KaAFJirTAaKULagLSDNmPwSSaXcQGFDyd2X
-         hrhz34J2EcxsgXz6qfPRxzslg/jmpf/0TxdphaCnlLSyCm/bqUJPEUnm1rIACwPBZOqw
-         ZhfB7gy+MEQUD2Ta6kFrt/YKBErvsS6kBTRoSWs3vfzIsr0TcV6f5pV05RV7kHqZG2HM
-         zQCA==
-X-Gm-Message-State: APjAAAVCa1sBLS1xcEYjeBxEzN88XEQlQpMgflSBfIIF2pldZTZmHZGS
-        ZIq4xtkbaApVFzXXTgkxsHbWjPVf4PM=
-X-Google-Smtp-Source: APXvYqx78FT+PTgz3Wv+wxfQwynpA8Sh3Bl3+3IGmU2qO6A7euVIuJ/SKC+7E0qJggTs1kCrb8Le+w==
-X-Received: by 2002:ac8:31ab:: with SMTP id h40mr6578368qte.122.1551889886815;
-        Wed, 06 Mar 2019 08:31:26 -0800 (PST)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id o3sm1032894qte.55.2019.03.06.08.31.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Mar 2019 08:31:25 -0800 (PST)
-Date:   Wed, 6 Mar 2019 11:31:23 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com
-Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
- virtual address
-Message-ID: <20190306092837-mutt-send-email-mst@kernel.org>
-References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
- <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+        Wed, 6 Mar 2019 11:32:24 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x26GPbpW117863
+        for <linux-kernel@vger.kernel.org>; Wed, 6 Mar 2019 11:32:23 -0500
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r2hn8ghwr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 11:32:23 -0500
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 6 Mar 2019 16:32:22 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 6 Mar 2019 16:32:19 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x26GWIBU20578368
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Mar 2019 16:32:19 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DEBCDB2065;
+        Wed,  6 Mar 2019 16:32:18 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2417B2064;
+        Wed,  6 Mar 2019 16:32:18 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  6 Mar 2019 16:32:18 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 3E45216C1F8E; Wed,  6 Mar 2019 08:32:25 -0800 (PST)
+Date:   Wed, 6 Mar 2019 08:32:25 -0800
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] RCU updates for v5.1
+Reply-To: paulmck@linux.ibm.com
+References: <20190305120301.GA93284@gmail.com>
+ <CAHk-=wiM4_0ZDDAcN0nJ8TsK+MnO1ObmSH4nTvrirA5nenFTHA@mail.gmail.com>
+ <20190306070836.GA111385@gmail.com>
+ <CAHk-=wgVkir377S9fbWjxpYqVDUx0NphLb6YhL-Q=JP-u-GcOw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+In-Reply-To: <CAHk-=wgVkir377S9fbWjxpYqVDUx0NphLb6YhL-Q=JP-u-GcOw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19030616-0040-0000-0000-000004CD71CA
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010715; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01170504; UDB=6.00606765; IPR=6.00951143;
+ MB=3.00025859; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-06 16:32:21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030616-0041-0000-0000-000008D87E06
+Message-Id: <20190306163225.GC13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=989 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903060114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 02:18:12AM -0500, Jason Wang wrote:
-> It was noticed that the copy_user() friends that was used to access
-> virtqueue metdata tends to be very expensive for dataplane
-> implementation like vhost since it involves lots of software checks,
-> speculation barrier, hardware feature toggling (e.g SMAP). The
-> extra cost will be more obvious when transferring small packets since
-> the time spent on metadata accessing become more significant.
+On Wed, Mar 06, 2019 at 06:42:30AM -0800, Linus Torvalds wrote:
+> On Tue, Mar 5, 2019 at 11:08 PM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > >
+> > > Hmm. I think this made my build time explode.
+> >
+> > Could it be the locking tree?
 > 
-> This patch tries to eliminate those overheads by accessing them
-> through kernel virtual address by vmap(). To make the pages can be
-> migrated, instead of pinning them through GUP, we use MMU notifiers to
-> invalidate vmaps and re-establish vmaps during each round of metadata
-> prefetching if necessary. It looks to me .invalidate_range() is
-> sufficient for catching this since we don't need extra TLB flush. For
-> devices that doesn't use metadata prefetching, the memory accessors
-> fallback to normal copy_user() implementation gracefully. The
-> invalidation was synchronized with datapath through vq mutex, and in
-> order to avoid hold vq mutex during range checking, MMU notifier was
-> teared down when trying to modify vq metadata.
+> No, I hadn't pulled that yet.
 > 
-> Dirty page checking is done by calling set_page_dirty_locked()
-> explicitly for the page that used ring stay after each round of
-> processing.
-> 
-> Note that this was only done when device IOTLB is not enabled. We
-> could use similar method to optimize it in the future.
-> 
-> Tests shows at most about 22% improvement on TX PPS when using
-> virtio-user + vhost_net + xdp1 + TAP on 2.6GHz Broadwell:
-> 
->         SMAP on | SMAP off
-> Before: 5.0Mpps | 6.6Mpps
-> After:  6.1Mpps | 7.4Mpps
-> 
-> Cc: <linux-mm@kvack.org>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/vhost/net.c   |   2 +
->  drivers/vhost/vhost.c | 281 +++++++++++++++++++++++++++++++++++++++++++++++++-
->  drivers/vhost/vhost.h |  16 +++
->  3 files changed, 297 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> index bf55f99..c276371 100644
-> --- a/drivers/vhost/net.c
-> +++ b/drivers/vhost/net.c
-> @@ -982,6 +982,7 @@ static void handle_tx(struct vhost_net *net)
->  	else
->  		handle_tx_copy(net, sock);
->  
-> +	vq_meta_prefetch_done(vq);
->  out:
->  	mutex_unlock(&vq->mutex);
->  }
-> @@ -1250,6 +1251,7 @@ static void handle_rx(struct vhost_net *net)
->  		vhost_net_enable_vq(net, vq);
->  out:
->  	vhost_net_signal_used(nvq);
-> +	vq_meta_prefetch_done(vq);
->  	mutex_unlock(&vq->mutex);
->  }
->  
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 1015464..36ccf7c 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -434,6 +434,74 @@ static size_t vhost_get_desc_size(struct vhost_virtqueue *vq, int num)
->  	return sizeof(*vq->desc) * num;
->  }
->  
-> +static void vhost_uninit_vmap(struct vhost_vmap *map)
-> +{
-> +	if (map->addr) {
-> +		vunmap(map->unmap_addr);
-> +		kfree(map->pages);
-> +		map->pages = NULL;
-> +		map->npages = 0;
-> +	}
-> +
-> +	map->addr = NULL;
-> +	map->unmap_addr = NULL;
-> +}
-> +
-> +static void vhost_invalidate_vmap(struct vhost_virtqueue *vq,
-> +				  struct vhost_vmap *map,
-> +				  unsigned long ustart,
-> +				  size_t size,
-> +				  unsigned long start,
-> +				  unsigned long end)
-> +{
-> +	if (end < ustart || start > ustart - 1 + size)
-> +		return;
-> +
-> +	dump_stack();
-> +	mutex_lock(&vq->mutex);
-> +	vhost_uninit_vmap(map);
-> +	mutex_unlock(&vq->mutex);
-> +}
-> +
-> +
-> +static void vhost_invalidate(struct vhost_dev *dev,
-> +			     unsigned long start, unsigned long end)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < dev->nvqs; i++) {
-> +		struct vhost_virtqueue *vq = dev->vqs[i];
-> +
-> +		vhost_invalidate_vmap(vq, &vq->avail_ring,
-> +				      (unsigned long)vq->avail,
-> +				      vhost_get_avail_size(vq, vq->num),
-> +				      start, end);
-> +		vhost_invalidate_vmap(vq, &vq->desc_ring,
-> +				      (unsigned long)vq->desc,
-> +				      vhost_get_desc_size(vq, vq->num),
-> +				      start, end);
-> +		vhost_invalidate_vmap(vq, &vq->used_ring,
-> +				      (unsigned long)vq->used,
-> +				      vhost_get_used_size(vq, vq->num),
-> +				      start, end);
-> +	}
-> +}
-> +
-> +
-> +static void vhost_invalidate_range(struct mmu_notifier *mn,
-> +				   struct mm_struct *mm,
-> +				   unsigned long start, unsigned long end)
-> +{
-> +	struct vhost_dev *dev = container_of(mn, struct vhost_dev,
-> +					     mmu_notifier);
-> +
-> +	vhost_invalidate(dev, start, end);
-> +}
-> +
-> +static const struct mmu_notifier_ops vhost_mmu_notifier_ops = {
-> +	.invalidate_range = vhost_invalidate_range,
-> +};
-> +
->  void vhost_dev_init(struct vhost_dev *dev,
->  		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
->  {
+> And it looks like it was a false alarm anyway. Sorry for the noise.
 
+Whew!!!  ;-)
 
-Note that
-.invalidate_range seems to be called after page lock has
-been dropped.
+							Thanx, Paul
 
-Looking at page dirty below:
-
-
-
-
-> @@ -449,6 +517,7 @@ void vhost_dev_init(struct vhost_dev *dev,
->  	dev->mm = NULL;
->  	dev->worker = NULL;
->  	dev->iov_limit = iov_limit;
-> +	dev->mmu_notifier.ops = &vhost_mmu_notifier_ops;
->  	init_llist_head(&dev->work_list);
->  	init_waitqueue_head(&dev->wait);
->  	INIT_LIST_HEAD(&dev->read_list);
-> @@ -462,6 +531,9 @@ void vhost_dev_init(struct vhost_dev *dev,
->  		vq->indirect = NULL;
->  		vq->heads = NULL;
->  		vq->dev = dev;
-> +		vq->avail_ring.addr = NULL;
-> +		vq->used_ring.addr = NULL;
-> +		vq->desc_ring.addr = NULL;
->  		mutex_init(&vq->mutex);
->  		vhost_vq_reset(dev, vq);
->  		if (vq->handle_kick)
-> @@ -542,7 +614,13 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
->  	if (err)
->  		goto err_cgroup;
->  
-> +	err = mmu_notifier_register(&dev->mmu_notifier, dev->mm);
-> +	if (err)
-> +		goto err_mmu_notifier;
-> +
->  	return 0;
-> +err_mmu_notifier:
-> +	vhost_dev_free_iovecs(dev);
->  err_cgroup:
->  	kthread_stop(worker);
->  	dev->worker = NULL;
-> @@ -633,6 +711,81 @@ static void vhost_clear_msg(struct vhost_dev *dev)
->  	spin_unlock(&dev->iotlb_lock);
->  }
->  
-> +static int vhost_init_vmap(struct vhost_dev *dev,
-> +			   struct vhost_vmap *map, unsigned long uaddr,
-> +			   size_t size, int write)
-> +{
-> +	struct page **pages;
-> +	int npages = DIV_ROUND_UP(size, PAGE_SIZE);
-> +	int npinned;
-> +	void *vaddr;
-> +	int err = -EFAULT;
-> +
-> +	err = -ENOMEM;
-> +	pages = kmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
-> +	if (!pages)
-> +		goto err_uaddr;
-> +
-> +	err = EFAULT;
-> +	npinned = get_user_pages_fast(uaddr, npages, write, pages);
-> +	if (npinned != npages)
-> +		goto err_gup;
-> +
-> +	vaddr = vmap(pages, npages, VM_MAP, PAGE_KERNEL);
-> +	if (!vaddr)
-> +		goto err_gup;
-> +
-> +	map->addr = vaddr + (uaddr & (PAGE_SIZE - 1));
-> +	map->unmap_addr = vaddr;
-> +	map->npages = npages;
-> +	map->pages = pages;
-> +
-> +err_gup:
-> +	/* Don't pin pages, mmu notifier will notify us about page
-> +	 * migration.
-> +	 */
-> +	if (npinned > 0)
-> +		release_pages(pages, npinned);
-> +err_uaddr:
-> +	return err;
-> +}
-> +
-> +static void vhost_uninit_vq_vmaps(struct vhost_virtqueue *vq)
-> +{
-> +	vhost_uninit_vmap(&vq->avail_ring);
-> +	vhost_uninit_vmap(&vq->desc_ring);
-> +	vhost_uninit_vmap(&vq->used_ring);
-> +}
-> +
-> +static int vhost_setup_avail_vmap(struct vhost_virtqueue *vq,
-> +				  unsigned long avail)
-> +{
-> +	return vhost_init_vmap(vq->dev, &vq->avail_ring, avail,
-> +			       vhost_get_avail_size(vq, vq->num), false);
-> +}
-> +
-> +static int vhost_setup_desc_vmap(struct vhost_virtqueue *vq,
-> +				 unsigned long desc)
-> +{
-> +	return vhost_init_vmap(vq->dev, &vq->desc_ring, desc,
-> +			       vhost_get_desc_size(vq, vq->num), false);
-> +}
-> +
-> +static int vhost_setup_used_vmap(struct vhost_virtqueue *vq,
-> +				 unsigned long used)
-> +{
-> +	return vhost_init_vmap(vq->dev, &vq->used_ring, used,
-> +			       vhost_get_used_size(vq, vq->num), true);
-> +}
-> +
-> +static void vhost_set_vmap_dirty(struct vhost_vmap *used)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < used->npages; i++)
-> +		set_page_dirty_lock(used->pages[i]);
-
-
-This seems to rely on page lock to mark page dirty.
-
-Could it happen that page writeback will check the
-page, find it clean, and then you mark it dirty and then
-invalidate callback is called?
-
-
-> +}
-> +
->  void vhost_dev_cleanup(struct vhost_dev *dev)
->  {
->  	int i;
-> @@ -662,8 +815,12 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
->  		kthread_stop(dev->worker);
->  		dev->worker = NULL;
->  	}
-> -	if (dev->mm)
-> +	for (i = 0; i < dev->nvqs; i++)
-> +		vhost_uninit_vq_vmaps(dev->vqs[i]);
-> +	if (dev->mm) {
-> +		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
->  		mmput(dev->mm);
-> +	}
->  	dev->mm = NULL;
->  }
->  EXPORT_SYMBOL_GPL(vhost_dev_cleanup);
-> @@ -892,6 +1049,16 @@ static inline void __user *__vhost_get_user(struct vhost_virtqueue *vq,
->  
->  static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_used *used = vq->used_ring.addr;
-> +
-> +		if (likely(used)) {
-> +			*((__virtio16 *)&used->ring[vq->num]) =
-> +				cpu_to_vhost16(vq, vq->avail_idx);
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->avail_idx),
->  			      vhost_avail_event(vq));
->  }
-> @@ -900,6 +1067,16 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
->  				 struct vring_used_elem *head, int idx,
->  				 int count)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_used *used = vq->used_ring.addr;
-> +
-> +		if (likely(used)) {
-> +			memcpy(used->ring + idx, head,
-> +			       count * sizeof(*head));
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_copy_to_user(vq, vq->used->ring + idx, head,
->  				  count * sizeof(*head));
->  }
-> @@ -907,6 +1084,15 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
->  static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
->  
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_used *used = vq->used_ring.addr;
-> +
-> +		if (likely(used)) {
-> +			used->flags = cpu_to_vhost16(vq, vq->used_flags);
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->used_flags),
->  			      &vq->used->flags);
->  }
-> @@ -914,6 +1100,15 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
->  static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
->  
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_used *used = vq->used_ring.addr;
-> +
-> +		if (likely(used)) {
-> +			used->idx = cpu_to_vhost16(vq, vq->last_used_idx);
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->last_used_idx),
->  			      &vq->used->idx);
->  }
-> @@ -959,12 +1154,30 @@ static void vhost_dev_unlock_vqs(struct vhost_dev *d)
->  static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
->  				      __virtio16 *idx)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_avail *avail = vq->avail_ring.addr;
-> +
-> +		if (likely(avail)) {
-> +			*idx = avail->idx;
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_get_avail(vq, *idx, &vq->avail->idx);
->  }
->  
->  static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
->  				       __virtio16 *head, int idx)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_avail *avail = vq->avail_ring.addr;
-> +
-> +		if (likely(avail)) {
-> +			*head = avail->ring[idx & (vq->num - 1)];
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_get_avail(vq, *head,
->  			       &vq->avail->ring[idx & (vq->num - 1)]);
->  }
-> @@ -972,24 +1185,60 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
->  static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
->  					__virtio16 *flags)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_avail *avail = vq->avail_ring.addr;
-> +
-> +		if (likely(avail)) {
-> +			*flags = avail->flags;
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_get_avail(vq, *flags, &vq->avail->flags);
->  }
->  
->  static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
->  				       __virtio16 *event)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_avail *avail = vq->avail_ring.addr;
-> +
-> +		if (likely(avail)) {
-> +			*event = (__virtio16)avail->ring[vq->num];
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_get_avail(vq, *event, vhost_used_event(vq));
->  }
->  
->  static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
->  				     __virtio16 *idx)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_used *used = vq->used_ring.addr;
-> +
-> +		if (likely(used)) {
-> +			*idx = used->idx;
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_get_used(vq, *idx, &vq->used->idx);
->  }
->  
->  static inline int vhost_get_desc(struct vhost_virtqueue *vq,
->  				 struct vring_desc *desc, int idx)
->  {
-> +	if (!vq->iotlb) {
-> +		struct vring_desc *d = vq->desc_ring.addr;
-> +
-> +		if (likely(d)) {
-> +			*desc = *(d + idx);
-> +			return 0;
-> +		}
-> +	}
-> +
->  	return vhost_copy_from_user(vq, desc, vq->desc + idx, sizeof(*desc));
->  }
->  
-> @@ -1330,8 +1579,16 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
->  {
->  	unsigned int num = vq->num;
->  
-> -	if (!vq->iotlb)
-> +	if (!vq->iotlb) {
-> +		if (unlikely(!vq->avail_ring.addr))
-> +			vhost_setup_avail_vmap(vq, (unsigned long)vq->avail);
-> +		if (unlikely(!vq->desc_ring.addr))
-> +			vhost_setup_desc_vmap(vq, (unsigned long)vq->desc);
-> +		if (unlikely(!vq->used_ring.addr))
-> +			vhost_setup_used_vmap(vq, (unsigned long)vq->used);
-> +
->  		return 1;
-> +	}
->  
->  	return iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->desc,
->  			       vhost_get_desc_size(vq, num), VHOST_ADDR_DESC) &&
-> @@ -1343,6 +1600,15 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
->  }
->  EXPORT_SYMBOL_GPL(vq_meta_prefetch);
->  
-> +void vq_meta_prefetch_done(struct vhost_virtqueue *vq)
-> +{
-> +	if (vq->iotlb)
-> +		return;
-> +	if (likely(vq->used_ring.addr))
-> +		vhost_set_vmap_dirty(&vq->used_ring);
-> +}
-> +EXPORT_SYMBOL_GPL(vq_meta_prefetch_done);
-> +
->  /* Can we log writes? */
->  /* Caller should have device mutex but not vq mutex */
->  bool vhost_log_access_ok(struct vhost_dev *dev)
-> @@ -1483,6 +1749,13 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
->  
->  	mutex_lock(&vq->mutex);
->  
-> +	/* Unregister MMU notifer to allow invalidation callback
-> +	 * can access vq->avail, vq->desc , vq->used and vq->num
-> +	 * without holding vq->mutex.
-> +	 */
-> +	if (d->mm)
-> +		mmu_notifier_unregister(&d->mmu_notifier, d->mm);
-> +
->  	switch (ioctl) {
->  	case VHOST_SET_VRING_NUM:
->  		/* Resizing ring with an active backend?
-> @@ -1499,6 +1772,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
->  			r = -EINVAL;
->  			break;
->  		}
-> +		vhost_uninit_vq_vmaps(vq);
->  		vq->num = s.num;
->  		break;
->  	case VHOST_SET_VRING_BASE:
-> @@ -1581,6 +1855,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
->  		vq->avail = (void __user *)(unsigned long)a.avail_user_addr;
->  		vq->log_addr = a.log_guest_addr;
->  		vq->used = (void __user *)(unsigned long)a.used_user_addr;
-> +		vhost_uninit_vq_vmaps(vq);
->  		break;
->  	case VHOST_SET_VRING_KICK:
->  		if (copy_from_user(&f, argp, sizeof f)) {
-> @@ -1656,6 +1931,8 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
->  	if (pollstart && vq->handle_kick)
->  		r = vhost_poll_start(&vq->poll, vq->kick);
->  
-> +	if (d->mm)
-> +		mmu_notifier_register(&d->mmu_notifier, d->mm);
->  	mutex_unlock(&vq->mutex);
->  
->  	if (pollstop && vq->handle_kick)
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index 7a7fc00..146076e 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -12,6 +12,8 @@
->  #include <linux/virtio_config.h>
->  #include <linux/virtio_ring.h>
->  #include <linux/atomic.h>
-> +#include <linux/pagemap.h>
-> +#include <linux/mmu_notifier.h>
->  
->  struct vhost_work;
->  typedef void (*vhost_work_fn_t)(struct vhost_work *work);
-> @@ -80,6 +82,13 @@ enum vhost_uaddr_type {
->  	VHOST_NUM_ADDRS = 3,
->  };
->  
-> +struct vhost_vmap {
-> +	void *addr;
-> +	void *unmap_addr;
-> +	int npages;
-> +	struct page **pages;
-> +};
-> +
->  /* The virtqueue structure describes a queue attached to a device. */
->  struct vhost_virtqueue {
->  	struct vhost_dev *dev;
-> @@ -90,6 +99,11 @@ struct vhost_virtqueue {
->  	struct vring_desc __user *desc;
->  	struct vring_avail __user *avail;
->  	struct vring_used __user *used;
-> +
-> +	struct vhost_vmap avail_ring;
-> +	struct vhost_vmap desc_ring;
-> +	struct vhost_vmap used_ring;
-> +
->  	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
->  	struct file *kick;
->  	struct eventfd_ctx *call_ctx;
-> @@ -158,6 +172,7 @@ struct vhost_msg_node {
->  
->  struct vhost_dev {
->  	struct mm_struct *mm;
-> +	struct mmu_notifier mmu_notifier;
->  	struct mutex mutex;
->  	struct vhost_virtqueue **vqs;
->  	int nvqs;
-> @@ -210,6 +225,7 @@ int vhost_log_write(struct vhost_virtqueue *vq, struct vhost_log *log,
->  		    unsigned int log_num, u64 len,
->  		    struct iovec *iov, int count);
->  int vq_meta_prefetch(struct vhost_virtqueue *vq);
-> +void vq_meta_prefetch_done(struct vhost_virtqueue *vq);
->  
->  struct vhost_msg_node *vhost_new_msg(struct vhost_virtqueue *vq, int type);
->  void vhost_enqueue_msg(struct vhost_dev *dev,
-> -- 
-> 1.8.3.1
