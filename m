@@ -2,536 +2,640 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39842C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02068C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC05206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lItDvPI5"
+	by mail.kernel.org (Postfix) with ESMTP id B2541206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfCFQ2B (ORCPT
+        id S1729797AbfCFQb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:28:01 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38434 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCFQ2A (ORCPT
+        Wed, 6 Mar 2019 11:31:29 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36776 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCFQb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:28:00 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x26GRaXG088164;
-        Wed, 6 Mar 2019 10:27:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551889656;
-        bh=GFtA1WVTXkEvZF9ttsy/ei+tARYzCwLjXNQ0v8YedUU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lItDvPI5m/QmrQemnWfBMIf0FdynvqAljQv0ojBzYBhouM5V6dkK6T8XxUDbRRfmh
-         PBkOg+7nSThb8flRUSolRLCHREg9NsKVp7oKuuzNy1ckupm9rszcwMw35Pq+Do/Zmb
-         nxiLn3ktZ+hnAaKhT+9QKXRs+evlw9y5AY6Fb0S8=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x26GRad8099863
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Mar 2019 10:27:36 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 6
- Mar 2019 10:27:35 -0600
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Wed, 6 Mar 2019 10:27:35 -0600
-Received: from [172.22.114.173] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x26GRYt6014104;
-        Wed, 6 Mar 2019 10:27:35 -0600
-Subject: Re: [RFC][PATCH 1/5 v2] dma-buf: Add dma-buf heaps framework
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <1551819273-640-2-git-send-email-john.stultz@linaro.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <a4fd1783-c0d8-8ed5-5cd0-522b0789998c@ti.com>
-Date:   Wed, 6 Mar 2019 10:27:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 11:31:28 -0500
+Received: by mail-qt1-f194.google.com with SMTP id p25so13513781qtb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:31:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vWjDEiShTtYZHLzV3ow5JATlpVpFdKwiiEiACkztbXc=;
+        b=DYHrBvTWxiBv6QDwc8gF1ziaoKeYvV/t4KLIIZQKaJc81WXal7nQ2/5KhZpG11TrB0
+         IIU6dDYW0gcA4NhF8iQBEbM4ZKC/IPjFN8ZVDHH7niREjshO2aXR6JoyKc2DGC9Oa8CU
+         7gh8G7r+E4C48uYJLObJQaxYkGyvmHFX5KaAFJirTAaKULagLSDNmPwSSaXcQGFDyd2X
+         hrhz34J2EcxsgXz6qfPRxzslg/jmpf/0TxdphaCnlLSyCm/bqUJPEUnm1rIACwPBZOqw
+         ZhfB7gy+MEQUD2Ta6kFrt/YKBErvsS6kBTRoSWs3vfzIsr0TcV6f5pV05RV7kHqZG2HM
+         zQCA==
+X-Gm-Message-State: APjAAAVCa1sBLS1xcEYjeBxEzN88XEQlQpMgflSBfIIF2pldZTZmHZGS
+        ZIq4xtkbaApVFzXXTgkxsHbWjPVf4PM=
+X-Google-Smtp-Source: APXvYqx78FT+PTgz3Wv+wxfQwynpA8Sh3Bl3+3IGmU2qO6A7euVIuJ/SKC+7E0qJggTs1kCrb8Le+w==
+X-Received: by 2002:ac8:31ab:: with SMTP id h40mr6578368qte.122.1551889886815;
+        Wed, 06 Mar 2019 08:31:26 -0800 (PST)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id o3sm1032894qte.55.2019.03.06.08.31.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 08:31:25 -0800 (PST)
+Date:   Wed, 6 Mar 2019 11:31:23 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190306092837-mutt-send-email-mst@kernel.org>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1551819273-640-2-git-send-email-john.stultz@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551856692-3384-6-git-send-email-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/19 2:54 PM, John Stultz wrote:
-> From: "Andrew F. Davis" <afd@ti.com>
+On Wed, Mar 06, 2019 at 02:18:12AM -0500, Jason Wang wrote:
+> It was noticed that the copy_user() friends that was used to access
+> virtqueue metdata tends to be very expensive for dataplane
+> implementation like vhost since it involves lots of software checks,
+> speculation barrier, hardware feature toggling (e.g SMAP). The
+> extra cost will be more obvious when transferring small packets since
+> the time spent on metadata accessing become more significant.
 > 
-> This framework allows a unified userspace interface for dma-buf
-> exporters, allowing userland to allocate specific types of
-> memory for use in dma-buf sharing.
+> This patch tries to eliminate those overheads by accessing them
+> through kernel virtual address by vmap(). To make the pages can be
+> migrated, instead of pinning them through GUP, we use MMU notifiers to
+> invalidate vmaps and re-establish vmaps during each round of metadata
+> prefetching if necessary. It looks to me .invalidate_range() is
+> sufficient for catching this since we don't need extra TLB flush. For
+> devices that doesn't use metadata prefetching, the memory accessors
+> fallback to normal copy_user() implementation gracefully. The
+> invalidation was synchronized with datapath through vq mutex, and in
+> order to avoid hold vq mutex during range checking, MMU notifier was
+> teared down when trying to modify vq metadata.
 > 
-> Each heap is given its own device node, which a user can
-> allocate a dma-buf fd from using the DMA_HEAP_IOC_ALLOC.
+> Dirty page checking is done by calling set_page_dirty_locked()
+> explicitly for the page that used ring stay after each round of
+> processing.
 > 
-> This code is an evoluiton of the Android ION implementation,
-> and a big thanks is due to its authors/maintainers over time
-> for their effort:
->   Rebecca Schultz Zavin, Colin Cross, Benjamin Gaignard,
->   Laura Abbott, and many other contributors!
+> Note that this was only done when device IOTLB is not enabled. We
+> could use similar method to optimize it in the future.
 > 
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> [jstultz: reworded commit message, and lots of cleanups]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Tests shows at most about 22% improvement on TX PPS when using
+> virtio-user + vhost_net + xdp1 + TAP on 2.6GHz Broadwell:
+> 
+>         SMAP on | SMAP off
+> Before: 5.0Mpps | 6.6Mpps
+> After:  6.1Mpps | 7.4Mpps
+> 
+> Cc: <linux-mm@kvack.org>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
 > ---
-> v2:
-> * Folded down fixes I had previously shared in implementing
->   heaps
-> * Make flags a u64 (Suggested by Laura)
-> * Add PAGE_ALIGN() fix to the core alloc funciton
-> * IOCTL fixups suggested by Brian
-> * Added fixes suggested by Benjamin
-> * Removed core stats mgmt, as that should be implemented by
->   per-heap code
-> * Changed alloc to return a dma-buf fd, rather then a buffer
->   (as it simplifies error handling)
-> ---
->  MAINTAINERS                   |  16 ++++
->  drivers/dma-buf/Kconfig       |   8 ++
->  drivers/dma-buf/Makefile      |   1 +
->  drivers/dma-buf/dma-heap.c    | 191 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/dma-heap.h      |  65 ++++++++++++++
->  include/uapi/linux/dma-heap.h |  52 ++++++++++++
->  6 files changed, 333 insertions(+)
->  create mode 100644 drivers/dma-buf/dma-heap.c
->  create mode 100644 include/linux/dma-heap.h
->  create mode 100644 include/uapi/linux/dma-heap.h
+>  drivers/vhost/net.c   |   2 +
+>  drivers/vhost/vhost.c | 281 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/vhost/vhost.h |  16 +++
+>  3 files changed, 297 insertions(+), 2 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ac2e518..a661e19 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4621,6 +4621,22 @@ F:	include/linux/*fence.h
->  F:	Documentation/driver-api/dma-buf.rst
->  T:	git git://anongit.freedesktop.org/drm/drm-misc
+> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+> index bf55f99..c276371 100644
+> --- a/drivers/vhost/net.c
+> +++ b/drivers/vhost/net.c
+> @@ -982,6 +982,7 @@ static void handle_tx(struct vhost_net *net)
+>  	else
+>  		handle_tx_copy(net, sock);
 >  
-> +DMA-BUF HEAPS FRAMEWORK
-> +M:	Laura Abbott <labbott@redhat.com>
-> +R:	Liam Mark <lmark@codeaurora.org>
-> +R:	Brian Starkey <Brian.Starkey@arm.com>
-> +R:	"Andrew F. Davis" <afd@ti.com>
-
-Quotes not needed in maintainers file.
-
-> +R:	John Stultz <john.stultz@linaro.org>
-> +S:	Maintained
-> +L:	linux-media@vger.kernel.org
-> +L:	dri-devel@lists.freedesktop.org
-> +L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
-> +F:	include/uapi/linux/dma-heap.h
-> +F:	include/linux/dma-heap.h
-> +F:	drivers/dma-buf/dma-heap.c
-> +F:	drivers/dma-buf/heaps/*
-> +T:	git git://anongit.freedesktop.org/drm/drm-misc
-> +
->  DMA GENERIC OFFLOAD ENGINE SUBSYSTEM
->  M:	Vinod Koul <vkoul@kernel.org>
->  L:	dmaengine@vger.kernel.org
-> diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-> index 2e5a0fa..09c61db 100644
-> --- a/drivers/dma-buf/Kconfig
-> +++ b/drivers/dma-buf/Kconfig
-> @@ -39,4 +39,12 @@ config UDMABUF
->  	  A driver to let userspace turn memfd regions into dma-bufs.
->  	  Qemu can use this to create host dmabufs for guest framebuffers.
+> +	vq_meta_prefetch_done(vq);
+>  out:
+>  	mutex_unlock(&vq->mutex);
+>  }
+> @@ -1250,6 +1251,7 @@ static void handle_rx(struct vhost_net *net)
+>  		vhost_net_enable_vq(net, vq);
+>  out:
+>  	vhost_net_signal_used(nvq);
+> +	vq_meta_prefetch_done(vq);
+>  	mutex_unlock(&vq->mutex);
+>  }
 >  
-> +menuconfig DMABUF_HEAPS
-> +	bool "DMA-BUF Userland Memory Heaps"
-> +	select DMA_SHARED_BUFFER
-> +	help
-> +	  Choose this option to enable the DMA-BUF userland memory heaps,
-> +	  this allows userspace to allocate dma-bufs that can be shared between
-> +	  drivers.
-> +
->  endmenu
-> diff --git a/drivers/dma-buf/Makefile b/drivers/dma-buf/Makefile
-> index 0913a6c..b0332f1 100644
-> --- a/drivers/dma-buf/Makefile
-> +++ b/drivers/dma-buf/Makefile
-> @@ -1,4 +1,5 @@
->  obj-y := dma-buf.o dma-fence.o dma-fence-array.o reservation.o seqno-fence.o
-> +obj-$(CONFIG_DMABUF_HEAPS)	+= dma-heap.o
->  obj-$(CONFIG_SYNC_FILE)		+= sync_file.o
->  obj-$(CONFIG_SW_SYNC)		+= sw_sync.o sync_debug.o
->  obj-$(CONFIG_UDMABUF)		+= udmabuf.o
-> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> new file mode 100644
-> index 0000000..14b3975
-> --- /dev/null
-> +++ b/drivers/dma-buf/dma-heap.c
-> @@ -0,0 +1,191 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Framework for userspace DMA-BUF allocations
-> + *
-> + * Copyright (C) 2011 Google, Inc.
-> + * Copyright (C) 2019 Linaro Ltd.
-> + */
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/device.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/err.h>
-> +#include <linux/idr.h>
-> +#include <linux/list.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include <linux/dma-heap.h>
-> +#include <uapi/linux/dma-heap.h>
-> +
-> +#define DEVNAME "dma_heap"
-> +
-> +#define NUM_HEAP_MINORS 128
-> +static DEFINE_IDR(dma_heap_idr);
-> +static DEFINE_MUTEX(minor_lock); /* Protect idr accesses */
-> +
-> +dev_t dma_heap_devt;
-> +struct class *dma_heap_class;
-> +struct list_head dma_heap_list;
-> +struct dentry *dma_heap_debug_root;
-> +
-> +static int dma_heap_buffer_alloc(struct dma_heap *heap, size_t len,
-> +				 unsigned int flags)
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 1015464..36ccf7c 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -434,6 +434,74 @@ static size_t vhost_get_desc_size(struct vhost_virtqueue *vq, int num)
+>  	return sizeof(*vq->desc) * num;
+>  }
+>  
+> +static void vhost_uninit_vmap(struct vhost_vmap *map)
 > +{
-> +	len = PAGE_ALIGN(len);
-> +	if (!len)
-> +		return -EINVAL;
-> +
-> +	return heap->ops->allocate(heap, len, flags);
-> +}
-> +
-> +static int dma_heap_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct dma_heap *heap;
-> +
-> +	mutex_lock(&minor_lock);
-> +	heap = idr_find(&dma_heap_idr, iminor(inode));
-> +	mutex_unlock(&minor_lock);
-> +	if (!heap) {
-> +		pr_err("dma_heap: minor %d unknown.\n", iminor(inode));
-> +		return -ENODEV;
+> +	if (map->addr) {
+> +		vunmap(map->unmap_addr);
+> +		kfree(map->pages);
+> +		map->pages = NULL;
+> +		map->npages = 0;
 > +	}
 > +
-> +	/* instance data as context */
-> +	filp->private_data = heap;
-> +	nonseekable_open(inode, filp);
-> +
-> +	return 0;
+> +	map->addr = NULL;
+> +	map->unmap_addr = NULL;
 > +}
 > +
-> +static int dma_heap_release(struct inode *inode, struct file *filp)
+> +static void vhost_invalidate_vmap(struct vhost_virtqueue *vq,
+> +				  struct vhost_vmap *map,
+> +				  unsigned long ustart,
+> +				  size_t size,
+> +				  unsigned long start,
+> +				  unsigned long end)
 > +{
-> +	filp->private_data = NULL;
+> +	if (end < ustart || start > ustart - 1 + size)
+> +		return;
 > +
-> +	return 0;
+> +	dump_stack();
+> +	mutex_lock(&vq->mutex);
+> +	vhost_uninit_vmap(map);
+> +	mutex_unlock(&vq->mutex);
 > +}
 > +
-> +static long dma_heap_ioctl(struct file *filp, unsigned int cmd,
-> +			   unsigned long arg)
+> +
+> +static void vhost_invalidate(struct vhost_dev *dev,
+> +			     unsigned long start, unsigned long end)
 > +{
-> +	switch (cmd) {
-> +	case DMA_HEAP_IOC_ALLOC:
-> +	{
-> +		struct dma_heap_allocation_data heap_allocation;
-> +		struct dma_heap *heap = filp->private_data;
-> +		int fd;
+> +	int i;
 > +
-> +		if (copy_from_user(&heap_allocation, (void __user *)arg,
-> +				   sizeof(heap_allocation)))
-> +			return -EFAULT;
+> +	for (i = 0; i < dev->nvqs; i++) {
+> +		struct vhost_virtqueue *vq = dev->vqs[i];
 > +
-> +		if (heap_allocation.fd ||
-> +		    heap_allocation.reserved0 ||
-> +		    heap_allocation.reserved1 ||
-> +		    heap_allocation.reserved2) {
+> +		vhost_invalidate_vmap(vq, &vq->avail_ring,
+> +				      (unsigned long)vq->avail,
+> +				      vhost_get_avail_size(vq, vq->num),
+> +				      start, end);
+> +		vhost_invalidate_vmap(vq, &vq->desc_ring,
+> +				      (unsigned long)vq->desc,
+> +				      vhost_get_desc_size(vq, vq->num),
+> +				      start, end);
+> +		vhost_invalidate_vmap(vq, &vq->used_ring,
+> +				      (unsigned long)vq->used,
+> +				      vhost_get_used_size(vq, vq->num),
+> +				      start, end);
+> +	}
+> +}
+> +
+> +
+> +static void vhost_invalidate_range(struct mmu_notifier *mn,
+> +				   struct mm_struct *mm,
+> +				   unsigned long start, unsigned long end)
+> +{
+> +	struct vhost_dev *dev = container_of(mn, struct vhost_dev,
+> +					     mmu_notifier);
+> +
+> +	vhost_invalidate(dev, start, end);
+> +}
+> +
+> +static const struct mmu_notifier_ops vhost_mmu_notifier_ops = {
+> +	.invalidate_range = vhost_invalidate_range,
+> +};
+> +
+>  void vhost_dev_init(struct vhost_dev *dev,
+>  		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
+>  {
 
-Seems too many reserved, I can understand one, but if we ever needed all
-of these we would be better off just adding another alloc ioctl.
 
-> +			pr_warn_once("dma_heap: ioctl data not valid\n");
-> +			return -EINVAL;
+Note that
+.invalidate_range seems to be called after page lock has
+been dropped.
+
+Looking at page dirty below:
+
+
+
+
+> @@ -449,6 +517,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>  	dev->mm = NULL;
+>  	dev->worker = NULL;
+>  	dev->iov_limit = iov_limit;
+> +	dev->mmu_notifier.ops = &vhost_mmu_notifier_ops;
+>  	init_llist_head(&dev->work_list);
+>  	init_waitqueue_head(&dev->wait);
+>  	INIT_LIST_HEAD(&dev->read_list);
+> @@ -462,6 +531,9 @@ void vhost_dev_init(struct vhost_dev *dev,
+>  		vq->indirect = NULL;
+>  		vq->heads = NULL;
+>  		vq->dev = dev;
+> +		vq->avail_ring.addr = NULL;
+> +		vq->used_ring.addr = NULL;
+> +		vq->desc_ring.addr = NULL;
+>  		mutex_init(&vq->mutex);
+>  		vhost_vq_reset(dev, vq);
+>  		if (vq->handle_kick)
+> @@ -542,7 +614,13 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+>  	if (err)
+>  		goto err_cgroup;
+>  
+> +	err = mmu_notifier_register(&dev->mmu_notifier, dev->mm);
+> +	if (err)
+> +		goto err_mmu_notifier;
+> +
+>  	return 0;
+> +err_mmu_notifier:
+> +	vhost_dev_free_iovecs(dev);
+>  err_cgroup:
+>  	kthread_stop(worker);
+>  	dev->worker = NULL;
+> @@ -633,6 +711,81 @@ static void vhost_clear_msg(struct vhost_dev *dev)
+>  	spin_unlock(&dev->iotlb_lock);
+>  }
+>  
+> +static int vhost_init_vmap(struct vhost_dev *dev,
+> +			   struct vhost_vmap *map, unsigned long uaddr,
+> +			   size_t size, int write)
+> +{
+> +	struct page **pages;
+> +	int npages = DIV_ROUND_UP(size, PAGE_SIZE);
+> +	int npinned;
+> +	void *vaddr;
+> +	int err = -EFAULT;
+> +
+> +	err = -ENOMEM;
+> +	pages = kmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
+> +	if (!pages)
+> +		goto err_uaddr;
+> +
+> +	err = EFAULT;
+> +	npinned = get_user_pages_fast(uaddr, npages, write, pages);
+> +	if (npinned != npages)
+> +		goto err_gup;
+> +
+> +	vaddr = vmap(pages, npages, VM_MAP, PAGE_KERNEL);
+> +	if (!vaddr)
+> +		goto err_gup;
+> +
+> +	map->addr = vaddr + (uaddr & (PAGE_SIZE - 1));
+> +	map->unmap_addr = vaddr;
+> +	map->npages = npages;
+> +	map->pages = pages;
+> +
+> +err_gup:
+> +	/* Don't pin pages, mmu notifier will notify us about page
+> +	 * migration.
+> +	 */
+> +	if (npinned > 0)
+> +		release_pages(pages, npinned);
+> +err_uaddr:
+> +	return err;
+> +}
+> +
+> +static void vhost_uninit_vq_vmaps(struct vhost_virtqueue *vq)
+> +{
+> +	vhost_uninit_vmap(&vq->avail_ring);
+> +	vhost_uninit_vmap(&vq->desc_ring);
+> +	vhost_uninit_vmap(&vq->used_ring);
+> +}
+> +
+> +static int vhost_setup_avail_vmap(struct vhost_virtqueue *vq,
+> +				  unsigned long avail)
+> +{
+> +	return vhost_init_vmap(vq->dev, &vq->avail_ring, avail,
+> +			       vhost_get_avail_size(vq, vq->num), false);
+> +}
+> +
+> +static int vhost_setup_desc_vmap(struct vhost_virtqueue *vq,
+> +				 unsigned long desc)
+> +{
+> +	return vhost_init_vmap(vq->dev, &vq->desc_ring, desc,
+> +			       vhost_get_desc_size(vq, vq->num), false);
+> +}
+> +
+> +static int vhost_setup_used_vmap(struct vhost_virtqueue *vq,
+> +				 unsigned long used)
+> +{
+> +	return vhost_init_vmap(vq->dev, &vq->used_ring, used,
+> +			       vhost_get_used_size(vq, vq->num), true);
+> +}
+> +
+> +static void vhost_set_vmap_dirty(struct vhost_vmap *used)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < used->npages; i++)
+> +		set_page_dirty_lock(used->pages[i]);
+
+
+This seems to rely on page lock to mark page dirty.
+
+Could it happen that page writeback will check the
+page, find it clean, and then you mark it dirty and then
+invalidate callback is called?
+
+
+> +}
+> +
+>  void vhost_dev_cleanup(struct vhost_dev *dev)
+>  {
+>  	int i;
+> @@ -662,8 +815,12 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+>  		kthread_stop(dev->worker);
+>  		dev->worker = NULL;
+>  	}
+> -	if (dev->mm)
+> +	for (i = 0; i < dev->nvqs; i++)
+> +		vhost_uninit_vq_vmaps(dev->vqs[i]);
+> +	if (dev->mm) {
+> +		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
+>  		mmput(dev->mm);
+> +	}
+>  	dev->mm = NULL;
+>  }
+>  EXPORT_SYMBOL_GPL(vhost_dev_cleanup);
+> @@ -892,6 +1049,16 @@ static inline void __user *__vhost_get_user(struct vhost_virtqueue *vq,
+>  
+>  static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_used *used = vq->used_ring.addr;
+> +
+> +		if (likely(used)) {
+> +			*((__virtio16 *)&used->ring[vq->num]) =
+> +				cpu_to_vhost16(vq, vq->avail_idx);
+> +			return 0;
 > +		}
-> +		if (heap_allocation.flags & ~DMA_HEAP_VALID_FLAGS) {
-> +			pr_warn_once("dma_heap: flags has invalid or unsupported flags set\n");
-> +			return -EINVAL;
+> +	}
+> +
+>  	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->avail_idx),
+>  			      vhost_avail_event(vq));
+>  }
+> @@ -900,6 +1067,16 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>  				 struct vring_used_elem *head, int idx,
+>  				 int count)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_used *used = vq->used_ring.addr;
+> +
+> +		if (likely(used)) {
+> +			memcpy(used->ring + idx, head,
+> +			       count * sizeof(*head));
+> +			return 0;
 > +		}
-> +
-> +		fd = dma_heap_buffer_alloc(heap, heap_allocation.len,
-> +					   heap_allocation.flags);
-> +		if (fd < 0)
-> +			return fd;
-> +
-> +		heap_allocation.fd = fd;
-> +
-> +		if (copy_to_user((void __user *)arg, &heap_allocation,
-> +				 sizeof(heap_allocation)))
-> +			return -EFAULT;
-> +
-> +		break;
-> +	}
-> +	default:
-> +		return -ENOTTY;
 > +	}
 > +
-> +	return 0;
-> +}
+>  	return vhost_copy_to_user(vq, vq->used->ring + idx, head,
+>  				  count * sizeof(*head));
+>  }
+> @@ -907,6 +1084,15 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>  static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>  
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_used *used = vq->used_ring.addr;
 > +
-> +static const struct file_operations dma_heap_fops = {
-> +	.owner          = THIS_MODULE,
-> +	.open		= dma_heap_open,
-> +	.release	= dma_heap_release,
-> +	.unlocked_ioctl = dma_heap_ioctl,
-> +#ifdef CONFIG_COMPAT
-> +	.compat_ioctl	= dma_heap_ioctl,
-> +#endif
-> +};
+> +		if (likely(used)) {
+> +			used->flags = cpu_to_vhost16(vq, vq->used_flags);
+> +			return 0;
+> +		}
+> +	}
 > +
-> +int dma_heap_add(struct dma_heap *heap)
+>  	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->used_flags),
+>  			      &vq->used->flags);
+>  }
+> @@ -914,6 +1100,15 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>  static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+>  
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_used *used = vq->used_ring.addr;
+> +
+> +		if (likely(used)) {
+> +			used->idx = cpu_to_vhost16(vq, vq->last_used_idx);
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->last_used_idx),
+>  			      &vq->used->idx);
+>  }
+> @@ -959,12 +1154,30 @@ static void vhost_dev_unlock_vqs(struct vhost_dev *d)
+>  static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+>  				      __virtio16 *idx)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_avail *avail = vq->avail_ring.addr;
+> +
+> +		if (likely(avail)) {
+> +			*idx = avail->idx;
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_get_avail(vq, *idx, &vq->avail->idx);
+>  }
+>  
+>  static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>  				       __virtio16 *head, int idx)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_avail *avail = vq->avail_ring.addr;
+> +
+> +		if (likely(avail)) {
+> +			*head = avail->ring[idx & (vq->num - 1)];
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_get_avail(vq, *head,
+>  			       &vq->avail->ring[idx & (vq->num - 1)]);
+>  }
+> @@ -972,24 +1185,60 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>  static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+>  					__virtio16 *flags)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_avail *avail = vq->avail_ring.addr;
+> +
+> +		if (likely(avail)) {
+> +			*flags = avail->flags;
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_get_avail(vq, *flags, &vq->avail->flags);
+>  }
+>  
+>  static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+>  				       __virtio16 *event)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_avail *avail = vq->avail_ring.addr;
+> +
+> +		if (likely(avail)) {
+> +			*event = (__virtio16)avail->ring[vq->num];
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_get_avail(vq, *event, vhost_used_event(vq));
+>  }
+>  
+>  static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+>  				     __virtio16 *idx)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_used *used = vq->used_ring.addr;
+> +
+> +		if (likely(used)) {
+> +			*idx = used->idx;
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_get_used(vq, *idx, &vq->used->idx);
+>  }
+>  
+>  static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+>  				 struct vring_desc *desc, int idx)
+>  {
+> +	if (!vq->iotlb) {
+> +		struct vring_desc *d = vq->desc_ring.addr;
+> +
+> +		if (likely(d)) {
+> +			*desc = *(d + idx);
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	return vhost_copy_from_user(vq, desc, vq->desc + idx, sizeof(*desc));
+>  }
+>  
+> @@ -1330,8 +1579,16 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
+>  {
+>  	unsigned int num = vq->num;
+>  
+> -	if (!vq->iotlb)
+> +	if (!vq->iotlb) {
+> +		if (unlikely(!vq->avail_ring.addr))
+> +			vhost_setup_avail_vmap(vq, (unsigned long)vq->avail);
+> +		if (unlikely(!vq->desc_ring.addr))
+> +			vhost_setup_desc_vmap(vq, (unsigned long)vq->desc);
+> +		if (unlikely(!vq->used_ring.addr))
+> +			vhost_setup_used_vmap(vq, (unsigned long)vq->used);
+> +
+>  		return 1;
+> +	}
+>  
+>  	return iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->desc,
+>  			       vhost_get_desc_size(vq, num), VHOST_ADDR_DESC) &&
+> @@ -1343,6 +1600,15 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
+>  }
+>  EXPORT_SYMBOL_GPL(vq_meta_prefetch);
+>  
+> +void vq_meta_prefetch_done(struct vhost_virtqueue *vq)
 > +{
-> +	struct device *dev_ret;
-> +	int ret;
-> +
-> +	if (!heap->name || !strcmp(heap->name, "")) {
-> +		pr_err("dma_heap: Cannot add heap without a name\n");
-
-As these names end up as the dev name in the file system we may want to
-check for invalid names, there is probably a helper for that somewhere.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!heap->ops || !heap->ops->allocate) {
-> +		pr_err("dma_heap: Cannot add heap with invalid ops struct\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Find unused minor number */
-> +	mutex_lock(&minor_lock);
-> +	ret = idr_alloc(&dma_heap_idr, heap, 0, NUM_HEAP_MINORS, GFP_KERNEL);
-> +	mutex_unlock(&minor_lock);
-> +	if (ret < 0) {
-> +		pr_err("dma_heap: Unable to get minor number for heap\n");
-> +		return ret;
-> +	}
-> +	heap->minor = ret;
-> +
-> +	/* Create device */
-> +	heap->heap_devt = MKDEV(MAJOR(dma_heap_devt), heap->minor);
-> +	dev_ret = device_create(dma_heap_class,
-> +				NULL,
-> +				heap->heap_devt,
-> +				NULL,
-> +				heap->name);
-> +	if (IS_ERR(dev_ret)) {
-> +		pr_err("dma_heap: Unable to create char device\n");
-> +		return PTR_ERR(dev_ret);
-> +	}
-> +
-> +	/* Add device */
-> +	cdev_init(&heap->heap_cdev, &dma_heap_fops);
-> +	ret = cdev_add(&heap->heap_cdev, dma_heap_devt, NUM_HEAP_MINORS);
-> +	if (ret < 0) {
-> +		device_destroy(dma_heap_class, heap->heap_devt);
-> +		pr_err("dma_heap: Unable to add char device\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
+> +	if (vq->iotlb)
+> +		return;
+> +	if (likely(vq->used_ring.addr))
+> +		vhost_set_vmap_dirty(&vq->used_ring);
 > +}
-> +EXPORT_SYMBOL(dma_heap_add);
+> +EXPORT_SYMBOL_GPL(vq_meta_prefetch_done);
 > +
-> +static int dma_heap_init(void)
-> +{
-> +	int ret;
+>  /* Can we log writes? */
+>  /* Caller should have device mutex but not vq mutex */
+>  bool vhost_log_access_ok(struct vhost_dev *dev)
+> @@ -1483,6 +1749,13 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+>  
+>  	mutex_lock(&vq->mutex);
+>  
+> +	/* Unregister MMU notifer to allow invalidation callback
+> +	 * can access vq->avail, vq->desc , vq->used and vq->num
+> +	 * without holding vq->mutex.
+> +	 */
+> +	if (d->mm)
+> +		mmu_notifier_unregister(&d->mmu_notifier, d->mm);
 > +
-> +	ret = alloc_chrdev_region(&dma_heap_devt, 0, NUM_HEAP_MINORS, DEVNAME);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dma_heap_class = class_create(THIS_MODULE, DEVNAME);
-> +	if (IS_ERR(dma_heap_class)) {
-> +		unregister_chrdev_region(dma_heap_devt, NUM_HEAP_MINORS);
-> +		return PTR_ERR(dma_heap_class);
-> +	}
-> +
-> +	return 0;
-> +}
-> +subsys_initcall(dma_heap_init);
-> diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
-> new file mode 100644
-> index 0000000..ed86a8e
-> --- /dev/null
-> +++ b/include/linux/dma-heap.h
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * DMABUF Heaps Allocation Infrastructure
-> + *
-> + * Copyright (C) 2011 Google, Inc.
-> + * Copyright (C) 2019 Linaro Ltd.
-> + */
-> +
-> +#ifndef _DMA_HEAPS_H
-> +#define _DMA_HEAPS_H
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct dma_heap_buffer - metadata for a particular buffer
-> + * @heap:		back pointer to the heap the buffer came from
-> + * @dmabuf:		backing dma-buf for this buffer
-> + * @size:		size of the buffer
-> + * @flags:		buffer specific flags
-> + */
-> +struct dma_heap_buffer {
-> +	struct dma_heap *heap;
-> +	struct dma_buf *dmabuf;
-> +	size_t size;
-> +	unsigned long flags;
+>  	switch (ioctl) {
+>  	case VHOST_SET_VRING_NUM:
+>  		/* Resizing ring with an active backend?
+> @@ -1499,6 +1772,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+>  			r = -EINVAL;
+>  			break;
+>  		}
+> +		vhost_uninit_vq_vmaps(vq);
+>  		vq->num = s.num;
+>  		break;
+>  	case VHOST_SET_VRING_BASE:
+> @@ -1581,6 +1855,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+>  		vq->avail = (void __user *)(unsigned long)a.avail_user_addr;
+>  		vq->log_addr = a.log_guest_addr;
+>  		vq->used = (void __user *)(unsigned long)a.used_user_addr;
+> +		vhost_uninit_vq_vmaps(vq);
+>  		break;
+>  	case VHOST_SET_VRING_KICK:
+>  		if (copy_from_user(&f, argp, sizeof f)) {
+> @@ -1656,6 +1931,8 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+>  	if (pollstart && vq->handle_kick)
+>  		r = vhost_poll_start(&vq->poll, vq->kick);
+>  
+> +	if (d->mm)
+> +		mmu_notifier_register(&d->mmu_notifier, d->mm);
+>  	mutex_unlock(&vq->mutex);
+>  
+>  	if (pollstop && vq->handle_kick)
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index 7a7fc00..146076e 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -12,6 +12,8 @@
+>  #include <linux/virtio_config.h>
+>  #include <linux/virtio_ring.h>
+>  #include <linux/atomic.h>
+> +#include <linux/pagemap.h>
+> +#include <linux/mmu_notifier.h>
+>  
+>  struct vhost_work;
+>  typedef void (*vhost_work_fn_t)(struct vhost_work *work);
+> @@ -80,6 +82,13 @@ enum vhost_uaddr_type {
+>  	VHOST_NUM_ADDRS = 3,
+>  };
+>  
+> +struct vhost_vmap {
+> +	void *addr;
+> +	void *unmap_addr;
+> +	int npages;
+> +	struct page **pages;
 > +};
 > +
-> +/**
-> + * struct dma_heap - represents a dmabuf heap in the system
-> + * @name:		used for debugging/device-node name
-> + * @ops:		ops struct for this heap
-> + * @minor		minor number of this heap device
-> + * @heap_devt		heap device node
-> + * @heap_cdev		heap char device
-> + *
-> + * Represents a heap of memory from which buffers can be made.
-> + */
-> +struct dma_heap {
-> +	const char *name;
-> +	struct dma_heap_ops *ops;
-> +	unsigned int minor;
-> +	dev_t heap_devt;
-> +	struct cdev heap_cdev;
-> +};
-
-Still not sure about this, all of the members in this struct are
-strictly internally used by the framework. The users of this framework
-should not have access to them and only need to deal with an opaque
-pointer for tracking themselves (can store it in a private struct of
-their own then container_of to get back out their struct).
-
-Anyway, not a big deal, and if it really bugs me enough I can always go
-fix it later, it's all kernel internal so not a blocker here. :)
-
-Andrew
-
+>  /* The virtqueue structure describes a queue attached to a device. */
+>  struct vhost_virtqueue {
+>  	struct vhost_dev *dev;
+> @@ -90,6 +99,11 @@ struct vhost_virtqueue {
+>  	struct vring_desc __user *desc;
+>  	struct vring_avail __user *avail;
+>  	struct vring_used __user *used;
 > +
-> +/**
-> + * struct dma_heap_ops - ops to operate on a given heap
-> + * @allocate:		allocate dmabuf and return fd
-> + *
-> + * allocate returns dmabuf fd  on success, -errno on error.
-> + */
-> +struct dma_heap_ops {
-> +	int (*allocate)(struct dma_heap *heap,
-> +			unsigned long len,
-> +			unsigned long flags);
-> +};
+> +	struct vhost_vmap avail_ring;
+> +	struct vhost_vmap desc_ring;
+> +	struct vhost_vmap used_ring;
 > +
-> +/**
-> + * dma_heap_add - adds a heap to dmabuf heaps
-> + * @heap:		the heap to add
-> + */
-> +int dma_heap_add(struct dma_heap *heap);
-> +
-> +#endif /* _DMA_HEAPS_H */
-> diff --git a/include/uapi/linux/dma-heap.h b/include/uapi/linux/dma-heap.h
-> new file mode 100644
-> index 0000000..75c5d3f
-> --- /dev/null
-> +++ b/include/uapi/linux/dma-heap.h
-> @@ -0,0 +1,52 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * DMABUF Heaps Userspace API
-> + *
-> + * Copyright (C) 2011 Google, Inc.
-> + * Copyright (C) 2019 Linaro Ltd.
-> + */
-> +#ifndef _UAPI_LINUX_DMABUF_POOL_H
-> +#define _UAPI_LINUX_DMABUF_POOL_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * DOC: DMABUF Heaps Userspace API
-> + *
-> + */
-> +
-> +/* Currently no flags */
-> +#define DMA_HEAP_VALID_FLAGS (0)
-> +
-> +/**
-> + * struct dma_heap_allocation_data - metadata passed from userspace for
-> + *                                      allocations
-> + * @len:		size of the allocation
-> + * @flags:		flags passed to pool
-> + * @fd:			will be populated with a fd which provdes the
-> + *			handle to the allocated dma-buf
-> + *
-> + * Provided by userspace as an argument to the ioctl
-> + */
-> +struct dma_heap_allocation_data {
-> +	__u64 len;
-> +	__u64 flags;
-> +	__u32 fd;
-> +	__u32 reserved0;
-> +	__u32 reserved1;
-> +	__u32 reserved2;
-> +};
-> +
-> +#define DMA_HEAP_IOC_MAGIC		'H'
-> +
-> +/**
-> + * DOC: DMA_HEAP_IOC_ALLOC - allocate memory from pool
-> + *
-> + * Takes an dma_heap_allocation_data struct and returns it with the fd field
-> + * populated with the dmabuf handle of the allocation.
-> + */
-> +#define DMA_HEAP_IOC_ALLOC	_IOWR(DMA_HEAP_IOC_MAGIC, 0, \
-> +				      struct dma_heap_allocation_data)
-> +
-> +#endif /* _UAPI_LINUX_DMABUF_POOL_H */
-> 
+>  	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
+>  	struct file *kick;
+>  	struct eventfd_ctx *call_ctx;
+> @@ -158,6 +172,7 @@ struct vhost_msg_node {
+>  
+>  struct vhost_dev {
+>  	struct mm_struct *mm;
+> +	struct mmu_notifier mmu_notifier;
+>  	struct mutex mutex;
+>  	struct vhost_virtqueue **vqs;
+>  	int nvqs;
+> @@ -210,6 +225,7 @@ int vhost_log_write(struct vhost_virtqueue *vq, struct vhost_log *log,
+>  		    unsigned int log_num, u64 len,
+>  		    struct iovec *iov, int count);
+>  int vq_meta_prefetch(struct vhost_virtqueue *vq);
+> +void vq_meta_prefetch_done(struct vhost_virtqueue *vq);
+>  
+>  struct vhost_msg_node *vhost_new_msg(struct vhost_virtqueue *vq, int type);
+>  void vhost_enqueue_msg(struct vhost_dev *dev,
+> -- 
+> 1.8.3.1
