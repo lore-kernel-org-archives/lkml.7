@@ -2,193 +2,164 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB853C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241C3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9AD620661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E9420661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfCFIMK (ORCPT
+        id S1729585AbfCFIMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 03:12:10 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:58582 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbfCFIMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 03:12:10 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4722C83F51;
-        Wed,  6 Mar 2019 08:12:09 +0000 (UTC)
-Received: from xz-x1 (dhcp-14-116.nay.redhat.com [10.66.14.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 627E11A267;
-        Wed,  6 Mar 2019 08:12:03 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 16:12:01 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-Message-ID: <20190306081201.GC11093@xz-x1>
-References: <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com>
- <5C7D2F82.40907@huawei.com>
- <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
- <5C7D4500.3070607@huawei.com>
- <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com>
- <5C7E1A38.2060906@huawei.com>
- <20190306020540.GA23850@redhat.com>
- <5C7F6048.2050802@huawei.com>
- <20190306062625.GA3549@rapoport-lnx>
- <5C7F7992.7050806@huawei.com>
+        Wed, 6 Mar 2019 03:12:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40738 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbfCFIMm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 03:12:42 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q1so12291998wrp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 00:12:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=V42LmmXuwLaIwaZFmcP96QgdK+zM16OEbVWTwpodrKg=;
+        b=XSAAoLg0CUIkdxnuekAF8O1LGwOupw7WuTpEN2Id64IoFLgW6+bBET+NpWV7hC01xX
+         07MgfiW0ot/8xtms7QTPxYKjUqbksB5EdjGnvbQ6I09aUWhmjMNpVR+rCrsRxkt5KUVY
+         63AvAnJLApRnXB074kn61YgQbRB+73En2geBA7aMheWBW6722m7JExNpEx2CYgwBZuO1
+         tIGZOeVhFg2CB/PM+NGpeB6hyPN+e3R97FgO/t6yiRCbZSs8RB4CFq7QxyWU7wBpWVhM
+         hGNoptViuzmIT152eyFKLNP42HVXykyrYKnFJGtPA5mBRteij71k9oK3PusW0KskPEqe
+         NFiQ==
+X-Gm-Message-State: APjAAAXmezAG5stxSIcUr9/OaEQkOV7QOe5wXwFVnjfCeVcNwrkeCihW
+        75Tcu8rEc1Zs4q7uQN9hq60h3A==
+X-Google-Smtp-Source: APXvYqw1+pnL7jGo/lhXNmdhhuk9igJOku9BKN2nWcU+BvcOrVrl9+svCqji2E9phFgqyYXoZKytgg==
+X-Received: by 2002:adf:e8cf:: with SMTP id k15mr1845287wrn.193.1551859960136;
+        Wed, 06 Mar 2019 00:12:40 -0800 (PST)
+Received: from steredhat.homenet.telecomitalia.it (host114-14-dynamic.30-79-r.retail.telecomitalia.it. [79.30.14.114])
+        by smtp.gmail.com with ESMTPSA id n3sm1730335wrs.10.2019.03.06.00.12.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 00:12:39 -0800 (PST)
+Date:   Wed, 6 Mar 2019 09:12:36 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Adalbert =?utf-8?B?TGF6xINy?= <alazar@bitdefender.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vsock/virtio: fix kernel panic from
+ virtio_transport_reset_no_sock
+Message-ID: <20190306081236.mcd4o27yw67euzgv@steredhat.homenet.telecomitalia.it>
+References: <20190305180145.27161-1-alazar@bitdefender.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5C7F7992.7050806@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 06 Mar 2019 08:12:09 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190305180145.27161-1-alazar@bitdefender.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 03:41:06PM +0800, zhong jiang wrote:
-> On 2019/3/6 14:26, Mike Rapoport wrote:
-> > Hi,
-> >
-> > On Wed, Mar 06, 2019 at 01:53:12PM +0800, zhong jiang wrote:
-> >> On 2019/3/6 10:05, Andrea Arcangeli wrote:
-> >>> Hello everyone,
-> >>>
-> >>> [ CC'ed Mike and Peter ]
-> >>>
-> >>> On Tue, Mar 05, 2019 at 02:42:00PM +0800, zhong jiang wrote:
-> >>>> On 2019/3/5 14:26, Dmitry Vyukov wrote:
-> >>>>> On Mon, Mar 4, 2019 at 4:32 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >>>>>> On 2019/3/4 22:11, Dmitry Vyukov wrote:
-> >>>>>>> On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >>>>>>>> On 2019/3/4 15:40, Dmitry Vyukov wrote:
-> >>>>>>>>> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >>>>>>>>>> Hi, guys
-> >>>>>>>>>>
-> >>>>>>>>>> I also hit the following issue. but it fails to reproduce the issue by the log.
-> >>>>>>>>>>
-> >>>>>>>>>> it seems to the case that we access the mm->owner and deference it will result in the UAF.
-> >>>>>>>>>> But it should not be possible that we specify the incomplete process to be the mm->owner.
-> >>>>>>>>>>
-> >>>>>>>>>> Any thoughts?
-> >>>>>>>>> FWIW syzbot was able to reproduce this with this reproducer.
-> >>>>>>>>> This looks like a very subtle race (threaded reproducer that runs
-> >>>>>>>>> repeatedly in multiple processes), so most likely we are looking for
-> >>>>>>>>> something like few instructions inconsistency window.
-> >>>>>>>>>
-> >>>>>>>> I has a little doubtful about the instrustions inconsistency window.
-> >>>>>>>>
-> >>>>>>>> I guess that you mean some smb barriers should be taken into account.:-)
-> >>>>>>>>
-> >>>>>>>> Because IMO, It should not be the lock case to result in the issue.
-> >>>>>>> Since the crash was triggered on x86 _most likley_ this is not a
-> >>>>>>> missed barrier. What I meant is that one thread needs to executed some
-> >>>>>>> code, while another thread is stopped within few instructions.
-> >>>>>>>
-> >>>>>>>
-> >>>>>> It is weird and I can not find any relationship you had said with the issue.:-(
-> >>>>>>
-> >>>>>> Because It is the cause that mm->owner has been freed, whereas we still deference it.
-> >>>>>>
-> >>>>>> From the lastest freed task call trace, It fails to create process.
-> >>>>>>
-> >>>>>> Am I miss something or I misunderstand your meaning. Please correct me.
-> >>>>> Your analysis looks correct. I am just saying that the root cause of
-> >>>>> this use-after-free seems to be a race condition.
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>> Yep, Indeed,  I can not figure out how the race works. I will dig up further.
-> >>> Yes it's a race condition.
-> >>>
-> >>> We were aware about the non-cooperative fork userfaultfd feature
-> >>> creating userfaultfd file descriptor that gets reported to the parent
-> >>> uffd, despite they belong to mm created by failed forks.
-> >>>
-> >>> https://www.spinics.net/lists/linux-mm/msg136357.html
-> >>>
-> >> Hi, Andrea
-> >>
-> >> I still not clear why uffd ioctl can use the incomplete process as the mm->owner.
-> >> and how to produce the race.
-> > There is a C reproducer in  the syzcaller report:
-> >
-> > https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
-> >  
-> >> From your above explainations,   My underdtanding is that the process handling do_exexve
-> >> will have a temporary mm,  which will be used by the UUFD ioctl.
-> > The race is between userfaultfd operation and fork() failure:
-> >
-> > forking thread                  | userfaultfd monitor thread
-> > --------------------------------+-------------------------------
-> > fork()                          |
-> >   dup_mmap()                    |
-> >     dup_userfaultfd()           |
-> >     dup_userfaultfd_complete()  |
-> >                                 |  read(UFFD_EVENT_FORK)
-> >                                 |  uffdio_copy()
-> >                                 |    mmget_not_zero()
-> >     goto bad_fork_something     |
-> >     ...                         |
-> > bad_fork_free:                  |
-> >       free_task()               |
-> >                                 |  mem_cgroup_from_task()
-> >                                 |       /* access stale mm->owner */
-> >  
-> Hi, Mike
+Hi Adalbert,
+thanks for catching this issue, I have a comment below.
 
-Hi, Zhong,
+On Tue, Mar 05, 2019 at 08:01:45PM +0200, Adalbert Lazăr wrote:
+> Previous to commit 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug"),
+> vsock_core_init() was called from virtio_vsock_probe(). Now,
+> virtio_transport_reset_no_sock() can be called before vsock_core_init()
+> has the chance to run.
+> 
+> [Wed Feb 27 14:17:09 2019] BUG: unable to handle kernel NULL pointer dereference at 0000000000000110
+> [Wed Feb 27 14:17:09 2019] #PF error: [normal kernel read fault]
+> [Wed Feb 27 14:17:09 2019] PGD 0 P4D 0
+> [Wed Feb 27 14:17:09 2019] Oops: 0000 [#1] SMP PTI
+> [Wed Feb 27 14:17:09 2019] CPU: 3 PID: 59 Comm: kworker/3:1 Not tainted 5.0.0-rc7-390-generic-hvi #390
+> [Wed Feb 27 14:17:09 2019] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+> [Wed Feb 27 14:17:09 2019] Workqueue: virtio_vsock virtio_transport_rx_work [vmw_vsock_virtio_transport]
+> [Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+> [Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+> [Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+> [Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+> [Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+> [Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+> [Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+> [Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+> [Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+> [Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+> [Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [Wed Feb 27 14:17:09 2019] Call Trace:
+> [Wed Feb 27 14:17:09 2019]  virtio_transport_recv_pkt+0x63/0x820 [vmw_vsock_virtio_transport_common]
+> [Wed Feb 27 14:17:09 2019]  ? kfree+0x17e/0x190
+> [Wed Feb 27 14:17:09 2019]  ? detach_buf_split+0x145/0x160
+> [Wed Feb 27 14:17:09 2019]  ? __switch_to_asm+0x40/0x70
+> [Wed Feb 27 14:17:09 2019]  virtio_transport_rx_work+0xa0/0x106 [vmw_vsock_virtio_transport]
+> [Wed Feb 27 14:17:09 2019] NET: Registered protocol family 40
+> [Wed Feb 27 14:17:09 2019]  process_one_work+0x167/0x410
+> [Wed Feb 27 14:17:09 2019]  worker_thread+0x4d/0x460
+> [Wed Feb 27 14:17:09 2019]  kthread+0x105/0x140
+> [Wed Feb 27 14:17:09 2019]  ? rescuer_thread+0x360/0x360
+> [Wed Feb 27 14:17:09 2019]  ? kthread_destroy_worker+0x50/0x50
+> [Wed Feb 27 14:17:09 2019]  ret_from_fork+0x35/0x40
+> [Wed Feb 27 14:17:09 2019] Modules linked in: vmw_vsock_virtio_transport vmw_vsock_virtio_transport_common input_leds vsock serio_raw i2c_piix4 mac_hid qemu_fw_cfg autofs4 cirrus ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_net psmouse drm net_failover pata_acpi virtio_blk failover floppy
+> [Wed Feb 27 14:17:09 2019] CR2: 0000000000000110
+> [Wed Feb 27 14:17:09 2019] ---[ end trace baa35abd2e040fe5 ]---
+> [Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+> [Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+> [Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+> [Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+> [Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+> [Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+> [Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+> [Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+> [Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+> [Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+> [Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> ---
+>  net/vmw_vsock/virtio_transport_common.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 3ae3a33da70b..502201aaff2a 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -662,6 +662,7 @@ static int virtio_transport_reset(struct vsock_sock *vsk,
+>   */
+>  static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+>  {
+> +	const struct virtio_transport *t;
+>  	struct virtio_vsock_pkt_info info = {
+>  		.op = VIRTIO_VSOCK_OP_RST,
+>  		.type = le16_to_cpu(pkt->hdr.type),
+> @@ -680,7 +681,11 @@ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+>  	if (!pkt)
+>  		return -ENOMEM;
+>  
+> -	return virtio_transport_get_ops()->send_pkt(pkt);
+> +	t = virtio_transport_get_ops();
+> +	if (!t)
+> +		return -ENOTCONN;
 
-> 
-> forking thread fails to create the process ,and then free the allocated task struct.
-> Other userfaultfd monitor thread should not access the stale mm->owner.
-> 
-> The parent process and child process do not share the mm struct.  Userfaultfd monitor thread's
-> mm->owner should not point to the freed child task_struct.
+Should be better to do this check before the virtio_transport_alloc_pkt?
 
-IIUC the problem is that above mm (of the mm->owner) is the child
-process's mm rather than the uffd monitor's.  When
-dup_userfaultfd_complete() is called there will be a new userfaultfd
-context sent to the uffd monitor thread which linked to the chlid
-process's mm, and if the monitor thread do UFFDIO_COPY upon the newly
-received userfaultfd it'll operate on that new mm too.
+Otherwise, I think we should free that packet before to return -ENOTCONN.
 
-> 
-> and due to the existence of tasklist_lock,  we can not specify the mm->owner to freed task_struct.
-> 
-> I miss something,=-O
-> 
-> Thanks,
-> zhong jiang
-> >> Thanks,
-> >> zhong jiang
-> 
-> 
+Thanks,
+Stefano
 
-Regards,
-
--- 
-Peter Xu
+> +
+> +	return t->send_pkt(pkt);
+>  }
+>  
+>  static void virtio_transport_wait_close(struct sock *sk, long timeout)
+> -- 
+> 2.21.0
+> 
