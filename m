@@ -2,335 +2,343 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC85C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F9BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF9220828
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712CA20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PayNj4Vv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YS1gQPJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfCFQFm (ORCPT
+        id S1728066AbfCFQGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:05:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33209 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCFQFm (ORCPT
+        Wed, 6 Mar 2019 11:06:12 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41864 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCFQGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:05:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id q24so11238670otk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:05:41 -0800 (PST)
+        Wed, 6 Mar 2019 11:06:11 -0500
+Received: by mail-pf1-f195.google.com with SMTP id d25so8957311pfn.8;
+        Wed, 06 Mar 2019 08:06:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E6Fzw9IFx2Yr3UeQMrBLlHOD9uervQUaSXuoQ91uh/4=;
-        b=PayNj4Vv2xdw7RsMjJq9XXx0SPTQ3q1IkyzRlk0ChotC4nzpGAEGypwBJrHqMjDkIW
-         6DfL1ZTQuOnl69EyRxXgI+A9PXzuTe1nrHfDIMD5JMLhEzfLzLuojEaAMIF18OobtWuE
-         Ok13oHkOuJaW6chywy8tFJXE+zpRjX4zlLvXIoQujqSumz+litKqwW5ckEyvnaYqz4RY
-         DKFvfr+ZG8Sz4ZzKbmozPGEGydE/hBxsmCDd81dugS+USc1xDEd1mHzW3oFUqr3XFogw
-         EJcvZqVHA/uVcsj5lXSIYU7DxMHs+YNxcfkjIkB3E32j2YymyZikIhL2su1axhhzlcfA
-         1GOw==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J8MHLJs93wrjRd42BSejHjevUFgX7QUjTgz49rje4yw=;
+        b=YS1gQPJy525uIoDtA4QEFtInFTnr90yNXvXpwGVl+J0sUBv1D3L5U+W4/0CXVpYJ7G
+         odBFj5J3GnDw81MuK52ZkN+vfpNaXzHzRg0AyRRXfJtT7pAx5/LUAf8QGCH3a5DA//7w
+         rbG/h48d6TVtb2k1BPoVxmrGjF/G5lYcHEaGOQErFMSaC3kUmJSsarBgnXV2f+VAYq35
+         R0/wDn9zk+A6i71CuVNF8pRhnT/OBtcXu4t0jaOMrw1AVkXv4Z6MjhcwwaFpfEGgfG2n
+         SSiL3bcS07ngnOmhZTD38ZJG0+9reu2TQqoHjdVY8zbyJ0uiCG7cYlp5eLUf8knAZ8yS
+         2YfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E6Fzw9IFx2Yr3UeQMrBLlHOD9uervQUaSXuoQ91uh/4=;
-        b=SWs2eN/MP363bwKT58VOkOip86jVwxRA4twyhUe5sYe5JwvxBpUsUfq4qwdoNCzHIN
-         Py8kI0hAAecLQ5R9NJaxMCpxTqcXOif7l/mr//aWeQBqdk6dm8iEVtpZA+F4iF4Cyaih
-         dhP5SG+N0SQj4hlHoNs/R1hLc52unISbB41KBXciPTK/ZsGbpen/AaRm3CoKFVqCck8T
-         yaosJ5GyOjLqW/FyE+0fIJrKKJUqbGLNHtsqMj8wBphX/JvGSdP07A22uGA5l9s0JM+r
-         yikkpA0ZIRP78N1e3b4SlI8d4wxqdHrzZt90DUAkpDRLBowtdTEFa0RzmTjjQi8FqLqu
-         7Tug==
-X-Gm-Message-State: APjAAAW0NdMql4vsq6/rO2Db4tsAf37HHXwfYwNNJPHnIM/5yy8PJvlH
-        1FIgaDowDMf+sgvUkotX7f9G7MAnBdoCU4BDx/JIxA==
-X-Google-Smtp-Source: APXvYqwzhLSIdTjMeEvrXe9utWaOk2/EByr/H/I6ti5rvLYwJr8TfXvYX/aDW80AZajcXoTuzhD7qINBrxRFQ6hqlJc=
-X-Received: by 2002:a9d:77c7:: with SMTP id w7mr5093744otl.207.1551888340889;
- Wed, 06 Mar 2019 08:05:40 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J8MHLJs93wrjRd42BSejHjevUFgX7QUjTgz49rje4yw=;
+        b=hKwfxNLkWWLT+QOwdGppu8Qpc/nBrx+gqST06WNjQq0dzxPFMpwmlJqY83B39lQzBc
+         CK4JktZkyZNXLR1BhAF3kH5SiRgCHKJzto2NwYZ5Ib8QO9SKcTfbPDoHmkbBH7rs+KEq
+         E0Pe3LwRIZwDWzDbcXvjx4pRudG+EqaDtOzAEdlE3iZ9TWXngF9ilaRnqlUEUCPPWhGV
+         wLc/mr8a9eT+A7HhNWXwUjIqNs4WqD2/AnMS6XzP6UxZrx9J17xwCVMgvoG8mIMub6kE
+         B8Hko0SMvtSyEuDLnpFyA3eN8J/UrkZAsc8V0S0ggtrIRFtOyxOHQ9vlg3tThjKwRbja
+         v+Jw==
+X-Gm-Message-State: APjAAAV0Rz0t+ySmCzm6Hb2RIWOJqMrT5nsSsvv/MRZvzs9dchKoly+y
+        gCWv1u3Efp41mpLQUfO/jRk=
+X-Google-Smtp-Source: APXvYqx5dXqLmC1YLl6Rsj76afi77MiEmr5HyvyRA7U4BE9l7MWZEfiGnIdczvTlZfAQsIFyKzNOxA==
+X-Received: by 2002:a17:902:d20b:: with SMTP id t11mr7755705ply.318.1551888370504;
+        Wed, 06 Mar 2019 08:06:10 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b8sm3833593pfi.129.2019.03.06.08.06.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 08:06:09 -0800 (PST)
+Subject: Re: [PATCH V7 1/3] watchdog: imx_sc: Add i.MX system controller
+ watchdog support
+To:     Anson Huang <anson.huang@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "olof@lixom.net" <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1551834095-19950-1-git-send-email-Anson.Huang@nxp.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <9b850967-d90a-5bd8-6ecf-99819f95805e@roeck-us.net>
+Date:   Wed, 6 Mar 2019 08:06:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <1551819273-640-5-git-send-email-john.stultz@linaro.org>
-In-Reply-To: <1551819273-640-5-git-send-email-john.stultz@linaro.org>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 6 Mar 2019 17:05:30 +0100
-Message-ID: <CA+M3ks4ekiNc=BDYn=ZvRoaCCbY8d_NJx9jgPw-=U6xdK_o-HQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 4/5 v2] dma-buf: heaps: Add CMA heap to dmabuf heapss
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1551834095-19950-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mar. 5 mars 2019 =C3=A0 21:54, John Stultz <john.stultz@linaro.org> a =
-=C3=A9crit :
->
-> This adds a CMA heap, which allows userspace to allocate
-> a dma-buf of contiguous memory out of a CMA region.
->
-> This code is an evolution of the Android ION implementation, so
-> thanks to its original author and maintainters:
->   Benjamin Gaignard, Laura Abbott, and others!
->
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+On 3/5/19 5:06 PM, Anson Huang wrote:
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+> inside, the system controller is in charge of controlling power,
+> clock and watchdog etc..
+> 
+> This patch adds i.MX system controller watchdog driver support,
+> watchdog operation needs to be done in secure EL3 mode via
+> ARM-Trusted-Firmware, using SMC call, CPU will trap into
+> ARM-Trusted-Firmware and then it will request system controller
+> to do watchdog operation via IPC.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Reviewed-by: Guenter Roeck <linux@roekc-us.net>
+
 > ---
-> v2:
-> * Switch allocate to return dmabuf fd
-> * Simplify init code
-> * Checkpatch fixups
+> Changes since V6:
+> 	- use module_platform_driver() instead of module_init/exit to make code simple.
 > ---
->  drivers/dma-buf/heaps/Kconfig    |   8 ++
->  drivers/dma-buf/heaps/Makefile   |   1 +
->  drivers/dma-buf/heaps/cma_heap.c | 164 +++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 173 insertions(+)
->  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
->
-> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfi=
-g
-> index 2050527..a5eef06 100644
-> --- a/drivers/dma-buf/heaps/Kconfig
-> +++ b/drivers/dma-buf/heaps/Kconfig
-> @@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
->         help
->           Choose this option to enable the system dmabuf heap. The system=
- heap
->           is backed by pages from the buddy allocator. If in doubt, say Y=
-.
+>   drivers/watchdog/Kconfig      |  14 ++++
+>   drivers/watchdog/Makefile     |   1 +
+>   drivers/watchdog/imx_sc_wdt.c | 174 ++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 189 insertions(+)
+>   create mode 100644 drivers/watchdog/imx_sc_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 242eea8..33a6523 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -641,6 +641,20 @@ config IMX2_WDT
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called imx2_wdt.
+>   
+> +config IMX_SC_WDT
+> +	tristate "IMX SC Watchdog"
+> +	depends on IMX_SCU
+> +	depends on HAVE_ARM_SMCCC
+> +	select WATCHDOG_CORE
+> +	help
+> +	  This is the driver for the system controller watchdog
+> +	  on the NXP i.MX SoCs with system controller inside.
+> +	  If you have one of these processors and wish to have
+> +	  watchdog support enabled, say Y, otherwise say N.
 > +
-> +config DMABUF_HEAPS_CMA
-> +       bool "DMA-BUF CMA Heap"
-> +       depends on DMABUF_HEAPS && DMA_CMA
-> +       help
-> +         Choose this option to enable dma-buf CMA heap. This heap is bac=
-ked
-> +         by the Contiguous Memory Allocator (CMA). If your system has th=
-ese
-> +         regions, you should say Y here.
-> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makef=
-ile
-> index d1808ec..6e54cde 100644
-> --- a/drivers/dma-buf/heaps/Makefile
-> +++ b/drivers/dma-buf/heaps/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y                                  +=3D heap-helpers.o
->  obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)      +=3D system_heap.o
-> +obj-$(CONFIG_DMABUF_HEAPS_CMA)         +=3D cma_heap.o
-> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma=
-_heap.c
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called imx_sc_wdt.
+> +
+>   config UX500_WATCHDOG
+>   	tristate "ST-Ericsson Ux500 watchdog"
+>   	depends on MFD_DB8500_PRCMU
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index ba930e4..136d9f0 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -68,6 +68,7 @@ obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
+>   obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+>   obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+>   obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+> +obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
+>   obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
+>   obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>   obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
 > new file mode 100644
-> index 0000000..33c18ec
+> index 0000000..ee48709
 > --- /dev/null
-> +++ b/drivers/dma-buf/heaps/cma_heap.c
-> @@ -0,0 +1,164 @@
+> +++ b/drivers/watchdog/imx_sc_wdt.c
+> @@ -0,0 +1,174 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * DMABUF CMA heap exporter
-> + *
-> + * Copyright (C) 2012, 2019 Linaro Ltd.
-> + * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
+> + * Copyright 2018-2019 NXP.
 > + */
 > +
-> +#include <linux/device.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-heap.h>
-> +#include <linux/slab.h>
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/cma.h>
-> +#include <linux/scatterlist.h>
-> +#include <linux/highmem.h>
+> +#include <linux/arm-smccc.h>
+> +#include <linux/io.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/watchdog.h>
 > +
-> +#include "heap-helpers.h"
+> +#define DEFAULT_TIMEOUT 60
+> +/*
+> + * Software timer tick implemented in scfw side, support 10ms to 0xffffffff ms
+> + * in theory, but for normal case, 1s~128s is enough, you can change this max
+> + * value in case it's not enough.
+> + */
+> +#define MAX_TIMEOUT 128
 > +
-> +struct cma_heap {
-> +       struct dma_heap heap;
-> +       struct cma *cma;
+> +#define IMX_SIP_TIMER			0xC2000002
+> +#define IMX_SIP_TIMER_START_WDOG		0x01
+> +#define IMX_SIP_TIMER_STOP_WDOG		0x02
+> +#define IMX_SIP_TIMER_SET_WDOG_ACT	0x03
+> +#define IMX_SIP_TIMER_PING_WDOG		0x04
+> +#define IMX_SIP_TIMER_SET_TIMEOUT_WDOG	0x05
+> +#define IMX_SIP_TIMER_GET_WDOG_STAT	0x06
+> +#define IMX_SIP_TIMER_SET_PRETIME_WDOG	0x07
+> +
+> +#define SC_TIMER_WDOG_ACTION_PARTITION	0
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0000);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static unsigned int timeout = DEFAULT_TIMEOUT;
+> +module_param(timeout, uint, 0000);
+> +MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
+> +		 __MODULE_STRING(DEFAULT_TIMEOUT) ")");
+> +
+> +static int imx_sc_wdt_ping(struct watchdog_device *wdog)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_PING_WDOG,
+> +		      0, 0, 0, 0, 0, 0, &res);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_sc_wdt_start(struct watchdog_device *wdog)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_START_WDOG,
+> +		      0, 0, 0, 0, 0, 0, &res);
+> +	if (res.a0)
+> +		return -EACCES;
+> +
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_WDOG_ACT,
+> +		      SC_TIMER_WDOG_ACTION_PARTITION,
+> +		      0, 0, 0, 0, 0, &res);
+> +	return res.a0 ? -EACCES : 0;
+> +}
+> +
+> +static int imx_sc_wdt_stop(struct watchdog_device *wdog)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_STOP_WDOG,
+> +		      0, 0, 0, 0, 0, 0, &res);
+> +
+> +	return res.a0 ? -EACCES : 0;
+> +}
+> +
+> +static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
+> +				unsigned int timeout)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	wdog->timeout = timeout;
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_TIMEOUT_WDOG,
+> +		      timeout * 1000, 0, 0, 0, 0, 0, &res);
+> +
+> +	return res.a0 ? -EACCES : 0;
+> +}
+> +
+> +static const struct watchdog_ops imx_sc_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = imx_sc_wdt_start,
+> +	.stop  = imx_sc_wdt_stop,
+> +	.ping  = imx_sc_wdt_ping,
+> +	.set_timeout = imx_sc_wdt_set_timeout,
 > +};
 > +
-> +
-> +#define to_cma_heap(x) container_of(x, struct cma_heap, heap)
-
-Even if I had write this macro years ago, now I would prefer to have a
-static inline function
-to be able to check the types.
-
-with that:
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-
-> +
-> +
-> +static void cma_heap_free(struct heap_helper_buffer *buffer)
-> +{
-> +       struct cma_heap *cma_heap =3D to_cma_heap(buffer->heap_buffer.hea=
-p);
-> +       struct page *pages =3D buffer->priv_virt;
-> +       unsigned long nr_pages;
-> +
-> +       nr_pages =3D PAGE_ALIGN(buffer->heap_buffer.size) >> PAGE_SHIFT;
-> +
-> +       /* release memory */
-> +       cma_release(cma_heap->cma, pages, nr_pages);
-> +       /* release sg table */
-> +       sg_free_table(buffer->sg_table);
-> +       kfree(buffer->sg_table);
-> +       kfree(buffer);
-> +}
-> +
-> +/* dmabuf heap CMA operations functions */
-> +static int cma_heap_allocate(struct dma_heap *heap,
-> +                               unsigned long len,
-> +                               unsigned long flags)
-> +{
-> +       struct cma_heap *cma_heap =3D to_cma_heap(heap);
-> +       struct heap_helper_buffer *helper_buffer;
-> +       struct sg_table *table;
-> +       struct page *pages;
-> +       size_t size =3D PAGE_ALIGN(len);
-> +       unsigned long nr_pages =3D size >> PAGE_SHIFT;
-> +       unsigned long align =3D get_order(size);
-> +       DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> +       struct dma_buf *dmabuf;
-> +       int ret =3D -ENOMEM;
-> +
-> +       if (align > CONFIG_CMA_ALIGNMENT)
-> +               align =3D CONFIG_CMA_ALIGNMENT;
-> +
-> +       helper_buffer =3D kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-> +       if (!helper_buffer)
-> +               return -ENOMEM;
-> +
-> +       INIT_HEAP_HELPER_BUFFER(helper_buffer, cma_heap_free);
-> +       helper_buffer->heap_buffer.flags =3D flags;
-> +       helper_buffer->heap_buffer.heap =3D heap;
-> +       helper_buffer->heap_buffer.size =3D len;
-> +
-> +
-> +       pages =3D cma_alloc(cma_heap->cma, nr_pages, align, false);
-> +       if (!pages)
-> +               goto free_buf;
-> +
-> +       if (PageHighMem(pages)) {
-> +               unsigned long nr_clear_pages =3D nr_pages;
-> +               struct page *page =3D pages;
-> +
-> +               while (nr_clear_pages > 0) {
-> +                       void *vaddr =3D kmap_atomic(page);
-> +
-> +                       memset(vaddr, 0, PAGE_SIZE);
-> +                       kunmap_atomic(vaddr);
-> +                       page++;
-> +                       nr_clear_pages--;
-> +               }
-> +       } else {
-> +               memset(page_address(pages), 0, size);
-> +       }
-> +
-> +       table =3D kmalloc(sizeof(*table), GFP_KERNEL);
-> +       if (!table)
-> +               goto free_cma;
-> +
-> +       ret =3D sg_alloc_table(table, 1, GFP_KERNEL);
-> +       if (ret)
-> +               goto free_table;
-> +
-> +       sg_set_page(table->sgl, pages, size, 0);
-> +
-> +       /* create the dmabuf */
-> +       exp_info.ops =3D &heap_helper_ops;
-> +       exp_info.size =3D len;
-> +       exp_info.flags =3D O_RDWR;
-> +       exp_info.priv =3D &helper_buffer->heap_buffer;
-> +       dmabuf =3D dma_buf_export(&exp_info);
-> +       if (IS_ERR(dmabuf)) {
-> +               ret =3D PTR_ERR(dmabuf);
-> +               goto free_table;
-> +       }
-> +
-> +       helper_buffer->heap_buffer.dmabuf =3D dmabuf;
-> +       helper_buffer->priv_virt =3D pages;
-> +       helper_buffer->sg_table =3D table;
-> +
-> +       ret =3D dma_buf_fd(dmabuf, O_CLOEXEC);
-> +       if (ret < 0) {
-> +               dma_buf_put(dmabuf);
-> +               /* just return, as put will call release and that will fr=
-ee */
-> +               return ret;
-> +       }
-> +
-> +       return ret;
-> +free_table:
-> +       kfree(table);
-> +free_cma:
-> +       cma_release(cma_heap->cma, pages, nr_pages);
-> +free_buf:
-> +       kfree(helper_buffer);
-> +       return ret;
-> +}
-> +
-> +static struct dma_heap_ops cma_heap_ops =3D {
-> +       .allocate =3D cma_heap_allocate,
+> +static const struct watchdog_info imx_sc_wdt_info = {
+> +	.identity	= "i.MX SC watchdog timer",
+> +	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+> +			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
 > +};
 > +
-> +static int __add_cma_heaps(struct cma *cma, void *data)
+> +static int imx_sc_wdt_probe(struct platform_device *pdev)
 > +{
-> +       struct cma_heap *cma_heap;
+> +	struct watchdog_device *imx_sc_wdd;
+> +	int ret;
 > +
-> +       cma_heap =3D kzalloc(sizeof(*cma_heap), GFP_KERNEL);
+> +	imx_sc_wdd = devm_kzalloc(&pdev->dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
+> +	if (!imx_sc_wdd)
+> +		return -ENOMEM;
 > +
-> +       if (!cma_heap)
-> +               return -ENOMEM;
+> +	platform_set_drvdata(pdev, imx_sc_wdd);
 > +
-> +       cma_heap->heap.name =3D cma_get_name(cma);
-> +       cma_heap->heap.ops =3D &cma_heap_ops;
-> +       cma_heap->cma =3D cma;
+> +	imx_sc_wdd->info = &imx_sc_wdt_info;
+> +	imx_sc_wdd->ops = &imx_sc_wdt_ops;
+> +	imx_sc_wdd->min_timeout = 1;
+> +	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
+> +	imx_sc_wdd->parent = &pdev->dev;
+> +	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
 > +
-> +       dma_heap_add(&cma_heap->heap);
+> +	ret = watchdog_init_timeout(imx_sc_wdd, timeout, &pdev->dev);
+> +	if (ret)
+> +		dev_warn(&pdev->dev, "Failed to set timeout value, using default\n");
 > +
-> +       return 0;
+> +	watchdog_stop_on_reboot(imx_sc_wdd);
+> +	watchdog_stop_on_unregister(imx_sc_wdd);
+> +
+> +	ret = devm_watchdog_register_device(&pdev->dev, imx_sc_wdd);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register watchdog device\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
 > +}
 > +
-> +static int add_cma_heaps(void)
+> +static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
 > +{
-> +       cma_for_each_area(__add_cma_heaps, NULL);
-> +       return 0;
+> +	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+> +
+> +	if (watchdog_active(imx_sc_wdd))
+> +		imx_sc_wdt_stop(imx_sc_wdd);
+> +
+> +	return 0;
 > +}
-> +device_initcall(add_cma_heaps);
-> --
-> 2.7.4
->
+> +
+> +static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
+> +{
+> +	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+> +
+> +	if (watchdog_active(imx_sc_wdd))
+> +		imx_sc_wdt_start(imx_sc_wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(imx_sc_wdt_pm_ops,
+> +			 imx_sc_wdt_suspend, imx_sc_wdt_resume);
+> +
+> +static struct platform_driver imx_sc_wdt_driver = {
+> +	.probe		= imx_sc_wdt_probe,
+> +	.driver		= {
+> +		.name	= "imx-sc-wdt",
+> +		.pm	= &imx_sc_wdt_pm_ops,
+> +	},
+> +};
+> +module_platform_driver(imx_sc_wdt_driver);
+> +
+> +MODULE_AUTHOR("Robin Gong <yibin.gong@nxp.com>");
+> +MODULE_DESCRIPTION("NXP i.MX system controller watchdog driver");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
