@@ -2,102 +2,143 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44923C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B758C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0022D20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CrPRmkbl"
+	by mail.kernel.org (Postfix) with ESMTP id 0099820684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfCFOfA (ORCPT
+        id S1727687AbfCFOiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 09:35:00 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:43168 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfCFOfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 09:35:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1j1Wl2FLBFBKTP0BeY4Oc90/RV8cLO5oIe173oBbnnY=; b=CrPRmkbltl9OnWmQOWteyWu5A
-        ghRJKfz/CWNwDTUrcfjP0hIorfX6ik+y0pN2zh/2BVN6sPGZWXOl+easYjG741Z6LSeqi9BKvG5Da
-        jX0qnc78SRvhf7WNs+MzmbSI8c9beFSv5rFxZRf8r++Ju8vbKgYM6A6UodJS5fVIDd+PeYyLrSlkj
-        nENLUEWEvd8Uc4eUSk+UtJBmwsrg7CuWxSRovSpUMT65/DPB89QZYgh0Tuy3S2Bc0ZnaoOJkgDvCw
-        mu5aQ+6abk9/ieyfa6pkbjbDMflODORCeSH1rUjDw0a4ZStowg5RLl2cdZ6nHD2s9jvvOg4GHTZHa
-        e/UbyRDGw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1Xd4-0003NM-P4; Wed, 06 Mar 2019 14:34:43 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BA91A299F9597; Wed,  6 Mar 2019 15:34:39 +0100 (CET)
-Date:   Wed, 6 Mar 2019 15:34:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
-Message-ID: <20190306143439.GY32534@hirez.programming.kicks-ass.net>
-References: <20190228150152.078767622@infradead.org>
- <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
- <20190301144556.GY32477@hirez.programming.kicks-ass.net>
- <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
- <20190301152305.GJ32494@hirez.programming.kicks-ass.net>
- <20190306131347.GX32534@hirez.programming.kicks-ass.net>
- <CACT4Y+YFkDRwTN1MKqLDePfuRis3Qas1kgEF7g5eVR0ijodtkw@mail.gmail.com>
- <20190306135728.GV32477@hirez.programming.kicks-ass.net>
- <CACT4Y+YP+Xn3TxVXrza_LBK8m7CCKBUYWpuGS0+MzFCXEE+Akg@mail.gmail.com>
- <20190306141237.GW32477@hirez.programming.kicks-ass.net>
+        Wed, 6 Mar 2019 09:38:16 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51518 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726913AbfCFOiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 09:38:15 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6D1A673482E4A166F3B9;
+        Wed,  6 Mar 2019 22:32:17 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 6 Mar 2019 22:32:12 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <arvid.brodin@alten.se>
+Subject: [PATCH net] net: hsr: fix memory leak in hsr_dev_finalize()
+Date:   Wed, 6 Mar 2019 22:45:01 +0800
+Message-ID: <20190306144501.77976-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306141237.GW32477@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 03:12:37PM +0100, Peter Zijlstra wrote:
-> On Wed, Mar 06, 2019 at 03:01:33PM +0100, Dmitry Vyukov wrote:
-> > On Wed, Mar 6, 2019 at 2:57 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > I've not found callers of __asan_report_load* with AC=1 in the kernel
-> > > yet. Under what condtions does GCC emit calls to these functions?
-> > 
-> > CONFIG_KASAN_INLINE=y
-> > Then compiler inlines fast path into generated code and only calls
-> > into runtime to report errors (also, faster, this should be a default
-> > for anything other than tiny ROM controllers).
-> 
-> *sigh*, clearly I've not build enough kernels yet... Lemme go try that.
+If hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER) failed to
+add port, it directly returns res and forgets to free the node
+that allocated in hsr_create_self_node(), and forgets to delete
+the node->mac_list linked in hsr->self_node_db.
 
-mm/kasan/generic_report.o: warning: objtool: __asan_report_load1_noabort()+0x0: call to __fentry__() with UACCESS enabled
+BUG: memory leak
+unreferenced object 0xffff8881cfa0c780 (size 64):
+  comm "syz-executor.0", pid 2077, jiffies 4294717969 (age 2415.377s)
+  hex dump (first 32 bytes):
+    e0 c7 a0 cf 81 88 ff ff 00 02 00 00 00 00 ad de  ................
+    00 e6 49 cd 81 88 ff ff c0 9b 87 d0 81 88 ff ff  ..I.............
+  backtrace:
+    [<00000000e2ff5070>] hsr_dev_finalize+0x736/0x960 [hsr]
+    [<000000003ed2e597>] hsr_newlink+0x2b2/0x3e0 [hsr]
+    [<000000003fa8c6b6>] __rtnl_newlink+0xf1f/0x1600 net/core/rtnetlink.c:3182
+    [<000000001247a7ad>] rtnl_newlink+0x66/0x90 net/core/rtnetlink.c:3240
+    [<00000000e7d1b61d>] rtnetlink_rcv_msg+0x54e/0xb90 net/core/rtnetlink.c:5130
+    [<000000005556bd3a>] netlink_rcv_skb+0x129/0x340 net/netlink/af_netlink.c:2477
+    [<00000000741d5ee6>] netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+    [<00000000741d5ee6>] netlink_unicast+0x49a/0x650 net/netlink/af_netlink.c:1336
+    [<000000009d56f9b7>] netlink_sendmsg+0x88b/0xdf0 net/netlink/af_netlink.c:1917
+    [<0000000046b35c59>] sock_sendmsg_nosec net/socket.c:621 [inline]
+    [<0000000046b35c59>] sock_sendmsg+0xc3/0x100 net/socket.c:631
+    [<00000000d208adc9>] __sys_sendto+0x33e/0x560 net/socket.c:1786
+    [<00000000b582837a>] __do_sys_sendto net/socket.c:1798 [inline]
+    [<00000000b582837a>] __se_sys_sendto net/socket.c:1794 [inline]
+    [<00000000b582837a>] __x64_sys_sendto+0xdd/0x1b0 net/socket.c:1794
+    [<00000000c866801d>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+    [<00000000fea382d9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e01dacb3>] 0xffffffffffffffff
 
-You want to do:
+Fixes: c5a759117210("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ net/hsr/hsr_device.c   |  4 +++-
+ net/hsr/hsr_framereg.c | 12 ++++++++++++
+ net/hsr/hsr_framereg.h |  1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-CFLAGS_REMOVE_generic_report.o = -pg
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index b8cd43c9ed5b..c4676bacb8db 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -486,7 +486,7 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+ 
+ 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
+ 	if (res)
+-		return res;
++		goto err_add_port;
+ 
+ 	res = register_netdevice(hsr_dev);
+ 	if (res)
+@@ -506,6 +506,8 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+ fail:
+ 	hsr_for_each_port(hsr, port)
+ 		hsr_del_port(port);
++err_add_port:
++	hsr_del_node(&hsr->self_node_db);
+ 
+ 	return res;
+ }
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 286ceb41ac0c..9af16cb68f76 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -124,6 +124,18 @@ int hsr_create_self_node(struct list_head *self_node_db,
+ 	return 0;
+ }
+ 
++void hsr_del_node(struct list_head *self_node_db)
++{
++	struct hsr_node *node;
++
++	rcu_read_lock();
++	node = list_first_or_null_rcu(self_node_db, struct hsr_node, mac_list);
++	rcu_read_unlock();
++	if (node) {
++		list_del_rcu(&node->mac_list);
++		kfree(node);
++	}
++}
+ 
+ /* Allocate an hsr_node and add it to node_db. 'addr' is the node's AddressA;
+  * seq_out is used to initialize filtering of outgoing duplicate frames
+diff --git a/net/hsr/hsr_framereg.h b/net/hsr/hsr_framereg.h
+index 370b45998121..531fd3dfcac1 100644
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -16,6 +16,7 @@
+ 
+ struct hsr_node;
+ 
++void hsr_del_node(struct list_head *self_node_db);
+ struct hsr_node *hsr_add_node(struct list_head *node_db, unsigned char addr[],
+ 			      u16 seq_out);
+ struct hsr_node *hsr_get_node(struct hsr_port *port, struct sk_buff *skb,
+-- 
+2.20.1
 
-like generic.o has?
