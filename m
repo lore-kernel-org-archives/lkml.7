@@ -2,102 +2,94 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB97FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6787EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F5120684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CFC20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzXIGeNw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xv0M1+nr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfCFQ6S (ORCPT
+        id S1730199AbfCFQ6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:58:18 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40737 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfCFQ6R (ORCPT
+        Wed, 6 Mar 2019 11:58:55 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:44804 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfCFQ6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:58:17 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j36so13609231qta.7;
-        Wed, 06 Mar 2019 08:58:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5WKxlespnozNwXXzrZIVyTtNdvgIQi6IivB4otClv/o=;
-        b=CzXIGeNwCfiTrnHw7jMvU3bYn3thd0okwLi1ReH0MkYO1xnpgyY/XBG28qbpRCF9xJ
-         aGagHc/cFD5pZgAUhxTmaVQOoAwjqeetWitnp471tWB3eohbOHxTnhbp01cImJzwdY80
-         7NUJW/ZMo5P+7C1AbsH2FLdTPXWkSqgHj9i6KNR+qfBY8CQP3QYDGI2omAorEhaxqBZL
-         mqCfIB0e7TFvBK9hu5YHyq9nE20r41HluYSiRyeGUS12UFq+MvNbb2tD3T/qqoRovMiO
-         E8II6lMNkTHtzpW8r3u+9EFlv/kD2heft03/tzLt+JKzk/0pPMmXpcpFJeZ4cU5yMqd9
-         nH6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5WKxlespnozNwXXzrZIVyTtNdvgIQi6IivB4otClv/o=;
-        b=lZEksiy2PPTjEwU0kTlV/88plY1ufRokhbSa6h8qlPclDMyVt9G6rP3bWEeJnMLoii
-         57zw0ebpukB1FEXBLrg6os/xiaFvsvcxzMPRDHyg5N7bPrj8qOd56FcFdhqo/W+QqvLd
-         ixKp8OnKzJFlm6uw0xbwL4EAamwB5DR1UHx8f0hVfOmAn0CK7cCngkATgHNNEd9to6LS
-         ACBuCxEMxNsTKFB4y1AfjS/e7pI0v/MyxmT1CFcYfuZFfcYj+r1sT7GzX+ERhZEuX19G
-         rTcpm8idXCh5I5NZFaFX0TUszrJndt5jtwHkztTRi+EOVjjQ5CNcHAkVrmSzNN6vkab2
-         5qUg==
-X-Gm-Message-State: APjAAAV3RPA8b80yty7XVMGjvqldr80kv360R4dNIgAkU85WiTDSoGUR
-        L2s8RcWSw1L9KFMrpklFFBphEw1KPXzMgNGRdvQ=
-X-Google-Smtp-Source: APXvYqzH49CVqPdcmlb1xI5roqdq3t5OpqZq0Cg4UpMZtBXxip+eNELM3yp+/Xijy0EwanKkqceo7XVAGSh6PrAGg90=
-X-Received: by 2002:a0c:ad67:: with SMTP id v36mr7080548qvc.5.1551891496427;
- Wed, 06 Mar 2019 08:58:16 -0800 (PST)
+        Wed, 6 Mar 2019 11:58:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Daoa5W1kY+eBrvLFATCAUtuqAOrV6WLhDnSOpJs+YPI=; b=xv0M1+nrrSu7k5Mo05NVEgL9/
+        kT4xFZ3Ep3V9S/xn5mAvELAbckbjcru/R5AFSzl0bXygAZz3kFVEuZmlAOIxtXAhnzbmMtkUP0W6Y
+        Q1yYaB4ZJnRWbfTgmyy2c6YE0YmRnVHftnIeXkuizSb4ne/Tg46aLB58/SHLhqxkINJatgwJ2MJrP
+        bxbplBS6y9k7VdcyvvewGtWf9iKV9W+ofBPhe7hFFvZURE4KCg6oNXF+qgWMyeZsv1o+M4ITmLtxV
+        Vxe58KN3NYoszX/Au4CAcly9TtB6X3F7KPS4dxSpVrnpccPDN9LawNqWfYmqnKdgS72AU6f74HOwU
+        kTDWe01+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1ZsG-0004Av-Lm; Wed, 06 Mar 2019 16:58:32 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7263B20316505; Wed,  6 Mar 2019 17:58:31 +0100 (CET)
+Date:   Wed, 6 Mar 2019 17:58:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>
+Subject: Re: [RFC PATCH] tools/memory-model: Remove (dep ; rfi) from ppo
+Message-ID: <20190306165831.GZ32477@hirez.programming.kicks-ass.net>
+References: <20190226093009.GS32477@hirez.programming.kicks-ass.net>
+ <20190226104551.GF32534@hirez.programming.kicks-ass.net>
+ <20190226112133.GG32534@hirez.programming.kicks-ass.net>
+ <20190226112521.GH32534@hirez.programming.kicks-ass.net>
+ <20190226113008.GI32534@hirez.programming.kicks-ass.net>
+ <20190226113813.GA14753@zn.tnic>
+ <20190226134906.GG32494@hirez.programming.kicks-ass.net>
+ <20190226142845.GK4072@linux.ibm.com>
+ <20190226150450.GW32477@hirez.programming.kicks-ass.net>
+ <ab631777-7cbd-4658-fb99-05d60ec5a1ea@gmail.com>
 MIME-Version: 1.0
-References: <20190304224854.12494-1-pakki001@umn.edu>
-In-Reply-To: <20190304224854.12494-1-pakki001@umn.edu>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 6 Mar 2019 08:58:04 -0800
-Message-ID: <CAPhsuW4+2r+CV71JGL6_0Cxn0aDeuLDg7Bhma51tS7RpR9fZpg@mail.gmail.com>
-Subject: Re: [PATCH] md: Fix failed allocation of md_register_thread
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Shaohua Li <shli@kernel.org>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab631777-7cbd-4658-fb99-05d60ec5a1ea@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 2:50 PM Aditya Pakki <pakki001@umn.edu> wrote:
->
-> mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-> The patch checks for such a scenario and frees allocated resources.
->
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+On Thu, Mar 07, 2019 at 12:46:05AM +0900, Akira Yokosawa wrote:
+> So, I'm looking at the macro RELOC_HIDE() defined in include/linux/compiler-gcc.h.
 
-This looks good. Could you please add a "Fixed:" tag?
+> Am I the only one who was not aware of this gcc-specific macro?
 
-Thanks,
-Song
+It's one I regularly see, but had forgotten about in this context.
 
-> ---
->  drivers/md/raid10.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index abb5d382f64d..f52b4d9bcd24 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -3939,6 +3939,8 @@ static int raid10_run(struct mddev *mddev)
->                 set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
->                 mddev->sync_thread = md_register_thread(md_do_sync, mddev,
->                                                         "reshape");
-> +               if (!mddev->sync_thread)
-> +                       goto out_free_conf;
->         }
->
->         return 0;
-> --
-> 2.17.1
->
+However; you can also fix things by adding asm volatile ("":::"memory");
+in places.
+
+But that's not really the point; I would really rather have a cmdline
+knob to fix things. That way we can compile the kernel with and without
+and look for differences. -fno-unicorns or something :-)
+
+While I understand some compiler people revel in UB and love to make
+unicorns happen, I think in this case the produces result is utterly
+insane.
