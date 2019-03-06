@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3B0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17871C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7686206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FD520661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfCFS1z (ORCPT
+        id S1726855AbfCFS2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:27:55 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:60681 "EHLO
+        Wed, 6 Mar 2019 13:28:30 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:54365 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfCFS1z (ORCPT
+        with ESMTP id S1726724AbfCFS23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:27:55 -0500
+        Wed, 6 Mar 2019 13:28:29 -0500
 Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mzhax-1gorg90z3Z-00vcuz; Wed, 06 Mar 2019 19:27:52 +0100
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MjjOl-1gePOq42Nn-00lB0w; Wed, 06 Mar 2019 19:27:16 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Subject: [PATCH] drivers: mmc: Kconfig: pedantic cleanups
-Date:   Wed,  6 Mar 2019 19:27:51 +0100
-Message-Id: <1551896871-30654-1-git-send-email-info@metux.net>
+Cc:     perex@perex.cz, tiwai@suse.com
+Subject: [PATCH] sound: soc: qcom: Kconfig: formatting cleanup
+Date:   Wed,  6 Mar 2019 19:27:08 +0100
+Message-Id: <1551896828-30562-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:XdYhKOSIFGbb2eB8ETSq4xrlyxiP2WzP8xSB+a+oWcGzPk++4it
- S2Anj3YgAgLQv8107JhF/D6I/+EWWdvC2+PZttTZoaX8H/4bO2242dL4oO8Z4+i9NzkcvZe
- OdEbi2RgJuihliwgpCdDcBOicTjtnTj1fpYXa5M5vWEwE/bESTgDHD/ZJJqF05X4v881DB6
- JSym5Qvh61ALnMg7Z16fA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/9lhF4260mY=:A7pJ/IlYtsu3j0cWOG10b0
- xRyQpZHx7W0oRRf7aAFHaJQ/foWTryoUf6offp7q3IPVnnq0AXWGA9JuB4JoXpREc2vFOSBH2
- C+GqX+ZyZF3BHcCvYGUa5S7JsIA28GFz7k3YvEsJBD6Fzp8+QAJxfYkAln4/c7BaevJXNmuv5
- Ek48Pgdm0sfISPMt/4H7K9eppBmvOdV8WbuCKwCrWaTlLp595givbsSmoWJTfaq0QCMB2iPMG
- nzsd6pBkWttjhVdQAA3MDgadMmSotXjxbU8RhpuBrEzL270B4L6M11wyy+v5Ew0eVzqk2FpHl
- pRCN7oxTqx6rw64V0eFdgl0waaF13gPjg4XMaq+rmqNMHqB5TIuP1E37XMtgTzsMqiTjuEczv
- mWbHoz0qMOrTju0aSpTytza+cmOHo06SD1dY4PXuR24CEomiGTOTuBOd/PdoiicCL51D6KH2I
- bQO40u9huphfaqVWekN5DkW2sPwOjigDZGfYfrRYiU4EaQ26AIWBG5ckBeXzjfiBOdJB9ch8j
- +VZEgpueuptR93QxosnjQuzWhBWbuZH9uXqlZoKT3nw7w5gAI7t2Pgj928mhAUQe56KMxlGyP
- KNwTg66huFxRU8+n/guSfjABhw9/J5DaGA071wQ7IbQbt6ZMEsbGcWulK5sr++djnMjYmzagA
- rueynsDaqqc7qfILIKRNdahie9bvv6rVCjpaWjMn84y2WTEDUVBKUukmoh6T88E10+CX1sPxG
- w29TNzw2455PlJEL3wWyCws1yL/4sD5QddB7Zg==
+X-Provags-ID: V03:K1:hBpBApIZMQIdrwK37yW7DxXZRxuPku8Nqp+AUMb6W6PNcMkvr9a
+ 4B3PnFESy9+qSk5m90bu29+B6CErP6BkK2w4EWvVzP/2jW7uBM3D1CJ1gEg6vbj4TDxAiTC
+ 5awq6ZlWJXZ4mVpYgr7PQhPJzE5xtkZWJ9hycexnFcKlZNoZv7rj/peEmp5ePg9Xl0hsO3w
+ 0Nn5jK0pGMyGrVfksKrDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:561sHun1cWY=:NjH9x9cS6u4uFQRPYt/91j
+ TlyxJtcQbEsDsu8FXEYfc/m7ziVLpARV0UpMV8g/9WRExhINmC6ALsaFDC7uyOCA8FbJe8qUQ
+ Zkkx+uoUCi97RqVOTDhYYDh3+LGSIJ3xwlkLfwP0fwqtE0+ilXt9SYLxcFs7vp7BgyfN/dl3h
+ ptItLwRwqd1kwzEaKS0LN080XeOYfZs98lG7u7C1hi7Wrb5t8hCuKALNWv2upiaxvUm38bQTb
+ Sh2RUFN+8iH5xYtrowOUTHnTWmaQTO3qThNUydwu2XLbZ6GuSgI4ZHPsZwW1fPdMoPt5Aar6F
+ o9KNuxS9s5xnr//atMlfcphV+QTtNPPI08g3M9j3SHB/t9z5K9XAjr85OPB4rodZhEFTnjklD
+ ixiDFRSV99LuI0ah6NJQBcrjCCsj1Kz1SeSH4wVxZjgczs90Kw57on7PQDZD6gY6fvez8bjzg
+ /gKcCcePbNKapIMk/GQ2mA/OiCgxrN7Ma6dgaR5ZqnmbIKGayyqlJbjSs5KsH2RzNtoVKn2h3
+ /OCAP0yHbwT+Gd7VkUT5XCpfzM4yGJ82YG1oFcPVTIOVC/73DKsMXgqE+IcFGL7oYkRYnRGW1
+ k+yPXA/OYEnHNXbs8SRjV4MOAFkDyRkh74qQCOqdqfWXYsfYqG6mYXQCmHTyysMy/UbC85ok7
+ TL1jsC28jvQSyKykCR83JK6Rz+CKFPMyPnsBzGotSsW1K2lt4JMqiJnKTlfRTjzKuSYjIq41v
+ uwss0RLFnU+A+Vx4GZawcZ3CyY976qpOa+SgPJ4DIZaIV4exeSEL9v3fpunbkpBb99LE6SDw5
+ BSdwRILEz+q1JvvaZlaEDf4kC9oVHMkNzK1L48itK6z6vdinJ0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,99 +54,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/mmc/host/Kconfig | 43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
+ sound/soc/qcom/Kconfig | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 28fcd8f..de7a38d 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -437,7 +437,7 @@ config MMC_WBSD
- 	depends on ISA_DMA_API
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 804ae0d..a748ad0 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -2,8 +2,8 @@ config SND_SOC_QCOM
+ 	tristate "ASoC support for QCOM platforms"
+ 	depends on ARCH_QCOM || COMPILE_TEST
  	help
- 	  This selects the Winbond(R) W83L51xD Secure digital and
--          Multimedia card Interface.
-+	  Multimedia card Interface.
- 	  If you have a machine with a integrated W83L518D or W83L519D
- 	  SD/MMC card reader, say Y or M here.
+-          Say Y or M if you want to add support to use audio devices
+-          in Qualcomm Technologies SOC-based platforms.
++	  Say Y or M if you want to add support to use audio devices
++	  in Qualcomm Technologies SOC-based platforms.
  
-@@ -515,7 +515,7 @@ config MMC_TIFM_SD
- 	  'Misc devices: TI Flash Media PCI74xx/PCI76xx host adapter support
- 	  (TIFM_7XX1)'.
- 
--          To compile this driver as a module, choose M here: the
-+	  To compile this driver as a module, choose M here: the
- 	  module will be called tifm_sd.
- 
- config MMC_MVSDIO
-@@ -531,12 +531,12 @@ config MMC_MVSDIO
- 	  module will be called mvsdio.
- 
- config MMC_DAVINCI
--        tristate "TI DAVINCI Multimedia Card Interface support"
--        depends on ARCH_DAVINCI
--        help
--          This selects the TI DAVINCI Multimedia card Interface.
--          If you have an DAVINCI board with a Multimedia Card slot,
--          say Y or M here.  If unsure, say N.
-+	tristate "TI DAVINCI Multimedia Card Interface support"
-+	depends on ARCH_DAVINCI
-+	help
-+	  This selects the TI DAVINCI Multimedia card Interface.
-+	  If you have an DAVINCI board with a Multimedia Card slot,
-+	  say Y or M here.  If unsure, say N.
- 
- config MMC_GOLDFISH
- 	tristate "goldfish qemu Multimedia Card Interface support"
-@@ -565,18 +565,18 @@ config MMC_S3C
- 	depends on S3C24XX_DMAC
+ config SND_SOC_LPASS_CPU
+ 	tristate
+@@ -29,17 +29,17 @@ config SND_SOC_STORM
+ 	select SND_SOC_LPASS_IPQ806X
+ 	select SND_SOC_MAX98357A
  	help
- 	  This selects a driver for the MCI interface found in
--          Samsung's S3C2410, S3C2412, S3C2440, S3C2442 CPUs.
-+	  Samsung's S3C2410, S3C2412, S3C2440, S3C2442 CPUs.
- 	  If you have a board based on one of those and a MMC/SD
- 	  slot, say Y or M here.
+-          Say Y or M if you want add support for SoC audio on the
+-          Qualcomm Technologies IPQ806X-based Storm board.
++	  Say Y or M if you want add support for SoC audio on the
++	  Qualcomm Technologies IPQ806X-based Storm board.
  
- 	  If unsure, say N.
+ config SND_SOC_APQ8016_SBC
+ 	tristate "SoC Audio support for APQ8016 SBC platforms"
+ 	depends on SND_SOC_QCOM
+ 	select SND_SOC_LPASS_APQ8016
+ 	help
+-          Support for Qualcomm Technologies LPASS audio block in
+-          APQ8016 SOC-based systems.
+-          Say Y if you want to use audio devices on MI2S.
++	  Support for Qualcomm Technologies LPASS audio block in
++	  APQ8016 SOC-based systems.
++	  Say Y if you want to use audio devices on MI2S.
  
- config MMC_S3C_HW_SDIO_IRQ
--       bool "Hardware support for SDIO IRQ"
--       depends on MMC_S3C
--       help
--         Enable the hardware support for SDIO interrupts instead of using
--	 the generic polling code.
-+	bool "Hardware support for SDIO IRQ"
-+	depends on MMC_S3C
-+	help
-+	  Enable the hardware support for SDIO interrupts instead of using
-+	  the generic polling code.
+ config SND_SOC_QCOM_COMMON
+ 	tristate
+@@ -81,10 +81,10 @@ config SND_SOC_QDSP6
+ 	select SND_SOC_QDSP6_ASM
+ 	select SND_SOC_QDSP6_ASM_DAI
+ 	help
+-	 To add support for MSM QDSP6 Soc Audio.
+-	 This will enable sound soc platform specific
+-	 audio drivers. This includes q6asm, q6adm,
+-	 q6afe interfaces to DSP using apr.
++	  To add support for MSM QDSP6 Soc Audio.
++	  This will enable sound soc platform specific
++	  audio drivers. This includes q6asm, q6adm,
++	  q6afe interfaces to DSP using apr.
  
- choice
- 	prompt "Samsung S3C SD/MMC transfer code"
-@@ -948,15 +948,16 @@ config MMC_MTK
- 	  If unsure, say N.
+ config SND_SOC_MSM8996
+ 	tristate "SoC Machine driver for MSM8996 and APQ8096 boards"
+@@ -92,9 +92,9 @@ config SND_SOC_MSM8996
+ 	select SND_SOC_QDSP6
+ 	select SND_SOC_QCOM_COMMON
+ 	help
+-          Support for Qualcomm Technologies LPASS audio block in
+-          APQ8096 SoC-based systems.
+-          Say Y if you want to use audio device on this SoCs
++	  Support for Qualcomm Technologies LPASS audio block in
++	  APQ8096 SoC-based systems.
++	  Say Y if you want to use audio device on this SoCs
  
- config MMC_SDHCI_MICROCHIP_PIC32
--        tristate "Microchip PIC32MZDA SDHCI support"
--        depends on MMC_SDHCI && PIC32MZDA && MMC_SDHCI_PLTFM
--        help
--          This selects the Secure Digital Host Controller Interface (SDHCI)
--          for PIC32MZDA platform.
-+	tristate "Microchip PIC32MZDA SDHCI support"
-+	depends on MMC_SDHCI && PIC32MZDA && MMC_SDHCI_PLTFM
-+	help
-+	  This selects the Secure Digital Host Controller Interface (SDHCI)
-+	  for PIC32MZDA platform.
-+
-+	  If you have a controller with this interface, say Y or M here.
- 
--          If you have a controller with this interface, say Y or M here.
-+	  If unsure, say N.
- 
--          If unsure, say N.
- config MMC_SDHCI_BRCMSTB
- 	tristate "Broadcom SDIO/SD/MMC support"
- 	depends on ARCH_BRCMSTB || BMIPS_GENERIC
+ config SND_SOC_SDM845
+ 	tristate "SoC Machine driver for SDM845 boards"
 -- 
 1.9.1
 
