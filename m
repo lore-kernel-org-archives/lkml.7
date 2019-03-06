@@ -2,147 +2,129 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2E7C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F41C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259B220840
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6F520663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfCFVBF convert rfc822-to-8bit (ORCPT
+        id S1728234AbfCFVCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:01:05 -0500
-Received: from lithops.sigma-star.at ([195.201.40.130]:47128 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbfCFVBF (ORCPT
+        Wed, 6 Mar 2019 16:02:01 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:37942 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726585AbfCFVCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:01:05 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 83B26608A387;
-        Wed,  6 Mar 2019 22:01:02 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id MYKFNp8BqHXm; Wed,  6 Mar 2019 22:01:02 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 27C8F608A38A;
-        Wed,  6 Mar 2019 22:01:02 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id fhfYwcal_9De; Wed,  6 Mar 2019 22:01:02 +0100 (CET)
-Received: from blindfold.localnet (213-47-184-186.cable.dynamic.surfer.at [213.47.184.186])
-        by lithops.sigma-star.at (Postfix) with ESMTPSA id C9B95608A387;
-        Wed,  6 Mar 2019 22:01:01 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, jdike@addtoit.com,
-        anton.ivanov@cambridgegreys.com, linux-um@lists.infradead.org
-Subject: Re: [PATCH] arch: um: Kconfig: pedantic cleanups
-Date:   Wed, 06 Mar 2019 22:01:01 +0100
-Message-ID: <31062067.NyzppZ7ELz@blindfold>
-In-Reply-To: <1551896897-30963-1-git-send-email-info@metux.net>
-References: <1551896897-30963-1-git-send-email-info@metux.net>
+        Wed, 6 Mar 2019 16:02:00 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1h1dfm-0002Ca-T8; Wed, 06 Mar 2019 21:01:54 +0000
+Received: from ben by deadeye with local (Exim 4.92-RC6)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1h1dfm-00062J-NV; Wed, 06 Mar 2019 21:01:54 +0000
+Message-ID: <5760e0a210c7c39b486aa932ccbe7f3f2c210d62.camel@decadent.org.uk>
+Subject: Re: [PATCH] kbuild: add workaround for Debian make-kpkg
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Cc:     Liz Zhang <lizzha@microsoft.com>, Lili Deng <v-lide@microsoft.com>,
+        Riku Voipio <riku.voipio@linaro.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org,
+        Manoj Srivastava <manoj.srivastava.1962@gmail.com>
+Date:   Wed, 06 Mar 2019 21:01:49 +0000
+In-Reply-To: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-3foCDG+6ZtH2f72oUuhy"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 6. März 2019, 19:28:17 CET schrieb Enrico Weigelt, metux IT consult:
 
-Can we please have a changelog?
+--=-3foCDG+6ZtH2f72oUuhy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-//richard
+[Trying again with an alternate address for Manoj.]
 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  arch/um/Kconfig | 52 ++++++++++++++++++++++++++--------------------------
->  1 file changed, 26 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index ec9711d..216ee50 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -80,46 +80,46 @@ config LD_SCRIPT_DYN
->  	bool
->  	default y
->  	depends on !LD_SCRIPT_STATIC
-> -        select MODULE_REL_CRCS if MODVERSIONS
-> +	select MODULE_REL_CRCS if MODVERSIONS
->  
->  config HOSTFS
->  	tristate "Host filesystem"
->  	help
-> -          While the User-Mode Linux port uses its own root file system for
-> -          booting and normal file access, this module lets the UML user
-> -          access files stored on the host.  It does not require any
-> -          network connection between the Host and UML.  An example use of
-> -          this might be:
-> +	  While the User-Mode Linux port uses its own root file system for
-> +	  booting and normal file access, this module lets the UML user
-> +	  access files stored on the host.  It does not require any
-> +	  network connection between the Host and UML.  An example use of
-> +	  this might be:
->  
-> -          mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
-> +	  mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
->  
-> -          where /tmp/fromhost is an empty directory inside UML and
-> -          /tmp/umlshare is a directory on the host with files the UML user
-> -          wishes to access.
-> +	  where /tmp/fromhost is an empty directory inside UML and
-> +	  /tmp/umlshare is a directory on the host with files the UML user
-> +	  wishes to access.
->  
-> -          For more information, see
-> -          <http://user-mode-linux.sourceforge.net/hostfs.html>.
-> +	  For more information, see
-> +	  <http://user-mode-linux.sourceforge.net/hostfs.html>.
->  
-> -          If you'd like to be able to work with files stored on the host,
-> -          say Y or M here; otherwise say N.
-> +	  If you'd like to be able to work with files stored on the host,
-> +	  say Y or M here; otherwise say N.
->  
->  config MCONSOLE
->  	bool "Management console"
->  	depends on PROC_FS
->  	default y
->  	help
-> -          The user mode linux management console is a low-level interface to
-> -          the kernel, somewhat like the i386 SysRq interface.  Since there is
-> -          a full-blown operating system running under every user mode linux
-> -          instance, there is much greater flexibility possible than with the
-> -          SysRq mechanism.
-> -
-> -          If you answer 'Y' to this option, to use this feature, you need the
-> -          mconsole client (called uml_mconsole) which is present in CVS in
-> -          2.4.5-9um and later (path /tools/mconsole), and is also in the
-> -          distribution RPM package in 2.4.6 and later.
-> -
-> -          It is safe to say 'Y' here.
-> +	  The user mode linux management console is a low-level interface to
-> +	  the kernel, somewhat like the i386 SysRq interface.  Since there is
-> +	  a full-blown operating system running under every user mode linux
-> +	  instance, there is much greater flexibility possible than with the
-> +	  SysRq mechanism.
-> +
-> +	  If you answer 'Y' to this option, to use this feature, you need the
-> +	  mconsole client (called uml_mconsole) which is present in CVS in
-> +	  2.4.5-9um and later (path /tools/mconsole), and is also in the
-> +	  distribution RPM package in 2.4.6 and later.
-> +
-> +	  It is safe to say 'Y' here.
->  
->  config MAGIC_SYSRQ
->  	bool "Magic SysRq key"
-> 
+kernel-package is maintained by Manoj Srivastava (cc'd), not by the
+Debian kernel team.
+
+On Thu, 2019-03-07 at 01:00 +0900, Masahiro Yamada wrote:
+> Since commit 3812b8c5c5d5 ("kbuild: make -r/-R effective in top
+> Makefile for old Make versions"), make-kpkg is not working.
+>=20
+> make-kpkg directly includes the top Makefile of Linux kernel, and
+> appends some debian_* targets.
+>=20
+>   /usr/share/kernel-package/ruleset/kernel_version.mk:
+>=20
+>     # Include the kernel makefile
+>     override dot-config :=3D 1
+>     include Makefile
+>     dot-config :=3D 1
+>=20
+> I did not know the kernel Makefile was used in that way, and it is
+> hard to guarantee the behavior when the kernel Makefile is included
+> by another Makefile from a different project.
+>=20
+> Looks like Debian Stretch stopped providing make-kpkg (except
+> PowerPC).
+
+kernel-package is not included in stretch at all.  I'm not sure where
+you're seeing it as being present on powerpc - that architecture wasn't
+included in the stretch release.
+
+> Maybe it is obsolete and being replaced with 'make deb-pkg' etc.
+> but still widely used.
+[...]
+
+kernel-package is currently planned to be included in the next release,
+though I'm not sure whether it should be.
+
+There is another bug report about kernel-package with current kernel
+versions <https://bugs.debian.org/890817> but I don't know whether it
+has been worked around already.
+
+Ben.
+
+--=20
+Ben Hutchings
+friends: People who know you well, but like you anyway.
 
 
 
+--=-3foCDG+6ZtH2f72oUuhy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlyANT0ACgkQ57/I7JWG
+EQkRsQ/+Ph2M0eSA6fshi/nueiBYnTirKrdWIQPXSLa4w1R4TB00qO561Sev/XCU
+DYXrW4wTgmooI1TFVK25yK/3A0ysZwXSwvjMcXnl2ENaCmKJylJObqpsJi3nPIpR
+AqKDmochmB/1DZ1qNNqAHp/hqwWAkuyjvw2DBtcwKybtTCRoe2HAxlV1+1shYM6e
+wIxPILJS/MzakPsn/BZExwuB0SbvrgMXmYJHVWnEnHR9APa1jJmJYx+m92zU5aP0
+iVmvKvTco7JL097spmT/wGGC4FymmAnkIt6ZDUfeafFbU+1zVbAURrH1PVSXVvr+
+q1nlcyxW83XeSM8tmX3GEJiheMo6lIitY0jvMDxfD4fR6FSmZxKECV6n0mz2eMQa
+8rF3MnV4RNu8zUNFw+jvRqGOdB01L4VNDyRSh0v9xK6naeofEw9SFLpur0VYmn4k
+iaU4RunSzI+QH8vHYlbjqIb+OPqlY5NsRD1xGObV8Ic8PNYNww5nfShyAwFhlFPX
+EWqMgAN+rWV4DJUFyKRakvYYJe8ZQGcQWMLpboQM/xfegtjfgKqryJuzyyWkpF3O
+MsCEU7prX+MzQQq9Uq65Gg/CtjbYK3ik+SxTmmXg7EYGbsV3x2LTjG02xj9+eyzW
+Sp72TvO0jniBCPwIH/sa/khD0H3QA/epj0FuvcBZJD67lcFKN6E=
+=7G9C
+-----END PGP SIGNATURE-----
+
+--=-3foCDG+6ZtH2f72oUuhy--
