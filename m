@@ -2,211 +2,132 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8330C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28BEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A68206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE7120661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oLunVfSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfCFJ45 (ORCPT
+        id S1729982AbfCFJ5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:56:57 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:41673 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfCFJ44 (ORCPT
+        Wed, 6 Mar 2019 04:57:01 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43866 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbfCFJ46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:56:56 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x269uR9k1654018
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 01:56:27 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x269uRQj1654014;
-        Wed, 6 Mar 2019 01:56:27 -0800
-Date:   Wed, 6 Mar 2019 01:56:27 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kees Cook <tipbot@zytor.com>
-Message-ID: <tip-a0bf7fc24303a538396aa8d32450d05c1929b9f0@git.kernel.org>
-Cc:     mingo@kernel.org, linux@dominikbrodowski.net,
-        gregkh@linuxfoundation.org, sean.j.christopherson@intel.com,
-        kernel-hardening@lists.openwall.com, solar@openwall.com,
-        jannh@google.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, hpa@zytor.com, keescook@chromium.org
-Reply-To: jannh@google.com, solar@openwall.com,
-          sean.j.christopherson@intel.com,
-          kernel-hardening@lists.openwall.com, linux@dominikbrodowski.net,
-          gregkh@linuxfoundation.org, mingo@kernel.org,
-          keescook@chromium.org, tglx@linutronix.de, hpa@zytor.com,
-          peterz@infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20190227200132.24707-4-keescook@chromium.org>
-References: <20190227200132.24707-4-keescook@chromium.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/asm] lkdtm: Check for SMEP clearing protections
-Git-Commit-ID: a0bf7fc24303a538396aa8d32450d05c1929b9f0
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 6 Mar 2019 04:56:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x269upRa091145;
+        Wed, 6 Mar 2019 03:56:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551866211;
+        bh=EWdfRDkR47h5farf8flW3tudH2mBH1OHkT3I7G7iNNM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oLunVfScC9+SYhtfQSXU0ryGTsLTEcONNWchXOtNvd4MTznpCAa7vf3ZxJmWt338/
+         niq2lvdh9kDQvZ+TeMpiU5WOwIDpMBar1hZ2UH+TDeX9X1MmmIxPf95xi6/7OtkChe
+         +L066CP5emSVdB+zpxWw3ETYkbSE4u120u/1sk4g=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x269uo0J122855
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Mar 2019 03:56:50 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 6
+ Mar 2019 03:56:49 -0600
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Wed, 6 Mar 2019 03:56:49 -0600
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x269ukPG021936;
+        Wed, 6 Mar 2019 03:56:47 -0600
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <kishon@ti.com>, <zhang.chunyan@linaro.org>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
+Date:   Wed, 6 Mar 2019 15:30:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a0bf7fc24303a538396aa8d32450d05c1929b9f0
-Gitweb:     https://git.kernel.org/tip/a0bf7fc24303a538396aa8d32450d05c1929b9f0
-Author:     Kees Cook <keescook@chromium.org>
-AuthorDate: Wed, 27 Feb 2019 12:01:32 -0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 6 Mar 2019 10:49:50 +0100
+Adrian,
 
-lkdtm: Check for SMEP clearing protections
+On 25/02/19 1:47 PM, Adrian Hunter wrote:
+> On 15/02/19 9:20 PM, Faiz Abbas wrote:
+>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>> card insert/remove operations and a tasklet for finishing mmc requests.
+>> With the addition of external dma support, dmaengine APIs need to
+>> terminate in non-atomic context before unmapping the dma buffers.
+>>
+>> To facilitate this, remove the finish_tasklet and move the call of
+>> sdhci_request_done() to the threaded_irq() callback.
+> 
+> The irq thread has a higher latency than the tasklet.  The performance drop
+> is measurable on the system I tried:
+> 
+> Before:
+> 
+> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+> 1+0 records in
+> 1+0 records out
+> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
+> 
+> After:
+> 
+> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+> 1+0 records in
+> 1+0 records out
+> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
+> 
+> So we only want to resort to the thread for the error case.
+> 
 
-This adds an x86-specific test for pinned cr4 bits. A successful test
-will validate pinning and check the ROP-style call-middle-of-function
-defense, if needed. For example, in the case of native_write_cr4()
-looking like this:
+Sorry for the late response here, but this is about 1.6% decrease. I
+tried out the same commands on a dra7xx board here (with about 5
+consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
+will also find a lesser percentage change if you average over multiple
+dd commands.
 
-ffffffff8171bce0 <native_write_cr4>:
-ffffffff8171bce0:       48 8b 35 79 46 f2 00    mov    0xf24679(%rip),%rsi
-ffffffff8171bce7:       48 09 f7                or     %rsi,%rdi
-ffffffff8171bcea:       0f 22 e7                mov    %rdi,%cr4
-...
-ffffffff8171bd5a:       c3                      retq
+Is this really so significant that we have to maintain two different
+bottom halves and keep having difficulty with adding APIs that can sleep?
 
-The UNSET_SMEP test will jump to ffffffff8171bcea (the mov to cr4)
-instead of ffffffff8171bce0 (native_write_cr4() entry) to simulate a
-direct-call bypass attempt.
+Also I am not sure how to implement only the error handling part in the
+threaded_irq. We need to enter sdhci_request_done() and get the current
+mrq before we can check for error conditions like I've done in patch 2:
 
-Expected successful results:
+/* Terminate and synchronize dma in case of an error */
+if (data && (mrq->cmd->error || data->error) &&
+    host->use_external_dma) {
+	struct dma_chan *chan = sdhci_external_dma_channel(host, data);
+	dmaengine_terminate_sync(chan);
+}
 
-  # echo UNSET_SMEP > /sys/kernel/debug/provoke-crash/DIRECT
-  # dmesg
-  [   79.594433] lkdtm: Performing direct entry UNSET_SMEP
-  [   79.596459] lkdtm: trying to clear SMEP normally
-  [   79.598406] lkdtm: ok: SMEP did not get cleared
-  [   79.599981] lkdtm: trying to clear SMEP with call gadget
-  [   79.601810] ------------[ cut here ]------------
-  [   79.603421] Attempt to unpin cr4 bits: 100000; bypass attack?!
-  ...
-  [   79.650170] ---[ end trace 2452ca0f6126242e ]---
-  [   79.650937] lkdtm: ok: SMEP removal was reverted
+On a related note, do we really need to protect everything in
+sdhci_request_done() with spinlocks? In patch 2 I have only removed lock
+for the terminate_sync() parts that I added but the whole
+dma_unmap/dma_sync parts should be left unprotected IMO.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Solar Designer <solar@openwall.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Link: https://lkml.kernel.org/r/20190227200132.24707-4-keescook@chromium.org
-
----
- drivers/misc/lkdtm/bugs.c  | 61 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/misc/lkdtm/core.c  |  1 +
- drivers/misc/lkdtm/lkdtm.h |  1 +
- 3 files changed, 63 insertions(+)
-
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 7eebbdfbcacd..6176384b4f85 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -255,3 +255,64 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
- 
- 	pr_err("FAIL: accessed page after stack!\n");
- }
-+
-+void lkdtm_UNSET_SMEP(void)
-+{
-+#ifdef CONFIG_X86_64
-+#define MOV_CR4_DEPTH	64
-+	void (*direct_write_cr4)(unsigned long val);
-+	unsigned char *insn;
-+	unsigned long cr4;
-+	int i;
-+
-+	cr4 = native_read_cr4();
-+
-+	if ((cr4 & X86_CR4_SMEP) != X86_CR4_SMEP) {
-+		pr_err("FAIL: SMEP not in use\n");
-+		return;
-+	}
-+	cr4 &= ~(X86_CR4_SMEP);
-+
-+	pr_info("trying to clear SMEP normally\n");
-+	native_write_cr4(cr4);
-+	if (cr4 == native_read_cr4()) {
-+		pr_err("FAIL: pinning SMEP failed!\n");
-+		cr4 |= X86_CR4_SMEP;
-+		pr_info("restoring SMEP\n");
-+		native_write_cr4(cr4);
-+		return;
-+	}
-+	pr_info("ok: SMEP did not get cleared\n");
-+
-+	/*
-+	 * To test the post-write pinning verification we need to call
-+	 * directly into the the middle of native_write_cr4() where the
-+	 * cr4 write happens, skipping the pinning. This searches for
-+	 * the cr4 writing instruction.
-+	 */
-+	insn = (unsigned char *)native_write_cr4;
-+	for (i = 0; i < MOV_CR4_DEPTH; i++) {
-+		/* mov %rdi, %cr4 */
-+		if (insn[i] == 0x0f && insn[i+1] == 0x22 && insn[i+2] == 0xe7)
-+			break;
-+	}
-+	if (i >= MOV_CR4_DEPTH) {
-+		pr_info("ok: cannot locate cr4 writing call gadget\n");
-+		return;
-+	}
-+	direct_write_cr4 = (void *)(insn + i);
-+
-+	pr_info("trying to clear SMEP with call gadget\n");
-+	direct_write_cr4(cr4);
-+	if (native_read_cr4() & X86_CR4_SMEP) {
-+		pr_info("ok: SMEP removal was reverted\n");
-+	} else {
-+		pr_err("FAIL: cleared SMEP not detected!\n");
-+		cr4 |= X86_CR4_SMEP;
-+		pr_info("restoring SMEP\n");
-+		native_write_cr4(cr4);
-+	}
-+#else
-+	pr_err("FAIL: this test is x86_64-only\n");
-+#endif
-+}
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index 2837dc77478e..fd668776414b 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -132,6 +132,7 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(CORRUPT_LIST_ADD),
- 	CRASHTYPE(CORRUPT_LIST_DEL),
- 	CRASHTYPE(CORRUPT_USER_DS),
-+	CRASHTYPE(UNSET_SMEP),
- 	CRASHTYPE(CORRUPT_STACK),
- 	CRASHTYPE(CORRUPT_STACK_STRONG),
- 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 3c6fd327e166..9c78d7e21c13 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -26,6 +26,7 @@ void lkdtm_CORRUPT_LIST_DEL(void);
- void lkdtm_CORRUPT_USER_DS(void);
- void lkdtm_STACK_GUARD_PAGE_LEADING(void);
- void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
-+void lkdtm_UNSET_SMEP(void);
- 
- /* lkdtm_heap.c */
- void lkdtm_OVERWRITE_ALLOCATION(void);
+Thanks,
+Faiz
