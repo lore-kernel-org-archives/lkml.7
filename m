@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A92EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8819AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7597820663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6306620684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfCFPw2 (ORCPT
+        id S1726933AbfCFPwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:52:28 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34576 "EHLO
+        Wed, 6 Mar 2019 10:52:38 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34540 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbfCFPvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:51:31 -0500
+        id S1730060AbfCFPv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:51:27 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91B1E1596;
-        Wed,  6 Mar 2019 07:51:30 -0800 (PST)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 572193F738;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1760F1993;
         Wed,  6 Mar 2019 07:51:27 -0800 (PST)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D017A3F703;
+        Wed,  6 Mar 2019 07:51:23 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,9 +43,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v4 12/19] mm: pagewalk: Add test_p?d callbacks
-Date:   Wed,  6 Mar 2019 15:50:24 +0000
-Message-Id: <20190306155031.4291-13-steven.price@arm.com>
+Subject: [PATCH v4 11/19] mm: pagewalk: Allow walking without vma
+Date:   Wed,  6 Mar 2019 15:50:23 +0000
+Message-Id: <20190306155031.4291-12-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190306155031.4291-1-steven.price@arm.com>
 References: <20190306155031.4291-1-steven.price@arm.com>
@@ -56,95 +56,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is useful to be able to skip parts of the page table tree even when
-walking without VMAs. Add test_p?d callbacks similar to test_walk but
-which are called just before a table at that level is walked. If the
-callback returns non-zero then the entire table is skipped.
+Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
+for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
+a hole, because it lacks a vma.
+
+This means each arch has re-implemented page table walking when needed,
+for example in the per-arch ptdump walker.
+
+Remove the requirement to have a vma except when trying to split huge
+pages.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- include/linux/mm.h | 11 +++++++++++
- mm/pagewalk.c      | 24 ++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ mm/pagewalk.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1a4b1615d012..4755af1779f6 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1427,6 +1427,11 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
-  *             value means "do page table walk over the current vma,"
-  *             and a negative one means "abort current page table walk
-  *             right now." 1 means "skip the current vma."
-+ * @test_pmd:  similar to test_walk(), but called for every pmd.
-+ * @test_pud:  similar to test_walk(), but called for every pud.
-+ * @test_p4d:  similar to test_walk(), but called for every p4d.
-+ *             Returning 0 means walk this part of the page tables,
-+ *             returning 1 means to skip this range.
-  * @mm:        mm_struct representing the target process of page table walk
-  * @vma:       vma currently walked (NULL if walking outside vmas)
-  * @private:   private data for callbacks' usage
-@@ -1451,6 +1456,12 @@ struct mm_walk {
- 			     struct mm_walk *walk);
- 	int (*test_walk)(unsigned long addr, unsigned long next,
- 			struct mm_walk *walk);
-+	int (*test_pmd)(unsigned long addr, unsigned long next,
-+			pmd_t *pmd_start, struct mm_walk *walk);
-+	int (*test_pud)(unsigned long addr, unsigned long next,
-+			pud_t *pud_start, struct mm_walk *walk);
-+	int (*test_p4d)(unsigned long addr, unsigned long next,
-+			p4d_t *p4d_start, struct mm_walk *walk);
- 	struct mm_struct *mm;
- 	struct vm_area_struct *vma;
- 	void *private;
 diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index dac0c848b458..231655db1295 100644
+index 98373a9f88b8..dac0c848b458 100644
 --- a/mm/pagewalk.c
 +++ b/mm/pagewalk.c
-@@ -32,6 +32,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 	unsigned long next;
- 	int err = 0;
- 
-+	if (walk->test_pmd) {
-+		err = walk->test_pmd(addr, end, pmd_offset(pud, 0), walk);
-+		if (err < 0)
-+			return err;
-+		if (err > 0)
-+			return 0;
-+	}
-+
- 	pmd = pmd_offset(pud, addr);
+@@ -36,7 +36,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
  	do {
  again:
-@@ -82,6 +90,14 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 	unsigned long next;
- 	int err = 0;
+ 		next = pmd_addr_end(addr, end);
+-		if (pmd_none(*pmd) || !walk->vma) {
++		if (pmd_none(*pmd)) {
+ 			if (walk->pte_hole)
+ 				err = walk->pte_hole(addr, next, walk);
+ 			if (err)
+@@ -59,9 +59,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 		if (!walk->pte_entry)
+ 			continue;
  
-+	if (walk->test_pud) {
-+		err = walk->test_pud(addr, end, pud_offset(p4d, 0), walk);
-+		if (err < 0)
-+			return err;
-+		if (err > 0)
-+			return 0;
-+	}
+-		split_huge_pmd(walk->vma, pmd, addr);
+-		if (pmd_trans_unstable(pmd))
+-			goto again;
++		if (walk->vma) {
++			split_huge_pmd(walk->vma, pmd, addr);
++			if (pmd_trans_unstable(pmd))
++				goto again;
++		} else if (pmd_large(*pmd)) {
++			continue;
++		}
 +
- 	pud = pud_offset(p4d, addr);
+ 		err = walk_pte_range(pmd, addr, next, walk);
+ 		if (err)
+ 			break;
+@@ -81,7 +86,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
  	do {
   again:
-@@ -124,6 +140,14 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
- 	unsigned long next;
- 	int err = 0;
+ 		next = pud_addr_end(addr, end);
+-		if (pud_none(*pud) || !walk->vma) {
++		if (pud_none(*pud)) {
+ 			if (walk->pte_hole)
+ 				err = walk->pte_hole(addr, next, walk);
+ 			if (err)
+@@ -95,9 +100,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 				break;
+ 		}
  
-+	if (walk->test_p4d) {
-+		err = walk->test_p4d(addr, end, p4d_offset(pgd, 0), walk);
-+		if (err < 0)
-+			return err;
-+		if (err > 0)
-+			return 0;
-+	}
-+
- 	p4d = p4d_offset(pgd, addr);
- 	do {
- 		next = p4d_addr_end(addr, end);
+-		split_huge_pud(walk->vma, pud, addr);
+-		if (pud_none(*pud))
+-			goto again;
++		if (walk->vma) {
++			split_huge_pud(walk->vma, pud, addr);
++			if (pud_none(*pud))
++				goto again;
++		} else if (pud_large(*pud)) {
++			continue;
++		}
+ 
+ 		if (walk->pmd_entry || walk->pte_entry)
+ 			err = walk_pmd_range(pud, addr, next, walk);
 -- 
 2.20.1
 
