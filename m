@@ -2,130 +2,182 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38F0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C172087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551895210;
-	bh=gKXUJgtTS6AIBw7vEV/Mub5TOrGtfxQInsx8I4Q4MP4=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=wEaZDWGENYv19it9yjVg1bvBfv6D3PdRS1o6LwMzxYBDDM/6PWMz6hEdTSbFQoArB
-	 RwwXQ+iKbianjBTBTv0QcYcifQMDw9dPXYGNpuN4eCZvYxIT/Vjp4QEGvmrQPjufrF
-	 B6AISVbTGxkC4ji9EDrOjMedaHaQ0+g3v3+zzJ/E=
+	by mail.kernel.org (Postfix) with ESMTP id B727620652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:00:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GX2CGKZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfCFSAI (ORCPT
+        id S1730627AbfCFSAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:00:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbfCFSAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:00:08 -0500
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C49A720652;
-        Wed,  6 Mar 2019 18:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551895206;
-        bh=gKXUJgtTS6AIBw7vEV/Mub5TOrGtfxQInsx8I4Q4MP4=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=poPqh5QwHJ+lNcL8w8IYd4j4wKSfW8+yxNusZsoZcZZ3k3+twCAakuC3jXoZXpPtO
-         rvIK4IHExO+LeJ3T50k+YykLuBxB+Zm4ngaRmo08B2TPdiWTES1hUQmLxR3tNZZ17k
-         A2TTv67XccT/by2EE+9Gy3XCidw6FeGrsQ31bB7U=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 Mar 2019 13:00:18 -0500
+Received: from mail-it1-f175.google.com ([209.85.166.175]:38009 "EHLO
+        mail-it1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfCFSAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 13:00:18 -0500
+Received: by mail-it1-f175.google.com with SMTP id l66so11535538itg.3;
+        Wed, 06 Mar 2019 10:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zO+AZEfAv5pHsN/jVDva2C5rp6LD2HHLHn2cEbcpRxs=;
+        b=GX2CGKZfAwb3eSRY1stEGm0zcrDI1bnMDl/PzfN4dzsf+h01QTCSpfgZisXxp4Wxda
+         n3NZZBNpA25to7B6uwR6j0FKHs6Ckfww7cjOFsXU5tSfi+KMJHF67zhHI2zKD7aMtr5Y
+         m31RYrFTN1ezCHf2sn1tX3GofzFyE+/YgobvFZAAnNZNC/HHVV7pqvO5zgWxL2v08FKS
+         0hqypg+2hzX954IsdkrkPMVVaSPFDXTNg1XbhwnAYKstlrc9G389H9S7duu2GnRxzGcu
+         LqSuqpu/5H1fW+qeY91TsaueOxJDxCYHY2m/KKJxyNr0+xMUAxVqiG2yW7urfBC/u0Ah
+         bdNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zO+AZEfAv5pHsN/jVDva2C5rp6LD2HHLHn2cEbcpRxs=;
+        b=XnIGImdaRtJ0TlG+wUNA+lhlHuVh2QmpH6Tv8O0sWYPtES77HYWt9WJF7BeWLZZZBf
+         8SfY8YiE/MiHETi3cUBAuVzTJVQADzCsUrtlpFyU1oJOr5uX7xXEoIZNRvSM8ZOgO42g
+         l3pf9T5ahxCKtg1/KQxmuepMlrUQIc03UnLoBhTxewS/a6XIPq8bPuqJ/UBmiIleYm5L
+         a4GzeLBjeRqC+Eo2ONVzhGE4RJL8BGFyk3xLFvo+CvC91SOyrDcBFnGlBGYkXMtciyfm
+         b42NdbwprzSUvoI/b9aLX8l1gOSrQTs1E8TMSPdpAQ2Gb7C0o1Goct/vH3wciOh/rY0M
+         a18A==
+X-Gm-Message-State: APjAAAUjccx3pHyPTMT483r/slCLkGJdVi1EEk52+Xx4tKsC4IHAdA9g
+        x3rYfKHAV3Nj6UR81J+Mt/nxCSqhFFtdixviMLs=
+X-Google-Smtp-Source: APXvYqzamDMOh1SCdmcXq4z4AMwZQJA7x6hMzYySmnOM0vwGjORa6rLhtGgRSAptmhP7AY8mJyheLv8bjv4hV4dhsvk=
+X-Received: by 2002:a24:45e3:: with SMTP id c96mr2606444itd.89.1551895216704;
+ Wed, 06 Mar 2019 10:00:16 -0800 (PST)
 MIME-Version: 1.0
+References: <20190306155048.12868-1-nitesh@redhat.com>
+In-Reply-To: <20190306155048.12868-1-nitesh@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 6 Mar 2019 10:00:05 -0800
+Message-ID: <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <fc94b0cdd050d10ee9c83dc5f918fedab4fb0fc7.camel@baylibre.com>
-References: <20190226223429.193873-1-sboyd@kernel.org> <20190226223429.193873-7-sboyd@kernel.org> <fc94b0cdd050d10ee9c83dc5f918fedab4fb0fc7.camel@baylibre.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 6/8] clk: Allow parents to be specified without string names
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Chen-Yu Tsai <wens@csie.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Message-ID: <155189520594.20095.18225586788918924296@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 06 Mar 2019 10:00:05 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jerome Brunet (2019-03-02 10:40:42)
-> On Tue, 2019-02-26 at 14:34 -0800, Stephen Boyd wrote:
-> > The common clk framework is lacking in ability to describe the clk
-> > topology without specifying strings for every possible parent-child
-> > link. There are a few drawbacks to the current approach:
-> >=20
-> >  1) String comparisons are used for everything, including describing
-> >  topologies that are 'local' to a single clock controller.
-> >=20
-> >  2) clk providers (e.g. i2c clk drivers) need to create globally unique
-> >  clk names to avoid collisions in the clk namespace, leading to awkward
-> >  name generation code in various clk drivers.
-> >=20
-> >  3) DT bindings may not fully describe the clk topology and linkages
-> >  between clk controllers because drivers can easily rely on globally un=
-ique
-> >  strings to describe connections between clks.
-> >=20
-> > This leads to confusing DT bindings, complicated clk name generation
-> > code, and inefficient string comparisons during clk registration just so
-> > that the clk framework can detect the topology of the clk tree.
-> > Furthermore, some drivers call clk_get() and then __clk_get_name() to
-> > extract the globally unique clk name just so they can specify the parent
-> > of the clk they're registering. We have of_clk_parent_fill() but that
-> > mostly only works for single clks registered from a DT node, which isn't
-> > the norm. Let's simplify this all by introducing two new ways of
-> > specifying clk parents.
-> >=20
-> > The first method is an array of pointers to clk_hw structures
-> > corresponding to the parents at that index. This works for clks that are
-> > registered when we have access to all the clk_hw pointers for the
-> > parents.
-> >=20
-> > The second method is a mix of clk_hw pointers and strings of local and
-> > global parent clk names. If the .name member of the map is set we'll
-> > look for that clk by performing a DT based lookup of the device the clk
-> > is registered with and the .name specified in the map. If that fails,
-> > we'll fallback to the .fallback member and perform a global clk name
-> > lookup like we've always done before.
->=20
-> Nitpick: I think you forgot to update the commit message when renaming the
-> struct members
+On Wed, Mar 6, 2019 at 7:51 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote=
+:
+>
+> The following patch-set proposes an efficient mechanism for handing freed=
+ memory between the guest and the host. It enables the guests with no page =
+cache to rapidly free and reclaims memory to and from the host respectively=
+.
+>
+> Benefit:
+> With this patch-series, in our test-case, executed on a single system and=
+ single NUMA node with 15GB memory, we were able to successfully launch 5 g=
+uests(each with 5 GB memory) when page hinting was enabled and 3 without it=
+. (Detailed explanation of the test procedure is provided at the bottom und=
+er Test - 1).
+>
+> Changelog in v9:
+>         * Guest free page hinting hook is now invoked after a page has be=
+en merged in the buddy.
+>         * Free pages only with order FREE_PAGE_HINTING_MIN_ORDER(currentl=
+y defined as MAX_ORDER - 1) are captured.
+>         * Removed kthread which was earlier used to perform the scanning,=
+ isolation & reporting of free pages.
 
-Fixed. Thanks!
+Without a kthread this has the potential to get really ugly really
+fast. If we are going to run asynchronously we should probably be
+truly asynchonous and just place a few pieces of data in the page that
+a worker thread can use to identify which pages have been hinted and
+which pages have not. Then we can have that one thread just walking
+through the zone memory pulling out fixed size pieces at a time and
+providing hints on that. By doing that we avoid the potential of
+creating a batch of pages that eat up most of the system memory.
 
->=20
-> >=20
-> > Using either one of these new methods is entirely optional. Existing
-> > drivers will continue to work, and they can migrate to this new approach
-> > as they see fit. Eventually, we'll want to get rid of the 'parent_names'
-> > array in struct clk_init_data and use one of these new methods instead.
-> >=20
->=20
-> Being able to specify parents from DT is great addition !!! Thx !
+>         * Pages, captured in the per cpu array are sorted based on the zo=
+ne numbers. This is to avoid redundancy of acquiring zone locks.
+>         * Dynamically allocated space is used to hold the isolated guest =
+free pages.
 
-Woohooo!
+I have concerns that doing this per CPU and allocating memory
+dynamically can result in you losing a significant amount of memory as
+it sits waiting to be hinted.
 
->=20
-> Overall, it looks good but with such big patch on framework is not easy g=
-et a
-> clear idea. I'll try to give it a spin next week.
+>         * All the pages are reported asynchronously to the host via virti=
+o driver.
+>         * Pages are returned back to the guest buddy free list only when =
+the host response is received.
 
-Ok. Please be aware that I found one bug already but there are probably
-more lurking. I've also pushed the branch out to clk.git on kernel.org
-if you're interested in looking at the mass conversions going on.
+I have been thinking about this. Instead of stealing the page couldn't
+you simply flag it that there is a hint in progress and simply wait in
+arch_alloc_page until the hint has been processed? The problem is in
+stealing pages you are going to introduce false OOM issues when the
+memory isn't available because it is being hinted on.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-parent-re=
-write
+> Pending items:
+>         * Make sure that the guest free page hinting's current implementa=
+tion doesn't break hugepages or device assigned guests.
+>         * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side support=
+. (It is currently missing)
+>         * Compare reporting free pages via vring with vhost.
+>         * Decide between MADV_DONTNEED and MADV_FREE.
+>         * Analyze overall performance impact due to guest free page hinti=
+ng.
+>         * Come up with proper/traceable error-message/logs.
 
+I'll try applying these patches and see if I can reproduce the results
+you reported. With the last patch set I couldn't reproduce the results
+as you reported them. It has me wondering if you were somehow seeing
+the effects of a balloon instead of the actual memory hints as I
+couldn't find any evidence of the memory ever actually being freed
+back by the hints functionality.
+
+Also do you have any idea if this patch set will work with an SMP
+setup or is it still racy? I might try enabling SMP in my environment
+to see if I can test the scalability of the VM with something like a
+will-it-scale test.
+
+> Tests:
+> 1. Use-case - Number of guests we can launch
+>
+>         NUMA Nodes =3D 1 with 15 GB memory
+>         Guest Memory =3D 5 GB
+>         Number of cores in guest =3D 1
+>         Workload =3D test allocation program allocates 4GB memory, touche=
+s it via memset and exits.
+>         Procedure =3D
+>         The first guest is launched and once its console is up, the test =
+allocation program is executed with 4 GB memory request (Due to this the gu=
+est occupies almost 4-5 GB of memory in the host in a system without page h=
+inting). Once this program exits at that time another guest is launched in =
+the host and the same process is followed. We continue launching the guests=
+ until a guest gets killed due to low memory condition in the host.
+>
+>         Results:
+>         Without hinting =3D 3
+>         With hinting =3D 5
+>
+> 2. Hackbench
+>         Guest Memory =3D 5 GB
+>         Number of cores =3D 4
+>         Number of tasks         Time with Hinting       Time without Hint=
+ing
+>         4000                    19.540                  17.818
+>
+>
