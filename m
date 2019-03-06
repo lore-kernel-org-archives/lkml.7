@@ -2,98 +2,122 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F394C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358FEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E724C20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A5520684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:17:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VUY70J6D"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DmPzlkeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbfCFRPD (ORCPT
+        id S1730437AbfCFRRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:15:03 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54398 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfCFRPC (ORCPT
+        Wed, 6 Mar 2019 12:17:38 -0500
+Received: from mail-it1-f193.google.com ([209.85.166.193]:55957 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfCFRRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:15:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p0Am2vZOgk4I7W5D7IAyEGRj8DE4tO44TRrmOOFLFv4=; b=VUY70J6DiKVkKesKQtRtkhKpj
-        AM8SFplsBhf8bRaoJbslGWFEFZ5ZT7IU/3wRt2u+XMP+PvG28F8riVv4a4d5Ehd7phKNkK6KsFpGd
-        lz742GYbfGucI2AuPUXBpFPMR3ueURpbQ3wSuYd5l7W6WYXNqvNMYWoLSxkDij6+h0pKLwkgQtkXh
-        ryiyLvf/aWjrJgOHZ/8OPkLhf/8JVTPhUz7wbKChwpvBJbx1p8dhcEKK9HLMCySIWaqCDbRVdU3Vl
-        IlxWRYgASe4sqW6Gn9mPmTfGJNHkPSrCPKGfo3xYNnrtUuxDFKme5r2QF7LaJks/o04j1BG9WCsbG
-        V871sEBnw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1a86-0008Cp-F4; Wed, 06 Mar 2019 17:14:54 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4766F2029B174; Wed,  6 Mar 2019 18:14:51 +0100 (CET)
-Date:   Wed, 6 Mar 2019 18:14:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>, jgross@suse.com
-Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
-Message-ID: <20190306171451.GZ32534@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.078767622@infradead.org>
- <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
- <20190301144556.GY32477@hirez.programming.kicks-ass.net>
- <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
- <20190301152305.GJ32494@hirez.programming.kicks-ass.net>
- <20190306131347.GX32534@hirez.programming.kicks-ass.net>
+        Wed, 6 Mar 2019 12:17:38 -0500
+Received: by mail-it1-f193.google.com with SMTP id z131so10667133itf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:17:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zrUbNV+koa4f1wIx3s2XHtmcJu2CEdgy0FiyKR7xLY4=;
+        b=DmPzlkeG3h/XfdII8afocr2+r8erNuWOzIcIqjUVRCY9yhnBUGzKBvzu0iaMwMZg1f
+         Vhl8RjEfqrrRqMUcht/aeu/PFITH/CSZZju4fymlQvKvE2X4fHX/zsIAxCpnbPuT/YEQ
+         Dpf+ND8AlhX6sDa4RuoCs8VEFrkM++3qjeEK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zrUbNV+koa4f1wIx3s2XHtmcJu2CEdgy0FiyKR7xLY4=;
+        b=Ame/op7yyFGhurNq/t2Szr/d2gKP5poe4tGoVuLEq9be7j+6A25xyCABfAi+Sj3snK
+         wB+QP0iHZZONkZDIWO7TSvilZXfa7GTKDalr2QwC5MMlwJT9DEzPeRJBT/JHkreWPv4f
+         mwQr4MjijCFOUJw0W8VeCftLr0XNJcSKkN4En5uHbwVvfjIL9Urj/CfhZxtadNFtqxxF
+         evdmyJjqOEAa8C1i6o1YEBY/x8OeH5+SZgI4DT2kcoxmJyyDXqpryoSbKe71hwgcuQf9
+         aqLkQMkSm75KyH0PkDPFaE68DmzpCqb40fjLyolS+HhZXmtdPafIJgHc6vfyOjZlJ58f
+         IJGA==
+X-Gm-Message-State: APjAAAXw8qvlwTQJKMp3JXiNL6FtnxfOH/ws6mTaXwtdCNioend0V9h3
+        V0KeEs+SNzmUPklNgWvuWcIuMqsnyt0ZTOx586d6aw==
+X-Google-Smtp-Source: APXvYqxCPUiq0As8iiMisJcuwj7j8WM4GLMiN6qMEx/1TK7ymws+MtplC2/D1XjjXl8rtJ7VQPBIN8SfBqLC0Gwr60k=
+X-Received: by 2002:a24:e4d:: with SMTP id 74mr2557585ite.32.1551892657186;
+ Wed, 06 Mar 2019 09:17:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306131347.GX32534@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190219101629.15977-1-jagan@amarulasolutions.com> <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
+In-Reply-To: <CAMty3ZDpy5YX3V+6e=UtY=a9Lgiw-NEP1JPQn4_LKL3mYFtrvQ@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Wed, 6 Mar 2019 22:47:26 +0530
+Message-ID: <CAMty3ZB3o1Np7_H7rmCgpUWPk7BRqHRm7gxRpgAq_YyeCUKgaw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] input: touchscreen: Add goodix GT5553 CTP support
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 02:13:47PM +0100, Peter Zijlstra wrote:
-> +static __always_inline unsigned long smap_save(void)
-> +{
-> +	unsigned long flags = arch_local_save_flags();
-> +	clac();
-> +	return flags;
-> +}
-> +
-> +static __always_inline void smap_restore(unsigned long flags)
-> +{
-> +	arch_local_irq_restore(flags);
-> +}
+Hi Dmitry,
 
-ARGH; the bloody paravirt me harder nonsense makes that pvops calls.
+On Tue, Feb 26, 2019 at 11:43 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> Hi Dmitry,
+>
+> On Tue, Feb 19, 2019 at 3:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > This is v6 patchset for supporting goodix GT5553 CTP. Here is the
+> > previous version[1]
+> >
+> > Changes for v5:
+> > - document bindings for required regulators, which are need during
+> >   power-on sequence
+> > - enable, disable required regulators as described in power-on sequence
+> >   using normal regulator calls
+> > - update the proper commi messages
+> > Changes for v4:
+> > - document AVDD22, DVDD12, VDDIO as optional properties
+> > - use regulator bulk calls, for get, enable and disable functionalities
+> > Changes for v4:
+> > - devm_add_action_or_reset for disabling regulator
+> > Changes for v3:
+> > - add cover-letter
+> > - s/ADVV28/AVDD28 on commit head
+> > - fix few typo
+> > Changes for v2:
+> > - Rename vcc-supply with AVDD28-supply
+> > - disable regulator in remove
+> > - fix to setup regulator in probe code
+> > - add chipdata
+> > - drop example node in dt-bindings
+> >
+> > [1] https://patchwork.kernel.org/cover/10816901/
+> >
+> > Jagan Teki (4):
+> >   dt-bindings: input: touchscreen: goodix: Document regulator properties
+> >   Input: goodix - Add regulators suppot
+> >   dt-bindings: input: touchscreen: goodix: Add GT5663 compatible
+> >   Input: goodix - Add GT5663 CTP support
+> >
+> >  .../bindings/input/touchscreen/goodix.txt     |  3 +
+> >  drivers/input/touchscreen/goodix.c            | 60 +++++++++++++++++++
+> >  2 files changed, 63 insertions(+)
+>
+> Let me know if you have any further comments on regulator patch, fyi
+> Rob reviewed it already.
 
-And that (obviously) explodes.. Anybody got any clue why that Xen
-trainwreck wants to paravirt: "PUSHF;POP" and "PUSH;POPF" !?
+Would you comment on this? few dts changes are pending for this to support.
 
-Also; I suppose I can ALTERNATIVE the whole thing, because Xen will not
-be having SMAP in the first place I suppose.
+Jagan.
