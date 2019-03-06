@@ -2,103 +2,141 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47640C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52A1C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A2B20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HgcQru7Q"
+	by mail.kernel.org (Postfix) with ESMTP id 9001420675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfCFQDB (ORCPT
+        id S1727674AbfCFQD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:03:01 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:53931 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfCFQDA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:03:00 -0500
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x26G2Zvf025270;
-        Thu, 7 Mar 2019 01:02:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x26G2Zvf025270
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551888156;
-        bh=ZHtvOZZeNFMSU/z4AjSUUdYaQwQC9fBxIznHwNNaLKk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HgcQru7QmU6UzKYttmYn07io/J1mcEqqZvfbWvklkuBF5cLcW8+zTDpYAoCxQyRPS
-         CqaqFpKIPUFs4jSLf+is7K/R7+rx869H4RRqoQYxw/f+cbDbzWqoR7earDJfe6CZj1
-         aM/POY6olFkqtkeEpNJAeTppoT8v1VgPl5Iv8/Jz3FR1o6b3M0Ok7+5g8UJRqXUwRS
-         LWV3pEv1gBgRWtuDZGG/+oim+AyX4e5nrDQmi7dg6aWFIjVqPja5y5ruTK3XPqu+93
-         bQmYEdB0tU8AisWK8n1ZWhA5bY6SmYiqJGzD5CjZfyz6y12N2Idye9SgklxSVff0r/
-         nYeoS7Sl07ZaQ==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id s15so9117828uap.6;
-        Wed, 06 Mar 2019 08:02:36 -0800 (PST)
-X-Gm-Message-State: APjAAAU0WUUyld+k0J/5GdfZGvQmR3FlOKCnEcw2BqekoYFXoaEEbFa5
-        yZRYvd6CfKzLXqvVtQbNnvBEjEyHhF7WWiU+Jnk=
-X-Google-Smtp-Source: APXvYqzzj6ikTG1vQl5mQWuR0HZ3rpa4yA5Y+O3YVc4QmnhxxYPTKqxXLpKIpdDptoKhHELmt4w/xDV0KR21lDdu8VM=
-X-Received: by 2002:ab0:648c:: with SMTP id p12mr4313757uam.93.1551888154846;
- Wed, 06 Mar 2019 08:02:34 -0800 (PST)
+        Wed, 6 Mar 2019 11:03:27 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:56650 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbfCFQD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 11:03:27 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2734D307E044;
+        Wed,  6 Mar 2019 16:03:26 +0000 (UTC)
+Received: from redhat.com (ovpn-125-142.rdu2.redhat.com [10.10.125.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F8621001DF0;
+        Wed,  6 Mar 2019 16:03:25 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 11:03:23 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-ID: <20190306160323.GD3230@redhat.com>
+References: <20190130030317.GC10462@redhat.com>
+ <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
+ <20190130183616.GB5061@redhat.com>
+ <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+ <20190131041641.GK5061@redhat.com>
+ <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+ <20190306155126.GB3230@redhat.com>
+ <CAPcyv4iB+7LF-ZOF1VXE+g2hS7Gb=+RbGAmTiGWDsaikEuXGYw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190304125520.17794-1-luc.vanoostenryck@gmail.com>
-In-Reply-To: <20190304125520.17794-1-luc.vanoostenryck@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 7 Mar 2019 01:01:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARMjdi5PxJ=RD19LKd_DrRpn-TXmy-9mZZcgNiU=hzizQ@mail.gmail.com>
-Message-ID: <CAK7LNARMjdi5PxJ=RD19LKd_DrRpn-TXmy-9mZZcgNiU=hzizQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use -Werror=implicit-... instead of -Werror-implicit-...
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iB+7LF-ZOF1VXE+g2hS7Gb=+RbGAmTiGWDsaikEuXGYw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 06 Mar 2019 16:03:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 9:55 PM Luc Van Oostenryck
-<luc.vanoostenryck@gmail.com> wrote:
->
-> The flag '-Werror-implicit-function-declaration', present in GCC 2.95,
-> stopped to be documented in GCC 4.3, replaced by the more generic
-> '-Werror=...' form.
->
-> So, use the equivalent '-Werror=implicit-function-declaration' instead.
->
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> ---
+On Wed, Mar 06, 2019 at 07:57:30AM -0800, Dan Williams wrote:
+> On Wed, Mar 6, 2019 at 7:51 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > On Tue, Mar 05, 2019 at 08:20:10PM -0800, Dan Williams wrote:
+> > > On Tue, Mar 5, 2019 at 2:16 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > >
+> > > > On Wed, 30 Jan 2019 21:44:46 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > > >
+> > > > > > > Another way to help allay these worries is commit to no new exports
+> > > > > > > without in-tree users. In general, that should go without saying for
+> > > > > > > any core changes for new or future hardware.
+> > > > > >
+> > > > > > I always intend to have an upstream user the issue is that the device
+> > > > > > driver tree and the mm tree move a different pace and there is always
+> > > > > > a chicken and egg problem. I do not think Andrew wants to have to
+> > > > > > merge driver patches through its tree, nor Linus want to have to merge
+> > > > > > drivers and mm trees in specific order. So it is easier to introduce
+> > > > > > mm change in one release and driver change in the next. This is what
+> > > > > > i am doing with ODP. Adding things necessary in 5.1 and working with
+> > > > > > Mellanox to have the ODP HMM patch fully tested and ready to go in
+> > > > > > 5.2 (the patch is available today and Mellanox have begin testing it
+> > > > > > AFAIK). So this is the guideline i will be following. Post mm bits
+> > > > > > with driver patches, push to merge mm bits one release and have the
+> > > > > > driver bits in the next. I do hope this sound fine to everyone.
+> > > > >
+> > > > > The track record to date has not been "merge HMM patch in one release
+> > > > > and merge the driver updates the next". If that is the plan going
+> > > > > forward that's great, and I do appreciate that this set came with
+> > > > > driver changes, and maintain hope the existing exports don't go
+> > > > > user-less for too much longer.
+> > > >
+> > > > Decision time.  Jerome, how are things looking for getting these driver
+> > > > changes merged in the next cycle?
+> > > >
+> > > > Dan, what's your overall take on this series for a 5.1-rc1 merge?
+> > >
+> > > My hesitation would be drastically reduced if there was a plan to
+> > > avoid dangling unconsumed symbols and functionality. Specifically one
+> > > or more of the following suggestions:
+> > >
+> > > * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
+> > > surface for out-of-tree consumers to come grumble at us when we
+> > > continue to refactor the kernel as we are wont to do.
+> > >
+> > > * A commitment to consume newly exported symbols in the same merge
+> > > window, or the following merge window. When that goal is missed revert
+> > > the functionality until such time that it can be consumed, or
+> > > otherwise abandoned.
+> > >
+> > > * No new symbol exports and functionality while existing symbols go unconsumed.
+> > >
+> > > These are the minimum requirements I would expect my work, or any
+> > > core-mm work for that matter, to be held to, I see no reason why HMM
+> > > could not meet the same.
+> >
+> > nouveau use all of this and other driver patchset have been posted to
+> > also use this API.
+> >
+> > > On this specific patch I would ask that the changelog incorporate the
+> > > motivation that was teased out of our follow-on discussion, not "There
+> > > is no reason not to support that case." which isn't a justification.
+> >
+> > mlx5 wants to use HMM without DAX support it would regress mlx5. Other
+> > driver like nouveau also want to access DAX filesystem. So yes there is
+> > no reason not to support DAX filesystem. Why do you not want DAX with
+> > mirroring ? You want to cripple HMM ? Why ?
+> 
+> There is a misunderstanding... my request for this patch was to update
+> the changelog to describe the merits of DAX mirroring to replace the
+> "There is no reason not to support that case." Otherwise someone
+> reading this changelog in a year will wonder what the motivation was.
 
-Applied to linux-kbuild.
-Thanks.
+So what about:
 
-
-
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index d5713e7b1e50..253e5ede92e7 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -429,7 +429,7 @@ LINUXINCLUDE    := \
->  KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
->  KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
->                    -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
-> -                  -Werror-implicit-function-declaration -Werror=implicit-int \
-> +                  -Werror=implicit-function-declaration -Werror=implicit-int \
->                    -Wno-format-security \
->                    -std=gnu89
->  KBUILD_CPPFLAGS := -D__KERNEL__
-> --
-> 2.21.0
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+HMM mirroring allow device to mirror process address onto device
+there is no reason for that mirroring to not work if the virtual
+address are the result of an mmap of a file on DAX enabled file-
+system.
