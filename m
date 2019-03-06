@@ -2,94 +2,98 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECD2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FB4C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635B320657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="HhsmWIEt"
+	by mail.kernel.org (Postfix) with ESMTP id D63D620663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfCFQmU (ORCPT
+        id S1729381AbfCFQrv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:42:20 -0500
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52014 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfCFQmT (ORCPT
+        Wed, 6 Mar 2019 11:47:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42133 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfCFQrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:42:19 -0500
-Received: by mail-it1-f196.google.com with SMTP id e24so10502765itl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:42:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qj4+Bb2DbKj2RKmdRZjZiyAv4UmvOHroOu8tDL9W7zQ=;
-        b=HhsmWIEtUafbIqHgM//rz8ZAukGg1jmNneCKXQmz/s1qQwtkqIrSpG8G1fqixgvOFU
-         Tj3QI/vBIcL22Lrj0kCEdXsQI5gmig1tdAFjPhYvahvc68E8NiS6utWFxPbaMxJl26Br
-         XPgtAuNwUEy68M0ZHzohPmHNw4m2dsa0xDYc7qQYOHdOOPCXK5kwt68CGi+GnT2VR6/W
-         dDjWwf9hCq/m3c7QK2W74LiWlT6iCvfUyCq6UDTXEOrBw6YVLo0XmfdE6dhg9A9HK5Hc
-         10prbqHwTiEgniCp/bhfYBlCp2cJ1Axybo14YjxnMMHpt4ZUnYV2tr35WHOxx6t2UWmg
-         ctNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Qj4+Bb2DbKj2RKmdRZjZiyAv4UmvOHroOu8tDL9W7zQ=;
-        b=S3hVoKyBNsgz4HSDZkZhwLcqh2CbgfZ7jhxriogd3kV3EvfFxS3JIki/cBBa8bXo8g
-         iAuOCEe4H8pkRXJyxQ7gdf7LmUB5amtSG58t1SWuSpMSoUgK+7EOFkTVdJ9C0ee137TO
-         9b0pSAODT7MixsMCDhBM60XtZsU6izy2+DW7QjoYTEt1KvDYj8pqJ1EEM+gbRG8fYIrI
-         ubOO5GW/SFQIo08YSINkhparRNYmplamIlNnARwW0pXquTQ4Z2Fm315jN2tRWV+xZ+Ln
-         a1atB9MfnzyIsWWkJ42m5HBvyrYu7WLLiysr1bhZi1FWgT5qosR7d0CdqpTB2ZhKMifX
-         DTLw==
-X-Gm-Message-State: APjAAAV4olRAMOVu0zzk+GiUPB6YNqq41UlTqxyxWduqhvwdpECljmKs
-        ZHlno8hTnZ3txIEXns0Q+5e4Ic29s7/QIA==
-X-Google-Smtp-Source: APXvYqwKSJeU9t3HI8w2UrGkS6QGoDrZbIsE0inOr/hmF/EC/plA1NUup1mC/2Cuaq0nP0kfm8FBFA==
-X-Received: by 2002:a24:eb0e:: with SMTP id h14mr2564978itj.100.1551890538836;
-        Wed, 06 Mar 2019 08:42:18 -0800 (PST)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id t1sm702693ioc.45.2019.03.06.08.42.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 08:42:17 -0800 (PST)
-Subject: Re: [GIT PULL] (xen) stable/for-jens-5.1 to your 'for-5.1/block'
- branch.
-To:     Konrad Rzeszutek Wilk <konrad@darnok.org>,
-        linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org
-References: <20190306022530.GC25368@localhost.localdomain>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ad623518-1a94-a8b6-fb29-26eb26968090@kernel.dk>
-Date:   Wed, 6 Mar 2019 09:42:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190306022530.GC25368@localhost.localdomain>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Mar 2019 11:47:51 -0500
+Received: from rettich.hi.pengutronix.de ([2001:67c:670:100:1d::c3] helo=rettich)
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jlu@pengutronix.de>)
+        id 1h1Zht-0003qt-OM; Wed, 06 Mar 2019 17:47:49 +0100
+Received: from jlu by rettich with local (Exim 4.89)
+        (envelope-from <jlu@pengutronix.de>)
+        id 1h1Zhq-0002Je-NX; Wed, 06 Mar 2019 17:47:46 +0100
+Message-ID: <1551890866.5086.125.camel@pengutronix.de>
+Subject: Re: [RFC PATCH 0/2] Create CAAM HW key in linux keyring and use in
+ dmcrypt
+From:   Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+To:     Franck LENORMAND <franck.lenormand@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Cc:     horia.geanta@nxp.com, silvano.dininno@nxp.com, agk@redhat.com,
+        snitzer@redhat.com, dm-devel@redhat.com, dhowells@redhat.com,
+        jmorris@namei.org, serge@hallyn.com,
+        David Gstir <david@sigma-star.at>
+Date:   Wed, 06 Mar 2019 17:47:46 +0100
+In-Reply-To: <1551456599-10603-1-git-send-email-franck.lenormand@nxp.com>
+References: <1551456599-10603-1-git-send-email-franck.lenormand@nxp.com>
+Organization: Pengutronix
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c3
+X-SA-Exim-Mail-From: jlu@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/19 7:25 PM, Konrad Rzeszutek Wilk wrote:
-> Hi Jens,
-> 
-> Apologies for doing it right at the merge window time. This patchset has been brewing
-> for quite a while.
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/konrad/xen.git stable/for-jens-5.1
-> 
-> This patchset makes the backend more robust by reading a negotiation
-> variable only once and not twice.
+Hi Franck,
 
-Pulled, thanks.
+thanks for working on this!
 
+On Fri, 2019-03-01 at 17:09 +0100, Franck LENORMAND wrote:
+> The creation of such structures and its use was not exposed to userspace so
+> it was complicated to use and required custom development. We would like to
+> ease this using interface which are known and used:
+>  - Linux key retention service : Allow to generate or load keys in a
+>         keyring which can be used by applications.
+>  - dm-crypt : device mapper allowing to encrypt data.
+> 
+> The capacity to generate or load keys already available in the Linux key
+> retention service does not allows to exploit CAAM capabilities hence we
+> need to create a new key_type. The new key type "caam_tk" allows to:
+>  - Create a black key from random
+>  - Create a black key from a red key
+>  - Load a black blob to retrieve the black key
+
+On 2018-07-23, Udit Agarwal <udit.agarwal@nxp.com> sent a series which
+seems related to this:
+[PATCH v2 1/2] security/keys/secure_key: Adds the secure key support
+based on CAAM.
+[PATCH v2 2/2] encrypted_keys: Adds support for secure key-type as
+master key.
+
+Is this series intended to continue that work and cover the same uses-
+cases? 
+
+If I remember correctly, the CAAM also supports marking blobs to allow
+or disallow exporting the encapsulated key from the hardware. Or is
+this unneeded and we could encrypt/decrypt other (less critical) key
+material against the tk(cbc(aes)) CAAM key via the keyring mechanisms?
+
+Best regards,
+Jan
 -- 
-Jens Axboe
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
