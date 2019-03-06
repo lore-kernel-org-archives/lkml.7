@@ -2,178 +2,158 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD6FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA11820661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FED420449
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfCFMDv (ORCPT
+        id S1729702AbfCFMII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 07:03:51 -0500
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:45661 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfCFMDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 07:03:51 -0500
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h1VGu-0004SB-Bt; Wed, 06 Mar 2019 07:03:45 -0500
-Date:   Wed, 6 Mar 2019 07:03:10 -0500
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     syzbot <syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com>,
-        davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
-        linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Yasevich <vyasevich@gmail.com>
-Subject: Re: general protection fault in sctp_sched_rr_dequeue
-Message-ID: <20190306120310.GA6711@hmswarspite.think-freely.org>
-References: <000000000000cc734405836318dc@google.com>
- <CADvbK_fJ8R0WmQaFcz0sOhL_AXH3AdO2zLeqMD38X22izEAMNg@mail.gmail.com>
+        Wed, 6 Mar 2019 07:08:08 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36878 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727222AbfCFMIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 07:08:07 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 991B890394409D311364;
+        Wed,  6 Mar 2019 20:08:05 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
+ 20:07:56 +0800
+Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
+ non-strict
+To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
+ <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
+ <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
+ <5C78B89C.7040100@huawei.com> <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
+ <5C7A1EE1.6020200@huawei.com> <7ed7da40-adbe-09b2-5124-baf62558987d@arm.com>
+ <5C7FA9D1.5010400@huawei.com>
+CC:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <314e630c-2c05-e993-009c-98c637270122@huawei.com>
+Date:   Wed, 6 Mar 2019 12:07:50 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADvbK_fJ8R0WmQaFcz0sOhL_AXH3AdO2zLeqMD38X22izEAMNg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <5C7FA9D1.5010400@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 06:43:48PM +0800, Xin Long wrote:
-> On Wed, Mar 6, 2019 at 9:42 AM syzbot
-> <syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    63bdf4284c38 Merge branch 'linus' of git://git.kernel.org/..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=100347cb200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=872be05707464aaa
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=4c9934f20522c0efd657
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11cd9b03200000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127de8e7200000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com
-> >
-> > kauditd_printk_skb: 2 callbacks suppressed
-> > audit: type=1400 audit(1551833288.424:35): avc:  denied  { map } for
-> > pid=8035 comm="bash" path="/bin/bash" dev="sda1" ino=1457
-> > scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023
-> > tcontext=system_u:object_r:file_t:s0 tclass=file permissive=1
-> > audit: type=1400 audit(1551833294.934:36): avc:  denied  { map } for
-> > pid=8047 comm="syz-executor778" path="/root/syz-executor778173561"
-> > dev="sda1" ino=16484 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023
-> > tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 1 PID: 8047 Comm: syz-executor778 Not tainted 5.0.0+ #7
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
-> The panic was caused by sched->init() reset stream->rr_next = NULL, even
-> if outq->out_chunk_list is not empty.
-> 
-> We should remove the sched->init() from sctp_stream_init(), since
-> all sched info was moved into sout->ext and sctp_stream_alloc_out()
-> will not afffect it.
-> 
-I think what you're saying is we can just let sctp_outq_init handle the stream
-scheduler initalization, correct?  If so, ACK to that approach
-Neil
 
-> > Code: ea 03 80 3c 02 00 0f 85 a2 00 00 00 48 8b 5b 08 e8 62 20 ee fa 48 8d
-> > 7b 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75
-> > 53 4c 8b 6b 30 4c 89 e7 49 83 ed 18 4c 89 ee e8 b4
-> > RSP: 0018:ffff88809eacf040 EFLAGS: 00010206
-> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8679cd9f
-> > RDX: 0000000000000006 RSI: ffffffff8681c41e RDI: 0000000000000030
-> > RBP: ffff88809eacf058 R08: ffff8880a12bc300 R09: 0000000000000002
-> > R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: ffff88807cae6ca0
-> > R13: ffff88807cae6580 R14: dffffc0000000000 R15: ffff88809eacf198
-> > FS:  0000000001865880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000055af2d491150 CR3: 000000008dd7b000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >   sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
-> >   sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
-> >   sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
-> >   sctp_outq_uncork+0x6c/0x80 net/sctp/outqueue.c:772
-> >   sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1820 [inline]
-> >   sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
-> >   sctp_do_sm+0x513/0x5390 net/sctp/sm_sideeffect.c:1191
-> >   sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1074
-> >   sctp_inq_push+0x1ea/0x290 net/sctp/inqueue.c:95
-> >   sctp_backlog_rcv+0x189/0xbc0 net/sctp/input.c:354
-> >   sk_backlog_rcv include/net/sock.h:937 [inline]
-> >   __release_sock+0x12e/0x3a0 net/core/sock.c:2413
-> >   release_sock+0x59/0x1c0 net/core/sock.c:2929
-> >   sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:8999
-> >   sctp_sendmsg_to_asoc+0x13e2/0x17d0 net/sctp/socket.c:1968
-> >   sctp_sendmsg+0x10a9/0x17e0 net/sctp/socket.c:2114
-> >   inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
-> >   sock_sendmsg_nosec net/socket.c:622 [inline]
-> >   sock_sendmsg+0xdd/0x130 net/socket.c:632
-> >   ___sys_sendmsg+0x806/0x930 net/socket.c:2137
-> >   __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
-> >   __do_sys_sendmsg net/socket.c:2184 [inline]
-> >   __se_sys_sendmsg net/socket.c:2182 [inline]
-> >   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
-> >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x440159
-> > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> > ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007fff8801fd38 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
-> > RDX: 0000000000000000 RSI: 000000002001afc8 RDI: 0000000000000003
-> > RBP: 00000000006ca018 R08: 0000000000000002 R09: 00000000004002c8
-> > R10: 0000000000000008 R11: 0000000000000246 R12: 00000000004019e0
-> > R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
-> > Modules linked in:
-> > ---[ end trace 7cc5803525726c53 ]---
-> > RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
-> > Code: ea 03 80 3c 02 00 0f 85 a2 00 00 00 48 8b 5b 08 e8 62 20 ee fa 48 8d
-> > 7b 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75
-> > 53 4c 8b 6b 30 4c 89 e7 49 83 ed 18 4c 89 ee e8 b4
-> > RSP: 0018:ffff88809eacf040 EFLAGS: 00010206
-> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8679cd9f
-> > RDX: 0000000000000006 RSI: ffffffff8681c41e RDI: 0000000000000030
-> > RBP: ffff88809eacf058 R08: ffff8880a12bc300 R09: 0000000000000002
-> > R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: ffff88807cae6ca0
-> > R13: ffff88807cae6580 R14: dffffc0000000000 R15: ffff88809eacf198
-> > FS:  0000000001865880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000055af2d491150 CR3: 000000008dd7b000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
-> > syzbot.
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
-> 
+>>>
+>>>> (VFIO) is untrusted, ok. But a malicious driver loaded into the kernel
+>>>> address space would have much easier ways to corrupt the system than to
+>>>> exploit lazy mode...
+>>> Yes, so that we have no need to consider untrusted drivers.
+>>>
+>>>>
+>>>> For (3), I agree that we should at least disallow lazy mode if
+>>>> pci_dev->untrusted is set. At the moment it means that we require the
+>>>> strictest IOMMU configuration for external-facing PCI ports, but it can
+>>>> be extended to blacklist other vulnerable devices or locations.
+>>> I plan to add an attribute file for each device, espcially for hotplug devices. And
+>>> let the root users to decide which mode should be used, strict or non-strict. Becasue
+>>> they should known whether the hot-plug divice is trusted or not.
+>>
+>> Aside from the problem that without massive implementation changes strict/non-strict is at
+>> best a per-domain property, not a per-device one, I can't see this being particularly practical
+>> - surely the whole point of a malicious endpoint is that it's going to pretend to be some common
+>> device for which a 'trusted' kernel driver already exists?
+> Yes, It should be assumed that all kernel drivers and all hard-wired devices are trusted. There is
+> no reason to doubt that the open source drivers or the drivers and devices provided by legitimate
+> suppliers are malicious.
+>
+>
+>> If you've chosen to trust *any* external device, I think you may as well have just set non-strict globally anyway.
+>> The effort involved in trying to implement super-fine-grained control seems hard to justify.
+> The default mode of external devices is strict, it can be obviously changed to non-strict mode. But as
+> you said, it maybe hard to be implemented. In addition, bring a malicious device into computer room,
+> attach and export data it's not easy also. Maybe I should follow Jean'suggestion first,
+
+
+>add a config item.
+>
+
++1
+
+On another topic, we did also see a use case for selectively 
+passthrough'ing devices.
+
+Typically, having the kernel use the identity mapping for when driving a 
+device is fine. In fact, having the IOMMU translating puts a big 
+performance burden on the system. However sometimes we may require the 
+IOMMU involved for certain devices, like for when the kernel device 
+driver has big contiguous DMA requirements, which is the case for some 
+RDMA NIC cards.
+
+John
+
+
+>>
+>> Robin.
+>>
+>>>>
+>>>> If you do (3) then maybe we don't need (1) and (2), which require a
+>>>> tonne of work in the DMA and IOMMU layers (but would certainly be nice
+>>>> to see, since it would also help handle ATS invalidation timeouts)
+>>>>
+>>>> Thanks,
+>>>> Jean
+>>>>
+>>>>>     So that some high-end trusted devices use non-strict mode, and keep others still using
+>>>>> strict mode. The drivers who want to use non-strict mode, should change to use new APIs
+>>>>> by themselves.
+>>>>>
+>>>>>
+>>>>>>>
+>>>>>>> Why not keep the policy to secure by default, as we do for
+>>>>>>> iommu.passthrough? And maybe add something similar to
+>>>>>>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
+>>>>>>> command-line argument or change the default config.
+>>>>>>
+>>>>>> Sorry for the late reply, it was Chinese new year, and we had a long discussion
+>>>>>> internally, we are fine to add a Kconfig but not sure OS vendors will set it
+>>>>>> to default y.
+>>>>>>
+>>>>>> OS vendors seems not happy to pass a command-line argument, to be honest,
+>>>>>> this is our motivation to enable non-strict as default. Hope OS vendors
+>>>>>> can see this email thread, and give some input here.
+>>>>>>
+>>>>>> Thanks
+>>>>>> Hanjun
+>>>>>>
+>>>>>>
+>>>>>> .
+>>>>>>
+>>>>>
+>>>>
+>>>>
+>>>> .
+>>>>
+>>>
+>>
+>> .
+>>
+>
+
+
