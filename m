@@ -2,66 +2,67 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC629C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9BBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B627208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25B021738
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551909617;
-	bh=USLjqtBY3foGnG6eLWpiyQKvOLcHcy69KDqUY5YJJF4=;
+	s=default; t=1551909620;
+	bh=VAw8MIRSRT+e0pplflJLnKaWqpG57nUoZU1z1kuwKsU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ZjSlJvX7mKUERQN/ks3udn2YkytJjObtVVwL/qzU3F5oyLualSSY8UsN0pQdaEQuQ
-	 KFlr/XMHwstQGkDmQqt4WsO87WvjWTSmmmH37apeB1F6JEkDuM3zweQ9dJJ41HVRvl
-	 Rnv8ErC9knzLVbyn9xh9F8ekHlRDi9fTRsLrwRug=
+	b=Ms7LwZsrGBxypw+J8R0Qun6ZUYk+vV+RInlVPNKAdwLu6ApBhcv41qmKYxvJudeuK
+	 4nNHeQvHpXwADwqwMo9HAb1jZOkM6mOYIKE7nRyN2LF/PFUb11ptZJCozReeEkJY+3
+	 9GL0FxJNxSEQxLKTMGoinTN9Hb3baR+7ElG7PqRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfCFWAQ (ORCPT
+        id S1726470AbfCFWAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
+        Wed, 6 Mar 2019 17:00:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfCFWAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:00:14 -0500
-Subject: Re: [GIT PULL] Device properties framework updates for v5.1-rc1
+        id S1726307AbfCFWAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 17:00:13 -0500
+Subject: Re: [GIT PULL] ACPI updates for v5.1-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551909613;
-        bh=USLjqtBY3foGnG6eLWpiyQKvOLcHcy69KDqUY5YJJF4=;
+        s=default; t=1551909612;
+        bh=VAw8MIRSRT+e0pplflJLnKaWqpG57nUoZU1z1kuwKsU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xof6SryZ2S4ZFozVjv1g+Ofpm75nXtETqxE6n7oJNcNTce+qZQ+HlXBbaSaUR0GNR
-         GK1FCQudVze9o6n/TyuNU00orc5h0bnb2T4BQyIbQc9n7vLq5Z3AKbJGh2attLqpe/
-         fqV+CV29Xq5F481N+mDtCr207yPF/mCvvVbLmMS4=
+        b=S5VfLkQeuGuczFYvoqpbqZb+kxJ04OPuAmkrUuUi0gOZ4t3x42xDJoqzbkjek2bVX
+         z60v/xuwetI5XypOICFTmz8ncB44XzgK6QRzOuSoUJeb42rKQuCePBRGhZDW3b6Kl7
+         +SaVeXhlB8l++X/Cq4iV6ILY8K+zPCwD6yKHiu2k=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0jP3p-fnqyVLmA=Saq9MSUdhCuKpkG_NkT+0AKSNU2sOQ@mail.gmail.com>
-References: <CAJZ5v0jP3p-fnqyVLmA=Saq9MSUdhCuKpkG_NkT+0AKSNU2sOQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gTvVCn6O63+TnU9QueyMgowNRd7dQC0oO18eXJVUMLsQ@mail.gmail.com>
+References: <CAJZ5v0gTvVCn6O63+TnU9QueyMgowNRd7dQC0oO18eXJVUMLsQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0jP3p-fnqyVLmA=Saq9MSUdhCuKpkG_NkT+0AKSNU2sOQ@mail.gmail.com>
+X-PR-Tracked-Message-Id: <CAJZ5v0gTvVCn6O63+TnU9QueyMgowNRd7dQC0oO18eXJVUMLsQ@mail.gmail.com>
 X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- devprop-5.1-rc1
-X-PR-Tracked-Commit-Id: 344798206f171c5abea7ab1f9762fa526d7f539d
+ acpi-5.1-rc1
+X-PR-Tracked-Commit-Id: 8167e00e9e35ad90f62e2e424c80c9bc4f3adf7b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 542d0e583b7b366527175b2b5fc0aad262fa33b0
-Message-Id: <155190961368.11982.14471870149424981853.pr-tracker-bot@kernel.org>
-Date:   Wed, 06 Mar 2019 22:00:13 +0000
+X-PR-Merge-Commit-Id: d276709ce6c90b9eceecdbd01a0c083ab04d3a52
+Message-Id: <155190961288.11982.11231753445202184888.pr-tracker-bot@kernel.org>
+Date:   Wed, 06 Mar 2019 22:00:12 +0000
 To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 4 Mar 2019 14:24:14 +0100:
+The pull request you sent on Mon, 4 Mar 2019 14:23:08 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git devprop-5.1-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.1-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/542d0e583b7b366527175b2b5fc0aad262fa33b0
+https://git.kernel.org/torvalds/c/d276709ce6c90b9eceecdbd01a0c083ab04d3a52
 
 Thank you!
 
