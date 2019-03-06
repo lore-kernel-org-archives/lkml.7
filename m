@@ -2,376 +2,165 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894D3C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3558C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5421020661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A0420661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PNo8gYj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfCFHcC (ORCPT
+        id S1729417AbfCFHcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 02:32:02 -0500
-Received: from jax4mhob23.registeredsite.com ([64.69.218.111]:54786 "EHLO
-        jax4mhob23.registeredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729263AbfCFHcA (ORCPT
+        Wed, 6 Mar 2019 02:32:20 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:35098 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728863AbfCFHcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 02:32:00 -0500
-Received: from mailpod.hostingplatform.com ([10.30.71.203])
-        by jax4mhob23.registeredsite.com (8.14.4/8.14.4) with ESMTP id x267VvCH151918
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Mar 2019 02:31:57 -0500
-Received: (qmail 4212 invoked by uid 0); 6 Mar 2019 07:31:57 -0000
-X-TCPREMOTEIP: 81.173.50.109
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
-  by 0 with ESMTPA; 6 Mar 2019 07:31:56 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-iio@vger.kernel.org, himanshujha199640@gmail.com
-Cc:     linux-kernel@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, dpfrey@gmail.com,
-        colin.king@canonical.com, Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v3 2/2] iio/chemical/bme680: Fix SPI read interface
-Date:   Wed,  6 Mar 2019 08:31:48 +0100
-Message-Id: <1551857508-4254-2-git-send-email-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1551857508-4254-1-git-send-email-mike.looijmans@topic.nl>
-References: <1551857508-4254-1-git-send-email-mike.looijmans@topic.nl>
-References: <1550238475-25698-1-git-send-email-mike.looijmans@topic.nl>
-In-Reply-To: <1550238475-25698-1-git-send-email-mike.looijmans@topic.nl>
+        Wed, 6 Mar 2019 02:32:19 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x267So1M061784;
+        Wed, 6 Mar 2019 07:31:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=6Znb0plCkzY9WefoMZi7sUrmh49dgexVTHFeb/yTavc=;
+ b=PNo8gYj2xX9Cd503/Yo527SwPW/to1whpN7J6Y5B9fxgFkX+VHrULFoWaxfnBo4xErmD
+ Xhe2u/6WnVZgFeOqEpDxXzJ93OiZC49y2reBki9ulNRU0Tmztod4cDSTbicAl+POYdoQ
+ nLyYPLugfS4+/6q2GUXgUg7oPUfmfojjQ7LnGsJcxbzuu83HpvHf9FxhgCHT7hGLCbE4
+ iGuWEddPJXN3tLIhmcVDgSxcDRhv9gyy7NCXLoJPQtYyq2ENnIXZ9iHHk6TreSi0IkfA
+ vkbUwhFuTSsnClwiV43D4tB1NZv6BevRfzL7Z0gdQPGiNKnJ1rLVyxUEgKUxDms4EloQ Dg== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2qyjfrhxbr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Mar 2019 07:31:59 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x267Vwev012028
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Mar 2019 07:31:58 GMT
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x267VvLN021433;
+        Wed, 6 Mar 2019 07:31:57 GMT
+Received: from [10.182.69.106] (/10.182.69.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 Mar 2019 23:31:57 -0800
+Subject: Re: [Xen-devel] [PATCH v4.9 1/1] jiffies: use jiffies64_to_nsecs() to
+ fix 100% steal usage for xen vcpu hotplug
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     stable@vger.kernel.org
+Cc:     jgross@suse.com, herbert.van.den.bergh@oracle.com,
+        sstabellini@kernel.org, sboyd@kernel.org, frederic@kernel.org,
+        joe.jin@oracle.com, linux-kernel@vger.kernel.org,
+        john.stultz@linaro.org, xen-devel@lists.xenproject.org,
+        boris.ostrovsky@oracle.com, tglx@linutronix.de
+References: <1551772744-524-1-git-send-email-dongli.zhang@oracle.com>
+Message-ID: <15c804c0-eeb1-2adb-9cbf-4a28d39983a0@oracle.com>
+Date:   Wed, 6 Mar 2019 15:35:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <1551772744-524-1-git-send-email-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9186 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903060052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SPI interface implementation was completely broken.
+Thanks to Joe Jin's reminding, this patch is applicable to mainline linux
+kernel, although there is no issue due to this kind of bug in mainline kernel.
 
-When using the SPI interface, there are only 7 address bits, the upper bit
-is controlled by a page select register. The core needs access to both
-ranges, so implement register read/write for both regions. The regmap
-paging functionality didn't agree with a register that needs to be read
-and modified, so I implemented a custom paging algorithm.
+Therefore, can I first submit this patch to mainline kernel and then backport it
+to stable linux with more detailed explanation how the issue is reproduced on xen?
 
-This fixes that the device wouldn't even probe in SPI mode.
+This would help synchronize stable with mainline better.
 
-The SPI interface then isn't different from I2C, merged them into the core,
-and the I2C/SPI named registers are no longer needed.
+Thank you very much!
 
-Implemented register value caching for the registers to reduce the I2C/SPI
-data transfers considerably.
+Dongli Zhang
 
-The calibration set reads as all zeroes until some undefined point in time,
-and I couldn't determine what makes it valid. The datasheet mentions these
-registers but does not provide any hints on when they become valid, and they
-aren't even enumerated in the memory map. So check the calibration and
-retry reading it from the device after each measurement until it provides
-something valid.
-
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Remove unused 'addr7' variable
-v3: Split patch into temperature and SPI
-
- drivers/iio/chemical/bme680.h      |   6 +-
- drivers/iio/chemical/bme680_core.c |  38 ++++++++++++
- drivers/iio/chemical/bme680_i2c.c  |  21 -------
- drivers/iio/chemical/bme680_spi.c  | 115 +++++++++++++++++++++++++------------
- 4 files changed, 118 insertions(+), 62 deletions(-)
-
-diff --git a/drivers/iio/chemical/bme680.h b/drivers/iio/chemical/bme680.h
-index 0ae89b87..4edc5d21 100644
---- a/drivers/iio/chemical/bme680.h
-+++ b/drivers/iio/chemical/bme680.h
-@@ -2,11 +2,9 @@
- #ifndef BME680_H_
- #define BME680_H_
- 
--#define BME680_REG_CHIP_I2C_ID			0xD0
--#define BME680_REG_CHIP_SPI_ID			0x50
-+#define BME680_REG_CHIP_ID			0xD0
- #define   BME680_CHIP_ID_VAL			0x61
--#define BME680_REG_SOFT_RESET_I2C		0xE0
--#define BME680_REG_SOFT_RESET_SPI		0x60
-+#define BME680_REG_SOFT_RESET			0xE0
- #define   BME680_CMD_SOFTRESET			0xB6
- #define BME680_REG_STATUS			0x73
- #define   BME680_SPI_MEM_PAGE_BIT		BIT(4)
-diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
-index fefe32b..ccde4c6 100644
---- a/drivers/iio/chemical/bme680_core.c
-+++ b/drivers/iio/chemical/bme680_core.c
-@@ -63,9 +63,23 @@ struct bme680_data {
- 	s32 t_fine;
- };
- 
-+static const struct regmap_range bme680_volatile_ranges[] = {
-+	regmap_reg_range(BME680_REG_MEAS_STAT_0, BME680_REG_GAS_R_LSB),
-+	regmap_reg_range(BME680_REG_STATUS, BME680_REG_STATUS),
-+	regmap_reg_range(BME680_T2_LSB_REG, BME680_GH3_REG),
-+};
-+
-+static const struct regmap_access_table bme680_volatile_table = {
-+	.yes_ranges	= bme680_volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(bme680_volatile_ranges),
-+};
-+
- const struct regmap_config bme680_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-+	.max_register = 0xef,
-+	.volatile_table = &bme680_volatile_table,
-+	.cache_type = REGCACHE_RBTREE,
- };
- EXPORT_SYMBOL(bme680_regmap_config);
- 
-@@ -316,6 +330,10 @@ static s16 bme680_compensate_temp(struct bme680_data *data,
- 	s64 var1, var2, var3;
- 	s16 calc_temp;
- 
-+	/* If the calibration is invalid, attempt to reload it */
-+	if (!calib->par_t2)
-+		bme680_read_calib(data, calib);
-+
- 	var1 = (adc_temp >> 3) - (calib->par_t1 << 1);
- 	var2 = (var1 * calib->par_t2) >> 11;
- 	var3 = ((var1 >> 1) * (var1 >> 1)) >> 12;
-@@ -865,8 +883,28 @@ int bme680_core_probe(struct device *dev, struct regmap *regmap,
- {
- 	struct iio_dev *indio_dev;
- 	struct bme680_data *data;
-+	unsigned int val;
- 	int ret;
- 
-+	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
-+			   BME680_CMD_SOFTRESET);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to reset chip\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
-+	if (ret < 0) {
-+		dev_err(dev, "Error reading chip ID\n");
-+		return ret;
-+	}
-+
-+	if (val != BME680_CHIP_ID_VAL) {
-+		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
-+				val, BME680_CHIP_ID_VAL);
-+		return -ENODEV;
-+	}
-+
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
- 	if (!indio_dev)
- 		return -ENOMEM;
-diff --git a/drivers/iio/chemical/bme680_i2c.c b/drivers/iio/chemical/bme680_i2c.c
-index 06d4be5..cfc4449 100644
---- a/drivers/iio/chemical/bme680_i2c.c
-+++ b/drivers/iio/chemical/bme680_i2c.c
-@@ -23,8 +23,6 @@ static int bme680_i2c_probe(struct i2c_client *client,
- {
- 	struct regmap *regmap;
- 	const char *name = NULL;
--	unsigned int val;
--	int ret;
- 
- 	regmap = devm_regmap_init_i2c(client, &bme680_regmap_config);
- 	if (IS_ERR(regmap)) {
-@@ -33,25 +31,6 @@ static int bme680_i2c_probe(struct i2c_client *client,
- 		return PTR_ERR(regmap);
- 	}
- 
--	ret = regmap_write(regmap, BME680_REG_SOFT_RESET_I2C,
--			   BME680_CMD_SOFTRESET);
--	if (ret < 0) {
--		dev_err(&client->dev, "Failed to reset chip\n");
--		return ret;
--	}
--
--	ret = regmap_read(regmap, BME680_REG_CHIP_I2C_ID, &val);
--	if (ret < 0) {
--		dev_err(&client->dev, "Error reading I2C chip ID\n");
--		return ret;
--	}
--
--	if (val != BME680_CHIP_ID_VAL) {
--		dev_err(&client->dev, "Wrong chip ID, got %x expected %x\n",
--				val, BME680_CHIP_ID_VAL);
--		return -ENODEV;
--	}
--
- 	if (id)
- 		name = id->name;
- 
-diff --git a/drivers/iio/chemical/bme680_spi.c b/drivers/iio/chemical/bme680_spi.c
-index c9fb05e..881778e 100644
---- a/drivers/iio/chemical/bme680_spi.c
-+++ b/drivers/iio/chemical/bme680_spi.c
-@@ -11,28 +11,93 @@
- 
- #include "bme680.h"
- 
-+struct bme680_spi_bus_context {
-+	struct spi_device *spi;
-+	u8 current_page;
-+};
-+
-+/*
-+ * In SPI mode there are only 7 address bits, a "page" register determines
-+ * which part of the 8-bit range is active. This function looks at the address
-+ * and writes the page selection bit if needed
-+ */
-+static int bme680_regmap_spi_select_page(
-+	struct bme680_spi_bus_context *ctx, u8 reg)
-+{
-+	struct spi_device *spi = ctx->spi;
-+	int ret;
-+	u8 buf[2];
-+	u8 page = (reg & 0x80) ? 0 : 1; /* Page "1" is low range */
-+
-+	if (page == ctx->current_page)
-+		return 0;
-+
-+	/*
-+	 * Data sheet claims we're only allowed to change bit 4, so we must do
-+	 * a read-modify-write on each and every page select
-+	 */
-+	buf[0] = BME680_REG_STATUS;
-+	ret = spi_write_then_read(spi, buf, 1, buf + 1, 1);
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "failed to set page %u\n", page);
-+		return ret;
-+	}
-+
-+	buf[0] = BME680_REG_STATUS;
-+	if (page)
-+		buf[1] |= BME680_SPI_MEM_PAGE_BIT;
-+	else
-+		buf[1] &= ~BME680_SPI_MEM_PAGE_BIT;
-+
-+	ret = spi_write(spi, buf, 2);
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "failed to set page %u\n", page);
-+		return ret;
-+	}
-+
-+	ctx->current_page = page;
-+
-+	return 0;
-+}
-+
- static int bme680_regmap_spi_write(void *context, const void *data,
- 				   size_t count)
- {
--	struct spi_device *spi = context;
-+	struct bme680_spi_bus_context *ctx = context;
-+	struct spi_device *spi = ctx->spi;
-+	int ret;
- 	u8 buf[2];
- 
- 	memcpy(buf, data, 2);
-+
-+	ret = bme680_regmap_spi_select_page(ctx, buf[0]);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * The SPI register address (= full register address without bit 7)
- 	 * and the write command (bit7 = RW = '0')
- 	 */
- 	buf[0] &= ~0x80;
- 
--	return spi_write_then_read(spi, buf, 2, NULL, 0);
-+	return spi_write(spi, buf, 2);
- }
- 
- static int bme680_regmap_spi_read(void *context, const void *reg,
- 				  size_t reg_size, void *val, size_t val_size)
- {
--	struct spi_device *spi = context;
-+	struct bme680_spi_bus_context *ctx = context;
-+	struct spi_device *spi = ctx->spi;
-+	int ret;
-+	u8 addr = *(const u8 *)reg;
-+
-+	ret = bme680_regmap_spi_select_page(ctx, addr);
-+	if (ret)
-+		return ret;
- 
--	return spi_write_then_read(spi, reg, reg_size, val, val_size);
-+	addr |= 0x80; /* bit7 = RW = '1' */
-+
-+	return spi_write_then_read(spi, &addr, 1, val, val_size);
- }
- 
- static struct regmap_bus bme680_regmap_bus = {
-@@ -45,8 +110,8 @@ static int bme680_regmap_spi_read(void *context, const void *reg,
- static int bme680_spi_probe(struct spi_device *spi)
- {
- 	const struct spi_device_id *id = spi_get_device_id(spi);
-+	struct bme680_spi_bus_context *bus_context;
- 	struct regmap *regmap;
--	unsigned int val;
- 	int ret;
- 
- 	spi->bits_per_word = 8;
-@@ -56,45 +121,21 @@ static int bme680_spi_probe(struct spi_device *spi)
- 		return ret;
- 	}
- 
-+	bus_context = devm_kzalloc(&spi->dev, sizeof(*bus_context), GFP_KERNEL);
-+	if (!bus_context)
-+		return -ENOMEM;
-+
-+	bus_context->spi = spi;
-+	bus_context->current_page = 0xff; /* Undefined on warm boot */
-+
- 	regmap = devm_regmap_init(&spi->dev, &bme680_regmap_bus,
--				  &spi->dev, &bme680_regmap_config);
-+				  bus_context, &bme680_regmap_config);
- 	if (IS_ERR(regmap)) {
- 		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
- 				(int)PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
--	ret = regmap_write(regmap, BME680_REG_SOFT_RESET_SPI,
--			   BME680_CMD_SOFTRESET);
--	if (ret < 0) {
--		dev_err(&spi->dev, "Failed to reset chip\n");
--		return ret;
--	}
--
--	/* after power-on reset, Page 0(0x80-0xFF) of spi_mem_page is active */
--	ret = regmap_read(regmap, BME680_REG_CHIP_SPI_ID, &val);
--	if (ret < 0) {
--		dev_err(&spi->dev, "Error reading SPI chip ID\n");
--		return ret;
--	}
--
--	if (val != BME680_CHIP_ID_VAL) {
--		dev_err(&spi->dev, "Wrong chip ID, got %x expected %x\n",
--				val, BME680_CHIP_ID_VAL);
--		return -ENODEV;
--	}
--	/*
--	 * select Page 1 of spi_mem_page to enable access to
--	 * to registers from address 0x00 to 0x7F.
--	 */
--	ret = regmap_write_bits(regmap, BME680_REG_STATUS,
--				BME680_SPI_MEM_PAGE_BIT,
--				BME680_SPI_MEM_PAGE_1_VAL);
--	if (ret < 0) {
--		dev_err(&spi->dev, "failed to set page 1 of spi_mem_page\n");
--		return ret;
--	}
--
- 	return bme680_core_probe(&spi->dev, regmap, id->name);
- }
- 
--- 
-1.9.1
-
+On 3/5/19 3:59 PM, Dongli Zhang wrote:
+> [ Not relevant upstream, therefore no upstream commit. ]
+> 
+> To fix, use jiffies64_to_nsecs() directly instead of deriving the result
+> according to jiffies_to_usecs().
+> 
+> As the return type of jiffies_to_usecs() is 'unsigned int', when the return
+> value is more than the size of 'unsigned int', the leading 32 bits would be
+> discarded.
+> 
+> Suppose USEC_PER_SEC=1000000L and HZ=1000, below are the expected and
+> actual incorrect result of jiffies_to_usecs(0x7770ef70):
+> 
+> - expected  : jiffies_to_usecs(0x7770ef70) = 0x000001d291274d80
+> - incorrect : jiffies_to_usecs(0x7770ef70) = 0x0000000091274d80
+> 
+> The leading 0x000001d200000000 is discarded.
+> 
+> After xen vcpu hotplug and when the new vcpu steal clock is calculated for
+> the first time, the result of this_rq()->prev_steal_time in
+> steal_account_process_tick() would be far smaller than the expected
+> value, due to that jiffies_to_usecs() discards the leading 32 bits.
+> 
+> As a result, the diff between current steal and this_rq()->prev_steal_time
+> is always very large. Steal usage would become 100% when the initial steal
+> clock obtained from xen hypervisor is very large during xen vcpu hotplug,
+> that is, when the guest is already up for a long time.
+> 
+> The bug can be detected by doing the following:
+> 
+> * Boot xen guest with vcpus=2 and maxvcpus=4
+> * Leave the guest running for a month so that the initial steal clock for
+>   the new vcpu would be very large
+> * Hotplug 2 extra vcpus
+> * The steal time of new vcpus in /proc/stat would increase abnormally and
+>   sometimes steal usage in top can become 100%
+> 
+> This was incidentally fixed in the patch set starting by
+> commit 93825f2ec736 ("jiffies: Reuse TICK_NSEC instead of NSEC_PER_JIFFY")
+> and ended with
+> commit b672592f0221 ("sched/cputime: Remove generic asm headers").
+> 
+> This version applies to the v4.9 series.
+> 
+> Link: https://lkml.org/lkml/2019/2/28/1373
+> Suggested-by: Juergen Gross <jgross@suse.com>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>  include/linux/jiffies.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+> index 734377a..94aff43 100644
+> --- a/include/linux/jiffies.h
+> +++ b/include/linux/jiffies.h
+> @@ -287,13 +287,13 @@ extern unsigned long preset_lpj;
+>  extern unsigned int jiffies_to_msecs(const unsigned long j);
+>  extern unsigned int jiffies_to_usecs(const unsigned long j);
+>  
+> +extern u64 jiffies64_to_nsecs(u64 j);
+> +
+>  static inline u64 jiffies_to_nsecs(const unsigned long j)
+>  {
+> -	return (u64)jiffies_to_usecs(j) * NSEC_PER_USEC;
+> +	return jiffies64_to_nsecs(j);
+>  }
+>  
+> -extern u64 jiffies64_to_nsecs(u64 j);
+> -
+>  extern unsigned long __msecs_to_jiffies(const unsigned int m);
+>  #if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
+>  /*
+> 
