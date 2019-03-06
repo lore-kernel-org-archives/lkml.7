@@ -2,167 +2,149 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B510C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1918BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4100D20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF06720684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDCIiK6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfCFBmG (ORCPT
+        id S1728425AbfCFBmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 20:42:06 -0500
-Received: from mail-it1-f200.google.com ([209.85.166.200]:56973 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfCFBmF (ORCPT
+        Tue, 5 Mar 2019 20:42:39 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41411 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbfCFBmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 20:42:05 -0500
-Received: by mail-it1-f200.google.com with SMTP id j18so4000164itl.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 17:42:05 -0800 (PST)
+        Tue, 5 Mar 2019 20:42:39 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n2so11539444wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 17:42:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fx+P6z6mIclGkhJ0HEQl/jHfzyyMaXodWbU601BYoEc=;
+        b=SDCIiK6u2WXtvBMIIiiUQ3O7Zv9vSvwFO0FJ4hL08rn7DZjBovuTVxk76HbcBwpcrb
+         PoPvVy4xtlf81s3pF7DM5LmRnsC/jVPaqTzdZ0ItwzLkBdbdVK/GUMJQfkdtxXoJND8a
+         Et2VRtQ78tHrIoDN5MNckmfKCn4InW6UO4rRU1MWfOfCBKaWCvIim4LNfYyeYifm9RVo
+         auf6dw4LZawKXdPUmwyzZcCRDxkswLUBJfIHysGwNluwMc853C95XTW64UBOjni/X3VQ
+         bqSXnshjiu7QR29bcwe3dlOHxZNTUhz8NCxZB+YszR8GcpEfAcEal69G4aDELhRAQi6K
+         /auQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=F+VV95ctUMuT0UNJk/uL+Kkcb1e5YTNqiTRATO1oRQY=;
-        b=CQv/sIQbdbOzPH8s9Xsfn4pZpb2O/oX87kdVrBELobh+cj51kY+sCkTqHMhgZDsKFd
-         /Ihe3aRYKhHAUMP4vYUXIIG7rP8CgN1kaV4rh3Ve7qSKepvXO1ZYhVCDJVmxvCUWnhE1
-         qwlrwt3noh1EyXWW3x75MJph4Rr751a/ExIZVovdISSYR4VADHqBYGEdArJ3zYlaGVeQ
-         u80YB5VSsgVpaDubRqfmtO3cGSODR/djEGCjRsnwXZ8nDTuvBVEaMKpgFYE4gpKmVkH2
-         dRcU9ID9vRmL30Rx9KHgjPqmLogrwyv7xTEYCuqzQr1AONZGb/i/xlxeXnM2UVEa5Ayx
-         px4g==
-X-Gm-Message-State: APjAAAVERvw7+/GpytYZ+Y1LcRHchlMN/Tzy8cHZB/MRMY00ywkggs6B
-        ihmJE31C+0ACvMHbfYmAqZA/1pkpjBLofVLSc0kvURKFvyR5
-X-Google-Smtp-Source: APXvYqxRi7zCC2lXeNOiuoObsvD6iNiU7ZBRIAbtGkPrlUieAvWyAuSyOL+ALLHT75NmNq5gnOHvVYORkmhoqEpco6JzRHVEBiDp
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fx+P6z6mIclGkhJ0HEQl/jHfzyyMaXodWbU601BYoEc=;
+        b=kectXkXriZ4hJJ1BKffsvDbRZzADB3ets6m7Uae03GdlJgmQlCs7jsBuusW362eb81
+         mNkq7XjjHeUaRjVQ670Q0UzpgQ8uiTLTK0hAmIcsHxG4SsrwEyA1nASKlNc1FDpoxTjR
+         wDIh3OGJpzUyzcKwUIWEHddf9y+X25CfuRM4VZ1rrwJA/DeQ/vLuAKsb6IjBs/U/FXuv
+         woWuMSi3lddjqezFkrb8OzF11Z+TD4s2cn9klLwfwEiE3XsEAr6gErGonv2l7uva+NcV
+         5+tjaypYMMEKOllmJw1DTX7Px2c3oeUJnzGo/mWwjUe1F0ITJ4eEBBPH2DemUfGNbMqj
+         FMYA==
+X-Gm-Message-State: APjAAAWfNjzEIbAEjk9mz2gtLgMZ5L39XdIRu/6iuF/QEzxAe22gRNkk
+        vzWKFM2sSuaUTsglrebLm/ptCuyP9yNsnRnLJ6ho7w==
+X-Google-Smtp-Source: APXvYqx572+SzrTfZNed1kdbJFdwoZJGqMRpJp25CqwvEZ8p1klaOYUD+qyJJ0rEvPQfwi7UpgGwI0ay5eDA5mDF/Uc=
+X-Received: by 2002:a5d:6703:: with SMTP id o3mr1032983wru.75.1551836557026;
+ Tue, 05 Mar 2019 17:42:37 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a24:a4a:: with SMTP id 71mr4238447itw.8.1551836524603;
- Tue, 05 Mar 2019 17:42:04 -0800 (PST)
-Date:   Tue, 05 Mar 2019 17:42:04 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cc734405836318dc@google.com>
-Subject: general protection fault in sctp_sched_rr_dequeue
-From:   syzbot <syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <1551835710-53773-1-git-send-email-wangxiongfeng2@huawei.com>
+In-Reply-To: <1551835710-53773-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 5 Mar 2019 17:42:25 -0800
+Message-ID: <CALAqxLXFGKDzxT-S9DDnjRRYvDB1Qq3T-tHYYGQXg3c47HtTbQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] ntp: Avoid undefined behaviour in second_overflow()
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Miroslav Lichvar <mlichvar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Mar 5, 2019 at 5:29 PM Xiongfeng Wang <wangxiongfeng2@huawei.com> wrote:
+>
+> When I ran Syzkaller testsuite, I got the following call trace.
+> ================================================================================
+> UBSAN: Undefined behaviour in kernel/time/ntp.c:457:16
+> signed integer overflow:
+> 9223372036854775807 + 500 cannot be represented in type 'long int'
+> CPU: 3 PID: 0 Comm: swapper/3 Not tainted 4.19.25-dirty #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xca/0x13e lib/dump_stack.c:113
+>  ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+>  handle_overflow+0x193/0x1e2 lib/ubsan.c:190
+>  second_overflow+0x403/0x540 kernel/time/ntp.c:457
+>  accumulate_nsecs_to_secs kernel/time/timekeeping.c:2002 [inline]
+>  logarithmic_accumulation kernel/time/timekeeping.c:2046 [inline]
+>  timekeeping_advance+0x2bb/0xec0 kernel/time/timekeeping.c:2114
+>  tick_do_update_jiffies64.part.2+0x1a0/0x350 kernel/time/tick-sched.c:97
+>  tick_do_update_jiffies64 kernel/time/tick-sched.c:1229 [inline]
+>  tick_nohz_update_jiffies kernel/time/tick-sched.c:499 [inline]
+>  tick_nohz_irq_enter kernel/time/tick-sched.c:1232 [inline]
+>  tick_irq_enter+0x1fd/0x240 kernel/time/tick-sched.c:1249
+>  irq_enter+0xc4/0x100 kernel/softirq.c:353
+>  entering_irq arch/x86/include/asm/apic.h:517 [inline]
+>  entering_ack_irq arch/x86/include/asm/apic.h:523 [inline]
+>  smp_apic_timer_interrupt+0x20/0x480 arch/x86/kernel/apic/apic.c:1052
+>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:864
+>  </IRQ>
+> RIP: 0010:native_safe_halt+0x2/0x10 arch/x86/include/asm/irqflags.h:58
+> Code: 01 f0 0f 82 bc fd ff ff 48 c7 c7 c0 21 b1 83 e8 a1 0a 02 ff e9 ab fd ff ff 4c 89 e7 e8 77 b6 a5 fe e9 6a ff ff ff 90 90 fb f4 <c3> 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 f4 c3 90 90 90 90 90 90
+> RSP: 0018:ffff888106307d20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> RAX: 0000000000000007 RBX: dffffc0000000000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8881062e4f1c
+> RBP: 0000000000000003 R08: ffffed107c5dc77b R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff848c78a0
+> R13: 0000000000000003 R14: 1ffff11020c60fae R15: 0000000000000000
+>  arch_safe_halt arch/x86/include/asm/paravirt.h:94 [inline]
+>  default_idle+0x24/0x2b0 arch/x86/kernel/process.c:561
+>  cpuidle_idle_call kernel/sched/idle.c:153 [inline]
+>  do_idle+0x2ca/0x420 kernel/sched/idle.c:262
+>  cpu_startup_entry+0xcb/0xe0 kernel/sched/idle.c:368
+>  start_secondary+0x421/0x570 arch/x86/kernel/smpboot.c:271
+>  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+> ================================================================================
+>
+> It is because time_maxerror is set as 0x7FFFFFFFFFFFFFFF by user. It
+> overflows when we add it with 'MAXFREQ / NSEC_PER_USEC' in
+> 'second_overflow()'.
+>
+> This patch add a limit check and saturate it when the user set
+> 'time_maxerror'.
+>
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  kernel/time/ntp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+> index 36a2bef..38e1b65 100644
+> --- a/kernel/time/ntp.c
+> +++ b/kernel/time/ntp.c
+> @@ -677,6 +677,8 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
+>
+>         if (txc->modes & ADJ_MAXERROR)
+>                 time_maxerror = txc->maxerror;
+> +       if (time_maxerror > NTP_PHASE_LIMIT)
+> +               time_maxerror = NTP_PHASE_LIMIT;
 
-syzbot found the following crash on:
+This looks sane to me.
+Acked-by: John Stultz <john.stultz@linaro.org>
 
-HEAD commit:    63bdf4284c38 Merge branch 'linus' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=100347cb200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=872be05707464aaa
-dashboard link: https://syzkaller.appspot.com/bug?extid=4c9934f20522c0efd657
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11cd9b03200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127de8e7200000
+Though it makes me wonder a bit more about the sanity checking on the
+other parameters passed via adjtimex(), tick_usec for instance looks
+like it could be similarly problematic.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com
-
-kauditd_printk_skb: 2 callbacks suppressed
-audit: type=1400 audit(1551833288.424:35): avc:  denied  { map } for   
-pid=8035 comm="bash" path="/bin/bash" dev="sda1" ino=1457  
-scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=system_u:object_r:file_t:s0 tclass=file permissive=1
-audit: type=1400 audit(1551833294.934:36): avc:  denied  { map } for   
-pid=8047 comm="syz-executor778" path="/root/syz-executor778173561"  
-dev="sda1" ino=16484 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8047 Comm: syz-executor778 Not tainted 5.0.0+ #7
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
-Code: ea 03 80 3c 02 00 0f 85 a2 00 00 00 48 8b 5b 08 e8 62 20 ee fa 48 8d  
-7b 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-53 4c 8b 6b 30 4c 89 e7 49 83 ed 18 4c 89 ee e8 b4
-RSP: 0018:ffff88809eacf040 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8679cd9f
-RDX: 0000000000000006 RSI: ffffffff8681c41e RDI: 0000000000000030
-RBP: ffff88809eacf058 R08: ffff8880a12bc300 R09: 0000000000000002
-R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: ffff88807cae6ca0
-R13: ffff88807cae6580 R14: dffffc0000000000 R15: ffff88809eacf198
-FS:  0000000001865880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055af2d491150 CR3: 000000008dd7b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
-  sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
-  sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
-  sctp_outq_uncork+0x6c/0x80 net/sctp/outqueue.c:772
-  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1820 [inline]
-  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
-  sctp_do_sm+0x513/0x5390 net/sctp/sm_sideeffect.c:1191
-  sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1074
-  sctp_inq_push+0x1ea/0x290 net/sctp/inqueue.c:95
-  sctp_backlog_rcv+0x189/0xbc0 net/sctp/input.c:354
-  sk_backlog_rcv include/net/sock.h:937 [inline]
-  __release_sock+0x12e/0x3a0 net/core/sock.c:2413
-  release_sock+0x59/0x1c0 net/core/sock.c:2929
-  sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:8999
-  sctp_sendmsg_to_asoc+0x13e2/0x17d0 net/sctp/socket.c:1968
-  sctp_sendmsg+0x10a9/0x17e0 net/sctp/socket.c:2114
-  inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg+0xdd/0x130 net/socket.c:632
-  ___sys_sendmsg+0x806/0x930 net/socket.c:2137
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
-  __do_sys_sendmsg net/socket.c:2184 [inline]
-  __se_sys_sendmsg net/socket.c:2182 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440159
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff8801fd38 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
-RDX: 0000000000000000 RSI: 000000002001afc8 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000002 R09: 00000000004002c8
-R10: 0000000000000008 R11: 0000000000000246 R12: 00000000004019e0
-R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 7cc5803525726c53 ]---
-RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
-Code: ea 03 80 3c 02 00 0f 85 a2 00 00 00 48 8b 5b 08 e8 62 20 ee fa 48 8d  
-7b 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-53 4c 8b 6b 30 4c 89 e7 49 83 ed 18 4c 89 ee e8 b4
-RSP: 0018:ffff88809eacf040 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8679cd9f
-RDX: 0000000000000006 RSI: ffffffff8681c41e RDI: 0000000000000030
-RBP: ffff88809eacf058 R08: ffff8880a12bc300 R09: 0000000000000002
-R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: ffff88807cae6ca0
-R13: ffff88807cae6580 R14: dffffc0000000000 R15: ffff88809eacf198
-FS:  0000000001865880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055af2d491150 CR3: 000000008dd7b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
-syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+thanks
+-john
