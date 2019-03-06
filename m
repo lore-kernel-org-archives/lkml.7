@@ -2,126 +2,198 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B1BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18510C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC7F20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE59620675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfCFJ2q (ORCPT
+        id S1729749AbfCFJaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:28:46 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4775 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729078AbfCFJ2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:28:46 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 12A411A769AA38A3EF59;
-        Wed,  6 Mar 2019 17:28:44 +0800 (CST)
-Received: from [127.0.0.1] (10.177.21.79) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
- 17:28:36 +0800
-Subject: Re: [PATCH v2] aio: add check for timeout to aviod invalid value
-To:     <viro@zeniv.linux.org.uk>, <bcrl@kvack.org>
-References: <1551089387-27557-1-git-send-email-tanxiaojun@huawei.com>
-CC:     <linux-aio@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <guohanjun@huawei.com>,
-        <wangxiongfeng2@huawei.com>
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-Message-ID: <5C7F92C3.1030307@huawei.com>
-Date:   Wed, 6 Mar 2019 17:28:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        Wed, 6 Mar 2019 04:30:13 -0500
+Received: from mga04.intel.com ([192.55.52.120]:44134 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729078AbfCFJaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 04:30:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 01:30:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,447,1544515200"; 
+   d="scan'208";a="325866225"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Mar 2019 01:30:07 -0800
+Subject: Re: [PATCH v2 5/7] perf script python: add Python3 support to
+ intel-pt-events.py
+To:     Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+References: <20190302011903.2416-1-tonyj@suse.de>
+ <20190302011903.2416-6-tonyj@suse.de>
+ <6fe06c75-5f98-4829-e139-af2bfcda24f3@intel.com>
+ <dfa719d4-0d9e-ad08-536f-17b3da116b19@suse.de>
+ <18913237-75f2-731b-940d-1fccc43d1b4a@suse.de>
+ <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <d3920c9a-3990-6111-ca4f-58d96a929bf4@intel.com>
+Date:   Wed, 6 Mar 2019 11:28:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <1551089387-27557-1-git-send-email-tanxiaojun@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.21.79]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any comments?
-Anything is fine to me.
+On 5/03/19 6:19 PM, Tony Jones wrote:
+> On 3/5/19 8:10 AM, Tony Jones wrote:
+> 
+>>
+>> Sure enough, I managed to attach the wrong patch. Sorry. I'll attach revised (v3) 
+>> to this thread as the change is trivial.
+> 
+> From: Tony Jones <tonyj@suse.de>
+> Date: Tue, 05 Mar 2019 08:31:30 -0800
+> Subject: [PATCH v3] perf script python: add Python3 support to intel-pt-events.py
+> 
+> Support both Python2 and Python3 in the intel-pt-events.py script
+> 
+> There may be differences in the ordering of output lines due to
+> differences in dictionary ordering etc.  However the format within lines
+> should be unchanged.
+> 
+> The use of 'from __future__' implies the minimum supported Python2 version
+> is now v2.6
+> 
+> Signed-off-by: Tony Jones <tonyj@suse.de>
+> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
 
-Thanks.
-Xiaojun.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On 2019/2/25 18:09, Tan Xiaojun wrote:
-> Syzkaller reported a UBSAN bug below, which was mainly caused by a large
-> negative number passed to the timeout of the io_getevents system call.
->
-> ======================================================================
-> UBSAN: Undefined behaviour in ./include/linux/ktime.h:42:14
-> signed integer overflow:
-> -8427032702788048137 * 1000000000 cannot be represented in type 'long long int'
-> CPU: 3 PID: 11668 Comm: syz-executor0 Not tainted 4.19.18-514.55.6.9.x86_64+ #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xca/0x13e lib/dump_stack.c:113
->  ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
->  handle_overflow+0x193/0x1e2 lib/ubsan.c:190
->  ktime_set include/linux/ktime.h:42 [inline]
->  timespec64_to_ktime include/linux/ktime.h:78 [inline]
->  do_io_getevents+0x307/0x390 fs/aio.c:2043
->  __do_sys_io_getevents fs/aio.c:2080 [inline]
->  __se_sys_io_getevents fs/aio.c:2068 [inline]
->  __x64_sys_io_getevents+0x163/0x250 fs/aio.c:2068
->  do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462589
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fde9b04ec58 EFLAGS: 00000246 ORIG_RAX: 00000000000000d0
-> RAX: ffffffffffffffda RBX: 000000000072bf00 RCX: 0000000000462589
-> RDX: 0000000000000006 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000005 R08: 0000000020000100 R09: 0000000000000000
-> R10: 0000000020000040 R11: 0000000000000246 R12: 00007fde9b04f6bc
-> R13: 00000000004bd1f0 R14: 00000000006f6b60 R15: 00000000ffffffff
-> ======================================================================
-> bond0 (unregistering): Released all slaves
->
-> The timeout described in "man io_getevents" does not say whether it
-> can be negative or not, but as a waiting time, a negative number has
-> no meaning. So I add check to avoid this case.
->
-> This issue was previously discussed at:
-> https://lore.kernel.org/lkml/CACT4Y+bBxVYLQ6LtOKrKtnLthqLHcw-BMp3aqP3mjdAvr9FULQ@mail.gmail.com/
->
-> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-> Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
 > ---
->  fs/aio.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/aio.c b/fs/aio.c
-> index aaaaf4d..3a39673 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -2078,10 +2078,16 @@ static long do_io_getevents(aio_context_t ctx_id,
->  		struct io_event __user *events,
->  		struct timespec64 *ts)
->  {
-> -	ktime_t until = ts ? timespec64_to_ktime(*ts) : KTIME_MAX;
-> -	struct kioctx *ioctx = lookup_ioctx(ctx_id);
-> +	ktime_t until;
-> +	struct kioctx *ioctx;
->  	long ret = -EINVAL;
+>  tools/perf/scripts/python/intel-pt-events.py |   32 ++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 13 deletions(-)
+> 
+> --- a/tools/perf/scripts/python/intel-pt-events.py
+> +++ b/tools/perf/scripts/python/intel-pt-events.py
+> @@ -10,6 +10,8 @@
+>  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>  # more details.
 >  
-> +	if (ts && !timespec64_valid(ts))
-> +		return -EINVAL;
+> +from __future__ import print_function
 > +
-> +	until = ts ? timespec64_to_ktime(*ts) : KTIME_MAX;
-> +	ioctx = lookup_ioctx(ctx_id);
-> +
->  	if (likely(ioctx)) {
->  		if (likely(min_nr <= nr && min_nr >= 0))
->  			ret = read_events(ioctx, min_nr, nr, events, until);
-
+>  import os
+>  import sys
+>  import struct
+> @@ -22,34 +24,34 @@ sys.path.append(os.environ['PERF_EXEC_PA
+>  #from Core import *
+>  
+>  def trace_begin():
+> -	print "Intel PT Power Events and PTWRITE"
+> +	print("Intel PT Power Events and PTWRITE")
+>  
+>  def trace_end():
+> -	print "End"
+> +	print("End")
+>  
+>  def trace_unhandled(event_name, context, event_fields_dict):
+> -		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
+> +		print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
+>  
+>  def print_ptwrite(raw_buf):
+>  	data = struct.unpack_from("<IQ", raw_buf)
+>  	flags = data[0]
+>  	payload = data[1]
+>  	exact_ip = flags & 1
+> -	print "IP: %u payload: %#x" % (exact_ip, payload),
+> +	print("IP: %u payload: %#x" % (exact_ip, payload), end=' ')
+>  
+>  def print_cbr(raw_buf):
+>  	data = struct.unpack_from("<BBBBII", raw_buf)
+>  	cbr = data[0]
+>  	f = (data[4] + 500) / 1000
+>  	p = ((cbr * 1000 / data[2]) + 5) / 10
+> -	print "%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p),
+> +	print("%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p), end=' ')
+>  
+>  def print_mwait(raw_buf):
+>  	data = struct.unpack_from("<IQ", raw_buf)
+>  	payload = data[1]
+>  	hints = payload & 0xff
+>  	extensions = (payload >> 32) & 0x3
+> -	print "hints: %#x extensions: %#x" % (hints, extensions),
+> +	print("hints: %#x extensions: %#x" % (hints, extensions), end=' ')
+>  
+>  def print_pwre(raw_buf):
+>  	data = struct.unpack_from("<IQ", raw_buf)
+> @@ -57,13 +59,14 @@ def print_pwre(raw_buf):
+>  	hw = (payload >> 7) & 1
+>  	cstate = (payload >> 12) & 0xf
+>  	subcstate = (payload >> 8) & 0xf
+> -	print "hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
+> +	print("hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
+> +		end=' ')
+>  
+>  def print_exstop(raw_buf):
+>  	data = struct.unpack_from("<I", raw_buf)
+>  	flags = data[0]
+>  	exact_ip = flags & 1
+> -	print "IP: %u" % (exact_ip),
+> +	print("IP: %u" % (exact_ip), end=' ')
+>  
+>  def print_pwrx(raw_buf):
+>  	data = struct.unpack_from("<IQ", raw_buf)
+> @@ -71,18 +74,21 @@ def print_pwrx(raw_buf):
+>  	deepest_cstate = payload & 0xf
+>  	last_cstate = (payload >> 4) & 0xf
+>  	wake_reason = (payload >> 8) & 0xf
+> -	print "deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason),
+> +	print("deepest cstate: %u last cstate: %u wake reason: %#x" %
+> +		(deepest_cstate, last_cstate, wake_reason), end=' ')
+>  
+>  def print_common_start(comm, sample, name):
+>  	ts = sample["time"]
+>  	cpu = sample["cpu"]
+>  	pid = sample["pid"]
+>  	tid = sample["tid"]
+> -	print "%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
+> +	print("%16s %5u/%-5u [%03u] %9u.%09u %7s:" %
+> +		(comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
+> +		end=' ')
+>  
+>  def print_common_ip(sample, symbol, dso):
+>  	ip = sample["ip"]
+> -	print "%16x %s (%s)" % (ip, symbol, dso)
+> +	print("%16x %s (%s)" % (ip, symbol, dso))
+>  
+>  def process_event(param_dict):
+>  	event_attr = param_dict["attr"]
+> @@ -92,12 +98,12 @@ def process_event(param_dict):
+>  	name	   = param_dict["ev_name"]
+>  
+>  	# Symbol and dso info are not always resolved
+> -	if (param_dict.has_key("dso")):
+> +	if "dso" in param_dict:
+>  		dso = param_dict["dso"]
+>  	else:
+>  		dso = "[unknown]"
+>  
+> -	if (param_dict.has_key("symbol")):
+> +	if "symbol" in param_dict:
+>  		symbol = param_dict["symbol"]
+>  	else:
+>  		symbol = "[unknown]"
+> 
 
