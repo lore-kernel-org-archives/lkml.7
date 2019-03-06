@@ -2,213 +2,120 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0514FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC97C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B4A20652
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7320A20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551895173;
+	bh=6emJEMNkBmkw/qdWxaKwwoyFpuFZb6ZEI7+AgKwntZI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=heNSwsAG/fIUuT6Eh4wncFKQd8fR1jZvTCHQblcGpnJ3CFbsPkfOMQK7LoaSHEDVn
+	 yDfAt51nZ1xgJf2EfbxecPsPre7nqt9hgAQwL5n+Lui6Cko5S2oWSYzXg2dLcu9LwK
+	 64PuPMQ81k1vwdH3SThjcn0crf0c5sInQLw+UchM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfCFR6K (ORCPT
+        id S1730598AbfCFR7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:58:10 -0500
-Received: from mga06.intel.com ([134.134.136.31]:38930 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfCFR6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:58:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 09:58:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,448,1544515200"; 
-   d="scan'208";a="121536057"
-Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
-  by orsmga006.jf.intel.com with ESMTP; 06 Mar 2019 09:58:08 -0800
-Date:   Wed, 6 Mar 2019 09:58:08 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-edac@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH] EDAC, {skx|i10nm}_edac: Fix randconfig build error
-Message-ID: <20190306175808.GA30016@agluck-desk>
-References: <20190305132147.3739133-1-arnd@arndb.de>
- <20190305143453.GC8256@zn.tnic>
- <CAK8P3a2kSrTkTespcBGr6oYi8nvriS9pwtM2nQ7gCxVB+TzLog@mail.gmail.com>
+        Wed, 6 Mar 2019 12:59:31 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44886 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728944AbfCFR7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:59:31 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q128so11704857ljb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:59:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hi84fhsxf2r6cg8iA9zWa4Z/EZJKaybISgwttPqRQ5U=;
+        b=VLMEmmigBcNy4dP3EdIF7z4ljXRAq/zI8gVEbvZoIAIpq1rrYVcZ0UrhmL8rkz75SR
+         wiW1mEsfxmmHbQogIP2rK6hZgV9yZefGEOTQdIygHNqeGu8VxuIOeb2Pd82TortkPeXY
+         sL8dlitQTj7ylYXuUGvSBfiaO8c4fm6q9x2NQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hi84fhsxf2r6cg8iA9zWa4Z/EZJKaybISgwttPqRQ5U=;
+        b=B56uoKjV6ZYFPg1peLf3R5ATqS38Xk5SicHYeo9fU0SDE2yMCI050W5nW3U5J8z7gH
+         DpSjsxXBZdQPdDOx20Em56OC8y18hIEErRcFmnBgDkGa1aAi+l0Di4tHDmYvZhcPou7L
+         IL9jgfkMn8e6aI1+/7y9MRE80RQfimsBnRs9onLcuHyWVbZJthkXv+773A24SJVDSecK
+         n8Ve9FMKRvWzxj7PpcVY4DtQ1Uc3vQcYK63PTzLjvauhT6s/cGEY57CI283+P0/8Jnm5
+         l1/XK17MaJfijx/IHoRJeb5+lEx8PRRwb0ydPtdIrz6FgikzR/6HKILhWHgc3M08w/8Y
+         9frQ==
+X-Gm-Message-State: APjAAAXhhHyoI6Q99nARP6Lf2jei3OgGKFA7+Y+PkUHGCqVa2Ka6Q9bu
+        enXfHjfE/BSl0+1FB9aNAGgptyJ9Kq0=
+X-Google-Smtp-Source: APXvYqxcooZuUPiDNCxNz7e3Zneo9hXpQUugMG9f0Xrn7BtstsLxfz5YBWNsfJbBeKTgDKGXGrM9DA==
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr3369544ljg.146.1551895169096;
+        Wed, 06 Mar 2019 09:59:29 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id g21sm425209lfb.73.2019.03.06.09.59.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 09:59:28 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id a8so9611200lfi.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:59:28 -0800 (PST)
+X-Received: by 2002:a19:48cb:: with SMTP id v194mr4748710lfa.166.1551895167718;
+ Wed, 06 Mar 2019 09:59:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2kSrTkTespcBGr6oYi8nvriS9pwtM2nQ7gCxVB+TzLog@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190228145450.289603901@infradead.org> <20190228150152.078767622@infradead.org>
+ <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
+ <20190301144556.GY32477@hirez.programming.kicks-ass.net> <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
+ <20190301152305.GJ32494@hirez.programming.kicks-ass.net> <20190306131347.GX32534@hirez.programming.kicks-ass.net>
+ <20190306171451.GZ32534@hirez.programming.kicks-ass.net> <20190306173715.GA32534@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190306173715.GA32534@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 6 Mar 2019 09:59:11 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiDfi_=hny1hDCrxaEUUcgvykaWXt4f1qn+pt1RD1OFLQ@mail.gmail.com>
+Message-ID: <CAHk-=wiDfi_=hny1hDCrxaEUUcgvykaWXt4f1qn+pt1RD1OFLQ@mail.gmail.com>
+Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Juergen Gross <jgross@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Wed, Mar 6, 2019 at 9:37 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> The below seems to 'work'.
 
-Kbuild failed on the kernel configurations below:
+Yeah, and makes things cheaper for the non-SMAP case too. Looks sane.
 
-  CONFIG_ACPI_NFIT=y
-  CONFIG_EDAC_DEBUG=y
-  CONFIG_EDAC_SKX=m
-  CONFIG_EDAC_I10NM=y
-         or
-  CONFIG_ACPI_NFIT=y
-  CONFIG_EDAC_DEBUG=y
-  CONFIG_EDAC_SKX=y
-  CONFIG_EDAC_I10NM=m
+One note:
 
-Failed log:
-  ...
-  CC [M]  drivers/edac/skx_common.o
-  ...
-  .../skx_common.o:.../skx_common.c:672: undefined reference to `__this_module'
+ +       asm volatile (ALTERNATIVE("", "pushf; pop %0; "
+__stringify(__ASM_CLAC),
 
-That is because if one of the two drivers {skx|i10nm}_edac is built-in
-and the other one is built as a module, the shared file skx_common.c is
-always built to an object in module style by kbuild. Therefore, when
-linking for vmlinux, the '__this_module' symbol isn't defined.
+Hmm. Every single use of __ASM_CLAC is together with "__stringity()".
 
-Fix it by moving the DEFINE_SIMPLE_ATTRIBUTE() from skx_common.c to
-skx_base.c and i10nm_base.c, where the '__this_module' is always defined
-whatever it's built-in or built as a module.
+Maybe we could just get rid of that oddity, and just make __ASM_CLAC
+be a string to begin with.
 
-Test the patch with following configurations:
+At one point it was used bare in the __ASSEMBLY__ version, but that
+does not appear to the case any more since commit 669f8a900198
+("x86/smap: Use ALTERNATIVE macro") back in 2015.
 
-  CONFIG_ACPI_NFIT=y
-  CONFIG_EDAC_DEBUG=[y|n]
-
-  +------------------------------------+
-  |  skx_edac  |  i10nm_edac  | Build  |
-  |------------|--------------|--------|
-  |     m      |      m       |   ok   |
-  |------------|--------------|--------|
-  |     m      |      y       |   ok   |
-  |------------|--------------|--------|
-  |     y      |      m       |   ok   |
-  |------------|--------------|--------|
-  |     y      |      y       |   ok   |
-  +------------------------------------+
-
-Fixes: d4dc89d069aa ("EDAC, i10nm: Add a driver for Intel 10nm server processors")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
-
-This seems cleaner than adding all the EXPORTs to skx_common.c
-I also tried a build with the 0x8A152468-config.gz that Arnd
-supplied.
-
- drivers/edac/i10nm_base.c | 4 +++-
- drivers/edac/skx_base.c   | 4 +++-
- drivers/edac/skx_common.c | 7 +++----
- drivers/edac/skx_common.h | 7 +++++--
- 4 files changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
-index c334fb7c63df..57ae2c6d5958 100644
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -181,6 +181,8 @@ static struct notifier_block i10nm_mce_dec = {
- 	.priority	= MCE_PRIO_EDAC,
- };
- 
-+DEFINE_SIMPLE_ATTRIBUTE(fops_u64_wo, NULL, debugfs_u64_set, "%llu\n");
-+
- static int __init i10nm_init(void)
- {
- 	u8 mc = 0, src_id = 0, node_id = 0;
-@@ -249,7 +251,7 @@ static int __init i10nm_init(void)
- 
- 	opstate_init();
- 	mce_register_decode_chain(&i10nm_mce_dec);
--	setup_skx_debug("i10nm_test");
-+	setup_skx_debug("i10nm_test", &fops_u64_wo);
- 
- 	i10nm_printk(KERN_INFO, "%s\n", I10NM_REVISION);
- 
-diff --git a/drivers/edac/skx_base.c b/drivers/edac/skx_base.c
-index adae4c848ca1..1748f627ca6c 100644
---- a/drivers/edac/skx_base.c
-+++ b/drivers/edac/skx_base.c
-@@ -540,6 +540,8 @@ static struct notifier_block skx_mce_dec = {
- 	.priority	= MCE_PRIO_EDAC,
- };
- 
-+DEFINE_SIMPLE_ATTRIBUTE(fops_u64_wo, NULL, debugfs_u64_set, "%llu\n");
-+
- /*
-  * skx_init:
-  *	make sure we are running on the correct cpu model
-@@ -619,7 +621,7 @@ static int __init skx_init(void)
- 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
- 	opstate_init();
- 
--	setup_skx_debug("skx_test");
-+	setup_skx_debug("skx_test", &fops_u64_wo);
- 
- 	mce_register_decode_chain(&skx_mce_dec);
- 
-diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
-index 0e96e7b5b0a7..f75af7ff5515 100644
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -653,7 +653,7 @@ void skx_remove(void)
-  */
- static struct dentry *skx_test;
- 
--static int debugfs_u64_set(void *data, u64 val)
-+int debugfs_u64_set(void *data, u64 val)
- {
- 	struct mce m;
- 
-@@ -669,16 +669,15 @@ static int debugfs_u64_set(void *data, u64 val)
- 
- 	return 0;
- }
--DEFINE_SIMPLE_ATTRIBUTE(fops_u64_wo, NULL, debugfs_u64_set, "%llu\n");
- 
--void setup_skx_debug(const char *dirname)
-+void setup_skx_debug(const char *dirname, const struct file_operations *fops)
- {
- 	skx_test = edac_debugfs_create_dir(dirname);
- 	if (!skx_test)
- 		return;
- 
- 	if (!edac_debugfs_create_file("addr", 0200, skx_test,
--				      NULL, &fops_u64_wo)) {
-+				      NULL, fops)) {
- 		debugfs_remove(skx_test);
- 		skx_test = NULL;
- 	}
-diff --git a/drivers/edac/skx_common.h b/drivers/edac/skx_common.h
-index d25374e34d4f..637867e0952c 100644
---- a/drivers/edac/skx_common.h
-+++ b/drivers/edac/skx_common.h
-@@ -142,10 +142,13 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
- void skx_remove(void);
- 
- #ifdef CONFIG_EDAC_DEBUG
--void setup_skx_debug(const char *dirname);
-+int debugfs_u64_set(void *data, u64 val);
-+void setup_skx_debug(const char *dirname, const struct file_operations *fops);
- void teardown_skx_debug(void);
- #else
--static inline void setup_skx_debug(const char *dirname) {}
-+static inline int debugfs_u64_set(void *data, u64 val) { return -ENOENT; }
-+static inline void setup_skx_debug(const char *dirname,
-+				   const struct file_operations *fops) {}
- static inline void teardown_skx_debug(void) {}
- #endif /*CONFIG_EDAC_DEBUG*/
- 
--- 
-2.19.1
-
+                 Linus
