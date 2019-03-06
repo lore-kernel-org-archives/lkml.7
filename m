@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06441C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD591C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0849206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8843D20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfCFWnH (ORCPT
+        id S1726311AbfCFWnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:43:07 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60836 "EHLO
+        Wed, 6 Mar 2019 17:43:14 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60844 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfCFWnG (ORCPT
+        with ESMTP id S1726186AbfCFWnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:43:06 -0500
+        Wed, 6 Mar 2019 17:43:12 -0500
 Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:798c:6bb0:a97a:4a09:e6d8])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 36B2A282060;
-        Wed,  6 Mar 2019 22:42:59 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D72E4280377;
+        Wed,  6 Mar 2019 22:43:05 +0000 (GMT)
 From:   Helen Koike <helen.koike@collabora.com>
 To:     linux-media@vger.kernel.org
 Cc:     lucmaga@gmail.com, linux-kernel@vger.kernel.org,
         lkcamp@lists.libreplanetbr.org, andrealmeid@collabora.com,
         Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com
-Subject: [PATCH 1/8] media: vimc: deb: fix default sink bayer format
-Date:   Wed,  6 Mar 2019 19:42:37 -0300
-Message-Id: <20190306224244.21070-2-helen.koike@collabora.com>
+Subject: [PATCH 2/8] media: vimc: stream: fix thread state before sleep
+Date:   Wed,  6 Mar 2019 19:42:38 -0300
+Message-Id: <20190306224244.21070-3-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190306224244.21070-1-helen.koike@collabora.com>
 References: <20190306224244.21070-1-helen.koike@collabora.com>
@@ -44,32 +44,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The format of the sink pad should be a bayer mbus format.
+The state TASK_UNINTERRUPTIBLE should be set just before
+schedule_timeout() call, so it knows the sleep mode it should enter.
+There is no point in setting TASK_UNINTERRUPTIBLE at the initialization
+of the thread as schedule_timeout() will set the state back to
+TASK_RUNNING.
 
-This fixes a kernel NULL pointer dereference error that was caused when
-the stream starts because the configured format was not found in the
-pixelmap table.
+This fixes a warning in __might_sleep() call, as it's expecting the
+task to be in TASK_RUNNING state just before changing the state to
+a sleeping state.
 
 Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 ---
 
- drivers/media/platform/vimc/vimc-debayer.c | 2 +-
+ drivers/media/platform/vimc/vimc-streamer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-index eaed4233ad1b..20826f209731 100644
---- a/drivers/media/platform/vimc/vimc-debayer.c
-+++ b/drivers/media/platform/vimc/vimc-debayer.c
-@@ -66,7 +66,7 @@ struct vimc_deb_device {
- static const struct v4l2_mbus_framefmt sink_fmt_default = {
- 	.width = 640,
- 	.height = 480,
--	.code = MEDIA_BUS_FMT_RGB888_1X24,
-+	.code = MEDIA_BUS_FMT_SRGGB8_1X8,
- 	.field = V4L2_FIELD_NONE,
- 	.colorspace = V4L2_COLORSPACE_DEFAULT,
- };
+diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+index fcc897fb247b..392754c18046 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.c
++++ b/drivers/media/platform/vimc/vimc-streamer.c
+@@ -120,7 +120,6 @@ static int vimc_streamer_thread(void *data)
+ 	int i;
+ 
+ 	set_freezable();
+-	set_current_state(TASK_UNINTERRUPTIBLE);
+ 
+ 	for (;;) {
+ 		try_to_freeze();
+@@ -137,6 +136,7 @@ static int vimc_streamer_thread(void *data)
+ 				break;
+ 		}
+ 		//wait for 60hz
++		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		schedule_timeout(HZ / 60);
+ 	}
+ 
 -- 
 2.20.1
 
