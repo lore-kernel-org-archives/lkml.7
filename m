@@ -2,361 +2,171 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50661C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0E8C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE3B20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E8A20840
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfCFJim (ORCPT
+        id S1729579AbfCFJlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:38:42 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:33210 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbfCFJim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:38:42 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AEFBF13AB0;
-        Wed,  6 Mar 2019 09:38:41 +0000 (UTC)
-Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 89C45608C1;
-        Wed,  6 Mar 2019 09:38:30 +0000 (UTC)
-Subject: Re: [PATCH v4 02/22] iommu: introduce device fault data
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@linux.intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
-        kevin.tian@intel.com, ashok.raj@intel.com, christoffer.dall@arm.com
-References: <20190218135504.25048-1-eric.auger@redhat.com>
- <20190218135504.25048-3-eric.auger@redhat.com>
- <c9adfbda-b78a-405a-a691-9f99d7dc2a26@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <43c5c3be-a609-62e1-efaa-c5571bb762c6@redhat.com>
-Date:   Wed, 6 Mar 2019 10:38:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 04:41:36 -0500
+Received: from charybdis-ext.suse.de ([195.135.221.2]:7170 "EHLO suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726596AbfCFJlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 04:41:36 -0500
+Received: by suse.de (Postfix, from userid 1000)
+        id A3FDF44A0; Wed,  6 Mar 2019 10:41:34 +0100 (CET)
+Date:   Wed, 6 Mar 2019 10:41:34 +0100
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "hughd@google.com" <hughd@google.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
+ __nr_hugepages_store_common()
+Message-ID: <20190306094130.q5v7qfgbekatnmyk@d104.suse.de>
+References: <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
+ <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
+ <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
+ <5C74A2DA.1030304@huawei.com>
+ <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
+ <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
+ <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
+ <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
+ <20190305000402.GA4698@hori.linux.bs1.fc.nec.co.jp>
+ <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <c9adfbda-b78a-405a-a691-9f99d7dc2a26@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 06 Mar 2019 09:38:41 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+On Mon, Mar 04, 2019 at 08:15:40PM -0800, Mike Kravetz wrote:
+> In addition, the code in __nr_hugepages_store_common() which tries to
+> handle the case of not being able to allocate a node mask would likely
+> result in incorrect behavior.  Luckily, it is very unlikely we will
+> ever take this path.  If we do, simply return ENOMEM.
 
-On 3/5/19 3:56 PM, Jean-Philippe Brucker wrote:
-> On 18/02/2019 13:54, Eric Auger wrote:
->> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>
->> Device faults detected by IOMMU can be reported outside the IOMMU
->> subsystem for further processing. This patch introduces
->> a generic device fault data structure.
->>
->> The fault can be either an unrecoverable fault or a page request,
->> also referred to as a recoverable fault.
->>
->> We only care about non internal faults that are likely to be reported
->> to an external subsystem.
->>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
->> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
->> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->>
->> v3 -> v4:
->> - use a union containing aither an unrecoverable fault or a page
->>   request message. Move the device private data in the page request
->>   structure. Reshuffle the fields and use flags.
->> - move fault perm attributes to the uapi
->> - remove a bunch of iommu_fault_reason enum values that were related
->>   to internal errors
->> ---
->>  include/linux/iommu.h      |  47 +++++++++++++++
->>  include/uapi/linux/iommu.h | 115 +++++++++++++++++++++++++++++++++++++
->>  2 files changed, 162 insertions(+)
->>  create mode 100644 include/uapi/linux/iommu.h
->>
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index e90da6b6f3d1..032d33894723 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -25,6 +25,7 @@
->>  #include <linux/errno.h>
->>  #include <linux/err.h>
->>  #include <linux/of.h>
->> +#include <uapi/linux/iommu.h>
->>  
->>  #define IOMMU_READ	(1 << 0)
->>  #define IOMMU_WRITE	(1 << 1)
->> @@ -48,6 +49,7 @@ struct bus_type;
->>  struct device;
->>  struct iommu_domain;
->>  struct notifier_block;
->> +struct iommu_fault_event;
->>  
->>  /* iommu fault flags */
->>  #define IOMMU_FAULT_READ	0x0
->> @@ -55,6 +57,7 @@ struct notifier_block;
->>  
->>  typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
->>  			struct device *, unsigned long, int, void *);
->> +typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *, void *);
->>  
->>  struct iommu_domain_geometry {
->>  	dma_addr_t aperture_start; /* First address that can be mapped    */
->> @@ -243,6 +246,49 @@ struct iommu_device {
->>  	struct device *dev;
->>  };
->>  
->> +/**
->> + * struct iommu_fault_event - Generic per device fault data
->> + *
->> + * - PCI and non-PCI devices
->> + * - Recoverable faults (e.g. page request), information based on PCI ATS
->> + *   and PASID spec.
-> 
-> "for example information based on PCI PRI and PASID extensions"? ATS+PRI
-> have been integrated into the main spec, and only PRI is relevant here.
-> 
->> + * - Un-recoverable faults of device interest
-> 
-> "of interest to device drivers"?
+Hi Mike,
 
-Simplified/Replaced by
-"
-* struct iommu_fault_event - Generic fault event
- *
- * Can represent recoverable faults such as a page requests or
- * unrecoverable faults such as DMA or IRQ remapping faults.
-"
-> 
->> + * - DMA remapping and IRQ remapping faults
->> + *
->> + * @fault: fault descriptor
->> + * @iommu_private: used by the IOMMU driver for storing fault-specific
->> + *                 data. Users should not modify this field before
->> + *                 sending the fault response.
->> + */
->> +struct iommu_fault_event {
->> +	struct iommu_fault fault;
->> +	u64 iommu_private;
->> +};
->> +
->> +/**
->> + * struct iommu_fault_param - per-device IOMMU fault data
->> + * @dev_fault_handler: Callback function to handle IOMMU faults at device level
->> + * @data: handler private data
->> + *
->> + */
->> +struct iommu_fault_param {
->> +	iommu_dev_fault_handler_t handler;
->> +	void *data;
->> +};
->> +
->> +/**
->> + * struct iommu_param - collection of per-device IOMMU data
->> + *
->> + * @fault_param: IOMMU detected device fault reporting data
->> + *
->> + * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
->> + *	struct iommu_group	*iommu_group;
->> + *	struct iommu_fwspec	*iommu_fwspec;
->> + */
->> +struct iommu_param {
->> +	struct iommu_fault_param *fault_param;
->> +};
->> +
->>  int  iommu_device_register(struct iommu_device *iommu);
->>  void iommu_device_unregister(struct iommu_device *iommu);
->>  int  iommu_device_sysfs_add(struct iommu_device *iommu,
->> @@ -418,6 +464,7 @@ struct iommu_ops {};
->>  struct iommu_group {};
->>  struct iommu_fwspec {};
->>  struct iommu_device {};
->> +struct iommu_fault_param {};
->>  
->>  static inline bool iommu_present(struct bus_type *bus)
->>  {
->> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->> new file mode 100644
->> index 000000000000..7ebf23ed6ccb
->> --- /dev/null
->> +++ b/include/uapi/linux/iommu.h
->> @@ -0,0 +1,115 @@
->> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->> +/*
->> + * IOMMU user API definitions
->> + */
->> +
->> +#ifndef _UAPI_IOMMU_H
->> +#define _UAPI_IOMMU_H
->> +
->> +#include <linux/types.h>
->> +
->> +/*  Generic fault types, can be expanded IRQ remapping fault */
->> +enum iommu_fault_type {
->> +	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
->> +	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
->> +};
->> +
->> +enum iommu_fault_reason {
->> +	IOMMU_FAULT_REASON_UNKNOWN = 0,
->> +
->> +	/* Could not access the PASID table (fetch caused external abort) */
->> +	IOMMU_FAULT_REASON_PASID_FETCH,
->> +
->> +	/* pasid entry is invalid or has configuration errors */
->> +	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
->> +
->> +	/*
->> +	 * PASID is out of range (e.g. exceeds the maximum PASID
->> +	 * supported by the IOMMU) or disabled.
->> +	 */
->> +	IOMMU_FAULT_REASON_PASID_INVALID,
->> +
->> +	/*
->> +	 * An external abort occurred fetching (or updating) a translation
->> +	 * table descriptor
->> +	 */
->> +	IOMMU_FAULT_REASON_WALK_EABT,
->> +
->> +	/*
->> +	 * Could not access the page table entry (Bad address),
->> +	 * actual translation fault
->> +	 */
->> +	IOMMU_FAULT_REASON_PTE_FETCH,
->> +
->> +	/* Protection flag check failed */
->> +	IOMMU_FAULT_REASON_PERMISSION,
->> +
->> +	/* access flag check failed */
->> +	IOMMU_FAULT_REASON_ACCESS,
->> +
->> +	/* Output address of a translation stage caused Address Size fault */
->> +	IOMMU_FAULT_REASON_OOR_ADDRESS,
->> +};
->> +
->> +/**
->> + * Unrecoverable fault data
->> + * @reason: reason of the fault
->> + * @addr: offending page address
->> + * @fetch_addr: address that caused a fetch abort, if any
->> + * @pasid: contains process address space ID, used in shared virtual memory
->> + * @perm: Requested permission access using by the incoming transaction
->> + *	IOMMU_FAULT_READ, IOMMU_FAULT_WRITE
-> 
-> Stale comment
-removed
-> 
->> + */
->> +struct iommu_fault_unrecoverable {
->> +	__u32	reason; /* enum iommu_fault_reason */
->> +#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
->> +#define IOMMU_FAULT_UNRECOV_PERM_VALID		(1 << 1)
-> 
-> Not needed, since @perm is already a bitfield
-not exactly, READ is encoded as 0. We need to differentiate read fault
-from no perm provided. However if I follow your recommendation below and
-transform the READ FAULT into a set bit this makes sense.
+I still thnk that we could just get rid of the NODEMASK_ALLOC machinery
+here, it adds a needlessly complexity IMHO.
+Note that before "(5df66d306ec9: mm: fix comment for NODEMASK_ALLOC)",
+the comment about the size was wrong, showing a much bigger size that it
+actually was, and I would not be surprised if people started to add
+NODEMASK_ALLOC here and there because of that.
 
-> 
->> +#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 2)
->> +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 3)
->> +	__u32	flags;
->> +	__u32	pasid;
->> +#define IOMMU_FAULT_PERM_WRITE	(1 << 0) /* write */
->> +#define IOMMU_FAULT_PERM_EXEC	(1 << 1) /* exec */
->> +#define IOMMU_FAULT_PERM_PRIV	(1 << 2) /* priviledged */
-> 
-> typo "privileged"
-OK
-> 
->> +#define IOMMU_FAULT_PERM_INST	(1 << 3) /* instruction */
-> 
-> Could you move these outside the struct definition? They are shared with
-> the other struct. And it would be less confusing, from the device driver
-> point of view, to merge those with the existing IOMMU_FAULT_* defines
-> (but moving them to UAPI and making them bits)
-ok I will look at this. Need to check if the read fault value is not
-hardcoded anywhere.
-> 
->> +	__u32	perm;
->> +	__u64	addr;
->> +	__u64	fetch_addr;
->> +};
->> +
->> +/*
->> + * Page Request data (aka. recoverable fault data)
->> + * @flags : encodes whether the pasid is valid and whether this
->> + * is the last page in group
->> + * @pasid: pasid
->> + * @grpid: page request group index
->> + * @perm: requested page permissions
->> + * @addr: page address
->> + */
->> +struct iommu_fault_page_request {
->> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT	(1 << 0)
-> 
-> PASID_VALID, to be consistent with the other set of flags?
-OK
-> 
->> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
->> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
->> +	__u32   flags;
->> +	__u32	pasid;
->> +	__u32	grpid;
->> +	__u32	perm;
->> +	__u64	addr;
-> 
-> Given that we'll be reporting stall faults using this struct, it would
-> be good to have the fetch_addr field and flag here as well.
-OK
-> 
->> +	__u64	private_data[2];
->> +};
->> +
->> +/**
->> + * struct iommu_fault - Generic fault data
->> + *
->> + * @type contains fault type
->> + */
->> +
->> +struct iommu_fault {
->> +	__u32	type;   /* enum iommu_fault_type */
->> +	__u32	reserved;
->> +	union {
->> +		struct iommu_fault_unrecoverable event;
->> +		struct iommu_fault_page_request prm;
-> 
-> What's the 'm' in "prm"? Maybe just "pr"?
-This stands for page request message, I think this is the Intel's naming?
+Actually, there was a little talk about removing NODEMASK_ALLOC altogether,
+but some further checks must be done before.
 
-Thank you for the review.
+> Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-Eric
+But the overall change looks good to me:
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+> ---
+>  mm/hugetlb.c | 42 +++++++++++++++++++++++++++++++++---------
+>  1 file changed, 33 insertions(+), 9 deletions(-)
 > 
-> Thanks,
-> Jean
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index c5c4558e4a79..5a190a652cac 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2274,7 +2274,7 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
+>  }
+>  
+>  #define persistent_huge_pages(h) (h->nr_huge_pages - h->surplus_huge_pages)
+> -static int set_max_huge_pages(struct hstate *h, unsigned long count,
+> +static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
+>  						nodemask_t *nodes_allowed)
+>  {
+>  	unsigned long min_count, ret;
+> @@ -2289,6 +2289,28 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count,
+>  		goto decrease_pool;
+>  	}
+>  
+> +	spin_lock(&hugetlb_lock);
+> +
+> +	/*
+> +	 * Check for a node specific request.
+> +	 * Changing node specific huge page count may require a corresponding
+> +	 * change to the global count.  In any case, the passed node mask
+> +	 * (nodes_allowed) will restrict alloc/free to the specified node.
+> +	 */
+> +	if (nid != NUMA_NO_NODE) {
+> +		unsigned long old_count = count;
+> +
+> +		count += h->nr_huge_pages - h->nr_huge_pages_node[nid];
+> +		/*
+> +		 * User may have specified a large count value which caused the
+> +		 * above calculation to overflow.  In this case, they wanted
+> +		 * to allocate as many huge pages as possible.  Set count to
+> +		 * largest possible value to align with their intention.
+> +		 */
+> +		if (count < old_count)
+> +			count = ULONG_MAX;
+> +	}
+> +
+>  	/*
+>  	 * Increase the pool size
+>  	 * First take pages out of surplus state.  Then make up the
+> @@ -2300,7 +2322,6 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count,
+>  	 * pool might be one hugepage larger than it needs to be, but
+>  	 * within all the constraints specified by the sysctls.
+>  	 */
+> -	spin_lock(&hugetlb_lock);
+>  	while (h->surplus_huge_pages && count > persistent_huge_pages(h)) {
+>  		if (!adjust_pool_surplus(h, nodes_allowed, -1))
+>  			break;
+> @@ -2421,16 +2442,19 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
+>  			nodes_allowed = &node_states[N_MEMORY];
+>  		}
+>  	} else if (nodes_allowed) {
+> +		/* Node specific request */
+> +		init_nodemask_of_node(nodes_allowed, nid);
+> +	} else {
+>  		/*
+> -		 * per node hstate attribute: adjust count to global,
+> -		 * but restrict alloc/free to the specified node.
+> +		 * Node specific request, but we could not allocate the few
+> +		 * words required for a node mask.  We are unlikely to hit
+> +		 * this condition.  Since we can not pass down the appropriate
+> +		 * node mask, just return ENOMEM.
+>  		 */
+> -		count += h->nr_huge_pages - h->nr_huge_pages_node[nid];
+> -		init_nodemask_of_node(nodes_allowed, nid);
+> -	} else
+> -		nodes_allowed = &node_states[N_MEMORY];
+> +		return -ENOMEM;
+> +	}
+>  
+> -	err = set_max_huge_pages(h, count, nodes_allowed);
+> +	err = set_max_huge_pages(h, count, nid, nodes_allowed);
+>  	if (err)
+>  		goto out;
+>  
+> -- 
+> 2.17.2
 > 
->> +	};
->> +};
->> +#endif /* _UAPI_IOMMU_H */
->>
-> 
+
+-- 
+Oscar Salvador
+SUSE L3
