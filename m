@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF33C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067B8C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD57206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02D720663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iy/8J0yR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gqOzKczO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfCFX7Z (ORCPT
+        id S1726279AbfCFX71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 18:59:25 -0500
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:37069 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfCFX7Y (ORCPT
+        Wed, 6 Mar 2019 18:59:27 -0500
+Received: from mail-io1-f73.google.com ([209.85.166.73]:42410 "EHLO
+        mail-io1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfCFX70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 18:59:24 -0500
-Received: by mail-qt1-f201.google.com with SMTP id f24so13517532qte.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 15:59:23 -0800 (PST)
+        Wed, 6 Mar 2019 18:59:26 -0500
+Received: by mail-io1-f73.google.com with SMTP id f10so11291564ioj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 15:59:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=1LcLxZZeadXcC/hwYKSoMtkJDQep5r2KsFbSWUW2wE8=;
-        b=Iy/8J0yRHPiIt2hYd0U0RM3kg9R26eWWh+SOLOq8mADHY7qZwOuibMK43DHFghczD6
-         dGHlYeHj/PiUPNYHSvx9phw9pn8aFFwr7wQLCqRVZRu+2qe9JQ/jLpurg2kZQdfwi/Wk
-         9KMAUmoQvEUpsmnvCWw2XOC2wCksC73V1Sqw9RoKV3rE+f3N8dWG4/fiULpnhy4Dtk4I
-         rzHQGQjsZbNU4U0Ylk/l3d0ZzKaZnYthZPAoNKpcU6m84M5Lw7rPk/9ZLfoD4fCmAHwr
-         UduPZlx3HpnZSGHZl9oq6TXz6VHpSCDtoMe3hzMzXnCZNgck/Rz9zOBBLo8kMfbzhxSN
-         pE2w==
+        bh=oWdYyyegqGh9dnT7Ur+TRTADwlxgKjQOj5E8Tun8bMQ=;
+        b=gqOzKczO47/bhq9tKm001IfUHbPL4/7sXAvN9b8QzoFJ97T0ZaVqSi9+FOYcf2oYIL
+         D4pkz8PHcA/NHGA9fGzNKz/JteFILLlU2i1WBUTEBKBDRsXYT8OBMNBWUXhL7qvYm2Dn
+         HiouJU1JWLeR9mMldGcKtLk2s3WyRaKS0WIhpXB0lOiFUtatdqP4sUcBrGsvEO2DFpXP
+         Z6EbW2KMM0RI2LYEjcu4oUVeTyKBTSXhhfVbqQZW+C3hHTyUZZFXPi61wAruCLqFgMRp
+         Vpi+Rj5B8h63nm4FqkDfDuiqdElb7Ftqtmp4AH89EyLl+9ExfdfC/1pwPnbfb1o02T4z
+         whGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=1LcLxZZeadXcC/hwYKSoMtkJDQep5r2KsFbSWUW2wE8=;
-        b=O6x9NyEFHv/VRRF0YnVxBLSPOrTIIXRQ3zkAAGPSmTjuLhfynsT8Iv/l4bB5VBUtST
-         T2AhFAFckPm9TwqXzl6SWe7M6MY0yvqLq2ZJHctdeiO9lXq4/hgH0fmNzAt1T5AwdpL0
-         L1MVbJFn4CazLYZJa/bxmESt6OW4opO4azleN6zv9+4OdfBb5dccGB1O7YX5wnV8YSBF
-         ir5yiQb0bDA3t819r9nqncLVqioWB+echMo6+lugPvmKhP5995EuP1DEIVJXsmr5PX7Z
-         T+yE2oG9x788BJ2t0Dl4r5xTODKNX5FtXOZk72RE7gx8SRfnosHn1QdOfN3A1NJcVADN
-         0JsA==
-X-Gm-Message-State: APjAAAWUu2Ns+m477t/cbhiF08N3MdY99CFrFjwN3+t/fYG3LdizUGHA
-        KsO4cWZtxVk8QZM9x7fJ+5MYg/lmpMRosoz7kBrQOg==
-X-Google-Smtp-Source: APXvYqyOBdwvSsdMSp5kQoNI/HEa3TYEz/jWBYpMcJUpgp/H/8TOMhyRjhoIwLNH8ClFacW34Q+fAetK1mRRuNWWVKO8Ug==
-X-Received: by 2002:a0c:b91c:: with SMTP id u28mr5949305qvf.45.1551916762437;
- Wed, 06 Mar 2019 15:59:22 -0800 (PST)
-Date:   Wed,  6 Mar 2019 15:58:47 -0800
+        bh=oWdYyyegqGh9dnT7Ur+TRTADwlxgKjQOj5E8Tun8bMQ=;
+        b=RV2Y3ofKAeGb2GOglEx9CtCLk6dAvoSMBOJFmdRP8okL5cga/6L1uW/Nt00r2VNk2i
+         4PnBNN4AIFa7+aa2M/1e4QnB+M3WJTVPooFuu2v+ow2WLeE/FQFqQ7feamdqYgt+O0yI
+         DkZv+X2zy+CPXIUtToH1E1/r/35Drnf4SlBycKPYecH7R3e6MrZ1esDIFkR6uajmI6P2
+         ujncQ14plxHYq9s0HGzgxsInaZkkbhu9xyyJpx75U9gGI5rxvZEK8we3KX9KSA52VkqO
+         GqXv1+YLC+fkAvoreZl5wN2KnBFLxm8KfpLxzE3IvZOAc1KG6D6hVkAOg99NBNU58kRN
+         dtbA==
+X-Gm-Message-State: APjAAAVwFjkpx5202HkRNATjtQGXCbcb4UmIKo09I3wUZz6yiC0+mScH
+        907It+QR9tSCciCi628RCs0bEqkJ/Q/lrmRGdiBqkQ==
+X-Google-Smtp-Source: APXvYqxs3rNiZuQjtIM8nXlO444w3TylwdPP7zihd7Z9kTD59RmKV3eUNMW/EqrJabgS5Ny38cKVAb5OCAdHM2YjYDMJ2Q==
+X-Received: by 2002:a24:cd07:: with SMTP id l7mr7868368itg.22.1551916764991;
+ Wed, 06 Mar 2019 15:59:24 -0800 (PST)
+Date:   Wed,  6 Mar 2019 15:58:48 -0800
 In-Reply-To: <20190306235913.6631-1-matthewgarrett@google.com>
-Message-Id: <20190306235913.6631-2-matthewgarrett@google.com>
+Message-Id: <20190306235913.6631-3-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190306235913.6631-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 01/27] Add the ability to lock down access to the running
- kernel image
+Subject: [PATCH 02/27] Add a SysRq option to lift kernel lockdown
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -70,174 +69,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Kyle McMartin <kyle@redhat.com>
 
-Provide a single call to allow kernel code to determine whether the system
-should be locked down, thereby disallowing various accesses that might
-allow the running kernel image to be changed including the loading of
-modules that aren't validly signed with a key we recognise, fiddling with
-MSR registers and disallowing hibernation.
+Make an option to provide a sysrq key that will lift the kernel lockdown,
+thereby allowing the running kernel image to be accessed and modified.
 
+On x86 this is triggered with SysRq+x, but this key may not be available on
+all arches, so it is set by setting LOCKDOWN_LIFT_KEY in asm/setup.h.
+Since this macro must be defined in an arch to be able to use this facility
+for that arch, the Kconfig option is restricted to arches that support it.
+
+Signed-off-by: Kyle McMartin <kyle@redhat.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: James Morris <james.l.morris@oracle.com>
+cc: x86@kernel.org
 Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
 ---
- include/linux/kernel.h   | 17 ++++++++++++
- include/linux/security.h |  9 +++++-
- security/Kconfig         | 15 ++++++++++
- security/Makefile        |  3 ++
- security/lock_down.c     | 59 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 102 insertions(+), 1 deletion(-)
- create mode 100644 security/lock_down.c
+ arch/x86/include/asm/setup.h |  2 ++
+ drivers/input/misc/uinput.c  |  1 +
+ drivers/tty/sysrq.c          | 19 ++++++++++-----
+ include/linux/input.h        |  5 ++++
+ include/linux/sysrq.h        |  8 +++++-
+ kernel/debug/kdb/kdb_main.c  |  2 +-
+ security/Kconfig             |  9 +++++++
+ security/lock_down.c         | 47 ++++++++++++++++++++++++++++++++++++
+ 8 files changed, 85 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 8f0e68e250a7..833bf32ce4e6 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -340,6 +340,23 @@ static inline void refcount_error_report(struct pt_regs *regs, const char *err)
- { }
- #endif
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index ed8ec011a9fd..8daf633a5347 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -9,6 +9,8 @@
+ #include <linux/linkage.h>
+ #include <asm/page_types.h>
  
-+#ifdef CONFIG_LOCK_DOWN_KERNEL
-+extern bool __kernel_is_locked_down(const char *what, bool first);
-+#else
-+static inline bool __kernel_is_locked_down(const char *what, bool first)
-+{
-+	return false;
-+}
-+#endif
++#define LOCKDOWN_LIFT_KEY 'x'
 +
-+#define kernel_is_locked_down(what)					\
-+	({								\
-+		static bool message_given;				\
-+		bool locked_down = __kernel_is_locked_down(what, !message_given); \
-+		message_given = true;					\
-+		locked_down;						\
-+	})
+ #ifdef __i386__
+ 
+ #include <linux/pfn.h>
+diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
+index 8ec483e8688b..c2a77dc73fa0 100644
+--- a/drivers/input/misc/uinput.c
++++ b/drivers/input/misc/uinput.c
+@@ -365,6 +365,7 @@ static int uinput_create_device(struct uinput_device *udev)
+ 		dev->flush = uinput_dev_flush;
+ 	}
+ 
++	dev->flags |= INPUTDEV_FLAGS_SYNTHETIC;
+ 	dev->event = uinput_dev_event;
+ 
+ 	input_set_drvdata(udev->dev, udev);
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 1f03078ec352..0a05d336008e 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -480,6 +480,7 @@ static struct sysrq_key_op *sysrq_key_table[36] = {
+ 	/* x: May be registered on mips for TLB dump */
+ 	/* x: May be registered on ppc/powerpc for xmon */
+ 	/* x: May be registered on sparc64 for global PMU dump */
++	/* x: May be registered on x86_64 for disabling secure boot */
+ 	NULL,				/* x */
+ 	/* y: May be registered on sparc64 for global register dump */
+ 	NULL,				/* y */
+@@ -523,7 +524,7 @@ static void __sysrq_put_key_op(int key, struct sysrq_key_op *op_p)
+                 sysrq_key_table[i] = op_p;
+ }
+ 
+-void __handle_sysrq(int key, bool check_mask)
++void __handle_sysrq(int key, unsigned int from)
+ {
+ 	struct sysrq_key_op *op_p;
+ 	int orig_log_level;
+@@ -543,11 +544,15 @@ void __handle_sysrq(int key, bool check_mask)
+ 
+         op_p = __sysrq_get_key_op(key);
+         if (op_p) {
++		/* Ban synthetic events from some sysrq functionality */
++		if ((from == SYSRQ_FROM_PROC || from == SYSRQ_FROM_SYNTHETIC) &&
++		    op_p->enable_mask & SYSRQ_DISABLE_USERSPACE)
++			printk("This sysrq operation is disabled from userspace.\n");
+ 		/*
+ 		 * Should we check for enabled operations (/proc/sysrq-trigger
+ 		 * should not) and is the invoked operation enabled?
+ 		 */
+-		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
++		if (from == SYSRQ_FROM_KERNEL || sysrq_on_mask(op_p->enable_mask)) {
+ 			pr_cont("%s\n", op_p->action_msg);
+ 			console_loglevel = orig_log_level;
+ 			op_p->handler(key);
+@@ -579,7 +584,7 @@ void __handle_sysrq(int key, bool check_mask)
+ void handle_sysrq(int key)
+ {
+ 	if (sysrq_on())
+-		__handle_sysrq(key, true);
++		__handle_sysrq(key, SYSRQ_FROM_KERNEL);
+ }
+ EXPORT_SYMBOL(handle_sysrq);
+ 
+@@ -659,7 +664,7 @@ static void sysrq_do_reset(struct timer_list *t)
+ static void sysrq_handle_reset_request(struct sysrq_state *state)
+ {
+ 	if (state->reset_requested)
+-		__handle_sysrq(sysrq_xlate[KEY_B], false);
++		__handle_sysrq(sysrq_xlate[KEY_B], SYSRQ_FROM_KERNEL);
+ 
+ 	if (sysrq_reset_downtime_ms)
+ 		mod_timer(&state->keyreset_timer,
+@@ -812,8 +817,10 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+ 
+ 	default:
+ 		if (sysrq->active && value && value != 2) {
++			int from = sysrq->handle.dev->flags & INPUTDEV_FLAGS_SYNTHETIC ?
++					SYSRQ_FROM_SYNTHETIC : 0;
+ 			sysrq->need_reinject = false;
+-			__handle_sysrq(sysrq_xlate[code], true);
++			__handle_sysrq(sysrq_xlate[code], from);
+ 		}
+ 		break;
+ 	}
+@@ -1096,7 +1103,7 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+ 
+ 		if (get_user(c, buf))
+ 			return -EFAULT;
+-		__handle_sysrq(c, false);
++		__handle_sysrq(c, SYSRQ_FROM_PROC);
+ 	}
+ 
+ 	return count;
+diff --git a/include/linux/input.h b/include/linux/input.h
+index 7c7516eb7d76..38cd0ea72c37 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -42,6 +42,7 @@ struct input_value {
+  * @phys: physical path to the device in the system hierarchy
+  * @uniq: unique identification code for the device (if device has it)
+  * @id: id of the device (struct input_id)
++ * @flags: input device flags (SYNTHETIC, etc.)
+  * @propbit: bitmap of device properties and quirks
+  * @evbit: bitmap of types of events supported by the device (EV_KEY,
+  *	EV_REL, etc.)
+@@ -124,6 +125,8 @@ struct input_dev {
+ 	const char *uniq;
+ 	struct input_id id;
+ 
++	unsigned int flags;
 +
- /* Internal, do not use. */
- int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
- int __must_check _kstrtol(const char *s, unsigned int base, long *res);
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 13537a49ae97..b290946341a4 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -1798,5 +1798,12 @@ static inline void security_bpf_prog_free(struct bpf_prog_aux *aux)
- #endif /* CONFIG_SECURITY */
- #endif /* CONFIG_BPF_SYSCALL */
+ 	unsigned long propbit[BITS_TO_LONGS(INPUT_PROP_CNT)];
  
--#endif /* ! __LINUX_SECURITY_H */
-+#ifdef CONFIG_LOCK_DOWN_KERNEL
-+extern void __init init_lockdown(void);
-+#else
-+static inline void __init init_lockdown(void)
-+{
-+}
-+#endif
+ 	unsigned long evbit[BITS_TO_LONGS(EV_CNT)];
+@@ -190,6 +193,8 @@ struct input_dev {
+ };
+ #define to_input_dev(d) container_of(d, struct input_dev, dev)
  
-+#endif /* ! __LINUX_SECURITY_H */
++#define	INPUTDEV_FLAGS_SYNTHETIC	0x000000001
++
+ /*
+  * Verify that we are in sync with input_device_id mod_devicetable.h #defines
+  */
+diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
+index 8c71874e8485..7de1f08b60a9 100644
+--- a/include/linux/sysrq.h
++++ b/include/linux/sysrq.h
+@@ -29,6 +29,8 @@
+ #define SYSRQ_ENABLE_BOOT	0x0080
+ #define SYSRQ_ENABLE_RTNICE	0x0100
+ 
++#define SYSRQ_DISABLE_USERSPACE	0x00010000
++
+ struct sysrq_key_op {
+ 	void (*handler)(int);
+ 	char *help_msg;
+@@ -43,8 +45,12 @@ struct sysrq_key_op {
+  * are available -- else NULL's).
+  */
+ 
++#define SYSRQ_FROM_KERNEL	0x0001
++#define SYSRQ_FROM_PROC		0x0002
++#define SYSRQ_FROM_SYNTHETIC	0x0004
++
+ void handle_sysrq(int key);
+-void __handle_sysrq(int key, bool check_mask);
++void __handle_sysrq(int key, unsigned int from);
+ int register_sysrq_key(int key, struct sysrq_key_op *op);
+ int unregister_sysrq_key(int key, struct sysrq_key_op *op);
+ struct sysrq_key_op *__sysrq_get_key_op(int key);
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 82a3b32a7cfc..efee1abf5e8e 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -1981,7 +1981,7 @@ static int kdb_sr(int argc, const char **argv)
+ 		return KDB_ARGCOUNT;
+ 
+ 	kdb_trap_printk++;
+-	__handle_sysrq(*argv[1], check_mask);
++	__handle_sysrq(*argv[1], check_mask ? SYSRQ_FROM_KERNEL : 0);
+ 	kdb_trap_printk--;
+ 
+ 	return 0;
 diff --git a/security/Kconfig b/security/Kconfig
-index 1d6463fb1450..47dc3403b5af 100644
+index 47dc3403b5af..8346eb883336 100644
 --- a/security/Kconfig
 +++ b/security/Kconfig
-@@ -229,6 +229,21 @@ config STATIC_USERMODEHELPER_PATH
- 	  If you wish for all usermode helper programs to be disabled,
- 	  specify an empty string here (i.e. "").
+@@ -244,6 +244,15 @@ config LOCK_DOWN_KERNEL_FORCE
+         help
+           Enable the kernel lock down functionality automatically at boot.
  
-+config LOCK_DOWN_KERNEL
-+	bool "Allow the kernel to be 'locked down'"
++config ALLOW_LOCKDOWN_LIFT_BY_SYSRQ
++	bool "Allow the kernel lockdown to be lifted by SysRq"
++	depends on LOCK_DOWN_KERNEL
++	depends on MAGIC_SYSRQ
++	depends on X86
 +	help
-+	  Allow the kernel to be locked down. If lockdown support is enabled
-+	  and activated, the kernel will impose additional restrictions
-+	  intended to prevent uid 0 from being able to modify the running
-+	  kernel. This may break userland applications that rely on low-level
-+	  access to hardware.
-+
-+config LOCK_DOWN_KERNEL_FORCE
-+        bool "Enable kernel lockdown mode automatically"
-+        depends on LOCK_DOWN_KERNEL
-+        help
-+          Enable the kernel lock down functionality automatically at boot.
++	  Allow the lockdown on a kernel to be lifted, by pressing a SysRq key
++	  combination on a wired keyboard.
 +
  source "security/selinux/Kconfig"
  source "security/smack/Kconfig"
  source "security/tomoyo/Kconfig"
-diff --git a/security/Makefile b/security/Makefile
-index c598b904938f..5ff090149c88 100644
---- a/security/Makefile
-+++ b/security/Makefile
-@@ -32,3 +32,6 @@ obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
- # Object integrity file lists
- subdir-$(CONFIG_INTEGRITY)		+= integrity
- obj-$(CONFIG_INTEGRITY)			+= integrity/
-+
-+# Allow the kernel to be locked down
-+obj-$(CONFIG_LOCK_DOWN_KERNEL)		+= lock_down.o
 diff --git a/security/lock_down.c b/security/lock_down.c
-new file mode 100644
-index 000000000000..13a8228c1034
---- /dev/null
+index 13a8228c1034..cfbc2c39712b 100644
+--- a/security/lock_down.c
 +++ b/security/lock_down.c
-@@ -0,0 +1,59 @@
-+/* Lock down the kernel
-+ *
-+ * Copyright (C) 2016 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public Licence
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the Licence, or (at your option) any later version.
-+ */
+@@ -11,8 +11,14 @@
+ 
+ #include <linux/security.h>
+ #include <linux/export.h>
++#include <linux/sysrq.h>
++#include <asm/setup.h>
+ 
++#ifdef CONFIG_ALLOW_LOCKDOWN_LIFT_BY_SYSRQ
++static __read_mostly bool kernel_locked_down;
++#else
+ static __ro_after_init bool kernel_locked_down;
++#endif
+ 
+ /*
+  * Put the kernel into lock-down mode.
+@@ -57,3 +63,44 @@ bool __kernel_is_locked_down(const char *what, bool first)
+ 	return kernel_locked_down;
+ }
+ EXPORT_SYMBOL(__kernel_is_locked_down);
 +
-+#include <linux/security.h>
-+#include <linux/export.h>
-+
-+static __ro_after_init bool kernel_locked_down;
++#ifdef CONFIG_ALLOW_LOCKDOWN_LIFT_BY_SYSRQ
 +
 +/*
-+ * Put the kernel into lock-down mode.
++ * Take the kernel out of lockdown mode.
 + */
-+static void __init lock_kernel_down(const char *where)
++static void lift_kernel_lockdown(void)
 +{
-+	if (!kernel_locked_down) {
-+		kernel_locked_down = true;
-+		pr_notice("Kernel is locked down from %s; see man kernel_lockdown.7\n",
-+			  where);
-+	}
++	pr_notice("Lifting lockdown\n");
++	kernel_locked_down = false;
 +}
 +
-+static int __init lockdown_param(char *ignored)
++/*
++ * Allow lockdown to be lifted by pressing something like SysRq+x (and not by
++ * echoing the appropriate letter into the sysrq-trigger file).
++ */
++static void sysrq_handle_lockdown_lift(int key)
 +{
-+	lock_kernel_down("command line");
++	if (kernel_locked_down)
++		lift_kernel_lockdown();
++}
++
++static struct sysrq_key_op lockdown_lift_sysrq_op = {
++	.handler	= sysrq_handle_lockdown_lift,
++	.help_msg	= "unSB(x)",
++	.action_msg	= "Disabling Secure Boot restrictions",
++	.enable_mask	= SYSRQ_DISABLE_USERSPACE,
++};
++
++static int __init lockdown_lift_sysrq(void)
++{
++	if (kernel_locked_down) {
++		lockdown_lift_sysrq_op.help_msg[5] = LOCKDOWN_LIFT_KEY;
++		register_sysrq_key(LOCKDOWN_LIFT_KEY, &lockdown_lift_sysrq_op);
++	}
 +	return 0;
 +}
 +
-+early_param("lockdown", lockdown_param);
++late_initcall(lockdown_lift_sysrq);
 +
-+/*
-+ * Lock the kernel down from very early in the arch setup.  This must happen
-+ * prior to things like ACPI being initialised.
-+ */
-+void __init init_lockdown(void)
-+{
-+#ifdef CONFIG_LOCK_DOWN_FORCE
-+	lock_kernel_down("Kernel configuration");
-+#endif
-+}
-+
-+/**
-+ * kernel_is_locked_down - Find out if the kernel is locked down
-+ * @what: Tag to use in notice generated if lockdown is in effect
-+ */
-+bool __kernel_is_locked_down(const char *what, bool first)
-+{
-+	if (what && first && kernel_locked_down)
-+		pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
-+			  what);
-+	return kernel_locked_down;
-+}
-+EXPORT_SYMBOL(__kernel_is_locked_down);
++#endif /* CONFIG_ALLOW_LOCKDOWN_LIFT_BY_SYSRQ */
 -- 
 2.21.0.352.gf09ad66450-goog
 
