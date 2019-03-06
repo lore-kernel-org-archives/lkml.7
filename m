@@ -2,71 +2,80 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79935C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81DFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5792A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D7D2064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbfCFTEj (ORCPT
+        id S1730608AbfCFTFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 14:04:39 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:39450 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfCFTEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 14:04:38 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A91A1145183B2;
-        Wed,  6 Mar 2019 11:04:36 -0800 (PST)
-Date:   Wed, 06 Mar 2019 11:04:36 -0800 (PST)
-Message-Id: <20190306.110436.1714716608828903522.davem@davemloft.net>
-To:     alex@ghiti.fr
-Cc:     vbabka@suse.cz, catalin.marinas@arm.com, will.deacon@arm.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        ysato@users.sourceforge.jp, dalias@libc.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        mike.kravetz@oracle.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v5 2/4] sparc: Advertise gigantic page support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190306190005.7036-3-alex@ghiti.fr>
-References: <20190306190005.7036-1-alex@ghiti.fr>
-        <20190306190005.7036-3-alex@ghiti.fr>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 Mar 2019 11:04:37 -0800 (PST)
+        Wed, 6 Mar 2019 14:05:00 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33936 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbfCFTE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 14:04:59 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4D4CC057F4D;
+        Wed,  6 Mar 2019 19:04:59 +0000 (UTC)
+Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07FD419007;
+        Wed,  6 Mar 2019 19:04:58 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 13:04:57 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH] x86/unwind/orc: Fix ORC unwind table alignment
+Message-ID: <20190306190457.lj46nmqfxvixjnfj@treble>
+References: <d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com>
+ <CAKwvOdmHe-bkt34E5yf81GoiFRHR8EPnu8wqk2aD2u8P_4Q5jQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmHe-bkt34E5yf81GoiFRHR8EPnu8wqk2aD2u8P_4Q5jQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 06 Mar 2019 19:04:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Ghiti <alex@ghiti.fr>
-Date: Wed,  6 Mar 2019 14:00:03 -0500
-
-> sparc actually supports gigantic pages and selecting
-> ARCH_HAS_GIGANTIC_PAGE allows it to allocate and free
-> gigantic pages at runtime.
+On Wed, Mar 06, 2019 at 10:44:01AM -0800, Nick Desaulniers wrote:
+> On Wed, Mar 6, 2019 at 9:08 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > The .orc_unwind section is a packed array of 6-byte structs.  It's
+> > currently aligned to 6 bytes, which is causing warnings in the LLD
+> > linker.
+> >
+> > Six isn't a power of two, so it's not a valid alignment value.  The
+> > actual alignment doesn't matter much because it's an array of packed
+> > structs.  An alignment of two is sufficient.  In reality it always gets
+> > aligned to four bytes because it comes immediately after the
+> > 4-byte-aligned .orc_unwind_ip section.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/218
+> > Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
 > 
-> sparc allows configuration such as huge pages of 16GB,
-> pages of 8KB and MAX_ORDER = 13 (default):
-> HPAGE_SHIFT (34) - PAGE_SHIFT (13) = 21 >= MAX_ORDER (13)
-> 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Thanks for the patch Josh, we appreciate it.  It looks like
+> ee9f8fce9964 landed in v4.14-rc1.  Should we CC stable?
 
-Much better.
+Yes, that would be a good idea.
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Can the tip maintainers please add
+
+  Cc: stable@vger.kernel.org
+
+when merging?
+
+-- 
+Josh
