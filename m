@@ -2,120 +2,180 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DD6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 05:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88ACC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501F320675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 05:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE1920652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fw3vOv13"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GnK9xvdL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfCFFx3 (ORCPT
+        id S1727358AbfCFGKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 00:53:29 -0500
-Received: from ozlabs.org ([203.11.71.1]:59931 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbfCFFx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 00:53:28 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Djc42nkxz9s9T;
-        Wed,  6 Mar 2019 16:53:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1551851606;
-        bh=laNqj5WYWxPNNssbLanzQubyLGHBQac/J9CedDtRrgQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fw3vOv13DDmFzZf5hVC4t81Vp2XKtwcdCFeYm+jRuFpxHZaIGRuX+q54qEfTB2rCI
-         QtJy8pbVQyH51uVcJDJCTfArTmnQcJtgFk4cftMT86mUDKOs1XdgJd7Iihr++F6Ip9
-         2QyEyIvnx+U7m+gzvhhE3dysXhnKYktDDB7LBQPPGce98d0HT5NJKX27rEtbTVgtLw
-         mXkFKRJuJFot17FuoU4U5Vk5wo2Bb2SyyyM4A/4DTJqixIsI/ey0m+Tp0HCRg5b+zo
-         O/+QlBpuY3w0wMh846Mr0LoJnhsbxdweRHniXdba3GyPUAy6Z48fljiW8zYXGairyf
-         hQDNcjjrbvhlw==
-Date:   Wed, 6 Mar 2019 16:53:21 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: linux-next: manual merge of the tip tree with Linus' tree
-Message-ID: <20190306165321.681712d7@canb.auug.org.au>
+        Wed, 6 Mar 2019 01:10:09 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33937 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfCFGKJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 01:10:09 -0500
+Received: by mail-oi1-f195.google.com with SMTP id g16so8944332oib.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 22:10:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zVIBa03gx3cZsry8Jzc0jtgX3ZsSC37VXNYnXVylNDg=;
+        b=GnK9xvdLxgdS8i6rt1yMIrR12NvNGYhMehBwfrJXMwG4pW0n+hKLuzNj21D3aOnUE/
+         M56hFDjCUVzaL8l3Q+eFd1UqxbjHItlxHPpkbKxjCVjgs0LimyJtgFZg/cJQ+T42ti4G
+         9H5npbirW7LV7fccTFVM5rBiXJUmx+/kZ4MfQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zVIBa03gx3cZsry8Jzc0jtgX3ZsSC37VXNYnXVylNDg=;
+        b=B1PWG2Mmp3F6OVErkWRiAPuKTrnpgCJkNbqv4Idl1s9YhTQMw9V6gnjt7TQR8Q1xCV
+         yKNoaQwI1AbzmISZR3Ek8H+Pm+vNvDauVt5Lje/heTMon9EzRoiCmdaj+6J+pxNx1YXo
+         iIVGg2MBSKbdIucEzq0ocFde2JdklVG3Ysshvrf+l4LjPdwQbpzZBYZSZTe07d1N09lm
+         BnXr1cH4Sc5j+kExsv2nZEmbaxqR8pkt1ZrAVNYVh3wt2ey0GdEiSnZPXNVzTidvB4OR
+         3h4ls24AHCaSXT8SEWa9zeBHo2qVuyTVJ9w5Xb2PEieqT+wVmP+qDot+w0+J4doMSxcX
+         pgfg==
+X-Gm-Message-State: APjAAAX1UGnvk1b2T8CULEx+XjUcYnCQAP4l+OL5pPBuR876JhtYPiia
+        tKXnf3cegeA6bkyAppK1BI+j8rTFcqQ=
+X-Google-Smtp-Source: APXvYqyLc72yQo/TU/iVinF+Tzt+LjVJv/AN6H1/vfM1bBrct/oc/43E0UwS95gAefJhpLXDcU3HtQ==
+X-Received: by 2002:aca:34d4:: with SMTP id b203mr634292oia.123.1551852607345;
+        Tue, 05 Mar 2019 22:10:07 -0800 (PST)
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
+        by smtp.gmail.com with ESMTPSA id n187sm332042oia.34.2019.03.05.22.10.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Mar 2019 22:10:06 -0800 (PST)
+Received: by mail-ot1-f43.google.com with SMTP id t7so9708565otk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 22:10:06 -0800 (PST)
+X-Received: by 2002:a9d:4c85:: with SMTP id m5mr3332750otf.367.1551852605965;
+ Tue, 05 Mar 2019 22:10:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/xxf0+bjchqGOdpU3OtBvoX+"; protocol="application/pgp-signature"
+References: <20181017075242.21790-1-henryhsu@chromium.org> <CAAFQd5AL2CnnWLk+i133RRa36HTa0baFkezRhpTXf9YP0DSF1Q@mail.gmail.com>
+ <CAHNYxRwbSSp02Zr4a1z5gh0q6cHUUDnZCqRQU7QtP8LMe3Jp2A@mail.gmail.com>
+ <1610184.U7oo9Z4Yep@avalon> <CAAFQd5A7k2VgmawF-x=AcKhJiG-shrJiCP4Tu9054J0eE91+9w@mail.gmail.com>
+ <d79e0857-c6ae-9e57-52e2-e596864a68f8@metafoo.de> <CAAFQd5C_QucJiZMUgCpztC52Mi3p6HDThHNkcNOm9C+SZUDDYQ@mail.gmail.com>
+In-Reply-To: <CAAFQd5C_QucJiZMUgCpztC52Mi3p6HDThHNkcNOm9C+SZUDDYQ@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 6 Mar 2019 15:09:54 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5AcURGhaXH1_4BD+-Fvm8u2w3mvx2WojgdfOKwGcQAJNg@mail.gmail.com>
+Message-ID: <CAAFQd5AcURGhaXH1_4BD+-Fvm8u2w3mvx2WojgdfOKwGcQAJNg@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Add boottime clock support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Alexandru Stan <amstan@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Heng-Ruey Hsu <henryhsu@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ricky Liang <jcliang@chromium.org>, linux-iio@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xxf0+bjchqGOdpU3OtBvoX+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 23, 2018 at 11:46 PM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> Hi Laurent,
+>
+> On Fri, Nov 2, 2018 at 12:03 AM Lars-Peter Clausen <lars@metafoo.de> wrote:
+> >
+> > On 11/01/2018 03:30 PM, Tomasz Figa wrote:
+> > > On Thu, Nov 1, 2018 at 11:03 PM Laurent Pinchart
+> > > <laurent.pinchart@ideasonboard.com> wrote:
+> > >>
+> > >> Hi Alexandru,
+> > >>
+> > >> On Thursday, 18 October 2018 20:28:06 EET Alexandru M Stan wrote:
+> > >>> On Wed, Oct 17, 2018 at 9:31 PM, Tomasz Figa wrote:
+> > >>>> On Thu, Oct 18, 2018 at 5:50 AM Laurent Pinchart wrote:
+> > >>>>> On Wednesday, 17 October 2018 11:28:52 EEST Tomasz Figa wrote:
+> > >>>>>> On Wed, Oct 17, 2018 at 5:02 PM Laurent Pinchart wrote:
+> > >>>>>>> On Wednesday, 17 October 2018 10:52:42 EEST Heng-Ruey Hsu wrote:
+> > >>>>>>>> Android requires camera timestamps to be reported with
+> > >>>>>>>> CLOCK_BOOTTIME to sync timestamp with other sensor sources.
+> > >>>>>>>
+> > >>>>>>> What's the rationale behind this, why can't CLOCK_MONOTONIC work ? If
+> > >>>>>>> the monotonic clock has shortcomings that make its use impossible for
+> > >>>>>>> proper synchronization, then we should consider switching to
+> > >>>>>>> CLOCK_BOOTTIME globally in V4L2, not in selected drivers only.
+> > >>>>>>
+> > >>>>>> CLOCK_BOOTTIME includes the time spent in suspend, while
+> > >>>>>> CLOCK_MONOTONIC doesn't. I can imagine the former being much more
+> > >>>>>> useful for anything that cares about the actual, long term, time
+> > >>>>>> tracking. Especially important since suspend is a very common event on
+> > >>>>>> Android and doesn't stop the time flow there, i.e. applications might
+> > >>>>>> wake up the device to perform various tasks at necessary times.
+> > >>>>>
+> > >>>>> Sure, but this patch mentions timestamp synchronization with other
+> > >>>>> sensors, and from that point of view, I'd like to know what is wrong with
+> > >>>>> the monotonic clock if all devices use it.
+> > >>>>
+> > >>>> AFAIK the sensors mentioned there are not camera sensors, but rather
+> > >>>> things we normally put under IIO, e.g. accelerometers, gyroscopes and
+> > >>>> so on. I'm not sure how IIO deals with timestamps, but Android seems
+> > >>>> to operate in the CLOCK_BOTTIME domain. Let me add some IIO folks.
+> > >>>>
+> > >>>> Gwendal, Alexandru, do you think you could shed some light on how we
+> > >>>> handle IIO sensors timestamps across the kernel, Chrome OS and
+> > >>>> Android?
+> > >>>
+> > >>> On our devices of interest have a specialized "sensor" that comes via
+> > >>> IIO (from the EC, cros-ec-ring driver) that can be used to more
+> > >>> accurately timestamp each frame (since it's recorded with very low
+> > >>> jitter by a realtime-ish OS). In some high level userspace thing
+> > >>> (specifically the Android Camera HAL) we try to pick the best
+> > >>> timestamp from the IIO, whatever's closest to what the V4L stuff gives
+> > >>> us.
+> > >>>
+> > >>> I guess the Android convention is for sensor timestamps to be in
+> > >>> CLOCK_BOOTTIME (maybe because it likes sleeping so much). There's
+> > >>> probably no advantage to using one over the other, but the important
+> > >>> thing is that they have to be the same, otherwise the closest match
+> > >>> logic would fail.
+> > >>
+> > >> That's my understanding too, I don't think CLOCK_BOOTTIME really brings much
+> > >> benefit in this case,
+> > >
+> > > I think it does have a significant benefit. CLOCK_MONOTONIC stops when
+> > > the device is sleeping, but the sensors can still capture various
+> > > actions. We would lose the time keeping of those actions if we use
+> > > CLOCK_MONOTONIC.
+> > >
+> > >> but it's important than all timestamps use the same
+> > >> clock. The question is thus which clock we should select. Mainline mostly uses
+> > >> CLOCK_MONOTONIC, and Android CLOCK_BOOTTIME. Would you like to submit patches
+> > >> to switch Android to CLOCK_MONOTONIC ? :-)
+> > >
+> > > Is it Android using CLOCK_BOOTTIME or the sensors (IIO?). I have
+> > > almost zero familiarity with the IIO subsystem and was hoping someone
+> > > from there could comment on what time domain is used for those
+> > > sensors.
+> >
+> > IIO has the option to choose between BOOTTIME or MONOTONIC (and a few
+> > others) for the timestamp on a per device basis.
+> >
+> > There was a bit of a discussion about this a while back. See
+> > https://lkml.org/lkml/2018/7/10/432 and the following thread.
+>
+> Given that IIO supports BOOTTIME in upstream already and also the
+> important advantage of using it over MONOTONIC for systems which keep
+> capturing events during sleep, do you think we could move on with some
+> way to support it in uvcvideo or preferably V4L2 in general?
 
-Hi all,
+Gentle ping.
 
-Today's linux-next merge of the tip tree got a conflict in:
-
-  arch/x86/um/Kconfig
-
-between commit:
-
-  eac616557050 ("x86: Deprecate a.out support")
-
-from Linus' tree and commit:
-
-  942fa985e9f1 ("32-bit userspace ABI: introduce ARCH_32BIT_OFF_T config op=
-tion")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/x86/um/Kconfig
-index 494eeb51e4e1,ab14e6f73ca4..a9e80e44178c
---- a/arch/x86/um/Kconfig
-+++ b/arch/x86/um/Kconfig
-@@@ -16,6 -16,8 +16,7 @@@ config 64BI
- =20
-  config X86_32
-  	def_bool !64BIT
- -	select HAVE_AOUT
-+ 	select ARCH_32BIT_OFF_T
-  	select ARCH_WANT_IPC_PARSE_VERSION
-  	select MODULES_USE_ELF_REL
-  	select CLONE_BACKWARDS
-
---Sig_/xxf0+bjchqGOdpU3OtBvoX+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx/YFIACgkQAVBC80lX
-0Gz22Af/enj2lc2djVHy4zZOzB0Dso/qgMFo7WeIsD+eIGiJeCjGt6/25cOZ4wqc
-tvXMDIbzrHQIU+dgtyPWK7SqgfXm64uaATI9jp/xdj8JudLFYKBCxOdkeiY0MSWR
-MVI3lU0n8f20CZUNhSbl6ghorZAX4yavAnwb9l/CBsoA8YzJjpA6/Stgw3G7AilC
-p1eb7C21X6wGdzVF076ohdqNCW6oZJaV6g1P6XA2EFTBmEeF2sFFMaBuzYmQtbFK
-FUpetWHfYjUBaIpmhNi5i4lVDLjLTA5Gkb8NrSqWqhEr96IJDb0hOioqHQ6xiStQ
-8PAvUYAer8r+BJAqbUVrbcWFmZplhw==
-=bgc7
------END PGP SIGNATURE-----
-
---Sig_/xxf0+bjchqGOdpU3OtBvoX+--
+Best regards,
+Tomasz
