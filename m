@@ -2,107 +2,123 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3714C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBCBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0EE20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411BF20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfCFN3m (ORCPT
+        id S1726731AbfCFNb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 08:29:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40630 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727304AbfCFN3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 08:29:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 340A7BC60;
-        Wed,  6 Mar 2019 13:29:40 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 14:29:38 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J. Wysocky" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-ext4@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>, Jan Kara <jack@suse.cz>
-Subject: [question] panic() during reboot -f (reboot syscall)
-Message-ID: <20190306132938.hzyb7gee5actx3l3@pathway.suse.cz>
+        Wed, 6 Mar 2019 08:31:58 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:60623 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfCFNb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 08:31:58 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26DVHWe1724181
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 6 Mar 2019 05:31:17 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26DVFLx1724177;
+        Wed, 6 Mar 2019 05:31:15 -0800
+Date:   Wed, 6 Mar 2019 05:31:15 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kees Cook <tipbot@zytor.com>
+Message-ID: <tip-3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f@git.kernel.org>
+Cc:     kernel-hardening@lists.openwall.com, keescook@chromium.org,
+        hpa@zytor.com, sean.j.christopherson@intel.com, jannh@google.com,
+        solar@openwall.com, linux@dominikbrodowski.net, mingo@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, peterz@infradead.org
+Reply-To: keescook@chromium.org, kernel-hardening@lists.openwall.com,
+          mingo@kernel.org, tglx@linutronix.de, linux@dominikbrodowski.net,
+          solar@openwall.com, jannh@google.com, gregkh@linuxfoundation.org,
+          peterz@infradead.org, sean.j.christopherson@intel.com,
+          linux-kernel@vger.kernel.org, hpa@zytor.com
+In-Reply-To: <20190227200132.24707-3-keescook@chromium.org>
+References: <20190227200132.24707-3-keescook@chromium.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/asm] x86/asm: Avoid taking an exception before cr4 restore
+Git-Commit-ID: 3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Commit-ID:  3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f
+Gitweb:     https://git.kernel.org/tip/3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f
+Author:     Kees Cook <keescook@chromium.org>
+AuthorDate: Wed, 27 Feb 2019 12:01:31 -0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 6 Mar 2019 13:25:55 +0100
 
-I wonder if it is "normal" to get panic() when the system is rebooted
-using "reboot -f". I looks a bit weird to me.
+x86/asm: Avoid taking an exception before cr4 restore
 
-In our case, the panic() was triggered from ext4 filesystem code
-that was mounted with "errors=panic"
+Instead of taking a full WARN() exception before restoring a potentially
+missed CR4 bit, retain the missing bit for later reporting.
 
-  crash> bt
-  PID: 3984   TASK: ffff887db1f6c180  CPU: 32  COMMAND: "bash"
-  #0 [ffff887e637bf9a8] machine_kexec at ffffffff81059c5c
-  #1 [ffff887e637bf9f8] __crash_kexec at ffffffff81119e0a
-  #2 [ffff887e637bfab8] panic at ffffffff81193c31
-  #3 [ffff887e637bfb30] ext4_handle_error at ffffffffa0229faa [ext4]
-  #4 [ffff887e637bfb40] __ext4_error_inode at ffffffffa022a12a [ext4]
-  #5 [ffff887e637bfbe0] __ext4_get_inode_loc at ffffffffa02096a5 [ext4]
-  #6 [ffff887e637bfc40] ext4_iget at ffffffffa020c028 [ext4]
-  #7 [ffff887e637bfcc0] ext4_lookup at ffffffffa0216ca0 [ext4]
-  #8 [ffff887e637bfce8] lookup_real at ffffffff81218e3f
-  #9 [ffff887e637bfd00] __lookup_hash at ffffffff8121916f
-  #10 [ffff887e637bfd20] walk_component at ffffffff8121b50f
-  #11 [ffff887e637bfd70] path_lookupat at ffffffff8121ca30
-  #12 [ffff887e637bfd98] filename_lookup at ffffffff8121e58c
-  #13 [ffff887e637bfe98] vfs_fstatat at ffffffff81214549
-  #14 [ffff887e637bfed8] SYSC_newstat at ffffffff812149ca
-  #15 [ffff887e637bff50] entry_SYSCALL_64_fastpath at ffffffff8161de61
-      RIP: 00007f9db8d3ebe5  RSP: 00007ffda081cf68  RFLAGS: 00000246
-      RAX: ffffffffffffffda  RBX: 0000000000000000  RCX: 00007f9db8d3ebe5
-      RDX: 00000000013c7fa0  RSI: 00000000013c7fa0  RDI: 00000000013c7f40
-      RBP: 00007f9db943bee0   R8: 00000000013c7f40   R9: 00000000000b0000
-      R10: 000000007af2c337  R11: 0000000000000246  R12: 00000000013c7fa0
-      R13: 00000000013c7fa0  R14: 0000000000000008  R15: 00000000013c7f80
-      ORIG_RAX: 0000000000000004  CS: 0033  SS: 002b
+Additionally update the comments to note the required use of "volatile".
 
+Suggested-by: Solar Designer <solar@openwall.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
+Link: https://lkml.kernel.org/r/20190227200132.24707-3-keescook@chromium.org
 
-Now, "reboot -f" just calls the reboot() syscall. I do not see
-anything that would stop processes. It even does not stop
-other CPUs by purpose, see the commit cf7df378aa4ff7da
-("reboot: rigrate shutdown/reboot to boot cpu").
+---
+ arch/x86/include/asm/special_insns.h | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-But it shuts down devices very early, via:
-
-  + kernel_restart()
-    + kernel_restart_prepare()
-      + blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
-      + device_shutdown()
-
-As a result, processes are still running. Filesystem code return
-errors because the underlaying disk device was removed. It causes
-panic() because "errors=panic" mount option.
-
-
-My undestanding that userspace is reponsible for "clean" reboot.
-The "reboot" command normally stops services, kill processes,
-sync disks, umount filesystem before it calls the "reboot"
-syscall.
-
-By other words. It looks like the panic() is possible by design.
-But it looks a bit weird. Any opinion?
-
-Best Regards,
-Petr
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index fabda1400137..99607f142cad 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -76,18 +76,24 @@ extern volatile unsigned long cr4_pin;
+ 
+ static inline void native_write_cr4(unsigned long val)
+ {
++	unsigned long warn = 0;
++
+ again:
+ 	val |= cr4_pin;
+ 	asm volatile("mov %0,%%cr4": : "r" (val), "m" (__force_order));
+ 	/*
+ 	 * If the MOV above was used directly as a ROP gadget we can
+ 	 * notice the lack of pinned bits in "val" and start the function
+-	 * from the beginning to gain the cr4_pin bits for sure.
++	 * from the beginning to gain the cr4_pin bits for sure. Note
++	 * that "val" must be volatile to keep the compiler from
++	 * optimizing away this check.
+ 	 */
+-	if (WARN_ONCE((val & cr4_pin) != cr4_pin,
+-		      "Attempt to unpin cr4 bits: %lx, cr4 bypass attack?!",
+-		      ~val & cr4_pin))
++	if ((val & cr4_pin) != cr4_pin) {
++		warn = ~val & cr4_pin;
+ 		goto again;
++	}
++	WARN_ONCE(warn, "Attempt to unpin cr4 bits: %lx; bypass attack?!\n",
++		  warn);
+ }
+ 
+ #ifdef CONFIG_X86_64
