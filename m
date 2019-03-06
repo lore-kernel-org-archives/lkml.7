@@ -4,45 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267BAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25CEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDDC20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD4A206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="ZHR/Ukgb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="j+ZpehFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbfCFAyd (ORCPT
+        id S1728747AbfCFAyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 19:54:33 -0500
-Received: from onstation.org ([52.200.56.107]:51278 "EHLO onstation.org"
+        Tue, 5 Mar 2019 19:54:40 -0500
+Received: from onstation.org ([52.200.56.107]:51274 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727640AbfCFAxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727650AbfCFAxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Mar 2019 19:53:53 -0500
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id F04D17E7;
+        by onstation.org (Postfix) with ESMTPSA id 960AD777;
         Wed,  6 Mar 2019 00:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=onstation.org;
-        s=default; t=1551833633;
-        bh=2yaeJTb6WRlptJAGUQe2fNzGglP8R6/J1pQEhQchcPs=;
+        s=default; t=1551833632;
+        bh=7Zou067i2cPBEBFnScUqHT3cbSpYdjFDEEBY2cPiZKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHR/UkgbVQ9wtP94fmvZsHQDTilaIzPpR81MVab/+q29fqnMKkSuoQgT2kms6Wr0e
-         TNB2cS3bTW12xlxnwpiz7uJWBsN5DTlqFUV9U244wf5y5ZiyDywY5c3UAUSUYSs7Rh
-         VZjHHXsNwMbT52xhmY15TYU8UPKaIdHnmmrs1ayw=
+        b=j+ZpehFz049bcYOrB6Cq5onYQlmreRVDq0lstveCFD+ge4IXiTVV7tgHIM1nRY1i7
+         gUvduM8m1tbl8NQqB+gQQUWlT17TpftZFRR6qj+xM52vcQgyVIpQukxuiieO5X4eyH
+         N1SKtWKb5lxkXr32cQzS1LCXOYcPEKHK06IN7dfs=
 From:   Brian Masney <masneyb@onstation.org>
 To:     andy.gross@linaro.org
 Cc:     david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH 3/8] ARM: dts: qcom: msm8660: add gpio-ranges
-Date:   Tue,  5 Mar 2019 19:53:11 -0500
-Message-Id: <20190306005316.12232-4-masneyb@onstation.org>
+Subject: [PATCH 2/8] ARM: dts: qcom: mdm9615: add gpio-ranges
+Date:   Tue,  5 Mar 2019 19:53:10 -0500
+Message-Id: <20190306005316.12232-3-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190306005316.12232-1-masneyb@onstation.org>
 References: <20190306005316.12232-1-masneyb@onstation.org>
@@ -62,21 +63,21 @@ change was tested on qcom-pm8941 using a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm/boot/dts/qcom-msm8660.dtsi | 1 +
+ arch/arm/boot/dts/qcom-mdm9615.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
-index 65a994f0e09b..ec5cbc468bd3 100644
---- a/arch/arm/boot/dts/qcom-msm8660.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
-@@ -295,6 +295,7 @@
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index 02afc6a42005..356e9535f7a6 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -326,6 +326,7 @@
  					interrupt-controller;
  					#interrupt-cells = <2>;
  					gpio-controller;
-+					gpio-ranges = <&pm8058_gpio 0 0 44>;
++					gpio-ranges = <&pmicgpio 0 0 6>;
  					#gpio-cells = <2>;
- 
  				};
+ 			};
 -- 
 2.20.1
 
