@@ -2,128 +2,103 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052E1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47640C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DB820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A2B20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="d4djSLsL"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HgcQru7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfCFQB1 (ORCPT
+        id S1727428AbfCFQDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:01:27 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:59956 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfCFQB0 (ORCPT
+        Wed, 6 Mar 2019 11:03:01 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:53931 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfCFQDA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:01:26 -0500
-Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x26G0cMQ009811;
-        Thu, 7 Mar 2019 01:00:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x26G0cMQ009811
+        Wed, 6 Mar 2019 11:03:00 -0500
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x26G2Zvf025270;
+        Thu, 7 Mar 2019 01:02:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x26G2Zvf025270
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551888039;
-        bh=rzANvPh7XYNdT8fbWCbuqmzMaV3KolLp8OdfjmAjmsE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=d4djSLsLYf5lmboBlQODP5KPdaAhPXrUcK1UUHNSsWb5owLU5toq7N/1JSpwPnNO4
-         Bql7dPL7u/ngMD12Eq2ZVr2KAB+JBeFJrrzuCIHGNUDuSvkPbwaeUiaRwP16qHnigz
-         yFNl+oX7xzfRvERww77R5OeJcrMHdxMc1qJWe3HLTCCejj+puN5TUPTTk7T8wLk5UI
-         jDQ21NiYiA1MNj7AlD4XgTftloBYAkKMZzIvke3Gd4h2x/hDYNEJ9DXnJJOtGe2VDX
-         2g9o29ujTlYQeawUMMuQdbytDQmqGjvTc93Z6af23vzRd/Zp9muB/U3J7Yh72SjNl5
-         94XToxpTmlehQ==
-X-Nifty-SrcIP: [218.220.227.105]
+        s=dec2015msa; t=1551888156;
+        bh=ZHtvOZZeNFMSU/z4AjSUUdYaQwQC9fBxIznHwNNaLKk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HgcQru7QmU6UzKYttmYn07io/J1mcEqqZvfbWvklkuBF5cLcW8+zTDpYAoCxQyRPS
+         CqaqFpKIPUFs4jSLf+is7K/R7+rx869H4RRqoQYxw/f+cbDbzWqoR7earDJfe6CZj1
+         aM/POY6olFkqtkeEpNJAeTppoT8v1VgPl5Iv8/Jz3FR1o6b3M0Ok7+5g8UJRqXUwRS
+         LWV3pEv1gBgRWtuDZGG/+oim+AyX4e5nrDQmi7dg6aWFIjVqPja5y5ruTK3XPqu+93
+         bQmYEdB0tU8AisWK8n1ZWhA5bY6SmYiqJGzD5CjZfyz6y12N2Idye9SgklxSVff0r/
+         nYeoS7Sl07ZaQ==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id s15so9117828uap.6;
+        Wed, 06 Mar 2019 08:02:36 -0800 (PST)
+X-Gm-Message-State: APjAAAU0WUUyld+k0J/5GdfZGvQmR3FlOKCnEcw2BqekoYFXoaEEbFa5
+        yZRYvd6CfKzLXqvVtQbNnvBEjEyHhF7WWiU+Jnk=
+X-Google-Smtp-Source: APXvYqzzj6ikTG1vQl5mQWuR0HZ3rpa4yA5Y+O3YVc4QmnhxxYPTKqxXLpKIpdDptoKhHELmt4w/xDV0KR21lDdu8VM=
+X-Received: by 2002:ab0:648c:: with SMTP id p12mr4313757uam.93.1551888154846;
+ Wed, 06 Mar 2019 08:02:34 -0800 (PST)
+MIME-Version: 1.0
+References: <20190304125520.17794-1-luc.vanoostenryck@gmail.com>
+In-Reply-To: <20190304125520.17794-1-luc.vanoostenryck@gmail.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Liz Zhang <lizzha@microsoft.com>, Lili Deng <v-lide@microsoft.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: add workaround for Debian make-kpkg
-Date:   Thu,  7 Mar 2019 01:00:35 +0900
-Message-Id: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+Date:   Thu, 7 Mar 2019 01:01:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARMjdi5PxJ=RD19LKd_DrRpn-TXmy-9mZZcgNiU=hzizQ@mail.gmail.com>
+Message-ID: <CAK7LNARMjdi5PxJ=RD19LKd_DrRpn-TXmy-9mZZcgNiU=hzizQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: use -Werror=implicit-... instead of -Werror-implicit-...
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 3812b8c5c5d5 ("kbuild: make -r/-R effective in top
-Makefile for old Make versions"), make-kpkg is not working.
+On Mon, Mar 4, 2019 at 9:55 PM Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com> wrote:
+>
+> The flag '-Werror-implicit-function-declaration', present in GCC 2.95,
+> stopped to be documented in GCC 4.3, replaced by the more generic
+> '-Werror=...' form.
+>
+> So, use the equivalent '-Werror=implicit-function-declaration' instead.
+>
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> ---
 
-make-kpkg directly includes the top Makefile of Linux kernel, and
-appends some debian_* targets.
+Applied to linux-kbuild.
+Thanks.
 
-  /usr/share/kernel-package/ruleset/kernel_version.mk:
 
-    # Include the kernel makefile
-    override dot-config := 1
-    include Makefile
-    dot-config := 1
 
-I did not know the kernel Makefile was used in that way, and it is
-hard to guarantee the behavior when the kernel Makefile is included
-by another Makefile from a different project.
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index d5713e7b1e50..253e5ede92e7 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -429,7 +429,7 @@ LINUXINCLUDE    := \
+>  KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
+>  KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
+>                    -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
+> -                  -Werror-implicit-function-declaration -Werror=implicit-int \
+> +                  -Werror=implicit-function-declaration -Werror=implicit-int \
+>                    -Wno-format-security \
+>                    -std=gnu89
+>  KBUILD_CPPFLAGS := -D__KERNEL__
+> --
+> 2.21.0
+>
 
-Looks like Debian Stretch stopped providing make-kpkg (except PowerPC).
-Maybe it is obsolete and being replaced with 'make deb-pkg' etc.
-but still widely used.
 
-This commit adds a workaround; if the top Makefile is included by
-another Makefile, skip sub-make in order to make the main part visible.
-'MAKEFLAGS += -rR' does not become effective for GNU Make < 4.0, but
-Debian/Ubuntu is already using newer versions.
-
-The effect of this commit:
-
-  Debian 8 (Jessie)  : Fixed
-  Debian 9 (Stretch) : make-kpkg (kernel-package) is not provided
-  Ubuntu 14.04 LTS   : NOT Fixed
-  Ubuntu 16.04 LTS   : Fixed
-  Ubuntu 18.04 LTS   : Fixed
-
-This commit cannot fix Ubuntu 14.04 because it installs GNU Make 3.81,
-but its support will end in Apr 2019, which is before the Linux v5.1
-release.
-
-I added warning so that nobody would try to include the top Makefile.
-
-Fixes: 3812b8c5c5d5 ("kbuild: make -r/-R effective in top Makefile for old Make versions")
-Reported-by: Liz Zhang <lizzha@microsoft.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Tested-by: Lili Deng <v-lide@microsoft.com>
----
-
- Makefile | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Makefile b/Makefile
-index ef4b32c..925d870 100644
---- a/Makefile
-+++ b/Makefile
-@@ -31,6 +31,16 @@ _all:
- # descending is started. They are now explicitly listed as the
- # prepare rule.
- 
-+# Ugly workaround for Debian make-kpkg:
-+# make-kpkg directly includes the top Makefile of Linux kernel. In such a case,
-+# skip sub-make to support debian_* targets in ruleset/kernel_version.mk, but
-+# displays warning to discourage such abusage.
-+ifneq ($(word 2, $(MAKEFILE_LIST)),)
-+$(warning Do not include top Makefile of Linux Kernel)
-+sub-make-done := 1
-+MAKEFLAGS += -rR
-+endif
-+
- ifneq ($(sub-make-done),1)
- 
- # Do not use make's built-in rules and variables
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
