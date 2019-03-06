@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA19C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D317C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22742063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFC72063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfCFSs3 (ORCPT
+        id S1728051AbfCFStG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:48:29 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:40829 "EHLO
+        Wed, 6 Mar 2019 13:49:06 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:53559 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfCFSs3 (ORCPT
+        with ESMTP id S1727780AbfCFStF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:48:29 -0500
+        Wed, 6 Mar 2019 13:49:05 -0500
 Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N32y5-1gwcid3kDd-013Osu; Wed, 06 Mar 2019 19:48:26 +0100
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MsZ3N-1gnFJT0jP9-00u3f1 for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019
+ 19:49:04 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: [PATCH] drivers: input: Kconfig: pedantic claenups
-Date:   Wed,  6 Mar 2019 19:48:25 +0100
-Message-Id: <1551898105-17927-1-git-send-email-info@metux.net>
+Subject: [PATCH] drivers: pcmcia: Kconfig: pedantic cleanups
+Date:   Wed,  6 Mar 2019 19:49:03 +0100
+Message-Id: <1551898143-18026-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:oMMcBcO3CEjzMnFlxGDcrHN+opJcEYKUkzzPYJG6Gju3b1f/Vl0
- vqqnF6Y/5Eh1M6eApEo4QNnScVhZbMV+rWuZ9VZA4TU3u0LZFBNDACl1ajp5rsC0g/I4F8o
- F/+Jeh4e2sm03qg3kc+1VaSU24XsWWAgQ6ITI+9Ds2c1O09vwXd1lV1mfunMt4huzqusHg1
- /b8ti6+KWYDkko1G/WGUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:z4R3wsB8m/g=:q9tQ6XrsbSKHym7Wss4xMQ
- M1zJbkaMnXCQmiGd895FRgP5rvxoPjK83PDWTU4e4ZZ4y+x1E20RCPf10HEImon9nNfAAFc8P
- r8pm70VieVB2UunCQqEG7E6dX4fWxBESgYaAVBpZXXIT25zSkwDOLHJvNIKr8ZTY6zsXy7I7D
- MPdWibv0MSnKLvzF8nRnIXhHwUx5aAnCz9ZsEl0iF/FGYt1yPLPSjaFXaW+mRvpIs+YL4h9Sl
- SWLNs1KxL2Hw8gatiTAj3fiqjyRwzKOTcbDgIoh4aTCAiChK8HUfHFuvpIZ0gYAKv7mOUXdaD
- cZmNMviEqwYA/GWU2WaAm54bJmfmdhBkEqpPn+agV9JAdOTYT7Wi6RyBMahF5rAZowyMDy2Em
- eoxp8xy0IXz6Nf1gM27Ejl84qzbEebiwMdN5kT6OGy89Ddrf4PMyDhkdYyvFoOJbHh9NTaD/L
- 3ltFnfq86khDNSrguJRUG5fnozFTY4g1llNBdNbIFuGNkYC8+sV0P0KtQpjfG30jM1Qgct9nT
- 7GitibyIK6cpqRf+MqhiWVOJuTEfy0hmu9Lqlxkr943hLIb+KlcQIta3hU8yhz6IXM+EmGOuf
- PQgKY/Hl89NKvu+WzvtDCi972xY1+W3dAWwAdhikU8lB8P72vEnPj/rYedHFf/kYiDtvlPUyg
- Z8F8g4swz2HmMvezLf32Yrgof0pdJcd1Yi1h3Z7ZzrlEhrUWJwfrp2cm3venAZuxXS2HiO63P
- FIdhIhPFeYH0bo+Sy7X2orbXdv1c1KazBa+dTg==
+X-Provags-ID: V03:K1:bpx8tDC3Z/uu8AIBstDrCq9NaR3a2VKlz5upt/KYVOFosEvXz4T
+ nw1DyVLuyataDARtQ4twyn+WQSpAalJmgbS88J9MI4oIhtN3Khd/1zNSIgl4Mjr7Uvm8Def
+ fIyM2R+vE6ZLj5XNiu3jy25/bCrABfVSzpoZ2+gzqS9ja9lslbkPw0aMlv74hOFKdvN36CQ
+ l8rxewa0dPsmqkPp/ApCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:leoq1K2HASU=:Ix4RigPnVDIHaUxPXujhq+
+ 4bxUn8LQkLqzUXvQ5XO0Zljw/nCqEfZFzBGbxVD8egiZC0yFiR0lYD8W8fLhVk1ra8eUby5NP
+ zlZ8ekMuTDGpaF5ddbau7hrmplqa31JBldSOtXsbF+5tGCED9HFQpi4PH48Fa07OLEJtjgUCI
+ CWKOT9BKPKZboIOeZg3zhQgJQof3ZzpUUayy8DO3ziFAGtwbItd8h6jf7aT09YyCUdXL/9byT
+ 3zXul+U12QJDsGYXJik1c3D2u+PWdBMY9odHvlTrms46RWuZ6Wa2k3AyZd9dMxS7aD5SqgQnr
+ hdiqXLaquPpG2OVb3rujkg3uiloqSm5n+MGrVku3v/r1vbSJr59WhE9hc++/JwT5pdsOs2qAO
+ iLCz02CR/Sh0ObMa1/TR8ue2g5S3lRxCdOs6wnB7R4RNaiL6f61+X6mXVHr39M2BHZ7mlR2Ui
+ L0+XFr4NW0Fa7pG/9+TPc4Y2LmG8wiXPMSZa+muLK8OnO1SkeYTlrpCX/CCvo4WCRj1e6BUYJ
+ ln+EVzeN05NPT/PnFoOBxSoFW8uiSpqwajk/CE9HlzRkEBmsZpKaDDCsfDDYzBdh7xoi5CRb7
+ KLW2biEPnxx/sMAt3j5ml6D9+Wg/h3xawnsEgUtuNT2AEQfl+ka7ocyBHdrlirWyoXe3xTC2B
+ 8nmtPIvfyk8omaXj5sJtBv/Ts2Ur5OIwjy4EvswkzDV9a45gQunDtSXI7nGwFZAzauKdjESWl
+ JlCxs3eMNDF2IMJrTrLI52RvnpS7f9dHqEqBTA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,175 +53,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/input/misc/Kconfig        | 26 +++++++++++++-------------
- drivers/input/mouse/Kconfig       | 26 +++++++++++++-------------
- drivers/input/serio/Kconfig       |  2 +-
- drivers/input/tablet/Kconfig      | 20 ++++++++++----------
- drivers/input/touchscreen/Kconfig |  2 +-
- 5 files changed, 38 insertions(+), 38 deletions(-)
+ drivers/pcmcia/Kconfig | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index ca59a2b..0ffafc0 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -240,13 +240,13 @@ config INPUT_APANEL
- 	select INPUT_POLLDEV
- 	select CHECK_SIGNATURE
- 	help
--	 Say Y here for support of the Application Panel buttons, used on
--	 Fujitsu Lifebook. These are attached to the mainboard through
--	 an SMBus interface managed by the I2C Intel ICH (i801) driver,
--	 which you should also build for this kernel.
-+	  Say Y here for support of the Application Panel buttons, used on
-+	  Fujitsu Lifebook. These are attached to the mainboard through
-+	  an SMBus interface managed by the I2C Intel ICH (i801) driver,
-+	  which you should also build for this kernel.
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called apanel.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called apanel.
- 
- config INPUT_GP2A
- 	tristate "Sharp GP2AP002A00F I2C Proximity/Opto sensor driver"
-@@ -273,12 +273,12 @@ config INPUT_GPIO_DECODER
- 	depends on GPIOLIB || COMPILE_TEST
- 	select INPUT_POLLDEV
- 	help
--	 Say Y here if you want driver to read status of multiple GPIO
--	 lines and report the encoded value as an absolute integer to
--	 input subsystem.
-+	  Say Y here if you want driver to read status of multiple GPIO
-+	  lines and report the encoded value as an absolute integer to
-+	  input subsystem.
- 
--	 To compile this driver as a module, choose M here: the module
--	 will be called gpio_decoder.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called gpio_decoder.
- 
- config INPUT_IXP4XX_BEEPER
- 	tristate "IXP4XX Beeper support"
-@@ -543,8 +543,8 @@ config INPUT_PCF50633_PMU
- 	tristate "PCF50633 PMU events"
- 	depends on MFD_PCF50633
- 	help
--	 Say Y to include support for delivering  PMU events via  input
--	 layer on NXP PCF50633.
-+	  Say Y to include support for delivering  PMU events via  input
-+	  layer on NXP PCF50633.
- 
- config INPUT_PCF8574
- 	tristate "PCF8574 Keypad input device"
-diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
-index 566a1e3..8b7a7e0 100644
---- a/drivers/input/mouse/Kconfig
-+++ b/drivers/input/mouse/Kconfig
-@@ -91,14 +91,14 @@ config MOUSE_PS2_SYNAPTICS_SMBUS
- 	  If unsure, say Y.
- 
- config MOUSE_PS2_CYPRESS
--       bool "Cypress PS/2 mouse protocol extension" if EXPERT
--       default y
--       depends on MOUSE_PS2
--       help
--         Say Y here if you have a Cypress PS/2 Trackpad connected to
--         your system.
-+	bool "Cypress PS/2 mouse protocol extension" if EXPERT
-+	default y
-+	depends on MOUSE_PS2
-+	help
-+	  Say Y here if you have a Cypress PS/2 Trackpad connected to
-+	  your system.
- 
--         If unsure, say Y.
-+	  If unsure, say Y.
- 
- config MOUSE_PS2_LIFEBOOK
- 	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
-@@ -285,19 +285,19 @@ config MOUSE_ELAN_I2C_I2C
- 	depends on MOUSE_ELAN_I2C
+diff --git a/drivers/pcmcia/Kconfig b/drivers/pcmcia/Kconfig
+index fab92ba..1fc7ded 100644
+--- a/drivers/pcmcia/Kconfig
++++ b/drivers/pcmcia/Kconfig
+@@ -22,18 +22,18 @@ config PCMCIA
+ 	select CRC32
  	default y
- 	help
--	   Say Y here if Elan Touchpad in your system is connected to
--	   a standard I2C controller.
-+	  Say Y here if Elan Touchpad in your system is connected to
-+	  a standard I2C controller.
+ 	---help---
+-	   This option enables support for 16-bit PCMCIA cards. Most older
+-	   PC-cards are such 16-bit PCMCIA cards, so unless you know you're
+-	   only using 32-bit CardBus cards, say Y or M here.
++	  This option enables support for 16-bit PCMCIA cards. Most older
++	  PC-cards are such 16-bit PCMCIA cards, so unless you know you're
++	  only using 32-bit CardBus cards, say Y or M here.
+ 
+-	   To use 16-bit PCMCIA cards, you will need supporting software in
+-	   most cases. (see the file <file:Documentation/Changes> for
+-	   location and details).
++	  To use 16-bit PCMCIA cards, you will need supporting software in
++	  most cases. (see the file <file:Documentation/Changes> for
++	  location and details).
+ 
+-	   To compile this driver as modules, choose M here: the
+-	   module will be called pcmcia.
++	  To compile this driver as modules, choose M here: the
++	  module will be called pcmcia.
  
 -	   If unsure, say Y.
 +	  If unsure, say Y.
  
- config MOUSE_ELAN_I2C_SMBUS
- 	bool "Enable SMbus support"
- 	depends on MOUSE_ELAN_I2C
- 	help
--	   Say Y here if Elan Touchpad in your system is connected to
--	   a SMbus adapter.
-+	  Say Y here if Elan Touchpad in your system is connected to
-+	  a SMbus adapter.
+ config PCMCIA_LOAD_CIS
+ 	bool "Load CIS updates from userspace"
+@@ -275,4 +275,4 @@ config PCCARD_NONSTATIC
+ config PCCARD_IODYN
+ 	bool
  
--	   If unsure, say Y.
-+	  If unsure, say Y.
- 
- config MOUSE_INPORT
- 	tristate "InPort/MS/ATIXL busmouse"
-diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
-index c9c7224..b29cb49 100644
---- a/drivers/input/serio/Kconfig
-+++ b/drivers/input/serio/Kconfig
-@@ -7,7 +7,7 @@ config SERIO
- 	help
- 	  Say Yes here if you have any input device that uses serial I/O to
- 	  communicate with the system. This includes the
--	  		* standard AT keyboard and PS/2 mouse *
-+	                * standard AT keyboard and PS/2 mouse *
- 	  as well as serial mice, Sun keyboards, some joysticks and 6dof
- 	  devices and more.
- 
-diff --git a/drivers/input/tablet/Kconfig b/drivers/input/tablet/Kconfig
-index a2b9f97..df427d1 100644
---- a/drivers/input/tablet/Kconfig
-+++ b/drivers/input/tablet/Kconfig
-@@ -38,16 +38,16 @@ config TABLET_USB_AIPTEK
- 	  module will be called aiptek.
- 
- config TABLET_USB_GTCO
--        tristate "GTCO CalComp/InterWrite USB Support"
--        depends on USB && INPUT
--        help
--          Say Y here if you want to use the USB version of the GTCO
--          CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
--          (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
--          (CONFIG_INPUT_EVDEV) as well.
--
--          To compile this driver as a module, choose M here: the
--          module will be called gtco.
-+	tristate "GTCO CalComp/InterWrite USB Support"
-+	depends on USB && INPUT
-+	help
-+	  Say Y here if you want to use the USB version of the GTCO
-+	  CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
-+	  (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
-+	  (CONFIG_INPUT_EVDEV) as well.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called gtco.
- 
- config TABLET_USB_HANWANG
- 	tristate "Hanwang Art Master III tablet support (USB)"
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 068dbbc..11ca597 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -632,7 +632,7 @@ config TOUCHSCREEN_HP600
- 	depends on SH_HP6XX && SH_ADC
- 	help
- 	  Say Y here if you have a HP Jornada 620/660/680/690 and want to
--          support the built-in touchscreen.
-+	  support the built-in touchscreen.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called hp680_ts_input.
+-endif	# PCCARD
++endif # PCCARD
 -- 
 1.9.1
 
