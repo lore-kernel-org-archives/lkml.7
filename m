@@ -2,98 +2,80 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D9CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A6DC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B4E20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ArUUrSAD"
+	by mail.kernel.org (Postfix) with ESMTP id 001F020657
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfCFVi1 (ORCPT
+        id S1726249AbfCFVjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:38:27 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45382 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFVi0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:38:26 -0500
-Received: by mail-qk1-f195.google.com with SMTP id v139so7758357qkb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 13:38:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Kmnz/guZPJnRPV2xKUGZraLYc52bC6Yc94Bjksc5cLM=;
-        b=ArUUrSAD2NzcY95UPnvXBFw4Gk7PHBSGPLEXvuPWD9s325FpXawK7pCWywUUWl6QTt
-         Cgd6/7byaLnFT0ZxV8kfojcps7U8mXF7PC0KtFVWE1P3ir0lnnyTOSD5pAKuky+qYfzy
-         iCv35q/Dw855IUoti90UxpL7M1Td+z0dJQBwdRrj92aGotU4N9POqNFSYidpecR2LCLN
-         sAn7RD+PT0ltHqUb06im4BZgkhjl7T+mZjJ+lzQDEjZW/BjGOVtkueP9e3RolKvHHil+
-         J/PdgQ00McBiKhDjAGcH9DpsEQS/bxxVuI0pgELNX9IzdnUzioUWt2CKNB1WrBnyDFdX
-         mDJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Kmnz/guZPJnRPV2xKUGZraLYc52bC6Yc94Bjksc5cLM=;
-        b=ae4khgjQrUCdgUpQbQhsGmtIzy25fGCprJ2f+l1uVoObioh7DehxLhK8gkxL3piJpa
-         hMBpMBZJQWxCUTus99Dpchrdq+XrdPQh1fkVdISygHeHxPMFiTbSIq6+lHKGlDcOfAPK
-         gfwXqvL1Czn3S2qMkxlLBlXaaWm+kyn4MddLzzvXIt1nnvewHzm+4yYtfzChmf0FYi0P
-         9nQaO1mJFUQ+UvIZIOsPbeXgmEvsfacbpAJvo2aTN2piFl0CZQzfxF0b0QO44JGuM0GC
-         t5iRKtFlWd1c+wiBDVnKAMiq9ntVh1egZn35Wj4+1XG+CcJYqI//Ox3sH6zWtRHdZkS5
-         zMug==
-X-Gm-Message-State: APjAAAUaosaqDdVNGv+GTsMavdUQAC8HtVhUkyr3RrVVkVx1CUWIB7uc
-        tAlNwkg7M8AdpDeBrWuGhd7MrQ==
-X-Google-Smtp-Source: APXvYqzhAatQmCLy5HofCjyR6wWxVLm2DK3OoMKMB9x4IwyuBT8dyVzRYZgLkPpJwmjS4oVdYI9OLA==
-X-Received: by 2002:a37:d409:: with SMTP id l9mr7699999qki.211.1551908305925;
-        Wed, 06 Mar 2019 13:38:25 -0800 (PST)
-Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z140sm1389873qka.81.2019.03.06.13.38.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 13:38:25 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     akpm@linux-foundation.org, aryabinin@virtuozzo.com,
-        glider@google.com, dvyukov@google.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] Revert "x86_64: increase stack size for KASAN_EXTRA"
-Date:   Wed,  6 Mar 2019 16:38:06 -0500
-Message-Id: <20190306213806.46139-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Wed, 6 Mar 2019 16:39:37 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:43048 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfCFVjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 16:39:37 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1h1eGD-0004fk-1g; Wed, 06 Mar 2019 14:39:33 -0700
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+References: <20190213175454.7506-1-logang@deltatee.com>
+ <20190213175454.7506-11-logang@deltatee.com>
+ <20190306204400.hzpizimya7fq6swi@mobilestation>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <284dae8b-4e8a-1d7b-e806-bf7fed2a39a7@deltatee.com>
+Date:   Wed, 6 Mar 2019 14:39:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190306204400.hzpizimya7fq6swi@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: epilmore@gigaio.com, dave.jiang@intel.com, allenbh@gmail.com, joro@8bytes.org, bhelgaas@google.com, jdmason@kudzu.us, linux-kselftest@vger.kernel.org, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, fancer.lancer@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2 10/12] NTB: Introduce NTB MSI Test Client
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit a8e911d13540487942d53137c156bd7707f66e5d.
-KASAN_EXTRA was removed via the commit 7771bdbbfd3d ("kasan: remove use
-after scope bugs detection."), so this is no longer needed.
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/x86/include/asm/page_64_types.h | 4 ----
- 1 file changed, 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index 0ce558a8150d..8f657286d599 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -7,11 +7,7 @@
- #endif
- 
- #ifdef CONFIG_KASAN
--#ifdef CONFIG_KASAN_EXTRA
--#define KASAN_STACK_ORDER 2
--#else
- #define KASAN_STACK_ORDER 1
--#endif
- #else
- #define KASAN_STACK_ORDER 0
- #endif
--- 
-2.17.2 (Apple Git-113)
+On 2019-03-06 1:44 p.m., Serge Semin wrote:
+> Alas the test driver is not going to work with IDT NTB hardware,
+> since it uses Spad only, which aren't supported by IDT devices. IDT NTB
+> PCIe functions provide message registers to communicate with peers. See
+> ntb_perf driver code for reference of portable driver design.
+> 
+> In order to make the test driver portable the following alterations
+> are needed:
+> 1) Add NTB Message register API usage together with Scratchpad+Doorbell.
+> 2) When NTB MSI library is updated with functions like
+> ntb_msi_peer_setup_mws()/ntb_msi_peer_clear_mws() they are needed to be
+> utilized in the test driver as well to set a translation address on the
+> peer side.
 
+Per, the discussion on the previous email, we can update this later once
+we actually have sensible infrastructure for it. The mess in ntb_perf is
+not something I want to replicate and we don't have any interest in
+creating a large amount of infrastructure to support hardware we don't
+care about.
+
+Logan
