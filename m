@@ -2,197 +2,213 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECEFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD6FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45CFB20657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:03:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MKmOnc6r"
+	by mail.kernel.org (Postfix) with ESMTP id B805B20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfCFRD4 (ORCPT
+        id S1730414AbfCFREO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:03:56 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45028 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbfCFRD4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:03:56 -0500
-Received: by mail-pg1-f196.google.com with SMTP id j3so8879281pgm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:03:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YiE0C9rB0X9qdq2q/pQyvDknkZ/AT2mZbxMfrOYFXCI=;
-        b=MKmOnc6rYJUSFYO7qFwf/sP1JYQzN7eaG26KStS36t+V9KpAIZ7+y1hd26trMQhbqb
-         yyPdAunP6hd2IWTyRFE7iC60nxZMd8RhbgIimFDq/vYpUn52u4GFUYXJ5Fu9vVEgDdMi
-         z3uhSv0Uj2m1+ZJ4zAXPITXyWRjS+uNYejebmPFqEoD17xco1e3hAHO8Q/MZRcrOXHhA
-         L0iwP+UblVtBw2SuSDsZG4gqEtp9+tfXWX3ziUCy4USEUYrYW4ta3rrxs+Ih5NOtLXbb
-         anN3FBjFpcqwlaSby+hhKwuI+6E9L+5cIuqznoqlWUtRy6C42V50M1h+akDdoYuOrtRV
-         Vqag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YiE0C9rB0X9qdq2q/pQyvDknkZ/AT2mZbxMfrOYFXCI=;
-        b=Sfpaa5/In1PigxrCqgzATgJgsqWZ06vLzRZ5+SLNOSkzCfHlUhQ2BEOzl3P4HIVG7k
-         RqtGLLPd7fe3TnTQhRPSbNFdsw6OnAlZCMMZUlobOyb+GX5NNIQ2NxIfPngNMzzB25gb
-         RO/RIow1mpV+BOm6KCy5Lk33eF0jXWpiMua1wsiDJBBcm1Ssi/OuBFD9N/UlktGoz1JC
-         UBXZvQ1eUx9TGdxLy5zkDbaqGpgDT2ibwbypbHz8sWPj211aK8/w8IbCjag4fvjN7M3a
-         YDfa31ks1eWrvRNh561bzPmvmQ8BXg5tKMuL2e564TOsXXkoohoxVFoivFWTJM2vQCiS
-         9KFQ==
-X-Gm-Message-State: APjAAAXl6h/CXpwg1lbLKC5F65sI8DFsOGYSlbBkw0NSfUmcF5FwBxb1
-        su/INGK88ngZQOpGRpnduSgQDw==
-X-Google-Smtp-Source: APXvYqwY8B+nEmufUu/9ta0m8tXf7tQPgYwAVFD4PkSVT+7zhbtpS3AbjeUXGFm8S4pG+MawBPwPwQ==
-X-Received: by 2002:a63:ea48:: with SMTP id l8mr6972853pgk.431.1551891834056;
-        Wed, 06 Mar 2019 09:03:54 -0800 (PST)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p2sm3038555pgs.7.2019.03.06.09.03.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Mar 2019 09:03:53 -0800 (PST)
-Date:   Wed, 6 Mar 2019 09:03:51 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Chris Ball <chris@printf.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] mmc: mmci: Support any block sizes for ux500v2
- and qcom variant
-Message-ID: <20190306170351.GB3522@tuxbook-pro>
-References: <1408683219-7939-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1408683272-7984-1-git-send-email-srinivas.kandagatla@linaro.org>
- <CACRpkdZtUJim0d0iC26d-Z8xBckdCX7uwh_v4PhJSKkHEcmmrw@mail.gmail.com>
+        Wed, 6 Mar 2019 12:04:14 -0500
+Received: from monster.unsafe.ru ([5.9.28.80]:53618 "EHLO mail.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbfCFREN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:04:13 -0500
+X-Greylist: delayed 584 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Mar 2019 12:04:12 EST
+Received: from MacBook-PC.fortress (nat-pool-brq-t.redhat.com [213.175.37.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 7C3C0C61ABD;
+        Wed,  6 Mar 2019 16:54:27 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 17:54:25 +0100
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: [PATCH v1] moduleparam: Save information about built-in modules in
+ separate file
+Message-ID: <20190306165425.GD14017@MacBook-PC.fortress>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0OWHXb1mYLuhj1Ox"
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZtUJim0d0iC26d-Z8xBckdCX7uwh_v4PhJSKkHEcmmrw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 05 Mar 14:25 PST 2019, Linus Walleij wrote:
 
-> Sorry for top-posting, patch included for context.
-> 
-> I saw today that Brian has the Nexus 5 working with Broadcom/Cypress
-> 4339 over SDIO on the MMCI.
-> 
-> Brian are you managing to use the WLAN without this patch or is this
-> something you stacked up to make it work? (If you want context I
-> can forward the rest of the conversation where we discuss how to
-> fix it properly.)
-> 
+--0OWHXb1mYLuhj1Ox
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Brian's Nexus 5 is on 8974 where the MMCI block has become the sdhci-msm
-block, so while being a superset (afaict) of the old MMCI block we use
-the sdhci driver instead.
+Problem:
 
-> I discussed this patch several times with Ulf and I think Niklas looked
-> at it too, but we never got around to fix it up properly.
-> 
+When a kernel module is compiled as a separate module, some important
+information about the kernel module is available via .modinfo section of
+the module.  In contrast, when the kernel module is compiled into the
+kernel, that information is not available.
 
-This is still needed for at least 8064 to have working sdio wifi (and
-perhaps your 8060?).
+Information about built-in modules is necessary in the following cases:
 
-Regards,
-Bjorn
+1. When it is necessary to find out what additional parameters can be
+passed to the kernel at boot time.
 
-> Yours,
-> Linus Walleij
-> 
-> 
-> On Fri, Aug 22, 2014 at 6:54 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
-> 
-> > From: Ulf Hansson <ulf.hansson@linaro.org>
-> >
-> > For the ux500v2 variant of the PL18x block, any block sizes are
-> > supported. This will make it possible to decrease data overhead
-> > for SDIO transfers.
-> >
-> > This patch is based on Ulf Hansson patch
-> > http://www.spinics.net/lists/linux-mmc/msg12160.html
-> >
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >         enabled this support on qcom variant.
-> >
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  drivers/mmc/host/mmci.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> > index c11cb05..533ad2b 100644
-> > --- a/drivers/mmc/host/mmci.c
-> > +++ b/drivers/mmc/host/mmci.c
-> > @@ -77,6 +77,7 @@ static unsigned int fmax = 515633;
-> >   * @qcom_fifo: enables qcom specific fifo pio read logic.
-> >   * @reversed_irq_handling: handle data irq before cmd irq.
-> >   * @qcom_dml: enables qcom specific dma glue for dma transfers.
-> > + * @any_blksize: true if block any sizes are supported
-> >   */
-> >  struct variant_data {
-> >         unsigned int            clkreg;
-> > @@ -102,6 +103,7 @@ struct variant_data {
-> >         bool                    qcom_fifo;
-> >         bool                    reversed_irq_handling;
-> >         bool                    qcom_dml;
-> > +       bool                    any_blksize;
-> >  };
-> >
-> >  static struct variant_data variant_arm = {
-> > @@ -194,6 +196,7 @@ static struct variant_data variant_ux500v2 = {
-> >         .pwrreg_clkgate         = true,
-> >         .busy_detect            = true,
-> >         .pwrreg_nopower         = true,
-> > +       .any_blksize            = true,
-> >  };
-> >
-> >  static struct variant_data variant_qcom = {
-> > @@ -212,6 +215,7 @@ static struct variant_data variant_qcom = {
-> >         .explicit_mclk_control  = true,
-> >         .qcom_fifo              = true,
-> >         .qcom_dml               = true,
-> > +       .any_blksize            = true,
-> >  };
-> >
-> >  static int mmci_card_busy(struct mmc_host *mmc)
-> > @@ -239,10 +243,11 @@ static int mmci_card_busy(struct mmc_host *mmc)
-> >  static int mmci_validate_data(struct mmci_host *host,
-> >                               struct mmc_data *data)
-> >  {
-> > +       struct variant_data *variant = host->variant;
-> > +
-> >         if (!data)
-> >                 return 0;
-> > -
-> > -       if (!is_power_of_2(data->blksz)) {
-> > +       if (!is_power_of_2(data->blksz) && !variant->any_blksize) {
-> >                 dev_err(mmc_dev(host->mmc),
-> >                         "unsupported block size (%d bytes)\n", data->blksz);
-> >                 return -EINVAL;
-> > @@ -796,7 +801,6 @@ static void mmci_start_data(struct mmci_host *host, struct mmc_data *data)
-> >         writel(host->size, base + MMCIDATALENGTH);
-> >
-> >         blksz_bits = ffs(data->blksz) - 1;
-> > -       BUG_ON(1 << blksz_bits != data->blksz);
-> >
-> >         if (variant->blksz_datactrl16)
-> >                 datactrl = MCI_DPSM_ENABLE | (data->blksz << 16);
-> > --
-> > 1.9.1
-> >
+2. When you need to know which module names and their aliases are in
+the kernel. This is very useful for creating an initrd image.
+
+Proposal:
+
+The proposed patch does not remove .modinfo section with module
+information from the vmlinux at the build time and saves it into a
+separate file after kernel linking. So, the kernel does not increase in
+size and no additional information remains in it. Information is stored
+in the same format as in the separate modules (null-terminated string
+array). Because the .modinfo section is already exported with a separate
+modules, we are not creating a new API.
+
+It can be easily read in the userspace:
+
+$ tr '\0' '\n' < kernel.builtin.modinfo
+ext4.softdep=3Dpre: crc32c
+ext4.license=3DGPL
+ext4.description=3DFourth Extended Filesystem
+ext4.author=3DRemy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Th=
+eodore Ts'o and others
+ext4.alias=3Dfs-ext4
+ext4.alias=3Dext3
+ext4.alias=3Dfs-ext3
+ext4.alias=3Dext2
+ext4.alias=3Dfs-ext2
+md_mod.alias=3Dblock-major-9-*
+md_mod.alias=3Dmd
+md_mod.description=3DMD RAID framework
+md_mod.license=3DGPL
+md_mod.parmtype=3Dcreate_on_open:bool
+md_mod.parmtype=3Dstart_dirty_degraded:int
+=2E..
+
+Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+---
+ Makefile                    |  1 +
+ include/linux/moduleparam.h | 12 +++++-------
+ scripts/link-vmlinux.sh     |  8 ++++++++
+ 3 files changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d5713e7b1e50..971102194c92 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1288,6 +1288,7 @@ _modinst_:
+ 	fi
+ 	@cp -f $(objtree)/modules.order $(MODLIB)/
+ 	@cp -f $(objtree)/modules.builtin $(MODLIB)/
++	@cp -f $(objtree)/kernel.builtin.modinfo $(MODLIB)/
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
+=20
+ # This depmod is only for convenience to give the initial
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index ba36506db4fb..5ba250d9172a 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -10,23 +10,21 @@
+    module name. */
+ #ifdef MODULE
+ #define MODULE_PARAM_PREFIX /* empty */
++#define __MODULE_INFO_PREFIX /* empty */
+ #else
+ #define MODULE_PARAM_PREFIX KBUILD_MODNAME "."
++/* We cannot use MODULE_PARAM_PREFIX because some modules override it. */
++#define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
+ #endif
+=20
+ /* Chosen so that structs with an unsigned long line up. */
+ #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
+=20
+-#ifdef MODULE
+ #define __MODULE_INFO(tag, name, info)					  \
+ static const char __UNIQUE_ID(name)[]					  \
+   __used __attribute__((section(".modinfo"), unused, aligned(1)))	  \
+-  =3D __stringify(tag) "=3D" info
+-#else  /* !MODULE */
+-/* This struct is here for syntactic coherency, it is not used */
+-#define __MODULE_INFO(tag, name, info)					  \
+-  struct __UNIQUE_ID(name) {}
+-#endif
++  =3D __MODULE_INFO_PREFIX __stringify(tag) "=3D" info
++
+ #define __MODULE_PARM_TYPE(name, _type)					  \
+   __MODULE_INFO(parmtype, name##type, #name ":" _type)
+=20
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index c8cf45362bd6..399d7e4d11ec 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -258,10 +258,12 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+=20
+ 	# step 1
+ 	vmlinux_link "" .tmp_vmlinux1
++	"${OBJCOPY}" -R .modinfo .tmp_vmlinux1
+ 	kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
+=20
+ 	# step 2
+ 	vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
++	"${OBJCOPY}" -R .modinfo .tmp_vmlinux2
+ 	kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
+=20
+ 	# step 3
+@@ -273,6 +275,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+ 		kallsyms_vmlinux=3D.tmp_vmlinux3
+=20
+ 		vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
++		"${OBJCOPY}" -R .modinfo .tmp_vmlinux3
+=20
+ 		kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
+ 	fi
+@@ -281,6 +284,11 @@ fi
+ info LD vmlinux
+ vmlinux_link "${kallsymso}" vmlinux
+=20
++info MODINFO kernel.builtin.modinfo
++"${OBJCOPY}" -j .modinfo -O binary vmlinux kernel.builtin.modinfo
++chmod 444 kernel.builtin.modinfo
++"${OBJCOPY}" -R .modinfo vmlinux
++
+ if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
+ 	info SORTEX vmlinux
+ 	sortextable vmlinux
+--=20
+2.19.2
+
+
+--0OWHXb1mYLuhj1Ox
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJcf/s1AAoJEKRaulRM/9Q0u+oP/1vxXnWlVM43EVSoQes8LsAd
+P9mLCkEWPWdAyTnlCgcPwOetr2drGfh1rX8mhC4YLM0zCZ4LVUJybXLZbZU1K7Ue
+pGfywG5ac3+ux4d/tcemShRfoiEbt4pfAwNoDJmeFBRct9wjXVjPwiLckEmOSk6f
+Rp7aEIr/qtThhofAqe4ycSp+FW4V39pa+qg5DpmYiPxjqGsMcPW5jUUBP0d/j1u5
+Ojo+ExKnYy7WLXI212fH3XuHCAyoTUPn9uYRyYwiZ2XLdPtEQzf5jI8MAxbU7HLF
+oDxPBITOFLlqTWYm0M29aGNsx2HFNSFHKzKbjV0CuOonVJql2kl1zIzEBfGJ1bPd
+WKyX/XhIZpF8p2nKSylbad985t+24SpCDFonriduaesMFgyyTORxoW6HF6QDjo27
+i4/RqxYGNanTDn/FV70+zbyhu5r0/Ph+i/bKc+BSWcvuTFTSgzEjkZ+GsLIzjE3J
+2P5jJQa8QFboJLiN0iMrUQE4UbiWscCf/4azeWndnNlDiMtAkNt0q5eqhqo4qbAK
+NQJLkjNjuBBYeC+XeoNdE5sE/8ieC870yGS0GTTyilKUNCbZllXvertrVZ5H1c0Q
+ImI9/10n1CxOqe/ssHrKi/C1nsDdZ+Gr8uG3PhdgTZLOFroFhZDVzC2BPoGSGQ2t
+d2EdYqiSg1WbF8cOfXLY
+=bKn9
+-----END PGP SIGNATURE-----
+
+--0OWHXb1mYLuhj1Ox--
