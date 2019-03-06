@@ -2,208 +2,207 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE56C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EFD2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205A020663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbfCFTL1 (ORCPT
+        id S1727318AbfCFTNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 14:11:27 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:41746 "EHLO ale.deltatee.com"
+        Wed, 6 Mar 2019 14:13:47 -0500
+Received: from mx1.mailbox.org ([80.241.60.212]:46544 "EHLO mx1.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbfCFTL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 14:11:27 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h1bwh-0002qW-Ui; Wed, 06 Mar 2019 12:11:17 -0700
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-References: <20190213175454.7506-1-logang@deltatee.com>
- <20190213175454.7506-8-logang@deltatee.com>
- <20190306012420.wjeatxgb7nwq3j5q@mobilestation>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <bd72f24f-5982-0fe7-59df-2fbbfe9f798a@deltatee.com>
-Date:   Wed, 6 Mar 2019 12:11:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726599AbfCFTNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 14:13:46 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 280ED4AC94;
+        Wed,  6 Mar 2019 20:13:44 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id vWRf0VQgEezb; Wed,  6 Mar 2019 20:13:31 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path resolution
+Date:   Thu,  7 Mar 2019 06:12:39 +1100
+Message-Id: <20190306191244.8691-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20190306012420.wjeatxgb7nwq3j5q@mobilestation>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: epilmore@gigaio.com, dave.jiang@intel.com, allenbh@gmail.com, joro@8bytes.org, bhelgaas@google.com, jdmason@kudzu.us, linux-kselftest@vger.kernel.org, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, fancer.lancer@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 07/12] NTB: Introduce functions to calculate multi-port
- resource index
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now that the holiday break is over, it's time to re-send this patch
+series (with a few additions, due to new information we got from
+CVE-2019-5736 -- which this patchset mostly protected against but had
+some holes with regards to #!-style scripts).
 
+Patch changelog:
+  v5:
+    * In response to CVE-2019-5736 (one of the vectors showed that
+      open(2)+fexec(3) cannot be used to scope binfmt_script's implicit
+      open_exec()), AT_* flags have been re-added and are now piped
+      through to binfmt_script (and other binfmt_* that use open_exec)
+      but are only supported for execveat(2) for now.
+  v4:
+    * Remove AT_* flag reservations, as they require more discussion.
+    * Switch to path_is_under() over __d_path() for breakout checking.
+    * Make O_XDEV no longer block openat("/tmp", "/", O_XDEV) -- dirfd
+      is now ignored for absolute paths to match other flags.
+    * Improve the dirfd_path_init() refactor and move it to a separate
+      commit.
+    * Remove reference to Linux-capsicum.
+    * Switch "proclink" name to "magic link".
+  v3: [resend]
+  v2:
+    * Made ".." resolution with AT_THIS_ROOT and AT_BENEATH safe(r) with
+      some semi-aggressive __d_path checking (see patch 3).
+    * Disallowed "proclinks" with AT_THIS_ROOT and AT_BENEATH, in the
+      hopes they can be re-enabled once safe.
+    * Removed the selftests as they will be reimplemented as xfstests.
+    * Removed stat(2) support, since you can already get it through
+      O_PATH and fstatat(2).
 
-On 2019-03-05 6:24 p.m., Serge Semin wrote:
->> + * In a 5 peer system, this function will return the following matrix
->> + *
->> + * pidx \ port    0    1    2    3    4
->> + * 0              0    0    1    2    3
->> + * 1              0    1    2    3    4
->> + * 2              0    1    2    3    4
->> + * 3              0    1    2    3    4
->> + *
+The need for some sort of control over VFS's path resolution (to avoid
+malicious paths resulting in inadvertent breakouts) has been a very
+long-standing desire of many userspace applications. This patchset is a
+revival of Al Viro's old AT_NO_JUMPS[1,2] patchset (which was a variant
+of David Drysdale's O_BENEATH patchset[3] which was a spin-off of the
+Capsicum project[4]) with a few additions and changes made based on the
+previous discussion within [5] as well as others I felt were useful.
 
-Oh, first, oops: looks like I copied this down wrong anyway; the code
-was what I had intended, but the documented example should have been:
+In line with the conclusions of the original discussion of AT_NO_JUMPS,
+the flag has been split up into separate flags:
 
-pidx \ local_port     0    1    2    3    4
- 0                    0    0    1    2    3
- 1                    0    1    1    2    3
- 2                    0    1    2    2    3
- 3                    0    1    2    3    3
+  * O_XDEV blocks all mountpoint crossings (upwards, downwards, or
+    through absolute links). Absolute pathnames alone in openat(2) do
+    not trigger this.
 
-And this is definitely the correct table we are aiming for.
-ntb_peer_resource_idx() is supposed to return the result of
-ntb_peer_port_idx(ntb, local_port) when run on the peer specified by pidx.
+  * O_NOMAGICLINKS blocks resolution through /proc/$pid/fd-style links.
+    This is done by blocking the usage of nd_jump_link() during
+    resolution in a filesystem. The term "magic links" is used to match
+    with the only reference to these links in Documentation/, but I'm
+    happy to change the name.
 
-Note: this table also makes sense because it only uses 4 resources for 5
-ports which is the best case scenario. (In other words, to communicate
-between N ports, N-1 resources are required on each peer).
+    It should be noted that this is different to the scope of O_NOFOLLOW
+    in that it applies to all path components. However, you can do
+    open(O_NOFOLLOW|O_NOMAGICLINKS|O_PATH) on a "magic link" and it will
+    *not* fail (assuming that no parent component was a "magic link"),
+    and you will have an fd for the "magic link".
 
-> This table is too simplified to represent a generic case of port-index
-> mapping table. In particular the IDT PCIe switch got it ports numbered
-> with uneven integers like: 0 2 4 6 8 12 16 20 or 0 8 16, and so on.
-> Moreover some of the ports might be disabled or may have NTB functions
-> deactivated, in which case these ports shouldn't be considered by NTB subsystem
-> at all. Basically we may have any increasing subset of that port
-> numbers depending on the current IDT PCIe-switch ports setup.
+  * O_BENEATH disallows escapes to outside the starting dirfd's tree,
+    using techniques such as ".." or absolute links. Absolute paths in
+    openat(2) are also disallowed. Conceptually this flag is to ensure
+    you "stay below" a certain point in the filesystem tree -- but this
+    requires some additional to protect against various races that would
+    allow escape using ".." (see patch 4 for more detail).
 
-Yes, I did not consider situations where there would be gaps in the
-"port number" space. It wasn't at all clear from the code that this was
-possible. Switchtec hardware could be configured for such an
-arrangement, but I don't know why anyone would do that as it just
-needlessly complicates everything.
+    Currently O_BENEATH implies O_NOMAGICLINKS, because it can trivially
+    beam you around the filesystem (breaking the protection). In future,
+    there might be similar safety checks as in patch 4, but that
+    requires more discussion.
 
-As you point out, with a gap, we end up with something that is wrong:
+In addition, two new flags were added that expand on the above ideas:
 
-pidx \ port     0    1    3    4    5
- 0              0    0    2    3    4
- 1              0    1    2    3    4
- 2              0    1    3    3    4
- 3              0    1    3    4    4
+  * O_NOSYMLINKS does what it says on the tin. No symlink resolution is
+    allowed at all, including "magic links". Just as with O_NOMAGICLINKS
+    this can still be used with (O_PATH|O_NOFOLLOW) to open an fd for
+    the symlink as long as no parent path had a symlink component.
 
-Here, the relationship between ntb_peer_resource_idx() and
-ntb_peer_port_idx() is not maintained and it seems to prescribe 5
-resources for 5 ports. If there were more gaps it would be even more wrong.
+  * O_THISROOT is an extension of O_BENEATH that, rather than blocking
+    attempts to move past the root, forces all such movements to be
+    scoped to the starting point. This provides chroot(2)-like
+    protection but without the cost of a chroot(2) for each filesystem
+    operation, as well as being safe against race attacks that chroot(2)
+    is not.
 
->> +static inline int ntb_peer_resource_idx(struct ntb_dev *ntb, int pidx)
->> +{
->> +	int local_port, peer_port;
->> +
->> +	if (pidx >= ntb_peer_port_count(ntb))
->> +		return -EINVAL;
->> +
->> +	local_port = ntb_port_number(ntb);
->> +	peer_port = ntb_peer_port_number(ntb, pidx);
->> +
->> +	if (peer_port < local_port)
->> +		return local_port - 1;
->> +	else
->> +		return local_port;
->> +}
->> +
-> 
-> Instead of redefining the port-index table we can just fix the
-> ntb_peer_resource_idx() method, so it would return a global port index
-> instead of some number based on the port number. It can be done just by
-> the next modification:
-> 
-> +     if (peer_port <= local_port)
-> +             return pidx;
-> +     else
-> +             return pidx + 1;
-> 
+    If a race is detected (as with O_BENEATH) then an error is
+    generated, and similar to O_BENEATH it is not permitted to cross
+    "magic links" with O_THISROOT.
 
-This creates a table that looks like:
+    The primary need for this is from container runtimes, which
+    currently need to do symlink scoping in userspace[6] when opening
+    paths in a potentially malicious container. There is a long list of
+    CVEs that could have bene mitigated by having O_THISROOT (such as
+    CVE-2017-1002101, CVE-2017-1002102, CVE-2018-15664, and
+    CVE-2019-5736, just to name a few).
 
-pidx \ port     0    1    2    3    4
- 0              1    0    0    0    0
- 1              2    2    1    1    1
- 2              3    3    3    2    2
- 3              4    4    4    4    3
+In addition, a mirror set of AT_* flags have been added (though
+currently these are only supported for execveat(2) -- and not for any
+other syscall). The need for these is explained in the final patch in
+the series (it's motivated by CVE-2019-5736).
 
-Which is not correct. In fact, it seems to require 5 resources for 5
-ports. This appears to be what is done in the current ntb_perf and I
-think I figured it out several months ago but it's way too messy and
-hard to understand and I don't want to spend the time to figure it out
-again.
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: David Drysdale <drysdale@google.com>
+Cc: Tycho Andersen <tycho@tycho.ws>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: <containers@lists.linux-foundation.org>
+Cc: <linux-fsdevel@vger.kernel.org>
+Cc: <linux-api@vger.kernel.org>
 
-IMO, in order to support gaps, we'd need to, on some layer, create an
-un-gapped numbering scheme for the ports. I think the easiest thing is
-to just have Logical and Physical port numbers; so we would have
-something like:
+[1]: https://lwn.net/Articles/721443/
+[2]: https://lore.kernel.org/patchwork/patch/784221/
+[3]: https://lwn.net/Articles/619151/
+[4]: https://lwn.net/Articles/603929/
+[5]: https://lwn.net/Articles/723057/
+[6]: https://github.com/cyphar/filepath-securejoin
 
-Physical Port Number: 0  2  4  6  8  12  16  20
-Logical Port Number:  0  1  2  3  4  5   6   7
-Peer Index (Port 0):  x  0  1  2  3  4   5   6
-Port Index (Port 8):  0  1  2  3  x  4   5   6
-(etc)
+Aleksa Sarai (5):
+  namei: split out nd->dfd handling to dirfd_path_init
+  namei: O_BENEATH-style path resolution flags
+  namei: O_THISROOT: chroot-like path resolution
+  namei: aggressively check for nd->root escape on ".." resolution
+  binfmt_*: scope path resolution of interpreters
 
-Where the Physical Port Number is whatever the hardware uses and the
-logical port number is a numbering scheme starting with zero with no
-gaps. Then the port indexes are still as we currently have them. If we
-say that the port numbers we have now are the Logical Port Number, then
-ntb_peer_resource_idx() is correct.
+ fs/binfmt_elf.c                  |   2 +-
+ fs/binfmt_elf_fdpic.c            |   2 +-
+ fs/binfmt_em86.c                 |   4 +-
+ fs/binfmt_misc.c                 |   2 +-
+ fs/binfmt_script.c               |   2 +-
+ fs/exec.c                        |  26 +++-
+ fs/fcntl.c                       |   2 +-
+ fs/namei.c                       | 205 ++++++++++++++++++++++---------
+ fs/open.c                        |  13 +-
+ include/linux/binfmts.h          |   1 +
+ include/linux/fcntl.h            |   3 +-
+ include/linux/fs.h               |   9 +-
+ include/linux/namei.h            |   8 ++
+ include/uapi/asm-generic/fcntl.h |  17 +++
+ include/uapi/linux/fcntl.h       |   6 +
+ 15 files changed, 228 insertions(+), 74 deletions(-)
 
-I would strongly argue that the clients don't need to know anything
-about the Physical Port Number and these should be handled strictly
-inside the drivers. If multiple drivers need to do something similar to
-map the logical to physical port numbers then we should introduce helper
-functions to allow them to do so. If the Physical Numbers are not
-contained in the driver than the API would need to be expanded to expose
-which numbers are actually used to avoid needing to constantly loop
-through all the indexes to find this out.
+-- 
+2.21.0
 
-On a similar vein, I'd  suggest that most clients shouldn't even really
-need to do anything with the Logical Port Number and should deal largely
-with Port Indexes. Ideally, Logical Port Numbers should only be used by
-helper code in the common layer to help assign resources used by the
-clients (like ntb_peer_resource_idx()).
-
-This world view isn't far off from what we have now, though you *may*
-need to adjust your IDT driver and we will have to eventually clean up
-the existing test clients to use the new helper functions.
-
-> Personally I'd prefer the first solution even though it may lead to the
-> "Unsupported TLP" errors and cause a greater code changes. Here is why:
-> 1) the error might be IDT-specific, so we shouldn't limit the API due to
-> one particular hardware peculiarity,
-> 2) port-index table with global indexes implementation shall simplify the IDT
-> NTB hw driver and provide a cleaner NTB API with simpler shared resources
-> utilization code.
-
-> The final decision is after the NTB subsystem maintainers. If they agree with
-> solution #1 I'll send a corresponding patchset on this week, so you can
-> alter this patchset being based on it.
-
-I think what we have right now is close enough and we just have to clean
-up the code and fix things. I don't think we need to do another big
-change to the semantics. I *certainly* don't want to risk breaking
-everything again to do it.
- Logan
