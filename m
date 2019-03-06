@@ -2,119 +2,361 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6825CC10F0C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50661C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B0E20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:37:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NS75H5d4"
+	by mail.kernel.org (Postfix) with ESMTP id 0FE3B20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfCFJg7 (ORCPT
+        id S1729809AbfCFJim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:36:59 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:50356 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729725AbfCFJg6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:36:58 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x269XhiX164633;
-        Wed, 6 Mar 2019 09:36:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=ySK+dnbEwNc/jKCcXQYwRKr281ZVSbI5VAD5JADKSXY=;
- b=NS75H5d4BIExubi8/gXjQ+2jAR9Hi4BPuZF3X6XKt/me6YlINo6XvDNNsBCC0vMEQyVo
- Pc3woLLg39I4or4aXAD39z0GMcS/BIt7hWfEyZXCrXqn85VsccruAlMigBRgynYXiTsV
- geQv/bjWg4mcE5q+DECQCOU78M3nW7FTprWJIOAHgT0XPCza+7bArIBNW8zUJIIEgn/Q
- JHtGrZ9G49gxvnq+su5xOIGf/Y8l7RtaAc0pGE9xgogrCTo028oMGWrncVdbBMOreUZe
- horeE9axn7c5GHwmel/i+f/S/LU7elvuZ8hB+zHgZHkg8jAR1L+T2Tv8eZYHxeEumG1l xQ== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2130.oracle.com with ESMTP id 2qyfbeawsy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Mar 2019 09:36:38 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x269acXb019478
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Mar 2019 09:36:38 GMT
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x269abKR024174;
-        Wed, 6 Mar 2019 09:36:37 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Mar 2019 01:36:37 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.2\))
-Subject: Re: [PATCH v3] page cache: Store only head pages in i_pages
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <CAPhsuW5a8=QJe2acWXQGWic1a=CJigwPR6BxSu2O2vg4W1mhzA@mail.gmail.com>
-Date:   Wed, 6 Mar 2019 02:36:35 -0700
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux-MM <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
-        Song Liu <liu.song.a23@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <863F9255-E992-402F-827D-DA5F4661B9AB@oracle.com>
-References: <20190215222525.17802-1-willy@infradead.org>
- <CAPhsuW7Hu6jBn-ti7S2cJhO1YQYg_RDZUgkqtgFO8zpBMV_9LA@mail.gmail.com>
- <CAPhsuW5a8=QJe2acWXQGWic1a=CJigwPR6BxSu2O2vg4W1mhzA@mail.gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3445.104.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9186 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903060066
+        Wed, 6 Mar 2019 04:38:42 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33210 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbfCFJim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 04:38:42 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AEFBF13AB0;
+        Wed,  6 Mar 2019 09:38:41 +0000 (UTC)
+Received: from [10.36.116.102] (ovpn-116-102.ams2.redhat.com [10.36.116.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 89C45608C1;
+        Wed,  6 Mar 2019 09:38:30 +0000 (UTC)
+Subject: Re: [PATCH v4 02/22] iommu: introduce device fault data
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@linux.intel.com, will.deacon@arm.com, robin.murphy@arm.com
+Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
+        kevin.tian@intel.com, ashok.raj@intel.com, christoffer.dall@arm.com
+References: <20190218135504.25048-1-eric.auger@redhat.com>
+ <20190218135504.25048-3-eric.auger@redhat.com>
+ <c9adfbda-b78a-405a-a691-9f99d7dc2a26@arm.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <43c5c3be-a609-62e1-efaa-c5571bb762c6@redhat.com>
+Date:   Wed, 6 Mar 2019 10:38:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <c9adfbda-b78a-405a-a691-9f99d7dc2a26@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 06 Mar 2019 09:38:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jean,
 
-Other than the bug Song found in memfd_tag_pins(), I'd like to suggest =
-two quick
-but pedantic changes to mm/filemap.c:
+On 3/5/19 3:56 PM, Jean-Philippe Brucker wrote:
+> On 18/02/2019 13:54, Eric Auger wrote:
+>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>
+>> Device faults detected by IOMMU can be reported outside the IOMMU
+>> subsystem for further processing. This patch introduces
+>> a generic device fault data structure.
+>>
+>> The fault can be either an unrecoverable fault or a page request,
+>> also referred to as a recoverable fault.
+>>
+>> We only care about non internal faults that are likely to be reported
+>> to an external subsystem.
+>>
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> ---
+>>
+>> v3 -> v4:
+>> - use a union containing aither an unrecoverable fault or a page
+>>   request message. Move the device private data in the page request
+>>   structure. Reshuffle the fields and use flags.
+>> - move fault perm attributes to the uapi
+>> - remove a bunch of iommu_fault_reason enum values that were related
+>>   to internal errors
+>> ---
+>>  include/linux/iommu.h      |  47 +++++++++++++++
+>>  include/uapi/linux/iommu.h | 115 +++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 162 insertions(+)
+>>  create mode 100644 include/uapi/linux/iommu.h
+>>
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index e90da6b6f3d1..032d33894723 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/errno.h>
+>>  #include <linux/err.h>
+>>  #include <linux/of.h>
+>> +#include <uapi/linux/iommu.h>
+>>  
+>>  #define IOMMU_READ	(1 << 0)
+>>  #define IOMMU_WRITE	(1 << 1)
+>> @@ -48,6 +49,7 @@ struct bus_type;
+>>  struct device;
+>>  struct iommu_domain;
+>>  struct notifier_block;
+>> +struct iommu_fault_event;
+>>  
+>>  /* iommu fault flags */
+>>  #define IOMMU_FAULT_READ	0x0
+>> @@ -55,6 +57,7 @@ struct notifier_block;
+>>  
+>>  typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
+>>  			struct device *, unsigned long, int, void *);
+>> +typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *, void *);
+>>  
+>>  struct iommu_domain_geometry {
+>>  	dma_addr_t aperture_start; /* First address that can be mapped    */
+>> @@ -243,6 +246,49 @@ struct iommu_device {
+>>  	struct device *dev;
+>>  };
+>>  
+>> +/**
+>> + * struct iommu_fault_event - Generic per device fault data
+>> + *
+>> + * - PCI and non-PCI devices
+>> + * - Recoverable faults (e.g. page request), information based on PCI ATS
+>> + *   and PASID spec.
+> 
+> "for example information based on PCI PRI and PASID extensions"? ATS+PRI
+> have been integrated into the main spec, and only PRI is relevant here.
+> 
+>> + * - Un-recoverable faults of device interest
+> 
+> "of interest to device drivers"?
 
-Though not modified in this patch, in line 284, the parenthesis should =
-be moved
-to after the period:
+Simplified/Replaced by
+"
+* struct iommu_fault_event - Generic fault event
+ *
+ * Can represent recoverable faults such as a page requests or
+ * unrecoverable faults such as DMA or IRQ remapping faults.
+"
+> 
+>> + * - DMA remapping and IRQ remapping faults
+>> + *
+>> + * @fault: fault descriptor
+>> + * @iommu_private: used by the IOMMU driver for storing fault-specific
+>> + *                 data. Users should not modify this field before
+>> + *                 sending the fault response.
+>> + */
+>> +struct iommu_fault_event {
+>> +	struct iommu_fault fault;
+>> +	u64 iommu_private;
+>> +};
+>> +
+>> +/**
+>> + * struct iommu_fault_param - per-device IOMMU fault data
+>> + * @dev_fault_handler: Callback function to handle IOMMU faults at device level
+>> + * @data: handler private data
+>> + *
+>> + */
+>> +struct iommu_fault_param {
+>> +	iommu_dev_fault_handler_t handler;
+>> +	void *data;
+>> +};
+>> +
+>> +/**
+>> + * struct iommu_param - collection of per-device IOMMU data
+>> + *
+>> + * @fault_param: IOMMU detected device fault reporting data
+>> + *
+>> + * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
+>> + *	struct iommu_group	*iommu_group;
+>> + *	struct iommu_fwspec	*iommu_fwspec;
+>> + */
+>> +struct iommu_param {
+>> +	struct iommu_fault_param *fault_param;
+>> +};
+>> +
+>>  int  iommu_device_register(struct iommu_device *iommu);
+>>  void iommu_device_unregister(struct iommu_device *iommu);
+>>  int  iommu_device_sysfs_add(struct iommu_device *iommu,
+>> @@ -418,6 +464,7 @@ struct iommu_ops {};
+>>  struct iommu_group {};
+>>  struct iommu_fwspec {};
+>>  struct iommu_device {};
+>> +struct iommu_fault_param {};
+>>  
+>>  static inline bool iommu_present(struct bus_type *bus)
+>>  {
+>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+>> new file mode 100644
+>> index 000000000000..7ebf23ed6ccb
+>> --- /dev/null
+>> +++ b/include/uapi/linux/iommu.h
+>> @@ -0,0 +1,115 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> +/*
+>> + * IOMMU user API definitions
+>> + */
+>> +
+>> +#ifndef _UAPI_IOMMU_H
+>> +#define _UAPI_IOMMU_H
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +/*  Generic fault types, can be expanded IRQ remapping fault */
+>> +enum iommu_fault_type {
+>> +	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
+>> +	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
+>> +};
+>> +
+>> +enum iommu_fault_reason {
+>> +	IOMMU_FAULT_REASON_UNKNOWN = 0,
+>> +
+>> +	/* Could not access the PASID table (fetch caused external abort) */
+>> +	IOMMU_FAULT_REASON_PASID_FETCH,
+>> +
+>> +	/* pasid entry is invalid or has configuration errors */
+>> +	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
+>> +
+>> +	/*
+>> +	 * PASID is out of range (e.g. exceeds the maximum PASID
+>> +	 * supported by the IOMMU) or disabled.
+>> +	 */
+>> +	IOMMU_FAULT_REASON_PASID_INVALID,
+>> +
+>> +	/*
+>> +	 * An external abort occurred fetching (or updating) a translation
+>> +	 * table descriptor
+>> +	 */
+>> +	IOMMU_FAULT_REASON_WALK_EABT,
+>> +
+>> +	/*
+>> +	 * Could not access the page table entry (Bad address),
+>> +	 * actual translation fault
+>> +	 */
+>> +	IOMMU_FAULT_REASON_PTE_FETCH,
+>> +
+>> +	/* Protection flag check failed */
+>> +	IOMMU_FAULT_REASON_PERMISSION,
+>> +
+>> +	/* access flag check failed */
+>> +	IOMMU_FAULT_REASON_ACCESS,
+>> +
+>> +	/* Output address of a translation stage caused Address Size fault */
+>> +	IOMMU_FAULT_REASON_OOR_ADDRESS,
+>> +};
+>> +
+>> +/**
+>> + * Unrecoverable fault data
+>> + * @reason: reason of the fault
+>> + * @addr: offending page address
+>> + * @fetch_addr: address that caused a fetch abort, if any
+>> + * @pasid: contains process address space ID, used in shared virtual memory
+>> + * @perm: Requested permission access using by the incoming transaction
+>> + *	IOMMU_FAULT_READ, IOMMU_FAULT_WRITE
+> 
+> Stale comment
+removed
+> 
+>> + */
+>> +struct iommu_fault_unrecoverable {
+>> +	__u32	reason; /* enum iommu_fault_reason */
+>> +#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
+>> +#define IOMMU_FAULT_UNRECOV_PERM_VALID		(1 << 1)
+> 
+> Not needed, since @perm is already a bitfield
+not exactly, READ is encoded as 0. We need to differentiate read fault
+from no perm provided. However if I follow your recommendation below and
+transform the READ FAULT into a set bit this makes sense.
 
- * modified.) The function expects only THP head pages to be present in =
-the
+> 
+>> +#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 2)
+>> +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 3)
+>> +	__u32	flags;
+>> +	__u32	pasid;
+>> +#define IOMMU_FAULT_PERM_WRITE	(1 << 0) /* write */
+>> +#define IOMMU_FAULT_PERM_EXEC	(1 << 1) /* exec */
+>> +#define IOMMU_FAULT_PERM_PRIV	(1 << 2) /* priviledged */
+> 
+> typo "privileged"
+OK
+> 
+>> +#define IOMMU_FAULT_PERM_INST	(1 << 3) /* instruction */
+> 
+> Could you move these outside the struct definition? They are shared with
+> the other struct. And it would be less confusing, from the device driver
+> point of view, to merge those with the existing IOMMU_FAULT_* defines
+> (but moving them to UAPI and making them bits)
+ok I will look at this. Need to check if the read fault value is not
+hardcoded anywhere.
+> 
+>> +	__u32	perm;
+>> +	__u64	addr;
+>> +	__u64	fetch_addr;
+>> +};
+>> +
+>> +/*
+>> + * Page Request data (aka. recoverable fault data)
+>> + * @flags : encodes whether the pasid is valid and whether this
+>> + * is the last page in group
+>> + * @pasid: pasid
+>> + * @grpid: page request group index
+>> + * @perm: requested page permissions
+>> + * @addr: page address
+>> + */
+>> +struct iommu_fault_page_request {
+>> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT	(1 << 0)
+> 
+> PASID_VALID, to be consistent with the other set of flags?
+OK
+> 
+>> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
+>> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
+>> +	__u32   flags;
+>> +	__u32	pasid;
+>> +	__u32	grpid;
+>> +	__u32	perm;
+>> +	__u64	addr;
+> 
+> Given that we'll be reporting stall faults using this struct, it would
+> be good to have the fetch_addr field and flag here as well.
+OK
+> 
+>> +	__u64	private_data[2];
+>> +};
+>> +
+>> +/**
+>> + * struct iommu_fault - Generic fault data
+>> + *
+>> + * @type contains fault type
+>> + */
+>> +
+>> +struct iommu_fault {
+>> +	__u32	type;   /* enum iommu_fault_type */
+>> +	__u32	reserved;
+>> +	union {
+>> +		struct iommu_fault_unrecoverable event;
+>> +		struct iommu_fault_page_request prm;
+> 
+> What's the 'm' in "prm"? Maybe just "pr"?
+This stands for page request message, I think this is the Intel's naming?
 
-> +		 * Move to the next page in the vector if this is a =
-small page
-> +		 * or the index is of the last page in this compound =
-page).
+Thank you for the review.
 
-A few lines later, there is an extraneous parenthesis, and the comment =
-could be a bit
-clearer.
-
-Might I suggest:
-
-                 * Move to the next page in the vector if this is a =
-PAGESIZE
-                 * page or if the index is of the last PAGESIZE page =
-within
-                 * this compound page.
-
-You can say "base" instead of "PAGESIZE," but "small" seems open to =
-interpretation.
-
-I haven't run across any problems and have been hammering the code for =
-over five days
-without issue; all my testing was with transparent_hugepage/enabled set =
-to
-"always."
-
-Tested-by: William Kucharski <william.kucharski@oracle.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>=
+Eric
+> 
+> Thanks,
+> Jean
+> 
+>> +	};
+>> +};
+>> +#endif /* _UAPI_IOMMU_H */
+>>
+> 
