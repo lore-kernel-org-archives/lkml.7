@@ -2,265 +2,476 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DD6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F52C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8A020652
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E96321019
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="C87bB7RU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730703AbfCFSHy (ORCPT
+        id S1730713AbfCFSJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:07:54 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:21061 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbfCFSHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:07:54 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3F5683092658;
-        Wed,  6 Mar 2019 18:07:53 +0000 (UTC)
-Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 91CACA4F84;
-        Wed,  6 Mar 2019 18:07:51 +0000 (UTC)
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
-        riel@surriel.com, david@redhat.com, dodgen@google.com,
-        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
-        alexander.duyck@gmail.com
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <20190306110501-mutt-send-email-mst@kernel.org>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
-Date:   Wed, 6 Mar 2019 13:07:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190306110501-mutt-send-email-mst@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="JxYzMsx6no2b159rO7jMVpujrTFgIS6rJ"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 06 Mar 2019 18:07:53 +0000 (UTC)
+        Wed, 6 Mar 2019 13:09:39 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43897 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfCFSJj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 13:09:39 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m35so11141807ede.10
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=biLQh5l734qE48460EHEU4FVnZpUsBbZHO4mHn49GII=;
+        b=C87bB7RU1ozp+GOwCrLwZgbqacXTuK1xpdA9GoITwpZOiVcK65Qg3Tshuzgeku9e7U
+         IPTRr7zEvIVKpCFV3Yw4eY7RENCVRhYW83nqEzGvRn/CnEXbGt5/KCDUdyBAMKco/oHn
+         M3V/AyKW3+WcuWoAQTjteZIuM24OxRP+hHA57qlykFq/IhMiLzIOOinTXnTsAePeTfKn
+         1TZvRTXB8r7FROJAuPTl8QYgPd7vxD7NeUXYiojioGta+U28nrtzW25T1Zn+BXKOV49q
+         GiA3DtdH0Mx7GTICj7lk4elNkCYqDvtHdZ+rPHcI32pYFvnA0HRmO1oNBdlMyyNLOfkQ
+         BYWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=biLQh5l734qE48460EHEU4FVnZpUsBbZHO4mHn49GII=;
+        b=EKDS3CEAK/Xa2ToHIRjTOZ7647APt8hAgLq8zxAlmAmpEIuvkfWY8j596vFM1bUCtx
+         bKxrCpvhHAJGuuFgPq3BHgKqC+04H5q30WFWZh84z/SB0xKJELkTkwXkrQJpzloEaWWU
+         L5oj3x6jksQtTidBYiI/JzobXAbRpNQj7XlYYwiGU/eIMtjObQKi5R0D6rD59RszLPpM
+         Rzy0TwmHAWbRa2l902OoJ3QfG6yykajM9pmbZE3KhF1O1t4U3J/N1KjuKgmMFuWuctdw
+         aMLV4dHmLGmA4tWxmh7PcAkNR/ab6YeGPRt74HoqcUfiwM4UOctCbhQWkKNJc45+MNdG
+         jwfw==
+X-Gm-Message-State: APjAAAWuZOmS/WrKDyZR5SXtUSCygRk6dK+RIahbOBRhmXdOzrLICF/L
+        4NktqdlnhIAitnLbwzyIXLVqtwo6AMk=
+X-Google-Smtp-Source: APXvYqxf9dhLM5y0w/VJrZY1WFe1vnFpw2JRKurgNKqQYv4/scegPQxpusVSYHTzFy6038W+q7e7cw==
+X-Received: by 2002:aa7:dc46:: with SMTP id g6mr24907957edu.162.1551895776403;
+        Wed, 06 Mar 2019 10:09:36 -0800 (PST)
+Received: from [10.83.32.113] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id y45sm619598edd.33.2019.03.06.10.09.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 10:09:35 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH 4/4] iommu/vt-d: Remove lazy allocation of domains
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <06aa306a-278a-a22f-7718-200f6f9e5e87@linux.intel.com>
+Date:   Wed, 6 Mar 2019 18:08:34 +0000
+Cc:     iommu@lists.linux-foundation.org, Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A8A495EE-D3EA-4D84-AB92-9B4742E6E500@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <2C75F46E-78FE-45E9-9E7D-280B3138EA13@arista.com>
+ <F83456DB-81DD-4E9B-9204-12ED9972D2FA@arista.com>
+ <7F6B5F6A-EC76-4A9F-8EB6-AEAB9994D91A@arista.com>
+ <fdd74d83-acd4-23da-6c0c-b52573d999bb@linux.intel.com>
+ <4B054B40-0B13-4F1E-87D6-8D2F072B5B9C@arista.com>
+ <06aa306a-278a-a22f-7718-200f6f9e5e87@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---JxYzMsx6no2b159rO7jMVpujrTFgIS6rJ
-Content-Type: multipart/mixed; boundary="gsK4cdQ2SmPsmm3JcrDh3layyISQw5H9P";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
- wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
- david@redhat.com, dodgen@google.com, konrad.wilk@oracle.com,
- dhildenb@redhat.com, aarcange@redhat.com, alexander.duyck@gmail.com
-Message-ID: <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <20190306110501-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190306110501-mutt-send-email-mst@kernel.org>
+Hey,
 
---gsK4cdQ2SmPsmm3JcrDh3layyISQw5H9P
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+> On 6 Mar 2019, at 07:00, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>=20
+> Hi,
+>=20
+> On 3/5/19 7:46 PM, James Sewart wrote:
+>> Hey Lu,
+>>> On 5 Mar 2019, at 06:59, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>=20
+>>> Hi,
+>>>=20
+>>> It's hard for me to understand why do we remove the rmrr related
+>>> code in this patch.
+>> The RMRR code removed here requires the lazy allocation of domains to
+>> exist, as it is run before iommu.c would assign IOMMU groups and =
+attach a
+>> domain. Before patch 3, removing this code would mean the RMRR =
+regions are
+>> never mapped for a domain: iommu.c will allocate a default domain for =
+the
+>> group that a device is about to be put in, it will attach the domain =
+to
+>> the device, then for each region returned by get_resv_regions it will
+>> create an identity map, this is where the RMRRs are setup for the =
+default
+>> domain. >
+>>>=20
+>>> And, now we have two places to hold a domain for a device: group and
+>>> dev->info. We can consider to optimize the use of per device iommu
+>>> arch data. This should be later work anyway.
+>>>=20
+>>> More comments inline.
+>>>=20
+>>> On 3/4/19 11:47 PM, James Sewart wrote:
+>>>> The generic IOMMU code will allocate and attach a dma ops domain to =
+each
+>>>> device that comes online, replacing any lazy allocated domain. =
+Removes
+>>>> RMRR application at iommu init time as we won't have a domain =
+attached
+>>>> to any device. iommu.c will do this after attaching a device using
+>>>> create_direct_mappings.
+>>>> Signed-off-by: James Sewart <jamessewart@arista.com>
+>>>> ---
+>>>>  drivers/iommu/intel-iommu.c | 202 =
+++----------------------------------
+>>>>  1 file changed, 8 insertions(+), 194 deletions(-)
+>>>> diff --git a/drivers/iommu/intel-iommu.c =
+b/drivers/iommu/intel-iommu.c
+>>>> index 71cd6bbfec05..282257e2628d 100644
+>>>> --- a/drivers/iommu/intel-iommu.c
+>>>> +++ b/drivers/iommu/intel-iommu.c
+>>>> @@ -2595,118 +2595,6 @@ static struct dmar_domain =
+*dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>>>>  	return domain;
+>>>>  }
+>>>>  -static int get_last_alias(struct pci_dev *pdev, u16 alias, void =
+*opaque)
+>>>> -{
+>>>> -	*(u16 *)opaque =3D alias;
+>>>> -	return 0;
+>>>> -}
+>>>> -
+>>>> -static struct dmar_domain *find_or_alloc_domain(struct device =
+*dev, int gaw)
+>>>> -{
+>>>> -	struct device_domain_info *info =3D NULL;
+>>>> -	struct dmar_domain *domain =3D NULL;
+>>>> -	struct intel_iommu *iommu;
+>>>> -	u16 dma_alias;
+>>>> -	unsigned long flags;
+>>>> -	u8 bus, devfn;
+>>>> -
+>>>> -	iommu =3D device_to_iommu(dev, &bus, &devfn);
+>>>> -	if (!iommu)
+>>>> -		return NULL;
+>>>> -
+>>>> -	if (dev_is_pci(dev)) {
+>>>> -		struct pci_dev *pdev =3D to_pci_dev(dev);
+>>>> -
+>>>> -		pci_for_each_dma_alias(pdev, get_last_alias, =
+&dma_alias);
+>>>> -
+>>>> -		spin_lock_irqsave(&device_domain_lock, flags);
+>>>> -		info =3D =
+dmar_search_domain_by_dev_info(pci_domain_nr(pdev->bus),
+>>>> -						      =
+PCI_BUS_NUM(dma_alias),
+>>>> -						      dma_alias & 0xff);
+>>>> -		if (info) {
+>>>> -			iommu =3D info->iommu;
+>>>> -			domain =3D info->domain;
+>>>> -		}
+>>>> -		spin_unlock_irqrestore(&device_domain_lock, flags);
+>>>> -
+>>>> -		/* DMA alias already has a domain, use it */
+>>>> -		if (info)
+>>>> -			goto out;
+>>>> -	}
+>>>> -
+>>>> -	/* Allocate and initialize new domain for the device */
+>>>> -	domain =3D alloc_domain(0);
+>>>> -	if (!domain)
+>>>> -		return NULL;
+>>>> -	if (domain_init(domain, iommu, gaw)) {
+>>>> -		domain_exit(domain);
+>>>> -		return NULL;
+>>>> -	}
+>>>> -
+>>>> -out:
+>>>> -
+>>>> -	return domain;
+>>>> -}
+>>>> -
+>>>> -static struct dmar_domain *set_domain_for_dev(struct device *dev,
+>>>> -					      struct dmar_domain =
+*domain)
+>>>> -{
+>>>> -	struct intel_iommu *iommu;
+>>>> -	struct dmar_domain *tmp;
+>>>> -	u16 req_id, dma_alias;
+>>>> -	u8 bus, devfn;
+>>>> -
+>>>> -	iommu =3D device_to_iommu(dev, &bus, &devfn);
+>>>> -	if (!iommu)
+>>>> -		return NULL;
+>>>> -
+>>>> -	req_id =3D ((u16)bus << 8) | devfn;
+>>>> -
+>>>> -	if (dev_is_pci(dev)) {
+>>>> -		struct pci_dev *pdev =3D to_pci_dev(dev);
+>>>> -
+>>>> -		pci_for_each_dma_alias(pdev, get_last_alias, =
+&dma_alias);
+>>>> -
+>>>> -		/* register PCI DMA alias device */
+>>>> -		if (req_id !=3D dma_alias) {
+>>>> -			tmp =3D dmar_insert_one_dev_info(iommu, =
+PCI_BUS_NUM(dma_alias),
+>>>> -					dma_alias & 0xff, NULL, domain);
+>>>> -
+>>>> -			if (!tmp || tmp !=3D domain)
+>>>> -				return tmp;
+>>>> -		}
+>>>> -	}
+>>>> -
+>>>> -	tmp =3D dmar_insert_one_dev_info(iommu, bus, devfn, dev, =
+domain);
+>>>> -	if (!tmp || tmp !=3D domain)
+>>>> -		return tmp;
+>>>> -
+>>>> -	return domain;
+>>>> -}
+>>>> -
+>>>> -static struct dmar_domain *get_domain_for_dev(struct device *dev, =
+int gaw)
+>>>> -{
+>>>> -	struct dmar_domain *domain, *tmp;
+>>>> -
+>>>> -	domain =3D find_domain(dev);
+>>>> -	if (domain)
+>>>> -		goto out;
+>>>> -
+>>>> -	domain =3D find_or_alloc_domain(dev, gaw);
+>>>> -	if (!domain)
+>>>> -		goto out;
+>>>> -
+>>>> -	tmp =3D set_domain_for_dev(dev, domain);
+>>>> -	if (!tmp || domain !=3D tmp) {
+>>>> -		domain_exit(domain);
+>>>> -		domain =3D tmp;
+>>>> -	}
+>>>> -
+>>>> -out:
+>>>> -
+>>>> -	return domain;
+>>>> -}
+>>>> -
+>>>>  static int iommu_domain_identity_map(struct dmar_domain *domain,
+>>>>  				     unsigned long long start,
+>>>>  				     unsigned long long end)
+>>>> @@ -2779,7 +2667,7 @@ static int iommu_prepare_identity_map(struct =
+device *dev,
+>>>>  	struct dmar_domain *domain;
+>>>>  	int ret;
+>>>>  -	domain =3D get_domain_for_dev(dev, =
+DEFAULT_DOMAIN_ADDRESS_WIDTH);
+>>>> +	domain =3D find_domain(dev);
+>>>>  	if (!domain)
+>>>>  		return -ENOMEM;
+>>>>  @@ -3301,11 +3189,9 @@ static int copy_translation_tables(struct =
+intel_iommu *iommu)
+>>>>  static int __init init_dmars(void)
+>>>>  {
+>>>>  	struct dmar_drhd_unit *drhd;
+>>>> -	struct dmar_rmrr_unit *rmrr;
+>>>>  	bool copied_tables =3D false;
+>>>> -	struct device *dev;
+>>>>  	struct intel_iommu *iommu;
+>>>> -	int i, ret;
+>>>> +	int ret;
+>>>>    	/*
+>>>>  	 * for each drhd
+>>>> @@ -3466,32 +3352,6 @@ static int __init init_dmars(void)
+>>>>  			goto free_iommu;
+>>>>  		}
+>>>>  	}
+>>>> -	/*
+>>>> -	 * For each rmrr
+>>>> -	 *   for each dev attached to rmrr
+>>>> -	 *   do
+>>>> -	 *     locate drhd for dev, alloc domain for dev
+>>>> -	 *     allocate free domain
+>>>> -	 *     allocate page table entries for rmrr
+>>>> -	 *     if context not allocated for bus
+>>>> -	 *           allocate and init context
+>>>> -	 *           set present in root table for this bus
+>>>> -	 *     init context with domain, translation etc
+>>>> -	 *    endfor
+>>>> -	 * endfor
+>>>> -	 */
+>>>> -	pr_info("Setting RMRR:\n");
+>>>> -	for_each_rmrr_units(rmrr) {
+>>>> -		/* some BIOS lists non-exist devices in DMAR table. */
+>>>> -		for_each_active_dev_scope(rmrr->devices, =
+rmrr->devices_cnt,
+>>>> -					  i, dev) {
+>>>> -			ret =3D iommu_prepare_rmrr_dev(rmrr, dev);
+>>>> -			if (ret)
+>>>> -				pr_err("Mapping reserved region =
+failed\n");
+>>>> -		}
+>>>> -	}
+>>>> -
+>>>> -	iommu_prepare_isa();
+>>>=20
+>>> Why do you want to remove this segment of code?
+>> This will only work if the lazy allocation of domains exists, these
+>> mappings will disappear once a default domain is attached to a device =
+and
+>> then remade by iommu_group_create_direct_mappings. This code is =
+redundant
+>> and removing it allows us to remove all the lazy allocation logic.
+>=20
+> No exactly.
+>=20
+> We need to setup the rmrr mapping before enabling dma remapping,
+> otherwise, there will be a window after dma remapping enabling and
+> rmrr getting mapped, during which people might see dma faults.
 
+Do you think this patch instead should be a refactoring to simplify this =
+initial domain setup before the default domain takes over? It seems like =
+duplicated effort to have both lazy allocated domains and externally =
+managed domains. We could allocate a domain here for any devices with =
+RMRR and call get_resv_regions to avoid duplicating RMRR loop.
 
-On 3/6/19 11:09 AM, Michael S. Tsirkin wrote:
-> On Wed, Mar 06, 2019 at 10:50:42AM -0500, Nitesh Narayan Lal wrote:
->> The following patch-set proposes an efficient mechanism for handing fr=
-eed memory between the guest and the host. It enables the guests with no =
-page cache to rapidly free and reclaims memory to and from the host respe=
-ctively.
->>
->> Benefit:
->> With this patch-series, in our test-case, executed on a single system =
-and single NUMA node with 15GB memory, we were able to successfully launc=
-h 5 guests(each with 5 GB memory) when page hinting was enabled and 3 wit=
-hout it. (Detailed explanation of the test procedure is provided at the b=
-ottom under Test - 1).
->>
->> Changelog in v9:
->> 	* Guest free page hinting hook is now invoked after a page has been m=
-erged in the buddy.
->>         * Free pages only with order FREE_PAGE_HINTING_MIN_ORDER(curre=
-ntly defined as MAX_ORDER - 1) are captured.
->> 	* Removed kthread which was earlier used to perform the scanning, iso=
-lation & reporting of free pages.
->> 	* Pages, captured in the per cpu array are sorted based on the zone n=
-umbers. This is to avoid redundancy of acquiring zone locks.
->>         * Dynamically allocated space is used to hold the isolated gue=
-st free pages.
->>         * All the pages are reported asynchronously to the host via vi=
-rtio driver.
->>         * Pages are returned back to the guest buddy free list only wh=
-en the host response is received.
->>
->> Pending items:
->>         * Make sure that the guest free page hinting's current impleme=
-ntation doesn't break hugepages or device assigned guests.
->> 	* Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side support. (I=
-t is currently missing)
->>         * Compare reporting free pages via vring with vhost.
->>         * Decide between MADV_DONTNEED and MADV_FREE.
->> 	* Analyze overall performance impact due to guest free page hinting.
->> 	* Come up with proper/traceable error-message/logs.
->>
->> Tests:
->> 1. Use-case - Number of guests we can launch
->>
->> 	NUMA Nodes =3D 1 with 15 GB memory
->> 	Guest Memory =3D 5 GB
->> 	Number of cores in guest =3D 1
->> 	Workload =3D test allocation program allocates 4GB memory, touches it=
- via memset and exits.
->> 	Procedure =3D
->> 	The first guest is launched and once its console is up, the test allo=
-cation program is executed with 4 GB memory request (Due to this the gues=
-t occupies almost 4-5 GB of memory in the host in a system without page h=
-inting). Once this program exits at that time another guest is launched i=
-n the host and the same process is followed. We continue launching the gu=
-ests until a guest gets killed due to low memory condition in the host.
->>
->> 	Results:
->> 	Without hinting =3D 3
->> 	With hinting =3D 5
->>
->> 2. Hackbench
->> 	Guest Memory =3D 5 GB=20
->> 	Number of cores =3D 4
->> 	Number of tasks		Time with Hinting	Time without Hinting
->> 	4000			19.540			17.818
->>
-> How about memhog btw?
-> Alex reported:
->
-> 	My testing up till now has consisted of setting up 4 8GB VMs on a syst=
-em
-> 	with 32GB of memory and 4GB of swap. To stress the memory on the syste=
-m I
-> 	would run "memhog 8G" sequentially on each of the guests and observe h=
-ow
-> 	long it took to complete the run. The observed behavior is that on the=
+>=20
+>> iommu_prepare_isa does need moving to get_resv_regions for its =
+mappings to
+>> be applied, this will need some refactoring.
+>=20
+> Yes, agree.
+>=20
+>>>=20
+>>>>    domains_done:
+>>>>  @@ -3580,53 +3440,6 @@ static unsigned long =
+intel_alloc_iova(struct device *dev,
+>>>>  	return iova_pfn;
+>>>>  }
+>>>>  -struct dmar_domain *get_valid_domain_for_dev(struct device *dev)
+>>>> -{
+>>>> -	struct dmar_domain *domain, *tmp;
+>>>> -	struct dmar_rmrr_unit *rmrr;
+>>>> -	struct device *i_dev;
+>>>> -	int i, ret;
+>>>> -
+>>>> -	domain =3D find_domain(dev);
+>>>> -	if (domain)
+>>>> -		goto out;
+>>>> -
+>>>> -	domain =3D find_or_alloc_domain(dev, =
+DEFAULT_DOMAIN_ADDRESS_WIDTH);
+>>>> -	if (!domain)
+>>>> -		goto out;
+>>>> -
+>>>> -	/* We have a new domain - setup possible RMRRs for the device */
+>>>> -	rcu_read_lock();
+>>>> -	for_each_rmrr_units(rmrr) {
+>>>> -		for_each_active_dev_scope(rmrr->devices, =
+rmrr->devices_cnt,
+>>>> -					  i, i_dev) {
+>>>> -			if (i_dev !=3D dev)
+>>>> -				continue;
+>>>> -
+>>>> -			ret =3D domain_prepare_identity_map(dev, domain,
+>>>> -							  =
+rmrr->base_address,
+>>>> -							  =
+rmrr->end_address);
+>>>> -			if (ret)
+>>>> -				dev_err(dev, "Mapping reserved region =
+failed\n");
+>>>=20
+>>> We can't simply remove this segment of code, right? At least it =
+should
+>>> be moved to the domain allocation interface.
+>> iommu_group_create_direct_mappings will take care of these mappings, =
+this
+>> code is not used once an externally managed domain(group domain) is
+>> attached to the device.
+>=20
+> Yes, this seems to be duplicated even with lazy domain allocation.
+>=20
+> Best regards,
+> Lu Baolu
+>=20
+>>>=20
+>>>> -		}
+>>>> -	}
+>>>> -	rcu_read_unlock();
+>>>> -
+>>>> -	tmp =3D set_domain_for_dev(dev, domain);
+>>>> -	if (!tmp || domain !=3D tmp) {
+>>>> -		domain_exit(domain);
+>>>> -		domain =3D tmp;
+>>>> -	}
+>>>> -
+>>>> -out:
+>>>> -
+>>>> -	if (!domain)
+>>>> -		pr_err("Allocating domain for %s failed\n", =
+dev_name(dev));
+>>>> -
+>>>> -
+>>>> -	return domain;
+>>>> -}
+>>>> -
+>>>>  /* Check if the dev needs to go through non-identity map and unmap =
+process.*/
+>>>>  static int iommu_no_mapping(struct device *dev)
+>>>>  {
+>>>> @@ -3689,7 +3502,7 @@ static dma_addr_t __intel_map_page(struct =
+device *dev, struct page *page,
+>>>>  	if (iommu_no_mapping(dev))
+>>>>  		return paddr;
+>>>>  -	domain =3D get_valid_domain_for_dev(dev);
+>>>> +	domain =3D find_domain(dev);
+>>>>  	if (!domain)
+>>>>  		return DMA_MAPPING_ERROR;
+>>>>  @@ -3753,7 +3566,8 @@ static void intel_unmap(struct device *dev, =
+dma_addr_t dev_addr, size_t size)
+>>>>  		return;
+>>>>    	domain =3D find_domain(dev);
+>>>> -	BUG_ON(!domain);
+>>>> +	if (!domain)
+>>>> +		return;
+>>>> =20
+>>>=20
+>>> This is not related to this patch. Let's do it in a separated patch.
+>>>=20
+>>>>  	iommu =3D domain_get_iommu(domain);
+>>>>  @@ -3899,7 +3713,7 @@ static int intel_map_sg(struct device *dev, =
+struct scatterlist *sglist, int nele
+>>>>  	if (iommu_no_mapping(dev))
+>>>>  		return intel_nontranslate_map_sg(dev, sglist, nelems, =
+dir);
+>>>>  -	domain =3D get_valid_domain_for_dev(dev);
+>>>> +	domain =3D find_domain(dev);
+>>>>  	if (!domain)
+>>>>  		return 0;
+>>>>  @@ -5377,9 +5191,9 @@ int intel_iommu_enable_pasid(struct =
+intel_iommu *iommu, struct intel_svm_dev *sd
+>>>>  	u64 ctx_lo;
+>>>>  	int ret;
+>>>>  -	domain =3D get_valid_domain_for_dev(sdev->dev);
+>>>> +	domain =3D find_domain(sdev->dev);
+>>>>  	if (!domain)
+>>>> -		return -EINVAL;
+>>>> +		return -ENOMEM;
+>>>=20
+>>> This is not related to this patch. Let's do it in a separated patch.
+>>>=20
+>>>>    	spin_lock_irqsave(&device_domain_lock, flags);
+>>>>  	spin_lock(&iommu->lock);
+>>>=20
+>>> Best regards,
+>>> Lu Baolu
 
-> 	systems with these patches applied in both the guest and on the host I=
- was
-> 	able to complete the test with a time of 5 to 7 seconds per guest. On =
-a
-> 	system without these patches the time ranged from 7 to 49 seconds per
-> 	guest. I am assuming the variability is due to time being spent writin=
-g
-> 	pages out to disk in order to free up space for the guest.
->
-Here are the results:
+Cheers,
+James.
 
-Procedure: 3 Guests of size 5GB is launched on a single NUMA node with
-total memory of 15GB and no swap. In each of the guest, memhog is run
-with 5GB. Post-execution of memhog, Host memory usage is monitored by
-using Free command.
-
-Without Hinting:
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
-=C2=A0 Time of execution=C2=A0=C2=A0=C2=A0 Host used memory
-Guest 1:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 45 seconds=C2=A0=C2=A0=C2=A0=
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 5.4 GB
-Guest 2:=C2=A0=C2=A0 =C2=A0=C2=A0 =C2=A0 45 seconds=C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0 =C2=A0=C2=A0 =C2=A0 10 GB
-Guest 3:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 1=C2=A0 minute=C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0 =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 15 GB
-
-With Hinting:
-=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0 =C2=A0 Ti=
-me of execution =C2=A0=C2=A0=C2=A0 Host used memory
-Guest 1:=C2=A0=C2=A0 =C2=A0=C2=A0 =C2=A0 49 seconds=C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 2.4 GB
-Guest 2:=C2=A0=C2=A0 =C2=A0=C2=A0 =C2=A0 40 seconds=C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0 =C2=A0=C2=A0 =C2=A0 4.3 GB
-Guest 3:=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 50 seconds=C2=A0=C2=A0=C2=A0=
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 6.3 GB
-
---=20
-Regards
-Nitesh
-
-
---gsK4cdQ2SmPsmm3JcrDh3layyISQw5H9P--
-
---JxYzMsx6no2b159rO7jMVpujrTFgIS6rJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyADHYACgkQo4ZA3AYy
-ozkwHxAAwWuIcoLYbXpaVTgkAQjS58cpp8y0fUeNTTCp9lLte05X7trXtbU84Ilm
-BGrPLyzl11WCPjC8SQ9UjbDq+1SbGTmxMNzEOKumXWbfNQk01B/1LK6NKdLi9Y+f
-Cu7Q7/p9wiBe1lLVPBsl2E6MgP+TDUkT1EVxG78d7XcCKeOQjB/TobGMRfrohyEo
-8CaWFy5q6Pm3+vBXbfdec5hdSJwd6Sc8g1M0Axw9RWvEqaVtuhF1Z7Henm3BvU2R
-89oNUZmGM6rHmdhKKqVcrV23WNLvSOobLwZHexydU/pHJfYtKzt8EBr+SMkRXUgK
-aKVuoZIMJPfJBtyE0CzSp33b738A9yatb6m0KOu0kKrwJ8YzgPI1F1T/Bwo0LxZ0
-MRn3Qpm0J9xOOGeDRW+rPDVvWhwVX3/CnkcCTUFjzLV213kOwVt5kOmeg9oBw5Ui
-iyw+GE8u2W/mK+hPiZKPbH4TIS7TPddftyNO2OdZLM7jccJcXhkEHYPF446lV8c7
-N9iCpGxEUXjIBDvmZX0mtBUkX0eIT838HgphfyOsDzsPtEcd2IkfxMUyUL8Qtj53
-0Xt277DRWmw3euqjCsqTm1IfSO7zTB6ljxqK9YPFBSUziYnDEDUbIwBoDg08aCXD
-uBwnS9/DqS40HLXFUnDodu/c+ZaDr1jcuLh/clu8wzLLlOpNSFA=
-=J3yz
------END PGP SIGNATURE-----
-
---JxYzMsx6no2b159rO7jMVpujrTFgIS6rJ--
