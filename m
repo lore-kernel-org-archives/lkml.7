@@ -5,60 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50BBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B2CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91BE720663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0DB20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gYTOWof+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i/MjTXb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfCGAAD (ORCPT
+        id S1726579AbfCGAAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:00:03 -0500
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:53005 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGAAB (ORCPT
+        Wed, 6 Mar 2019 19:00:07 -0500
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:44158 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfCGAAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:00:01 -0500
-Received: by mail-qk1-f201.google.com with SMTP id k21so11618578qkg.19
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:00 -0800 (PST)
+        Wed, 6 Mar 2019 19:00:03 -0500
+Received: by mail-qt1-f202.google.com with SMTP id c9so13386596qte.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=EgD7M29mELKbRq1NWt6DNZZmbYMYEW26ecUsjbEvlVs=;
-        b=gYTOWof+SnJgMS2LMqTCUBSp6zvC0gCXrCSqXNr50gmxewWj8i1zMYIleOGZoVxMPQ
-         LF37ClnmwpqbzLw2xE8kWW8XNteLVIsCet67X232y7QE+kb57re8nGck768NviwV1t5l
-         fJecS05fRNQ9WKgzKmIbkiqL82Z1S8X8Npca0z9r7YkeAgAo8zFrxNeTjgbZqXxrCkcm
-         d5+Jr2N6cwpx+0SPxEEmQS6+b1WW3yrKkoGtM7svV8BvQzcAOUIWyFSYyYDHqfdpPkB7
-         D/Mk96oFbG+YOC/1Yyf5ws/IFrQ2VPf7EEq49q2+f/jbjKa3lmOtkfTb8PWvjD0Pp2pF
-         U5mg==
+        bh=RLZYCznt91X7Gql2FLJuA+D6Xq8z59q436/ddkparrE=;
+        b=i/MjTXb7CbOG6UdkkS0vRNZvfV6iqT+SJUy26kVbxvGCwjfn8jRCtI1zQO9vj5H2ak
+         apfgI4/baSkKebqMBSvCMvYYCd4lYbo5ztim2Tyika6/fTfhgxfiyzwCe6U8SXuxUH/A
+         QMXQD8oXCYd6+d5dhpHO9MT8ekx8Nhcac8L3GeVKmleZ3xJNOFmMJqTs6o1aMOa/SvMi
+         gfGhsbLGZLzEnc36jFQIkNfeaKcX77AgJBYVu2/DvzZJ1oXI4NCpFzcTHoMVU38SfSl7
+         DH+AH9U/Yw0/Mu1nSxhw0CQM0XKEcmhK6zNTjbEdD41qts+TJNBsuwJNo9oPQByKvGkt
+         DkxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=EgD7M29mELKbRq1NWt6DNZZmbYMYEW26ecUsjbEvlVs=;
-        b=jrt5bIJIuudbyCS+ArlW0aaJjTij4yzaaVrG9tZ7vknopxGPVKt6gXBD11L2wDi2Vl
-         GqHk6ns6Jp1gh62QyBleHy6BW9I4DvNjo/ntDkZgeH00uIbmGIos1jvgeT/i6aqSzOMu
-         YWORNs5elFKPloRd/bi9zCiAuMsV64a6aNPbUtnFruFviTkoKN0S+Gg0Y5DW44sPr0hM
-         vpz7ePGlP6iuQFykGBEmTWL55+GFAMZeehPOFfbLspFwxvncP9++RFotdgq5iaXq9f9S
-         iLBJSDVYiCjttvo90qnfIGXcLQhTVwzaZAXrL6UpBG9kF3E8s5spujvVrTkK27bLzhcN
-         +FvA==
-X-Gm-Message-State: APjAAAV7xMR0BVWjFZ0FXCRRaL+KWYmh9Fpe8N4pYKMzh6a4yRJKjRXZ
-        K3L942Pf7nm2hEBktVf9ulh33UOUATMNkC2AuYNjFQ==
-X-Google-Smtp-Source: APXvYqyMy1TJIWtN1222VFXuk/FGDSDNyZ8044iMtqYU3Zf07qKmx+B/7/pJqqNoAqGr0x0JLQBdkjn8lvYBk6GwiigknA==
-X-Received: by 2002:aed:37c4:: with SMTP id j62mr5900910qtb.19.1551916799883;
- Wed, 06 Mar 2019 15:59:59 -0800 (PST)
-Date:   Wed,  6 Mar 2019 15:58:59 -0800
+        bh=RLZYCznt91X7Gql2FLJuA+D6Xq8z59q436/ddkparrE=;
+        b=e/fTOXdpDxzbG+171Z6UL2Y2q76b5+7Dk4jU5PRbzCH5qJ9BgCgHcChGvotQtwhREi
+         s4YMsaSMgy6TUzgjKrrGiRsu3PYAc+SyEP2K84VGWCYbopr2Ve+CO6EjYQr0JAWWSpGa
+         XYUoLNTBXKpUb0mUmg7WlxWYtUG79HfdCEAhPhTSx5/fcGJ6a3FrHDHqrR1rXCERYDqq
+         Sf84UnJEFicGLOfSxAhkfGaI/d9yiaeSm9pT/QbCHsGHmChcO/15QpIaeXK2azfpRZpJ
+         3V/q/Cxf6JVHc0UCfQy8WxF9X0QpsJHeXR+4FGUGcD0Yn9i8PZWl5yE49jydU3Ws28CK
+         VgIA==
+X-Gm-Message-State: APjAAAXOl7I2aG2ESOjUr7iDYR1ko1NhmPJkKfHixJ7rBq2Ze6TraKlW
+        KNZ1nQY6BBNVMYybZk4rmz/HVWdJwPkUS70Vc0pdWQ==
+X-Google-Smtp-Source: APXvYqyg65IJHTLLH/dejwTsjoNanUPirYo+pqDWCoJN7KCkY2ggEVBCzFT/3DLvioXGAP9kW6hrdz8OII58UGrorWamGQ==
+X-Received: by 2002:a0c:b91c:: with SMTP id u28mr5950718qvf.45.1551916802349;
+ Wed, 06 Mar 2019 16:00:02 -0800 (PST)
+Date:   Wed,  6 Mar 2019 15:59:00 -0800
 In-Reply-To: <20190306235913.6631-1-matthewgarrett@google.com>
-Message-Id: <20190306235913.6631-14-matthewgarrett@google.com>
+Message-Id: <20190306235913.6631-15-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190306235913.6631-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 13/27] x86/msr: Restrict MSR access when the kernel is locked down
+Subject: [PATCH 14/27] ACPI: Limit access to custom_method when the kernel is
+ locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -71,52 +72,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-Writing to MSRs should not be allowed if the kernel is locked down, since
-it could lead to execution of arbitrary code in kernel mode.  Based on a
-patch by Kees Cook.
-
-MSR accesses are logged for the purposes of building up a whitelist as per
-Alan Cox's suggestion.
+custom_method effectively allows arbitrary access to system memory, making
+it possible for an attacker to circumvent restrictions on module loading.
+Disable it if the kernel is locked down.
 
 Signed-off-by: Matthew Garrett <mjg59@srcf.ucam.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
-cc: x86@kernel.org
+cc: linux-acpi@vger.kernel.org
 Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
 ---
- arch/x86/kernel/msr.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/acpi/custom_method.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
-index 4588414e2561..f5a2cf07972f 100644
---- a/arch/x86/kernel/msr.c
-+++ b/arch/x86/kernel/msr.c
-@@ -84,6 +84,11 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
- 	int err = 0;
- 	ssize_t bytes = 0;
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index 4451877f83b6..ac8a90dc7096 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -29,6 +29,9 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 	struct acpi_table_header table;
+ 	acpi_status status;
  
-+	if (kernel_is_locked_down("Direct MSR access")) {
-+		pr_info("Direct access to MSR %x\n", reg);
++	if (kernel_is_locked_down("ACPI custom methods"))
 +		return -EPERM;
-+	}
 +
- 	if (count % 8)
- 		return -EINVAL;	/* Invalid chunk size */
- 
-@@ -135,6 +140,11 @@ static long msr_ioctl(struct file *file, unsigned int ioc, unsigned long arg)
- 			err = -EFAULT;
- 			break;
- 		}
-+		if (kernel_is_locked_down("Direct MSR access")) {
-+			pr_info("Direct access to MSR %x\n", regs[1]); /* Display %ecx */
-+			err = -EPERM;
-+			break;
-+		}
- 		err = wrmsr_safe_regs_on_cpu(cpu, regs);
- 		if (err)
- 			break;
+ 	if (!(*ppos)) {
+ 		/* parse the table header to get the table length */
+ 		if (count <= sizeof(struct acpi_table_header))
 -- 
 2.21.0.352.gf09ad66450-goog
 
