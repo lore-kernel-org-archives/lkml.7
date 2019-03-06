@@ -2,109 +2,149 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC01C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3200C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC4520684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F9zPxo9d"
+	by mail.kernel.org (Postfix) with ESMTP id 83E2820663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfCFPt3 (ORCPT
+        id S1729287AbfCFPuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:49:29 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56424 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfCFPt2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:49:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Wg9YyR9jm3cYOM6tiDzT7E7sgKI2jmCpliy2yz57EwY=; b=F9zPxo9duHtjG3o2oieO4xwBw
-        xYXL8ZtyS+ST44gC/En6Hrm80jY+oH1mco2WC/jKx4iJ/0WPm5SnY2ylQk8rK2T+cmZiE38/dmDZb
-        Rp2dBKa+a3jvFCg4M6w8UsGHY/mX3MW8STou12WB+brGCLuIb88oAIpOdQPItuyRRbfNmiVYvXACG
-        YBvgtXO/haP9JeSpJo8NnKTuhzUEqofrL7PROR5cTTGEobdw/O+h5X14grRwYdll4VmmNw/JYYpZz
-        Y1aw2kMtPmCq+wzeb4kt61cyZz/WBqPRV1V3y99faou9Mg9z254Xp5RcAF9UHS2cMDSP55qak8kKU
-        rWQiN0Zfg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1YnQ-000660-AM; Wed, 06 Mar 2019 15:49:28 +0000
-Subject: Re: [PATCH] extcon-ptn5150: fix COMPILE_TEST dependencies
-To:     Arnd Bergmann <arnd@arndb.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20190306110906.2622957-1-arnd@arndb.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bcfbf645-c865-a7ad-ada6-bd77ac665f32@infradead.org>
-Date:   Wed, 6 Mar 2019 07:49:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 6 Mar 2019 10:50:46 -0500
+Received: from foss.arm.com ([217.140.101.70]:34160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfCFPuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:50:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C31F180D;
+        Wed,  6 Mar 2019 07:50:45 -0800 (PST)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 870023F703;
+        Wed,  6 Mar 2019 07:50:42 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH v4 00/19] Convert x86 & arm64 to use generic page walk
+Date:   Wed,  6 Mar 2019 15:50:12 +0000
+Message-Id: <20190306155031.4291-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190306110906.2622957-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/19 3:08 AM, Arnd Bergmann wrote:
-> The PTN5150 dependencies look like they were meant to do the
-> right thing, but they actually should not allow building without
-> I2C for compile testing, as that results in a Kconfig warning
-> and subsequent build failure:
-> 
-> WARNING: unmet direct dependencies detected for REGMAP_I2C
->   Depends on [m]: I2C [=m]
->   Selected by [y]:
->   - EXTCON_PTN5150 [=y] && EXTCON [=y] && (I2C [=m] && GPIOLIB [=y] || COMPILE_TEST [=y])
->   Selected by [m]:
->   - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
->   - KEYBOARD_CAP11XX [=m] && !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && OF [=y] && I2C [=m]
->   - INPUT_DRV260X_HAPTICS [=m] && !UML && INPUT_MISC [=y] && INPUT [=y] && I2C [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
->   - ... [many others]
-> 
-> Add parentheses around the expression so we can compile-test
-> without GPIOLIB but not without I2C.
-> 
-> Fixes: 4ed754de2d66 ("extcon: Add support for ptn5150 extcon driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Most architectures current have a debugfs file for dumping the kernel
+page tables. Currently each architecture has to implement custom
+functions for walking the page tables because the generic
+walk_page_range() function is unable to walk the page tables used by the
+kernel.
 
-Hi Chanwoo,
+This series extends the capabilities of walk_page_range() so that it can
+deal with the page tables of the kernel (which have no VMAs and can
+contain larger huge pages than exist for user space). x86 and arm64 are
+then converted to make use of walk_page_range() removing the custom page
+table walkers.
 
-You might want to drop my patch and use this one from Arnd instead...
+To enable a generic page table walker to walk the unusual mappings of
+the kernel we need to implement a set of functions which let us know
+when the walker has reached the leaf entry. Since arm, powerpc, s390,
+sparc and x86 all have p?d_large macros lets standardise on that and
+implement those that are missing.
 
+Potentially future changes could unify the implementations of the
+debugfs walkers further, moving the common functionality into common
+code. This would require a common way of handling the effective
+permissions (currently implemented only for x86) along with a per-arch
+way of formatting the page table information for debugfs. One
+immediate benefit would be getting the KASAN speed up optimisation in
+arm64 (and other arches) which is currently only implemented for x86.
 
-> ---
->  drivers/extcon/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-> index 8e17149655f0..540e8cd16ee6 100644
-> --- a/drivers/extcon/Kconfig
-> +++ b/drivers/extcon/Kconfig
-> @@ -116,7 +116,7 @@ config EXTCON_PALMAS
->  
->  config EXTCON_PTN5150
->  	tristate "NXP PTN5150 CC LOGIC USB EXTCON support"
-> -	depends on I2C && GPIOLIB || COMPILE_TEST
-> +	depends on I2C && (GPIOLIB || COMPILE_TEST)
->  	select REGMAP_I2C
->  	help
->  	  Say Y here to enable support for USB peripheral and USB host
-> 
+Changes since v3:
+ * Restored the generic macros, only implement p?d_large() for
+   architectures that have support for large pages. This also means
+   adding dummy #defines for architectures that define p?d_large as
+   static inline to avoid picking up the generic macro.
+ * Drop the 'depth' argument from pte_hole
+ * Because we no longer have the depth for holes, we also drop support
+   in x86 for showing missing pages in debugfs. See discussion below:
+   https://lore.kernel.org/lkml/26df02dd-c54e-ea91-bdd1-0a4aad3a30ac@arm.com/
+ * mips: only define p?d_large when _PAGE_HUGE is defined.
 
+Changes since v2:
+ * Rather than attemping to provide generic macros, actually implement
+   p?d_large() for each architecture.
+
+Changes since v1:
+ * Added p4d_large() macro
+ * Comments to explain p?d_large() macro semantics
+ * Expanded comment for pte_hole() callback to explain mapping between
+   depth and P?D
+ * Handle folded page tables at all levels, so depth from pte_hole()
+   ignores folding at any level (see real_depth() function in
+   mm/pagewalk.c)
+
+Steven Price (19):
+  arc: mm: Add p?d_large() definitions
+  arm64: mm: Add p?d_large() definitions
+  mips: mm: Add p?d_large() definitions
+  powerpc: mm: Add p?d_large() definitions
+  riscv: mm: Add p?d_large() definitions
+  s390: mm: Add p?d_large() definitions
+  sparc: mm: Add p?d_large() definitions
+  x86: mm: Add p?d_large() definitions
+  mm: Add generic p?d_large() macros
+  mm: pagewalk: Add p4d_entry() and pgd_entry()
+  mm: pagewalk: Allow walking without vma
+  mm: pagewalk: Add test_p?d callbacks
+  arm64: mm: Convert mm/dump.c to use walk_page_range()
+  x86: mm: Don't display pages which aren't present in debugfs
+  x86: mm: Point to struct seq_file from struct pg_state
+  x86: mm+efi: Convert ptdump_walk_pgd_level() to take a mm_struct
+  x86: mm: Convert ptdump_walk_pgd_level_debugfs() to take an mm_struct
+  x86: mm: Convert ptdump_walk_pgd_level_core() to take an mm_struct
+  x86: mm: Convert dump_pagetables to use walk_page_range
+
+ arch/arc/include/asm/pgtable.h               |   1 +
+ arch/arm64/include/asm/pgtable.h             |   2 +
+ arch/arm64/mm/dump.c                         | 117 ++++---
+ arch/mips/include/asm/pgtable-64.h           |   8 +
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  30 +-
+ arch/powerpc/kvm/book3s_64_mmu_radix.c       |  12 +-
+ arch/riscv/include/asm/pgtable-64.h          |   7 +
+ arch/riscv/include/asm/pgtable.h             |   7 +
+ arch/s390/include/asm/pgtable.h              |   2 +
+ arch/sparc/include/asm/pgtable_64.h          |   2 +
+ arch/x86/include/asm/pgtable.h               |  10 +-
+ arch/x86/mm/debug_pagetables.c               |   8 +-
+ arch/x86/mm/dump_pagetables.c                | 349 ++++++++++---------
+ arch/x86/platform/efi/efi_32.c               |   2 +-
+ arch/x86/platform/efi/efi_64.c               |   4 +-
+ include/asm-generic/pgtable.h                |  19 +
+ include/linux/mm.h                           |  20 +-
+ mm/pagewalk.c                                |  76 +++-
+ 18 files changed, 404 insertions(+), 272 deletions(-)
 
 -- 
-~Randy
+2.20.1
+
