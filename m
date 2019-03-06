@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B571DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E5AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963E42063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615252063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfCFSvu (ORCPT
+        id S1729889AbfCFSw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:51:50 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:33795 "EHLO
+        Wed, 6 Mar 2019 13:52:26 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:57979 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729744AbfCFSvt (ORCPT
+        with ESMTP id S1729476AbfCFSw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:51:49 -0500
+        Wed, 6 Mar 2019 13:52:26 -0500
 Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MMoKq-1hKMwp3rts-00Iomg; Wed, 06 Mar 2019 19:51:47 +0100
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mg6mG-1gamQD3wBa-00hgdi; Wed, 06 Mar 2019 19:52:24 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org
-Subject: [PATCH] drivers: uwb: Kconfig: pedantic cleanups
-Date:   Wed,  6 Mar 2019 19:51:46 +0100
-Message-Id: <1551898306-18997-1-git-send-email-info@metux.net>
+Cc:     daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH] drivers: thermal: Kconfig: pedantic cleanups
+Date:   Wed,  6 Mar 2019 19:52:22 +0100
+Message-Id: <1551898342-19308-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:eBnZ8C2zY3vUfZzQxS7z+nS8aWTQPEvRTqxsxThNfY6OQnx99tq
- qYt5V1v3YVFArlwsBcOOPx+K8bp5lafiwDl9E+8AH6Sxtqt+UXCZD1yvAWYjoqOxR9vqoSv
- 1usFmwYVtfHjGgzpU5yL7ZGydY9SYsdlRJYMVESKO7FjbpEwWaP1Dg7f/EFS6YlvQs3srNo
- FivsAM4akKcxMaJvyfD2Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F5aHGTo7Aow=:veirXrc9p2VsRAEol2rQ3N
- ZjKNeJbzlZ3p+7rgGCcbxUH+MBDu0wVM024EGk9tWFDquRFSinJy80Um8M6Kec2a7Df8tU+D9
- IQyh7rxnFw+kQTR37Bmv5lupD11ewFPvLQzz3K4ZvN198aN9G3B3JzNNlUP8cA52/9hGRswsD
- p9njJ4uY11bn6L8bC7YWqdj9xGc9qvs+jJFYFsIP53U6gRo83ny6FHCmhwyJR56GlGxkCnF/+
- DMoc5eXFqEeYv1ftN9rTlQQfQDhtvhKY3Jxvi0SOfQluq3EUqUIpAF0BF1ifBxr3ryqfxOsKr
- dHjT7BgodiNY00tYAZBVX6mhlYas3Pn6iWqXggm4WxHAxd+STi1s4ay8HQLkyha6Ydmi1NJfq
- rZZ+n0VMAU/I8m6aX0FEUewmsplQPNNS/5SZoFw+gGC/F+vrmoDKeMvKdsprDUHCtJS9FrSWq
- C/yvvbGonMZaQ/HX272BnGiV35SYWCUXJRIoY3s+71/A+umIvlUZCJXXIAFaPTN8p8+4+td9K
- 69NXrGrUiHCW1Py0P5pUAy//d8O6K6gtQP9xKeWLpC1n+qF7+i+mJzjw7qX8wnQdqA0HZsEeP
- C7AOX4KG8udx+FhsQX4lZsiYHcMwRsnufmOgM1miiHWW3+bzk+2YU2FzZbIpRAXNqwNhGeGRc
- Q6fPyoXsN5hhdjIDwqEMJbBuXd8ZsTL0cxFUmAjlRq+kOm0v8mK8hAn9NbX+3tR5ljOU+df4F
- YVp/P7qIUZTaox0B6QF8hJQB4qW4BG11xmfJEQ==
+X-Provags-ID: V03:K1:f8X5uOOlThPBguGoyP7xnhVdhvJTmeY0c2dzecpQ9qPGksmvnAw
+ qCF9PX0GYRYnwVR6fAznr/PHdO5+tRdbaOCO4jMhLZ9UcYEa9YdatxBQYNJVmXKM5ghh8nu
+ v+nj1ggzg9K0vqNY8zMfYUmddqC2urSYJQcyXnuVLHO4dtKU/O3V9F+m0bTIfiEOeF2f46P
+ ZXW9z9oHYIn9RpbXdZAow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Yta/PsAQHFU=:6NfTbnvqMur/xcW1orqt6b
+ iSehflfKbMcvP30mn57WAFoRPerU1dLbwtNQDHbmBH3mLM4YydcOCtGiapkEc9U9/heDetXnH
+ tiy7NBh/Ady7egD7NpOKI7PUwPE76p6str/Jnj2YobmTxUeNYcFjJPxQrc+apZ/0ct93GGEUr
+ G37pEjEGSvfyQxiN0ygYxvJHaPf6o4QBAiWzN/mCS2JNg+Dv0FgMtNvI4KsAPuXTG80WlK7B5
+ C4fh18N1UfJaQJrjM+W0X5iqoEIPmeTFEOLLiuU8PI/2d2pgTFoQhOVft7EmDdh+0jSZh/4t4
+ VCnn6RyOqNCE9D4XQMxWzHhPO1hnFwn1tYJLTgPHEdwdyMvGkwxbXxzuwS41XIguNGnNM8Dmu
+ hcwS25dRFIjpXZxfydlROrgVoTu5fnhMNp9OiDTkmdkqBZ/mlsF0eq/XfpRrPBoQbaF/iGZXx
+ +8brh7UlpMm/p2sejCXIZfdweCBOFUHkFXVEPhkew4Ey1py4tD0SGETuElTv2UDxxDuJ2d+23
+ Jkgen/OxbkQFT/MahCbb/nMRl6mFVt9Yfo9IYseRGjFHvmNUrbN3uouOn2m0dZAOo7mTbNhCF
+ sI+1zqNpI8m9F2DOWpXfS6H6V+UjUxt8LGGI/C0a5q94wpG1DbYOPNyhbpb+WkW1ZiMSGs+iz
+ Z3gPIJKlDurBdWKUp7GcaNpACQXhaXLIGEQxXbrcq5JhItPkwT+LkazTydpZCE75Fb3p19g8d
+ se8UIY0J1EoVxEc1ByKqeREA0O1RjeDPEoNyLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,66 +54,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/uwb/Kconfig | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/thermal/st/Kconfig    | 22 +++++++++++-----------
+ drivers/thermal/tegra/Kconfig |  4 ++--
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/uwb/Kconfig b/drivers/uwb/Kconfig
-index afac258..d0e15e1 100644
---- a/drivers/uwb/Kconfig
-+++ b/drivers/uwb/Kconfig
-@@ -41,31 +41,31 @@ config UWB_HWA
- 	  is safe to select any even if you do not have the hardware.
+diff --git a/drivers/thermal/st/Kconfig b/drivers/thermal/st/Kconfig
+index b80f9a9..d8b1a45 100644
+--- a/drivers/thermal/st/Kconfig
++++ b/drivers/thermal/st/Kconfig
+@@ -3,9 +3,9 @@
+ #
  
- config UWB_WHCI
--        tristate "UWB Radio Control driver for WHCI-compliant cards"
--        depends on PCI
--        help
--          This driver enables the radio controller for WHCI cards.
-+	tristate "UWB Radio Control driver for WHCI-compliant cards"
-+	depends on PCI
+ config ST_THERMAL
+-       tristate "Thermal sensors on STMicroelectronics STi series of SoCs"
+-       help
+-         Support for thermal sensors on STMicroelectronics STi series of SoCs.
++	tristate "Thermal sensors on STMicroelectronics STi series of SoCs"
 +	help
-+	  This driver enables the radio controller for WHCI cards.
++	  Support for thermal sensors on STMicroelectronics STi series of SoCs.
  
--          WHCI is a specification developed by Intel
--          (http://www.intel.com/technology/comms/wusb/whci.htm) much
--          in the spirit of USB's EHCI, but for UWB and Wireless USB
--          radio/host controllers connected via memory mapping (eg:
--          PCI). Most of these cards come also with a Wireless USB host
--          controller.
-+	  WHCI is a specification developed by Intel
-+	  (http://www.intel.com/technology/comms/wusb/whci.htm) much
-+	  in the spirit of USB's EHCI, but for UWB and Wireless USB
-+	  radio/host controllers connected via memory mapping (eg:
-+	  PCI). Most of these cards come also with a Wireless USB host
-+	  controller.
+ config ST_THERMAL_SYSCFG
+ 	select ST_THERMAL
+@@ -16,11 +16,11 @@ config ST_THERMAL_MEMMAP
+ 	tristate "STi series memory mapped access based thermal sensors"
  
--          To compile this driver select Y (built in) or M (module). It
--          is safe to select any even if you do not have the hardware.
-+	  To compile this driver select Y (built in) or M (module). It
-+	  is safe to select any even if you do not have the hardware.
- 
- config UWB_I1480U
--        tristate "Support for Intel Wireless UWB Link 1480 HWA"
--        depends on UWB_HWA
--        select FW_LOADER
--        help
--         This driver enables support for the i1480 when connected via
--         USB. It consists of a firmware uploader that will enable it
--         to behave as an HWA device.
-+	tristate "Support for Intel Wireless UWB Link 1480 HWA"
-+	depends on UWB_HWA
-+	select FW_LOADER
+ config STM32_THERMAL
+-       tristate "Thermal framework support on STMicroelectronics STM32 series of SoCs"
+-       depends on MACH_STM32MP157
+-       default y
+-       help
+-	Support for thermal framework on STMicroelectronics STM32 series of
+-	SoCs. This thermal driver allows to access to general thermal framework
+-	functionalities and to acces to SoC sensor functionalities. This
+-	configuration is fully dependent of MACH_STM32MP157.
++	tristate "Thermal framework support on STMicroelectronics STM32 series of SoCs"
++	depends on MACH_STM32MP157
++	default y
 +	help
-+	  This driver enables support for the i1480 when connected via
-+	  USB. It consists of a firmware uploader that will enable it
-+	  to behave as an HWA device.
++	  Support for thermal framework on STMicroelectronics STM32 series of
++	  SoCs. This thermal driver allows to access to general thermal framework
++	  functionalities and to acces to SoC sensor functionalities. This
++	  configuration is fully dependent of MACH_STM32MP157.
+diff --git a/drivers/thermal/tegra/Kconfig b/drivers/thermal/tegra/Kconfig
+index f8740f7..fc0b33b 100644
+--- a/drivers/thermal/tegra/Kconfig
++++ b/drivers/thermal/tegra/Kconfig
+@@ -14,7 +14,7 @@ config TEGRA_BPMP_THERMAL
+ 	tristate "Tegra BPMP thermal sensing"
+ 	depends on TEGRA_BPMP || COMPILE_TEST
+ 	help
+-	 Enable this option for support for sensing system temperature of NVIDIA
+-	 Tegra systems-on-chip with the BPMP coprocessor (Tegra186).
++	  Enable this option for support for sensing system temperature of NVIDIA
++	  Tegra systems-on-chip with the BPMP coprocessor (Tegra186).
  
--         To compile this driver select Y (built in) or M (module). It
--         is safe to select any even if you do not have the hardware.
-+	  To compile this driver select Y (built in) or M (module). It
-+	  is safe to select any even if you do not have the hardware.
- 
- endif # UWB
+ endmenu
 -- 
 1.9.1
 
