@@ -2,151 +2,97 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6514C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96095C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBCC20854
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6276720661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfQXCzeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfCFVRg (ORCPT
+        id S1726560AbfCFVSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:17:36 -0500
-Received: from mga02.intel.com ([134.134.136.20]:51066 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfCFVRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:17:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 13:17:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,449,1544515200"; 
-   d="scan'208";a="304986830"
-Received: from ray.jf.intel.com (HELO [10.7.201.16]) ([10.7.201.16])
-  by orsmga005.jf.intel.com with ESMTP; 06 Mar 2019 13:17:34 -0800
-Subject: Re: [PATCH v5 4/4] hugetlb: allow to free gigantic pages regardless
- of the configuration
-To:     Alex Ghiti <alex@ghiti.fr>, Vlastimil Babka <vbabka@suse.cz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190306190005.7036-1-alex@ghiti.fr>
- <20190306190005.7036-5-alex@ghiti.fr>
- <7c81abe0-5f9d-32f9-1e9a-70ab06d48f8e@intel.com>
- <82a3f572-e9c1-0151-3d7d-a646f5e5302c@ghiti.fr>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <5058428f-f351-ce26-7348-3b2255e5425d@intel.com>
-Date:   Wed, 6 Mar 2019 13:17:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 6 Mar 2019 16:18:25 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40910 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfCFVSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 16:18:24 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u9so9406675pgo.7;
+        Wed, 06 Mar 2019 13:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vkbFsO7UtONNBfXfGJYdtz5hJ8wK93PPF7z+no1SJu0=;
+        b=tfQXCzeUChjqpp+aWsWwI0JwPHvv/xhV/TVpYVW++NDiCgeFjYNiyTiPsE+lHgJ7k7
+         X9H+QhLLbQC7UVdxo6CNoOhLJPnsf6Gb8lwhuuv9eqrR99l4bu2V1AZNkPIpz+7Ze3xN
+         68eAWs1YxDpYHxObiW/R8EVYAJSOTlAXWiAb3oRKiVbAngTRFS9pjFQ+K2e24givNt2s
+         oV4USXidvuuSY8pvVSJeVfAXGuYDS0lgeEbicO2inn7xI+qxvNZ6AtTwx6GNQxOCU544
+         by1NorgbEmvSa6yJ/Kz/plZqiAhO55GgN1Bt8fHkmCP95Ke1ZPkT/8645EEEgHWR6J8m
+         ac2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vkbFsO7UtONNBfXfGJYdtz5hJ8wK93PPF7z+no1SJu0=;
+        b=GRvEKJ/FY+65xeLxw2PVxrasKjdiPTaGYOp2hkDuxBOW679gj7BqyTsCJgr0xAxlGK
+         LJDdOliByyikVLye7NPt91zOeVnJVy5iumenZjxpAYEEwIuv18KUc4pC19NryI8EXDr9
+         CvH+JlHbFknNajRKWl2ZwPiTMN8/KPXAheHUoXBMj79unppGuhYfMiHdiWugf6VZH62a
+         w6fP2ix/oINyTQdu3MXZz2O0nVqOprBNHzXGet2TH8rDaryYimGMPWkzfe9a3jBJk+g7
+         eVa+HnG8NDJcT9jH77GLq8IETXV3IXK1uG83uWvZO4rPIL7xqzQhdpcZwO2SmJm7GzKW
+         MiJQ==
+X-Gm-Message-State: APjAAAXaCeIvp3PfmFS+yhbXxcUkN8PrZQGH9LyuWq3BvScnBdM3uMvk
+        QcAJvUblWP9amuR8/YbFs0M1qBfACME=
+X-Google-Smtp-Source: APXvYqyXy45NI2GL1cT16HUSc/WntboSqpX5QaF7wqzBVGcnuAsYoZwNpzqf+uRFU89kOP9tspX6SQ==
+X-Received: by 2002:a63:b447:: with SMTP id n7mr8134613pgu.401.1551907103530;
+        Wed, 06 Mar 2019 13:18:23 -0800 (PST)
+Received: from myunghoj-Precision-5530 ([118.220.181.225])
+        by smtp.gmail.com with ESMTPSA id u8sm3270221pgp.48.2019.03.06.13.18.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 13:18:22 -0800 (PST)
+Date:   Thu, 7 Mar 2019 06:15:38 +0900
+From:   Myungho Jung <mhjungk@gmail.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfrm: Reset secpath in xfrm failure
+Message-ID: <20190306211536.GA27609@myunghoj-Precision-5530>
+References: <20190306073304.GA22426@myunghoj-Precision-5530>
+ <20190306113543.GD3758@gauss3.secunet.de>
 MIME-Version: 1.0
-In-Reply-To: <82a3f572-e9c1-0151-3d7d-a646f5e5302c@ghiti.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306113543.GD3758@gauss3.secunet.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/19 12:08 PM, Alex Ghiti wrote:
->>>
->>> +    /*
->>> +     * Gigantic pages allocation depends on the capability for large
->>> page
->>> +     * range allocation. If the system cannot provide
->>> alloc_contig_range,
->>> +     * allow users to free gigantic pages.
->>> +     */
->>> +    if (hstate_is_gigantic(h) && !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
->>> +        spin_lock(&hugetlb_lock);
->>> +        if (count > persistent_huge_pages(h)) {
->>> +            spin_unlock(&hugetlb_lock);
->>> +            return -EINVAL;
->>> +        }
->>> +        goto decrease_pool;
->>> +    }
->> We talked about it during the last round and I don't seen any mention of
->> it here in comments or the changelog: Why is this a goto?  Why don't we
->> just let the code fall through to the "decrease_pool" label?  Why is
->> this new block needed at all?  Can't we just remove the old check and
->> let it be?
+On Wed, Mar 06, 2019 at 12:35:43PM +0100, Steffen Klassert wrote:
+> On Wed, Mar 06, 2019 at 04:33:08PM +0900, Myungho Jung wrote:
+> > In esp4_gro_receive() and esp6_gro_receive(), secpath can be allocated
+> > without adding xfrm state to xvec. Then, sp->xvec[sp->len - 1] would
+> > fail and result in dereferencing invalid pointer in esp4_gso_segment()
+> > and esp6_gso_segment(). Reset secpath if xfrm function returns error.
+> > 
+> > Reported-by: syzbot+b69368fd933c6c592f4c@syzkaller.appspotmail.com
+> > Signed-off-by: Myungho Jung <mhjungk@gmail.com>
 > 
-> I'll get rid of the goto, I don't know how to justify it properly in a
-> comment,
-> maybe because it is not necessary.
-> This is not a new block, this means exactly the same as before (remember
-> gigantic_page_supported() actually meant CONTIG_ALLOC before this series),
-> except that now we allow a user to free boottime allocated gigantic pages.
-> And no we cannot just remove the check and let it be since it would modify
-> the current behaviour, which is to return an error when trying to allocate
-> gigantic pages whereas alloc_contig_range is not defined. I thought it was
-> clearly commented above, I can try to make it more explicit.
+> The patch itself looks ok, but please add a 'Fixes' tag to
+> the commit message.
+> 
+> Thanks!
 
-OK, that makes sense.  Could you get some of this in the changelog,
-please?  Otherwise this all looks good to me.
+Hi Steffen,
+
+Thanks for reviewing the change. I'll add fixes tag and resubmit it.
+
+Thanks,
+Myungho
