@@ -2,248 +2,290 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52CAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB940C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6679120663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7216920663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W26TvcYy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UTnpULdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfCFCBl (ORCPT
+        id S1728818AbfCFCEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 21:01:41 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41644 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbfCFCBl (ORCPT
+        Tue, 5 Mar 2019 21:04:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57126 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfCFCEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 21:01:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n2so11568473wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 18:01:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yIBZuL0eOBoV99TZmqrvl+xwLJ3s6WeXnIz+OUXIKKc=;
-        b=W26TvcYyaIEkNZ2usRp8FiFvmoGngr68o5dKzbDwpf9TFhPbdJzGGm/nXGnaZB73MI
-         Pda2xORvFXeaUoJMGhl09dzfJT1Sksv0tyAtnijVoAVRtHkbmNTJklvhZXtXJX3jiK3T
-         QGQS5W/ARRUv47pQcEOXIN3cP4IgiMduqY+SFuq/zqF1Fnf6g6+GSRfey/MOX8uwQjA0
-         iQctStK0KeXxuU/CA/KSc2U1iIJ2h0DDMewc6++gddYhuDaH67sFBZU6DdcaSkln+blT
-         WJ+zj7uWRqYkDFpDdhsADN35F8PM68z04gvONhQ8h9ZMNssEnCb/dv+YbLVO3vwyAQVo
-         WMGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yIBZuL0eOBoV99TZmqrvl+xwLJ3s6WeXnIz+OUXIKKc=;
-        b=UEqUBu/1AhD/tq7ay0fLmvJ4XvpxIXsAWel6xQnTQ65EtyhVmcA2UMN6nEwSS53ead
-         Kcp78yR6Qp17Ro1FkEwmZUOmSMVqrWm2LZovchSg/HMSil1b+c70B0eGBxxQ0qZ4lyLW
-         DeE71HYKnKdwPSaxWisj6Eo45hfI6fvzF3tCuv7foltwK0DdGmv0oeLnZnvOqtmckvYw
-         HygM1si5ru9aio2r6HJ/q5pPMtnshaVYcc7Pjgj5X1REpguUz1+DhlZd9pPTshPHcTvC
-         qGnSog45XibxAilVRRwdwI3i/DpduGzC7ntOXTy9oB05GVKNVeGZdeoiHf1dnComxnuq
-         9TmQ==
-X-Gm-Message-State: APjAAAWOKKnfvZ3ul0MHHiSFMFsY4BOrz5OHg+0NDtRka2L0KkR0aUuP
-        Q8Fn+W2a7CvUgTpi0kzB1P7dIDrRgC6OW1XEBtw=
-X-Google-Smtp-Source: APXvYqxPQ/nsXeYQSBLEmAiyBmv4gTaup34A0T4WRXPOMPFk05OY5coWK1tlse6Nm4HZxOJOqi+Bp+KNaOpY/9pQedA=
-X-Received: by 2002:a5d:68c2:: with SMTP id p2mr1038206wrw.23.1551837699042;
- Tue, 05 Mar 2019 18:01:39 -0800 (PST)
+        Tue, 5 Mar 2019 21:04:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TLgRSEn8Xldp3Ri8AGhTfePuzbZ9QAxJ17REEn8vp4c=; b=UTnpULdxu/T/K/CCsFcL7HUbY
+        8Ff5VMfr6W3Oh9KJKRCVPYQikBy7iVOO0JTPmVr1IJFNz6rRxospnCUoWtqL3G9AjGXMn3bplUcJP
+        pR+jxGIEuOWG7hUU8qo6yIxpwB882J4ZN8EOVaKq52mbGT54Xsd22xWUwYJnleyVQVrhdkmKTbYNi
+        Y6pkijNOfFMz3NQ4B6GRReTAx9+wL+svjuKLmKoJK0P/M2lbFoOC1pdEc+hwj2mJwPymPaWOMAVST
+        FOGDk1qfcdcWZfA6koYzUKBBTHfYVsolGMofpdvnnRm7gFpaYETA4Fe4U7sh5Tm04e0Rcp/YpB86V
+        7YTXVV92Q==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1Lv9-0005mz-5w; Wed, 06 Mar 2019 02:04:35 +0000
+Subject: Re: [PATCH v2] tty/serial: Add a serial port simulator
+To:     cminyard@mvista.com
+Cc:     minyard@acm.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190305171231.22133-1-minyard@acm.org>
+ <eea0ad95-8344-371a-1dd0-58c8366a355b@infradead.org>
+ <20190306015149.GD4290@minyard.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <041e137e-0b9d-04f9-255d-b1f402b23c17@infradead.org>
+Date:   Tue, 5 Mar 2019 18:04:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
- <20190222105957.wxhlcmoag5f3i4fi@queper01-lin> <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
- <20190304135810.rq2ojnbn5vezrab3@queper01-lin> <20190304152616.GM32494@hirez.programming.kicks-ass.net>
- <20190304164816.4fnxxesjwzdoqria@queper01-lin> <20190304174028.GO32494@hirez.programming.kicks-ass.net>
- <20190304175030.4slf247y2eftkmu4@queper01-lin> <20190304184708.GQ32494@hirez.programming.kicks-ass.net>
- <20190304191059.mzwid3udqwtzejww@queper01-lin> <20190305083202.GU32494@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190305083202.GU32494@hirez.programming.kicks-ass.net>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Wed, 6 Mar 2019 10:01:01 +0800
-Message-ID: <CAAfSe-uwkaO3oQMzRM9Nb18Kn_DeRatexbqEof+EVKPkemDcbQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/cpufreq: Fix 32bit math overflow
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Quentin Perret <quentin.perret@arm.com>,
-        =?UTF-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
-        <Vincent.Wang@unisoc.com>,
-        =?UTF-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
-        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190306015149.GD4290@minyard.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Mar 2019 at 16:32, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Mar 04, 2019 at 07:11:01PM +0000, Quentin Perret wrote:
->
-> > So yeah, that works for me.
->
-> Chunyan, Vincent; can you verify the below cures your ill?
->
+On 3/5/19 5:51 PM, Corey Minyard wrote:
+> On Tue, Mar 05, 2019 at 03:29:51PM -0800, Randy Dunlap wrote:
+>> Hi Corey,
+>>
+>> Just some doc comments.
+> 
+> Thanks a bunch.  A few comments inline on things I didn't do quite
+> like you suggested..
+> 
+>>
+>> On 3/5/19 9:12 AM, minyard@acm.org wrote:
+>>> diff --git a/Documentation/serial/serialsim.rst b/Documentation/serial/serialsim.rst
+>>> new file mode 100644
+>>> index 000000000000..655e10b4908e
+>>> --- /dev/null
+>>> +++ b/Documentation/serial/serialsim.rst
+>>> @@ -0,0 +1,149 @@
+>>> +.. SPDX-License-Identifier: GPL-2.0+
+>>> +=====================================
+>>> +serialsim - A kernel serial simualtor
+>>                                xxxxxxxxx
+>>                         serial device simulator
+>>
+>>> +=====================================
+>>> +
+>>> +:Author: Corey Minyard <minyard@mvista.com> / <minyard@acm.org>
+>>> +
+>>> +The serialsim device is a serial simulator with echo and pipe devices.
+>>> +It is quite useful for testing programs that use serial ports.
+>>> +
+>>> +This attempts to emulate a basic serial device.  It uses the baud rate
+>>> +and sends the bytes through the loopback or pipe at approximately the
+>>> +speed it would on a normal serial device.
+>>> +
+>>> +There is a python interface to the special ioctls for controlling the
+>>> +remote end of the termios in addition to the standard ioctl interface
+>>> +documented below.  See https://github.com/cminyard/serialsim
+>>> +
+>>> +=====
+>>> +Using
+>>> +=====
+>>> +
+>>> +The serialsim.ko module creates two types of devices.  Echo devices
+>>> +simply echo back the data to the same device.  These devices will
+>>> +appear as /dev/ttyEcho<n>.
+>>> +
+>>> +Pipe devices will transfer the data between two devices.  The
+>>> +devices will appear as /dev/ttyPipeA<n> and /dev/ttyPipeB<n>.  And
+>>
+>>                                                                   Any
+>>
+>>> +data written to PipeA reads from PipeB, and vice-versa.
+>>> +
+>>> +You may create an arbitrary number of devices by setting the
+>>> +nr_echo ports and nr_pipe_ports module parameters.  The default is
+>>
+>>    nr_echo_ports
+>>
+>>> +four for both.
+>>
+>> or for each.
+>>
+>>> +
+>>> +This driver supports modifying the modem control lines and
+>>> +injecting various serial errors.  It also supports a simulated null
+>>> +modem between the two pipes, or in a loopback on the echo device.
+>>> +
+>>> +By default a pipe or echo comes up in null modem configuration,
+>>> +meaning that the DTR line is hooked to the DSR and CD lines on the
+>>> +other side and the RTS line on one side is hooked to the CTS line
+>>> +on the other side.
+>>> +
+>>> +The RTS and CTS lines don't currently do anything for flow control.
+>>> +
+>>> +You can modify null modem and control the lines individually
+>>> +through an interface in /sys/class/tty/ttyECHO<n>/ctrl,
+>>> +/sys/class/tty/ttyPipeA<n>/ctrl, and
+>>> +/sys/class/tty/ttyPipeB<n>/ctrl.  The following may be written to
+>>> +those files:
+>>> +
+>>> +[+-]nullmodem
+>>> +    enable/disable null modem
+>>> +
+>>> +[+-]cd
+>>> +    enable/disable Carrier Detect (no effect if +nullmodem)
+>>> +
+>>> +[+-]dsr
+>>> +    enable/disable Data Set Ready (no effect if +nullmodem)
+>>> +
+>>> +[+-]cts
+>>> +    enable/disable Clear To Send (no effect if +nullmodem)
+>>> +
+>>> +[+-]ring
+>>> +    enable/disable Ring
+>>> +
+>>> +frame
+>>> +    inject a frame error on the next byte
+>>> +
+>>> +parity
+>>> +    inject a parity error on the next byte
+>>> +
+>>> +overrun
+>>> +    inject an overrun error on the next byte
+>>> +
+>>> +The contents of the above files has the following format:
+>>
+>>                                    have
+> 
+> This intrigued me a bit.  I assumed, even though "contents" can
+> be plural, it is used in a singular fashion here because it is one
+> "thing".  So I did some research.  I couldn't really find
+> anything definitive, and there seems to be a lot of debate on
+> this.  But if you look at:
+> https://dictionary.cambridge.org/grammar/british-grammar/content-or-contents
+> you will see, when they use "contents", they use a singular verb
+> with it:
+>    The contents of a book is the list of chapters or articles...
+> So if it's good enough for Cambridge, it's good enough for me :).
+> Though I'm certainly no grammar expert.
 
-Hi Peter,
+OK :)
 
-Sure, we will port the below changes to our 4.14 developing kernel for
-testing, will get back to you once we have done the test.
+>>
+>>> +
+>>> +tty[Echo|PipeA|PipeB]<n>
+>>> +    <mctrl values>
+>>> +
+>>> +where <mctrl values> is the modem control values above (not frame,
+>>> +parity, or overrun) with the following added:
+>>> +
+>>> +[+-]dtr
+>>> +    value of the Data Terminal Ready
+>>> +
+>>> +[+-]rts
+>>> +    value of the Request To Send
+>>> +
+>>> +The above values are not settable through this interface, they are
+>>> +set through the serial port interface itself.
+>>> +
+>>> +So, for instance, ttyEcho0 comes up in the following state::
+>>> +
+>>> +   # cat /sys/class/tty/ttyEcho0/ctrl
+>>> +   ttyEcho0: +nullmodem -cd -dsr -cts -ring -dtr -rts
+>>> +
+>>> +If something connects, it will become::
+>>> +
+>>> +   ttyEcho0: +nullmodem +cd +dsr +cts -ring +dtr +rts
+>>> +
+>>> +To enable ring::
+>>> +
+>>> +   # echo "+ring" >/sys/class/tty/ttyEcho0/ctrl
+>>> +   # cat /sys/class/tty/ttyEcho0/ctrl
+>>> +   ttyEcho0: +nullmodem +cd +dsr +cts +ring +dtr +rts
+>>> +
+>>> +Now disable NULL modem and the CD line::
+>>> +
+>>> +   # echo "-nullmodem -cd" >/sys/class/tty/ttyEcho0/ctrl
+>>> +   # cat /sys/class/tty/ttyEcho0/ctrl
+>>> +   ttyEcho0: -nullmodem -cd -dsr -cts +ring -dtr -rts
+>>> +
+>>> +Note that these settings are for the side you are modifying.  So if
+>>> +you set nullmodem on ttyPipeA0, that controls whether the DTR/RTS
+>>> +lines from ttyPipeB0 affect ttyPipeA0.  It doesn't affect ttyPipeB's
+>>> +modem control lines.
+>>> +
+>>> +The PIPEA and PIPEB devices also have the ability to set these
+>>> +values for the other end via an ioctl.  The following ioctls are
+>>> +available:
+>>> +
+>>> +TIOCSERSNULLMODEM
+>>> +    Set the null modem value, the arg is a boolean.
+>>> +
+>>> +TIOCSERSREMMCTRL
+>>> +    Set the modem control lines, bits 16-31 of the arg is
+>>
+>>                                                           are
+> 
+> Same comment as above.  IMHO, it's one set of bits.
+> 
+>>
+>>> +    a 16-bit mask telling which values to set, bits 0-15 are the
+>>> +    actual values.  Settable values are TIOCM_CAR, TIOCM_CTS,
+>>> +    TIOCM_DSR, and TIOC_RNG.  If NULLMODEM is set to true, then only
+>>> +    TIOC_RNG is settable.  The DTR and RTS lines are not here, you can
+>>> +    set them through the normal interface.
+>>> +
+>>> +TIOCSERSREMERR
+>>> +    Send an error or errors on the next sent byte.  arg is
+>>> +    a bitwise OR of (1 << TTY_xxx).  Allowed errors are TTY_BREAK,
+>>
+>> is this better: (or I don't understand?)
+>>        a bitwise OR of (1 << TTY_xxx) and one (or more of) the
+>>        allowed error flags TTY_BREAK, TTY_FRAME, TTY_PARITY, and TTY_OVERRUN.
+> 
+> Well, not really.  But what I wrote isn't great, so, how about:
+> 
+>     Send an error or errors on the next sent byte.  arg is a bitwise
+>     OR of (1 << TTY_BREAK), (1 << TTY_FRAME), (1 << TTY_PARITY), and
+>     (1 << TTY_OVERRUN).  If none of those are set, then no error
+>     is sent.
 
-Thanks,
-Chunyan
+I see.  Thanks.
 
-> ---
-> Subject: sched/cpufreq: Fix 32bit math overflow
->
-> Vincent Wang reported that get_next_freq() has a mult overflow issue on
-> 32bit platforms in the IOWAIT boost case, since in that case {util,max}
-> are in freq units instead of capacity units.
->
-> Solve this by moving the IOWAIT boost to capacity units. And since this
-> means @max is constant; simplify the code.
->
-> Cc: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> Reported-by: Vincent Wang <vincent.wang@unisoc.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/sched/cpufreq_schedutil.c | 58 +++++++++++++++++-----------------------
->  1 file changed, 24 insertions(+), 34 deletions(-)
->
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 2efe629425be..72b62ac1c7c2 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -48,10 +48,10 @@ struct sugov_cpu {
->
->         bool                    iowait_boost_pending;
->         unsigned int            iowait_boost;
-> -       unsigned int            iowait_boost_max;
->         u64                     last_update;
->
->         unsigned long           bw_dl;
-> +       unsigned long           min;
->         unsigned long           max;
->
->         /* The field below is for single-CPU policies only: */
-> @@ -303,8 +303,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
->         if (delta_ns <= TICK_NSEC)
->                 return false;
->
-> -       sg_cpu->iowait_boost = set_iowait_boost
-> -               ? sg_cpu->sg_policy->policy->min : 0;
-> +       sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
->         sg_cpu->iowait_boost_pending = set_iowait_boost;
->
->         return true;
-> @@ -344,14 +343,12 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
->
->         /* Double the boost at each request */
->         if (sg_cpu->iowait_boost) {
-> -               sg_cpu->iowait_boost <<= 1;
-> -               if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
-> -                       sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
-> +               sg_cpu->iowait_boost = min(sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
->                 return;
->         }
->
->         /* First wakeup after IO: start with minimum boost */
-> -       sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
-> +       sg_cpu->iowait_boost = sg_cpu->min;
->  }
->
->  /**
-> @@ -373,47 +370,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
->   * This mechanism is designed to boost high frequently IO waiting tasks, while
->   * being more conservative on tasks which does sporadic IO operations.
->   */
-> -static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
-> -                              unsigned long *util, unsigned long *max)
-> +static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
-> +                                       unsigned long util, unsigned long max)
->  {
-> -       unsigned int boost_util, boost_max;
-> +       unsigned long boost;
->
->         /* No boost currently required */
->         if (!sg_cpu->iowait_boost)
-> -               return;
-> +               return util;
->
->         /* Reset boost if the CPU appears to have been idle enough */
->         if (sugov_iowait_reset(sg_cpu, time, false))
-> -               return;
-> +               return util;
->
-> -       /*
-> -        * An IO waiting task has just woken up:
-> -        * allow to further double the boost value
-> -        */
-> -       if (sg_cpu->iowait_boost_pending) {
-> -               sg_cpu->iowait_boost_pending = false;
-> -       } else {
-> +       if (!sg_cpu->iowait_boost_pending) {
->                 /*
-> -                * Otherwise: reduce the boost value and disable it when we
-> -                * reach the minimum.
-> +                * No boost pending; reduce the boost value.
->                  */
->                 sg_cpu->iowait_boost >>= 1;
-> -               if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
-> +               if (sg_cpu->iowait_boost < sg_cpu->min) {
->                         sg_cpu->iowait_boost = 0;
-> -                       return;
-> +                       return util;
->                 }
->         }
->
-> +       sg_cpu->iowait_boost_pending = false;
-> +
->         /*
-> -        * Apply the current boost value: a CPU is boosted only if its current
-> -        * utilization is smaller then the current IO boost level.
-> +        * @util is already in capacity scale; convert iowait_boost
-> +        * into the same scale so we can compare.
->          */
-> -       boost_util = sg_cpu->iowait_boost;
-> -       boost_max = sg_cpu->iowait_boost_max;
-> -       if (*util * boost_max < *max * boost_util) {
-> -               *util = boost_util;
-> -               *max = boost_max;
-> -       }
-> +       boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
-> +       return max(boost, util);
->  }
->
->  #ifdef CONFIG_NO_HZ_COMMON
-> @@ -460,7 +448,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
->
->         util = sugov_get_util(sg_cpu);
->         max = sg_cpu->max;
-> -       sugov_iowait_apply(sg_cpu, time, &util, &max);
-> +       util = sugov_iowait_apply(sg_cpu, time, util, max);
->         next_f = get_next_freq(sg_policy, util, max);
->         /*
->          * Do not reduce the frequency if the CPU has not been idle
-> @@ -500,7 +488,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
->
->                 j_util = sugov_get_util(j_sg_cpu);
->                 j_max = j_sg_cpu->max;
-> -               sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
-> +               j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
->
->                 if (j_util * max > j_max * util) {
->                         util = j_util;
-> @@ -837,7 +825,9 @@ static int sugov_start(struct cpufreq_policy *policy)
->                 memset(sg_cpu, 0, sizeof(*sg_cpu));
->                 sg_cpu->cpu                     = cpu;
->                 sg_cpu->sg_policy               = sg_policy;
-> -               sg_cpu->iowait_boost_max        = policy->cpuinfo.max_freq;
-> +               sg_cpu->min                     =
-> +                       (SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
-> +                       policy->cpuinfo.max_freq;
->         }
->
->         for_each_cpu(cpu, policy->cpus) {
+> Thanks,
+> 
+> -corey
+> 
+>>
+>>> +    TTY_FRAME, TTY_PARITY, and TTY_OVERRUN.
+>>> +
+>>> +TIOCSERGREMTERMIOS
+>>> +    Return the termios structure for the other side of the pipe.
+>>> +    arg is a pointer to a standard termios struct.
+>>> +
+>>> +TIOCSERGREMRS485
+>>> +    Return the remote RS485 settings, arg is a pointer to a struct
+>>> +    serial_rs485.
+>>> +
+>>> +Note that unlike the sysfs interface, these ioctls affect the other
+>>> +end.  So setting nullmodem on the ttyPipeB0 interface sets whether
+>>> +the DTR/RTS lines on ttyPipeB0 affect ttyPipeA0.
+>>
+>>
+>> cheers.
+>> -- 
+>> ~Randy
+
+
+-- 
+~Randy
