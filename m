@@ -2,127 +2,120 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9002EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D3FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5009820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E34B2075B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 01:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C+hB89nQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fCP/wRgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfCFBeU (ORCPT
+        id S1728669AbfCFBfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 20:34:20 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3225 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfCFBeU (ORCPT
+        Tue, 5 Mar 2019 20:35:37 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:56019 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfCFBfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 20:34:20 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7f23930000>; Tue, 05 Mar 2019 17:34:11 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 05 Mar 2019 17:34:19 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 05 Mar 2019 17:34:19 -0800
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Mar
- 2019 01:34:19 +0000
-Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
- paths
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Artemy Kovalyov <artemyko@mellanox.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <20190302032726.11769-2-jhubbard@nvidia.com>
- <20190302202435.31889-1-jhubbard@nvidia.com>
- <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
- <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
- <332021c5-ab72-d54f-85c8-b2b12b76daed@nvidia.com>
- <903383a6-f2c9-4a69-83c0-9be9c052d4be@mellanox.com>
- <20190306013213.GA1662@ziepe.ca>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <74f196a1-bd27-2e94-2f9f-0cf657eb0c91@nvidia.com>
-Date:   Tue, 5 Mar 2019 17:34:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 5 Mar 2019 20:35:37 -0500
+Received: by mail-it1-f194.google.com with SMTP id z131so7092275itf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 17:35:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nnH5gTz+dmOUwUqdWQFZb+nIuHdSODZLbf2vioXCAnk=;
+        b=fCP/wRgIYLeiTmFflgsjdwwp0QsBmy7GKbkTMNUOTJN3bUEiQK5DVFEB7vr0vLRi3f
+         +FA4NcDElVBKw69oVPwkI9Q8bCo8TQHlIw2YfWd4UxOAm1MHrBA4B54FXVURqogfRZY4
+         M50OogYNM13dMbHJZnx4IH69KvHbBup6d/KoM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nnH5gTz+dmOUwUqdWQFZb+nIuHdSODZLbf2vioXCAnk=;
+        b=WkrLfAUr6qtZgOZ5URNXAojoXUOjcuU8XJf/pz5DEIvsxW+kZEsoY7MDmUFNkZoL+l
+         5YkwNtJJI3nMZWb2N8DF2qwUCyjLl86VVCADsvertnMPxbbksAkB5BQWMFVuBjNo5PoE
+         rCRJdGN5g0KciTLbzF3B30HqPy6QFkdskEXfqqia6EZtUKr3NhMxrZEIkSzWGZD4WZIF
+         LF98/Mnd6d05UCFK8csJ6CQER+8u9yoqYYVD+rkgnuv+Rj5B3FZgiKkqrbWIf6ERAL/m
+         yTSjbBBlHNnmx7faxRa55gsONcvUdAvqY3vsAwFr9COtp+T4mr80DcwDOzXxdic1nkKg
+         IM4w==
+X-Gm-Message-State: APjAAAUfLHok/+aRUF7nMQyN+1NnNFXIwUHLkcfoht3TTNPH2PYOiyzh
+        5xsjj8D+V4mf43cL4ml8ZoUQH22W8x639c4RfxKf+GTH
+X-Google-Smtp-Source: APXvYqxej0lhInzne5NXHvBkXSEhPEAZJNAeSRcEpKwOs9nJoEQyJXn9c82lVv/8xPPEFiqnHi+itxduPEsOPHOWRTY=
+X-Received: by 2002:a24:38c:: with SMTP id e134mr764476ite.24.1551836136101;
+ Tue, 05 Mar 2019 17:35:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190306013213.GA1662@ziepe.ca>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551836051; bh=fq/HESMUJWBf059BBX+oMOGMTSzOEnBoqdF74U+vpJk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=C+hB89nQ9YW70yt0RWj8v+uzy9zwNRFfBdGoCq7bd89OCRZkNw7c4RhFusE6Eoltj
-         GMpXbfU90OsiqipDUOeIwFOG//icBckExIXFjgaJQV68QYU75RxdRib4z+1gyhSazm
-         ZPMee18ECaDRb0nJOW3B0/zNeIQd1g/12GdjipSQqjvw9xkt0Iu7IDdS1/7/ADtstZ
-         I/xJY/9Brn2KaYiqgSwJjXqEQYXLmJm8schB+66rZ/fwG5dwbr9X1xQcM98PuqrjrN
-         gbcMIHwSIVuXQZk1C0OVOSpsJTH39foJVdaIH30XHQAeda5UUBgCZVpn5w99lYBJ6X
-         HxvibPZcbpf9Q==
+References: <20190305044936.22267-1-dbasehore@chromium.org>
+ <20190305044936.22267-2-dbasehore@chromium.org> <155181177527.20095.15680753964583935841@swboyd.mtv.corp.google.com>
+In-Reply-To: <155181177527.20095.15680753964583935841@swboyd.mtv.corp.google.com>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Tue, 5 Mar 2019 17:35:24 -0800
+Message-ID: <CAGAzgso9-1j2XDsHQn+RbSTtV8Vqideu_nG=2qCJD94iyaxFFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] clk: Remove recursion in clk_core_{prepare,enable}()
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-doc@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        aisheng.dong@nxp.com, mchehab+samsung@kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, jbrunet@baylibre.com,
+        Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/19 5:32 PM, Jason Gunthorpe wrote:
-> On Wed, Mar 06, 2019 at 03:02:36AM +0200, Artemy Kovalyov wrote:
->>
->>
->> On 04/03/2019 00:37, John Hubbard wrote:
->>> On 3/3/19 1:52 AM, Artemy Kovalyov wrote:
->>>>
->>>>
->>>> On 02/03/2019 21:44, Ira Weiny wrote:
->>>>>
->>>>> On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
->>>>>> From: John Hubbard <jhubbard@nvidia.com>
->>>>>>
->>>>>> ...
->>>
->>> OK, thanks for explaining! Artemy, while you're here, any thoughts about the
->>> release_pages, and the change of the starting point, from the other part of the
->>> patch:
->>>
->>> @@ -684,9 +677,11 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
->>> u64 user_virt,
->>> 	mutex_unlock(&umem_odp->umem_mutex);
->>>
->>>    		if (ret < 0) {
->>> -			/* Release left over pages when handling errors. */
->>> -			for (++j; j < npages; ++j)
->> release_pages() is an optimized batch put_page() so it's ok.
->> but! release starting from page next to one cause failure in
->> ib_umem_odp_map_dma_single_page() is correct because failure flow of this
->> functions already called put_page().
->> So release_pages(&local_page_list[j+1], npages - j-1) would be correct.
-> 
-> Someone send a fixup patch please...
-> 
-> Jason
+On Tue, Mar 5, 2019 at 10:49 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Derek Basehore (2019-03-04 20:49:31)
+> > From: Stephen Boyd <sboyd@codeaurora.org>
+> >
+> > Enabling and preparing clocks can be written quite naturally with
+> > recursion. We start at some point in the tree and recurse up the
+> > tree to find the oldest parent clk that needs to be enabled or
+> > prepared. Then we enable/prepare and return to the caller, going
+> > back to the clk we started at and enabling/preparing along the
+> > way. This also unroll the recursion in unprepare,disable which can
+> > just be done in the order of walking up the clk tree.
+> >
+> > The problem is recursion isn't great for kernel code where we
+> > have a limited stack size. Furthermore, we may be calling this
+> > code inside clk_set_rate() which also has recursion in it, so
+> > we're really not looking good if we encounter a tall clk tree.
+> >
+> > Let's create a stack instead by looping over the parent chain and
+> > collecting clks of interest. Then the enable/prepare becomes as
+> > simple as iterating over that list and calling enable.
+> >
+> > Modified verison of https://lore.kernel.org/patchwork/patch/814369/
+> > -Fixed kernel warning
+> > -unrolled recursion in unprepare/disable too
+> >
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > ---
+>
+> From the original post:
+>
+> "I have some vague fear that this may not work if a clk op is framework
+> reentrant and attemps to call consumer clk APIs from within the clk ops.
+> If the reentrant call tries to add a clk that's already in the list then
+> we'll corrupt the list. Ugh."
+>
+> Do we have this sort of problem here? Or are you certain that we don't
+> have clks that prepare or enable something that is already in the
+> process of being prepared or enabled?
 
-Yeah, I'm on it. Just need to double-check that this is the case. But Jason,
-you're confirming it already, so that helps too.
+I can look into whether anything's doing this and add a WARN_ON which
+returns an error if we ever hit that case. If this is happening on
+some platform, we'd want to correct that anyways.
 
-Patch coming shortly.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+>
