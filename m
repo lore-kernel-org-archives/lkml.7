@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB231C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04484C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1B720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22D320675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfCFJ2Q (ORCPT
+        id S1729598AbfCFJ21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:28:16 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:54014 "EHLO
+        Wed, 6 Mar 2019 04:28:27 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:54034 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725747AbfCFJ2P (ORCPT
+        by vger.kernel.org with ESMTP id S1729078AbfCFJ20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:28:15 -0500
+        Wed, 6 Mar 2019 04:28:26 -0500
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x269KEKP030353;
-        Wed, 6 Mar 2019 03:28:12 -0600
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x269Jkjv029768;
+        Wed, 6 Mar 2019 03:28:22 -0600
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2r1v7xa23d-1;
-        Wed, 06 Mar 2019 03:28:11 -0600
-Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
-        by mail1.cirrus.com (Postfix) with ESMTP id 5C86A611E130;
-        Wed,  6 Mar 2019 03:28:11 -0600 (CST)
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2r1v7xa23p-1;
+        Wed, 06 Mar 2019 03:28:22 -0600
+Received: from EX17.ad.cirrus.com (ex17.ad.cirrus.com [172.20.9.81])
+        by mail3.cirrus.com (Postfix) with ESMTP id 570A9611C8B2;
+        Wed,  6 Mar 2019 03:28:38 -0600 (CST)
 Received: from imbe.wolfsonmicro.main (198.61.95.81) by EX17.ad.cirrus.com
  (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
- 09:28:10 +0000
+ 09:28:21 +0000
 Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com
  [198.61.86.93])        by imbe.wolfsonmicro.main (8.14.4/8.14.4) with ESMTP id
- x269SA8T000931;        Wed, 6 Mar 2019 09:28:10 GMT
-Date:   Wed, 6 Mar 2019 09:28:10 +0000
+ x269SLw0001936;        Wed, 6 Mar 2019 09:28:21 GMT
+Date:   Wed, 6 Mar 2019 09:28:21 +0000
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     Steve Twiss <stwiss.opensource@diasemi.com>
 CC:     Liam Girdwood <lgirdwood@gmail.com>,
@@ -45,19 +45,19 @@ CC:     Liam Girdwood <lgirdwood@gmail.com>,
         Support Opensource <support.opensource@diasemi.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Cirrus Patches <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 12/13] regulator: wm831x isink: Fix notifier mutex lock
+Subject: Re: [PATCH 13/13] regulator: wm831x ldo: Fix notifier mutex lock
  warning
-Message-ID: <20190306092810.GH46536@ediswmail.ad.cirrus.com>
+Message-ID: <20190306092821.GI46536@ediswmail.ad.cirrus.com>
 References: <cover.1551808797.git.stwiss.opensource@diasemi.com>
- <f3e0a68a956e63e46cfa22de3716ab24f422edf9.1551808797.git.stwiss.opensource@diasemi.com>
+ <f2a9f1b5ced38ac25303fbe746022f00b8b17ce7.1551808797.git.stwiss.opensource@diasemi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <f3e0a68a956e63e46cfa22de3716ab24f422edf9.1551808797.git.stwiss.opensource@diasemi.com>
+In-Reply-To: <f2a9f1b5ced38ac25303fbe746022f00b8b17ce7.1551808797.git.stwiss.opensource@diasemi.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=873 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=850 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1903060064
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 03:51:28PM +0000, Steve Twiss wrote:
+On Tue, Feb 26, 2019 at 03:54:01PM +0000, Steve Twiss wrote:
 > The mutex for the regulator_dev must be controlled by the caller of
 > the regulator_notifier_call_chain(), as described in the comment
 > for that function.
@@ -75,7 +75,7 @@ On Tue, Feb 26, 2019 at 03:51:28PM +0000, Steve Twiss wrote:
 > regulator_notifier_call_chain() when that function call is first made.
 > The mutex can be controlled using the regulator_lock/unlock() API.
 > 
-> Fixes: d4d6b722e780 ("regulator: Add WM831x ISINK support")
+> Fixes: d1c6b4fe668b ("regulator: Add WM831x LDO support")
 > Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 > ---
