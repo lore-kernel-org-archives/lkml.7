@@ -2,93 +2,99 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F259C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7A2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D47D206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:12:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MAFuedTf"
+	by mail.kernel.org (Postfix) with ESMTP id 4DF4B20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfCFOMs (ORCPT
+        id S1727361AbfCFOPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 09:12:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52526 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfCFOMq (ORCPT
+        Wed, 6 Mar 2019 09:15:33 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48919 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfCFOPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 09:12:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7vOihw0YlqCQPkpXlF74W9CWc2BPFCQYVyoMm8mGKbA=; b=MAFuedTfyLKoIefcMPyQZOJ+W
-        oRp12OUZCpnarov8gd3AQKlLFr+GqwSF03IjbMTkObUyJK0ptbtwi9Ccl47fNnmwUe3PaISalikXR
-        OCNTfKKbj6zWUNx+9u4eOTuCqBbuSbxBhK4AyvPR03iyGrPCCxHlMJ/CwZHdPEMkJMtOWizz3QUKm
-        VDLGRaYNLhfFKcLSqPu3rusQE1dO4WMOE4w5bXw7mPBj2f7CQyT6UgdFcavK0SaDR4o/A7x37wTs5
-        mTGQHdcMBNQDZ4rFfCtVcyMuS/2jp1vOjVGa0tOZh0Y4sTQ5An/pW1saDO/SediqHf5/W5R2MFoUx
-        tZzN9y1dw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1XHj-00006E-00; Wed, 06 Mar 2019 14:12:39 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3A0122029B174; Wed,  6 Mar 2019 15:12:37 +0100 (CET)
-Date:   Wed, 6 Mar 2019 15:12:37 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
-Message-ID: <20190306141237.GW32477@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.078767622@infradead.org>
- <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
- <20190301144556.GY32477@hirez.programming.kicks-ass.net>
- <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
- <20190301152305.GJ32494@hirez.programming.kicks-ass.net>
- <20190306131347.GX32534@hirez.programming.kicks-ass.net>
- <CACT4Y+YFkDRwTN1MKqLDePfuRis3Qas1kgEF7g5eVR0ijodtkw@mail.gmail.com>
- <20190306135728.GV32477@hirez.programming.kicks-ass.net>
- <CACT4Y+YP+Xn3TxVXrza_LBK8m7CCKBUYWpuGS0+MzFCXEE+Akg@mail.gmail.com>
+        Wed, 6 Mar 2019 09:15:33 -0500
+X-Originating-IP: 90.88.150.179
+Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 716DE1C000D;
+        Wed,  6 Mar 2019 14:15:30 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 15:15:29 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Eric Anholt <eric@anholt.net>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Eben Upton <eben@raspberrypi.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 0/3] drm/vc4: Add a load tracker
+Message-ID: <20190306141529.a6xas3b63dn36o6l@flea>
+References: <20190220155124.25022-1-paul.kocialkowski@bootlin.com>
+ <87sgwie42w.fsf@anholt.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m6dmrx72wi3buuqy"
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+YP+Xn3TxVXrza_LBK8m7CCKBUYWpuGS0+MzFCXEE+Akg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87sgwie42w.fsf@anholt.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 03:01:33PM +0100, Dmitry Vyukov wrote:
-> On Wed, Mar 6, 2019 at 2:57 PM Peter Zijlstra <peterz@infradead.org> wrote:
 
-> > I've not found callers of __asan_report_load* with AC=1 in the kernel
-> > yet. Under what condtions does GCC emit calls to these functions?
-> 
-> CONFIG_KASAN_INLINE=y
-> Then compiler inlines fast path into generated code and only calls
-> into runtime to report errors (also, faster, this should be a default
-> for anything other than tiny ROM controllers).
+--m6dmrx72wi3buuqy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-*sigh*, clearly I've not build enough kernels yet... Lemme go try that.
+On Wed, Feb 20, 2019 at 09:56:39AM -0800, Eric Anholt wrote:
+> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+>=20
+> > Hi,
+> >
+> > Here is a fourth iteration of the VC4 load tracking series, which was
+> > initially developed by Boris Brezillon and that I have now taken over.
+> >
+> > This new iteration takes in account comments from v3 and comes with a
+> > new approach for avoiding underrun reports when reconfiguring the
+> > pipeline. It is now based on detection instead of delaying the underrun
+> > interrupt unmasking.
+> >
+> > It can be tested with a dedicated IGT GPU Tools series:
+> >   VC4 load tracker testing
+>=20
+> Series is:
+>=20
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+>=20
+> Thanks for persisting on this!
+
+Applied all three patches to drm-misc-next.
+
+Maxime
+
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--m6dmrx72wi3buuqy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH/WAQAKCRDj7w1vZxhR
+xUs2AP0f+FfZXQ3TMHgu2xsEUttkmQhuPu/z+1tt0jVC4dFvmQEAvSEX/es6lHgY
+kaFX9cgTqGjoZf7klp40FlFP76U3fAw=
+=Fl0T
+-----END PGP SIGNATURE-----
+
+--m6dmrx72wi3buuqy--
