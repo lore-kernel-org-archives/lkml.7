@@ -6,114 +6,79 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6953AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2100C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EEB20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3AD20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfCFKxL (ORCPT
+        id S1730093AbfCFKyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:53:11 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:35909 "EHLO
+        Wed, 6 Mar 2019 05:54:25 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:37525 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfCFKxL (ORCPT
+        with ESMTP id S1727082AbfCFKyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:53:11 -0500
+        Wed, 6 Mar 2019 05:54:24 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MZkxj-1gUoEv4BE7-00Wr18; Wed, 06 Mar 2019 11:52:51 +0100
+ 1MowT0-1hJTvh10Fa-00qRCV; Wed, 06 Mar 2019 11:54:19 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     netdev@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] appletalk: Fix compile regression
-Date:   Wed,  6 Mar 2019 11:52:36 +0100
-Message-Id: <20190306105249.2165038-1-arnd@arndb.de>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] appletalk: Add atalk.h header files to MAINTAINERS file
+Date:   Wed,  6 Mar 2019 11:52:37 +0100
+Message-Id: <20190306105249.2165038-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190306105249.2165038-1-arnd@arndb.de>
+References: <20190306105249.2165038-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/jRd9q1XZJAFsz3r5gJJf4LaKq31rWb+CKKYKuPWmai36hTMVOl
- yDKw3+8qmqmyABGtbcDBmGEIdfg+WdkNRJ0jz18sOSBnsB2/R4SOrpbCESSfSZYzhY/h48D
- uDxEnAJE0XYxKHq1zx/0iiJ97gTKbkG81iEts6VZjMbYbENAb5uX6kggBnqjX5BM2Cr4fhM
- SkmbwV+nFOUOFNPM0VOfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Zo5N12rnU68=:wi1oYA8ybpBHfDDE6wGLJx
- l+NATxFimdrWdwUUF/ltvg/cidhkREWJ/h657pVzBwgFjRgrvd6hw9+pwpbqjPjpEquckBlzI
- BHWcHyTLJKE/UKw/xWPaMfw/Vn0yCHCTDNGzj/XWEQuKci6oPCCD6GQADvwimbsDtM7ENXdPH
- DTjoNEt/4iFT7GFiVHULn5hFF9opeZNaE8lT0eZC6lpvQPUNTgzNdJEvqXlNl9KqjliM9Yc83
- QI1hJmJbzYq2s9a2LiX+7xPZfobtMeynLKPb8aB4EEOM77hWEocvdw27dvIVs+2DqKKCUD9d3
- 6qW5MsBIJvc7rzIZzCdpeOFqgxBw1L/ST90UEKtfQZe607BeTllCXh1wFVtk6w1u85nS5tKMs
- oofLhaxbK0kG0oZeGtuZAY/1O02qyTvumcw/vqsIHCNiRmze9b0ogf41ai+ZTC1LTJyOOIqsb
- OtgP4Y5fEDZ0uJmtEJkcYIAAl7guCCU1oz8QG1lyAaoC/nwvuMQfMifDtsTE+PgqJlSy/57fU
- XzOH6US9JKNvtzosHdtf8LlH6x2psRjS7wgkpaWbTJ8U48tYiQC4VQqOYloSajJrx7ehohVZ7
- 71mxKxr8X3CF8pR4MPWrlxS4xiQuL26Nw/y3W25q5pvR3SBETwey+Pi19cK5L19/ye9EVBLg2
- BJfKfV2TvlgSLgCQb/YTpFQpAod59cxpHN//FhwJQ1lqeTpkS1O7943KUvIzt+fWXB0oz4+Wx
- R9zntaUkH0trrwQTwk08VshocMBCrNp0+HmMpw==
+X-Provags-ID: V03:K1:JMQw8Awr6G37WwGOfVRwI4KS6Q79JUrX0ye3tEGwB2Is07dQswW
+ U096LGjc11M2HHZMAX3ztLB8/5+mJbdkvUI8woQVTwTSxn6RguLYCVckjBwD7yrlyqui/4Z
+ BxDILTNak6DlObJ38kVO++ov1t158Zz67G1vN+bXyM7g+Nlh9BuvhcA/2mAfZ88yiJUsOCf
+ hEMdij6/nKTq1HTm39VrQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CWyEpVprRso=:lEics7Ifb7ACrlAX8wzrvJ
+ qOYakD+39zQIZzmBhXlr09D0bcsnnGnu9VBauOHWiACVcj7BxBZugNOgX0rVJwNLgkj0kuwv+
+ /l0YRuHLLnCW/I8fHgTAkmNfDJJlrYzFmxpfi5Gzo8LmLfDHLlwDDi0rJr/DXZgxjGjDr+Cdn
+ XLLGoSOMcRiqmQv9M7wUl5lTDRzwOqspuiLAfFhP3nz3eorzynhmCVrX0pTapkUC7SO24Wnbt
+ 3dQz6VcHbbMWv1RYYsiamxnSBOmGEk181cCUcQczYtkbnMQib36nvaBYhUbIciUVlBkeCn+t5
+ /GwMHnn0p0mo706YEnVMOD7RS1atmRP4yj0135eBUKjV2qMtya5Bol5TjvEqRzX/tTZZsRIag
+ QdQVVtiAoON12Nrm65yW6fMvFjqZHeZcX+n8Henacdsvqjiz69zrHbRNDwqgJUpnYadqMA4nj
+ BaXRqQoXc1+y9d1MOEVjvFHLD2W49F24REwCAqtitZkM0KWBHonSkuveafi+5ZJBWrjVGHtdm
+ fMKxU7OKu3CuoeYHJelrMKroYdwdsqZz6rmI+qeomz79bnLvxtcx5ikmyTriN68x5iTMzoqRn
+ KYgtqgSEGKTsTXmc7qYhxVocwd1s/pIOnqAMrryEjxUDhhrVno0QlVT2K0Ha52/IaV7qQQn0C
+ pHbK8LqbETU2cM8SYEx49zLf8Epli1GHeaow0x5GYSDXawOhY6kyMRHDxzE2jvdP7qg57S/Cu
+ /OthPbCbMj83kjE/s6DUgWsCGdH7s2r2gVz1fA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A bugfix just broke compilation of appletalk when CONFIG_SYSCTL
-is disabled:
+Add the path names here so that git-send-email can pick up the
+netdev@vger.kernel.org Cc line automatically for a patch that
+only touches the headers.
 
-In file included from net/appletalk/ddp.c:65:
-net/appletalk/ddp.c: In function 'atalk_init':
-include/linux/atalk.h:164:34: error: expected expression before 'do'
- #define atalk_register_sysctl()  do { } while(0)
-                                  ^~
-net/appletalk/ddp.c:1934:7: note: in expansion of macro 'atalk_register_sysctl'
-  rc = atalk_register_sysctl();
-
-This is easier to avoid by using conventional inline functions
-as stubs rather than macros. The header already has inline
-functions for other purposes, so I'm changing over all the
-macros for consistency.
-
-Fixes: 6377f787aeb9 ("appletalk: Fix use-after-free in atalk_proc_exit")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-resent with mailing list on Cc
----
- include/linux/atalk.h | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/atalk.h b/include/linux/atalk.h
-index 5a90f28d5ff2..d5cfc0b15b76 100644
---- a/include/linux/atalk.h
-+++ b/include/linux/atalk.h
-@@ -161,16 +161,26 @@ extern int sysctl_aarp_resolve_time;
- extern int atalk_register_sysctl(void);
- extern void atalk_unregister_sysctl(void);
- #else
--#define atalk_register_sysctl()		do { } while(0)
--#define atalk_unregister_sysctl()	do { } while(0)
-+static inline int atalk_register_sysctl(void)
-+{
-+	return 0;
-+}
-+static inline void atalk_unregister_sysctl(void)
-+{
-+}
- #endif
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1e64279f338a..1f344f0c2254 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1059,6 +1059,8 @@ L:	netdev@vger.kernel.org
+ S:	Odd fixes
+ F:	drivers/net/appletalk/
+ F:	net/appletalk/
++F:	include/linux/atalk.h
++F:	include/uapi/linux/atalk.h
  
- #ifdef CONFIG_PROC_FS
- extern int atalk_proc_init(void);
- extern void atalk_proc_exit(void);
- #else
--#define atalk_proc_init()	({ 0; })
--#define atalk_proc_exit()	do { } while(0)
-+static inline int atalk_proc_init(void)
-+{
-+	return 0;
-+}
-+static inline void atalk_proc_exit(void)
-+{
-+}
- #endif /* CONFIG_PROC_FS */
- 
- #endif /* __LINUX_ATALK_H__ */
+ APPLIED MICRO (APM) X-GENE DEVICE TREE SUPPORT
+ M:	Khuong Dinh <khuong@os.amperecomputing.com>
 -- 
 2.20.0
 
