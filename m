@@ -2,197 +2,241 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D847C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71033C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD6120663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2518720663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccTd2CEU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBd2SxJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfCFXMr (ORCPT
+        id S1726248AbfCFXNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 18:12:47 -0500
-Received: from mail-it1-f194.google.com ([209.85.166.194]:35083 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCFXMq (ORCPT
+        Wed, 6 Mar 2019 18:13:31 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38573 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfCFXNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 18:12:46 -0500
-Received: by mail-it1-f194.google.com with SMTP id 188so12925547itb.0;
-        Wed, 06 Mar 2019 15:12:45 -0800 (PST)
+        Wed, 6 Mar 2019 18:13:30 -0500
+Received: by mail-lj1-f194.google.com with SMTP id 199so12488566ljj.5;
+        Wed, 06 Mar 2019 15:13:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1yYY+hlDrFnFfX0Lw0YllZ9KuunWzLXQegi/MDoLIIQ=;
-        b=ccTd2CEUfadVkqIG5F21ppkpCDRJhwZ3sYqJxWp40HMveZiw+EzC5GaPHkRuOCpSsD
-         x0YbSGJUWygD2/GMqjpx3Sx/hxJHRaypd8iPifQsJKeYjJOTWuqYsBNCpCFEAMc9utcz
-         zJt7OIAwM3u0iZTkxyJ+y9OAKhTfeIwkmDjsMxLAjyQBfv/H0rQ4aIvtGUELFmltZw/R
-         bM++BG9zip81E0geoEqpOMjiyhf+rFmCJNYQnV4Tc3VulYIqUA/QYMfGd9+YzRYuc4Qj
-         VFrb4RXnvuh25j1c0bnx5rDK/WAtihwwzOj4omul9UmHE5TPOTpC4a2CSVtx+Nodcqo1
-         e74Q==
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aTzEPq963NUOgByo5HwPXtKbRC2xUp3lDNkLo3K0Ut8=;
+        b=VBd2SxJ+9fJZhBePdky8pZsP4mb40rJr8f74ShX5fw9beqVqQ+FJo/SaLLmOSLiBOu
+         DAl2wamjzHdKh3g/YYhw+KE43zSVCLLv18aPk7MSdkC9ZHgNfe+Kp9pU/TJ7kF6Qv4MB
+         XuBCkyyM4wE28i77/2n0r7GR02UqWZyOnSvLYY2OU0YgqtMD0CBovJC6OKUlzTijgREc
+         7KSFYr68vD6y2wephyLnjlD5h+yPLT8KOW1QEp0tTqCmlacM4G+654JYTYxBycnQ9ir4
+         Dcttme2gV1Xtl24yB+9hYWI4F7hiBqXZLL0nd54UqacYV6i3NxPdf9zF/ZULLxfPGhYw
+         6CuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1yYY+hlDrFnFfX0Lw0YllZ9KuunWzLXQegi/MDoLIIQ=;
-        b=UKsfMIqHAmLT8xTNMFH6P39l3Kpw8yiqtYaG5ltvonL5Un7o4MQQGMiIxT4C0FnDhR
-         1qcHUY5fI3zx0uMQfwsszhiJHNjh2//kcc8yQAurQJaNMZJBJ+YwfEFfNst/Q+5+spsJ
-         6cwi/n8zs6Hl/8lUnJkTI+wNzP8jRUNW5N0/BEE0slQ/ccMVsVfpk7pMqZYpJ4cBBiCE
-         FZM/YR4mCy2k9lSVI64Mzz3zztJ1oIbxlUdZgj3YlWkzoEQl0aL7WvZoJ0RDLA2sGIN6
-         WRXSiHWe6llT5+ozwsG3/V8xPAjIs8fD14QnhL988nS9pkuGqhLakf9tMigF68EdMVRG
-         qsuQ==
-X-Gm-Message-State: APjAAAVz2V7KFdeAg1zn9R/pDnmwDzbqYPeh8JcFZiQJEwQCjY1dNvvc
-        xLBj61uWU28SdH7xjZSh9Yl0nfG1741I0vEDyHs=
-X-Google-Smtp-Source: APXvYqzQsJp2+41k/pIeJ0VDstp4dM3UZ2CNqmpIYH9+63MK2mMWrd/7nWmxDo3vKjdieKVRBF6vFO68MeK1xnPtYjc=
-X-Received: by 2002:a24:4650:: with SMTP id j77mr3611316itb.6.1551913965195;
- Wed, 06 Mar 2019 15:12:45 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=aTzEPq963NUOgByo5HwPXtKbRC2xUp3lDNkLo3K0Ut8=;
+        b=JxSonDA4lq9KWfEqvk5m3OkRbm1sEmLVIzMjkXMPq3s97LcphJkqACFlqIpLoxyCrK
+         wV8eY5zYnN1+wrgi2YioEOvGn3vOhjtUfOHaNA061H6ou/Kgk9VeNxXH/BSOqaVXoqOL
+         fqwoNTj9NEnBkWs7p1gFfk1SxLR9AlVOlhT1+gaxVXJbiY/8jq2VEYSlFNwCk9wH3XnJ
+         aCy/JEIPaPiNjygsj3L83bzxfPUqXB4iQcBOSo/YvJxDMYt/HS7IcPBBx84+NhmqyNdj
+         gEeoiTrVaXwTHPskVa/hAVFYHNC/T6KqxEv8UPoOsDrxWDbSnryZXFovffrsEqsDg+TS
+         191A==
+X-Gm-Message-State: APjAAAXHdz2mCOBejkBvfX6vXctOqoLFOOg+/dSAqAQifwXaoH+sLAoe
+        3UcAVCEkXX3RvfP/t/9roBI=
+X-Google-Smtp-Source: APXvYqxrNk42nMhn7VEwrzRdgc/d8IDWcU7gggC9CLLQie16acqUl5d/YS8/OMwpSJTJIJYLGrOGMA==
+X-Received: by 2002:a2e:890b:: with SMTP id d11mr4196912lji.174.1551914007437;
+        Wed, 06 Mar 2019 15:13:27 -0800 (PST)
+Received: from mobilestation ([95.79.187.182])
+        by smtp.gmail.com with ESMTPSA id v1sm542663ljc.57.2019.03.06.15.13.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 06 Mar 2019 15:13:26 -0800 (PST)
+Date:   Thu, 7 Mar 2019 02:13:24 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+Subject: Re: [PATCH v2 09/12] NTB: Introduce MSI library
+Message-ID: <20190306231323.gtcuemtdukt6rhcd@mobilestation>
+Mail-Followup-To: Serge Semin <fancer.lancer@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>, linux-kernel@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
+        Jon Mason <jdmason@kudzu.us>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+References: <20190213175454.7506-1-logang@deltatee.com>
+ <20190213175454.7506-10-logang@deltatee.com>
+ <20190306202631.3vc3b64e45ackcna@mobilestation>
+ <5b420eb7-5010-aae3-e9bd-1c612af409ae@deltatee.com>
 MIME-Version: 1.0
-References: <20190306155048.12868-1-nitesh@redhat.com> <20190306110501-mutt-send-email-mst@kernel.org>
- <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com> <20190306130955-mutt-send-email-mst@kernel.org>
- <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com> <20190306133826-mutt-send-email-mst@kernel.org>
- <3f87916d-8d18-013c-8988-9eb516c9cd2e@redhat.com> <20190306140917-mutt-send-email-mst@kernel.org>
- <9ead968e-0cc6-0061-de5c-42a3cef46339@redhat.com> <20190306165223-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190306165223-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 6 Mar 2019 15:12:33 -0800
-Message-ID: <CAKgT0UeN=o0NratKSmhBhBBmwQ06qo9tiU9sqvpq_u8uMZPM1w@mail.gmail.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b420eb7-5010-aae3-e9bd-1c612af409ae@deltatee.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 2:18 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Wed, Mar 06, 2019 at 10:40:57PM +0100, David Hildenbrand wrote:
-> > On 06.03.19 21:32, Michael S. Tsirkin wrote:
-> > > On Wed, Mar 06, 2019 at 07:59:57PM +0100, David Hildenbrand wrote:
-> > >> On 06.03.19 19:43, Michael S. Tsirkin wrote:
-> > >>> On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
-> > >>>>>> Here are the results:
-> > >>>>>>
-> > >>>>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA node with
-> > >>>>>> total memory of 15GB and no swap. In each of the guest, memhog is run
-> > >>>>>> with 5GB. Post-execution of memhog, Host memory usage is monitored by
-> > >>>>>> using Free command.
-> > >>>>>>
-> > >>>>>> Without Hinting:
-> > >>>>>>                  Time of execution    Host used memory
-> > >>>>>> Guest 1:        45 seconds            5.4 GB
-> > >>>>>> Guest 2:        45 seconds            10 GB
-> > >>>>>> Guest 3:        1  minute               15 GB
-> > >>>>>>
-> > >>>>>> With Hinting:
-> > >>>>>>                 Time of execution     Host used memory
-> > >>>>>> Guest 1:        49 seconds            2.4 GB
-> > >>>>>> Guest 2:        40 seconds            4.3 GB
-> > >>>>>> Guest 3:        50 seconds            6.3 GB
-> > >>>>> OK so no improvement.
-> > >>>> If we are looking in terms of memory we are getting back from the guest,
-> > >>>> then there is an improvement. However, if we are looking at the
-> > >>>> improvement in terms of time of execution of memhog then yes there is none.
-> > >>>
-> > >>> Yes but the way I see it you can't overcommit this unused memory
-> > >>> since guests can start using it at any time.  You timed it carefully
-> > >>> such that this does not happen, but what will cause this timing on real
-> > >>> guests?
-> > >>
-> > >> Whenever you overcommit you will need backup swap.
-> > >
-> > > Right and the point of hinting is that pages can just be
-> > > discarded and not end up in swap.
-> > >
-> > >
-> > > Point is you should be able to see the gain.
-> > >
-> > > Hinting patches cost some CPU so we need to know whether
-> > > they cost too much. How much is too much? When the cost
-> > > is bigger than benefit. But we can't compare CPU cycles
-> > > to bytes. So we need to benchmark everything in terms of
-> > > cycles.
-> > >
-> > >> There is no way
-> > >> around it. It just makes the probability of you having to go to disk
-> > >> less likely.
-> > >
-> > >
-> > > Right and let's quantify this. Does this result in net gain or loss?
-> >
-> > Yes, I am totally with you. But if it is a net benefit heavily depends
-> > on the setup. E.g. what kind of storage used for the swap, how fast, is
-> > the same disk also used for other I/O ...
-> >
-> > Also, CPU is a totally different resource than I/O. While you might have
-> > plenty of CPU cycles to spare, your I/O throughput might already be
-> > limited. Same goes into the other direction.
-> >
-> > So it might not be as easy as comparing two numbers. It really depends
-> > on the setup. Well, not completely true, with 0% CPU overhead we would
-> > have a clear winner with hinting ;)
->
-> I mean users need to know about this too.
->
-> Are these hinting patches a gain:
-> - on zram
-> - on ssd
-> - on a rotating disk
-> - none of the above
-> ?
->
-> If users don't know when would they enable hinting?
->
-> Close to one is going to try all possible configurations, test
-> exhaustively and find an optimal default for their workload.
-> So it's our job to figure it out and provide guidance.
+On Wed, Mar 06, 2019 at 02:35:53PM -0700, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-03-06 1:26 p.m., Serge Semin wrote:
+> > First of all, It might be unsafe to have some resources consumed by NTB
+> > MSI or some other library without a simple way to warn NTB client drivers
+> > about their attempts to access that resources, since it might lead to random
+> > errors. When I thought about implementing a transport library based on the
+> > Message/Spad+Doorbell registers, I had in mind to create an internal bits-field
+> > array with the resources busy-flags. If, for instance, some message or
+> > scratchpad register is occupied by the library (MSI, transport or some else),
+> > then it would be impossible to access these resources directly through NTB API
+> > methods. So NTB client driver shall retrieve an error in an attempt to
+> > write/read data to/from busy message or scratchpad register, or in an attempt
+> > to set some occupied doorbell bit. The same thing can be done for memory windows.
+> 
+> Yes, it would be nice to have a generic library to manage all the
+> resources, but right now we don't and it's unfair to expect us to take
+> on this work to get the features we care about merged. Right now, it's
+> not at all unsafe as the client is quite capable of ensuring it has the
+> resources for the MSI library. The changes for ntb_transport to ensure
+> this are quite reasonable.
+> 
+> > Second tiny concern is about documentation. Since there is a special file for
+> > all NTB-related doc, it would be good to have some description about the
+> > NTB MSI library there as well:
+> > Documentation/ntb.txt
+> 
+> Sure, I'll add a short blurb for v3. Though, I noticed it's quite out of
+> date since your changes. Especially in the ntb_tool section...
+> 
 
-Right. I think for now I will stick to testing on what I have which is
-a SSD for swap, and no-overcommit for the "non of the above" case.
+Ok. Thanks.
+If you want you can add some info to the ntb_tool section as well. If you
+don't have time, I'll update it next time I submit anything new to the
+subsystem.
 
-BTW it looks like this patch set introduced a pretty heavy penalty for
-the no-overcommit case. For a 32G VM with no overcommit a 32G memhog
-test is now taking over 50 seconds whereas without the patch set I can
-complete the test in around 20 seconds.
+-Sergey
 
-> >
-> > >
-> > >
-> > >> If you assume that all of your guests will be using all of their memory
-> > >> all the time, you don't have to think about overcommiting memory in the
-> > >> first place. But this is not what we usually have.
-> > >
-> > > Right and swap is there to support overcommit. However it
-> > > was felt that hinting can be faster since it avoids IO
-> > > involved in swap.
-> >
-> > Feels like it, I/O is prone to be slow.
-> >
-> >
-> > --
-> >
-> > Thanks,
-> >
-> > David / dhildenb
->
-> OK so should be measureable.
->
-> --
-> MST
+> >> +	u32 *peer_mws[];
+> > 
+> > Shouldn't we use the __iomem attribute here since later the devm_ioremap() is
+> > used to map MWs at these pointers?
+> 
+> Yes, will change for v3.
+> 
+> 
+> > Simpler and faster cleanup-code would be:
+> 
+> > + unroll:
+> > + 	for (--i; i >= 0; --i)
+> > + 		devm_iounmap(&ntb->dev, ntb->msi->peer_mws[i]);
+> 
+> Faster, maybe, but I would not consider this simpler. It's much more
+> complicated to reason about and ensure it's correct. I prefer my way
+> because I don't care about speed, but I do care about readability.
+> 
+> 
+> > Alas calling the ntb_mw_set_trans() method isn't enough to fully initialize
+> > NTB Memory Windows. Yes, the library will work for Intel/AMD/Switchtec
+> > (two-ports legacy configuration), but will fail for IDT due to being based on
+> > the outbound MW xlat interface. So the library at this stage isn't portable
+> > across all NTB hardware. In order to make it working the translation address is
+> > supposed to be transferred to the peer side, where a peer code should call
+> > ntb_peer_mw_set_trans() method with the retrieved xlat address.
+> > See documentation for details:
+> 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/ntb.txt
+> > 
+> > ntb_perf driver can be also used as a reference of the portable NTB MWs setup.
+> 
+> Gross. Well, given that ntb_transport doesn't even support this and we
+> don't really have a sensible library to transfer this information, I'm
+> going to leave it as is for now. Someone can update ntb_msi when they
+> update ntb_transport, preferably after we have a nice library to handle
+> the transfers for us seeing I absolutely do not want to replicate the
+> mess in ntb_perf.
+> 
+> Actually, if we had a generic spad/msg communication library, it would
+> probably be better to have a common ntb_mw_set_trans() function that
+> uses the communications library to send the data and automatically call
+> ntb_peer_mw_set_trans() on the peer. That way we don't have to push this
+> mess into the clients.
+> 
+> > The same cleanup pattern can be utilized here:
+> > +error_out:
+> > +	for (--peer; peer >= 0; --peer) {
+> > +		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
+> > +		ntb_mw_clear_trans(ntb, i, peer_widx);
+> > +	}
+> > 
+> > So you won't need "i" variable here anymore. You also don't need to check the
+> > return value of ntb_peer_highest_mw_idx() in the cleanup loop because it
+> > was already checked in the main algo code.
+> 
+> See above.
+> 
+> >> +EXPORT_SYMBOL(ntb_msi_clear_mws);
+> >> +
+> > 
+> > Similarly something like ntb_msi_peer_clear_mws() should be added to
+> > unset a translation address on the peer side.
+> 
+> Well, we can table that for when ntb_msi supports the peer MW setting
+> functions.
+> >> +int ntb_msi_peer_trigger(struct ntb_dev *ntb, int peer,
+> >> +			 struct ntb_msi_desc *desc)
+> >> +{
+> >> +	int idx;
+> >> +
+> >> +	if (!ntb->msi)
+> >> +		return -EINVAL;
+> >> +
+> >> +	idx = desc->addr_offset / sizeof(*ntb->msi->peer_mws[peer]);
+> >> +
+> >> +	ntb->msi->peer_mws[peer][idx] = desc->data;
+> >> +
+> > 
+> > Shouldn't we use iowrite32() here instead of direct access to the IO-memory?
+> 
+> Yes, as above I'll fix it for v3.
+> 
+> >> @@ -425,6 +427,10 @@ struct ntb_dev {
+> >>  	spinlock_t			ctx_lock;
+> >>  	/* block unregister until device is fully released */
+> >>  	struct completion		released;
+> >> +
+> >> +	#ifdef CONFIG_NTB_MSI
+> >> +	struct ntb_msi *msi;
+> >> +	#endif
+> > 
+> > I'd align the macro-condition to the most left position:
+> > +#ifdef CONFIG_NTB_MSI
+> > +	struct ntb_msi *msi;
+> > +#endif
+> 
+> Fixed for v3.
+> 
+> 
+> Logan
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
+> To post to this group, send email to linux-ntb@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/5b420eb7-5010-aae3-e9bd-1c612af409ae%40deltatee.com.
+> For more options, visit https://groups.google.com/d/optout.
