@@ -2,153 +2,104 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85374C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6003EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E4E20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQmC5+1s"
+	by mail.kernel.org (Postfix) with ESMTP id 3032E20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551838423;
+	bh=RlgfuNyTULlM/74n7jczCleTjgjKhXHQr0EmJhM7n4E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=u+KBrNtfOYtQSrvavwvf2kYhWapVdDBm1xasgZM6BjkwaMdeTyi3ryadPDvoSC/FH
+	 j982q4E6Ov6JUd5glDCC9IidCz9hyLUvHb8EAii7adhdUoeIrItDrMqgL7LA6MK9q1
+	 Ls9X5b9aMBXVQ/NdAoaKtXwHvXYRrtQCxfb+DgWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbfCFCMx (ORCPT
+        id S1728844AbfCFCNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 21:12:53 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42262 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfCFCMw (ORCPT
+        Tue, 5 Mar 2019 21:13:41 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35148 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfCFCNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 21:12:52 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b2so7024159pgl.9;
-        Tue, 05 Mar 2019 18:12:52 -0800 (PST)
+        Tue, 5 Mar 2019 21:13:41 -0500
+Received: by mail-lf1-f66.google.com with SMTP id h6so3464939lfc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 18:13:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Z6v6bDAYwichAnuEc7vStabgiv6BkmrMebYmVYFex4=;
-        b=tQmC5+1s55Yvp2TC5tQHCbsksrAj68xUi/8teC/ZAMTcXVUapSD0+brG147QgyL0Y7
-         6AKj4EFkbMogGufSDgGVSVfppH92nuF5i/y2hYgbcSQ3aH0kUlbmEqCuBhb/RhQBuFoK
-         uNeXANDvKdWj136dxewUykiC3e42yv/lIh2OlBuhNP85yI+FKDcSN33UfkFqVcvYl+VM
-         7k+mXnDHBGx4+jsU/IM/W75OqAc0fvICmWW2r8IjWHyriwiCxDEDDfy2+jHjr3ZUpniN
-         p2JR9H6UrluCLhbS3ItT9MgB0Hx6bPPvlF9alF0NCvgOZssxFifIP70T9j3DtY8rxCmX
-         2Pow==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JDpuSMCeIvNCcidtLtsbvARRQv4a3+7l83TX/B6+7qk=;
+        b=GwfZayd0suFlVhYX0r1NULMJRpJ+chlSlvTA4bG286JR3J+7Oskh68hIvPJ3AYVa/H
+         +mBb9b1yJXOPkK9hilVDegWWuL1CPmhdQ8aDQ+/Oo8XMycQ0SnVPt0prkmkwe2CNaWyQ
+         WEFVK/bUZaxZCORJRJYrvsIhitBvX6A4XZAzI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Z6v6bDAYwichAnuEc7vStabgiv6BkmrMebYmVYFex4=;
-        b=n2VrFH/gD+vXyZOs3lU9LbPXKbXUSL4tP+8aRGjfIFFIYBy+7GmVsvQ+X20ThOQKBU
-         58ctPMn5YrjOcW531tIMDHpYi45b7a3W4pJetV4kMLcdavPFSjGY3tnG6tCbf36kNL7v
-         MEPxm84b2JZATWF4e0zTm3pDmHR7L7XOWqb5ttRXX6w77nxcTmQvWfrHBB5QF3+syGFx
-         7gYnGb5jFrQOEMGJUQtQOHnecLniOvEEVoPW7pBPFDn9yN1XxOISWnnWs12A2Tbg+VaM
-         k7m0ICQ25fn4CwMSihFQrkBoSWg+rrfLFuwRYKZN9rzZ3SJu8Ms9GscPXWpYCWIWhJGP
-         lePw==
-X-Gm-Message-State: APjAAAXQ8Dkm2ILI8xa/u2eiPqTbo20svpfGU/AYt90Cgqz9GaSuPC5e
-        q/fZ5HmNbwgZBk93QyTVFK8=
-X-Google-Smtp-Source: APXvYqxLF9WNxX9Z4OkCB3x+R7MIPgFudMtbUzTG7daAGmuHOhvva2vIpv8tI+wRnGVpLKq5FVr/gQ==
-X-Received: by 2002:a17:902:1a9:: with SMTP id b38mr4393594plb.37.1551838371514;
-        Tue, 05 Mar 2019 18:12:51 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v15sm437411pfa.75.2019.03.05.18.12.49
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JDpuSMCeIvNCcidtLtsbvARRQv4a3+7l83TX/B6+7qk=;
+        b=VzzQEssGZ+YCYqlQR1XJM87XAXwV9DdQ+/ksEApMIDHgZkXKzGYWq/h+N4xiYXDKO7
+         bo8qRE9/woh8dLRcegeziguKTbi/GB14h6xLfdHewUiQsqGfHVcmjkTlIQW0UamC9rJg
+         X2zy6VavXgnECWpGm0F1Rop97iEQy/uXIpZVXzUc7aoDr+I5cZGHVzVzZaeKX78RJl3q
+         N2qhfNmSrbUHKqCK/eR//5a8a29ww2jqEjUW7dbl+QS2YSq2//z0j8bqe2Eg7NsYfFHM
+         7qQ4NMcaGucxsut+FEzKt60k19CgRdOCflCRCBfe0dm3SJeIK5lkny1UFK/MLIBWJEti
+         LKCg==
+X-Gm-Message-State: APjAAAWyevu9RZ1xDUgwqAiUBgoh4+vMRUl9ccjqlm9M3yOwLC+bOqse
+        jOqyEQKX+0JBiGK4gYh+OMalp5EbPrM=
+X-Google-Smtp-Source: APXvYqy5spqNkNF8dLjKMc3UowKjVoFbWQjRsIZqyQ5c1JYsg1UAjd6Vhh1oCRjmevcc/qjH28w8kg==
+X-Received: by 2002:ac2:4215:: with SMTP id y21mr2647940lfh.6.1551838418850;
+        Tue, 05 Mar 2019 18:13:38 -0800 (PST)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id c5sm70189lja.90.2019.03.05.18.13.37
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 18:12:50 -0800 (PST)
-Date:   Tue, 5 Mar 2019 18:12:48 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Prateek Patel <prpatel@nvidia.com>,
-        DT <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
- early memory reservation
-Message-ID: <20190306021248.GA17298@roeck-us.net>
-References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
- <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx>
- <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx>
- <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
- <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
- <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
- <20190213085028.6199594b@canb.auug.org.au>
- <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
+        Tue, 05 Mar 2019 18:13:38 -0800 (PST)
+Received: by mail-lf1-f44.google.com with SMTP id d26so7703530lfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 18:13:37 -0800 (PST)
+X-Received: by 2002:ac2:5088:: with SMTP id f8mr2398225lfm.11.1551838417314;
+ Tue, 05 Mar 2019 18:13:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190305120301.GA93284@gmail.com>
+In-Reply-To: <20190305120301.GA93284@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 5 Mar 2019 18:13:21 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiM4_0ZDDAcN0nJ8TsK+MnO1ObmSH4nTvrirA5nenFTHA@mail.gmail.com>
+Message-ID: <CAHk-=wiM4_0ZDDAcN0nJ8TsK+MnO1ObmSH4nTvrirA5nenFTHA@mail.gmail.com>
+Subject: Re: [GIT PULL] RCU updates for v5.1
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@us.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
-> On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> >
-> > On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
-> > > >
-> > > > On 04/02/2019 15:37, Marc Gonzalez wrote:
-> > > >
-> > > > > Cc: stable@vger.kernel.org # 3.15+
-> > > > > Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
-> > > > > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > Acked-by: Prateek Patel <prpatel@nvidia.com>
-> > > > > Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > ---
-> > > > > Resend with DT CCed to reach robh's patch queue
-> > > > > I added CC: stable, Fixes, and Prateek's ack
-> > > > > Trim recipients list to minimize inconvenience
-> > > >
-> > > > I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
-> > > > "memblock: drop __memblock_alloc_base()"
-> > > >
-> > > > It's definitely going to conflict with the proposed patch
-> > > > over drivers/of/of_reserved_mem.c
-> > > >
-> > > > Rob, what's the next step then?
-> > >
-> > > Rebase it on top of what's in linux-next and apply it to the tree
-> > > which has the above dependency. I'm guessing that is Andrew Morton's
-> > > tree.
-> >
-> > Yeah, that is in Andrew's "post linux-next" patch series, so if you
-> > rebase it on top of linux-next and then send it to Andrew with some
-> > explanation.
-> >
-> > ...
-> >
-> > Actually, if it is intended for the stable trees, then presumably it is
-> > intended to go to Linus for the current release?  In which case, the
-> > patch in Andrew's tree will have to be changed to cope after your patch
-> > appears in Linus' tree (and therefore, linux-next).
-> 
-> At this point in the cycle, I wasn't planning to send this for 5.0.
-> It's not fixing something introduced in 5.0 and it is a debug feature.
-> 
-Hi Rob,
+On Tue, Mar 5, 2019 at 4:03 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Please pull the latest core-rcu-for-linus git tree from:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-rcu-for-linus
 
-this may be a debug feature, but we do test our kernels with it enabled,
-and the problem does affect our 4.19 branch (chromeos-4.19). Are you
-suggesting that we should backport the fix into our branch and not send
-the backport to -stable ?
+Hmm. I think this made my build time explode.
 
-No problem, just trying to avoid wasting our time.
+I'm bisecting, but it looks like my allmodconfig builds went from ~31
+min to ~39 min with this pull.
 
-Thanks,
-Guenter
+NOTE! I'm  not saying that the kernel slowed down. Just the *build*
+(with the same kernel) slowed down.
+
+It's odd, and maybe I did something wrong, so I'll have to
+double-check the numbers, but I thought I'd mention it in case
+somebody goes "Ahh, I did X to the include files, so now every
+compiler invocation probably sees all of xyz and that will slow things
+down enormously".
+
+            Linus
