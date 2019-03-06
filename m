@@ -2,108 +2,98 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D9CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A302206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B4E20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uAch6plV"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ArUUrSAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfCFVhm (ORCPT
+        id S1726313AbfCFVi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:37:42 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42205 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFVhm (ORCPT
+        Wed, 6 Mar 2019 16:38:27 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45382 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFVi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:37:42 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b2so9437475pgl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 13:37:42 -0800 (PST)
+        Wed, 6 Mar 2019 16:38:26 -0500
+Received: by mail-qk1-f195.google.com with SMTP id v139so7758357qkb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 13:38:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y2vf15Ic7g8xBFgvPGfR2CXL2T3Ehbl3TcB+bdjrhEg=;
-        b=uAch6plV3eeCsqHxLzYCUc3rWWKRH/c7zONsAHDXIlc9wcj+QyMY0lfWV5lJ2iE4HA
-         HhoL8/B6sXWy5DY1F3CLyM5UYObNpInaIyIMdSvP6mVLzo0mpij/rWDZV5r7fCKpgpa2
-         UU1uOzLr/Kg7P5i6HvuSEBq0+6h90GM6rIe3xwpG+NYoBaSrp3eif2jcPuI0xEc3fjCR
-         l79CPQTO9tI2Zx9I+qLWvz2osi5SCNKnsMeNhWbKSfil2wbrmYtV6fYmk3cPv14OXWjU
-         HxKYtYrMykMhs4T2Hyb+UfveATg1jZmgyxIU947gj+xmVfp7yOKF7wtOaZmRtKLCairG
-         KWOQ==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Kmnz/guZPJnRPV2xKUGZraLYc52bC6Yc94Bjksc5cLM=;
+        b=ArUUrSAD2NzcY95UPnvXBFw4Gk7PHBSGPLEXvuPWD9s325FpXawK7pCWywUUWl6QTt
+         Cgd6/7byaLnFT0ZxV8kfojcps7U8mXF7PC0KtFVWE1P3ir0lnnyTOSD5pAKuky+qYfzy
+         iCv35q/Dw855IUoti90UxpL7M1Td+z0dJQBwdRrj92aGotU4N9POqNFSYidpecR2LCLN
+         sAn7RD+PT0ltHqUb06im4BZgkhjl7T+mZjJ+lzQDEjZW/BjGOVtkueP9e3RolKvHHil+
+         J/PdgQ00McBiKhDjAGcH9DpsEQS/bxxVuI0pgELNX9IzdnUzioUWt2CKNB1WrBnyDFdX
+         mDJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y2vf15Ic7g8xBFgvPGfR2CXL2T3Ehbl3TcB+bdjrhEg=;
-        b=Y9rFrdx4NxPLW7dBtwNe8oc8V10fsBX0uRXDwGZUKX4dWi8Aa1CkSHtu5Qg5BSlun3
-         o3aN2rDfAh7c/SAgMFzlQfNrOZFCcAYdohnCnXlixTrdtiK732re2Pv7CE12rudSKWIb
-         n2/SVrNfYPdSbll8wAkgJ65UvZpf7/s7pNz6/TMnQvlcKE4PS4s7Lf+5ElafZ/jwTEnC
-         yXk4ivdMwKVoEGzv26quE8V+MVsGJR/7/5sPWB/g2zY4UcVJ8qkRwSxbipYF5m8poZAk
-         exx9ptFfivmiRTlukBTSSRdNUlj2hh+J0PqCCSRt26AKzub7jIBAfOsWHJ1fjQ34Rikb
-         SSSw==
-X-Gm-Message-State: APjAAAUZq0o+EGxF+YrRyq2Pw17EX8lL7yH0ceVZeC+/y4HqxvPBF2jV
-        xtz6qjjELKv3IRaH3cu3u+4O3HnZU+b/VOfZi4JXSQ==
-X-Google-Smtp-Source: APXvYqzLiQLhSIz5Zze60wWoKMfDzMmeBvQzyh837v5r9YS9u8DvkwoFPftBFvnImb8FKolsPX4os+5v76JutPOi5e8=
-X-Received: by 2002:a17:902:8e82:: with SMTP id bg2mr9136064plb.217.1551908261353;
- Wed, 06 Mar 2019 13:37:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20190302184929.28971-1-louis@kragniz.eu> <alpine.DEB.2.21.1903062059570.1646@nanos.tec.linutronix.de>
- <20190306203725.GA23373@gmail.com>
-In-Reply-To: <20190306203725.GA23373@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 6 Mar 2019 13:37:30 -0800
-Message-ID: <CAKwvOdkjMv8xGTEagpbsbe3ky4eAXpUAXxkDUcZp9DN8xY5rYw@mail.gmail.com>
-Subject: Re: [PATCH] x86/KASLR: always return a value from process_mem_region
-To:     Louis Taylor <louis@kragniz.eu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        fanc.fnst@cn.fujitsu.com, bhe@redhat.com,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Jon Flatley <jflat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Kmnz/guZPJnRPV2xKUGZraLYc52bC6Yc94Bjksc5cLM=;
+        b=ae4khgjQrUCdgUpQbQhsGmtIzy25fGCprJ2f+l1uVoObioh7DehxLhK8gkxL3piJpa
+         hMBpMBZJQWxCUTus99Dpchrdq+XrdPQh1fkVdISygHeHxPMFiTbSIq6+lHKGlDcOfAPK
+         gfwXqvL1Czn3S2qMkxlLBlXaaWm+kyn4MddLzzvXIt1nnvewHzm+4yYtfzChmf0FYi0P
+         9nQaO1mJFUQ+UvIZIOsPbeXgmEvsfacbpAJvo2aTN2piFl0CZQzfxF0b0QO44JGuM0GC
+         t5iRKtFlWd1c+wiBDVnKAMiq9ntVh1egZn35Wj4+1XG+CcJYqI//Ox3sH6zWtRHdZkS5
+         zMug==
+X-Gm-Message-State: APjAAAUaosaqDdVNGv+GTsMavdUQAC8HtVhUkyr3RrVVkVx1CUWIB7uc
+        tAlNwkg7M8AdpDeBrWuGhd7MrQ==
+X-Google-Smtp-Source: APXvYqzhAatQmCLy5HofCjyR6wWxVLm2DK3OoMKMB9x4IwyuBT8dyVzRYZgLkPpJwmjS4oVdYI9OLA==
+X-Received: by 2002:a37:d409:: with SMTP id l9mr7699999qki.211.1551908305925;
+        Wed, 06 Mar 2019 13:38:25 -0800 (PST)
+Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z140sm1389873qka.81.2019.03.06.13.38.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 13:38:25 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     akpm@linux-foundation.org, aryabinin@virtuozzo.com,
+        glider@google.com, dvyukov@google.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] Revert "x86_64: increase stack size for KASAN_EXTRA"
+Date:   Wed,  6 Mar 2019 16:38:06 -0500
+Message-Id: <20190306213806.46139-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 12:38 PM Louis Taylor <louis@kragniz.eu> wrote:
->
-> On Wed, Mar 06, 2019 at 09:02:47PM +0100, Thomas Gleixner wrote:
-> > On Sat, 2 Mar 2019, Louis Taylor wrote:
-> >
-> > > When compiling with -Wreturn-type, clang warns:
-> > >
-> > > arch/x86/boot/compressed/kaslr.c:704:1: warning: control may reach end of
-> > >       non-void function [-Wreturn-type]
-> > >
-> > > This function's return statement should probably have been placed
-> > > outside the #endif, so move it there
-> > >
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/360
-> > > Signed-off-by: Louis Taylor <louis@kragniz.eu>
-> >
-> > This lacks a
-> >
-> > Fixes: commitsha1 (".....")
->
-> Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the kernel in immovable memory only")
->
-> Would you like me to resend with that tag?
+This reverts commit a8e911d13540487942d53137c156bd7707f66e5d.
+KASAN_EXTRA was removed via the commit 7771bdbbfd3d ("kasan: remove use
+after scope bugs detection."), so this is no longer needed.
 
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/include/asm/page_64_types.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Looks like it was added.
-Looking at https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/boot,
-it looks like part of the commit message got cut off. `#endif, so move
-it there` is missing?
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 0ce558a8150d..8f657286d599 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -7,11 +7,7 @@
+ #endif
+ 
+ #ifdef CONFIG_KASAN
+-#ifdef CONFIG_KASAN_EXTRA
+-#define KASAN_STACK_ORDER 2
+-#else
+ #define KASAN_STACK_ORDER 1
+-#endif
+ #else
+ #define KASAN_STACK_ORDER 0
+ #endif
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.2 (Apple Git-113)
+
