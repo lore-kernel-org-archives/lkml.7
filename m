@@ -2,119 +2,105 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB44C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D77C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4BE213A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bCM5IHx0"
+	by mail.kernel.org (Postfix) with ESMTP id 9E90920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbfCFK65 (ORCPT
+        id S1730255AbfCFLB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:58:57 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39719 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729405AbfCFK64 (ORCPT
+        Wed, 6 Mar 2019 06:01:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:47381 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbfCFLB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:58:56 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p27so9951623edc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:58:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8lgpO6Nc3rni5EmlwzR6zMwCapbBbmxD/kLh39iky6A=;
-        b=bCM5IHx0ckrPyZj4A+iDvAEUWOtnHcZyOqoXsqk7aKHk5A/60rqAVhPQhGXvOk26i+
-         NSzNkQIP78O6sidlRmIYGt+wlgX6wpRu4I5N6093eCgBOU1GANiRpz1SDMtZKNJgMF8N
-         yMMWOzJ/h5GsU4MclwWD7+jWKEJLG5mAhqsSg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8lgpO6Nc3rni5EmlwzR6zMwCapbBbmxD/kLh39iky6A=;
-        b=RO1xLNez/2yvh+bnJhXDLxOiunwY5gNPUnMcrGr54WrMkiHHhAaaayduG1KIqpV63d
-         Q5igjKnGuE4quj/YnJkSdX/h79PwniunA3P41yOd83OgboQV3z0gZQqrSEZ9KaW2TOYN
-         NgGqaODadQ8cqCdiv2yxks7v378wBsYU5oS0tD2sMvSQNnhAqlfAlhFyro9aZzYGCIwH
-         X+MW5/NCHKS/ErasHO4Q6DnSE8inGvjalxjb3Wn3uyEqL4QZ/BGrZSHEHdce2QJCboUu
-         ugcdY5wjlKsUJEbFhly5LujZAehNiy6+GQQ3ADB8pjfxXzu+830gd7U48H15OyaY7iMe
-         aKRg==
-X-Gm-Message-State: APjAAAUYCxYHdokeN7KOb9/ZlbSQ4OEIrJfNFsS8xl6eH+wbbtGrPbwi
-        HkFvSf8WKtxjern6ELzaLqzDJVfQEBH3miO5iNgVrg==
-X-Google-Smtp-Source: APXvYqxbEE4NpLGuyqvbsTXXRwPGyh+R5XuBq1A5NYE1h+XYTJ2EWiLjNZfx1cqgN1yrYpGb9aBrD/NTYgPDHxlq8pA=
-X-Received: by 2002:a50:bb21:: with SMTP id y30mr22432999ede.156.1551869935168;
- Wed, 06 Mar 2019 02:58:55 -0800 (PST)
+        Wed, 6 Mar 2019 06:01:26 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MRmsE-1gYMov1bac-00TFwb; Wed, 06 Mar 2019 12:01:11 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/hmm: fix unused variable warning in hmm_vma_walk_pud
+Date:   Wed,  6 Mar 2019 12:00:55 +0100
+Message-Id: <20190306110109.2386057-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com> <1551865835-50974-9-git-send-email-bibby.hsieh@mediatek.com>
-In-Reply-To: <1551865835-50974-9-git-send-email-bibby.hsieh@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Wed, 6 Mar 2019 18:58:44 +0800
-Message-ID: <CANdKZ0cBRfSjS021waSWB-RE6PPBt+ZpvnZmVWABgB8Y1nVe+w@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] soc: mediatek: cmdq: add polling function
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        ginny.chen@mediatek.com, kendrick.hsu@mediatek.com,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:xtKHG1cotgsAuNU1Bh1vZIBHyo9Waba/hnKI7aokdYdMmG9jdy9
+ zH9VdScakVcGI7/TId/fO8MqEKIZf1ch2ZM2GM4nybKMMiz8gwKm7EsFVsbbBRVaxNloebZ
+ 8afArbe2cCMc7AFVB66+LlGjcdX4fIysCx2jXXnhY2OAN6AQ1w5FNFb5Yg1g1IhLWKStmTo
+ DRx0Y565hgf0Y8OO9dBTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yx9f28pAM/I=:LmhQn3gu0AVe24ypm4s4fC
+ 3gcoRijC1djG5MbSwcAYiYtF0ikuE7r6iiK1WBdlQ/rSYM0xFga6ZfDJzuw6Rx2/uZHfUxNlw
+ 56K4L/6owPUNVuu96ydKxBLUbJOCorQqgZLWYC+N2uoUChcIStaVVQYglLfeFEwnzgRWdXm3Y
+ pWIpI8aX9Hz4D8ZTyRcz+LB3fxsCo229VCooikJ8pWWTei8ytU14DhWXMKEaT6vonU+rx2UTJ
+ jfE9tZRCP1xGIxGqi1fubuPe6EEJekUZQpUi8/y/Fn81T3NrTfg159QobxPLgaMbo0sf6N3RR
+ WMufqHg2daokoqY6V7GOxSqwrQuHpyClSp1bKiIYk0JhpilPt8Xxzlep04lvdSjYerAWUCt+8
+ no+tp3dRMqNY/SJJuZPkJiseV9fhN0bjgYnnG7Q0ZV3HHsZpntL1vtvprfWh/UuQ0QH//l+II
+ PLwtCCERbjmqeEODldUOZD/3PPLgktUF53GIv4wZFs1QXZQq/xDwD3H5Krq/1jcM61ZBKd0Kd
+ JxZ4nN/1WjqNbyEnv0IAHospjVFWvKKE0girpwEqIfEB+Hq8r+riiLQ5g6Wn/wDTg0k0a5OoA
+ 7nRkax9tPYEvU83GXsLm5dR+2nuKK/vFg92NSaX4xXgrNpxraWjneQIRfrg+ptz1n9+ZV29/T
+ I2tqfSbCee/b8J0+J7dOwmuhp2WfspcBhV+2TH8uWpEsUvnBhTg+rbEAPKPG4HzlyC1DvnwFP
+ B6r9w1bPjR8k4VnH1WJutlkZ4QPpyOv4N/w2Xg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 5:51 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index d3873ab..71c167c 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -231,6 +231,27 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->
-> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-> +                 u16 offset, u32 value, u32 mask)
-> +{
-> +       int err;
-> +
-> +       if (mask != 0xffffffff) {
-> +               err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
-> +                                             CMDQ_GET_ARG_B(~mask),
-> +                                             0, 0, 0, 0, 0, CMDQ_CODE_MASK);
+Without CONFIG_HUGETLB_PAGE, the 'vma' variable is never referenced
+on x86, so we get this warning:
 
-All other codes use CMDQ_IMMEDIATE_VALUE instead of 0 for arguments of
-cmdq_pkt_append_command. Also use CMDQ_IMMEDIATE_VALUE here?
+mm/hmm.c: In function 'hmm_vma_walk_pud':
+mm/hmm.c:764:25: error: unused variable 'vma' [-Werror=unused-variable]
 
-> +
-> +               if (err != 0)
-> +                       return err;
-> +       }
-> +       offset = offset | 0x1;
-> +
-> +       return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
-> +                                      CMDQ_GET_ARG_B(value),
-> +                                      offset, subsys, 0, 0, 0, CMDQ_CODE_POLL);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_poll);
-> +
+Remove the local variable by open-coding walk-vma in the only
+place it is used.
+
+Reported-by: John Hubbard <jhubbard@nvidia.com>
+Suggested-by: John Hubbard <jhubbard@nvidia.com>
+Fixes: 1bed8a07a556 ("mm/hmm: allow to mirror vma of a file on a DAX backed filesystem")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+Andrew, you already took a similar patch from me for a different
+warning in the same file. Feel free to fold both patches into
+one if you haven't already forwarded the first patch, or leave
+them separate. Note that the warnings were introduced by different
+patches from the same series originally.
+---
+ mm/hmm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/mm/hmm.c b/mm/hmm.c
+index c4beb1628cad..c1cbe82d12b5 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -761,7 +761,6 @@ static int hmm_vma_walk_pud(pud_t *pudp,
+ {
+ 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+ 	struct hmm_range *range = hmm_vma_walk->range;
+-	struct vm_area_struct *vma = walk->vma;
+ 	unsigned long addr = start, next;
+ 	pmd_t *pmdp;
+ 	pud_t pud;
+@@ -807,7 +806,7 @@ static int hmm_vma_walk_pud(pud_t *pudp,
+ 		return 0;
+ 	}
+ 
+-	split_huge_pud(vma, pudp, addr);
++	split_huge_pud(walk->vma, pudp, addr);
+ 	if (pud_none(*pudp))
+ 		goto again;
+ 
+-- 
+2.20.0
+
