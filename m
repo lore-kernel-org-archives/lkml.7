@@ -2,279 +2,140 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBE2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D110C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69CE20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071A220661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbfCFTOc (ORCPT
+        id S1728984AbfCFTQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 14:14:32 -0500
-Received: from mx2.mailbox.org ([80.241.60.215]:19076 "EHLO mx2.mailbox.org"
+        Wed, 6 Mar 2019 14:16:43 -0500
+Received: from mga07.intel.com ([134.134.136.100]:3954 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfCFTOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 14:14:31 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id A6033A1332;
-        Wed,  6 Mar 2019 20:14:27 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id MIgNecLOWE9l; Wed,  6 Mar 2019 20:14:21 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Eric Biederman <ebiederm@xmission.com>,
+        id S1726264AbfCFTQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 14:16:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 11:16:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,448,1544515200"; 
+   d="scan'208";a="304954825"
+Received: from ray.jf.intel.com (HELO [10.7.201.16]) ([10.7.201.16])
+  by orsmga005.jf.intel.com with ESMTP; 06 Mar 2019 11:16:42 -0800
+Subject: Re: [PATCH v5 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+To:     Alexandre Ghiti <alex@ghiti.fr>, Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH RESEND v5 5/5] binfmt_*: scope path resolution of interpreters
-Date:   Thu,  7 Mar 2019 06:12:44 +1100
-Message-Id: <20190306191244.8691-6-cyphar@cyphar.com>
-In-Reply-To: <20190306191244.8691-1-cyphar@cyphar.com>
-References: <20190306191244.8691-1-cyphar@cyphar.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190306190005.7036-1-alex@ghiti.fr>
+ <20190306190005.7036-5-alex@ghiti.fr>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <7c81abe0-5f9d-32f9-1e9a-70ab06d48f8e@intel.com>
+Date:   Wed, 6 Mar 2019 11:16:44 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190306190005.7036-5-alex@ghiti.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The need to be able to scope path resolution of interpreters became
-clear with one of the possible vectors used in CVE-2019-5736 (which
-most major container runtimes were vulnerable to).
+On 3/6/19 11:00 AM, Alexandre Ghiti wrote:
+> +static int set_max_huge_pages(struct hstate *h, unsigned long count,
+> +			      nodemask_t *nodes_allowed)
+>  {
+>  	unsigned long min_count, ret;
+>  
+> -	if (hstate_is_gigantic(h) && !gigantic_page_supported())
+> -		return h->max_huge_pages;
+> +	/*
+> +	 * Gigantic pages allocation depends on the capability for large page
+> +	 * range allocation. If the system cannot provide alloc_contig_range,
+> +	 * allow users to free gigantic pages.
+> +	 */
+> +	if (hstate_is_gigantic(h) && !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
+> +		spin_lock(&hugetlb_lock);
+> +		if (count > persistent_huge_pages(h)) {
+> +			spin_unlock(&hugetlb_lock);
+> +			return -EINVAL;
+> +		}
+> +		goto decrease_pool;
+> +	}
 
-Naively, it might seem that openat(2) -- which supports path scoping --
-can be combined with execveat(AT_EMPTY_PATH) to trivially scope the
-binary being executed. Unfortunately, a "bad binary" (usually a symlink)
-could be written as a #!-style script with the symlink target as the
-interpreter -- which would be completely missed by just scoping the
-openat(2). An example of this being exploitable is CVE-2019-5736.
-
-In order to get around this, we need to pass down to each binfmt_*
-implementation the scoping flags requested in execveat(2). In order to
-maintain backwards-compatibility we only pass the scoping AT_* flags.
-
-To avoid breaking userspace (in the exceptionally rare cases where you
-have #!-scripts with a relative path being execveat(2)-ed with dfd !=
-AT_FDCWD), we only pass dfd down to binfmt_* if any of our new flags are
-set in execveat(2).
-
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- fs/binfmt_elf.c            |  2 +-
- fs/binfmt_elf_fdpic.c      |  2 +-
- fs/binfmt_em86.c           |  4 ++--
- fs/binfmt_misc.c           |  2 +-
- fs/binfmt_script.c         |  2 +-
- fs/exec.c                  | 26 ++++++++++++++++++++++----
- include/linux/binfmts.h    |  1 +
- include/linux/fs.h         |  9 +++++++--
- include/uapi/linux/fcntl.h |  6 ++++++
- 9 files changed, 42 insertions(+), 12 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 54207327f98f..eef86ffa38c8 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -777,7 +777,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			if (elf_interpreter[elf_ppnt->p_filesz - 1] != '\0')
- 				goto out_free_interp;
- 
--			interpreter = open_exec(elf_interpreter);
-+			interpreter = openat_exec(bprm->dfd, elf_interpreter, bprm->flags);
- 			retval = PTR_ERR(interpreter);
- 			if (IS_ERR(interpreter))
- 				goto out_free_interp;
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index b53bb3729ac1..c463c6428f77 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -263,7 +263,7 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
- 			kdebug("Using ELF interpreter %s", interpreter_name);
- 
- 			/* replace the program with the interpreter */
--			interpreter = open_exec(interpreter_name);
-+			interpreter = openat_exec(bprm->dfd, interpreter_name, bprm->flags);
- 			retval = PTR_ERR(interpreter);
- 			if (IS_ERR(interpreter)) {
- 				interpreter = NULL;
-diff --git a/fs/binfmt_em86.c b/fs/binfmt_em86.c
-index dd2d3f0cd55d..3ee46b0dc0d4 100644
---- a/fs/binfmt_em86.c
-+++ b/fs/binfmt_em86.c
-@@ -81,10 +81,10 @@ static int load_em86(struct linux_binprm *bprm)
- 
- 	/*
- 	 * OK, now restart the process with the interpreter's inode.
--	 * Note that we use open_exec() as the name is now in kernel
-+	 * Note that we use openat_exec() as the name is now in kernel
- 	 * space, and we don't need to copy it.
- 	 */
--	file = open_exec(interp);
-+	file = openat_exec(binprm->dfd, interp, binprm->flags);
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index aa4a7a23ff99..573ef06ff5a1 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -209,7 +209,7 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 		if (!IS_ERR(interp_file))
- 			deny_write_access(interp_file);
- 	} else {
--		interp_file = open_exec(fmt->interpreter);
-+		interp_file = openat_exec(bprm->dfd, fmt->interpreter, bprm->flags);
- 	}
- 	retval = PTR_ERR(interp_file);
- 	if (IS_ERR(interp_file))
-diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
-index d0078cbb718b..340f63635aac 100644
---- a/fs/binfmt_script.c
-+++ b/fs/binfmt_script.c
-@@ -102,7 +102,7 @@ static int load_script(struct linux_binprm *bprm)
- 	/*
- 	 * OK, now restart the process with the interpreter's dentry.
- 	 */
--	file = open_exec(i_name);
-+	file = openat_exec(bprm->dfd, i_name, bprm->flags);
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
-diff --git a/fs/exec.c b/fs/exec.c
-index bcf383730bea..e63063b2de23 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -846,12 +846,24 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
- 		.lookup_flags = LOOKUP_FOLLOW,
- 	};
- 
--	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-+	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH | AT_BENEATH |
-+		       AT_XDEV | AT_NO_MAGICLINKS | AT_NO_SYMLINKS |
-+		       AT_THIS_ROOT)) != 0)
- 		return ERR_PTR(-EINVAL);
- 	if (flags & AT_SYMLINK_NOFOLLOW)
- 		open_exec_flags.lookup_flags &= ~LOOKUP_FOLLOW;
- 	if (flags & AT_EMPTY_PATH)
- 		open_exec_flags.lookup_flags |= LOOKUP_EMPTY;
-+	if (flags & AT_BENEATH)
-+		open_exec_flags.lookup_flags |= LOOKUP_BENEATH;
-+	if (flags & AT_XDEV)
-+		open_exec_flags.lookup_flags |= LOOKUP_XDEV;
-+	if (flags & AT_NO_MAGICLINKS)
-+		open_exec_flags.lookup_flags |= LOOKUP_NO_MAGICLINKS;
-+	if (flags & AT_NO_SYMLINKS)
-+		open_exec_flags.lookup_flags |= LOOKUP_NO_SYMLINKS;
-+	if (flags & AT_THIS_ROOT)
-+		open_exec_flags.lookup_flags |= LOOKUP_IN_ROOT;
- 
- 	file = do_filp_open(fd, name, &open_exec_flags);
- 	if (IS_ERR(file))
-@@ -879,18 +891,18 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
- 	return ERR_PTR(err);
- }
- 
--struct file *open_exec(const char *name)
-+struct file *openat_exec(int dfd, const char *name, int flags)
- {
- 	struct filename *filename = getname_kernel(name);
- 	struct file *f = ERR_CAST(filename);
- 
- 	if (!IS_ERR(filename)) {
--		f = do_open_execat(AT_FDCWD, filename, 0);
-+		f = do_open_execat(dfd, filename, flags);
- 		putname(filename);
- 	}
- 	return f;
- }
--EXPORT_SYMBOL(open_exec);
-+EXPORT_SYMBOL(openat_exec);
- 
- int kernel_read_file(struct file *file, void **buf, loff_t *size,
- 		     loff_t max_size, enum kernel_read_file_id id)
-@@ -1762,6 +1774,12 @@ static int __do_execve_file(int fd, struct filename *filename,
- 
- 	sched_exec();
- 
-+	bprm->flags = flags & (AT_XDEV | AT_NO_MAGICLINKS | AT_NO_SYMLINKS |
-+			       AT_THIS_ROOT);
-+	bprm->dfd = AT_FDCWD;
-+	if (bprm->flags)
-+		bprm->dfd = fd;
-+
- 	bprm->file = file;
- 	if (!filename) {
- 		bprm->filename = "none";
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index 688ab0de7810..e4da2d36e97f 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -50,6 +50,7 @@ struct linux_binprm {
- 	unsigned int taso:1;
- #endif
- 	unsigned int recursion_depth; /* only for search_binary_handler() */
-+	int dfd, flags;		/* passed down to execat_open() */
- 	struct file * file;
- 	struct cred *cred;	/* new credentials */
- 	int unsafe;		/* how unsafe this exec is (mask of LSM_UNSAFE_*) */
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3e85cb8e8c20..a82c8dd44ad9 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2937,8 +2937,13 @@ extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t,
- extern ssize_t kernel_read(struct file *, void *, size_t, loff_t *);
- extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
- extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
--extern struct file * open_exec(const char *);
-- 
-+
-+extern struct file *openat_exec(int, const char *, int);
-+static inline struct file *open_exec(const char *name)
-+{
-+	return openat_exec(AT_FDCWD, name, 0);
-+}
-+
- /* fs/dcache.c -- generic fs support functions */
- extern bool is_subdir(struct dentry *, struct dentry *);
- extern bool path_is_under(const struct path *, const struct path *);
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 6448cdd9a350..607bc98813e3 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -90,5 +90,11 @@
- #define AT_STATX_FORCE_SYNC	0x2000	/* - Force the attributes to be sync'd with the server */
- #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
- 
-+#define AT_RESOLUTION_TYPE	0xF8000 /* Type of path-resolution scoping we are applying. */
-+#define AT_BENEATH		0x08000 /* - Block "lexical" trickery like "..", symlinks, absolute paths, etc. */
-+#define AT_XDEV			0x10000 /* - Block mount-point crossings (includes bind-mounts). */
-+#define AT_NO_MAGICLINKS	0x20000 /* - Block procfs-style "magic" symlinks. */
-+#define AT_NO_SYMLINKS		0x40000 /* - Block all symlinks (implies AT_NO_MAGICLINKS). */
-+#define AT_THIS_ROOT		0x80000 /* - Scope ".." resolution to dirfd (like chroot(2)). */
- 
- #endif /* _UAPI_LINUX_FCNTL_H */
--- 
-2.21.0
-
+We talked about it during the last round and I don't seen any mention of
+it here in comments or the changelog: Why is this a goto?  Why don't we
+just let the code fall through to the "decrease_pool" label?  Why is
+this new block needed at all?  Can't we just remove the old check and
+let it be?
