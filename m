@@ -2,198 +2,90 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE5DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62263C10F09
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD0B20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3356D2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551841155;
+	bh=osM66By3LY4Eke2CyQeQ2vwup2tO7woBRnpW5XQ+K/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=thkRfu8evGmXL9WCgXXuA+HlrrqMUg+ZBskDdruoxvYRgyiT8iG9eIoW8EjDcsTZm
+	 yNHWTUpgJ3fp9XLyEl/9BZu82TXfF/01S+IaIfJKA7QDtZygrV97k3hEYdnFa2tTJh
+	 ihrkyezNu1z+T8g2C2vMD+UN+ndLENAC4YfqebVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfCFCyc (ORCPT
+        id S1728923AbfCFC7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 21:54:32 -0500
-Received: from mga04.intel.com ([192.55.52.120]:24371 "EHLO mga04.intel.com"
+        Tue, 5 Mar 2019 21:59:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfCFCyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 21:54:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 18:54:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,446,1544515200"; 
-   d="scan'208";a="129343462"
-Received: from shcsbb05.sh.intel.com ([10.239.147.132])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Mar 2019 18:54:29 -0800
-From:   xiao jin <jin.xiao@intel.com>
-To:     jarkko.nikula@linux.intel.com, daniel@zonque.org,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-        broonie@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yanmin.zhang@intel.com
-Cc:     "he, bo" <bo.he@intel.com>, xiao jin <jin.xiao@intel.com>,
-        he@vger.kernel.org
-Subject: [PATCH] spi-pxa2xx.c: modify the chip selection timing when spi transfer
-Date:   Wed,  6 Mar 2019 11:05:19 +0800
-Message-Id: <20190306030519.10746-1-jin.xiao@intel.com>
-X-Mailer: git-send-email 2.21.0
+        id S1726069AbfCFC7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 21:59:13 -0500
+Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0379220675;
+        Wed,  6 Mar 2019 02:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551841152;
+        bh=osM66By3LY4Eke2CyQeQ2vwup2tO7woBRnpW5XQ+K/I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DHW/YBNjUJHMy0n7XmcZ3BzmhBu00WykSe7gH6MTiJK8jjeL+QXK+MH6hNig5hr9j
+         P2G8Yqn26KoBa0j6cgryJI0rAaMgEXzVRko+zP42MM8s9rjiqh/U/icEYFV5t5d9xk
+         Io9v0MOMkkW7Zdl2+As8y8GvJolFz22oglqqXxbU=
+Date:   Wed, 6 Mar 2019 10:58:04 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
+        Russell King <linux@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 05/15] ARM: imx51: fix a leaked reference by adding
+ missing of_node_put
+Message-ID: <20190306025803.GG26041@dragon>
+References: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
+ <1551785646-46173-5-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551785646-46173-5-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "he, bo" <bo.he@intel.com>
+On Tue, Mar 05, 2019 at 07:33:56PM +0800, Wen Yang wrote:
+> The call to of_get_next_child returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
+> 
+> Detected by coccinelle with the following warnings:
+> ./arch/arm/mach-imx/mach-imx51.c:64:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 57, but without a corresponding object release within this function.
+> 
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v2->v1: add a missing space between "adding" and "missing"
 
-We find spi can't work on board. More debug shows it's related
-to the following patch that changed the chip selection assert and
-deassert timing.
+I fixed it against v1 which I applied on my branch.
 
-commit d5898e19c0d74cd41b9f5c8c8ea87e559c3fe0c1
-
-    spi: pxa2xx: Use core message processing loop
-
-    Convert the pump_transfers() transfer tasklet to transfer_one()
-    hook the SPI core calls to process single transfer instead of
-    handling message processing and chip select handling in the driver.
-    This not only simplifies the driver but also brings transfer
-    statistics from the core.
-
-We modify the chip selection timeing action back to before the patch.
-The spi on the board works.
-
-Signed-off-by: xiao jin <jin.xiao@intel.com>
-Signed-off-by: he, bo <bo.he@intel.com>
----
- drivers/spi/spi-pxa2xx.c | 41 ++++++++++++++--------------------------
- 1 file changed, 14 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index ec4b65100..0affa09da 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -340,11 +340,9 @@ static void lpss_ssp_setup(struct driver_data *drv_data)
- 	}
- }
- 
--static void lpss_ssp_select_cs(struct spi_device *spi,
-+static void lpss_ssp_select_cs(struct driver_data *drv_data,
- 			       const struct lpss_config *config)
- {
--	struct driver_data *drv_data =
--		spi_controller_get_devdata(spi->controller);
- 	u32 value, cs;
- 
- 	if (!config->cs_sel_mask)
-@@ -352,7 +350,7 @@ static void lpss_ssp_select_cs(struct spi_device *spi,
- 
- 	value = __lpss_ssp_read_priv(drv_data, config->reg_cs_ctrl);
- 
--	cs = spi->chip_select;
-+	cs = drv_data->master->cur_msg->spi->chip_select;
- 	cs <<= config->cs_sel_shift;
- 	if (cs != (value & config->cs_sel_mask)) {
- 		/*
-@@ -371,17 +369,15 @@ static void lpss_ssp_select_cs(struct spi_device *spi,
- 	}
- }
- 
--static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
-+static void lpss_ssp_cs_control(struct driver_data *drv_data, bool enable)
- {
--	struct driver_data *drv_data =
--		spi_controller_get_devdata(spi->controller);
- 	const struct lpss_config *config;
- 	u32 value;
- 
- 	config = lpss_get_config(drv_data);
- 
- 	if (enable)
--		lpss_ssp_select_cs(spi, config);
-+		lpss_ssp_select_cs(drv_data, config);
- 
- 	value = __lpss_ssp_read_priv(drv_data, config->reg_cs_ctrl);
- 	if (enable)
-@@ -391,11 +387,10 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
- 	__lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
- }
- 
--static void cs_assert(struct spi_device *spi)
-+static void cs_assert(struct driver_data *drv_data)
- {
--	struct chip_data *chip = spi_get_ctldata(spi);
--	struct driver_data *drv_data =
--		spi_controller_get_devdata(spi->controller);
-+	struct chip_data *chip =
-+		spi_get_ctldata(drv_data->master->cur_msg->spi);
- 
- 	if (drv_data->ssp_type == CE4100_SSP) {
- 		pxa2xx_spi_write(drv_data, SSSR, chip->frm);
-@@ -413,14 +408,13 @@ static void cs_assert(struct spi_device *spi)
- 	}
- 
- 	if (is_lpss_ssp(drv_data))
--		lpss_ssp_cs_control(spi, true);
-+		lpss_ssp_cs_control(drv_data, true);
- }
- 
--static void cs_deassert(struct spi_device *spi)
-+static void cs_deassert(struct driver_data *drv_data)
- {
--	struct chip_data *chip = spi_get_ctldata(spi);
--	struct driver_data *drv_data =
--		spi_controller_get_devdata(spi->controller);
-+	struct chip_data *chip =
-+		spi_get_ctldata(drv_data->master->cur_msg->spi);
- 	unsigned long timeout;
- 
- 	if (drv_data->ssp_type == CE4100_SSP)
-@@ -443,15 +437,7 @@ static void cs_deassert(struct spi_device *spi)
- 	}
- 
- 	if (is_lpss_ssp(drv_data))
--		lpss_ssp_cs_control(spi, false);
--}
--
--static void pxa2xx_spi_set_cs(struct spi_device *spi, bool level)
--{
--	if (level)
--		cs_deassert(spi);
--	else
--		cs_assert(spi);
-+		lpss_ssp_cs_control(drv_data, false);
- }
- 
- int pxa2xx_spi_flush(struct driver_data *drv_data)
-@@ -610,6 +596,7 @@ static void int_transfer_complete(struct driver_data *drv_data)
- 	if (!pxa25x_ssp_comp(drv_data))
- 		pxa2xx_spi_write(drv_data, SSTO, 0);
- 
-+	cs_deassert(drv_data);
- 	spi_finalize_current_transfer(drv_data->master);
- }
- 
-@@ -1070,6 +1057,7 @@ static int pxa2xx_spi_transfer_one(struct spi_controller *master,
- 			pxa2xx_spi_write(drv_data, SSTO, chip->timeout);
- 	}
- 
-+	cs_assert(drv_data);
- 	/*
- 	 * Release the data by enabling service requests and interrupts,
- 	 * without changing any mode bits
-@@ -1563,7 +1551,6 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
- 	master->dma_alignment = DMA_ALIGNMENT;
- 	master->cleanup = cleanup;
- 	master->setup = setup;
--	master->set_cs = pxa2xx_spi_set_cs;
- 	master->transfer_one = pxa2xx_spi_transfer_one;
- 	master->handle_err = pxa2xx_spi_handle_err;
- 	master->unprepare_transfer_hardware = pxa2xx_spi_unprepare_transfer;
--- 
-2.20.1
-
+Shawn
