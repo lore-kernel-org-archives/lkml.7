@@ -2,301 +2,193 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB14C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB853C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DAB20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JIxEx1F5"
+	by mail.kernel.org (Postfix) with ESMTP id B9AD620661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbfCFIL4 (ORCPT
+        id S1729569AbfCFIMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 03:11:56 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:27297 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfCFILz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 03:11:55 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190306081151epoutp0118761fd2a48ad499668a05c3fdbf7c26~JUF4j2tbj1641716417epoutp01B
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2019 08:11:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190306081151epoutp0118761fd2a48ad499668a05c3fdbf7c26~JUF4j2tbj1641716417epoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551859911;
-        bh=Aev+Fd8au7QBY1y/6GD+am7XmFP8qS7GYfmBm23OrgI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=JIxEx1F5sl8E8x+J/R2n0hkbiS9teJ6OtopecKqUO2mh0wbkkEbBTF0Vex6lf4M00
-         336FeDGAHbNwby3vtkt6HARCvWAfsViBCkIGOPSogJuoV1sXYgK0nUaoOiKMT3C9ud
-         MoLXtnsPfr4Totq2YUHknB57l3U7sxIL9fpMc+AY=
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.152]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190306081149epcas1p4f5e3fb5c066c72063a2cf10b0dcb25ae~JUF2AeVEs0437804378epcas1p46;
-        Wed,  6 Mar 2019 08:11:49 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EA.B5.04206.2C08F7C5; Wed,  6 Mar 2019 17:11:47 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190306081146epcas1p284ab5e689f28e5f50c0f8517935333c2~JUFzg-iVi1544315443epcas1p2c;
-        Wed,  6 Mar 2019 08:11:46 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190306081146epsmtrp2a8aec9e1a2f98696dc135d759f13abb0~JUFzfO---0937909379epsmtrp2T;
-        Wed,  6 Mar 2019 08:11:46 +0000 (GMT)
-X-AuditID: b6c32a39-d65ff7000000106e-74-5c7f80c2fd54
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2F.4C.03601.2C08F7C5; Wed,  6 Mar 2019 17:11:46 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190306081146epsmtip2df878678fee1229cae60817c373ec4db~JUFzUiRzn0965809658epsmtip2E;
-        Wed,  6 Mar 2019 08:11:46 +0000 (GMT)
-Subject: Re: [PATCH v5 2/8] clk: samsung: add new clocks for DMC for
- Exynos5422 SoC
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <d92cd97e-32fa-fd21-fd5d-bb7eb36bc2ab@samsung.com>
-Date:   Wed, 6 Mar 2019 17:11:45 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.5.1
+        Wed, 6 Mar 2019 03:12:10 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:58582 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729267AbfCFIMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 03:12:10 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4722C83F51;
+        Wed,  6 Mar 2019 08:12:09 +0000 (UTC)
+Received: from xz-x1 (dhcp-14-116.nay.redhat.com [10.66.14.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 627E11A267;
+        Wed,  6 Mar 2019 08:12:03 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 16:12:01 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
+        Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>
+Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
+Message-ID: <20190306081201.GC11093@xz-x1>
+References: <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com>
+ <5C7D2F82.40907@huawei.com>
+ <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
+ <5C7D4500.3070607@huawei.com>
+ <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com>
+ <5C7E1A38.2060906@huawei.com>
+ <20190306020540.GA23850@redhat.com>
+ <5C7F6048.2050802@huawei.com>
+ <20190306062625.GA3549@rapoport-lnx>
+ <5C7F7992.7050806@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1551781151-5562-3-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmge7hhvoYg5X/mSw2zljPajH/yDlW
-        i/7Hr5ktzp/fwG5xtukNu8WtBhmLy7vmsFl87j3CaDHj/D4mi7VH7rJb3G5cwWZx+E07qwOP
-        x6ZVnWweB9/tYfLo27KK0ePzJrkAlqhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNL
-        C3MlhbzE3FRbJRefAF23zBygy5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BZYF
-        esWJucWleel6yfm5VoYGBkamQIUJ2RlTN/5kL/huU/HhyULGBsavRl2MnBwSAiYSZ1dtY+5i
-        5OIQEtjBKDHh22l2COcTo8SnV7+gnG+MEjMnzmOEaek4sYsdxBYS2MsosfGJHIT9nlHi2EwX
-        EFtYIFTiR+NbVpBmEYHljBL7pt5lBHGYBVYxSmyeugpsEpuAlsT+FzfYQGx+AUWJqz8eA8U5
-        OHgF7CQ+no8DCbMIqEisXfMcrERUIELi/dPdLCA2r4CgxMmZT8BsTgEviY1fXzOB2MwC4hK3
-        nsyHsuUlmrfOBvtNQqCfXeLFmT9sEB+4SKx9OosJwhaWeHV8CzuELSXx+d1eqJpqiZUnj7BB
-        NHcwSmzZf4EVImEssX/pZCaQQ5kFNCXW79KHWMYn8e5rDytIWEKAV6KjTQiiWlni8oO7UKsk
-        JRa3d0KN95B4vmkBywRGxVlI3pmF5IVZSF6YhbBsASPLKkax1ILi3PTUYsMCU+TY3sQITrVa
-        ljsYj53zOcQowMGoxMM7obUuRog1say4MvcQowQHs5IIb15tfYwQb0piZVVqUX58UWlOavEh
-        RlNgaE9klhJNzgfmgbySeENTI2NjYwsTQzNTQ0Mlcd71Ds4xQgLpiSWp2ampBalFMH1MHJxS
-        DYzOXGV2XxWMv159+npje/9uu7y9/reZ1t6Si7DZq2x75nPnO4Ny70ihBTtvZ4mtNC+dnL2h
-        t9vlKd++m4ZCDp43L+7g+316eWXifYMlswOOuU+qFZjOF/5mp8b82uxLj5SC+g9miisKvbir
-        bfB8wroL5Qkt793ZLT9WOqUqFobqLX+5kHufVYUSS3FGoqEWc1FxIgCj8KFiywMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWy7bCSvO6hhvoYg8vXxCw2zljPajH/yDlW
-        i/7Hr5ktzp/fwG5xtukNu8WtBhmLy7vmsFl87j3CaDHj/D4mi7VH7rJb3G5cwWZx+E07qwOP
-        x6ZVnWweB9/tYfLo27KK0ePzJrkAligum5TUnMyy1CJ9uwSujKkbf7IXfLep+PBkIWMD41ej
-        LkZODgkBE4mOE7vYuxi5OIQEdjNK3OjtY4RISEpMu3iUuYuRA8gWljh8uBii5i2jxOIff9lA
-        aoQFQiV+NL5lBUmICCxnlJj7dykLiMMssIpR4t3fucwQLXcZJc43PAFrYRPQktj/4gaYzS+g
-        KHH1x2NGkBW8AnYSH8/HgYRZBFQk1q55DlYiKhAhcffiCxYQm1dAUOLkzCdgNqeAl8TGr6+Z
-        QGxmAXWJP/MuMUPY4hK3nsyHistLNG+dzTyBUXgWkvZZSFpmIWmZhaRlASPLKkbJ1ILi3PTc
-        YsMCo7zUcr3ixNzi0rx0veT83E2M4LjT0trBeOJE/CFGAQ5GJR7eCa11MUKsiWXFlbmHGCU4
-        mJVEePNq62OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1
-        MBaG5Ctwezhmm621zZq/PsnFdevmkgPnnuldWSz/Neq1tVV0Vntg8Y4zU9ZrPeJsfcTukNlw
-        T+bBHS8ThmCJXxIsIq9+dEudX7VH13u6fdps1YfTN6VHBd3Kf7vdasur3YvkthuEtPkZz1Q6
-        GcPUG32n9pFL8Qn3pNgzZ2eut2T4u1LhrfHrBiWW4oxEQy3mouJEALcI1WG3AgAA
-X-CMS-MailID: 20190306081146epcas1p284ab5e689f28e5f50c0f8517935333c2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190305101925eucas1p22d36ab220829bc6df98c92bb6c5e0395
-References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190305101925eucas1p22d36ab220829bc6df98c92bb6c5e0395@eucas1p2.samsung.com>
-        <1551781151-5562-3-git-send-email-l.luba@partner.samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5C7F7992.7050806@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 06 Mar 2019 08:12:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+On Wed, Mar 06, 2019 at 03:41:06PM +0800, zhong jiang wrote:
+> On 2019/3/6 14:26, Mike Rapoport wrote:
+> > Hi,
+> >
+> > On Wed, Mar 06, 2019 at 01:53:12PM +0800, zhong jiang wrote:
+> >> On 2019/3/6 10:05, Andrea Arcangeli wrote:
+> >>> Hello everyone,
+> >>>
+> >>> [ CC'ed Mike and Peter ]
+> >>>
+> >>> On Tue, Mar 05, 2019 at 02:42:00PM +0800, zhong jiang wrote:
+> >>>> On 2019/3/5 14:26, Dmitry Vyukov wrote:
+> >>>>> On Mon, Mar 4, 2019 at 4:32 PM zhong jiang <zhongjiang@huawei.com> wrote:
+> >>>>>> On 2019/3/4 22:11, Dmitry Vyukov wrote:
+> >>>>>>> On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
+> >>>>>>>> On 2019/3/4 15:40, Dmitry Vyukov wrote:
+> >>>>>>>>> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
+> >>>>>>>>>> Hi, guys
+> >>>>>>>>>>
+> >>>>>>>>>> I also hit the following issue. but it fails to reproduce the issue by the log.
+> >>>>>>>>>>
+> >>>>>>>>>> it seems to the case that we access the mm->owner and deference it will result in the UAF.
+> >>>>>>>>>> But it should not be possible that we specify the incomplete process to be the mm->owner.
+> >>>>>>>>>>
+> >>>>>>>>>> Any thoughts?
+> >>>>>>>>> FWIW syzbot was able to reproduce this with this reproducer.
+> >>>>>>>>> This looks like a very subtle race (threaded reproducer that runs
+> >>>>>>>>> repeatedly in multiple processes), so most likely we are looking for
+> >>>>>>>>> something like few instructions inconsistency window.
+> >>>>>>>>>
+> >>>>>>>> I has a little doubtful about the instrustions inconsistency window.
+> >>>>>>>>
+> >>>>>>>> I guess that you mean some smb barriers should be taken into account.:-)
+> >>>>>>>>
+> >>>>>>>> Because IMO, It should not be the lock case to result in the issue.
+> >>>>>>> Since the crash was triggered on x86 _most likley_ this is not a
+> >>>>>>> missed barrier. What I meant is that one thread needs to executed some
+> >>>>>>> code, while another thread is stopped within few instructions.
+> >>>>>>>
+> >>>>>>>
+> >>>>>> It is weird and I can not find any relationship you had said with the issue.:-(
+> >>>>>>
+> >>>>>> Because It is the cause that mm->owner has been freed, whereas we still deference it.
+> >>>>>>
+> >>>>>> From the lastest freed task call trace, It fails to create process.
+> >>>>>>
+> >>>>>> Am I miss something or I misunderstand your meaning. Please correct me.
+> >>>>> Your analysis looks correct. I am just saying that the root cause of
+> >>>>> this use-after-free seems to be a race condition.
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>> Yep, Indeed,  I can not figure out how the race works. I will dig up further.
+> >>> Yes it's a race condition.
+> >>>
+> >>> We were aware about the non-cooperative fork userfaultfd feature
+> >>> creating userfaultfd file descriptor that gets reported to the parent
+> >>> uffd, despite they belong to mm created by failed forks.
+> >>>
+> >>> https://www.spinics.net/lists/linux-mm/msg136357.html
+> >>>
+> >> Hi, Andrea
+> >>
+> >> I still not clear why uffd ioctl can use the incomplete process as the mm->owner.
+> >> and how to produce the race.
+> > There is a C reproducer in  the syzcaller report:
+> >
+> > https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
+> >  
+> >> From your above explainations,   My underdtanding is that the process handling do_exexve
+> >> will have a temporary mm,  which will be used by the UUFD ioctl.
+> > The race is between userfaultfd operation and fork() failure:
+> >
+> > forking thread                  | userfaultfd monitor thread
+> > --------------------------------+-------------------------------
+> > fork()                          |
+> >   dup_mmap()                    |
+> >     dup_userfaultfd()           |
+> >     dup_userfaultfd_complete()  |
+> >                                 |  read(UFFD_EVENT_FORK)
+> >                                 |  uffdio_copy()
+> >                                 |    mmget_not_zero()
+> >     goto bad_fork_something     |
+> >     ...                         |
+> > bad_fork_free:                  |
+> >       free_task()               |
+> >                                 |  mem_cgroup_from_task()
+> >                                 |       /* access stale mm->owner */
+> >  
+> Hi, Mike
 
-You are missing some answer on v4 patch[1] and then
-send the patch without modification. On many times,
-I mentioned that please answer from the comment.
+Hi, Zhong,
 
-Please check the comments from reviewers
-carefully without any lost.
-
-- [v4,2/8] clk: samsung: add new clocks for DMC for Exynos5422 SoC
-[1] https://lkml.org/lkml/2019/2/12/12
-
-Please answer from the following comment.
-
-[Following comments on v4 patch]
->>> +       DIV(0, "dout_pclk_drex0", "dout_cclk_drex0", DIV_CDREX0, 28, 3),
->>
->> Before applied this patch, on line 809, DIV_CDREX0[28:30] was already
->> defined with "dout_pclk_cdrex" gate clock name.
-> In my previous email, I have mentioned that the same bits
-> (8 combinations) are controlling 3 dividers, which re-branch to 3 edges
-> in the clock tree named:
-> CLKDIV_PCLK_CDREX, CLKDIV_PCLK_DREX0, CLKDIV_PCLK_DREX1.
-> It is in the Exynos5422_UM_REV0.10 documentation section:
-> 7.9.6.7 CLK_DIV_CDREX0
-
-It is my missing point. I checked it on Exynos5422 TRM.
-I want to develop the clocks according to H/W clock.
-Please keep it without removal.
-
-Instead,
-It is very strange case. So, you need to add
-the detailed comment when defining the multiple clocks
-with same register/same bits. Also, in order to reduce
-the confusion of this strange case, IMO you better to
-define the three clocks at the nearby in this driver.
-(CLKDIV_PCLK_CDREX, CLKDIV_PCLK_DREX0, CLKDIV_PCLK_DREX1)
-If they are scattered, it is difficult for understanding
-why they are developed like this.
-
-
-
-On 19. 3. 5. 오후 7:19, Lukasz Luba wrote:
-> This patch provides support for clocks needed for Dynamic Memory Controller
-> in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
-> GATE entries.
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5420.c | 54 +++++++++++++++++++++++++++++++++---
->  1 file changed, 50 insertions(+), 4 deletions(-)
+> forking thread fails to create the process ,and then free the allocated task struct.
+> Other userfaultfd monitor thread should not access the stale mm->owner.
 > 
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 34cce3c..6da5875 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -134,6 +134,10 @@
->  #define SRC_CDREX		0x20200
->  #define DIV_CDREX0		0x20500
->  #define DIV_CDREX1		0x20504
-> +#define GATE_BUS_CDREX0		0x20700
-> +#define GATE_BUS_CDREX1		0x20704
-> +#define CDREX_PAUSE		0x2091c
-> +#define CDREX_LPDDR3PHY_CON3	0x20a20
->  #define KPLL_LOCK		0x28000
->  #define KPLL_CON0		0x28100
->  #define SRC_KFC			0x28200
-> @@ -248,6 +252,10 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
->  	DIV_CDREX1,
->  	SRC_KFC,
->  	DIV_KFC0,
-> +	GATE_BUS_CDREX0,
-> +	GATE_BUS_CDREX1,
-> +	CDREX_PAUSE,
-> +	CDREX_LPDDR3PHY_CON3,
->  };
->  
->  static const unsigned long exynos5800_clk_regs[] __initconst = {
-> @@ -425,6 +433,9 @@ PNAME(mout_group13_5800_p)	= { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
->  PNAME(mout_group14_5800_p)	= { "dout_aclk550_cam", "dout_sclk_sw" };
->  PNAME(mout_group15_5800_p)	= { "dout_osc_div", "mout_sw_aclk550_cam" };
->  PNAME(mout_group16_5800_p)	= { "dout_osc_div", "mout_mau_epll_clk" };
-> +PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
-> +					"mout_sclk_mpll", "ff_dout_spll2",
-> +					"mout_sclk_spll", "mout_sclk_epll"};
->  
->  /* fixed rate clocks generated outside the soc */
->  static struct samsung_fixed_rate_clock
-> @@ -450,7 +461,7 @@ static const struct samsung_fixed_factor_clock
->  static const struct samsung_fixed_factor_clock
->  		exynos5800_fixed_factor_clks[] __initconst = {
->  	FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
-> -	FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
-> +	FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
->  };
->  
->  static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
-> @@ -472,11 +483,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
->  	MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
->  	MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
->  
-> +	MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
-> +		mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
-> +
->  	MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
-> -			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
-> +			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
->  	MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
->  			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
-> -	MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
-> +	MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
->  	MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
->  
->  	MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
-> @@ -648,7 +662,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
->  
->  	MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
->  	MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
-> -	MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
-> +	MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
->  	MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
->  	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
->  	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
-> @@ -817,6 +831,8 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
->  	DIV(CLK_DOUT_CLK2X_PHY0, "dout_clk2x_phy0", "dout_sclk_cdrex",
->  			DIV_CDREX0, 3, 5),
->  
-> +	DIV(0, "dout_pclk_drex0", "dout_cclk_drex0", DIV_CDREX0, 28, 3),
-> +
->  	DIV(CLK_DOUT_PCLK_CORE_MEM, "dout_pclk_core_mem", "mout_mclk_cdrex",
->  			DIV_CDREX1, 8, 3),
->  
-> @@ -1170,6 +1186,36 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
->  			GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
->  
->  	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
-> +
-> +	/* CDREX */
-> +	GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
-> +			GATE_BUS_CDREX0, 0, 0, 0),
-> +	GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
-> +			GATE_BUS_CDREX0, 1, 0, 0),
+> The parent process and child process do not share the mm struct.  Userfaultfd monitor thread's
+> mm->owner should not point to the freed child task_struct.
 
-nitpick. Add the blank line because of clocks of the different register.
+IIUC the problem is that above mm (of the mm->owner) is the child
+process's mm rather than the uffd monitor's.  When
+dup_userfaultfd_complete() is called there will be a new userfaultfd
+context sent to the uffd monitor thread which linked to the chlid
+process's mm, and if the monitor thread do UFFDIO_COPY upon the newly
+received userfaultfd it'll operate on that new mm too.
 
-> +	GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
-> +			SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
-> +
-> +	GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
-> +			GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
-> +			GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
-> +			GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
-> +			GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
-> +
-> +	GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
-> +			GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
-> +			GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
-> +			GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
-> +			GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
-> +
-> +	GATE(CLK_CDREX_PAUSE, "clk_cdrex_pause", NULL, CDREX_PAUSE, 0, 0, 0),
-
-nitpick. Add the blank line because of clocks of the different register.
-
-> +	GATE(CLK_CDREX_TIMING_SET, "clk_cdrex_timing_set", NULL,
-> +			CDREX_LPDDR3PHY_CON3, 28, 0, 0),
->  };
->  
->  static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
+> 
+> and due to the existence of tasklist_lock,  we can not specify the mm->owner to freed task_struct.
+> 
+> I miss something,=-O
+> 
+> Thanks,
+> zhong jiang
+> >> Thanks,
+> >> zhong jiang
+> 
 > 
 
+Regards,
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Peter Xu
