@@ -2,356 +2,176 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BE3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E446DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA87820661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:35:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tHd7x27l"
+	by mail.kernel.org (Postfix) with ESMTP id BD93920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbfCFHfl (ORCPT
+        id S1729468AbfCFHgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 02:35:41 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57259 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbfCFHfk (ORCPT
+        Wed, 6 Mar 2019 02:36:10 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49169 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729388AbfCFHgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 02:35:40 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190306073538euoutp029aada409f5141c38039e3dfe1040b397~JTmQRj4ti0505705057euoutp02M
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2019 07:35:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190306073538euoutp029aada409f5141c38039e3dfe1040b397~JTmQRj4ti0505705057euoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551857738;
-        bh=kVuHMzQfmEZtEl3B5Op757Cj1illB/4/YuF0mexjPEw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=tHd7x27lniJoPf1MLGsh+VzDjPLn1pJ1GmDlt6+e9Lw0bjPT9MTBr9mzCszIb7oq5
-         k7qYjldyv5MCWiqIGjEcmVODhz4USKPq+RdeWUtvPfpzidBDfKRsyZQo7CBFbKOJbd
-         Y2hHwvwQmg/EYoZl5fEwuvaiQs2uh08luvDnyxoU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190306073537eucas1p2fd4dafaecb2315ae58f5ad2097325313~JTmPu3IlJ0741907419eucas1p2a;
-        Wed,  6 Mar 2019 07:35:37 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id DD.2D.04806.9487F7C5; Wed,  6
-        Mar 2019 07:35:37 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190306073536eucas1p17f0f877c6aefe304ba991ee33fdab921~JTmPA6aKA0570905709eucas1p1f;
-        Wed,  6 Mar 2019 07:35:36 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190306073536eusmtrp11cd56c8c4d8ecb0d1f2d6f1697e288eb~JTmOvO-xZ0177401774eusmtrp17;
-        Wed,  6 Mar 2019 07:35:36 +0000 (GMT)
-X-AuditID: cbfec7f5-79db79c0000012c6-23-5c7f78494543
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7F.03.04284.8487F7C5; Wed,  6
-        Mar 2019 07:35:36 +0000 (GMT)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190306073536eusmtip1db8e6378fe190ce30fdc131187a589d3~JTmOK-w1B2061220612eusmtip13;
-        Wed,  6 Mar 2019 07:35:36 +0000 (GMT)
-Subject: Re: [PATCH v5 4/8] dt-bindings: devfreq: add Exynos5422 DMC device
- description
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <82e9065e-100b-646f-68e2-aa85a8807b40@partner.samsung.com>
-Date:   Wed, 6 Mar 2019 08:35:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.4.0
+        Wed, 6 Mar 2019 02:36:09 -0500
+X-Originating-IP: 90.88.150.179
+Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 534AE1C0015;
+        Wed,  6 Mar 2019 07:36:06 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 08:36:05 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Gerhard Wiesinger <lists@wiesinger.com>
+Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
+Subject: Re: Banana Pi-R1 stabil
+Message-ID: <20190306073605.modlx4yhdzbg7sfz@flea>
+References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
+ <20190227092023.nvr34byfjranujfm@flea>
+ <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
+ <20190228093516.abual3564dkvx6un@flea>
+ <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
+ <20190301093038.oz56z22ivpntdcfw@flea>
+ <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
+ <20190305092830.ef45kxzhdnxlh63g@flea>
+ <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPchn1nFH2FvvCTKoEen2+9EgTfHKbmzEfgKFxGmKGH8Pw@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGKsWRmVeSWpSXmKPExsWy7djPc7qeFfUxBucfSFtsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW1zeNYfN4nPvEUaLGef3MVmsPXKX3eJ24wo2i8Nv2lkd
-        eDw2repk8+jbsorR4/MmuQDmKC6blNSczLLUIn27BK6Mj1fesxac8a9417qOrYHxun4XIweH
-        hICJxLHZIl2MXBxCAisYJf48PMUE4XxhlLiz9SQzhPOZUeLxzyvsXYycYB2z/98Cs4UEljNK
-        rN6eBFH0llHiX+cFNpCEsECkxJpjDWC2iICmxPW/31lBipgF1jFLTJ10kxFkN5uAnsSOVYUg
-        NbwCbhKX90wHC7MIqEjseZAOEhYViJA43PuOEaJEUOLkzCcsIDanQKDE0otHmUFsZgFxiVtP
-        5jNB2PIS29/OATtaQuAcu8S1eZcYIY52kXj5cjEThC0s8er4FqhnZCROT+5hgbCLJc52rGKD
-        sGsk2k/ugKqxljh8/CIryG3MQL+s36UPEXaU+PriECskFPkkbrwVhDiBT2LStunMEGFeiY42
-        IYhqDYktPRegDhCTWL5mGvsERqVZSB6bheSZWUiemYWwdwEjyypG8dTS4tz01GLjvNRyveLE
-        3OLSvHS95PzcTYzA1HT63/GvOxj3/Uk6xCjAwajEwzuhtS5GiDWxrLgy9xCjBAezkgivZ1Z9
-        jBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQbGgE91tZ4h
-        PWlPeNQVlkwLsChcuTAulXFBYZG/ypxb3xrOs0+Um3f+94/izRmWoQH5aw09ktVq5jJt+rIr
-        Prah8sz+FNuSVdNSmxa+WDLb1mXF7Lf3JNN3GUq/aZpy4uDF1pszBJ+orJSbzas3efepH75O
-        rouWZcSI7Ps3kef/rsxpa91mZcsYKrEUZyQaajEXFScCAEwiH3ZJAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsVy+t/xu7oeFfUxBm37VS02zljPanH9y3NW
-        i/lHzrFa9D9+zWxx/vwGdouzTW/YLS7vmsNm8bn3CKPFjPP7mCzWHrnLbnG7cQWbxeE37awO
-        PB6bVnWyefRtWcXo8XmTXABzlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamS
-        vp1NSmpOZllqkb5dgl7GxyvvWQvO+Fe8a13H1sB4Xb+LkZNDQsBEYvb/W+xdjFwcQgJLGSW+
-        tj9jhkiISUzat50dwhaW+HOtiw2i6DWjxP5v+xlBEsICkRJrjjWwgdgiApoS1/9+ZwUpYhbY
-        wCyxbdFtFoiOJUwSH9rbgUZxcLAJ6EnsWFUI0sAr4CZxec90RpAwi4CKxJ4H6SBhUYEIiY9P
-        9zFBlAhKnJz5hAXE5hQIlFh68SjYccwCZhLzNj+EssUlbj2ZzwRhy0tsfzuHeQKj0Cwk7bOQ
-        tMxC0jILScsCRpZVjCKppcW56bnFhnrFibnFpXnpesn5uZsYgTG57djPzTsYL20MPsQowMGo
-        xMM7obUuRog1say4MvcQowQHs5IIr2dWfYwQb0piZVVqUX58UWlOavEhRlOg3yYyS4km5wPT
-        RV5JvKGpobmFpaG5sbmxmYWSOO95g8ooIYH0xJLU7NTUgtQimD4mDk6pBkazX6YrNhht3Pn3
-        5BdOi8/XLao/PMiUPRoQWZRpsN3g450pJ/ueuR/tyzPSOCwsuLdeaMZjNRMT8e4Zh1cUHlil
-        87stQ+9VdCqXQk7Hf+0piv8rgrr8bvb4qYVffdLG+FEgcPm0VQceBbUs6mh1WvtCn2NBmOKC
-        k5INj7ZN/SN34MUr/8mOH3qUWIozEg21mIuKEwFtdaUm3wIAAA==
-X-CMS-MailID: 20190306073536eucas1p17f0f877c6aefe304ba991ee33fdab921
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190305101926eucas1p2eee36b9cb50cbcf511fab7bae59e24bb
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190305101926eucas1p2eee36b9cb50cbcf511fab7bae59e24bb
-References: <CGME20190305101926eucas1p2eee36b9cb50cbcf511fab7bae59e24bb@eucas1p2.samsung.com>
-        <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
-        <1551781151-5562-5-git-send-email-l.luba@partner.samsung.com>
-        <CAJKOXPchn1nFH2FvvCTKoEen2+9EgTfHKbmzEfgKFxGmKGH8Pw@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="o75bzzlkdlwciv3j"
+Content-Disposition: inline
+In-Reply-To: <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
 
-On 3/5/19 12:35 PM, Krzysztof Kozlowski wrote:
-> On Tue, 5 Mar 2019 at 11:19, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> The patch adds description for DT binding for a new Exynos5422 Dynamic
->> Memory Controller device.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   .../devicetree/bindings/devfreq/exynos5422-dmc.txt | 177 +++++++++++++++++++++
->>   1 file changed, 177 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt b/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
->> new file mode 100644
->> index 0000000..0e73e98
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
->> @@ -0,0 +1,177 @@
->> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
->> +
->> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
->> +memory chips are connected. The driver is to monitor the controller in runtime
->> +and switch frequency and voltage. To monitor the usage of the controller in
->> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
->> +is able to measure the current load of the memory.
->> +When 'userspace' governor is used for the driver, an application is able to
->> +switch the DMC frequency.
->> +
->> +Required properties for DMC device for Exynos5422:
->> +- compatible: Should be "samsung,exynos5422-bus".
->> +- clock-names : the name of clock used by the bus, "bus".
->> +- clocks : phandles for clock specified in "clock-names" property.
->> +- devfreq-events : phandles for PPMU devices connected to this DMC.
->> +
->> +The example definition of a DMC and PPMU devices declared in DT is shown below:
->> +
->> +       ppmu_dmc0_0: ppmu@10d00000 {
->> +               compatible = "samsung,exynos-ppmu";
->> +               reg = <0x10d00000 0x2000>;
->> +               clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
->> +               clock-names = "ppmu";
->> +               status = "okay";
->> +               events {
->> +                       ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
->> +                               event-name = "ppmu-event3-dmc0_0";
->> +                       };
->> +               };
->> +       };
->> +
->> +
->> +       ppmu_dmc0_1: ppmu@10d10000 {
->> +               compatible = "samsung,exynos-ppmu";
->> +               reg = <0x10d10000 0x2000>;
->> +               clocks = <&clock CLK_PCLK_PPMU_DREX0_1>;
->> +               clock-names = "ppmu";
->> +               status = "okay";
->> +               events {
->> +                       ppmu_event_dmc0_1: ppmu-event3-dmc0_1 {
->> +                               event-name = "ppmu-event3-dmc0_1";
->> +                       };
->> +               };
->> +       };
->> +
->> +       ppmu_dmc1_0: ppmu@10d10000 {
->> +               compatible = "samsung,exynos-ppmu";
->> +               reg = <0x10d60000 0x2000>;
->> +               clocks = <&clock CLK_PCLK_PPMU_DREX1_0>;
->> +               clock-names = "ppmu";
->> +               status = "okay";
->> +               events {
->> +                       ppmu_event_dmc1_0: ppmu-event3-dmc1_0 {
->> +                               event-name = "ppmu-event3-dmc1_0";
->> +                       };
->> +               };
->> +       };
->> +
->> +       ppmu_dmc1_1: ppmu@10d70000 {
->> +               compatible = "samsung,exynos-ppmu";
->> +               reg = <0x10d70000 0x2000>;
->> +               clocks = <&clock CLK_PCLK_PPMU_DREX1_1>;
->> +               clock-names = "ppmu";
->> +               status = "okay";
->> +               events {
->> +                       ppmu_event_dmc1_1: ppmu-event3-dmc1_1 {
->> +                               event-name = "ppmu-event3-dmc1_1";
->> +                       };
->> +               };
->> +       };
->> +
->> +       dmc: memory-controller@10c20000 {
->> +               compatible = "samsung,exynos5422-dmc";
->> +               reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>,
->> +                       <0x10000000 0x1000>;
->> +               clocks =        <&clock CLK_FOUT_SPLL>,
->> +                               <&clock CLK_MOUT_SCLK_SPLL>,
->> +                               <&clock CLK_FF_DOUT_SPLL2>,
->> +                               <&clock CLK_FOUT_BPLL>,
->> +                               <&clock CLK_MOUT_BPLL>,
->> +                               <&clock CLK_SCLK_BPLL>,
->> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE>,
->> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
->> +                               <&clock CLK_MOUT_MCLK_CDREX>,
->> +                               <&clock CLK_DOUT_CLK2X_PHY0>,
->> +                               <&clock CLK_CLKM_PHY0>,
->> +                               <&clock CLK_CLKM_PHY1>,
->> +                               <&clock CLK_CDREX_PAUSE>,
->> +                               <&clock CLK_CDREX_TIMING_SET>;
->> +               clock-names =   "fout_spll",
->> +                               "mout_sclk_spll",
->> +                               "ff_dout_spll2",
->> +                               "fout_bpll",
->> +                               "mout_bpll",
->> +                               "sclk_bpll",
->> +                               "mout_mx_mspll_ccore",
->> +                               "mout_mx_mspll_ccore_phy",
->> +                               "mout_mclk_cdrex",
->> +                               "dout_clk2x_phy0",
->> +                               "clkm_phy0",
->> +                               "clkm_phy1",
->> +                               "clk_cdrex_pause",
->> +                               "clk_cdrex_timing_set";
->> +               status = "okay";
->> +               operating-points-v2 = <&dmc_opp_table>;
->> +               devfreq-events = <&ppmu_dmc0_0>, <&ppmu_dmc0_1>,
->> +                               <&ppmu_dmc1_0>, <&ppmu_dmc1_1>;
->> +       };
->> +
->> +The needed timings of DRAM memory are stored in dedicated nodes.
->> +There are two nodes with regular timings and for bypass mode.
->> +
->> +       dmc_bypass_mode: bypass_mode {
->> +               compatible = "samsung,dmc-bypass-mode";
-> 
-> This looks like an example, not bindings.
-I have not seen similar, since it is not just 'timing' but other
-Exynos register specific stuff in the register.
-> 
->> +
->> +               freq-hz = <400000000>;
->> +               volt-uv = <887500>;
-> 
-> -microvolt
-> Documentation/devicetree/bindings/property-units.txt
-Thanks
-> 
->> +               dram-timing-row = <0x365a9713>;
->> +               dram-timing-data = <0x4740085e>;
->> +               dram-timing-power = <0x543a0446>;
->> +       };
->> +
->> +       dram_timing: timing {
->> +               compatible = "samsung,dram-timing";
-> 
-> Probably you should use timings from Documentation/devicetree/bindings/lpddr2/
-> If not, all the fields below should be described.
-It is not just 'timing'. It is a whole register specific value for the
-Exynos5422. It could be named 'dram-config-regs' to avoid confusion.
-The regs are called 'row', 'data' and 'power' and adding a procedure
-in the driver which takes ~30 values for each speed-grade and combines
-into a reg value makes no sense.
-> 
-> All these bindings (memory-controller, timings) look like description
-> of memory controller so maybe they should go into
-> Documentation/devicetree/bindings/memory-controllers ?
-I don't know, maybe Chanwoo has some opinion since he requested to put
-these register values into DT.
+--o75bzzlkdlwciv3j
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
->> +
->> +               dram-timing-names = "165MHz", "206MHz", "275MHz", "413MHz",
->> +                                   "543MHz", "633MHz", "728MHz", "825MHz";
->> +               dram-timing-row = <0x11223185>, <0x112331C6>, <0x12244287>,
->> +                                 <0x1B35538A>, <0x244764CD>, <0x2A48758F>,
->> +                                 <0x30598651>, <0x365A9713>;
->> +               dram-timing-data = <0x2720085E>, <0x2720085E>, <0x2720085E>,
->> +                                  <0x2720085E>, <0x3730085E>, <0x3730085E>,
->> +                                  <0x3730085E>, <0x4740085E>;
->> +               dram-timing-power = <0x140C0225>, <0x180F0225>, <0x1C140225>,
->> +                                   <0x2C1D0225>, <0x38270335>, <0x402D0335>,
->> +                                   <0x4C330336>, <0x543A0446>;
->> +       };
->> +
->> +The frequencies supported by the DMC are stored in OPP table v2.
->> +
->> +       dmc_opp_table: opp_table2 {
->> +               compatible = "operating-points-v2";
->> +
->> +               opp00 {
->> +                       opp-hz = /bits/ 64 <165000000>;
->> +                       opp-microvolt = <875000>;
->> +               };
->> +               opp01 {
->> +                       opp-hz = /bits/ 64 <206000000>;
->> +                       opp-microvolt = <875000>;
->> +               };
->> +               opp02 {
->> +                       opp-hz = /bits/ 64 <275000000>;
->> +                       opp-microvolt = <875000>;
->> +               };
->> +               opp03 {
->> +                       opp-hz = /bits/ 64 <413000000>;
->> +                       opp-microvolt = <887500>;
->> +               };
->> +               opp04 {
->> +                       opp-hz = /bits/ 64 <543000000>;
->> +                       opp-microvolt = <937500>;
->> +               };
->> +               opp05 {
->> +                       opp-hz = /bits/ 64 <633000000>;
->> +                       opp-microvolt = <1012500>;
->> +               };
->> +               opp06 {
->> +                       opp-hz = /bits/ 64 <728000000>;
->> +                       opp-microvolt = <1037500>;
->> +               };
->> +               opp07 {
->> +                       opp-hz = /bits/ 64 <825000000>;
->> +                       opp-microvolt = <1050000>;
->> +               };
->> +       };
->> +
->> --
->> 2.7.4
->>
-> 
-> 
+On Tue, Mar 05, 2019 at 08:21:02PM +0100, Gerhard Wiesinger wrote:
+> > > > Run https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-str=
+ess-test
+> > > >=20
+> > > > > But it doesn't explaing that it works with kernel 4.7.4 without a=
+ny
+> > > > > problems.
+> > > > My best guess would be that cpufreq wasn't enabled at that time, or
+> > > > without voltage scaling.
+> > > >=20
+> > > Where can I see the voltage scaling parameters?
+> > >=20
+> > > on DTS I don't see any difference between kernel 4.7.4 and 4.20.10 re=
+garding
+> > > voltage:
+> > >=20
+> > > dtc -I dtb -O dts -o
+> > > /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dts
+> > > /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dtb
+> > This can be also due to configuration being changed, driver support, et=
+c.
+>=20
+> Where will the voltages for scaling then be set in detail (drivers, etc.)?
+
+The operating points are in the DT, but how to change it (cpufreq
+drivers, clock drivers, regulators drivers) aren't, and the
+configuration will tell if those drivers are included, and which
+governor is going to be the default.
+
+> > > There is another strange thing (tested with
+> > > kernel-5.0.0-0.rc8.git1.1.fc31.armv7hl, kernel-4.19.8-300.fc29.armv7h=
+l,
+> > > kernel-4.20.13-200.fc29.armv7hl, kernel-4.20.10-200.fc29.armv7hl):
+> > >=20
+> > > There is ALWAYS high CPU of around 10% in kworker:
+> > >=20
+> > >  =A0 PID USER=A0=A0=A0=A0=A0 PR=A0 NI=A0=A0=A0 VIRT=A0=A0=A0 RES=A0=
+=A0=A0 SHR S=A0 %CPU=A0 %MEM TIME+ COMMAND
+> > > 18722 root=A0=A0=A0=A0=A0 20=A0=A0 0=A0=A0=A0=A0=A0=A0 0=A0=A0=A0=A0=
+=A0 0=A0=A0=A0=A0=A0 0 I=A0=A0 9.5=A0=A0 0.0 0:47.52
+> > > [kworker/1:3-events_freezable_power_]
+> > >=20
+> > >  =A0 PID USER=A0=A0=A0=A0=A0 PR=A0 NI=A0=A0=A0 VIRT=A0=A0=A0 RES=A0=
+=A0=A0 SHR S=A0 %CPU=A0 %MEM TIME+ COMMAND
+> > >  =A0 776 root=A0=A0=A0=A0=A0 20=A0=A0 0=A0=A0=A0=A0=A0=A0 0=A0=A0=A0=
+=A0=A0 0=A0=A0=A0=A0=A0 0 I=A0=A0 8.6=A0=A0 0.0 0:02.77
+> > > [kworker/0:4-events]
+> > The first one looks like it's part of the workqueue code.
+>=20
+> Any guessed reason for that?
+
+None, I'm not familiar with the workqueue code.
+
+> > > BTW: Still stable at aboout 2,5days on both devices. So solution IS t=
+he
+> > > performance governor.
+> > No, the performance governor prevents any change in frequency. My
+> > guess is that a lower frequency operating point is not working and is
+> > crashing the CPU.
+> >=20
+>=20
+> Yes, there might at least 2 scenarios:
+>=20
+> 1.) Frequency switching itself is the problem
+
+But that code is also the one being used by the BananaPro, which you
+reported as stable.
+
+> 2.) lower frequency/voltage operating points are not stable.
+>=20
+> For both scenarios: it might be possible that the crash happens on idle C=
+PU,
+> high CPU load or just randomly. Therefore just "waiting" might be better
+> than 100% CPU utilization.But will test also 100% CPU.
+>=20
+> Therefore it would be good to see where the voltages for different
+> frequencies for the SoC are defined (to compare).
+
+In the device tree.
+
+> I'm currently testing 2 different settings on the 2 new Banana Pi R1 with
+> newest kernel (see below), so 2 static frequencies:
+>=20
+> # Set to specific frequency 144000 (currently testing on Banana Pi R1 #1)
+>=20
+> # Set to specific frequency 312000 (currently testing on Banana Pi R1 #2)
+>=20
+> If that's fine I'll test also further frequencies (with different loads).
+
+Look, you can come up with whatever program you want for this, but if
+I insist on running that cpustress program (for the 4th time now), is
+that it's actually good at it and caught all the cpufreq issues we've
+seen so far.
+
+Feel free to not trust me on this, but I'm not sure how the discussion
+can continue if you do.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--o75bzzlkdlwciv3j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH94ZQAKCRDj7w1vZxhR
+xb5vAP9omEQE7Ew2d9KdT9TaBwLf/pj0fDYL8wcklX4q3ak8eAD+J2xpcLaJWHLX
+s+dBzrM8KllbuLtR+eC6yBOSsC4+0QE=
+=Byx2
+-----END PGP SIGNATURE-----
+
+--o75bzzlkdlwciv3j--
