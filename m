@@ -2,106 +2,115 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D34C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B75C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E8C20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="hkGpfIRw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LBWIqIvs"
+	by mail.kernel.org (Postfix) with ESMTP id A634A20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfCFVt6 (ORCPT
+        id S1726234AbfCFVwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:49:58 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40819 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbfCFVt6 (ORCPT
+        Wed, 6 Mar 2019 16:52:33 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:34875 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfCFVwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:49:58 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id C888724539;
-        Wed,  6 Mar 2019 16:49:56 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 06 Mar 2019 16:49:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=U6Mzn5zmmi/RZCnEuGaG3vqz1fW
-        gi9ayODANZ8PR6xQ=; b=hkGpfIRw+sjzylR2uKL6kbS6XdcK6mDBwgGx95TsGQM
-        MLZpmaOeNyEXgnug3yMK/LNETzK34D/nBNh6BTVRvl2FnzxxPXNC0L2I/YE7zP2y
-        GPuBSy0p+vgtrTGdykynXolb4Au3BQvAQZ04hPNr5bDwbhDcsKEr5EbSel083XFA
-        sdx/VDQz+rY41sqOs1VM+ny7BwZF9eC1+EZQ1jLCummTqGeM2DzZFn1YwROHQO2O
-        fbDn6TjAy4z41Aqj/U4lVYnFkxktHaEoBBwV3Yd7lM192p0Onu5hreILl1PtWay4
-        R/E+dLMn2MjYzZFQbdsGfI+svek8ycSYLWDR8oFyadg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=U6Mzn5
-        zmmi/RZCnEuGaG3vqz1fWgi9ayODANZ8PR6xQ=; b=LBWIqIvsY2/hDKeX/lyG5L
-        ZY974DPt6DatjXxiHfWUlB8m9dGAeMsqr7Axj0aGZo3YWGzqzizg04bJATWhd/If
-        DERWK5D3+rtWrAzU8TtkFJ4npWP2Pi8HYPuy0TO2cc0nILwTVKP6G9Og+ggUGIJB
-        eePNgeKn+SxWvGuiCtR7e5afdLiW3sFIvYVcLwrNqD8C/BKgKTQji1b1b4AXz2UD
-        Ox4bLPS5juT2Tt3XlGvRjMUdUxyflth138C89HoLY1EoOQ0j2C+3bsJ03Jl/ovs/
-        d/sGOnz6UeS4tO67jWImMYct1vuDja9xDPPb6e54F6aHLXujExESS7tAoa/0OJXA
-        ==
-X-ME-Sender: <xms:gkCAXPmYCRRj5E4FyuQvOj2Df0FTiimhNYiq_xg7D5YNVOf3ketOkw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeeigdekjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvgedrudeiledrhedrudehkeenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:gkCAXKTP48w46JOBUxBmeYEGEWYt6RrMVmcpMqU-rLi-_-evn2z-8Q>
-    <xmx:gkCAXDDJOsFatt5Re9WybrGGtm7nfWYTR5Qzasx65HdD5lXEdJNrmg>
-    <xmx:gkCAXBRN0xdC-IFPkaJUEQx-BDm6HiA6cAFRfrMq5wiexMgrIJjh4w>
-    <xmx:hECAXKykRM0S-9IxF-lsQSFoQuaFpI37IY7f15vtUVQFrZaPCNduIQ>
-Received: from localhost (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 39B43E4752;
-        Wed,  6 Mar 2019 16:49:52 -0500 (EST)
-Date:   Thu, 7 Mar 2019 08:49:34 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] lib/string: Add strscpy_pad() function
-Message-ID: <20190306214934.GA16461@eros.localdomain>
-References: <20190306214226.14598-1-tobin@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306214226.14598-1-tobin@kernel.org>
-X-Mailer: Mutt 1.11.3 (2019-02-01)
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Wed, 6 Mar 2019 16:52:32 -0500
+Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M60HD-1h96Rp1Oup-007XjX; Wed, 06 Mar 2019 22:52:06 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net,
+        linux-watchdog@vger.kernel.org
+Subject: [PATCH v2] drivers: watchdog: Kconfig: pedantic formatting
+Date:   Wed,  6 Mar 2019 22:52:05 +0100
+Message-Id: <1551909125-20305-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <8a1297c7-f1f2-5742-0ef6-f83799510735@roeck-us.net>
+References: <8a1297c7-f1f2-5742-0ef6-f83799510735@roeck-us.net>
+X-Provags-ID: V03:K1:9xTm2JiTUZAyYNG07MdKHbzBZ8nkgkm+T8IZva6SuDN+gO5EuYN
+ iPbejt6IUBeEHe0onA5PjVVjcD4XfzNKFaIzdTZh0vBg0FTdNfROtz7g+90RmcgcCznEIAH
+ 6Q73JRqQ5jV2AT73I6MU7L4AD0iWT+1YJD3rTfgnICVKjJrO8lUNPZNN8kajfCl3h9Hq0bE
+ nh2QAtpz0hyRM88Y7y4AA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dQsoFl848gA=:yBC+0Lc6lpXDd8xrlAzhZw
+ hReGBLa4u36gx7TFfPqyX6791i35JTmQtg/X6qCtns9GYzGj2sJhNny5mPN9qSdyTkZ4L/JxQ
+ TlLMx3Y/FlrSsCgAWF/cD2oH/FXkriIbpKic6F3EYL1AqdU8OEf3RfPMyWYn0kzw3CKjXU23O
+ NxIdQX0MAcBG1vUaPosxsVl60CjIONC3760x38a32mY9jjYGhG3RsxZXH90sYNj0XQ0i6Rd9g
+ 7srcyNCoxdloy9+xT48lVU38K+8jYSEW9XjSjKtMiXmwH+TMKMdZXGsCNtKiPBDBSHkUT7AiN
+ rPJ/IL5UPypBpwtT85H31VUJ5Y0dvVbIhDbOQb4Bc5SbuVsqHdZcTcLfLUgwNInhNlYvgrltM
+ GLdp5lyG9uOMdCwC5Ky4dgySBbPQpXoI0mBmhDNF7FNIfxyi+TdEFJW+mng6anYDN8eXu0OU5
+ JC3PgzyKt4ibqSgph3v+M6HKtkQOrCtRzR0vDYFqcF7N0v45BHUJ3dFscf8QKIz+QHIIbbiOa
+ XZPPaVmMNItYkE+lMSq3xxf8YO6F05g15Zkho4IwOljNljmeIiANOx7cg7K4tapoIx41RbVxm
+ LOxz+ozripgYrLNkE1HAI+iWb8n6i5LDxbvHt8Qos0JqL+tu0R+z0hPDnYILeVqmyfHo2v8Lw
+ Acjsx1mQ1sF6AggLw+fdw9/4fewxwiHFF0Yun7yjt8wsL1gzOA2lRg9XcLImxzI3BP3kugdLR
+ 3m9RXTR3Fu4eL24N+V68+pnQk39D0eL8ZrlQSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 08:42:19AM +1100, Tobin C. Harding wrote:
-> Hi,
+Formatting of Kconfig files doesn't look so pretty, so just
+take damp cloth and clean it up.
 
-Man, I didn't see the merge window was open, I thought rc8 only came out
-on Sunday.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/watchdog/Kconfig | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Sorry, please ignore this.  Will re-send again later in the cycle.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 57f017d..38509d5 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -279,10 +279,10 @@ config ARMADA_37XX_WATCHDOG
+ 	select MFD_SYSCON
+ 	select WATCHDOG_CORE
+ 	help
+-	   Say Y here to include support for the watchdog timer found on
+-	   Marvell Armada 37xx SoCs.
+-	   To compile this driver as a module, choose M here: the
+-	   module will be called armada_37xx_wdt.
++	  Say Y here to include support for the watchdog timer found on
++	  Marvell Armada 37xx SoCs.
++	  To compile this driver as a module, choose M here: the
++	  module will be called armada_37xx_wdt.
+ 
+ config ASM9260_WATCHDOG
+ 	tristate "Alphascale ASM9260 watchdog"
+@@ -606,10 +606,10 @@ config MAX77620_WATCHDOG
+ 	tristate "Maxim Max77620 Watchdog Timer"
+ 	depends on MFD_MAX77620 || COMPILE_TEST
+ 	help
+-	 This is the driver for the Max77620 watchdog timer.
+-	 Say 'Y' here to enable the watchdog timer support for
+-	 MAX77620 chips. To compile this driver as a module,
+-	 choose M here: the module will be called max77620_wdt.
++	  This is the driver for the Max77620 watchdog timer.
++	  Say 'Y' here to enable the watchdog timer support for
++	  MAX77620 chips. To compile this driver as a module,
++	  choose M here: the module will be called max77620_wdt.
+ 
+ config IMX2_WDT
+ 	tristate "IMX2+ Watchdog"
+@@ -1632,10 +1632,10 @@ config BCM7038_WDT
+ 	depends on HAS_IOMEM
+ 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
+ 	help
+-	 Watchdog driver for the built-in hardware in Broadcom 7038 and
+-	 later SoCs used in set-top boxes.  BCM7038 was made public
+-	 during the 2004 CES, and since then, many Broadcom chips use this
+-	 watchdog block, including some cable modem chips.
++	  Watchdog driver for the built-in hardware in Broadcom 7038 and
++	  later SoCs used in set-top boxes.  BCM7038 was made public
++	  during the 2004 CES, and since then, many Broadcom chips use this
++	  watchdog block, including some cable modem chips.
+ 
+ config IMGPDC_WDT
+ 	tristate "Imagination Technologies PDC Watchdog Timer"
+-- 
+1.9.1
 
-thanks,
-Tobin.
