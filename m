@@ -2,91 +2,147 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85604C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC2CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5684220675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BF920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H83DSUY7";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mm0e27pQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfCFPZ3 (ORCPT
+        id S1728731AbfCFP2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:25:29 -0500
-Received: from mail-qt1-f179.google.com ([209.85.160.179]:38253 "EHLO
-        mail-qt1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbfCFPZ2 (ORCPT
+        Wed, 6 Mar 2019 10:28:33 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:46008 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfCFP2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:25:28 -0500
-Received: by mail-qt1-f179.google.com with SMTP id s1so13227351qte.5
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:25:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=gGCwgMKP6vt58kbX5XtRQWiKQmeKhonse8Ecu4U1gxo=;
-        b=Gf42nMuk5xbMIwu4ZVsartYeD6lHUBSSW11Dj5+Xh9CN+CYLMtZZeucIqqDdDkb22/
-         OcZgeQXhIhaPaGffN+G6t3CENSsP+KFzMN254p5neEXRjBv0mmA8s6ORAESnZC6QojpL
-         tudgPSrghSDykSThEinPhfZbWpCEA1hRrecJwH6o88kvzpc4ybroltPSdNyS8GBLzd6P
-         DA0Q/izM7gVVvMrycO6LButvGTouXv0sXlLH7Ozp2UtT2ktmfneM7wraNsP9ct9UsMOy
-         PxjclsAsPPiAcJdTPghx1dq2BQ4lsY1V7D7jcpnkXHUdafMaqydu2YRVXa3/piUUxuon
-         njbg==
-X-Gm-Message-State: APjAAAUKMZF+JB9ylWSS134c6ID+qrOMHR3CkmOH/3NvkUPZb57iN0Aa
-        /uXcRPLuSn/5/2EzCODhQIMh5A7U7lT3QlF1A2I=
-X-Google-Smtp-Source: APXvYqz8gx2NIEAH/HGCJwYvRtE32vm3rhvvxEX0Ypu4F9xUKcydAS6/YpYOHE81OYK4gtJyDZNagHDc5IaE7pJbdao=
-X-Received: by 2002:ac8:2bcf:: with SMTP id n15mr5889343qtn.96.1551885927690;
- Wed, 06 Mar 2019 07:25:27 -0800 (PST)
-MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 6 Mar 2019 16:25:11 +0100
-Message-ID: <CAK8P3a1mnNrpf5moqi4x9BaTNpE9ZUgs-VBjXoG7=AxENwYtbQ@mail.gmail.com>
-Subject: [GIT PULL 0/6] ARM: SoC changes for 5.1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <arm@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 Mar 2019 10:28:32 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 58ECB60ACE; Wed,  6 Mar 2019 15:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551886111;
+        bh=lr6xzu7kGN76YrY51OX5vOavA1Q3p7mxTgffMhP+ox0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H83DSUY77oPss5VUyyo+KFapYjzCsy/ioaSv8+Fw7LMCDgMkSWlD0fS9KEAHZR46N
+         XFWA6FS4mRSpCXzAF3FLqtIxu09FPW7KJC3gCIjb7rVp08s+rqeynaXjbLfSbUDfwa
+         i4Hi4RiB4z67p8Lbwsbs67beIQWntTIiMbR8gPiM=
+Received: from lingutla-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: clingutla@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 23CD9606AC;
+        Wed,  6 Mar 2019 15:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551886109;
+        bh=lr6xzu7kGN76YrY51OX5vOavA1Q3p7mxTgffMhP+ox0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mm0e27pQEdQJuqopTnGW1Bv4oOsAR7xsjC/BMwWPaIk/JrrR4GsoQTMgbSWsZQqsg
+         daOiV/I6pRlHwGXTNe5NcP7b4o1pgfH3tCEpnAtHji79rlEA4aQK1/n7d5GAPdcDQq
+         1/Ig6bKBge2GYx+hvbhr/p5zC5OBLWcQN5DAbpAk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 23CD9606AC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clingutla@codeaurora.org
+From:   Lingutla Chandrasekhar <clingutla@codeaurora.org>
+To:     quentin.perret@arm.com, sudeep.holla@arm.com,
+        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org
+Cc:     will.deacon@arm.com, catalin.marinas@arm.com,
+        morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org,
+        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
+        Lingutla Chandrasekhar <clingutla@codeaurora.org>
+Subject: [PATCH v1] arch_topology: Make cpu_capacity sysfs node as ready-only
+Date:   Wed,  6 Mar 2019 20:57:53 +0530
+Message-Id: <1551886073-16217-1-git-send-email-clingutla@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20190306152254.GB19434@e105550-lin.cambridge.arm.com>
+References: <20190306152254.GB19434@e105550-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+If user updates any cpu's cpu_capacity, then the new value is going to
+be applied to all its online sibling cpus. But this need not to be correct
+always, as sibling cpus (in ARM, same micro architecture cpus) would have
+different cpu_capacity with different performance characteristics.
+So updating the user supplied cpu_capacity to all cpu siblings
+is not correct.
 
-There are six arm-soc branches this time, including one branch
-for two newly added SoC families (Socionext Milbeaut
-and Bitmain BM18xx), and one 'late' branch that I ended
-up sending together with the rest because I felt confident
-enough about it after the extra week past -rc8.
+And another problem is, current code assumes that 'all cpus in a cluster
+or with same package_id (core_siblings), would have same cpu_capacity'.
+But with commit '5bdd2b3f0f8 ("arm64: topology: add support to remove
+cpu topology sibling masks")', when a cpu hotplugged out, the cpu
+information gets cleared in its sibling cpus. So user supplied
+cpu_capacity would be applied to only online sibling cpus at the time.
+After that, if any cpu hot plugged in, it would have different cpu_capacity
+than its siblings, which breaks the above assumption.
 
-The release feels a little smaller than normal this time, though
-there are still a total of 767 non-merge commits in it, pulled
-from exactly 100 downstream branches.
+So instead of mucking around the core sibling mask for user supplied
+value, use device-tree to set cpu capacity. And make the cpu_capacity
+node as read-only to know the assymetry between cpus in the system.
 
-Contributors with the most commits this time were
+Signed-off-by: Lingutla Chandrasekhar <clingutla@codeaurora.org>
+---
+ drivers/base/arch_topology.c | 33 +--------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
 
-     57 Bartosz Golaszewski
-     29 Fabrizio Castro
-     28 Chen-Yu Tsai
-     23 Vladimir Zapolskiy
-     20 Joseph Lo
-     18 Manivannan Sadhasivam
-     18 Biju Das
-     17 Martin Blumenstingl
-     16 Thierry Reding
-     16 Stefan Wahren
-     16 Jerome Brunet
-     15 Linus Walleij
-     12 Miquel Raynal
-     12 Anson Huang
-     11 Bjorn Andersson
-     10 Rajendra Nayak
-     10 Lucas Stach
-     10 Geert Uytterhoeven
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index edfcf8d..d455897 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -7,7 +7,6 @@
+  */
+ 
+ #include <linux/acpi.h>
+-#include <linux/arch_topology.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
+ #include <linux/device.h>
+@@ -51,37 +50,7 @@ static ssize_t cpu_capacity_show(struct device *dev,
+ static void update_topology_flags_workfn(struct work_struct *work);
+ static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
+ 
+-static ssize_t cpu_capacity_store(struct device *dev,
+-				  struct device_attribute *attr,
+-				  const char *buf,
+-				  size_t count)
+-{
+-	struct cpu *cpu = container_of(dev, struct cpu, dev);
+-	int this_cpu = cpu->dev.id;
+-	int i;
+-	unsigned long new_capacity;
+-	ssize_t ret;
+-
+-	if (!count)
+-		return 0;
+-
+-	ret = kstrtoul(buf, 0, &new_capacity);
+-	if (ret)
+-		return ret;
+-	if (new_capacity > SCHED_CAPACITY_SCALE)
+-		return -EINVAL;
+-
+-	mutex_lock(&cpu_scale_mutex);
+-	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
+-		topology_set_cpu_scale(i, new_capacity);
+-	mutex_unlock(&cpu_scale_mutex);
+-
+-	schedule_work(&update_topology_flags_work);
+-
+-	return count;
+-}
+-
+-static DEVICE_ATTR_RW(cpu_capacity);
++static DEVICE_ATTR_RO(cpu_capacity);
+ 
+ static int register_cpu_capacity_sysctl(void)
+ {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+ a Linux Foundation Collaborative Project.
 
-All the usual platforms are active (renesas, sunxi, imx, omap,
-qcom, rockchips, mediatek), but I'm also happy to see more
-updates on some platforms that have seen less activity in the
-past (davinci, tegra and samsung-s5p).
-
-      Arnd
