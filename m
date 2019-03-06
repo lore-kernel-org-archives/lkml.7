@@ -2,330 +2,290 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D65C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002DDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF1420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FM11/1BP"
+	by mail.kernel.org (Postfix) with ESMTP id C08F220675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbfCFGbZ (ORCPT
+        id S1729148AbfCFGbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 01:31:25 -0500
-Received: from mail-eopbgr50089.outbound.protection.outlook.com ([40.107.5.89]:43681
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Wed, 6 Mar 2019 01:31:39 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43502 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728923AbfCFGao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 01:30:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X7h3YHptgT41jH4vhALSVvw+nmZsWyQfFs7bzY5bUTY=;
- b=FM11/1BPFYhbUpX+TcszZS5LZvM+sdhqTtrupUBp2FqS7eiFFjIz+XWGYUDuWeOopUSUjbH74Q5HOiRFDJq4yizr/gAocmZI4KcMgV12jj77EsRH8VfCnggvH+IlfMBAKfkvHLoXKnF2pIpKIeBjN7RGTm9M1a4sQrwCdPNOyuw=
-Received: from AM6PR04MB5016.eurprd04.prod.outlook.com (20.177.34.88) by
- AM6PR04MB4373.eurprd04.prod.outlook.com (20.177.38.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.19; Wed, 6 Mar 2019 06:30:39 +0000
-Received: from AM6PR04MB5016.eurprd04.prod.outlook.com
- ([fe80::5841:afe:53fd:42bb]) by AM6PR04MB5016.eurprd04.prod.outlook.com
- ([fe80::5841:afe:53fd:42bb%6]) with mapi id 15.20.1665.020; Wed, 6 Mar 2019
- 06:30:39 +0000
-From:   Clark Wang <xiaoning.wang@nxp.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 3/8] spi: lpspi: enable runtime pm for lpspi
-Thread-Topic: [PATCH V2 3/8] spi: lpspi: enable runtime pm for lpspi
-Thread-Index: AQHU0+YdkcfLuiZbykin5q3vWUwfTA==
-Date:   Wed, 6 Mar 2019 06:30:39 +0000
-Message-ID: <20190306063020.793-4-xiaoning.wang@nxp.com>
-References: <20190306063020.793-1-xiaoning.wang@nxp.com>
-In-Reply-To: <20190306063020.793-1-xiaoning.wang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SG2PR02CA0029.apcprd02.prod.outlook.com
- (2603:1096:3:18::17) To AM6PR04MB5016.eurprd04.prod.outlook.com
- (2603:10a6:20b:9::24)
-x-mailer: git-send-email 2.17.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaoning.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 566b5697-8151-4525-b8a8-08d6a1fd3fa6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB4373;
-x-ms-traffictypediagnostic: AM6PR04MB4373:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB4373;23:CNbFCH5QkGLFDGzWPWpNeAuAQ0N0Ed6M6IUzaAU?=
- =?iso-8859-1?Q?YI3QJWdIlE5ZTsGhpn3KnLG3tZM99nSheJ4W4PKGGlW7t6kx98R3xQFQnv?=
- =?iso-8859-1?Q?0BIeoPlm0t/bgf4tT36Jzffihc2R4WZWPwRzKV//Ml2frAMMz3CM8R4brz?=
- =?iso-8859-1?Q?7K76quzqV1M7l6UYVB09Y8TDPopUVorWKe0G/fXGqcJelbJj21gNClPohG?=
- =?iso-8859-1?Q?VkSxgOhv5Zwpb/Jv+PM1LUlvhySCjf8KEVDCqbngtcb2Qw4/nwq5j+csNt?=
- =?iso-8859-1?Q?vMNxHXwsRNOxuMnp2cK7/PPOCvZMwm2+d30GMmuWJwo4MvJwgPXr6TmhY1?=
- =?iso-8859-1?Q?FiTolcewtry3oVS+I6cEoMvca2gYKSDPTbbtTDsAoe2m/DCfr8rwfELvS7?=
- =?iso-8859-1?Q?Q7msJH28DIzkpv5UyV/XXjYmTs25jtSqaHyUp3TdT/bs0LYZJZxREBJtgE?=
- =?iso-8859-1?Q?cXsD0vzNH4Ori/3VMKfa+uRFsFID8vTv/W5kwn8V/O1/ZBf+P/tnCds+Bb?=
- =?iso-8859-1?Q?adOc8FOH50Gca8bL2Am5rn6G6Php/18NzLur8vxMLzyWPd3y8zwtRLkdqo?=
- =?iso-8859-1?Q?8gV8JXHorG4XNaE/nx9Dt+Vm1fISzmJUI2WS/HqJgYXibELMT1q6u3aCnz?=
- =?iso-8859-1?Q?0hf4Ev5oWKjn0GrO8pc5Dfxtf6U3N6Kz3SItHuekISl7h5Vm9xsImyUNN7?=
- =?iso-8859-1?Q?iBHPqRmpCJsWSHYIBXkPjgtH0eugACIbg1hamD/wyxa/m/eW/fxP11m6H4?=
- =?iso-8859-1?Q?AIEFOjid7oDVllruCZ5qxJSzvJnelK6Az6wAntTN4xr4eWlhQhyrNy7vJD?=
- =?iso-8859-1?Q?JUw6BJPRqIUrMDMWj7Bj91DgsIP770uhEOPuhC7ERWUFSU0x+hpSQrVjUj?=
- =?iso-8859-1?Q?9AeGpwKY/xU8vBBN17/y53nXpXOaMpAuuISyAxVBWKw1L/VzNKR7t4J0aV?=
- =?iso-8859-1?Q?iXczfvPUi9EPs/3+C7nqDM2M0wopxZ5Tc10HkqwstnDSO94sZ+DsGZVozN?=
- =?iso-8859-1?Q?ledRaemcvDUPT3O0ZA1yyuHKYjkxOoN7IDNNwZegSsqNgRr0mP1RfiT9AP?=
- =?iso-8859-1?Q?0Ik0Rb5wWGCzZRKMD6DErJ1ygoY5i/AR1A29F1z4KLhGniCpAvBHrO67O3?=
- =?iso-8859-1?Q?+aBnafvd2HyezM0PJQbN7rHjphw5Ji+arnMTEhZUEPjZ6IzFcuuHsrslYs?=
- =?iso-8859-1?Q?tHI1Fm+1eyv+mZOhJgKMUd0xr5opG18Rx2zLPEnJYsCLQf1bZjgacAI6A4?=
- =?iso-8859-1?Q?8IxkZ6sc2SQi8b8fBQcR9qbDgms6dW7yi/j3l5Gb18ra2kZNp5abDrFRyZ?=
- =?iso-8859-1?Q?t91Y2hWr3NSoesiBrgxIbY7DF/3PsymTKDqeZCS/GITt7cTYGYMH9V55wQ?=
- =?iso-8859-1?Q?hgM5KmI4=3D?=
-x-microsoft-antispam-prvs: <AM6PR04MB43736493CB1F08261DAA199BF3730@AM6PR04MB4373.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0968D37274
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(97736004)(6116002)(386003)(8936002)(6506007)(106356001)(52116002)(1730700003)(8676002)(26005)(81156014)(81166006)(14444005)(256004)(105586002)(102836004)(50226002)(2501003)(76176011)(99286004)(6512007)(305945005)(71200400001)(6436002)(5640700003)(6486002)(4326008)(53936002)(71190400001)(476003)(25786009)(486006)(66066001)(2616005)(7736002)(186003)(68736007)(446003)(1076003)(11346002)(54906003)(478600001)(316002)(36756003)(6916009)(2351001)(14454004)(86362001)(2906002)(5660300002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4373;H:AM6PR04MB5016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zouIrKcvWt6ouoWj7MNa4Xzc0kyXsLC8+y6g+37we3Jtil6x0C89spxmhSgieMxz8HqWDH2sGpi3L6fRYqaeW5RSpTWg4S4OZMvvE1a0T6kBERB3YRK93E4M+smLOQ9+/Kr8jvAQCEbdwgyxZDCfQ0g9cfAk8TfNHnh3iKPnrQAI4V2EoeWr9FhVS5nfCu4NR3BAze9nsSsy48D4qxKKaP14HmYl6YiP9ctTezV0yiPgNF/CscsNlrl5ZPfsfGFf2Z/a1SSqpDBx7sPSI2bpPrbSLbeCjX/fGP9zaMM5+nhCzMUDb/e3zDd5GuAD4AlMVO49Bm//EXJf+CE6ZK7VuqMCKm2CNF0a3yugg3lIPxnQ4L99SCMC73zRDTbNCVtGoy4vctWjrHPSnhw0AaWyJRYidxHxYj3wvN8+QUWHhlg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1726378AbfCFGbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 01:31:38 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2ECF52F0FCF37C7ACBE7;
+        Wed,  6 Mar 2019 14:31:36 +0800 (CST)
+Received: from [127.0.0.1] (10.134.22.195) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
+ 14:31:35 +0800
+Subject: Re: [PATCH 1/2] f2fs: fix to add refcount once page is tagged
+ PG_private
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190305095233.126601-1-yuchao0@huawei.com>
+ <20190306034654.GD78380@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <328faef7-dad0-4dd9-5ecf-1c37ed5ebad6@huawei.com>
+Date:   Wed, 6 Mar 2019 14:31:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 566b5697-8151-4525-b8a8-08d6a1fd3fa6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2019 06:30:39.0165
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4373
+In-Reply-To: <20190306034654.GD78380@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Han Xu <han.xu@nxp.com>
+On 2019/3/6 11:46, Jaegeuk Kim wrote:
+> On 03/05, Chao Yu wrote:
+>> As Gao Xiang reported in bugzilla:
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=202749
+>>
+>> f2fs may skip pageout() due to incorrect page reference count.
+>>
+>> The problem here is that MM defined the rule [1] very clearly that
+>> once page was set with PG_private flag, we should increment the
+>> refcount in that page, also main flows like pageout(), migrate_page()
+>> will assume there is one additional page reference count if
+>> page_has_private() returns true.
+>>
+>> But currently, f2fs won't add/del refcount when changing PG_private
+>> flag. Anyway, f2fs should follow MM's rule to make MM's related flows
+>> running as expected.
+>>
+>> [1] https://lore.kernel.org/lkml/2b19b3c4-2bc4-15fa-15cc-27a13e5c7af1@aol.com/
+>>
+>> Reported-by: Gao Xiang <gaoxiang25@huawei.com>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/checkpoint.c | 11 +++++++++--
+>>  fs/f2fs/data.c       | 32 ++++++++++++++++++++------------
+>>  fs/f2fs/dir.c        |  6 +++++-
+>>  fs/f2fs/node.c       |  6 +++++-
+>>  fs/f2fs/segment.c    | 23 +++++++++++++++++------
+>>  5 files changed, 56 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>> index c65a1e8e1e95..4e0e93af5ce0 100644
+>> --- a/fs/f2fs/checkpoint.c
+>> +++ b/fs/f2fs/checkpoint.c
+>> @@ -406,7 +406,11 @@ static int f2fs_set_meta_page_dirty(struct page *page)
+>>  	if (!PageDirty(page)) {
+>>  		__set_page_dirty_nobuffers(page);
+>>  		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_META);
+>> -		SetPagePrivate(page);
+>> +
+>> +		if (!PagePrivate(page)) {
+>> +			get_page(page);
+>> +			SetPagePrivate(page);
+> 
+> Can we add generic functions?
+> 
+> f2fs_set_page_private(page)
+> {
+> 	if (PagePrivate(page))
+> 		return;
+> 
+> 	SetPagePrivate(page);
+> 	get_page(page);
+> }
+>  
+> f2fs_clear_page_private(page)
+> {
+> 	if (!PagePrivate(page))
+> 		return;
+> 
+> 	set_page_private(page, 0);
+> 	ClearPagePrivate(page);
+> 	f2fs_put_page(page, 0);
+> }
 
-Enable the runtime power management for lpspi module.
+Done. :)
 
-Do some adaptation work from kernel 4.9 to 4.14.
+Thanks,
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Signed-off-by: Han Xu <han.xu@nxp.com>
-Reviewed-by: Frank Li <frank.li@nxp.com>
----
-V2:
- - Fix the comment format.
----
- drivers/spi/spi-fsl-lpspi.c | 117 ++++++++++++++++++++++++++++--------
- 1 file changed, 92 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index f363c000d24a..84dcb9e176b8 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -16,7 +16,9 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- #include <linux/spi/spi_bitbang.h>
-@@ -24,6 +26,8 @@
-=20
- #define DRIVER_NAME "fsl_lpspi"
-=20
-+#define FSL_LPSPI_RPM_TIMEOUT 50 /* 50ms */
-+
- /* i.MX7ULP LPSPI registers */
- #define IMX7ULP_VERID	0x0
- #define IMX7ULP_PARAM	0x4
-@@ -154,13 +158,9 @@ static int lpspi_prepare_xfer_hardware(struct spi_cont=
-roller *controller)
- 				spi_controller_get_devdata(controller);
- 	int ret;
-=20
--	ret =3D clk_prepare_enable(fsl_lpspi->clk_ipg);
--	if (ret)
--		return ret;
--
--	ret =3D clk_prepare_enable(fsl_lpspi->clk_per);
--	if (ret) {
--		clk_disable_unprepare(fsl_lpspi->clk_ipg);
-+	ret =3D pm_runtime_get_sync(fsl_lpspi->dev);
-+	if (ret < 0) {
-+		dev_err(fsl_lpspi->dev, "failed to enable clock\n");
- 		return ret;
- 	}
-=20
-@@ -172,8 +172,8 @@ static int lpspi_unprepare_xfer_hardware(struct spi_con=
-troller *controller)
- 	struct fsl_lpspi_data *fsl_lpspi =3D
- 				spi_controller_get_devdata(controller);
-=20
--	clk_disable_unprepare(fsl_lpspi->clk_ipg);
--	clk_disable_unprepare(fsl_lpspi->clk_per);
-+	pm_runtime_mark_last_busy(fsl_lpspi->dev);
-+	pm_runtime_put_autosuspend(fsl_lpspi->dev);
-=20
- 	return 0;
- }
-@@ -480,6 +480,45 @@ static irqreturn_t fsl_lpspi_isr(int irq, void *dev_id=
-)
- 	return IRQ_NONE;
- }
-=20
-+int fsl_lpspi_runtime_resume(struct device *dev)
-+{
-+	struct fsl_lpspi_data *fsl_lpspi =3D dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret =3D clk_prepare_enable(fsl_lpspi->clk_per);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D clk_prepare_enable(fsl_lpspi->clk_ipg);
-+	if (ret) {
-+		clk_disable_unprepare(fsl_lpspi->clk_per);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+int fsl_lpspi_runtime_suspend(struct device *dev)
-+{
-+	struct fsl_lpspi_data *fsl_lpspi =3D dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(fsl_lpspi->clk_per);
-+	clk_disable_unprepare(fsl_lpspi->clk_ipg);
-+
-+	return 0;
-+}
-+
-+static int fsl_lpspi_init_rpm(struct fsl_lpspi_data *fsl_lpspi)
-+{
-+	struct device *dev =3D fsl_lpspi->dev;
-+
-+	pm_runtime_enable(dev);
-+	pm_runtime_set_autosuspend_delay(dev, FSL_LPSPI_RPM_TIMEOUT);
-+	pm_runtime_use_autosuspend(dev);
-+
-+	return 0;
-+}
-+
- static int fsl_lpspi_probe(struct platform_device *pdev)
- {
- 	struct fsl_lpspi_data *fsl_lpspi;
-@@ -505,6 +544,7 @@ static int fsl_lpspi_probe(struct platform_device *pdev=
-)
-=20
- 	fsl_lpspi =3D spi_controller_get_devdata(controller);
- 	fsl_lpspi->dev =3D &pdev->dev;
-+	dev_set_drvdata(&pdev->dev, fsl_lpspi);
- 	fsl_lpspi->is_slave =3D of_property_read_bool((&pdev->dev)->of_node,
- 						    "spi-slave");
-=20
-@@ -551,28 +591,21 @@ static int fsl_lpspi_probe(struct platform_device *pd=
-ev)
- 		goto out_controller_put;
- 	}
-=20
--	ret =3D clk_prepare_enable(fsl_lpspi->clk_ipg);
--	if (ret) {
--		dev_err(&pdev->dev,
--			"can't enable lpspi ipg clock, ret=3D%d\n", ret);
-+	/* enable the clock */
-+	ret =3D fsl_lpspi_init_rpm(fsl_lpspi);
-+	if (ret)
- 		goto out_controller_put;
--	}
-=20
--	ret =3D clk_prepare_enable(fsl_lpspi->clk_per);
--	if (ret) {
--		dev_err(&pdev->dev,
--			"can't enable lpspi per clock, ret=3D%d\n", ret);
--		clk_disable_unprepare(fsl_lpspi->clk_ipg);
--		goto out_controller_put;
-+	ret =3D pm_runtime_get_sync(fsl_lpspi->dev);
-+	if (ret < 0) {
-+		dev_err(fsl_lpspi->dev, "failed to enable clock\n");
-+		return ret;
- 	}
-=20
- 	temp =3D readl(fsl_lpspi->base + IMX7ULP_PARAM);
- 	fsl_lpspi->txfifosize =3D 1 << (temp & 0x0f);
- 	fsl_lpspi->rxfifosize =3D 1 << ((temp >> 8) & 0x0f);
-=20
--	clk_disable_unprepare(fsl_lpspi->clk_per);
--	clk_disable_unprepare(fsl_lpspi->clk_ipg);
--
- 	ret =3D devm_spi_register_controller(&pdev->dev, controller);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "spi_register_controller error.\n");
-@@ -593,16 +626,50 @@ static int fsl_lpspi_remove(struct platform_device *p=
-dev)
- 	struct fsl_lpspi_data *fsl_lpspi =3D
- 				spi_controller_get_devdata(controller);
-=20
--	clk_disable_unprepare(fsl_lpspi->clk_per);
--	clk_disable_unprepare(fsl_lpspi->clk_ipg);
-+	pm_runtime_disable(fsl_lpspi->dev);
-+
-+	spi_master_put(controller);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int fsl_lpspi_suspend(struct device *dev)
-+{
-+	int ret;
-+
-+	pinctrl_pm_select_sleep_state(dev);
-+	ret =3D pm_runtime_force_suspend(dev);
-+	return ret;
-+}
-+
-+static int fsl_lpspi_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	ret =3D pm_runtime_force_resume(dev);
-+	if (ret) {
-+		dev_err(dev, "Error in resume: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pinctrl_pm_select_default_state(dev);
-=20
- 	return 0;
- }
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static const struct dev_pm_ops fsl_lpspi_pm_ops =3D {
-+	SET_RUNTIME_PM_OPS(fsl_lpspi_runtime_suspend,
-+				fsl_lpspi_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(fsl_lpspi_suspend, fsl_lpspi_resume)
-+};
-=20
- static struct platform_driver fsl_lpspi_driver =3D {
- 	.driver =3D {
- 		.name =3D DRIVER_NAME,
- 		.of_match_table =3D fsl_lpspi_dt_ids,
-+		.pm =3D &fsl_lpspi_pm_ops,
- 	},
- 	.probe =3D fsl_lpspi_probe,
- 	.remove =3D fsl_lpspi_remove,
---=20
-2.17.1
+> 
+>>
+>> +		}
+>>  		f2fs_trace_pid(page);
+>>  		return 1;
+>>  	}
+>> @@ -957,7 +961,10 @@ void f2fs_update_dirty_page(struct inode *inode, struct page *page)
+>>  	inode_inc_dirty_pages(inode);
+>>  	spin_unlock(&sbi->inode_lock[type]);
+>>  
+>> -	SetPagePrivate(page);
+>> +	if (!PagePrivate(page)) {
+>> +		get_page(page);
+>> +		SetPagePrivate(page);
+>> +	}
+>>  	f2fs_trace_pid(page);
+>>  }
+>>  
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 3f3becd46362..46924d4f69d0 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -2715,8 +2715,11 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
+>>  	if (IS_ATOMIC_WRITTEN_PAGE(page))
+>>  		return f2fs_drop_inmem_page(inode, page);
+>>  
+>> -	set_page_private(page, 0);
+>> -	ClearPagePrivate(page);
+>> +	if (PagePrivate(page)) {
+>> +		set_page_private(page, 0);
+>> +		ClearPagePrivate(page);
+>> +		f2fs_put_page(page, 0);
+>> +	}
+>>  }
+>>  
+>>  int f2fs_release_page(struct page *page, gfp_t wait)
+>> @@ -2730,8 +2733,11 @@ int f2fs_release_page(struct page *page, gfp_t wait)
+>>  		return 0;
+>>  
+>>  	clear_cold_data(page);
+>> -	set_page_private(page, 0);
+>> -	ClearPagePrivate(page);
+>> +	if (PagePrivate(page)) {
+>> +		set_page_private(page, 0);
+>> +		ClearPagePrivate(page);
+>> +		f2fs_put_page(page, 0);
+>> +	}
+>>  	return 1;
+>>  }
+>>  
+>> @@ -2799,12 +2805,8 @@ int f2fs_migrate_page(struct address_space *mapping,
+>>  			return -EAGAIN;
+>>  	}
+>>  
+>> -	/*
+>> -	 * A reference is expected if PagePrivate set when move mapping,
+>> -	 * however F2FS breaks this for maintaining dirty page counts when
+>> -	 * truncating pages. So here adjusting the 'extra_count' make it work.
+>> -	 */
+>> -	extra_count = (atomic_written ? 1 : 0) - page_has_private(page);
+>> +	/* one extra reference was held for atomic_write page */
+>> +	extra_count = atomic_written ? 1 : 0;
+>>  	rc = migrate_page_move_mapping(mapping, newpage,
+>>  				page, mode, extra_count);
+>>  	if (rc != MIGRATEPAGE_SUCCESS) {
+>> @@ -2825,9 +2827,15 @@ int f2fs_migrate_page(struct address_space *mapping,
+>>  		get_page(newpage);
+>>  	}
+>>  
+>> -	if (PagePrivate(page))
+>> +	if (PagePrivate(page)) {
+>> +		get_page(newpage);
+>>  		SetPagePrivate(newpage);
+>> -	set_page_private(newpage, page_private(page));
+>> +		set_page_private(newpage, page_private(page));
+>> +
+>> +		set_page_private(page, 0);
+>> +		ClearPagePrivate(page);
+>> +		f2fs_put_page(page, 0);
+>> +	}
+>>  
+>>  	if (mode != MIGRATE_SYNC_NO_COPY)
+>>  		migrate_page_copy(newpage, page);
+>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+>> index 103f3686a045..fbbafb04a431 100644
+>> --- a/fs/f2fs/dir.c
+>> +++ b/fs/f2fs/dir.c
+>> @@ -728,7 +728,11 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
+>>  		!f2fs_truncate_hole(dir, page->index, page->index + 1)) {
+>>  		f2fs_clear_page_cache_dirty_tag(page);
+>>  		clear_page_dirty_for_io(page);
+>> -		ClearPagePrivate(page);
+>> +		if (PagePrivate(page)) {
+>> +			set_page_private(page, 0);
+>> +			ClearPagePrivate(page);
+>> +			f2fs_put_page(page, 0);
+>> +		}
+>>  		ClearPageUptodate(page);
+>>  		clear_cold_data(page);
+>>  		inode_dec_dirty_pages(dir);
+>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>> index f6ff84e29749..ce97a9885105 100644
+>> --- a/fs/f2fs/node.c
+>> +++ b/fs/f2fs/node.c
+>> @@ -1961,7 +1961,11 @@ static int f2fs_set_node_page_dirty(struct page *page)
+>>  	if (!PageDirty(page)) {
+>>  		__set_page_dirty_nobuffers(page);
+>>  		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_NODES);
+>> -		SetPagePrivate(page);
+>> +
+>> +		if (!PagePrivate(page)) {
+>> +			get_page(page);
+>> +			SetPagePrivate(page);
+>> +		}
+>>  		f2fs_trace_pid(page);
+>>  		return 1;
+>>  	}
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index e730c334abba..2d77dd133a4e 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -191,8 +191,11 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
+>>  
+>>  	f2fs_trace_pid(page);
+>>  
+>> -	set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
+>> -	SetPagePrivate(page);
+>> +	if (!PagePrivate(page)) {
+>> +		get_page(page);
+>> +		SetPagePrivate(page);
+>> +		set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
+>> +	}
+>>  
+>>  	new = f2fs_kmem_cache_alloc(inmem_entry_slab, GFP_NOFS);
+>>  
+>> @@ -280,8 +283,11 @@ static int __revoke_inmem_pages(struct inode *inode,
+>>  			ClearPageUptodate(page);
+>>  			clear_cold_data(page);
+>>  		}
+>> -		set_page_private(page, 0);
+>> -		ClearPagePrivate(page);
+>> +		if (PagePrivate(page)) {
+>> +			set_page_private(page, 0);
+>> +			ClearPagePrivate(page);
+>> +			f2fs_put_page(page, 0);
+>> +		}
+>>  		f2fs_put_page(page, 1);
+>>  
+>>  		list_del(&cur->list);
+>> @@ -370,8 +376,13 @@ void f2fs_drop_inmem_page(struct inode *inode, struct page *page)
+>>  	kmem_cache_free(inmem_entry_slab, cur);
+>>  
+>>  	ClearPageUptodate(page);
+>> -	set_page_private(page, 0);
+>> -	ClearPagePrivate(page);
+>> +
+>> +	if (PagePrivate(page)) {
+>> +		set_page_private(page, 0);
+>> +		ClearPagePrivate(page);
+>> +		f2fs_put_page(page, 0);
+>> +	}
+>> +
+>>  	f2fs_put_page(page, 0);
+>>  
+>>  	trace_f2fs_commit_inmem_page(page, INMEM_INVALIDATE);
+>> -- 
+>> 2.18.0.rc1
+> 
+> .
+> 
 
