@@ -7,80 +7,97 @@ X-Spam-Status: No, score=-14.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47E2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9423FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B139720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C8820828
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfCFPFE (ORCPT
+        id S1728985AbfCFPHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:05:04 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42478 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbfCFPFD (ORCPT
+        Wed, 6 Mar 2019 10:07:42 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41753 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727818AbfCFPHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:05:03 -0500
-Received: by mail-qk1-f194.google.com with SMTP id y140so6950795qkb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:05:03 -0800 (PST)
+        Wed, 6 Mar 2019 10:07:42 -0500
+Received: by mail-qk1-f193.google.com with SMTP id y15so6962273qki.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:07:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=AI5UH56vjK3geeI68czcbnkrAamK54QdpdxzKpXJrI8=;
-        b=hHnk6h3cxPC9E4PZ318tjWiI8FSa0DT6BI+Zi4UuNfCEekoSsoolmgxEOnxD5asyHk
-         JM8jO1XuCM/H4wXiokOs5crlk6YquZX1iwkiNdKyuiYkc5JZBDaEbZwzwE8TRt3UaLp3
-         zO27IE17KsjON5nBsCFqYRRb/3Q+zF9rOGBKAM2MxYVCzgPgulCC1tIAIOBS/00/gekp
-         boVlYvlETwXyG0OGvym0EKIDAAU7Ni/Qce0bWxIGby67nn5IF80Ny9ggkJNjpWVAlTMo
-         boDhBCf6RprHuhVboY7vISS42bXwLOalTaR0yWdM1lH4pwaKC/y42+Ts5a9CCkIPgmBg
-         Y3fw==
-X-Gm-Message-State: APjAAAVM2IAVDcEW0v5ahRYXdm2Acb2ECypQRFBZbPlBWnqfJk+MEdqZ
-        j4Y9iNuo9toaquVMQvF0RFMVvr7MbQ5zVlQ5SO0=
-X-Google-Smtp-Source: APXvYqxIsRrwMRxZCmwNkf8uQ+at2Q5W0kcPXSfYPI/r6I+Sl1sB7LdJu3+AYsBclnDCsJSgf/PBcCLfmIucKDBK2SE=
-X-Received: by 2002:a05:620a:12a5:: with SMTP id x5mr6069657qki.291.1551884702524;
- Wed, 06 Mar 2019 07:05:02 -0800 (PST)
+        bh=WQ2YvDd1LZb2MigqzyjLLb7FhRal6NKdJVZCncYIeqc=;
+        b=lrvox8YaUrOf2UyoO9KXGxAv3CRikDaN8wsV72XTCv3wIUZ5qaiTKiTHxPThr/wW+t
+         VWGSVtLUuy9zRtBjFh+j36EvPhwUnI8CnTtfcnP4XDl11PEmPdRjBdJ6cbIu1LYX1Zr9
+         ceRYCkbUgUZWYgvu5DoU0LKkc5BeBG1gKQxU2/wLv7ZQ4oj/XkeWTbzEmDW+aMbl7VaM
+         WBH/gp4ezaTE75vvYaQTQeS8QJ1UcS0JMkJqR2/dtf/jjGc+q0VEqHmV2i0TgjQ/RHIE
+         RpT7C98PJ9l9ZijDpL3O527b6Yyso4yncRM7FpeXJEJpOViFFtaqVvXRjIUX6knqgPVm
+         fieQ==
+X-Gm-Message-State: APjAAAU6n+SLlpBpL+omGSoiH1DS2h5QDtHOGW+KWc9SAJsXk2TWHq9V
+        KyKh02L3yfdRy0f2spzAOBxQvAgetxR5Z/xqZBuunh5Z
+X-Google-Smtp-Source: APXvYqzzxbJsyifOSGwDVsofzfMP3o/bp666E4Tv1HBqMI+UILZE7qOPK9hWYM7sVisTblVk5twVFwQO1w4y9F1DyP4=
+X-Received: by 2002:a37:8dc5:: with SMTP id p188mr5879761qkd.330.1551884860982;
+ Wed, 06 Mar 2019 07:07:40 -0800 (PST)
 MIME-Version: 1.0
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 6 Mar 2019 16:04:46 +0100
-Message-ID: <CAK8P3a0gCmN3hAmV-YaX_a1p-DpyMtVKADN2YwhSxi=wPiyyjg@mail.gmail.com>
-Subject: [GIT PULL] y2038: A build fix for compat mode
+Date:   Wed, 6 Mar 2019 16:07:24 +0100
+Message-ID: <CAK8P3a2DX1TRubsmrkEckuZCYTGwmfN4KiuvXazJQL9vrUTBKg@mail.gmail.com>
+Subject: [GIT PULL] asm-generic changes for v5.1
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laura Abbott <labbott@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit cfbe271667b7aba03b403aee916ccd457409d2e8:
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
 
-  Merge tag 'y2038-syscall-abi' of
-git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground into
-timers/2038 (2019-02-27 21:45:27 +0100)
+  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
-tags/y2038-fix
+  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
+tags/asm-generic-5.1
 
-for you to fetch changes up to 7e89a37c477c4caacde7b511c64720e20104945f:
+for you to fetch changes up to d724444ab97d2cdf1c4dbfc1ff65d0b18a9631e0:
 
-  ipc: Fix building compat mode without sysvipc (2019-03-06 16:00:56 +0100)
+  asm-generic/page.h: fix typo in #error text requiring a real
+asm/page.h (2019-02-22 21:53:25 +0100)
 
 ----------------------------------------------------------------
-y2038: A build fix for compat mode
+asm-generic changes for v5.1
 
-Here is one more patch on top of the y2038 changes already pulled
-for linux-5.1, for some reason this had escaped all testing.
+Only a few small changes this time:
+
+- Michael S. Tsirkin cleans up linux/mman.h
+- Mike Rapoport found a typo
+
+I had originally merged another cleanup series for I/O accessors from
+Hugo Lefeuvre as well, but dropped it after the discussion of the barrier
+semantics and some conflicts. I expect this series to get merged for a
+later release though.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 ----------------------------------------------------------------
-Arnd Bergmann (1):
-      ipc: Fix building compat mode without sysvipc
+Michael S. Tsirkin (3):
+      x86/mpx: tweak header name
+      drm: tweak header name
+      arch: move common mmap flags to linux/mman.h
 
- kernel/sys_ni.c | 3 +++
- 1 file changed, 3 insertions(+)
+Mike Rapoport (1):
+      asm-generic/page.h: fix typo in #error text requiring a real asm/page.h
+
+ arch/alpha/include/uapi/asm/mman.h     | 4 +---
+ arch/mips/include/uapi/asm/mman.h      | 4 +---
+ arch/parisc/include/uapi/asm/mman.h    | 4 +---
+ arch/x86/mm/mpx.c                      | 2 +-
+ arch/xtensa/include/uapi/asm/mman.h    | 4 +---
+ include/asm-generic/page.h             | 2 +-
+ include/drm/drmP.h                     | 3 +--
+ include/uapi/asm-generic/mman-common.h | 4 +---
+ include/uapi/linux/mman.h              | 4 ++++
+ 9 files changed, 12 insertions(+), 19 deletions(-)
