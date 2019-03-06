@@ -2,77 +2,103 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B982C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4E0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF0E20652
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551895383;
-	bh=lFiXw/Tlk4muXQk5UzPWgCDKxCcwAq1nSYS2MmURA2w=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=X8GyUSeRelxziY+CFj76OjiAG3Je8/eSwG39xWyHqDmlskodZKZrdhrWhvLCa7kqD
-	 NrvG7OBO8DrYKP/y6+lU+uZaT8oW7vtubcMMJP9UmqLF44sYW2gbtpLDBkZgJsjdmy
-	 fuz4kdyjO/B4ZIoPG/0PD9buDpU1O8Isn6k2XlfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7CDE320652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfCFSDC (ORCPT
+        id S1730686AbfCFSEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:03:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfCFSDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:03:00 -0500
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A831E20652;
-        Wed,  6 Mar 2019 18:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551895379;
-        bh=lFiXw/Tlk4muXQk5UzPWgCDKxCcwAq1nSYS2MmURA2w=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=azXDagyuZXG4aTJ1Ls4sXuMzL1KMBweA3hygMob+o+PjgIqgfPKZMMnHAvct5+VRZ
-         Z/W1/Ux1gQG2M84qJMXfstGe0kj1EHr25QL7Y47Y/IMuMqbKmvPU5FqjlalnAodeeq
-         /S+hGBOYgrc02K5ZWdYx0DZM0GjBPLvlINrqIwsg=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 Mar 2019 13:04:06 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:45363 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbfCFSEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 13:04:05 -0500
+Received: by mail-io1-f69.google.com with SMTP id g3so10237126ioh.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:04:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=vP4iacDgbeChJ5VoBpjLxp5xzju9Yppzw6XSjbY71L8=;
+        b=RZfvOzMn4fsw5cBHrMCRir5a7hBJ+zxdkhYyHs2kiLqAMbU4dyPM3+QSUuMsFBE+eI
+         108+ZqSp7g4gAye2vy1iKa3KrO5QQURt3ST7s+Oozs3x7SLtBa3Hb1NfjgQ2tiFR4Ib7
+         i7wZCYpn68+5b7XFHqvFQDRIrxZjCeljmWkTD479YCdNNkg9G1pXjHYU8PIimIulcAvw
+         IbaKB5acK72iRYhdLIJ+lu0UD+tj6zx5q2UoDT6Vi/R6B7EH5XQiORcs+y5RJB20l3yz
+         szCbosBaRo5fv1pkwSdSkPs6Tc1aM+qpEn2QhDeo9iprASQ7vJyTi92X/rogooPB+b09
+         O1Mg==
+X-Gm-Message-State: APjAAAUz5BJvkR4zsJZHpPssVOXzqMJGJk6jZLIIYaz4ONeL6Z0cz0Y+
+        gD5AjIo9lsn7b4QsRT4iVNdYjK1rzhGQlEptiB0wKxc1dJu4
+X-Google-Smtp-Source: APXvYqw0sMWdtCfXs08oMDtP89iPqPxLcoiFMV7N6MA3/NmAMWY7vPPzDVtyynWn2S9jG+I9oLSCzoyFWAlzIZUZ3JVbE44ODMUq
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190306040726.1930-1-rnayak@codeaurora.org>
-References: <20190306040726.1930-1-rnayak@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] OPP: Fix handling of multiple power domains
-Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, nm@ti.com,
-        viresh.kumar@linaro.org
-Message-ID: <155189537895.20095.130363485109002162@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 06 Mar 2019 10:02:58 -0800
+X-Received: by 2002:a24:a14:: with SMTP id 20mr6677810itw.23.1551895444846;
+ Wed, 06 Mar 2019 10:04:04 -0800 (PST)
+Date:   Wed, 06 Mar 2019 10:04:04 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b7fd51058370d0d9@google.com>
+Subject: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+From:   syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-03-05 20:07:26)
-> We seem to rely on the number of phandles specified in the
-> 'required-opps' property to identify cases where a device is
-> associated with multiple power domains and hence would have
-> multiple virtual devices that have to be dealt with.
->=20
-> In cases where we do have devices with multiple power domains
-> but with only one of them being scalable, this logic seems to
-> fail.
->=20
-> Instead read the number of power domains from DT to identify
-> such cases.
->=20
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+Hello,
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+syzbot found the following crash on:
 
+HEAD commit:    cf08baa29613 Add linux-next specific files for 20190306
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15bc76c7200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c8b6073d992e8217
+dashboard link: https://syzkaller.appspot.com/bug?extid=91fd909b6e62ebe06131
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com
+
+BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+turning off the locking correctness validator.
+CPU: 0 PID: 11902 Comm: kworker/u5:27 Not tainted 5.0.0-next-20190306 #4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: hci94 hci_power_on
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  add_chain_cache kernel/locking/lockdep.c:2582 [inline]
+  lookup_chain_cache_add kernel/locking/lockdep.c:2656 [inline]
+  validate_chain kernel/locking/lockdep.c:2676 [inline]
+  __lock_acquire.cold+0x250/0x50d kernel/locking/lockdep.c:3692
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4202
+  __flush_work+0x677/0x8a0 kernel/workqueue.c:3034
+  flush_work+0x18/0x20 kernel/workqueue.c:3060
+  hci_dev_do_open+0xa92/0x1780 net/bluetooth/hci_core.c:1543
+  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
+syzbot.
