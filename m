@@ -2,166 +2,98 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B90BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366A9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D7D206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081FF20840
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TYePpk5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbfCFJEg (ORCPT
+        id S1729342AbfCFJJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:04:36 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57391 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726391AbfCFJEg (ORCPT
+        Wed, 6 Mar 2019 04:09:41 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37759 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfCFJJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:04:36 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2693YoT032403;
-        Wed, 6 Mar 2019 10:04:25 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhkn6t96-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 06 Mar 2019 10:04:25 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8534841;
-        Wed,  6 Mar 2019 09:04:23 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 53745244B;
-        Wed,  6 Mar 2019 09:04:23 +0000 (GMT)
-Received: from [10.48.0.237] (10.75.127.47) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 6 Mar
- 2019 10:04:22 +0100
-Subject: Re: [PATCH 1/4] mmc: mmci: avoid fake busy polling
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1551802205-32188-1-git-send-email-ludovic.Barre@st.com>
- <1551802205-32188-2-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFo_O36=N9wM2jFnUvkga1TFjPMibr+0MRU6bLOpq7nH7g@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <5b531f55-b8a0-5a83-4a7c-727013a66820@st.com>
-Date:   Wed, 6 Mar 2019 10:04:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 04:09:40 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s22so8074726pfh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 01:09:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=79l63kcqXmc25Kzf0CEDnWnX5vnRmUo9Cx6sRC5Sj+4=;
+        b=TYePpk5hYtk7u634e/LJ7sQXvPICLPF9fzcwKbTZU4tiTR64l9GwO2qU+Of5hLYNu3
+         z6u0Z7chy1GtMQdkwlaXuVLWEaDV61CmPMl0yIxCQJWj+mUvitYwdsuz7wQq3ponzqeo
+         3gQxpQd2fLSFoGW4IxFOrEWqTK9/Z4fmKFEYs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=79l63kcqXmc25Kzf0CEDnWnX5vnRmUo9Cx6sRC5Sj+4=;
+        b=uNaK34zNoAyqrMILH4A7xBUqbP6/BV0Kki+XhIeAne4c9Vb77fwJaeeAkPW922k7ca
+         CzSvJzjGoLW+oHdnATIDSKoMrbMdSGyHQn6VwMj6Bq8RIc+TLe3Mej01zbC0tyYX+kET
+         WLiiGaERfDouNpN+u+YvFiiy/nclNUG8YbcO6HVdaRDa4qiiD9hWDQ21vs6xp+wJoT2K
+         krzgP9s87VxBOqy8EYm9u3SxFcLC79ERCfbYr83bYVbY2CCHhmeu+Pn49i60qhN+79rd
+         IVddfGWkY2OCzxpDc3INGM2aXw8YWo0dWTRwFGeP1X0dM97i4Qiu84GcDflRDuqyXHDp
+         pWJA==
+X-Gm-Message-State: APjAAAWto266aDqT+vLWgGYQbmNMhFK8o1yQTROJ8VB9VYxtEV+3HpV3
+        IV+wdZdSVUbgDkfgxtSxjsX7ng==
+X-Google-Smtp-Source: APXvYqw+ibNtiwANtR95jlMMUbQKUNv8L8d6GDRvJrL1uLsWfFLDmb2lgL5HuDjLsz0atLGM09T3zg==
+X-Received: by 2002:a62:e0ca:: with SMTP id d71mr6198984pfm.62.1551863379887;
+        Wed, 06 Mar 2019 01:09:39 -0800 (PST)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id h65sm1603710pgc.93.2019.03.06.01.09.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 01:09:39 -0800 (PST)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...), Garlic Tseng <garlic.tseng@mediatek.com>,
+        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), Mark Brown <broonie@kernel.org>,
+        Masanari Iida <standby24x7@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Shunli Wang <shunli.wang@mediatek.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: [PATCH 0/2] Fix UBSAN warning in mtk-afe-fe-dai
+Date:   Wed,  6 Mar 2019 17:09:01 +0800
+Message-Id: <20190306090922.117634-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFo_O36=N9wM2jFnUvkga1TFjPMibr+0MRU6bLOpq7nH7g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_06:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf
+This fix a UBSAN warning on mediatek mtk-afe-fe-dai, and also clean up
+code to prevent new config introduce the UBSAN warning again.
 
-On 3/6/19 10:00 AM, Ulf Hansson wrote:
-> On Tue, 5 Mar 2019 at 17:10, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> The busy status bit could occurred even if no busy response is
->> expected (example cmd11). On sdmmc variant, the busy_detect_flag
->> reflects inverted value of d0 state, it's sampled at the end of a
->> CMD response and a second time 2 clk cycles after the CMD response.
->> To avoid a fake busy, the busy status could be checked and polled
->> only if the command has RSP_BUSY flag.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> 
-> Before I review this, can you tell what HW you have tested this on?
+Pi-Hsun Shih (2):
+  ASoC: mediatek: Fix UBSAN warning.
+  ASoC: mediatek: Reduce repititive code on mtk_regmap_update_bits.
 
-I tested on stm32mp157c (stm32_sdmmc variant)
+ sound/soc/mediatek/common/mtk-afe-fe-dai.c | 51 +++++++++-------------
+ sound/soc/mediatek/mt2701/mt2701-afe-pcm.c | 13 ------
+ sound/soc/mediatek/mt6797/mt6797-afe-pcm.c | 16 -------
+ sound/soc/mediatek/mt8173/mt8173-afe-pcm.c | 16 -------
+ sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 20 ---------
+ 5 files changed, 20 insertions(+), 96 deletions(-)
 
-> 
-> Kind regards
-> Uffe
-> 
->> ---
->>   drivers/mmc/host/mmci.c | 19 +++++++++++++------
->>   1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 387ff14..4901b73 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -1220,12 +1220,13 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>               unsigned int status)
->>   {
->>          void __iomem *base = host->base;
->> -       bool sbc;
->> +       bool sbc, busy_resp;
->>
->>          if (!cmd)
->>                  return;
->>
->>          sbc = (cmd == host->mrq->sbc);
->> +       busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->>
->>          /*
->>           * We need to be one of these interrupts to be considered worth
->> @@ -1239,8 +1240,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>          /*
->>           * ST Micro variant: handle busy detection.
->>           */
->> -       if (host->variant->busy_detect) {
->> -               bool busy_resp = !!(cmd->flags & MMC_RSP_BUSY);
->> +       if (busy_resp && host->variant->busy_detect) {
->>
->>                  /* We are busy with a command, return */
->>                  if (host->busy_status &&
->> @@ -1253,7 +1253,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>                   * that the special busy status bit is still set before
->>                   * proceeding.
->>                   */
->> -               if (!host->busy_status && busy_resp &&
->> +               if (!host->busy_status &&
->>                      !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
->>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
->>
->> @@ -1508,6 +1508,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>   {
->>          struct mmci_host *host = dev_id;
->>          u32 status;
->> +       bool busy_resp;
->>          int ret = 0;
->>
->>          spin_lock(&host->lock);
->> @@ -1550,9 +1551,15 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>                  }
->>
->>                  /*
->> -                * Don't poll for busy completion in irq context.
->> +                * Don't poll for:
->> +                * -busy completion in irq context.
->> +                * -no busy response expected.
->>                   */
->> -               if (host->variant->busy_detect && host->busy_status)
->> +               busy_resp = host->cmd ?
->> +                       !!(host->cmd->flags & MMC_RSP_BUSY) : false;
->> +
->> +               if (host->variant->busy_detect &&
->> +                   (!busy_resp || host->busy_status))
->>                          status &= ~host->variant->busy_detect_flag;
->>
->>                  ret = 1;
->> --
->> 2.7.4
->>
+-- 
+2.21.0.352.gf09ad66450-goog
+
