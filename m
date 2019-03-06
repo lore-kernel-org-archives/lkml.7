@@ -2,165 +2,154 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3558C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F35C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A0420661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FE620661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PNo8gYj2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0eBxBnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfCFHcU (ORCPT
+        id S1729443AbfCFHdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 02:32:20 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:35098 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbfCFHcT (ORCPT
+        Wed, 6 Mar 2019 02:33:14 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41521 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728863AbfCFHdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 02:32:19 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x267So1M061784;
-        Wed, 6 Mar 2019 07:31:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=6Znb0plCkzY9WefoMZi7sUrmh49dgexVTHFeb/yTavc=;
- b=PNo8gYj2xX9Cd503/Yo527SwPW/to1whpN7J6Y5B9fxgFkX+VHrULFoWaxfnBo4xErmD
- Xhe2u/6WnVZgFeOqEpDxXzJ93OiZC49y2reBki9ulNRU0Tmztod4cDSTbicAl+POYdoQ
- nLyYPLugfS4+/6q2GUXgUg7oPUfmfojjQ7LnGsJcxbzuu83HpvHf9FxhgCHT7hGLCbE4
- iGuWEddPJXN3tLIhmcVDgSxcDRhv9gyy7NCXLoJPQtYyq2ENnIXZ9iHHk6TreSi0IkfA
- vkbUwhFuTSsnClwiV43D4tB1NZv6BevRfzL7Z0gdQPGiNKnJ1rLVyxUEgKUxDms4EloQ Dg== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2qyjfrhxbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Mar 2019 07:31:59 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x267Vwev012028
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Mar 2019 07:31:58 GMT
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x267VvLN021433;
-        Wed, 6 Mar 2019 07:31:57 GMT
-Received: from [10.182.69.106] (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Mar 2019 23:31:57 -0800
-Subject: Re: [Xen-devel] [PATCH v4.9 1/1] jiffies: use jiffies64_to_nsecs() to
- fix 100% steal usage for xen vcpu hotplug
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     stable@vger.kernel.org
-Cc:     jgross@suse.com, herbert.van.den.bergh@oracle.com,
-        sstabellini@kernel.org, sboyd@kernel.org, frederic@kernel.org,
-        joe.jin@oracle.com, linux-kernel@vger.kernel.org,
-        john.stultz@linaro.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com, tglx@linutronix.de
-References: <1551772744-524-1-git-send-email-dongli.zhang@oracle.com>
-Message-ID: <15c804c0-eeb1-2adb-9cbf-4a28d39983a0@oracle.com>
-Date:   Wed, 6 Mar 2019 15:35:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 6 Mar 2019 02:33:14 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k11so6684380pgb.8;
+        Tue, 05 Mar 2019 23:33:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=EKe7pYqO/S8mQt2aBQbI8hgJrHk8UMFItsNlWCpshp8=;
+        b=r0eBxBnAmtMaR6ZSRocFqVi8/UsQNjQ61lvDTYFu6ZL7uZJIMO+w+ZNzddHJGW0rFa
+         TCiJ3YO407Qs4ziSiISiUIvIEsLxLLOO4PbowYrq12dm1EkUsZRNEx/WzNEdUm1En5dm
+         suIF/ogCsaO4wCyeGEyOkZt55bL7l4/L/0Y99aI//IP0JOM3hgwiZP+eTDJZgGLQiGLh
+         k5oKKHKtW5GX49Jhj/iVZ2wHXp3DdmXqaQV2jIoNAGrXmUszKYckhAE4dfzDs9bsYLSR
+         sgv8+G9Iav74iUCLBmVT6ge/1XksSVpnrvUJwatz4TZ0eJ8TUcd7AW/cDn5bZwhvL+1x
+         OzoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=EKe7pYqO/S8mQt2aBQbI8hgJrHk8UMFItsNlWCpshp8=;
+        b=ua5RPus4vDTY9TGUaTMGRs0eJb8BgJCLl+IgIQWv6pxNhiRKCeeemv4dsKrrfPzn5C
+         vm9yV8wU8Gz7ENqnAdceos8P+Q06Bnn5U3m80FqpgAwZoUk8LlcSTR2j7cx2iDrFOA7Z
+         Ke4htC7JttSWgUVRFV4K+qHhoGXYD1tsglwbjB2jB1Mk8FsA4O7Q/ejQPvSRbdMv+wQ5
+         e5o6etlZLVWMv55wmUdKecf/WNPHeRl5dc6z2FQ7h6dry4KPcBKTvAmHsojK1QPttN9f
+         WVhXvnU5hZXFBbG9o3ocBxt122SsdoWr4+NNzaUGyPQ3iZPmBxr7k9I0m2bIaalBiRkx
+         iDvQ==
+X-Gm-Message-State: APjAAAUcD6t+FcqCFZWFkBwhkle9PDqyWcLaMCfpMwirRD/+9hRys6op
+        40gd4Kzo7T5JkXxPrOQgBL4MAE588v4=
+X-Google-Smtp-Source: APXvYqwsauFknoaispgp9PoM4InjOXvPSgmWK7q82wbWmRYcd2beZ9URiILzyBHSjLIZ7muJfi+N6A==
+X-Received: by 2002:a62:a10c:: with SMTP id b12mr5888992pff.234.1551857593169;
+        Tue, 05 Mar 2019 23:33:13 -0800 (PST)
+Received: from myunghoj-Precision-5530 ([118.220.181.225])
+        by smtp.gmail.com with ESMTPSA id l28sm3159823pfi.186.2019.03.05.23.33.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 Mar 2019 23:33:12 -0800 (PST)
+Date:   Wed, 6 Mar 2019 16:33:08 +0900
+From:   Myungho Jung <mhjungk@gmail.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] xfrm: Reset secpath in xfrm failure
+Message-ID: <20190306073304.GA22426@myunghoj-Precision-5530>
 MIME-Version: 1.0
-In-Reply-To: <1551772744-524-1-git-send-email-dongli.zhang@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9186 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903060052
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks to Joe Jin's reminding, this patch is applicable to mainline linux
-kernel, although there is no issue due to this kind of bug in mainline kernel.
+In esp4_gro_receive() and esp6_gro_receive(), secpath can be allocated
+without adding xfrm state to xvec. Then, sp->xvec[sp->len - 1] would
+fail and result in dereferencing invalid pointer in esp4_gso_segment()
+and esp6_gso_segment(). Reset secpath if xfrm function returns error.
 
-Therefore, can I first submit this patch to mainline kernel and then backport it
-to stable linux with more detailed explanation how the issue is reproduced on xen?
+Reported-by: syzbot+b69368fd933c6c592f4c@syzkaller.appspotmail.com
+Signed-off-by: Myungho Jung <mhjungk@gmail.com>
+---
+ net/ipv4/esp4_offload.c | 9 +++++++--
+ net/ipv6/esp6_offload.c | 9 +++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-This would help synchronize stable with mainline better.
+diff --git a/net/ipv4/esp4_offload.c b/net/ipv4/esp4_offload.c
+index 8756e0e790d2..7329e40c73f6 100644
+--- a/net/ipv4/esp4_offload.c
++++ b/net/ipv4/esp4_offload.c
+@@ -51,14 +51,18 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
+ 		if (!sp)
+ 			goto out;
+ 
+-		if (sp->len == XFRM_MAX_DEPTH)
++		if (sp->len == XFRM_MAX_DEPTH) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
+ 				      (xfrm_address_t *)&ip_hdr(skb)->daddr,
+ 				      spi, IPPROTO_ESP, AF_INET);
+-		if (!x)
++		if (!x) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		sp->xvec[sp->len++] = x;
+ 		sp->olen++;
+@@ -66,6 +70,7 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
+ 		xo = xfrm_offload(skb);
+ 		if (!xo) {
+ 			xfrm_state_put(x);
++			secpath_reset(skb);
+ 			goto out;
+ 		}
+ 	}
+diff --git a/net/ipv6/esp6_offload.c b/net/ipv6/esp6_offload.c
+index d46b4eb645c2..399c688d192e 100644
+--- a/net/ipv6/esp6_offload.c
++++ b/net/ipv6/esp6_offload.c
+@@ -73,14 +73,18 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
+ 		if (!sp)
+ 			goto out;
+ 
+-		if (sp->len == XFRM_MAX_DEPTH)
++		if (sp->len == XFRM_MAX_DEPTH) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
+ 				      (xfrm_address_t *)&ipv6_hdr(skb)->daddr,
+ 				      spi, IPPROTO_ESP, AF_INET6);
+-		if (!x)
++		if (!x) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		sp->xvec[sp->len++] = x;
+ 		sp->olen++;
+@@ -88,6 +92,7 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
+ 		xo = xfrm_offload(skb);
+ 		if (!xo) {
+ 			xfrm_state_put(x);
++			secpath_reset(skb);
+ 			goto out;
+ 		}
+ 	}
+-- 
+2.17.1
 
-Thank you very much!
-
-Dongli Zhang
-
-On 3/5/19 3:59 PM, Dongli Zhang wrote:
-> [ Not relevant upstream, therefore no upstream commit. ]
-> 
-> To fix, use jiffies64_to_nsecs() directly instead of deriving the result
-> according to jiffies_to_usecs().
-> 
-> As the return type of jiffies_to_usecs() is 'unsigned int', when the return
-> value is more than the size of 'unsigned int', the leading 32 bits would be
-> discarded.
-> 
-> Suppose USEC_PER_SEC=1000000L and HZ=1000, below are the expected and
-> actual incorrect result of jiffies_to_usecs(0x7770ef70):
-> 
-> - expected  : jiffies_to_usecs(0x7770ef70) = 0x000001d291274d80
-> - incorrect : jiffies_to_usecs(0x7770ef70) = 0x0000000091274d80
-> 
-> The leading 0x000001d200000000 is discarded.
-> 
-> After xen vcpu hotplug and when the new vcpu steal clock is calculated for
-> the first time, the result of this_rq()->prev_steal_time in
-> steal_account_process_tick() would be far smaller than the expected
-> value, due to that jiffies_to_usecs() discards the leading 32 bits.
-> 
-> As a result, the diff between current steal and this_rq()->prev_steal_time
-> is always very large. Steal usage would become 100% when the initial steal
-> clock obtained from xen hypervisor is very large during xen vcpu hotplug,
-> that is, when the guest is already up for a long time.
-> 
-> The bug can be detected by doing the following:
-> 
-> * Boot xen guest with vcpus=2 and maxvcpus=4
-> * Leave the guest running for a month so that the initial steal clock for
->   the new vcpu would be very large
-> * Hotplug 2 extra vcpus
-> * The steal time of new vcpus in /proc/stat would increase abnormally and
->   sometimes steal usage in top can become 100%
-> 
-> This was incidentally fixed in the patch set starting by
-> commit 93825f2ec736 ("jiffies: Reuse TICK_NSEC instead of NSEC_PER_JIFFY")
-> and ended with
-> commit b672592f0221 ("sched/cputime: Remove generic asm headers").
-> 
-> This version applies to the v4.9 series.
-> 
-> Link: https://lkml.org/lkml/2019/2/28/1373
-> Suggested-by: Juergen Gross <jgross@suse.com>
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-> ---
->  include/linux/jiffies.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-> index 734377a..94aff43 100644
-> --- a/include/linux/jiffies.h
-> +++ b/include/linux/jiffies.h
-> @@ -287,13 +287,13 @@ extern unsigned long preset_lpj;
->  extern unsigned int jiffies_to_msecs(const unsigned long j);
->  extern unsigned int jiffies_to_usecs(const unsigned long j);
->  
-> +extern u64 jiffies64_to_nsecs(u64 j);
-> +
->  static inline u64 jiffies_to_nsecs(const unsigned long j)
->  {
-> -	return (u64)jiffies_to_usecs(j) * NSEC_PER_USEC;
-> +	return jiffies64_to_nsecs(j);
->  }
->  
-> -extern u64 jiffies64_to_nsecs(u64 j);
-> -
->  extern unsigned long __msecs_to_jiffies(const unsigned int m);
->  #if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
->  /*
-> 
