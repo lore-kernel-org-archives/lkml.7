@@ -2,119 +2,111 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D9CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BACCC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855152063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39CE20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jA2n9ERj"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V2pQCRMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727748AbfCFSoO (ORCPT
+        id S1727776AbfCFSp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:44:14 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37375 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727378AbfCFSoN (ORCPT
+        Wed, 6 Mar 2019 13:45:57 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38785 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbfCFSp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:44:13 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s22so9305182pfh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:44:13 -0800 (PST)
+        Wed, 6 Mar 2019 13:45:57 -0500
+Received: by mail-qt1-f194.google.com with SMTP id s1so14049461qte.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:45:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Q9JVrQM5g86z//emudDTvqgPCz4G8IKm2xbJJqgFAs=;
-        b=jA2n9ERjAeNYQ4YfUc3qfGQ3ahMZEF4MXXHz/T1/IgjlS/0CvjUUaPhgJXHAIsT/do
-         RuaYSD9mJTKdqjb/PT2zouMF289k4vYYVZdw8btr3dPxVR4qf9YOeiP7MSVkON0P93hi
-         g8GzzkO74wHExyX70+RCv+nHTDr7IdQinsVhhIZAkFU9IVmFkOiddfiFx9T+7e2C+IyA
-         cup6ItcuTo/l1ajNOoYI8Cv2/ViJcoMKQyDVT9ygD6pUNdPA+RJjZwsjL58Qd6srYmmV
-         EV7NA9F/a+VFMUIo9wzLmTsvS5MIijcPa1/BSKb/KaerBi1QwuVsAEO3FU77m989iHEv
-         OLaw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wP4x1hH9ASA25vStqJ3tJGCz2jYo8u6wNo9sRUut+8M=;
+        b=V2pQCRMHS1s6mmiWLTMzw9Ywz9BxY16RXHVXGkV3niNlpnB+mFV1VLlsophkQdsLKY
+         2zX0WGYf21kPzTFJEHFymHSgJjUicWqvFegXwI7dJ02ONdTgbXy8tPVUnToWmvQiNmzv
+         rr2w+eDAEDUk/TK4zkgOlp8tmeFWv141l7cZMMxV75Vlz/U+Nd0Glre4EuLwuQBs1Y+W
+         RQTVaVh1CQS8BZ5RgDF3FPTsGhDR6WCsaWQQ82Ik2Fd0K1PVjkPmZqoHlrG5XVGyxcaF
+         TWAh0xgJf8AHJBXBdy45No4KJa8kIvApq90vDKVujmF91qYNn1ZAJO9/izATrWi3xpHe
+         sJjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Q9JVrQM5g86z//emudDTvqgPCz4G8IKm2xbJJqgFAs=;
-        b=KYOOyGcDQ5zFeNa+8IxlIsk8Dty+19gzqsGim4EziAovDswQGoZSubudYMd1Jq2MPG
-         tXBBKWWdGgLqUAKsFDTtLydIj3wJw5CW1jLnNz35Sm1Mc3hhdN5t7O4YmQN4PeEKcFDU
-         EMefPhsle71mQLReepC1IiPPGZX3CMNnl0qmm+Z2zGkWT/3YXfsyeYiN3r17SViCNMdK
-         cfWYqeqeF6S3JJjy4FRAndkp38hD0ujCl99kYq298Orp4D8UOPHxwu5zckADV9IBA0Cj
-         ojRggJkd04YIgL9CcD6GTxpwdtt6OUMV8ch4Wn+GPSRdLg1l35GCMTGNla5GDhk0EWUy
-         U/zA==
-X-Gm-Message-State: APjAAAWWFW23eyRtJhG1C0d7IvEK6GMFwk8uglNbtdjUElgjt/aqow2I
-        I94QgtNW7G63HOL95DAEKTpA1eOHvJAPHXZUIB/WHw==
-X-Google-Smtp-Source: APXvYqzExV9zVNTVE6yf/7E/2CMSjaN/3x6J0E1R2XGjmMF0HI5/BoFfIyFTGTnB79zO5d+5orms2nDy91XnDM6LM2Y=
-X-Received: by 2002:a17:902:3f81:: with SMTP id a1mr8419549pld.238.1551897852619;
- Wed, 06 Mar 2019 10:44:12 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wP4x1hH9ASA25vStqJ3tJGCz2jYo8u6wNo9sRUut+8M=;
+        b=mWXrFgkK9yz4NJi9Dt+qRarLUy3EFsUAlLpWvPjpjKxj27otqvTqaWg8UvGxMeWsfm
+         eH9JCEVjeWBxS9SZhDT+q4dQrnoQiUlKZOotlMvZT+PrzTDAibR9pj8ywlrV6jwUnfVx
+         wamHDzIsNW9Trxisl3/NJ8hIjF5ZKkHVO+ewJrma2A3mKv6EUarulPNj6VUMB/D4N9iA
+         u3KyZ4vadfSsZv14G/eYuTSzxJB8Pu5FUZHnZrhRw+C2AIffrLStFfAAI3L0nT+vS9WZ
+         4eUq9/1pkti0+qrqsMhH4BOQ2d5Xikq2mwt4DgUFMy9hd1x+oIqMeDkmEHgOKTIAHiWl
+         8q4Q==
+X-Gm-Message-State: APjAAAWOGYkgOoJnFY944Cm1hMydFc4SaJIs3/zzG/dQ3dEsI6tJdb+X
+        JXVKhiB8Ih1qyzSYGCeGF9HAv0mEBaY=
+X-Google-Smtp-Source: APXvYqxJhjubnP2c5kwOcRCIALiz3FeIJ/AsJUODcIi8OSpPh57S2nc20GPqu2e0uRk2rhdoVnXYzw==
+X-Received: by 2002:ac8:148b:: with SMTP id l11mr6577506qtj.290.1551897955580;
+        Wed, 06 Mar 2019 10:45:55 -0800 (PST)
+Received: from ziepe.ca ([24.137.65.181])
+        by smtp.gmail.com with ESMTPSA id l31sm1519876qtb.20.2019.03.06.10.45.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 10:45:54 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h1bYA-00079W-2T; Wed, 06 Mar 2019 14:45:54 -0400
+Date:   Wed, 6 Mar 2019 14:45:54 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     john.hubbard@gmail.com
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH] RDMA/umem: updated bug fix in error handling path
+Message-ID: <20190306184554.GG1662@ziepe.ca>
+References: <20190306020022.21828-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com>
-In-Reply-To: <d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 6 Mar 2019 10:44:01 -0800
-Message-ID: <CAKwvOdmHe-bkt34E5yf81GoiFRHR8EPnu8wqk2aD2u8P_4Q5jQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/unwind/orc: Fix ORC unwind table alignment
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306020022.21828-1-jhubbard@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 9:08 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> The .orc_unwind section is a packed array of 6-byte structs.  It's
-> currently aligned to 6 bytes, which is causing warnings in the LLD
-> linker.
->
-> Six isn't a power of two, so it's not a valid alignment value.  The
-> actual alignment doesn't matter much because it's an array of packed
-> structs.  An alignment of two is sufficient.  In reality it always gets
-> aligned to four bytes because it comes immediately after the
-> 4-byte-aligned .orc_unwind_ip section.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/218
-> Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-
-Thanks for the patch Josh, we appreciate it.  It looks like
-ee9f8fce9964 landed in v4.14-rc1.  Should we CC stable?
-
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reported-by: Dmitry Golovin <dima@golovin.in>
-> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+On Tue, Mar 05, 2019 at 06:00:22PM -0800, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> The previous attempted bug fix overlooked the fact that
+> ib_umem_odp_map_dma_single_page() was doing a put_page()
+> upon hitting an error. So there was not really a bug there.
+> 
+> Therefore, this reverts the off-by-one change, but
+> keeps the change to use release_pages() in the error path.
+> 
+> Fixes: commit xxxxxxxxxxxx ("RDMA/umem: minor bug fix in error handling path")
+> Suggested-by: Artemy Kovalyov <artemyko@mellanox.com>
+> 
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Doug Ledford <dledford@redhat.com>
+> Cc: linux-rdma@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->  include/asm-generic/vmlinux.lds.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 3d7a6a9c2370..f8f6f04c4453 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -733,7 +733,7 @@
->                 KEEP(*(.orc_unwind_ip))                                 \
->                 __stop_orc_unwind_ip = .;                               \
->         }                                                               \
-> -       . = ALIGN(6);                                                   \
-> +       . = ALIGN(2);                                                   \
->         .orc_unwind : AT(ADDR(.orc_unwind) - LOAD_OFFSET) {             \
->                 __start_orc_unwind = .;                                 \
->                 KEEP(*(.orc_unwind))                                    \
-> --
-> 2.17.2
->
+>  drivers/infiniband/core/umem_odp.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
+Applied to for-next, thanks
 
--- 
-Thanks,
-~Nick Desaulniers
+Jason
