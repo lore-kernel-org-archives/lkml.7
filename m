@@ -2,176 +2,164 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E446DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C06C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD93920661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55DF20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbfCFHgK (ORCPT
+        id S1729477AbfCFHlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 02:36:10 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49169 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbfCFHgJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 02:36:09 -0500
-X-Originating-IP: 90.88.150.179
-Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 534AE1C0015;
-        Wed,  6 Mar 2019 07:36:06 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 08:36:05 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Gerhard Wiesinger <lists@wiesinger.com>
-Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
-Subject: Re: Banana Pi-R1 stabil
-Message-ID: <20190306073605.modlx4yhdzbg7sfz@flea>
-References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
- <20190227092023.nvr34byfjranujfm@flea>
- <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
- <20190228093516.abual3564dkvx6un@flea>
- <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
- <20190301093038.oz56z22ivpntdcfw@flea>
- <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
- <20190305092830.ef45kxzhdnxlh63g@flea>
- <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
+        Wed, 6 Mar 2019 02:41:14 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55410 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728723AbfCFHlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 02:41:13 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 450DFBF8FE01670BA136;
+        Wed,  6 Mar 2019 15:41:11 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
+ 15:41:08 +0800
+Message-ID: <5C7F7992.7050806@huawei.com>
+Date:   Wed, 6 Mar 2019 15:41:06 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="o75bzzlkdlwciv3j"
-Content-Disposition: inline
-In-Reply-To: <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
-User-Agent: NeoMutt/20180716
+To:     Mike Rapoport <rppt@linux.ibm.com>
+CC:     Andrea Arcangeli <aarcange@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
+        Michal Hocko <mhocko@kernel.org>, <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Peter Xu <peterx@redhat.com>
+Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
+References: <00000000000006457e057c341ff8@google.com> <5C7BFE94.6070500@huawei.com> <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com> <5C7D2F82.40907@huawei.com> <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com> <5C7D4500.3070607@huawei.com> <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com> <5C7E1A38.2060906@huawei.com> <20190306020540.GA23850@redhat.com> <5C7F6048.2050802@huawei.com> <20190306062625.GA3549@rapoport-lnx>
+In-Reply-To: <20190306062625.GA3549@rapoport-lnx>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/3/6 14:26, Mike Rapoport wrote:
+> Hi,
+>
+> On Wed, Mar 06, 2019 at 01:53:12PM +0800, zhong jiang wrote:
+>> On 2019/3/6 10:05, Andrea Arcangeli wrote:
+>>> Hello everyone,
+>>>
+>>> [ CC'ed Mike and Peter ]
+>>>
+>>> On Tue, Mar 05, 2019 at 02:42:00PM +0800, zhong jiang wrote:
+>>>> On 2019/3/5 14:26, Dmitry Vyukov wrote:
+>>>>> On Mon, Mar 4, 2019 at 4:32 PM zhong jiang <zhongjiang@huawei.com> wrote:
+>>>>>> On 2019/3/4 22:11, Dmitry Vyukov wrote:
+>>>>>>> On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
+>>>>>>>> On 2019/3/4 15:40, Dmitry Vyukov wrote:
+>>>>>>>>> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
+>>>>>>>>>> Hi, guys
+>>>>>>>>>>
+>>>>>>>>>> I also hit the following issue. but it fails to reproduce the issue by the log.
+>>>>>>>>>>
+>>>>>>>>>> it seems to the case that we access the mm->owner and deference it will result in the UAF.
+>>>>>>>>>> But it should not be possible that we specify the incomplete process to be the mm->owner.
+>>>>>>>>>>
+>>>>>>>>>> Any thoughts?
+>>>>>>>>> FWIW syzbot was able to reproduce this with this reproducer.
+>>>>>>>>> This looks like a very subtle race (threaded reproducer that runs
+>>>>>>>>> repeatedly in multiple processes), so most likely we are looking for
+>>>>>>>>> something like few instructions inconsistency window.
+>>>>>>>>>
+>>>>>>>> I has a little doubtful about the instrustions inconsistency window.
+>>>>>>>>
+>>>>>>>> I guess that you mean some smb barriers should be taken into account.:-)
+>>>>>>>>
+>>>>>>>> Because IMO, It should not be the lock case to result in the issue.
+>>>>>>> Since the crash was triggered on x86 _most likley_ this is not a
+>>>>>>> missed barrier. What I meant is that one thread needs to executed some
+>>>>>>> code, while another thread is stopped within few instructions.
+>>>>>>>
+>>>>>>>
+>>>>>> It is weird and I can not find any relationship you had said with the issue.:-(
+>>>>>>
+>>>>>> Because It is the cause that mm->owner has been freed, whereas we still deference it.
+>>>>>>
+>>>>>> From the lastest freed task call trace, It fails to create process.
+>>>>>>
+>>>>>> Am I miss something or I misunderstand your meaning. Please correct me.
+>>>>> Your analysis looks correct. I am just saying that the root cause of
+>>>>> this use-after-free seems to be a race condition.
+>>>>>
+>>>>>
+>>>>>
+>>>> Yep, Indeed,  I can not figure out how the race works. I will dig up further.
+>>> Yes it's a race condition.
+>>>
+>>> We were aware about the non-cooperative fork userfaultfd feature
+>>> creating userfaultfd file descriptor that gets reported to the parent
+>>> uffd, despite they belong to mm created by failed forks.
+>>>
+>>> https://www.spinics.net/lists/linux-mm/msg136357.html
+>>>
+>> Hi, Andrea
+>>
+>> I still not clear why uffd ioctl can use the incomplete process as the mm->owner.
+>> and how to produce the race.
+> There is a C reproducer in  the syzcaller report:
+>
+> https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
+>  
+>> From your above explainations,   My underdtanding is that the process handling do_exexve
+>> will have a temporary mm,  which will be used by the UUFD ioctl.
+> The race is between userfaultfd operation and fork() failure:
+>
+> forking thread                  | userfaultfd monitor thread
+> --------------------------------+-------------------------------
+> fork()                          |
+>   dup_mmap()                    |
+>     dup_userfaultfd()           |
+>     dup_userfaultfd_complete()  |
+>                                 |  read(UFFD_EVENT_FORK)
+>                                 |  uffdio_copy()
+>                                 |    mmget_not_zero()
+>     goto bad_fork_something     |
+>     ...                         |
+> bad_fork_free:                  |
+>       free_task()               |
+>                                 |  mem_cgroup_from_task()
+>                                 |       /* access stale mm->owner */
+>  
+Hi, Mike
 
---o75bzzlkdlwciv3j
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+forking thread fails to create the process ,and then free the allocated task struct.
+Other userfaultfd monitor thread should not access the stale mm->owner.
 
-On Tue, Mar 05, 2019 at 08:21:02PM +0100, Gerhard Wiesinger wrote:
-> > > > Run https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-str=
-ess-test
-> > > >=20
-> > > > > But it doesn't explaing that it works with kernel 4.7.4 without a=
-ny
-> > > > > problems.
-> > > > My best guess would be that cpufreq wasn't enabled at that time, or
-> > > > without voltage scaling.
-> > > >=20
-> > > Where can I see the voltage scaling parameters?
-> > >=20
-> > > on DTS I don't see any difference between kernel 4.7.4 and 4.20.10 re=
-garding
-> > > voltage:
-> > >=20
-> > > dtc -I dtb -O dts -o
-> > > /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dts
-> > > /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dtb
-> > This can be also due to configuration being changed, driver support, et=
-c.
->=20
-> Where will the voltages for scaling then be set in detail (drivers, etc.)?
+The parent process and child process do not share the mm struct.  Userfaultfd monitor thread's
+mm->owner should not point to the freed child task_struct.
 
-The operating points are in the DT, but how to change it (cpufreq
-drivers, clock drivers, regulators drivers) aren't, and the
-configuration will tell if those drivers are included, and which
-governor is going to be the default.
+and due to the existence of tasklist_lock,  we can not specify the mm->owner to freed task_struct.
 
-> > > There is another strange thing (tested with
-> > > kernel-5.0.0-0.rc8.git1.1.fc31.armv7hl, kernel-4.19.8-300.fc29.armv7h=
-l,
-> > > kernel-4.20.13-200.fc29.armv7hl, kernel-4.20.10-200.fc29.armv7hl):
-> > >=20
-> > > There is ALWAYS high CPU of around 10% in kworker:
-> > >=20
-> > >  =A0 PID USER=A0=A0=A0=A0=A0 PR=A0 NI=A0=A0=A0 VIRT=A0=A0=A0 RES=A0=
-=A0=A0 SHR S=A0 %CPU=A0 %MEM TIME+ COMMAND
-> > > 18722 root=A0=A0=A0=A0=A0 20=A0=A0 0=A0=A0=A0=A0=A0=A0 0=A0=A0=A0=A0=
-=A0 0=A0=A0=A0=A0=A0 0 I=A0=A0 9.5=A0=A0 0.0 0:47.52
-> > > [kworker/1:3-events_freezable_power_]
-> > >=20
-> > >  =A0 PID USER=A0=A0=A0=A0=A0 PR=A0 NI=A0=A0=A0 VIRT=A0=A0=A0 RES=A0=
-=A0=A0 SHR S=A0 %CPU=A0 %MEM TIME+ COMMAND
-> > >  =A0 776 root=A0=A0=A0=A0=A0 20=A0=A0 0=A0=A0=A0=A0=A0=A0 0=A0=A0=A0=
-=A0=A0 0=A0=A0=A0=A0=A0 0 I=A0=A0 8.6=A0=A0 0.0 0:02.77
-> > > [kworker/0:4-events]
-> > The first one looks like it's part of the workqueue code.
->=20
-> Any guessed reason for that?
+I miss something,=-O
 
-None, I'm not familiar with the workqueue code.
+Thanks,
+zhong jiang
+>> Thanks,
+>> zhong jiang
 
-> > > BTW: Still stable at aboout 2,5days on both devices. So solution IS t=
-he
-> > > performance governor.
-> > No, the performance governor prevents any change in frequency. My
-> > guess is that a lower frequency operating point is not working and is
-> > crashing the CPU.
-> >=20
->=20
-> Yes, there might at least 2 scenarios:
->=20
-> 1.) Frequency switching itself is the problem
 
-But that code is also the one being used by the BananaPro, which you
-reported as stable.
-
-> 2.) lower frequency/voltage operating points are not stable.
->=20
-> For both scenarios: it might be possible that the crash happens on idle C=
-PU,
-> high CPU load or just randomly. Therefore just "waiting" might be better
-> than 100% CPU utilization.But will test also 100% CPU.
->=20
-> Therefore it would be good to see where the voltages for different
-> frequencies for the SoC are defined (to compare).
-
-In the device tree.
-
-> I'm currently testing 2 different settings on the 2 new Banana Pi R1 with
-> newest kernel (see below), so 2 static frequencies:
->=20
-> # Set to specific frequency 144000 (currently testing on Banana Pi R1 #1)
->=20
-> # Set to specific frequency 312000 (currently testing on Banana Pi R1 #2)
->=20
-> If that's fine I'll test also further frequencies (with different loads).
-
-Look, you can come up with whatever program you want for this, but if
-I insist on running that cpustress program (for the 4th time now), is
-that it's actually good at it and caught all the cpufreq issues we've
-seen so far.
-
-Feel free to not trust me on this, but I'm not sure how the discussion
-can continue if you do.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---o75bzzlkdlwciv3j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH94ZQAKCRDj7w1vZxhR
-xb5vAP9omEQE7Ew2d9KdT9TaBwLf/pj0fDYL8wcklX4q3ak8eAD+J2xpcLaJWHLX
-s+dBzrM8KllbuLtR+eC6yBOSsC4+0QE=
-=Byx2
------END PGP SIGNATURE-----
-
---o75bzzlkdlwciv3j--
