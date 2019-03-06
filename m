@@ -2,172 +2,206 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92AAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104EDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E72F20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=wiesinger.com header.i=@wiesinger.com header.b="siPWQoZG"
+	by mail.kernel.org (Postfix) with ESMTP id DF13520661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbfCFUDK (ORCPT
+        id S1730961AbfCFUDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:03:10 -0500
-Received: from vps01.wiesinger.com ([46.36.37.179]:51294 "EHLO
-        vps01.wiesinger.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfCFUDK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:03:10 -0500
-Received: from wiesinger.com (wiesinger.com [84.113.44.87])
-        by vps01.wiesinger.com (Postfix) with ESMTPS id 4F1FF9F318;
-        Wed,  6 Mar 2019 21:03:05 +0100 (CET)
-Received: from [192.168.0.14] ([192.168.0.14])
-        (authenticated bits=0)
-        by wiesinger.com (8.15.2/8.15.2) with ESMTPSA id x26K30w9014229
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 21:03:02 +0100
-DKIM-Filter: OpenDKIM Filter v2.11.0 wiesinger.com x26K30w9014229
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiesinger.com;
-        s=default; t=1551902583;
-        bh=j90UGS9eT/w6p4TIFU64M5KL0xqaPSoeGWmXmpq5sQE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=siPWQoZGlVsNJx+7ayYT+22g6kezU20TQ8psrdU0jpkWkAl4eJ439FNt5OJLeodN/
-         2iMpcNbMhxEAbFDbW1nBIHcM0V1SYcJnf7RnA747QfGb/HTyblz7CVooAgPzhU1w0r
-         b4ZYOyzyKKd1e+tucYD9jG/qivAtMD9L0H93bJ7f8o+0Ic02vYCV1wHfT+WNQ9BOy9
-         WdeHL32oszEOl2D8EFb0SFHpyNtFWSRvTeCW6e2w3e3pTSc9S3uqIykHyKGV3BeU0l
-         l2fia6p7qB/LA138Hw8QNlFmt3NUAhi7Ta9//EEtYG4DWWc/XsU9nCaKJ0KIJxy7/y
-         z3oUfGCkh9toaCi0SF42+xp3h+ZfdvWxGKyQ33Sl44OSWa8sXzNKfatrAftDnw1jk1
-         XOZBFtvOyvI4gx5MvFRWAojkYeApdHJvRrR59b61duft818Y86WDfNcQAdhHqbMjcL
-         0C0W7WPANhByUHp78gvAEVTIhJGhp9z4eiu11KSDdKVRdyHLmmma/EYFzQ72PlUw/A
-         bL9DE0OS91TCWJPF3SW7DdGfMHo/ZSIqn/fv+NwP3ZGhyIPQkMPcVvX3Gf8/6R5332
-         tzkDyWn86dsQRHA3uUJQAnZgYwkY/SuiVkOu16n59qWKs1IntMPSLG5FSwwhnXcaDf
-         loqaaH65z7Hm8yVndi9557jQ=
-Subject: Re: Banana Pi-R1 stabil
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
-References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
- <20190227092023.nvr34byfjranujfm@flea>
- <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
- <20190228093516.abual3564dkvx6un@flea>
- <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
- <20190301093038.oz56z22ivpntdcfw@flea>
- <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
- <20190305092830.ef45kxzhdnxlh63g@flea>
- <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
- <20190306073605.modlx4yhdzbg7sfz@flea>
-From:   Gerhard Wiesinger <lists@wiesinger.com>
-Message-ID: <34300c49-fe89-77cb-444a-f6de02d41a62@wiesinger.com>
-Date:   Wed, 6 Mar 2019 21:03:00 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
-MIME-Version: 1.0
-In-Reply-To: <20190306073605.modlx4yhdzbg7sfz@flea>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 6 Mar 2019 15:03:21 -0500
+Received: from mout.gmx.net ([212.227.15.18]:54013 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726809AbfCFUDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 15:03:20 -0500
+Received: from Juliuss-Air-2.fritz.box ([87.123.204.100]) by mail.gmx.com
+ (mrgmx003 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 0MOfcU-1h7gUY14nm-0064r7; Wed, 06 Mar 2019 21:02:56 +0100
+From:   Julius Niedworok <julius.n@gmx.net>
+To:     linux-wireless@vger.kernel.org
+Cc:     julius.n@gmx.net, ga58taw@mytum.de, david@redhat.com,
+        nc@net.in.tum.de, Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
+Date:   Wed,  6 Mar 2019 21:02:05 +0100
+Message-Id: <20190306200206.60916-1-julius.n@gmx.net>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+In-Reply-To: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
+References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
+X-Provags-ID: V03:K1:WED7gH8PQCymbI0Mi6oSuDmgSRevpD5vZTpEUQR3v+d71yp3lJT
+ n60H5KmxOw+CWJb3BjkQJ2WlrMWKP1nc5jkpyt6KXP1rABexl9AQ0ktlZ9ho2avMW5yz4E/
+ vFDiR4dYUH5cmSKlLJ32BVG5dhfNqtTl71mEfczqk3/qtl6P6gc2WY0YbFaPiNgskLD5eP9
+ O+fX3wluxyDvHpc2phCPQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PQHMVE9NQYg=:fyj2pmY3xaurOGuW1iYLnL
+ u7vUbYNR9pgad+LxhSe9OipTl/EI8Qv4HpyaXcIlPEUljAi7Oj1IIKzBD5JhoUVeAwHmkjmye
+ H40YPn0wZcIHrtzHaU2PXqI8QeViiL3gYU8ba+rVOtn8C1O9KU1XuIEwKafsmHK5ZWE91b0Vi
+ 7sU6kMjfaUfZrno/LIbFz594exFoNGbpbrLtKVzu/if5hzCEo5w+ciU+WXvaLBCi6T21g2BWV
+ tjRfoSBGpkVUnjNjDiQQX0KSgu8ryeOtSSEM6MdurvvGAv0Yu1+KpIRBA3xvMazURZDnP8JjD
+ OSdWNHxpQSTVCH3dR4zoKz2v4iUI/HYC40XN3O1Bgo40eps7F8TP2DtY6Pm8dOlyntJHf27Tt
+ jTFZrow1zdk/flPtVIJY6tYop+zrP8OM4kLNYQklV3WTXXt1P23XwqUwkT8xj04l2vUuUr3kt
+ sIMYmI1SVIPW0UiCX9ebgv/IlBxvpct0K+l3jGIJHsKoSbr/wNKZfsgmCal2ZC3VLdAEzJwiB
+ 9fHzPvNWKhnBlKu6NXsUZTXEwIUGPsETKIBdX/D9BiRhSnJk6V1cFbUb8pUxKQ0hCAFyAI1rY
+ pcf+mMwMovYc7C26/ZnWBhyczM8hMaC9/+3k9nbpj/iA++Dus8rre0JWTN4nahnpZNohyJJgT
+ 5pSOd07rnR1JuRfNdKw8amyIOREmovTAS4HyX3J3/XTd+Rbryfpi8zfcPV/R+17zm8r+c4jYe
+ vKR5VwL4eiH1a1sh4Q0TnSLErFpL9Vo21D4sHOY1OeQZQvkgsrYFo7qoSpklFFyQ7qKxg5Gks
+ kl+2KlvJlqE7/FlW6SCtYKJjZuGi4i+MY2fE53KGCpqRMyHSfGFutaAkZiBrQbNAZZGxOjF43
+ qt8I1Rc/+RjmuJKua+iRVsSbhAJtVPoJu5jqqVfxoAN9czE1WSWfS0yYiSS4Jw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.03.2019 08:36, Maxime Ripard wrote:
->
->> Yes, there might at least 2 scenarios:
->>
->> 1.) Frequency switching itself is the problem
-> But that code is also the one being used by the BananaPro, which you
-> reported as stable.
+At Technical University of Munich we use MAC 802.11 TX status frames to
+perform several measurements in MAC 802.11 setups.
 
+With ath based drivers this was possible until commit d94a461d7a7df6
+("ath9k: use ieee80211_tx_status_noskb where possible") as the driver
+ignored the IEEE80211_TX_CTL_REQ_TX_STATUS flag and always delivered
+tx_status frames. Since that commit, this behavior was changed and the
+driver now adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
 
-Yes, BananaPro is stable (with exactly same configuration as far as I 
-know) ....
+Due to performance reasons, IEEE80211_TX_CTL_REQ_TX_STATUS is not set for
+data frames from interfaces in managed mode. Hence, frames that are sent
+from a managed mode interface do never deliver tx_status frames. This
+remains true even if a monitor mode interface (the measurement interface)
+is added to the same ieee80211 physical device. Thus, there is no
+possibility for receiving tx_status frames for frames sent on an interface
+in managed mode, if the driver adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
 
+In order to force delivery of tx_status frames for research and debugging
+purposes, implement a debugfs option force_tx_status for ieee80211 physical
+devices. When this option is set for a physical device,
+IEEE80211_TX_CTL_REQ_TX_STATUS is enabled in all packets sent from that
+device. This option can be set via
+/sys/kernel/debug/ieee80211/<dev>/force_tx_status. The default is disabled.
 
->
->> 2.) lower frequency/voltage operating points are not stable.
->>
->> For both scenarios: it might be possible that the crash happens on idle CPU,
->> high CPU load or just randomly. Therefore just "waiting" might be better
->> than 100% CPU utilization.But will test also 100% CPU.
->>
->> Therefore it would be good to see where the voltages for different
->> frequencies for the SoC are defined (to compare).
-> In the device tree.
->
->> I'm currently testing 2 different settings on the 2 new Banana Pi R1 with
->> newest kernel (see below), so 2 static frequencies:
->>
->> # Set to specific frequency 144000 (currently testing on Banana Pi R1 #1)
->>
->> # Set to specific frequency 312000 (currently testing on Banana Pi R1 #2)
->>
->> If that's fine I'll test also further frequencies (with different loads).
-> Look, you can come up with whatever program you want for this, but if
-> I insist on running that cpustress program (for the 4th time now), is
-> that it's actually good at it and caught all the cpufreq issues we've
-> seen so far.
+Co-developed-by: Charlie Groh <ga58taw@mytum.de>
+Signed-off-by: Charlie Groh <ga58taw@mytum.de>
+Signed-off-by: Julius Niedworok <julius.n@gmx.net>
+---
+ net/mac80211/debugfs.c     | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ net/mac80211/ieee80211_i.h |  1 +
+ net/mac80211/tx.c          | 10 +++++++++
+ 3 files changed, 64 insertions(+)
 
-As I wrote, I run several stress tests also with the program you 
-mention. But test combination require a minimum testing time to get 
-verifiable results.
-
-The combinations are:
-
-- idle cpu vs. 100% CPU
-
-- on demand governor vs. several fixed frequencies.
-
-
-So far stable testing conditions for idle CPU and 100% CPU with command 
-line below and cpuburn-a7 program:
-# Set to max performance (stable)=> frequency 960000
-# Set to specific frequency 144000 (stable)
-# Set to specific frequency 312000 (stable)
-
-TODO list to test with "idle" CPU and 100% CPU:
-# Set to specific frequency 528000 (next step tested)
-# Set to specific frequency 720000 (next step tested)
-# Set to specific frequency 864000
-# Set to specific frequency 912000
-# Set to ondemand
-
-My guess is (but it is just a guess which has to be verified):
-
-- stable in all fixed frequencies in idle CPU and 100% CPU condition as 
-well as on demand and 100% CPU
-
-- not stable with ondemand and "idle" CPU (so real frequency switching 
-will happen often)
-
-
->
-> Feel free to not trust me on this, but I'm not sure how the discussion
-> can continue if you do.
->
-You missed my point from my previous mail: "But will test also 100% 
-CPU.". See command line below.
-
-
-Ciao,
-
-Gerhard
-
-
-Test script:
-
-while true; do echo "========================================"; echo -n 
-"CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
-"CPU_FREQ1: "; cat 
-/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
-./stress/cpuburn-a7
-
-
-
+diff --git a/net/mac80211/debugfs.c b/net/mac80211/debugfs.c
+index 3fe541e..074b5d1 100644
+--- a/net/mac80211/debugfs.c
++++ b/net/mac80211/debugfs.c
+@@ -150,6 +150,58 @@ static const struct file_operations aqm_ops = {
+ 	.llseek = default_llseek,
+ };
+ 
++static ssize_t force_tx_status_read(struct file *file,
++				    char __user *user_buf,
++			size_t count,
++			loff_t *ppos)
++{
++	struct ieee80211_local *local = file->private_data;
++	char buf[3];
++	int len = 0;
++
++	len = scnprintf(buf, sizeof(buf), "%d\n", (int)local->force_tx_status);
++
++	return simple_read_from_buffer(user_buf, count, ppos,
++				       buf, len);
++}
++
++static ssize_t force_tx_status_write(struct file *file,
++				     const char __user *user_buf,
++			 size_t count,
++			 loff_t *ppos)
++{
++	struct ieee80211_local *local = file->private_data;
++	char buf[3];
++	size_t len;
++
++	if (count > sizeof(buf))
++		return -EINVAL;
++
++	if (copy_from_user(buf, user_buf, count))
++		return -EFAULT;
++
++	buf[sizeof(buf) - 1] = '\0';
++	len = strlen(buf);
++	if (len > 0 && buf[len - 1] == '\n')
++		buf[len - 1] = 0;
++
++	if (buf[0] == '0' && buf[1] == '\0')
++		local->force_tx_status = 0;
++	else if (buf[0] == '1' && buf[1] == '\0')
++		local->force_tx_status = 1;
++	else
++		return -EINVAL;
++
++	return count;
++}
++
++static const struct file_operations force_tx_status_ops = {
++	.write = force_tx_status_write,
++	.read = force_tx_status_read,
++	.open = simple_open,
++	.llseek = default_llseek,
++};
++
+ #ifdef CONFIG_PM
+ static ssize_t reset_write(struct file *file, const char __user *user_buf,
+ 			   size_t count, loff_t *ppos)
+@@ -379,6 +431,7 @@ void debugfs_hw_add(struct ieee80211_local *local)
+ 	DEBUGFS_ADD(hwflags);
+ 	DEBUGFS_ADD(user_power);
+ 	DEBUGFS_ADD(power);
++	DEBUGFS_ADD_MODE(force_tx_status, 0600);
+ 
+ 	if (local->ops->wake_tx_queue)
+ 		DEBUGFS_ADD_MODE(aqm, 0600);
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index 7dfb4e2..3339b5d 100644
+--- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -1367,6 +1367,7 @@ struct ieee80211_local {
+ 		struct dentry *rcdir;
+ 		struct dentry *keys;
+ 	} debugfs;
++	bool force_tx_status;
+ #endif
+ 
+ 	/*
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 928f13a..717fa71 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -2463,6 +2463,11 @@ static struct sk_buff *ieee80211_build_hdr(struct ieee80211_sub_if_data *sdata,
+ 	if (IS_ERR(sta))
+ 		sta = NULL;
+ 
++#ifdef CONFIG_MAC80211_DEBUGFS
++		if (local->force_tx_status)
++			info_flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
++#endif
++
+ 	/* convert Ethernet header to proper 802.11 header (based on
+ 	 * operation mode) */
+ 	ethertype = (skb->data[12] << 8) | skb->data[13];
+@@ -3468,6 +3473,11 @@ static bool ieee80211_xmit_fast(struct ieee80211_sub_if_data *sdata,
+ 		      (tid_tx ? IEEE80211_TX_CTL_AMPDU : 0);
+ 	info->control.flags = IEEE80211_TX_CTRL_FAST_XMIT;
+ 
++#ifdef CONFIG_MAC80211_DEBUGFS
++		if (local->force_tx_status)
++			info->flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
++#endif
++
+ 	if (hdr->frame_control & cpu_to_le16(IEEE80211_STYPE_QOS_DATA)) {
+ 		tid = skb->priority & IEEE80211_QOS_CTL_TAG1D_MASK;
+ 		*ieee80211_get_qos_ctl(hdr) = tid;
+-- 
+2.10.1 (Apple Git-78)
 
