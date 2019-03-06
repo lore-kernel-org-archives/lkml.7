@@ -2,98 +2,102 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF86AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D57C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A397120684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SC2dKtvX"
+	by mail.kernel.org (Postfix) with ESMTP id A4ECF20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfCFXEA (ORCPT
+        id S1726156AbfCFXJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 18:04:00 -0500
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:52446 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfCFXD7 (ORCPT
+        Wed, 6 Mar 2019 18:09:38 -0500
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57400 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCFXJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 18:03:59 -0500
-Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
-        by smtprelay.synopsys.com (Postfix) with ESMTP id 7A02F10C219C;
-        Wed,  6 Mar 2019 15:03:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1551913439; bh=2dOsSpPrJjbl70kbZdlzeiIVCGoQmcGSgFFktrvm96o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SC2dKtvXh3uj7gF15oDUORFU+or7MyYOO2DMKysfIW5s+VY9DXJswkgUjgUY18bva
-         YS09ucuPQlbqygPMRynbAKkggXc5S/q/9VG5+9qppVs2sJVYeZ7I7/+aK87PSimxg2
-         2Ab8TOLpiknxzd8NFh64mKNjwdmd2sEMOcUCrx6LeJ0r26n5a+ruO5A2m2QlbpJZeu
-         nmWAS58CC0rwIh9JifZNrdyIY8871giAhGSlmPGyjdvNyQhTx8CwuYkv++Y4rcv0xo
-         +VoZ0LiavQ8u2yIpwNg88LXm4hPrUK2BMs4du5DNPXbCX4G3WPPBT98cJQevhXT4cz
-         OofOCydlOL+Aw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost1.synopsys.com (Postfix) with ESMTP id 28DB555BB;
-        Wed,  6 Mar 2019 15:03:57 -0800 (PST)
-From:   Vitor Soares <vitor.soares@synopsys.com>
-To:     bbrezillon@kernel.org
-Cc:     linux-i3c@lists.infradead.org, joao.pinto@synopsys.com,
-        linux-kernel@vger.kernel.org,
-        Vitor Soares <vitor.soares@synopsys.com>
-Subject: [PATCH 3/7] i3c: master: dw: remove dead code from dw_i3c_master_*_xfers()
-Date:   Thu,  7 Mar 2019 00:03:55 +0100
-Message-Id: <6dcb0e17851cfb6913dda388d0960e0d1f15f853.1550587318.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <01dfc316793360cb601922caefe23153ca2db194.1550587318.git.vitor.soares@synopsys.com>
-References: <01dfc316793360cb601922caefe23153ca2db194.1550587318.git.vitor.soares@synopsys.com>
+        Wed, 6 Mar 2019 18:09:37 -0500
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 9888D80449; Thu,  7 Mar 2019 00:09:28 +0100 (CET)
+Date:   Thu, 7 Mar 2019 00:09:34 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, Borislav Petkov <bp@alien8.de>,
+        dancol@google.com, gregkh@linuxfoundation.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kara <jack@suse.cz>, Jonathan Corbet <corbet@lwn.net>,
+        karim.yaghmour@opersys.com, Kees Cook <keescook@chromium.org>,
+        kernel-team@android.com, linux-doc@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        rdunlap@infradead.org, rostedt@goodmis.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        yhs@fb.com
+Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
+ kernel
+Message-ID: <20190306230934.GA7915@amd>
+References: <20190118225543.86996-1-joel@joelfernandes.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Content-Disposition: inline
+In-Reply-To: <20190118225543.86996-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detected by CoverityScan (Event result_independent_of_operands):
-"(i3c_xfers + i).len > 65536" is always false regardless of the values
-of its operands. This occurs as the logical operand of "if"
 
-"(i2c_xfers + i).len > 65536" is always false regardless of the values
-of its operands. This occurs as the logical operand of "if"
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
----
- drivers/i3c/master/dw-i3c-master.c | 10 ----------
- 1 file changed, 10 deletions(-)
+On Fri 2019-01-18 17:55:43, Joel Fernandes wrote:
+> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+>=20
+> Introduce in-kernel headers and other artifacts which are made available
+> as an archive through proc (/proc/kheaders.tgz file). This archive makes
+> it possible to build kernel modules, run eBPF programs, and other
+> tracing programs that need to extend the kernel for tracing purposes
+> without any dependency on the file system having headers and build
+> artifacts.
+>=20
+> On Android and embedded systems, it is common to switch kernels but not
+> have kernel headers available on the file system. Raw kernel headers
+> also cannot be copied into the filesystem like they can be on other
+> distros, due to licensing and other issues. There's no linux-headers
 
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index bb03079..eef6fae 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -840,11 +840,6 @@ static int dw_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
- 		return -ENOTSUPP;
- 
- 	for (i = 0; i < i3c_nxfers; i++) {
--		if (i3c_xfers[i].len > COMMAND_PORT_ARG_DATA_LEN_MAX)
--			return -ENOTSUPP;
--	}
--
--	for (i = 0; i < i3c_nxfers; i++) {
- 		if (i3c_xfers[i].rnw)
- 			nrxwords += DIV_ROUND_UP(i3c_xfers[i].len, 4);
- 		else
-@@ -973,11 +968,6 @@ static int dw_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
- 		return -ENOTSUPP;
- 
- 	for (i = 0; i < i2c_nxfers; i++) {
--		if (i2c_xfers[i].len > COMMAND_PORT_ARG_DATA_LEN_MAX)
--			return -ENOTSUPP;
--	}
--
--	for (i = 0; i < i2c_nxfers; i++) {
- 		if (i2c_xfers[i].flags & I2C_M_RD)
- 			nrxwords += DIV_ROUND_UP(i2c_xfers[i].len, 4);
- 		else
--- 
-2.7.4
+If your licensing prevents you from having headers on the
+filesystem... then I guess you should fix the licensing.
 
+I agree with Christoph, this looks pretty horrible.
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyAUy4ACgkQMOfwapXb+vIkRgCgjmm82c+3htKMrxgu9SMJ68mM
+mQ8An0DTKGTVOU5v2sd+FIhRicsYg/ZN
+=sq5v
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
