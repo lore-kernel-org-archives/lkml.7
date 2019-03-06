@@ -2,188 +2,328 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972F0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECEFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685C5205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:58:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oIwlDMF0"
+	by mail.kernel.org (Postfix) with ESMTP id 259E820657
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfCFS6H (ORCPT
+        id S1729818AbfCFS6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:58:07 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:35496 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfCFS6G (ORCPT
+        Wed, 6 Mar 2019 13:58:23 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:58157 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfCFS6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:58:06 -0500
-Received: by mail-yw1-f68.google.com with SMTP id s204so10908025ywg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:58:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+ZUb58DPvs+1LwePJJnz/Y+H0iPbyRfGahGY+7UcEWc=;
-        b=oIwlDMF0kpLAerHBrCOsyJjHboTYRFAaPKjUbP6uMWuzKTKvu0DqyQ3AMJ57tM2ItB
-         VBtb9FO0fJRAy8iITHKNKsjn1kj8Exb6F7az5nZqqZ01AKN3Yz9KUWUDkt7oXrLLu52j
-         ctZNao4vtxcOz87xZSe12oifQ5+mP5hEO8PI+5ovW89CoBny7jXei+N3yC8GRJRehGXD
-         Rw4eRl8uM1zyvLCFbI0m2e4icoCDUsfmfRZAw/U623bQ0+Lb90goPra9t5uREn/WwRdX
-         3PiHcsl7JlwJTFX+I2VIadAOpZ+KC97csfZqE08XWs7w7mm5onWQBLacA3iopedA2ZOH
-         YQ1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+ZUb58DPvs+1LwePJJnz/Y+H0iPbyRfGahGY+7UcEWc=;
-        b=HqTDugitj7g7svS5mSA6EgMwGfIiY8Gdi5lONRDtae8CuKS6zjVRqRqZwLBhOwmu++
-         YoI+ri2XmmKq6+NOi+zBHWZCKqFRsIRiDcpQ7uqUo/BtC8dbE1Z3x2RE6XBY82loCIZG
-         i+3EHuQGb1qCWY/td99oKNj8A8Wa8FrmRpkJ/aZBuTYOKDxgkFEk+D83tjvC3/AdyAdR
-         YY2D/YgTzq9N3ErQjxr6MowjDzOFL8vYlcQuE82mo1BIuF4QeWVrBEIjQlwHoXCgXxoC
-         S/RhegGp29um49z687hEGn3bftKU68w5kHRlhrVfez7z0+rfv6WejcW+L51WnseKcH3d
-         mNZg==
-X-Gm-Message-State: APjAAAVkIPFy7DPXd4Bu9Z39teDQKkTnLbS0V6kKF201B2SDwYv7l8h0
-        9FgXFGVf5yeaSbN4dHRQfsv3JEAHxaxKL4Op8OODBCZ5kB9tww==
-X-Google-Smtp-Source: APXvYqxKC3mT2ujfG87Gzgt+kuzqEnyrl7Qb6XH5ajqRkH663Aj/7AoH2J4b7op9HOAT5UCgWG9OT39W4DDHUIxYwLc=
-X-Received: by 2002:a81:a609:: with SMTP id d9mr6731699ywh.17.1551898685247;
- Wed, 06 Mar 2019 10:58:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20190228002725.57444-1-gwendal@chromium.org> <CAFqH_52tWw8pGwY5fdAPQ6npbfWA7o4OhtPxvbUbCh5TdnbSew@mail.gmail.com>
- <CABXOdTfqPKq34OVDmJ9qjTr0nqarhpN=f37m3xH9iuHxex+xrw@mail.gmail.com> <CAFqH_50ZQtbOqG+u9VLT8m=9jvv_XQsghUTCuySu-=vho6rLKw@mail.gmail.com>
-In-Reply-To: <CAFqH_50ZQtbOqG+u9VLT8m=9jvv_XQsghUTCuySu-=vho6rLKw@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Wed, 6 Mar 2019 10:57:53 -0800
-Message-ID: <CABXOdTf3kt9EnyBB=8BjpiOOJ3=OaVodqKxTJkZC6=sTqry2jg@mail.gmail.com>
-Subject: Re: [PATCH] mfd: cros: Update EC protocol to match current EC code
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 6 Mar 2019 13:58:23 -0500
+Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MPXxi-1hOCkS3TOc-00MfEN; Wed, 06 Mar 2019 19:53:06 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        ooo@electrozaur.com, linux-scsi@vger.kernel.org,
+        esc.storagedev@microsemi.com
+Subject: [PATCH] drivers: scsi: Kconfig: pedantic cleanups
+Date:   Wed,  6 Mar 2019 19:53:04 +0100
+Message-Id: <1551898384-19624-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:Ka7nKNxWRosUs8Qv8Q2LLt9aNP0XWvd/hUzn19Cd8szzUxeFNdd
+ gD8ZgdASKolBOou5NVGLfjrgx6vw5eXfNAWhAFkmPlNtKWeOnOBHf1SO1cZektYdGagqpLT
+ LAb2aPQtHA7B0MJrDuvnRGxsd50yNOlu7uziFoZssxipCE/EIG3BpH4jswXzx+zNeXs5tJl
+ I/txkLpAqwcDb5jEW/VuA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3gSjJi4Vh3I=:76Kc3gsgua5bcL3XZ3KlK4
+ jDL9W/UcjQDuRj3Ou5Ha5bny/MSfDBWxgtmw2zU/FW1Nu0RBYRwZBkdjfNbw4XIjgQYS9agzO
+ J/G+qbIsyy6YGCVyR3dgIUMYhvZIiyTnNa0u998aExcpVP1HdY0myCnJnJf45n+M0n3Ha6wEO
+ xQXmHcjJZPQ4qfptL1rxIyauokd0jAxZkR3bnjQgG1Nbes9k9FTjDo+pvhuPtiHRX1cP5UfSp
+ OGr4I6fP8myFJXWLgFnJCg1VvpMeJ4ZH8LWMqeHZDNs5CaFZPS6BqYHET1oyeaESQsrSjEMyq
+ zOmzP1Xw/CmcX1FZOk49Puhpz2GYzoEpGEILukkjQVXKduYKrlLcZv+4IeILBAgyP/HB9JQvU
+ hrbiHksAArDi8zAxHkVLjUrAFsPXMnL2xQOTwt/PlzGkRm5mu9o5eEPV/DJZYRcKmaaqjakhk
+ CMsmZHVor94nmT1iE8ub4j6BHb6oRejKVaXDHg++uLNumU1XMTrQ6QzxpYb0D42RQk8wyO974
+ Jcj/+IRePMcIramGZOOJzjwcU4dOTc0xFvWgKgO5allgTXhAW0zPbvG6+1J59ckzwLOAyqV98
+ SXgqIXei5PFIglx294fPGEoknzNDQkhMkDKeDnaSrzWNzkuMUS38vw0d4YAAjYGWTophKVXoC
+ TbPCte9tn6JtL+mzQKwXHfsyGR7aTMqF6LAUbGHTR6ek8s6ZYaww7wTW9ixOx42LYMxHG3GPc
+ 1XYYvPYoojzvxsLRUkVz6iXgkwsuz9gpp00ZLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 10:27 AM Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
->
-> Hi Guenter,
->
-> Missatge de Guenter Roeck <groeck@google.com> del dia dc., 6 de mar=C3=A7
-> 2019 a les 18:20:
-> >
-> > [resending in plain text mode ]
-> >
-> > On Wed, Mar 6, 2019 at 8:57 AM Enric Balletbo Serra <eballetbo@gmail.co=
-m> wrote:
-> > >
-> > > Hi Gwendal,
-> > >
-> > > Many thanks to send this upstream.
-> > >
-> > > Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dj., 28 de
-> > > febr. 2019 a les 1:31:
-> > > >
-> > > > Chromebook Embedded Controller protocol is defined in the kernel at
-> > > > cros_ec_commands.h.
-> > > > The source of trust for the EC protocol is at
-> > > > https://chromium.googlesource.com/chromiumos/platform/ec/+/master/i=
-nclude/ec_commands.h
-> > > >
-> > > > Only needed changes have been picked up from this file to the kerne=
-l
-> > > > include file leading to gaps between the upstream version and what =
-the
-> > > > latest ECs can do.
-> > > >
-> > > > Fill the gaps to ease future integrations. Changes from the origina=
-l
-> > > > files is header/footer for license and include files for alignment.
-> > > >
-> > > > Check this include file works on ChomeOS kernel 4.14 and 4.19 on ev=
-e.
-> > > >
-> > > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > > > ---
-> > > >  include/linux/mfd/cros_ec_commands.h | 3627 +++++++++++++++++++++-=
-----
-> > >
-> > > I'm wondering if we should move this file to include/uapi at some
-> > > point as this file is also used as user-space API for some userspace
-> > > applications.
-> > >
-> > > While we are here I'd suggest if we can also fix the few errors (3)
-> > > and warnings (5) spotted by checkpatch. With that it's an ack from my
-> > > side.
-> > >
-> > > Being strict, though, on most cases the variables are going to be use=
-d
-> > > in code that can be seen by user-space programs so maybe we should
-> > > really need to switch to __u8/__u16/etc exportable data types instead
-> > > of the uint8_t/uint16_t/etc types (those are not aimed to be used
-> > > within the kernel). For those types that are internal we should use
-> > > in-kernel type (u8/u16/etc)
-> > >
-> > > There is also the use of the BIT macro instead of the (1 << x), I kno=
-w
-> > > that this is a maintainer preference.
-> > >
-> > Is all that even possible ?
->
-> Sorry, if I wasn't clear from my side, I should have marked those as
-> nit, as in this case, I don't really mind, but I remember Lee
-> requesting some of those changes for this file.
->
-> What I want to avoid is the desynchronization again. As this file
-> belongs to the MFD subsystem Lee needs to be happy with it or at least
-> know that we're not following the kernel style because is an imported
-> file (i.e not using the BIT macro, doing this example because I know
-> he takes care of this).
->
-> So I think that the main question here is if an imported file like
-> this is acceptable in the include/linux/mfd?
->
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/scsi/Kconfig          | 63 +++++++++++++++++++++----------------------
+ drivers/scsi/osd/Kconfig      | 38 +++++++++++++-------------
+ drivers/scsi/pcmcia/Kconfig   |  2 +-
+ drivers/scsi/qedf/Kconfig     |  8 +++---
+ drivers/scsi/smartpqi/Kconfig | 16 +++++------
+ 5 files changed, 63 insertions(+), 64 deletions(-)
 
-I find it highly (and more and more) confusing about what is
-acceptable in the kernel and where, and what isn't. There are imported
-files all over the place, and they seem to be widely acceptable and
-accepted. It is difficult to keep track of what is acceptable and what
-isn't on a per subsystem basis. I'll step back and keep my confusion
-to myself.
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index f38882f..7a9eab1 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -1,9 +1,9 @@
+ menu "SCSI device support"
+ 
+ config SCSI_MOD
+-       tristate
+-       default y if SCSI=n || SCSI=y
+-       default m if SCSI=m
++	tristate
++	default y if SCSI=n || SCSI=y
++	default m if SCSI=m
+ 
+ config RAID_ATTRS
+ 	tristate "RAID Transport Class"
+@@ -47,7 +47,7 @@ config SCSI_ESP_PIO
+ 
+ config SCSI_NETLINK
+ 	bool
+-	default	n
++	default n
+ 	depends on NET
+ 
+ config SCSI_PROC_FS
+@@ -307,25 +307,25 @@ config ISCSI_TCP
+ 	select CRYPTO_CRC32C
+ 	select SCSI_ISCSI_ATTRS
+ 	help
+-	 The iSCSI Driver provides a host with the ability to access storage
+-	 through an IP network. The driver uses the iSCSI protocol to transport
+-	 SCSI requests and responses over a TCP/IP network between the host
+-	 (the "initiator") and "targets".  Architecturally, the iSCSI driver
+-	 combines with the host's TCP/IP stack, network drivers, and Network
+-	 Interface Card (NIC) to provide the same functions as a SCSI or a
+-	 Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
++	  The iSCSI Driver provides a host with the ability to access storage
++	  through an IP network. The driver uses the iSCSI protocol to transport
++	  SCSI requests and responses over a TCP/IP network between the host
++	  (the "initiator") and "targets".  Architecturally, the iSCSI driver
++	  combines with the host's TCP/IP stack, network drivers, and Network
++	  Interface Card (NIC) to provide the same functions as a SCSI or a
++	  Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
+ 
+-	 To compile this driver as a module, choose M here: the
+-	 module will be called iscsi_tcp.
++	  To compile this driver as a module, choose M here: the
++	  module will be called iscsi_tcp.
+ 
+-	 The userspace component needed to initialize the driver, documentation,
+-	 and sample configuration files can be found here:
++	  The userspace component needed to initialize the driver, documentation,
++	  and sample configuration files can be found here:
+ 
+-	 http://open-iscsi.org
++	  http://open-iscsi.org
+ 
+ config ISCSI_BOOT_SYSFS
+ 	tristate "iSCSI Boot Sysfs Interface"
+-	default	n
++	default n
+ 	help
+ 	  This option enables support for exposing iSCSI boot information
+ 	  via sysfs to userspace. If you wish to export this information,
+@@ -340,7 +340,7 @@ source "drivers/scsi/cxlflash/Kconfig"
+ config SGIWD93_SCSI
+ 	tristate "SGI WD93C93 SCSI Driver"
+ 	depends on SGI_HAS_WD93 && SCSI
+-  	help
++	help
+ 	  If you have a Western Digital WD93 SCSI controller on
+ 	  an SGI MIPS system, say Y.  Otherwise, say N.
+ 
+@@ -455,7 +455,6 @@ config SCSI_AACRAID
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called aacraid.
+ 
+-
+ source "drivers/scsi/aic7xxx/Kconfig.aic7xxx"
+ source "drivers/scsi/aic7xxx/Kconfig.aic79xx"
+ source "drivers/scsi/aic94xx/Kconfig"
+@@ -475,7 +474,7 @@ config SCSI_DPT_I2O
+ 	tristate "Adaptec I2O RAID support "
+ 	depends on SCSI && PCI && VIRT_TO_BUS
+ 	help
+-	  This driver supports all of Adaptec's I2O based RAID controllers as 
++	  This driver supports all of Adaptec's I2O based RAID controllers as
+ 	  well as the DPT SmartRaid V cards.  This is an Adaptec maintained
+ 	  driver by Deanna Bonds.  See <file:Documentation/scsi/dpti.txt>.
+ 
+@@ -669,7 +668,7 @@ config SCSI_GDTH
+ 	---help---
+ 	  Formerly called GDT SCSI Disk Array Controller Support.
+ 
+-	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI) 
++	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI)
+ 	  manufactured by Intel Corporation/ICP vortex GmbH. It is documented
+ 	  in the kernel source in <file:drivers/scsi/gdth.c> and
+ 	  <file:drivers/scsi/gdth.h>.
+@@ -1152,8 +1151,8 @@ config SCSI_LPFC
+ 	depends on NVME_FC || NVME_FC=n
+ 	select CRC_T10DIF
+ 	---help---
+-          This lpfc driver supports the Emulex LightPulse
+-          Family of Fibre Channel PCI host adapters.
++	  This lpfc driver supports the Emulex LightPulse
++	  Family of Fibre Channel PCI host adapters.
+ 
+ config SCSI_LPFC_DEBUG_FS
+ 	bool "Emulex LightPulse Fibre Channel debugfs Support"
+@@ -1468,14 +1467,14 @@ config ZFCP
+ 	depends on S390 && QDIO && SCSI
+ 	depends on SCSI_FC_ATTRS
+ 	help
+-          If you want to access SCSI devices attached to your IBM eServer
+-          zSeries by means of Fibre Channel interfaces say Y.
+-          For details please refer to the documentation provided by IBM at
+-          <http://oss.software.ibm.com/developerworks/opensource/linux390>
++	  If you want to access SCSI devices attached to your IBM eServer
++	  zSeries by means of Fibre Channel interfaces say Y.
++	  For details please refer to the documentation provided by IBM at
++	  <http://oss.software.ibm.com/developerworks/opensource/linux390>
+ 
+-          This driver is also available as a module. This module will be
+-          called zfcp. If you want to compile it as a module, say M here
+-          and read <file:Documentation/kbuild/modules.txt>.
++	  This driver is also available as a module. This module will be
++	  called zfcp. If you want to compile it as a module, say M here
++	  and read <file:Documentation/kbuild/modules.txt>.
+ 
+ config SCSI_PMCRAID
+ 	tristate "PMC SIERRA Linux MaxRAID adapter support"
+@@ -1506,8 +1505,8 @@ config SCSI_VIRTIO
+ 	tristate "virtio-scsi support"
+ 	depends on VIRTIO
+ 	help
+-          This is the virtual HBA driver for virtio.  If the kernel will
+-          be used in a virtual machine, say Y or M.
++	  This is the virtual HBA driver for virtio.  If the kernel will
++	  be used in a virtual machine, say Y or M.
+ 
+ source "drivers/scsi/csiostor/Kconfig"
+ 
+diff --git a/drivers/scsi/osd/Kconfig b/drivers/scsi/osd/Kconfig
+index 347cc5e..90b08c3 100644
+--- a/drivers/scsi/osd/Kconfig
++++ b/drivers/scsi/osd/Kconfig
+@@ -15,35 +15,35 @@ config SCSI_OSD_INITIATOR
+ 	tristate "OSD-Initiator library"
+ 	depends on SCSI
+ 	help
+-		Enable the OSD-Initiator library (libosd.ko).
+-		NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
+-		dependencies
++	  Enable the OSD-Initiator library (libosd.ko).
++	  NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
++	  dependencies
+ 
+ config SCSI_OSD_ULD
+ 	tristate "OSD Upper Level driver"
+ 	depends on SCSI_OSD_INITIATOR
+ 	help
+-		Build a SCSI upper layer driver that exports /dev/osdX devices
+-		to user-mode for testing and controlling OSD devices. It is also
+-		needed by exofs, for mounting an OSD based file system.
++	  Build a SCSI upper layer driver that exports /dev/osdX devices
++	  to user-mode for testing and controlling OSD devices. It is also
++	  needed by exofs, for mounting an OSD based file system.
+ 
+ config SCSI_OSD_DPRINT_SENSE
+-    int "(0-2) When sense is returned, DEBUG print all sense descriptors"
+-    default 1
+-    depends on SCSI_OSD_INITIATOR
+-    help
+-        When a CHECK_CONDITION status is returned from a target, and a
+-        sense-buffer is retrieved, turning this on will dump a full
+-        sense-decoding message. Setting to 2 will also print recoverable
+-        errors that might be regularly returned for some filesystem
+-        operations.
++	int "(0-2) When sense is returned, DEBUG print all sense descriptors"
++	default 1
++	depends on SCSI_OSD_INITIATOR
++	help
++	  When a CHECK_CONDITION status is returned from a target, and a
++	  sense-buffer is retrieved, turning this on will dump a full
++	  sense-decoding message. Setting to 2 will also print recoverable
++	  errors that might be regularly returned for some filesystem
++	  operations.
+ 
+ config SCSI_OSD_DEBUG
+ 	bool "Compile All OSD modules with lots of DEBUG prints"
+ 	default n
+ 	depends on SCSI_OSD_INITIATOR
+ 	help
+-		OSD Code is populated with lots of OSD_DEBUG(..) printouts to
+-		dmesg. Enable this if you found a bug and you want to help us
+-		track the problem (see also MAINTAINERS). Setting this will also
+-		force SCSI_OSD_DPRINT_SENSE=2.
++	  OSD Code is populated with lots of OSD_DEBUG(..) printouts to
++	  dmesg. Enable this if you found a bug and you want to help us
++	  track the problem (see also MAINTAINERS). Setting this will also
++	  force SCSI_OSD_DPRINT_SENSE=2.
+diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
+index 2d435f1..b63b34d 100644
+--- a/drivers/scsi/pcmcia/Kconfig
++++ b/drivers/scsi/pcmcia/Kconfig
+@@ -32,7 +32,7 @@ config PCMCIA_NINJA_SCSI
+ 	  NinjaSCSI-3: (version string: "WBT","NinjaSCSI-3","R1.0")
+ 	    IO-DATA     PCSC-FP
+ 	    ALPHA DATA  AD-PCS201
+-	    CyQ've      SFC-201  
++	    CyQ've      SFC-201
+ 	    LOGITECH    LPM-SCSI2E
+ 	    Pioneer PCR-PR24's card
+ 	    I-O DATA CDPS-PX24's card (PCSC-F)
+diff --git a/drivers/scsi/qedf/Kconfig b/drivers/scsi/qedf/Kconfig
+index 943f5ee..e2693db 100644
+--- a/drivers/scsi/qedf/Kconfig
++++ b/drivers/scsi/qedf/Kconfig
+@@ -2,10 +2,10 @@ config QEDF
+ 	tristate "QLogic QEDF 25/40/100Gb FCoE Initiator Driver Support"
+ 	depends on PCI && SCSI
+ 	depends on QED
+-        depends on LIBFC
+-        depends on LIBFCOE
++	depends on LIBFC
++	depends on LIBFCOE
+ 	select QED_LL2
+ 	select QED_FCOE
+ 	---help---
+-	This driver supports FCoE offload for the QLogic FastLinQ
+-	41000 Series Converged Network Adapters.
++	  This driver supports FCoE offload for the QLogic FastLinQ
++	  41000 Series Converged Network Adapters.
+diff --git a/drivers/scsi/smartpqi/Kconfig b/drivers/scsi/smartpqi/Kconfig
+index 97e159c..fafc7f7 100644
+--- a/drivers/scsi/smartpqi/Kconfig
++++ b/drivers/scsi/smartpqi/Kconfig
+@@ -41,14 +41,14 @@ config SCSI_SMARTPQI
+ 	select SCSI_SAS_ATTRS
+ 	select RAID_ATTRS
+ 	---help---
+-	This driver supports Microsemi PQI controllers.
++	  This driver supports Microsemi PQI controllers.
+ 
+-	<http://www.microsemi.com>
++	  <http://www.microsemi.com>
+ 
+-	To compile this driver as a module, choose M here: the
+-	module will be called smartpqi.
++	  To compile this driver as a module, choose M here: the
++	  module will be called smartpqi.
+ 
+-        Note: the aacraid driver will not manage a smartpqi
+-              controller. You need to enable smartpqi for smartpqi
+-              controllers. For more information, please see
+-              Documentation/scsi/smartpqi.txt
++	  Note: the aacraid driver will not manage a smartpqi
++	        controller. You need to enable smartpqi for smartpqi
++	        controllers. For more information, please see
++	        Documentation/scsi/smartpqi.txt
+-- 
+1.9.1
 
-> > After all, this is an imported file, and
-> > we don't usually expect that imported files meet the Linux kernel
-> > coding style.
-> >
->
-> I remember seeing somewhere that the EC code was following the Linux
-> kernel style? Now I am not able to find where.
->
-
-You are correct: https://www.chromium.org/chromium-os/ec-development
-
-Running checkpatch over the code, it doesn't look like that is
-followed, though, much less enforced.
-
-Guenter
-
-> Thanks,
->  Enric
->
-> > Thanks,
-> > Guenter
-> >
-> > > [snip]
-> > >
-> > > Thanks,
-> > >  Enric
