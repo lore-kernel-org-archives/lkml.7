@@ -2,151 +2,335 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89709C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC85C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57E8F20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF9220828
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gt9wS9MG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PayNj4Vv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfCFQFg (ORCPT
+        id S1727908AbfCFQFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:05:36 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35836 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCFQFg (ORCPT
+        Wed, 6 Mar 2019 11:05:42 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33209 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCFQFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:05:36 -0500
-Received: by mail-pg1-f194.google.com with SMTP id e17so8771738pgd.2;
-        Wed, 06 Mar 2019 08:05:35 -0800 (PST)
+        Wed, 6 Mar 2019 11:05:42 -0500
+Received: by mail-ot1-f65.google.com with SMTP id q24so11238670otk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:05:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V0XKKRvlkjY8iv3557p4UkcOTCqjFcfgjbKI194klvo=;
-        b=gt9wS9MG0Qt8lbVWmyE460QYpCU+INmUEcpxu8Iko9WiksWsLN+kBWE9ga8QDX7PaI
-         R6DRNCgtKPB/2OTig2QS9/sXEDN3PpTWGcHk2nLQjaX9KIvo4MGxb3BrNaSafBXiBlZg
-         cEZJRQA5Ny5uc02cdtr6visVRBy/lVBoGmz08ZwDajzU7mhq/746Zy8858jdPIgEAiV8
-         7BTAORv+aGh5vIiJ7MDY5Ck7txseAcj0XAN8/Om3FXe2418cPPSluwuEeNELir+KXz33
-         KTXyxtfQkrEKLTawJCi/LBawAiDDVOE79cu/n7Mm2GDDhe4uUc1iTJ4TiPgvtptzSnDS
-         aLDA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=E6Fzw9IFx2Yr3UeQMrBLlHOD9uervQUaSXuoQ91uh/4=;
+        b=PayNj4Vv2xdw7RsMjJq9XXx0SPTQ3q1IkyzRlk0ChotC4nzpGAEGypwBJrHqMjDkIW
+         6DfL1ZTQuOnl69EyRxXgI+A9PXzuTe1nrHfDIMD5JMLhEzfLzLuojEaAMIF18OobtWuE
+         Ok13oHkOuJaW6chywy8tFJXE+zpRjX4zlLvXIoQujqSumz+litKqwW5ckEyvnaYqz4RY
+         DKFvfr+ZG8Sz4ZzKbmozPGEGydE/hBxsmCDd81dugS+USc1xDEd1mHzW3oFUqr3XFogw
+         EJcvZqVHA/uVcsj5lXSIYU7DxMHs+YNxcfkjIkB3E32j2YymyZikIhL2su1axhhzlcfA
+         1GOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V0XKKRvlkjY8iv3557p4UkcOTCqjFcfgjbKI194klvo=;
-        b=ioMlSSplccGB8J52BZm1QFquy8SMqaGueL+eZ1HmRkY3pT8hKG4NXFeOZFN9/HMwzQ
-         nz90xUzW8MSe0JKUIbpKy1pHGv1g7+cZfNuuiVIp+i5cfEcB2x6OM6lEsh/P+squY1Cd
-         OfuxokFSxFYa7XSb7rH1MqeU+h0IeMovhojxoW++NNy6GuxOGQaYIVP9ZbAEztdByFXF
-         A3u0uxfv5u3qKyYIQuDdKA3/8C+IaCsbuia5+wnKnpV5D+NdsAAzEsd+Rn8VggQyob0j
-         gZ7xkNDO9OlBFBHGF/DMRf4fi3wT8qujJLFvDbZI0cvU1OySXbl2p6QAUfdfnAjtr9+Y
-         eSgw==
-X-Gm-Message-State: APjAAAW2B1/LMdH1WDxloat9h0zc4oYkvBFr56/05cJWbruCzcLAfjCZ
-        6Rguwg/Ro9RcvkRJwDIguCQ=
-X-Google-Smtp-Source: APXvYqyGDcVeqhTwOdL/SFc9N0mD13JgPjlVFbC6OCt8f8P6jsWWii6DmXlABNQDtY3CLVT/NKFZ8Q==
-X-Received: by 2002:a63:ee05:: with SMTP id e5mr6381629pgi.83.1551888335435;
-        Wed, 06 Mar 2019 08:05:35 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t23sm6356316pfa.111.2019.03.06.08.05.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 08:05:34 -0800 (PST)
-Subject: Re: [PATCH V7 3/3] firmware: imx: imx-scu: register build-in child
- devices
-To:     Anson Huang <anson.huang@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "olof@lixom.net" <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1551834095-19950-1-git-send-email-Anson.Huang@nxp.com>
- <1551834095-19950-3-git-send-email-Anson.Huang@nxp.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <90ff94d9-6f15-5353-c5a1-f2ec5ee744ad@roeck-us.net>
-Date:   Wed, 6 Mar 2019 08:05:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=E6Fzw9IFx2Yr3UeQMrBLlHOD9uervQUaSXuoQ91uh/4=;
+        b=SWs2eN/MP363bwKT58VOkOip86jVwxRA4twyhUe5sYe5JwvxBpUsUfq4qwdoNCzHIN
+         Py8kI0hAAecLQ5R9NJaxMCpxTqcXOif7l/mr//aWeQBqdk6dm8iEVtpZA+F4iF4Cyaih
+         dhP5SG+N0SQj4hlHoNs/R1hLc52unISbB41KBXciPTK/ZsGbpen/AaRm3CoKFVqCck8T
+         yaosJ5GyOjLqW/FyE+0fIJrKKJUqbGLNHtsqMj8wBphX/JvGSdP07A22uGA5l9s0JM+r
+         yikkpA0ZIRP78N1e3b4SlI8d4wxqdHrzZt90DUAkpDRLBowtdTEFa0RzmTjjQi8FqLqu
+         7Tug==
+X-Gm-Message-State: APjAAAW0NdMql4vsq6/rO2Db4tsAf37HHXwfYwNNJPHnIM/5yy8PJvlH
+        1FIgaDowDMf+sgvUkotX7f9G7MAnBdoCU4BDx/JIxA==
+X-Google-Smtp-Source: APXvYqwzhLSIdTjMeEvrXe9utWaOk2/EByr/H/I6ti5rvLYwJr8TfXvYX/aDW80AZajcXoTuzhD7qINBrxRFQ6hqlJc=
+X-Received: by 2002:a9d:77c7:: with SMTP id w7mr5093744otl.207.1551888340889;
+ Wed, 06 Mar 2019 08:05:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1551834095-19950-3-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <1551819273-640-5-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <1551819273-640-5-git-send-email-john.stultz@linaro.org>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Wed, 6 Mar 2019 17:05:30 +0100
+Message-ID: <CA+M3ks4ekiNc=BDYn=ZvRoaCCbY8d_NJx9jgPw-=U6xdK_o-HQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 4/5 v2] dma-buf: heaps: Add CMA heap to dmabuf heapss
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/5/19 5:06 PM, Anson Huang wrote:
-> For some devices which are controlled by system controller,
-> they are NOT present in device tree since no hardware info
-> needed, just register these devices as children of SCU device.
-> This patch registers i.MX system controller watchdog platform
-> device as child device of SCU.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Le mar. 5 mars 2019 =C3=A0 21:54, John Stultz <john.stultz@linaro.org> a =
+=C3=A9crit :
+>
+> This adds a CMA heap, which allows userspace to allocate
+> a dma-buf of contiguous memory out of a CMA region.
+>
+> This code is an evolution of the Android ION implementation, so
+> thanks to its original author and maintainters:
+>   Benjamin Gaignard, Laura Abbott, and others!
+>
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Liam Mark <lmark@codeaurora.org>
+> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> Cc: Andrew F. Davis <afd@ti.com>
+> Cc: Chenbo Feng <fengc@google.com>
+> Cc: Alistair Strachan <astrachan@google.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
-> No changes.
+> v2:
+> * Switch allocate to return dmabuf fd
+> * Simplify init code
+> * Checkpatch fixups
 > ---
->   drivers/firmware/imx/imx-scu.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-> index 2bb1a19..df75ead 100644
-> --- a/drivers/firmware/imx/imx-scu.c
-> +++ b/drivers/firmware/imx/imx-scu.c
-> @@ -196,6 +196,7 @@ EXPORT_SYMBOL(imx_scu_call_rpc);
->   
->   static int imx_scu_probe(struct platform_device *pdev)
->   {
-> +	struct platform_device *child_pdev;
->   	struct device *dev = &pdev->dev;
->   	struct imx_sc_ipc *sc_ipc;
->   	struct imx_sc_chan *sc_chan;
-> @@ -248,6 +249,13 @@ static int imx_scu_probe(struct platform_device *pdev)
->   
->   	dev_info(dev, "NXP i.MX SCU Initialized\n");
->   
-> +	/* register SCU child devices which are NOT in device tree */
-> +	child_pdev = platform_device_register_data(dev, "imx-sc-wdt",
-> +				PLATFORM_DEVID_NONE, NULL, 0);
-> +	if (IS_ERR(child_pdev))
-> +		dev_warn(dev, "failed to register scu watchdog device %ld!\n",
-> +			 PTR_ERR(child_pdev));
+>  drivers/dma-buf/heaps/Kconfig    |   8 ++
+>  drivers/dma-buf/heaps/Makefile   |   1 +
+>  drivers/dma-buf/heaps/cma_heap.c | 164 +++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 173 insertions(+)
+>  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+>
+> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfi=
+g
+> index 2050527..a5eef06 100644
+> --- a/drivers/dma-buf/heaps/Kconfig
+> +++ b/drivers/dma-buf/heaps/Kconfig
+> @@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
+>         help
+>           Choose this option to enable the system dmabuf heap. The system=
+ heap
+>           is backed by pages from the buddy allocator. If in doubt, say Y=
+.
 > +
+> +config DMABUF_HEAPS_CMA
+> +       bool "DMA-BUF CMA Heap"
+> +       depends on DMABUF_HEAPS && DMA_CMA
+> +       help
+> +         Choose this option to enable dma-buf CMA heap. This heap is bac=
+ked
+> +         by the Contiguous Memory Allocator (CMA). If your system has th=
+ese
+> +         regions, you should say Y here.
+> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makef=
+ile
+> index d1808ec..6e54cde 100644
+> --- a/drivers/dma-buf/heaps/Makefile
+> +++ b/drivers/dma-buf/heaps/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-y                                  +=3D heap-helpers.o
+>  obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)      +=3D system_heap.o
+> +obj-$(CONFIG_DMABUF_HEAPS_CMA)         +=3D cma_heap.o
+> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma=
+_heap.c
+> new file mode 100644
+> index 0000000..33c18ec
+> --- /dev/null
+> +++ b/drivers/dma-buf/heaps/cma_heap.c
+> @@ -0,0 +1,164 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * DMABUF CMA heap exporter
+> + *
+> + * Copyright (C) 2012, 2019 Linaro Ltd.
+> + * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/dma-buf.h>
+> +#include <linux/dma-heap.h>
+> +#include <linux/slab.h>
+> +#include <linux/errno.h>
+> +#include <linux/err.h>
+> +#include <linux/cma.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/highmem.h>
+> +
+> +#include "heap-helpers.h"
+> +
+> +struct cma_heap {
+> +       struct dma_heap heap;
+> +       struct cma *cma;
+> +};
+> +
+> +
+> +#define to_cma_heap(x) container_of(x, struct cma_heap, heap)
 
-I just realized ... since this is not a devm_ function, we now also need
-error handling (if devm_of_platform_populate() fails) and a remove function.
-Sorry for that - I should have noticed earlier.
+Even if I had write this macro years ago, now I would prefer to have a
+static inline function
+to be able to check the types.
 
-Guenter
+with that:
+Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 
->   	return devm_of_platform_populate(dev);
->   }
->   
-> 
+> +
+> +
+> +static void cma_heap_free(struct heap_helper_buffer *buffer)
+> +{
+> +       struct cma_heap *cma_heap =3D to_cma_heap(buffer->heap_buffer.hea=
+p);
+> +       struct page *pages =3D buffer->priv_virt;
+> +       unsigned long nr_pages;
+> +
+> +       nr_pages =3D PAGE_ALIGN(buffer->heap_buffer.size) >> PAGE_SHIFT;
+> +
+> +       /* release memory */
+> +       cma_release(cma_heap->cma, pages, nr_pages);
+> +       /* release sg table */
+> +       sg_free_table(buffer->sg_table);
+> +       kfree(buffer->sg_table);
+> +       kfree(buffer);
+> +}
+> +
+> +/* dmabuf heap CMA operations functions */
+> +static int cma_heap_allocate(struct dma_heap *heap,
+> +                               unsigned long len,
+> +                               unsigned long flags)
+> +{
+> +       struct cma_heap *cma_heap =3D to_cma_heap(heap);
+> +       struct heap_helper_buffer *helper_buffer;
+> +       struct sg_table *table;
+> +       struct page *pages;
+> +       size_t size =3D PAGE_ALIGN(len);
+> +       unsigned long nr_pages =3D size >> PAGE_SHIFT;
+> +       unsigned long align =3D get_order(size);
+> +       DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+> +       struct dma_buf *dmabuf;
+> +       int ret =3D -ENOMEM;
+> +
+> +       if (align > CONFIG_CMA_ALIGNMENT)
+> +               align =3D CONFIG_CMA_ALIGNMENT;
+> +
+> +       helper_buffer =3D kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
+> +       if (!helper_buffer)
+> +               return -ENOMEM;
+> +
+> +       INIT_HEAP_HELPER_BUFFER(helper_buffer, cma_heap_free);
+> +       helper_buffer->heap_buffer.flags =3D flags;
+> +       helper_buffer->heap_buffer.heap =3D heap;
+> +       helper_buffer->heap_buffer.size =3D len;
+> +
+> +
+> +       pages =3D cma_alloc(cma_heap->cma, nr_pages, align, false);
+> +       if (!pages)
+> +               goto free_buf;
+> +
+> +       if (PageHighMem(pages)) {
+> +               unsigned long nr_clear_pages =3D nr_pages;
+> +               struct page *page =3D pages;
+> +
+> +               while (nr_clear_pages > 0) {
+> +                       void *vaddr =3D kmap_atomic(page);
+> +
+> +                       memset(vaddr, 0, PAGE_SIZE);
+> +                       kunmap_atomic(vaddr);
+> +                       page++;
+> +                       nr_clear_pages--;
+> +               }
+> +       } else {
+> +               memset(page_address(pages), 0, size);
+> +       }
+> +
+> +       table =3D kmalloc(sizeof(*table), GFP_KERNEL);
+> +       if (!table)
+> +               goto free_cma;
+> +
+> +       ret =3D sg_alloc_table(table, 1, GFP_KERNEL);
+> +       if (ret)
+> +               goto free_table;
+> +
+> +       sg_set_page(table->sgl, pages, size, 0);
+> +
+> +       /* create the dmabuf */
+> +       exp_info.ops =3D &heap_helper_ops;
+> +       exp_info.size =3D len;
+> +       exp_info.flags =3D O_RDWR;
+> +       exp_info.priv =3D &helper_buffer->heap_buffer;
+> +       dmabuf =3D dma_buf_export(&exp_info);
+> +       if (IS_ERR(dmabuf)) {
+> +               ret =3D PTR_ERR(dmabuf);
+> +               goto free_table;
+> +       }
+> +
+> +       helper_buffer->heap_buffer.dmabuf =3D dmabuf;
+> +       helper_buffer->priv_virt =3D pages;
+> +       helper_buffer->sg_table =3D table;
+> +
+> +       ret =3D dma_buf_fd(dmabuf, O_CLOEXEC);
+> +       if (ret < 0) {
+> +               dma_buf_put(dmabuf);
+> +               /* just return, as put will call release and that will fr=
+ee */
+> +               return ret;
+> +       }
+> +
+> +       return ret;
+> +free_table:
+> +       kfree(table);
+> +free_cma:
+> +       cma_release(cma_heap->cma, pages, nr_pages);
+> +free_buf:
+> +       kfree(helper_buffer);
+> +       return ret;
+> +}
+> +
+> +static struct dma_heap_ops cma_heap_ops =3D {
+> +       .allocate =3D cma_heap_allocate,
+> +};
+> +
+> +static int __add_cma_heaps(struct cma *cma, void *data)
+> +{
+> +       struct cma_heap *cma_heap;
+> +
+> +       cma_heap =3D kzalloc(sizeof(*cma_heap), GFP_KERNEL);
+> +
+> +       if (!cma_heap)
+> +               return -ENOMEM;
+> +
+> +       cma_heap->heap.name =3D cma_get_name(cma);
+> +       cma_heap->heap.ops =3D &cma_heap_ops;
+> +       cma_heap->cma =3D cma;
+> +
+> +       dma_heap_add(&cma_heap->heap);
+> +
+> +       return 0;
+> +}
+> +
+> +static int add_cma_heaps(void)
+> +{
+> +       cma_for_each_area(__add_cma_heaps, NULL);
+> +       return 0;
+> +}
+> +device_initcall(add_cma_heaps);
+> --
+> 2.7.4
+>
 
+
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
