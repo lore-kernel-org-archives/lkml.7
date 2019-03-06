@@ -3,79 +3,187 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A6DC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57CCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001F020657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F1820657
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbfCFVjh (ORCPT
+        id S1726260AbfCFVlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:39:37 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:43048 "EHLO ale.deltatee.com"
+        Wed, 6 Mar 2019 16:41:13 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60284 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfCFVjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:39:37 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h1eGD-0004fk-1g; Wed, 06 Mar 2019 14:39:33 -0700
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-References: <20190213175454.7506-1-logang@deltatee.com>
- <20190213175454.7506-11-logang@deltatee.com>
- <20190306204400.hzpizimya7fq6swi@mobilestation>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <284dae8b-4e8a-1d7b-e806-bf7fed2a39a7@deltatee.com>
-Date:   Wed, 6 Mar 2019 14:39:32 -0700
+        id S1725747AbfCFVlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 16:41:13 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DE5B0307E052;
+        Wed,  6 Mar 2019 21:41:12 +0000 (UTC)
+Received: from [10.36.116.78] (ovpn-116-78.ams2.redhat.com [10.36.116.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 473BF5C5FD;
+        Wed,  6 Mar 2019 21:40:58 +0000 (UTC)
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
+        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
+        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
+        aarcange@redhat.com, alexander.duyck@gmail.com
+References: <20190306155048.12868-1-nitesh@redhat.com>
+ <20190306110501-mutt-send-email-mst@kernel.org>
+ <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
+ <20190306130955-mutt-send-email-mst@kernel.org>
+ <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com>
+ <20190306133826-mutt-send-email-mst@kernel.org>
+ <3f87916d-8d18-013c-8988-9eb516c9cd2e@redhat.com>
+ <20190306140917-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <9ead968e-0cc6-0061-de5c-42a3cef46339@redhat.com>
+Date:   Wed, 6 Mar 2019 22:40:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190306204400.hzpizimya7fq6swi@mobilestation>
+In-Reply-To: <20190306140917-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: epilmore@gigaio.com, dave.jiang@intel.com, allenbh@gmail.com, joro@8bytes.org, bhelgaas@google.com, jdmason@kudzu.us, linux-kselftest@vger.kernel.org, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, fancer.lancer@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 10/12] NTB: Introduce NTB MSI Test Client
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 06 Mar 2019 21:41:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-03-06 1:44 p.m., Serge Semin wrote:
-> Alas the test driver is not going to work with IDT NTB hardware,
-> since it uses Spad only, which aren't supported by IDT devices. IDT NTB
-> PCIe functions provide message registers to communicate with peers. See
-> ntb_perf driver code for reference of portable driver design.
+On 06.03.19 21:32, Michael S. Tsirkin wrote:
+> On Wed, Mar 06, 2019 at 07:59:57PM +0100, David Hildenbrand wrote:
+>> On 06.03.19 19:43, Michael S. Tsirkin wrote:
+>>> On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
+>>>>>> Here are the results:
+>>>>>>
+>>>>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA node with
+>>>>>> total memory of 15GB and no swap. In each of the guest, memhog is run
+>>>>>> with 5GB. Post-execution of memhog, Host memory usage is monitored by
+>>>>>> using Free command.
+>>>>>>
+>>>>>> Without Hinting:
+>>>>>>                  Time of execution    Host used memory
+>>>>>> Guest 1:        45 seconds            5.4 GB
+>>>>>> Guest 2:        45 seconds            10 GB
+>>>>>> Guest 3:        1  minute               15 GB
+>>>>>>
+>>>>>> With Hinting:
+>>>>>>                 Time of execution     Host used memory
+>>>>>> Guest 1:        49 seconds            2.4 GB
+>>>>>> Guest 2:        40 seconds            4.3 GB
+>>>>>> Guest 3:        50 seconds            6.3 GB
+>>>>> OK so no improvement.
+>>>> If we are looking in terms of memory we are getting back from the guest,
+>>>> then there is an improvement. However, if we are looking at the
+>>>> improvement in terms of time of execution of memhog then yes there is none.
+>>>
+>>> Yes but the way I see it you can't overcommit this unused memory
+>>> since guests can start using it at any time.  You timed it carefully
+>>> such that this does not happen, but what will cause this timing on real
+>>> guests?
+>>
+>> Whenever you overcommit you will need backup swap.
 > 
-> In order to make the test driver portable the following alterations
-> are needed:
-> 1) Add NTB Message register API usage together with Scratchpad+Doorbell.
-> 2) When NTB MSI library is updated with functions like
-> ntb_msi_peer_setup_mws()/ntb_msi_peer_clear_mws() they are needed to be
-> utilized in the test driver as well to set a translation address on the
-> peer side.
+> Right and the point of hinting is that pages can just be
+> discarded and not end up in swap.
+> 
+> 
+> Point is you should be able to see the gain.
+> 
+> Hinting patches cost some CPU so we need to know whether
+> they cost too much. How much is too much? When the cost
+> is bigger than benefit. But we can't compare CPU cycles
+> to bytes. So we need to benchmark everything in terms of
+> cycles.
+> 
+>> There is no way
+>> around it. It just makes the probability of you having to go to disk
+>> less likely.
+> 
+> 
+> Right and let's quantify this. Does this result in net gain or loss?
 
-Per, the discussion on the previous email, we can update this later once
-we actually have sensible infrastructure for it. The mess in ntb_perf is
-not something I want to replicate and we don't have any interest in
-creating a large amount of infrastructure to support hardware we don't
-care about.
+Yes, I am totally with you. But if it is a net benefit heavily depends
+on the setup. E.g. what kind of storage used for the swap, how fast, is
+the same disk also used for other I/O ...
 
-Logan
+Also, CPU is a totally different resource than I/O. While you might have
+plenty of CPU cycles to spare, your I/O throughput might already be
+limited. Same goes into the other direction.
+
+So it might not be as easy as comparing two numbers. It really depends
+on the setup. Well, not completely true, with 0% CPU overhead we would
+have a clear winner with hinting ;)
+
+> 
+> 
+>> If you assume that all of your guests will be using all of their memory
+>> all the time, you don't have to think about overcommiting memory in the
+>> first place. But this is not what we usually have.
+> 
+> Right and swap is there to support overcommit. However it
+> was felt that hinting can be faster since it avoids IO
+> involved in swap.
+
+Feels like it, I/O is prone to be slow.
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
