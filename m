@@ -2,226 +2,912 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591A6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB57C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E43F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6662064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551864180;
-	bh=eo/XRTCu3mGL3b2htQYUTujWjZltA7MQ9tnC4uJRfvc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hGdB3hOwU+ozVTZ3Qo6Ka1RtUgr4Wb41t2WT/eQyQBclGIDXmT6slGgo2g7i2GbuT
-	 dqUtpTU9grRgATBHnT6gYAVdqrSGvtjqciw5252GQdC/DRr4tPPWridUQ1Ss/JaC+S
-	 yqOdVdXdsWXKJLorqsjn23h4Nw/zcuWJFBFd/RLs=
+	s=default; t=1551864186;
+	bh=oj6uciZjjd1JktpYy7sxJA8osvW+tc0NYrlB8TrHz7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uVJfbBuE/yiJ7cN70TuMZrh7VBWRY/qmUBNVn8HVX40XytnIwV5+3Y81HSKh1n/Lx
+	 3YHv6dfb4fKJW/uS2RUTrkV/AgwfaTt7AN3ttSE7+FcpVriLXAJtQ0rV0qFW5HChLU
+	 mdFbfEMw/NDxV5Sl3QsEEM9SXlRXajIlL7nIECbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbfCFJW6 (ORCPT
+        id S1729697AbfCFJXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:22:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50284 "EHLO mail.kernel.org"
+        Wed, 6 Mar 2019 04:23:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729649AbfCFJW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:22:58 -0500
+        id S1729105AbfCFJXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 04:23:04 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CA7206DD;
-        Wed,  6 Mar 2019 09:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BF212064A;
+        Wed,  6 Mar 2019 09:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551864176;
-        bh=eo/XRTCu3mGL3b2htQYUTujWjZltA7MQ9tnC4uJRfvc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=t4k3iLBwru62/OSDvnEK5BH9gnqw4Ul2Mor6TIj6HUVEpLdWIX8j/L1GD005ZZOAj
-         x4+0YyJP8boGNHK2+CRnTGluT4F6gVsxtGau0qNDOwULyQ+OLC1zy7RiMo8gyi4QOM
-         /jmnQl8+GU/Ch+cUsZQundBZOFKZpCuS8IA+Z57Q=
-Date:   Wed, 6 Mar 2019 10:22:54 +0100
+        s=default; t=1551864182;
+        bh=oj6uciZjjd1JktpYy7sxJA8osvW+tc0NYrlB8TrHz7A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dxyquUr9ndqgW8J2F+DEGaVw2B6Hp3fGUvZ5PnquG9KbNfwRYYShbpfs59aPYduh9
+         wn6M25/a/w86FDQ/69B7GzwNJCcBfeL/URo3TbTqAhMrzfE05eZLDYOPUwTfRmmR3/
+         BR5XYO4wb1mUNT/alZfzfgYEQSHvsK6zK+ZXXjl4=
+Date:   Wed, 6 Mar 2019 10:22:59 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.9.162
-Message-ID: <20190306092254.GA29122@kroah.com>
+Subject: Re: Linux 4.9.162
+Message-ID: <20190306092259.GB29122@kroah.com>
+References: <20190306092254.GA29122@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190306092254.GA29122@kroah.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-I'm announcing the release of the 4.9.162 kernel.
-
-All users of the 4.9 kernel series must upgrade.
-
-The updated 4.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.9.y
-and can be browsed at the normal kernel.org git web browser:
-	http://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Dsu=
-mmary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                                   |    2=20
- arch/arc/include/asm/bitops.h                              |    6 -
- arch/powerpc/include/asm/epapr_hcalls.h                    |   12 +--
- arch/x86/include/asm/uaccess.h                             |    7 +
- arch/x86/kvm/svm.c                                         |   27 +++----
- drivers/block/loop.c                                       |   47 ++++++--=
------
- drivers/gpu/drm/msm/msm_rd.c                               |    7 +
- drivers/mmc/host/mmc_spi.c                                 |    1=20
- drivers/net/ethernet/altera/altera_tse_main.c              |    4 -
- drivers/net/ethernet/ibm/ibmveth.c                         |    2=20
- drivers/net/usb/asix_devices.c                             |    9 +-
- drivers/scsi/csiostor/csio_attr.c                          |    2=20
- drivers/scsi/libsas/sas_expander.c                         |    2=20
- drivers/thermal/int340x_thermal/processor_thermal_device.c |   30 ++++----
- drivers/tty/serial/fsl_lpuart.c                            |    2=20
- drivers/usb/dwc3/gadget.c                                  |    3=20
- drivers/usb/gadget/function/f_sourcesink.c                 |    2=20
- fs/direct-io.c                                             |    5 -
- kernel/locking/rwsem-xadd.c                                |   11 ++-
- mm/mmap.c                                                  |    7 -
- net/mac80211/cfg.c                                         |    4 +
- net/mac80211/rx.c                                          |    6 +
- net/wireless/reg.c                                         |    4 -
- sound/core/compress_offload.c                              |    3=20
- sound/soc/fsl/imx-audmux.c                                 |   24 +++---
- sound/soc/intel/boards/broadwell.c                         |    2=20
- sound/soc/intel/boards/haswell.c                           |    2=20
- sound/soc/soc-dapm.c                                       |   10 +-
- 28 files changed, 138 insertions(+), 105 deletions(-)
-
-Aaron Hill (1):
-      drivers: thermal: int340x_thermal: Fix sysfs race condition
-
-Andy Lutomirski (1):
-      x86/uaccess: Don't leak the AC flag into __put_user() value evaluation
-
-Atsushi Nemoto (1):
-      net: altera_tse: fix connect_local_phy error path
-
-Balaji Pothunoori (1):
-      mac80211: don't initiate TDLS connection if station is not associated=
- to AP
-
-Bo He (1):
-      usb: dwc3: gadget: synchronize_irq dwc irq in suspend
-
-Bob Copeland (1):
-      mac80211: fix miscounting of ttl-dropped frames
-
-Chaitanya Tata (1):
-      cfg80211: extend range deviation for DMG
-
-Dan Carpenter (3):
-      ALSA: compress: prevent potential divide by zero bugs
-      thermal: int340x_thermal: Fix a NULL vs IS_ERR() check
-      usb: gadget: Potential NULL dereference on allocation error
-
-Ernesto A. Fern=E1ndez (1):
-      direct-io: allow direct writes to empty inodes
-
-Eugeniy Paltsev (1):
-      ARC: fix __ffs return value to avoid build warnings
-
-Greg Kroah-Hartman (4):
-      Revert "loop: Fix double mutex_unlock(&loop_ctl_mutex) in loop_contro=
-l_ioctl()"
-      Revert "loop: Get rid of loop_index_mutex"
-      Revert "loop: Fold __loop_release into loop_release"
-      Linux 4.9.162
-
-Jann Horn (1):
-      mm: enforce min addr even if capable() in expand_downwards()
-
-John Garry (1):
-      scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attac=
-hed
-
-Jonathan Neusch=E4fer (1):
-      mmc: spi: Fix card detection during probe
-
-Kristian H. Kristensen (1):
-      drm/msm: Unblock writer if reader closes file
-
-Mathieu Malaterre (1):
-      mac80211: Add attribute aligned(2) to struct 'action'
-
-Rander Wang (1):
-      ASoC: Intel: Haswell/Broadwell: fix setting for .dynamic field
-
-Seth Forshee (1):
-      powerpc: Always initialize input array when calling epapr_hypercall()
-
-Silvio Cesare (2):
-      ASoC: dapm: change snprintf to scnprintf for possible overflow
-      ASoC: imx-audmux: change snprintf to scnprintf for possible overflow
-
-Suravee Suthikulpanit (1):
-      svm: Fix AVIC incomplete IPI emulation
-
-Thomas Falcon (1):
-      ibmveth: Do not process frames after calling napi_reschedule
-
-Tomonori Sakita (1):
-      serial: fsl_lpuart: fix maximum acceptable baud rate with over-sampli=
-ng
-
-Varun Prakash (1):
-      scsi: csiostor: fix NULL pointer dereference in csio_vport_set_state()
-
-Vitaly Kuznetsov (1):
-      KVM: nSVM: clear events pending from svm_complete_interrupts() when e=
-xiting to L1
-
-Xie Yongji (1):
-      locking/rwsem: Fix (possible) missed wakeup
-
-Zeng Tao (1):
-      usb: dwc3: gadget: Fix the uninitialized link_state when udc starts
-
-Zhang Run (1):
-      net: usb: asix: ax88772_bind return error when hw_reset fail
-
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlx/kWsACgkQONu9yGCS
-aT7pdA//arM6z0wCVNqGiRP6Kjb6ssbmnN2WivvEuxSqEJ3Y5af6IE0MEgiNBlqR
-XX+seY6YMGg9HaQWw37Iz1X88c2R0Coylk5ocKJvgLsAWnUUKmrosBLSz2lcSiQj
-GEYqv4+KWDBgxspGOdHiMrcvXFk58ZJzK4arNC2Rh+n/Nwwgcp6vAEJ1h+lm0LZR
-VP76u16KRpkpHRZLyMEfG+iv8pkA/RFfaEJP3KD36XirOoSjWuHk+92mKTTXZgUh
-jklBo/xnk68bPsR9VDOr8bPNigHG8Wgw/n6B2ZOljFuo2OG+8uI0FRdE+XpULpdb
-hjJBbYPh+sJzo1Yt6eKGV2G6fvZ/P0WCcNfAkyL1ZtYgNYLf8BrjBBK6N7X64f4n
-cv4Fl+1MgLDeez/Rr29CaSRjAgDOIh89sQDWlMr0xGUBU1qNI52XpYV73CuXt3UH
-sM2D/VIxafaYoaKlAyyQbGKSFl5+uVpfPopF21P7pC52n5UYemMaIbYIU/fDWRFV
-KtVeUo5FqHfjT4U1/EyN9JsrEEf2STyC2jBBXm8urAAGBiaZ0YcP8uoM8uURVO0A
-oXciY7H7Q0vxzme2dxSeFW/0a3tvfh8cYszFywPEcSCxwlC2ffNjOYr1MscZQ023
-4FUsg6o28EU5PAYbpHELdCQHsXrzsfTyDt/AV3w60Pk68X7JFTE=
-=9OeY
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
+diff --git a/Makefile b/Makefile
+index 239b74a7147b..fce163d09139 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,6 @@
+ VERSION = 4
+ PATCHLEVEL = 9
+-SUBLEVEL = 161
++SUBLEVEL = 162
+ EXTRAVERSION =
+ NAME = Roaring Lionus
+ 
+diff --git a/arch/arc/include/asm/bitops.h b/arch/arc/include/asm/bitops.h
+index 8da87feec59a..99e6d8948f4a 100644
+--- a/arch/arc/include/asm/bitops.h
++++ b/arch/arc/include/asm/bitops.h
+@@ -340,7 +340,7 @@ static inline __attribute__ ((const)) int __fls(unsigned long x)
+ /*
+  * __ffs: Similar to ffs, but zero based (0-31)
+  */
+-static inline __attribute__ ((const)) int __ffs(unsigned long word)
++static inline __attribute__ ((const)) unsigned long __ffs(unsigned long word)
+ {
+ 	if (!word)
+ 		return word;
+@@ -400,9 +400,9 @@ static inline __attribute__ ((const)) int ffs(unsigned long x)
+ /*
+  * __ffs: Similar to ffs, but zero based (0-31)
+  */
+-static inline __attribute__ ((const)) int __ffs(unsigned long x)
++static inline __attribute__ ((const)) unsigned long __ffs(unsigned long x)
+ {
+-	int n;
++	unsigned long n;
+ 
+ 	asm volatile(
+ 	"	ffs.f	%0, %1		\n"  /* 0:31; 31(Z) if src 0 */
+diff --git a/arch/powerpc/include/asm/epapr_hcalls.h b/arch/powerpc/include/asm/epapr_hcalls.h
+index 334459ad145b..90863245df53 100644
+--- a/arch/powerpc/include/asm/epapr_hcalls.h
++++ b/arch/powerpc/include/asm/epapr_hcalls.h
+@@ -508,7 +508,7 @@ static unsigned long epapr_hypercall(unsigned long *in,
+ 
+ static inline long epapr_hypercall0_1(unsigned int nr, unsigned long *r2)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 	unsigned long r;
+ 
+@@ -520,7 +520,7 @@ static inline long epapr_hypercall0_1(unsigned int nr, unsigned long *r2)
+ 
+ static inline long epapr_hypercall0(unsigned int nr)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	return epapr_hypercall(in, out, nr);
+@@ -528,7 +528,7 @@ static inline long epapr_hypercall0(unsigned int nr)
+ 
+ static inline long epapr_hypercall1(unsigned int nr, unsigned long p1)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+@@ -538,7 +538,7 @@ static inline long epapr_hypercall1(unsigned int nr, unsigned long p1)
+ static inline long epapr_hypercall2(unsigned int nr, unsigned long p1,
+ 				    unsigned long p2)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+@@ -549,7 +549,7 @@ static inline long epapr_hypercall2(unsigned int nr, unsigned long p1,
+ static inline long epapr_hypercall3(unsigned int nr, unsigned long p1,
+ 				    unsigned long p2, unsigned long p3)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+@@ -562,7 +562,7 @@ static inline long epapr_hypercall4(unsigned int nr, unsigned long p1,
+ 				    unsigned long p2, unsigned long p3,
+ 				    unsigned long p4)
+ {
+-	unsigned long in[8];
++	unsigned long in[8] = {0};
+ 	unsigned long out[8];
+ 
+ 	in[0] = p1;
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index a8d85a687cf4..2177c7551ff7 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -292,8 +292,7 @@ do {									\
+ 		__put_user_asm(x, ptr, retval, "l", "k", "ir", errret);	\
+ 		break;							\
+ 	case 8:								\
+-		__put_user_asm_u64((__typeof__(*ptr))(x), ptr, retval,	\
+-				   errret);				\
++		__put_user_asm_u64(x, ptr, retval, errret);		\
+ 		break;							\
+ 	default:							\
+ 		__put_user_bad();					\
+@@ -427,8 +426,10 @@ do {									\
+ #define __put_user_nocheck(x, ptr, size)			\
+ ({								\
+ 	int __pu_err;						\
++	__typeof__(*(ptr)) __pu_val;				\
++	__pu_val = x;						\
+ 	__uaccess_begin();					\
+-	__put_user_size((x), (ptr), (size), __pu_err, -EFAULT);	\
++	__put_user_size(__pu_val, (ptr), (size), __pu_err, -EFAULT);\
+ 	__uaccess_end();					\
+ 	__builtin_expect(__pu_err, 0);				\
+ })
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index c8efacf2e65f..01eb0451b96d 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -2862,6 +2862,14 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	kvm_mmu_reset_context(&svm->vcpu);
+ 	kvm_mmu_load(&svm->vcpu);
+ 
++	/*
++	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
++	 * doesn't end up in L1.
++	 */
++	svm->vcpu.arch.nmi_injected = false;
++	kvm_clear_exception_queue(&svm->vcpu);
++	kvm_clear_interrupt_queue(&svm->vcpu);
++
+ 	return 0;
+ }
+ 
+@@ -3932,25 +3940,14 @@ static int avic_incomplete_ipi_interception(struct vcpu_svm *svm)
+ 		kvm_lapic_reg_write(apic, APIC_ICR, icrl);
+ 		break;
+ 	case AVIC_IPI_FAILURE_TARGET_NOT_RUNNING: {
+-		int i;
+-		struct kvm_vcpu *vcpu;
+-		struct kvm *kvm = svm->vcpu.kvm;
+ 		struct kvm_lapic *apic = svm->vcpu.arch.apic;
+ 
+ 		/*
+-		 * At this point, we expect that the AVIC HW has already
+-		 * set the appropriate IRR bits on the valid target
+-		 * vcpus. So, we just need to kick the appropriate vcpu.
++		 * Update ICR high and low, then emulate sending IPI,
++		 * which is handled when writing APIC_ICR.
+ 		 */
+-		kvm_for_each_vcpu(i, vcpu, kvm) {
+-			bool m = kvm_apic_match_dest(vcpu, apic,
+-						     icrl & KVM_APIC_SHORT_MASK,
+-						     GET_APIC_DEST_FIELD(icrh),
+-						     icrl & KVM_APIC_DEST_MASK);
+-
+-			if (m && !avic_vcpu_is_running(vcpu))
+-				kvm_vcpu_wake_up(vcpu);
+-		}
++		kvm_lapic_reg_write(apic, APIC_ICR2, icrh);
++		kvm_lapic_reg_write(apic, APIC_ICR, icrl);
+ 		break;
+ 	}
+ 	case AVIC_IPI_FAILURE_INVALID_TARGET:
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 344f34746c10..28ce17405aab 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -81,6 +81,7 @@
+ #include <asm/uaccess.h>
+ 
+ static DEFINE_IDR(loop_index_idr);
++static DEFINE_MUTEX(loop_index_mutex);
+ static DEFINE_MUTEX(loop_ctl_mutex);
+ 
+ static int max_part;
+@@ -1559,11 +1560,9 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ static int lo_open(struct block_device *bdev, fmode_t mode)
+ {
+ 	struct loop_device *lo;
+-	int err;
++	int err = 0;
+ 
+-	err = mutex_lock_killable(&loop_ctl_mutex);
+-	if (err)
+-		return err;
++	mutex_lock(&loop_index_mutex);
+ 	lo = bdev->bd_disk->private_data;
+ 	if (!lo) {
+ 		err = -ENXIO;
+@@ -1572,20 +1571,18 @@ static int lo_open(struct block_device *bdev, fmode_t mode)
+ 
+ 	atomic_inc(&lo->lo_refcnt);
+ out:
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&loop_index_mutex);
+ 	return err;
+ }
+ 
+-static void lo_release(struct gendisk *disk, fmode_t mode)
++static void __lo_release(struct loop_device *lo)
+ {
+-	struct loop_device *lo;
+ 	int err;
+ 
+-	mutex_lock(&loop_ctl_mutex);
+-	lo = disk->private_data;
+ 	if (atomic_dec_return(&lo->lo_refcnt))
+-		goto out_unlock;
++		return;
+ 
++	mutex_lock(&loop_ctl_mutex);
+ 	if (lo->lo_flags & LO_FLAGS_AUTOCLEAR) {
+ 		/*
+ 		 * In autoclear mode, stop the loop thread
+@@ -1602,10 +1599,16 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
+ 		loop_flush(lo);
+ 	}
+ 
+-out_unlock:
+ 	mutex_unlock(&loop_ctl_mutex);
+ }
+ 
++static void lo_release(struct gendisk *disk, fmode_t mode)
++{
++	mutex_lock(&loop_index_mutex);
++	__lo_release(disk->private_data);
++	mutex_unlock(&loop_index_mutex);
++}
++
+ static const struct block_device_operations lo_fops = {
+ 	.owner =	THIS_MODULE,
+ 	.open =		lo_open,
+@@ -1889,7 +1892,7 @@ static struct kobject *loop_probe(dev_t dev, int *part, void *data)
+ 	struct kobject *kobj;
+ 	int err;
+ 
+-	mutex_lock(&loop_ctl_mutex);
++	mutex_lock(&loop_index_mutex);
+ 	err = loop_lookup(&lo, MINOR(dev) >> part_shift);
+ 	if (err < 0)
+ 		err = loop_add(&lo, MINOR(dev) >> part_shift);
+@@ -1897,7 +1900,7 @@ static struct kobject *loop_probe(dev_t dev, int *part, void *data)
+ 		kobj = NULL;
+ 	else
+ 		kobj = get_disk(lo->lo_disk);
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&loop_index_mutex);
+ 
+ 	*part = 0;
+ 	return kobj;
+@@ -1907,13 +1910,9 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
+ 			       unsigned long parm)
+ {
+ 	struct loop_device *lo;
+-	int ret;
+-
+-	ret = mutex_lock_killable(&loop_ctl_mutex);
+-	if (ret)
+-		return ret;
++	int ret = -ENOSYS;
+ 
+-	ret = -ENOSYS;
++	mutex_lock(&loop_index_mutex);
+ 	switch (cmd) {
+ 	case LOOP_CTL_ADD:
+ 		ret = loop_lookup(&lo, parm);
+@@ -1927,15 +1926,19 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
+ 		ret = loop_lookup(&lo, parm);
+ 		if (ret < 0)
+ 			break;
++		mutex_lock(&loop_ctl_mutex);
+ 		if (lo->lo_state != Lo_unbound) {
+ 			ret = -EBUSY;
++			mutex_unlock(&loop_ctl_mutex);
+ 			break;
+ 		}
+ 		if (atomic_read(&lo->lo_refcnt) > 0) {
+ 			ret = -EBUSY;
++			mutex_unlock(&loop_ctl_mutex);
+ 			break;
+ 		}
+ 		lo->lo_disk->private_data = NULL;
++		mutex_unlock(&loop_ctl_mutex);
+ 		idr_remove(&loop_index_idr, lo->lo_number);
+ 		loop_remove(lo);
+ 		break;
+@@ -1945,7 +1948,7 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
+ 			break;
+ 		ret = loop_add(&lo, -1);
+ 	}
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&loop_index_mutex);
+ 
+ 	return ret;
+ }
+@@ -2028,10 +2031,10 @@ static int __init loop_init(void)
+ 				  THIS_MODULE, loop_probe, NULL, NULL);
+ 
+ 	/* pre-create number of devices given by config or max_loop */
+-	mutex_lock(&loop_ctl_mutex);
++	mutex_lock(&loop_index_mutex);
+ 	for (i = 0; i < nr; i++)
+ 		loop_add(&lo, i);
+-	mutex_unlock(&loop_ctl_mutex);
++	mutex_unlock(&loop_index_mutex);
+ 
+ 	printk(KERN_INFO "loop: module loaded\n");
+ 	return 0;
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index 8487f461f05f..4823019eb422 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -112,7 +112,9 @@ static void rd_write(struct msm_rd_state *rd, const void *buf, int sz)
+ 		char *fptr = &fifo->buf[fifo->head];
+ 		int n;
+ 
+-		wait_event(rd->fifo_event, circ_space(&rd->fifo) > 0);
++		wait_event(rd->fifo_event, circ_space(&rd->fifo) > 0 || !rd->open);
++		if (!rd->open)
++			return;
+ 
+ 		n = min(sz, circ_space_to_end(&rd->fifo));
+ 		memcpy(fptr, ptr, n);
+@@ -202,7 +204,10 @@ static int rd_open(struct inode *inode, struct file *file)
+ static int rd_release(struct inode *inode, struct file *file)
+ {
+ 	struct msm_rd_state *rd = inode->i_private;
++
+ 	rd->open = false;
++	wake_up_all(&rd->fifo_event);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+index e77d79c8cd9f..6224ad37fd80 100644
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1450,6 +1450,7 @@ static int mmc_spi_probe(struct spi_device *spi)
+ 		mmc->caps &= ~MMC_CAP_NEEDS_POLL;
+ 		mmc_gpiod_request_cd_irq(mmc);
+ 	}
++	mmc_detect_change(mmc, 0);
+ 
+ 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
+ 		has_ro = true;
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index a0eee7218695..e306342506f1 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -692,8 +692,10 @@ static struct phy_device *connect_local_phy(struct net_device *dev)
+ 
+ 		phydev = phy_connect(dev, phy_id_fmt, &altera_tse_adjust_link,
+ 				     priv->phy_iface);
+-		if (IS_ERR(phydev))
++		if (IS_ERR(phydev)) {
+ 			netdev_err(dev, "Could not attach to PHY\n");
++			phydev = NULL;
++		}
+ 
+ 	} else {
+ 		int ret;
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 4996228fd7e6..955f658f3b65 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1240,7 +1240,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
+ 	struct iphdr *iph;
+ 	u16 mss = 0;
+ 
+-restart_poll:
+ 	while (frames_processed < budget) {
+ 		if (!ibmveth_rxq_pending_buffer(adapter))
+ 			break;
+@@ -1338,7 +1337,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
+ 		    napi_reschedule(napi)) {
+ 			lpar_rc = h_vio_signal(adapter->vdev->unit_address,
+ 					       VIO_IRQ_DISABLE);
+-			goto restart_poll;
+ 		}
+ 	}
+ 
+diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
+index 5be6b67492d5..393fd3ed6b94 100644
+--- a/drivers/net/usb/asix_devices.c
++++ b/drivers/net/usb/asix_devices.c
+@@ -729,8 +729,13 @@ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	asix_read_cmd(dev, AX_CMD_STATMNGSTS_REG, 0, 0, 1, &chipcode, 0);
+ 	chipcode &= AX_CHIPCODE_MASK;
+ 
+-	(chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
+-					    ax88772a_hw_reset(dev, 0);
++	ret = (chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
++						  ax88772a_hw_reset(dev, 0);
++
++	if (ret < 0) {
++		netdev_dbg(dev->net, "Failed to reset AX88772: %d\n", ret);
++		return ret;
++	}
+ 
+ 	/* Read PHYID register *AFTER* the PHY was reset properly */
+ 	phyid = asix_get_phyid(dev);
+diff --git a/drivers/scsi/csiostor/csio_attr.c b/drivers/scsi/csiostor/csio_attr.c
+index 2d1c4ebd40f9..6587f20cff1a 100644
+--- a/drivers/scsi/csiostor/csio_attr.c
++++ b/drivers/scsi/csiostor/csio_attr.c
+@@ -582,12 +582,12 @@ csio_vport_create(struct fc_vport *fc_vport, bool disable)
+ 	}
+ 
+ 	fc_vport_set_state(fc_vport, FC_VPORT_INITIALIZING);
++	ln->fc_vport = fc_vport;
+ 
+ 	if (csio_fcoe_alloc_vnp(hw, ln))
+ 		goto error;
+ 
+ 	*(struct csio_lnode **)fc_vport->dd_data = ln;
+-	ln->fc_vport = fc_vport;
+ 	if (!fc_vport->node_name)
+ 		fc_vport->node_name = wwn_to_u64(csio_ln_wwnn(ln));
+ 	if (!fc_vport->port_name)
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 12886f96b286..7be581f7c35d 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -818,6 +818,7 @@ static struct domain_device *sas_ex_discover_end_dev(
+ 		rphy = sas_end_device_alloc(phy->port);
+ 		if (!rphy)
+ 			goto out_free;
++		rphy->identify.phy_identifier = phy_id;
+ 
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
+@@ -845,6 +846,7 @@ static struct domain_device *sas_ex_discover_end_dev(
+ 
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
++		rphy->identify.phy_identifier = phy_id;
+ 		sas_fill_in_rphy(child, rphy);
+ 
+ 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
+diff --git a/drivers/thermal/int340x_thermal/processor_thermal_device.c b/drivers/thermal/int340x_thermal/processor_thermal_device.c
+index ff3b36f339e3..1fdf6fd24cdf 100644
+--- a/drivers/thermal/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/int340x_thermal/processor_thermal_device.c
+@@ -77,7 +77,12 @@ static ssize_t power_limit_##index##_##suffix##_show(struct device *dev, \
+ 	struct pci_dev *pci_dev; \
+ 	struct platform_device *pdev; \
+ 	struct proc_thermal_device *proc_dev; \
+-\
++	\
++	if (proc_thermal_emum_mode == PROC_THERMAL_NONE) { \
++		dev_warn(dev, "Attempted to get power limit before device was initialized!\n"); \
++		return 0; \
++	} \
++	\
+ 	if (proc_thermal_emum_mode == PROC_THERMAL_PLATFORM_DEV) { \
+ 		pdev = to_platform_device(dev); \
+ 		proc_dev = platform_get_drvdata(pdev); \
+@@ -291,11 +296,6 @@ static int proc_thermal_add(struct device *dev,
+ 	*priv = proc_priv;
+ 
+ 	ret = proc_thermal_read_ppcc(proc_priv);
+-	if (!ret) {
+-		ret = sysfs_create_group(&dev->kobj,
+-					 &power_limit_attribute_group);
+-
+-	}
+ 	if (ret)
+ 		return ret;
+ 
+@@ -309,8 +309,7 @@ static int proc_thermal_add(struct device *dev,
+ 
+ 	proc_priv->int340x_zone = int340x_thermal_zone_add(adev, ops);
+ 	if (IS_ERR(proc_priv->int340x_zone)) {
+-		ret = PTR_ERR(proc_priv->int340x_zone);
+-		goto remove_group;
++		return PTR_ERR(proc_priv->int340x_zone);
+ 	} else
+ 		ret = 0;
+ 
+@@ -324,9 +323,6 @@ static int proc_thermal_add(struct device *dev,
+ 
+ remove_zone:
+ 	int340x_thermal_zone_remove(proc_priv->int340x_zone);
+-remove_group:
+-	sysfs_remove_group(&proc_priv->dev->kobj,
+-			   &power_limit_attribute_group);
+ 
+ 	return ret;
+ }
+@@ -357,7 +353,10 @@ static int int3401_add(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, proc_priv);
+ 	proc_thermal_emum_mode = PROC_THERMAL_PLATFORM_DEV;
+ 
+-	return 0;
++	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PLATFORM_DEV\n");
++
++	return sysfs_create_group(&pdev->dev.kobj,
++					 &power_limit_attribute_group);
+ }
+ 
+ static int int3401_remove(struct platform_device *pdev)
+@@ -416,7 +415,7 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
+ 		proc_priv->soc_dts = intel_soc_dts_iosf_init(
+ 					INTEL_SOC_DTS_INTERRUPT_MSI, 2, 0);
+ 
+-		if (proc_priv->soc_dts && pdev->irq) {
++		if (!IS_ERR(proc_priv->soc_dts) && pdev->irq) {
+ 			ret = pci_enable_msi(pdev);
+ 			if (!ret) {
+ 				ret = request_threaded_irq(pdev->irq, NULL,
+@@ -434,7 +433,10 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
+ 			dev_err(&pdev->dev, "No auxiliary DTSs enabled\n");
+ 	}
+ 
+-	return 0;
++	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PCI\n");
++
++	return sysfs_create_group(&pdev->dev.kobj,
++					 &power_limit_attribute_group);
+ }
+ 
+ static void  proc_thermal_pci_remove(struct pci_dev *pdev)
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 5c471c3481bd..800996522fdc 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1494,7 +1494,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	}
+ 
+ 	/* ask the core to calculate the divisor */
+-	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
++	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 4);
+ 
+ 	spin_lock_irqsave(&sport->port.lock, flags);
+ 
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index ed6b9bfe3759..712bd450f857 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1705,6 +1705,7 @@ static int __dwc3_gadget_start(struct dwc3 *dwc)
+ 
+ 	/* begin to receive SETUP packets */
+ 	dwc->ep0state = EP0_SETUP_PHASE;
++	dwc->link_state = DWC3_LINK_STATE_SS_DIS;
+ 	dwc3_ep0_out_start(dwc);
+ 
+ 	dwc3_gadget_enable_irq(dwc);
+@@ -3096,6 +3097,8 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	dwc3_disconnect_gadget(dwc);
+ 	__dwc3_gadget_stop(dwc);
+ 
++	synchronize_irq(dwc->irq_gadget);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/usb/gadget/function/f_sourcesink.c b/drivers/usb/gadget/function/f_sourcesink.c
+index 8784fa12ea2c..6e9d958004a0 100644
+--- a/drivers/usb/gadget/function/f_sourcesink.c
++++ b/drivers/usb/gadget/function/f_sourcesink.c
+@@ -842,7 +842,7 @@ static struct usb_function *source_sink_alloc_func(
+ 
+ 	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
+ 	if (!ss)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ss_opts =  container_of(fi, struct f_ss_opts, func_inst);
+ 
+diff --git a/fs/direct-io.c b/fs/direct-io.c
+index 07cc38ec66ca..fc90f0c33cbe 100644
+--- a/fs/direct-io.c
++++ b/fs/direct-io.c
+@@ -616,6 +616,7 @@ static int get_more_blocks(struct dio *dio, struct dio_submit *sdio,
+ 	unsigned long fs_count;	/* Number of filesystem-sized blocks */
+ 	int create;
+ 	unsigned int i_blkbits = sdio->blkbits + sdio->blkfactor;
++	loff_t i_size;
+ 
+ 	/*
+ 	 * If there was a memory error and we've overwritten all the
+@@ -645,8 +646,8 @@ static int get_more_blocks(struct dio *dio, struct dio_submit *sdio,
+ 		 */
+ 		create = dio->op == REQ_OP_WRITE;
+ 		if (dio->flags & DIO_SKIP_HOLES) {
+-			if (fs_startblk <= ((i_size_read(dio->inode) - 1) >>
+-							i_blkbits))
++			i_size = i_size_read(dio->inode);
++			if (i_size && fs_startblk <= (i_size - 1) >> i_blkbits)
+ 				create = 0;
+ 		}
+ 
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index a4112dfcd0fb..be06c45cbe4f 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -195,15 +195,22 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 		woken++;
+ 		tsk = waiter->task;
+ 
+-		wake_q_add(wake_q, tsk);
++		get_task_struct(tsk);
+ 		list_del(&waiter->list);
+ 		/*
+-		 * Ensure that the last operation is setting the reader
++		 * Ensure calling get_task_struct() before setting the reader
+ 		 * waiter to nil such that rwsem_down_read_failed() cannot
+ 		 * race with do_exit() by always holding a reference count
+ 		 * to the task to wakeup.
+ 		 */
+ 		smp_store_release(&waiter->task, NULL);
++		/*
++		 * Ensure issuing the wakeup (either by us or someone else)
++		 * after setting the reader waiter to nil.
++		 */
++		wake_q_add(wake_q, tsk);
++		/* wake_q_add() already take the task ref */
++		put_task_struct(tsk);
+ 	}
+ 
+ 	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 283755645d17..3f2314ad6acd 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2345,12 +2345,11 @@ int expand_downwards(struct vm_area_struct *vma,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct vm_area_struct *prev;
+ 	unsigned long gap_addr;
+-	int error;
++	int error = 0;
+ 
+ 	address &= PAGE_MASK;
+-	error = security_mmap_addr(address);
+-	if (error)
+-		return error;
++	if (address < mmap_min_addr)
++		return -EPERM;
+ 
+ 	/* Enforce stack_guard_gap */
+ 	gap_addr = address - stack_guard_gap;
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index 6ef9d32c34f1..954315e1661d 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1425,6 +1425,10 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
+ 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
+ 		sta->sta.tdls = true;
+ 
++	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
++
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index af02d2136a06..23f6c8baae95 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -217,7 +217,7 @@ static void ieee80211_handle_mu_mimo_mon(struct ieee80211_sub_if_data *sdata,
+ 		struct ieee80211_hdr_3addr hdr;
+ 		u8 category;
+ 		u8 action_code;
+-	} __packed action;
++	} __packed __aligned(2) action;
+ 
+ 	if (!sdata)
+ 		return;
+@@ -2510,7 +2510,9 @@ ieee80211_rx_h_mesh_fwding(struct ieee80211_rx_data *rx)
+ 	skb_set_queue_mapping(skb, q);
+ 
+ 	if (!--mesh_hdr->ttl) {
+-		IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, dropped_frames_ttl);
++		if (!is_multicast_ether_addr(hdr->addr1))
++			IEEE80211_IFSTA_MESH_CTR_INC(ifmsh,
++						     dropped_frames_ttl);
+ 		goto out;
+ 	}
+ 
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 36d1d25082e3..7c19d0d2549b 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -773,7 +773,7 @@ static bool reg_does_bw_fit(const struct ieee80211_freq_range *freq_range,
+  * definitions (the "2.4 GHz band", the "5 GHz band" and the "60GHz band"),
+  * however it is safe for now to assume that a frequency rule should not be
+  * part of a frequency's band if the start freq or end freq are off by more
+- * than 2 GHz for the 2.4 and 5 GHz bands, and by more than 10 GHz for the
++ * than 2 GHz for the 2.4 and 5 GHz bands, and by more than 20 GHz for the
+  * 60 GHz band.
+  * This resolution can be lowered and should be considered as we add
+  * regulatory rule support for other "bands".
+@@ -788,7 +788,7 @@ static bool freq_in_rule_band(const struct ieee80211_freq_range *freq_range,
+ 	 * with the Channel starting frequency above 45 GHz.
+ 	 */
+ 	u32 limit = freq_khz > 45 * ONE_GHZ_IN_KHZ ?
+-			10 * ONE_GHZ_IN_KHZ : 2 * ONE_GHZ_IN_KHZ;
++			20 * ONE_GHZ_IN_KHZ : 2 * ONE_GHZ_IN_KHZ;
+ 	if (abs(freq_khz - freq_range->start_freq_khz) <= limit)
+ 		return true;
+ 	if (abs(freq_khz - freq_range->end_freq_khz) <= limit)
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 4490a699030b..555df64d46ff 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -529,7 +529,8 @@ static int snd_compress_check_input(struct snd_compr_params *params)
+ {
+ 	/* first let's check the buffer parameter's */
+ 	if (params->buffer.fragment_size == 0 ||
+-	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size)
++	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
++	    params->buffer.fragments == 0)
+ 		return -EINVAL;
+ 
+ 	/* now codec parameters */
+diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
+index fc57da341d61..136df38c4536 100644
+--- a/sound/soc/fsl/imx-audmux.c
++++ b/sound/soc/fsl/imx-audmux.c
+@@ -86,49 +86,49 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+-	ret = snprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
++	ret = scnprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
+ 		       pdcr, ptcr);
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_TFSDIR)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxFS output from %s, ",
+ 				audmux_port_string((ptcr >> 27) & 0x7));
+ 	else
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxFS input, ");
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_TCLKDIR)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxClk output from %s",
+ 				audmux_port_string((ptcr >> 22) & 0x7));
+ 	else
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxClk input");
+ 
+-	ret += snprintf(buf + ret, PAGE_SIZE - ret, "\n");
++	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_SYN) {
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"Port is symmetric");
+ 	} else {
+ 		if (ptcr & IMX_AUDMUX_V2_PTCR_RFSDIR)
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxFS output from %s, ",
+ 					audmux_port_string((ptcr >> 17) & 0x7));
+ 		else
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxFS input, ");
+ 
+ 		if (ptcr & IMX_AUDMUX_V2_PTCR_RCLKDIR)
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxClk output from %s",
+ 					audmux_port_string((ptcr >> 12) & 0x7));
+ 		else
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxClk input");
+ 	}
+ 
+-	ret += snprintf(buf + ret, PAGE_SIZE - ret,
++	ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 			"\nData received from %s\n",
+ 			audmux_port_string((pdcr >> 13) & 0x7));
+ 
+diff --git a/sound/soc/intel/boards/broadwell.c b/sound/soc/intel/boards/broadwell.c
+index 7486a0022fde..993d2c105ae1 100644
+--- a/sound/soc/intel/boards/broadwell.c
++++ b/sound/soc/intel/boards/broadwell.c
+@@ -191,7 +191,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+diff --git a/sound/soc/intel/boards/haswell.c b/sound/soc/intel/boards/haswell.c
+index 863f1d5e2a2c..11d0cc2b0e39 100644
+--- a/sound/soc/intel/boards/haswell.c
++++ b/sound/soc/intel/boards/haswell.c
+@@ -145,7 +145,7 @@ static struct snd_soc_dai_link haswell_rt5640_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 8bfc534e3b34..ab647f1fe11b 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -1976,19 +1976,19 @@ static ssize_t dapm_widget_power_read_file(struct file *file,
+ 		out = is_connected_output_ep(w, NULL, NULL);
+ 	}
+ 
+-	ret = snprintf(buf, PAGE_SIZE, "%s: %s%s  in %d out %d",
++	ret = scnprintf(buf, PAGE_SIZE, "%s: %s%s  in %d out %d",
+ 		       w->name, w->power ? "On" : "Off",
+ 		       w->force ? " (forced)" : "", in, out);
+ 
+ 	if (w->reg >= 0)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				" - R%d(0x%x) mask 0x%x",
+ 				w->reg, w->reg, w->mask << w->shift);
+ 
+-	ret += snprintf(buf + ret, PAGE_SIZE - ret, "\n");
++	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
+ 
+ 	if (w->sname)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret, " stream %s %s\n",
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret, " stream %s %s\n",
+ 				w->sname,
+ 				w->active ? "active" : "inactive");
+ 
+@@ -2001,7 +2001,7 @@ static ssize_t dapm_widget_power_read_file(struct file *file,
+ 			if (!p->connect)
+ 				continue;
+ 
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					" %s  \"%s\" \"%s\"\n",
+ 					(rdir == SND_SOC_DAPM_DIR_IN) ? "in" : "out",
+ 					p->name ? p->name : "static",
