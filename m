@@ -2,93 +2,110 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82152C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CDBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AB120675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9F520675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfCFKSY (ORCPT
+        id S1729248AbfCFKTb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:18:24 -0500
-Received: from mail.osukl.com ([81.134.89.156]:19449 "EHLO mail.osukl.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbfCFKSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:18:24 -0500
-Received: from OS01.os.local ([fe80::dd48:92d6:34f3:22da]) by OS01.os.local
- ([fe80::dd48:92d6:34f3:22da%16]) with mapi id 14.03.0389.001; Wed, 6 Mar 2019
- 10:18:20 +0000
-From:   Ryan Pannell <ryan@osukl.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-amarula@amarulasolutions.com" 
-        <linux-amarula@amarulasolutions.com>
-Subject: RE: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
- initial support
-Thread-Topic: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD
- initial support
-Thread-Index: AQHUzZj1PzRBqQmkXEOapWN/my/XQKXzyHUAgAAMv4CAAw3CAIAAIXsAgAY5JYCAAAJsgIAABYNggAEc0gCAAAJ7AIAACzJA
-Date:   Wed, 6 Mar 2019 10:18:18 +0000
-Message-ID: <7AB137701821F94BAF7B06C1747BA691011A3FE164@OS01.os.local>
-References: <20190226060240.8783-1-jagan@amarulasolutions.com>
- <20190226060240.8783-2-jagan@amarulasolutions.com>
- <20190227153346.dwd3stsbsvf7rwly@flea>
- <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com>
- <20190301145724.vhvyoqkkxdflg2g7@flea>
- <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
- <20190305155919.cm3yrve3vqp7jimh@flea>
- <CAMty3ZD6Bsu7B6phhf4h7jreoM1uvM-ZQNCaUZKKa=1DNOtb8A@mail.gmail.com>
- <7AB137701821F94BAF7B06C1747BA691011A3FE123@OS01.os.local>
- <20190306092708.2pjc7uz6wvku4hkb@flea>
- <CAMty3ZDRAqV10u7QkujxkXtJYOUX8zbxkKtb5oxJMt+2jUbaHg@mail.gmail.com>
-In-Reply-To: <CAMty3ZDRAqV10u7QkujxkXtJYOUX8zbxkKtb5oxJMt+2jUbaHg@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.16.61]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 6 Mar 2019 05:19:31 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40829 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfCFKTb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 05:19:31 -0500
+Received: by mail-qt1-f195.google.com with SMTP id j36so12185836qta.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:19:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KDuqq3OQugnVi/sHGn4FIjHcj0fzu4Mo+4imtCZdOzM=;
+        b=JBa2TuMv64zTSBPGXHoOsSv0Mfw3wTnzxP0XN14H7IWqIsjKUAYa453WqvTKMREKzO
+         bJV9O7Z/bodCdR2zjhE9QM/tedvnByt6XXK5lHnZb1FW5jYhFXsh3CZ0ckOS7BvGhaAG
+         CyoT6bx6VbIbxDNSLkHnLhj1dTnbqjNVQKj8v2t5jt9mRhmitKiWmZ9LxDOPammyl4gs
+         HvJo4Z01fAIwgdXAo5y/NGYUtCQ0hSbQlZTo2S+y8zVYIazrwYYyp58zFP4A0m0fXlnm
+         +U1Lv3cPzzfv/MhzCMlyuD4BtdJrVi9SxMHw+BLjHEBByuWfuwQfDfdcQvlPWUucZq3P
+         hLIw==
+X-Gm-Message-State: APjAAAU2Ffyi54+QitW02ONFlxE4VpNvbMPY56z+PXWY9ihomNq+1fxA
+        sB0XxvmH+J4xKVBGDoULbD+8xHtGPWb6EQf1wE0=
+X-Google-Smtp-Source: APXvYqwlRefBtN7F0BSjmxiEhBo6nicOMU4ZZ22wsdOnFGndKuvhBT7TV6ri6KNFkjGqXGJxdr4OPG0fXMcEPCvYwSA=
+X-Received: by 2002:a0c:b501:: with SMTP id d1mr5707775qve.115.1551867570098;
+ Wed, 06 Mar 2019 02:19:30 -0800 (PST)
 MIME-Version: 1.0
+References: <20190304200026.1140281-1-arnd@arndb.de> <bf509a99-604b-10a4-e71b-f4f8e61f00b3@nvidia.com>
+In-Reply-To: <bf509a99-604b-10a4-e71b-f4f8e61f00b3@nvidia.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 6 Mar 2019 11:19:13 +0100
+Message-ID: <CAK8P3a2no2gjWXTcgg_g1DJ9B-j8LfyaeOn+Ji18bWS5mQNZUA@mail.gmail.com>
+Subject: Re: [PATCH] mm/hmm: fix unused variable warnings
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SmFnYW4sDQoNClRoZSBjb21wYXRpYmxlIGlzIGZvciB0aGUgcmVhbCBoYXJkd2FyZSBuYW1lIGFz
-IE1heGltZSBwcmV2aW91c2x5IGV4cGxhaW5lZC4gVGhlIHBsYXRmb3JtIGlzIGRlc2NyaWJlZCBp
-biB0aGUgbGF0dGVyIHBhcnQuDQpQbGVhc2UgdXNlOg0KY29tcGF0aWJsZSA9ICJvY2VhbmljLDUy
-MDUtNWlubWZkIiwgImFsbHdpbm5lcixzdW41MGktYTY0IjsNCg0KVGhhbmtzLA0KUnlhbiBQYW5u
-ZWxsDQpEZXZlbG9wbWVudCBUZWFtIExlYWQNCk9jZWFuaWMgU3lzdGVtcyAoVUspIEx0ZA0KDQot
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVs
-YXNvbHV0aW9ucy5jb20+IA0KU2VudDogMDYgTWFyY2ggMjAxOSAwOTozNg0KVG86IE1heGltZSBS
-aXBhcmQgPG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb20+DQpDYzogUnlhbiBQYW5uZWxsIDxyeWFu
-QG9zdWtsLmNvbT47IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz47IFJvYiBIZXJyaW5nIDxy
-b2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsg
-TWljaGFlbCBUcmltYXJjaGkgPG1pY2hhZWxAYW1hcnVsYXNvbHV0aW9ucy5jb20+OyBsaW51eC1h
-cm0ta2VybmVsIDxsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBkZXZpY2V0
-cmVlIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWtlcm5lbCA8bGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LWFtYXJ1bGFAYW1hcnVsYXNvbHV0aW9ucy5jb20N
-ClN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBhcm02NDogYWxsd2lubmVyOiBhNjQ6IEFkZCBPY2Vh
-bmljIEE2NC01aW5NRkQgaW5pdGlhbCBzdXBwb3J0DQoNCk9uIFdlZCwgTWFyIDYsIDIwMTkgYXQg
-Mjo1NyBQTSBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPiB3cm90ZToN
-Cj4NCj4gT24gVHVlLCBNYXIgMDUsIDIwMTkgYXQgMDQ6MzU6MDRQTSArMDAwMCwgUnlhbiBQYW5u
-ZWxsIHdyb3RlOg0KPiA+IFdlIGRvbid0IG1pbmQgaWYgaXQgaGFzIHRvIGJlOg0KPiA+IGNvbXBh
-dGlibGUgPSAib2NlYW5pYyw1aW5tZmQiLCAiYWxsd2lubmVyLHN1bjUwaS1hNjQiOw0KPiA+DQo+
-ID4gSG93ZXZlciwgdG8gYXZvaWQgY29uZnVzaW9uLCBtaWdodCBpdCBiZSB3b3J0aCBpbmNsdWRp
-bmcgdGhlIHBhcnQgbnVtYmVyIChXZSBsaXN0IHRoaXMgYXMgJzUyMDUgNSIgTUZEJykgc28gdGhp
-cyB3b3VsZCBiZWNvbWU6DQo+ID4gY29tcGF0aWJsZSA9ICJvY2VhbmljLDUyMDUtNWlubWZkIiwg
-ImFsbHdpbm5lcixzdW41MGktYTY0IjsNCj4gPg0KPiA+IFBlcmhhcHMgdGhpcyBzb2x2ZXMgdGhl
-IGlzc3VlLiBQbGVhc2UgbGV0IG1lIGtub3cgdGhvdWdodHMuDQo+DQo+IFllcCwgdGhhdCB3b3Jr
-cyBmb3IgbWUNCg0KQTY0IGluc3RlYWQgb2YgcGFydC1udW1iZXIgNTIwNSBzZWVtcyBsZXNzIGNv
-bmZ1c2VkIGlzbid0IGl0PyBvciB3ZSBuZWVkIHRvIGdpdmUgbW9yZSBwcmlvcml0eSB3aXRoIHJl
-YWwgaGFyZHdhcmUgZGVmaW5pdGlvbj8NCg==
+On Wed, Mar 6, 2019 at 12:51 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> With some Kconfig local hacks that removed all HUGE* support, while leaving
+> HMM enabled, I was able to reproduce your results, and also to verify the
+> fix. It also makes sense from reading it.
+
+Thanks for the confirmation.
+
+> Also, I ran into one more warning as well:
+>
+> mm/hmm.c: In function ‘hmm_vma_walk_pud’:
+> mm/hmm.c:764:25: warning: unused variable ‘vma’ [-Wunused-variable]
+>   struct vm_area_struct *vma = walk->vma;
+>                          ^~~
+>
+> ...which can be fixed like this:
+>
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index c4beb1628cad..c1cbe82d12b5 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -761,7 +761,6 @@ static int hmm_vma_walk_pud(pud_t *pudp,
+>  {
+>         struct hmm_vma_walk *hmm_vma_walk = walk->private;
+>         struct hmm_range *range = hmm_vma_walk->range;
+> -       struct vm_area_struct *vma = walk->vma;
+>         unsigned long addr = start, next;
+>         pmd_t *pmdp;
+>         pud_t pud;
+> @@ -807,7 +806,7 @@ static int hmm_vma_walk_pud(pud_t *pudp,
+>                 return 0;
+>         }
+>
+> -       split_huge_pud(vma, pudp, addr);
+> +       split_huge_pud(walk->vma, pudp, addr);
+>         if (pud_none(*pudp))
+>                 goto again;
+>
+> ...so maybe you'd like to fold that into your patch?
+
+I also ran into this one last night during further randconfig testing,
+and came up with the same patch that you showed here. I'll
+send this one to Andrew and add a Reported-by line for you,
+since he already merged the first patch.
+
+I'll leave it up to Andrew to fold the fixes into one, or into the original
+patches if he thinks that makes sense.
+
+     Arnd
