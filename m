@@ -2,250 +2,153 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4301C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85374C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB6220663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E4E20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:12:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQmC5+1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfCFCFp (ORCPT
+        id S1728864AbfCFCMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 21:05:45 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:55280 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726256AbfCFCFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 21:05:44 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F30F5308222E;
-        Wed,  6 Mar 2019 02:05:43 +0000 (UTC)
-Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 14774600D7;
-        Wed,  6 Mar 2019 02:05:40 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 21:05:40 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
+        Tue, 5 Mar 2019 21:12:53 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42262 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfCFCMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 21:12:52 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b2so7024159pgl.9;
+        Tue, 05 Mar 2019 18:12:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4Z6v6bDAYwichAnuEc7vStabgiv6BkmrMebYmVYFex4=;
+        b=tQmC5+1s55Yvp2TC5tQHCbsksrAj68xUi/8teC/ZAMTcXVUapSD0+brG147QgyL0Y7
+         6AKj4EFkbMogGufSDgGVSVfppH92nuF5i/y2hYgbcSQ3aH0kUlbmEqCuBhb/RhQBuFoK
+         uNeXANDvKdWj136dxewUykiC3e42yv/lIh2OlBuhNP85yI+FKDcSN33UfkFqVcvYl+VM
+         7k+mXnDHBGx4+jsU/IM/W75OqAc0fvICmWW2r8IjWHyriwiCxDEDDfy2+jHjr3ZUpniN
+         p2JR9H6UrluCLhbS3ItT9MgB0Hx6bPPvlF9alF0NCvgOZssxFifIP70T9j3DtY8rxCmX
+         2Pow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Z6v6bDAYwichAnuEc7vStabgiv6BkmrMebYmVYFex4=;
+        b=n2VrFH/gD+vXyZOs3lU9LbPXKbXUSL4tP+8aRGjfIFFIYBy+7GmVsvQ+X20ThOQKBU
+         58ctPMn5YrjOcW531tIMDHpYi45b7a3W4pJetV4kMLcdavPFSjGY3tnG6tCbf36kNL7v
+         MEPxm84b2JZATWF4e0zTm3pDmHR7L7XOWqb5ttRXX6w77nxcTmQvWfrHBB5QF3+syGFx
+         7gYnGb5jFrQOEMGJUQtQOHnecLniOvEEVoPW7pBPFDn9yN1XxOISWnnWs12A2Tbg+VaM
+         k7m0ICQ25fn4CwMSihFQrkBoSWg+rrfLFuwRYKZN9rzZ3SJu8Ms9GscPXWpYCWIWhJGP
+         lePw==
+X-Gm-Message-State: APjAAAXQ8Dkm2ILI8xa/u2eiPqTbo20svpfGU/AYt90Cgqz9GaSuPC5e
+        q/fZ5HmNbwgZBk93QyTVFK8=
+X-Google-Smtp-Source: APXvYqxLF9WNxX9Z4OkCB3x+R7MIPgFudMtbUzTG7daAGmuHOhvva2vIpv8tI+wRnGVpLKq5FVr/gQ==
+X-Received: by 2002:a17:902:1a9:: with SMTP id b38mr4393594plb.37.1551838371514;
+        Tue, 05 Mar 2019 18:12:51 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v15sm437411pfa.75.2019.03.05.18.12.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Mar 2019 18:12:50 -0800 (PST)
+Date:   Tue, 5 Mar 2019 18:12:48 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Prateek Patel <prpatel@nvidia.com>,
+        DT <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Peter Xu <peterx@redhat.com>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-Message-ID: <20190306020540.GA23850@redhat.com>
-References: <00000000000006457e057c341ff8@google.com>
- <5C7BFE94.6070500@huawei.com>
- <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com>
- <5C7D2F82.40907@huawei.com>
- <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
- <5C7D4500.3070607@huawei.com>
- <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com>
- <5C7E1A38.2060906@huawei.com>
+        stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
+ early memory reservation
+Message-ID: <20190306021248.GA17298@roeck-us.net>
+References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr>
+ <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
+ <20190123055414.GA4747@rapoport-lnx>
+ <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
+ <20190123123143.GE4747@rapoport-lnx>
+ <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
+ <617e0d57-342d-4162-bd21-ece18e481d87@free.fr>
+ <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
+ <20190213085028.6199594b@canb.auug.org.au>
+ <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5C7E1A38.2060906@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 06 Mar 2019 02:05:44 +0000 (UTC)
+In-Reply-To: <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
-
-[ CC'ed Mike and Peter ]
-
-On Tue, Mar 05, 2019 at 02:42:00PM +0800, zhong jiang wrote:
-> On 2019/3/5 14:26, Dmitry Vyukov wrote:
-> > On Mon, Mar 4, 2019 at 4:32 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >> On 2019/3/4 22:11, Dmitry Vyukov wrote:
-> >>> On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >>>> On 2019/3/4 15:40, Dmitry Vyukov wrote:
-> >>>>> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >>>>>> Hi, guys
-> >>>>>>
-> >>>>>> I also hit the following issue. but it fails to reproduce the issue by the log.
-> >>>>>>
-> >>>>>> it seems to the case that we access the mm->owner and deference it will result in the UAF.
-> >>>>>> But it should not be possible that we specify the incomplete process to be the mm->owner.
-> >>>>>>
-> >>>>>> Any thoughts?
-> >>>>> FWIW syzbot was able to reproduce this with this reproducer.
-> >>>>> This looks like a very subtle race (threaded reproducer that runs
-> >>>>> repeatedly in multiple processes), so most likely we are looking for
-> >>>>> something like few instructions inconsistency window.
-> >>>>>
-> >>>> I has a little doubtful about the instrustions inconsistency window.
-> >>>>
-> >>>> I guess that you mean some smb barriers should be taken into account.:-)
-> >>>>
-> >>>> Because IMO, It should not be the lock case to result in the issue.
-> >>> Since the crash was triggered on x86 _most likley_ this is not a
-> >>> missed barrier. What I meant is that one thread needs to executed some
-> >>> code, while another thread is stopped within few instructions.
-> >>>
-> >>>
-> >> It is weird and I can not find any relationship you had said with the issue.:-(
-> >>
-> >> Because It is the cause that mm->owner has been freed, whereas we still deference it.
-> >>
-> >> From the lastest freed task call trace, It fails to create process.
-> >>
-> >> Am I miss something or I misunderstand your meaning. Please correct me.
-> > Your analysis looks correct. I am just saying that the root cause of
-> > this use-after-free seems to be a race condition.
+On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
+> On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > >
+> > Hi all,
 > >
+> > On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+> > > >
+> > > > On 04/02/2019 15:37, Marc Gonzalez wrote:
+> > > >
+> > > > > Cc: stable@vger.kernel.org # 3.15+
+> > > > > Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
+> > > > > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > Acked-by: Prateek Patel <prpatel@nvidia.com>
+> > > > > Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > ---
+> > > > > Resend with DT CCed to reach robh's patch queue
+> > > > > I added CC: stable, Fixes, and Prateek's ack
+> > > > > Trim recipients list to minimize inconvenience
+> > > >
+> > > > I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
+> > > > "memblock: drop __memblock_alloc_base()"
+> > > >
+> > > > It's definitely going to conflict with the proposed patch
+> > > > over drivers/of/of_reserved_mem.c
+> > > >
+> > > > Rob, what's the next step then?
+> > >
+> > > Rebase it on top of what's in linux-next and apply it to the tree
+> > > which has the above dependency. I'm guessing that is Andrew Morton's
+> > > tree.
 > >
-> Yep, Indeed,  I can not figure out how the race works. I will dig up further.
+> > Yeah, that is in Andrew's "post linux-next" patch series, so if you
+> > rebase it on top of linux-next and then send it to Andrew with some
+> > explanation.
+> >
+> > ...
+> >
+> > Actually, if it is intended for the stable trees, then presumably it is
+> > intended to go to Linus for the current release?  In which case, the
+> > patch in Andrew's tree will have to be changed to cope after your patch
+> > appears in Linus' tree (and therefore, linux-next).
+> 
+> At this point in the cycle, I wasn't planning to send this for 5.0.
+> It's not fixing something introduced in 5.0 and it is a debug feature.
+> 
+Hi Rob,
 
-Yes it's a race condition.
+this may be a debug feature, but we do test our kernels with it enabled,
+and the problem does affect our 4.19 branch (chromeos-4.19). Are you
+suggesting that we should backport the fix into our branch and not send
+the backport to -stable ?
 
-We were aware about the non-cooperative fork userfaultfd feature
-creating userfaultfd file descriptor that gets reported to the parent
-uffd, despite they belong to mm created by failed forks.
+No problem, just trying to avoid wasting our time.
 
-https://www.spinics.net/lists/linux-mm/msg136357.html
-
-The fork failure in my testcase happened because of signal pending
-that interrupted fork after the failed-fork uffd context, was already
-pushed to the userfaultfd reader/monitor. CRIU then takes care of
-filtering the failed fork cases so we didn't want to make the fork
-code more complicated just for userfaultfd.
-
-In reality if MEMCG is enabled at build time, mm->owner maintainance
-code now creates a race condition in the above case, with any fork
-failure.
-
-I pinged Mike yesterday to ask if my theory could be true for this bug
-and one solution he suggested is to do the userfaultfd_dup at a point
-where fork cannot fail anymore. That's precisely what we were
-wondering to do back then to avoid the failed fork reports to the
-non cooperative uffd monitor.
-
-That will solve the false positive deliveries that CRIU manager
-currently filters out too. From a theoretical standpoint it's also
-quite strange to even allow any uffd ioctl to run on a otherwise long
-gone mm created for a process that in the end wasn't even created (the
-mm got temporarily fully created, but no child task really ever used
-such mm). However that mm is on its way to exit_mmap as soon as the
-ioclt returns and this only ever happens during race conditions, so
-the way CRIU monitor works there wasn't anything fundamentally
-concerning about this detail, despite it's remarkably "strange". Our
-priority was to keep the fork code as simple as possible and keep
-userfaultfd as non intrusive as possible.
-
-One alternative solution I'm wondering about for this memcg issue is
-to free the task struct with RCU also when fork has failed and to add
-the mm_update_next_owner before mmput. That will still report failed
-forks to the uffd monitor, so it's not the ideal fix, but since it's
-probably simpler I'm posting it below. Also I couldn't reproduce the
-problem with the testcase here yet.
-
-From 6cbf9d377b705476e5226704422357176f79e32c Mon Sep 17 00:00:00 2001
-From: Andrea Arcangeli <aarcange@redhat.com>
-Date: Tue, 5 Mar 2019 19:21:37 -0500
-Subject: [PATCH 1/1] userfaultfd: use RCU to free the task struct when fork
- fails if MEMCG
-
-MEMCG depends on the task structure not to be freed under
-rcu_read_lock() in get_mem_cgroup_from_mm() after it dereferences
-mm->owner.
-
-A better fix would be to avoid registering forked vmas in userfaultfd
-contexts reported to the monitor, if case fork ends up failing.
-
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
----
- kernel/fork.c | 34 ++++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index eb9953c82104..3bcbb361ffbc 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -953,6 +953,15 @@ static void mm_init_aio(struct mm_struct *mm)
- #endif
- }
- 
-+static __always_inline void mm_clear_owner(struct mm_struct *mm,
-+					   struct task_struct *p)
-+{
-+#ifdef CONFIG_MEMCG
-+	if (mm->owner == p)
-+		mm->owner = NULL;
-+#endif
-+}
-+
- static void mm_init_owner(struct mm_struct *mm, struct task_struct *p)
- {
- #ifdef CONFIG_MEMCG
-@@ -1345,6 +1354,7 @@ static struct mm_struct *dup_mm(struct task_struct *tsk)
- free_pt:
- 	/* don't put binfmt in mmput, we haven't got module yet */
- 	mm->binfmt = NULL;
-+	mm_init_owner(mm, NULL);
- 	mmput(mm);
- 
- fail_nomem:
-@@ -1676,6 +1686,24 @@ static inline void rcu_copy_process(struct task_struct *p)
- #endif /* #ifdef CONFIG_TASKS_RCU */
- }
- 
-+#ifdef CONFIG_MEMCG
-+static void __delayed_free_task(struct rcu_head *rhp)
-+{
-+	struct task_struct *tsk = container_of(rhp, struct task_struct, rcu);
-+
-+	free_task(tsk);
-+}
-+#endif /* CONFIG_MEMCG */
-+
-+static __always_inline void delayed_free_task(struct task_struct *tsk)
-+{
-+#ifdef CONFIG_MEMCG
-+	call_rcu(&tsk->rcu, __delayed_free_task);
-+#else /* CONFIG_MEMCG */
-+	free_task(tsk);
-+#endif /* CONFIG_MEMCG */
-+}
-+
- /*
-  * This creates a new process as a copy of the old one,
-  * but does not actually start it yet.
-@@ -2137,8 +2165,10 @@ static __latent_entropy struct task_struct *copy_process(
- bad_fork_cleanup_namespaces:
- 	exit_task_namespaces(p);
- bad_fork_cleanup_mm:
--	if (p->mm)
-+	if (p->mm) {
-+		mm_clear_owner(p->mm, p);
- 		mmput(p->mm);
-+	}
- bad_fork_cleanup_signal:
- 	if (!(clone_flags & CLONE_THREAD))
- 		free_signal_struct(p->signal);
-@@ -2169,7 +2199,7 @@ static __latent_entropy struct task_struct *copy_process(
- bad_fork_free:
- 	p->state = TASK_DEAD;
- 	put_task_stack(p);
--	free_task(p);
-+	delayed_free_task(p);
- fork_out:
- 	spin_lock_irq(&current->sighand->siglock);
- 	hlist_del_init(&delayed.node);
+Thanks,
+Guenter
