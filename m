@@ -2,179 +2,123 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ECAC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C44C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121DF206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551912494;
-	bh=e9RSnELXLOjF1US988iwHM5qMpBbVvt+Th4lFBfyF3A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vVzXOgo6bRwmSJ5MmWdPupvyOzHewoUfnzaWFMpXdje3iEcfNAPh0tK4eFHA6wPHO
-	 zgs/TpnYQRtSdvXTSGARenzlKPxgihsjbhI/xTuzJgWH42knDwIcFytvjwft/5dTvV
-	 1AHuyvpNt5Ioi0NqGLJlMjWyS2qBAsXee+yUykvk=
+	by mail.kernel.org (Postfix) with ESMTP id 19B5220675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfCFWsM (ORCPT
+        id S1726186AbfCFWt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:48:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbfCFWsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:48:11 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23AA420675;
-        Wed,  6 Mar 2019 22:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551912490;
-        bh=e9RSnELXLOjF1US988iwHM5qMpBbVvt+Th4lFBfyF3A=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=fwYQm7zP2769SP+uuMgs5aFPFjAMChvalElqTU0GL5DR5mYI9mvuhGBGUWILIh+QV
-         jT77XiDHJTbm2Z6njrqg8qwby36azquuPpsZuoCuuHxLmXDOGJAvPmvz/I8Bh5UqTt
-         r/u5DdUkBzFZ5KPMcoHfuXvOr1FDRi9jJKqOUTK0=
-Date:   Wed, 6 Mar 2019 23:48:03 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Cyril Hrubis <chrubis@suse.cz>, Daniel Gruss <daniel@gruss.cc>,
-        Dave Chinner <david@fromorbit.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Kevin Easton <kevin@guarana.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 0/3] mincore() and IOCB_NOWAIT adjustments
-In-Reply-To: <20190306143547.c686225447822beaf3b6e139@linux-foundation.org>
-Message-ID: <nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1901051817390.16954@cbobk.fhfr.pm> <20190130124420.1834-1-vbabka@suse.cz> <nycvar.YFH.7.76.1903061310170.19912@cbobk.fhfr.pm> <20190306143547.c686225447822beaf3b6e139@linux-foundation.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 6 Mar 2019 17:49:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44994 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbfCFWt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 17:49:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 03E4CB615;
+        Wed,  6 Mar 2019 22:49:54 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Date:   Thu, 07 Mar 2019 09:49:46 +1100
+Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nfsd: allow nfsv3 readdir request to be larger.
+In-Reply-To: <20190305214212.GC27437@fieldses.org>
+References: <87lg1vs5eh.fsf@notabene.neil.brown.name> <20190304164725.GE13690@fieldses.org> <877ederyjm.fsf@notabene.neil.brown.name> <20190305214212.GC27437@fieldses.org>
+Message-ID: <87y35rr52t.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Mar 2019, Andrew Morton wrote:
-
-> > could you please take at least the correct and straightforward fix for 
-> > mincore() before we figure out how to deal with the slightly less 
-> > practical RWF_NOWAIT? Thanks.
-> 
-> I assume we're talking about [1/3] and [2/3] from this thread?
-> 
-> Can we have a resend please?  Gather the various acks and revisions,
-> make changelog changes to address the review questions and comments?
-
-1/3 is clearly the one to be merged. The version with all the acks 
-gathered is in this thread, at
-
-	https://lore.kernel.org/lkml/de52b3bd-4e39-c133-542a-0a9c5e357404@suse.cz/
-
-Attaching the patch also at the end of this mail so that it could be 
-easily picked up.
-
-I am unfortunately not sure what changelog changes you are talking about, 
-there were none requested during the review as far as I know.
-
-2/3 is clearly postponed for now, it needs more thinking.
-
-3/3 is actually waiting for your decision, see
-
-	https://lore.kernel.org/lkml/20190212063643.GL15609@dhcp22.suse.cz/
-
-The 1/3 patch to be merged in any case:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-=== cut here ===
+nfsd currently reports the NFSv4 dtpref FSINFO parameter
+to be PAGE_SIZE, so NFS clients will typically ask for one
+page of directory entries at a time.  This is needlessly restrictive
+as nfsd can handle larger replies easily.
 
-From: Jiri Kosina <jkosina@suse.cz>
-Date: Wed, 16 Jan 2019 20:53:17 +0100
-Subject: [PATCH v2] mm/mincore: make mincore() more conservative
+Also, a READDIR request (but not a READDIRPLUS request) has the count
+size clipped to PAGE_SIE, again unnecessary.
 
-The semantics of what mincore() considers to be resident is not completely
-clear, but Linux has always (since 2.3.52, which is when mincore() was
-initially done) treated it as "page is available in page cache".
+This patch lifts these limits so that larger readdir requests can be
+used.
 
-That's potentially a problem, as that [in]directly exposes meta-information
-about pagecache / memory mapping state even about memory not strictly belonging
-to the process executing the syscall, opening possibilities for sidechannel
-attacks.
+Signed-off-by: NeilBrown <neilb@suse.com>
+=2D--
+ fs/nfsd/nfs3proc.c | 2 +-
+ fs/nfsd/nfs3xdr.c  | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Change the semantics of mincore() so that it only reveals pagecache information
-for non-anonymous mappings that belog to files that the calling process could
-(if it tried to) successfully open for writing.
-
-[mhocko@suse.com: restructure can_do_mincore() conditions]
-Originally-by: Linus Torvalds <torvalds@linux-foundation.org>
-Originally-by: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Kevin Easton <kevin@guarana.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Cyril Hrubis <chrubis@suse.cz>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Daniel Gruss <daniel@gruss.cc>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Josh Snyder <joshs@netflix.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- mm/mincore.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/mm/mincore.c b/mm/mincore.c
-index 218099b5ed31..b8842b849604 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -169,6 +169,16 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
- 	return 0;
- }
- 
-+static inline bool can_do_mincore(struct vm_area_struct *vma)
-+{
-+	if (vma_is_anonymous(vma))
-+		return true;
-+	if (!vma->vm_file)
-+		return false;
-+	return inode_owner_or_capable(file_inode(vma->vm_file)) ||
-+		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
-+}
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index c9cf46e0c040..8f933e84cec1 100644
+=2D-- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -588,7 +588,7 @@ nfsd3_proc_fsinfo(struct svc_rqst *rqstp)
+ 	resp->f_wtmax  =3D max_blocksize;
+ 	resp->f_wtpref =3D max_blocksize;
+ 	resp->f_wtmult =3D PAGE_SIZE;
+=2D	resp->f_dtpref =3D PAGE_SIZE;
++	resp->f_dtpref =3D max_blocksize;
+ 	resp->f_maxfilesize =3D ~(u32) 0;
+ 	resp->f_properties =3D NFS3_FSF_DEFAULT;
+=20
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 83919116d5cb..93fea246f676 100644
+=2D-- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -573,6 +573,8 @@ int
+ nfs3svc_decode_readdirargs(struct svc_rqst *rqstp, __be32 *p)
+ {
+ 	struct nfsd3_readdirargs *args =3D rqstp->rq_argp;
++	u32 max_blocksize =3D svc_max_payload(rqstp);
 +
- /*
-  * Do a chunk of "sys_mincore()". We've already checked
-  * all the arguments, we hold the mmap semaphore: we should
-@@ -189,8 +199,13 @@ static long do_mincore(unsigned long addr, unsigned long pages, unsigned char *v
- 	vma = find_vma(current->mm, addr);
- 	if (!vma || addr < vma->vm_start)
- 		return -ENOMEM;
--	mincore_walk.mm = vma->vm_mm;
- 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
-+	if (!can_do_mincore(vma)) {
-+		unsigned long pages = (end - addr) >> PAGE_SHIFT;
-+		memset(vec, 1, pages);
-+		return pages;
-+	}
-+	mincore_walk.mm = vma->vm_mm;
- 	err = walk_page_range(addr, end, &mincore_walk);
- 	if (err < 0)
- 		return err;
+ 	p =3D decode_fh(p, &args->fh);
+ 	if (!p)
+ 		return 0;
+@@ -580,7 +582,7 @@ nfs3svc_decode_readdirargs(struct svc_rqst *rqstp, __be=
+32 *p)
+ 	args->verf   =3D p; p +=3D 2;
+ 	args->dircount =3D ~0;
+ 	args->count  =3D ntohl(*p++);
+=2D	args->count  =3D min_t(u32, args->count, PAGE_SIZE);
++	args->count  =3D min_t(u32, args->count, max_blocksize);
+ 	args->buffer =3D page_address(*(rqstp->rq_next_page++));
+=20
+ 	return xdr_argsize_check(rqstp, p);
+=2D-=20
+2.14.0.rc0.dirty
 
 
--- 
-Jiri Kosina
-SUSE Labs
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyATosACgkQOeye3VZi
+gbnWvBAAwnMdpmf4PvM1cimIjSJhHQFC5W5eZD6C+8dy6savgpoCaidOPxi1hHXm
+RMNETiyQKfffsOoI1gvqLWNpT0NtMTI0KGu47D66Bub0inV33jdSUI4qu7F24DJt
+JKjHQwtw7ON0xLWYzTqwAEQRD2bpxG1qphNUOQ/0NwQUzJkmH6jtoPIyjCylzXrj
+KwIh4pHSxwH5i82QYGIM7QIGwYftBBLvQYCGwW6EbVgpJ2X4tocmWWnMo90+qfa/
+l4Gd5faFgkpy5qFvS7arvyg7wS/c5naAMOJnt+8mAL6aNvPT434vWqwyYWP/2IyV
+oIMv3Q2numhsb2ugfeMq41fC6LgbzQ9MGJv9+rAmQ6rcl4FdvDrajpHenZJmn3Mh
+NekKz+jEabB4F/8pCzId12ObTWZxqIqLpGLkBvrckQBlKSHDUfZPqSiUfvoSivJi
+uOe0GrZIVpnCCbAj0uJHe+Yj2Y9uz4/TJ5KhVQl8RJ21QziNE1Fq/ZcJsmiufjsr
+1piAgKWi42v9YEibzGiPEH9Cmqh/GuD/64iajnbO4edm5rjM5Rd1TppPFr/CHswq
+8Gt8L8G+/Y2XNFDvWz+TPry7el9Iu18P7DJ8arqKUT8oGH8wSUCq668SbV+/Lish
+yfbkJ8RC+qPJxoeahM3VZSS665NZsqfH7xWJdze+d2ApQOWzXnI=
+=/k3D
+-----END PGP SIGNATURE-----
+--=-=-=--
