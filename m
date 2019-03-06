@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA99C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9258BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B27820675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622CF20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="NHSwPuD7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Hgsqg4R1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfCFAyG (ORCPT
+        id S1728701AbfCFAyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 19:54:06 -0500
+        Tue, 5 Mar 2019 19:54:20 -0500
 Received: from onstation.org ([52.200.56.107]:51292 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728333AbfCFAxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 19:53:55 -0500
+        id S1726297AbfCFAxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 19:53:54 -0500
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id B73BB777;
-        Wed,  6 Mar 2019 00:53:54 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id A9BAD3C9;
+        Wed,  6 Mar 2019 00:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=onstation.org;
-        s=default; t=1551833635;
-        bh=15IFA7+YDYdZXPH7tM75O2FX11LrDRzRIMzz0sRdFco=;
+        s=default; t=1551833633;
+        bh=ziRj2k2fniz8f9jZgOmlmLAV3LDh9WprZZB5V7XV/7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NHSwPuD7dSplmoFnqYYZ3aZ2hjIj4Gzf0S1rGbjJaDQnNT8dvsGhMunjgL9YTFeJY
-         AOCP3YwKFruO8WubnjJsXv1Rw66ZwuoddVRxmd2HoaVgq5MMAYjlKxoxd/AY+gE0qM
-         Vm2ZdN8jEkFNH62kkPrT+qJUInXj6mKLvONLd49k=
+        b=Hgsqg4R17ffHFuWAHWtWRo8jDpBYVW39nrQmqOhaZYbhYvksmiENE3NFbrF9XrwEx
+         xAdyw5MDY6HkqzgZBge8YkWjoy3WiVHZUQii8milJR6hGYdaqD7bcOjOIqWzZg61J8
+         6iOEB9ogPpyHmu0cNXHqXO3bRCy2eMvjCfvkWWLQ=
 From:   Brian Masney <masneyb@onstation.org>
 To:     andy.gross@linaro.org
 Cc:     david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH 8/8] arm64: dts: qcom: pmi8998: add gpio-ranges
-Date:   Tue,  5 Mar 2019 19:53:16 -0500
-Message-Id: <20190306005316.12232-9-masneyb@onstation.org>
+Subject: [PATCH 5/8] arm64: dts: qcom: pm8005: add gpio-ranges
+Date:   Tue,  5 Mar 2019 19:53:13 -0500
+Message-Id: <20190306005316.12232-6-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190306005316.12232-1-masneyb@onstation.org>
 References: <20190306005316.12232-1-masneyb@onstation.org>
@@ -62,18 +62,18 @@ change was tested on qcom-pm8941 using a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm64/boot/dts/qcom/pmi8998.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/pm8005.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/pmi8998.dtsi b/arch/arm64/boot/dts/qcom/pmi8998.dtsi
-index 051f57e7d6ac..23f9146a161e 100644
---- a/arch/arm64/boot/dts/qcom/pmi8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pmi8998.dtsi
-@@ -13,6 +13,7 @@
- 			compatible = "qcom,pmi8998-gpio", "qcom,spmi-gpio";
+diff --git a/arch/arm64/boot/dts/qcom/pm8005.dtsi b/arch/arm64/boot/dts/qcom/pm8005.dtsi
+index c0ddf128136c..3f97607d8baa 100644
+--- a/arch/arm64/boot/dts/qcom/pm8005.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8005.dtsi
+@@ -15,6 +15,7 @@
+ 			compatible = "qcom,pm8005-gpio", "qcom,spmi-gpio";
  			reg = <0xc000>;
  			gpio-controller;
-+			gpio-ranges = <&pmi8998_gpio 0 0 14>;
++			gpio-ranges = <&pm8005_gpio 0 0 4>;
  			#gpio-cells = <2>;
  			interrupt-controller;
  			#interrupt-cells = <2>;
