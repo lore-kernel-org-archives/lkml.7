@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B89C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77C8C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84ED72064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F352064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfCFLq4 (ORCPT
+        id S1729650AbfCFLq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 06:46:56 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:37621 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729490AbfCFLqz (ORCPT
+        Wed, 6 Mar 2019 06:46:58 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:47953 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729562AbfCFLqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Mar 2019 06:46:55 -0500
-X-UUID: a2a2dbefbdf54025aef51791f4951fd6-20190306
-X-UUID: a2a2dbefbdf54025aef51791f4951fd6-20190306
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+X-UUID: d9f6dfc8a14748438eb99f9cb1a36618-20190306
+X-UUID: d9f6dfc8a14748438eb99f9cb1a36618-20190306
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 846422692; Wed, 06 Mar 2019 19:46:47 +0800
+        with ESMTP id 1847711942; Wed, 06 Mar 2019 19:46:51 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 6 Mar 2019 19:46:45 +0800
+ 15.0.1395.4; Wed, 6 Mar 2019 19:46:49 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 6 Mar 2019 19:46:45 +0800
+ Transport; Wed, 6 Mar 2019 19:46:48 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
@@ -41,9 +41,9 @@ CC:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 01/11] usb: mtu3: check return value of devm_extcon_register_notifier()
-Date:   Wed, 6 Mar 2019 19:46:13 +0800
-Message-ID: <1551872783-13707-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH 04/11] usb: mtu3: rebuild the code of getting vbus regulator
+Date:   Wed, 6 Mar 2019 19:46:16 +0800
+Message-ID: <1551872783-13707-5-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1551872783-13707-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1551872783-13707-1-git-send-email-chunfeng.yun@mediatek.com>
@@ -55,86 +55,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check the return value of devm_extcon_register_notifier() and
-add error handling.
+Remove local variable @vbus and use @dev instead of @pdev->dev
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_dr.c   | 13 +++++++++----
- drivers/usb/mtu3/mtu3_plat.c |  8 +++++++-
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/usb/mtu3/mtu3_plat.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index ac60e9c8564e..61694c40e101 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -238,14 +238,18 @@ static int ssusb_extcon_register(struct otg_switch_mtk *otg_sx)
- 	otg_sx->vbus_nb.notifier_call = ssusb_vbus_notifier;
- 	ret = devm_extcon_register_notifier(ssusb->dev, edev, EXTCON_USB,
- 					&otg_sx->vbus_nb);
--	if (ret < 0)
-+	if (ret < 0) {
- 		dev_err(ssusb->dev, "failed to register notifier for USB\n");
-+		return ret;
-+	}
- 
- 	otg_sx->id_nb.notifier_call = ssusb_id_notifier;
- 	ret = devm_extcon_register_notifier(ssusb->dev, edev, EXTCON_USB_HOST,
- 					&otg_sx->id_nb);
--	if (ret < 0)
-+	if (ret < 0) {
- 		dev_err(ssusb->dev, "failed to register notifier for USB-HOST\n");
-+		return ret;
-+	}
- 
- 	dev_dbg(ssusb->dev, "EXTCON_USB: %d, EXTCON_USB_HOST: %d\n",
- 		extcon_get_state(edev, EXTCON_USB),
-@@ -415,6 +419,7 @@ void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
- int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
-+	int ret = 0;
- 
- 	INIT_WORK(&otg_sx->id_work, ssusb_id_work);
- 	INIT_WORK(&otg_sx->vbus_work, ssusb_vbus_work);
-@@ -422,9 +427,9 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- 	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_init(ssusb);
- 	else
--		ssusb_extcon_register(otg_sx);
-+		ret = ssusb_extcon_register(otg_sx);
- 
--	return 0;
-+	return ret;
- }
- 
- void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
 diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index e086630e41a9..dee31d5eefe1 100644
+index 3a4a80f15957..a326b1d6006a 100644
 --- a/drivers/usb/mtu3/mtu3_plat.c
 +++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -401,7 +401,11 @@ static int mtu3_probe(struct platform_device *pdev)
- 			goto gadget_exit;
- 		}
+@@ -228,7 +228,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
+ 	struct device *dev = &pdev->dev;
+-	struct regulator *vbus;
+ 	struct resource *res;
+ 	int i;
+ 	int ret;
+@@ -299,12 +298,11 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	of_property_read_u32(node, "mediatek,u3p-dis-msk",
+ 			     &ssusb->u3p_dis_msk);
  
--		ssusb_otg_switch_init(ssusb);
-+		ret = ssusb_otg_switch_init(ssusb);
-+		if (ret) {
-+			dev_err(dev, "failed to initialize switch\n");
-+			goto host_exit;
-+		}
- 		break;
- 	default:
- 		dev_err(dev, "unsupported mode: %d\n", ssusb->dr_mode);
-@@ -411,6 +415,8 @@ static int mtu3_probe(struct platform_device *pdev)
+-	vbus = devm_regulator_get(&pdev->dev, "vbus");
+-	if (IS_ERR(vbus)) {
++	otg_sx->vbus = devm_regulator_get(dev, "vbus");
++	if (IS_ERR(otg_sx->vbus)) {
+ 		dev_err(dev, "failed to get vbus\n");
+-		return PTR_ERR(vbus);
++		return PTR_ERR(otg_sx->vbus);
+ 	}
+-	otg_sx->vbus = vbus;
  
- 	return 0;
- 
-+host_exit:
-+	ssusb_host_exit(ssusb);
- gadget_exit:
- 	ssusb_gadget_exit(ssusb);
- comm_exit:
+ 	if (ssusb->dr_mode == USB_DR_MODE_HOST)
+ 		goto out;
 -- 
 2.20.1
 
