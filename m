@@ -2,106 +2,147 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A93C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2E7C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CDF20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IjQr5S8g"
+	by mail.kernel.org (Postfix) with ESMTP id 259B220840
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfCFVAw (ORCPT
+        id S1728088AbfCFVBF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:00:52 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39641 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbfCFVAv (ORCPT
+        Wed, 6 Mar 2019 16:01:05 -0500
+Received: from lithops.sigma-star.at ([195.201.40.130]:47128 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728018AbfCFVBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:00:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id b4so11066393oif.6;
-        Wed, 06 Mar 2019 13:00:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WkZ4HEOJZFJ5tvEsQ4ywiwfaW/8mEqhWWpAAzk9aizg=;
-        b=IjQr5S8gwfPe+w9yvuXdiT+V+jsiia4rARi/vB88Q5xKvTp8AIaK/D6CG3920dUhG2
-         NSk3tujLvxjCe4D4ndxu6c+tg17hSyu5qwV3IXH53hEZm8Cfqa2/e8tp1aKkZir2bi4l
-         kZT5jssK5fudG5pIakE4tXpKG0bU5Blw15M6yKCvIe092BBakxRgDgkcQ5vCxfenoHJ9
-         BjCuTSBX1/Xjg4oQKdjekVqUV3pNnDm+d8Y3cRI2nulsOpW3lHVNYZgYlHRqrHJkszZP
-         uv38j4CkNgqIOILJut9FV97s0yaVETJXSuNdp5W3k0GtHVPrJyit1XQqlcDbRrUpJKaL
-         utbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WkZ4HEOJZFJ5tvEsQ4ywiwfaW/8mEqhWWpAAzk9aizg=;
-        b=kxz5bIvPe+W0EEzWgl/gYnueYGHG6xTpmT6Q+tPGjzbCQuFvSxHmhIY+4MfxKnAYlg
-         fbFRUPgj6HjqDeRysbU31uJSfT3twi3xxFkf9dzRE+nNgFhhSxy2bj5mrYOhVU9zLV/D
-         yRWKpgVBSPpS0eeZlsniexjMR6URCHi9TCyOYMQC0I9Xq7d76/r4CrybzCVBnjoQj5mt
-         qxroBgMvCFkWRrApwrPizm9dKRaKeYb0un3iXtwgOBdrvxQMH9TjK94OlGXYt/Fk6JF8
-         4OBY6Q16NcQ2S27HHWA2Nq27z8EYNL89Z8f73enffeYIVQUZy43e/46AUAdzri93GTk4
-         uqXw==
-X-Gm-Message-State: APjAAAU6K37BAAkR74yoesDmNRlDaxqmDjlDEWwVYGKcVr4LcFWdVrRZ
-        pE3jo2uQLwAt5byuBaw1S+RgnF8XFRHEJhaYYUc=
-X-Google-Smtp-Source: APXvYqzjgug8DoTlX4m1L/JICwfzoFheIp+0TFPFevCk+4vLgK+k7KoG9TZ6GSBWv2cc2lBWJcDy70x3XEVKsDwnyj0=
-X-Received: by 2002:aca:aacb:: with SMTP id t194mr2996977oie.129.1551906050696;
- Wed, 06 Mar 2019 13:00:50 -0800 (PST)
+        Wed, 6 Mar 2019 16:01:05 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 83B26608A387;
+        Wed,  6 Mar 2019 22:01:02 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id MYKFNp8BqHXm; Wed,  6 Mar 2019 22:01:02 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 27C8F608A38A;
+        Wed,  6 Mar 2019 22:01:02 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id fhfYwcal_9De; Wed,  6 Mar 2019 22:01:02 +0100 (CET)
+Received: from blindfold.localnet (213-47-184-186.cable.dynamic.surfer.at [213.47.184.186])
+        by lithops.sigma-star.at (Postfix) with ESMTPSA id C9B95608A387;
+        Wed,  6 Mar 2019 22:01:01 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, jdike@addtoit.com,
+        anton.ivanov@cambridgegreys.com, linux-um@lists.infradead.org
+Subject: Re: [PATCH] arch: um: Kconfig: pedantic cleanups
+Date:   Wed, 06 Mar 2019 22:01:01 +0100
+Message-ID: <31062067.NyzppZ7ELz@blindfold>
+In-Reply-To: <1551896897-30963-1-git-send-email-info@metux.net>
+References: <1551896897-30963-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-6-narmstrong@baylibre.com>
-In-Reply-To: <20190304103846.2060-6-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 6 Mar 2019 22:00:39 +0100
-Message-ID: <CAFBinCAacdsjwtg_RK=e=Lnep7oLF+eTBmkb1FB4nFR129z1jA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] phy: amlogic: add Amlogic G12A USB2 PHY Driver
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
-        kishon@ti.com, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Am Mittwoch, 6. März 2019, 19:28:17 CET schrieb Enrico Weigelt, metux IT consult:
 
-On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-there's a "regmap" include right above. this driver doesn't use syscon
-so this include can be dropped
+Can we please have a changelog?
 
-[...]
-> +static int phy_meson_g12a_usb2_exit(struct phy *phy)
-> +{
-> +       struct phy_meson_g12a_usb2_priv *priv = phy_get_drvdata(phy);
+Thanks,
+//richard
+
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  arch/um/Kconfig | 52 ++++++++++++++++++++++++++--------------------------
+>  1 file changed, 26 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index ec9711d..216ee50 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -80,46 +80,46 @@ config LD_SCRIPT_DYN
+>  	bool
+>  	default y
+>  	depends on !LD_SCRIPT_STATIC
+> -        select MODULE_REL_CRCS if MODVERSIONS
+> +	select MODULE_REL_CRCS if MODVERSIONS
+>  
+>  config HOSTFS
+>  	tristate "Host filesystem"
+>  	help
+> -          While the User-Mode Linux port uses its own root file system for
+> -          booting and normal file access, this module lets the UML user
+> -          access files stored on the host.  It does not require any
+> -          network connection between the Host and UML.  An example use of
+> -          this might be:
+> +	  While the User-Mode Linux port uses its own root file system for
+> +	  booting and normal file access, this module lets the UML user
+> +	  access files stored on the host.  It does not require any
+> +	  network connection between the Host and UML.  An example use of
+> +	  this might be:
+>  
+> -          mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
+> +	  mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
+>  
+> -          where /tmp/fromhost is an empty directory inside UML and
+> -          /tmp/umlshare is a directory on the host with files the UML user
+> -          wishes to access.
+> +	  where /tmp/fromhost is an empty directory inside UML and
+> +	  /tmp/umlshare is a directory on the host with files the UML user
+> +	  wishes to access.
+>  
+> -          For more information, see
+> -          <http://user-mode-linux.sourceforge.net/hostfs.html>.
+> +	  For more information, see
+> +	  <http://user-mode-linux.sourceforge.net/hostfs.html>.
+>  
+> -          If you'd like to be able to work with files stored on the host,
+> -          say Y or M here; otherwise say N.
+> +	  If you'd like to be able to work with files stored on the host,
+> +	  say Y or M here; otherwise say N.
+>  
+>  config MCONSOLE
+>  	bool "Management console"
+>  	depends on PROC_FS
+>  	default y
+>  	help
+> -          The user mode linux management console is a low-level interface to
+> -          the kernel, somewhat like the i386 SysRq interface.  Since there is
+> -          a full-blown operating system running under every user mode linux
+> -          instance, there is much greater flexibility possible than with the
+> -          SysRq mechanism.
+> -
+> -          If you answer 'Y' to this option, to use this feature, you need the
+> -          mconsole client (called uml_mconsole) which is present in CVS in
+> -          2.4.5-9um and later (path /tools/mconsole), and is also in the
+> -          distribution RPM package in 2.4.6 and later.
+> -
+> -          It is safe to say 'Y' here.
+> +	  The user mode linux management console is a low-level interface to
+> +	  the kernel, somewhat like the i386 SysRq interface.  Since there is
+> +	  a full-blown operating system running under every user mode linux
+> +	  instance, there is much greater flexibility possible than with the
+> +	  SysRq mechanism.
 > +
-> +       return reset_control_reset(priv->reset);
-do you know whether we should reset_control_assert here instead of
-reset_control_reset?
-the probe function below already uses reset_control_deassert, so the
-current implementation is inconsistent. in v1 you replied with "Maybe
-it would be better, indeed." - if there's a reason why
-reset_control_assert doesn't work here then I would like to have a
-comment stating why
-
-Apart from these two this is looking good!
-Human readable BIT/GENMASK #defines for the register bits would be
-nice, but I'm not sure if you have the details to add these.
+> +	  If you answer 'Y' to this option, to use this feature, you need the
+> +	  mconsole client (called uml_mconsole) which is present in CVS in
+> +	  2.4.5-9um and later (path /tools/mconsole), and is also in the
+> +	  distribution RPM package in 2.4.6 and later.
+> +
+> +	  It is safe to say 'Y' here.
+>  
+>  config MAGIC_SYSRQ
+>  	bool "Magic SysRq key"
+> 
 
 
-Regards
-Martin
+
+
