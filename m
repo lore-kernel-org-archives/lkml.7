@@ -2,81 +2,96 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8247C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5B1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FA7206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551865490;
-	bh=aOoghl6CRZqXAKWz2+Vw+FfgO8GDh0CsXbaGriu3KxU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eFEqtroRhgwuQ5Mo7jhw8NAupYqHjNUw5FnH8wCcBtqO9w8EZ9p4ExBJ+JWZsDxKA
-	 s0MkC7Nd4UD0fVb0KpEn/96b5jKWVFCmhZrw47ED3lt9otyn3puI6FpIFw9KYe407/
-	 cEHQHjcOjCFlqbxjKlv7mpvctM9K5BSz1rTL912s=
+	by mail.kernel.org (Postfix) with ESMTP id 84A71206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbfCFJos (ORCPT
+        id S1729847AbfCFJqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:44:48 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43709 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfCFJos (ORCPT
+        Wed, 6 Mar 2019 04:46:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36153 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729695AbfCFJqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:44:48 -0500
-Received: by mail-ot1-f67.google.com with SMTP id n71so10162816ota.10;
-        Wed, 06 Mar 2019 01:44:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aOoghl6CRZqXAKWz2+Vw+FfgO8GDh0CsXbaGriu3KxU=;
-        b=UkteB8fYVzq3eJsPuwbhUwP5cOEZPNDJQKf1cGcSYdwh0yFCt8+7LzqubgjeH/TA1/
-         9C9mCMyuJCBvO7T3qll6LB5847tvZz29zgc6xuK3U6nXRSjnO9hicJx/HLTq6FOYRAIs
-         ZTVYpW5HFMt3iC/mJXOq+1RVcvJ6SdTRWo24nusPryqvNSoSX++nNvmNNIBMEy2IL4uN
-         hEmx1Zxbz022ApsDRuZ9BTBF8OrjczRrWCS8+m5D4rWZBmT/K7TY75rPa/mXYqHxMG0k
-         6QzfVsPPUSIigrwFoiIPyz1Bww8w/0mVfqg/J61mUQonMO9v/kuxCXSGbEsZmp2cbrTa
-         38JA==
-X-Gm-Message-State: APjAAAWMi9UGW3LqYzDypVpRb2MQoNZb3ZPauflQ29R/3jKjjBqeME7o
-        p0wCZnBrxUW0DDslJQBTHbteNQYLs6nb8XyPAUs=
-X-Google-Smtp-Source: APXvYqyteLnBACNqsUQx6/wB8tloP2vfyWPwB/J6KAEM88VtNNpAtGERZculhZ51d2CQGy0zdzv8I7KtojIif3HaSfc=
-X-Received: by 2002:a9d:7547:: with SMTP id b7mr3634459otl.244.1551865485056;
- Wed, 06 Mar 2019 01:44:45 -0800 (PST)
-MIME-Version: 1.0
-References: <cc753578-75ba-2030-553d-f7d7d16955ef@kernel.org>
-In-Reply-To: <cc753578-75ba-2030-553d-f7d7d16955ef@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 6 Mar 2019 10:44:32 +0100
-Message-ID: <CAJZ5v0jg5Z6RZJjeuftWb+MBxvhUc5mdKQLfea+e29TQDRuxVw@mail.gmail.com>
-Subject: Re: [GIT PULL] cpupower update for Linux 5.1-rc1
-To:     shuah <shuah@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Thomas Renninger <trenn@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+        Wed, 6 Mar 2019 04:46:01 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1h1T7b-0006X3-3u; Wed, 06 Mar 2019 10:45:55 +0100
+Message-ID: <1551865552.9298.24.camel@pengutronix.de>
+Subject: Re: Smarter Kconfig help
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Peng Hao <peng.hao2@zte.com.cn>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Wed, 06 Mar 2019 10:45:52 +0100
+In-Reply-To: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
+References: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+Hi Russell,
 
-On Fri, Mar 1, 2019 at 5:47 PM shuah <shuah@kernel.org> wrote:
->
-> Hi Rafael,
->
-> Please pull the following cpupower update for Linux 5.1-rc1.
->
-> This cpupower update for Linux 5.1-rc1 consists of a patch to add
-> support to display boost frequency separately from Abhishek Goel.
->
-> diff is attached.
+Am Dienstag, den 05.03.2019, 17:31 +0000 schrieb Russell King - ARM Linux admin:
+> Guys,
+> 
+> We need to be smarter when writing Kconfig help.  I'm just going
+> through updating my build trees with the results of 5.0 development,
+> and a number of the help texts are next to useless.  For example,
+> 
+> PVPANIC - is this something that should be enabled for a host or
+> guest kernel?  Answer: you have to read the driver code to find out.
+> 
+> IMX_IRQSTEER - which i.MX SoCs does this apply to?  The help text
+> just says:
+> 
+>   "Support for the i.MX IRQSTEER interrupt multiplexer/remapper."
+> 
+> which doesn't say which SoCs this should be enabled for - it turns
+> out that grepping for the driver's DT compatible string, none of
+> the 32-bit ARM cores have support for this, yet we still default
+> it to enabled there.  It seems the help text should at the very
+> least tell the user that this is not applicable to i.MX SoCs with
+> 32-bit ARM cores.
+> 
+> I'm sure there's many other instances of this... I suspect that
+> it's caused by review concentrating mostly on the technical aspects
+> of the code and the Kconfig help text just gets forgotten about.
+> 
+> Can we at least improve these two options please?
 
-Pulled, but since my own pull requests have been sent already, this
-will have to wait for the second half of the merge window.
+While I totally agree that the irqsteer driver should only default Y on
+64bit i.MX SoCs, I'm not really sure what to do about the Kconfig help
+text.
 
-Thanks!
+Enumerating SoCs in the Kconfig of a IP block driver is always prone to
+get outdated. Just as the first example I've been able to come up with,
+the MMC_SDHCI_ESDHC_IMX help text says: "This selects the Freescale
+eSDHC/uSDHC controller support found on i.MX25, i.MX35 i.MX5x and
+i.MX6x.", while the same IP block is to be found on i.MX7 and various
+i.MX8.
+
+For the Kconfig user, who needs to decide if an option is relevant,
+outdated SoC information is probably just as bad as no information at
+all.
+
+Regards,
+Lucas
