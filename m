@@ -2,209 +2,164 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4678AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75578C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9FF205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4305C20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAueEc4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfCFSYd (ORCPT
+        id S1726721AbfCFS1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:24:33 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:34739 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfCFSYd (ORCPT
+        Wed, 6 Mar 2019 13:27:05 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41086 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFS1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:24:33 -0500
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x26IOUAj061356;
-        Thu, 7 Mar 2019 03:24:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
- Thu, 07 Mar 2019 03:24:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x26IOPSI061317
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 7 Mar 2019 03:24:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
-References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
- <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
- <201903050123.x251N312025685@www262.sakura.ne.jp>
- <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <0fc95fee-8b6e-5ff0-9a91-9e0ea66028f3@i-love.sakura.ne.jp>
-Date:   Thu, 7 Mar 2019 03:24:25 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Wed, 6 Mar 2019 13:27:05 -0500
+Received: by mail-qk1-f196.google.com with SMTP id y15so7395303qki.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:27:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kBMrk+cJz1b/nqRd7zw4UXY0V7pjf3jNTASwtiSq0+I=;
+        b=OAueEc4/u4mAgWJBkHS6cELi7LjD2bs/igVzgaoMMKopfZlAWuMUVM4PS2jpJSK0X0
+         aJmnhkEyO0YbUyQ1k9F2KJrIra4MrjhEfUaFtL8fg5mYMjteZlZLHmQDbTkUgkAQkIkF
+         XTIZPMuL1EbPTgb6PyEyBzQMPXWognybeZ7pyjU0gWAEsoA+HylTNoPGK9yszCr7TJvO
+         C4kbXWB92IZH0+PYs74pYj2VpbiKThS5r6UP+xhjii+It7zTpHZbXPue+0TKo3xpNp9I
+         f9ycS1IYXFw8TEeYsUvt5gj50M89Yo1P5f4KdlA8dOv5FdYWgFkAAM3zTYJB3nbqfeyp
+         CEWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kBMrk+cJz1b/nqRd7zw4UXY0V7pjf3jNTASwtiSq0+I=;
+        b=imM3GN7NimMQP1eIPXWSg1h1ABbLRmu1Y85HlKEsfyWf6sjovrZq+2Rm/PN6uhtKhi
+         zTQs/lKfjWBNorfm7YaqSkJ2aKkhlisn1ij6kJkdgJZip4uIJK/xX4Smc4PmfMytGqwm
+         QQGwLAHmnrtQ+MvJ9jP/MkocAIaADqu2ahIMAi1ig7AqfBBKLQfFvI/i97+f9gzwinOw
+         AJnH/0xTw17sGw89Suigg+uuiQsBGhWF3mGC2AtKuHStRzXgTEXI0A0kL1jBXCrQVEOi
+         2Wzthsx1wWjQ5gKi9AcUp0TyReO4s++3129YR7zMBsMCLe54ILxAoqbzzQo4yAHtliNB
+         qnjw==
+X-Gm-Message-State: APjAAAWr6fRiWDACcBNrJ6FsmmVOdeAgMyd/hozTRUR8WW3+YTEyq85q
+        y29f/Tgi/agoaMROcg4ePu7mbgyTOiMcR1GRnSs=
+X-Google-Smtp-Source: APXvYqz5EAnxqCVqkhro1f4kNylY/XB/OfFij+EUoZijR4gyBVobpMjmJfsZql2hcaiETf9SC7lPZW+iS28TT4YZxqI=
+X-Received: by 2002:a05:620a:391:: with SMTP id q17mr6894809qkm.16.1551896824136;
+ Wed, 06 Mar 2019 10:27:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190228002725.57444-1-gwendal@chromium.org> <CAFqH_52tWw8pGwY5fdAPQ6npbfWA7o4OhtPxvbUbCh5TdnbSew@mail.gmail.com>
+ <CABXOdTfqPKq34OVDmJ9qjTr0nqarhpN=f37m3xH9iuHxex+xrw@mail.gmail.com>
+In-Reply-To: <CABXOdTfqPKq34OVDmJ9qjTr0nqarhpN=f37m3xH9iuHxex+xrw@mail.gmail.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Wed, 6 Mar 2019 19:26:52 +0100
+Message-ID: <CAFqH_50ZQtbOqG+u9VLT8m=9jvv_XQsghUTCuySu-=vho6rLKw@mail.gmail.com>
+Subject: Re: [PATCH] mfd: cros: Update EC protocol to match current EC code
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/06 19:04, Petr Mladek wrote:
->> I'm suggesting to use a non-async printk() for $trailer_text_line line. I think
->> that changing all printk() called from out_of_memory() to async is doable, if
->> the caller of out_of_memory() wakes up a dedicated kthread described below.
-> 
-> This is error prone. The trailing printk is not guaranteed:
-> 
->     + It might get lost by code refactoring.
+Hi Guenter,
 
-Caller uses this async printk() with their own risk. This concern is same with
-"buffering into on-stack 'char buf[80]' using snprintf() and forgetting to flush
-it using printk()".
+Missatge de Guenter Roeck <groeck@google.com> del dia dc., 6 de mar=C3=A7
+2019 a les 18:20:
+>
+> [resending in plain text mode ]
+>
+> On Wed, Mar 6, 2019 at 8:57 AM Enric Balletbo Serra <eballetbo@gmail.com>=
+ wrote:
+> >
+> > Hi Gwendal,
+> >
+> > Many thanks to send this upstream.
+> >
+> > Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dj., 28 de
+> > febr. 2019 a les 1:31:
+> > >
+> > > Chromebook Embedded Controller protocol is defined in the kernel at
+> > > cros_ec_commands.h.
+> > > The source of trust for the EC protocol is at
+> > > https://chromium.googlesource.com/chromiumos/platform/ec/+/master/inc=
+lude/ec_commands.h
+> > >
+> > > Only needed changes have been picked up from this file to the kernel
+> > > include file leading to gaps between the upstream version and what th=
+e
+> > > latest ECs can do.
+> > >
+> > > Fill the gaps to ease future integrations. Changes from the original
+> > > files is header/footer for license and include files for alignment.
+> > >
+> > > Check this include file works on ChomeOS kernel 4.14 and 4.19 on eve.
+> > >
+> > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> > > ---
+> > >  include/linux/mfd/cros_ec_commands.h | 3627 +++++++++++++++++++++---=
+--
+> >
+> > I'm wondering if we should move this file to include/uapi at some
+> > point as this file is also used as user-space API for some userspace
+> > applications.
+> >
+> > While we are here I'd suggest if we can also fix the few errors (3)
+> > and warnings (5) spotted by checkpatch. With that it's an ack from my
+> > side.
+> >
+> > Being strict, though, on most cases the variables are going to be used
+> > in code that can be seen by user-space programs so maybe we should
+> > really need to switch to __u8/__u16/etc exportable data types instead
+> > of the uint8_t/uint16_t/etc types (those are not aimed to be used
+> > within the kernel). For those types that are internal we should use
+> > in-kernel type (u8/u16/etc)
+> >
+> > There is also the use of the BIT macro instead of the (1 << x), I know
+> > that this is a maintainer preference.
+> >
+> Is all that even possible ?
 
-> 
->     + People would miss that it is needed when async printk is used
->       in a shared function, e.g. dump_stack().
+Sorry, if I wasn't clear from my side, I should have marked those as
+nit, as in this case, I don't really mind, but I remember Lee
+requesting some of those changes for this file.
 
-I'm planning to allow async printk() for shared functions like dump_stack()
-because there will be some $trailer_text_line line after such shared functions.
-(By the way, for that reason, I expect that we won't do a tree-wide KERN_DEFAULT
-removal so that callers can pass KERN_DEFAULT_ASYNC as an function argument to
-such shared functions.)
+What I want to avoid is the desynchronization again. As this file
+belongs to the MFD subsystem Lee needs to be happy with it or at least
+know that we're not following the kernel style because is an imported
+file (i.e not using the BIT macro, doing this example because I know
+he takes care of this).
 
-> 
->     + People will not know that it is needed because they
->       are not familiar with the API. The would just use it
->       as part of a cargo cult programming or so.
+So I think that the main question here is if an imported file like
+this is acceptable in the include/linux/mfd?
 
-Same with "buffering into on-stack buffer and forgetting to flush it" above.
+> After all, this is an imported file, and
+> we don't usually expect that imported files meet the Linux kernel
+> coding style.
+>
 
-I'm planning to allow any shared functions which can be called from e.g.
-warn_alloc(), out_of_memory(), SysRq-t by allowing such shared functions
-to accept loglevel argument.
+I remember seeing somewhere that the EC code was following the Linux
+kernel style? Now I am not able to find where.
 
-> 
-> For this reason, this API is a "no no no" from my side.
-> 
+Thanks,
+ Enric
 
-There are two types of printk() data. One is "small/short messages but
-partial/incomplete line (even if a few bytes) might be helpful" and
-the other is "large/long messages but partial/incomplete line is hardly
-helpful". The former uses "sync printk()s" and the latter uses "async
-printk()s followed by a sync printk()". And this API is powerful for the
-latter type which are called by for_each_*() pattern (e.g. dump_tasks()).
-
-> 
-> I am open to bring back discussions about a forced offload when
-> a single task is blocked in console_unlock() for too long.
-
-This is a matter of adding hints for judging which thread
-(console_owner or console_waiter) should continue printing.
-
-> 
-> It might be configurable depending on the usecase. For example,
-> real time kernel would be more aggressive with offloading.
-> It might need to be completely disabled to debug certain
-> type of problems, e.g. sudden death.
-> 
-> 
-> But I would really like to avoid even more printk variants.
-> They have many problems:
-> 
->     + Only a handful of people would know how to use them right.
-
-The caller of async printk() knows when/how to use async printk().
-
-> 
->     + They are hard to maintain. Any incompatible printk() in the call
->       chain might break the intention.
-
-There is no incompatible printk(). Only when to wake up a thread which
-writes to consoles differs.
-
-> 
->     + They are problematic in a shared code. Incompatible printk()
->       variants might be required/preferred according to the use case.
-
-Again, there is no incompatible printk().
-
-> 
->     + They might improve situation in one workload and make it
->       worse in another one.
-
-Avoiding e.g. RCU stall / OOM stall by deferring write to consoles is
-an improvement. Reducing the side effect of accumulated pending logs
-is matters of "how we can try to offload to an idle thread (or utilize
-idle CPUs) for writing to consoles" and "how we can try to ratelimit
-appropriately".
-
-To me, none of these concerns is a valid reason to keep "store now but
-print later" prefix away.
-
-
-
-> 
-> 
->>> For example, I would stop printing allocation failures until
->>> the currently running OOM killer succeeds in freeing some memory.
->>
->> We could serialize out_of_memory() and warn_alloc(), but since warn_alloc()
->> can be called from atomic context (e.g. GFP_ATOMIC from interrupt handler)
->> while out_of_memory() is always called from schedulable context (e.g.
->> GFP_KERNEL), we can't use oom_lock mutex.
-> 
-> I did not mean serializing. I meant to avoid printing the warnings
-> at all until OOM killer finishes its job.
-
-But your ratelimit_reset() below requires serializing.
-
-> 
-> 
->> Also, both nopage_rs in warn_alloc() and oom_rs in oom_kill_process() are not
->> working well. This is because ___ratelimit() function assumes that operations
->> to be ratelimited complete fast enough to be able to repeat many times within
->> a second. If one operation to be ratelimited takes many seconds (or even
->> minutes), ___ratelimit() becomes always true and can not ratelimit at all.
-> 
-> The current ratelimiting is time driven. We might need an event
-> driven variant. It might even be done with the current
-> implementation if we add something like:
-> 
-> void ratelimit_reset(struct ratelimit_state *rs)
-> {
-> 	unsigned long flags;
-> 
-> 	raw_spin_irqsave(&rs->lock, flags);
-> 
-> 	rs->begin   = jiffies;
-> 	rs->printed = 0;
-> 
-> 	raw_spin_unlock_irqrestore(&rs->lock, flags);
-> }
-> 
-> We could call this when some event "solved" the problem.
-
-This requires serialization among threads using "rs". I already
-proposed ratelimit_reset() for memcg's OOM problem at
-https://lkml.kernel.org/r/201810180246.w9I2koi3011358@www262.sakura.ne.jp
-but it was not accepted.
-
-> It means that it makes sense to enable the related
-> ratelimited messages again because they would describe
-> another problem.
-
-___ratelimit() could also check number of not-yet-flushed
-printk() records (e.g. log_next_seq - console_seq <= $some_threshold).
-
+> Thanks,
+> Guenter
+>
+> > [snip]
+> >
+> > Thanks,
+> >  Enric
