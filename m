@@ -2,108 +2,112 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6362C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFBBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E86D2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8611520675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbfCFIlt (ORCPT
+        id S1729451AbfCFIn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 03:41:49 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52510 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfCFIlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 03:41:49 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 31B05448B87E48562C11
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2019 16:41:47 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 6 Mar 2019 16:41:38 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <tglx@linutronix.de>, <deepa.kernel@gmail.com>, <arnd@arndb.de>
-CC:     <linux-kernel@vger.kernel.org>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH v3] posix-cpu-timers: Avoid undefined behaviour in timespec64_to_ns()
-Date:   Wed, 6 Mar 2019 16:40:46 +0800
-Message-ID: <1551861646-52541-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 6 Mar 2019 03:43:28 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44306 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbfCFIn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 03:43:27 -0500
+Received: by mail-ed1-f67.google.com with SMTP id b20so9589335edw.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 00:43:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jk6odKMg/O/nSsls4wjhQaV1/5sByi0cTfR8gR1keOk=;
+        b=CWyI6ZXDKBOBA2zHQTpT9L7LQE6g1lRdKNIY8P+clsKG3xzd6gCfsq1M9ltleIHv5M
+         R2cvMSCTXNUf+fiZPnHsCS5QDCoSOecnnc2Cl39tnF7SElpXSMnTQfrJtyw7Bb25viX6
+         H0hwU/L0zPY7ZzYMKkpUgSawkiUx+8tgWcHRK1/17nhVv1bn3QKH+Ma0jXWY4UGIy2Dd
+         pkZupyYeF9hwPVZP2CexV02afXjGIE/KdlgWXf6+rPDmsezaRMF9BFe0xUQxY0GAkmsg
+         VP42bEdBJ9+QCor1oSvlEU+DYuJcE01kQ56I332Xs4Nd/y/6km2pJVsE1E6M7BDOmUtl
+         NF/g==
+X-Gm-Message-State: APjAAAXXpUflsSQHMj281b8Sn/lMMaOPSFhCTvi8Zl8ivDgpWfbi7hxV
+        ITePnlpcZ3sPfPVF+r9LAiXkzOaXldY=
+X-Google-Smtp-Source: APXvYqz9UrLPnN6IoYEvk7klLjV8Z6xyCIs21U4FvtisU9CY1LmZqLi6N7tMcn1pF5/P5YTVv+JInw==
+X-Received: by 2002:a17:906:4347:: with SMTP id z7mr3164978ejm.190.1551861805562;
+        Wed, 06 Mar 2019 00:43:25 -0800 (PST)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id t25sm279483eda.69.2019.03.06.00.43.24
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 00:43:24 -0800 (PST)
+Subject: Re: [PATCH v3] io: accel: kxcjk1013: restore the range after resume.
+To:     "Chen, Hu" <hu1.chen@intel.com>
+Cc:     bo.he@intel.com, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <23ced5ac-b0a0-7d87-76d7-bdec0c3e0e15@redhat.com>
+ <20190306023224.23695-1-hu1.chen@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <cac7810e-04df-8aca-fbd9-2433b544960c@redhat.com>
+Date:   Wed, 6 Mar 2019 09:43:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190306023224.23695-1-hu1.chen@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I ran Syzkaller testsuite, I got the following call trace.
-================================================================================
-UBSAN: Undefined behaviour in ./include/linux/time64.h:120:27
-signed integer overflow:
-8243129037239968815 * 1000000000 cannot be represented in type 'long long int'
-CPU: 5 PID: 28854 Comm: syz-executor.1 Not tainted 4.19.24 #4
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xca/0x13e lib/dump_stack.c:113
- ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
- handle_overflow+0x193/0x1e2 lib/ubsan.c:190
- timespec64_to_ns include/linux/time64.h:120 [inline]
- posix_cpu_timer_set+0x95a/0xb70 kernel/time/posix-cpu-timers.c:687
- do_timer_settime+0x198/0x2a0 kernel/time/posix-timers.c:892
- __do_sys_timer_settime kernel/time/posix-timers.c:918 [inline]
- __se_sys_timer_settime kernel/time/posix-timers.c:904 [inline]
- __x64_sys_timer_settime+0x18d/0x260 kernel/time/posix-timers.c:904
- do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462eb9
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f14e4127c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000df
-RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462eb9
-RDX: 0000000020000080 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f14e41286bc
-R13: 00000000004c54cc R14: 0000000000704278 R15: 00000000ffffffff
-================================================================================
+Hi,
 
-It is because 'it_interval.tv_sec' is larger than 'KTIME_SEC_MAX' and
-'it_interval.tv_sec * NSEC_PER_SEC' overflows in 'timespec64_to_ns()'.
+On 06-03-19 03:32, Chen, Hu wrote:
+> From: "he, bo" <bo.he@intel.com>
+> 
+> On some laptops, kxcjk1013 is powered off when system enters S3. We need
+> restore the range regiter during resume. Otherwise, the sensor doesn't
+> work properly after S3.
+> 
+> Signed-off-by: he, bo <bo.he@intel.com>
+> Signed-off-by: Chen, Hu <hu1.chen@intel.com>
 
-This patch checks whether 'it_interval.tv_sec' is larger than
-'KTIME_SEC_MAX' and saturate if that is the case.
+Thanks, patch looks good to me:
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
----
-v3:
-  - add limit check and saturate
-v2:
-  - use 'timespec64_valid_restrict()' to check the input and return
-    -EINVAL if check fails.
----
- kernel/time/posix-timers.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Regards,
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 0e84bb7..4b57566 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -856,6 +856,10 @@ static int do_timer_settime(timer_t timer_id, int flags,
- 	if (!timespec64_valid(&new_spec64->it_interval) ||
- 	    !timespec64_valid(&new_spec64->it_value))
- 		return -EINVAL;
-+	if (new_spec64->it_interval.tv_sec > KTIME_SEC_MAX)
-+		new_spec64->it_interval.tv_sec = KTIME_SEC_MAX;
-+	if (new_spec64->it_value.tv_sec > KTIME_SEC_MAX)
-+		new_spec64->it_value.tv_sec = KTIME_SEC_MAX;
- 
- 	if (old_spec64)
- 		memset(old_spec64, 0, sizeof(*old_spec64));
--- 
-1.7.12.4
+Hans
 
+
+
+> ---
+>   v3: Avoid unnecessary mutex_unlock (Hans).
+>   v2: Handle return value independently (Jonathan).
+> 
+>   drivers/iio/accel/kxcjk-1013.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
+> index 7096e577b23f..50f3ff386bea 100644
+> --- a/drivers/iio/accel/kxcjk-1013.c
+> +++ b/drivers/iio/accel/kxcjk-1013.c
+> @@ -1437,6 +1437,8 @@ static int kxcjk1013_resume(struct device *dev)
+>   
+>   	mutex_lock(&data->mutex);
+>   	ret = kxcjk1013_set_mode(data, OPERATION);
+> +	if (ret == 0)
+> +		ret = kxcjk1013_set_range(data, data->range);
+>   	mutex_unlock(&data->mutex);
+>   
+>   	return ret;
+> 
