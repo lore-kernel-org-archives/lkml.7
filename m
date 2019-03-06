@@ -2,112 +2,113 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06FBC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C60A20657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFBB20657
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pXwQEKe3"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="oZi8soNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfCFV1m (ORCPT
+        id S1726197AbfCFVaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:27:42 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41468 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFV1m (ORCPT
+        Wed, 6 Mar 2019 16:30:05 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:41071 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFVaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:27:42 -0500
-Received: by mail-oi1-f195.google.com with SMTP id e7so11129845oia.8;
-        Wed, 06 Mar 2019 13:27:41 -0800 (PST)
+        Wed, 6 Mar 2019 16:30:04 -0500
+Received: by mail-yw1-f67.google.com with SMTP id q128so11393517ywg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 13:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wfnQYJ9ZYPWLDmoAsuuOz4MnfdiiAyFbgZYkpIctsQw=;
-        b=pXwQEKe398p9NqTp1Migh8Gljfdn5LNtRx4dXr0nuLQROc1E31OvuoXH7S07gTUeoL
-         iiJTkmo2r6FJTV5x9knq/HX4z3BkKVfg0EduNWmBmUzkg2M2+GO909sxK2aRS/CJwPZl
-         wGEpKv0CrC9jtmX5x9PEAT14GFelVIWCK+10HDB4UAu8/AO5d6wbQUEo8SQ3B6w3XXni
-         EO3cLROVeMse8e5XWkHnvjcW2kEmqwq8dBZYxbqV0S53F3yUp0xI5Smd2nlQC0xHs8gl
-         BWwzJxJL3Rl4t4Tug9OIohi3H5jm8JnCc69xxiiIN+oNLEkELvHPULwwCUmSiQfs757k
-         bdng==
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NGlf0gBKF+Q5ixlrYcrI4I5PHHPIvPCv8Cp9LR7yJBY=;
+        b=oZi8soNmHYdaQ4vaMURDGrB+8OGgbjwg21His3g8aZTt23WOvVcKuCm9XpgsPShMOr
+         EF8G7L4ZdmBS78e9Kjao6pdudjQUyfLg5f7kZZhT7roXi0uN4Ide032PWfbN6n2vkZh1
+         KzGUosoJdsF5htcKWXwog+Gf4c+ebWX/qgPvWZdWSuNyMoF1l9kXEdGMUM+QCT6kXFqi
+         /HCPjVSH1umfbSykMZu58mY9RbbymQd9/vuuTRSTt2bVWI582x/++6ozKTC4DvwLtKWX
+         5BcLr9kjZ2aCH5mPL5uO8aTRV8/xaivHYwDAuXD2V4J63paBuxIaB1xNpVCXLqwNrDAC
+         zFog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wfnQYJ9ZYPWLDmoAsuuOz4MnfdiiAyFbgZYkpIctsQw=;
-        b=XuFDL8OFdCcIeYO004uEEe2+iF9kLXbdiXPnpbw9EMrNIirvq8XVBiWDKoznyn7Nly
-         pfGC+KUNi0H4q+vNrGZ6LEhUqirh6JCYyNgq8IJwTi5vI0BJE2ZEA5XrqdKXgQnHjTEX
-         FWI3kWp9jx0qx32JoViG0D7RIvb/TVwsL6/lg0W3hs7nfi/s9reMwwDjKqYunHxjEOW7
-         9g31gvvsaOjLSAXBL5vrTUXiuZVDLltD2g875AzmjAugJ2113p7KgMVrvRrfHY0Vf+27
-         CpP/3rHWUkmWzyeWcZ7z75vZMW4f/CBRXOBnuPbVjvnM0E7/98by+nMIYvO68CLhdF8S
-         FMqw==
-X-Gm-Message-State: APjAAAVdB4+G1O3lUSUOwaq8VWJRtGKa5ButBqoJfnacZB++fj4MYEWG
-        Cf8F8fbU5InJQ+o/QcE+9kG9hDgdWuP9Z3nkcGg=
-X-Google-Smtp-Source: APXvYqziQVrcMvGA65w5hFphx3ZggVpQ+FudS9uwkIC3wb4hLSrfo2bAN1wdUmKmEpX565SFbMxTHS47D8NP85XV/kM=
-X-Received: by 2002:aca:c286:: with SMTP id s128mr3047723oif.39.1551907660645;
- Wed, 06 Mar 2019 13:27:40 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NGlf0gBKF+Q5ixlrYcrI4I5PHHPIvPCv8Cp9LR7yJBY=;
+        b=YhM0ppLF7DVKUo6VG9jItNbdloaG3WBGIPPnKr6mDdRN43UZrPVw6kHGKX2vMrlwa6
+         Jtz/+1sz6CFILF0xZJ5p4SRp3w+jKD/hbcFjL7q7CA5eKb1SDOyCqSvrja78x6pG7KxS
+         IwYFoYnsVPkG6fkCa3wIqudHMLC25XZw2hbZ5LK1FjhZBO8MonUNkjjKUm1NkFYXpz8w
+         xbCNvfNsOxjiYIyeaCMkFIhGGdF52IYzG+yUYrvp5ds5w/ynDPMZm+VmYPMNtzSbE0O6
+         OLNjY3Pr+YKKQr4r/RGn5L/HQXsjccKgYzDudEB9uAPcvoybhMaKxSnmwUWeYirTMxAh
+         NSkA==
+X-Gm-Message-State: APjAAAUnHFQkBEnzfltXUwGqPQInjJuvnK5QNuL+V/OJatKI1JbZj6AH
+        0rEmdL/lScjFlloLQh3gaColIg==
+X-Google-Smtp-Source: APXvYqxH8/M4rLtzq+ngu8In/B87Onz29ncRKaK83jmmY1cqrWAxVyEldLH2L4iuIZ9vz+Xav0GtUA==
+X-Received: by 2002:a81:615:: with SMTP id 21mr7523360ywg.295.1551907803104;
+        Wed, 06 Mar 2019 13:30:03 -0800 (PST)
+Received: from cisco ([2601:282:901:dd7b:316c:2a55:1ab5:9f1c])
+        by smtp.gmail.com with ESMTPSA id m65sm885035ywb.46.2019.03.06.13.30.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 13:30:02 -0800 (PST)
+Date:   Wed, 6 Mar 2019 14:30:00 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Christian Brauner <christian.brauner@canonical.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] seccomp: disallow NEW_LISTENER and TSYNC flags
+Message-ID: <20190306213000.GI7413@cisco>
+References: <20190306201413.14153-1-tycho@tycho.ws>
+ <20190306201413.14153-2-tycho@tycho.ws>
+ <20190306203932.im7lkblvmd227td3@gmail.com>
+ <20190306204611.GH7413@cisco>
+ <CAPP7u0Wp6q=LwtnbNk3YNaKKHXAfDqXd0Dx6xXXesvKpR-p+Gg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190304103846.2060-1-narmstrong@baylibre.com> <20190304103846.2060-5-narmstrong@baylibre.com>
-In-Reply-To: <20190304103846.2060-5-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 6 Mar 2019 22:27:29 +0100
-Message-ID: <CAFBinCDthrw1zM8ryLOV4FDVvZecG8q8hGnNJVy8HOjTQRpFzg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
-        kishon@ti.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPP7u0Wp6q=LwtnbNk3YNaKKHXAfDqXd0Dx6xXXesvKpR-p+Gg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Wed, Mar 06, 2019 at 10:02:25PM +0100, Christian Brauner wrote:
+> On Wed, Mar 6, 2019 at 9:46 PM Tycho Andersen <tycho@tycho.ws> wrote:
+> >
+> > On Wed, Mar 06, 2019 at 09:39:35PM +0100, Christian Brauner wrote:
+> > > > +
+> > > >     /* Prepare the new filter before holding any locks. */
+> > > >     prepared = seccomp_prepare_user_filter(filter);
+> > > >     if (IS_ERR(prepared))
+> > > > @@ -1302,7 +1315,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
+> > > >             mutex_unlock(&current->signal->cred_guard_mutex);
+> > > >  out_put_fd:
+> > > >     if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+> > > > -           if (ret < 0) {
+> > > > +           if (ret) {
+> > >
+> > > Why that change but keep checking if (ret < 0) further up?
+> >
+> > Not sure what you mean here. The only other place I see that we check
+> > something is < 0 in that function is the return value of
+> > get_unused_fd_flags(), which looks right to me?
+> 
+> The change just seemed it had nothing to do with the rest of the patch.
+> Just making sure this didn't happen on accident and would cause regressions.
 
-On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Adds the bindings for the Amlogic G12A USB Glue HW.
->
-> The Amlogic G12A SoC Family embeds 2 USB Controllers :
-> - a DWC3 IP configured as Host for USB2 and USB3
-> - a DWC2 IP configured as Peripheral USB2 Only
->
-> A glue connects these both controllers to 2 USB2 PHYs,
-> and optionnally to an USB3+PCIE Combo PHY shared with the PCIE controller.
->
-> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
-> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
-> setups the on-chip OTG mode selection for this PHY.
->
-> The PHYs phandles are passed  to the Glue node since the Glue controls the
-> interface with the PHY, not the DWC3 controller.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+No, not on accident :). See the second half of the patch notes.
 
-[...]
-> +                       dwc3: usb@ff500000 {
-> +                               compatible = "snps,dwc3";
-> +                               reg = <0x0 0xff500000 0x0 0x100000>;
-> +                               interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +                               dr_mode = "host";
-> +                               snps,dis_u2_susphy_quirk;
-> +                               snps,quirk-frame-length-adjustment;
-> +                       };
-in v1 of the patch I asked whether we should pass the PHYs which are
-connected to the dwc3 controller here as well (instead of only passing
-them to the USBCTRL node).
-we can still do this later on, the important part is: USBCTRL
-interfaces with the PHYs -> that is already part of the binding.
+I can split it out into two separate patches if that makes more sense.
+In fact this hunk alone fixes the UAF, but you still get non-sensical
+return results even if it doesn't do anything terrible, hence the
+first hunk.
 
+Cheers,
 
-Regards
-Martin
+Tycho
