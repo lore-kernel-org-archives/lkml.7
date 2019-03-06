@@ -2,280 +2,284 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290D2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 04:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21DDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 05:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CBA2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 04:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5365320675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 05:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZbX4TJ/J"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YQgHztCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfCFEso (ORCPT
+        id S1726378AbfCFFH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 23:48:44 -0500
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:37250 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfCFEsn (ORCPT
+        Wed, 6 Mar 2019 00:07:27 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:45297 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfCFFH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 23:48:43 -0500
-Received: by mail-ed1-f54.google.com with SMTP id m12so9190454edv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 20:48:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e/2Q5osMdQfR2ee7+DOJ+eZyJx4NybysVcMAjqH88SQ=;
-        b=ZbX4TJ/JAPl7EMUIpuVYy/gcyh8emV4bNpidjzGtz3UzmHoUnZUByG8zcVT0RNqXe7
-         sdPgn2dNLhTvwZy4s6D4f1SLRl1tYoFTjjJelpPFpzT+MyyRuPA4VV/5yQzp56FQ6YXU
-         8gbPBTk6m7KtSx9/cN+BbUngWgF+hX9V4MlN6lszpr2Yqg4GvzqgV81dcE5FlBBrWca6
-         tC1vTia6mi1pRybYR6cT+cCNDOUUD49igLhwZho2UPc0XThkb3igAOMrQUJayxcRpBFl
-         cq1UZMKCXlcbiNMfu7nvFRpPnQy73JuZBIAqrvyMjJ5R9mzVUae/PKH3GoMCJGbG45QB
-         YKnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e/2Q5osMdQfR2ee7+DOJ+eZyJx4NybysVcMAjqH88SQ=;
-        b=c7mvHoMzME9td9PXWJb1dSs3s1zjanex4oKJhEzvrY6ACAasyr5/J0muN8caw0nwdH
-         Fh1L6OojVpqTRQW0YMirTRH5zt/v4bTXCPpkuF2UINSsUaqUjp3wEec8EBvOtAKa5PpU
-         /ZwmX6Dyyh1UL3W6ijm82RFaYjt83V0aU3t+Y57EC4b49vaE2XbbJlKfsaXDb8VBL5QD
-         ouf+lZ3jTawco2A25NWrtP/wmSyuaeP/tAMVkhach8vttkiDvQcSQeqV4YmxmfAhJUUi
-         G/jXI/A8KvgTUjvakpiiiqYLVubzqiz1/Thd3XWwTjzcmC4Ej2pZMdd/QgCqS4s+VFpF
-         mLFA==
-X-Gm-Message-State: APjAAAWkKnXmZoAZA/sdNQ9P+YUAc4p2/rHBaKMgaxPf/xaELhI5xmjO
-        xP0oyrc4nUMYqh/lOOk//vbndx64OZWFlwMgZFI=
-X-Google-Smtp-Source: APXvYqywaXT9bNz2/nWP6cY2rx3SnDlbWV48BR92SKgDPb1j7akd8vR7woSO0x4Ycbe+cOlCwy8vKSHVvUioLN6Vn7w=
-X-Received: by 2002:a50:cd14:: with SMTP id z20mr21291911edi.146.1551847721228;
- Tue, 05 Mar 2019 20:48:41 -0800 (PST)
+        Wed, 6 Mar 2019 00:07:27 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190306050723epoutp030d462341021b24f4c5142d6505a9056c~JRk0Aqd3m2622426224epoutp03B
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2019 05:07:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190306050723epoutp030d462341021b24f4c5142d6505a9056c~JRk0Aqd3m2622426224epoutp03B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1551848843;
+        bh=D9gEkdlfDU9pcbqELgHmwBVx62w4m2AwhGQlQyaYU4c=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=YQgHztCxlwv3LMCrrJU0qh0G7AygCSNooUNe4LBxXt9EL2N7CwGyZFqQQFgXYPcbz
+         8rwWZsCvuHvjPXLvyOvipd0UWE3t4+SxOmK+IF7CnWG8m/qR8rVMIUcLMhib1S0hbW
+         tNAMd4XLdTxvFSVpRPCQfupMMiagpblJBFSP/2+o=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190306050718epcas1p400d39a3e93c04204a72c8e737b77ed1d~JRkvr66r12637926379epcas1p4m;
+        Wed,  6 Mar 2019 05:07:18 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E9.FB.04173.3855F7C5; Wed,  6 Mar 2019 14:07:15 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190306050714epcas1p24e31aac164de5b3e0cc4109f11e85d05~JRksJekZR0257602576epcas1p2P;
+        Wed,  6 Mar 2019 05:07:14 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190306050714epsmtrp21574d284e903e7f19ddfb61976d4bcea~JRksIlXPv0952309523epsmtrp2L;
+        Wed,  6 Mar 2019 05:07:14 +0000 (GMT)
+X-AuditID: b6c32a36-5d9ff7000000104d-d7-5c7f5583f443
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        25.E1.03971.2855F7C5; Wed,  6 Mar 2019 14:07:14 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190306050714epsmtip15af9864c90e95fd7923c217f52c29d1e~JRkr8krSv3015930159epsmtip1D;
+        Wed,  6 Mar 2019 05:07:14 +0000 (GMT)
+Subject: Re: [PATCH -next & mmotm] extcon: fix EXTCON_PTP5150 kconfig
+ warnings and build errors
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9a85c4a4-5dc7-e69a-ffa1-490c8cb98e9f@samsung.com>
+Date:   Wed, 6 Mar 2019 14:07:14 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <5c51daed7c023_2fcf3fe7576d45c417207b@github-lowworker-89d05ac.cp1-iad.github.net.mail>
- <5c51ee838b18f_74e53fd6ff0d45c41780e2@github-lowworker-5909e27.cp1-iad.github.net.mail>
- <5c522f5b6cb8a_60733fc5256d45b412831@github-lowworker-39ccb07.cp1-iad.github.net.mail>
- <5c534f0336ca6_19ae3fcbf5cd45b4186161@github-lowworker-e55e3e3.cp1-iad.github.net.mail>
- <5c535110f0f30_3aa13fafe46d45c4222962@github-lowworker-dcc078e.cp1-iad.github.net.mail>
- <061a28afa26cf5ad7d11f8074353a9cf@redchan.it> <5c5489478eb20_56f33fd9e9ad45b43146ec@github-lowworker-4f62d42.cp1-iad.github.net.mail>
- <5c55ecdcb298_3a283fd6dfcd45c4309246@github-lowworker-63e61ec.cp1-iad.github.net.mail>
- <5c563190ae6cc_18c33fcb464d45bc1523b0@github-lowworker-39ccb07.cp1-iad.github.net.mail>
- <5c586b095281b_4c6d3ffba28d45b8120450@github-lowworker-e51511d.cp1-iad.github.net.mail>
- <5c58a56f8ded7_36e93f9cb4ad45b8932e7@github-lowworker-e55e3e3.cp1-iad.github.net.mail>
- <312c3d91f6c4a71c34b96728a2efb385@redchan.it> <5c5b1609a1561_1ac23fbe2d6d45b88762d0@github-lowworker-dcc078e.cp1-iad.github.net.mail>
- <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5812163@github.com> <2ba97dc3492f9c2eac75f118782c04f3@redchan.it>
-In-Reply-To: <2ba97dc3492f9c2eac75f118782c04f3@redchan.it>
-From:   Martin Schroeder <mkschreder.uk@googlemail.com>
-Date:   Wed, 6 Mar 2019 05:48:30 +0100
-Message-ID: <CAGmj6qvwS9dvD1rP-7t5pttB-8vZuUF3BnL3RD5ceFmA4fCdYA@mail.gmail.com>
-Subject: Re: DMCA takedown notice
-To:     mikeeusa@redchan.it
-Cc:     linux-kernel@vger.kernel.org, freebsd-chat@freebsd.org,
-        misc@openbsd.org, editor@lulz.com, news@theregister.co.uk,
-        esr@thyrsus.com, torvalds@osdl.org, rms@gnu.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ff1784cd-6429-8597-fcba-55b383727515@infradead.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOJsWRmVeSWpSXmKPExsWy7bCmgW5zaH2MwYNt7BZz1q9hs7i8aw6b
+        xe3GFWwWb+9MZ7F4uX86qwOrx85Zd9k9Nq/Q8jgx4zeLR9+WVYwenzfJBbBGZdtkpCampBYp
+        pOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAO1WUihLzCkFCgUkFhcr
+        6dvZFOWXlqQqZOQXl9gqpRak5BRYFugVJ+YWl+al6yXn51oZGhgYmQIVJmRn/Ls+ma1gmXtF
+        68ejjA2M3ZZdjJwcEgImEnP6D7J1MXJxCAnsYJS4v+4/K0hCSOATo8Sd5Y4QiW+MEhPffGGE
+        6Th1ZhtUx15Gic8LFjFCdLxnlFh+TRDEFhZIlDj/7zdYXESgSuJx5ynmLkYODmaBeIm2+fwg
+        YTYBLYn9L26wgdj8AooSV388ZgQp4RWwkzj7rAokzCKgInHzWCMTiC0qECHx/uluFhCbV0BQ
+        4uTMJ2A2p4CjxPMtd8HGMAuIS9x6Mp8JwpaXaN46mxnkTAmB52wSN1btYoO430Xiwp+VTBC2
+        sMSr41vYIWwpic/v9kLVVEusPHmEDaK5g1Fiy/4LrBAJY4n9SyczQfyiKbF+lz7EMj6Jd197
+        WEHCEgK8Eh1tQhDVyhKXH9yFWiUpsbi9E2q8h8ScdedYJzAqzkLyziwkL8xC8sIshGULGFlW
+        MYqlFhTnpqcWGxYYIUf1JkZwotQy28G46JzPIUYBDkYlHt4JrXUxQqyJZcWVuYcYJTiYlUR4
+        gx3qY4R4UxIrq1KL8uOLSnNSiw8xmgJDeyKzlGhyPjCJ55XEG5oaGRsbW5gYmpkaGiqJ8653
+        cI4REkhPLEnNTk0tSC2C6WPi4JRqYNx67qPv2+htvgUrlm39Pn/jJH9hv7SulwvPrm4Mz3jL
+        te65Rf/xza/TPBv7AhXmM1t1R7XF1S6cX1nW/9KOZ+HlJaa7bmXE9Ho/uyGdLh5ketXt//+F
+        MwouJ7JH/b2RsFNP9tQSQXYTZZGHa+KdJx00Wucu3h0c+eXOtviz0ZuLRQ+H/mM8fUuJpTgj
+        0VCLuag4EQA2O2nUqgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJTrcptD7GYNNFZYs569ewWVzeNYfN
+        4nbjCjaLt3ems1i83D+d1YHVY+esu+wem1doeZyY8ZvFo2/LKkaPz5vkAlijuGxSUnMyy1KL
+        9O0SuDL+XZ/MVrDMvaL141HGBsZuyy5GTg4JAROJU2e2sXUxcnEICexmlFj0fi47REJSYtrF
+        o8xdjBxAtrDE4cPFEDVvGSXuty5kBKkRFkiU2LK2lRnEFhGokpg+/zEbSD2zQLzEuT45iPop
+        jBId90+C1bAJaEnsf3GDDcTmF1CUuPrjMSNIPa+AncTZZ1UgYRYBFYmbxxqZQGxRgQiJuxdf
+        sIDYvAKCEidnPgGzOQUcJZ5vuQs2hllAXeLPvEvMELa4xK0n85kgbHmJ5q2zmScwCs9C0j4L
+        ScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHDVamjsYLy+JP8Qo
+        wMGoxMM7obUuRog1say4MvcQowQHs5IIb7BDfYwQb0piZVVqUX58UWlOavEhRmkOFiVx3qd5
+        xyKFBNITS1KzU1MLUotgskwcnFINjJyOIdqnAtKPbdzhZvF1uc/yFzPWLWZ5+onLxH39OeOZ
+        YevkXO07FvmLxSxcUek37aZg9MIlj+wfhN1xi9RgZ0rduWyH5rJWff6t6jONSi5eERX/OXWp
+        /ZLXxTOqd5Xqz/p8zPXVXVWltRz7rJ5bLRe5IWwa2fb45TO+ax5sTnfmXcj7mlawRluJpTgj
+        0VCLuag4EQCO0akblgIAAA==
+X-CMS-MailID: 20190306050714epcas1p24e31aac164de5b3e0cc4109f11e85d05
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190226001817epcas4p1a7d9f952dccd38dcce178dad487268fa
+References: <CGME20190226001817epcas4p1a7d9f952dccd38dcce178dad487268fa@epcas4p1.samsung.com>
+        <ff1784cd-6429-8597-fcba-55b383727515@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fact that you even spend this much time on trying to take back
-your gift to the community instead of just accepting your
-responsibility for your own actions is impressive. And unless you sign
-with your legal name and your copyright notices uses your legal name
-as well as details of your location then your claims have no effect at
-all because it is literally impossible to even speculate that you are
-the copyright holder - let alone proving it beyond any reasonable
-doubt that it is the case. So if you are serious about this and not
-just simulating a possible angle of attack on the GPL that somebody
-else could take to illustrate a possible weakness in the GPL, then
-stop hiding behind anonymity and file an actual real claim with a
-court.
+Hi,
 
-Should your effort succeed then it is a problem with the law and not
-with the license. A license that grants certain rights to a copy of a
-work provided that certain conditions outlined in the license are met
-should never be revocable from THAT particular copy of the work,
-unless the terms of the license itself are broken. Having the
-possibility to arbitrarily revoke rights granted by a license for any
-other reason than conditions that the licensee was aware of when they
-accepted the license would have tremendous negative consequences and
-disruptions to many areas of the society. If the law has a loophole
-like that then the best thing that we all can do is ensure that it
-doesn't have it anymore in the near future.
+Applied it for v5.1-rc2.
+I'll send the pull request it for v5.1-rc2.
 
-On Tue, Feb 12, 2019 at 12:10 AM <mikeeusa@redchan.it> wrote:
->
-> You take it down or I sue you, simple as that.
->
-> I have revoked the license from a number of people, including the John
-> Doe who has chosen to violate my copyright thence-forth.
->
-> I have signed using my 2 decades long held pen-name.
->
-> The U.S. Code defines an electronic signature for the purpose of US law
-> as "an electronic sound, symbol, or process, attached to or logically
-> associated with a contract or other record and executed or adopted by a
-> person with the intent to sign the record."
->
-> My signing with my pen-name suffices for this purpose. What is important
-> is my intent to sign the record, which I have evinced.
->
-> I have also posted the information on my long-held project page, so that
-> you may know that I am me:
-> https://sourceforge.net/projects/gpcslots2/files/notes/
->
-> https://sourceforge.net/projects/gpcslots2/files/notes/tkdnreq_github.txt/download
-> https://sourceforge.net/projects/gpcslots2/files/notes/takedownreq_vs_johndoe-of-8ch.txt/download
->
-> (I have also uploaded this response to said /notes/ directory)
->
-> In addition to many other places.
-> Your contention that I must do anything greater at this point is legally
-> inefficacious.
->
-> I _DEMAND_ that you take the offending material down immediately.
->
-> --MikeeUSA--
-> (Author of GPC-Slots 2)
-> (electronic signature)
->
-> On 2019-02-06 21:20, GitHub Staff wrote:
-> > Hi MikeeUSA,
-> >
-> > Thank you for your notices, the most recent of which is included below
-> > for reference.
-> >
-> > This DMCA notice is incomplete. It lacks "A physical or electronic
-> > signature of a person authorized to act on behalf of the owner of an
-> > exclusive right that is allegedly infringed" and "Information
-> > reasonably sufficient to permit the service provider to contact the
-> > complaining party."
-> >
-> > Unfortunately, an electronic signature must be a legal name, not a
-> > monicker or username, and we cannot accept disposable or temporary
-> > email addresses as reliable contact information for a DMCA notice.
-> >
-> > Once you've revised your notice to include the required details,
-> > please send back the entire revised notice, and not only the corrected
-> > sections. Once we've received a complete and actionable notice, we'll
-> > process it expeditiously.
-> >
-> > Thanks,
-> >
-> > GitHub Staff
-> > -------------------------
-> >
-> > I have a good faith belief that use of the copyrighted materials
-> > described above on the infringing web pages is not authorized by the
-> > copyright owner, or its agent, or the law. I have taken fair use into
-> > consideration.
-> >
-> > I swear, under penalty of perjury, that the information in this
-> > notification is accurate and that I am the copyright owner, or am
-> > authorized to act on behalf of the owner, of an exclusive right that
-> > is allegedly infringed.
-> > :
-> >
-> > As you may know, In the United States; a license, absent an attached
-> > interest, is revocable.
-> >
-> > A "John Doe" had his non-exclusive license regarding the game
-> > "GPC-Slots2" terminated by the copyright owner (me: MikeeUSA).
-> > The copyright owner may do this as-of-right, unless there is an
-> > attached interest (ie: unless the licensee paid good consideration for
-> > the license).
-> >
-> > The "John Doe" then proceeded to belligerently upload a copy of
-> > "GPC-Slots2" to your host, GitHub.
-> > This violated Author's (my) copyright, since "John Doe"'s gratuitous
-> > bare license had been terminated by the copyright holder (me).
-> >
-> > The "John Doe" then proceeded to modify my work, which again violated
-> > my copyright since I had previously revoked his license.
-> > The license flows from me, the copyright owner, not any text. It is
-> > permission to use, redistribute, modify, etc. Instructions on how to
-> > use my property.
-> > When such permission is not supported by any consideration, it may be
-> > rescinded by the owner, at his will.
-> > (/Regardless/ of the "terms". "Terms" are only enforceable against the
-> > grantor if the licensee has paid consideration for them, essentially,
-> > under US law.)
-> >
-> > I have done so.
-> >
-> > I reiterated to the "John Doe" that his license had been terminated.
-> >
-> > "John Doe" then informed me that I "can't do that". I tried to explain
-> > to him US law.
-> > "John Doe" declared that he did not care and would keep the violating
-> > work up, in defiance of me.
-> > (IE: he would "pirate" it)
-> >
-> > He then cited works from a discredited paralegal while I cited
-> > published works by lawyers studied in their field.
-> >
-> > (Note: I make no claim to PERL, the color ansi library, any supporting
-> > libraries, or the -2 split screen function. My copyright covers the
-> > game code of GPC-Slots2. I (MikeeUSA) am the original author of the
-> > work and never signed over copyright to the work.)
-> > (Note: "obeying the terms" (obeying the copyright holders instructions
-> > regarding the use of his property) is not consideration: it is a
-> > preexisting legal duty: outside of the "terms" there is no right for
-> > the licensee to copy, modify, make derivative works, distribute,
-> > distribute derivative works)
-> >
-> > [Additionally "John Doe" registered a fraudulent account under my
-> > long-held non-de-gurre, adding a Code of Conduct ("CoC"), something I
-> > would never do (being opposed to "CoC" for gratis projects on
-> > principal)]
-> >
-> > I now have no choice but to issue a DMCA take-down request, to you,
-> > GitHub.
-> >
-> > Regrettably;
-> > --MikeeUSA--
-> > (electronic signature)
-> > Jan 29, 2019
-> >
-> > (Addendum: "John Doe" then uploaded the modified work to gitlab.com
-> > and bitbucket.org
-> >
-> > Contact information:
-> > email: mikeeusa@redchan.it
-> >
-> > infringing content: github.com/MikeeUSA/GPC-Slots-2
-> > gitlab.com/MikeeUSA/GPC-Slots-2
-> > bitbucket.org/MikeeUSA/gpc-slots-2
-> > The material is not authorized by me, the copyright owner of the
-> > GPC-Slots2 game code, as I explicitly rescinded the license from the
-> > "John Doe", and he acknowledged that I had informed him of such and
-> > communicated that he would defy my will regarding my property and
-> > copyright.
-> > Everything stated within this above communication is accurate to the
-> > best of my knowledge and ability.
-> >
-> > Some notices to you, github (and now gitlab and bitbucket):
-> > 1) Yes I viewed your page at:
-> > https://help.github.com/articles/guide-to-submitting-a-dmca-takedown-notice/
-> > 2) Yes this is "opensource" code.
-> > 3) No that does not matter:
-> > The GPL(any version), being a bare license, is revocable
-> > ("retroactively").
-> > Just as any bare license, not supported by an interest, in the US.
-> > The "John Doe" is not in privity of contract with me and has paid me
-> > no consideration.
-> > He cannot "bind" me (the grantor) to the terms.
-> > It is his duty to abide by my instructions regarding my property.
-> > I did not transfer my property away, the license is just that: a
-> > license (temporary permission, that can be rescinded unless a "term"
-> > was indeed "purchased")
-> > It is also his duty to cease all use, modification, distribution of my
-> > property at my demand.
-> > I have made such a demand.
-> > 4) Yes I will consider taking legal action against you if you do not
-> > heed my request.
-> > Cite the paralegal from groklaw, ZDnet, the FSF, and the SFConservancy
-> > all you want.
-> > They are wrong on the law and have been wrong for 10 years.
+Best Regards,
+Chanwoo Choi
+
+On 19. 2. 26. 오전 9:17, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Having COMPILE_TEST here is causing problems.  I reported one
+> last week and have another one today.  Although I support
+> using COMPILE_TEST when possible, this one is better removed.
+> 
+> Fixes these warnings and build errors:
+> 
+> WARNING: unmet direct dependencies detected for REGMAP_I2C
+>   Depends on [m]: I2C [=m]
+>   Selected by [y]:
+>   - EXTCON_PTN5150 [=y] && EXTCON [=y] && (I2C [=m] && GPIOLIB [=y] || COMPILE_TEST [=y])
+>   Selected by [m]:
+>   - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
+>   - KEYBOARD_CAP11XX [=m] && !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && OF [=y] && I2C [=m]
+>   - I2C_MUX_LTC4306 [=m] && I2C [=m] && I2C_MUX [=m]
+>   - GPIO_TS4900 [=m] && GPIOLIB [=y] && I2C [=m] && (SOC_IMX6 || COMPILE_TEST [=y])
+>   - SENSORS_LTC2945 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_LTC4222 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_MAX6621 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_LM75 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_NCT7802 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_EMC1403 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_ADS7828 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_INA2XX [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_INA3221 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_TMP102 [=m] && HWMON [=y] && I2C [=m]
+>   - SENSORS_TMP103 [=m] && HWMON [=y] && I2C [=m]
+>   - MFD_BCM590XX [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_AXP20X_I2C [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_MADERA_I2C [=m] && HAS_IOMEM [=y] && MFD_MADERA [=m] && I2C [=m]
+>   - MFD_DA9062 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_DA9063 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_DA9150 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_MC13XXX_I2C [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_88PM800 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_88PM805 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_MAX14577 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_MAX77686 [=m] && HAS_IOMEM [=y] && I2C [=m] && (OF [=y] || COMPILE_TEST [=y])
+>   - MFD_MAX8907 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_RT5033 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_RN5T618 [=m] && HAS_IOMEM [=y] && I2C [=m] && OF [=y]
+>   - MFD_SI476X_CORE [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_SKY81452 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_TI_LMU [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - TPS6105X [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_TPS65086 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_TPS65217 [=m] && HAS_IOMEM [=y] && I2C [=m] && OF [=y]
+>   - MFD_TI_LP873X [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_TPS65218 [=m] && HAS_IOMEM [=y] && I2C [=m] && OF [=y]
+>   - MFD_TPS65912_I2C [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_LM3533 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - MFD_WM8994 [=m] && HAS_IOMEM [=y] && I2C [=m]
+>   - REGULATOR_88PG86X [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_DA9211 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_FAN53555 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_LTC3676 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_MAX8649 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_MT6311 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_PFUZE100 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_PV88060 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_PV88080 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_SY8106A [=m] && REGULATOR [=y] && I2C [=m] && (OF [=y] || COMPILE_TEST [=y])
+>   - REGULATOR_TPS62360 [=m] && REGULATOR [=y] && I2C [=m]
+>   - REGULATOR_TPS65023 [=m] && REGULATOR [=y] && I2C [=m]
+>   - DRM_ANALOGIX_ANX78XX [=m] && HAS_IOMEM [=y] && DRM [=m] && DRM_BRIDGE [=y]
+>   - DRM_TOSHIBA_TC358767 [=m] && HAS_IOMEM [=y] && DRM [=m] && DRM_BRIDGE [=y] && OF [=y]
+>   - DRM_TI_SN65DSI86 [=m] && HAS_IOMEM [=y] && DRM [=m] && DRM_BRIDGE [=y] && OF [=y]
+>   - DRM_I2C_ADV7511 [=m] && HAS_IOMEM [=y] && DRM [=m] && DRM_BRIDGE [=y] && OF [=y]
+>   - BACKLIGHT_LM3630A [=m] && HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=y] && BACKLIGHT_CLASS_DEVICE [=m] && I2C [=m] && PWM [=y]
+>   - BACKLIGHT_LM3639 [=m] && HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=y] && BACKLIGHT_CLASS_DEVICE [=m] && I2C [=m]
+>   - LEDS_LM3642 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=m]
+>   - LEDS_LP8860 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=m] && OF [=y]
+>   - LEDS_TLC591XX [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=m]
+>   - LEDS_LM355x [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=m]
+>   - LEDS_IS31FL319X [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=m] && OF [=y]
+>   - EXTCON_RT8973A [=m] && EXTCON [=y] && I2C [=m]
+>   - ADXL345_I2C [=m] && IIO [=y] && INPUT_ADXL34X [=n]=n && I2C [=m]
+>   - BMC150_ACCEL_I2C [=m] && IIO [=y]
+>   - MMA7455_I2C [=m] && IIO [=y] && I2C [=m]
+>   - MXC4005 [=m] && IIO [=y] && I2C [=m]
+>   - MXC6255 [=m] && IIO [=y] && I2C [=m]
+>   - TI_ADS1015 [=m] && IIO [=y] && I2C [=m] && !SENSORS_ADS1015 [=n]
+>   - BME680_I2C [=m] && IIO [=y] && I2C [=m] && BME680 [=m]
+>   - AD5380 [=m] && IIO [=y] && (SPI_MASTER [=n] && I2C [=m]!=m || I2C [=m]) && I2C [=m]
+>   - BMG160_I2C [=m] && IIO [=y]
+>   - MPU3050_I2C [=m] && IIO [=y] && INPUT_MPU3050!=y && INPUT_MPU3050!=m && I2C [=m]
+>   - AFE4404 [=m] && IIO [=y] && I2C [=m]
+>   - MAX30100 [=m] && IIO [=y] && I2C [=m]
+>   - HTS221_I2C [=m] && IIO [=y] && HTS221 [=m]
+>   - INV_MPU6050_I2C [=m] && IIO [=y] && I2C_MUX [=m]
+>   - IIO_ST_LSM6DSX_I2C [=m] && IIO [=y] && IIO_ST_LSM6DSX [=m]
+>   - GP2AP020A00F [=m] && IIO [=y] && I2C [=m]
+>   - SENSORS_ISL29028 [=m] && IIO [=y] && I2C [=m]
+>   - JSA1212 [=m] && IIO [=y] && I2C [=m]
+>   - RPR0521 [=m] && IIO [=y] && I2C [=m]
+>   - LTR501 [=m] && IIO [=y] && I2C [=m]
+>   - MAX44000 [=m] && IIO [=y] && I2C [=m]
+>   - PA12203001 [=m] && IIO [=y] && I2C [=m]
+>   - ST_UVIS25_I2C [=m] && IIO [=y] && ST_UVIS25 [=m]
+>   - AK8974 [=m] && IIO [=y] && I2C [=m] && OF [=y]
+>   - SENSORS_HMC5843_I2C [=m] && IIO [=y] && I2C [=m]
+>   - SENSORS_RM3100_I2C [=m] && IIO [=y] && I2C [=m]
+>   - LMP91000 [=m] && IIO [=y] && I2C [=m]
+>   - BMP280_I2C [=m] && IIO [=y] && BMP280 [=m] && I2C [=m]
+>   - HP03 [=m] && IIO [=y] && I2C [=m]
+>   - ZPA2326_I2C [=m] && IIO [=y]
+>   - MLX90632 [=m] && IIO [=y] && I2C [=m]
+> 
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_read':
+> regmap-i2c.c:(.text+0x122): undefined reference to `i2c_smbus_read_byte_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_write':
+> regmap-i2c.c:(.text+0x157): undefined reference to `i2c_smbus_write_byte_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_read':
+> regmap-i2c.c:(.text+0x182): undefined reference to `i2c_smbus_read_word_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_read_swapped':
+> regmap-i2c.c:(.text+0x1b2): undefined reference to `i2c_smbus_read_word_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_write_swapped':
+> regmap-i2c.c:(.text+0x1ee): undefined reference to `i2c_smbus_write_word_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_write':
+> regmap-i2c.c:(.text+0x217): undefined reference to `i2c_smbus_write_word_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read':
+> regmap-i2c.c:(.text+0x254): undefined reference to `i2c_smbus_read_i2c_block_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write':
+> regmap-i2c.c:(.text+0x2b0): undefined reference to `i2c_smbus_write_i2c_block_data'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_read':
+> regmap-i2c.c:(.text+0x312): undefined reference to `i2c_transfer'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_gather_write':
+> regmap-i2c.c:(.text+0x39c): undefined reference to `i2c_transfer'
+> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_write':
+> regmap-i2c.c:(.text+0x3f4): undefined reference to `i2c_transfer_buffer_flags'
+> ld: drivers/extcon/extcon-ptn5150.o: in function `ptn5150_i2c_init':
+> extcon-ptn5150.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
+> 
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>
+> ---
+>  drivers/extcon/Kconfig |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- mmotm-2019-0225-1340.orig/drivers/extcon/Kconfig
+> +++ mmotm-2019-0225-1340/drivers/extcon/Kconfig
+> @@ -116,7 +116,7 @@ config EXTCON_PALMAS
+>  
+>  config EXTCON_PTN5150
+>  	tristate "NXP PTN5150 CC LOGIC USB EXTCON support"
+> -	depends on I2C && GPIOLIB || COMPILE_TEST
+> +	depends on I2C && GPIOLIB
+>  	select REGMAP_I2C
+>  	help
+>  	  Say Y here to enable support for USB peripheral and USB host
+> 
+> 
+> 
+
