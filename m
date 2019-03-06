@@ -2,289 +2,135 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E537C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78F4C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AB720657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1862064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeX5v9ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbfCFTHy (ORCPT
+        id S1730692AbfCFTIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 14:07:54 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:46836 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbfCFTHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 14:07:54 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 37A7158E38;
-        Wed,  6 Mar 2019 19:07:53 +0000 (UTC)
-Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1CCE600C5;
-        Wed,  6 Mar 2019 19:07:44 +0000 (UTC)
+        Wed, 6 Mar 2019 14:08:52 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51265 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfCFTIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 14:08:51 -0500
+Received: by mail-it1-f196.google.com with SMTP id e24so11301286itl.1;
+        Wed, 06 Mar 2019 11:08:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R3hq+LqjUjg+BkrZdYl/kSPNrNKGY5hWXHfQfAinw+s=;
+        b=CeX5v9ww2mf+7Asj0FqY8Z4jtCmK1Az5A+PyiA/ulDFEfbMzzwOds93LrLJTv0ot+i
+         qB/dcZbpf5eUt6PTI5Rc5qHOqAcHPwt5Wzl3nub0iQkXESwEW60W1bRH6IDTjPUfnKN+
+         AWeTZ+8hYDDujKbwHsAIJQf4KDakpoFrLCAdHkhtKc99/kH0MG7n+azO0P+F5XE5XRFC
+         Nxhjow2KSEEgfHHoC85lHH3f3EiOPwNdY/1kme9assbm+/ooyLhAM/3iIW/xIJKFUkSv
+         lPSYORcfT8R7Im4y2zvhze04ZNnL57pxeT76vQCqoQzY8jVDC4S7XfwA/TnCQv4y4lso
+         wFmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R3hq+LqjUjg+BkrZdYl/kSPNrNKGY5hWXHfQfAinw+s=;
+        b=PXjb0J9wph2hYXHUMADEFw1KhKCiDVX1mLvjl2YZL0fbcHwcht0Nbk4fsjbMe5KCEf
+         cTtIw09RTTKhSymv2MrJMkki3MroUHzzkzUCZ+ij9dZ4+7Lh/guAs3xvdbljLzy69oRR
+         MBRo5ESeDKFKnRaoy2yQmfnpFZsY8B8o+flp4SKg31WeduBOo5Mcuq9B1EmJN5odNFxv
+         oLtiJS6OB1lmhmaWoSP0SNWAOk56auzU/4/OhzeroUkXFHxHSmhxXjFXE17Cskg9NwNN
+         A2rxhkBPP1PSuVnIv6F0XGuG7QR55n9txzmdnSVZgPVrpf6zZtwfS3jCTRNxdfv6lSbT
+         nd/g==
+X-Gm-Message-State: APjAAAV/qA6BZdzIY0SyX5bnH0vDIjNZZf/By52kidS+t/OHmWagrgDU
+        u2znQKwvJKfQlr3Wqfy4/wUkmoI5hWANsXjqq1s=
+X-Google-Smtp-Source: APXvYqxre7Qg17324YiENSBsRaXlZ6Rfn+CG+w7EfQ5MaSivgqBjvVpp+bYxyY75ucNZl1jKG7zxvlLdP6gr2uHKHSY=
+X-Received: by 2002:a24:4650:: with SMTP id j77mr2992351itb.6.1551899330458;
+ Wed, 06 Mar 2019 11:08:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306110501-mutt-send-email-mst@kernel.org>
+ <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com> <20190306130955-mutt-send-email-mst@kernel.org>
+ <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com> <20190306133826-mutt-send-email-mst@kernel.org>
+ <3f87916d-8d18-013c-8988-9eb516c9cd2e@redhat.com>
+In-Reply-To: <3f87916d-8d18-013c-8988-9eb516c9cd2e@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 6 Mar 2019 11:08:39 -0800
+Message-ID: <CAKgT0UdqCb37VNe7pABBYBXYFrVzYdPntmPf-V6ZYp9DdwmxYA@mail.gmail.com>
 Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-mm <linux-mm@kvack.org>,
         Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
         pagupta@redhat.com, wei.w.wang@intel.com,
         Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
- z4nL4AV6VJmC7dBIlTi3Mj2eymD/2dkKP6UXlliWkq67feVg1KG+4UIp89lFW7v5Y8Muw3Fm
- uQbFvxyhN8n3tmhRe+ScWsndSBDxYOZgkbCSIfNPdZrHcnOLfA7xMJZeRCjqUpwhIjxQdFA7
- n0s0KZ2cHIsemtBM8b2WXSQG9CjqAJHVkDhrBWKThDRF7k80oiJdEQlTEiVhaEDURXq+2XmG
- jpCnvRQDb28EJSsQlNEAzwzHMeplddfB0vCg9fRk/kOBMDBtGsTvNT9OYUZD+7jaf0gvBvBB
- lbKmmMMX7uJB+ejY7bnw6ePNrVPErWyfHzR5WYrIFUtgoR3LigKnw5apzc7UIV9G8uiIcZEn
- C+QJCK43jgnkPcSmwVPztcrkbC84g1K5v2Dxh9amXKLBA1/i+CAY8JWMTepsFohIFMXNLj+B
- RJoOcR4HGYXZ6CAJa3Glu3mCmYqHTOKwezJTAvmsCLd3W7WxOGF8BbBjVaPjcZfavOvkin0u
- DaFvhAmrzN6lL0msY17JCZo046z8oAqkyvEflFbC0S1R/POzehKrzQ1RFRD3/YzzlhmIowkM
- BpTqNBeHEzQAlIhQuyu1ugmQtfsYYq6FPmWMRfFPes/4JUU/PQARAQABtCVOaXRlc2ggTmFy
- YXlhbiBMYWwgPG5pbGFsQHJlZGhhdC5jb20+iQI9BBMBCAAnBQJZeKUKAhsjBQkJZgGABQsJ
- CAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEKOGQNwGMqM56lEP/A2KMs/pu0URcVk/kqVwcBhU
- SnvB8DP3lDWDnmVrAkFEOnPX7GTbactQ41wF/xwjwmEmTzLrMRZpkqz2y9mV0hWHjqoXbOCS
- 6RwK3ri5e2ThIPoGxFLt6TrMHgCRwm8YuOSJ97o+uohCTN8pmQ86KMUrDNwMqRkeTRW9wWIQ
- EdDqW44VwelnyPwcmWHBNNb1Kd8j3xKlHtnS45vc6WuoKxYRBTQOwI/5uFpDZtZ1a5kq9Ak/
- MOPDDZpd84rqd+IvgMw5z4a5QlkvOTpScD21G3gjmtTEtyfahltyDK/5i8IaQC3YiXJCrqxE
- r7/4JMZeOYiKpE9iZMtS90t4wBgbVTqAGH1nE/ifZVAUcCtycD0f3egX9CHe45Ad4fsF3edQ
- ESa5tZAogiA4Hc/yQpnnf43a3aQ67XPOJXxS0Qptzu4vfF9h7kTKYWSrVesOU3QKYbjEAf95
- NewF9FhAlYqYrwIwnuAZ8TdXVDYt7Z3z506//sf6zoRwYIDA8RDqFGRuPMXUsoUnf/KKPrtR
- ceLcSUP/JCNiYbf1/QtW8S6Ca/4qJFXQHp0knqJPGmwuFHsarSdpvZQ9qpxD3FnuPyo64S2N
- Dfq8TAeifNp2pAmPY2PAHQ3nOmKgMG8Gn5QiORvMUGzSz8Lo31LW58NdBKbh6bci5+t/HE0H
- pnyVf5xhNC/FuQINBFl4pQoBEACr+MgxWHUP76oNNYjRiNDhaIVtnPRqxiZ9v4H5FPxJy9UD
- Bqr54rifr1E+K+yYNPt/Po43vVL2cAyfyI/LVLlhiY4yH6T1n+Di/hSkkviCaf13gczuvgz4
- KVYLwojU8+naJUsiCJw01MjO3pg9GQ+47HgsnRjCdNmmHiUQqksMIfd8k3reO9SUNlEmDDNB
- XuSzkHjE5y/R/6p8uXaVpiKPfHoULjNRWaFc3d2JGmxJpBdpYnajoz61m7XJlgwl/B5Ql/6B
- dHGaX3VHxOZsfRfugwYF9CkrPbyO5PK7yJ5vaiWre7aQ9bmCtXAomvF1q3/qRwZp77k6i9R3
- tWfXjZDOQokw0u6d6DYJ0Vkfcwheg2i/Mf/epQl7Pf846G3PgSnyVK6cRwerBl5a68w7xqVU
- 4KgAh0DePjtDcbcXsKRT9D63cfyfrNE+ea4i0SVik6+N4nAj1HbzWHTk2KIxTsJXypibOKFX
- 2VykltxutR1sUfZBYMkfU4PogE7NjVEU7KtuCOSAkYzIWrZNEQrxYkxHLJsWruhSYNRsqVBy
- KvY6JAsq/i5yhVd5JKKU8wIOgSwC9P6mXYRgwPyfg15GZpnw+Fpey4bCDkT5fMOaCcS+vSU1
- UaFmC4Ogzpe2BW2DOaPU5Ik99zUFNn6cRmOOXArrryjFlLT5oSOe4IposgWzdwARAQABiQIl
- BBgBCAAPBQJZeKUKAhsMBQkJZgGAAAoJEKOGQNwGMqM5ELoP/jj9d9gF1Al4+9bngUlYohYu
- 0sxyZo9IZ7Yb7cHuJzOMqfgoP4tydP4QCuyd9Q2OHHL5AL4VFNb8SvqAxxYSPuDJTI3JZwI7
- d8JTPKwpulMSUaJE8ZH9n8A/+sdC3CAD4QafVBcCcbFe1jifHmQRdDrvHV9Es14QVAOTZhnJ
- vweENyHEIxkpLsyUUDuVypIo6y/Cws+EBCWt27BJi9GH/EOTB0wb+2ghCs/i3h8a+bi+bS7L
- FCCm/AxIqxRurh2UySn0P/2+2eZvneJ1/uTgfxnjeSlwQJ1BWzMAdAHQO1/lnbyZgEZEtUZJ
- x9d9ASekTtJjBMKJXAw7GbB2dAA/QmbA+Q+Xuamzm/1imigz6L6sOt2n/X/SSc33w8RJUyor
- SvAIoG/zU2Y76pKTgbpQqMDmkmNYFMLcAukpvC4ki3Sf086TdMgkjqtnpTkEElMSFJC8npXv
- 3QnGGOIfFug/qs8z03DLPBz9VYS26jiiN7QIJVpeeEdN/LKnaz5LO+h5kNAyj44qdF2T2AiF
- HxnZnxO5JNP5uISQH3FjxxGxJkdJ8jKzZV7aT37sC+Rp0o3KNc+GXTR+GSVq87Xfuhx0LRST
- NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
-Date:   Wed, 6 Mar 2019 14:07:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="dRDaSzssymHtsRfrS36m7IfOIFpVkpG3R"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 06 Mar 2019 19:07:53 +0000 (UTC)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---dRDaSzssymHtsRfrS36m7IfOIFpVkpG3R
-Content-Type: multipart/mixed; boundary="s88sWQsaJltwgeGmpg6DNlYbCx6gnM26D";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: kvm list <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-mm <linux-mm@kvack.org>, Paolo Bonzini <pbonzini@redhat.com>,
- lcapitulino@redhat.com, pagupta@redhat.com, wei.w.wang@intel.com,
- Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
- David Hildenbrand <david@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- dodgen@google.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
- dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Message-ID: <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
-In-Reply-To: <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
-
---s88sWQsaJltwgeGmpg6DNlYbCx6gnM26D
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-
-
-On 3/6/19 1:00 PM, Alexander Duyck wrote:
-> On Wed, Mar 6, 2019 at 7:51 AM Nitesh Narayan Lal <nitesh@redhat.com> w=
-rote:
->> The following patch-set proposes an efficient mechanism for handing fr=
-eed memory between the guest and the host. It enables the guests with no =
-page cache to rapidly free and reclaims memory to and from the host respe=
-ctively.
->>
->> Benefit:
->> With this patch-series, in our test-case, executed on a single system =
-and single NUMA node with 15GB memory, we were able to successfully launc=
-h 5 guests(each with 5 GB memory) when page hinting was enabled and 3 wit=
-hout it. (Detailed explanation of the test procedure is provided at the b=
-ottom under Test - 1).
->>
->> Changelog in v9:
->>         * Guest free page hinting hook is now invoked after a page has=
- been merged in the buddy.
->>         * Free pages only with order FREE_PAGE_HINTING_MIN_ORDER(curre=
-ntly defined as MAX_ORDER - 1) are captured.
->>         * Removed kthread which was earlier used to perform the scanni=
-ng, isolation & reporting of free pages.
-> Without a kthread this has the potential to get really ugly really
-> fast. If we are going to run asynchronously we should probably be
-> truly asynchonous and just place a few pieces of data in the page that
-> a worker thread can use to identify which pages have been hinted and
-> which pages have not.=20
-
-Can you please explain what do you mean by truly asynchronous?
-
-With this implementation also I am not reporting the pages synchronously.=
-
-
-> Then we can have that one thread just walking
-> through the zone memory pulling out fixed size pieces at a time and
-> providing hints on that. By doing that we avoid the potential of
-> creating a batch of pages that eat up most of the system memory.
+On Wed, Mar 6, 2019 at 11:00 AM David Hildenbrand <david@redhat.com> wrote:
 >
->>         * Pages, captured in the per cpu array are sorted based on the=
- zone numbers. This is to avoid redundancy of acquiring zone locks.
->>         * Dynamically allocated space is used to hold the isolated gue=
-st free pages.
-> I have concerns that doing this per CPU and allocating memory
-> dynamically can result in you losing a significant amount of memory as
-> it sits waiting to be hinted.
-It should not as the buddy will keep merging the pages and we are only
-capturing MAX_ORDER - 1.
-This was the issue with the last patch-series when I was capturing all
-order pages resulting in the per-cpu array to be filled with lower order
-pages.
+> On 06.03.19 19:43, Michael S. Tsirkin wrote:
+> > On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
+> >>>> Here are the results:
+> >>>>
+> >>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA node with
+> >>>> total memory of 15GB and no swap. In each of the guest, memhog is run
+> >>>> with 5GB. Post-execution of memhog, Host memory usage is monitored by
+> >>>> using Free command.
+> >>>>
+> >>>> Without Hinting:
+> >>>>                  Time of execution    Host used memory
+> >>>> Guest 1:        45 seconds            5.4 GB
+> >>>> Guest 2:        45 seconds            10 GB
+> >>>> Guest 3:        1  minute               15 GB
+> >>>>
+> >>>> With Hinting:
+> >>>>                 Time of execution     Host used memory
+> >>>> Guest 1:        49 seconds            2.4 GB
+> >>>> Guest 2:        40 seconds            4.3 GB
+> >>>> Guest 3:        50 seconds            6.3 GB
+> >>> OK so no improvement.
+> >> If we are looking in terms of memory we are getting back from the guest,
+> >> then there is an improvement. However, if we are looking at the
+> >> improvement in terms of time of execution of memhog then yes there is none.
+> >
+> > Yes but the way I see it you can't overcommit this unused memory
+> > since guests can start using it at any time.  You timed it carefully
+> > such that this does not happen, but what will cause this timing on real
+> > guests?
 >
->>         * All the pages are reported asynchronously to the host via vi=
-rtio driver.
->>         * Pages are returned back to the guest buddy free list only wh=
-en the host response is received.
-> I have been thinking about this. Instead of stealing the page couldn't
-> you simply flag it that there is a hint in progress and simply wait in
-> arch_alloc_page until the hint has been processed?=20
-With the flag, I am assuming you mean to block the allocation until
-hinting is going on, which is an issue. That was one of the issues
-discussed earlier which I wanted to solve with this implementation.
-> The problem is in
-> stealing pages you are going to introduce false OOM issues when the
-> memory isn't available because it is being hinted on.
-I think this situation will arise when the guest is under memory
-pressure. In such situations any attempt to perform isolation will
-anyways fail and we may not be reporting anything at that time.
+> Whenever you overcommit you will need backup swap. There is no way
+> around it. It just makes the probability of you having to go to disk
+> less likely.
 >
->> Pending items:
->>         * Make sure that the guest free page hinting's current impleme=
-ntation doesn't break hugepages or device assigned guests.
->>         * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side supp=
-ort. (It is currently missing)
->>         * Compare reporting free pages via vring with vhost.
->>         * Decide between MADV_DONTNEED and MADV_FREE.
->>         * Analyze overall performance impact due to guest free page hi=
-nting.
->>         * Come up with proper/traceable error-message/logs.
-> I'll try applying these patches and see if I can reproduce the results
-> you reported.=20
-Thanks. Let me know if you run into any issues.
-> With the last patch set I couldn't reproduce the results
-> as you reported them.=20
-If I remember correctly then the last time you only tried with multiple
-vcpus and not with 1 vcpu.
-> It has me wondering if you were somehow seeing
-> the effects of a balloon instead of the actual memory hints as I
-> couldn't find any evidence of the memory ever actually being freed
-> back by the hints functionality.
+> If you assume that all of your guests will be using all of their memory
+> all the time, you don't have to think about overcommiting memory in the
+> first place. But this is not what we usually have.
 
-Can you please elaborate what kind of evidence you are looking for?
+Right, but the general idea is that free page hinting allows us to
+avoid having to use the swap if we are hinting the pages as unused.
+The general assumption we are working with is that some percentage of
+the VMs are unused most of the time so you can share those resources
+between multiple VMs and have them free those up normally.
 
-I did trace the hints on the QEMU/host side.
-
->
-> Also do you have any idea if this patch set will work with an SMP
-> setup or is it still racy? I might try enabling SMP in my environment
-> to see if I can test the scalability of the VM with something like a
-> will-it-scale test.
-I did try running page_fault1_threads in will-it-scale with 4 vcpus.
-It didn't give me any issue.
->
->> Tests:
->> 1. Use-case - Number of guests we can launch
->>
->>         NUMA Nodes =3D 1 with 15 GB memory
->>         Guest Memory =3D 5 GB
->>         Number of cores in guest =3D 1
->>         Workload =3D test allocation program allocates 4GB memory, tou=
-ches it via memset and exits.
->>         Procedure =3D
->>         The first guest is launched and once its console is up, the te=
-st allocation program is executed with 4 GB memory request (Due to this t=
-he guest occupies almost 4-5 GB of memory in the host in a system without=
- page hinting). Once this program exits at that time another guest is lau=
-nched in the host and the same process is followed. We continue launching=
- the guests until a guest gets killed due to low memory condition in the =
-host.
->>
->>         Results:
->>         Without hinting =3D 3
->>         With hinting =3D 5
->>
->> 2. Hackbench
->>         Guest Memory =3D 5 GB
->>         Number of cores =3D 4
->>         Number of tasks         Time with Hinting       Time without H=
-inting
->>         4000                    19.540                  17.818
->>
->>
---=20
-Nitesh
-
-
---s88sWQsaJltwgeGmpg6DNlYbCx6gnM26D--
-
---dRDaSzssymHtsRfrS36m7IfOIFpVkpG3R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyAGn8ACgkQo4ZA3AYy
-ozlcpA/+M2yz4zBSPI4bcJRgJLgRUFR3N07g2HjQ7/he1oiumZyAU12b9P5VH8Li
-7JVMd6aYMeJ7lotWU4g9kzzQaSe7YnJoVBeICXIEyeuKuq1g2lyIcCRJpOzUV0Bn
-RqcamKVY0ndX2MYJXq31LWdm/0ux9wlqlyR+WEZT1wSmiIhLLnJ6S9wAbFPFK4tn
-gq2ttDHDIiCs1YemM9QhTH+YYIGPKtrQOgprCbL85JvpbY7rCqi9QoELIxXi+cUM
-Wjb88EMVcr6gXBKiS1ta9GJh6IQm8Y3PJPsRZRmEOTROZyLY/7Toujmcz+1uQm+v
-o8G3BMSsyqOHw0KbIFy1l7RrB1mVQJVsUo5zqp80NnKBFlLlmr9jn7EieH1UbxGM
-IwToFqR8p8wOCNLHM8ujfQ6TUEaY9fwonCWsWDb9KrkaAAZtjZgaRU+rKSwOP1VZ
-9OMgHYst6Hzp+1yuA7T1QfsOOa1xAjv2SpXnNT8aS9k4HJ1N/W4MYfgpOqdXqDzT
-4xXTXCg5UIMbjy1Ib2PAvtaK8qP0zvGrYFBk4Qw+DpW+MRYYTmVHZ0ddULCrxgdc
-bENegLQ7eLIbk1ttsTylZHN+ok48oTFUGYtX9DQjUM4j1zqRlfl3OZy9jyMkEC81
-iYxpV/KRe9Lwq8J/xcXvMifzkH9Pua6oMElqxNN9GDCrxIFHvaM=
-=cUBW
------END PGP SIGNATURE-----
-
---dRDaSzssymHtsRfrS36m7IfOIFpVkpG3R--
+If we can reduce swap usage we can improve overall performance and
+that was what I was pointing out with my test. I had also done
+something similar to what Nitesh was doing with his original test
+where I had launched 8 VMs with 8GB of memory per VM on a system with
+32G of RAM and only 4G of swap. In that setup I could keep a couple
+VMs busy at a time without issues, and obviously without the patch I
+just started to OOM qemu instances and  could only have 4 VMs at a
+time running at maximum.
