@@ -2,143 +2,151 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C23C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C33C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F45820661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1E620684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfCFVPK (ORCPT
+        id S1726364AbfCFVR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:15:10 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:36631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbfCFVPK (ORCPT
+        Wed, 6 Mar 2019 16:17:29 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:52450 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfCFVR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:15:10 -0500
-Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MKsax-1hMsgx0Umr-00LBa1; Wed, 06 Mar 2019 22:14:58 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        linux-um@lists.infradead.org
-Subject: [PATCH v2] arch: um: Kconfig: pedantic indention cleanups
-Date:   Wed,  6 Mar 2019 22:14:55 +0100
-Message-Id: <1551906895-6065-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <31062067.NyzppZ7ELz@blindfold>
-References: <31062067.NyzppZ7ELz@blindfold>
-X-Provags-ID: V03:K1:caS+n5r7nsIZ6fTWzSWB09pXEE4MfNgocRPwZKAQw6LOK7aOgBq
- OR1Nlx5NEbGmM/T0UB5WzOg7vKblrVWWSgcoMU8IpsoGRPed04KaG+EDhBU3en87rAkjNCp
- AZKJO7p/9LusbgPiMjoxCzkuFo6ca9XrvAQ0/dsytHKE9sMcUYgbWEz4/C63fqD8hzPcx8O
- ydnG3OAVPW1MODKYJQ2Qg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n1hbcW0Cr+8=:SpssrzcZoZ7axS1ryXGFU6
- Lo2vdZz88ecpI3rMXLDwz1WhiCEHdg0EoaCXCxq9x01H0PpZbMUheBI7aVj/5fFp3o+oEli+a
- PZdefVA5pxgr5S+BwDnp4lsnpxaYwgryvKZIyHbAdtx5V4SG29KXd0rWMezHxShOVEWcj3hJx
- FuQg2P4rHh9t0si8pqEmRtsgXzOY6/89X1mA8cS7lcREcEy/UUOM4W2xHuNm0SBP+EjlXzAJz
- CNQsDatBGgLAGCDOMc/HEjCy5JjcSbcHSaQm0ZOcrnoJvcBEb22c3mXnBKIjf+T2v1DolnXYK
- RLfnKXoqMPCEwNddpNBG+dNlB6UaTbV4w//f9eA1xKcTrV7ENTAYMupKl7mKz39KnjX17bHW+
- qicBIw7TTjwXg8iRKrEiooIVPnKVfDbgQ1OxNMFkayuGItB8cctWvcnGqV/HzbF8lyPT72BP7
- cQIPhXgc68mpO282/kdDcPO2mkVLB39KdwbsjclZsFU3+B78Rc7tZhV3CKNiCG65nIzFoVhAm
- CL5DfTbEgyyZdP7hqrMYNzapxoDzcKTLGW9ivMAk3AGy9GtzHZm0oZgVGbCyRXr5S/d0hUe0y
- oYzBOOOl0sGqQrt8xauJ5oGD21EeH0zaaUJ4fziqi0Al6L5NwrXlQ08eerz2/cGcGgZfkWYXt
- 43GouRaJLCpWrbbWqMWRAGWzPFllWP8VoaXfSSkHvopalrqQiFjh0l8eHehNHF3JUdyCf7fXc
- 1ED/9u+l4GrlWHnqnu9gUava7+SXLEPm+oe3uQ==
+        Wed, 6 Mar 2019 16:17:28 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1h1dud-00056P-W4; Wed, 06 Mar 2019 22:17:16 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+        <20190212143003.48446-9-john.ogness@linutronix.de>
+        <20190304073856.GA552@jagdpanzerIV>
+        <20190304100044.GC21004@jagdpanzerIV>
+        <20190304110703.GA960@tigerII.localdomain>
+        <87o96p9gtx.fsf@linutronix.de>
+        <20190306155701.wc22i2no5swdcids@pathway.suse.cz>
+Date:   Wed, 06 Mar 2019 22:17:12 +0100
+Message-ID: <87r2bjbt47.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Formatting of Kconfig files doesn't look so pretty, so just
-take damp cloth and clean it up.
+On 2019-03-06, Petr Mladek <pmladek@suse.com> wrote:
+>> I would like to clarify that message supression (i.e. console loglevel)
+>> is a method of reducing what is printed. It does nothing to address the
+>> issues related to console printing. My proposal focusses on addressing
+>> the issues related to console printing.
+>> 
+>> Console printing is a convenient feature to allow a kernel to
+>> communicate information to a user without any reliance on
+>> userspace. IMHO there are 2 categories of messages that the kernel will
+>> communicate. The first is informational (usb events, wireless and
+>> ethernet connectivity, filesystem events, etc.). Since this category of
+>> messages occurs during normal runtime, we should expect that it does not
+>> cause adverse effects to the rest of the system (such as latencies and
+>> non-deterministic behavior).
+>>
+>> The second category is for emergency situations, where the kernel needs
+>> to report something unusual (panic, BUG, WARN, etc.). In some of these
+>> situations, it may be the last thing the kernel ever does. We should
+>> expect this category to focus on getting the message out as reliably as
+>> possible. Even if it means disturbing the system with large latencies.
+>> 
+>> _Both_ categories are important for the user, but their requirements are
+>> different:
+>> 
+>>    informational: non-disturbing
+>>    emergency:     reliable
+>
+> Isn't this already handled by the console_level?
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- arch/um/Kconfig | 52 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+You mean that the current console level is being used to set the
+boundary between emergency and informational messages? Definitely no!
+Take any Linux distribution and look at their default console_level
+setting. Even the kernel code defaults to a value of 7!
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index ec9711d..216ee50 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -80,46 +80,46 @@ config LD_SCRIPT_DYN
- 	bool
- 	default y
- 	depends on !LD_SCRIPT_STATIC
--        select MODULE_REL_CRCS if MODVERSIONS
-+	select MODULE_REL_CRCS if MODVERSIONS
- 
- config HOSTFS
- 	tristate "Host filesystem"
- 	help
--          While the User-Mode Linux port uses its own root file system for
--          booting and normal file access, this module lets the UML user
--          access files stored on the host.  It does not require any
--          network connection between the Host and UML.  An example use of
--          this might be:
-+	  While the User-Mode Linux port uses its own root file system for
-+	  booting and normal file access, this module lets the UML user
-+	  access files stored on the host.  It does not require any
-+	  network connection between the Host and UML.  An example use of
-+	  this might be:
- 
--          mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
-+	  mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
- 
--          where /tmp/fromhost is an empty directory inside UML and
--          /tmp/umlshare is a directory on the host with files the UML user
--          wishes to access.
-+	  where /tmp/fromhost is an empty directory inside UML and
-+	  /tmp/umlshare is a directory on the host with files the UML user
-+	  wishes to access.
- 
--          For more information, see
--          <http://user-mode-linux.sourceforge.net/hostfs.html>.
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/hostfs.html>.
- 
--          If you'd like to be able to work with files stored on the host,
--          say Y or M here; otherwise say N.
-+	  If you'd like to be able to work with files stored on the host,
-+	  say Y or M here; otherwise say N.
- 
- config MCONSOLE
- 	bool "Management console"
- 	depends on PROC_FS
- 	default y
- 	help
--          The user mode linux management console is a low-level interface to
--          the kernel, somewhat like the i386 SysRq interface.  Since there is
--          a full-blown operating system running under every user mode linux
--          instance, there is much greater flexibility possible than with the
--          SysRq mechanism.
--
--          If you answer 'Y' to this option, to use this feature, you need the
--          mconsole client (called uml_mconsole) which is present in CVS in
--          2.4.5-9um and later (path /tools/mconsole), and is also in the
--          distribution RPM package in 2.4.6 and later.
--
--          It is safe to say 'Y' here.
-+	  The user mode linux management console is a low-level interface to
-+	  the kernel, somewhat like the i386 SysRq interface.  Since there is
-+	  a full-blown operating system running under every user mode linux
-+	  instance, there is much greater flexibility possible than with the
-+	  SysRq mechanism.
-+
-+	  If you answer 'Y' to this option, to use this feature, you need the
-+	  mconsole client (called uml_mconsole) which is present in CVS in
-+	  2.4.5-9um and later (path /tools/mconsole), and is also in the
-+	  distribution RPM package in 2.4.6 and later.
-+
-+	  It is safe to say 'Y' here.
- 
- config MAGIC_SYSRQ
- 	bool "Magic SysRq key"
--- 
-1.9.1
+> The informational messages can be reliably read via syslog, /dev/kmsg.
+> They are related to the normal works when the system works well.
 
+Yes, this is how things _could_ be. But why are users currently using
+the kernel's console printing for informational messages? And why is the
+kernel code encouraging it? Perhaps because users like being able to
+receive messages without relying on userspace tools? IMO it is this mass
+use of console printing for informational messages that is preventing
+the implementation from becoming optimally reliable.
+
+My proposal is making this distinction clearer: a significant increase
+in reliability for emergency messages, and a fully preemptible printer
+for informational messages. The fully preemptible printer will work just
+as well as any userspace tool, but doesn't require userspace. Not
+requiring userspace seems to me to be the part users are interested
+in.
+
+(But I might be wrong on this. Perhaps Linux is just "marketing" its
+console printing feature incorrectly and users aren't aware that it is
+only meant for emergencies.)
+
+> The emergency messages (errors, warnings) are printed in emergency
+> situations. They are printed as reliably as possible to the console
+> because the userspace might not be reliable enough.
+
+As reliably as _possible_? I hope that my series at least helps to show
+that we can do a lot better about reliability.
+
+> That said, the "atomic" consoles brings new possibilities
+> and might be very useful in some scenarios. Also a more grained
+> prioritization might be helpful.
+>
+> But each solution might just bring new problems. For example,
+> the atomic consoles are still serialized between CPUs. It might
+> slow down the entire system and not only on task.
+
+Why is that a problem? The focus is reliabilty. We are talking about
+emergency messages here. Messages that should never occur for a
+correctly functioning system. It does not matter if the entire system
+slows down because of it.
+
+> If it gets blocked for some reasons (nobody is perfect) it would
+> block all the other serialized CPUs as well.
+
+Yes, blocking in an atomic context would be bad for any code.
+
+> In each case, we really need to be careful about the complexity.
+> printk() is already complex enough. It might be acceptable if
+> it makes the design cleaner and less tangled. printk() would
+> deserve a redesign.
+
+It is my belief that I am significantly simplifying printk because there
+are no more exotic contexts and situations. Emergency messages are
+atomic and immediate. Context does not matter. Informational messages
+are printed fully preemptible, so console drivers are free to do
+whatever magic they want to do. Do you see that as more complex than the
+current implementation of safe buffers, defers, hand-offs, exclusive
+consoles, and cond_rescheds?
+
+John Ogness
