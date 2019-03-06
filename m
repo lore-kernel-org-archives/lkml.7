@@ -2,333 +2,129 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AF3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAC420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CBE20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:12:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EZHL5jkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfCFWLx (ORCPT
+        id S1726727AbfCFWMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:11:53 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:45927 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFWLx (ORCPT
+        Wed, 6 Mar 2019 17:12:45 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33140 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFWMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:11:53 -0500
-Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mk0a0-1gddcb3Xse-00kMiL; Wed, 06 Mar 2019 23:11:33 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        ooo@electrozaur.com, linux-scsi@vger.kernel.org,
-        esc.storagedev@microsemi.com
-Subject: [PATCH v2] drivers: scsi: Kconfig: pedantic formatting
-Date:   Wed,  6 Mar 2019 23:11:32 +0100
-Message-Id: <1551910292-27628-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1551898384-19624-1-git-send-email-info@metux.net>
-References: <1551898384-19624-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:4VHbknKkctzeGKn5+wybZd0pNrEI7oRO+s7nlK+YAcuQDGQVbfx
- abUFDOnVuRQo31U5GG8ekg3TjvkWmq9sKBbM2H8dTrjJo+HuXNd77uyRmjAeuBHzmGbcwg4
- A6wN47Y2vdJquBxOyXYbu+K5+XNzJrKZEADhnklMEJxaNBd/mRKT2k6HNcIvWn8Y7XPgo6F
- UxSEGaa6e6u/SD/wm5IGw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5lcQWWMxi4A=:rIYPoumU8eu4U25X+sV9Ai
- epvao5VKa7jwNBiaZGIveOW51BgAd5gSehje8Uwu7ncY58nTNkQhduq+SzTMC7BhYYSQGOUAt
- opDjCDNxvY2foK/CLrcUKtNRBcCgMsX5KxE8YtvzPJSKM1XNZ7aIydfQuToP4721YgY1gkWxA
- UrElkW71tXRk5rRxUOJTcsKBjYRW2VXdzbF7hdQAdIFd25mvmfNJgNv9IwgYxL9c3FKr7WgMK
- TvOaTvF7vGTFxKZsOycpfYF1fJCw4q+pY9cNgjEVCekYSscNcYEB6HV3tylrztkyaUrUpl+Sm
- YVK9htW3xsxr7XmLdskby6DQ/ZZg+ee8dNhiXQvpw3BkbgL3TDizh9KnGVK5qi+la+mOhxFLd
- jfsEUnw0QuOaWMW0XZgYVm8uRvBcxEPHnzvQbIhmvcxqsE8jVfPWTgWGqJkTbpIDJm2r1WF77
- 0lUOvup3yiAhrF27K3M2Bj4DjqzviNrthkvd081nCyqMy7veByFufId/aXyfviKEJPz/a8JPh
- p4qhPNINzfJLY7heRpLcCRu0qLnkUdPzKAjrXRE+LOmwYQ6G5te2P5gxf22Q1gh39fiQSz5gF
- krh9ljkCm5FMudR8DMbuJLCRA216A0q3/kXSOSqdCcr1WtWM6nfgJqDwRHWLIkpZFsKXq04C5
- hknMR+U6IGuVTMvZ661s9PUehP+xBRCGfiNSTmCvmeoC78m76H1t26PrcV5Kzf7+LMCdQ6Ucv
- b131Qh+5ROsSdEqQz8Zu+lVJNI1IAp1B5dQPPQ==
+        Wed, 6 Mar 2019 17:12:44 -0500
+Received: by mail-pg1-f195.google.com with SMTP id h11so9529656pgl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 14:12:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=4WiXplkSOqcHAkHALHgT+HxYhesWO1hQ7GJbig7RVyk=;
+        b=EZHL5jkX5qbGfxl8nHlpemRyDYPtRUUF8BqR7R+LyYl09emsiMaMjpb8at5njzSWSa
+         5TUM39b3EIrl+bPvY1qKOfF/pL+HbeQ+gR3U8XfXJyOesdbQV+grAIGhgsPGCL9zRLGu
+         /gQZ2Xz6jIPuHJeSpOKcOELifPCjIa/OLhDqw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=4WiXplkSOqcHAkHALHgT+HxYhesWO1hQ7GJbig7RVyk=;
+        b=IWIiAXvqzTbV585GX+ZWVPSELGnDrHeQTwK9rgBGGUvhfv2snPm2rCX5ik2HD4hBQr
+         StqHjcatm8363p4ZLEowP3DmmIJAvxtUImjTe+jmhkdR8x01jw8TK3Mkur1S6aZQaVO0
+         NiTm8f5LqLUP9DhwwT5yC9+gWPexuT+IiIp9YNhAKdNvNagZbmOapK8s3cm3p0yd2STp
+         JiuCavVxnrcAooDeJZrelvoQlBQri9axfcM6PVTWdr2NFi3ZOR+3jt7GQD+zM+dmrslo
+         8irVyeu2kzoSnfxENjwqnmLLSW+JvOTrg7ZvtUHIQLsUiEyk5gkk1GDb1ZInBuClFQnT
+         zR6A==
+X-Gm-Message-State: APjAAAVfd3slGcnr/kNe62VNY5F1BrlGROpmRDIPXMCkj+dfRDKNLhDX
+        JW4Wma4n84KlafPa4Yibw3hYEw==
+X-Google-Smtp-Source: APXvYqx5DQysWH15e3DdRqD2wtSnG5aRgv2S8ML9sXSAOVXqK7UYxu2mQkhSLTQoDzEJShm3X9fRiQ==
+X-Received: by 2002:a63:591f:: with SMTP id n31mr8218228pgb.304.1551910363808;
+        Wed, 06 Mar 2019 14:12:43 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e184sm6121172pfc.143.2019.03.06.14.12.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 14:12:42 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190304171450.GB10971@codeaurora.org>
+References: <20190221121827.32427-1-rplsssn@codeaurora.org> <20190221121827.32427-3-rplsssn@codeaurora.org> <155122856693.260864.16771523196413005158@swboyd.mtv.corp.google.com> <20190227222913.GA10971@codeaurora.org> <155146312862.16805.13188707704058408931@swboyd.mtv.corp.google.com> <20190304171450.GB10971@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH RESEND v3 2/3] drivers: qcom: rpmh-rsc: return if the controller is idle
+Cc:     "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, andy.gross@linaro.org,
+        david.brown@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org, rnayak@codeaurora.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, evgreen@chromium.org,
+        dianders@chromium.org, mka@chromium.org
+To:     Lina Iyer <ilina@codeaurora.org>
+Message-ID: <155191036168.20095.16985811185745151630@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Wed, 06 Mar 2019 14:12:41 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Formatting of Kconfig files doesn't look so pretty, so just
-take damp cloth and clean it up.
+Quoting Lina Iyer (2019-03-04 09:14:50)
+> On Fri, Mar 01 2019 at 10:58 -0700, Stephen Boyd wrote:
+> >Quoting Lina Iyer (2019-02-27 14:29:13)
+> >> Hi Stephen,
+> >>
+> >> On Tue, Feb 26 2019 at 17:49 -0700, Stephen Boyd wrote:
+> >
+> >Ok, can you explain why it's even a problem for the TCSes to be active
+> >during suspend? I would hope that for suspend/resume, if this is
+> >actually a problem, the RPMh driver itself can block suspend with a
+> >driver suspend callback that checks for idleness.
+> The RSC can transmit TCS executed from Linux and when all the CPUs have
+> powered down, could execute a firmware in the RSC to deliver the sleep
+> state requests. The firmware cannot run when there are active requests
+> being processed. To ensure that case, we bail out of sleep or suspend,
+> when the last CPU is powering down, if there are active requests.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/scsi/Kconfig          | 63 +++++++++++++++++++++----------------------
- drivers/scsi/osd/Kconfig      | 38 +++++++++++++-------------
- drivers/scsi/pcmcia/Kconfig   |  2 +-
- drivers/scsi/qedf/Kconfig     |  8 +++---
- drivers/scsi/smartpqi/Kconfig | 16 +++++------
- 5 files changed, 63 insertions(+), 64 deletions(-)
+Ok, do we actually bail out or just pick a shallower idle state that
+wouldn't trigger the firmware to run something that may conflict with
+the active requests (i.e. some light CPU sleep mode)? The commit text
+seems to imply we block certain idle states.
 
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index f38882f..7a9eab1 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -1,9 +1,9 @@
- menu "SCSI device support"
- 
- config SCSI_MOD
--       tristate
--       default y if SCSI=n || SCSI=y
--       default m if SCSI=m
-+	tristate
-+	default y if SCSI=n || SCSI=y
-+	default m if SCSI=m
- 
- config RAID_ATTRS
- 	tristate "RAID Transport Class"
-@@ -47,7 +47,7 @@ config SCSI_ESP_PIO
- 
- config SCSI_NETLINK
- 	bool
--	default	n
-+	default n
- 	depends on NET
- 
- config SCSI_PROC_FS
-@@ -307,25 +307,25 @@ config ISCSI_TCP
- 	select CRYPTO_CRC32C
- 	select SCSI_ISCSI_ATTRS
- 	help
--	 The iSCSI Driver provides a host with the ability to access storage
--	 through an IP network. The driver uses the iSCSI protocol to transport
--	 SCSI requests and responses over a TCP/IP network between the host
--	 (the "initiator") and "targets".  Architecturally, the iSCSI driver
--	 combines with the host's TCP/IP stack, network drivers, and Network
--	 Interface Card (NIC) to provide the same functions as a SCSI or a
--	 Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
-+	  The iSCSI Driver provides a host with the ability to access storage
-+	  through an IP network. The driver uses the iSCSI protocol to transport
-+	  SCSI requests and responses over a TCP/IP network between the host
-+	  (the "initiator") and "targets".  Architecturally, the iSCSI driver
-+	  combines with the host's TCP/IP stack, network drivers, and Network
-+	  Interface Card (NIC) to provide the same functions as a SCSI or a
-+	  Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
- 
--	 To compile this driver as a module, choose M here: the
--	 module will be called iscsi_tcp.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called iscsi_tcp.
- 
--	 The userspace component needed to initialize the driver, documentation,
--	 and sample configuration files can be found here:
-+	  The userspace component needed to initialize the driver, documentation,
-+	  and sample configuration files can be found here:
- 
--	 http://open-iscsi.org
-+	  http://open-iscsi.org
- 
- config ISCSI_BOOT_SYSFS
- 	tristate "iSCSI Boot Sysfs Interface"
--	default	n
-+	default n
- 	help
- 	  This option enables support for exposing iSCSI boot information
- 	  via sysfs to userspace. If you wish to export this information,
-@@ -340,7 +340,7 @@ source "drivers/scsi/cxlflash/Kconfig"
- config SGIWD93_SCSI
- 	tristate "SGI WD93C93 SCSI Driver"
- 	depends on SGI_HAS_WD93 && SCSI
--  	help
-+	help
- 	  If you have a Western Digital WD93 SCSI controller on
- 	  an SGI MIPS system, say Y.  Otherwise, say N.
- 
-@@ -455,7 +455,6 @@ config SCSI_AACRAID
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called aacraid.
- 
--
- source "drivers/scsi/aic7xxx/Kconfig.aic7xxx"
- source "drivers/scsi/aic7xxx/Kconfig.aic79xx"
- source "drivers/scsi/aic94xx/Kconfig"
-@@ -475,7 +474,7 @@ config SCSI_DPT_I2O
- 	tristate "Adaptec I2O RAID support "
- 	depends on SCSI && PCI && VIRT_TO_BUS
- 	help
--	  This driver supports all of Adaptec's I2O based RAID controllers as 
-+	  This driver supports all of Adaptec's I2O based RAID controllers as
- 	  well as the DPT SmartRaid V cards.  This is an Adaptec maintained
- 	  driver by Deanna Bonds.  See <file:Documentation/scsi/dpti.txt>.
- 
-@@ -669,7 +668,7 @@ config SCSI_GDTH
- 	---help---
- 	  Formerly called GDT SCSI Disk Array Controller Support.
- 
--	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI) 
-+	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI)
- 	  manufactured by Intel Corporation/ICP vortex GmbH. It is documented
- 	  in the kernel source in <file:drivers/scsi/gdth.c> and
- 	  <file:drivers/scsi/gdth.h>.
-@@ -1152,8 +1151,8 @@ config SCSI_LPFC
- 	depends on NVME_FC || NVME_FC=n
- 	select CRC_T10DIF
- 	---help---
--          This lpfc driver supports the Emulex LightPulse
--          Family of Fibre Channel PCI host adapters.
-+	  This lpfc driver supports the Emulex LightPulse
-+	  Family of Fibre Channel PCI host adapters.
- 
- config SCSI_LPFC_DEBUG_FS
- 	bool "Emulex LightPulse Fibre Channel debugfs Support"
-@@ -1468,14 +1467,14 @@ config ZFCP
- 	depends on S390 && QDIO && SCSI
- 	depends on SCSI_FC_ATTRS
- 	help
--          If you want to access SCSI devices attached to your IBM eServer
--          zSeries by means of Fibre Channel interfaces say Y.
--          For details please refer to the documentation provided by IBM at
--          <http://oss.software.ibm.com/developerworks/opensource/linux390>
-+	  If you want to access SCSI devices attached to your IBM eServer
-+	  zSeries by means of Fibre Channel interfaces say Y.
-+	  For details please refer to the documentation provided by IBM at
-+	  <http://oss.software.ibm.com/developerworks/opensource/linux390>
- 
--          This driver is also available as a module. This module will be
--          called zfcp. If you want to compile it as a module, say M here
--          and read <file:Documentation/kbuild/modules.txt>.
-+	  This driver is also available as a module. This module will be
-+	  called zfcp. If you want to compile it as a module, say M here
-+	  and read <file:Documentation/kbuild/modules.txt>.
- 
- config SCSI_PMCRAID
- 	tristate "PMC SIERRA Linux MaxRAID adapter support"
-@@ -1506,8 +1505,8 @@ config SCSI_VIRTIO
- 	tristate "virtio-scsi support"
- 	depends on VIRTIO
- 	help
--          This is the virtual HBA driver for virtio.  If the kernel will
--          be used in a virtual machine, say Y or M.
-+	  This is the virtual HBA driver for virtio.  If the kernel will
-+	  be used in a virtual machine, say Y or M.
- 
- source "drivers/scsi/csiostor/Kconfig"
- 
-diff --git a/drivers/scsi/osd/Kconfig b/drivers/scsi/osd/Kconfig
-index 347cc5e..90b08c3 100644
---- a/drivers/scsi/osd/Kconfig
-+++ b/drivers/scsi/osd/Kconfig
-@@ -15,35 +15,35 @@ config SCSI_OSD_INITIATOR
- 	tristate "OSD-Initiator library"
- 	depends on SCSI
- 	help
--		Enable the OSD-Initiator library (libosd.ko).
--		NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
--		dependencies
-+	  Enable the OSD-Initiator library (libosd.ko).
-+	  NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
-+	  dependencies
- 
- config SCSI_OSD_ULD
- 	tristate "OSD Upper Level driver"
- 	depends on SCSI_OSD_INITIATOR
- 	help
--		Build a SCSI upper layer driver that exports /dev/osdX devices
--		to user-mode for testing and controlling OSD devices. It is also
--		needed by exofs, for mounting an OSD based file system.
-+	  Build a SCSI upper layer driver that exports /dev/osdX devices
-+	  to user-mode for testing and controlling OSD devices. It is also
-+	  needed by exofs, for mounting an OSD based file system.
- 
- config SCSI_OSD_DPRINT_SENSE
--    int "(0-2) When sense is returned, DEBUG print all sense descriptors"
--    default 1
--    depends on SCSI_OSD_INITIATOR
--    help
--        When a CHECK_CONDITION status is returned from a target, and a
--        sense-buffer is retrieved, turning this on will dump a full
--        sense-decoding message. Setting to 2 will also print recoverable
--        errors that might be regularly returned for some filesystem
--        operations.
-+	int "(0-2) When sense is returned, DEBUG print all sense descriptors"
-+	default 1
-+	depends on SCSI_OSD_INITIATOR
-+	help
-+	  When a CHECK_CONDITION status is returned from a target, and a
-+	  sense-buffer is retrieved, turning this on will dump a full
-+	  sense-decoding message. Setting to 2 will also print recoverable
-+	  errors that might be regularly returned for some filesystem
-+	  operations.
- 
- config SCSI_OSD_DEBUG
- 	bool "Compile All OSD modules with lots of DEBUG prints"
- 	default n
- 	depends on SCSI_OSD_INITIATOR
- 	help
--		OSD Code is populated with lots of OSD_DEBUG(..) printouts to
--		dmesg. Enable this if you found a bug and you want to help us
--		track the problem (see also MAINTAINERS). Setting this will also
--		force SCSI_OSD_DPRINT_SENSE=2.
-+	  OSD Code is populated with lots of OSD_DEBUG(..) printouts to
-+	  dmesg. Enable this if you found a bug and you want to help us
-+	  track the problem (see also MAINTAINERS). Setting this will also
-+	  force SCSI_OSD_DPRINT_SENSE=2.
-diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
-index 2d435f1..b63b34d 100644
---- a/drivers/scsi/pcmcia/Kconfig
-+++ b/drivers/scsi/pcmcia/Kconfig
-@@ -32,7 +32,7 @@ config PCMCIA_NINJA_SCSI
- 	  NinjaSCSI-3: (version string: "WBT","NinjaSCSI-3","R1.0")
- 	    IO-DATA     PCSC-FP
- 	    ALPHA DATA  AD-PCS201
--	    CyQ've      SFC-201  
-+	    CyQ've      SFC-201
- 	    LOGITECH    LPM-SCSI2E
- 	    Pioneer PCR-PR24's card
- 	    I-O DATA CDPS-PX24's card (PCSC-F)
-diff --git a/drivers/scsi/qedf/Kconfig b/drivers/scsi/qedf/Kconfig
-index 943f5ee..e2693db 100644
---- a/drivers/scsi/qedf/Kconfig
-+++ b/drivers/scsi/qedf/Kconfig
-@@ -2,10 +2,10 @@ config QEDF
- 	tristate "QLogic QEDF 25/40/100Gb FCoE Initiator Driver Support"
- 	depends on PCI && SCSI
- 	depends on QED
--        depends on LIBFC
--        depends on LIBFCOE
-+	depends on LIBFC
-+	depends on LIBFCOE
- 	select QED_LL2
- 	select QED_FCOE
- 	---help---
--	This driver supports FCoE offload for the QLogic FastLinQ
--	41000 Series Converged Network Adapters.
-+	  This driver supports FCoE offload for the QLogic FastLinQ
-+	  41000 Series Converged Network Adapters.
-diff --git a/drivers/scsi/smartpqi/Kconfig b/drivers/scsi/smartpqi/Kconfig
-index 97e159c..fafc7f7 100644
---- a/drivers/scsi/smartpqi/Kconfig
-+++ b/drivers/scsi/smartpqi/Kconfig
-@@ -41,14 +41,14 @@ config SCSI_SMARTPQI
- 	select SCSI_SAS_ATTRS
- 	select RAID_ATTRS
- 	---help---
--	This driver supports Microsemi PQI controllers.
-+	  This driver supports Microsemi PQI controllers.
- 
--	<http://www.microsemi.com>
-+	  <http://www.microsemi.com>
- 
--	To compile this driver as a module, choose M here: the
--	module will be called smartpqi.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called smartpqi.
- 
--        Note: the aacraid driver will not manage a smartpqi
--              controller. You need to enable smartpqi for smartpqi
--              controllers. For more information, please see
--              Documentation/scsi/smartpqi.txt
-+	  Note: the aacraid driver will not manage a smartpqi
-+	        controller. You need to enable smartpqi for smartpqi
-+	        controllers. For more information, please see
-+	        Documentation/scsi/smartpqi.txt
--- 
-1.9.1
+>=20
+> >But I suspect that in
+> >the system wide suspend/resume case, any callers that could make TCS
+> >requests are child devices of the RPMh controller and therefore they
+> >would already be suspended if they didn't have anything pending they're
+> >waiting for a response on or they would be blocking suspend themselves
+> >if they're waiting for the response. So why are we even checking the
+> >TCSes in system suspend path at all? Assume that callers know what
+> >they're doing and will block suspend if they care?
+> >
+> In suspend, they probably would do what you mention above. All CPUs
+> might conincidentally be idle at the same idle, when a request is being
+> processed.
+>=20
+> >Following that same logic, is this more of an API that is planned for
+> >use by CPU idle? Where the case is much more of a runtime PM design.
+> >Even then, I don't get it. A device that's runtime active and making
+> >RPMh requests might need to block some forms of CPU idle states because
+> >a request hasn't been processed yet that may change the decision for
+> >certain deep idle states?
+> >
+> A process waiting on a RPMH request, may let the CPU go to sleep and
+> therefore this is a possibility.
+>=20
+
+Ok thanks for the info. Can these details be included in the commit text
+so we don't lose sight of the bigger picture? And can this patch series
+be combined with a larger cpuidle/suspend patch series so we don't have
+to review this in isolation? I don't understand the need to add more
+APIs that aren't used yet.
 
