@@ -2,97 +2,122 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF817C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898F3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81EE2064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F88520661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="U+Q4puwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbfCFLJO (ORCPT
+        id S1730350AbfCFLM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 06:09:14 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:36845 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfCFLJN (ORCPT
+        Wed, 6 Mar 2019 06:12:28 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42329 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbfCFLM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 06:09:13 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N14xe-1h7QSn0c5S-012Vhh; Wed, 06 Mar 2019 12:09:07 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] extcon-ptn5150: fix COMPILE_TEST dependencies
-Date:   Wed,  6 Mar 2019 12:08:57 +0100
-Message-Id: <20190306110906.2622957-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 6 Mar 2019 06:12:27 -0500
+Received: by mail-ed1-f67.google.com with SMTP id j89so9990561edb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 03:12:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=essensium-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=peBwF4s7AcJireIW9aEtgVMb0skheqT5dujZbapujjU=;
+        b=U+Q4puwiim6Jb7u4OLSexsa7dEXMdqiBgn0bfCnW7ueHxwqQkYiLqtcAFz1YZG8a48
+         IV9Yronx9+kfZ4LRWxeHTuYZnDzo9xlixk5ipPU1751eoVlcJHstazFQ/2gKBOJ4wSlY
+         2lhbxzkfLgOs1vNSLKTBIer0bmBbGFsvPw386R48jcyF+onY/BZ8Q9XOYmZGIAbU1VAD
+         I67bS2qDOBRtExGkzf+9EenvgAqpjXcsAYXMI906j4V+866d9ITn+wfyAric7bXMzsTV
+         rFkGl64CwczORVIY2lxlz16+cH56iBOlVzdGn6Ravo8XVpkeeqAHNothMPWL91tncDrl
+         IuUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=peBwF4s7AcJireIW9aEtgVMb0skheqT5dujZbapujjU=;
+        b=MtmG67dsFsJ00dA793UdTNyVbgM8kBeh/yrrH3cZMYYwztq1zImXlo9JAxHVpVk2ZZ
+         z5eE786wkT05ogBO2MCiWSempbS05Dj/pjpa7s/1CIHqJoIdsDDh5jueZ1hmO3D4orqb
+         vv54uLJieBp9+VLcHo2myQQNxAOh5LG362edBnZkSFbCJPKhuJNXniZtb/OVVBVWh3Q5
+         wv8XChFIowj89m0rExx3UGIZgePwuR5EUk0SzrJMbg9D6Ia1B5d/TE0uWIndyx05vEQc
+         BBKkNS5EpQsquDL2dNp7iw9w0yxIspXj9pitXIMHR1ZtSnpX/qZHFr/homnyYGs3MBKd
+         X9+A==
+X-Gm-Message-State: APjAAAVQSPyVt57BC27bqnDYCA0yK/k/4IqchJ1YG76xeADBuPUYFSei
+        ZdbinL1CrSKMQMdW6dr7wFXPPw==
+X-Google-Smtp-Source: APXvYqwL6qLqdtmDQRVfTtB1ememvfNYtB5rR34Lz4vhgk+9Ie37InYAacfORqy89rYDFGFr4IYarQ==
+X-Received: by 2002:a17:906:3112:: with SMTP id 18mr3600815ejx.84.1551870745347;
+        Wed, 06 Mar 2019 03:12:25 -0800 (PST)
+Received: from ph-ThinkPad-E560.local.ess-mail.com (ip-188-118-3-185.reverse.destiny.be. [188.118.3.185])
+        by smtp.gmail.com with ESMTPSA id t25sm277879ejr.30.2019.03.06.03.12.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 03:12:24 -0800 (PST)
+From:   Patrick Havelange <patrick.havelange@essensium.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Esben Haabendal <esben@haabendal.dk>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Patrick Havelange <patrick.havelange@essensium.com>
+Subject: [PATCH v2 0/7] FlexTimer Module Quadrature decoder counter
+Date:   Wed,  6 Mar 2019 12:12:01 +0100
+Message-Id: <20190306111208.7454-1-patrick.havelange@essensium.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KC4iYkvGtYdhiUP3vD9B3Tevzaf0ckV5iiY6/4+X7YAF6iqCLkT
- jO4eSlcx40dobzhFrGGrNOpYIpu1DWPyvlIatlbHhzoao4Xjn8rTiodRQiNsVV+wPeDN4Pa
- ymaZwZkyhz69X/JI94frVY1narYa5T0BKFRg4iRNVeqBDXZF0BkcxNERrYB1+U9/I34lbVQ
- 80I0+zzbC59lJEhLFzgLg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DIcRHNM81FA=:vqTtp2fETiYjd9qjOBnzgj
- LnY6R2vq+dw0UsqGvmL+NfCKa174JhqSOw4lsQL2a8kq4GxCGP3L7Heba0iuUd2n9RFedEV/C
- CB03gtpJg1uuSJ0vaGrkIECaHEhiR8y95L7AXMs0kqnYFdJ7cvchJYY7WmozNh/zychoHQI1H
- FpTtmPZqggXKKr0yApmf3/oIbJ4Lgh5Oe8xGTbpbEaTClCz3WsYpm3wK8+xMidiWqq25fUoVC
- SlnxPDYXmVDorfd7MyWktgxvKrbR6m+ZAzwnYu7fFxyp3bNuL7qNKF/kRw8fNXcbHvWnQ86gR
- 2gdzkM8ESo6AH78kiX/jrju+8Q6cSRLxdJbcXJ1mw6pJC/EPij3/8uB3HryG3RBx14LQkKQrA
- niNz2yVnr0Nia3459ABXkOsNIrhwl4gMhxElWgmnSVBFDx8V1SKB+Of5H0KO4kPGw2Z3B9B1d
- 4hQ1nzgZ0tKr0UOqKKzVGIRanrxm16AXya86BoJnp71p7TXpZ6nETbww/nGLeFD1bt3RKXuOE
- MuEWND29o04b5jP2yROM/z4IBwyR1X98ytXrGm5k6/xxdLUYIPZTzrjanT8Z9m3KFwN3KQAH9
- qg8QQOhTWhi6pAanUJ6jqrfj584zhK3mCfztpNjkYVhALBxAFZdZxs8YYKkxu7ufgdNzFNTkB
- zGdIUc33KUTpEyUM2NV15QDG/Cz0Dk61TTL3wXVIbLGLJuMmoeyxP8E+FedMOx5ujMpfZXVX+
- L09QvvPbTWNy9uWy/I1bhwqNN8bVrHbq8h/SeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PTN5150 dependencies look like they were meant to do the
-right thing, but they actually should not allow building without
-I2C for compile testing, as that results in a Kconfig warning
-and subsequent build failure:
+This patch serie is to be applied on top of 
+https://patchwork.kernel.org/project/linux-iio/list/?series=147
+(a more recent version of the serie is available here : 
+https://gitlab.com/vilhelmgray/iio/tree/generic_counter_v10 )
 
-WARNING: unmet direct dependencies detected for REGMAP_I2C
-  Depends on [m]: I2C [=m]
-  Selected by [y]:
-  - EXTCON_PTN5150 [=y] && EXTCON [=y] && (I2C [=m] && GPIOLIB [=y] || COMPILE_TEST [=y])
-  Selected by [m]:
-  - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
-  - KEYBOARD_CAP11XX [=m] && !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && OF [=y] && I2C [=m]
-  - INPUT_DRV260X_HAPTICS [=m] && !UML && INPUT_MISC [=y] && INPUT [=y] && I2C [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
-  - ... [many others]
+Main changes in v2: 
+The code is a bit simpler, thanks to more use of devm_* functions.
+The polling/32bit signed version has been dropped, as not needed and
+no other driver is doing that.
 
-Add parentheses around the expression so we can compile-test
-without GPIOLIB but not without I2C.
 
-Fixes: 4ed754de2d66 ("extcon: Add support for ptn5150 extcon driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/extcon/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patrick Havelange (7):
+  include/fsl: add common FlexTimer #defines in a separate header.
+  drivers/pwm: pwm-fsl-ftm: use common header for FlexTimer #defines
+  drivers/clocksource: timer-fsl-ftm: use common header for FlexTimer
+    #defines
+  dt-bindings: counter: ftm-quaddec
+  counter: add FlexTimer Module Quadrature decoder counter driver
+  counter: ftm-quaddec: Documentation: Add specific counter sysfs
+    documentation
+  LS1021A: dtsi: add ftm quad decoder entries
 
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index 8e17149655f0..540e8cd16ee6 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -116,7 +116,7 @@ config EXTCON_PALMAS
- 
- config EXTCON_PTN5150
- 	tristate "NXP PTN5150 CC LOGIC USB EXTCON support"
--	depends on I2C && GPIOLIB || COMPILE_TEST
-+	depends on I2C && (GPIOLIB || COMPILE_TEST)
- 	select REGMAP_I2C
- 	help
- 	  Say Y here to enable support for USB peripheral and USB host
+ .../ABI/testing/sysfs-bus-counter-ftm-quaddec |  16 +
+ .../bindings/counter/ftm-quaddec.txt          |  18 +
+ arch/arm/boot/dts/ls1021a.dtsi                |  28 ++
+ drivers/clocksource/timer-fsl-ftm.c           |  15 +-
+ drivers/counter/Kconfig                       |   9 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/ftm-quaddec.c                 | 356 ++++++++++++++++++
+ drivers/pwm/pwm-fsl-ftm.c                     |  44 +--
+ include/linux/fsl/ftm.h                       |  88 +++++
+ 9 files changed, 519 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-ftm-quaddec
+ create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
+ create mode 100644 drivers/counter/ftm-quaddec.c
+ create mode 100644 include/linux/fsl/ftm.h
+
 -- 
-2.20.0
+2.19.1
 
