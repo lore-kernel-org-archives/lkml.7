@@ -2,100 +2,83 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329CBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18BAC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2A2206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD68E206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbfCFPv0 (ORCPT
+        id S1730095AbfCFPv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 6 Mar 2019 10:51:29 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:34480 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbfCFPv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Mar 2019 10:51:26 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34478 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfCFPvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:51:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15C1B165C;
-        Wed,  6 Mar 2019 07:51:20 -0800 (PST)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF1BD3F703;
-        Wed,  6 Mar 2019 07:51:16 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v4 09/19] mm: Add generic p?d_large() macros
-Date:   Wed,  6 Mar 2019 15:50:21 +0000
-Message-Id: <20190306155031.4291-10-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190306155031.4291-1-steven.price@arm.com>
-References: <20190306155031.4291-1-steven.price@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7EBB388305;
+        Wed,  6 Mar 2019 15:51:26 +0000 (UTC)
+Received: from virtlab420.virt.lab.eng.bos.redhat.com (virtlab420.virt.lab.eng.bos.redhat.com [10.19.152.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CBFFF1001E60;
+        Wed,  6 Mar 2019 15:51:21 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
+        riel@surriel.com, david@redhat.com, mst@redhat.com,
+        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
+        aarcange@redhat.com, alexander.duyck@gmail.com
+Subject: [RFC][Patch v9 4/6] KVM: Reporting page poisoning value to the host
+Date:   Wed,  6 Mar 2019 10:50:46 -0500
+Message-Id: <20190306155048.12868-5-nitesh@redhat.com>
+In-Reply-To: <20190306155048.12868-1-nitesh@redhat.com>
+References: <20190306155048.12868-1-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 06 Mar 2019 15:51:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exposing the pud/pgd levels of the page tables to walk_page_range() means
-we may come across the exotic large mappings that come with large areas
-of contiguous memory (such as the kernel's linear map).
+This patch enables the kernel to report the page poisoning value
+to the host by using VIRTIO_BALLOON_F_PAGE_POISON feature.
+Page Poisoning is a feature in which the page is filled with a specific
+pattern of (0x00 or 0xaa) after freeing and the same is verified
+before allocation to prevent following issues:
+    *information leak from the freed data
+    *use after free bugs
+    *memory corruption
+The issue arises when the pattern used for Page Poisoning is 0xaa while
+the newly allocated page received from the host by the guest is
+filled with the pattern 0x00. This will result in memory corruption errors.
 
-For architectures that don't provide p?d_large() macros, provide generic
-does nothing defaults.
-
-Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 ---
- include/asm-generic/pgtable.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/virtio/virtio_balloon.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 05e61e6c843f..f0de24100ac6 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1186,4 +1186,23 @@ static inline bool arch_has_pfn_modify_check(void)
- #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
- #endif
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index cfe7574b5204..e82c72cd916b 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -970,6 +970,11 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 	}
  
-+/*
-+ * p?d_large() - true if this entry is a final mapping to a physical address.
-+ * This differs from p?d_huge() by the fact that they are always available (if
-+ * the architecture supports large pages at the appropriate level) even
-+ * if CONFIG_HUGETLB_PAGE is not defined.
-+ */
-+#ifndef pgd_large
-+#define pgd_large(x)	0
-+#endif
-+#ifndef p4d_large
-+#define p4d_large(x)	0
-+#endif
-+#ifndef pud_large
-+#define pud_large(x)	0
-+#endif
-+#ifndef pmd_large
-+#define pmd_large(x)	0
-+#endif
-+
- #endif /* _ASM_GENERIC_PGTABLE_H */
+ #ifdef CONFIG_KVM_FREE_PAGE_HINTING
++	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
++		memset(&poison_val, PAGE_POISON, sizeof(poison_val));
++		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
++			      poison_val, &poison_val);
++	}
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+ 		enable_hinting(vb);
+ #endif
 -- 
-2.20.1
+2.17.2
 
