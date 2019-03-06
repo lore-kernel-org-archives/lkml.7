@@ -7,213 +7,171 @@ X-Spam-Status: No, score=-14.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF181C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83608C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852C820840
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513EA21734
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfCFPf2 convert rfc822-to-8bit (ORCPT
+        id S1729744AbfCFPgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:35:28 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46043 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfCFPf1 (ORCPT
+        Wed, 6 Mar 2019 10:36:23 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35690 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfCFPgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:35:27 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d18so13248334qtg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:35:26 -0800 (PST)
+        Wed, 6 Mar 2019 10:36:23 -0500
+Received: by mail-qt1-f194.google.com with SMTP id p48so13276836qtk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:36:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=C44dV1LLE+sDJe4B4ets0h5dOkzQfklkA1FAWBOmCl4=;
-        b=VpE58r4cY8zNHusbPBf+jw5cR46aocZpB9nZkDi5JFvi7e5pd9W5yeiwzMtXhj1kRZ
-         ujmBEpuBw/uDijkbO+aF8Bz5DEncMC7SfzHV1UuBTVwcH1FGmxrTdwhmPu4oUmGNzQkT
-         CWpsjHW1FkR/B4fJreu4v7hnMt2ejOGNW39CHWdvphZnPGK+RcNgLKYgLkihVM79n7/S
-         WAqh5kWJ/l1CEKCpFq2BC8vthWlUU+mAXz5iLo+pXQHgt8bXURJnl53Ew7Ef4c/McxlL
-         B6976Op9VBlKc5FytEQXRSA2do9Mxf+I8BDQQbV2erh7nVrhEMmE/S36nbOHOH7RT1a+
-         XEpA==
-X-Gm-Message-State: APjAAAU9dJu7/oPKNkkImh8N5YlGVurg6KXlUtlQMpk755T0sR3zikVP
-        gr8rY0WTgw3FH3GC5rCHBz/tTiwJXTMvnyWAzo0=
-X-Google-Smtp-Source: APXvYqwfCzQHpZI3A387gdsSyqs3QMfsYLc+ALoM3as0DpWx5hI3enOa6iVtqIla1OYC8u8kuJ4CQZjB0XJimKMk9LY=
-X-Received: by 2002:ac8:237b:: with SMTP id b56mr6131857qtb.343.1551886526215;
- Wed, 06 Mar 2019 07:35:26 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=J+FeZe6PSCOtLAAuNZaCxy4v5LXwB6YxaeesmlZNuV0=;
+        b=Y5dvUYPUfyArN67YbGfv0p91qt4xtt3R+x7Kkq5vKBwyUzT4W25pAWSw9EJl7UxU//
+         fyh7TNrzpMzCD8Tw5p+IZhppTGkWsKngCJDPBLTgZ+oZITtI/hthA0axNVFnrslcPkHB
+         jgmkr8XBAHX/aIDnVAY8w7zd/1/pLqWyJ+0u6AaUL8xzIaLwVb/+y1X4gBnb7Q6U9ypL
+         ThBglznkNH7GJpQemjd9Xie/tkYrS6JrPKgpce7w3pzOKTzWjjq+FHT62n+7nH9SI9Jd
+         LW0byMfYMDq9CDVUZIoutn1upicUbQngD70sn7D+KufANV7NzI7Ligc6m3NpLToLoU1M
+         1ijg==
+X-Gm-Message-State: APjAAAXHrYJ8IzrXzcwx7JdA4bTqjOSMSahkV8sfS9dRwuCWOrDDN+LS
+        ReQ9bNM8lzXSdaaVy0FcapjLxDPxrScdnU700+I=
+X-Google-Smtp-Source: APXvYqxgtj8wrj9LK2YWP2uiA0RzycbeCeEhzl1TFMJ22p5xsTSYFn+1J4W2JlZi7sJwDH7A5AgHikqbew1MjvvFvCk=
+X-Received: by 2002:a0c:98c8:: with SMTP id g8mr6857391qvd.161.1551886582156;
+ Wed, 06 Mar 2019 07:36:22 -0800 (PST)
 MIME-Version: 1.0
 References: <CAK8P3a1mnNrpf5moqi4x9BaTNpE9ZUgs-VBjXoG7=AxENwYtbQ@mail.gmail.com>
 In-Reply-To: <CAK8P3a1mnNrpf5moqi4x9BaTNpE9ZUgs-VBjXoG7=AxENwYtbQ@mail.gmail.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 6 Mar 2019 16:35:07 +0100
-Message-ID: <CAK8P3a1k3y0ZHLxGNBoynF+tpej9PVQUT7PgP1RLCuXWonKmHg@mail.gmail.com>
-Subject: [GIT PULL 4/6] ARM: SoC defconfig updates for 5.1
+Date:   Wed, 6 Mar 2019 16:36:05 +0100
+Message-ID: <CAK8P3a2+OspNio3=mLoYPjOg_rbYeomYa8TrRaLwU=ZF1ec20w@mail.gmail.com>
+Subject: [GIT PULL 5/6] ARM: New SoC family support for 5.1
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         arm-soc <arm@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit f17b5f06cb92ef2250513a1e154c47b78df07d40:
+The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
 
-  Linux 5.0-rc4 (2019-01-27 15:18:05 -0800)
+  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git
-tags/armsoc-defconfig
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-newsoc
 
-for you to fetch changes up to 31b0067e8d6d200f5c0a083ca7b3536022243a90:
+for you to fetch changes up to c889e2a0b053703be7e7591c9a574975440e5502:
 
-  ARM: spear3xx_defconfig: Activate PL111 DRM driver (2019-03-01 15:09:21 +0100)
+  Merge branch 'milbeaut/newsoc' into arm/newsoc (2019-03-01 15:21:04 +0100)
 
 ----------------------------------------------------------------
-ARM: SoC defconfig updates for 5.1
+ARM: New SoC family support
 
-We regenerated the defconfig files for samsung, shmobile, lpc18xx,
-lpc32xx, omap2, and nhk8815.
+Two new SoC families are added this time.
 
-Lots of additional drivers added on samsung and nhk8815,
-as well as the new pl110 driver on all machines that have it.
+Sugaya Taichi submitted support for the Milbeaut SoC family from
+Socionext and explains:
 
-The remaining changes are mostly to enable newly added drivers,
-and in case of imx8mq together with the SoC getting merged.
+ "SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
+  computer vision. It also features advanced functionalities such as 360-degree,
+  real-time spherical stitching with multi cameras, image stabilization for
+  without mechanical gimbals, and rolling shutter correction. More detail is
+  below:
+  https://www.socionext.com/en/products/assp/milbeaut/SC2000.html"
+
+Interestingly, this one has a history dating back to older chips
+made by Socionext and previously Matsushita/Panasonic based on their
+own mn10300 CPU architecture that was removed from the kernel last year.
+
+Manivannan Sadhasivam adds support for another SoC family, this is the
+Bitmain BM1880 chip used in the Sophon Edge TPU developer board.
+The chip is intended for Deep Learning applications, and comes
+with dual-core Arm Cortex-A53 to run Linux as well as a RISC-V
+microcontroller core to control the tensor unit.
+For the moment, the TPU is not accessible in mainline Linux, so
+we treat it as a generic Arm SoC.
+More information is available at https://www.sophon.ai/
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 ----------------------------------------------------------------
-Abel Vesa (1):
-      arm64: defconfig: Add i.MX8MQ boot necessary configs
+Arnd Bergmann (2):
+      Merge tag 'bitmain-initial-soc-v5.1' of
+git://git.kernel.org/.../mani/linux-bitmain into arm/newsoc
+      Merge branch 'milbeaut/newsoc' into arm/newsoc
 
-Aisheng Dong (1):
-      arm64: defconfig: add imx8qxp support
+Manivannan Sadhasivam (5):
+      dt-bindings: arm: Document Bitmain BM1880 SoC
+      arm64: Add ARCH_BITMAIN platform
+      arm64: dts: bitmain: Add BM1880 SoC support
+      arm64: dts: bitmain: Add Sophon Egde board support
+      MAINTAINERS: Add entry for Bitmain SoC platform
 
-Anson Huang (1):
-      arm64: defconfig: add i.MX system controller RTC support
+Sugaya Taichi (9):
+      dt-bindings: sram: milbeaut: Add binding for Milbeaut smp-sram
+      dt-bindings: arm: Add SMP enable-method for Milbeaut
+      dt-bindings: Add documentation for Milbeaut SoCs
+      ARM: milbeaut: Add basic support for Milbeaut m10v SoC
+      dt-bindings: timer: Add Milbeaut M10V timer description
+      clocksource/drivers/timer-milbeaut: Introduce timer for Milbeaut SoCs
+      ARM: dts: milbeaut: Add device tree set for the Milbeaut M10V board
+      ARM: configs: Add Milbeaut M10V defconfig
+      ARM: multi_v7_defconfig: add ARCH_MILBEAUT and ARCH_MILBEAUT_M10V
 
-Ard Biesheuvel (1):
-      ARM: multi_v7_defconfig: enable GCC plugin support and structleak plugin
-
-Arnd Bergmann (11):
-      Merge tag 'omap-for-v5.1/defconfig-signed' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/defconfig
-      Merge tag 'imx-defconfig-5.1' of
-git://git.kernel.org/.../shawnguo/linux into arm/defconfig
-      Merge tag 'tegra-for-5.1-arm64-defconfig' of
-git://git.kernel.org/.../tegra/linux into arm/defconfig
-      Merge tag 'renesas-arm-defconfig-for-v5.1' of
-git://git.kernel.org/.../horms/renesas into arm/defconfig
-      Merge tag 'renesas-arm64-defconfig-for-v5.1' of
-git://git.kernel.org/.../horms/renesas into arm/defconfig
-      Merge tag 'sunxi-config64-for-5.1' of
-git://git.kernel.org/.../sunxi/linux into arm/defconfig
-      Merge branch 'socfpga_for_next_v5.1_defconfig' of
-git://git.kernel.org/.../dinguyen/linux into arm/defconfig
-      Merge tag 'lpc32xx-defconfig-for-5.1' of
-https://github.com/vzapolskiy/linux-lpc32xx into arm/defconfig
-      Merge tag 'arm-soc/for-5.1/defconfig' of
-https://github.com/Broadcom/stblinux into arm/defconfig
-      Merge tag 'samsung-defconfig-5.1' of
-git://git.kernel.org/.../krzk/linux into arm/defconfig
-      ARM: pxa: remove CONFIG_SND_PXA2XX_AC97 in pxa_defconfig
-
-Biju Das (2):
-      ARM: shmobile: Enable NXP pcf85363 rtc in shmobile_defconfig
-      ARM: multi_v7_defconfig: Enable NXP pcf85363 rtc
-
-Carlo Caione (2):
-      arm64: defconfig: Enable PFUZE100 regulator
-      arm64: defconfig: Add IMX2+ watchdog
-
-Dinh Nguyen (1):
-      ARM: socfpga_defconfig: enable BLK_DEV_LOOP config option
-
-Florian Fainelli (1):
-      Merge tag 'tags/bcm2835-defconfig-next-2018-11-27' into defconfig/next
-
-Geert Uytterhoeven (4):
-      arm64: defconfig: Enable CONFIG_PHY_RCAR_GEN3_PCIE
-      ARM: shmobile: defconfig: Refresh for v5.0-rc1
-      ARM: shmobile: defconfig: Enable support for RZ/A2
-      ARM: multi_v7_defconfig: Enable support for RZ/A2
-
-Jagan Teki (2):
-      arm64: defconfig: Enable I2C_GPIO
-      arm64: defconfig: Enable SUN6I Camera sensor interface
-
-Joseph Lo (1):
-      arm64: defconfig: Enable MAX8973 regulator
-
-Kuninori Morimoto (1):
-      arm64: defconfig: select Kingfisher Sound related configs
-
-Linus Walleij (11):
-      ARM: defconfig: Update LPC18xx defconfig
-      ARM: defconfig: Switch LPC18xx to use PL11x DRM driver
-      ARM: defconfig: Update LPC32xx defconfig
-      ARM: defconfig: Switch LPC32xx to use PL11x DRM driver
-      ARM: defconfig: axm55xx: Drop PL11x graphics driver
-      ARM: defconfig: Enable PL11x DRM driver on multi_v7
-      arm64: defconfig: Switch to PL11x DRM driver
-      ARM: defconfig: integrator: Switch to DRM
-      ARM: nhk8815_defconfig: Update defconfig
-      ARM: nhk8815_defconfig: Add new options
-      ARM: spear3xx_defconfig: Activate PL111 DRM driver
-
-Lukasz Luba (1):
-      ARM: omap2plus_defconfig: remove PROVE_LOCKING from defconfig
-
-Paweł Chmiel (3):
-      ARM: s5pv210_defconfig: Run make savedefconfig
-      ARM: s5pv210_defconfig: Enable more drivers present on Samsung Aries
-      ARM: s5pv210_defconfig: Enable cpufreq
-
-Simon Horman (1):
-      arm64: defconfig: Enable R-Car thermal driver
-
-Stefan Wahren (1):
-      ARM: bcm2835_defconfig: Enable BCM2835 MMAL-based V4L2 camera driver
-
-Thierry Reding (1):
-      arm64: defconfig: Enable Tegra TCU
-
-Tony Lindgren (2):
-      ARM: omap2plus_defconfig: Update for dropped options
-      ARM: omap2plus_defconfig: Update for moved options
-
-Vladimir Zapolskiy (8):
-      ARM: defconfig: lpc32xx: enable NFSv4 support
-      ARM: defconfig: lpc32xx: enable build options for basic debugging
-      ARM: defconfig: lpc32xx: enable panic on oops option
-      ARM: defconfig: lpc32xx: enable serial console on HS UART
-      ARM: defconfig: lpc32xx: enable generic SRAM driver
-      ARM: defconfig: lpc32xx: disable superfluous GPIO controllers
-      ARM: defconfig: lpc32xx: enable fixed voltage regulator support
-      ARM: defconfig: lpc32xx: enable DRM simple panel driver
-
-Yogesh Narayan Gaur (1):
-      arm64: defconfig: enable NXP FlexSPI driver
-
- arch/arm/configs/axm55xx_defconfig    |  4 ----
- arch/arm/configs/bcm2835_defconfig    |  3 +++
- arch/arm/configs/integrator_defconfig |  9 +++++++--
- arch/arm/configs/lpc18xx_defconfig    | 31 +++++++++++++------------------
- arch/arm/configs/lpc32xx_defconfig    | 65
-+++++++++++++++++++++++++++++++----------------------------------
- arch/arm/configs/multi_v7_defconfig   |  8 +++++++-
- arch/arm/configs/nhk8815_defconfig    | 41
-+++++++++++++++++++++++++++--------------
- arch/arm/configs/omap2plus_defconfig  | 83
-++++++++++++++++++++++++++++++++++++++---------------------------------------------
- arch/arm/configs/pxa_defconfig        |  1 -
- arch/arm/configs/s5pv210_defconfig    | 47
-++++++++++++++++++++++++++++++++++++-----------
- arch/arm/configs/shmobile_defconfig   | 48
-++++++++++++++++++++++++------------------------
- arch/arm/configs/socfpga_defconfig    | 25 +++++++++++--------------
- arch/arm/configs/spear3xx_defconfig   |  6 ++++--
- arch/arm64/configs/defconfig          | 32 +++++++++++++++++++++++++++++++-
- 14 files changed, 232 insertions(+), 171 deletions(-)
+ Documentation/devicetree/bindings/arm/bitmain.yaml
+|  18 +++++++
+ Documentation/devicetree/bindings/arm/cpus.yaml                      |   1 +
+ Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+|  22 ++++++++
+ Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
+|  24 +++++++++
+ Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+|  17 ++++++
+ MAINTAINERS                                                          |   7 +++
+ arch/arm/Kconfig                                                     |   2 +
+ arch/arm/Makefile                                                    |   1 +
+ arch/arm/boot/dts/Makefile                                           |   1 +
+ arch/arm/boot/dts/milbeaut-m10v-evb.dts
+|  32 +++++++++++
+ arch/arm/boot/dts/milbeaut-m10v.dtsi
+|  95 ++++++++++++++++++++++++++++++++
+ arch/arm/configs/milbeaut_m10v_defconfig
+| 119 ++++++++++++++++++++++++++++++++++++++++
+ arch/arm/configs/multi_v7_defconfig                                  |   2 +
+ arch/arm/mach-milbeaut/Kconfig
+|  20 +++++++
+ arch/arm/mach-milbeaut/Makefile                                      |   1 +
+ arch/arm/mach-milbeaut/platsmp.c
+| 143 ++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm64/Kconfig.platforms                                         |   5 ++
+ arch/arm64/boot/dts/Makefile                                         |   1 +
+ arch/arm64/boot/dts/bitmain/Makefile                                 |   3 ++
+ arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+|  50 +++++++++++++++++
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi
+| 119 ++++++++++++++++++++++++++++++++++++++++
+ drivers/clocksource/Kconfig                                          |   9 ++++
+ drivers/clocksource/Makefile                                         |   1 +
+ drivers/clocksource/timer-milbeaut.c
+| 161 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 24 files changed, 854 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bitmain.yaml
+ create mode 100644
+Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+ create mode 100644 Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
+ create mode 100644
+Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+ create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dts
+ create mode 100644 arch/arm/boot/dts/milbeaut-m10v.dtsi
+ create mode 100644 arch/arm/configs/milbeaut_m10v_defconfig
+ create mode 100644 arch/arm/mach-milbeaut/Kconfig
+ create mode 100644 arch/arm/mach-milbeaut/Makefile
+ create mode 100644 arch/arm/mach-milbeaut/platsmp.c
+ create mode 100644 arch/arm64/boot/dts/bitmain/Makefile
+ create mode 100644 arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+ create mode 100644 arch/arm64/boot/dts/bitmain/bm1880.dtsi
+ create mode 100644 drivers/clocksource/timer-milbeaut.c
