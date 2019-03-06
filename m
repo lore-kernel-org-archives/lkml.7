@@ -2,141 +2,140 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61D020684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:18:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gTgRimAd"
+	by mail.kernel.org (Postfix) with ESMTP id D206420661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbfCFLSa (ORCPT
+        id S1728948AbfCFLTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 06:18:30 -0500
-Received: from mout.web.de ([212.227.15.3]:51771 "EHLO mout.web.de"
+        Wed, 6 Mar 2019 06:19:12 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:54999 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfCFLSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 06:18:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1551871093;
-        bh=dkC6c7XltdejrNRH4toIXc+41IHTqRrbUjK4KrfcU/0=;
-        h=X-UI-Sender-Class:Subject:Cc:References:From:To:Date:In-Reply-To;
-        b=gTgRimAd5gMe5x62bLDOfhWLTYCiMoPx6Mn3DeFjucMMCmoyrBCY5V/V/uYhlzC1x
-         JaNVbvLOgZafLI4Yyp/9/cf+MehoKNCS4vikipe4cHsLYQqRVa9S3ieZk+RdOVkSgF
-         Tc3QTfL4h3DpYwHyufh24Ko+WX+9ggXHJBbS+tEU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.80.135]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LvBJK-1h9dmJ0fLe-010LcN; Wed, 06
- Mar 2019 12:18:13 +0100
-Subject: Re: [v6] coccinelle: semantic code search for missing put_device()
-Cc:     Wen Yang <yellowriver2010@hotmail.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cocci@systeme.lip6.fr
-References: <201902191014156680299@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Wen Yang <wen.yang99@zte.com.cn>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Message-ID: <26dfa462-296c-6daf-5f22-30c20593c9cd@web.de>
-Date:   Wed, 6 Mar 2019 12:18:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        id S1726028AbfCFLTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 06:19:11 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 28A753082E0F;
+        Wed,  6 Mar 2019 11:19:11 +0000 (UTC)
+Received: from kasong-laptop-rh.nay.redhat.com (unknown [10.66.128.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A4DC60E3D;
+        Wed,  6 Mar 2019 11:19:04 +0000 (UTC)
+From:   Kairui Song <kasong@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dave Young <dyoung@redhat.com>, x86@kernel.org,
+        devel@linuxdriverproject.org, Kairui Song <kasong@redhat.com>
+Subject: [PATCH v3] x86, hyperv: fix kernel panic when kexec on HyperV
+Date:   Wed,  6 Mar 2019 19:18:27 +0800
+Message-Id: <20190306111827.14131-1-kasong@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <201902191014156680299@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:zRt0TW4S+VgctpkkBMCnziMvTR2UdYKZxOBk8vsXqnDy5tmI32F
- LxESADpU7g2Uv3JKpGu0GkYpJLgZtMejZofuzDOumutUkX6HpbFiKCcMu1e80UyBNpe28RG
- QrK/c6SN09Y0btTYm4kIxQebmYnWUvX9l93Dcq/xWLFzPcKr1l8MYdiC1ydMersVps49ChR
- E7kVinvXW7pG0/CCuBkdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xOQ5jjph6q0=:DaTtkJHzvU+D6XH/L4YxtV
- c6A/copolht319FpZw9FRxLYbzBkWN4Cg6x+Edm60fieqQtFfT2reV41/i+nihORWLLwQgl9f
- 8eTk0w8MJBbgDeRZByRlC5tkTyiqtX0H6AUCQ12CSuWbMoGuRaARAwz/p84uk3V5Y4Y+lRJ5e
- cSmtvdxYLP1Xtst6vYPFmGoP67B12dARNX4M9wiWczg+n4FioPvhBr47e6BFg5lEh8Q5sOjXe
- Yyy2YdXS6TAc2SZqV3W7qO04+SJtSQZTHHxYL8ngw6pm5X0eOnNNNx6pPFtsGTbV/5Kn22Dwa
- duthj2VT/8n8HjPDRGUWRWqEdWHiloQoU1TkEy91uFCad8C7GCpGTjQOEKs6l7grjhlfGgVcp
- gAd3c3jOIFs9E24vN4cpn2LjQf8vW9eX8Ld4d4RoDiStKQtU1kq01Ks9Mkam/SAKHLtkD4cVa
- xg2cHuJeUZ2v7FZ0QO36yMAydBZQwaEYvzYyL5491LwdNfGHi0yJ+f3mqO5CNOcuf9YsFMLIP
- 3H+H6S4fuwH5ai1FLnxjf7aVovebeq5pdsRQb/yF4D59EPVzI5Xsza24iWAe/oquX84EFiN0g
- in5sMz5sM2ykAQLLPK6IMbK6gKxdd5NR3rzuu+6uDZuRid31nBO8F6Kk/u2/xT0GqD6yOU8dn
- HFk6J9D96PKwsmhSohJWitaRt+sMWrfeNxBzNp+8wa8rSxcS1oPSOKsVBrC6rPJkkifkPqsiO
- iY6YHaUoOv6yo0+YVSCSnZ6cd0OXpLQZz0/W7STpZMEnzQOblXx7h0OC5mihOai3bFkVqza2+
- Ya1ZAaYgwCyhPgMAifgLueKuXGeebQAC3Q8WRfC1VRNrl1qrJLsCBaHzad/qfruB3LjJaFsPG
- lsxQkDIaA7S+5yfh/Z8b2OZiyJIOANp1hlglvTs84V2tYujlYAr5+JokxN91x5KC2fnxzOhB8
- M3ymKVyF6Jg==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 06 Mar 2019 11:19:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Do you have any other questions?
+After commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments"),
+kexec will fail with a kernel panic like this:
 
-I would like to point another aspect out for further development considerations.
+kexec_core: Starting new kernel
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+PGD 8000000057995067 P4D 8000000057995067 PUD 57990067 PMD 0
+Oops: 0002 [#1] SMP PTI
+CPU: 0 PID: 1016 Comm: kexec Not tainted 4.18.16-300.fc29.x86_64 #1
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v3.0 03/02/2018
+RIP: 0010:0xffffc9000001d000
+Code: Bad RIP value.
+RSP: 0018:ffffc9000495bcf0 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffc9000001d000 RCX: 0000000000020015
+RDX: 000000007f553000 RSI: 0000000000000000 RDI: ffffc9000495bd28
+RBP: 0000000000000002 R08: 0000000000000000 R09: ffffffff8238aaf8
+R10: ffffffff8238aae0 R11: 0000000000000000 R12: ffff88007f553008
+R13: 0000000000000001 R14: ffff8800ff553000 R15: 0000000000000000
+FS:  00007ff5c0e67b80(0000) GS:ffff880078e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc9000001cfd6 CR3: 000000004f678006 CR4: 00000000003606f0
+Call Trace:
+ ? __send_ipi_mask+0x1c6/0x2d0
+ ? hv_send_ipi_mask_allbutself+0x6d/0xb0
+ ? mp_save_irq+0x70/0x70
+ ? __ioapic_read_entry+0x32/0x50
+ ? ioapic_read_entry+0x39/0x50
+ ? clear_IO_APIC_pin+0xb8/0x110
+ ? native_stop_other_cpus+0x6e/0x170
+ ? native_machine_shutdown+0x22/0x40
+ ? kernel_kexec+0x136/0x156
+ ? __do_sys_reboot+0x1be/0x210
+ ? kmem_cache_free+0x1b1/0x1e0
+ ? __dentry_kill+0x10b/0x160
+ ? _cond_resched+0x15/0x30
+ ? dentry_kill+0x47/0x170
+ ? dput.part.34+0xc6/0x100
+ ? __fput+0x147/0x220
+ ? _cond_resched+0x15/0x30
+ ? task_work_run+0x38/0xa0
+ ? do_syscall_64+0x5b/0x160
+ ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Modules linked in: ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 xt_conntrack ebtable_nat ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat iptable_mangle iptable_raw iptable_security nf_conntrack ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables sunrpc vfat fat crct10dif_pclmul crc32_pclmul ghash_clmulni_intel intel_rapl_perf hv_balloon joydev xfs libcrc32c hv_storvsc serio_raw scsi_transport_fc hv_netvsc hyperv_keyboard hyperv_fb hid_hyperv crc32c_intel hv_vmbus
 
-The initial assignment targets are (id)expressions in the discussed analysis
-approach so far.
-Would you like to care also for value (or pointer) initialisations by resource
-allocation calls at the following source code places?
+That's because now we may use hypercall for sending IPI, the
+hypercall page will be reset very early upon kexec reboot, but kexec
+will need to send IPI for stopping CPUs, and it will reference this
+no longer usable page, then kernel panics.
 
-* Variable definition
+To fix it, simply reset hv_hypercall_pg to NULL before the page is
+reset to avoid any misuse, IPI sending will fallback to use non
+hypercall based method. This only happens on kexec / kdump so setting to
+NULL should be good enough.
 
-* Designated initialiser
+Fixes: 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
+Signed-off-by: Kairui Song <kasong@redhat.com>
 
+---
 
-Will possible software extensions trigger interesting challenges?
+Update from V2:
+- The memory barrier is not needed, remove it.
 
-Regards,
-Markus
+Update from V1:
+- Add comment for the wmb call.
+
+ arch/x86/hyperv/hv_init.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 7abb09e2eeb8..d3f42b6bbdac 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -406,6 +406,13 @@ void hyperv_cleanup(void)
+ 	/* Reset our OS id */
+ 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+ 
++	/*
++	 * Reset hypercall page reference before reset the page,
++	 * let hypercall operations fail safely rather than
++	 * panic the kernel for using invalid hypercall page
++	 */
++	hv_hypercall_pg = NULL;
++
+ 	/* Reset the hypercall page */
+ 	hypercall_msr.as_uint64 = 0;
+ 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+-- 
+2.20.1
+
