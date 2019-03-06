@@ -2,294 +2,100 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E6FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C54C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD10206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovCilbDl"
+	by mail.kernel.org (Postfix) with ESMTP id 5EFCF20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfCFWGI (ORCPT
+        id S1726432AbfCFWIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:06:08 -0500
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55559 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFWGI (ORCPT
+        Wed, 6 Mar 2019 17:08:50 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:53201 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFWIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:06:08 -0500
-Received: by mail-it1-f194.google.com with SMTP id z131so12101558itf.5;
-        Wed, 06 Mar 2019 14:06:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lqPYOaCXuNPqYA0GOIDbs7rPmzwX5TT0hcpajmda5F4=;
-        b=ovCilbDlrzJq3s5qWLY8FgCbaDYdeGY1uoh6Uxp6KqIaRFOpnLv4C+XYHd2+HmWlke
-         qZiGhWTSqDH9bQjgTNemPcHj1e+ciz24NFq/CVhxlkoGzMC/FmVdRC7DL7RGuAxbT4dK
-         MINPIMe12fto75VzOihCuchAZ5USA8Rz5P5pPhLOUd8oRklzNbSS2qSSW0egH4yXWgk0
-         VqE8La0fkaYEojAezSXn8zXAjTUlrggsyPxp/zTqzXs1feJHj/FrjSKW5j+yrK2VAnQn
-         1NIi/3nGxKJTVHbeydLssjBg8CkVD21gsYyUtD2ker/F23gQWfeyF5q5mYE1789RFD0z
-         3YXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lqPYOaCXuNPqYA0GOIDbs7rPmzwX5TT0hcpajmda5F4=;
-        b=H0E0Yk8h8VeduND9ZFyyWJxBLLhGcz6NFUoxFeW4GD/R9KIXOgm2mb3kCQdIV0XwGs
-         VIngPnmFaKTqKdyewpR6AvEJBMI5qvk2dbYcIs9v0G/CYrW81Ak3B76XQBQb5PJd+z/w
-         YyhV7o50R8YcnM0/k6lWpNpyOJ2YED/71M9R102bCTFHTdPADgS8OXL1c5/UO3mhcNuP
-         KUhIu8w1znhIuhZNkZxLneNzBD6ZgWa4CbYbgZwy8LqSScugr/guHujw14OUpx3xvEsx
-         1WAUy4qPsTu69NWcafGplZJrR7d+UP5W+lHM0NKcM9Z4SIgjgc/4TmCVD0CYEuzKHXYs
-         m1xw==
-X-Gm-Message-State: APjAAAWJGbCdVizzSIgbo73LYw0QFHdTwb4I+EtFvQyeH6OwPOLkrhNE
-        iKDYDMsu4+R50fiA//4mjRuVrUjwe9wCbcjVhPo=
-X-Google-Smtp-Source: APXvYqxCBqEmb582tjxfS8Hn0YXcYFl+HtWOzqWbWTd94BKUX34IFenEiQS2F2UsciVYOzbAf21UpFGeXSJn+avDdLw=
-X-Received: by 2002:a02:95a:: with SMTP id f87mr5361433jad.83.1551909966364;
- Wed, 06 Mar 2019 14:06:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20190306155048.12868-1-nitesh@redhat.com> <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
- <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
-In-Reply-To: <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 6 Mar 2019 14:05:54 -0800
-Message-ID: <CAKgT0UdNPADF+8NMxnWuiB_+_M6_0jTt5NfoOvFN9qbPjGWNtw@mail.gmail.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 6 Mar 2019 17:08:50 -0500
+Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Md66H-1gTQIG0I9D-00aF2H; Wed, 06 Mar 2019 23:08:47 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-rdma@vger.kernel.org
+Subject: [PATCH v2] drivers: infiniband: Kconfig: pedantic formatting
+Date:   Wed,  6 Mar 2019 23:08:45 +0100
+Message-Id: <1551910125-26368-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1551898167-18310-1-git-send-email-info@metux.net>
+References: <1551898167-18310-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:SMPlWpx7GizanHM6xccGqGFznQKTa/lCdGm9oYUZA3mHhWvifHi
+ 45tgihsCXaglCV9eWOttzFqcVkF/HXdo4wrdoVVyKoOaxusWshBJgA5RDKgCfK8GzAqitMA
+ SxpfYALdjnrSsycOVlQlGX2fICJIMu0zBA6CWLDs3/Xl7U0M0PAkSt+bTQMckLVcqrHD/WM
+ PV/fp1a7AVgTxH9QBtNPA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hK1QVTLFZo4=:Y0NMaPe2S+57ePX8nC40uD
+ K2RcEDZx6qFge4Y+1NneKmNr6sM99rRPw+Iez9i1SRIkBQ+oUrE2FSHu7EODF6uns9knrxEi0
+ Toe3QQ4n7Wtq3dCvQvA5pLLzPt2HA0I5n5Adbr2NwxBthCdeLLnEgDOxhqFQbyGHtUszJr4K+
+ F8fUsr7UlS9cAkWI05avBLT8mEu/cEUlfUZcw6M0fHAG98e306CRX5Nd1jrnJh1jw4r3mXKss
+ KTTF4Z19dOai+08jbVBVf6UNDjdDSCIhho8BsX9O00rgyICq0jS3G3BIpxPPcaaFJurJ482zI
+ 8VZ6WVeqC8R8HJyTUuE+8W0i7AotjPPivRVDoSgQDxzkC8xVEYGdSG737myqc8pwtlT4dlM6B
+ ZpZW4AvSFa/HBDYqgYTIZNmrUf/igExa0WOHjE9/ZCBEtRrGjGE51BuzWifl3RtiGn7PVyyDD
+ YS6Tvon/VZRKoDuAblRGCPiMbfty4JMBoFVdVpsg2LEzC39bUwLBEsUrA0o8yxz6loUffUuQq
+ kVAHqsJeUCS2npWX3YAYujcbPl9ggjakyP979LVQUB/hzBTBocyPFZ0RgJNXIa4Uf2WzMT46Z
+ eZFIyOMha2vueQv02hWQjYeP7tzhjvly0QGFT6Yl09NsjEePQc1vGixXL7AvC3eABJ6yJBkh+
+ BQssFxUUpzAeGz5pFueKMwYcDKmojfeo0U6NscXTH7WxknOmp2XNNjgr/NBropsC5m4X9/Vab
+ tiOWd23DUvlgK+OA86aABEruwDKCKHKKULIQvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 11:07 AM Nitesh Narayan Lal <nitesh@redhat.com> wrot=
-e:
->
->
-> On 3/6/19 1:00 PM, Alexander Duyck wrote:
-> > On Wed, Mar 6, 2019 at 7:51 AM Nitesh Narayan Lal <nitesh@redhat.com> w=
-rote:
-> >> The following patch-set proposes an efficient mechanism for handing fr=
-eed memory between the guest and the host. It enables the guests with no pa=
-ge cache to rapidly free and reclaims memory to and from the host respectiv=
-ely.
-> >>
-> >> Benefit:
-> >> With this patch-series, in our test-case, executed on a single system =
-and single NUMA node with 15GB memory, we were able to successfully launch =
-5 guests(each with 5 GB memory) when page hinting was enabled and 3 without=
- it. (Detailed explanation of the test procedure is provided at the bottom =
-under Test - 1).
-> >>
-> >> Changelog in v9:
-> >>         * Guest free page hinting hook is now invoked after a page has=
- been merged in the buddy.
-> >>         * Free pages only with order FREE_PAGE_HINTING_MIN_ORDER(curre=
-ntly defined as MAX_ORDER - 1) are captured.
-> >>         * Removed kthread which was earlier used to perform the scanni=
-ng, isolation & reporting of free pages.
-> > Without a kthread this has the potential to get really ugly really
-> > fast. If we are going to run asynchronously we should probably be
-> > truly asynchonous and just place a few pieces of data in the page that
-> > a worker thread can use to identify which pages have been hinted and
-> > which pages have not.
->
-> Can you please explain what do you mean by truly asynchronous?
->
-> With this implementation also I am not reporting the pages synchronously.
+Formatting of Kconfig files doesn't look so pretty, so just
+take damp cloth and clean it up.
 
-The problem is you are making it pseudo synchronous by having to push
-pages off to a side buffer aren't you? In my mind we should be able to
-have the page hinting go on with little to no interference with
-existing page allocation and freeing.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/infiniband/hw/bnxt_re/Kconfig | 10 +++++-----
+ drivers/infiniband/ulp/iser/Kconfig   |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-> > Then we can have that one thread just walking
-> > through the zone memory pulling out fixed size pieces at a time and
-> > providing hints on that. By doing that we avoid the potential of
-> > creating a batch of pages that eat up most of the system memory.
-> >
-> >>         * Pages, captured in the per cpu array are sorted based on the=
- zone numbers. This is to avoid redundancy of acquiring zone locks.
-> >>         * Dynamically allocated space is used to hold the isolated gue=
-st free pages.
-> > I have concerns that doing this per CPU and allocating memory
-> > dynamically can result in you losing a significant amount of memory as
-> > it sits waiting to be hinted.
-> It should not as the buddy will keep merging the pages and we are only
-> capturing MAX_ORDER - 1.
-> This was the issue with the last patch-series when I was capturing all
-> order pages resulting in the per-cpu array to be filled with lower order
-> pages.
-> >
-> >>         * All the pages are reported asynchronously to the host via vi=
-rtio driver.
-> >>         * Pages are returned back to the guest buddy free list only wh=
-en the host response is received.
-> > I have been thinking about this. Instead of stealing the page couldn't
-> > you simply flag it that there is a hint in progress and simply wait in
-> > arch_alloc_page until the hint has been processed?
-> With the flag, I am assuming you mean to block the allocation until
-> hinting is going on, which is an issue. That was one of the issues
-> discussed earlier which I wanted to solve with this implementation.
+diff --git a/drivers/infiniband/hw/bnxt_re/Kconfig b/drivers/infiniband/hw/bnxt_re/Kconfig
+index 19982a4..05aa9fa 100644
+--- a/drivers/infiniband/hw/bnxt_re/Kconfig
++++ b/drivers/infiniband/hw/bnxt_re/Kconfig
+@@ -1,9 +1,9 @@
+ config INFINIBAND_BNXT_RE
+-    tristate "Broadcom Netxtreme HCA support"
+-    depends on ETHERNET && NETDEVICES && PCI && INET && DCB
+-    select NET_VENDOR_BROADCOM
+-    select BNXT
+-    ---help---
++	tristate "Broadcom Netxtreme HCA support"
++	depends on ETHERNET && NETDEVICES && PCI && INET && DCB
++	select NET_VENDOR_BROADCOM
++	select BNXT
++	---help---
+ 	  This driver supports Broadcom NetXtreme-E 10/25/40/50 gigabit
+ 	  RoCE HCAs.  To compile this driver as a module, choose M here:
+ 	  the module will be called bnxt_re.
+diff --git a/drivers/infiniband/ulp/iser/Kconfig b/drivers/infiniband/ulp/iser/Kconfig
+index d00af71..299268f 100644
+--- a/drivers/infiniband/ulp/iser/Kconfig
++++ b/drivers/infiniband/ulp/iser/Kconfig
+@@ -4,8 +4,8 @@ config INFINIBAND_ISER
+ 	select SCSI_ISCSI_ATTRS
+ 	---help---
+ 	  Support for the iSCSI Extensions for RDMA (iSER) Protocol
+-          over InfiniBand. This allows you to access storage devices
+-          that speak iSCSI over iSER over InfiniBand.
++	  over InfiniBand. This allows you to access storage devices
++	  that speak iSCSI over iSER over InfiniBand.
+ 
+ 	  The iSER protocol is defined by IETF.
+ 	  See <http://www.ietf.org/rfc/rfc5046.txt>
+-- 
+1.9.1
 
-With the flag we would allow the allocation, but would have to
-synchronize with the hinting at that point. I got the idea from the
-way the s390 code works. They have both an arch_free_page and an
-arch_alloc_page. If I understand correctly the arch_alloc_page is what
-is meant to handle the case of a page that has been marked for
-hinting, but may not have been hinted on yet. My thought for now is to
-keep it simple and use a page flag to indicate that a page is
-currently pending a hint. We should be able to spin in such a case and
-it would probably still perform better than a solution where we would
-not have the memory available and possibly be under memory pressure.
-
-> > The problem is in
-> > stealing pages you are going to introduce false OOM issues when the
-> > memory isn't available because it is being hinted on.
-> I think this situation will arise when the guest is under memory
-> pressure. In such situations any attempt to perform isolation will
-> anyways fail and we may not be reporting anything at that time.
-
-What I want to avoid is the scenario where an application grabs a
-large amount of memory, then frees said memory, and we are sitting on
-it for some time because we decide to try and hint on the large chunk.
-By processing this sometime after the pages are sent to the buddy
-allocator in a separate thread, and by processing a small fixed window
-of memory at a time we can avoid making freeing memory expensive, and
-still provide the hints in a reasonable time frame.
-
-> >
-> >> Pending items:
-> >>         * Make sure that the guest free page hinting's current impleme=
-ntation doesn't break hugepages or device assigned guests.
-> >>         * Follow up on VIRTIO_BALLOON_F_PAGE_POISON's device side supp=
-ort. (It is currently missing)
-> >>         * Compare reporting free pages via vring with vhost.
-> >>         * Decide between MADV_DONTNEED and MADV_FREE.
-> >>         * Analyze overall performance impact due to guest free page hi=
-nting.
-> >>         * Come up with proper/traceable error-message/logs.
-> > I'll try applying these patches and see if I can reproduce the results
-> > you reported.
-> Thanks. Let me know if you run into any issues.
-> > With the last patch set I couldn't reproduce the results
-> > as you reported them.
-> If I remember correctly then the last time you only tried with multiple
-> vcpus and not with 1 vcpu.
-
-I had tried 1 vcpu, however I ended up running into some other issues
-that made it difficult to even boot the system last week.
-
-> > It has me wondering if you were somehow seeing
-> > the effects of a balloon instead of the actual memory hints as I
-> > couldn't find any evidence of the memory ever actually being freed
-> > back by the hints functionality.
->
-> Can you please elaborate what kind of evidence you are looking for?
->
-> I did trace the hints on the QEMU/host side.
-
-It looks like the new patches are working as I am seeing the memory
-freeing occurring this time around. Although it looks like this is
-still generating traces from free_pcpages_bulk if I enable multiple
-VCPUs:
-
-[  175.823539] list_add corruption. next->prev should be prev
-(ffff947c7ffd61e0), but was ffffc7a29f9e0008. (next=3Dffffc7a29f4c0008).
-[  175.825978] ------------[ cut here ]------------
-[  175.826889] kernel BUG at lib/list_debug.c:25!
-[  175.827766] invalid opcode: 0000 [#1] SMP PTI
-[  175.828621] CPU: 5 PID: 1344 Comm: page_fault1_thr Not tainted
-5.0.0-next-20190306-baseline+ #76
-[  175.830312] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS Bochs 01/01/2011
-[  175.831885] RIP: 0010:__list_add_valid+0x35/0x70
-[  175.832784] Code: 18 48 8b 32 48 39 f0 75 39 48 39 c7 74 1e 48 39
-fa 74 19 b8 01 00 00 00 c3 48 89 c1 48 c7 c7 80 b5 0f a9 31 c0 e8 8f
-aa c8 ff <0f> 0b 48 89 c1 48 89 fe 31 c0 48 c7 c7 30 b6 0f a9 e8 79 aa
-c8 ff
-[  175.836379] RSP: 0018:ffffa717c40839b0 EFLAGS: 00010046
-[  175.837394] RAX: 0000000000000075 RBX: ffff947c7ffd61e0 RCX: 00000000000=
-00000
-[  175.838779] RDX: 0000000000000000 RSI: ffff947c5f957188 RDI: ffff947c5f9=
-57188
-[  175.840162] RBP: ffff947c7ffd61d0 R08: 000000000000026f R09: 00000000000=
-00005
-[  175.841539] R10: 0000000000000000 R11: ffffa717c4083730 R12: ffffc7a29f2=
-60008
-[  175.842932] R13: ffff947c7ffd5d00 R14: ffffc7a29f4c0008 R15: ffffc7a29f2=
-60000
-[  175.844319] FS:  0000000000000000(0000) GS:ffff947c5f940000(0000)
-knlGS:0000000000000000
-[  175.845896] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  175.847009] CR2: 00007fffe3421000 CR3: 000000051220e006 CR4: 00000000001=
-60ee0
-[  175.848390] Call Trace:
-[  175.848896]  free_pcppages_bulk+0x4bc/0x6a0
-[  175.849723]  free_unref_page_list+0x10d/0x190
-[  175.850567]  release_pages+0x103/0x4a0
-[  175.851313]  tlb_flush_mmu_free+0x36/0x50
-[  175.852105]  unmap_page_range+0x963/0xd50
-[  175.852897]  unmap_vmas+0x62/0xc0
-[  175.853549]  exit_mmap+0xb5/0x1a0
-[  175.854205]  mmput+0x5b/0x120
-[  175.854794]  do_exit+0x273/0xc30
-[  175.855426]  ? free_unref_page_commit+0x85/0xf0
-[  175.856312]  do_group_exit+0x39/0xa0
-[  175.857018]  get_signal+0x172/0x7c0
-[  175.857703]  do_signal+0x36/0x620
-[  175.858355]  ? percpu_counter_add_batch+0x4b/0x60
-[  175.859280]  ? __do_munmap+0x288/0x390
-[  175.860020]  exit_to_usermode_loop+0x4c/0xa8
-[  175.860859]  do_syscall_64+0x152/0x170
-[  175.861595]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  175.862586] RIP: 0033:0x7ffff76a8ec7
-[  175.863292] Code: Bad RIP value.
-[  175.863928] RSP: 002b:00007ffff4422eb8 EFLAGS: 00000212 ORIG_RAX:
-000000000000000b
-[  175.865396] RAX: 0000000000000000 RBX: 00007ffff7ff7280 RCX: 00007ffff76=
-a8ec7
-[  175.866799] RDX: 00007fffe3422000 RSI: 0000000008000000 RDI: 00007fffdb4=
-22000
-[  175.868194] RBP: 0000000000001000 R08: ffffffffffffffff R09: 00000000000=
-00000
-[  175.869582] R10: 0000000000000022 R11: 0000000000000212 R12: 00007ffff44=
-22fc0
-[  175.870984] R13: 0000000000000001 R14: 00007fffffffc1b0 R15: 00007ffff44=
-239c0
-[  175.872350] Modules linked in: ip6t_rpfilter ip6t_REJECT
-nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat
-ebtable_broute bridge stp llc ip6table_nat ip6table_mangle
-ip6table_raw ip6table_security iptable_nat nf_nat nf_conntrack
-nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw
-iptable_security ebtable_filter ebtables ip6table_filter ip6_tables
-sunrpc sb_edac crct10dif_pclmul crc32_pclmul ghash_clmulni_intel
-kvm_intel kvm ppdev irqbypass parport_pc parport virtio_balloon pcspkr
-i2c_piix4 joydev xfs libcrc32c cirrus drm_kms_helper ttm drm e1000
-crc32c_intel virtio_blk serio_raw ata_generic floppy pata_acpi
-qemu_fw_cfg
-[  175.883153] ---[ end trace 5b67f12a67d1f373 ]---
-
-I should be able to rebuild the kernels/qemu and test this patch set
-over the next day or two.
-
-Thanks.
-
-- Alex
