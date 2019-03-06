@@ -2,236 +2,196 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC97C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E72C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D02920661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9B120684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="onknNf+/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZU9csRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbfCFKll (ORCPT
+        id S1729604AbfCFKoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:41:41 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11649 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbfCFKlk (ORCPT
+        Wed, 6 Mar 2019 05:44:04 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35222 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbfCFKoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:41:40 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7fa3db0001>; Wed, 06 Mar 2019 02:41:31 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 06 Mar 2019 02:41:39 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 06 Mar 2019 02:41:39 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Mar
- 2019 10:41:38 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 6 Mar 2019 10:41:39 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c7fa3df0002>; Wed, 06 Mar 2019 02:41:38 -0800
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <mkumard@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 3/3] irqchip/gic-pm: use devm_clk_*() helpers
-Date:   Wed, 6 Mar 2019 16:11:18 +0530
-Message-ID: <1551868878-1131-3-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551868878-1131-1-git-send-email-spujar@nvidia.com>
-References: <1551868878-1131-1-git-send-email-spujar@nvidia.com>
+        Wed, 6 Mar 2019 05:44:03 -0500
+Received: by mail-wm1-f65.google.com with SMTP id y15so5421549wma.0;
+        Wed, 06 Mar 2019 02:44:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i8T3mD8h2P+pNsSZDN7aVSuLfGuHznIr8wZq5vwvtTc=;
+        b=lZU9csRJD8c0BtN/JKN2hbLvWUPC/M3EJK47ro9RZaWgwhpqVaHfemrhui+H155qzB
+         hOTU4GKiExz79wlgZ4cpPyuX4GVw1qM8daMD7PDtShy7aECaZywm03CfaieuewluWrJ8
+         nEoUEincQqF18owKlbpSrRwCLVNPYurqC1qsYRVGECjq/4EWc3ubsz3QdK2Y3HIIp+AP
+         QCNjV/8WMqA5x8ZHFjslGPjMNgednD0Snpgi/W8t9q9DKqgohsWePiJXQ1thJqSPzKex
+         qp2u64oAJMqzp7r419+53d0pBKv5keG/VD6eAc/abNFCUYAK91FJMYUkjVzM2QlLPD/f
+         AB1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i8T3mD8h2P+pNsSZDN7aVSuLfGuHznIr8wZq5vwvtTc=;
+        b=Yd5Hlnb92yCnD87YxWpZtanUFm1kBCtofxEwYnHUtQikypMd8X8xx9kpg4C5uOYogK
+         g9SnCGvNIrUvEj90Z64FcND17GezTMLRAbKxtRbN65LCsTP/V2JxJ7qMEGqq3g/Ys9p3
+         xZ4raBI2qAJR8Da38IwJB/+vWOaN+sShMlF9OGaGCA32xW6HDqeM6vtoUCdOyW5QmXXG
+         Tpw1w4mX69TRFeZHK95MKfSfEWEze+fwHuNWdDnSZPehMY8lUdUhhn9lnPIaWJwxiSmH
+         Et+Ri3X08o09fs394h77nwugT0H4E+xir3ngqpKyKSZ+28rOc+GNpE8ef+bpOIk+/iFf
+         qOiQ==
+X-Gm-Message-State: APjAAAXtLLV20ImXw0CY2eL1EVm3GhpsU8Aoncyc+mLZOWl/sm1S3EJM
+        8eSDLwqasEotmIegviW5hA5/5+XVaUU1RzccwZw=
+X-Google-Smtp-Source: APXvYqz1zU9Rb2X9P4QLtAVA4yBqT5BlSGyEtpkjVOuRuNE2RvZD/bECcUX9XrrWpkRY1rvYxEWH2TqD0U2mLn4yvp8=
+X-Received: by 2002:a1c:9ed5:: with SMTP id h204mr1946537wme.140.1551869040208;
+ Wed, 06 Mar 2019 02:44:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551868891; bh=Qp/M0Ct3Oo0YiRVr0xnM8LvxXwBgpIbzfj5yKAhzP2o=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=onknNf+/beK5k7tlEnJbTJC0cfUCP5UBcEAw9ErBdS784aDTMpSVaesuaO91fBjNW
-         6TFAxVrqr6DJj/Vdq6rdZPaEtxVwZLEaiNUzUEZdJIKj0q46YZSxLeCla86/UTjuts
-         4eMDeQJLvo7tqRjURolEa0I/atgeIYgXgoJ0uZFZYHjpoTnBoMrwe8WDsfN+NcgcC4
-         khr4Q+P3Yn+Odi54cFPpj5yoOrPC1FMWQLpXRHUIfeEh7YJYEqrRWUzcGaXpdQDW3H
-         9cvxsx74uhMALhRaEN5EU1BTwOy0JzjgutFMHMw8rhbFRdO6jkHCksQjjjonusLu6k
-         0+o0ZHuReVmaw==
+References: <000000000000cc734405836318dc@google.com>
+In-Reply-To: <000000000000cc734405836318dc@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Wed, 6 Mar 2019 18:43:48 +0800
+Message-ID: <CADvbK_fJ8R0WmQaFcz0sOhL_AXH3AdO2zLeqMD38X22izEAMNg@mail.gmail.com>
+Subject: Re: general protection fault in sctp_sched_rr_dequeue
+To:     syzbot <syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With pm_clk_*() usage, it is seen that clocks always remain ON. This
-happens because clocks are managed by BPMP on Tegra devices and clock
-enable/disable happens during prepare/unprepare phase. This patch
-avoids use of pm_clk_*() and replaces it with devm_clk_*() helpers.
+On Wed, Mar 6, 2019 at 9:42 AM syzbot
+<syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    63bdf4284c38 Merge branch 'linus' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=100347cb200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=872be05707464aaa
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4c9934f20522c0efd657
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11cd9b03200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127de8e7200000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+4c9934f20522c0efd657@syzkaller.appspotmail.com
+>
+> kauditd_printk_skb: 2 callbacks suppressed
+> audit: type=1400 audit(1551833288.424:35): avc:  denied  { map } for
+> pid=8035 comm="bash" path="/bin/bash" dev="sda1" ino=1457
+> scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023
+> tcontext=system_u:object_r:file_t:s0 tclass=file permissive=1
+> audit: type=1400 audit(1551833294.934:36): avc:  denied  { map } for
+> pid=8047 comm="syz-executor778" path="/root/syz-executor778173561"
+> dev="sda1" ino=16484 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023
+> tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 8047 Comm: syz-executor778 Not tainted 5.0.0+ #7
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
+The panic was caused by sched->init() reset stream->rr_next = NULL, even
+if outq->out_chunk_list is not empty.
 
-Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
-Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/irqchip/irq-gic-pm.c | 69 +++++++++++++++++++++++++++++---------------
- 1 file changed, 46 insertions(+), 23 deletions(-)
+We should remove the sched->init() from sctp_stream_init(), since
+all sched info was moved into sout->ext and sctp_stream_alloc_out()
+will not afffect it.
 
-diff --git a/drivers/irqchip/irq-gic-pm.c b/drivers/irqchip/irq-gic-pm.c
-index ecafd29..1690939 100644
---- a/drivers/irqchip/irq-gic-pm.c
-+++ b/drivers/irqchip/irq-gic-pm.c
-@@ -19,7 +19,6 @@
- #include <linux/of_irq.h>
- #include <linux/irqchip/arm-gic.h>
- #include <linux/platform_device.h>
--#include <linux/pm_clock.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
- 
-@@ -28,14 +27,29 @@ struct gic_clk_data {
- 	const char *const *clocks;
- };
- 
-+struct gic_chip_pm {
-+	struct gic_chip_data *chip_data;
-+	const struct gic_clk_data *clk_data;
-+	struct clk **clk_handle;
-+};
-+
- static int gic_runtime_resume(struct device *dev)
- {
--	struct gic_chip_data *gic = dev_get_drvdata(dev);
--	int ret;
-+	struct gic_chip_pm *chip_pm = dev_get_drvdata(dev);
-+	struct gic_chip_data *gic = chip_pm->chip_data;
-+	const struct gic_clk_data *data = chip_pm->clk_data;
-+	int ret, i;
- 
--	ret = pm_clk_resume(dev);
--	if (ret)
--		return ret;
-+	for (i = 0; i < data->num_clocks; i++) {
-+		ret = clk_prepare_enable(chip_pm->clk_handle[i]);
-+		if (ret) {
-+			while (--i >= 0)
-+				clk_disable_unprepare(chip_pm->clk_handle[i]);
-+
-+			dev_err(dev, " clk_enable failed: %d\n", ret);
-+			return ret;
-+		}
-+	}
- 
- 	/*
- 	 * On the very first resume, the pointer to the driver data
-@@ -54,33 +68,39 @@ static int gic_runtime_resume(struct device *dev)
- 
- static int gic_runtime_suspend(struct device *dev)
- {
--	struct gic_chip_data *gic = dev_get_drvdata(dev);
-+	struct gic_chip_pm *chip_pm = dev_get_drvdata(dev);
-+	struct gic_chip_data *gic = chip_pm->chip_data;
-+	const struct gic_clk_data *data = chip_pm->clk_data;
-+	int i;
- 
- 	gic_dist_save(gic);
- 	gic_cpu_save(gic);
- 
--	return pm_clk_suspend(dev);
-+	for (i = 0; i < data->num_clocks; i++)
-+		clk_disable_unprepare(chip_pm->clk_handle[i]);
-+
-+	return 0;
- }
- 
--static int gic_get_clocks(struct device *dev, const struct gic_clk_data *data)
-+static int gic_get_clocks(struct device *dev, struct gic_chip_pm *chip_pm)
- {
- 	unsigned int i;
--	int ret;
-+	const struct gic_clk_data *data = chip_pm->clk_data;
- 
- 	if (!dev || !data)
- 		return -EINVAL;
- 
--	ret = pm_clk_create(dev);
--	if (ret)
--		return ret;
-+	chip_pm->clk_handle = devm_kzalloc(dev, data->num_clocks *
-+					   sizeof(struct clk *), GFP_KERNEL);
-+	if (!chip_pm->clk_handle)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < data->num_clocks; i++) {
--		ret = of_pm_clk_add_clk(dev, data->clocks[i]);
--		if (ret) {
-+		chip_pm->clk_handle[i] = devm_clk_get(dev, data->clocks[i]);
-+		if (IS_ERR(chip_pm->clk_handle[i])) {
- 			dev_err(dev, "failed to add clock %s\n",
- 				data->clocks[i]);
--			pm_clk_destroy(dev);
--			return ret;
-+			return PTR_ERR(chip_pm->clk_handle[i]);
- 		}
- 	}
- 
-@@ -91,14 +111,20 @@ static int gic_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	const struct gic_clk_data *data;
--	struct gic_chip_data *gic;
-+	struct gic_chip_pm *gic_chip_pm;
- 	int ret, irq;
- 
-+	gic_chip_pm = devm_kzalloc(dev, sizeof(*gic_chip_pm), GFP_KERNEL);
-+	if (!gic_chip_pm)
-+		return -ENOMEM;
-+
- 	data = of_device_get_match_data(&pdev->dev);
- 	if (!data) {
- 		dev_err(&pdev->dev, "no device match found\n");
- 		return -ENODEV;
- 	}
-+	gic_chip_pm->clk_data = data;
-+	platform_set_drvdata(pdev, gic_chip_pm);
- 
- 	irq = irq_of_parse_and_map(dev->of_node, 0);
- 	if (!irq) {
-@@ -106,7 +132,7 @@ static int gic_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	ret = gic_get_clocks(dev, data);
-+	ret = gic_get_clocks(dev, gic_chip_pm);
- 	if (ret)
- 		goto irq_dispose;
- 
-@@ -116,12 +142,10 @@ static int gic_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto rpm_disable;
- 
--	ret = gic_of_init_child(dev, &gic, irq);
-+	ret = gic_of_init_child(dev, &gic_chip_pm->chip_data, irq);
- 	if (ret)
- 		goto rpm_put;
- 
--	platform_set_drvdata(pdev, gic);
--
- 	pm_runtime_put(dev);
- 
- 	dev_info(dev, "GIC IRQ controller registered\n");
-@@ -132,7 +156,6 @@ static int gic_probe(struct platform_device *pdev)
- 	pm_runtime_put_sync(dev);
- rpm_disable:
- 	pm_runtime_disable(dev);
--	pm_clk_destroy(dev);
- irq_dispose:
- 	irq_dispose_mapping(irq);
- 
--- 
-2.7.4
-
+> Code: ea 03 80 3c 02 00 0f 85 a2 00 00 00 48 8b 5b 08 e8 62 20 ee fa 48 8d
+> 7b 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75
+> 53 4c 8b 6b 30 4c 89 e7 49 83 ed 18 4c 89 ee e8 b4
+> RSP: 0018:ffff88809eacf040 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8679cd9f
+> RDX: 0000000000000006 RSI: ffffffff8681c41e RDI: 0000000000000030
+> RBP: ffff88809eacf058 R08: ffff8880a12bc300 R09: 0000000000000002
+> R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: ffff88807cae6ca0
+> R13: ffff88807cae6580 R14: dffffc0000000000 R15: ffff88809eacf198
+> FS:  0000000001865880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055af2d491150 CR3: 000000008dd7b000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   sctp_outq_dequeue_data net/sctp/outqueue.c:90 [inline]
+>   sctp_outq_flush_data net/sctp/outqueue.c:1079 [inline]
+>   sctp_outq_flush+0xba2/0x2790 net/sctp/outqueue.c:1205
+>   sctp_outq_uncork+0x6c/0x80 net/sctp/outqueue.c:772
+>   sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1820 [inline]
+>   sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+>   sctp_do_sm+0x513/0x5390 net/sctp/sm_sideeffect.c:1191
+>   sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1074
+>   sctp_inq_push+0x1ea/0x290 net/sctp/inqueue.c:95
+>   sctp_backlog_rcv+0x189/0xbc0 net/sctp/input.c:354
+>   sk_backlog_rcv include/net/sock.h:937 [inline]
+>   __release_sock+0x12e/0x3a0 net/core/sock.c:2413
+>   release_sock+0x59/0x1c0 net/core/sock.c:2929
+>   sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:8999
+>   sctp_sendmsg_to_asoc+0x13e2/0x17d0 net/sctp/socket.c:1968
+>   sctp_sendmsg+0x10a9/0x17e0 net/sctp/socket.c:2114
+>   inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+>   sock_sendmsg_nosec net/socket.c:622 [inline]
+>   sock_sendmsg+0xdd/0x130 net/socket.c:632
+>   ___sys_sendmsg+0x806/0x930 net/socket.c:2137
+>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2175
+>   __do_sys_sendmsg net/socket.c:2184 [inline]
+>   __se_sys_sendmsg net/socket.c:2182 [inline]
+>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2182
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x440159
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fff8801fd38 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
+> RDX: 0000000000000000 RSI: 000000002001afc8 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000000000002 R09: 00000000004002c8
+> R10: 0000000000000008 R11: 0000000000000246 R12: 00000000004019e0
+> R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 7cc5803525726c53 ]---
+> RIP: 0010:sctp_sched_rr_dequeue+0xd3/0x170 net/sctp/stream_sched_rr.c:141
+> Code: ea 03 80 3c 02 00 0f 85 a2 00 00 00 48 8b 5b 08 e8 62 20 ee fa 48 8d
+> 7b 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75
+> 53 4c 8b 6b 30 4c 89 e7 49 83 ed 18 4c 89 ee e8 b4
+> RSP: 0018:ffff88809eacf040 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8679cd9f
+> RDX: 0000000000000006 RSI: ffffffff8681c41e RDI: 0000000000000030
+> RBP: ffff88809eacf058 R08: ffff8880a12bc300 R09: 0000000000000002
+> R10: ffffed1015d25bcf R11: ffff8880ae92de7b R12: ffff88807cae6ca0
+> R13: ffff88807cae6580 R14: dffffc0000000000 R15: ffff88809eacf198
+> FS:  0000000001865880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055af2d491150 CR3: 000000008dd7b000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
+> syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
