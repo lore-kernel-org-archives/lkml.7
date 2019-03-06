@@ -2,249 +2,116 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B5AC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E510C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12175206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3467720684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:57:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3Ahw9/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfCFW4X (ORCPT
+        id S1726217AbfCFW5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:56:23 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:49001 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFW4W (ORCPT
+        Wed, 6 Mar 2019 17:57:06 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37566 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFW5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:56:22 -0500
-Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id AAD79100006;
-        Wed,  6 Mar 2019 22:56:20 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 23:56:20 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 5.1
-Message-ID: <20190306225620.GA17610@piout.net>
+        Wed, 6 Mar 2019 17:57:05 -0500
+Received: by mail-lf1-f68.google.com with SMTP id u2so3240043lfd.4;
+        Wed, 06 Mar 2019 14:57:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UbUatogV1OYtO8p60xMbel10SeB8vF3N6/iddbJzbnY=;
+        b=G3Ahw9/D+GKmLvjDPbIMcmjTuUjQXN5v2QPj4bDHJ/TPC1ajrtO8r7JOCpVnr3MhGa
+         AHbojOME5P6fqFoyhaKFJ8xdNPv3CtR/p4wflquseE0yumSJskf3vORXiLQkIoy9j3vD
+         NnSN1eNxWzcCM7sX3fsWXGV+2zctYToRPM+lpuqVhYDEmwvh4TDoMWjmbOGLjMEo6XzO
+         rUm9X4HH9QadRhoamY6fPT1f8B4z8U3SyRS7G8qOSvMciTK4MFGUoUZJ9OX9KQVwGffX
+         q+EThJLnBiZA7s1c5NZLqgguz05iRaWpR8EhGUiTHf3uJJDS/74JlNUpwKdm3suWGBS7
+         tKaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UbUatogV1OYtO8p60xMbel10SeB8vF3N6/iddbJzbnY=;
+        b=p+Qd/MG6pHleQWw4HEEakl5HTmgrwWhZ0ueyHn5HKV59crtcRVVHQkg3q0H9Kgvvtc
+         bA0OQSnnRBpjAms4w/Ju6s4C0CVIzrASa1RC77xm7swsMrNwn7FMJOGjZPRYCvn/RVPs
+         nswN8D8KEzbYLm/sT5LarxBJIFNzo6j2wC54WFLBfpUc8s6uedg9EBAxJ6Bh32WJDS9l
+         Zr9tdX92f016GvjwcWG5THpeseKu3ck4U99/dvyUqPqah+b1jcIPGNsattonjmAcwG5/
+         wIBOyI5Hs02UIY4XrHrumpZSRAEz8rEhu7Mhcjdpi62x8GEgABP9rQTJO8H5abuPgmyH
+         cPBQ==
+X-Gm-Message-State: APjAAAU+sV5CIfcH8oNEtiT4Owb9Yv26FwrDGeJ6tNkO+7o94IUToaxC
+        Rnnc/HBjJD+pW5W+I/d9rSI=
+X-Google-Smtp-Source: APXvYqwRyPoKx9Y4I4Ed2288fN9kjVyt+GmHuVRlsst029M8DomUo2/0aZnxaiacCjGbvHn9xBPOUg==
+X-Received: by 2002:ac2:51c7:: with SMTP id u7mr5192220lfm.30.1551913023035;
+        Wed, 06 Mar 2019 14:57:03 -0800 (PST)
+Received: from localhost.localdomain (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
+        by smtp.gmail.com with ESMTPSA id a196sm4833lfa.89.2019.03.06.14.57.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 14:57:02 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] drm/tegra: gem: Fix CPU-cache maintenance for BO's allocated using get_pages()
+Date:   Thu,  7 Mar 2019 01:55:19 +0300
+Message-Id: <20190306225519.4538-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+The allocated pages need to be invalidated in CPU caches. On ARM32 the
+DMA_BIDIRECTIONAL flag only ensures that data is written-back to DRAM and
+the data stays in CPU cache lines. While the DMA_FROM_DEVICE flag ensures
+that the corresponding CPU cache lines are getting invalidated and nothing
+more, that's exactly what is needed for a newly allocated pages.
 
-Here is the pull-request for the RTC subsystem for 5.1.
+This fixes randomly failing rendercheck tests on Tegra30 using the
+Opentegra driver for tests that use small-sized pixmaps (10x10 and less,
+i.e. 1-2 memory pages) because apparently CPU reads out stale data from
+caches and/or that data is getting evicted to DRAM at the time of HW job
+execution.
 
-There is an unusual amount of new drivers this cycle, and this explains
-the number of insertions. Other than that, the changes are the usual
-fixes and feature addition.
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/gpu/drm/tegra/gem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
-
-  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.1
-
-for you to fetch changes up to e91b94fd2bc411b5926031496bbc3de9a96bb1c6:
-
-  rtc: pic32: convert to SPDX identifier (2019-03-04 20:23:15 +0100)
-
-----------------------------------------------------------------
-RTC for 5.0
-
-Subsystem:
- - new quartz-load-femtofarads DT property for quartz load capacitance
- - remove rtc_class_ops.read_callback
-
-New drivers:
- - Abracon AB-RTCMC-32.768kHz-EOZ9
- - Amlogic Meson RTC
- - Cadence RTC IP
- - Microcrystal RV3028
- - Whwave sd3078
-
-Drivers:
- - cmos: ignore bogus century byte
- - ds1307: rework rx8130 support
- - isl1208: add isl1209 support, nvmem support
- - rs5C372: report invalid time when the oscillator stopped
- - rx8581: add rx8571 support
-
-----------------------------------------------------------------
-Alexandre Belloni (20):
-      rtc: pcf8523: Add rv8523 compatible
-      rtc: imx-sc: depend on HAVE_ARM_SMCCC
-      rtc: meson: remove useless rtc_nvmem_unregister call
-      rtc: rv3028: add new driver
-      rtc: hid-sensor-time: stop selecting IIO
-      rtc: remove rtc_class_ops.read_callback
-      rtc: imx-sc: use rtc_time64_to_tm
-      rtc: zynqmp: fix possible race condition
-      rtc: zynqmp: let the core handle range
-      rtc: tx4939: remove useless test
-      rtc: tx4939: set range
-      rtc: tx4939: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: tx4939: use .set_time
-      rtc: tx4939: convert to SPDX identifier
-      rtc: rv8803: let the core handle range
-      rtc: rv8803: convert to SPDX identifier
-      rtc: update my email address
-      rtc: pic32: convert to devm_rtc_allocate_device
-      rtc: pic32: let the core handle range
-      rtc: pic32: convert to SPDX identifier
-
-Alexey Roslyakov (1):
-      rtc: pcf85063: remove dead code
-
-Anson Huang (2):
-      rtc: snvs: make sure clock is enabled for interrupt handle
-      rtc: imx-sc: add rtc set time support
-
-Artem Panfilov (2):
-      dt-bindings: rtc: add ABEOZ9
-      rtc: add AB-RTCMC-32.768kHz-EOZ9 RTC support
-
-Biju Das (2):
-      dt-bindings: rtc: add rx8571 compatible
-      rtc: rx8581: Add support for Epson rx8571 RTC
-
-Colin Ian King (4):
-      rtc: ds1672: fix unintended sign extension
-      rtc: 88pm860x: fix unintended sign extension
-      rtc: 88pm80x: fix unintended sign extension
-      rtc: pm8xxx: fix unintended sign extension
-
-Dianlong Li (3):
-      dt-bindings: define vendor prefix for whwave, Inc.
-      dt-bindings: rtc: sd3078: add device tree documentation
-      rtc: sd3078: new driver.
-
-Eric Wong (1):
-      rtc: cmos: ignore bogus century byte
-
-Jan Kotas (2):
-      dt-bindings: rtc: Add bindings for Cadence RTC
-      rtc: Add Cadence RTC driver
-
-Kangjie Lu (2):
-      rtc: coh901331: fix a missing check of clk_prepare
-      rtc: hym8563: fix a missing check of block data read
-
-Marek Szyprowski (2):
-      rtc: s3c: Rewrite clock handling
-      rtc: s3c: Use generic helper to get driver data
-
-Marek Vasut (2):
-      dt-bindings: rtc: Add RV1805 to abracon,abx80x bindings
-      rtc: abx80x: Configure reserved bits in RV1805
-
-Martin Blumenstingl (2):
-      dt-bindings: rtc: add device-tree bindings for the Amlogic Meson RTC
-      rtc: support for the Amlogic Meson RTC
-
-Oliver.Rohe@wago.com (2):
-      rtc: rs5c372: r2221: fix to use the correct XSTP bit
-      rtc: rs5c372: Fix reading from rtc when the oscillator got interrupted.
-
-Sam Ravnborg (6):
-      devicetree: property-units: Add femtofarads unit
-      dt-bindings: rtc: Add quartz-load-femtofarads property
-      dt-binding: pcf8523: add xtal load capacitance
-      dt-binding: pcf85063: add xtal load capacitance
-      rtc: pcf8523: set xtal load capacitance from DT
-      rtc: pcf85063: set xtal load capacitance from DT
-
-Trent Piepho (5):
-      rtc: isl1208: fix negative digital trim reporting
-      rtc: isl1208: Introduce driver state struct
-      rtc: isl1208: Support more chip variations
-      rtc: isl1208: Add new style nvmem support to driver
-      dt-bindings: rtc: Update for new chip in isl1208 series
-
-Uwe Kleine-König (5):
-      rtc: ds1307: Move register definitions to start of file
-      rtc: ds1307: forward declare chips array instead of a bunch of functions
-      rtc: ds1307: correct register offset for rx8130
-      rtc: ds1307: rx8130: honor Voltage Loss Flag when reading the time
-      rtc: ds1307: rx8130: Fix alarm handling
-
-Wei Yongjun (1):
-      rtc: sd3078: make symbol 'sd3078_driver' static
-
-YueHaibing (1):
-      rtc: sd3078: fix platform_no_drv_owner.cocci warnings
-
-ZhangXiaoxu (1):
-      rtc: Fix UBSAN overflow warning
-
- .../devicetree/bindings/property-units.txt         |    1 +
- .../devicetree/bindings/rtc/abracon,abx80x.txt     |    1 +
- Documentation/devicetree/bindings/rtc/cdns,rtc.txt |   25 +
- .../devicetree/bindings/rtc/isil,isl1208.txt       |   38 +
- .../devicetree/bindings/rtc/isil,isl1219.txt       |   29 -
- .../devicetree/bindings/rtc/nxp,pcf85063.txt       |   18 +
- .../devicetree/bindings/rtc/nxp,pcf8523.txt        |   18 +
- .../devicetree/bindings/rtc/rtc-meson.txt          |   35 +
- Documentation/devicetree/bindings/rtc/rtc.txt      |   23 +-
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- MAINTAINERS                                        |    6 +
- drivers/rtc/Kconfig                                |   58 +-
- drivers/rtc/Makefile                               |    5 +
- drivers/rtc/dev.c                                  |    5 -
- drivers/rtc/lib.c                                  |    6 +-
- drivers/rtc/rtc-88pm80x.c                          |   21 +-
- drivers/rtc/rtc-88pm860x.c                         |   21 +-
- drivers/rtc/rtc-ab-eoz9.c                          |  465 +++++++++
- drivers/rtc/rtc-abx80x.c                           |   71 +-
- drivers/rtc/rtc-cadence.c                          |  423 ++++++++
- drivers/rtc/rtc-coh901331.c                        |    6 +-
- drivers/rtc/rtc-ds1307.c                           | 1095 ++++++++++----------
- drivers/rtc/rtc-ds1672.c                           |    3 +-
- drivers/rtc/rtc-hym8563.c                          |    2 +
- drivers/rtc/rtc-imx-sc.c                           |   21 +-
- drivers/rtc/rtc-isl1208.c                          |  167 ++-
- drivers/rtc/rtc-mc146818-lib.c                     |    2 +-
- drivers/rtc/rtc-meson.c                            |  407 ++++++++
- drivers/rtc/rtc-pcf85063.c                         |   46 +-
- drivers/rtc/rtc-pcf8523.c                          |   29 +-
- drivers/rtc/rtc-pic32.c                            |   34 +-
- drivers/rtc/rtc-pm8xxx.c                           |    6 +-
- drivers/rtc/rtc-rs5c372.c                          |   76 +-
- drivers/rtc/rtc-rv3028.c                           |  732 +++++++++++++
- drivers/rtc/rtc-rv8803.c                           |   15 +-
- drivers/rtc/rtc-rx8581.c                           |  114 +-
- drivers/rtc/rtc-s3c.c                              |   87 +-
- drivers/rtc/rtc-sd3078.c                           |  231 +++++
- drivers/rtc/rtc-snvs.c                             |    6 +
- drivers/rtc/rtc-tx4939.c                           |   26 +-
- drivers/rtc/rtc-zynqmp.c                           |   18 +-
- include/linux/rtc.h                                |    3 +-
- 42 files changed, 3585 insertions(+), 811 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/cdns,rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1208.txt
- delete mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1219.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson.txt
- create mode 100644 drivers/rtc/rtc-ab-eoz9.c
- create mode 100644 drivers/rtc/rtc-cadence.c
- create mode 100644 drivers/rtc/rtc-meson.c
- create mode 100644 drivers/rtc/rtc-rv3028.c
- create mode 100644 drivers/rtc/rtc-sd3078.c
-
+diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
+index 4f80100ff5f3..4cce11fd8836 100644
+--- a/drivers/gpu/drm/tegra/gem.c
++++ b/drivers/gpu/drm/tegra/gem.c
+@@ -204,7 +204,7 @@ static void tegra_bo_free(struct drm_device *drm, struct tegra_bo *bo)
+ {
+ 	if (bo->pages) {
+ 		dma_unmap_sg(drm->dev, bo->sgt->sgl, bo->sgt->nents,
+-			     DMA_BIDIRECTIONAL);
++			     DMA_FROM_DEVICE);
+ 		drm_gem_put_pages(&bo->gem, bo->pages, true, true);
+ 		sg_free_table(bo->sgt);
+ 		kfree(bo->sgt);
+@@ -230,7 +230,7 @@ static int tegra_bo_get_pages(struct drm_device *drm, struct tegra_bo *bo)
+ 	}
+ 
+ 	err = dma_map_sg(drm->dev, bo->sgt->sgl, bo->sgt->nents,
+-			 DMA_BIDIRECTIONAL);
++			 DMA_FROM_DEVICE);
+ 	if (err == 0) {
+ 		err = -EFAULT;
+ 		goto free_sgt;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
