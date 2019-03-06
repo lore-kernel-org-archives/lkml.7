@@ -2,244 +2,149 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D41DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7AB20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1EF20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uABdvBSw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBnr/hHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfCFQOr (ORCPT
+        id S1729590AbfCFQPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:14:47 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42781 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729394AbfCFQOr (ORCPT
+        Wed, 6 Mar 2019 11:15:25 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34683 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfCFQPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:14:47 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i5so11222524oto.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:14:46 -0800 (PST)
+        Wed, 6 Mar 2019 11:15:24 -0500
+Received: by mail-pf1-f195.google.com with SMTP id u9so8987374pfn.1;
+        Wed, 06 Mar 2019 08:15:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zdCUIyrJr58bJ4p1jt7o4vG/kaR1BVf+OPlXm3EwToI=;
-        b=uABdvBSwLMRbqv1aaegNarvvqMw6OBL0tD9PGl1fmkKeD4rMyEFETsxkC3y/tLftAi
-         hRd7Ul9mL61Xmqbft38JYUgxsS5hg+TylmmwEUyttUEktkx6ycLgC1ljmixtSHpYur7i
-         JMOtJmh+i32S/6lk2TXdpMwsY/RUPYuYgkFUL1XqvPwZHpGxG03AvJRBl/uDGkIiPU5O
-         FzotGDbh4DZiCOSH4avxAF0oWLhro4t+rB7P00mqpnNOc2PbS9/pesnOHmxG2tadD2rU
-         E7lDOo5DpX6rU1Tx51crYNLZQs/WzpONDwN1yygPdEA1Jgx3/INcEsvByJQpUZz0fLMl
-         SVqA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hftjxlzHQuDZAC7EoQ4seygcnqDzV3vTUkyqN4y/l1U=;
+        b=IBnr/hHJYwumTM5vlWv9N4GsMaLmJCp1UIp7eCa2nehoArERnzj5rv7fBHNFbS2R5d
+         WRyWNNCRqV9/sNEleOlOCHLUvOQT5O8yQ89QA0Oizgh2zst28lsDX7Rv+2VC550mzmA1
+         S9kE1bnOFQVVJFV2mCU2YaQGEV9JafGuXHbxJKSauVcjy9R86yjSTFGJTcuQ1CKQCnyx
+         A7QacctpbUmfdXGEyuycKg2onLyjaPJnjehIRo5/3fytry/Yd+3gCqMqf6QujLEeTKBq
+         9FMBFKu9rfqcGZ8kfSHCjAv+6jA1T3RvqI2VRySR+g2epHi3910iJEe+h5kMb8gc0MiG
+         Lm1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zdCUIyrJr58bJ4p1jt7o4vG/kaR1BVf+OPlXm3EwToI=;
-        b=qTgtYQDytiAdYIplG080B1XisLRQbvEPmrJbEf6cV51V1ELrZ+0xwUIVC6vqJV5Hoh
-         WoNdHfuPTfSHHRINS0iTRMXwDD0s4p9r79Xh4Xpv40oToq36a6UEG9vOr2KDQ09XkdXK
-         dLnl3K2riNdAtON/k0mXeAkiXuzo02STBLjKQqq+vw9muzpwUm5aBuTk0CIMR1OJu+l1
-         S86qf7RpW1YsdJDJcBSFu4/tmK0vxv7rWmaQVvoNR5lcEAH7QpNwK7iTpInLh1eHF39K
-         9jY+lsISyqlZYN1QRshY7CZRRctzmzpF3+54oyEAx29crZaiKv8Ys04yLrOiewxrGVQH
-         PzDg==
-X-Gm-Message-State: APjAAAVZyzeGq8KT5WMs3qT30pZXgvdcmN0AOSXdCB9Qf0V/HCiYjwDe
-        7DNK+NLdQwojyFBBpeSdLNcBF7K17KmAYInwCN01rQ==
-X-Google-Smtp-Source: APXvYqyo2QU9YvRfIkzE2D3hyVpGYToRP2G0gHVficbS3RtCaFu228P8uCePlFnIddPAPFPYUvhAxOl54QmYPOLwzQs=
-X-Received: by 2002:a05:6830:1543:: with SMTP id l3mr5125026otp.84.1551888886437;
- Wed, 06 Mar 2019 08:14:46 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hftjxlzHQuDZAC7EoQ4seygcnqDzV3vTUkyqN4y/l1U=;
+        b=YxuxsmJgY2/zywNB1O4Gie1G+X7qsrdfxKsTAc89bpNDicxRX9oPyN+l5GlkArWpf0
+         WFMd8QVcnffVWMIY8N6KoK0of3RyKCUuiAmJeqqY4fKISUZn2NEcE36LJi2bsP20YS2M
+         oafBD+CFcjrDOP9O1trkXb7Qnp0OZ2o29HZnH3BteKeI4728bTBXw45YTIKPsAZOrwhE
+         Kreph0LxZJSQUNdqfPbbRyYFBmAoG5QbSDhu6szDrvM79jDaJtnIf9HFe4DgKnI6RUFz
+         BKVW8y70wuEA/R6PeL6NhavIvIYciWQeSH0we+NTtC7V1dO2YrRDNKNIYggUG+2Amo07
+         BS1g==
+X-Gm-Message-State: APjAAAUbArjA5zcI00lFJzhFq77oSnNaDtf5Bj2E86ICDFneZ4fa+tAv
+        QuMbmWMGSiWTxFZncr/9ufzQt/Q3
+X-Google-Smtp-Source: APXvYqyEwl9EshbJayRBfmHRNXuwFsLIanMFDNtFE0dcdVdpgDRNANB2QIuRXMRh1AS37/lmHH35Xw==
+X-Received: by 2002:a62:1752:: with SMTP id 79mr7885212pfx.127.1551888923309;
+        Wed, 06 Mar 2019 08:15:23 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s1sm2587678pgv.30.2019.03.06.08.15.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 08:15:17 -0800 (PST)
+Subject: Re: [PATCH] drivers: watchdog: Kconfig: pedantic cleanups
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org
+References: <1551885336-22650-1-git-send-email-info@metux.net>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8a1297c7-f1f2-5742-0ef6-f83799510735@roeck-us.net>
+Date:   Wed, 6 Mar 2019 08:15:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <1551819273-640-6-git-send-email-john.stultz@linaro.org>
-In-Reply-To: <1551819273-640-6-git-send-email-john.stultz@linaro.org>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 6 Mar 2019 17:14:35 +0100
-Message-ID: <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/5 v2] kselftests: Add dma-heap test
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1551885336-22650-1-git-send-email-info@metux.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mar. 5 mars 2019 =C3=A0 21:54, John Stultz <john.stultz@linaro.org> a =
-=C3=A9crit :
->
-> Add very trivial allocation test for dma-heaps.
->
-> TODO: Need to actually do some validation on
-> the returned dma-buf.
->
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+On 3/6/19 7:15 AM, Enrico Weigelt, metux IT consult wrote:
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+
+
+Checkpatch says:
+
+WARNING: Missing commit description - Add an appropriate one
+
+There needs to be some kind of description of those pedantic cleanups.
+
+On top of that, while the affected Kconfig file generates 42 checkpatch
+warnings, this patch doesn't fix a single one of them. I don't really
+see the point of this patch.
+
+Thanks,
+Guenter
+
 > ---
-> v2: Switched to use reworked dma-heap apis
-> ---
->  tools/testing/selftests/dmabuf-heaps/Makefile      | 11 +++
->  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 96 ++++++++++++++++=
-++++++
->  2 files changed, 107 insertions(+)
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->
-> diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testin=
-g/selftests/dmabuf-heaps/Makefile
-> new file mode 100644
-> index 0000000..c414ad3
-> --- /dev/null
-> +++ b/tools/testing/selftests/dmabuf-heaps/Makefile
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +CFLAGS +=3D -static -O3 -Wl,-no-as-needed -Wall
-> +#LDLIBS +=3D -lrt -lpthread -lm
-> +
-> +# these are all "safe" tests that don't modify
-> +# system time or require escalated privileges
-> +TEST_GEN_PROGS =3D dmabuf-heap
-> +
-> +
-> +include ../lib.mk
-> +
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/t=
-esting/selftests/dmabuf-heaps/dmabuf-heap.c
-> new file mode 100644
-> index 0000000..06837a4
-> --- /dev/null
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <dirent.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +#include <sys/types.h>
-> +
-> +#include "../../../../include/uapi/linux/dma-heap.h"
-> +
-> +#define DEVPATH "/dev/dma_heap"
-> +
-> +int dmabuf_heap_open(char *name)
-> +{
-> +       int ret, fd;
-> +       char buf[256];
-> +
-> +       ret =3D sprintf(buf, "%s/%s", DEVPATH, name);
-> +       if (ret < 0) {
-> +               printf("sprintf failed!\n");
-> +               return ret;
-> +       }
-> +
-> +       fd =3D open(buf, O_RDWR);
-> +       if (fd < 0)
-> +               printf("open %s failed!\n", buf);
-> +       return fd;
-> +}
-> +
-> +int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags, int *dmabu=
-f_fd)
-> +{
-> +       struct dma_heap_allocation_data data =3D {
-> +               .len =3D len,
-> +               .flags =3D flags,
-> +       };
-> +       int ret;
-> +
-> +       if (dmabuf_fd =3D=3D NULL)
-> +               return -EINVAL;
-> +
-> +       ret =3D ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
-> +       if (ret < 0)
-> +               return ret;
-> +       *dmabuf_fd =3D (int)data.fd;
-> +       return ret;
-> +}
-> +
-> +#define ONE_MEG (1024*1024)
-> +
-> +void do_test(char *heap_name)
-> +{
-> +       int heap_fd =3D -1, dmabuf_fd =3D -1;
-> +       int ret;
-> +
-> +       printf("Testing heap: %s\n", heap_name);
-> +
-> +       heap_fd =3D dmabuf_heap_open(heap_name);
-> +       if (heap_fd < 0)
-> +               return;
-> +
-> +       printf("Allocating 1 MEG\n");
-> +       ret =3D dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
-> +       if (ret)
-> +               goto out;
-> +
-> +       /* DO SOMETHING WITH THE DMABUF HERE? */
+>   drivers/watchdog/Kconfig | 24 ++++++++++++------------
+>   1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 57f017d..38509d5 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -279,10 +279,10 @@ config ARMADA_37XX_WATCHDOG
+>   	select MFD_SYSCON
+>   	select WATCHDOG_CORE
+>   	help
+> -	   Say Y here to include support for the watchdog timer found on
+> -	   Marvell Armada 37xx SoCs.
+> -	   To compile this driver as a module, choose M here: the
+> -	   module will be called armada_37xx_wdt.
+> +	  Say Y here to include support for the watchdog timer found on
+> +	  Marvell Armada 37xx SoCs.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called armada_37xx_wdt.
+>   
+>   config ASM9260_WATCHDOG
+>   	tristate "Alphascale ASM9260 watchdog"
+> @@ -606,10 +606,10 @@ config MAX77620_WATCHDOG
+>   	tristate "Maxim Max77620 Watchdog Timer"
+>   	depends on MFD_MAX77620 || COMPILE_TEST
+>   	help
+> -	 This is the driver for the Max77620 watchdog timer.
+> -	 Say 'Y' here to enable the watchdog timer support for
+> -	 MAX77620 chips. To compile this driver as a module,
+> -	 choose M here: the module will be called max77620_wdt.
+> +	  This is the driver for the Max77620 watchdog timer.
+> +	  Say 'Y' here to enable the watchdog timer support for
+> +	  MAX77620 chips. To compile this driver as a module,
+> +	  choose M here: the module will be called max77620_wdt.
+>   
+>   config IMX2_WDT
+>   	tristate "IMX2+ Watchdog"
+> @@ -1632,10 +1632,10 @@ config BCM7038_WDT
+>   	depends on HAS_IOMEM
+>   	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
+>   	help
+> -	 Watchdog driver for the built-in hardware in Broadcom 7038 and
+> -	 later SoCs used in set-top boxes.  BCM7038 was made public
+> -	 during the 2004 CES, and since then, many Broadcom chips use this
+> -	 watchdog block, including some cable modem chips.
+> +	  Watchdog driver for the built-in hardware in Broadcom 7038 and
+> +	  later SoCs used in set-top boxes.  BCM7038 was made public
+> +	  during the 2004 CES, and since then, many Broadcom chips use this
+> +	  watchdog block, including some cable modem chips.
+>   
+>   config IMGPDC_WDT
+>   	tristate "Imagination Technologies PDC Watchdog Timer"
+> 
 
-You can do a call to mmap and write a pattern in the buffer.
-
-Benjamin
-> +
-> +out:
-> +       if (dmabuf_fd >=3D 0)
-> +               close(dmabuf_fd);
-> +       if (heap_fd >=3D 0)
-> +               close(heap_fd);
-> +}
-> +
-> +
-> +int main(void)
-> +{
-> +       DIR *d;
-> +       struct dirent *dir;
-> +
-> +       d =3D opendir(DEVPATH);
-> +       if (!d) {
-> +               printf("No %s directory?\n", DEVPATH);
-> +               return -1;
-> +       }
-> +
-> +       while ((dir =3D readdir(d)) !=3D NULL)
-> +               do_test(dir->d_name);
-> +
-> +
-> +       return 0;
-> +}
-> --
-> 2.7.4
->
-
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
