@@ -2,343 +2,162 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F9BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB48C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712CA20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DD120675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YS1gQPJy"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uD10yDwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfCFQGM (ORCPT
+        id S1728294AbfCFQGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:06:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41864 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCFQGL (ORCPT
+        Wed, 6 Mar 2019 11:06:19 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37767 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728084AbfCFQGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:06:11 -0500
-Received: by mail-pf1-f195.google.com with SMTP id d25so8957311pfn.8;
-        Wed, 06 Mar 2019 08:06:10 -0800 (PST)
+        Wed, 6 Mar 2019 11:06:19 -0500
+Received: by mail-oi1-f196.google.com with SMTP id w66so10255351oia.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:06:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J8MHLJs93wrjRd42BSejHjevUFgX7QUjTgz49rje4yw=;
-        b=YS1gQPJy525uIoDtA4QEFtInFTnr90yNXvXpwGVl+J0sUBv1D3L5U+W4/0CXVpYJ7G
-         odBFj5J3GnDw81MuK52ZkN+vfpNaXzHzRg0AyRRXfJtT7pAx5/LUAf8QGCH3a5DA//7w
-         rbG/h48d6TVtb2k1BPoVxmrGjF/G5lYcHEaGOQErFMSaC3kUmJSsarBgnXV2f+VAYq35
-         R0/wDn9zk+A6i71CuVNF8pRhnT/OBtcXu4t0jaOMrw1AVkXv4Z6MjhcwwaFpfEGgfG2n
-         SSiL3bcS07ngnOmhZTD38ZJG0+9reu2TQqoHjdVY8zbyJ0uiCG7cYlp5eLUf8knAZ8yS
-         2YfQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WG5FG4s0G29MK3NWb/ke+Ciqb1d4X6CIoH9BNgecVEo=;
+        b=uD10yDwoqS+39AuF/q/8f2su76UGF+Ysjs+eUQCv4yAAzJ4AXAVFN7b788jut6Tv3c
+         LF1oV6T4k19AZ3E3r3bsP/3NEvaK/nuhVhmi4hWADJ1127foZpuI5Rl7/DyaaVtSfyg2
+         m+46swM8ng+Cnq0PUdMl9aRAsLdUOj0gERipDm/U7GlfeWAY2H73Vk/Gh9mcOJHQXEJ0
+         nRgckaAjjHBCt7s8MyO4yf9rmDifHtegTjbRh19faCmeMVeMPZeAW8motKnnc8lSA5Dw
+         LNCsnhSijSB7fvhl6DWi1m8CLb4w1ocuTQO/c7RYmLvTvYFa1Y/xIE+MczEYXG2m8gMf
+         dKiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J8MHLJs93wrjRd42BSejHjevUFgX7QUjTgz49rje4yw=;
-        b=hKwfxNLkWWLT+QOwdGppu8Qpc/nBrx+gqST06WNjQq0dzxPFMpwmlJqY83B39lQzBc
-         CK4JktZkyZNXLR1BhAF3kH5SiRgCHKJzto2NwYZ5Ib8QO9SKcTfbPDoHmkbBH7rs+KEq
-         E0Pe3LwRIZwDWzDbcXvjx4pRudG+EqaDtOzAEdlE3iZ9TWXngF9ilaRnqlUEUCPPWhGV
-         wLc/mr8a9eT+A7HhNWXwUjIqNs4WqD2/AnMS6XzP6UxZrx9J17xwCVMgvoG8mIMub6kE
-         B8Hko0SMvtSyEuDLnpFyA3eN8J/UrkZAsc8V0S0ggtrIRFtOyxOHQ9vlg3tThjKwRbja
-         v+Jw==
-X-Gm-Message-State: APjAAAV0Rz0t+ySmCzm6Hb2RIWOJqMrT5nsSsvv/MRZvzs9dchKoly+y
-        gCWv1u3Efp41mpLQUfO/jRk=
-X-Google-Smtp-Source: APXvYqx5dXqLmC1YLl6Rsj76afi77MiEmr5HyvyRA7U4BE9l7MWZEfiGnIdczvTlZfAQsIFyKzNOxA==
-X-Received: by 2002:a17:902:d20b:: with SMTP id t11mr7755705ply.318.1551888370504;
-        Wed, 06 Mar 2019 08:06:10 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b8sm3833593pfi.129.2019.03.06.08.06.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 08:06:09 -0800 (PST)
-Subject: Re: [PATCH V7 1/3] watchdog: imx_sc: Add i.MX system controller
- watchdog support
-To:     Anson Huang <anson.huang@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "olof@lixom.net" <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1551834095-19950-1-git-send-email-Anson.Huang@nxp.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9b850967-d90a-5bd8-6ecf-99819f95805e@roeck-us.net>
-Date:   Wed, 6 Mar 2019 08:06:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WG5FG4s0G29MK3NWb/ke+Ciqb1d4X6CIoH9BNgecVEo=;
+        b=eay5YUvtDofkWTG4Ym6oD0yAZIRVsESc1JfJ+oVTNyBP3gDefTB1t/fN1U9w4JHRYW
+         wO0bYDKmxa3hFR3Ypeuq7hCZooOQFN4x/Fql8/3eTkMK77hcRpUVHnUikQecCV9P00Fj
+         Th084DuojRmEY1f1LMsrcsD2nKjmfjM4ryT/Kd7FwCz+zek0qPFGL/2BTdXvJXrt7F/3
+         FBm4YVrTxhT4uye3jaQM2trzeOIPkAwPRs5jjrGWgVvxEG6Lh57NXD6hDKGIHMkPnt2z
+         JuwiQjnI3YUWa6fhWaXkY5yW/so2R1bEQLYnd6J/ObNqUREWpiwamg4w+5r9DGfEuYSm
+         iAew==
+X-Gm-Message-State: APjAAAUbe+NrkMEtiveMV8t0Rl9HLUsCNH0EazQR199DDsBUiIq6xAYf
+        hNXI/3ODJGySCkj9X6wM/gJYCfJLWOY9d4vyIxaDlw==
+X-Google-Smtp-Source: APXvYqzFh+cTk/5CYyCQGJZDVzHSMsSxu7SkZ6Xp7zboFKl45gJPzZJrWEZ3qEe/sbhoN4sz8AeOrnOKYR9Z6fgF3Mw=
+X-Received: by 2002:aca:fc06:: with SMTP id a6mr2167317oii.0.1551888377959;
+ Wed, 06 Mar 2019 08:06:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1551834095-19950-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190130030317.GC10462@redhat.com> <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
+ <20190130183616.GB5061@redhat.com> <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+ <20190131041641.GK5061@redhat.com> <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+ <20190306155126.GB3230@redhat.com> <CAPcyv4iB+7LF-ZOF1VXE+g2hS7Gb=+RbGAmTiGWDsaikEuXGYw@mail.gmail.com>
+ <20190306160323.GD3230@redhat.com>
+In-Reply-To: <20190306160323.GD3230@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 6 Mar 2019 08:06:06 -0800
+Message-ID: <CAPcyv4jxsbWUMmnsnQ07Cd4LdW47dqef-BBR=hS_DHS0UZ6N2g@mail.gmail.com>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/19 5:06 PM, Anson Huang wrote:
-> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> inside, the system controller is in charge of controlling power,
-> clock and watchdog etc..
-> 
-> This patch adds i.MX system controller watchdog driver support,
-> watchdog operation needs to be done in secure EL3 mode via
-> ARM-Trusted-Firmware, using SMC call, CPU will trap into
-> ARM-Trusted-Firmware and then it will request system controller
-> to do watchdog operation via IPC.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Wed, Mar 6, 2019 at 8:03 AM Jerome Glisse <jglisse@redhat.com> wrote:
+>
+> On Wed, Mar 06, 2019 at 07:57:30AM -0800, Dan Williams wrote:
+> > On Wed, Mar 6, 2019 at 7:51 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > >
+> > > On Tue, Mar 05, 2019 at 08:20:10PM -0800, Dan Williams wrote:
+> > > > On Tue, Mar 5, 2019 at 2:16 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > > >
+> > > > > On Wed, 30 Jan 2019 21:44:46 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > > >
+> > > > > > > > Another way to help allay these worries is commit to no new exports
+> > > > > > > > without in-tree users. In general, that should go without saying for
+> > > > > > > > any core changes for new or future hardware.
+> > > > > > >
+> > > > > > > I always intend to have an upstream user the issue is that the device
+> > > > > > > driver tree and the mm tree move a different pace and there is always
+> > > > > > > a chicken and egg problem. I do not think Andrew wants to have to
+> > > > > > > merge driver patches through its tree, nor Linus want to have to merge
+> > > > > > > drivers and mm trees in specific order. So it is easier to introduce
+> > > > > > > mm change in one release and driver change in the next. This is what
+> > > > > > > i am doing with ODP. Adding things necessary in 5.1 and working with
+> > > > > > > Mellanox to have the ODP HMM patch fully tested and ready to go in
+> > > > > > > 5.2 (the patch is available today and Mellanox have begin testing it
+> > > > > > > AFAIK). So this is the guideline i will be following. Post mm bits
+> > > > > > > with driver patches, push to merge mm bits one release and have the
+> > > > > > > driver bits in the next. I do hope this sound fine to everyone.
+> > > > > >
+> > > > > > The track record to date has not been "merge HMM patch in one release
+> > > > > > and merge the driver updates the next". If that is the plan going
+> > > > > > forward that's great, and I do appreciate that this set came with
+> > > > > > driver changes, and maintain hope the existing exports don't go
+> > > > > > user-less for too much longer.
+> > > > >
+> > > > > Decision time.  Jerome, how are things looking for getting these driver
+> > > > > changes merged in the next cycle?
+> > > > >
+> > > > > Dan, what's your overall take on this series for a 5.1-rc1 merge?
+> > > >
+> > > > My hesitation would be drastically reduced if there was a plan to
+> > > > avoid dangling unconsumed symbols and functionality. Specifically one
+> > > > or more of the following suggestions:
+> > > >
+> > > > * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
+> > > > surface for out-of-tree consumers to come grumble at us when we
+> > > > continue to refactor the kernel as we are wont to do.
+> > > >
+> > > > * A commitment to consume newly exported symbols in the same merge
+> > > > window, or the following merge window. When that goal is missed revert
+> > > > the functionality until such time that it can be consumed, or
+> > > > otherwise abandoned.
+> > > >
+> > > > * No new symbol exports and functionality while existing symbols go unconsumed.
+> > > >
+> > > > These are the minimum requirements I would expect my work, or any
+> > > > core-mm work for that matter, to be held to, I see no reason why HMM
+> > > > could not meet the same.
+> > >
+> > > nouveau use all of this and other driver patchset have been posted to
+> > > also use this API.
+> > >
+> > > > On this specific patch I would ask that the changelog incorporate the
+> > > > motivation that was teased out of our follow-on discussion, not "There
+> > > > is no reason not to support that case." which isn't a justification.
+> > >
+> > > mlx5 wants to use HMM without DAX support it would regress mlx5. Other
+> > > driver like nouveau also want to access DAX filesystem. So yes there is
+> > > no reason not to support DAX filesystem. Why do you not want DAX with
+> > > mirroring ? You want to cripple HMM ? Why ?
+> >
+> > There is a misunderstanding... my request for this patch was to update
+> > the changelog to describe the merits of DAX mirroring to replace the
+> > "There is no reason not to support that case." Otherwise someone
+> > reading this changelog in a year will wonder what the motivation was.
+>
+> So what about:
+>
+> HMM mirroring allow device to mirror process address onto device
+> there is no reason for that mirroring to not work if the virtual
+> address are the result of an mmap of a file on DAX enabled file-
+> system.
 
-Reviewed-by: Guenter Roeck <linux@roekc-us.net>
-
-> ---
-> Changes since V6:
-> 	- use module_platform_driver() instead of module_init/exit to make code simple.
-> ---
->   drivers/watchdog/Kconfig      |  14 ++++
->   drivers/watchdog/Makefile     |   1 +
->   drivers/watchdog/imx_sc_wdt.c | 174 ++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 189 insertions(+)
->   create mode 100644 drivers/watchdog/imx_sc_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 242eea8..33a6523 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -641,6 +641,20 @@ config IMX2_WDT
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called imx2_wdt.
->   
-> +config IMX_SC_WDT
-> +	tristate "IMX SC Watchdog"
-> +	depends on IMX_SCU
-> +	depends on HAVE_ARM_SMCCC
-> +	select WATCHDOG_CORE
-> +	help
-> +	  This is the driver for the system controller watchdog
-> +	  on the NXP i.MX SoCs with system controller inside.
-> +	  If you have one of these processors and wish to have
-> +	  watchdog support enabled, say Y, otherwise say N.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called imx_sc_wdt.
-> +
->   config UX500_WATCHDOG
->   	tristate "ST-Ericsson Ux500 watchdog"
->   	depends on MFD_DB8500_PRCMU
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index ba930e4..136d9f0 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -68,6 +68,7 @@ obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
->   obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
->   obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
->   obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
-> +obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
->   obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
->   obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
->   obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
-> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-> new file mode 100644
-> index 0000000..ee48709
-> --- /dev/null
-> +++ b/drivers/watchdog/imx_sc_wdt.c
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2018-2019 NXP.
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/io.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define DEFAULT_TIMEOUT 60
-> +/*
-> + * Software timer tick implemented in scfw side, support 10ms to 0xffffffff ms
-> + * in theory, but for normal case, 1s~128s is enough, you can change this max
-> + * value in case it's not enough.
-> + */
-> +#define MAX_TIMEOUT 128
-> +
-> +#define IMX_SIP_TIMER			0xC2000002
-> +#define IMX_SIP_TIMER_START_WDOG		0x01
-> +#define IMX_SIP_TIMER_STOP_WDOG		0x02
-> +#define IMX_SIP_TIMER_SET_WDOG_ACT	0x03
-> +#define IMX_SIP_TIMER_PING_WDOG		0x04
-> +#define IMX_SIP_TIMER_SET_TIMEOUT_WDOG	0x05
-> +#define IMX_SIP_TIMER_GET_WDOG_STAT	0x06
-> +#define IMX_SIP_TIMER_SET_PRETIME_WDOG	0x07
-> +
-> +#define SC_TIMER_WDOG_ACTION_PARTITION	0
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0000);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static unsigned int timeout = DEFAULT_TIMEOUT;
-> +module_param(timeout, uint, 0000);
-> +MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
-> +		 __MODULE_STRING(DEFAULT_TIMEOUT) ")");
-> +
-> +static int imx_sc_wdt_ping(struct watchdog_device *wdog)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_PING_WDOG,
-> +		      0, 0, 0, 0, 0, 0, &res);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_sc_wdt_start(struct watchdog_device *wdog)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_START_WDOG,
-> +		      0, 0, 0, 0, 0, 0, &res);
-> +	if (res.a0)
-> +		return -EACCES;
-> +
-> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_WDOG_ACT,
-> +		      SC_TIMER_WDOG_ACTION_PARTITION,
-> +		      0, 0, 0, 0, 0, &res);
-> +	return res.a0 ? -EACCES : 0;
-> +}
-> +
-> +static int imx_sc_wdt_stop(struct watchdog_device *wdog)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_STOP_WDOG,
-> +		      0, 0, 0, 0, 0, 0, &res);
-> +
-> +	return res.a0 ? -EACCES : 0;
-> +}
-> +
-> +static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
-> +				unsigned int timeout)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	wdog->timeout = timeout;
-> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_TIMEOUT_WDOG,
-> +		      timeout * 1000, 0, 0, 0, 0, 0, &res);
-> +
-> +	return res.a0 ? -EACCES : 0;
-> +}
-> +
-> +static const struct watchdog_ops imx_sc_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = imx_sc_wdt_start,
-> +	.stop  = imx_sc_wdt_stop,
-> +	.ping  = imx_sc_wdt_ping,
-> +	.set_timeout = imx_sc_wdt_set_timeout,
-> +};
-> +
-> +static const struct watchdog_info imx_sc_wdt_info = {
-> +	.identity	= "i.MX SC watchdog timer",
-> +	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> +			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
-> +};
-> +
-> +static int imx_sc_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *imx_sc_wdd;
-> +	int ret;
-> +
-> +	imx_sc_wdd = devm_kzalloc(&pdev->dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
-> +	if (!imx_sc_wdd)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, imx_sc_wdd);
-> +
-> +	imx_sc_wdd->info = &imx_sc_wdt_info;
-> +	imx_sc_wdd->ops = &imx_sc_wdt_ops;
-> +	imx_sc_wdd->min_timeout = 1;
-> +	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
-> +	imx_sc_wdd->parent = &pdev->dev;
-> +	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
-> +
-> +	ret = watchdog_init_timeout(imx_sc_wdd, timeout, &pdev->dev);
-> +	if (ret)
-> +		dev_warn(&pdev->dev, "Failed to set timeout value, using default\n");
-> +
-> +	watchdog_stop_on_reboot(imx_sc_wdd);
-> +	watchdog_stop_on_unregister(imx_sc_wdd);
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, imx_sc_wdd);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register watchdog device\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
-> +{
-> +	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(imx_sc_wdd))
-> +		imx_sc_wdt_stop(imx_sc_wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
-> +{
-> +	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(imx_sc_wdd))
-> +		imx_sc_wdt_start(imx_sc_wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(imx_sc_wdt_pm_ops,
-> +			 imx_sc_wdt_suspend, imx_sc_wdt_resume);
-> +
-> +static struct platform_driver imx_sc_wdt_driver = {
-> +	.probe		= imx_sc_wdt_probe,
-> +	.driver		= {
-> +		.name	= "imx-sc-wdt",
-> +		.pm	= &imx_sc_wdt_pm_ops,
-> +	},
-> +};
-> +module_platform_driver(imx_sc_wdt_driver);
-> +
-> +MODULE_AUTHOR("Robin Gong <yibin.gong@nxp.com>");
-> +MODULE_DESCRIPTION("NXP i.MX system controller watchdog driver");
-> +MODULE_LICENSE("GPL v2");
-> 
-
+Looks like an improvement to me.
