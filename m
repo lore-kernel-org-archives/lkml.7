@@ -2,80 +2,162 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84A3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8FF206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sP0Iq7/Z"
+	by mail.kernel.org (Postfix) with ESMTP id 4D90A20657
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbfCFKEF (ORCPT
+        id S1729973AbfCFKEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:04:05 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34253 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfCFKEF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:04:05 -0500
-Received: by mail-lf1-f68.google.com with SMTP id d26so8462985lfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:04:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=amiCGmOLNrYqhQWPhgnFN7rKslXa829jmZj04RAGSdU=;
-        b=sP0Iq7/ZXHxecWdibBUBeXenMqJq6yr28wddmvLt/lt17X+i/NnGPaC9ThZVWSb9cS
-         3wGbZeF/naYFOc/0vFVTUxBQahs0nShNu1SkT7M29Ksq0qJCZux4UcmHRdshhWkISEuT
-         BAik8aYsXmnCWJnN1kXruml4Nm6AB6+2UkBKMtwIxpwnHwXMKoYodQcLNmSJzUfjVFVQ
-         IA36D9qmV0HeQRpVZ6SGKjUj5I88XgT2AnSXHC3aEulHv+C9uJiBLI1VG8m2dxArHvvD
-         KqliNeWrMWWQRWh7WuLZQklTizOv/sxTKJjhTE5IoK/oObWHXIiZChSCdUicDe5htRAD
-         iktA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=amiCGmOLNrYqhQWPhgnFN7rKslXa829jmZj04RAGSdU=;
-        b=fwNvQ11MMghQYoA3RtPmsRCvc7v8TCPtVBSW/2KtSYLmjbFSa00vF5S5IJBYfydFni
-         ciItb6PG6P/vsh/g09Bkau2c+2DY40oLlxVMwUznMETpkBWPxEtbNkrH0UiuriKToEiU
-         hEn67D65rs8TdBAVGv8X8OJpaSAwjuWx8x5GxxpIKM0A6XW+77wz/MFOYQ50xCP5T2o7
-         SoyLevV/pL3hnjrzvaRDiLu/FBsYqfUdcJMJicYhGsrcPE+G8CW1GshNQMCCa66c0a8n
-         3xPEfJkROkc0PVd3nCdNy+W/Zz4hWORtN4MUDidn4VVwoR+EW40nYPMFaacyHVKCINtR
-         CtPA==
-X-Gm-Message-State: APjAAAXWUZhQli8dhyy8/MjRnXCyNzbEH3zI4eqBicxvYh4j0OygtHTv
-        Gti0qoxifU+qtwBDfBR+HKfL6vJRE+GbOyjGSZo=
-X-Google-Smtp-Source: APXvYqz9G45DWZagn+J4cOt5hDEGAhnRiZBpsybOBgHY6wudJZrHpCkkO54GlkJzhAaui+qpUSBhhbfctduVjN5IIjo=
-X-Received: by 2002:ac2:510e:: with SMTP id q14mr3390283lfb.151.1551866643387;
- Wed, 06 Mar 2019 02:04:03 -0800 (PST)
+        Wed, 6 Mar 2019 05:04:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42928 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726596AbfCFKEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 05:04:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3E28FAFCC;
+        Wed,  6 Mar 2019 10:04:05 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 11:04:04 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
+Message-ID: <20190306100404.jzfk7oqsh3turqth@pathway.suse.cz>
+References: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
+ <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
+ <201903050123.x251N312025685@www262.sakura.ne.jp>
 MIME-Version: 1.0
-References: <20190301184816.784-1-mans@mansr.com> <20190301184816.784-3-mans@mansr.com>
- <CANiq72nFOhrjN0nfBQc28dDyY0XPwWrJwWSkXv0yxGb-B2M-JQ@mail.gmail.com>
-In-Reply-To: <CANiq72nFOhrjN0nfBQc28dDyY0XPwWrJwWSkXv0yxGb-B2M-JQ@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 6 Mar 2019 11:03:52 +0100
-Message-ID: <CANiq72k-svkxyUndC7H0+Rc6ZSPX=ZCnFfYDUGfh=KxogWydYw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] auxdisplay: charlcd: make backlight initial state configurable
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201903050123.x251N312025685@www262.sakura.ne.jp>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 10:56 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> CC'ing Willy in case he wants to take a look for charlcd.c
+On Tue 2019-03-05 10:23:03, Tetsuo Handa wrote:
+> Petr Mladek wrote:
+> > On Mon 2019-03-04 20:40:37, Tetsuo Handa wrote:
+> > > On 2019/03/04 12:22, Sergey Senozhatsky wrote:
+> > > > On (02/23/19 13:42), Tetsuo Handa wrote:
+> > > > [..]
+> > > >> This patch tries to address "don't lockup the system" with minimal risk of
+> > > >> failing to "print out printk() messages", by allowing printk() callers to
+> > > >> tell printk() "store $body_text_lines lines into logbuf but start actual
+> > > >> printing after $trailer_text_line line is stored into logbuf". This patch
+> > > >> is different from existing printk_deferred(), for printk_deferred() is
+> > > >> intended for scheduler/timekeeping use only. Moreover, what this patch
+> > > >> wants to do is "do not try to print out printk() messages as soon as
+> > > >> possible", for accumulated stalling period cannot be decreased if
+> > > >> printk_deferred() from e.g. dump_tasks() from out_of_memory() immediately
+> > > >> prints out the messages. The point of this patch is to defer the stalling
+> > > >> duration to after leaving the critical section.
+> > > > 
+> > > > We can export printk deferred, I guess; but I'm not sure if it's going
+> > > > to be easy to switch OOM to printk_deferred - there are lots of direct
+> > > > printk callers: warn-s, dump_stacks, etc; it might even be simpler to
+> > > > start re-directing OOM printouts to printk_safe buffer.
+> > 
+> > Exactly. OOM calls many functions that are called also in other situations.
+> > The async messages are not pushed to the console unless someone calls
+> > a non-async printk.
+> > 
+> > How do you want to guarantee that the non-async printk will get called
+> > in all situations? The async printk() API is too error-prone.
+> 
+> I'm suggesting to use a non-async printk() for $trailer_text_line line. I think
+> that changing all printk() called from out_of_memory() to async is doable, if
+> the caller of out_of_memory() wakes up a dedicated kthread described below.
 
-(and Geert, sorry!)
+This is error prone. The trailing printk is not guaranteed:
 
-Cheers,
-Miguel
+    + It might get lost by code refactoring.
+
+    + People would miss that it is needed when async printk is used
+      in a shared function, e.g. dump_stack().
+
+    + People will not know that it is needed because they
+      are not familiar with the API. The would just use it
+      as part of a cargo cult programming or so.
+
+For this reason, this API is a "no no no" from my side.
+
+
+I am open to bring back discussions about a forced offload when
+a single task is blocked in console_unlock() for too long.
+
+It might be configurable depending on the usecase. For example,
+real time kernel would be more aggressive with offloading.
+It might need to be completely disabled to debug certain
+type of problems, e.g. sudden death.
+
+
+But I would really like to avoid even more printk variants.
+They have many problems:
+
+    + Only a handful of people would know how to use them right.
+
+    + They are hard to maintain. Any incompatible printk() in the call
+      chain might break the intention.
+
+    + They are problematic in a shared code. Incompatible printk()
+      variants might be required/preferred according to the use case.
+
+    + They might improve situation in one workload and make it
+      worse in another one.
+
+
+> > For example, I would stop printing allocation failures until
+> > the currently running OOM killer succeeds in freeing some memory.
+> 
+> We could serialize out_of_memory() and warn_alloc(), but since warn_alloc()
+> can be called from atomic context (e.g. GFP_ATOMIC from interrupt handler)
+> while out_of_memory() is always called from schedulable context (e.g.
+> GFP_KERNEL), we can't use oom_lock mutex.
+
+I did not mean serializing. I meant to avoid printing the warnings
+at all until OOM killer finishes its job.
+
+
+> Also, both nopage_rs in warn_alloc() and oom_rs in oom_kill_process() are not
+> working well. This is because ___ratelimit() function assumes that operations
+> to be ratelimited complete fast enough to be able to repeat many times within
+> a second. If one operation to be ratelimited takes many seconds (or even
+> minutes), ___ratelimit() becomes always true and can not ratelimit at all.
+
+The current ratelimiting is time driven. We might need an event
+driven variant. It might even be done with the current
+implementation if we add something like:
+
+void ratelimit_reset(struct ratelimit_state *rs)
+{
+	unsigned long flags;
+
+	raw_spin_irqsave(&rs->lock, flags);
+
+	rs->begin   = jiffies;
+	rs->printed = 0;
+
+	raw_spin_unlock_irqrestore(&rs->lock, flags);
+}
+
+We could call this when some event "solved" the problem.
+It means that it makes sense to enable the related
+ratelimited messages again because they would describe
+another problem.
+
+Best Regards,
+Petr
