@@ -2,107 +2,84 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84158C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5971520663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53992064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfCFTkk (ORCPT
+        id S1730874AbfCFTm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 14:40:40 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:36075 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfCFTkk (ORCPT
+        Wed, 6 Mar 2019 14:42:27 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:47123 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfCFTm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 14:40:40 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26JeA451851445
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 11:40:10 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26Je9p31851442;
-        Wed, 6 Mar 2019 11:40:09 -0800
-Date:   Wed, 6 Mar 2019 11:40:09 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-f76a16adc485699f95bb71fce114f97c832fe664@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, ndesaulniers@google.com,
-        mingo@kernel.org, jpoimboe@redhat.com, sedat.dilek@gmail.com,
-        dima@golovin.in, tglx@linutronix.de, hpa@zytor.com,
-        peterz@infradead.org
-Reply-To: ndesaulniers@google.com, linux-kernel@vger.kernel.org,
-          jpoimboe@redhat.com, sedat.dilek@gmail.com, mingo@kernel.org,
-          hpa@zytor.com, tglx@linutronix.de, dima@golovin.in,
-          peterz@infradead.org
-In-Reply-To: <d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com>
-References: <d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/unwind/orc: Fix ORC unwind table alignment
-Git-Commit-ID: f76a16adc485699f95bb71fce114f97c832fe664
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 6 Mar 2019 14:42:26 -0500
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.11] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7973DFF802;
+        Wed,  6 Mar 2019 19:42:18 +0000 (UTC)
+Subject: Re: [PATCH v5 3/4] mm: Simplify MEMORY_ISOLATION && COMPACTION || CMA
+ into CONTIG_ALLOC
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190306190005.7036-1-alex@ghiti.fr>
+ <20190306190005.7036-4-alex@ghiti.fr>
+ <6a50153b-c68b-f96c-1840-df6b7dd2cc61@suse.cz>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <bf448a35-47e0-53f2-59d7-384c45514b9c@ghiti.fr>
+Date:   Wed, 6 Mar 2019 14:42:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <6a50153b-c68b-f96c-1840-df6b7dd2cc61@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f76a16adc485699f95bb71fce114f97c832fe664
-Gitweb:     https://git.kernel.org/tip/f76a16adc485699f95bb71fce114f97c832fe664
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 6 Mar 2019 11:07:24 -0600
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 6 Mar 2019 20:36:32 +0100
+On 3/6/19 2:30 PM, Vlastimil Babka wrote:
+> On 3/6/19 8:00 PM, Alexandre Ghiti wrote:
+>> This condition allows to define alloc_contig_range, so simplify
+>> it into a more accurate naming.
+>>
+>> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>
+> (you could have sent this with my ack from v4 as there wasn't
+> significant change, just the one I suggested :)
 
-x86/unwind/orc: Fix ORC unwind table alignment
+Thanks, that's good to know.
 
-The .orc_unwind section is a packed array of 6-byte structs.  It's
-currently aligned to 6 bytes, which is causing warnings in the LLD
-linker.
+Alex
 
-Six isn't a power of two, so it's not a valid alignment value.  The
-actual alignment doesn't matter much because it's an array of packed
-structs.  An alignment of two is sufficient.  In reality it always gets
-aligned to four bytes because it comes immediately after the
-4-byte-aligned .orc_unwind_ip section.
-
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://github.com/ClangBuiltLinux/linux/issues/218
-Link: https://lkml.kernel.org/r/d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com
-
----
- include/asm-generic/vmlinux.lds.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 3d7a6a9c2370..f8f6f04c4453 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -733,7 +733,7 @@
- 		KEEP(*(.orc_unwind_ip))					\
- 		__stop_orc_unwind_ip = .;				\
- 	}								\
--	. = ALIGN(6);							\
-+	. = ALIGN(2);							\
- 	.orc_unwind : AT(ADDR(.orc_unwind) - LOAD_OFFSET) {		\
- 		__start_orc_unwind = .;					\
- 		KEEP(*(.orc_unwind))					\
