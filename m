@@ -2,132 +2,225 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8819AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E03C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6306620684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715CE206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfCFPwi (ORCPT
+        id S1730373AbfCFPwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:52:38 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34540 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730060AbfCFPv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:51:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1760F1993;
-        Wed,  6 Mar 2019 07:51:27 -0800 (PST)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D017A3F703;
-        Wed,  6 Mar 2019 07:51:23 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v4 11/19] mm: pagewalk: Allow walking without vma
-Date:   Wed,  6 Mar 2019 15:50:23 +0000
-Message-Id: <20190306155031.4291-12-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190306155031.4291-1-steven.price@arm.com>
-References: <20190306155031.4291-1-steven.price@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 6 Mar 2019 10:52:43 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:57578 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727048AbfCFPwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:52:40 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 34F0AE6A74;
+        Wed,  6 Mar 2019 15:52:40 +0000 (UTC)
+Received: from virtlab420.virt.lab.eng.bos.redhat.com (virtlab420.virt.lab.eng.bos.redhat.com [10.19.152.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DBE1960139;
+        Wed,  6 Mar 2019 15:52:29 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
+        riel@surriel.com, david@redhat.com, mst@redhat.com,
+        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
+        aarcange@redhat.com, alexander.duyck@gmail.com
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>
+Subject: [RFC][QEMU Patch] KVM: Enable QEMU to free the pages hinted by the guest
+Date:   Wed,  6 Mar 2019 10:52:20 -0500
+Message-Id: <20190306155220.12944-1-nitesh@redhat.com>
+In-Reply-To: <20190306155048.12868-1-nitesh@redhat.com>
+References: <20190306155048.12868-1-nitesh@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 06 Mar 2019 15:52:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
-for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
-a hole, because it lacks a vma.
+This patch enables QEMU to perform MADVISE_DONTNEED on the pages
+reported by the guest.
 
-This means each arch has re-implemented page table walking when needed,
-for example in the per-arch ptdump walker.
-
-Remove the requirement to have a vma except when trying to split huge
-pages.
-
-Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 ---
- mm/pagewalk.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ hw/virtio/trace-events                        |  1 +
+ hw/virtio/virtio-balloon.c                    | 90 +++++++++++++++++++
+ include/hw/virtio/virtio-balloon.h            |  2 +-
+ .../standard-headers/linux/virtio_balloon.h   |  1 +
+ 4 files changed, 93 insertions(+), 1 deletion(-)
 
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 98373a9f88b8..dac0c848b458 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -36,7 +36,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 	do {
- again:
- 		next = pmd_addr_end(addr, end);
--		if (pmd_none(*pmd) || !walk->vma) {
-+		if (pmd_none(*pmd)) {
- 			if (walk->pte_hole)
- 				err = walk->pte_hole(addr, next, walk);
- 			if (err)
-@@ -59,9 +59,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 		if (!walk->pte_entry)
- 			continue;
+diff --git a/hw/virtio/trace-events b/hw/virtio/trace-events
+index 07bcbe9e85..e3ab66f126 100644
+--- a/hw/virtio/trace-events
++++ b/hw/virtio/trace-events
+@@ -46,3 +46,4 @@ virtio_balloon_handle_output(const char *name, uint64_t gpa) "section name: %s g
+ virtio_balloon_get_config(uint32_t num_pages, uint32_t actual) "num_pages: %d actual: %d"
+ virtio_balloon_set_config(uint32_t actual, uint32_t oldactual) "actual: %d oldactual: %d"
+ virtio_balloon_to_target(uint64_t target, uint32_t num_pages) "balloon target: 0x%"PRIx64" num_pages: %d"
++virtio_balloon_hinting_request(unsigned long pfn, unsigned int num_pages) "Guest page hinting request: %lu num_pages: %d"
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index a12677d4d5..7ab1471017 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -33,6 +33,13 @@
  
--		split_huge_pmd(walk->vma, pmd, addr);
--		if (pmd_trans_unstable(pmd))
--			goto again;
-+		if (walk->vma) {
-+			split_huge_pmd(walk->vma, pmd, addr);
-+			if (pmd_trans_unstable(pmd))
-+				goto again;
-+		} else if (pmd_large(*pmd)) {
-+			continue;
-+		}
+ #define BALLOON_PAGE_SIZE  (1 << VIRTIO_BALLOON_PFN_SHIFT)
+ 
++struct guest_pages {
++	unsigned long pfn;
++	unsigned int order;
++};
 +
- 		err = walk_pte_range(pmd, addr, next, walk);
- 		if (err)
- 			break;
-@@ -81,7 +86,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 	do {
-  again:
- 		next = pud_addr_end(addr, end);
--		if (pud_none(*pud) || !walk->vma) {
-+		if (pud_none(*pud)) {
- 			if (walk->pte_hole)
- 				err = walk->pte_hole(addr, next, walk);
- 			if (err)
-@@ -95,9 +100,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 				break;
- 		}
++void page_hinting_request(uint64_t addr, uint32_t len);
++
+ static void balloon_page(void *addr, int deflate)
+ {
+     if (!qemu_balloon_is_inhibited()) {
+@@ -207,6 +214,85 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+     balloon_stats_change_timer(s, 0);
+ }
  
--		split_huge_pud(walk->vma, pud, addr);
--		if (pud_none(*pud))
--			goto again;
-+		if (walk->vma) {
-+			split_huge_pud(walk->vma, pud, addr);
-+			if (pud_none(*pud))
-+				goto again;
-+		} else if (pud_large(*pud)) {
-+			continue;
++static void *gpa2hva(MemoryRegion **p_mr, hwaddr addr, Error **errp)
++{
++    MemoryRegionSection mrs = memory_region_find(get_system_memory(),
++                                                 addr, 1);
++
++    if (!mrs.mr) {
++        error_setg(errp, "No memory is mapped at address 0x%" HWADDR_PRIx, addr);
++        return NULL;
++    }
++
++    if (!memory_region_is_ram(mrs.mr) && !memory_region_is_romd(mrs.mr)) {
++        error_setg(errp, "Memory at address 0x%" HWADDR_PRIx "is not RAM", addr);
++        memory_region_unref(mrs.mr);
++        return NULL;
++    }
++
++    *p_mr = mrs.mr;
++    return qemu_map_ram_ptr(mrs.mr->ram_block, mrs.offset_within_region);
++}
++
++void page_hinting_request(uint64_t addr, uint32_t len)
++{
++    Error *local_err = NULL;
++    MemoryRegion *mr = NULL;
++    int ret = 0;
++    struct guest_pages *guest_obj;
++    int i = 0;
++    void *hvaddr_to_free;
++    unsigned long pfn, pfn_end;
++    uint64_t gpaddr_to_free;
++    void * temp_addr = gpa2hva(&mr, addr, &local_err);
++
++    if (local_err) {
++        error_report_err(local_err);
++        return;
++    }
++    guest_obj = temp_addr;
++    while (i < len) {
++        pfn = guest_obj[i].pfn;
++	pfn_end = guest_obj[i].pfn + (1 << guest_obj[i].order) - 1;
++	trace_virtio_balloon_hinting_request(pfn,(1 << guest_obj[i].order));
++	while (pfn <= pfn_end) {
++	        gpaddr_to_free = pfn << VIRTIO_BALLOON_PFN_SHIFT;
++	        hvaddr_to_free = gpa2hva(&mr, gpaddr_to_free, &local_err);
++	        if (local_err) {
++			error_report_err(local_err);
++		        return;
 +		}
++		ret = qemu_madvise((void *)hvaddr_to_free, 4096, QEMU_MADV_DONTNEED);
++		if (ret == -1)
++		    printf("\n%d:%s Error: Madvise failed with error:%d\n", __LINE__, __func__, ret);
++		pfn++;
++	}
++	i++;
++    }
++}
++
++static void virtio_balloon_page_hinting(VirtIODevice *vdev, VirtQueue *vq)
++{
++    VirtQueueElement *elem = NULL;
++    uint64_t temp_addr;
++    uint32_t temp_len;
++    size_t size, t_size = 0;
++
++    elem = virtqueue_pop(vq, sizeof(VirtQueueElement));
++    if (!elem) {
++	printf("\npop error\n");
++	return;
++    }
++    size = iov_to_buf(elem->out_sg, elem->out_num, 0, &temp_addr, sizeof(temp_addr));
++    t_size += size;
++    size = iov_to_buf(elem->out_sg, elem->out_num, 8, &temp_len, sizeof(temp_len));
++    t_size += size;
++    page_hinting_request(temp_addr, temp_len);
++    virtqueue_push(vq, elem, t_size);
++    virtio_notify(vdev, vq);
++    g_free(elem);
++}
++
+ static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+ {
+     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
+@@ -376,6 +462,7 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
+     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
+     f |= dev->host_features;
+     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
++    virtio_add_feature(&f, VIRTIO_BALLOON_F_HINTING);
+     return f;
+ }
  
- 		if (walk->pmd_entry || walk->pte_entry)
- 			err = walk_pmd_range(pud, addr, next, walk);
+@@ -445,6 +532,7 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
+     s->ivq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
+     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
+     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
++    s->hvq = virtio_add_queue(vdev, 128, virtio_balloon_page_hinting);
+ 
+     reset_stats(s);
+ }
+@@ -488,6 +576,8 @@ static void virtio_balloon_instance_init(Object *obj)
+ 
+     object_property_add(obj, "guest-stats", "guest statistics",
+                         balloon_stats_get_all, NULL, NULL, s, NULL);
++    object_property_add(obj, "guest-page-hinting", "guest page hinting",
++                        NULL, NULL, NULL, s, NULL);
+ 
+     object_property_add(obj, "guest-stats-polling-interval", "int",
+                         balloon_stats_get_poll_interval,
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index e0df3528c8..774498a6ca 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -32,7 +32,7 @@ typedef struct virtio_balloon_stat_modern {
+ 
+ typedef struct VirtIOBalloon {
+     VirtIODevice parent_obj;
+-    VirtQueue *ivq, *dvq, *svq;
++    VirtQueue *ivq, *dvq, *svq, *hvq;
+     uint32_t num_pages;
+     uint32_t actual;
+     uint64_t stats[VIRTIO_BALLOON_S_NR];
+diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
+index 4dbb7dc6c0..f50c0d95ea 100644
+--- a/include/standard-headers/linux/virtio_balloon.h
++++ b/include/standard-headers/linux/virtio_balloon.h
+@@ -34,6 +34,7 @@
+ #define VIRTIO_BALLOON_F_MUST_TELL_HOST	0 /* Tell before reclaiming pages */
+ #define VIRTIO_BALLOON_F_STATS_VQ	1 /* Memory Stats virtqueue */
+ #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
++#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
+ 
+ /* Size of a PFN in the balloon interface. */
+ #define VIRTIO_BALLOON_PFN_SHIFT 12
 -- 
-2.20.1
+2.17.2
 
