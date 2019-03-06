@@ -1,169 +1,132 @@
-Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79CCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5828C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFCB20661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 23:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9DC20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 00:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nEk84GlD"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="do6mHBxe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k7ze3g9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfCEXvf (ORCPT
+        id S1728407AbfCFAAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 18:51:35 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3576 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfCEXve (ORCPT
+        Tue, 5 Mar 2019 19:00:19 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:41939 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727621AbfCFAAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 18:51:34 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7f0b860001>; Tue, 05 Mar 2019 15:51:34 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 05 Mar 2019 15:51:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 05 Mar 2019 15:51:33 -0800
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Mar
- 2019 23:51:33 +0000
-Subject: Re: [PATCH] mm/hmm: fix unused variable warnings
-To:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Williams <dan.j.williams@intel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190304200026.1140281-1-arnd@arndb.de>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <bf509a99-604b-10a4-e71b-f4f8e61f00b3@nvidia.com>
-Date:   Tue, 5 Mar 2019 15:51:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190304200026.1140281-1-arnd@arndb.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551829894; bh=qATl0olHTx+GwNgvJm69zDapss6pdR6QwqlMRQ/5Y5o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nEk84GlD/4KXT+psnVGHU/VmqWSUd8S9zR4O0C9SM2Whkhra47krqLNU+IIFNkuE3
-         BSqfgnM6OkoKcJ6+0my5pBK75a1tIkTNswq141jxxmnPm+oxZsaiVV9ChpfMlh+mYM
-         k4yFBx5qRpB4acMjSo8v1t26mTk011AtREAJyG+UoUOYEvkoBx8X9/Bp400+5IKevx
-         iJUyZGrsu7/hltPoImvlE7BhGRLO7bok2pktSdDeW9INljMf6u7NiE/lk2Fl5qX7WV
-         II6wTairReiyCuv9T22j/42AITmpwJGDC8DqZOsg2Ixp8tKq0Dpf1GVVNswp8E3Cbf
-         5FoU3LOgy/mJQ==
+        Tue, 5 Mar 2019 19:00:19 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id D17FA252A1;
+        Tue,  5 Mar 2019 19:00:15 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 05 Mar 2019 19:00:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        message-id:in-reply-to:references:date:from:to:cc:subject
+        :content-type; s=fm2; bh=mI22rVnWiiAIiyCDfZ8pwUtrqGYRJlqnVT+VlJp
+        yivQ=; b=do6mHBxejZXsDBt3rqmW5OQiSq8PV395oYJ6tO0dJQal8TGmNd4a7b8
+        LqO3bOzwtfvrTF98CCCV7fEYxiB2qq65uceKmWAxK5YlSBZrcuEiRIWGvTcq1CXg
+        wW3CG3jZiBYVHnCcQ8dU/RdMXAn4nGtCMKyn2C4BUbKcsIow6j/r7nvqDC8bfMtR
+        AY83Lv4xDnqLNGGGN7ElybbMCEd5+sk32/7SlAd/UktRY8VEIBT61gz6M2LpypJn
+        KNvKWcfXFk/lx+JKxKDcLt63+g1R8kM+rgmuovDFOO5Hwlmk80hq7XLfI8k7/n14
+        AXfmV+i3CkAauOdbuoDk9jipJ9qlTkA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:references:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mI22rVnWiiAIiyCDf
+        Z8pwUtrqGYRJlqnVT+VlJpyivQ=; b=k7ze3g9iNdKFVr24FZZSpdOhLxgiFt6cC
+        dfTlbC7kQ1WpfSL/J7Qe6aasc7a4suN/buTupTRTv9HipCauoYe/2gqeOzWG1z49
+        jaDixRxCpbNnVzmWW71nAjZePnM59Hd2bPOUGPTxSKHZPWCM0AUu27VZodEWab4x
+        ZenlaVeHO7mWxNwFpTQJFz6g7HP+y3CQ1Myt6WDc9gWa11fnWfqCz/JWu2K4mEcd
+        VeLCF3/LxSFKFVGFLE3asnrjVYqVn6RaJQZaN6s30tWSkAVGy9wzhhZWhWOhDQHO
+        POf0Vi/NiE2OA4DyDLnaTINEvam58wVDgXSAZBqDOTeN2IfpjznEw==
+X-ME-Sender: <xms:jg1_XEgjORv_ZdiIPWJ3pGpsLwMNIu_NuyDi38ioZdEdN7NIJOfHEw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeeggddujecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgurhgv
+    ficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfu
+    ihiivgeptd
+X-ME-Proxy: <xmx:jg1_XI_Lk1z1sqE5ezYBrdTUJwau5-0VVNNYW3G6jO25pc5bVEiYnw>
+    <xmx:jg1_XPJCNXslNk12xM-XJ44ufp1lYZZhACVLS6SUoaqX0f0dGkE7EQ>
+    <xmx:jg1_XAqduhL_HcBR90tNnnTY1pPySURDiBT9ZU_AJP1PZQx4SEr3Dg>
+    <xmx:jw1_XP_dkzKvXLo8PzUmTjoHwcR-_DQbKC0xGStcHksPc5X7Gu-k_g>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 8300B7C3AB; Tue,  5 Mar 2019 19:00:14 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.5-925-g644bf8c-fmstable-20190228v5
+X-Me-Personality: 52947553
+Message-Id: <e889a254-ec7e-49f5-bdb0-1d8d8a9063a6@www.fastmail.com>
+In-Reply-To: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
+ <1551735420-16202-3-git-send-email-eajames@linux.ibm.com>
+ <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
+ <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+Date:   Tue, 05 Mar 2019 19:00:05 -0500
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Cc:     "Mark Rutland" <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 12:00 PM, Arnd Bergmann wrote:
-> When CONFIG_HUGETLB_PAGE is disabled, the only use of the variable 'h'
-> is compiled out, and the compiler thinks it is unnecessary:
->=20
-> mm/hmm.c: In function 'hmm_range_snapshot':
-> mm/hmm.c:1015:19: error: unused variable 'h' [-Werror=3Dunused-variable]
->     struct hstate *h =3D hstate_vma(vma);
->=20
-> Rephrase the code to avoid the temporary variable instead, so the
-> compiler stops warning.
->=20
-> Fixes: 5409a90d4212 ("mm/hmm: support hugetlbfs (snapshotting, faulting a=
-nd DMA mapping)")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  mm/hmm.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
->=20
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 3c9781037918..c4beb1628cad 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -1012,9 +1012,8 @@ long hmm_range_snapshot(struct hmm_range *range)
->  			return -EFAULT;
-> =20
->  		if (is_vm_hugetlb_page(vma)) {
-> -			struct hstate *h =3D hstate_vma(vma);
-> -
-> -			if (huge_page_shift(h) !=3D range->page_shift &&
-> +			if (range->page_shift !=3D
-> +				huge_page_shift(hstate_vma(vma)) &&
->  			    range->page_shift !=3D PAGE_SHIFT)
->  				return -EINVAL;
->  		} else {
-> @@ -1115,9 +1114,8 @@ long hmm_range_fault(struct hmm_range *range, bool =
-block)
->  			return -EFAULT;
-> =20
->  		if (is_vm_hugetlb_page(vma)) {
-> -			struct hstate *h =3D hstate_vma(vma);
-> -
-> -			if (huge_page_shift(h) !=3D range->page_shift &&
-> +			if (range->page_shift !=3D
-> +				huge_page_shift(hstate_vma(vma)) &&
->  			    range->page_shift !=3D PAGE_SHIFT)
->  				return -EINVAL;
->  		} else {
->=20
-
-Hi Arnd,
-
-With some Kconfig local hacks that removed all HUGE* support, while leaving
-HMM enabled, I was able to reproduce your results, and also to verify the
-fix. It also makes sense from reading it.
-
-Also, I ran into one more warning as well:
-
-mm/hmm.c: In function =E2=80=98hmm_vma_walk_pud=E2=80=99:
-mm/hmm.c:764:25: warning: unused variable =E2=80=98vma=E2=80=99 [-Wunused-v=
-ariable]
-  struct vm_area_struct *vma =3D walk->vma;
-                         ^~~
-
-...which can be fixed like this:
-
-diff --git a/mm/hmm.c b/mm/hmm.c
-index c4beb1628cad..c1cbe82d12b5 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -761,7 +761,6 @@ static int hmm_vma_walk_pud(pud_t *pudp,
- {
-        struct hmm_vma_walk *hmm_vma_walk =3D walk->private;
-        struct hmm_range *range =3D hmm_vma_walk->range;
--       struct vm_area_struct *vma =3D walk->vma;
-        unsigned long addr =3D start, next;
-        pmd_t *pmdp;
-        pud_t pud;
-@@ -807,7 +806,7 @@ static int hmm_vma_walk_pud(pud_t *pudp,
-                return 0;
-        }
-=20
--       split_huge_pud(vma, pudp, addr);
-+       split_huge_pud(walk->vma, pudp, addr);
-        if (pud_none(*pudp))
-                goto again;
-
-...so maybe you'd like to fold that into your patch?
 
 
+On Wed, 6 Mar 2019, at 08:15, Eddie James wrote:
+> 
+> On 3/5/19 2:01 AM, Arnd Bergmann wrote:
+> > On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
+> >> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
+> >> between the SOC (acting as a BMC) and a host processor in a server.
+> >>
+> >> This commit adds a driver to control the XDMA engine and adds functions
+> >> to initialize the hardware and memory and start DMA operations.
+> >>
+> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > Hi Eddie,
+> >
+> > Thanks for your submission! Overall this looks well-implemented, but
+> > I fear we already have too many ways of doing the same thing at
+> > the moment, and I would hope to avoid adding yet another user space
+> > interface for a specific hardware that does this.
+> >
+> > Your interface appears to be a fairly low-level variant, just doing
+> > single DMA transfers through ioctls, but configuring the PCIe
+> > endpoint over sysfs.
+> 
+> Hi, thanks for the quick response!
+> 
+> There is actually no PCIe configuration done in this driver. The two 
+> sysfs entries control the system control unit (SCU) on the AST2500 
+> purely to enable and disable entire PCIe devices. It might be possible 
+> to control those devices more finely with a PCI endpoint driver, but 
+> there is no need to do so. The XDMA engine does that by itself to 
+> perform DMA fairly automatically.
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+I had a series a while back to expose random bits from devices in sysfs. It got
+shot down pretty well, but the main contention was over the devicetree
+bindings.
+
+I think we could revive it as a library-type thing that drivers can use to expose
+bits like what you're describing without putting the grubby details in the
+devicetree. The we would have a consistent approach to exposing otherwise
+hard to describe functions (which is what a lot of a BMC turns out to be).
+
+Andrew
