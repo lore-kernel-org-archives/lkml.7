@@ -2,125 +2,98 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1306AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3C1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B7C206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fmczhx+1"
+	by mail.kernel.org (Postfix) with ESMTP id 6A0E220661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 14:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551883372;
+	bh=qCIJOb71XifbAfTijNXMnEgj3SZJ+Dmncf3rNZhdpW0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SqayixjyGfKphluJd5GkLPHDD5U6qsBuh0vX2W/6+7HPmW+ZbZWsLr0E4OtcRqm1+
+	 3d3ScIABX6CQfxUxMdCVACht0mvBdSdj3KD3/QcVdBfsv7V66v/FoGKePMTnPWG0nF
+	 QgYqpB/GhCeQIJJ3mt5inrgx7xEPOuluE4CiGTjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbfCFOlk (ORCPT
+        id S1729098AbfCFOmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 09:41:40 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32988 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfCFOlj (ORCPT
+        Wed, 6 Mar 2019 09:42:50 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36198 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfCFOmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 09:41:39 -0500
-Received: by mail-io1-f65.google.com with SMTP id e186so10398225ioa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 06:41:39 -0800 (PST)
+        Wed, 6 Mar 2019 09:42:50 -0500
+Received: by mail-lj1-f193.google.com with SMTP id v10so11102569lji.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 06:42:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=K2WfZ12UmlecEWrugyx7y8Ud5L7Bf4NFhWfw1yQJtMg=;
-        b=Fmczhx+1mVEkvwVBWd64Z2jO5vITtAJw3ya/oju8udASiaj7D8q9x7WI/rcd2YXy8S
-         zry82lL7ncHKeGT4QnU4ClqTpsqxywAy1dN5Q/HhPFQllmMydrvj10HAiDGljJxO4tZj
-         0OhGdog2DLcjCrF7NDxs9OhbcHg+SJzjIf7Ayu7fFzgT8tmWcUIVOj6YRKTphKfeunLe
-         EPFqadA0OT/+UF7XmpAqld2+Vb48gT03uMQAQ8b/kNJWqSImbt0E+GtBkOKr5Sw6wcPf
-         yeDPdCvIdKUSY0Yy7Llf56z9KRtd4nE9xaiLiJtRk4zm1gs2nX0wGTfmTvC6oAoBn+8E
-         yBKg==
+        bh=ocVqGt0e2wak6Ia5gTv5IFu4sD2q98MawTfHV8Uvo50=;
+        b=PTIcjuZUXg2i7g8f11aKcAtH52M9/abQe7Kn4HwYsXNLIW/WJBtcUKwKbJQbIbaH8J
+         aG9IVtCqzVUg4pqXJcZTS8ZdVHPiRhb2yh4YELCRMOhlB2EzibXCpG8zAth14KKwNXwa
+         7WY7gVOGyApf9VUamcR0yv7XxUFlST0I5fE6U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K2WfZ12UmlecEWrugyx7y8Ud5L7Bf4NFhWfw1yQJtMg=;
-        b=socI/VVFvLBFXD7QQy3x/hmq1qUMuenvH/8FP2UBQbDfmYVdU9/MdOg+j6Rd/FBEJK
-         3CVmyQ3WfDLC5YfYAp3MgwF7HNmrr69m9xmdFBZyQvLNCzD4JIzdONXLz25CU4NlvjVw
-         MxsBSY3umAlXjB/vwaR1emktdwtr7tV1JRIZcmToXfab8HkvutRynBnffyS90ZYF/j3J
-         aoOYoxExsbRq6oQPgyyWc/fBlEdvp4IkeD0C+wIFQEZxPIPXs0FStO82thzOJ7qnabAE
-         Ds5/YQ//sc0yqhN0WyJ7kAKm5KijPINtWvl4XQC3l43DJWHySoLZJuyhgFdJbdENkDm6
-         yRDg==
-X-Gm-Message-State: APjAAAXdiFuZ2rE68N2/vUOtODpvEf7p/0h3D8V8PkSdeZtrcohJGg1r
-        CnWfYmUu4amGktFbSbS+LaySLEfUcKZaahHbnE7Twg==
-X-Google-Smtp-Source: APXvYqzvy4RTi7BFgskAPvx0x90xmhdiCUKqrDuaKSxvT6bjBZ8vG2uC5IkvGDukAJz4i02im6ClUqTBwb2vP97nnTo=
-X-Received: by 2002:a5d:834a:: with SMTP id q10mr3091863ior.271.1551883298492;
- Wed, 06 Mar 2019 06:41:38 -0800 (PST)
+        bh=ocVqGt0e2wak6Ia5gTv5IFu4sD2q98MawTfHV8Uvo50=;
+        b=bcw+CKCXXgAZa8a+T0uBE4Y4DOs9dZXQyJ2NyU0sSY2K9J8pTbT3VTMQAGv+WFAXlJ
+         puMqzPJHi6i++s7bCu4Gp0GMznb5F0rV7pNa5ZeByZ3wrpR/W6PrXsX8d5ucv7Hoas6g
+         j+vKsWwp0vfvg6WvFjuGf9jEouSC8ulcBwNEEMwOUG9fm01QniMSkigebXl2akSbj9S8
+         S0B3ng5wookUQFGtWrOTZIHmjx+hnNBBDHPNpPJLqMo3/2j3njVysbciDBeMmEQ3AEXz
+         7fjt4BfCyqi6s4i3+5C8gCeZKxkkKhJmEEPoYUrkJjf2wsPqChoyNVI2pSozcoe+pCeA
+         aajw==
+X-Gm-Message-State: APjAAAUxG4lc7dImMpaHCfl4B+EAAZNsNVU47+uAYJm85oo+zWg6APcV
+        PHufhpTudGOnTip8EkcFy13qg1Zrz5Q=
+X-Google-Smtp-Source: APXvYqzHSGR77lqQXJozbE/tZKbW013ynzqSUkXkRPAZvX4TMnoradLE/9zl9v6cWlrcrqG2XK5b3Q==
+X-Received: by 2002:a2e:4d7:: with SMTP id a84mr2629044ljf.86.1551883367672;
+        Wed, 06 Mar 2019 06:42:47 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id r18sm363297ljd.35.2019.03.06.06.42.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 06:42:46 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id q128so11083147ljb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 06:42:46 -0800 (PST)
+X-Received: by 2002:a2e:208a:: with SMTP id g10mr2671139lji.135.1551883366150;
+ Wed, 06 Mar 2019 06:42:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20190228150152.078767622@infradead.org> <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
- <20190301144556.GY32477@hirez.programming.kicks-ass.net> <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
- <20190301152305.GJ32494@hirez.programming.kicks-ass.net> <20190306131347.GX32534@hirez.programming.kicks-ass.net>
- <CACT4Y+YFkDRwTN1MKqLDePfuRis3Qas1kgEF7g5eVR0ijodtkw@mail.gmail.com>
- <20190306135728.GV32477@hirez.programming.kicks-ass.net> <CACT4Y+YP+Xn3TxVXrza_LBK8m7CCKBUYWpuGS0+MzFCXEE+Akg@mail.gmail.com>
- <20190306141237.GW32477@hirez.programming.kicks-ass.net> <20190306143439.GY32534@hirez.programming.kicks-ass.net>
- <CACT4Y+YmQBc67hU2exY5=tAVG1jWNUeZ7FAm+GGgqDvOH7cu1A@mail.gmail.com>
-In-Reply-To: <CACT4Y+YmQBc67hU2exY5=tAVG1jWNUeZ7FAm+GGgqDvOH7cu1A@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 6 Mar 2019 15:41:27 +0100
-Message-ID: <CACT4Y+bu5pZDXv+iF4yhjKR22DUNh27Qb287uNViPdwRvQcxuQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+References: <20190305120301.GA93284@gmail.com> <CAHk-=wiM4_0ZDDAcN0nJ8TsK+MnO1ObmSH4nTvrirA5nenFTHA@mail.gmail.com>
+ <20190306070836.GA111385@gmail.com>
+In-Reply-To: <20190306070836.GA111385@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 6 Mar 2019 06:42:30 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgVkir377S9fbWjxpYqVDUx0NphLb6YhL-Q=JP-u-GcOw@mail.gmail.com>
+Message-ID: <CAHk-=wgVkir377S9fbWjxpYqVDUx0NphLb6YhL-Q=JP-u-GcOw@mail.gmail.com>
+Subject: Re: [GIT PULL] RCU updates for v5.1
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@us.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 3:40 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+On Tue, Mar 5, 2019 at 11:08 PM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> On Wed, Mar 6, 2019 at 3:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Mar 06, 2019 at 03:12:37PM +0100, Peter Zijlstra wrote:
-> > > On Wed, Mar 06, 2019 at 03:01:33PM +0100, Dmitry Vyukov wrote:
-> > > > On Wed, Mar 6, 2019 at 2:57 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > > > I've not found callers of __asan_report_load* with AC=1 in the kernel
-> > > > > yet. Under what condtions does GCC emit calls to these functions?
-> > > >
-> > > > CONFIG_KASAN_INLINE=y
-> > > > Then compiler inlines fast path into generated code and only calls
-> > > > into runtime to report errors (also, faster, this should be a default
-> > > > for anything other than tiny ROM controllers).
-> > >
-> > > *sigh*, clearly I've not build enough kernels yet... Lemme go try that.
-> >
-> > mm/kasan/generic_report.o: warning: objtool: __asan_report_load1_noabort()+0x0: call to __fentry__() with UACCESS enabled
-> >
-> > You want to do:
-> >
-> > CFLAGS_REMOVE_f= -pg
-> >
-> > like generic.o has?
 >
-> This should not matter for KASAN itself.
-> KASAN will call into function tracer, and function tracer will call
-> into KASAN, but unless function tracer is badly broken and causes a
-> KASAN report on every invocation, the recursion will end (function
-> tracer will get to the _report_ function). So we only disabled -pg for
+> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> >
+> > Hmm. I think this made my build time explode.
+>
+> Could it be the locking tree?
 
-tracer will _not_ get to the _report_ function
+No, I hadn't pulled that yet.
 
-> fast paths.
-> But if it makes things simpler for the objtool, then I think we can
-> disable function tracer for generic_report.c too.
+And it looks like it was a false alarm anyway. Sorry for the noise.
+
+                         Linus
