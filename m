@@ -2,108 +2,148 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF87DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60FE20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8572B20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jRuI5ozt"
+	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="1ZZlGuRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfCFMAK (ORCPT
+        id S1729287AbfCFMBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 07:00:10 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16028 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfCFMAJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 07:00:09 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7fb6480001>; Wed, 06 Mar 2019 04:00:08 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 06 Mar 2019 04:00:09 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 06 Mar 2019 04:00:09 -0800
-Received: from [10.26.11.158] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Mar
- 2019 12:00:05 +0000
-Subject: Re: [PATCH 3/3] irqchip/gic-pm: use devm_clk_*() helpers
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Sameer Pujar <spujar@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>
-CC:     <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
-        <mkumard@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-References: <1551868878-1131-1-git-send-email-spujar@nvidia.com>
- <1551868878-1131-3-git-send-email-spujar@nvidia.com>
- <487578fe-fa14-f1c4-fad9-ff47ebde2273@arm.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <573022cf-e2e3-0e12-d16c-6d465b8af2ce@nvidia.com>
-Date:   Wed, 6 Mar 2019 12:00:02 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 6 Mar 2019 07:01:46 -0500
+Received: from tomli.me ([153.92.126.73]:46566 "EHLO tomli.me"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728931AbfCFMBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 07:01:45 -0500
+Received: from tomli.me (localhost [127.0.0.1])
+        by tomli.me (OpenSMTPD) with ESMTP id 8dd4fbaa;
+        Wed, 6 Mar 2019 12:01:42 +0000 (UTC)
+X-HELO: localhost.lan
+Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
+Received: from Unknown (HELO localhost.lan) (2402:f000:1:1501:200:5efe:72f4:b31)
+ by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Wed, 06 Mar 2019 12:01:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=from:to:cc:subject:date:message-id:mime-version:content-transfer-encoding; s=1490979754; bh=YuR9eiUBEkchFJaxsK0WxnVqvtw3dGIzE2OVCB0RO8A=; b=1ZZlGuRpY5hKXOSlSNH5sJ+6VEYFjbyMrEmZxM37cwzvTljFr6ltOeHKcGXFr2o5puLjwR4kPtzC33HNcMwjDP6LnaCpLqlInZ11VHDel19Zanmj/LO3v9Zxflh4I5pz9KKojcAxRG9fi3o2My3RLdgl+mB4g20aX2J1pY2cKNkMPiy1+Drr4/4dF/2kd8ysufIvL2s7LMCNCzJfIvyeWBK60BYx+MUCWi5UgAVNJCtVs4+n1xPRLlYDLO5XT3YjVHwNX5eWPoTdk28rXRz1qaHCfvhFXxlW0UoMeANArPdzzLAOISHEFwKmLktrmGw698ydYGgQFdauDq3s5VXXLQ==
+From:   Yifeng Li <tomli@tomli.me>
+To:     Lee Jones <lee.jones@linaro.org>, linux-mips@vger.kernel.org,
+        Paul Burton <paul.burton@mips.com>
+Cc:     Yifeng Li <tomli@tomli.me>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] Preliminary Platform Driver Support for Lemote Yeeloong Laptops
+Date:   Wed,  6 Mar 2019 20:01:06 +0800
+Message-Id: <20190306120113.648-1-tomli@tomli.me>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <487578fe-fa14-f1c4-fad9-ff47ebde2273@arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551873608; bh=wtxcN7HqwIEzsoRUV3KQcp8qR8MUNuxh0LLKXkxrkTU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jRuI5oztX65yQkvppdckPVCK/y8JlmSuMDBNTMw7SUprrDt68RJXuZw2wzznPV053
-         Tn/bmwY8tJG7xw1RPwN3y9NZTPIOHMxabBdDtx9sNF2xLUjV6FfUwo/X33KBm/Te6O
-         xR8ywgH3tI3O8Qm4sNOSstDfvtmWdcSTiZ1fVwyoUrYkwSwnWKG08zhEg72mmrZsJN
-         7E9kwd+l3x5Ts8ubmNqKEqZszvlLY1YVY0jHB9IZqFQOOutxiYeTEWf3925Vpw43Ul
-         8f4ral8UHXwXZYcA7hBGCO3D24WhzbDbJS2KRql6ERuFLfYj8CXS1gHho0SdDgdpoU
-         O8Q1BR7GqGd5g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+v3:
+ - Style fixes: remove asterisks banners from code comments, use
+   pr_fmt() to format driver messages, remove newlines in mfd_cells
+   retries, fix copyright years.
 
-On 06/03/2019 11:31, Marc Zyngier wrote:
-> Hi Sameer,
-> 
-> [unrelated to this email: anything that comes from NVIDIA reaches me
->  encrypted with my public key. Not a big deal, but it'd be good if
->  someone could fix that.]
-> 
-> On 06/03/2019 10:41, Sameer Pujar wrote:
->> With pm_clk_*() usage, it is seen that clocks always remain ON. This
->> happens because clocks are managed by BPMP on Tegra devices and clock
->> enable/disable happens during prepare/unprepare phase. This patch
->> avoids use of pm_clk_*() and replaces it with devm_clk_*() helpers.
->>
->> Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
->> Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> 
-> On its own, I'm not opposed to that patch.
-> 
-> But given that there is no in-tree platform using this, despite the code
-> sitting here for more than 2.5 years, this is just updating dead code.
-> 
-> Am I missing anything?
+ - Define DEFINE_SPINLOCK(kb3310b_command_lock) as a static variable
+   within kb3310b_query_seq().
 
-Nope, but we are working to fix that at long last. I hope in the next
-few months it will not longer be dormant! This driver is still very much
-important to our audio support for newer Tegra devices.
+ - Reword misleading notes on using regmap.
 
-Cheers
-Jon
+v2:
+ - Fix the missing io.h header for the MFD driver.
+
+ - Use SIMPLE_DEV_PM_OPS instead of the inappropriate .suspend/resume
+   in the SCI driver.
+
+Lemote Yeeloong is a laptop powered by Loongson 2F MIPS processor,
+primarily a demo platform for hobbyists and developers. It uses an
+ENE KB3310B Embedded Controller with customized firmware to implement
+hardware and power management.
+
+Due to the lack of separation of responsibilities and functions between
+different subsystems, the original platform driver submitted to the
+mailing list was a piece of monolithic module that implements numerous
+drivers, as a result, it was never accepted.
+
+This patch series was carefully reorganized and partially reimplemented
+to avoid those pitfalls in the original driver. This is the first part
+of the submission, which modifies the core MIPS code to introduce
+preliminary preparation for other subdrivers. Notably, it leverages a
+notify chain and MFD cells to avoid introducing unnecessary code into
+the core MIPS subsystem.
+
+It features the following...
+
+* Create a MFD driver for KB3310B controller, and move the original
+KB3310B controller code from mips/loongson64 to our new MFD driver.
+This needs to be reviewed by the MFD subsystem maintainer before the
+following can proceed.
+
+* Add yeeloong_sci driver support of System Control Interrupt to
+arch/mips/loongson64/lemote-2f. This piece of code is crucial and
+has to be included in loongson64/lemote-2f because it reprograms CS5536
+southbridge GPIO to handle the underlying interrupts.
+
+* Originally, the SCI code was mixed into the hotkey driver. The new
+yeeloong_sci driver was written to avoid introducing unrelated subdriver
+code that is unsuitable for Linux/MIPS. It only handle a minimum set of
+core operations directly related to the hardware platform, and pass the
+events to other subdrivers via a notifier chain. As a result, the SCI
+logic and the specific hotkey handling logic have been decoupled.
+
+* Subdrivers - hwmon, battery, backlight, lcd and hotkey are registered
+as MFD cells in the MFD driver. It means onlf the MFD driver is resposible
+to register the upcoming subdrivers, the core board files mips/loongson64/
+will not contain unrelated code.
+
+I've done everything I can think of to factor unrelated code out of the
+MIPS subsystem. I hope the refactored code would be acceptable now. Please
+review my changeset to see whether it's appropriate.
+
+Thanks,
+
+Yifeng Li (7):
+  mfd: yeeloong_kb3310b: support KB3310B EC for Lemote Yeeloong laptops.
+  mips: loongson64: select MFD_YEELOONG_KB3310B for LEMOTE_MACH2F.
+  mips: loongson64: remove ec_kb3310b.c, use MFD driver.
+  mips: loongson64: remove yeeloong_report_lid_status from pm.c
+  mips: loongson64: register per-board platform drivers for lemote-2f
+  mips: loongson64: Support System Control Interrupts for Lemote
+    Yeeloong.
+  MAINTAINERS: add myself as a maintainer of MIPS/Loongson2 platform
+    code.
+
+ MAINTAINERS                                   |  16 +
+ .../include/asm/mach-loongson64/loongson.h    |   3 +
+ arch/mips/loongson64/Kconfig                  |   1 +
+ arch/mips/loongson64/common/platform.c        |  15 +
+ arch/mips/loongson64/lemote-2f/Makefile       |   2 +-
+ arch/mips/loongson64/lemote-2f/ec_kb3310b.c   | 129 ------
+ arch/mips/loongson64/lemote-2f/ec_kb3310b.h   | 188 ---------
+ arch/mips/loongson64/lemote-2f/platform.c     |  47 +++
+ arch/mips/loongson64/lemote-2f/pm.c           |  38 +-
+ arch/mips/loongson64/lemote-2f/reset.c        |   4 +-
+ arch/mips/loongson64/lemote-2f/sci.c          | 394 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/yeeloong_kb3310b.c                | 200 +++++++++
+ include/linux/mfd/yeeloong_kb3310b.h          | 211 ++++++++++
+ 15 files changed, 909 insertions(+), 350 deletions(-)
+ delete mode 100644 arch/mips/loongson64/lemote-2f/ec_kb3310b.c
+ delete mode 100644 arch/mips/loongson64/lemote-2f/ec_kb3310b.h
+ create mode 100644 arch/mips/loongson64/lemote-2f/platform.c
+ create mode 100644 arch/mips/loongson64/lemote-2f/sci.c
+ create mode 100644 drivers/mfd/yeeloong_kb3310b.c
+ create mode 100644 include/linux/mfd/yeeloong_kb3310b.h
 
 -- 
-nvpublic
+2.20.1
+
