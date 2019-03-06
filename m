@@ -2,162 +2,313 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF00C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DD320854
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551894537;
-	bh=vt77DZ7NRZimiia6SKeMbAdbmWd8wcoWdAaPHVHbXA8=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=EMC2ffGPkV/zdRLqdLjdqes+I2r4AyVw3VyFINJ/VqBCXhUwCT2lRdsRcP/jlrzo5
-	 Eeh9nZ3xUG75+67cS32L9f8R200SAqvtYoxVk9PBc47tvRRNKqg1FaF754LjHHdvH6
-	 0wTgSdbbaHpQJ4R9izp+OJ729PXckWjsXEamr+Ik=
+	by mail.kernel.org (Postfix) with ESMTP id 5FB6A20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:49:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m4M/csyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfCFRsz (ORCPT
+        id S1729007AbfCFRtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:48:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbfCFRsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:48:55 -0500
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E007E20661;
-        Wed,  6 Mar 2019 17:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551894534;
-        bh=vt77DZ7NRZimiia6SKeMbAdbmWd8wcoWdAaPHVHbXA8=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=uWfP39y8N1JraD3CT+600lPbs/9qYunduXFkS4FYwZF1dg3I8pkRnNqPPFJkaj7gH
-         Y6brIRjZo2cHxY0RTfCur95uF2FZXbdqCIjSvGO265u06jnKE4Z2I7X9gNndrbDL2k
-         8gHlLSrjqvNAuAOSXx0ewkhBRzli598pYdEvhs6k=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 Mar 2019 12:49:09 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34343 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfCFRtH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:49:07 -0500
+Received: by mail-qt1-f195.google.com with SMTP id w4so13822430qtc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:49:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BZwtFx2fooFRjiTR1TCKpWsbKo6ADG45oouWEdHr+9Q=;
+        b=m4M/csyxSRB84j6I57zfVmr8mQSwULuc27umU4eF0Q//esDgB5YZ4p2ZsWgfkukxRD
+         4yjvHtX4X9oQLUarWFFkdfcj4GSMKmJ6rJwQhDGh87gY8VBOx3LSXu8C3rHSbXppf8ZQ
+         MDyqGiwgi4ZuYeoxpp/TPITUfktu3vkSvfWtg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BZwtFx2fooFRjiTR1TCKpWsbKo6ADG45oouWEdHr+9Q=;
+        b=MVg/ffrTUcZ1SFB/7nORYCAw1exH7SMoJyCRmCgIyKETpnZoUAcx66flPCV5tVTdDU
+         ISjkGTyDYXXeNoeOWmLis/Ch2XosD4/uaAQVAL373b9QCsI9SQTE9nRLXzMDb6xPo2p7
+         Qs5UEBOYij9fw525UNWizMrQRUVKb7NDDVFZtR17tzZEeTuYD8XaLb0hR2P5eETLMdHG
+         PP1pHdlVA7CD6mSK6bDIS46rSLtwhfNLfHHwPplL7KE+Mtjk6Gx0/Y5mdcd3K1BkwBCr
+         McKz60OknmVV7usU0AXxNNBLjiKrm409CJKKjh9UxwuJPwJKlCF/c55nMNTIVFD2ooMc
+         wamg==
+X-Gm-Message-State: APjAAAXoKX+hBRdstRj2923o2LZHi5+OgQzT6vwIQyeQuKWuv6//mGQk
+        Lk9c+gEz0XemYK2H6fCXcBOIqA==
+X-Google-Smtp-Source: APXvYqxsaDJBsmLrCsybAMOeo8iG9yeTUngwNzYZbzRHP1l5LM78cmoyqx301D8YV0q1fGD3iC1MYw==
+X-Received: by 2002:a0c:954d:: with SMTP id m13mr7138102qvm.243.1551894545801;
+        Wed, 06 Mar 2019 09:49:05 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id 14sm1085321qkj.93.2019.03.06.09.49.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 09:49:04 -0800 (PST)
+Date:   Wed, 6 Mar 2019 12:49:04 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190306174904.GA34256@google.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <201903030526.3AuYFiuN%fengguang.wu@intel.com>
+ <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
+ <CAK7LNARGQE9y6hr7ZoTbn5-GkPBN2Gk-4=3=Cfnr7Oy-+q69kg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c5b12b52-0aa0-417b-50cd-b7d6fd9fc992@codeaurora.org>
-References: <20190226223429.193873-1-sboyd@kernel.org> <20190226223429.193873-7-sboyd@kernel.org> <c5b12b52-0aa0-417b-50cd-b7d6fd9fc992@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 6/8] clk: Allow parents to be specified without string names
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Chen-Yu Tsai <wens@csie.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Message-ID: <155189453289.20095.9593541968121360874@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 06 Mar 2019 09:48:52 -0800
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARGQE9y6hr7ZoTbn5-GkPBN2Gk-4=3=Cfnr7Oy-+q69kg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-03-02 13:25:06)
-> On 2/26/2019 3:34 PM, Stephen Boyd wrote:
-> > The common clk framework is lacking in ability to describe the clk
-> > topology without specifying strings for every possible parent-child
-> > link. There are a few drawbacks to the current approach:
-> >=20
-> >   1) String comparisons are used for everything, including describing
-> >   topologies that are 'local' to a single clock controller.
-> >=20
-> >   2) clk providers (e.g. i2c clk drivers) need to create globally unique
-> >   clk names to avoid collisions in the clk namespace, leading to awkward
-> >   name generation code in various clk drivers.
-> >=20
-> >   3) DT bindings may not fully describe the clk topology and linkages
-> >   between clk controllers because drivers can easily rely on globally u=
-nique
-> >   strings to describe connections between clks.
-> >=20
-> > This leads to confusing DT bindings, complicated clk name generation
-> > code, and inefficient string comparisons during clk registration just so
-> > that the clk framework can detect the topology of the clk tree.
-> > Furthermore, some drivers call clk_get() and then __clk_get_name() to
-> > extract the globally unique clk name just so they can specify the parent
-> > of the clk they're registering. We have of_clk_parent_fill() but that
-> > mostly only works for single clks registered from a DT node, which isn't
-> > the norm. Let's simplify this all by introducing two new ways of
-> > specifying clk parents.
-> >=20
-> > The first method is an array of pointers to clk_hw structures
-> > corresponding to the parents at that index. This works for clks that are
-> > registered when we have access to all the clk_hw pointers for the
-> > parents.
-> >=20
-> > The second method is a mix of clk_hw pointers and strings of local and
-> > global parent clk names. If the .name member of the map is set we'll
-> > look for that clk by performing a DT based lookup of the device the clk
-> > is registered with and the .name specified in the map. If that fails,
-> > we'll fallback to the .fallback member and perform a global clk name
-> > lookup like we've always done before.
-> >=20
-> > Using either one of these new methods is entirely optional. Existing
-> > drivers will continue to work, and they can migrate to this new approach
-> > as they see fit. Eventually, we'll want to get rid of the 'parent_names'
-> > array in struct clk_init_data and use one of these new methods instead.
-> >=20
->=20
-> I don't know exactly what regressed from V1, but this change breaks all=20
-> clock drivers as far as I can tell.  All clocks from old and new (ie=20
-> 8998 mmcc rebased onto this) drivers end up as orphans.
->=20
-> Is there some data I can provide to help you figure out the issue?
->=20
+Hi Masahiro,
+Thanks for review, my replies are inline:
 
-Can you try this patch? It fixes a pointer blunder that I'm sad about.
+On Wed, Mar 06, 2019 at 09:26:14PM +0900, Masahiro Yamada wrote:
+> On Mon, Mar 4, 2019 at 1:15 AM Joel Fernandes <joelaf@google.com> wrote:
+> >
+> > This report is for an older version of the patch so ignore it. The
+> > issue is already resolved.
+> >
+> > On Sat, Mar 2, 2019 at 2:00 PM kbuild test robot <lkp@intel.com> wrote:
+> > >
+> > > Hi Joel,
+> > >
+> > > Thank you for the patch! Yet something to improve:
+> > >
+> > > [auto build test ERROR on linus/master]
+> > > [also build test ERROR on v5.0-rc8]
+> > > [cannot apply to next-20190301]
+> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> > >
+> > > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/Provide-in-kernel-headers-for-making-it-easy-to-extend-the-kernel/20190303-014850
+> > > config: sh-allmodconfig (attached as .config)
+> > > compiler: sh4-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
+> > > reproduce:
+> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > >         chmod +x ~/bin/make.cross
+> > >         # save the attached .config to linux build tree
+> > >         GCC_VERSION=8.2.0 make.cross ARCH=sh
+> > >
+> > > All errors (new ones prefixed by >>):
+> > >
+> > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
+> > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
+> > >
+> > > ---
+> > > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Groups "kernel-team" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> 
+> 
+> 
+> Honestly speaking, I am worried about some flaws
+> in this feature, but anyway I read your code.
 
-----8<-----
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 37aea7884166..d12afd256dc5 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3297,15 +3297,17 @@ struct clk *clk_hw_create_clk(struct device *dev, s=
-truct clk_hw *hw,
- 	return clk;
- }
-=20
--static int clk_cpy_name(const char *dst, const char *src, bool must_exist)
-+static int clk_cpy_name(const char **dst_p, const char *src, bool must_exi=
-st)
- {
-+	const char *dst;
-+
- 	if (!src) {
- 		if (must_exist)
- 			return -EINVAL;
- 		return 0;
- 	}
-=20
--	dst =3D kstrdup_const(src, GFP_KERNEL);
-+	*dst_p =3D dst =3D kstrdup_const(src, GFP_KERNEL);
- 	if (!dst)
- 		return -ENOMEM;
-=20
-@@ -3341,14 +3343,14 @@ static int clk_core_populate_parent_map(struct clk_=
-core *core)
- 			WARN(!parent_names[i],
- 				"%s: invalid NULL in %s's .parent_names\n",
- 				__func__, core->name);
--			ret =3D clk_cpy_name(parent->name, parent_names[i],
-+			ret =3D clk_cpy_name(&parent->name, parent_names[i],
- 					   true);
- 		} else if (parent_data) {
- 			parent->hw =3D parent_data[i].hw;
--			ret =3D clk_cpy_name(parent->fw_name,
-+			ret =3D clk_cpy_name(&parent->fw_name,
- 					   parent_data[i].fw_name, false);
- 			if (!ret)
--				ret =3D clk_cpy_name(parent->name,
-+				ret =3D clk_cpy_name(&parent->name,
- 						   parent_data[i].name,
- 						   false);
- 		} else if (parent_hws) {
+I am not sure what you mean by that :-(. All the previous series's comments
+were addressed and it has been well tested by me and others. This looks quite
+solid to me. Sorry it took so many revisions, this was not that easy to get right.
+
+> Here are just comments from the build system point of view
+> in case something might be useful.
+> 
+> Please feel free to adopt some of them if you think they are good.
+>> [1]
+> 
+> Please do not ignore kbuild test robot.
+> 
+> It never makes such a mistake like
+> replying to a new patch about the test result from old version.
+> 
+> The reports are really addressing this version (v4).
+> 
+> I see the error message even on x86.
+
+I did not mean to. By the way - the error does not cause any issues. It is
+just find being noisy. You are right I missed this, and I will correct this
+in v5. However, it does not cause any issues to the feature/functionality at all.
+
+> [2]
+> 
+> The shell script keeps running
+> even when an error occurs.
+> 
+> If any line in a shell script fails,
+> probably it went already wrong.
+> 
+> I highly recommend to add 'set -e'
+> at the very beginning of your shell script.
+> 
+> It will propagate the error to Make.
+
+Ok I will consider making it -e. But please note that, the script itself does
+not have any bugs. When you say it this way, it looks a bit bad to the
+onlooker as if there is bugs in the code, but there aren't any that I know
+off. All the comments in this round of review from view are just cosmetic
+changes.
+
+> [3]
+> 
+> targets += kheaders_data.tar.xz
+> targets += kheaders_data.h
+> targets += kheaders.md5
+> 
+> These three lines are unneeded because
+> 'targets' is necessary just for if_changed or if_changed_rule.
+> 
+> Instead, please add
+> 
+> clean-files := kheaders_data.tar.xz kheaders_data.h kheaders.md5
+
+Ok.
+
+> [4]
+> 
+> It is pointless to pass 'ikh_file_list'
+> from Makefile to the shell script.
+> 
+> 
+> You can directly describe the following in gen_ikh_data.sh
+> 
+> You do not need to use sed.
+> 
+> 
+> src_file_list="
+> include/
+> arch/$SRCARCH/Makefile
+> arch/$SRCARCH/include/
+> arch/$SRCARCH/kernel/module.lds
+> scripts/
+> Makefile
+> "
+> 
+> obj_file_list="
+> scripts/
+> include/
+> arch/$SRCARCH/include/
+> "
+
+Honestly, I prefer to keep it in Makefile.
+
+> if grep -q "^CONFIG_STACK_VALIDATION=y" $KCONFIG_CONFIG; then
+>         obj_file_list="$obj_file_list tools/objtool/objtool"
+> fi
+> 
+> 
+> 
+> Be careful about module.lds
+> so that it will work for all architectures.
+
+Yes.
+
+> [5]
+> strip-comments.pl is short enough,
+> and I do not assume any other user.
+> 
+> 
+> IMHO, it would be cleaner to embed the one-liner perl
+> into the shell script, for example, like follows:
+> 
+> find  $cpio_dir -type f -print0 |
+>  xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
+
+This does not work. I already tried it. But I guess I could generate the
+script on the fly.
+
+> [6]
+> It might be better to move
+> scripts/gen_ikh_data.sh to kernel/gen_ikh_data.sh
+> 
+> It will make this feature self-contained in kernel/.
+> And (more importantly to me), it would reduce my maintenance field.
+
+Sure.
+
+> [7]
+> I do not understand for what 'tarfile_md5' is used.
+> Is it necessary?
+
+It is just precaution, incase tar got corrupted and needs to be regenerated.
+
+> [8]
+> Is it more efficient to pipe the header files
+> to perl script like this?
+> 
+> 
+>  cat (header) | perl 'do something' > (tmp directory)
+
+I don't think so.
+
+> [9]
+> 
+> I'd prefer avoiding 'pushd && popd' if possible.
+> 
+> Hint: Kbuild already runs at the top directory
+> of objtree.
+> 
+> 
+> It is OK if the change would mess up the script.
+
+This is needed to make out of tree builds work.
+
+> [10]
+> 
+> You can embed a binary directly into C file
+> without producing a giant header file.
+> 
+> I refactored kernel/configs.c
+> https://lore.kernel.org/patchwork/patch/1042013/
+> 
+> Be careful; my patch has not been merged yet into the mainline.
+> 
+> It has been a while in linux-next,
+> and I have not received any problem report.
+> 
+> So, I am guessing it will probably be merged
+> in the current MW.
+
+Ok I will consider doing this.
+
+Thanks for the review!
+
+ - Joel
+
