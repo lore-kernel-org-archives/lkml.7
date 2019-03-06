@@ -6,57 +6,42 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B39AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9B7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AA320684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2ECC20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:09:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfCFXJs (ORCPT
+        id S1726252AbfCFXJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 18:09:48 -0500
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57438 "EHLO
+        Wed, 6 Mar 2019 18:09:56 -0500
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57471 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfCFXJr (ORCPT
+        with ESMTP id S1725788AbfCFXJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 18:09:47 -0500
+        Wed, 6 Mar 2019 18:09:56 -0500
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 51C8480457; Thu,  7 Mar 2019 00:09:38 +0100 (CET)
-Date:   Thu, 7 Mar 2019 00:09:44 +0100
+        id 69B4A80192; Thu,  7 Mar 2019 00:09:47 +0100 (CET)
+Date:   Thu, 7 Mar 2019 00:09:53 +0100
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     hpa@zytor.com, Daniel Colascione <dancol@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        yhs@fb.com
-Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
- kernel
-Message-ID: <20190306230944.GB7915@amd>
-References: <20190118225543.86996-1-joel@joelfernandes.org>
- <20190119082532.GA9004@kroah.com>
- <20190119162754.GC231277@google.com>
- <CAKOZuet+7a4jdox6rebMN=kJtDn5RUYzvNjFh+Pzn2UkuP0Y8Q@mail.gmail.com>
- <20190119232503.GA149403@google.com>
- <78AACAF1-8EBF-4DF3-BE94-5B14E78BA791@zytor.com>
- <20190120155838.GA23827@google.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        eranian@google.com, vincent.weaver@maine.edu,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: System crash with perf_fuzzer (kernel: 5.0.0-rc3)
+Message-ID: <20190306230953.GC7915@amd>
+References: <7c7ec3d9-9af6-8a1d-515d-64dcf8e89b78@linux.ibm.com>
+ <20190125160056.GG6118@tassilo.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
+        protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
 Content-Disposition: inline
-In-Reply-To: <20190120155838.GA23827@google.com>
+In-Reply-To: <20190125160056.GG6118@tassilo.jf.intel.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,54 +49,51 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---aM3YZ0Iwxop3KEKx
+--Sr1nOIr3CvdE5hEN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-
-> > >Ok, I'll look into LZMA. Thanks for checking the compression sizes.
-> > >
-> > >- Joel
-> >=20
-> > Don't use lzma, use xz if you are going to do something.
+On Fri 2019-01-25 08:00:56, Andi Kleen wrote:
+> > [Fri Jan 25 10:28:53 2019] perf: interrupt took too long (2501 > 2500),=
+ lowering kernel.perf_event_max_sample_rate to 79750
+> > [Fri Jan 25 10:29:08 2019] perf: interrupt took too long (3136 > 3126),=
+ lowering kernel.perf_event_max_sample_rate to 63750
+> > [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (4140 > 3920),=
+ lowering kernel.perf_event_max_sample_rate to 48250
+> > [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (5231 > 5175),=
+ lowering kernel.perf_event_max_sample_rate to 38000
+> > [Fri Jan 25 10:29:11 2019] perf: interrupt took too long (6736 > 6538),=
+ lowering kernel.perf_event_max_sample_rate to 29500
 >=20
-> Ok, sounds good.
->=20
-> > However, it seems unlikely to me that someone not willing to spend the =
-space in the filesystem will spend unswappable kernel memory.
-> >=20
-> > It would seem that a far saner way to do this is to use inittmpfs or pe=
-rhaps an auxiliary "ktmpfs" so it can at least be swapped out if you have s=
-wap.
->=20
-> But this is already possible with the proposed solution, you would load t=
-he
-> module, extract it into a tmpfs, and unload the module. TMPFS pages can
-> already be swapped.
+> These are fairly normal.
 
-So your licensing requirements prevent you from having headers in the
-filesystem, but allow module with the headers hidden inside on the
-filesystem?
+Unfortunately, they are. Could we set up our defaults so that they
+don't normally happen?
 
-Looks like you should just tar xvzf
-this-is-a-kernel-module-I-promise.ko /usr/src/linux/include :-).
-									Pavel
+pavel@amd:~/g/unicsy_demo$ dmesg | grep "took too"
+[  761.507893] perf: interrupt took too long (2516 > 2500), lowering
+kernel.perf_event_max_sample_rate to 79250
+[ 4736.674595] perf: interrupt took too long (3209 > 3145), lowering
+kernel.perf_event_max_sample_rate to 62250
+pavel@amd:~/g/unicsy_demo$
+
+
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---aM3YZ0Iwxop3KEKx
+--Sr1nOIr3CvdE5hEN
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAlyAUzgACgkQMOfwapXb+vJQHQCdE/XXkghlja4N42Pg3cnPr7S7
-iKsAoJZ4ULf9mtuzWpfcFy+DYm/5G5fJ
-=dKWB
+iEYEARECAAYFAlyAU0EACgkQMOfwapXb+vJTEQCghbIoqocOdk1rDwJsoRb7+0Jp
+IbMAoL+bib41Od+R688k6MrE2rLmkTxQ
+=14SK
 -----END PGP SIGNATURE-----
 
---aM3YZ0Iwxop3KEKx--
+--Sr1nOIr3CvdE5hEN--
