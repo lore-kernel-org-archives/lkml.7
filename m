@@ -2,116 +2,149 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD49FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FC9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7274620684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551888721;
-	bh=de3hxMyklibF8vZdKauQbrL40O5VKkFo7YXp6sLEAoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sXUjduFHz/FKRTzKnFzdvfYxZZpobV++v5XnTiIqounIp9R9j9xDPgUXLfwcyT8Kt
-	 3WuP+ca0tnbjuEkvawEm2/60DUR70rNYo743Y5zdFF/HfmUmVIlz0O9NqYO4nefjoe
-	 nbb6RPTVprndifL9MIlBjQNWRLt3kEYSw55+Fu6E=
+	by mail.kernel.org (Postfix) with ESMTP id 2B6C020684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuMy49No"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfCFQMA (ORCPT
+        id S1729242AbfCFQMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:12:00 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:34658 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfCFQL7 (ORCPT
+        Wed, 6 Mar 2019 11:12:12 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35014 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfCFQML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:11:59 -0500
-Received: by mail-yw1-f65.google.com with SMTP id u205so10436069ywe.1;
-        Wed, 06 Mar 2019 08:11:59 -0800 (PST)
+        Wed, 6 Mar 2019 11:12:11 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j5so8979721pfa.2;
+        Wed, 06 Mar 2019 08:12:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j2ShychGTMUsUT8Zfh0SFhrOWqGhIAMgWTkjKkiV4qg=;
-        b=L7gfRNkxcA5vWx7QJVX4sBp0N3pcNjxGTwMViloTi6CFxQyN0OjRLX90j18nNi2Kyn
-         itmCaheEvuQKqTP+5l/5PBBRR8GSXDjGrkwxpYcZCFr+K/f3kNa/Wuacyh6M2k/Gr8XX
-         g/RgwSGKcBq04OJi++uh7hFLDLhzk7YV4QjXy3ggHqTCzWjLWP00cLz1CWqPl2hArcYm
-         pwAZNDuUSxdTbTiS20+K0nFEp9AK8ZG7KcIIlS5cQL7L5qESyGaB248LrhpcceSL1n/P
-         sHaSeUdasPc1VDzhNd0N88XQO8z+DnUQtEQl18RwGoUsWYmKzn+bD/WiZC3DuBqpSk2t
-         pWJg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=rwUk3uI8ypW71O/xZmIDWY3UgJWvUA2fe4eQVT1hRmk=;
+        b=FuMy49NotC4VrQ0czfJAjc+Ud+6SGSMOvdDIu8d2GVnRc+ksKWoaEPgjKLhT3D9dPE
+         u3VmO5iRSlYPFEFlmeWvx+LWdcLqcvqzWgYrTCfpzyAmXKOFizNfNK017zs3+oCfQdI+
+         a8Mpj5AURJ5fw3iyGJamBGKDaC1X//VU7XZ0LdBrYn0YQCVzXuyHHoRoRO/7PnXWWSPC
+         0gYIqIlfTFfU4ZGPlO1eZs8gOpd+VrUDxfCCEWSmCnLnIM/YyglFXSLE2ZWU+mR31Wq6
+         NDjq/3noNw+3+fpVrGSp8kZzS7JWU9uJsQc84diAgzUb9wkqAwRkoOBnT4weF2z3YPu8
+         /2wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j2ShychGTMUsUT8Zfh0SFhrOWqGhIAMgWTkjKkiV4qg=;
-        b=jbu6zji1ANPPQlYbnlK7kfGDuG25lnO9fZKYtxa9urL4zjx89tgTdrqaYQ7fibCVpO
-         +koGpxVIhvWpcJkxc2vlwghQPhKpN9O6jf/wk0TxSWDm7YVYQsWs/DJlr1tXC2eRNl6K
-         ytELYSPqgBezQ6Tcp99GES4iuW9WAevhUkY2033cAuKXBN6Mhu9/toP9aD5UKlC1ovRX
-         8qnevYuJ9JA+CZQNtKi4VE6XvTNQGm/5VN0MTLPI71czQyaOd4ToXIAOFrb8pjmmyBY1
-         9eZLotXo1uKgUIgmCMxSOWt8qkkCoea+9AeUjRHiGQbhrIwVAwyPRNYFRDuL9xlO32w2
-         ukRg==
-X-Gm-Message-State: APjAAAVpf6G8vHR/TG9SwZykOu9pSn9OqfIuLq+c8pejdZgErjfkC5fu
-        FL5DZlQnher/5ySt2tYsEAg=
-X-Google-Smtp-Source: APXvYqw45Pj/yxIPOVcogMnLGlpIQGJpq2XoD0G3omLiY28kcwNQFFiqH0UwUuO0gR7oGSBBYTnxVg==
-X-Received: by 2002:a81:4e45:: with SMTP id c66mr6139251ywb.462.1551888718421;
-        Wed, 06 Mar 2019 08:11:58 -0800 (PST)
-Received: from localhost ([2620:10d:c091:200::6238])
-        by smtp.gmail.com with ESMTPSA id n82sm616856ywd.37.2019.03.06.08.11.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rwUk3uI8ypW71O/xZmIDWY3UgJWvUA2fe4eQVT1hRmk=;
+        b=sZMocfbNyMFzsfFWW+sYe1n8jSxl4jWqUbkCvL+AvL5LcSFU0Q7Sm3qz5E9Pz6EMNX
+         wY/f2bUKUYvv3BADwVXlVLC+rcKSXIOf8zCpFN0e5NtIyy3XSBgwJRJ52VfS8JaW/ac3
+         KDIPTOlvbw2LZSZ+HePNx6vh0pALCSPnY/KUnQlexaFwQFvdKtfeu3Ba8QFsPplQHFaV
+         v8+9DnlAat0MLf/pF3UFsaZ7Z3AxvWCsoFOHaK8+ZVf/0YfH834/LhxagFjXqBp4VTNj
+         k0/1SmDcqsLU95UBgW7aYZPr5LAoxNKTwqqI2mbhBwfT3Cwsc4aBWk8yJuZGd0o2WqoP
+         Nm4w==
+X-Gm-Message-State: APjAAAViEM5WnUU3Fmx3dkNwfBAAKkncYKnxgov+W70Y9F2NFoHuIYBM
+        AbxwaxNQC4ESyh7Tlo9mjjzaDS1I
+X-Google-Smtp-Source: APXvYqxFnN9pYM1EGZGEIQH0oMuJRzvFy2i9Yy0gxJ/Lqn0jqZJywa8vNQb5QqljJQFMaDPsEooPdw==
+X-Received: by 2002:a17:902:2884:: with SMTP id f4mr6995033plb.203.1551888730023;
+        Wed, 06 Mar 2019 08:12:10 -0800 (PST)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id s6sm4875475pgm.90.2019.03.06.08.12.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 08:11:57 -0800 (PST)
-Date:   Wed, 6 Mar 2019 08:11:54 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] sched/core: check format and overflows in cgroup2 cpu.max
-Message-ID: <20190306161154.GF50184@devbig004.ftw2.facebook.com>
-References: <155125520155.293746.7017401430432481979.stgit@buzz>
- <20190305155741.GD50184@devbig004.ftw2.facebook.com>
- <4c0f1d90-b147-e1cd-20c1-0cdd869f4f15@yandex-team.ru>
+        Wed, 06 Mar 2019 08:12:09 -0800 (PST)
+Date:   Wed, 6 Mar 2019 08:12:09 -0800
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Thermal-SoC management changes for v5.1-rc1
+Message-ID: <20190306161207.GA7365@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c0f1d90-b147-e1cd-20c1-0cdd869f4f15@yandex-team.ru>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Konstantin.
+Hello Linus,
 
-On Tue, Mar 05, 2019 at 08:03:24PM +0300, Konstantin Khlebnikov wrote:
-> >Ditto as the blkio patch.  Unless there is a correctness problem, my
-> >preference is towards keeping the parsing functions simple and I don't
-> >think the kernel needs to play the role of strict input verifier here
-> >as long as the only foot getting shot is the user's own.
-> 
-> IMHO non-strict interface more likely hides bugs and could cause
-> problems for future changes.
-> 
-> Here is only only one fatal bug - buffer overflow in sscanf because
-> %s has no limit.
+Please consider the following thermal soc changes for v5.1-rc1.
 
-Ah, indeed.  Can you please post a patch to fix that problem first?
+The following changes since commit 8834f5600cf3c8db365e18a3d5cac2c2780c81e5:
 
-> Strict validation could be done as more strict sscanf variant or
-> some kind of extension for format string.
+  Linux 5.0-rc5 (2019-02-03 13:48:04 -0800)
 
-I don't necessarily disagree with you; however, what often ends up
-with these manually crafted parsing approach are 1. code which is
-unnecessarily difficult to follow 2. different subset of validations
-and parsing bugs (of course) everywhere.
+are available in the git repository at:
 
-Given the above, I tend to lean towards dump sscanf() parsing.  If we
-wanna improve the situation, I think the right thing to do is either
-improving sscanf or introducing new helpers to parse these things
-rather than hand-crafting each site.  It is really error-prone.
+  git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal linus
 
-Thanks.
+for you to fetch changes up to 6269e9f790e8d442b3e1529bf3b3de452dd4ac92:
 
--- 
-tejun
+  thermal: rcar_gen3_thermal: Register hwmon sysfs interface (2019-02-20 17:23:40 -0800)
+
+Kernel CI output:
+Full Boot Summary: https://kernelci.org/boot/all/job/evalenti/branch/for-kernelci/kernel/v5.0-rc5-15-g6269e9f790e8/
+Full Build Summary: https://kernelci.org/build/evalenti/branch/for-kernelci/kernel/v5.0-rc5-15-g6269e9f790e8/
+
+Specifics:
+- mediatek thermal now supports MT8183
+- broadcom thermal now supports Stingray
+- qoirq now supports multiple sensors
+- fixes on different drivers: rcar, tsens, tegra
+
+Some new drivers are still pending further review and I chose to leave them
+for the next merge window while still sending this material.
+
+BR,
+
+----------------------------------------------------------------
+Marek Vasut (1):
+      thermal: rcar_gen3_thermal: Register hwmon sysfs interface
+
+Michael Kao (7):
+      thermal: mediatek: fix register index error
+      thermal: mediatek: add common index of vts settings.
+      thermal: mediatek: add calibration item
+      thermal: mediatek: add thermal controller offset
+      thermal: mediatek: add flag for bank selection
+      dt-bindings: thermal: add binding document for mt8183 thermal controller
+      thermal: mediatek: add support for MT8183
+
+Peng Hao (1):
+      thermal/qcom/tsens-common : fix possible object reference leak
+
+Pramod Kumar (2):
+      dt-bindings: thermal: Add binding document for SR thermal
+      thermal: broadcom: Add Stingray thermal driver
+
+Wei Ni (3):
+      thermal: tegra: remove unnecessary warnings
+      thermal: tegra: fix memory allocation
+      thermal: tegra: add get_trend ops
+
+Yuantian Tang (1):
+      thermal: qoriq: add multiple sensors support
+
+ .../bindings/thermal/brcm,sr-thermal.txt           | 105 +++++++
+ .../bindings/thermal/mediatek-thermal.txt          |   1 +
+ drivers/thermal/Kconfig                            |   3 +-
+ drivers/thermal/broadcom/Kconfig                   |   9 +
+ drivers/thermal/broadcom/Makefile                  |   1 +
+ drivers/thermal/broadcom/sr-thermal.c              | 121 ++++++++
+ drivers/thermal/mtk_thermal.c                      | 316 +++++++++++++++++----
+ drivers/thermal/qcom/tsens-common.c                |  33 ++-
+ drivers/thermal/qoriq_thermal.c                    | 104 +++----
+ drivers/thermal/rcar_gen3_thermal.c                |  19 ++
+ drivers/thermal/tegra/soctherm.c                   |  38 ++-
+ 11 files changed, 620 insertions(+), 130 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+ create mode 100644 drivers/thermal/broadcom/sr-thermal.c
