@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE14C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032C1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A0D20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A142087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfCFPwx (ORCPT
+        id S1727079AbfCFPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:52:53 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34506 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730017AbfCFPvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:51:24 -0500
+        Wed, 6 Mar 2019 10:53:04 -0500
+Received: from foss.arm.com ([217.140.101.70]:34440 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729944AbfCFPvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:51:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90991174E;
-        Wed,  6 Mar 2019 07:51:23 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F9B41713;
+        Wed,  6 Mar 2019 07:51:16 -0800 (PST)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 559333F703;
-        Wed,  6 Mar 2019 07:51:20 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54A923F703;
+        Wed,  6 Mar 2019 07:51:13 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,9 +43,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v4 10/19] mm: pagewalk: Add p4d_entry() and pgd_entry()
-Date:   Wed,  6 Mar 2019 15:50:22 +0000
-Message-Id: <20190306155031.4291-11-steven.price@arm.com>
+Subject: [PATCH v4 08/19] x86: mm: Add p?d_large() definitions
+Date:   Wed,  6 Mar 2019 15:50:20 +0000
+Message-Id: <20190306155031.4291-9-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190306155031.4291-1-steven.price@arm.com>
 References: <20190306155031.4291-1-steven.price@arm.com>
@@ -56,104 +56,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
-("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
-no users. We're about to add users so reintroduce them, along with
-p4d_entry() as we now have 5 levels of tables.
+walk_page_range() is going to be allowed to walk page tables other than
+those of user space. For this it needs to know when it has reached a
+'leaf' entry in the page tables. This information is provided by the
+p?d_large() functions/macros.
 
-Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
-PUD-sized transparent hugepages") already re-added pud_entry() but with
-different semantics to the other callbacks. Since there have never
-been upstream users of this, revert the semantics back to match the
-other callbacks. This means pud_entry() is called for all entries, not
-just transparent huge pages.
+For x86 we already have static inline functions, so simply add #defines
+to prevent the generic versions (added in a later patch) from being
+picked up.
+
+We also need to add corresponding #undefs in dump_pagetables.c. This
+code will be removed when x86 is switched over to using the generic
+pagewalk code in a later patch.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- include/linux/mm.h |  9 ++++++---
- mm/pagewalk.c      | 27 ++++++++++++++++-----------
- 2 files changed, 22 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/pgtable.h | 5 +++++
+ arch/x86/mm/dump_pagetables.c  | 3 +++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 80bb6408fe73..1a4b1615d012 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1412,10 +1412,9 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 2779ace16d23..0dd04cf6ebeb 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -222,6 +222,7 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
+ 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
+ }
  
- /**
-  * mm_walk - callbacks for walk_page_range
-+ * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
-+ * @p4d_entry: if set, called for each non-empty P4D (1st-level) entry
-  * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
-- *	       this handler should only handle pud_trans_huge() puds.
-- *	       the pmd_entry or pte_entry callbacks will be used for
-- *	       regular PUDs.
-  * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
-  *	       this handler is required to be able to handle
-  *	       pmd_trans_huge() pmds.  They may simply choose to
-@@ -1435,6 +1434,10 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
-  * (see the comment on walk_page_range() for more details)
-  */
- struct mm_walk {
-+	int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
-+			 unsigned long next, struct mm_walk *walk);
-+	int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
-+			 unsigned long next, struct mm_walk *walk);
- 	int (*pud_entry)(pud_t *pud, unsigned long addr,
- 			 unsigned long next, struct mm_walk *walk);
- 	int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index c3084ff2569d..98373a9f88b8 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -90,15 +90,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 		}
++#define p4d_large	p4d_large
+ static inline int p4d_large(p4d_t p4d)
+ {
+ 	/* No 512 GiB pages yet */
+@@ -230,6 +231,7 @@ static inline int p4d_large(p4d_t p4d)
  
- 		if (walk->pud_entry) {
--			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
--
--			if (ptl) {
--				err = walk->pud_entry(pud, addr, next, walk);
--				spin_unlock(ptl);
--				if (err)
--					break;
--				continue;
--			}
-+			err = walk->pud_entry(pud, addr, next, walk);
-+			if (err)
-+				break;
- 		}
+ #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
  
- 		split_huge_pud(walk->vma, pud, addr);
-@@ -131,7 +125,12 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
- 				break;
- 			continue;
- 		}
--		if (walk->pmd_entry || walk->pte_entry)
-+		if (walk->p4d_entry) {
-+			err = walk->p4d_entry(p4d, addr, next, walk);
-+			if (err)
-+				break;
-+		}
-+		if (walk->pud_entry || walk->pmd_entry || walk->pte_entry)
- 			err = walk_pud_range(p4d, addr, next, walk);
- 		if (err)
- 			break;
-@@ -157,7 +156,13 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
- 				break;
- 			continue;
- 		}
--		if (walk->pmd_entry || walk->pte_entry)
-+		if (walk->pgd_entry) {
-+			err = walk->pgd_entry(pgd, addr, next, walk);
-+			if (err)
-+				break;
-+		}
-+		if (walk->p4d_entry || walk->pud_entry || walk->pmd_entry ||
-+				walk->pte_entry)
- 			err = walk_p4d_range(pgd, addr, next, walk);
- 		if (err)
- 			break;
++#define pmd_large	pmd_large
+ static inline int pmd_large(pmd_t pte)
+ {
+ 	return pmd_flags(pte) & _PAGE_PSE;
+@@ -857,6 +859,7 @@ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
+ 	return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(address);
+ }
+ 
++#define pud_large	pud_large
+ static inline int pud_large(pud_t pud)
+ {
+ 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
+@@ -868,6 +871,7 @@ static inline int pud_bad(pud_t pud)
+ 	return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+ }
+ #else
++#define pud_large	pud_large
+ static inline int pud_large(pud_t pud)
+ {
+ 	return 0;
+@@ -1213,6 +1217,7 @@ static inline bool pgdp_maps_userspace(void *__ptr)
+ 	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
+ }
+ 
++#define pgd_large	pgd_large
+ static inline int pgd_large(pgd_t pgd) { return 0; }
+ 
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index e3cdc85ce5b6..cf37abc0f58a 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -432,6 +432,7 @@ static void walk_pmd_level(struct seq_file *m, struct pg_state *st, pud_t addr,
+ 
+ #else
+ #define walk_pmd_level(m,s,a,e,p) walk_pte_level(m,s,__pmd(pud_val(a)),e,p)
++#undef pud_large
+ #define pud_large(a) pmd_large(__pmd(pud_val(a)))
+ #define pud_none(a)  pmd_none(__pmd(pud_val(a)))
+ #endif
+@@ -469,6 +470,7 @@ static void walk_pud_level(struct seq_file *m, struct pg_state *st, p4d_t addr,
+ 
+ #else
+ #define walk_pud_level(m,s,a,e,p) walk_pmd_level(m,s,__pud(p4d_val(a)),e,p)
++#undef p4d_large
+ #define p4d_large(a) pud_large(__pud(p4d_val(a)))
+ #define p4d_none(a)  pud_none(__pud(p4d_val(a)))
+ #endif
+@@ -503,6 +505,7 @@ static void walk_p4d_level(struct seq_file *m, struct pg_state *st, pgd_t addr,
+ 	}
+ }
+ 
++#undef pgd_large
+ #define pgd_large(a) (pgtable_l5_enabled() ? pgd_large(a) : p4d_large(__p4d(pgd_val(a))))
+ #define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
+ 
 -- 
 2.20.1
 
