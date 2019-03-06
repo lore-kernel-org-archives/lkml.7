@@ -2,103 +2,146 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4E0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BE9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDE320652
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE08E20652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfCFSEG (ORCPT
+        id S1730688AbfCFSG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:04:06 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:45363 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfCFSEF (ORCPT
+        Wed, 6 Mar 2019 13:06:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:45559 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728280AbfCFSG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:04:05 -0500
-Received: by mail-io1-f69.google.com with SMTP id g3so10237126ioh.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:04:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vP4iacDgbeChJ5VoBpjLxp5xzju9Yppzw6XSjbY71L8=;
-        b=RZfvOzMn4fsw5cBHrMCRir5a7hBJ+zxdkhYyHs2kiLqAMbU4dyPM3+QSUuMsFBE+eI
-         108+ZqSp7g4gAye2vy1iKa3KrO5QQURt3ST7s+Oozs3x7SLtBa3Hb1NfjgQ2tiFR4Ib7
-         i7wZCYpn68+5b7XFHqvFQDRIrxZjCeljmWkTD479YCdNNkg9G1pXjHYU8PIimIulcAvw
-         IbaKB5acK72iRYhdLIJ+lu0UD+tj6zx5q2UoDT6Vi/R6B7EH5XQiORcs+y5RJB20l3yz
-         szCbosBaRo5fv1pkwSdSkPs6Tc1aM+qpEn2QhDeo9iprASQ7vJyTi92X/rogooPB+b09
-         O1Mg==
-X-Gm-Message-State: APjAAAUz5BJvkR4zsJZHpPssVOXzqMJGJk6jZLIIYaz4ONeL6Z0cz0Y+
-        gD5AjIo9lsn7b4QsRT4iVNdYjK1rzhGQlEptiB0wKxc1dJu4
-X-Google-Smtp-Source: APXvYqw0sMWdtCfXs08oMDtP89iPqPxLcoiFMV7N6MA3/NmAMWY7vPPzDVtyynWn2S9jG+I9oLSCzoyFWAlzIZUZ3JVbE44ODMUq
-MIME-Version: 1.0
-X-Received: by 2002:a24:a14:: with SMTP id 20mr6677810itw.23.1551895444846;
- Wed, 06 Mar 2019 10:04:04 -0800 (PST)
-Date:   Wed, 06 Mar 2019 10:04:04 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b7fd51058370d0d9@google.com>
-Subject: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-From:   syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 6 Mar 2019 13:06:26 -0500
+Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M1YtP-1h4c8p0uPT-00350Y; Wed, 06 Mar 2019 19:06:24 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org
+Subject: [PATCH] scripts: helper for mailing patches from git to the maintainers
+Date:   Wed,  6 Mar 2019 19:06:23 +0100
+Message-Id: <1551895583-11955-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:y6AkdZqgk0jTwkHyflm0vA7WDmN9D/SVdtm9mPfwcukuYeJ5bT9
+ HJhXxWQZ7HFpJJgsAJnYvjwIF/gpuv8Me2bMa847l+jy0p+V89l1SSv1HtyDqhYxL6GYpYJ
+ w61fR1SRKmaPDLsmw7c8aO58WdZFO2yU7k/Rfqq/ssKsw0XubxY+yZsn0K53OyBXl++vzIB
+ F5djdset4R65EM3ypB2BA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:r+4MhfhsuG8=:jAjbrC6mAggqp8jlJHSzmx
+ UWBm7HvuSw6gQWGf2TjLizU9vw8UVN77hCk9JElxJmjPVS7MOZjIN/qP/s0FGK7Kp3275psd3
+ MRbmY4UZ/HDelWJlyfnjirVAkxDz1eRUHmSE+QfM765Nn7QFKmDMPgJcFKr9xHnjx2loftzki
+ Va7To6VHl/MKFYZVrFoIx77lS/YUIif/7lx0hAraHXNlYJGu8aevtrjwTG0i2wfYLZh0i+eNK
+ tZGs7MH/a9w/ehsqpW1bABwbyVTBclDTcGpfVtb5dF3Xn92Gf93wekFGSOdHVDwqk0Yrf60K+
+ PLjZKLPpJAHcdj41KXzYV/O4QoEAm8bWMNDbTaLDlzxfoRXHAh9ESiCTUXoA7Qx7sJCMEk8+A
+ JC05XoSh+BpF0bJ4TJ+S2gjaYejcNIh6rvxHSmOyI7JXmMh5ylr53xwBl0IATDaErI+2UFgsV
+ gRfzzq3pf8wJhWvv/oo+CPFZiqXBORW1Jn2+wecuareQabH79dTOKY5VigYIBZwZSmPas4N44
+ cuRwnGYimwSh49KCVOFsm2Mvn8uU2zb0mxPxiroM4p9Ury0qbZYlZElMeNzdG5B+lD9bll2JD
+ J5vh+Go070B1gdVIjEh5wHRLpn1jZBibKvn014EfY5nzMQF2hCmArDqm9vVibOq91Xrsuwgx4
+ 92LcNqEAbJGMVpRoGiv98CDMhdgpEeG1fcb43oLGotjUvvTOPFumZ7GBpGXBr31S5TEMEwEt0
+ HqJieEiCYRGy/K+y2T4zWxdqCepQR2W+fICsYQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is a little helper script for mailing patches out of a git
+branch to the corresponding maintainers.
 
-syzbot found the following crash on:
+Essentially, it scans the touched files, asks get_maintainer.pl
+for their maintainers and calls git-send-email for mailing out
+the patches.
 
-HEAD commit:    cf08baa29613 Add linux-next specific files for 20190306
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bc76c7200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c8b6073d992e8217
-dashboard link: https://syzkaller.appspot.com/bug?extid=91fd909b6e62ebe06131
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Syntax:
 
-Unfortunately, I don't have any reproducer for this crash yet.
+  ./scripts/git-send-patch <ref> [<optional git-send-email args>]
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com
+Examples:
 
-BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-turning off the locking correctness validator.
-CPU: 0 PID: 11902 Comm: kworker/u5:27 Not tainted 5.0.0-next-20190306 #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: hci94 hci_power_on
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  add_chain_cache kernel/locking/lockdep.c:2582 [inline]
-  lookup_chain_cache_add kernel/locking/lockdep.c:2656 [inline]
-  validate_chain kernel/locking/lockdep.c:2676 [inline]
-  __lock_acquire.cold+0x250/0x50d kernel/locking/lockdep.c:3692
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4202
-  __flush_work+0x677/0x8a0 kernel/workqueue.c:3034
-  flush_work+0x18/0x20 kernel/workqueue.c:3060
-  hci_dev_do_open+0xa92/0x1780 net/bluetooth/hci_core.c:1543
-  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2173
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+  ./scripts/git-send-patch HEAD^
+  ./scripts/git-send-patch linus/master --dry-run
 
-
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ scripts/git-send-patch | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100755 scripts/git-send-patch
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
-syzbot.
+diff --git a/scripts/git-send-patch b/scripts/git-send-patch
+new file mode 100755
+index 0000000..bd3a538
+--- /dev/null
++++ b/scripts/git-send-patch
+@@ -0,0 +1,63 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++[ -x "$GIT" ]       || export GIT=git
++[ -d "$KERNELSRC" ] || export KERNELSRC=.
++
++LKML="linux-kernel@vger.kernel.org"
++
++check_ksrc() {
++    if [ -d $KERNELSRC/arch ] && \
++       [ -d $KERNELSRC/block ] && \
++       [ -d $KERNELSRC/firmware ] && \
++       [ -d $KERNELSRC/init ] && \
++       [ -d $KERNELSRC/kernel ] && \
++       [ -d $KERNELSRC/sound ] && \
++       [ -d $KERNELSRC/drivers ] && \
++       [ -d $KERNELSRC/net ] && \
++       [ -d $KERNELSRC/include ] && \
++       [ -f $KERNELSRC/COPYING ] && \
++       [ -f $KERNELSRC/MAINTAINERS ] && \
++       [ -f $KERNELSRC/CREDITS ] && \
++       [ -f $KERNELSRC/Kconfig ] && \
++       [ -f $KERNELSRC/Makefile ]; then
++        return 0
++    else
++        echo "$0: cant find the kernel source tree. please call me from the topdir" >&2
++        exit 1
++    fi
++}
++
++check_ksrc
++
++get_files() {
++    $GIT diff --name-only "$REF"
++}
++
++get_maintainers() {
++    $KERNELSRC/scripts/get_maintainer.pl --m --l --remove-duplicates `get_files` |
++        grep -v "$LKML" | \
++        grep -E "(maintainer|reviewer|open list)" | \
++        grep -o '[[:alnum:]+\.\_\-]*@[[:alnum:]+\.\_\-]*'
++}
++
++construct_params() {
++    echo -n "--to=$LKML "
++    for a in `get_maintainers`; do
++        echo -n "--cc=$a "
++    done
++}
++
++if [ ! "$1" ]; then
++    echo "$0: missing git revision to send out" >&2
++    echo "" >&2
++    echo "for example: 'HEAD^' for sending just the last patch" >&2
++    echo >&2
++    echo "$0 <git-ref> [<extra params for git-send-mail>]"
++    exit 1
++fi
++
++REF="$1"
++shift
++
++$GIT send-email `construct_params` "$REF" "$@"
+-- 
+1.9.1
+
