@@ -2,213 +2,83 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD6FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B805B20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A2820661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbfCFREO (ORCPT
+        id S1729841AbfCFRIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:04:14 -0500
-Received: from monster.unsafe.ru ([5.9.28.80]:53618 "EHLO mail.unsafe.ru"
+        Wed, 6 Mar 2019 12:08:47 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:34866 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfCFREN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:04:13 -0500
-X-Greylist: delayed 584 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Mar 2019 12:04:12 EST
-Received: from MacBook-PC.fortress (nat-pool-brq-t.redhat.com [213.175.37.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727464AbfCFRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:08:47 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id 7C3C0C61ABD;
-        Wed,  6 Mar 2019 16:54:27 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 17:54:25 +0100
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: [PATCH v1] moduleparam: Save information about built-in modules in
- separate file
-Message-ID: <20190306165425.GD14017@MacBook-PC.fortress>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0OWHXb1mYLuhj1Ox"
-Content-Disposition: inline
+        by mx1.redhat.com (Postfix) with ESMTPS id 3257C309175F;
+        Wed,  6 Mar 2019 17:08:47 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFD2B18E39;
+        Wed,  6 Mar 2019 17:08:45 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH] x86/unwind/orc: Fix ORC unwind table alignment
+Date:   Wed,  6 Mar 2019 11:07:24 -0600
+Message-Id: <d55027ee95fe73e952dcd8be90aebd31b0095c45.1551892041.git.jpoimboe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 06 Mar 2019 17:08:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The .orc_unwind section is a packed array of 6-byte structs.  It's
+currently aligned to 6 bytes, which is causing warnings in the LLD
+linker.
 
---0OWHXb1mYLuhj1Ox
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Six isn't a power of two, so it's not a valid alignment value.  The
+actual alignment doesn't matter much because it's an array of packed
+structs.  An alignment of two is sufficient.  In reality it always gets
+aligned to four bytes because it comes immediately after the
+4-byte-aligned .orc_unwind_ip section.
 
-Problem:
-
-When a kernel module is compiled as a separate module, some important
-information about the kernel module is available via .modinfo section of
-the module.  In contrast, when the kernel module is compiled into the
-kernel, that information is not available.
-
-Information about built-in modules is necessary in the following cases:
-
-1. When it is necessary to find out what additional parameters can be
-passed to the kernel at boot time.
-
-2. When you need to know which module names and their aliases are in
-the kernel. This is very useful for creating an initrd image.
-
-Proposal:
-
-The proposed patch does not remove .modinfo section with module
-information from the vmlinux at the build time and saves it into a
-separate file after kernel linking. So, the kernel does not increase in
-size and no additional information remains in it. Information is stored
-in the same format as in the separate modules (null-terminated string
-array). Because the .modinfo section is already exported with a separate
-modules, we are not creating a new API.
-
-It can be easily read in the userspace:
-
-$ tr '\0' '\n' < kernel.builtin.modinfo
-ext4.softdep=3Dpre: crc32c
-ext4.license=3DGPL
-ext4.description=3DFourth Extended Filesystem
-ext4.author=3DRemy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Th=
-eodore Ts'o and others
-ext4.alias=3Dfs-ext4
-ext4.alias=3Dext3
-ext4.alias=3Dfs-ext3
-ext4.alias=3Dext2
-ext4.alias=3Dfs-ext2
-md_mod.alias=3Dblock-major-9-*
-md_mod.alias=3Dmd
-md_mod.description=3DMD RAID framework
-md_mod.license=3DGPL
-md_mod.parmtype=3Dcreate_on_open:bool
-md_mod.parmtype=3Dstart_dirty_degraded:int
-=2E..
-
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-Signed-off-by: Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/218
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- Makefile                    |  1 +
- include/linux/moduleparam.h | 12 +++++-------
- scripts/link-vmlinux.sh     |  8 ++++++++
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ include/asm-generic/vmlinux.lds.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index d5713e7b1e50..971102194c92 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1288,6 +1288,7 @@ _modinst_:
- 	fi
- 	@cp -f $(objtree)/modules.order $(MODLIB)/
- 	@cp -f $(objtree)/modules.builtin $(MODLIB)/
-+	@cp -f $(objtree)/kernel.builtin.modinfo $(MODLIB)/
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
-=20
- # This depmod is only for convenience to give the initial
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index ba36506db4fb..5ba250d9172a 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -10,23 +10,21 @@
-    module name. */
- #ifdef MODULE
- #define MODULE_PARAM_PREFIX /* empty */
-+#define __MODULE_INFO_PREFIX /* empty */
- #else
- #define MODULE_PARAM_PREFIX KBUILD_MODNAME "."
-+/* We cannot use MODULE_PARAM_PREFIX because some modules override it. */
-+#define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
- #endif
-=20
- /* Chosen so that structs with an unsigned long line up. */
- #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
-=20
--#ifdef MODULE
- #define __MODULE_INFO(tag, name, info)					  \
- static const char __UNIQUE_ID(name)[]					  \
-   __used __attribute__((section(".modinfo"), unused, aligned(1)))	  \
--  =3D __stringify(tag) "=3D" info
--#else  /* !MODULE */
--/* This struct is here for syntactic coherency, it is not used */
--#define __MODULE_INFO(tag, name, info)					  \
--  struct __UNIQUE_ID(name) {}
--#endif
-+  =3D __MODULE_INFO_PREFIX __stringify(tag) "=3D" info
-+
- #define __MODULE_PARM_TYPE(name, _type)					  \
-   __MODULE_INFO(parmtype, name##type, #name ":" _type)
-=20
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index c8cf45362bd6..399d7e4d11ec 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -258,10 +258,12 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
-=20
- 	# step 1
- 	vmlinux_link "" .tmp_vmlinux1
-+	"${OBJCOPY}" -R .modinfo .tmp_vmlinux1
- 	kallsyms .tmp_vmlinux1 .tmp_kallsyms1.o
-=20
- 	# step 2
- 	vmlinux_link .tmp_kallsyms1.o .tmp_vmlinux2
-+	"${OBJCOPY}" -R .modinfo .tmp_vmlinux2
- 	kallsyms .tmp_vmlinux2 .tmp_kallsyms2.o
-=20
- 	# step 3
-@@ -273,6 +275,7 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
- 		kallsyms_vmlinux=3D.tmp_vmlinux3
-=20
- 		vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
-+		"${OBJCOPY}" -R .modinfo .tmp_vmlinux3
-=20
- 		kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
- 	fi
-@@ -281,6 +284,11 @@ fi
- info LD vmlinux
- vmlinux_link "${kallsymso}" vmlinux
-=20
-+info MODINFO kernel.builtin.modinfo
-+"${OBJCOPY}" -j .modinfo -O binary vmlinux kernel.builtin.modinfo
-+chmod 444 kernel.builtin.modinfo
-+"${OBJCOPY}" -R .modinfo vmlinux
-+
- if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
- 	info SORTEX vmlinux
- 	sortextable vmlinux
---=20
-2.19.2
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 3d7a6a9c2370..f8f6f04c4453 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -733,7 +733,7 @@
+ 		KEEP(*(.orc_unwind_ip))					\
+ 		__stop_orc_unwind_ip = .;				\
+ 	}								\
+-	. = ALIGN(6);							\
++	. = ALIGN(2);							\
+ 	.orc_unwind : AT(ADDR(.orc_unwind) - LOAD_OFFSET) {		\
+ 		__start_orc_unwind = .;					\
+ 		KEEP(*(.orc_unwind))					\
+-- 
+2.17.2
 
-
---0OWHXb1mYLuhj1Ox
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcf/s1AAoJEKRaulRM/9Q0u+oP/1vxXnWlVM43EVSoQes8LsAd
-P9mLCkEWPWdAyTnlCgcPwOetr2drGfh1rX8mhC4YLM0zCZ4LVUJybXLZbZU1K7Ue
-pGfywG5ac3+ux4d/tcemShRfoiEbt4pfAwNoDJmeFBRct9wjXVjPwiLckEmOSk6f
-Rp7aEIr/qtThhofAqe4ycSp+FW4V39pa+qg5DpmYiPxjqGsMcPW5jUUBP0d/j1u5
-Ojo+ExKnYy7WLXI212fH3XuHCAyoTUPn9uYRyYwiZ2XLdPtEQzf5jI8MAxbU7HLF
-oDxPBITOFLlqTWYm0M29aGNsx2HFNSFHKzKbjV0CuOonVJql2kl1zIzEBfGJ1bPd
-WKyX/XhIZpF8p2nKSylbad985t+24SpCDFonriduaesMFgyyTORxoW6HF6QDjo27
-i4/RqxYGNanTDn/FV70+zbyhu5r0/Ph+i/bKc+BSWcvuTFTSgzEjkZ+GsLIzjE3J
-2P5jJQa8QFboJLiN0iMrUQE4UbiWscCf/4azeWndnNlDiMtAkNt0q5eqhqo4qbAK
-NQJLkjNjuBBYeC+XeoNdE5sE/8ieC870yGS0GTTyilKUNCbZllXvertrVZ5H1c0Q
-ImI9/10n1CxOqe/ssHrKi/C1nsDdZ+Gr8uG3PhdgTZLOFroFhZDVzC2BPoGSGQ2t
-d2EdYqiSg1WbF8cOfXLY
-=bKn9
------END PGP SIGNATURE-----
-
---0OWHXb1mYLuhj1Ox--
