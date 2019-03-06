@@ -2,210 +2,174 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE68AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA8AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0E320684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:56:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YStbOKY2"
+	by mail.kernel.org (Postfix) with ESMTP id 2427220675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfCFK45 (ORCPT
+        id S1730210AbfCFK5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:56:57 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38672 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfCFK45 (ORCPT
+        Wed, 6 Mar 2019 05:57:14 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57393 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730171AbfCFK5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:56:57 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a188so5387001wmf.3;
-        Wed, 06 Mar 2019 02:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:mime-version:subject:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=gFMy4yKGmwRBdn1oGAfnbpGsUUHokTp7MYJG67jJIv8=;
-        b=YStbOKY2rA1qaeoZNioqvQlDymdnkW28AEDFz4M6byT4SIPNasLc3L+LA11thqnyE9
-         sWOqbu7IOlk+aUjpYRnE3fAJG/nJ4TeDQ1SUd8/nIPiDKN+MdPjYiHv4+vIh+vfjA07s
-         uKK91oy7ZS6HswFlct2O339LoJdkCuzlGrBtLH6lnX4afhvieD0dFvLxgwZ3tIf9K3fG
-         AHE4Ny9ve8ALXF9VJXGLyrn/e/SYsDd2u10UKHlSW9eBDZER5iMzFAVYQSN3up+kFFIC
-         7MLbZNaxUoGTfGjLWSONKJo5ptmLdFXqKid89g/69kvMp0Mgkr8fu/yIwR4tHxsowiOp
-         0pSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:mime-version:subject:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=gFMy4yKGmwRBdn1oGAfnbpGsUUHokTp7MYJG67jJIv8=;
-        b=LrQDoAh59iel0Nrng+l5LQIzTHs92H4xeSzhcKal2z2uuNnz8Gubg3meu/VCrcfFaq
-         rIa4T4pZgTlp8WAfeNSg7mVf6yOQOXjWijzzFMnbCZk3qaSe87tW4zNBzRF7W6Qm6Yf9
-         ZWD4OmnL4L599YZmLJh4xPF/wtwP2JUMLBYFvYPOHAJe96/KVZL61AM++kHIxLDeAID4
-         rxnz8qNkTRBEkRl2Pw5f4B9L8qaeoVumvcTuvrsBq6lHt3DoaYuJ7kkR4ogXQhFFvjAF
-         4kd9Lw1lYNwF8SkinoxRSMcwv4yeX4muPDc06TT2WLPmA80+amwvWqtQorgxWCFmaG+A
-         CS4Q==
-X-Gm-Message-State: APjAAAUTGqIrC0roUr8EgW+9ABqHu74bCw7gBoOKDfuu3tqF9ObE2YoL
-        ykKMBR4AIyyYbrtCjG4TMqOCMQuG
-X-Google-Smtp-Source: APXvYqxew9xO+g2MmJASOG7KsbOm4KUtyLBdg2SjHTlceW73LGPVilfYbBxMcZE3ULKxRQTcA7MNfw==
-X-Received: by 2002:a1c:cf41:: with SMTP id f62mr2084998wmg.1.1551869814219;
-        Wed, 06 Mar 2019 02:56:54 -0800 (PST)
-Received: from [192.168.77.22] (val06-1-88-182-161-34.fbx.proxad.net. [88.182.161.34])
-        by smtp.gmail.com with ESMTPSA id t202sm5032798wmt.0.2019.03.06.02.56.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 02:56:53 -0800 (PST)
-From:   Christophe de Dinechin <christophe.de.dinechin@gmail.com>
-X-Google-Original-From: Christophe de Dinechin <christophe@dinechin.org>
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [RFC PATCH V2 4/5] vhost: introduce helpers to get the size of
- metadata area
-In-Reply-To: <1551856692-3384-5-git-send-email-jasowang@redhat.com>
-Date:   Wed, 6 Mar 2019 11:56:48 +0100
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        linux-mm@kvack.org, aarcange@redhat.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <608E47C2-5130-41DE-9D52-02807EBCDD43@dinechin.org>
-References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
- <1551856692-3384-5-git-send-email-jasowang@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Wed, 6 Mar 2019 05:57:13 -0500
+X-Originating-IP: 90.88.150.179
+Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D185F20003;
+        Wed,  6 Mar 2019 10:57:08 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 11:57:08 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     hans.verkuil@cisco.com, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        tfiga@chromium.org, posciak@chromium.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 2/2] media: cedrus: Add H264 decoding support
+Message-ID: <20190306105708.kjp7xjom42azhl6y@flea>
+References: <cover.1862a43851950ddee041d53669f8979aba863c38.1550672228.git-series.maxime.ripard@bootlin.com>
+ <1717029.ugS2kBEt89@jernej-laptop>
+ <20190305101732.3eylxubiiboygjc5@flea>
+ <7218484.YqF67YIo71@jernej-laptop>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5oodpt76mqik6m2b"
+Content-Disposition: inline
+In-Reply-To: <7218484.YqF67YIo71@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--5oodpt76mqik6m2b
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On 6 Mar 2019, at 08:18, Jason Wang <jasowang@redhat.com> wrote:
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
-> drivers/vhost/vhost.c | 46 =
-++++++++++++++++++++++++++++------------------
-> 1 file changed, 28 insertions(+), 18 deletions(-)
->=20
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 2025543..1015464 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -413,6 +413,27 @@ static void vhost_dev_free_iovecs(struct =
-vhost_dev *dev)
-> 		vhost_vq_free_iovecs(dev->vqs[i]);
-> }
->=20
-> +static size_t vhost_get_avail_size(struct vhost_virtqueue *vq, int =
-num)
+Hi,
 
-Nit: Any reason not to make `num` unsigned or size_t?
+On Tue, Mar 05, 2019 at 06:05:08PM +0100, Jernej =C5=A0krabec wrote:
+> Dne torek, 05. marec 2019 ob 11:17:32 CET je Maxime Ripard napisal(a):
+> > Hi Jernej,
+> >=20
+> > On Wed, Feb 20, 2019 at 06:50:54PM +0100, Jernej =C5=A0krabec wrote:
+> > > I really wanted to do another review on previous series but got distr=
+acted
+> > > by analyzing one particulary troublesome H264 sample. It still doesn't
+> > > work correctly, so I would ask you if you can test it with your stack=
+ (it
+> > > might be userspace issue):
+> > >=20
+> > > http://jernej.libreelec.tv/videos/problematic/test.mkv
+> > >=20
+> > > Please take a look at my comments below.
+> >=20
+> > I'd really prefer to focus on getting this merged at this point, and
+> > then fixing odd videos and / or setups we can find later
+> > on. Especially when new stacks are going to be developped on top of
+> > this, I'm sure we're going to have plenty of bugs to address :)
+>=20
+> I forgot to mention, you can add:
+> Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>=20
+> once you fix issues.
 
-> +{
-> +	size_t event =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) =
-? 2 : 0;
-> +
-> +	return sizeof(*vq->avail) +
-> +	       sizeof(*vq->avail->ring) * num + event;
-> +}
-> +
-> +static size_t vhost_get_used_size(struct vhost_virtqueue *vq, int =
-num)
-> +{
-> +	size_t event =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) =
-? 2 : 0;
-> +
-> +	return sizeof(*vq->used) +
-> +	       sizeof(*vq->used->ring) * num + event;
-> +}
-> +
-> +static size_t vhost_get_desc_size(struct vhost_virtqueue *vq, int =
-num)
-> +{
-> +	return sizeof(*vq->desc) * num;
-> +}
-> +
-> void vhost_dev_init(struct vhost_dev *dev,
-> 		    struct vhost_virtqueue **vqs, int nvqs, int =
-iov_limit)
-> {
-> @@ -1253,13 +1274,9 @@ static bool vq_access_ok(struct vhost_virtqueue =
-*vq, unsigned int num,
-> 			 struct vring_used __user *used)
->=20
-> {
-> -	size_t s =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 =
-: 0;
-> -
-> -	return access_ok(desc, num * sizeof *desc) &&
-> -	       access_ok(avail,
-> -			 sizeof *avail + num * sizeof *avail->ring + s) =
-&&
-> -	       access_ok(used,
-> -			sizeof *used + num * sizeof *used->ring + s);
-> +	return access_ok(desc, vhost_get_desc_size(vq, num)) &&
-> +	       access_ok(avail, vhost_get_avail_size(vq, num)) &&
-> +	       access_ok(used, vhost_get_used_size(vq, num));
-> }
->=20
-> static void vhost_vq_meta_update(struct vhost_virtqueue *vq,
-> @@ -1311,22 +1328,18 @@ static bool iotlb_access_ok(struct =
-vhost_virtqueue *vq,
->=20
-> int vq_meta_prefetch(struct vhost_virtqueue *vq)
-> {
-> -	size_t s =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 =
-: 0;
-> 	unsigned int num =3D vq->num;
->=20
-> 	if (!vq->iotlb)
-> 		return 1;
->=20
-> 	return iotlb_access_ok(vq, VHOST_ACCESS_RO, =
-(u64)(uintptr_t)vq->desc,
-> -			       num * sizeof(*vq->desc), VHOST_ADDR_DESC) =
-&&
-> +			       vhost_get_desc_size(vq, num), =
-VHOST_ADDR_DESC) &&
-> 	       iotlb_access_ok(vq, VHOST_ACCESS_RO, =
-(u64)(uintptr_t)vq->avail,
-> -			       sizeof *vq->avail +
-> -			       num * sizeof(*vq->avail->ring) + s,
-> +			       vhost_get_avail_size(vq, num),
-> 			       VHOST_ADDR_AVAIL) &&
-> 	       iotlb_access_ok(vq, VHOST_ACCESS_WO, =
-(u64)(uintptr_t)vq->used,
-> -			       sizeof *vq->used +
-> -			       num * sizeof(*vq->used->ring) + s,
-> -			       VHOST_ADDR_USED);
-> +			       vhost_get_used_size(vq, num), =
-VHOST_ADDR_USED);
-> }
-> EXPORT_SYMBOL_GPL(vq_meta_prefetch);
->=20
-> @@ -1343,13 +1356,10 @@ bool vhost_log_access_ok(struct vhost_dev =
-*dev)
-> static bool vq_log_access_ok(struct vhost_virtqueue *vq,
-> 			     void __user *log_base)
-> {
-> -	size_t s =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 =
-: 0;
-> -
-> 	return vq_memory_access_ok(log_base, vq->umem,
-> 				   vhost_has_feature(vq, =
-VHOST_F_LOG_ALL)) &&
-> 		(!vq->log_used || log_access_ok(log_base, vq->log_addr,
-> -					sizeof *vq->used +
-> -					vq->num * sizeof *vq->used->ring =
-+ s));
-> +				  vhost_get_used_size(vq, vq->num)));
-> }
->=20
-> /* Can we start vq? */
-> --=20
-> 1.8.3.1
->=20
+Great, thanks :)
 
+> > > > +	for (i =3D 0; i < ARRAY_SIZE(pred_weight->weight_factors); i++) {
+> > > > +		const struct v4l2_h264_weight_factors *factors =3D
+> > > > +			&pred_weight->weight_factors[i];
+> > > > +
+> > > > +		for (j =3D 0; j < ARRAY_SIZE(factors->luma_weight); j++)=20
+> {
+> > > > +			u32 val;
+> > > > +
+> > > > +			val =3D ((factors->luma_offset[j] & 0x1ff) <<=20
+> 16)
+> > > >=20
+> > > > +				(factors->luma_weight[j] & 0x1ff);
+> > > > +			cedrus_write(dev, VE_AVC_SRAM_PORT_DATA,
+> > >=20
+> > > val);
+> > >=20
+> > > You should cast offset varible to wider type. Currently some videos w=
+hich
+> > > use prediction weight table don't work for me, unless offset is caste=
+d to
+> > > u32 first. Shifting 8 bit variable for 16 places gives you 0 every ti=
+me.
+> >=20
+> > I'll do it.
+> >=20
+> > > Luma offset and weight are defined as s8, so having wider mask doesn't
+> > > really make sense. However, I think weight should be s16 anyway, beca=
+use
+> > > standard says that it's value could be 2^denominator for default valu=
+e or
+> > > in range -128..127. Worst case would be 2^7 =3D 128 and -128. To cove=
+r both
+> > > values you need at least 9 bits.
+> >=20
+> > But if I understood the spec right, in that case you would just have
+> > the denominator set, and not the offset, while the offset is used if
+> > you don't use the default formula (and therefore remains in the -128
+> > 127 range which is covered by the s8), right?
+>=20
+> Yeah, default offset is 0 and s8 is sufficient for that. I'm talking abou=
+t=20
+> weight. Default weight is "1 << denominator", which might be 1 << 7 or 12=
+8.
+>=20
+> We could also add a flag, which would signal default table. In that case =
+we=20
+> could just set a bit to tell VPU to use default values. Even if some VPUs=
+ need=20
+> default table to be set explicitly, it's very easy to calculate values as=
+=20
+> mentioned in previous paragraph.
+
+Yeah, sorry, I meant weight. Would that make any difference? Can we
+have situations where both the denominator and the weight would be
+set, with the weight set to 128?
+
+I've checked in the libva and ffmpeg, and libva uses a short, while
+ffmpeg uses an int, both for the weight and offset. For consistency I
+guess we could change both to shorts just like libva?
+
+What do you think?
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--5oodpt76mqik6m2b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH+nhAAKCRDj7w1vZxhR
+xY4fAP9lDiwgT+3oYdujG6kE1Qyw1W4wyCTqTi0jgm7oujeTagD/U74819AYc2pA
+7h2l8gSdhU9KRQ2Xg8ChzPaFgR1v1ww=
+=/2so
+-----END PGP SIGNATURE-----
+
+--5oodpt76mqik6m2b--
