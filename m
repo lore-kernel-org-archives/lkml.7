@@ -7,117 +7,200 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028B1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E64C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8BB20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4613620661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XqAAR3DC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hXP+Yies"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbfCFKlS (ORCPT
+        id S1729479AbfCFKlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:41:18 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:55705 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbfCFKlR (ORCPT
+        Wed, 6 Mar 2019 05:41:31 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18526 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729223AbfCFKlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:41:17 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190306104114epoutp047a75371fa0ad745f0c80603f2f2b921c~JWITQJfMG2868328683epoutp04M;
-        Wed,  6 Mar 2019 10:41:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190306104114epoutp047a75371fa0ad745f0c80603f2f2b921c~JWITQJfMG2868328683epoutp04M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551868874;
-        bh=fGvMUsNK8LiwXPW8H+Twl8qTGZcvmUYDlaTdFX6L1h0=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=XqAAR3DCHEtHCPJJf6BnOjsVpyryJFbo6EEewHN6pu/uDIqsgTQJanJxtcUiuo/G8
-         S6tsXMnn7LRKp1+vgqV6KR0Y7V7w/kD3+fZ8WoYEnwg8YO2OtnctgEdTBraA1QNTWl
-         J9zhvPYqyKxZon2CDqEH3p/WmI6RJnt4YJ6lb5YY=
-Received: from epsmges1p2.samsung.com (unknown [182.195.42.54]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190306104113epcas1p210aaee15c5b35cf3d02904cd6746a3ac~JWIS5mKKF2750727507epcas1p20;
-        Wed,  6 Mar 2019 10:41:13 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CB.68.04173.9C3AF7C5; Wed,  6 Mar 2019 19:41:13 +0900 (KST)
-Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190306104113epcas1p4a12ebf1aac63883cbd80b2750be76d06~JWISkS1qs1698416984epcas1p4e;
-        Wed,  6 Mar 2019 10:41:13 +0000 (GMT)
-X-AuditID: b6c32a36-5d9ff7000000104d-af-5c7fa3c97498
-Received: from epmmp1.local.host ( [203.254.227.16]) by
-        epsmgms2p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        33.94.04015.9C3AF7C5; Wed,  6 Mar 2019 19:41:13 +0900 (KST)
-Received: from AMDC3061.digital.local ([106.116.147.40]) by mmp1.samsung.com
-        (Oracle Communications Messaging Server 7.0.5.31.0 64bit (built May  5
-        2014)) with ESMTPA id <0PNX00MLMXOABX10@mmp1.samsung.com>; Wed, 06 Mar 2019
-        19:41:13 +0900 (KST)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     krzk@kernel.org
-Cc:     kgene@kernel.org, robh+dt@kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] ARM: dts: exynos: Fix audio routing on exynos5422-odroidxu3
-Date:   Wed, 06 Mar 2019 11:40:56 +0100
-Message-id: <20190306104056.7603-1-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCmnu7JxfUxBltaNSw2zljPajH/yDlW
-        i/7Hr5ktzp/fwG6x6fE1VovLu+awWcw4v4/JYu2Ru+wWrXuPsFscftPO6sDlsWlVJ5vH5iX1
-        Hn1bVjF6fN4kF8ASxWWTkpqTWZZapG+XwJXxZU4/S8FZ9orJk2axNTCuY+ti5OSQEDCRePfq
-        BWMXIxeHkMAORokv+y+zQzjfGSWOzf3KAlN1q/ECM0RiN6PExq4HUFW/GCU6fy0Hq2ITMJTo
-        PdrHCGKLCAhL3Fu6HKyIWWASk8SXzvNMXYwcHMICPhKfTqSB1LAIqErcmDsZrJdXwEqib9pT
-        Roht8hKrNxwA2yYh0Mgm8fjdLahjXSS6G1uYQeZICEhLXDpqCxGulti1vRuqvoNRouXCdmaI
-        hLXE4eMXWUFsZgE+iXdfe1ghenklOtqEIEo8JJrfPAO7QUggVmLB8ddsExjFFzAyrGIUSy0o
-        zk1PLTYsMNIrTswtLs1L10vOz93ECI4vLbMdjIvO+RxiFOBgVOLhndBaFyPEmlhWXJl7iFGC
-        g1lJhLdpbn2MEG9KYmVValF+fFFpTmrxIUZpDhYlcd71Ds4xQgLpiSWp2ampBalFMFkmDk6p
-        BsZwr4RVy/bUvtB9tun1hxZb2SfOx3NKuiam9l46dGppL3/mrfLCjxmLXCcLRxXM+bzjjmb2
-        PhOeztVhR9/bxG+7kj8nrNuVbda5My983uWvTDpzSGCW+D2hdT9Y1ucVJc2T2feO6SfPp1Zf
-        FhXPhS0PGmZV3djo+v/ewnsLnbh+RXJd54rmWHFAiaU4I9FQi7moOBEAbTFIX6sCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDJMWRmVeSWpSXmKPExsVy+t9jAd2Ti+tjDHat5bHYOGM9q8X8I+dY
-        Lfofv2a2OH9+A7vFpsfXWC0u75rDZjHj/D4mi7VH7rJbtO49wm5x+E07qwOXx6ZVnWwem5fU
-        e/RtWcXo8XmTXABLFJdNSmpOZllqkb5dAlfGlzn9LAVn2SsmT5rF1sC4jq2LkZNDQsBE4lbj
-        BeYuRi4OIYGdjBIH/x9hh3B+MUpc3nmEBaSKTcBQovdoHyOILSIgLHFv6XJ2EJtZYBKTxO5X
-        ll2MHBzCAj4Sn06kgYRZBFQlbsydDNbKK2Al0TftKSPEMnmJ1RsOME9g5FrAyLCKUTK1oDg3
-        PbfYqMAwL7Vcrzgxt7g0L10vOT93EyMwTLYd1urbwXh/SfwhRgEORiUe3gmtdTFCrIllxZW5
-        hxglOJiVRHib5tbHCPGmJFZWpRblxxeV5qQWH2KU5mBREue9nXcsUkggPbEkNTs1tSC1CCbL
-        xMEp1cC4we6R+edbf7oKK5uXntzjFrdxxwGz70zektfr/1l1NV1fXCp7et/7q51i97vjm2Xm
-        zuk6dDCLzerY7ysJK1YesFT5IuCheORdLv8TQXef6yu9jsYq8y/MvqxmyH54z5Zn29Iq+jxC
-        mp6fCMr7w5FmNnHhydyT+43Xf/TfcNt3auaBWzkBaVtdlViKMxINtZiLihMBJmwIAw8CAAA=
-X-CMS-MailID: 20190306104113epcas1p4a12ebf1aac63883cbd80b2750be76d06
-CMS-TYPE: 101P
-X-CMS-RootMailID: 20190306104113epcas1p4a12ebf1aac63883cbd80b2750be76d06
-References: <CGME20190306104113epcas1p4a12ebf1aac63883cbd80b2750be76d06@epcas1p4.samsung.com>
+        Wed, 6 Mar 2019 05:41:31 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7fa3d90002>; Wed, 06 Mar 2019 02:41:29 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 06 Mar 2019 02:41:28 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 06 Mar 2019 02:41:28 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Mar
+ 2019 10:41:28 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 6 Mar 2019 10:41:28 +0000
+Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5c7fa3d50000>; Wed, 06 Mar 2019 02:41:27 -0800
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <ldewangan@nvidia.com>, <mkumard@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH 1/3] bus: tegra-aconnect: use devm_clk_*() helpers
+Date:   Wed, 6 Mar 2019 16:11:16 +0530
+Message-ID: <1551868878-1131-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551868889; bh=2P8UBw6vXPbZ7oSbE4OEK5sJXWd0pcAkC41A42Jcnic=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=hXP+Yies2msM77JGhBBBQgLwuQ9FFvAz6qmEeJlb2vOczKnlNTgamFTwgGb7F7S1Q
+         NXFgnt6gqjnqUQIEGBl9JNfItWn6SsQ764DnScwyRKCHTwI7JYBR9WMAE0sNrjVlDG
+         ZyXEcu+Eq4sfs2q6AVNbkVxKYfrLVnHv+DBjvTtMplunZFWy1X4mUDHwvA/+pjM0Wf
+         mx6AhZ085IKPnUiPFw5uNF9S0Wbom3zVSBho6QCjHZi0qyOHCCJHmVUyuKuCOnnWCf
+         wLrYDLo9W6iyppN3EC2jVZoJ3593A355pyWZgvbcYxzxYjaJhzeDxuGeUWz6vGLhhj
+         wtwEDZiq6WyKg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing audio routing entry for the capture stream, this change
-is required to fix audio recording on Odroid XU3.
+aconnect bus driver is using pm_clk_*() for managing required clocks. With
+this, clocks seem to be always ON. This happens because, the clock prepare
+count is incremented in pm_clock_acquire() which is called during device
+probe(). The count is decremented during remove(). Hence the prepare_count
+for the clock is non-zero till the remove() gets executed. This is true for
+BPMP managed clock sources, where clock enable and disable happens during
+prepare and unprepare phases respectively. Thus clocks remain ON always and
+that is why pm_clk_*() cannot be used on Tegra.
 
-Fixes: 885b005d232c ("ARM: dts: exynos: Add support for secondary DAI to Odroid XU3")
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+This patch replaces pm_clk_*() with devm_clk_*() and runtime PM callbacks
+reflect this. System suspend/resume can use pm_runtime_force_suspend/resume
+
+Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
+Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 ---
- arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/bus/tegra-aconnect.c | 66 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 46 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-index 51a843bd65ed..3a37267e6134 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-@@ -26,7 +26,8 @@
- 			"Speakers", "SPKL",
- 			"Speakers", "SPKR",
- 			"I2S Playback", "Mixer DAI TX",
--			"HiFi Playback", "Mixer DAI TX";
-+			"HiFi Playback", "Mixer DAI TX",
-+			"Mixer DAI RX", "HiFi Capture";
+diff --git a/drivers/bus/tegra-aconnect.c b/drivers/bus/tegra-aconnect.c
+index 084ae28..ac58142 100644
+--- a/drivers/bus/tegra-aconnect.c
++++ b/drivers/bus/tegra-aconnect.c
+@@ -12,28 +12,38 @@
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm_clock.h>
+ #include <linux/pm_runtime.h>
  
- 		assigned-clocks = <&clock CLK_MOUT_EPLL>,
- 				<&clock CLK_MOUT_MAU_EPLL>,
++struct tegra_aconnect {
++	struct clk	*ape_clk;
++	struct clk	*apb2ape_clk;
++};
++
+ static int tegra_aconnect_probe(struct platform_device *pdev)
+ {
+-	int ret;
++	struct tegra_aconnect *aconnect;
+ 
+ 	if (!pdev->dev.of_node)
+ 		return -EINVAL;
+ 
+-	ret = pm_clk_create(&pdev->dev);
+-	if (ret)
+-		return ret;
++	aconnect = devm_kzalloc(&pdev->dev, sizeof(struct tegra_aconnect),
++				GFP_KERNEL);
++	if (!aconnect)
++		return -ENOMEM;
+ 
+-	ret = of_pm_clk_add_clk(&pdev->dev, "ape");
+-	if (ret)
+-		goto clk_destroy;
++	aconnect->ape_clk = devm_clk_get(&pdev->dev, "ape");
++	if (IS_ERR(aconnect->ape_clk)) {
++		dev_err(&pdev->dev, "Can't retrieve ape clock\n");
++		return PTR_ERR(aconnect->ape_clk);
++	}
+ 
+-	ret = of_pm_clk_add_clk(&pdev->dev, "apb2ape");
+-	if (ret)
+-		goto clk_destroy;
++	aconnect->apb2ape_clk = devm_clk_get(&pdev->dev, "apb2ape");
++	if (IS_ERR(aconnect->apb2ape_clk)) {
++		dev_err(&pdev->dev, "Can't retrieve apb2ape clock\n");
++		return PTR_ERR(aconnect->apb2ape_clk);
++	}
+ 
++	dev_set_drvdata(&pdev->dev, aconnect);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+@@ -41,35 +51,51 @@ static int tegra_aconnect_probe(struct platform_device *pdev)
+ 	dev_info(&pdev->dev, "Tegra ACONNECT bus registered\n");
+ 
+ 	return 0;
+-
+-clk_destroy:
+-	pm_clk_destroy(&pdev->dev);
+-
+-	return ret;
+ }
+ 
+ static int tegra_aconnect_remove(struct platform_device *pdev)
+ {
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	pm_clk_destroy(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+ static int tegra_aconnect_runtime_resume(struct device *dev)
+ {
+-	return pm_clk_resume(dev);
++	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
++	int ret;
++
++	ret = clk_prepare_enable(aconnect->ape_clk);
++	if (ret) {
++		dev_err(dev, "ape clk_enable failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = clk_prepare_enable(aconnect->apb2ape_clk);
++	if (ret) {
++		clk_disable_unprepare(aconnect->ape_clk);
++		dev_err(dev, "apb2ape clk_enable failed: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
+ }
+ 
+ static int tegra_aconnect_runtime_suspend(struct device *dev)
+ {
+-	return pm_clk_suspend(dev);
++	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
++
++	clk_disable_unprepare(aconnect->ape_clk);
++	clk_disable_unprepare(aconnect->apb2ape_clk);
++
++	return 0;
+ }
+ 
+ static const struct dev_pm_ops tegra_aconnect_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(tegra_aconnect_runtime_suspend,
+ 			   tegra_aconnect_runtime_resume, NULL)
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
+ };
+ 
+ static const struct of_device_id tegra_aconnect_of_match[] = {
 -- 
-2.17.1
+2.7.4
 
