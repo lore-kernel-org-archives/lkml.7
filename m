@@ -2,127 +2,128 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC69C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A53BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4322420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277542087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbQDu/K6"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="fT/td5/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfCFH6q (ORCPT
+        id S1729553AbfCFH6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 02:58:46 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39429 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfCFH6q (ORCPT
+        Wed, 6 Mar 2019 02:58:50 -0500
+Received: from mail.kmu-office.ch ([178.209.48.109]:35666 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFH6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 02:58:46 -0500
-Received: by mail-io1-f66.google.com with SMTP id x3so9439939ior.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 23:58:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NM3xQT8ZCO4/Dlq3Ro+mfnRddwV3Pbik78B0afnrzLw=;
-        b=UbQDu/K66YYoyGR+gDY2au5cxMtJ7vmotfGbOhXeob4n4R1tpmRGB6wewLBlkhI/f3
-         CHoay/boJrgRoQb7b92duBEoTCMnAimjiAPBx3vlK4fJ/e7OtzFWTO8W67RRG/5xtA86
-         IHA0CJ/EDAHdk4ZYWfFH4SvMyZ/gwVnsNVpyDPyvV9PmCKFRYikb5afEzHcDQJsksPvr
-         HIIpEZjvX9CYXDRZXXcjcxWTKUibRGDfF+rtW1opurszAEI/F/SRiPW5JqO07mPMJa7r
-         aOyuuja8zuGtZxck0yu0qzdciZw5b0x8QuwaH9BU63j0HykdwplCZobtQ4ZK9FRTDQpH
-         KR0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NM3xQT8ZCO4/Dlq3Ro+mfnRddwV3Pbik78B0afnrzLw=;
-        b=KJfsCKQf8iai6TxhujiZZAl9khWDPLNzBwyDJ4X18ZBnODH/R1PonzjmgIaSie0LME
-         hH4AiXcLcfnsMwcwC1dXxJyazw6Jyz5KzWz+WB70+4NlqZamGiRT6IedU3CnBiCBHASs
-         EukyX2/ouBZ45+cnrQZ/Av5m+AEsGJeA7fsktMOomx+GtL9PlWV+7j8BK/Imcm7odb9v
-         vu60dRzp+nyg11/NcPpQ1NnDNTgeN/rxl0Db4vnzGc9CcYJ6zSJlORCn7cO02urU3ZS+
-         6BNYqwVbYyqKPiIDPS4DwPtACrpTIJhUoDL2twTAGNNlKJMDu7RmT/EniPl5AFCr5lJQ
-         oWQg==
-X-Gm-Message-State: APjAAAUL5b3pmecWmqSk4/9gfLzrXm3BgaPSn+hBEJcuSaqESyu1LQCQ
-        QhWjmgnpaiH4ZSRQsfImIhpfAKNa2jjL3DPTVA==
-X-Google-Smtp-Source: APXvYqx4WI3i+3worYG3ambSfq+7VbRpDQg4MfhUKE2wp8kPcoBVtcrMO6ifbfjhv5fgzzkkymSD4geaMJTbKvNniQs=
-X-Received: by 2002:a6b:c889:: with SMTP id y131mr2517449iof.106.1551859125218;
- Tue, 05 Mar 2019 23:58:45 -0800 (PST)
+        Wed, 6 Mar 2019 02:58:47 -0500
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id CFCCE5C0878;
+        Wed,  6 Mar 2019 08:58:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1551859123;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j62psRips7w+AV5XkJWTeBZt6Uz5zCpP5GEzVKosuGE=;
+        b=fT/td5/5Cwpf0st+1O1UdOMaIGjPRdDF6S/ctObGmKvIHA4XW8WWjdxTWtuvQREFHb3Q1w
+        IR9tHxkHeUVrmwp7oHretImEvMuFR+PvYKkM9UwBYSPAK0dRz9FV68v4UssvkUVTORW6Mg
+        SwER9EV3qAeKla9uiGJSUQrKHJRYYRo=
 MIME-Version: 1.0
-References: <1551081596-2856-1-git-send-email-kernelfans@gmail.com>
- <20190225094522.GC26145@zn.tnic> <CAFgQCTtYp5mV0xmt4ZJbS0igBFe8S1ZbUnuTWE1-wj8CuHPJew@mail.gmail.com>
- <20190226104653.GB14836@zn.tnic> <20190227013034.GP14858@MiWiFi-R3L-srv> <20190227073958.GA1786@zn.tnic>
-In-Reply-To: <20190227073958.GA1786@zn.tnic>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Wed, 6 Mar 2019 15:58:33 +0800
-Message-ID: <CAFgQCTtR1YvzScYYj4LyLdZnWo5o-HCgatZLvP401EQ6hEpBxA@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot/KASLR: skip the specified crashkernel reserved region
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Baoquan He <bhe@redhat.com>, Kees Cook <keescook@chromium.org>,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 Mar 2019 08:58:43 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     linux@armlinux.org.uk, nicolas.pitre@linaro.org,
+        mark.rutland@arm.com, arnd@arndb.de, ard.biesheuvel@linaro.org,
+        will.deacon@arm.com, julien.thierry@arm.com,
+        ndesaulniers@google.com, linux-kernel@vger.kernel.org,
+        thierry.reding@gmail.com, natechancellor@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] ARM: drop unnecessary WASM
+In-Reply-To: <cdf451c0-3947-9be1-3bee-2366577c4c5f@arm.com>
+References: <13835555f8ef44b21d1b7ddfe1c4203d0981f77e.1551824161.git.stefan@agner.ch>
+ <cdf451c0-3947-9be1-3bee-2366577c4c5f@arm.com>
+Message-ID: <1a23b99ac6319815dd23e2df4e4cd064@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 3:40 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> + Kees.
->
-> @Kees, you might want to go upthread a bit for context.
->
-Seems not reply from Kees.
-> On Wed, Feb 27, 2019 at 09:30:34AM +0800, Baoquan He wrote:
-> > Agree that 'crashkernel=x' should be encouraged to use as the first
-> > choice when reserve crashkernel. If we decide to not obsolete
-> > 'crashkernel=x@y', it will leave a unstable kernel parameter.
->
-> Is anyone even talking about obsoleting this?
->
-> And if anyone is, anyone can think a bit why we can't do this.
->
-As Dave said, some un-relocatable code should be loaded to a specified
-space. Also the param is used by archs beside x86
-> > Another worry is that KASLR won't always fail 'crashkernel=x@y',
-> > customer may set and check in testing stage, then later in production
-> > environment one time of neglect to not check may cause carashed kernel
-> > uncaptured.
-> >
-> > IMHO, 'crashkernel=x@y' is similar to those specified memmap=ss[#$!]nn
-> > which have been avoided in boot stage KASLR.
->
-> So my worry is that by specifying too many exclusion ranges, we might
-> limit the kaslr space too much and make it too predictable. Especially
-> since distros slap those things automatically and most users take them
-> for granted.
->
-Kernel has already done this excluding 1gb pages. Do we need to worry
-about 200-400 MB for crashkernel? And I think if a user specify the
-region, then he/she should be aware of the limit of KASLR (can printk
-to warn him/her).
+On 06.03.2019 00:39, Robin Murphy wrote:
+> Hi Stefan,
+> 
+> On 2019-03-05 10:18 pm, Stefan Agner wrote:
+>> The W macro for generating wide instructions when targeting Thumb-2
+>> is not required for the preload data instructions (pld, pldw) since
+>> they are only available as wide instructions. The GNU assembler seems
+>> to work with or without the .w appended when compiling an Thumb-2
+>> kernel. However, Clang's integrated assembler does not consider the
+>> .w variants as valid instructions:
+>>
+>>    ./arch/arm/include/asm/processor.h:133:5: error: invalid instruction
+>>                            "pldw.w\t%a0 \n"
+>>                             ^
+>>    <inline asm>:2:1: note: instantiated into assembly here
+>>    pldw.w  [r0]
+>>    ^
+>>    1 error generated.
+> 
+> Have you filed a bug against Clang for that? Something like "pldwal.w"
+> may be super-redundant, but it's still perfectly valid syntax. The
+> "Standard assembler syntax fields" section of the Arm ARM even calls
+> out that "...the .W qualifier has no effect" on ARM/A32 instructions
+> since they are inherently 32-bit; that should equally apply for 32-bit
+> only Thumb/T32 instructions. There are certainly a few instructions
+> which don't allow a condition code (even "AL"), but off-hand I don't
+> remember any not having the optional {<q>} field in their syntax.
 
-> But I might be way off here because of something else I'm missing ...
->
-So how do you think about this now? Just leaving a unstable kernel
-parameter, or printk some info when crashkernel=x@y fails.
+Good point, bug filed:
+https://bugs.llvm.org/show_bug.cgi?id=40972
 
-Thanks,
-Pingfan
-> --
-> Regards/Gruss,
->     Boris.
->
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+Will send a v2 and note that this is a work around for Clang and
+reference the bug.
+
+--
+Stefan
+
+> 
+> That said, obviously the patch itself is no problem since the syntax
+> *is* redundant here, but it really is just a workaround for an
+> assembler bug.
+> 
+> Robin.
+> 
+>> Drop the macro to make sure non-wide variants of pld and pldw are
+>> emitted in all cases.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>   arch/arm/include/asm/processor.h | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
+>> index 120f4c9bbfde..042d77cf686d 100644
+>> --- a/arch/arm/include/asm/processor.h
+>> +++ b/arch/arm/include/asm/processor.h
+>> @@ -131,8 +131,8 @@ static inline void prefetchw(const void *ptr)
+>>   	__asm__ __volatile__(
+>>   		".arch_extension	mp\n"
+>>   		__ALT_SMP_ASM(
+>> -			WASM(pldw)		"\t%a0",
+>> -			WASM(pld)		"\t%a0"
+>> +			"pldw\t%a0",
+>> +			"pld\t%a0"
+>>   		)
+>>   		:: "p" (ptr));
+>>   }
+>>
