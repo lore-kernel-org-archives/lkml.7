@@ -2,87 +2,62 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC1FC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A63C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE6620684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551903185;
-	bh=juDD4D+mC2bHGEi8oZPfS7cdjKPDDAIyc8PJ07qZkE4=;
-	h=Subject:From:To:Cc:Date:List-ID:From;
-	b=J78jd2BmGmyHQHsr1eGI7JqzHRvcHSe4Qp8aud5ThuK4uMfwj9wtn2Jtywte+lJ4b
-	 bJcky0M1d361Dk2j7VIVkx3KrcK6KqG+JgAD1RW27UMBKYcwrDWtD6sNuRv3plOJbJ
-	 Q1FvxBHsgQhwlDwTi94woWMJwr9Idu8dtNqbWY3w=
+	by mail.kernel.org (Postfix) with ESMTP id B4C7F20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbfCFUNE (ORCPT
+        id S1730328AbfCFUNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfCFUNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:13:04 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E268B20663;
-        Wed,  6 Mar 2019 20:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551903183;
-        bh=juDD4D+mC2bHGEi8oZPfS7cdjKPDDAIyc8PJ07qZkE4=;
-        h=Subject:From:To:Cc:Date:From;
-        b=gUh0yQqGxFhcu4jB6jCAIh0feVSwV6nDBPKik0bu6Z6vf09mIqxYG/j+TKO/CE4XT
-         XnrgjjGTboFzIB8D7iSGH0cfXyhkOJLkUvh/dPd5MKmOOjB+BLGBcN7SoTygMcILwl
-         s+DfH0ry19lRSiJajWKu3Rv7zZvAhx+EipF1jMaU=
-Message-ID: <1551903181.4293.7.camel@kernel.org>
-Subject: [ANNOUNCE] 4.14.103-rt55
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Julia Cartwright <julia@ni.com>
-Date:   Wed, 06 Mar 2019 14:13:01 -0600
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Mar 2019 15:13:33 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:52239 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCFUNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 15:13:32 -0500
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h1cuq-00045w-9t; Wed, 06 Mar 2019 21:13:24 +0100
+Date:   Wed, 6 Mar 2019 21:13:23 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Louis Taylor <louis@kragniz.eu>
+cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        fanc.fnst@cn.fujitsu.com, bhe@redhat.com,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, ndesaulniers@google.com,
+        jflat@chromium.org
+Subject: Re: [PATCH] x86/KASLR: always return a value from
+ process_mem_region
+In-Reply-To: <alpine.DEB.2.21.1903062059570.1646@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1903062112360.1646@nanos.tec.linutronix.de>
+References: <20190302184929.28971-1-louis@kragniz.eu> <alpine.DEB.2.21.1903062059570.1646@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT Folks!
+Louis,
 
-I'm pleased to announce the 4.14.103-rt55 stable release.
+On Wed, 6 Mar 2019, Thomas Gleixner wrote:
+> 
+> This does not longer apply to mainline because the function does not longer
+> have a return value. So if that's important, you need to hash that out with
+> the stable folks.
 
-This release is just an update to the new stable 4.14.103 version
-and no RT specific changes have been made.
+Ignore me. Pilot error. Was on the wrong branch.
 
-You can get this release via the git tree at:
+Thanks,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.14-rt
-  Head SHA1: cbdc409470f2a897b5cdb529ca78c248c984fb02
-
-Or to build 4.14.103-rt55 directly, the following patches should be applied:
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.103.xz
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.103-rt55.patch.xz
-
-
-Enjoy!
-   
-   Tom
+	tglx
