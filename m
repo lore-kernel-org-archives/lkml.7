@@ -2,105 +2,69 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173E2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA91C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E010A20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B9C20840
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551909614;
+	bh=S1jgJp/hIy4+XoBrsDGo6saO5QWo45bCcfi5Q6I692Y=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=G/9HjJbeM8DYlGYiqnIQOgP50z2aWL4hYoncVZj9ZwPJfQIXhHAK0gpTwRvXLecxw
+	 3HagpNlyfZ0ZisaJ5MzU14o2YXrUakvoyA6thP7AWmou0iQOHWCCFMkU49yspMWyTz
+	 eaOUTbdEjnijA8FEOn+y1Qb83WwVnhaCz6jFw3pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfCFV6V (ORCPT
+        id S1726308AbfCFWAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:58:21 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:47271 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfCFV6V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:58:21 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26LwBLV1897174
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 13:58:11 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26LwA6p1897171;
-        Wed, 6 Mar 2019 13:58:10 -0800
-Date:   Wed, 6 Mar 2019 13:58:10 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Louis Taylor <tipbot@zytor.com>
-Message-ID: <tip-e4a0bd0308f05c1354d28feec8439e869eae6372@git.kernel.org>
-Cc:     louis@kragniz.eu, tglx@linutronix.de, natechancellor@gmail.com,
-        mingo@kernel.org, hpa@zytor.com, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org
-Reply-To: mingo@kernel.org, hpa@zytor.com, ndesaulniers@google.com,
-          linux-kernel@vger.kernel.org, louis@kragniz.eu,
-          tglx@linutronix.de, natechancellor@gmail.com
-In-Reply-To: <20190302184929.28971-1-louis@kragniz.eu>
-References: <20190302184929.28971-1-louis@kragniz.eu>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/boot/KASLR: Always return a value from
- process_mem_region
-Git-Commit-ID: e4a0bd0308f05c1354d28feec8439e869eae6372
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Wed, 6 Mar 2019 17:00:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfCFWAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 17:00:12 -0500
+Subject: Re: [GIT PULL] Power management updates for v5.1-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551909612;
+        bh=S1jgJp/hIy4+XoBrsDGo6saO5QWo45bCcfi5Q6I692Y=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=jkZROecmkOpaatqb0PrPU3pdqFvt/Bz/DTCRwHOIasr/PzKqfE8uw5RB32nG/nLyH
+         HDXNqU5ccAMtjeSakuz0pighu7uxQmUuO9sv3bRm8klC8RRjXlpCod/PZLgN1LQ64Q
+         6IGVNgAqZyQL5hFWF0zgAqRNxvyOP9/ky/LEc70E=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0jAtF5mdu1-_Wt3SbmL3zhXpJY2byPuryvRmCaJgtcuLA@mail.gmail.com>
+References: <CAJZ5v0jAtF5mdu1-_Wt3SbmL3zhXpJY2byPuryvRmCaJgtcuLA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0jAtF5mdu1-_Wt3SbmL3zhXpJY2byPuryvRmCaJgtcuLA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.1-rc1
+X-PR-Tracked-Commit-Id: 1271d6d576b7e7c80519de211f250cfd4eebca1a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ef8006846a3a97d9d8bf49e63dba948d0d2dbbf0
+Message-Id: <155190961208.11982.4441856239784560964.pr-tracker-bot@kernel.org>
+Date:   Wed, 06 Mar 2019 22:00:12 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e4a0bd0308f05c1354d28feec8439e869eae6372
-Gitweb:     https://git.kernel.org/tip/e4a0bd0308f05c1354d28feec8439e869eae6372
-Author:     Louis Taylor <louis@kragniz.eu>
-AuthorDate: Sat, 2 Mar 2019 18:49:29 +0000
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 6 Mar 2019 22:55:30 +0100
+The pull request you sent on Mon, 4 Mar 2019 14:21:50 +0100:
 
-x86/boot/KASLR: Always return a value from process_mem_region
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.1-rc1
 
-When compiling with -Wreturn-type, clang warns:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ef8006846a3a97d9d8bf49e63dba948d0d2dbbf0
 
-arch/x86/boot/compressed/kaslr.c:704:1: warning: control may reach end of
-      non-void function [-Wreturn-type]
+Thank you!
 
-This function's return statement should have been placed outside the
-ifdeffed region. Move it there.
-
-Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the kernel in immovable memory only")
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: bhe@redhat.com
-Cc: kirill.shutemov@linux.intel.com
-Cc: jflat@chromium.org
-Link: https://lkml.kernel.org/r/20190302184929.28971-1-louis@kragniz.eu
----
- arch/x86/boot/compressed/kaslr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index fa0332dda9f2..2e53c056ba20 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -697,8 +697,8 @@ static bool process_mem_region(struct mem_vector *region,
- 			return 1;
- 		}
- 	}
--	return 0;
- #endif
-+	return 0;
- }
- 
- #ifdef CONFIG_EFI
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
