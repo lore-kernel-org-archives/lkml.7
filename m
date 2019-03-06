@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4F7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75389C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D5F20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3780520663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYZ2dcvF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="joKpMu8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfCGAAe (ORCPT
+        id S1726753AbfCGAAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:00:34 -0500
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:47295 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfCGAAc (ORCPT
+        Wed, 6 Mar 2019 19:00:37 -0500
+Received: from mail-it1-f202.google.com ([209.85.166.202]:52316 "EHLO
+        mail-it1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfCGAAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:00:32 -0500
-Received: by mail-qt1-f201.google.com with SMTP id m34so13503670qtb.14
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:31 -0800 (PST)
+        Wed, 6 Mar 2019 19:00:34 -0500
+Received: by mail-it1-f202.google.com with SMTP id z131so7079833itb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=q6GDvRzzqJ3B5qJkvllHotglBKQhGGP0snG7GKJPXnw=;
-        b=ZYZ2dcvFODLgDGpfqBJrUFSMC14W0zW/v9LGNR5tj/HLP32OYfhhxK+Qk2jWmzBhHh
-         fD0lWZtBnBa8FU0tBiHQdUkFOSuMpN8OnDKhOgnSSwokIumQ5B1rAic14XtmbxwoKcp0
-         T/DAeLDBpCvbG392L0WuUZqkzrMF54pbJzA4/5HyQiIKhtn/3CPk0U2n1QTbX7EG99E7
-         BHQlX6U3dWAlMz6NWe/h4qEydE2ivUwg/Knf81MCzgaTOpRvylWBO+KNfut/iscvFkh6
-         06NUxz9LG8t4XjkO06JTu6xKFZiA0RzmvHpKsWctGwnhpyW7KBo28Jccu01eLCyVQ2kY
-         nNIg==
+        bh=2ZzvoWSyW5HTZoeTqFWgg34ixTiNCj89jLrYIWViRl0=;
+        b=joKpMu8ZGY15PM01/2KwGjHB3xEMV66i1KxgvTSL+1mba0Ycnp54vvwcsr5147kbND
+         HcmViD1WphwEuzoWcJ4H1/sv96EAylP80mqoUg0iOZfvL+dzMavW3U1OAEyTa1YWH4Vn
+         GUJyN4qGi22LgMAOY/b7ZppRgmDrY7lAgA3zJPCf8y1mlCHfBZ/w4PZmdHsrArINQSUO
+         +O0CMFhaKttpJXlUG0g8EejPBD3z+u4R/iTnyzrtCwu7XKbYpELQmoWInlNQFRH8S82c
+         /lgwwBJE78+C/d91iDKyGYt4HyCEtrQm3ZbbpNfUQ1BisJ/tNxPXHUnrJvVsOZy35ShU
+         CwDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=q6GDvRzzqJ3B5qJkvllHotglBKQhGGP0snG7GKJPXnw=;
-        b=nRjf011rMkmRRCwuS7GR4sNlVJwPJC9cHXIsMNJ50aC4zJlGsB4Lgl/e5++MCXCBES
-         sw5Cv/0UjFC0vD7oXHL4FcZKSNvPmMxqCZX4BEPvF1qmw+QMq6A5oF6XoSLb6JZVSj10
-         ThigFkYsWFq8lq/PnTgKApNWB22/PvYgpuIgdVlubgFa4V7RKuyV9z5vazWzQ18RcaSy
-         UTJT6ZpqGTwj+nDUh7UCMK22cBn8Fj4U5TisZMp1uNNBoz6xSaqV/vyxSWC6dRwVH86a
-         8CCfX+c7YYphqdBGcC9acyOe8xePlFlfNToIPxvsOTAVx0a0z1ekEoZQDrdHB7WEGGwl
-         45Gg==
-X-Gm-Message-State: APjAAAX/ZukzIW3KZCx6vLTTrjD8dOF/Z/azcA3OewCIqTGc3dFcNozH
-        rSFoKhYhyNYzPUkrL9ydR+vWlV3OJQxIjJp4bkE6qA==
-X-Google-Smtp-Source: APXvYqxBVZyLnxryEzxwDF1gzsHdvGrc99r5jJU/gjHf4YB4rW2YM9ulw3R1GygBB2M2xIaOh/9oc9tuEPUyt9xGuSAmwQ==
-X-Received: by 2002:a0c:d238:: with SMTP id m53mr6292264qvh.30.1551916831188;
- Wed, 06 Mar 2019 16:00:31 -0800 (PST)
-Date:   Wed,  6 Mar 2019 15:59:10 -0800
+        bh=2ZzvoWSyW5HTZoeTqFWgg34ixTiNCj89jLrYIWViRl0=;
+        b=U6rC3dAEd5GqRucS24uwl2iNAYoFhI06hNv7XoDsZMA7KqtH4oO2u1QTGYKAPRH+yq
+         zqDdNWKkZpEQpadocXs9q3DGj4OVVyYmmG9uzeJMxgVaLKdHJHKK7s2Q47J4Gy4nNW2S
+         Br6z1amGcdm5rRgf5JyDb0KI5dNBdoodLTG/fRrTgcR40OynE1rU/45BARFVPfIImxwj
+         GoztdjDskpjJfS1BIUwnRIMCrZUmDJpFl8MEWYQLah/s3iRn4AXfRKDB71RihfwRwQFu
+         SBHvnGfF6NviMUJDNYl+kimVF48ieZchxBBEZQfrFCcrpGYR4UcSZiKIOgVQEKRUyQvC
+         nEWA==
+X-Gm-Message-State: APjAAAWcgFCGLLNasGUlXqbD202+3943i+24fu+FvUZZCusMo5W8JziN
+        bDgzE2EcWn7lP2ZlzrfX2PitLuWtH497yX+FuhHeXw==
+X-Google-Smtp-Source: APXvYqzNE5CE6nTSGaldcUru/FCAR+lWhmANgOrDY049Tzeob4ckhzRzZiu3wCfqmDEK4LS3gEU6Do3cC6cmiNqK/hjmHQ==
+X-Received: by 2002:a24:c1:: with SMTP id 184mr7378710ita.21.1551916833546;
+ Wed, 06 Mar 2019 16:00:33 -0800 (PST)
+Date:   Wed,  6 Mar 2019 15:59:11 -0800
 In-Reply-To: <20190306235913.6631-1-matthewgarrett@google.com>
-Message-Id: <20190306235913.6631-25-matthewgarrett@google.com>
+Message-Id: <20190306235913.6631-26-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190306235913.6631-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 24/27] bpf: Restrict kernel image access functions when the
- kernel is locked down
+Subject: [PATCH 25/27] Lock down perf
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -72,38 +71,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-There are some bpf functions can be used to read kernel memory:
-bpf_probe_read, bpf_probe_write_user and bpf_trace_printk.  These allow
-private keys in kernel memory (e.g. the hibernation image signing key) to
-be read by an eBPF program and kernel memory to be altered without
-restriction.
+Disallow the use of certain perf facilities that might allow userspace to
+access kernel data.
 
-Completely prohibit the use of BPF when the kernel is locked down.
-
-Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: netdev@vger.kernel.org
-cc: Chun-Yi Lee <jlee@suse.com>
-cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+
 Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
 ---
- kernel/bpf/syscall.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/events/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index b155cd17c1bd..2cde39a875aa 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2585,6 +2585,9 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
- 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 3cd13a30f732..7748c6f39992 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10461,6 +10461,11 @@ SYSCALL_DEFINE5(perf_event_open,
+ 			return -EINVAL;
+ 	}
  
-+	if (kernel_is_locked_down("BPF"))
++	if ((attr.sample_type & PERF_SAMPLE_REGS_INTR) &&
++	    kernel_is_locked_down("PERF_SAMPLE_REGS_INTR"))
++		/* REGS_INTR can leak data, lockdown must prevent this */
 +		return -EPERM;
 +
- 	err = bpf_check_uarg_tail_zero(uattr, sizeof(attr), size);
- 	if (err)
- 		return err;
+ 	/* Only privileged users can get physical addresses */
+ 	if ((attr.sample_type & PERF_SAMPLE_PHYS_ADDR) &&
+ 	    perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
 -- 
 2.21.0.352.gf09ad66450-goog
 
