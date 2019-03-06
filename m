@@ -2,95 +2,260 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C35C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6FFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BCC20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551886177;
-	bh=Ac940CVAV8RCwd2xa+gSn6YMyTUPrgcG1OeIjJ1YbLU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sp7kHg3043wCy0SRMCCPnEv69uunqNucU2ufI5DPThk2sHGs5x+Y6zv1YNOYIp9B4
-	 87B716aHJel3al+icEG8lCPisxKmWtCxSB2If0+peOnipf0H483TonbzhlluGFhSmQ
-	 Np2lzaPIbMcRSw+AUa3J8+RsZ/T6VpMeXqCTAjtg=
+	by mail.kernel.org (Postfix) with ESMTP id EDC3A20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbfCFP3f (ORCPT
+        id S1729706AbfCFPaT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:29:35 -0500
-Received: from mail-lj1-f171.google.com ([209.85.208.171]:33047 "EHLO
-        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728319AbfCFP3f (ORCPT
+        Wed, 6 Mar 2019 10:30:19 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36031 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728319AbfCFPaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:29:35 -0500
-Received: by mail-lj1-f171.google.com with SMTP id z7so11270630lji.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kGPGVtGTvvx9A3lpOP8PLA6LKxELrkN3SjSpKy5Dnbo=;
-        b=K06aNX/op6Os+eaxQLtAXTT2s5VF/1bEGW1O76+78I+sIDe5+sf7ARqzkR3OW2UGNE
-         eT4CTKh+TOEG/jD86+CgeBXe9qVZhBF+6g/Z0iOl/l0kGgq76N3lAFFn567D6pMgyzmP
-         Pi2l7fBpTUQpLKHayIDvWa/2xea33kHaQIESo=
+        Wed, 6 Mar 2019 10:30:19 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p25so13257238qtb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:30:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kGPGVtGTvvx9A3lpOP8PLA6LKxELrkN3SjSpKy5Dnbo=;
-        b=PF7/7kF4zBxFVEJwdp3VGJmNAmDUdgyGWqsiZ3ZLSO5Mv4Z8ETj4ADC/U1hskmo1by
-         9E0MBtaXC+iZPQL79E21ZuVQJY8SaXBjwAsSFN1qFCkB1Bo2ekJgFMzy+Yp9HujgMrIG
-         p6vFuCUXfQavW8BTk3A/xO+gSoUtx8R07Wm2wEBBe4zVClCeqqdMAasmG131YE8QKsLu
-         X64TG9BI+IYAne0h3MucavhD6fCzL/WruKaTPxHCR1EneBNXO9oGvzP2GZiuWxXJb4XU
-         fsH79dADYVPNgSTL7y1YeSrOw6rD/jHhG4huuMnBZoGHiE8ZzQEpj9PAg4snQKlp13lT
-         VkOw==
-X-Gm-Message-State: APjAAAVJ2o0N+58ReVaLdGCfkE4M41YWoqUIMUcuw7w+Ko/RmlUcwWVu
-        9qc3d69VfO6y9rUcK9ZtUKatEbk3ros=
-X-Google-Smtp-Source: APXvYqzSME76nekAMnQVdPiUma7K+TCL9mqw0KCcrRyHA/T01pYfkCgzt9uSuxgvz7T7+R2CN3DYzQ==
-X-Received: by 2002:a2e:240a:: with SMTP id k10mr2774057ljk.31.1551886172751;
-        Wed, 06 Mar 2019 07:29:32 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id l72sm370752lfg.75.2019.03.06.07.29.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 07:29:31 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id z25so11265049ljk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:29:31 -0800 (PST)
-X-Received: by 2002:a2e:9117:: with SMTP id m23mr2738620ljg.94.1551886171237;
- Wed, 06 Mar 2019 07:29:31 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=2iWqwxAzfzB07tvbxb7CfsHW7OVZS2V3CWESOQ+j7qc=;
+        b=cxYN00o8EzJjB8Z6MTCYfk3OPxRNU6DB6g3iIQfxS7PxDpfR7c8T712ChrRk4iyakg
+         si61IEoU0BCc2J8nR6pVpeGRGgoY0rGsGjLs4wQSJmjctySl+lGNSVEXqb6N82C3xlbO
+         kXYWUX5WQuLGjOrQUF+tlNe83SHwTuASaCrOredhFz6zOQMJaCkrFoSMmWWh9rRBP2mn
+         lvHppTEaEb+H4KxDShuTQw9TSZIjUk89RxyqwZget6pIVPwRbyJmpGBmfY7qExY+d+/E
+         hDZj2NL55xwmF6aT+c+Yp4ON8ViH4krVgETXjTCQo7TiIkEg6ou+3MPZLw8fgWdJTjYQ
+         x3cg==
+X-Gm-Message-State: APjAAAXM5pgdSHseedPL5GK8RIcnZ9AnyNVdW2EzEg/X3890SHizi/RA
+        BYndHUvd93SkIcliJsZ5r6/PdWE+K9Om6prULfE=
+X-Google-Smtp-Source: APXvYqwBkH8yLGBHb+A/xQico8GquFlWwzuaobE5d2ZM1TQuimpQNlPbxoyCAuVwf+k17ZqYP6C9xmdnpumU4QEMTyM=
+X-Received: by 2002:a0c:81ee:: with SMTP id 43mr6555862qve.180.1551886217822;
+ Wed, 06 Mar 2019 07:30:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20190305123457.GA2839@gmail.com>
-In-Reply-To: <20190305123457.GA2839@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 6 Mar 2019 07:29:15 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiYtq87t3ZbGXjDfh26b4_Two0OqwyM8p=CzdR56v-_zA@mail.gmail.com>
-Message-ID: <CAHk-=wiYtq87t3ZbGXjDfh26b4_Two0OqwyM8p=CzdR56v-_zA@mail.gmail.com>
-Subject: Re: [GIT PULL] locking changes for v5.1
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@us.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <CAK8P3a37Nz0bWJx+Ly4Ttk-pZQ3birJaN+SLsJHgYVe=5wX0Vw@mail.gmail.com>
+ <CAK8P3a2sgn3Ai8m_yLX1kHdWrXT3aUFRS5Gzzy5V0dAqMpdGBw@mail.gmail.com>
+ <CAK8P3a0k4AgROH3UBd6hCyF=9VbbY2kDMGN=KnuLZ7tQV2aSOQ@mail.gmail.com>
+ <CAK8P3a2eH2W1Tmt5t7qtnPyhmhqKCtSOhQa-ugFvFW+NGbQOAQ@mail.gmail.com>
+ <CAK8P3a3s3AQhq57UQ_07hGVfpipxhdihUKH5EdYHX2=yhrY=6w@mail.gmail.com> <CAK8P3a0XTa6kBKzzTM3H+Xu=RRSJ2R-oi5=aydVrF-AE5=wpSw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 6 Mar 2019 16:30:00 +0100
+Message-ID: <CAK8P3a01nxwLHDztQ-K8bLi0tz0QkwmmJvp+Raquqp_ikRrG6A@mail.gmail.com>
+Subject: [GIT PULL 1/6] ARM: SoC platform updates for 5.1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <arm@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 4:35 AM Ingo Molnar <mingo@kernel.org> wrote:
->
-> The biggest part of this tree is the new auto-generated atomics API
-> wrappers by Mark Rutland.
+The following changes since commit f17b5f06cb92ef2250513a1e154c47b78df07d40:
 
-Ugh.
+  Linux 5.0-rc4 (2019-01-27 15:18:05 -0800)
 
-I'm, not entirely happy with this, but I guess I concur that the
-alternatives might be worse. Pulled,
+are available in the Git repository at:
 
-                  Linus
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-soc
+
+for you to fetch changes up to 49b35cd5e7ddad04ae2fac614cd26f29c4851957:
+
+  MAINTAINERS: Update Ampere email address (2019-02-22 23:57:56 +0100)
+
+----------------------------------------------------------------
+ARM: SoC platform updates for 5.1
+
+The APM X-Gene platform is now maintained by folks from Ampere
+computing that took over the product line a while ago, this gets
+reflected in the MAINTAINERS file.
+
+Cleanups continue on the older mach-davinci and mach-pxa platform,
+to get them to be more like the modern ones. For pxa, we
+now remove the Raumfeld platform code as it now works with
+device tree based booting.
+
+i.MX adds a couple new features for the i.MX7ULP SoC
+
+Mediatek gains support for a new SoC: MT7629 is a new wireless
+router platform, following MT7623.
+
+Aside from those, there are the usual minor cleanups and bugfixes
+across several platforms.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+----------------------------------------------------------------
+Anson Huang (2):
+      ARM: imx: add i.MX7ULP cpuidle support
+      ARM: imx: add i.MX7ULP SoC revision support
+
+Arnd Bergmann (11):
+      Merge tag 'pxa-for-5.1' of https://github.com/rjarzmik/linux
+into arm/fixes
+      Merge tag 'imx-maintainers-5.1' of
+git://git.kernel.org/.../shawnguo/linux into arm/fixes
+      Merge tag 'imx-soc-5.1' of
+git://git.kernel.org/.../shawnguo/linux into arm/fixes
+      Merge tag 'davinci-for-v5.1/soc-part2' of
+git://git.kernel.org/.../nsekhar/linux-davinci into arm/fixes
+      Merge tag 'amlogic-soc' of
+git://git.kernel.org/.../khilman/linux-amlogic into arm/fixes
+      Merge tag 'samsung-soc-5.1' of
+git://git.kernel.org/.../krzk/linux into arm/fixes
+      Merge tag 'mvebu-arm64-5.1-1' of
+git://git.infradead.org/linux-mvebu into arm/fixes
+      Merge tag 'v5.0-next-soc' of
+git://git.kernel.org/.../matthias.bgg/linux into arm/fixes
+      Merge tag 'tegra-for-5.1-arm-core' of
+git://git.kernel.org/.../tegra/linux into arm/fixes
+      Merge tag 'renesas-arm-soc-for-v5.1' of
+git://git.kernel.org/.../horms/renesas into arm/fixes
+      Merge tag 'lpc32xx-soc-for-5.1' of
+https://github.com/vzapolskiy/linux-lpc32xx into arm/fixes
+
+Bartosz Golaszewski (20):
+      ARM: davinci: da850-evm: remove dead MTD code
+      ARM: davinci: mityomapl138: don't read the MAC address from machine code
+      ARM: davinci: dm365-evm: use device properties for at24 eeprom
+      ARM: davinci: da830-evm: use device properties for at24 eeprom
+      ARM: davinci: dm644x-evm: use device properties for at24 eeprom
+      ARM: davinci: dm646x-evm: use device properties for at24 eeprom
+      ARM: davinci: sffsdr: fix the at24 eeprom device name
+      ARM: davinci: sffsdr: use device properties for at24 eeprom
+      ARM: davinci: remove dead code related to MAC address reading
+      ARM: davinci: mityomapl138: use nvmem notifiers
+      ARM: davinci: mityomapl138: use device properties for at24 eeprom
+      ARM: davinci: da850-evm: use GPIO hogs instead of the legacy API
+      usb: ohci-da8xx: add a new line after local variables
+      usb: ohci-da8xx: add a helper pointer to &pdev->dev
+      ARM: davinci: omapl138-hawk: use gpio lookup entries for usb gpios
+      ARM: davinci: da830-evm: use gpio lookup entries for usb gpios
+      usb: ohci-da8xx: add vbus and overcurrent gpios
+      ARM: davinci: omapl138-hawk: remove legacy usb helpers
+      ARM: davinci: da830-evm: remove legacy usb helpers
+      usb: ohci-da8xx: remove unused callbacks from platform data
+
+Brajeswar Ghosh (1):
+      arch/arm/mach-ep93xx: Remove duplicate header
+
+Daniel Mack (1):
+      ARM: pxa: remove raumfeld board files and defconfig
+
+Dmitry Osipenko (3):
+      ARM: tegra: Fix missed EMC registers latching on resume from LP1
+on Tegra30+
+      ARM: tegra: Fix DRAM refresh-interval clobbering on resume from
+LP1 on Tegra30
+      ARM: tegra: Restore memory arbitration on resume from LP1 on Tegra30+
+
+Fabio Estevam (1):
+      MAINTAINERS: imx: Change Fabio's email address
+
+Gustavo A. R. Silva (1):
+      ARM: s3c24xx: Fix boolean expressions in osiris_dvs_notify
+
+Jerome Brunet (3):
+      arm64: meson: remove COMMON_CLK_AMLOGIC selection
+      ARM: meson: remove COMMON_CLK_AMLOGIC selection
+      arm64: meson: enable g12a clock controller
+
+Khuong Dinh (1):
+      MAINTAINERS: Update Ampere email address
+
+Lucas Stach (2):
+      arm64: imx8mq: select GPCv2 irqchip driver
+      arm64: imx8mq: select PM support
+
+Marek Vasut (1):
+      ARM: shmobile: Fix R-Car Gen2 regulator quirk
+
+Markus Elfring (1):
+      ARM: lpc32xx: Delete an error message for a failed memory
+allocation in lpc32xx_pm_enter()
+
+Ryder Lee (2):
+      Revert "ARM: mediatek: add MT7623a smp bringup code"
+      arm: mediatek: add MT7629 smp bring up code
+
+Simon Horman (1):
+      ARM: shmobile: Add missing dts files to MAINTAINERS
+
+Stefan Agner (1):
+      ARM: imx: don't build ssi-fiq if not required
+
+Stuart Menefy (1):
+      ARM: exynos: Fix timeout when booting secondary CPUs
+
+Uwe Kleine-König (1):
+      MAINTAINERS: add all files matching "imx" and "mxs" to the IMX entry
+
+Vladimir Vid (1):
+      MAINTAINERS: Add entry for uDPU board
+
+Vladimir Zapolskiy (3):
+      ARM: pxa: remove unused empty mach/pxa25x-udc.h file
+      ARM: lpc32xx: remove platform data of ARM PL180 SD/MMC controller
+      ARM: lpc32xx: remove platform data of ARM PL111 LCD controller
+
+Weiyi Lu (1):
+      dt-bindings: soc: fix typo of MT8173 power dt-bindings
+
+zhong jiang (1):
+      ARM: lpc32xx: Use kmemdup to replace duplicating its implementation
+
+ MAINTAINERS                                        |   44 +--
+ arch/arm/configs/pxa_defconfig                     |    4 -
+ arch/arm/configs/raumfeld_defconfig                |  197 ------------
+ arch/arm/mach-davinci/board-da830-evm.c            |   86 +-----
+ arch/arm/mach-davinci/board-da850-evm.c            |   50 +--
+ arch/arm/mach-davinci/board-dm365-evm.c            |   13 +-
+ arch/arm/mach-davinci/board-dm644x-evm.c           |   13 +-
+ arch/arm/mach-davinci/board-dm646x-evm.c           |   13 +-
+ arch/arm/mach-davinci/board-mityomapl138.c         |   38 +--
+ arch/arm/mach-davinci/board-omapl138-hawk.c        |   81 +----
+ arch/arm/mach-davinci/board-sffsdr.c               |   13 +-
+ arch/arm/mach-davinci/common.c                     |   15 -
+ arch/arm/mach-ep93xx/ts72xx.c                      |    1 -
+ arch/arm/mach-exynos/platsmp.c                     |    4 +-
+ arch/arm/mach-imx/Makefile                         |    3 +-
+ arch/arm/mach-imx/common.h                         |   10 +
+ arch/arm/mach-imx/cpuidle-imx7ulp.c                |   60 ++++
+ arch/arm/mach-imx/cpuidle.h                        |    5 +
+ arch/arm/mach-imx/mach-imx7ulp.c                   |   46 +++
+ arch/arm/mach-imx/pm-imx7ulp.c                     |   49 ++-
+ arch/arm/mach-lpc32xx/phy3250.c                    |   84 ------
+ arch/arm/mach-lpc32xx/pm.c                         |   13 +-
+ arch/arm/mach-mediatek/Kconfig                     |    4 +
+ arch/arm/mach-mediatek/mediatek.c                  |    3 +-
+ arch/arm/mach-mediatek/platsmp.c                   |    2 +-
+ arch/arm/mach-meson/Kconfig                        |    1 -
+ arch/arm/mach-pxa/Kconfig                          |   18 --
+ arch/arm/mach-pxa/Makefile                         |    3 -
+ arch/arm/mach-pxa/include/mach/pxa25x-udc.h        |    0
+ arch/arm/mach-pxa/raumfeld.c                       | 1187
+------------------------------------------------------------------------
+ arch/arm/mach-s3c24xx/mach-osiris-dvs.c            |    8 +-
+ arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c |    5 +
+ arch/arm/mach-tegra/iomap.h                        |    9 +
+ arch/arm/mach-tegra/sleep-tegra20.S                |    2 -
+ arch/arm/mach-tegra/sleep-tegra30.S                |   25 +-
+ arch/arm64/Kconfig.platforms                       |    9 +-
+ drivers/usb/host/ohci-da8xx.c                      |  118 ++++----
+ include/dt-bindings/power/mt8173-power.h           |    6 +-
+ include/linux/davinci_emac.h                       |    1 -
+ include/linux/platform_data/usb-davinci.h          |   14 -
+ 40 files changed, 389 insertions(+), 1868 deletions(-)
+ delete mode 100644 arch/arm/configs/raumfeld_defconfig
+ create mode 100644 arch/arm/mach-imx/cpuidle-imx7ulp.c
+ delete mode 100644 arch/arm/mach-pxa/include/mach/pxa25x-udc.h
+ delete mode 100644 arch/arm/mach-pxa/raumfeld.c
