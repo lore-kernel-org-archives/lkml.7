@@ -5,155 +5,155 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD6FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B887C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FED420449
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567C120449
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfCFMII (ORCPT
+        id S1729882AbfCFMI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 07:08:08 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36878 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727222AbfCFMIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 07:08:07 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 991B890394409D311364;
-        Wed,  6 Mar 2019 20:08:05 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
- 20:07:56 +0800
-Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
- non-strict
-To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
- <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
- <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
- <5C78B89C.7040100@huawei.com> <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
- <5C7A1EE1.6020200@huawei.com> <7ed7da40-adbe-09b2-5124-baf62558987d@arm.com>
- <5C7FA9D1.5010400@huawei.com>
-CC:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <314e630c-2c05-e993-009c-98c637270122@huawei.com>
-Date:   Wed, 6 Mar 2019 12:07:50 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Wed, 6 Mar 2019 07:08:29 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60068 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729464AbfCFMI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 07:08:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA01D374;
+        Wed,  6 Mar 2019 04:08:27 -0800 (PST)
+Received: from [10.1.197.2] (ostrya.cambridge.arm.com [10.1.197.2])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F12703F703;
+        Wed,  6 Mar 2019 04:08:24 -0800 (PST)
+Subject: Re: [PATCH v4 02/22] iommu: introduce device fault data
+To:     Auger Eric <eric.auger@redhat.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "yi.l.liu@linux.intel.com" <yi.l.liu@linux.intel.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>
+Cc:     Marc Zyngier <Marc.Zyngier@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        Christoffer Dall <Christoffer.Dall@arm.com>
+References: <20190218135504.25048-1-eric.auger@redhat.com>
+ <20190218135504.25048-3-eric.auger@redhat.com>
+ <c9adfbda-b78a-405a-a691-9f99d7dc2a26@arm.com>
+ <43c5c3be-a609-62e1-efaa-c5571bb762c6@redhat.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <27abc9b6-f914-8f69-a232-c3345563277c@arm.com>
+Date:   Wed, 6 Mar 2019 12:08:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <5C7FA9D1.5010400@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+In-Reply-To: <43c5c3be-a609-62e1-efaa-c5571bb762c6@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/03/2019 09:38, Auger Eric wrote:
+>>> +struct iommu_fault_unrecoverable {
+>>> +    __u32   reason; /* enum iommu_fault_reason */
+>>> +#define IOMMU_FAULT_UNRECOV_PASID_VALID             (1 << 0)
+>>> +#define IOMMU_FAULT_UNRECOV_PERM_VALID              (1 << 1)
+>> 
+>> Not needed, since @perm is already a bitfield
+> not exactly, READ is encoded as 0. We need to differentiate read fault
+> from no perm provided. However if I follow your recommendation below and
+> transform the READ FAULT into a set bit this makes sense.
 
->>>
->>>> (VFIO) is untrusted, ok. But a malicious driver loaded into the kernel
->>>> address space would have much easier ways to corrupt the system than to
->>>> exploit lazy mode...
->>> Yes, so that we have no need to consider untrusted drivers.
->>>
->>>>
->>>> For (3), I agree that we should at least disallow lazy mode if
->>>> pci_dev->untrusted is set. At the moment it means that we require the
->>>> strictest IOMMU configuration for external-facing PCI ports, but it can
->>>> be extended to blacklist other vulnerable devices or locations.
->>> I plan to add an attribute file for each device, espcially for hotplug devices. And
->>> let the root users to decide which mode should be used, strict or non-strict. Becasue
->>> they should known whether the hot-plug divice is trusted or not.
->>
->> Aside from the problem that without massive implementation changes strict/non-strict is at
->> best a per-domain property, not a per-device one, I can't see this being particularly practical
->> - surely the whole point of a malicious endpoint is that it's going to pretend to be some common
->> device for which a 'trusted' kernel driver already exists?
-> Yes, It should be assumed that all kernel drivers and all hard-wired devices are trusted. There is
-> no reason to doubt that the open source drivers or the drivers and devices provided by legitimate
-> suppliers are malicious.
->
->
->> If you've chosen to trust *any* external device, I think you may as well have just set non-strict globally anyway.
->> The effort involved in trying to implement super-fine-grained control seems hard to justify.
-> The default mode of external devices is strict, it can be obviously changed to non-strict mode. But as
-> you said, it maybe hard to be implemented. In addition, bring a malicious device into computer room,
-> attach and export data it's not easy also. Maybe I should follow Jean'suggestion first,
+Ah yes, seeing four defines I assumed read was in there. No need for
+INST I think, it's already described by EXEC
 
+>>> +#define IOMMU_FAULT_UNRECOV_ADDR_VALID              (1 << 2)
+>>> +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID        (1 << 3)
+>>> +    __u32   flags;
+>>> +    __u32   pasid;
+>>> +#define IOMMU_FAULT_PERM_WRITE      (1 << 0) /* write */
+>>> +#define IOMMU_FAULT_PERM_EXEC       (1 << 1) /* exec */
+>>> +#define IOMMU_FAULT_PERM_PRIV       (1 << 2) /* priviledged */
+>> 
+>> typo "privileged"
+> OK
+>> 
+>>> +#define IOMMU_FAULT_PERM_INST       (1 << 3) /* instruction */
+>> 
+>> Could you move these outside the struct definition? They are shared with
+>> the other struct. And it would be less confusing, from the device driver
+>> point of view, to merge those with the existing IOMMU_FAULT_* defines
+>> (but moving them to UAPI and making them bits)
+> ok I will look at this. Need to check if the read fault value is not
+> hardcoded anywhere.
 
->add a config item.
->
+Oh right, looks like a couple of IOMMU drivers do. Hard to say if they
+mean READ or just "don't care", at first glance. I guess we can keep the
+FAULT_PERM variant until we actually unify the fault reporting API (not
+overly complicated since there are three users. I have patches for that
+buried somewhere)
 
-+1
+>> 
+>>> +    __u32   perm;
+>>> +    __u64   addr;
+>>> +    __u64   fetch_addr;
+>>> +};
+>>> +
+>>> +/*
+>>> + * Page Request data (aka. recoverable fault data)
+>>> + * @flags : encodes whether the pasid is valid and whether this
+>>> + * is the last page in group
+>>> + * @pasid: pasid
+>>> + * @grpid: page request group index
+>>> + * @perm: requested page permissions
+>>> + * @addr: page address
+>>> + */
+>>> +struct iommu_fault_page_request {
+>>> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT      (1 << 0)
+>> 
+>> PASID_VALID, to be consistent with the other set of flags?
+> OK
+>> 
+>>> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE  (1 << 1)
+>>> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA  (1 << 2)
+>>> +    __u32   flags;
+>>> +    __u32   pasid;
+>>> +    __u32   grpid;
+>>> +    __u32   perm;
+>>> +    __u64   addr;
+>> 
+>> Given that we'll be reporting stall faults using this struct, it would
+>> be good to have the fetch_addr field and flag here as well.
+> OK
+>> 
+>>> +    __u64   private_data[2];
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct iommu_fault - Generic fault data
+>>> + *
+>>> + * @type contains fault type
+>>> + */
+>>> +
+>>> +struct iommu_fault {
+>>> +    __u32   type;   /* enum iommu_fault_type */
+>>> +    __u32   reserved;
+>>> +    union {
+>>> +            struct iommu_fault_unrecoverable event;
+>>> +            struct iommu_fault_page_request prm;
+>> 
+>> What's the 'm' in "prm"? Maybe just "pr"?
+> This stands for page request message, I think this is the Intel's naming?
 
-On another topic, we did also see a use case for selectively 
-passthrough'ing devices.
+Looks like it's the PCI naming, let's stick with it then
 
-Typically, having the kernel use the identity mapping for when driving a 
-device is fine. In fact, having the IOMMU translating puts a big 
-performance burden on the system. However sometimes we may require the 
-IOMMU involved for certain devices, like for when the kernel device 
-driver has big contiguous DMA requirements, which is the case for some 
-RDMA NIC cards.
-
-John
-
-
->>
->> Robin.
->>
->>>>
->>>> If you do (3) then maybe we don't need (1) and (2), which require a
->>>> tonne of work in the DMA and IOMMU layers (but would certainly be nice
->>>> to see, since it would also help handle ATS invalidation timeouts)
->>>>
->>>> Thanks,
->>>> Jean
->>>>
->>>>>     So that some high-end trusted devices use non-strict mode, and keep others still using
->>>>> strict mode. The drivers who want to use non-strict mode, should change to use new APIs
->>>>> by themselves.
->>>>>
->>>>>
->>>>>>>
->>>>>>> Why not keep the policy to secure by default, as we do for
->>>>>>> iommu.passthrough? And maybe add something similar to
->>>>>>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
->>>>>>> command-line argument or change the default config.
->>>>>>
->>>>>> Sorry for the late reply, it was Chinese new year, and we had a long discussion
->>>>>> internally, we are fine to add a Kconfig but not sure OS vendors will set it
->>>>>> to default y.
->>>>>>
->>>>>> OS vendors seems not happy to pass a command-line argument, to be honest,
->>>>>> this is our motivation to enable non-strict as default. Hope OS vendors
->>>>>> can see this email thread, and give some input here.
->>>>>>
->>>>>> Thanks
->>>>>> Hanjun
->>>>>>
->>>>>>
->>>>>> .
->>>>>>
->>>>>
->>>>
->>>>
->>>> .
->>>>
->>>
->>
->> .
->>
->
-
-
+Thanks,
+Jean
