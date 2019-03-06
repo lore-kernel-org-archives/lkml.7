@@ -2,129 +2,77 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FD9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B982C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D90520663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAshJijk"
+	by mail.kernel.org (Postfix) with ESMTP id DCF0E20652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551895383;
+	bh=lFiXw/Tlk4muXQk5UzPWgCDKxCcwAq1nSYS2MmURA2w=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=X8GyUSeRelxziY+CFj76OjiAG3Je8/eSwG39xWyHqDmlskodZKZrdhrWhvLCa7kqD
+	 NrvG7OBO8DrYKP/y6+lU+uZaT8oW7vtubcMMJP9UmqLF44sYW2gbtpLDBkZgJsjdmy
+	 fuz4kdyjO/B4ZIoPG/0PD9buDpU1O8Isn6k2XlfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfCFSCW (ORCPT
+        id S1730664AbfCFSDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:02:22 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44742 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfCFSCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:02:21 -0500
-Received: by mail-lf1-f67.google.com with SMTP id u9so5493728lfe.11;
-        Wed, 06 Mar 2019 10:02:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9NlTnV1RuRzxavxPyEzKIvYJ+VeCVW6++rTPCnXKsCM=;
-        b=HAshJijk36tRtXm9Ks//VLNIk4cZ58Xyu44Tm5mtYSIBKnp3XuHPmADtVTi+4RG7Lz
-         xGf3IR/MilgzzDGOrNX47XZPqTEySRmSPXLBnuYUruL1wxI5I3MW9G6vftLoYpjTK7zL
-         0qxSG315vCeacS0c2PMRDGuZSNGxO6jmsA7BCxaePYLMpUNYqUW9gFXOFa61b5+zDmTo
-         rTJ2Z/n/O+r5Rc3OJhaV5qOXywZ+jBdvH4pmvPmPPnPAwunH/FY+EEaObkv95H3bigBB
-         iYMJ5Ein2UO6Jl53VFdw6QKXJp2Onb2LzFGG6U0b3doDvPDPD2eZHu9o+fN/MEsGQH/m
-         yP4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9NlTnV1RuRzxavxPyEzKIvYJ+VeCVW6++rTPCnXKsCM=;
-        b=U6ln2MDIJigHMg8Byq0oWUIkOaAccmgrXCsK+dulEC/ntr6u1XYrCmqjF8+eDKKf31
-         VTsMUsIvoQQ3efpLU9cZmsOH1cdvoKzL44kQK6+0WN+NnROopa0NrYFews9NOInhZzy7
-         g2DqOCW6W9Pp6Hh43dIfaF6N/mhDmAMRqSEdxXNViMFeG0bAJZFRaXXE8VruUHA4cS96
-         pb4Io7uPkO7WChI2lyc4cuXe9H6bOsn77zMJBPAkgK3BVreLj6bFL+HarMNS71e56kAb
-         /DoEZmJm/9dxKne/zw2j8a80efslrpY9LRma06BuAIEaek8CXYfg9JzGkAdsE9yboxN/
-         OZHw==
-X-Gm-Message-State: APjAAAUewixdpbLcVcXVqPQioUOyAvj+Xn5Q3wLv+9pSLw8Va4vmd165
-        T81fW75BayhsxghyTyc2L/V7i6B9G6p7UlWJtbY=
-X-Google-Smtp-Source: APXvYqyES9Mlgsy3geuwbdoVhE5fLT2b9NOat0SfHRhOEn8gfrTNRFwrNYBWJ0BtwzSo1L8lrjQhc3hEhcNyxmQwAWU=
-X-Received: by 2002:a19:a417:: with SMTP id q23mr4872719lfc.27.1551895338862;
- Wed, 06 Mar 2019 10:02:18 -0800 (PST)
+        Wed, 6 Mar 2019 13:03:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfCFSDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 13:03:00 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A831E20652;
+        Wed,  6 Mar 2019 18:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551895379;
+        bh=lFiXw/Tlk4muXQk5UzPWgCDKxCcwAq1nSYS2MmURA2w=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=azXDagyuZXG4aTJ1Ls4sXuMzL1KMBweA3hygMob+o+PjgIqgfPKZMMnHAvct5+VRZ
+         Z/W1/Ux1gQG2M84qJMXfstGe0kj1EHr25QL7Y47Y/IMuMqbKmvPU5FqjlalnAodeeq
+         /S+hGBOYgrc02K5ZWdYx0DZM0GjBPLvlINrqIwsg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190223070901.GA10274@jordon-HP-15-Notebook-PC>
- <87tvgr1fr4.fsf@concordia.ellerman.id.au> <CAFqt6zY0HV7E+_6_s5A3eG+jEj+4hgQnAgJQm-Pc1gyX4Vnbpg@mail.gmail.com>
- <CAFqt6zYqa6aCAcs51AdePtBSL58hMa1BSA87ZMLbwUJA=rWNLA@mail.gmail.com>
-In-Reply-To: <CAFqt6zYqa6aCAcs51AdePtBSL58hMa1BSA87ZMLbwUJA=rWNLA@mail.gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Wed, 6 Mar 2019 23:36:38 +0530
-Message-ID: <CAFqt6zZcoe1fZF__h=zdKaWC7MHt4nVELCV07RspWjntHA94hg@mail.gmail.com>
-Subject: Re: [PATCH] tools: testing: selftests: Remove duplicate headers
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Bamvor Zhang <bamv2005@gmail.com>, shuah <shuah@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul McKenney <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>, sboyd@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-gpio@vger.kernel.org,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190306040726.1930-1-rnayak@codeaurora.org>
+References: <20190306040726.1930-1-rnayak@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] OPP: Fix handling of multiple power domains
+Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, nm@ti.com,
+        viresh.kumar@linaro.org
+Message-ID: <155189537895.20095.130363485109002162@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Wed, 06 Mar 2019 10:02:58 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 4:19 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> On Tue, Feb 26, 2019 at 10:59 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
-> >
-> > On Tue, Feb 26, 2019 at 7:18 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > >
-> > > Souptick Joarder <jrdr.linux@gmail.com> writes:
-> > > > Remove duplicate headers which are included twice.
-> > > >
-> > > > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-> > > > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > > > ---
-> > > ...
-> > > >  tools/testing/selftests/powerpc/pmu/ebb/fork_cleanup_test.c | 1 -
-> > >
-> > > I took this hunk via the powerpc tree.
-> >
-> > How about taking this entirely through a single tree ?
-> > or Shall I send these changes in different patches ?
->
-> If no comment, can we get this patch in queue for 5.1 ?
+Quoting Rajendra Nayak (2019-03-05 20:07:26)
+> We seem to rely on the number of phandles specified in the
+> 'required-opps' property to identify cases where a device is
+> associated with multiple power domains and hence would have
+> multiple virtual devices that have to be dealt with.
+>=20
+> In cases where we do have devices with multiple power domains
+> but with only one of them being scalable, this logic seems to
+> fail.
+>=20
+> Instead read the number of power domains from DT to identify
+> such cases.
+>=20
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
 
-I will drop this patch as we have submitted these changes in
-different patches. ( Except the one picked by Michael).
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
->
-> >
-> > >
-> > > > diff --git a/tools/testing/selftests/powerpc/pmu/ebb/fork_cleanup_test.c b/tools/testing/selftests/powerpc/pmu/ebb/fork_cleanup_test.c
-> > > > index 167135b..af1b802 100644
-> > > > --- a/tools/testing/selftests/powerpc/pmu/ebb/fork_cleanup_test.c
-> > > > +++ b/tools/testing/selftests/powerpc/pmu/ebb/fork_cleanup_test.c
-> > > > @@ -11,7 +11,6 @@
-> > > >  #include <sys/wait.h>
-> > > >  #include <unistd.h>
-> > > >  #include <setjmp.h>
-> > > > -#include <signal.h>
-> > > >
-> > > >  #include "ebb.h"
-> > >
-> > >
-> > > cheers
