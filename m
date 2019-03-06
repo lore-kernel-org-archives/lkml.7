@@ -2,135 +2,109 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4A4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43657C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C282C2063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551897718;
-	bh=nl69/LqSZ0ikgE119j+nbVp0VMyf7XDQgB3bsfKeOZY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=1s3/Q67xOxzoP+1QvyWypfjWDz0dCTUQmsmwujE9MnlRGcQAp7y2GmfyzaH3EBEjS
-	 eYILQjtr5k9CTcDylKpI0H/HCs5WOWCXYutU8MJbq445uAWY2vIrgYgIoJq4DStH2y
-	 E83mZeBVwfcBr6iIbOLzu4ycry+NUQs/4m2HJY/A=
+	by mail.kernel.org (Postfix) with ESMTP id 162402063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFKuLd26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfCFSl5 (ORCPT
+        id S1727642AbfCFSnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:41:57 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:43479 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfCFSl5 (ORCPT
+        Wed, 6 Mar 2019 13:43:39 -0500
+Received: from mail-it1-f172.google.com ([209.85.166.172]:55002 "EHLO
+        mail-it1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfCFSnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:41:57 -0500
-Received: by mail-yw1-f68.google.com with SMTP id u200so10847652ywu.10;
-        Wed, 06 Mar 2019 10:41:56 -0800 (PST)
+        Wed, 6 Mar 2019 13:43:39 -0500
+Received: by mail-it1-f172.google.com with SMTP id w18so11134863itj.4;
+        Wed, 06 Mar 2019 10:43:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wWCXir4r1pXpp0Hmlieqg9dse5cFF3K/PCHaVFhMfhQ=;
-        b=tRFLglF0sRpWn57v0VTg/oj/p1a+1b2gTkJcO76E9XuUyIu1KSElPmoDfq+o5uo+2Z
-         HEKfjhTMkBEO7AY14hcLp8M12DnSF8HP7LTWLOALgLYKoAAXoerB0IjirLdFxWxnZwPN
-         GkExV8yLjuT3HwlLs1nuJfdJU1C0Vu4MvtHk+tch5PtjVkTteupp3cH5HAO4uCePDy7w
-         EggH+bUSFlHd8dRaG9jdViZhR26eqj43gQ5A+zTOG3aD0XiHn+LJgf8XG6oJ/ZzwMJvw
-         K4t36jIyNtk6PQDigVaWwf2Xog3PENqkgB31LsJEbqiZVcyafHnAPzay4aKM/8Xvkl/h
-         MZyw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XKsJSARaIXiJsFyVSuRaZysl9pduI66L9p2pAHVz2y4=;
+        b=lFKuLd26PoIcx6hogS2YHTqJUMClViOLA34+tUpEX26awsWVyMv7LSszyu7OuPv0UN
+         bf+btaQivqAeZbYIbveaDUEHgxF2IeYKfEn1M7G8tQjrAhgibnH1QlweCxohnf21HIBJ
+         KnDYWZR1D5URjSD/pPnbSv7uRHNXRalACiKdfaOdarCkVRVCnMOWGNii6WNmI2An1lWM
+         TXogghqokttOGPiCN/vtAEwzHqVbGK049zpQSoNpCJPTDBaEpk/OMP8oEOZL+xlXTuFe
+         idMC8kdih4EAGpuyY/DsUcHXT7vRV5gJNzKGr88YIzGAm+DMl64Cf5PvutPuH+gmvQCT
+         ln4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=wWCXir4r1pXpp0Hmlieqg9dse5cFF3K/PCHaVFhMfhQ=;
-        b=hACwLNLUBzc5Gq+4Pw6xiOnIHLm9nGzHX5dmGGwb288WjtDV0lsjvUiDahXhk805TR
-         IxbeVikVJW51SjOfvA9AfsbxanaSLyxXyVYgG2fut8EsQ7PfNvIfG/SUutYR5NEUhN58
-         ohlhTYolziPcH2R/ArHqv00MYPxjEKwfXalcoXoxiQw68rOpQxYw86McMmdrI+7GZj90
-         lYPQEuP3Vkz4fTNmuiqQ2ctI4lgP7EAKG+n/fPSSFD7k7egG+whHcCUmWCimb01JQ+ip
-         xKHXUFQQJKowlxrUSIwOmALMymVmr3BerAyFSG2vAe6M1e5e2iQDSExijsBuvuPsAPE4
-         67nw==
-X-Gm-Message-State: APjAAAV4eBZ9bV6qPv0qgdfuK2UZoEzPxap2ifoorWZWJKc+DV3/DF1S
-        Tj/J7iFCnRv6KYEO3cSKG//iQjyG
-X-Google-Smtp-Source: APXvYqzqSDrHavDiJpJjXptB2uVZfl93ZjjJk6xRoO8jP7wsDd0t9++60KWY4VuiKMO7Oyc+WZaDLA==
-X-Received: by 2002:a25:3f45:: with SMTP id m66mr6812907yba.238.1551897715885;
-        Wed, 06 Mar 2019 10:41:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:200::2:a2f4])
-        by smtp.gmail.com with ESMTPSA id l16sm885560ywk.39.2019.03.06.10.41.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 10:41:55 -0800 (PST)
-Date:   Wed, 6 Mar 2019 10:41:53 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] cgroup changes for v5.1-rc1
-Message-ID: <20190306184153.GI50184@devbig004.ftw2.facebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XKsJSARaIXiJsFyVSuRaZysl9pduI66L9p2pAHVz2y4=;
+        b=ftTev4klAdTtiA7zZQ0uenbHwuOOGtfHiXr9qt0iq4cvjIBdAyzd54qApnx0NTVdt5
+         OFziWptc0vliydvLneDGC+2kkrs0Gk4gc07yS/UnAbqumAAYgoYNC9NwkybrET1f5KyL
+         YuKryxJoAGqNNQZ4Z8nC8ZWXkRYdJlZV/KFkQJbUej7tOtkPdqHJkaCPP+7EbtExELuE
+         TMu8ttXtLuUfxkNTQT7p3PdvKx6N28vybRu90ycMPdGKm1hydaK96sLIRyZ5bnm3wrdU
+         G+U78lKuod6uSRr1DTBAgo1G4rzpQg4Mi2snFwhqsNaFRRC0q+cQpb3pruuxsyn/HfDW
+         RBHg==
+X-Gm-Message-State: APjAAAVfgjvBLk/RFtFEsNFxplEaox1gMY3Zi4nfwm8q4u9chfbSA6LF
+        kly8ImQajnKRWFwhGyFCgaVnPGakSCgyB+o5Xzo=
+X-Google-Smtp-Source: APXvYqzQc8y/SQZqjHW3Wb9NqF49Slajo0x5JptFFGJXyB/4hlWmx/e0UkTYelRMjCYNpSfD5JXcVrwTMz9Jo8gY5ws=
+X-Received: by 2002:a24:45e3:: with SMTP id c96mr2719435itd.89.1551897818040;
+ Wed, 06 Mar 2019 10:43:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306110501-mutt-send-email-mst@kernel.org>
+ <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com> <20190306130955-mutt-send-email-mst@kernel.org>
+ <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com> <20190306133613-mutt-send-email-mst@kernel.org>
+ <7a77ce2a-853f-86c6-6d10-1d8db8fb8ae4@redhat.com>
+In-Reply-To: <7a77ce2a-853f-86c6-6d10-1d8db8fb8ae4@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 6 Mar 2019 10:43:26 -0800
+Message-ID: <CAKgT0UfC0E6_ZSs5zvkTsH+2LdQuL7fWHqNJQtz+j7BThx5FDA@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
+On Wed, Mar 6, 2019 at 10:41 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+> On 3/6/19 1:38 PM, Michael S. Tsirkin wrote:
+> > On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
+> >>> Want to try testing Alex's patches for comparison?
+> >> Somehow I am not in a favor of doing a hypercall on every page (with
+> >> huge TLB order/MAX_ORDER -1) as I think it will be costly.
+> >> I can try using Alex's host side logic instead of virtio.
+> >> Let me know what you think?
+> > I am just saying maybe your setup is misconfigured
+> > that's why you see no speedup.
+> Got it.
+> > If you try Alex's
+> > patches and *don't* see speedup like he does, then
+> > he might be able to help you figure out why.
+> > OTOH if you do then *you* can try figuring out why
+> > don't your patches help.
+> Yeap, I can do that.
+> Thanks.
 
-* Oleg's pids controller accounting update which gets rid of rcu delay
-  in pids accounting updates.
-
-* rstat (cgroup hierarchical stat collection mechanism) optimization.
-
-* Doc updates.
+If I can get your patches up and running I can probably try the same
+test I did to see if I am able to reproduce the behavior. It may take
+a bit though as I am running into several merge conflicts that I am
+having to sort out.
 
 Thanks.
 
-The following changes since commit af0c9af1b3f66052c369d08be3f60fa9a9559e48:
-
-  fs/dcache: Track & report number of negative dentries (2019-01-30 11:02:11 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.1
-
-for you to fetch changes up to 6a613d24effcb875271b8a1c510172e2d6eaaee8:
-
-  cpuset: remove unused task_has_mempolicy() (2019-02-19 06:26:02 -0800)
-
-----------------------------------------------------------------
-Andrea Parri (1):
-      MAINTAINERS: Update cgroup entry
-
-Masahiro Yamada (1):
-      cpuset: remove unused task_has_mempolicy()
-
-Oleg Nesterov (1):
-      cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
-
-Randy Dunlap (1):
-      Documentation: cgroup-v2: eliminate markup warnings
-
-Tejun Heo (1):
-      cgroup, rstat: Don't flush subtree root unless necessary
-
-Tibor Billes (1):
-      cgroup: add documentation for pids.events file
-
- Documentation/admin-guide/cgroup-v2.rst |  2 +-
- Documentation/cgroup-v1/pids.txt        |  3 +++
- MAINTAINERS                             |  5 +++--
- include/linux/cgroup-defs.h             |  2 +-
- include/linux/cgroup.h                  |  2 ++
- kernel/cgroup/cgroup.c                  | 15 +++++++++------
- kernel/cgroup/cpuset.c                  | 13 -------------
- kernel/cgroup/pids.c                    |  4 ++--
- kernel/cgroup/rstat.c                   | 10 ++++++----
- kernel/exit.c                           |  1 +
- 10 files changed, 28 insertions(+), 29 deletions(-)
-
--- 
-tejun
+- Alex
