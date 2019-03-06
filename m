@@ -7,62 +7,65 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2382C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C33EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A325520663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC6220663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="aNAf0fyk"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="V6zDG2jF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbfCFUOo (ORCPT
+        id S1730966AbfCFUOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:14:44 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:37460 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730509AbfCFUOn (ORCPT
+        Wed, 6 Mar 2019 15:14:47 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46234 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730509AbfCFUOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:14:43 -0500
-Received: by mail-yw1-f68.google.com with SMTP id k14so11154162ywe.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 12:14:42 -0800 (PST)
+        Wed, 6 Mar 2019 15:14:45 -0500
+Received: by mail-yw1-f66.google.com with SMTP id n12so11137454ywn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 12:14:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G0zMQ/6cExYamIMb4POA2/0GG6eFLcdSFH8y7vnqv2Y=;
-        b=aNAf0fykzHgqnwL3eAAah+cxE7C0xjjV60kNnYX98sVbli/N7KtuVx6kD7BTwHuD9F
-         etTBXMqn7NbxYueHEyNXYvp2NBWyP/3PzRgZrh1yhzz8//x+Kx9mNBIv2Vj9imPrOLdK
-         awE9TJBa9qyNcCB03UMXxS2MHJjX/Zq5+eKbindiLijnPehERgtNafI/yzmeGEjnnky8
-         r9yQHzt+jvVfqCPk/mnNSClnw+sf4UI9Dp98pE3pgMtGfooqY4Iao730/JMp9X5o26xc
-         Gs4HPxbvx1xD4dpvO+5hVdMtpaJxGCx4WKXbydLw1XPnsJjwTf0wSIe97/WL9koMAG0P
-         XrIw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=55a6gCJDEclvsdzn2Vm2Gi8IIj39JbMXcsWZAnQ7VUg=;
+        b=V6zDG2jFwkpeRLySlbw4QvWvf4M/hThcyCKA61yGrCvaviymXofsilEPzkLZ9UvCUb
+         My25+3wNuO6bE0czrgNkv3ji0b9u9bNs1F45Go9RuUZQX7Jin9opHz+Rq4YILM4DjJHA
+         RtDhjwvZ03bGFDVMsLYAHt9hWncGbK78NElk6Za+OdLbyVQ7yk5xMGQoK51vET874t0a
+         TqTaytZte9BDz4WOvO+mZ3KuMe7jFRQKh5j9IV0Q9MgWD7jVpfWc/AFREK/tkeqwWFVF
+         zNpPdNA+v8Nv4cqqOWkExpd31xQjyYdJvJEhZQ0N7DlPmEkSCajzPqJLxRIIU15Th3xc
+         1N9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G0zMQ/6cExYamIMb4POA2/0GG6eFLcdSFH8y7vnqv2Y=;
-        b=N4CFsc9uCeOLw9gdVk3xHzkcLNsAsoFBNMZ1WBAlcVFEiiqG874KFYDrm/EPkvh2ji
-         6x+epRJda/Ia2L/IWf3Xf+YerqtLwpTWvjhkKsnbE4Hku3zRLXa2b/jul1KiOcUzSzBK
-         FcFRajA2QKBKfhPhqQXbodJ2JB/mbqfFakCvz5W0fBRvjD3efqDJgtpvehRkR1jWT2/f
-         myw9sB282EzScc4QtjdY0PcmvyL/QtM1o9CJhkIxehir75e9kCvfD2kaJJDCMRPzXCRh
-         bXLZ7cEocoDpvW87M6bfvGn7O8cFi7QjwDxieBsiMARGDZDeRCgn4ul/PhicAfmyRHBE
-         Ejvg==
-X-Gm-Message-State: APjAAAWQKgD/mrWrmR0BZX6oKdG7LqqZM+6rkSqAiEgAMRvP5/IZUKeR
-        mNEZNMoZQLFn9zCqNE7fxZlzjg==
-X-Google-Smtp-Source: APXvYqx8JekV4k5xSgYisFq9ohxPqIO1TKAJWZywd+i8xpG0rGyXDZhKSo2aLuDSr7dcxkr1vHM8bQ==
-X-Received: by 2002:a25:6601:: with SMTP id a1mr8591249ybc.467.1551903281939;
-        Wed, 06 Mar 2019 12:14:41 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=55a6gCJDEclvsdzn2Vm2Gi8IIj39JbMXcsWZAnQ7VUg=;
+        b=RW9F4V/Y323G1A3HkgbQuYH6xAuhEdSINCsuWKqHnlpCbInSPUNeqIJELPMBjjtz8k
+         LkhxrU8YdUBDE6EGcIQSCb9zzWAV0kFwL8E9CqqapXgDhy1YekoVE3k5wIz0u4eri0o7
+         kgmllA8Lh1Ay28I0Uq3H1wkZpDT+KEBholLn9YrUObljcdWBhCXVg4Ds8QrQ/kG6EOHD
+         fsPJKKdg94z735OyyjjvoltrShc/stxCwEeJnLASOS3UPh+fPWgkhESwYo0wk4G+8/k2
+         xU9xI5HXD2sBQjok2bRtfDLxjlEvAYjbk2QWGU6GrH7B/8/OfCAmnV1tTbrHGwOqeDs2
+         XJOQ==
+X-Gm-Message-State: APjAAAUn+oQw8RYj4K6dbYNXhwjZ7cuKobFY7E0/W4jGSn9uqVmuSH0W
+        qH5xkJxelKr+jXsdPiCIHccpudsO8Pc=
+X-Google-Smtp-Source: APXvYqxEM5LUQg+aGnD2TTUL9nv0i0ROjXBZnzytI/FJuhK9d1IiaHIDUYjGhRl2gOIp6rPX5SZKgA==
+X-Received: by 2002:a25:7403:: with SMTP id p3mr8754164ybc.356.1551903284133;
+        Wed, 06 Mar 2019 12:14:44 -0800 (PST)
 Received: from cisco.hsd1.co.comcast.net ([2601:282:901:dd7b:316c:2a55:1ab5:9f1c])
-        by smtp.gmail.com with ESMTPSA id s5sm893015ywg.108.2019.03.06.12.14.40
+        by smtp.gmail.com with ESMTPSA id s5sm893015ywg.108.2019.03.06.12.14.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 12:14:41 -0800 (PST)
+        Wed, 06 Mar 2019 12:14:43 -0800 (PST)
 From:   Tycho Andersen <tycho@tycho.ws>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>
-Subject: [PATCH 1/2] seccomp: fix up grammar in comment
-Date:   Wed,  6 Mar 2019 13:14:12 -0700
-Message-Id: <20190306201413.14153-1-tycho@tycho.ws>
+Cc:     linux-kernel@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        stable@vger.kernel.org
+Subject: [PATCH 2/2] seccomp: disallow NEW_LISTENER and TSYNC flags
+Date:   Wed,  6 Mar 2019 13:14:13 -0700
+Message-Id: <20190306201413.14153-2-tycho@tycho.ws>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190306201413.14153-1-tycho@tycho.ws>
+References: <20190306201413.14153-1-tycho@tycho.ws>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,27 +73,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sentence is kind of a train wreck anyway, but at least dropping the
-extra pronoun helps somewhat.
+As the comment notes, the return codes for TSYNC and NEW_LISTENER conflict,
+because they both return positive values, one in the case of success and
+one in the case of error. So, let's disallow both of these flags together.
+
+While this is technically a userspace break, all the users I know of are
+still waiting on me to land this feature in libseccomp, so I think it'll be
+safe. Also, at present my use case doesn't require TSYNC at all, so this
+isn't a big deal to disallow. If someone wanted to support this, a path
+forward would be to add a new flag like
+TSYNC_AND_LISTENER_YES_I_UNDERSTAND_THAT_TSYNC_WILL_JUST_RETURN_EAGAIN, but
+the use cases are so different I don't see it really happening.
+
+Finally, it's worth noting that this does actually fix a UAF issue: at the end
+of seccomp_set_mode_filter(), we have:
+
+        if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+                if (ret < 0) {
+                        listener_f->private_data = NULL;
+                        fput(listener_f);
+                        put_unused_fd(listener);
+                } else {
+                        fd_install(listener, listener_f);
+                        ret = listener;
+                }
+        }
+out_free:
+        seccomp_filter_free(prepared);
+
+But if ret > 0 because TSYNC raced, we'll install the listener fd and then free
+the filter out from underneath it, causing a UAF when the task closes it or
+dies. This patch also switches the condition to be simply if (ret), so that
+if someone does add the flag mentioned above, they won't have to remember
+to fix this too.
 
 Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+CC: stable@vger.kernel.org # v5.0+
 ---
- kernel/seccomp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/seccomp.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index e815781ed751..d0d355ded2f4 100644
+index d0d355ded2f4..79bada51091b 100644
 --- a/kernel/seccomp.c
 +++ b/kernel/seccomp.c
-@@ -329,7 +329,7 @@ static int is_ancestor(struct seccomp_filter *parent,
-  * Expects sighand and cred_guard_mutex locks to be held.
+@@ -500,7 +500,10 @@ seccomp_prepare_user_filter(const char __user *user_filter)
   *
-  * Returns 0 on success, -ve on error, or the pid of a thread which was
-- * either not in the correct seccomp mode or it did not have an ancestral
-+ * either not in the correct seccomp mode or did not have an ancestral
-  * seccomp filter.
+  * Caller must be holding current->sighand->siglock lock.
+  *
+- * Returns 0 on success, -ve on error.
++ * Returns 0 on success, -ve on error, or
++ *   - in TSYNC mode: the pid of a thread which was either not in the correct
++ *     seccomp mode or did not have an ancestral seccomp filter
++ *   - in NEW_LISTENER mode: the fd of the new listener
   */
- static inline pid_t seccomp_can_sync_threads(void)
+ static long seccomp_attach_filter(unsigned int flags,
+ 				  struct seccomp_filter *filter)
+@@ -1256,6 +1259,16 @@ static long seccomp_set_mode_filter(unsigned int flags,
+ 	if (flags & ~SECCOMP_FILTER_FLAG_MASK)
+ 		return -EINVAL;
+ 
++	/*
++	 * In the successful case, NEW_LISTENER returns the new listener fd.
++	 * But in the failure case, TSYNC returns the thread that died. If you
++	 * combine these two flags, there's no way to tell whether something
++	 * succeded or failed. So, let's disallow this combination.
++	 */
++	if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
++	    (flags && SECCOMP_FILTER_FLAG_NEW_LISTENER))
++		return -EINVAL;
++
+ 	/* Prepare the new filter before holding any locks. */
+ 	prepared = seccomp_prepare_user_filter(filter);
+ 	if (IS_ERR(prepared))
+@@ -1302,7 +1315,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
+ 		mutex_unlock(&current->signal->cred_guard_mutex);
+ out_put_fd:
+ 	if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+-		if (ret < 0) {
++		if (ret) {
+ 			listener_f->private_data = NULL;
+ 			fput(listener_f);
+ 			put_unused_fd(listener);
 -- 
 2.19.1
 
