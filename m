@@ -2,328 +2,152 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECEFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12923C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259E820657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9D520645
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfCFS6X (ORCPT
+        id S1729955AbfCFTAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:58:23 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:58157 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfCFS6X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:58:23 -0500
-Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPXxi-1hOCkS3TOc-00MfEN; Wed, 06 Mar 2019 19:53:06 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        ooo@electrozaur.com, linux-scsi@vger.kernel.org,
-        esc.storagedev@microsemi.com
-Subject: [PATCH] drivers: scsi: Kconfig: pedantic cleanups
-Date:   Wed,  6 Mar 2019 19:53:04 +0100
-Message-Id: <1551898384-19624-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:Ka7nKNxWRosUs8Qv8Q2LLt9aNP0XWvd/hUzn19Cd8szzUxeFNdd
- gD8ZgdASKolBOou5NVGLfjrgx6vw5eXfNAWhAFkmPlNtKWeOnOBHf1SO1cZektYdGagqpLT
- LAb2aPQtHA7B0MJrDuvnRGxsd50yNOlu7uziFoZssxipCE/EIG3BpH4jswXzx+zNeXs5tJl
- I/txkLpAqwcDb5jEW/VuA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3gSjJi4Vh3I=:76Kc3gsgua5bcL3XZ3KlK4
- jDL9W/UcjQDuRj3Ou5Ha5bny/MSfDBWxgtmw2zU/FW1Nu0RBYRwZBkdjfNbw4XIjgQYS9agzO
- J/G+qbIsyy6YGCVyR3dgIUMYhvZIiyTnNa0u998aExcpVP1HdY0myCnJnJf45n+M0n3Ha6wEO
- xQXmHcjJZPQ4qfptL1rxIyauokd0jAxZkR3bnjQgG1Nbes9k9FTjDo+pvhuPtiHRX1cP5UfSp
- OGr4I6fP8myFJXWLgFnJCg1VvpMeJ4ZH8LWMqeHZDNs5CaFZPS6BqYHET1oyeaESQsrSjEMyq
- zOmzP1Xw/CmcX1FZOk49Puhpz2GYzoEpGEILukkjQVXKduYKrlLcZv+4IeILBAgyP/HB9JQvU
- hrbiHksAArDi8zAxHkVLjUrAFsPXMnL2xQOTwt/PlzGkRm5mu9o5eEPV/DJZYRcKmaaqjakhk
- CMsmZHVor94nmT1iE8ub4j6BHb6oRejKVaXDHg++uLNumU1XMTrQ6QzxpYb0D42RQk8wyO974
- Jcj/+IRePMcIramGZOOJzjwcU4dOTc0xFvWgKgO5allgTXhAW0zPbvG6+1J59ckzwLOAyqV98
- SXgqIXei5PFIglx294fPGEoknzNDQkhMkDKeDnaSrzWNzkuMUS38vw0d4YAAjYGWTophKVXoC
- TbPCte9tn6JtL+mzQKwXHfsyGR7aTMqF6LAUbGHTR6ek8s6ZYaww7wTW9ixOx42LYMxHG3GPc
- 1XYYvPYoojzvxsLRUkVz6iXgkwsuz9gpp00ZLQ==
+        Wed, 6 Mar 2019 14:00:20 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:44876 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbfCFTAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 14:00:20 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7916587649;
+        Wed,  6 Mar 2019 19:00:19 +0000 (UTC)
+Received: from [10.36.116.78] (ovpn-116-78.ams2.redhat.com [10.36.116.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B632519028;
+        Wed,  6 Mar 2019 18:59:58 +0000 (UTC)
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
+        riel@surriel.com, dodgen@google.com, konrad.wilk@oracle.com,
+        dhildenb@redhat.com, aarcange@redhat.com, alexander.duyck@gmail.com
+References: <20190306155048.12868-1-nitesh@redhat.com>
+ <20190306110501-mutt-send-email-mst@kernel.org>
+ <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
+ <20190306130955-mutt-send-email-mst@kernel.org>
+ <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com>
+ <20190306133826-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <3f87916d-8d18-013c-8988-9eb516c9cd2e@redhat.com>
+Date:   Wed, 6 Mar 2019 19:59:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190306133826-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 06 Mar 2019 19:00:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/scsi/Kconfig          | 63 +++++++++++++++++++++----------------------
- drivers/scsi/osd/Kconfig      | 38 +++++++++++++-------------
- drivers/scsi/pcmcia/Kconfig   |  2 +-
- drivers/scsi/qedf/Kconfig     |  8 +++---
- drivers/scsi/smartpqi/Kconfig | 16 +++++------
- 5 files changed, 63 insertions(+), 64 deletions(-)
+On 06.03.19 19:43, Michael S. Tsirkin wrote:
+> On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
+>>>> Here are the results:
+>>>>
+>>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA node with
+>>>> total memory of 15GB and no swap. In each of the guest, memhog is run
+>>>> with 5GB. Post-execution of memhog, Host memory usage is monitored by
+>>>> using Free command.
+>>>>
+>>>> Without Hinting:
+>>>>                  Time of execution    Host used memory
+>>>> Guest 1:        45 seconds            5.4 GB
+>>>> Guest 2:        45 seconds            10 GB
+>>>> Guest 3:        1  minute               15 GB
+>>>>
+>>>> With Hinting:
+>>>>                 Time of execution     Host used memory
+>>>> Guest 1:        49 seconds            2.4 GB
+>>>> Guest 2:        40 seconds            4.3 GB
+>>>> Guest 3:        50 seconds            6.3 GB
+>>> OK so no improvement.
+>> If we are looking in terms of memory we are getting back from the guest,
+>> then there is an improvement. However, if we are looking at the
+>> improvement in terms of time of execution of memhog then yes there is none.
+> 
+> Yes but the way I see it you can't overcommit this unused memory
+> since guests can start using it at any time.  You timed it carefully
+> such that this does not happen, but what will cause this timing on real
+> guests?
 
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index f38882f..7a9eab1 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -1,9 +1,9 @@
- menu "SCSI device support"
- 
- config SCSI_MOD
--       tristate
--       default y if SCSI=n || SCSI=y
--       default m if SCSI=m
-+	tristate
-+	default y if SCSI=n || SCSI=y
-+	default m if SCSI=m
- 
- config RAID_ATTRS
- 	tristate "RAID Transport Class"
-@@ -47,7 +47,7 @@ config SCSI_ESP_PIO
- 
- config SCSI_NETLINK
- 	bool
--	default	n
-+	default n
- 	depends on NET
- 
- config SCSI_PROC_FS
-@@ -307,25 +307,25 @@ config ISCSI_TCP
- 	select CRYPTO_CRC32C
- 	select SCSI_ISCSI_ATTRS
- 	help
--	 The iSCSI Driver provides a host with the ability to access storage
--	 through an IP network. The driver uses the iSCSI protocol to transport
--	 SCSI requests and responses over a TCP/IP network between the host
--	 (the "initiator") and "targets".  Architecturally, the iSCSI driver
--	 combines with the host's TCP/IP stack, network drivers, and Network
--	 Interface Card (NIC) to provide the same functions as a SCSI or a
--	 Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
-+	  The iSCSI Driver provides a host with the ability to access storage
-+	  through an IP network. The driver uses the iSCSI protocol to transport
-+	  SCSI requests and responses over a TCP/IP network between the host
-+	  (the "initiator") and "targets".  Architecturally, the iSCSI driver
-+	  combines with the host's TCP/IP stack, network drivers, and Network
-+	  Interface Card (NIC) to provide the same functions as a SCSI or a
-+	  Fibre Channel (FC) adapter driver with a Host Bus Adapter (HBA).
- 
--	 To compile this driver as a module, choose M here: the
--	 module will be called iscsi_tcp.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called iscsi_tcp.
- 
--	 The userspace component needed to initialize the driver, documentation,
--	 and sample configuration files can be found here:
-+	  The userspace component needed to initialize the driver, documentation,
-+	  and sample configuration files can be found here:
- 
--	 http://open-iscsi.org
-+	  http://open-iscsi.org
- 
- config ISCSI_BOOT_SYSFS
- 	tristate "iSCSI Boot Sysfs Interface"
--	default	n
-+	default n
- 	help
- 	  This option enables support for exposing iSCSI boot information
- 	  via sysfs to userspace. If you wish to export this information,
-@@ -340,7 +340,7 @@ source "drivers/scsi/cxlflash/Kconfig"
- config SGIWD93_SCSI
- 	tristate "SGI WD93C93 SCSI Driver"
- 	depends on SGI_HAS_WD93 && SCSI
--  	help
-+	help
- 	  If you have a Western Digital WD93 SCSI controller on
- 	  an SGI MIPS system, say Y.  Otherwise, say N.
- 
-@@ -455,7 +455,6 @@ config SCSI_AACRAID
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called aacraid.
- 
--
- source "drivers/scsi/aic7xxx/Kconfig.aic7xxx"
- source "drivers/scsi/aic7xxx/Kconfig.aic79xx"
- source "drivers/scsi/aic94xx/Kconfig"
-@@ -475,7 +474,7 @@ config SCSI_DPT_I2O
- 	tristate "Adaptec I2O RAID support "
- 	depends on SCSI && PCI && VIRT_TO_BUS
- 	help
--	  This driver supports all of Adaptec's I2O based RAID controllers as 
-+	  This driver supports all of Adaptec's I2O based RAID controllers as
- 	  well as the DPT SmartRaid V cards.  This is an Adaptec maintained
- 	  driver by Deanna Bonds.  See <file:Documentation/scsi/dpti.txt>.
- 
-@@ -669,7 +668,7 @@ config SCSI_GDTH
- 	---help---
- 	  Formerly called GDT SCSI Disk Array Controller Support.
- 
--	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI) 
-+	  This is a driver for RAID/SCSI Disk Array Controllers (EISA/ISA/PCI)
- 	  manufactured by Intel Corporation/ICP vortex GmbH. It is documented
- 	  in the kernel source in <file:drivers/scsi/gdth.c> and
- 	  <file:drivers/scsi/gdth.h>.
-@@ -1152,8 +1151,8 @@ config SCSI_LPFC
- 	depends on NVME_FC || NVME_FC=n
- 	select CRC_T10DIF
- 	---help---
--          This lpfc driver supports the Emulex LightPulse
--          Family of Fibre Channel PCI host adapters.
-+	  This lpfc driver supports the Emulex LightPulse
-+	  Family of Fibre Channel PCI host adapters.
- 
- config SCSI_LPFC_DEBUG_FS
- 	bool "Emulex LightPulse Fibre Channel debugfs Support"
-@@ -1468,14 +1467,14 @@ config ZFCP
- 	depends on S390 && QDIO && SCSI
- 	depends on SCSI_FC_ATTRS
- 	help
--          If you want to access SCSI devices attached to your IBM eServer
--          zSeries by means of Fibre Channel interfaces say Y.
--          For details please refer to the documentation provided by IBM at
--          <http://oss.software.ibm.com/developerworks/opensource/linux390>
-+	  If you want to access SCSI devices attached to your IBM eServer
-+	  zSeries by means of Fibre Channel interfaces say Y.
-+	  For details please refer to the documentation provided by IBM at
-+	  <http://oss.software.ibm.com/developerworks/opensource/linux390>
- 
--          This driver is also available as a module. This module will be
--          called zfcp. If you want to compile it as a module, say M here
--          and read <file:Documentation/kbuild/modules.txt>.
-+	  This driver is also available as a module. This module will be
-+	  called zfcp. If you want to compile it as a module, say M here
-+	  and read <file:Documentation/kbuild/modules.txt>.
- 
- config SCSI_PMCRAID
- 	tristate "PMC SIERRA Linux MaxRAID adapter support"
-@@ -1506,8 +1505,8 @@ config SCSI_VIRTIO
- 	tristate "virtio-scsi support"
- 	depends on VIRTIO
- 	help
--          This is the virtual HBA driver for virtio.  If the kernel will
--          be used in a virtual machine, say Y or M.
-+	  This is the virtual HBA driver for virtio.  If the kernel will
-+	  be used in a virtual machine, say Y or M.
- 
- source "drivers/scsi/csiostor/Kconfig"
- 
-diff --git a/drivers/scsi/osd/Kconfig b/drivers/scsi/osd/Kconfig
-index 347cc5e..90b08c3 100644
---- a/drivers/scsi/osd/Kconfig
-+++ b/drivers/scsi/osd/Kconfig
-@@ -15,35 +15,35 @@ config SCSI_OSD_INITIATOR
- 	tristate "OSD-Initiator library"
- 	depends on SCSI
- 	help
--		Enable the OSD-Initiator library (libosd.ko).
--		NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
--		dependencies
-+	  Enable the OSD-Initiator library (libosd.ko).
-+	  NOTE: You must also select CRYPTO_SHA1 + CRYPTO_HMAC and their
-+	  dependencies
- 
- config SCSI_OSD_ULD
- 	tristate "OSD Upper Level driver"
- 	depends on SCSI_OSD_INITIATOR
- 	help
--		Build a SCSI upper layer driver that exports /dev/osdX devices
--		to user-mode for testing and controlling OSD devices. It is also
--		needed by exofs, for mounting an OSD based file system.
-+	  Build a SCSI upper layer driver that exports /dev/osdX devices
-+	  to user-mode for testing and controlling OSD devices. It is also
-+	  needed by exofs, for mounting an OSD based file system.
- 
- config SCSI_OSD_DPRINT_SENSE
--    int "(0-2) When sense is returned, DEBUG print all sense descriptors"
--    default 1
--    depends on SCSI_OSD_INITIATOR
--    help
--        When a CHECK_CONDITION status is returned from a target, and a
--        sense-buffer is retrieved, turning this on will dump a full
--        sense-decoding message. Setting to 2 will also print recoverable
--        errors that might be regularly returned for some filesystem
--        operations.
-+	int "(0-2) When sense is returned, DEBUG print all sense descriptors"
-+	default 1
-+	depends on SCSI_OSD_INITIATOR
-+	help
-+	  When a CHECK_CONDITION status is returned from a target, and a
-+	  sense-buffer is retrieved, turning this on will dump a full
-+	  sense-decoding message. Setting to 2 will also print recoverable
-+	  errors that might be regularly returned for some filesystem
-+	  operations.
- 
- config SCSI_OSD_DEBUG
- 	bool "Compile All OSD modules with lots of DEBUG prints"
- 	default n
- 	depends on SCSI_OSD_INITIATOR
- 	help
--		OSD Code is populated with lots of OSD_DEBUG(..) printouts to
--		dmesg. Enable this if you found a bug and you want to help us
--		track the problem (see also MAINTAINERS). Setting this will also
--		force SCSI_OSD_DPRINT_SENSE=2.
-+	  OSD Code is populated with lots of OSD_DEBUG(..) printouts to
-+	  dmesg. Enable this if you found a bug and you want to help us
-+	  track the problem (see also MAINTAINERS). Setting this will also
-+	  force SCSI_OSD_DPRINT_SENSE=2.
-diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
-index 2d435f1..b63b34d 100644
---- a/drivers/scsi/pcmcia/Kconfig
-+++ b/drivers/scsi/pcmcia/Kconfig
-@@ -32,7 +32,7 @@ config PCMCIA_NINJA_SCSI
- 	  NinjaSCSI-3: (version string: "WBT","NinjaSCSI-3","R1.0")
- 	    IO-DATA     PCSC-FP
- 	    ALPHA DATA  AD-PCS201
--	    CyQ've      SFC-201  
-+	    CyQ've      SFC-201
- 	    LOGITECH    LPM-SCSI2E
- 	    Pioneer PCR-PR24's card
- 	    I-O DATA CDPS-PX24's card (PCSC-F)
-diff --git a/drivers/scsi/qedf/Kconfig b/drivers/scsi/qedf/Kconfig
-index 943f5ee..e2693db 100644
---- a/drivers/scsi/qedf/Kconfig
-+++ b/drivers/scsi/qedf/Kconfig
-@@ -2,10 +2,10 @@ config QEDF
- 	tristate "QLogic QEDF 25/40/100Gb FCoE Initiator Driver Support"
- 	depends on PCI && SCSI
- 	depends on QED
--        depends on LIBFC
--        depends on LIBFCOE
-+	depends on LIBFC
-+	depends on LIBFCOE
- 	select QED_LL2
- 	select QED_FCOE
- 	---help---
--	This driver supports FCoE offload for the QLogic FastLinQ
--	41000 Series Converged Network Adapters.
-+	  This driver supports FCoE offload for the QLogic FastLinQ
-+	  41000 Series Converged Network Adapters.
-diff --git a/drivers/scsi/smartpqi/Kconfig b/drivers/scsi/smartpqi/Kconfig
-index 97e159c..fafc7f7 100644
---- a/drivers/scsi/smartpqi/Kconfig
-+++ b/drivers/scsi/smartpqi/Kconfig
-@@ -41,14 +41,14 @@ config SCSI_SMARTPQI
- 	select SCSI_SAS_ATTRS
- 	select RAID_ATTRS
- 	---help---
--	This driver supports Microsemi PQI controllers.
-+	  This driver supports Microsemi PQI controllers.
- 
--	<http://www.microsemi.com>
-+	  <http://www.microsemi.com>
- 
--	To compile this driver as a module, choose M here: the
--	module will be called smartpqi.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called smartpqi.
- 
--        Note: the aacraid driver will not manage a smartpqi
--              controller. You need to enable smartpqi for smartpqi
--              controllers. For more information, please see
--              Documentation/scsi/smartpqi.txt
-+	  Note: the aacraid driver will not manage a smartpqi
-+	        controller. You need to enable smartpqi for smartpqi
-+	        controllers. For more information, please see
-+	        Documentation/scsi/smartpqi.txt
+Whenever you overcommit you will need backup swap. There is no way
+around it. It just makes the probability of you having to go to disk
+less likely.
+
+If you assume that all of your guests will be using all of their memory
+all the time, you don't have to think about overcommiting memory in the
+first place. But this is not what we usually have.
+
+> 
+> So the real reason to want this is to avoid need for writeback on free
+> pages.
+> 
+> Right?
+
 -- 
-1.9.1
 
+Thanks,
+
+David / dhildenb
