@@ -2,143 +2,480 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE09C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8240420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551879572;
-	bh=RZVjRder/5EZYovaqiWdThINkoZDSPcukDSyvz7UueY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rJAl0JTK6BluPxCb119dRmR7zcmmQDGFZluAPsngHxxI2JeqoPl62bayHT9puqis4
-	 ggSp67sSqP3SKD25tvMiYd+ZI+JXR/Y8sZWpc2fE9dehwHzLVxEHcDUo87J+GZKmxb
-	 4fJxgzAfatXcuWW0Tx8cnKdFe035WIdwDpVLbnDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 69AA3206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0Li5ibG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfCFNjb (ORCPT
+        id S1729020AbfCFNjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 08:39:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfCFNja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 08:39:30 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEB5B208E4;
-        Wed,  6 Mar 2019 13:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551879569;
-        bh=RZVjRder/5EZYovaqiWdThINkoZDSPcukDSyvz7UueY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pyDhtWf3VomeFuoODOPJwzvo0gD/vrvpcOihJjJpWIYNU/PKa0lxtpGQtYeL2wnfK
-         56RkqFln093zBQbjbcBviyKTm7LjPsNcAR3pR6ZRFLEmnazVoCFOGW8ybmQ/2k3f9K
-         6TMFRXS8wqLNsLlitUlppN5U+/DEOScV+nM6qkow=
-Received: by mail-qk1-f178.google.com with SMTP id f196so6762109qke.10;
-        Wed, 06 Mar 2019 05:39:28 -0800 (PST)
-X-Gm-Message-State: APjAAAWk+Jsa+yv4rMcKGKAG6rQnRjSX1oZvWrFqfN8+w2FyIsGbU27I
-        zhDcWBPZFaXACoHK4r9+uIbt3u21eX9zIGV2eQ==
-X-Google-Smtp-Source: APXvYqyksOZr446gGXqxVX90+lV2/bBqVQ63Hywl/8JHs31waHhHSdL152klc2GCHnoMFeeC2uIODSOdqDJM3NAtv6o=
-X-Received: by 2002:a05:620a:123b:: with SMTP id v27mr5357078qkj.29.1551879568048;
- Wed, 06 Mar 2019 05:39:28 -0800 (PST)
+        Wed, 6 Mar 2019 08:39:47 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36775 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCFNjq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 08:39:46 -0500
+Received: by mail-it1-f196.google.com with SMTP id v83so10183129itf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 05:39:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ushobstt4JlVFc+fq33Ltq3wZ1UewxBwnEnhP0cKEkU=;
+        b=S0Li5ibG25S0zJmO+qE+XmosTDEyALFLs/UHlUi/OL+Fc0Eqmv5FPfhsyHZs95lY3g
+         toJEf5Bm23os4/Bj0IIuEzUkBRdpc6zTmCXdINJBsdOVP8oxhgWolV3pQJdnCc5Plr46
+         ErvXGP+/vxSjxIFG1KASWpX1ckSFXNyEuwhWklmsTCC5209XDzbFxR6dTxM33hvlvD3f
+         8U88dpUU76ZRVH3KZfREYNmJNc8do5SOUA561TnsK7kOa3w5k1j/lhPKEE7uMhZKHrgg
+         nkzMuBmyNq49waCflH1YMe4fuUXHqbOhmWy5VrHWRBAhgaIMEzNlPl257SbVLoGdTyxT
+         +0dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ushobstt4JlVFc+fq33Ltq3wZ1UewxBwnEnhP0cKEkU=;
+        b=MeRzeFfjYwMFvsLNULKIcobaPXdr4w/Bw1jq0rAcUPdyYALoseJtn0lqwBU8edf8ar
+         IeXiWFcH2Epu19Fn/TNn1Tu7aeUBq2LOf8K/P5SSNK5wu5CoPglhPO6RBiiyDrKKp2/7
+         vT7hRcsnZn9xplGHqY7Yf2F6ukLpyY+5uY4L0XzyC1c+2XNfOA+RDSo4saDQn0uLOBxd
+         +dxBdJyQtFyHtOmlyDdp/vGDZDB8/at4P5pIwI9mhQi0BnysHQO9HqKCLlU1nEFkT0TX
+         uHvloz6WMRGMgjkTZgCK7R0bN/Dt332i2HxsG1lzl1RJzINIY7vTMoga1teh5LDEwFAj
+         RLww==
+X-Gm-Message-State: APjAAAWyYb0+XvkV9WRdoQlVsg7Ua8iFDNGtKGitCx+QgkcSY4n6F3WQ
+        uSMbGWtqkY+uS7F7TJ/FRpM6NyuW2MdnjzdOZm+gNg==
+X-Google-Smtp-Source: APXvYqxjOJzXXo7+Sw+5Hfw2G4JcfYTZ2vbiMUZZEZwubbuZLXnUSDGbPLn+4e0RNbchQNXrtKbijpYVBC8LlmUeHFI=
+X-Received: by 2002:a24:674a:: with SMTP id u71mr2042857itc.12.1551879584804;
+ Wed, 06 Mar 2019 05:39:44 -0800 (PST)
 MIME-Version: 1.0
-References: <3c886941-bf9d-f040-b568-ee7a8eba9a04@free.fr> <CGME20190123055509epcas3p18a6d66fa08412f2308cb2c1997328ea8@epcas3p1.samsung.com>
- <20190123055414.GA4747@rapoport-lnx> <78f4ea8a-996d-038e-9e33-5ff02fa2c43f@samsung.com>
- <20190123123143.GE4747@rapoport-lnx> <4b8f82c4-7f8f-b814-c1ec-9902e43963f6@free.fr>
- <617e0d57-342d-4162-bd21-ece18e481d87@free.fr> <CAL_JsqKbCg-rGmLoA3mPv54=LMuQBfevfzL8f2QPVyjN-sNk8w@mail.gmail.com>
- <20190213085028.6199594b@canb.auug.org.au> <CAL_JsqK-cC6oVZ9MkP+ExOGjCRhA0XxGSgqGKL3W9bFF3rKAgA@mail.gmail.com>
- <20190306021248.GA17298@roeck-us.net>
-In-Reply-To: <20190306021248.GA17298@roeck-us.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 6 Mar 2019 07:39:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKhhZuPi8vWXZLTip_=kLVvknvQxzVXMaKD3BB0YHOA7A@mail.gmail.com>
-Message-ID: <CAL_JsqKhhZuPi8vWXZLTip_=kLVvknvQxzVXMaKD3BB0YHOA7A@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] of: fix kmemleak crash caused by imbalance in
- early memory reservation
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
+References: <20190228145450.289603901@infradead.org> <20190228150152.078767622@infradead.org>
+ <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
+ <20190301144556.GY32477@hirez.programming.kicks-ass.net> <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
+ <20190301152305.GJ32494@hirez.programming.kicks-ass.net> <20190306131347.GX32534@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190306131347.GX32534@hirez.programming.kicks-ass.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 6 Mar 2019 14:39:33 +0100
+Message-ID: <CACT4Y+YFkDRwTN1MKqLDePfuRis3Qas1kgEF7g5eVR0ijodtkw@mail.gmail.com>
+Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Prateek Patel <prpatel@nvidia.com>,
-        DT <devicetree@vger.kernel.org>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 8:12 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On Wed, Mar 6, 2019 at 2:13 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Tue, Feb 12, 2019 at 04:12:24PM -0600, Rob Herring wrote:
-> > On Tue, Feb 12, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > On Tue, 12 Feb 2019 10:03:09 -0600 Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Mon, Feb 11, 2019 at 10:47 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
-> > > > >
-> > > > > On 04/02/2019 15:37, Marc Gonzalez wrote:
-> > > > >
-> > > > > > Cc: stable@vger.kernel.org # 3.15+
-> > > > > > Fixes: 3f0c820664483 ("drivers: of: add initialization code for dynamic reserved memory")
-> > > > > > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > > Acked-by: Prateek Patel <prpatel@nvidia.com>
-> > > > > > Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > > ---
-> > > > > > Resend with DT CCed to reach robh's patch queue
-> > > > > > I added CC: stable, Fixes, and Prateek's ack
-> > > > > > Trim recipients list to minimize inconvenience
-> > > > >
-> > > > > I'm confused over commit 3532b3b554a216f30edb841d29eef48521bdc592 in linux-next
-> > > > > "memblock: drop __memblock_alloc_base()"
-> > > > >
-> > > > > It's definitely going to conflict with the proposed patch
-> > > > > over drivers/of/of_reserved_mem.c
-> > > > >
-> > > > > Rob, what's the next step then?
-> > > >
-> > > > Rebase it on top of what's in linux-next and apply it to the tree
-> > > > which has the above dependency. I'm guessing that is Andrew Morton's
-> > > > tree.
-> > >
-> > > Yeah, that is in Andrew's "post linux-next" patch series, so if you
-> > > rebase it on top of linux-next and then send it to Andrew with some
-> > > explanation.
-> > >
-> > > ...
-> > >
-> > > Actually, if it is intended for the stable trees, then presumably it is
-> > > intended to go to Linus for the current release?  In which case, the
-> > > patch in Andrew's tree will have to be changed to cope after your patch
-> > > appears in Linus' tree (and therefore, linux-next).
-> >
-> > At this point in the cycle, I wasn't planning to send this for 5.0.
-> > It's not fixing something introduced in 5.0 and it is a debug feature.
-> >
-> Hi Rob,
+> On Fri, Mar 01, 2019 at 04:23:05PM +0100, Peter Zijlstra wrote:
 >
-> this may be a debug feature, but we do test our kernels with it enabled,
-> and the problem does affect our 4.19 branch (chromeos-4.19). Are you
-> suggesting that we should backport the fix into our branch and not send
-> the backport to -stable ?
+> > But yes, I'll try some annotation, see what that looks like.
+>
+> OK; that took a lot of time.. and a number of objtool bugs fixed but I
+> think I have something that I don't hate -- although it is not as solid
+> as I'd like it to be.
+>
+>
+> unmodified:
+>
+> 0000 0000000000000150 <__asan_load1>:
+> 0000  150:      48 b8 ff ff ff ff ff    movabs $0xffff7fffffffffff,%rax
+> 0007  157:      7f ff ff
+> 000a  15a:      48 8b 0c 24             mov    (%rsp),%rcx
+> 000e  15e:      48 39 c7                cmp    %rax,%rdi
+> 0011  161:      76 23                   jbe    186 <__asan_load1+0x36>
+> 0013  163:      48 b8 00 00 00 00 00    movabs $0xdffffc0000000000,%rax
+> 001a  16a:      fc ff df
+> 001d  16d:      48 89 fa                mov    %rdi,%rdx
+> 0020  170:      48 c1 ea 03             shr    $0x3,%rdx
+> 0024  174:      0f b6 04 02             movzbl (%rdx,%rax,1),%eax
+> 0028  178:      84 c0                   test   %al,%al
+> 002a  17a:      75 01                   jne    17d <__asan_load1+0x2d>
+> 002c  17c:      c3                      retq
+> 002d  17d:      89 fa                   mov    %edi,%edx
+> 002f  17f:      83 e2 07                and    $0x7,%edx
+> 0032  182:      38 d0                   cmp    %dl,%al
+> 0034  184:      7f f6                   jg     17c <__asan_load1+0x2c>
+> 0036  186:      31 d2                   xor    %edx,%edx
+> 0038  188:      be 01 00 00 00          mov    $0x1,%esi
+> 003d  18d:      e9 00 00 00 00          jmpq   192 <__asan_load1+0x42>
+> 003e                    18e: R_X86_64_PLT32     kasan_report-0x4
+>
+> exception:
+>
+> 0000 0000000000000150 <__asan_load1>:
+> 0000  150:      48 b8 ff ff ff ff ff    movabs $0xffff7fffffffffff,%rax
+> 0007  157:      7f ff ff
+> 000a  15a:      48 8b 0c 24             mov    (%rsp),%rcx
+> 000e  15e:      48 39 c7                cmp    %rax,%rdi
+> 0011  161:      76 23                   jbe    186 <__asan_load1+0x36>
+> 0013  163:      48 b8 00 00 00 00 00    movabs $0xdffffc0000000000,%rax
+> 001a  16a:      fc ff df
+> 001d  16d:      48 89 fa                mov    %rdi,%rdx
+> 0020  170:      48 c1 ea 03             shr    $0x3,%rdx
+> 0024  174:      0f b6 04 02             movzbl (%rdx,%rax,1),%eax
+> 0028  178:      84 c0                   test   %al,%al
+> 002a  17a:      75 01                   jne    17d <__asan_load1+0x2d>
+> 002c  17c:      c3                      retq
+> 002d  17d:      89 fa                   mov    %edi,%edx
+> 002f  17f:      83 e2 07                and    $0x7,%edx
+> 0032  182:      38 d0                   cmp    %dl,%al
+> 0034  184:      7f f6                   jg     17c <__asan_load1+0x2c>
+> 0036  186:      65 48 8b 04 25 00 00    mov    %gs:0x0,%rax
+> 003d  18d:      00 00
+> 003b                    18b: R_X86_64_32S       current_task
+> 003f  18f:      8b 80 68 08 00 00       mov    0x868(%rax),%eax
+> 0045  195:      85 c0                   test   %eax,%eax
+> 0047  197:      75 e3                   jne    17c <__asan_load1+0x2c>
+> 0049  199:      be 01 00 00 00          mov    $0x1,%esi
+> 004e  19e:      31 d2                   xor    %edx,%edx
+> 0050  1a0:      0f 0b                   ud2
+> 0052  1a2:      c3                      retq
+>
+> annotated:
+>
+> 0000 0000000000000150 <__asan_load1>:
+> 0000  150:      48 b8 ff ff ff ff ff    movabs $0xffff7fffffffffff,%rax
+> 0007  157:      7f ff ff
+> 000a  15a:      53                      push   %rbx
 
-No, not at all. Just that I wasn't going to add it to the probable
-last 5.0-rc and would wait.
+/\/\/\/\/\/\
 
-However, it's complicated by other memblock changes in 5.1 and not a
-trivial backport. One of the versions on the list should be easier to
-backport than what's in mainline (or going to be).
+This push is unpleasant on hot fast path. I think we need to move
+whole report cold path into a separate noinline function as it is now,
+and that function will do the magic with smap. Then this won't prevent
+tail calling and won't affect fast-path codegen.
 
-Rob
+> 000b  15b:      48 8b 4c 24 08          mov    0x8(%rsp),%rcx
+> 0010  160:      48 39 c7                cmp    %rax,%rdi
+> 0013  163:      76 24                   jbe    189 <__asan_load1+0x39>
+> 0015  165:      48 b8 00 00 00 00 00    movabs $0xdffffc0000000000,%rax
+> 001c  16c:      fc ff df
+> 001f  16f:      48 89 fa                mov    %rdi,%rdx
+> 0022  172:      48 c1 ea 03             shr    $0x3,%rdx
+> 0026  176:      0f b6 04 02             movzbl (%rdx,%rax,1),%eax
+> 002a  17a:      84 c0                   test   %al,%al
+> 002c  17c:      75 02                   jne    180 <__asan_load1+0x30>
+> 002e  17e:      5b                      pop    %rbx
+> 002f  17f:      c3                      retq
+> 0030  180:      89 fa                   mov    %edi,%edx
+> 0032  182:      83 e2 07                and    $0x7,%edx
+> 0035  185:      38 d0                   cmp    %dl,%al
+> 0037  187:      7f f5                   jg     17e <__asan_load1+0x2e>
+> 0039  189:      9c                      pushfq
+> 003a  18a:      5b                      pop    %rbx
+> 003b  18b:      90                      nop
+> 003c  18c:      90                      nop
+> 003d  18d:      90                      nop
+> 003e  18e:      31 d2                   xor    %edx,%edx
+> 0040  190:      be 01 00 00 00          mov    $0x1,%esi
+> 0045  195:      e8 00 00 00 00          callq  19a <__asan_load1+0x4a>
+> 0046                    196: R_X86_64_PLT32     __kasan_report-0x4
+> 004a  19a:      53                      push   %rbx
+> 004b  19b:      9d                      popfq
+> 004c  19c:      5b                      pop    %rbx
+> 004d  19d:      c3                      retq
+>
+>
+> ---
+> --- a/arch/x86/include/asm/kasan.h
+> +++ b/arch/x86/include/asm/kasan.h
+> @@ -28,6 +28,23 @@
+>  #ifdef CONFIG_KASAN
+>  void __init kasan_early_init(void);
+>  void __init kasan_init(void);
+> +
+> +#include <asm/smap.h>
+> +
+> +extern void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
+> +
+> +static __always_inline
+> +void kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+> +{
+> +       unsigned long flags;
+> +
+> +       flags = smap_save();
+
+Previously you said that messing with smap here causes boot errors.
+Shouldn't we do smap_save iff kasan_report_enabled? Otherwise we just
+bail out, so no need to enable/disable smap.
+
+> +       __kasan_report(addr, size, is_write, ip);
+> +       smap_restore(flags);
+> +
+> +}
+> +#define kasan_report kasan_report
+> +
+>  #else
+>  static inline void kasan_early_init(void) { }
+>  static inline void kasan_init(void) { }
+> --- a/arch/x86/include/asm/smap.h
+> +++ b/arch/x86/include/asm/smap.h
+> @@ -46,6 +46,8 @@
+>
+>  #ifdef CONFIG_X86_SMAP
+>
+> +#include <asm/irqflags.h>
+> +
+>  static __always_inline void clac(void)
+>  {
+>         /* Note: a barrier is implicit in alternative() */
+> @@ -58,6 +60,18 @@ static __always_inline void stac(void)
+>         alternative("", __stringify(__ASM_STAC), X86_FEATURE_SMAP);
+>  }
+>
+> +static __always_inline unsigned long smap_save(void)
+> +{
+> +       unsigned long flags = arch_local_save_flags();
+> +       clac();
+> +       return flags;
+> +}
+> +
+> +static __always_inline void smap_restore(unsigned long flags)
+> +{
+> +       arch_local_irq_restore(flags);
+> +}
+> +
+>  /* These macros can be used in asm() statements */
+>  #define ASM_CLAC \
+>         ALTERNATIVE("", __stringify(__ASM_CLAC), X86_FEATURE_SMAP)
+> @@ -69,6 +83,9 @@ static __always_inline void stac(void)
+>  static inline void clac(void) { }
+>  static inline void stac(void) { }
+>
+> +static inline unsigned long smap_save(void) { return 0; }
+> +static inline void smap_restore(unsigned long flags) { }
+> +
+>  #define ASM_CLAC
+>  #define ASM_STAC
+>
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -83,6 +83,8 @@ size_t kasan_metadata_size(struct kmem_c
+>  bool kasan_save_enable_multi_shot(void);
+>  void kasan_restore_multi_shot(bool enabled);
+>
+> +void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
+> +
+>  #else /* CONFIG_KASAN */
+>
+>  static inline void kasan_unpoison_shadow(const void *address, size_t size) {}
+> @@ -153,8 +155,14 @@ static inline void kasan_remove_zero_sha
+>  static inline void kasan_unpoison_slab(const void *ptr) { }
+>  static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+>
+> +static inline void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip) { }
+> +
+>  #endif /* CONFIG_KASAN */
+>
+> +#ifndef kasan_report
+> +#define kasan_report(addr, size, is_write, ip) __kasan_report(addr, size, is_write, ip)
+> +#endif
+> +
+>  #ifdef CONFIG_KASAN_GENERIC
+>
+>  #define KASAN_SHADOW_INIT 0
+> @@ -177,9 +185,6 @@ void kasan_init_tags(void);
+>
+>  void *kasan_reset_tag(const void *addr);
+>
+> -void kasan_report(unsigned long addr, size_t size,
+> -               bool is_write, unsigned long ip);
+> -
+>  #else /* CONFIG_KASAN_SW_TAGS */
+>
+>  static inline void kasan_init_tags(void) { }
+> --- a/mm/kasan/generic_report.c
+> +++ b/mm/kasan/generic_report.c
+> @@ -118,14 +118,14 @@ const char *get_bug_type(struct kasan_ac
+>  #define DEFINE_ASAN_REPORT_LOAD(size)                     \
+>  void __asan_report_load##size##_noabort(unsigned long addr) \
+>  {                                                         \
+> -       kasan_report(addr, size, false, _RET_IP_);        \
+> +       __kasan_report(addr, size, false, _RET_IP_);      \
+
+Unless I am missing something, this seems to make this patch no-op. We
+fixed kasan_report for smap, but here we now use __kasan_report which
+is not fixed. So this won't work with smap again?..
+
+
+>  }                                                         \
+>  EXPORT_SYMBOL(__asan_report_load##size##_noabort)
+>
+>  #define DEFINE_ASAN_REPORT_STORE(size)                     \
+>  void __asan_report_store##size##_noabort(unsigned long addr) \
+>  {                                                          \
+> -       kasan_report(addr, size, true, _RET_IP_);          \
+> +       __kasan_report(addr, size, true, _RET_IP_);        \
+>  }                                                          \
+>  EXPORT_SYMBOL(__asan_report_store##size##_noabort)
+>
+> @@ -142,12 +142,12 @@ DEFINE_ASAN_REPORT_STORE(16);
+>
+>  void __asan_report_load_n_noabort(unsigned long addr, size_t size)
+>  {
+> -       kasan_report(addr, size, false, _RET_IP_);
+> +       __kasan_report(addr, size, false, _RET_IP_);
+>  }
+>  EXPORT_SYMBOL(__asan_report_load_n_noabort);
+>
+>  void __asan_report_store_n_noabort(unsigned long addr, size_t size)
+>  {
+> -       kasan_report(addr, size, true, _RET_IP_);
+> +       __kasan_report(addr, size, true, _RET_IP_);
+>  }
+>  EXPORT_SYMBOL(__asan_report_store_n_noabort);
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -130,8 +130,6 @@ void check_memory_region(unsigned long a
+>  void *find_first_bad_addr(void *addr, size_t size);
+>  const char *get_bug_type(struct kasan_access_info *info);
+>
+> -void kasan_report(unsigned long addr, size_t size,
+> -               bool is_write, unsigned long ip);
+>  void kasan_report_invalid_free(void *object, unsigned long ip);
+>
+>  #if defined(CONFIG_KASAN_GENERIC) && \
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -281,7 +281,7 @@ void kasan_report_invalid_free(void *obj
+>         end_report(&flags);
+>  }
+>
+> -void kasan_report(unsigned long addr, size_t size,
+> +void __kasan_report(unsigned long addr, size_t size,
+>                 bool is_write, unsigned long ip)
+>  {
+>         struct kasan_access_info info;
+> --- a/tools/objtool/arch.h
+> +++ b/tools/objtool/arch.h
+> @@ -43,6 +43,7 @@ enum op_dest_type {
+>         OP_DEST_REG_INDIRECT,
+>         OP_DEST_MEM,
+>         OP_DEST_PUSH,
+> +       OP_DEST_PUSHF,
+>         OP_DEST_LEAVE,
+>  };
+>
+> @@ -57,6 +58,7 @@ enum op_src_type {
+>         OP_SRC_REG_INDIRECT,
+>         OP_SRC_CONST,
+>         OP_SRC_POP,
+> +       OP_SRC_POPF,
+>         OP_SRC_ADD,
+>         OP_SRC_AND,
+>  };
+> --- a/tools/objtool/arch/x86/decode.c
+> +++ b/tools/objtool/arch/x86/decode.c
+> @@ -357,13 +357,13 @@ int arch_decode_instruction(struct elf *
+>                 /* pushf */
+>                 *type = INSN_STACK;
+>                 op->src.type = OP_SRC_CONST;
+> -               op->dest.type = OP_DEST_PUSH;
+> +               op->dest.type = OP_DEST_PUSHF;
+>                 break;
+>
+>         case 0x9d:
+>                 /* popf */
+>                 *type = INSN_STACK;
+> -               op->src.type = OP_SRC_POP;
+> +               op->src.type = OP_SRC_POPF;
+>                 op->dest.type = OP_DEST_MEM;
+>                 break;
+>
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -1359,11 +1359,11 @@ static int update_insn_state_regs(struct
+>                 return 0;
+>
+>         /* push */
+> -       if (op->dest.type == OP_DEST_PUSH)
+> +       if (op->dest.type == OP_DEST_PUSH || op->dest.type == OP_DEST_PUSHF)
+>                 cfa->offset += 8;
+>
+>         /* pop */
+> -       if (op->src.type == OP_SRC_POP)
+> +       if (op->src.type == OP_SRC_POP || op->src.type == OP_SRC_POPF)
+>                 cfa->offset -= 8;
+>
+>         /* add immediate to sp */
+> @@ -1620,6 +1620,7 @@ static int update_insn_state(struct inst
+>                         break;
+>
+>                 case OP_SRC_POP:
+> +               case OP_SRC_POPF:
+>                         if (!state->drap && op->dest.type == OP_DEST_REG &&
+>                             op->dest.reg == cfa->base) {
+>
+> @@ -1684,6 +1685,7 @@ static int update_insn_state(struct inst
+>                 break;
+>
+>         case OP_DEST_PUSH:
+> +       case OP_DEST_PUSHF:
+>                 state->stack_size += 8;
+>                 if (cfa->base == CFI_SP)
+>                         cfa->offset += 8;
+> @@ -1774,7 +1776,7 @@ static int update_insn_state(struct inst
+>                 break;
+>
+>         case OP_DEST_MEM:
+> -               if (op->src.type != OP_SRC_POP) {
+> +               if (op->src.type != OP_SRC_POP && op->src.type != OP_SRC_POPF) {
+>                         WARN_FUNC("unknown stack-related memory operation",
+>                                   insn->sec, insn->offset);
+>                         return -1;
+> @@ -2071,6 +2073,16 @@ static int validate_branch(struct objtoo
+>                         if (update_insn_state(insn, &state))
+>                                 return 1;
+>
+> +                       if (insn->stack_op.dest.type == OP_DEST_PUSHF) {
+> +                               if (state.uaccess)
+> +                                       state.uaccess_stack++;
+> +                       }
+> +
+> +                       if (insn->stack_op.src.type == OP_SRC_POPF) {
+> +                               if (state.uaccess_stack && !--state.uaccess_stack)
+> +                                       state.uaccess = func_uaccess_safe(func);
+> +                       }
+> +
+>                         break;
+>
+>                 case INSN_STAC:
+> @@ -2088,7 +2100,7 @@ static int validate_branch(struct objtoo
+>                                 return 1;
+>                         }
+>
+> -                       if (func_uaccess_safe(func)) {
+> +                       if (func_uaccess_safe(func) && !state.uaccess_stack) {
+>                                 WARN_FUNC("UACCESS-safe disables UACCESS", sec, insn->offset);
+>                                 return 1;
+>                         }
+> --- a/tools/objtool/check.h
+> +++ b/tools/objtool/check.h
+> @@ -32,6 +32,7 @@ struct insn_state {
+>         unsigned char type;
+>         bool bp_scratch;
+>         bool drap, end, uaccess;
+> +       int uaccess_stack;
+>         int drap_reg, drap_offset;
+>         struct cfi_reg vals[CFI_NUM_REGS];
+>  };
