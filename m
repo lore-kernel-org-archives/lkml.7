@@ -2,124 +2,109 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB10C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD3DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C95520652
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7921920652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ev5uKQUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbfCFMqC (ORCPT
+        id S1730165AbfCFMuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 07:46:02 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46172 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726317AbfCFMqB (ORCPT
+        Wed, 6 Mar 2019 07:50:32 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59620 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfCFMuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 07:46:01 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x26CYqdX009610
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Mar 2019 07:46:00 -0500
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r2cxndtja-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:46:00 -0500
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Wed, 6 Mar 2019 12:45:57 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Mar 2019 12:45:53 -0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x26CjqnR24641564
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Mar 2019 12:45:52 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DDDD124058;
-        Wed,  6 Mar 2019 12:45:52 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91B85124055;
-        Wed,  6 Mar 2019 12:45:28 +0000 (GMT)
-Received: from [9.199.59.8] (unknown [9.199.59.8])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Mar 2019 12:45:27 +0000 (GMT)
-Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Oliver <oohall@gmail.com>,
-        Jan Kara <jack@suse.cz>, linux-nvdimm@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
- <20190228083522.8189-2-aneesh.kumar@linux.ibm.com>
- <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
- <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com>
- <87k1hc8iqa.fsf@linux.ibm.com> <20190306124453.126d36d8@naga.suse.cz>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Date:   Wed, 6 Mar 2019 18:15:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 6 Mar 2019 07:50:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WR0S/PfcH9lLxoKWJu+GgLcUWJNBIIuWZc/DeVg1zag=; b=ev5uKQUSUImCZnLFxWslUIdvF
+        KWcV7cGenVyMyathz8+BGrbknbuTs679sitr1j/+EQzbl8hAkli/k4CJ7G7MZTU78DnH6dro+0Ukh
+        syZRwsECaGXM0NN1ukQWD7yiD/hQYHSNrLA19iWo7eia/ECIiO4G78UUq8Cn4dgfME4x7lNBRNpgG
+        9SM4ppnuOExQwTkdH4MBMYPRLnnS34NeDqXsIysyY2wrAVOhEjEZ88Z4UAI6wnTq4QaMnKBTm/Afl
+        Q2ujBq0eoqLEcssDKivDynq4o6rs7crB4MkeIRNNFLSIbGP1mKRTCAl1zfreo7xZgSaqAumOkxwn7
+        JAMYg9rWQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54980)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1h1W09-0007jK-Mf; Wed, 06 Mar 2019 12:50:25 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1h1W06-00044X-DV; Wed, 06 Mar 2019 12:50:22 +0000
+Date:   Wed, 6 Mar 2019 12:50:22 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Smarter Kconfig help
+Message-ID: <20190306125022.ikqy66lf25yifxwc@shell.armlinux.org.uk>
+References: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
+ <20190306093521.GA50994@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190306124453.126d36d8@naga.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030612-0060-0000-0000-00000317A706
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010714; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01170428; UDB=6.00611703; IPR=6.00951068;
- MB=3.00025857; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-06 12:45:55
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030612-0061-0000-0000-000048858CD3
-Message-Id: <df01bf6e-84a1-53fb-bf0c-0957af2f79e1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=982 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903060087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306093521.GA50994@lakrids.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/19 5:14 PM, Michal Suchánek wrote:
-> On Wed, 06 Mar 2019 14:47:33 +0530
-> "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> wrote:
-> 
->> Dan Williams <dan.j.williams@intel.com> writes:
->>
->>> On Thu, Feb 28, 2019 at 1:40 AM Oliver <oohall@gmail.com> wrote:
->>>>
->>>> On Thu, Feb 28, 2019 at 7:35 PM Aneesh Kumar K.V
->>>> <aneesh.kumar@linux.ibm.com> wrote:
->   
->> Also even if the user decided to not use THP, by
->> echo "never" > transparent_hugepage/enabled , we should continue to map
->> dax fault using huge page on platforms that can support huge pages.
-> 
-> Is this a good idea?
-> 
-> This knob is there for a reason. In some situations having huge pages
-> can severely impact performance of the system (due to host-guest
-> interaction or whatever) and the ability to really turn off all THP
-> would be important in those cases, right?
-> 
+Hi Mark,
 
-My understanding was that is not true for dax pages? These are not 
-regular memory that got allocated. They are allocated out of /dev/dax/ 
-or /dev/pmem*. Do we have a reason not to use hugepages for mapping 
-pages in that case?
+On Wed, Mar 06, 2019 at 09:35:21AM +0000, Mark Rutland wrote:
+> On Tue, Mar 05, 2019 at 05:31:12PM +0000, Russell King - ARM Linux admin wrote:
+> > Guys,
+> 
+> Hi Russell,
+> 
+> > We need to be smarter when writing Kconfig help.  I'm just going
+> > through updating my build trees with the results of 5.0 development,
+> > and a number of the help texts are next to useless.  For example,
+> > 
+> > PVPANIC - is this something that should be enabled for a host or
+> > guest kernel?  Answer: you have to read the driver code to find out.
+> 
+> When I looked at the help text:
+> 
+>     This driver provides support for the pvpanic device.  pvpanic is
+>     a paravirtualized device provided by QEMU; it lets a virtual machine
+>     (guest) communicate panic events to the host.
+> 
+> ... it seemed clear to me that this was for a guest, given the text says
+> QEMU provides the device. I guess you read that as meaning QEMU asks the
+> host kernel to provide the device to the guest?
 
--aneesh
+Yes - that's exactly where the confusion was.  It could be something
+like a tap network device to allow a guest access to a facility on the
+host, or it could be something that the guest kernel uses to communicate
+with its host environment.
 
+> Do you have a suggestion for how to word that unambiguously?
+
+It used to be normal to include a sugestion in the help text that
+guided when an option should be enabled.  So, adding something like:
+
+    "Say Y here if you are building a kernel for a virtual machine."
+
+would make it clear.  This used to be standard throughout the kernel,
+but it seems in recent years, this has been omitted.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
