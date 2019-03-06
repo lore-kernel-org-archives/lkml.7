@@ -2,123 +2,135 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482AAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4A4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2317B2063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C282C2063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551897718;
+	bh=nl69/LqSZ0ikgE119j+nbVp0VMyf7XDQgB3bsfKeOZY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=1s3/Q67xOxzoP+1QvyWypfjWDz0dCTUQmsmwujE9MnlRGcQAp7y2GmfyzaH3EBEjS
+	 eYILQjtr5k9CTcDylKpI0H/HCs5WOWCXYutU8MJbq445uAWY2vIrgYgIoJq4DStH2y
+	 E83mZeBVwfcBr6iIbOLzu4ycry+NUQs/4m2HJY/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfCFSlC (ORCPT
+        id S1727620AbfCFSl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:41:02 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:50228 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfCFSlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:41:01 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 227D21310;
-        Wed,  6 Mar 2019 18:41:01 +0000 (UTC)
-Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B62CA1001DC5;
-        Wed,  6 Mar 2019 18:40:51 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
-        riel@surriel.com, david@redhat.com, dodgen@google.com,
-        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
-        alexander.duyck@gmail.com
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <20190306110501-mutt-send-email-mst@kernel.org>
- <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
- <20190306130955-mutt-send-email-mst@kernel.org>
- <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com>
- <20190306133613-mutt-send-email-mst@kernel.org>
-Organization: Red Hat Inc,
-Message-ID: <7a77ce2a-853f-86c6-6d10-1d8db8fb8ae4@redhat.com>
-Date:   Wed, 6 Mar 2019 13:40:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 13:41:57 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43479 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfCFSl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 13:41:57 -0500
+Received: by mail-yw1-f68.google.com with SMTP id u200so10847652ywu.10;
+        Wed, 06 Mar 2019 10:41:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wWCXir4r1pXpp0Hmlieqg9dse5cFF3K/PCHaVFhMfhQ=;
+        b=tRFLglF0sRpWn57v0VTg/oj/p1a+1b2gTkJcO76E9XuUyIu1KSElPmoDfq+o5uo+2Z
+         HEKfjhTMkBEO7AY14hcLp8M12DnSF8HP7LTWLOALgLYKoAAXoerB0IjirLdFxWxnZwPN
+         GkExV8yLjuT3HwlLs1nuJfdJU1C0Vu4MvtHk+tch5PtjVkTteupp3cH5HAO4uCePDy7w
+         EggH+bUSFlHd8dRaG9jdViZhR26eqj43gQ5A+zTOG3aD0XiHn+LJgf8XG6oJ/ZzwMJvw
+         K4t36jIyNtk6PQDigVaWwf2Xog3PENqkgB31LsJEbqiZVcyafHnAPzay4aKM/8Xvkl/h
+         MZyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=wWCXir4r1pXpp0Hmlieqg9dse5cFF3K/PCHaVFhMfhQ=;
+        b=hACwLNLUBzc5Gq+4Pw6xiOnIHLm9nGzHX5dmGGwb288WjtDV0lsjvUiDahXhk805TR
+         IxbeVikVJW51SjOfvA9AfsbxanaSLyxXyVYgG2fut8EsQ7PfNvIfG/SUutYR5NEUhN58
+         ohlhTYolziPcH2R/ArHqv00MYPxjEKwfXalcoXoxiQw68rOpQxYw86McMmdrI+7GZj90
+         lYPQEuP3Vkz4fTNmuiqQ2ctI4lgP7EAKG+n/fPSSFD7k7egG+whHcCUmWCimb01JQ+ip
+         xKHXUFQQJKowlxrUSIwOmALMymVmr3BerAyFSG2vAe6M1e5e2iQDSExijsBuvuPsAPE4
+         67nw==
+X-Gm-Message-State: APjAAAV4eBZ9bV6qPv0qgdfuK2UZoEzPxap2ifoorWZWJKc+DV3/DF1S
+        Tj/J7iFCnRv6KYEO3cSKG//iQjyG
+X-Google-Smtp-Source: APXvYqzqSDrHavDiJpJjXptB2uVZfl93ZjjJk6xRoO8jP7wsDd0t9++60KWY4VuiKMO7Oyc+WZaDLA==
+X-Received: by 2002:a25:3f45:: with SMTP id m66mr6812907yba.238.1551897715885;
+        Wed, 06 Mar 2019 10:41:55 -0800 (PST)
+Received: from localhost ([2620:10d:c091:200::2:a2f4])
+        by smtp.gmail.com with ESMTPSA id l16sm885560ywk.39.2019.03.06.10.41.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 10:41:55 -0800 (PST)
+Date:   Wed, 6 Mar 2019 10:41:53 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] cgroup changes for v5.1-rc1
+Message-ID: <20190306184153.GI50184@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190306133613-mutt-send-email-mst@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="d59HHRy06H8yetGwTxlr6wgZT5IDIwPC3"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 06 Mar 2019 18:41:01 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---d59HHRy06H8yetGwTxlr6wgZT5IDIwPC3
-Content-Type: multipart/mixed; boundary="L34uAfN2VceX4UnGRao0Vn0YL6JKt8BRb";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
- wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
- david@redhat.com, dodgen@google.com, konrad.wilk@oracle.com,
- dhildenb@redhat.com, aarcange@redhat.com, alexander.duyck@gmail.com
-Message-ID: <7a77ce2a-853f-86c6-6d10-1d8db8fb8ae4@redhat.com>
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+Hello, Linus.
 
---L34uAfN2VceX4UnGRao0Vn0YL6JKt8BRb
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+* Oleg's pids controller accounting update which gets rid of rcu delay
+  in pids accounting updates.
 
-On 3/6/19 1:38 PM, Michael S. Tsirkin wrote:
-> On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
->>> Want to try testing Alex's patches for comparison?
->> Somehow I am not in a favor of doing a hypercall on every page (with
->> huge TLB order/MAX_ORDER -1) as I think it will be costly.
->> I can try using Alex's host side logic instead of virtio.
->> Let me know what you think?
-> I am just saying maybe your setup is misconfigured
-> that's why you see no speedup.=20
-Got it.
-> If you try Alex's
-> patches and *don't* see speedup like he does, then
-> he might be able to help you figure out why.
-> OTOH if you do then *you* can try figuring out why
-> don't your patches help.
-Yeap, I can do that.
+* rstat (cgroup hierarchical stat collection mechanism) optimization.
+
+* Doc updates.
+
 Thanks.
->
 
+The following changes since commit af0c9af1b3f66052c369d08be3f60fa9a9559e48:
 
+  fs/dcache: Track & report number of negative dentries (2019-01-30 11:02:11 -0800)
 
---L34uAfN2VceX4UnGRao0Vn0YL6JKt8BRb--
+are available in the Git repository at:
 
---d59HHRy06H8yetGwTxlr6wgZT5IDIwPC3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.1
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to 6a613d24effcb875271b8a1c510172e2d6eaaee8:
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyAFDIACgkQo4ZA3AYy
-ozlq2g/+LuhyTg5EE+QuRY1swFfvQ2XtYUvty6CPalWpGrt8mBo2479Cbj4q2sTk
-MgwZzoIo5p258UcuvpapIQDdIV+J3j7i2y6Wxdqt/9w8O7WkGWXVtBPvmBEL8BjT
-2FVEqK18NsKPnxF8O3dWqZynQmc0R0eucJobrRb312j4bsRHlCbtoU99RydlSls1
-3gs1nBRpQb3jmklYqhVhDGjD390QMZTcGA3N5ln53oNghXrSONhH1q28ebPt8X12
-rbPrRaWEvdXh3IPnlMltHcQKg9fJcNBH1k8xNv0dzrN5eKfvWCm/NZsOJdrimozR
-y4rVtxP4EfpesQ1CcIVX6m2dlb/dePLUH/tEqd3R0Xb0A54k99/62E8CClOH4mkO
-SDM17WavRCb+wmqoNpPumNYLezhHMS+Ei7UFEQDysOHe9XUz0d0dWg70vmemtjtz
-WMxlx4rGg1ZvOjDk5tACjwxN2FqcVBgSZXXT+Jm2qQmj+dlCgIbz4zc9t7sJ7HXd
-TJ/DSoktLfHMJF1K/hLCDv2MfhY+W0/Aa0mJXjlxOmSGb34pArpS0bRSDo5H2SNT
-EfdTEHR//nlanuiWuHXWslS+PxkiyVdQLTnOx6gr4qLZYZ7FNYSyC0/+gbO9ntzH
-blZstB6PYhEAS8itoApMpT9duHDoqegShK+l76N2HKuH4s6miQo=
-=cLRz
------END PGP SIGNATURE-----
+  cpuset: remove unused task_has_mempolicy() (2019-02-19 06:26:02 -0800)
 
---d59HHRy06H8yetGwTxlr6wgZT5IDIwPC3--
+----------------------------------------------------------------
+Andrea Parri (1):
+      MAINTAINERS: Update cgroup entry
+
+Masahiro Yamada (1):
+      cpuset: remove unused task_has_mempolicy()
+
+Oleg Nesterov (1):
+      cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
+
+Randy Dunlap (1):
+      Documentation: cgroup-v2: eliminate markup warnings
+
+Tejun Heo (1):
+      cgroup, rstat: Don't flush subtree root unless necessary
+
+Tibor Billes (1):
+      cgroup: add documentation for pids.events file
+
+ Documentation/admin-guide/cgroup-v2.rst |  2 +-
+ Documentation/cgroup-v1/pids.txt        |  3 +++
+ MAINTAINERS                             |  5 +++--
+ include/linux/cgroup-defs.h             |  2 +-
+ include/linux/cgroup.h                  |  2 ++
+ kernel/cgroup/cgroup.c                  | 15 +++++++++------
+ kernel/cgroup/cpuset.c                  | 13 -------------
+ kernel/cgroup/pids.c                    |  4 ++--
+ kernel/cgroup/rstat.c                   | 10 ++++++----
+ kernel/exit.c                           |  1 +
+ 10 files changed, 28 insertions(+), 29 deletions(-)
+
+-- 
+tejun
