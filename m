@@ -2,95 +2,345 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EAAC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC56C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F13620842
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551915504;
-	bh=a7eZWlQQ7Mm6881MX6dCx/DYzim0+FY4sKnqS7tfm0A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NuK/ssYIWKZdxh6xyqZ/Kf/54pZOWmoWx/dTu90ZjjtbldiIkcfYAzxPvzzP3D6Hv
-	 oiydlE5mDKtcSQplar2BLlXqbTSl4J5TKGQHnsxdjzSTOWdA7+wAD/tdZRKn102wVQ
-	 tB+/a0PQkbkiI5FEq4v/5qSNgvGPsFpdhGwndGFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8D54A20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ox0lB3IV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbfCFXiX (ORCPT
+        id S1726180AbfCFXnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 18:38:23 -0500
-Received: from mail.linuxfoundation.org ([140.211.169.12]:33836 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfCFXiW (ORCPT
+        Wed, 6 Mar 2019 18:43:20 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55052 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFXnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 18:38:22 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id DBE955AB3;
-        Wed,  6 Mar 2019 23:38:20 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 15:38:19 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Jiri Kosina <jikos@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Cyril Hrubis <chrubis@suse.cz>, Daniel Gruss <daniel@gruss.cc>,
-        Dave Chinner <david@fromorbit.com>,
-        Kevin Easton <kevin@guarana.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 0/3] mincore() and IOCB_NOWAIT adjustments
-Message-Id: <20190306153819.3510a19ffe510b674a7890ce@linux-foundation.org>
-In-Reply-To: <20190306233209.GA7753@nautica>
-References: <nycvar.YFH.7.76.1901051817390.16954@cbobk.fhfr.pm>
-        <20190130124420.1834-1-vbabka@suse.cz>
-        <nycvar.YFH.7.76.1903061310170.19912@cbobk.fhfr.pm>
-        <20190306143547.c686225447822beaf3b6e139@linux-foundation.org>
-        <nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm>
-        <20190306152337.e06cbc530fbfbcfcfe0dc37c@linux-foundation.org>
-        <20190306233209.GA7753@nautica>
-X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Mar 2019 18:43:19 -0500
+Received: by mail-it1-f195.google.com with SMTP id w18so12454185itj.4;
+        Wed, 06 Mar 2019 15:43:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tJLt5fGH+fMo09vxi7y7udIe4ykNXEN3DqyQaFpBPyo=;
+        b=ox0lB3IVckkPY/SCFfqiueux6rKnP1OCFlDt5TmKladTy6w9qhHGdP1DvSbolvIJXd
+         1lS+cGMMdrgsxaGIYRb8AjAttD4S0LjzQv7LQQMkYj7slBWRzqccDCUog3lfTIuZhAS3
+         EwOZKsC8y5k8esE8J7uhF+fPzJTO80UI9h+8tV04AGhydK+Qc4Y0NofWYhmKhBEj+PjD
+         2VyQWT1TtjSjE5A6tE/v/SlmGz+ESVa7PTQUW/pgkGbI5XtvG0ZA/PhFzXfKnXvPSmOR
+         304mPTJpXSorpeOP5eywqv5D9mPNhlflhxc8/3ek9h/8StrT/CghxUwCm/3Zk4efrjWm
+         by6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tJLt5fGH+fMo09vxi7y7udIe4ykNXEN3DqyQaFpBPyo=;
+        b=qeITnYANckcShpan7CX0g27sSY0GauRRtYdw43AmrrtJD/+W/hNVnmLDCqHjqgvHlB
+         AYeiQi0rsveNW69at0BSSPmEu8ULo8qX6dJcypPRFmmiXf2FXQRp0Sa1lLE7Q+t+CEv6
+         4PGSM+WHJWuqs6ghjiJ51m1+k+hXZnPEhquYEsunYsjr4t1/Spx/EY+njExBfB26SPIk
+         9I+G6OFbWQ5gDy51FgGFopnOUoJW+56YXb0d6uhPxq+Is16knmKBtGfPlHHjmw0w2Tvp
+         Vn7xDc0J3Fv07jP6VOwXO57Zsa6yC7UNbkNNdHQExxRjHUeCG2tJkdo5PUFO+wUYTLeJ
+         Cp3g==
+X-Gm-Message-State: APjAAAXCB9jgRQuv120WxpXl5ocwZ1eO6NJPAFp8vVoxcL6uI41bDevT
+        B808UholGZRPfoc0qTDMTrgIq/7wgMF3YhR+Ns0=
+X-Google-Smtp-Source: APXvYqzaPA+pSY7D+nDgztKY9BDgiNuuvkyc3qYqJrEd+9ryIw2MBE8qomVMamBxPAN83p3VYmH02hMit8lfA0Af0co=
+X-Received: by 2002:a24:b643:: with SMTP id d3mr3816515itj.146.1551915798185;
+ Wed, 06 Mar 2019 15:43:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155048.12868-2-nitesh@redhat.com>
+In-Reply-To: <20190306155048.12868-2-nitesh@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 6 Mar 2019 15:43:07 -0800
+Message-ID: <CAKgT0Uf5ZAMbg8s3Shcs2ooMueajXvVNx+gKi3eUKchNBj1mrQ@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 1/6] KVM: Guest free page hinting support
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019 00:32:09 +0100 Dominique Martinet <asmadeus@codewreck.org> wrote:
+On Wed, Mar 6, 2019 at 7:51 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+> This patch adds the following:
+> 1. Functional skeleton for the guest implementation. It enables the
+> guest to maintain the PFN of head buddy free pages of order
+> FREE_PAGE_HINTING_MIN_ORDER (currently defined as MAX_ORDER - 1)
+> in a per-cpu array.
+> Guest uses guest_free_page_enqueue() to enqueue the free pages post buddy
+> merging to the above mentioned per-cpu array.
+> guest_free_page_try_hinting() is used to initiate hinting operation once
+> the collected entries of the per-cpu array reaches or exceeds
+> HINTING_THRESHOLD (128). Having larger array size(MAX_FGPT_ENTRIES = 256)
+> than HINTING_THRESHOLD allows us to capture more pages specifically when
+> guest_free_page_enqueue() is called from free_pcppages_bulk().
+> For now guest_free_page_hinting() just resets the array index to continue
+> capturing of the freed pages.
+> 2. Enables the support for x86 architecture.
+>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  arch/x86/Kbuild              |  2 +-
+>  arch/x86/kvm/Kconfig         |  8 +++
+>  arch/x86/kvm/Makefile        |  2 +
+>  include/linux/page_hinting.h | 15 ++++++
+>  mm/page_alloc.c              |  5 ++
+>  virt/kvm/page_hinting.c      | 98 ++++++++++++++++++++++++++++++++++++
+>  6 files changed, 129 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/page_hinting.h
+>  create mode 100644 virt/kvm/page_hinting.c
+>
+> diff --git a/arch/x86/Kbuild b/arch/x86/Kbuild
+> index c625f57472f7..3244df4ee311 100644
+> --- a/arch/x86/Kbuild
+> +++ b/arch/x86/Kbuild
+> @@ -2,7 +2,7 @@ obj-y += entry/
+>
+>  obj-$(CONFIG_PERF_EVENTS) += events/
+>
+> -obj-$(CONFIG_KVM) += kvm/
+> +obj-$(subst m,y,$(CONFIG_KVM)) += kvm/
+>
+>  # Xen paravirtualization support
+>  obj-$(CONFIG_XEN) += xen/
+> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> index 72fa955f4a15..2fae31459706 100644
+> --- a/arch/x86/kvm/Kconfig
+> +++ b/arch/x86/kvm/Kconfig
+> @@ -96,6 +96,14 @@ config KVM_MMU_AUDIT
+>          This option adds a R/W kVM module parameter 'mmu_audit', which allows
+>          auditing of KVM MMU events at runtime.
+>
+> +# KVM_FREE_PAGE_HINTING will allow the guest to report the free pages to the
+> +# host in regular interval of time.
+> +config KVM_FREE_PAGE_HINTING
+> +       def_bool y
+> +       depends on KVM
+> +       select VIRTIO
+> +       select VIRTIO_BALLOON
+> +
+>  # OK, it's a little counter-intuitive to do this, but it puts it neatly under
+>  # the virtualization menu.
+>  source "drivers/vhost/Kconfig"
+> diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+> index 69b3a7c30013..78640a80501e 100644
+> --- a/arch/x86/kvm/Makefile
+> +++ b/arch/x86/kvm/Makefile
+> @@ -16,6 +16,8 @@ kvm-y                 += x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
+>                            i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
+>                            hyperv.o page_track.o debugfs.o
+>
+> +obj-$(CONFIG_KVM_FREE_PAGE_HINTING)    += $(KVM)/page_hinting.o
+> +
+>  kvm-intel-y            += vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
+>  kvm-amd-y              += svm.o pmu_amd.o
+>
+> diff --git a/include/linux/page_hinting.h b/include/linux/page_hinting.h
+> new file mode 100644
+> index 000000000000..90254c582789
+> --- /dev/null
+> +++ b/include/linux/page_hinting.h
+> @@ -0,0 +1,15 @@
+> +#include <linux/gfp.h>
+> +/*
+> + * Size of the array which is used to store the freed pages is defined by
+> + * MAX_FGPT_ENTRIES.
+> + */
+> +#define MAX_FGPT_ENTRIES       256
+> +/*
+> + * Threshold value after which hinting needs to be initiated on the captured
+> + * free pages.
+> + */
+> +#define HINTING_THRESHOLD      128
+> +#define FREE_PAGE_HINTING_MIN_ORDER    (MAX_ORDER - 1)
+> +
+> +void guest_free_page_enqueue(struct page *page, int order);
+> +void guest_free_page_try_hinting(void);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d295c9bc01a8..684d047f33ee 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -67,6 +67,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/nmi.h>
+>  #include <linux/psi.h>
+> +#include <linux/page_hinting.h>
+>
+>  #include <asm/sections.h>
+>  #include <asm/tlbflush.h>
+> @@ -1194,9 +1195,11 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+>                         mt = get_pageblock_migratetype(page);
+>
+>                 __free_one_page(page, page_to_pfn(page), zone, 0, mt);
+> +               guest_free_page_enqueue(page, 0);
+>                 trace_mm_page_pcpu_drain(page, 0, mt);
+>         }
+>         spin_unlock(&zone->lock);
+> +       guest_free_page_try_hinting();
+>  }
+>
 
-> Andrew Morton wrote on Wed, Mar 06, 2019:
-> > On Wed, 6 Mar 2019 23:48:03 +0100 (CET) Jiri Kosina <jikos@kernel.org> wrote:
-> > 
-> > > 3/3 is actually waiting for your decision, see
-> > > 
-> > > 	https://lore.kernel.org/lkml/20190212063643.GL15609@dhcp22.suse.cz/
-> > 
-> > I pity anyone who tried to understand this code by reading this code. 
-> > Can we please get some careful commentary in there explaining what is
-> > going on, and why things are thus?
-> > 
-> > I guess the [3/3] change makes sense, although it's unclear whether
-> > anyone really needs it?  5.0 was released with 574823bfab8 ("Change
-> > mincore() to count "mapped" pages rather than "cached" pages") so we'll
-> > have a release cycle to somewhat determine how much impact 574823bfab8
-> > has on users.  How about I queue up [3/3] and we reevaluate its
-> > desirability in a couple of months?
-> 
-> FWIW,
-> 
-> 574823bfab8 has been reverted in 30bac164aca750, included in 5.0-rc4, so
-> the controversial change has only been there from 5.0-rc1 to 5.0-rc3
+Trying to enqueue pages from here seems like a really bad idea. You
+are essentially putting yourself in a hot-path for order 0 pages and
+going to cause significant bottlenecks.
 
-Ah, OK, thanks, I misread.
+>  static void free_one_page(struct zone *zone,
+> @@ -1210,7 +1213,9 @@ static void free_one_page(struct zone *zone,
+>                 migratetype = get_pfnblock_migratetype(page, pfn);
+>         }
+>         __free_one_page(page, pfn, zone, order, migratetype);
+> +       guest_free_page_enqueue(page, order);
+>         spin_unlock(&zone->lock);
+> +       guest_free_page_try_hinting();
+>  }
 
-Linus, do you have thoughts on
-http://lkml.kernel.org/r/20190130124420.1834-4-vbabka@suse.cz ?
+I really think it would be better to leave the page assembly to the
+buddy allocator. Instead you may want to focus on somehow tagging the
+pages as being recently freed but not hinted on so that you can come
+back later to work on them.
 
+>  static void __meminit __init_single_page(struct page *page, unsigned long pfn,
+> diff --git a/virt/kvm/page_hinting.c b/virt/kvm/page_hinting.c
+> new file mode 100644
+> index 000000000000..48b4b5e796b0
+> --- /dev/null
+> +++ b/virt/kvm/page_hinting.c
+> @@ -0,0 +1,98 @@
+> +#include <linux/mm.h>
+> +#include <linux/page_hinting.h>
+> +
+> +/*
+> + * struct guest_free_pages- holds array of guest freed PFN's along with an
+> + * index variable to track total freed PFN's.
+> + * @free_pfn_arr: array to store the page frame number of all the pages which
+> + * are freed by the guest.
+> + * @guest_free_pages_idx: index to track the number entries stored in
+> + * free_pfn_arr.
+> + */
+> +struct guest_free_pages {
+> +       unsigned long free_page_arr[MAX_FGPT_ENTRIES];
+> +       int free_pages_idx;
+> +};
+> +
+> +DEFINE_PER_CPU(struct guest_free_pages, free_pages_obj);
+> +
+> +struct page *get_buddy_page(struct page *page)
+> +{
+> +       unsigned long pfn = page_to_pfn(page);
+> +       unsigned int order;
+> +
+> +       for (order = 0; order < MAX_ORDER; order++) {
+> +               struct page *page_head = page - (pfn & ((1 << order) - 1));
+> +
+> +               if (PageBuddy(page_head) && page_private(page_head) >= order)
+> +                       return page_head;
+> +       }
+> +       return NULL;
+> +}
+> +
+
+You would be much better off just letting the buddy allocator take care of this.
+
+I really think the spot I had my arch_merge_page call would work much
+better than this. The buddy allocator is already optimized to handle
+merging the pages and such so we should really let it do its job
+rather than reinventing it ourselves.
+
+> +static void guest_free_page_hinting(void)
+> +{
+> +       struct guest_free_pages *hinting_obj = &get_cpu_var(free_pages_obj);
+> +
+> +       hinting_obj->free_pages_idx = 0;
+> +       put_cpu_var(hinting_obj);
+> +}
+> +
+
+Shouldn't this be guarded with a local_irq_save to prevent someone
+from possibly performing an enqueue on the same CPU as the one you are
+resetting the work on, or is just the preempt_disable int he
+get_cpu_var enough to handle the case? If so could we get away with
+the same thing for the guest_free_page_enqueue?
+
+> +int if_exist(struct page *page)
+> +{
+> +       int i = 0;
+> +       struct guest_free_pages *hinting_obj = this_cpu_ptr(&free_pages_obj);
+> +
+> +       while (i < MAX_FGPT_ENTRIES) {
+> +               if (page_to_pfn(page) == hinting_obj->free_page_arr[i])
+> +                       return 1;
+> +               i++;
+> +       }
+> +       return 0;
+> +}
+> +
+
+Doing a linear search for the page is going to be painful. Also this
+is only searching a per-cpu list. What if you have this split over a
+couple of CPUs?
+
+> +void guest_free_page_enqueue(struct page *page, int order)
+> +{
+> +       unsigned long flags;
+> +       struct guest_free_pages *hinting_obj;
+> +       int l_idx;
+> +
+> +       /*
+> +        * use of global variables may trigger a race condition between irq and
+> +        * process context causing unwanted overwrites. This will be replaced
+> +        * with a better solution to prevent such race conditions.
+> +        */
+> +       local_irq_save(flags);
+> +       hinting_obj = this_cpu_ptr(&free_pages_obj);
+> +       l_idx = hinting_obj->free_pages_idx;
+> +       if (l_idx != MAX_FGPT_ENTRIES) {
+> +               if (PageBuddy(page) && page_private(page) >=
+> +                   FREE_PAGE_HINTING_MIN_ORDER) {
+> +                       hinting_obj->free_page_arr[l_idx] = page_to_pfn(page);
+> +                       hinting_obj->free_pages_idx += 1;
+> +               } else {
+> +                       struct page *buddy_page = get_buddy_page(page);
+> +
+> +                       if (buddy_page && page_private(buddy_page) >=
+> +                           FREE_PAGE_HINTING_MIN_ORDER &&
+> +                           !if_exist(buddy_page)) {
+> +                               unsigned long buddy_pfn =
+> +                                       page_to_pfn(buddy_page);
+> +
+> +                               hinting_obj->free_page_arr[l_idx] =
+> +                                                       buddy_pfn;
+> +                               hinting_obj->free_pages_idx += 1;
+> +                       }
+> +               }
+> +       }
+> +       local_irq_restore(flags);
+> +}
+> +
+> +void guest_free_page_try_hinting(void)
+> +{
+> +       struct guest_free_pages *hinting_obj;
+> +
+> +       hinting_obj = this_cpu_ptr(&free_pages_obj);
+> +       if (hinting_obj->free_pages_idx >= HINTING_THRESHOLD)
+> +               guest_free_page_hinting();
+> +}
+> --
+> 2.17.2
+>
