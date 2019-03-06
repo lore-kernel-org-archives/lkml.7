@@ -2,72 +2,199 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F46C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BEBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7782420661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C6920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACYxicgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbfCFPoo (ORCPT
+        id S1729553AbfCFPqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:44:44 -0500
-Received: from Galois.linutronix.de ([146.0.238.70]:50634 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfCFPon (ORCPT
+        Wed, 6 Mar 2019 10:46:14 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40951 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfCFPqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:44:43 -0500
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h1Yin-0006ul-EA; Wed, 06 Mar 2019 16:44:41 +0100
-Date:   Wed, 6 Mar 2019 16:44:40 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] cpu/hotplug: Create SMT sysfs interface for all arches
-In-Reply-To: <426cde0f727f0cbadc501bb9bca8c99c4e11ac02.1551462051.git.jpoimboe@redhat.com>
-Message-ID: <alpine.DEB.2.21.1903061633010.1646@nanos.tec.linutronix.de>
-References: <426cde0f727f0cbadc501bb9bca8c99c4e11ac02.1551462051.git.jpoimboe@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 6 Mar 2019 10:46:14 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u9so8712824pgo.7;
+        Wed, 06 Mar 2019 07:46:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BMNquzZ7LCKcc4KxDMrDMb83ZG4KwGAqon0uKkeZEyI=;
+        b=ACYxicgue5JCZwd/qlIJuStp6zl0+75jIs1RQY3bVI/AKVkAzxFBeLt/5iEQHz8kra
+         xc+6ykp5+UlXczY57jndzxSHNf+x3DiP4/dKZzypUbG30ujCA/dFvVzDpqoqV0J7LVqC
+         cruEsZIDS8eApIfvKZt3H2wdKlp2rBYI51cWrpgZS5ues60exR5EZjSkGOms4zJWiQ93
+         /cZJ9tX+tTpTMrLTbOLf11RX6BIsAwqohzBfcavpZ94EjxDBvmBS83N9n8YIwg1Sb8Oz
+         I+6mrfGIC8xcvZiONVcyXzGSQ9U6nmMAh0llTPnfRL4OwVtKwyF3UF0KmeFAXW0KywMm
+         d5DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BMNquzZ7LCKcc4KxDMrDMb83ZG4KwGAqon0uKkeZEyI=;
+        b=Nxh0H5sLcN6ElFL/CPbdJWMmapAlzwhhCRuwTriEoN/jIpu8zxM4IUg/e0jtQ2vG+C
+         fQ4njJ5/9GSU3vudcK8xgflJuKlZdz2rsy1Tvc79AbdkizHvUdXipUBp7BtA3Z3mVgps
+         ek4o9ZvdS2ewVeI5q5QdVJzD5HlRdPW97rq/otgpFQy43/qA6LjJAFWlbsrNSPpLH/au
+         MEEXknqiH/3MO/SVBs6UJMqjM8s42pgTY7VuIcC2qlt46RpQeUzdflP3Iqtk2qARjpzS
+         NTWNxdnb+5qC/+ufIhqB/3Ux5DvymfgI3d86/nRMctQuP3NaFXsANPK/4vCPsO6yQi0H
+         XJlA==
+X-Gm-Message-State: APjAAAUcjIysCHyttItkT2bCWg4sLZcTBIPPYCL6GMfKFAy8HG6Y6Jh+
+        SGURd/sA4sdws5W2HCwoD+E=
+X-Google-Smtp-Source: APXvYqxx0iM2bjfMpu/q8i3EFcxU44yiKWC1Ti35fVfyHbeUe1xbwLxIwzUHcQkbYwlQtPmpPAoCHw==
+X-Received: by 2002:a17:902:7798:: with SMTP id o24mr7682531pll.212.1551887172957;
+        Wed, 06 Mar 2019 07:46:12 -0800 (PST)
+Received: from [192.168.11.4] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id p2sm5740358pfi.95.2019.03.06.07.46.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 07:46:12 -0800 (PST)
+Subject: Re: [RFC PATCH] tools/memory-model: Remove (dep ; rfi) from ppo
+To:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>
+References: <20190222130014.GY32494@hirez.programming.kicks-ass.net>
+ <20190225175517.GK4072@linux.ibm.com>
+ <20190226093009.GS32477@hirez.programming.kicks-ass.net>
+ <20190226104551.GF32534@hirez.programming.kicks-ass.net>
+ <20190226112133.GG32534@hirez.programming.kicks-ass.net>
+ <20190226112521.GH32534@hirez.programming.kicks-ass.net>
+ <20190226113008.GI32534@hirez.programming.kicks-ass.net>
+ <20190226113813.GA14753@zn.tnic>
+ <20190226134906.GG32494@hirez.programming.kicks-ass.net>
+ <20190226142845.GK4072@linux.ibm.com>
+ <20190226150450.GW32477@hirez.programming.kicks-ass.net>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <ab631777-7cbd-4658-fb99-05d60ec5a1ea@gmail.com>
+Date:   Thu, 7 Mar 2019 00:46:05 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190226150450.GW32477@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Josh,
-
-On Fri, 1 Mar 2019, Josh Poimboeuf wrote:
-> Make the /sys/devices/system/cpu/smt/* files available on all arches, so
-> user space has a consistent way to detect whether SMT is enabled.
+On Tue, 26 Feb 2019 16:04:50 +0100, Peter Zijlstra wrote:
+> On Tue, Feb 26, 2019 at 06:28:45AM -0800, Paul E. McKenney wrote:
 > 
-> The 'control' file now shows 'notsupported' for architectures which
-> don't yet have CONFIG_HOTPLUG_SMT.
+>> Yes, this all is a bit on the insane side from a kernel viewpoint.
+>> But the paper you found does not impose this; it has instead been there
+>> for about 20 years, back before C and C++ admitted to the existence
+>> of concurrency.  But of course compilers are getting more aggressive,
+>> and yes, some of the problems show up in single-threaded code.
+> 
+> But that paper is from last year!! It has Peter Sewell on, I'm sure he's
+> heard of concurrency.
+> 
+>> The usual response is "then cast the pointers to intptr_t!" but of
+>> course that breaks type checking.
+> 
+> I tried laundering the pointer through intptr_t, but I can't seem to
+> unbreak it.
+> 
+> 
+> root@ivb-ep:~/tmp# gcc-8 -O2 -fno-strict-aliasing  -o ptr ptr.c ; ./ptr
+> p=0x55aacdc80034 q=0x55aacdc80034
+> x=1 y=2 *p=11 *q=2
+> root@ivb-ep:~/tmp# cat ptr.c
+> #include <stdio.h>
+> #include <string.h>
+> #include <stdint.h>
+> int y = 2, x = 1;
+> int main (int argc, char **argv) {
+> 	intptr_t P = (intptr_t)&x;
+> 	intptr_t Q = (intptr_t)&y;
+> 	P += sizeof(int);
+> 	int *q = &y;
+> 	printf("p=%p q=%p\n", (int*)P, (int*)Q);
+> 	if (P == Q) {
+> 		int *p = (int *)P;
+> 		*p = 11;
+> 		printf("x=%d y=%d *p=%d *q=%d\n", x, y, *p, *q);
+> 	}
+> }
+> 
 
-Yes, that makes sense.
+So, I'm looking at the macro RELOC_HIDE() defined in include/linux/compiler-gcc.h.
 
-<SNIP>
+It says:
 
-Nice work!. I'll pick it up and queue it for 5.2.
+--------
+/*
+ * This macro obfuscates arithmetic on a variable address so that gcc
+ * shouldn't recognize the original var, and make assumptions about it.
+ *
+ * This is needed because the C standard makes it undefined to do
+ * pointer arithmetic on "objects" outside their boundaries and the
+ * gcc optimizers assume this is the case. In particular they
+ * assume such arithmetic does not wrap.
+ *
+   [...]
+ */
+#define RELOC_HIDE(ptr, off)						\
+({									\
+	unsigned long __ptr;						\
+	__asm__ ("" : "=r"(__ptr) : "0"(ptr));				\
+	(typeof(ptr)) (__ptr + (off));					\
+})
+--------
 
-Thanks,
+Looks like this macro has existed ever since the origin of Linus' git repo.
 
-	tglx
+And the optimization "bug" discussed in this thread can be suppressed by
+this macro.
 
+For example,
 
+$ gcc -O2 -o reloc_hide reloc_hide.c; ./reloc_hide
+x=1 y=11 *p=11 *q=11
+$ cat reloc_hide.c
+#include <stdio.h>
+#include <stdint.h>
 
+#define RELOC_HIDE(ptr, off)						\
+({									\
+	uintptr_t __ptr;						\
+	__asm__ ("" : "=r"(__ptr) : "0"(ptr));				\
+	(typeof(ptr)) (__ptr + (off));					\
+})
 
+int y = 2, x = 1;
+int main (int argc, char **argv) {
+	int *p = RELOC_HIDE(&x, sizeof(*p));
+	int *q = RELOC_HIDE(&y, 0);
+	if (p == q) {
+		*p = 11;
+		printf("x=%d y=%d *p=%d *q=%d\n", x, y, *p, *q);
+	}
+}
 
+Note that "uintptr_t" is used in this version of RELOC_HIDE() for user-land
+code.
+
+Am I the only one who was not aware of this gcc-specific macro?
+
+        Thanks, Akira
