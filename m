@@ -2,204 +2,216 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34B1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7BFC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE46F20645
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CKwsL5HN"
+	by mail.kernel.org (Postfix) with ESMTP id 8F2D92064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 19:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbfCFTDf (ORCPT
+        id S1730527AbfCFTED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 14:03:35 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33636 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728637AbfCFTDd (ORCPT
+        Wed, 6 Mar 2019 14:04:03 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53457 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfCFTEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 14:03:33 -0500
-Received: by mail-wr1-f68.google.com with SMTP id i12so14655451wrw.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 11:03:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Neppaa8RdSqht8UnmU1WA+2pKzzdo2Ze2M49fJVuFqk=;
-        b=CKwsL5HNTI4ZDBtRxedSPbYsaWgWSxA2wBKgvKt59/9jpYW40RFrP0s7bzjFHVBCKG
-         HFaKBtSaCnmjWmg75tMhOlSEQu29gp5MFpFsc5Em2JfLv/opkpFkt0F85Z9qm/fC+wZK
-         +iuHHVVEZgzHzu0ExHqMXqw+ORzTKOfKVbjH5Rya2eitnN1zbr3w+gR0VxzNdJ97OKdI
-         mSqyPri83QuUBVTM/W8+DT+tJN0jpEYn6ZLqKb74iolpX3nyY8IlgTd6rajZBvf+zDuc
-         UkaHBEYn+SST5ynDzcKXoCVwE4psiv9GZwljfgmoT0vIPjL7xFUcmiLupxR2JDC3jnmb
-         hQYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Neppaa8RdSqht8UnmU1WA+2pKzzdo2Ze2M49fJVuFqk=;
-        b=hlKDKI82sXulKSmQfzN/eB2Et+SMsnXGVUcvlJyDZT2t37IzyoiZyIlfgtLcYEfaU4
-         v0K0wvlAvdMOJwYT/eB5wXUWAoHr1R3tV6BvTeHEi4x2sssV40gVCQ5qnfVD93RizFUA
-         +l3bFk2w6xA8paysTUSfl+gA6KcaN321k49gxCbXWtwLdvrtQr2xt4AMcoxwHexV+RDz
-         GFwbNkpu4m5x/gRO7u8qozQNc+ystVuQ1HUExdHVdfzjOsxSRax0MO3D1UCegxRSQxjZ
-         sskNR6rIO9Z4yZgP/LnWXgq4OBa7jpoc4WkSG/9XZUj6B6PYXfVtTG2dpGtePFJPKCiq
-         kDLg==
-X-Gm-Message-State: APjAAAUpYUic2PK6SpXh9Ni9MMpv51/VDiPyhkZDs7oTO6zMzvhJiQvc
-        qJF9qpMvly7ZJER+9y5CQuow5SmYxEwhQw1EV+JUXg==
-X-Google-Smtp-Source: APXvYqwoc9YzLdO+Wsx1UunUmMqeboKF6kbuqTB4YWnJ2ONYlnob2BRo6mTRmqqKyTReFFtfHdM8k54D4abdv83+Dy4=
-X-Received: by 2002:a5d:6703:: with SMTP id o3mr3960828wru.75.1551899010374;
- Wed, 06 Mar 2019 11:03:30 -0800 (PST)
+        Wed, 6 Mar 2019 14:04:02 -0500
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8B8662000B;
+        Wed,  6 Mar 2019 19:03:46 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v5 3/4] mm: Simplify MEMORY_ISOLATION && COMPACTION || CMA into CONTIG_ALLOC
+Date:   Wed,  6 Mar 2019 14:00:04 -0500
+Message-Id: <20190306190005.7036-4-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190306190005.7036-1-alex@ghiti.fr>
+References: <20190306190005.7036-1-alex@ghiti.fr>
 MIME-Version: 1.0
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <1551819273-640-2-git-send-email-john.stultz@linaro.org> <a4fd1783-c0d8-8ed5-5cd0-522b0789998c@ti.com>
-In-Reply-To: <a4fd1783-c0d8-8ed5-5cd0-522b0789998c@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 6 Mar 2019 11:03:19 -0800
-Message-ID: <CALAqxLVh9zU-96ZpOVFztS=WtpMWPEOqAo=zj+fhVVK78W50BQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/5 v2] dma-buf: Add dma-buf heaps framework
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 10:18 AM Andrew F. Davis <afd@ti.com> wrote:
->
-> On 3/5/19 2:54 PM, John Stultz wrote:
-> > From: "Andrew F. Davis" <afd@ti.com>
-> >
-> > This framework allows a unified userspace interface for dma-buf
-> > exporters, allowing userland to allocate specific types of
-> > memory for use in dma-buf sharing.
-> >
-> > Each heap is given its own device node, which a user can
-> > allocate a dma-buf fd from using the DMA_HEAP_IOC_ALLOC.
-> >
-> > This code is an evoluiton of the Android ION implementation,
-> > and a big thanks is due to its authors/maintainers over time
-> > for their effort:
-> >   Rebecca Schultz Zavin, Colin Cross, Benjamin Gaignard,
-> >   Laura Abbott, and many other contributors!
-> >
-> > Cc: Laura Abbott <labbott@redhat.com>
-> > Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> > Cc: Greg KH <gregkh@linuxfoundation.org>
-> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > Cc: Liam Mark <lmark@codeaurora.org>
-> > Cc: Brian Starkey <Brian.Starkey@arm.com>
-> > Cc: Andrew F. Davis <afd@ti.com>
-> > Cc: Chenbo Feng <fengc@google.com>
-> > Cc: Alistair Strachan <astrachan@google.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Andrew F. Davis <afd@ti.com>
-> > [jstultz: reworded commit message, and lots of cleanups]
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> > v2:
-> > * Folded down fixes I had previously shared in implementing
-> >   heaps
-> > * Make flags a u64 (Suggested by Laura)
-> > * Add PAGE_ALIGN() fix to the core alloc funciton
-> > * IOCTL fixups suggested by Brian
-> > * Added fixes suggested by Benjamin
-> > * Removed core stats mgmt, as that should be implemented by
-> >   per-heap code
-> > * Changed alloc to return a dma-buf fd, rather then a buffer
-> >   (as it simplifies error handling)
-> > ---
-> >  MAINTAINERS                   |  16 ++++
-> >  drivers/dma-buf/Kconfig       |   8 ++
-> >  drivers/dma-buf/Makefile      |   1 +
-> >  drivers/dma-buf/dma-heap.c    | 191 ++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/dma-heap.h      |  65 ++++++++++++++
-> >  include/uapi/linux/dma-heap.h |  52 ++++++++++++
-> >  6 files changed, 333 insertions(+)
-> >  create mode 100644 drivers/dma-buf/dma-heap.c
-> >  create mode 100644 include/linux/dma-heap.h
-> >  create mode 100644 include/uapi/linux/dma-heap.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index ac2e518..a661e19 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4621,6 +4621,22 @@ F:     include/linux/*fence.h
-> >  F:   Documentation/driver-api/dma-buf.rst
-> >  T:   git git://anongit.freedesktop.org/drm/drm-misc
-> >
-> > +DMA-BUF HEAPS FRAMEWORK
-> > +M:   Laura Abbott <labbott@redhat.com>
-> > +R:   Liam Mark <lmark@codeaurora.org>
-> > +R:   Brian Starkey <Brian.Starkey@arm.com>
-> > +R:   "Andrew F. Davis" <afd@ti.com>
->
-> Quotes not needed in maintainers file.
+This condition allows to define alloc_contig_range, so simplify
+it into a more accurate naming.
 
-Whatever you say, "Andrew F. Davis", or whomever you really are! ;)
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/arm64/Kconfig                     | 2 +-
+ arch/powerpc/platforms/Kconfig.cputype | 2 +-
+ arch/s390/Kconfig                      | 2 +-
+ arch/sh/Kconfig                        | 2 +-
+ arch/sparc/Kconfig                     | 2 +-
+ arch/x86/Kconfig                       | 2 +-
+ arch/x86/mm/hugetlbpage.c              | 2 +-
+ include/linux/gfp.h                    | 2 +-
+ mm/Kconfig                             | 3 +++
+ mm/page_alloc.c                        | 3 +--
+ 10 files changed, 12 insertions(+), 10 deletions(-)
 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index a4168d366127..091a513b93e9 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -18,7 +18,7 @@ config ARM64
+ 	select ARCH_HAS_FAST_MULTIPLIER
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+-	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
++	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_PTE_SPECIAL
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 8c7464c3f27f..f677c8974212 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -319,7 +319,7 @@ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+ config PPC_RADIX_MMU
+ 	bool "Radix MMU Support"
+ 	depends on PPC_BOOK3S_64
+-	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
++	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+ 	default y
+ 	help
+ 	  Enable support for the Power ISA 3.0 Radix style MMU. Currently this
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index ed554b09eb3f..1c57b83c76f5 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -69,7 +69,7 @@ config S390
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+-	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
++	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_SET_MEMORY
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 299a17bed67c..c7266302691c 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -53,7 +53,7 @@ config SUPERH
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_NMI
+ 	select NEED_SG_DMA_LENGTH
+-	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
++	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+ 
+ 	help
+ 	  The SuperH is a RISC processor targeted for use in embedded systems
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 0b7f0e0fefa5..ca33c80870e2 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -90,7 +90,7 @@ config SPARC64
+ 	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select PCI_DOMAINS if PCI
+-	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
++	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+ 
+ config ARCH_DEFCONFIG
+ 	string
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 68261430fe6e..8ba90f3e0038 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -23,7 +23,7 @@ config X86_64
+ 	def_bool y
+ 	depends on 64BIT
+ 	# Options that are inherently 64-bit kernel only:
+-	select ARCH_HAS_GIGANTIC_PAGE if (MEMORY_ISOLATION && COMPACTION) || CMA
++	select ARCH_HAS_GIGANTIC_PAGE if CONTIG_ALLOC
+ 	select ARCH_SUPPORTS_INT128
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select HAVE_ARCH_SOFT_DIRTY
+diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+index 92e4c4b85bba..fab095362c50 100644
+--- a/arch/x86/mm/hugetlbpage.c
++++ b/arch/x86/mm/hugetlbpage.c
+@@ -203,7 +203,7 @@ static __init int setup_hugepagesz(char *opt)
+ }
+ __setup("hugepagesz=", setup_hugepagesz);
+ 
+-#if (defined(CONFIG_MEMORY_ISOLATION) && defined(CONFIG_COMPACTION)) || defined(CONFIG_CMA)
++#ifdef CONFIG_CONTIG_ALLOC
+ static __init int gigantic_pages_init(void)
+ {
+ 	/* With compaction or CMA we can allocate gigantic pages at runtime */
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index 5f5e25fd6149..1f1ad9aeebb9 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -585,7 +585,7 @@ static inline bool pm_suspended_storage(void)
+ }
+ #endif /* CONFIG_PM_SLEEP */
+ 
+-#if (defined(CONFIG_MEMORY_ISOLATION) && defined(CONFIG_COMPACTION)) || defined(CONFIG_CMA)
++#ifdef CONFIG_CONTIG_ALLOC
+ /* The below functions must be run on a range from a single zone. */
+ extern int alloc_contig_range(unsigned long start, unsigned long end,
+ 			      unsigned migratetype, gfp_t gfp_mask);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 25c71eb8a7db..137eadc18732 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -258,6 +258,9 @@ config ARCH_ENABLE_HUGEPAGE_MIGRATION
+ config ARCH_ENABLE_THP_MIGRATION
+ 	bool
+ 
++config CONTIG_ALLOC
++       def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
++
+ config PHYS_ADDR_T_64BIT
+ 	def_bool 64BIT
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 35fdde041f5c..ac9c45ffb344 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8024,8 +8024,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 	return true;
+ }
+ 
+-#if (defined(CONFIG_MEMORY_ISOLATION) && defined(CONFIG_COMPACTION)) || defined(CONFIG_CMA)
+-
++#ifdef CONFIG_CONTIG_ALLOC
+ static unsigned long pfn_max_align_down(unsigned long pfn)
+ {
+ 	return pfn & ~(max_t(unsigned long, MAX_ORDER_NR_PAGES,
+-- 
+2.20.1
 
-> > +
-> > +             if (heap_allocation.fd ||
-> > +                 heap_allocation.reserved0 ||
-> > +                 heap_allocation.reserved1 ||
-> > +                 heap_allocation.reserved2) {
->
-> Seems too many reserved, I can understand one, but if we ever needed all
-> of these we would be better off just adding another alloc ioctl.
-
-Well, we have to have one u32 for padding. And I figured if we needed
-anything more then a u32, then we're in for 2 more.
-
-And I think the potential of the alignment and heap-private flags, I
-worry we might want to  have something, but I guess we could just add
-a new ioctl and keep the support for the old one if folks prefer.
-
-> > +int dma_heap_add(struct dma_heap *heap)
-> > +{
-> > +     struct device *dev_ret;
-> > +     int ret;
-> > +
-> > +     if (!heap->name || !strcmp(heap->name, "")) {
-> > +             pr_err("dma_heap: Cannot add heap without a name\n");
->
-> As these names end up as the dev name in the file system we may want to
-> check for invalid names, there is probably a helper for that somewhere.
-
-Hrm. I'll have to look.
-
-> > +struct dma_heap {
-> > +     const char *name;
-> > +     struct dma_heap_ops *ops;
-> > +     unsigned int minor;
-> > +     dev_t heap_devt;
-> > +     struct cdev heap_cdev;
-> > +};
->
-> Still not sure about this, all of the members in this struct are
-> strictly internally used by the framework. The users of this framework
-> should not have access to them and only need to deal with an opaque
-> pointer for tracking themselves (can store it in a private struct of
-> their own then container_of to get back out their struct).
->
-> Anyway, not a big deal, and if it really bugs me enough I can always go
-> fix it later, it's all kernel internal so not a blocker here. :)
-
-I guess I'd just move the include/linux/dma-heap.h to
-drivers/dma-buf/heaps/ and keep it localized there.
-But whichever. Feel free to also send a patch and I can fold it down.
-
-thanks
--john
