@@ -2,114 +2,192 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE48C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6047EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75E320661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3379620684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbfCFRCT (ORCPT
+        id S1730412AbfCFRCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:02:19 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:46842 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfCFRCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:02:18 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8DF5988305;
-        Wed,  6 Mar 2019 17:02:18 +0000 (UTC)
-Received: from localhost (ovpn-117-87.ams2.redhat.com [10.36.117.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F35855C647;
-        Wed,  6 Mar 2019 17:02:17 +0000 (UTC)
-Date:   Wed, 6 Mar 2019 17:02:16 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Adalbert =?utf-8?B?TGF6xINy?= <alazar@bitdefender.com>
-Cc:     Stefan Hajnoczi <stefanha@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vsock/virtio: fix kernel panic from
- virtio_transport_reset_no_sock
-Message-ID: <20190306170216.GC29057@stefanha-x1.localdomain>
-References: <20190305180145.27161-1-alazar@bitdefender.com>
- <20190306084104.GA22159@stefanha-x1.localdomain>
- <1551863441.5559.19509.@c1753101230bd75c4bdbfe8f0947046bcaf69c6c>
+        Wed, 6 Mar 2019 12:02:23 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25721 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726636AbfCFRCV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:02:21 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x26GuHKW022932;
+        Wed, 6 Mar 2019 18:01:57 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2qyhgb16m0-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 06 Mar 2019 18:01:57 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5968734;
+        Wed,  6 Mar 2019 17:01:56 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30C6950D7;
+        Wed,  6 Mar 2019 17:01:56 +0000 (GMT)
+Received: from [10.48.0.237] (10.75.127.51) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 6 Mar
+ 2019 18:01:55 +0100
+Subject: Re: [PATCH 4/5] mmc: mmci: stm32: define get_dctrl_cfg
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1551694625-6414-1-git-send-email-ludovic.Barre@st.com>
+ <1551694625-6414-5-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFr3PLOdozCmfE7Lin0FhzgLnN120RZmMwk=K8RzGvveow@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <bbbb79de-b480-718c-abec-ee4af0e88d71@st.com>
+Date:   Wed, 6 Mar 2019 18:01:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
-Content-Disposition: inline
-In-Reply-To: <1551863441.5559.19509.@c1753101230bd75c4bdbfe8f0947046bcaf69c6c>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 06 Mar 2019 17:02:18 +0000 (UTC)
+In-Reply-To: <CAPDyKFr3PLOdozCmfE7Lin0FhzgLnN120RZmMwk=K8RzGvveow@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_11:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---oJ71EGRlYNjSvfq7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 06, 2019 at 11:10:41AM +0200, Adalbert Laz=C4=83r wrote:
-> On Wed, 6 Mar 2019 08:41:04 +0000, Stefan Hajnoczi <stefanha@gmail.com> w=
-rote:
-> > On Tue, Mar 05, 2019 at 08:01:45PM +0200, Adalbert Laz=C4=83r wrote:
-> > The pkt argument is the received packet that we must reply to.
-> > The reply packet is allocated just before line 680 and must be free
-> > explicitly for return -ENOTCONN.
-> >=20
-> > You can avoid the leak and make the code easier to read like this:
-> >=20
-> >   struct virtio_vsock_pkt *reply;
-> >=20
-> >   ...
-> >=20
-> >      ------ avoid reusing 'pkt'
-> >     v
-> >   reply =3D virtio_transport_alloc_pkt(&info, 0, ...);
-> >   if (!reply)
-> >       return -ENOMEM;
-> >=20
-> >   t =3D virtio_transport_get_ops();
-> >   if (!t) {
-> >       virtio_transport_free_pkt(reply); <-- prevent memory leak
-> >       return -ENOTCONN;
-> >   }
-> >   return t->send_pkt(reply);
->=20
-> What do you think about Stefano's suggestion, to move the check above
-> the line were the reply is allocated?
+On 3/6/19 2:31 PM, Ulf Hansson wrote:
+> On Mon, 4 Mar 2019 at 11:17, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch defines get_dctrl_cfg callback for sdmmc variant.
+>> sdmmc variant has specific stm32 transfer modes.
+>> sdmmc data transfer mode selection could be:
+>> -Block data transfer ending on block count.
+>> -SDIO multibyte data transfer.
+>> -MMC Stream data transfer (not used).
+>> -Block data transfer ending with STOP_TRANSMISSION command.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.h             |  5 +++++
+>>   drivers/mmc/host/mmci_stm32_sdmmc.c | 21 +++++++++++++++++++++
+>>   2 files changed, 26 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 6f28f71..eb5d99af 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -131,6 +131,11 @@
+>>   /* Control register extensions in the Qualcomm versions */
+>>   #define MCI_DPSM_QCOM_DATA_PEND        BIT(17)
+>>   #define MCI_DPSM_QCOM_RX_DATA_PEND BIT(20)
+>> +/* Control register extensions in STM32 versions */
+>> +#define MCI_DPSM_STM32_MODE_BLOCK      (0 << 2)
+>> +#define MCI_DPSM_STM32_MODE_SDIO       (1 << 2)
+>> +#define MCI_DPSM_STM32_MODE_STREAM     (2 << 2)
+>> +#define MCI_DPSM_STM32_MODE_BLOCK_STOP (3 << 2)
+>>
+>>   #define MMCIDATACNT            0x030
+>>   #define MMCISTATUS             0x034
+>> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> index cfbfc6f..e7bf744 100644
+>> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> @@ -265,10 +265,31 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
+>>          }
+>>   }
+>>
+>> +u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
+>> +{
+>> +       struct variant_data *variant = host->variant;
+>> +       int blksz_bits;
+>> +       u32 datactrl;
+>> +
+>> +       blksz_bits = ffs(host->data->blksz) - 1;
+>> +       datactrl = variant->datactrl_dpsm_enable | blksz_bits << 4;
+>> +
+>> +       if (host->mmc->card && mmc_card_sdio(host->mmc->card) &&
+>> +           host->data->blocks == 1)
+> 
+> These settings are not limited to deal with the block size bits.
+> 
+> Don't get me wrong, it seems reasonable to include them, but the
+> generic code in mmci_start_data() also have code to cope with SDIO. I
+> think we should start by splitting that up into a couple of
+> helper/library functions, and make the legacy variant to use them.
+> This should probably be done as a preparation to your series, so you
+> can build on top of that.
 
-That's fine too.
+I think you wish helper functions for each group of datactrl feature,
+like for dpsm direction|sdio|ios timming. Each variant call theses 
+helpers to define its own datactrl value. it's possible, no problem.
 
-However a follow up patch to eliminate the confusing way that 'pkt' is
-reused is still warranted.  If you are busy I'd be happy to send that
-cleanup.
+In mmci_start_data will remain the part on clk_reg for sdio card
+	if (host->mmc->card && mmc_card_sdio(host->mmc->card)) {
+		u32 clk;
 
-Stefan
+		/*
+		 * The ST Micro variant for SDIO small write transfers
+		 * needs to have clock H/W flow control disabled,
+		 * otherwise the transfer will not start. The threshold
+		 * depends on the rate of MCLK.
+		 */
+		if (variant->st_sdio && data->flags & MMC_DATA_WRITE &&
+		    (host->size < 8 ||
+		     (host->size <= 8 && host->mclk > 50000000)))
+			clk = host->clk_reg & ~variant->clkreg_enable;
+		else
+			clk = host->clk_reg | variant->clkreg_enable;
 
---oJ71EGRlYNjSvfq7
-Content-Type: application/pgp-signature; name="signature.asc"
+		mmci_write_clkreg(host, clk);
+	}
 
------BEGIN PGP SIGNATURE-----
+it's OK ?
 
-iQEcBAEBAgAGBQJcf/0YAAoJEJykq7OBq3PIs3AH/1reh3MukS2CTzKwSmGQGqBN
-Ps+VDdzKgn+h+Rmr9t6vj3wrJI7T8omxUwcZzXjz45cJyY4UnqynrwvayMzZSLxi
-V817uV3GAMrlRJzTQdnl5M5UEW7h6gdkOexKl92eUU5cl+H0SUhb8oeOhL+9SY7X
-nuEaEQVfRiDeBGC62oUTfwwIVAQlkKyoLhE649PKl2lpP1UA+JwSaBFVQ/7RzLBo
-fPK33EceZifQh95nd4vr6TZhBbu3F4wC44illc46C9i9yYLvHz7RmXoHOteXuNVP
-TNLgyoLUMwiz7RCGn016JJ9MFCQBL7rA/JNuS4fo5DE2+ihx8kp8i58VnMEvPrs=
-=nvm3
------END PGP SIGNATURE-----
-
---oJ71EGRlYNjSvfq7--
+> 
+> Does it make sense? If not, please tell and I can try to provide some
+> patch to show you what I mean.
+> 
+> 
+>> +               datactrl |= MCI_DPSM_STM32_MODE_SDIO;
+>> +       else if (host->data->stop && !host->mrq->sbc)
+>> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK_STOP;
+>> +       else
+>> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK;
+>> +
+>> +       return datactrl;
+>> +}
+>> +
+>>   static struct mmci_host_ops sdmmc_variant_ops = {
+>>          .validate_data = sdmmc_idma_validate_data,
+>>          .prep_data = sdmmc_idma_prep_data,
+>>          .unprep_data = sdmmc_idma_unprep_data,
+>> +       .get_datactrl_cfg = sdmmc_get_dctrl_cfg,
+>>          .dma_setup = sdmmc_idma_setup,
+>>          .dma_start = sdmmc_idma_start,
+>>          .dma_finalize = sdmmc_idma_finalize,
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
