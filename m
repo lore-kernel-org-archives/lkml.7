@@ -2,95 +2,159 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF2CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55413C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFECC20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2869D206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="uojk0uA9"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="P2v8NP07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfCFSQR (ORCPT
+        id S1730793AbfCFSQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:16:17 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35320 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfCFSQR (ORCPT
+        Wed, 6 Mar 2019 13:16:57 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35367 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729645AbfCFSQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:16:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QelMipGIOdThBNtgxzwvwkQDN7dtdyFkTWUD4rHKJHo=; b=uojk0uA9P19Wfl5VjPHqk7rX8
-        bNtFsZHTeaw3c9A6wztBrOZh8NRH38y+LQiLg2BRiy0J15qwFl434+Y7kXdv1JgtqllYoy+SYANoy
-        SxtJqy19Of9J6EL54WtaMaVfltQjGS3JE/VgDiRZZsOI4jXuJMOdtZBXgi+u2cdnhBzJsu2Kc8S8A
-        O9QakBrNay8Vb0Ax4YFyfJIFg4zpOtEMRKzKCmUWQtcT0uPKB4G8PBDvLBnDiKNHkYeyOTwMXV6+1
-        jYhnyc6iGI+vB1KmeMUU/zntej8yQGNwFuRbg2HnT/6+f1TzdaHUc6thdvh+RZ3xZCnE9S58ip7az
-        UU0Kr2h6w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51632)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1h1b5E-0000nE-HX; Wed, 06 Mar 2019 18:16:00 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1h1b5B-0004G7-OD; Wed, 06 Mar 2019 18:15:57 +0000
-Date:   Wed, 6 Mar 2019 18:15:57 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <arm@kernel.org>
-Subject: Re: [GIT PULL 3/6] ARM: SoC driver updates for 5.1
-Message-ID: <20190306181557.fndmy5oks3sximeo@shell.armlinux.org.uk>
-References: <CAK8P3a1mnNrpf5moqi4x9BaTNpE9ZUgs-VBjXoG7=AxENwYtbQ@mail.gmail.com>
- <CAK8P3a1-j-rr1MKnVqD8__YnqPsP8y4S_TWr+TRJScRvkrFymA@mail.gmail.com>
- <CAHk-=wgdJKaDt=Dp_DS+LL3bzRZUo2VHHMZU_VUMukSPzRJPUw@mail.gmail.com>
+        Wed, 6 Mar 2019 13:16:56 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z13so7373508qki.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 10:16:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5I1cnz3QaZ6rw5yJX9izpTDc/C1IFx2uWmv13xl7pe8=;
+        b=P2v8NP07bmvXNsYtRajbosxBYGRBm8bR3dxbyxUC5Uqw6rItRA9lcdtuitPXxQ6A1X
+         hnYWp8f18zZsK8Pxv64+pa+/KTN7QXaobTLO5Mm3udmSJDKnK//qiHb/uuE4Zv4BhfUN
+         AWvHsoy8QZ7VKbolZLp0SXG76SAWeJVm0lUlU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5I1cnz3QaZ6rw5yJX9izpTDc/C1IFx2uWmv13xl7pe8=;
+        b=KucAqpMx6c+m2B0CNRASwezfnMy2g2SAuQ5czgs3pEI0AOjLeTzVUwL6EbyCLaA8YO
+         wC9BujX38JuISusk37IBr5LEyEqGcCxEsYxvH4UTiN09er9PJ0mZmfqtbdMqOI6jJH+f
+         p5+uQk1iiqk1PV2gekVVmFpP3o/1zhIfm84ZlyBlhvbQlt0Ybh+SxSZuiyx+pGNc9Esm
+         G2ExhWt0LWmnTS2JiTW0JWjZsbVfbitaO1RiY1fV6Dvs+nDuBkvkfrtXscOL1DLfFcKv
+         DXZXJ6HmuAc4nuwmNDXWhCI93vzDwFoLQlizw/k5B4S9wXZzyCNkXFx8TvAsDYpSh7Wr
+         bwiw==
+X-Gm-Message-State: APjAAAVFSLF7IIWgvFHk/onudnGIqtOgCNsXRVRL8hw2g/b8wPYwLDS7
+        AxvoLQ3lEy1Wc6QDLiKVCHIxQaesUL4=
+X-Google-Smtp-Source: APXvYqyD3GPpO9TrOZnl4S9WKYXwXytf77sgE28goIwSvHlSjVOiW6JgNGUv4Xw08IiyWPLyGBZ7Hg==
+X-Received: by 2002:a37:478b:: with SMTP id u133mr6591402qka.280.1551896215228;
+        Wed, 06 Mar 2019 10:16:55 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id o4sm1329000qke.30.2019.03.06.10.16.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 10:16:54 -0800 (PST)
+Date:   Wed, 6 Mar 2019 13:16:53 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190306181653.GB34256@google.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <201903030526.3AuYFiuN%fengguang.wu@intel.com>
+ <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgdJKaDt=Dp_DS+LL3bzRZUo2VHHMZU_VUMukSPzRJPUw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 10:09:28AM -0800, Linus Torvalds wrote:
-> On Wed, Mar 6, 2019 at 7:34 AM Arnd Bergmann <arnd@arndb.de> wrote:
+ 
+> On Sat, Mar 2, 2019 at 2:00 PM kbuild test robot <lkp@intel.com> wrote:
 > >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-drivers
-> 
-> This caused a surprising number of kernel file rebuilds for me, and
-> the reason was
-> 
-> >  include/linux/mod_devicetable.h                                     |   9 +
-> 
-> It turns out that the above is indirectly included from a _lot_ of
-> code device header files.
-> 
-> The reason seems to be the various 'struct *_device_id' declarations,
-> that then all the different header files want.
-> 
-> So a tiny change in an oddball header file causes a lot of recompiles.
-> 
-> Oh well. I don't know if there is anything to be done, but I did react
-> to how some surprising changes cause a lot of build activity, and it's
-> not always obvious.
+> > Hi Joel,
+> >
+> > Thank you for the patch! Yet something to improve:
+> >
+> > [auto build test ERROR on linus/master]
+> > [also build test ERROR on v5.0-rc8]
+> > [cannot apply to next-20190301]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/Provide-in-kernel-headers-for-making-it-easy-to-extend-the-kernel/20190303-014850
+> > config: sh-allmodconfig (attached as .config)
+> > compiler: sh4-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=8.2.0 make.cross ARCH=sh
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> > >> find: 'arch/sh/kernel/module.lds': No such file or directory
+> > >> find: 'arch/sh/kernel/module.lds': No such file or directory
+On Sun, Mar 03, 2019 at 08:11:59AM -0800, Joel Fernandes wrote:
+> This report is for an older version of the patch so ignore it. The
+> issue is already resolved.
+>
 
-Would it be worth splitting up mod_devicetable.h and having drivers
-include just the bus-specific device table header(s) that the driver
-requires?
+Apologies, this issue is real. However it does not cause any failure. It is
+only causing find command to be a bit noisy.
 
+The below diff fixes it and I'll update the patch for v5:
+
+diff --git a/scripts/gen_ikh_data.sh b/scripts/gen_ikh_data.sh
+index 1fa5628fcc30..9a7ea856acbc 100755
+--- a/scripts/gen_ikh_data.sh
++++ b/scripts/gen_ikh_data.sh
+@@ -1,5 +1,6 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
++set -e
+ 
+ spath="$(dirname "$(readlink -f "$0")")"
+ kroot="$spath/.."
+@@ -11,12 +12,14 @@ file_list=${@:2}
+ 
+ src_file_list=""
+ for f in $file_list; do
++	if [ ! -f "$kroot/$f" ] && [ ! -d "$kroot/$f" ]; then continue; fi
+ 	src_file_list="$src_file_list $(echo $f | grep -v OBJDIR)"
+ done
+ 
+ obj_file_list=""
+ for f in $file_list; do
+ 	f=$(echo $f | grep OBJDIR | sed -e 's/OBJDIR\///g')
++	if [ ! -f $f ] && [ ! -d $f ]; then continue; fi
+ 	obj_file_list="$obj_file_list $f";
+ done
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.21.0.352.gf09ad66450-goog
+
