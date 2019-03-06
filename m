@@ -2,188 +2,130 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F064C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE42C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CBE20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B860D20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbfCFPvi (ORCPT
+        id S1730154AbfCFPvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:51:38 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:56926 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbfCFPvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Mar 2019 10:51:33 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+Received: from mx1.redhat.com ([209.132.183.28]:47852 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbfCFPva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 10:51:30 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B4A3DE6A88;
-        Wed,  6 Mar 2019 15:51:32 +0000 (UTC)
-Received: from virtlab420.virt.lab.eng.bos.redhat.com (virtlab420.virt.lab.eng.bos.redhat.com [10.19.152.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3078A1001DCE;
-        Wed,  6 Mar 2019 15:51:31 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
-        riel@surriel.com, david@redhat.com, mst@redhat.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com
-Subject: [RFC][Patch v9 6/6] KVM: Adding tracepoints for guest free page hinting
-Date:   Wed,  6 Mar 2019 10:50:48 -0500
-Message-Id: <20190306155048.12868-7-nitesh@redhat.com>
-In-Reply-To: <20190306155048.12868-1-nitesh@redhat.com>
-References: <20190306155048.12868-1-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 06 Mar 2019 15:51:32 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 16FC2307E042;
+        Wed,  6 Mar 2019 15:51:30 +0000 (UTC)
+Received: from redhat.com (ovpn-125-142.rdu2.redhat.com [10.10.125.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 170B1600D7;
+        Wed,  6 Mar 2019 15:51:28 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 10:51:27 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-ID: <20190306155126.GB3230@redhat.com>
+References: <20190129212150.GP3176@redhat.com>
+ <CAPcyv4hZMcJ6r0Pw5aJsx37+YKx4qAY0rV4Ascc9LX6eFY8GJg@mail.gmail.com>
+ <20190130030317.GC10462@redhat.com>
+ <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
+ <20190130183616.GB5061@redhat.com>
+ <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+ <20190131041641.GK5061@redhat.com>
+ <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 06 Mar 2019 15:51:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables to track the pages freed by the guest and
-the pages isolated by the page hinting code through kernel
-tracepoints.
+On Tue, Mar 05, 2019 at 08:20:10PM -0800, Dan Williams wrote:
+> On Tue, Mar 5, 2019 at 2:16 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Wed, 30 Jan 2019 21:44:46 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > > >
+> > > > > Another way to help allay these worries is commit to no new exports
+> > > > > without in-tree users. In general, that should go without saying for
+> > > > > any core changes for new or future hardware.
+> > > >
+> > > > I always intend to have an upstream user the issue is that the device
+> > > > driver tree and the mm tree move a different pace and there is always
+> > > > a chicken and egg problem. I do not think Andrew wants to have to
+> > > > merge driver patches through its tree, nor Linus want to have to merge
+> > > > drivers and mm trees in specific order. So it is easier to introduce
+> > > > mm change in one release and driver change in the next. This is what
+> > > > i am doing with ODP. Adding things necessary in 5.1 and working with
+> > > > Mellanox to have the ODP HMM patch fully tested and ready to go in
+> > > > 5.2 (the patch is available today and Mellanox have begin testing it
+> > > > AFAIK). So this is the guideline i will be following. Post mm bits
+> > > > with driver patches, push to merge mm bits one release and have the
+> > > > driver bits in the next. I do hope this sound fine to everyone.
+> > >
+> > > The track record to date has not been "merge HMM patch in one release
+> > > and merge the driver updates the next". If that is the plan going
+> > > forward that's great, and I do appreciate that this set came with
+> > > driver changes, and maintain hope the existing exports don't go
+> > > user-less for too much longer.
+> >
+> > Decision time.  Jerome, how are things looking for getting these driver
+> > changes merged in the next cycle?
+> >
+> > Dan, what's your overall take on this series for a 5.1-rc1 merge?
+> 
+> My hesitation would be drastically reduced if there was a plan to
+> avoid dangling unconsumed symbols and functionality. Specifically one
+> or more of the following suggestions:
+> 
+> * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
+> surface for out-of-tree consumers to come grumble at us when we
+> continue to refactor the kernel as we are wont to do.
+> 
+> * A commitment to consume newly exported symbols in the same merge
+> window, or the following merge window. When that goal is missed revert
+> the functionality until such time that it can be consumed, or
+> otherwise abandoned.
+> 
+> * No new symbol exports and functionality while existing symbols go unconsumed.
+> 
+> These are the minimum requirements I would expect my work, or any
+> core-mm work for that matter, to be held to, I see no reason why HMM
+> could not meet the same.
 
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- include/trace/events/kmem.h | 62 +++++++++++++++++++++++++++++++++++++
- virt/kvm/page_hinting.c     | 12 +++++++
- 2 files changed, 74 insertions(+)
+nouveau use all of this and other driver patchset have been posted to
+also use this API.
 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index eb57e3037deb..0bef31484cf8 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -315,6 +315,68 @@ TRACE_EVENT(mm_page_alloc_extfrag,
- 		__entry->change_ownership)
- );
- 
-+TRACE_EVENT(guest_free_page,
-+	    TP_PROTO(unsigned long pfn, unsigned int order),
-+
-+	TP_ARGS(pfn, order),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, pfn)
-+		__field(unsigned int, order)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pfn            = pfn;
-+		__entry->order          = order;
-+	),
-+
-+	TP_printk("pfn=%lu order=%d",
-+		  __entry->pfn,
-+		  __entry->order)
-+);
-+
-+TRACE_EVENT(guest_isolated_page,
-+	    TP_PROTO(unsigned long pfn, unsigned int order),
-+
-+	TP_ARGS(pfn, order),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, pfn)
-+		__field(unsigned int, order)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pfn            = pfn;
-+		__entry->order          = order;
-+	),
-+
-+	TP_printk("pfn=%lu order=%u",
-+		  __entry->pfn,
-+		  __entry->order)
-+);
-+
-+TRACE_EVENT(guest_captured_page,
-+	    TP_PROTO(unsigned long pfn, unsigned int order, int idx),
-+
-+	TP_ARGS(pfn, order, idx),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, pfn)
-+		__field(unsigned int, order)
-+		__field(int, idx)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pfn		= pfn;
-+		__entry->order		= order;
-+		__entry->idx		= idx;
-+	),
-+
-+	TP_printk("pfn=%lu order=%u array_index=%d",
-+		  __entry->pfn,
-+		  __entry->order,
-+		  __entry->idx)
-+);
- #endif /* _TRACE_KMEM_H */
- 
- /* This part must be outside protection */
-diff --git a/virt/kvm/page_hinting.c b/virt/kvm/page_hinting.c
-index 5980682e0b86..dc72f1947751 100644
---- a/virt/kvm/page_hinting.c
-+++ b/virt/kvm/page_hinting.c
-@@ -4,6 +4,7 @@
- #include <linux/kvm_host.h>
- #include <linux/kernel.h>
- #include <linux/sort.h>
-+#include <trace/events/kmem.h>
- 
- /*
-  * struct guest_free_pages- holds array of guest freed PFN's along with an
-@@ -178,6 +179,8 @@ static void guest_free_page_hinting(void)
- 
- 				ret = __isolate_free_page(page, buddy_order);
- 				if (ret) {
-+					trace_guest_isolated_page(pfn,
-+								  buddy_order);
- 					isolated_pages_obj[hyp_idx].pfn = pfn;
- 					isolated_pages_obj[hyp_idx].order =
- 								buddy_order;
-@@ -198,6 +201,8 @@ static void guest_free_page_hinting(void)
- 					unsigned long buddy_pfn =
- 						page_to_pfn(buddy_page);
- 
-+					trace_guest_isolated_page(buddy_pfn,
-+								  buddy_order);
- 					isolated_pages_obj[hyp_idx].pfn =
- 								buddy_pfn;
- 					isolated_pages_obj[hyp_idx].order =
-@@ -255,9 +260,12 @@ void guest_free_page_enqueue(struct page *page, int order)
- 	local_irq_save(flags);
- 	hinting_obj = this_cpu_ptr(&free_pages_obj);
- 	l_idx = hinting_obj->free_pages_idx;
-+	trace_guest_free_page(page_to_pfn(page), order);
- 	if (l_idx != MAX_FGPT_ENTRIES) {
- 		if (PageBuddy(page) && page_private(page) >=
- 		    FREE_PAGE_HINTING_MIN_ORDER) {
-+			trace_guest_captured_page(page_to_pfn(page), order,
-+						  l_idx);
- 			hinting_obj->free_page_arr[l_idx] = page_to_pfn(page);
- 			hinting_obj->free_pages_idx += 1;
- 		} else {
-@@ -268,7 +276,11 @@ void guest_free_page_enqueue(struct page *page, int order)
- 			    !if_exist(buddy_page)) {
- 				unsigned long buddy_pfn =
- 					page_to_pfn(buddy_page);
-+				unsigned int buddy_order =
-+					page_private(buddy_page);
- 
-+				trace_guest_captured_page(buddy_pfn,
-+							  buddy_order, l_idx);
- 				hinting_obj->free_page_arr[l_idx] =
- 							buddy_pfn;
- 				hinting_obj->free_pages_idx += 1;
--- 
-2.17.2
+> On this specific patch I would ask that the changelog incorporate the
+> motivation that was teased out of our follow-on discussion, not "There
+> is no reason not to support that case." which isn't a justification.
 
+mlx5 wants to use HMM without DAX support it would regress mlx5. Other
+driver like nouveau also want to access DAX filesystem. So yes there is
+no reason not to support DAX filesystem. Why do you not want DAX with
+mirroring ? You want to cripple HMM ? Why ?
+
+Cheers,
+Jérôme
