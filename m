@@ -6,47 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E5AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C355C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615252063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6054205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 18:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbfCFSw0 (ORCPT
+        id S1728795AbfCFS53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 13:52:26 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:57979 "EHLO
+        Wed, 6 Mar 2019 13:57:29 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:56297 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729476AbfCFSw0 (ORCPT
+        with ESMTP id S1726755AbfCFS53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 13:52:26 -0500
+        Wed, 6 Mar 2019 13:57:29 -0500
 Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mg6mG-1gamQD3wBa-00hgdi; Wed, 06 Mar 2019 19:52:24 +0100
+ 1N1feo-1gvF080QlU-0121U9; Wed, 06 Mar 2019 19:57:24 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Cc:     daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH] drivers: thermal: Kconfig: pedantic cleanups
-Date:   Wed,  6 Mar 2019 19:52:22 +0100
-Message-Id: <1551898342-19308-1-git-send-email-info@metux.net>
+Cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH] security: keys: Kconfig: pedantic cleanup
+Date:   Wed,  6 Mar 2019 19:57:23 +0100
+Message-Id: <1551898643-23397-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:f8X5uOOlThPBguGoyP7xnhVdhvJTmeY0c2dzecpQ9qPGksmvnAw
- qCF9PX0GYRYnwVR6fAznr/PHdO5+tRdbaOCO4jMhLZ9UcYEa9YdatxBQYNJVmXKM5ghh8nu
- v+nj1ggzg9K0vqNY8zMfYUmddqC2urSYJQcyXnuVLHO4dtKU/O3V9F+m0bTIfiEOeF2f46P
- ZXW9z9oHYIn9RpbXdZAow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Yta/PsAQHFU=:6NfTbnvqMur/xcW1orqt6b
- iSehflfKbMcvP30mn57WAFoRPerU1dLbwtNQDHbmBH3mLM4YydcOCtGiapkEc9U9/heDetXnH
- tiy7NBh/Ady7egD7NpOKI7PUwPE76p6str/Jnj2YobmTxUeNYcFjJPxQrc+apZ/0ct93GGEUr
- G37pEjEGSvfyQxiN0ygYxvJHaPf6o4QBAiWzN/mCS2JNg+Dv0FgMtNvI4KsAPuXTG80WlK7B5
- C4fh18N1UfJaQJrjM+W0X5iqoEIPmeTFEOLLiuU8PI/2d2pgTFoQhOVft7EmDdh+0jSZh/4t4
- VCnn6RyOqNCE9D4XQMxWzHhPO1hnFwn1tYJLTgPHEdwdyMvGkwxbXxzuwS41XIguNGnNM8Dmu
- hcwS25dRFIjpXZxfydlROrgVoTu5fnhMNp9OiDTkmdkqBZ/mlsF0eq/XfpRrPBoQbaF/iGZXx
- +8brh7UlpMm/p2sejCXIZfdweCBOFUHkFXVEPhkew4Ey1py4tD0SGETuElTv2UDxxDuJ2d+23
- Jkgen/OxbkQFT/MahCbb/nMRl6mFVt9Yfo9IYseRGjFHvmNUrbN3uouOn2m0dZAOo7mTbNhCF
- sI+1zqNpI8m9F2DOWpXfS6H6V+UjUxt8LGGI/C0a5q94wpG1DbYOPNyhbpb+WkW1ZiMSGs+iz
- Z3gPIJKlDurBdWKUp7GcaNpACQXhaXLIGEQxXbrcq5JhItPkwT+LkazTydpZCE75Fb3p19g8d
- se8UIY0J1EoVxEc1ByKqeREA0O1RjeDPEoNyLA==
+X-Provags-ID: V03:K1:+2KiWfNLxm2te2CzlTNLGK6zWDZZHusM6mEeNpGLsQdnzusuQyB
+ a7OBqeUy65R8APvJUay9dmiJQD7IgsNiw/PQfCQUqu7izbHXFkLODr7eu3k+t7u3zXC+848
+ BMQ4GOMkGAYeHNTUoXTbV8uDknx4VxycrH5YnoaX1zbIWrQC47OCgvSrY8yyjDNGdKmI9i6
+ EvdjxCJHwYqsLAjhtr6KA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:d6EipNPsbkY=:ZPvmUv57yEKlHtzjZLmQn+
+ HPvYzajFGhrbPuzeSeXNRW0QRB3XYoRvoKIC+C1ou5MEaww03BjbC/rk922R5zV37c9oaaxLL
+ 3CKLzyKAT8qGumtNoAEpniz8Seh1Ohx4kGeb0ckiGGAsmtIJ7heGNqUsIF9igCvSNBo5nyemI
+ ECgRPmoqCfASF+/5gy4rYHRfF2hjXJ73QeZtIiJxI3KGb3CyxGg8WpUVTjkZ7v0yxzdfvg4dI
+ uSwInJfYrLgVIOi30mn41J4HsqRqq62dV1gHckTvehvZ03MdjnSy0pcn8QhQ+s2EpNYke07mB
+ E66daDEJm6V06JsEk/r7HNH0ifbP/XT37Ql/sH0fpVyXUthLEpP4JDXamTiUErsUenIWuDq2h
+ pn45WJyeNtUlNLORpwDL7r4znoAb6baQNGyXQFbt6mh45FllAeJnhxDwCf6EW5nJ8vGxasgKq
+ 5yT+bwy9nDsrI4fVpGnaUtjsqrPV5AcI7E1OzH/WvhcPOJHSDxMl0RE53mdn9HfADllM5KF8F
+ jeltS8XQghCWj4pj0FK29zj+9bS2Er/AzWUvsT5Ov4aRW4wnSuxwG02DWZ/+IgdG4wWE1f367
+ S3uc0+ZuQYyd7q1Gd4u4RJophi4hThvC2U5t+sOoI3cdr2redLLADgwe9RPDGFEYOFEBbnSdR
+ 9+xSaqKLMzUuF0C8btWJ6mQBddxHNCQjMH6z8y+JbSJ2Aw0l3W4/IFhBjcO96/PTNXpDGe6nb
+ ozcGEvuRfwX9OuVnNzP4EQfNfGjAUZyobgs3/iotGiu5a/b6ETb4bE7ydSKFTsoN0bICPn4Ur
+ Z99+V4mQiWRS7xyqUGdbEUFA3a6mGeC+syBbzt51XxaHoIXhcfK+84HP5DpQHjpE87Ir4rXX5
+ ZCRSrviykt9ndZ3LRiw7y058C9TvGR56BIkXwOrtfQRGUHtTzU8NycsAC14Rar96khquvVfQw
+ VXloFa5C2bw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -54,61 +57,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/thermal/st/Kconfig    | 22 +++++++++++-----------
- drivers/thermal/tegra/Kconfig |  4 ++--
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ security/keys/Kconfig | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/thermal/st/Kconfig b/drivers/thermal/st/Kconfig
-index b80f9a9..d8b1a45 100644
---- a/drivers/thermal/st/Kconfig
-+++ b/drivers/thermal/st/Kconfig
-@@ -3,9 +3,9 @@
- #
+diff --git a/security/keys/Kconfig b/security/keys/Kconfig
+index 6462e66..6594149 100644
+--- a/security/keys/Kconfig
++++ b/security/keys/Kconfig
+@@ -90,14 +90,14 @@ config ENCRYPTED_KEYS
+ 	  If you are unsure as to whether this is required, answer N.
  
- config ST_THERMAL
--       tristate "Thermal sensors on STMicroelectronics STi series of SoCs"
+ config KEY_DH_OPERATIONS
+-       bool "Diffie-Hellman operations on retained keys"
+-       depends on KEYS
+-       select CRYPTO
+-       select CRYPTO_HASH
+-       select CRYPTO_DH
 -       help
--         Support for thermal sensors on STMicroelectronics STi series of SoCs.
-+	tristate "Thermal sensors on STMicroelectronics STi series of SoCs"
+-	 This option provides support for calculating Diffie-Hellman
+-	 public keys and shared secrets using values stored as keys
+-	 in the kernel.
+-
+-	 If you are unsure as to whether this is required, answer N.
++	bool "Diffie-Hellman operations on retained keys"
++	depends on KEYS
++	select CRYPTO
++	select CRYPTO_HASH
++	select CRYPTO_DH
 +	help
-+	  Support for thermal sensors on STMicroelectronics STi series of SoCs.
- 
- config ST_THERMAL_SYSCFG
- 	select ST_THERMAL
-@@ -16,11 +16,11 @@ config ST_THERMAL_MEMMAP
- 	tristate "STi series memory mapped access based thermal sensors"
- 
- config STM32_THERMAL
--       tristate "Thermal framework support on STMicroelectronics STM32 series of SoCs"
--       depends on MACH_STM32MP157
--       default y
--       help
--	Support for thermal framework on STMicroelectronics STM32 series of
--	SoCs. This thermal driver allows to access to general thermal framework
--	functionalities and to acces to SoC sensor functionalities. This
--	configuration is fully dependent of MACH_STM32MP157.
-+	tristate "Thermal framework support on STMicroelectronics STM32 series of SoCs"
-+	depends on MACH_STM32MP157
-+	default y
-+	help
-+	  Support for thermal framework on STMicroelectronics STM32 series of
-+	  SoCs. This thermal driver allows to access to general thermal framework
-+	  functionalities and to acces to SoC sensor functionalities. This
-+	  configuration is fully dependent of MACH_STM32MP157.
-diff --git a/drivers/thermal/tegra/Kconfig b/drivers/thermal/tegra/Kconfig
-index f8740f7..fc0b33b 100644
---- a/drivers/thermal/tegra/Kconfig
-+++ b/drivers/thermal/tegra/Kconfig
-@@ -14,7 +14,7 @@ config TEGRA_BPMP_THERMAL
- 	tristate "Tegra BPMP thermal sensing"
- 	depends on TEGRA_BPMP || COMPILE_TEST
- 	help
--	 Enable this option for support for sensing system temperature of NVIDIA
--	 Tegra systems-on-chip with the BPMP coprocessor (Tegra186).
-+	  Enable this option for support for sensing system temperature of NVIDIA
-+	  Tegra systems-on-chip with the BPMP coprocessor (Tegra186).
- 
- endmenu
++	  This option provides support for calculating Diffie-Hellman
++	  public keys and shared secrets using values stored as keys
++	  in the kernel.
++
++	  If you are unsure as to whether this is required, answer N.
 -- 
 1.9.1
 
