@@ -2,84 +2,80 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C99C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8715C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD3920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF58206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 07:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbfCFHSV (ORCPT
+        id S1729224AbfCFHS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 02:18:21 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:53940 "EHLO mx1.redhat.com"
+        Wed, 6 Mar 2019 02:18:26 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:52354 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726159AbfCFHSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 02:18:21 -0500
+        id S1726159AbfCFHSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 02:18:25 -0500
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5867A3082E0E;
-        Wed,  6 Mar 2019 07:18:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E10C1C057F31;
+        Wed,  6 Mar 2019 07:18:24 +0000 (UTC)
 Received: from hp-dl380pg8-02.lab.eng.pek2.redhat.com (hp-dl380pg8-02.lab.eng.pek2.redhat.com [10.73.8.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E7FB600C5;
-        Wed,  6 Mar 2019 07:18:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7524600C5;
+        Wed,  6 Mar 2019 07:18:21 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     jasowang@redhat.com, mst@redhat.com, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com
-Subject: [RFC PATCH V2 0/5] vhost: accelerate metadata access through vmap()
-Date:   Wed,  6 Mar 2019 02:18:07 -0500
-Message-Id: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+Subject: [RFC PATCH V2 1/5] vhost: generalize adding used elem
+Date:   Wed,  6 Mar 2019 02:18:08 -0500
+Message-Id: <1551856692-3384-2-git-send-email-jasowang@redhat.com>
+In-Reply-To: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 06 Mar 2019 07:18:21 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 06 Mar 2019 07:18:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series tries to access virtqueue metadata through kernel virtual
-address instead of copy_user() friends since they had too much
-overheads like checks, spec barriers or even hardware feature
-toggling. This is done through setup kernel address through vmap() and
-resigter MMU notifier for invalidation.
+Use one generic vhost_copy_to_user() instead of two dedicated
+accessor. This will simplify the conversion to fine grain
+accessors. About 2% improvement of PPS were seen during vitio-user
+txonly test.
 
-Test shows about 24% improvement on TX PPS. TCP_STREAM doesn't see
-obvious improvement.
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vhost/vhost.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-Thanks
-
-Changes from V4:
-- use invalidate_range() instead of invalidate_range_start()
-- track dirty pages
-Changes from V3:
-- don't try to use vmap for file backed pages
-- rebase to master
-Changes from V2:
-- fix buggy range overlapping check
-- tear down MMU notifier during vhost ioctl to make sure invalidation
-  request can read metadata userspace address and vq size without
-  holding vq mutex.
-Changes from V1:
-- instead of pinning pages, use MMU notifier to invalidate vmaps and
-  remap duing metadata prefetch
-- fix build warning on MIPS
-
-Jason Wang (5):
-  vhost: generalize adding used elem
-  vhost: fine grain userspace memory accessors
-  vhost: rename vq_iotlb_prefetch() to vq_meta_prefetch()
-  vhost: introduce helpers to get the size of metadata area
-  vhost: access vq metadata through kernel virtual address
-
- drivers/vhost/net.c   |   6 +-
- drivers/vhost/vhost.c | 434 ++++++++++++++++++++++++++++++++++++++++++++------
- drivers/vhost/vhost.h |  18 ++-
- 3 files changed, 407 insertions(+), 51 deletions(-)
-
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index a2e5dc7..400aa78 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2251,16 +2251,7 @@ static int __vhost_add_used_n(struct vhost_virtqueue *vq,
+ 
+ 	start = vq->last_used_idx & (vq->num - 1);
+ 	used = vq->used->ring + start;
+-	if (count == 1) {
+-		if (vhost_put_user(vq, heads[0].id, &used->id)) {
+-			vq_err(vq, "Failed to write used id");
+-			return -EFAULT;
+-		}
+-		if (vhost_put_user(vq, heads[0].len, &used->len)) {
+-			vq_err(vq, "Failed to write used len");
+-			return -EFAULT;
+-		}
+-	} else if (vhost_copy_to_user(vq, used, heads, count * sizeof *used)) {
++	if (vhost_copy_to_user(vq, used, heads, count * sizeof *used)) {
+ 		vq_err(vq, "Failed to write used");
+ 		return -EFAULT;
+ 	}
 -- 
 1.8.3.1
 
