@@ -2,188 +2,194 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57CCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AE6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F1820657
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DF420663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551908598;
+	bh=cCtknt6ZFTVlcyeLBUxxmrg0mJ1MAnJgmn6hwOeEDYo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nt8CgrU3mTF3d8/6b4ssi6L5MC8MpJJFBy9t8G0R4ybackXMWHd67ta0hIDzUGutb
+	 NPAJlJgHY1GkGBBenlAq1YSZhi6gfemfLubV8nVKCxRfX27cqFsAEUEfQDZawg9Xmy
+	 prhE+fOmT63xhjeU+hDGfxHfttHmPu0yJO0vYqpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfCFVlN (ORCPT
+        id S1726226AbfCFVnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:41:13 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:60284 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfCFVlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:41:13 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DE5B0307E052;
-        Wed,  6 Mar 2019 21:41:12 +0000 (UTC)
-Received: from [10.36.116.78] (ovpn-116-78.ams2.redhat.com [10.36.116.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 473BF5C5FD;
-        Wed,  6 Mar 2019 21:40:58 +0000 (UTC)
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <20190306110501-mutt-send-email-mst@kernel.org>
- <bd029eb2-501a-8d2d-5f75-5d2b229c7e75@redhat.com>
- <20190306130955-mutt-send-email-mst@kernel.org>
- <afc52d00-c769-01a0-949a-8bc96af47fab@redhat.com>
- <20190306133826-mutt-send-email-mst@kernel.org>
- <3f87916d-8d18-013c-8988-9eb516c9cd2e@redhat.com>
- <20190306140917-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <9ead968e-0cc6-0061-de5c-42a3cef46339@redhat.com>
-Date:   Wed, 6 Mar 2019 22:40:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 16:43:17 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47167 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbfCFVnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 16:43:16 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3A30222AB6;
+        Wed,  6 Mar 2019 16:43:15 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 06 Mar 2019 16:43:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zrjsZN/tQaUBfGIam
+        X0028jOepi1+b2fBzSv1f+ywzc=; b=A87pgnHdfZXUgxMO6i4tyYFxMjqzIHhUa
+        WPdF8e7NjX5bC4Po8+k7LLTWWByzaHhpxS0zRlntNH0KhwWSwIVT7Z09OE0rCMuL
+        DR4ac/Dd5N0EGe543FJPdnGSP05bAKW52tjVU5ZkY9sCMp3VcY5YHJLqyK5Ja/So
+        uxqBF+QYP2K3yfp3RjnHpneK+qiKUvKvy41BzKSJQ8gNZIffqGIow5RsmGulH1Ov
+        JuyMEGR5qQ2TuZdrtEKk6EAyj+PfdCJxu3B6gFyqPvq1u99s02++6v5uFWBr0/4R
+        DpAANHoyY0ACQXEgpAQ3vT4/sYMGW2oKpV7VANIrgX+ltlSXrnH4w==
+X-ME-Sender: <xms:8D6AXENVLel8b-jVQnp6NLNzSN9wwNA5yZZh9Ye3MjomR4924Yuufw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeeigdekjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dvgedrudeiledrhedrudehkeenucfrrghrrghmpehmrghilhhfrhhomhepthhosghinhes
+    khgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:8D6AXAySBPy_nIdUCH1epAvjFQHX9twqeNhrwX4To4gCqt3xOxoaeg>
+    <xmx:8D6AXAkxubvfl2k9s-VjKppUsmHYK5yqrQ_CLsKnxmuR5C9nGgd7Tw>
+    <xmx:8D6AXHA8DxU3yZiRE3zU-np4siQRppNgG6_HOEYMosAynPfHf_MqgA>
+    <xmx:8z6AXPvd3JbZbz4P1z6ouZdem_aoMXC-2iKJoXfeUHFkbqyQvCy-ZA>
+Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 24849E4619;
+        Wed,  6 Mar 2019 16:43:06 -0500 (EST)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        kernel-hardening@lists.openwall.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] lib/string: Add strscpy_pad() function
+Date:   Thu,  7 Mar 2019 08:42:19 +1100
+Message-Id: <20190306214226.14598-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190306140917-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 06 Mar 2019 21:41:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.03.19 21:32, Michael S. Tsirkin wrote:
-> On Wed, Mar 06, 2019 at 07:59:57PM +0100, David Hildenbrand wrote:
->> On 06.03.19 19:43, Michael S. Tsirkin wrote:
->>> On Wed, Mar 06, 2019 at 01:30:14PM -0500, Nitesh Narayan Lal wrote:
->>>>>> Here are the results:
->>>>>>
->>>>>> Procedure: 3 Guests of size 5GB is launched on a single NUMA node with
->>>>>> total memory of 15GB and no swap. In each of the guest, memhog is run
->>>>>> with 5GB. Post-execution of memhog, Host memory usage is monitored by
->>>>>> using Free command.
->>>>>>
->>>>>> Without Hinting:
->>>>>>                  Time of execution    Host used memory
->>>>>> Guest 1:        45 seconds            5.4 GB
->>>>>> Guest 2:        45 seconds            10 GB
->>>>>> Guest 3:        1  minute               15 GB
->>>>>>
->>>>>> With Hinting:
->>>>>>                 Time of execution     Host used memory
->>>>>> Guest 1:        49 seconds            2.4 GB
->>>>>> Guest 2:        40 seconds            4.3 GB
->>>>>> Guest 3:        50 seconds            6.3 GB
->>>>> OK so no improvement.
->>>> If we are looking in terms of memory we are getting back from the guest,
->>>> then there is an improvement. However, if we are looking at the
->>>> improvement in terms of time of execution of memhog then yes there is none.
->>>
->>> Yes but the way I see it you can't overcommit this unused memory
->>> since guests can start using it at any time.  You timed it carefully
->>> such that this does not happen, but what will cause this timing on real
->>> guests?
->>
->> Whenever you overcommit you will need backup swap.
-> 
-> Right and the point of hinting is that pages can just be
-> discarded and not end up in swap.
-> 
-> 
-> Point is you should be able to see the gain.
-> 
-> Hinting patches cost some CPU so we need to know whether
-> they cost too much. How much is too much? When the cost
-> is bigger than benefit. But we can't compare CPU cycles
-> to bytes. So we need to benchmark everything in terms of
-> cycles.
-> 
->> There is no way
->> around it. It just makes the probability of you having to go to disk
->> less likely.
-> 
-> 
-> Right and let's quantify this. Does this result in net gain or loss?
+Hi,
 
-Yes, I am totally with you. But if it is a net benefit heavily depends
-on the setup. E.g. what kind of storage used for the swap, how fast, is
-the same disk also used for other I/O ...
+strscpy_pad() patch set now with added test shenanigans. 
 
-Also, CPU is a totally different resource than I/O. While you might have
-plenty of CPU cycles to spare, your I/O throughput might already be
-limited. Same goes into the other direction.
+This version adds 5 initial patches to the set and splits the single
+patch from v2 into two separate patches (6 and 7).
 
-So it might not be as easy as comparing two numbers. It really depends
-on the setup. Well, not completely true, with 0% CPU overhead we would
-have a clear winner with hinting ;)
+While doing the testing for strscpy_pad() it was noticed that there is
+duplication in how test modules are being fed to kselftest and also in
+the test modules themselves.
 
-> 
-> 
->> If you assume that all of your guests will be using all of their memory
->> all the time, you don't have to think about overcommiting memory in the
->> first place. But this is not what we usually have.
-> 
-> Right and swap is there to support overcommit. However it
-> was felt that hinting can be faster since it avoids IO
-> involved in swap.
+This set makes an attempt at adding a framework to kselftest for writing
+kernel test modules.  It also adds a script for use in creating script
+test runners for kselftest.  My macro-foo is not great, all criticism
+and suggestions very much appreciated.  The design is based on test
+modules lib/test_printf.c, lib/test_bitmap.c, lib/test_xarray.c. 
 
-Feels like it, I/O is prone to be slow.
+Shua, I'm by no means a kselftest expert, if this approach does not fit
+in with your general direction please say so.
 
+Kees, I put the strscpy_pad() addition patch separate so if this goes in
+through Shua's tree (and if it goes in at all) its a single patch to
+grab if we want to start playing around with strscpy_pad().
+
+ 
+Patch 1 fixes module unload for lib/test_printf in preparation for the
+        rest of the series.
+
+Patch 2 Adds a shell script that can be used to create shell script test
+        runners. 
+
+Patch 3 Converts current shell script runners in
+        tools/testing/selftests/lib/ to use the script introduced in
+        patch 2.
+
+Patch 4 Adds the test framework by way of a header file (inc. documentation)
+
+Patch 5 Converts a couple of current test modules to make some use of
+        the newly added test framework.
+
+Patch 6 Adds strscpy_pad()
+
+Patch 7 Adds test module for strscpy_pad() using the new framework and script.
+
+
+If you are a testing geek and you would like to play with this; if you
+are already running a kernel built recently from your tree you may
+want to just apply the first 5 patches then you don't need to build/boot
+a new kernel, just config and build the lib/ test modules (test_printf
+etc.) and then:
+
+	sudo make TARGETS=lib kselftest
+
+Late in the development of this I found that a bunch of boiler plate had
+to be added to the script to handle running tests with:
+
+	make O=/path/to/kout kselftest
+
+The reason is that during the build we are in the output directory but
+the script is in the source directory.  I get the feeling that a better
+understanding of how the kernel build process works would provide a
+better solution to this.  The current solution is disappointing since
+removing duplication and boiler plate was the point of the whole
+exercise.  I'd love a better way to solve this?
+
+One final interesting note: there are 36 test modules in lib/ only 3 of
+them are run by kselftest from tools/testing/selfests/lib?
+
+
+Thanks for looking at this,
+Tobin.
+
+
+
+Tobin C. Harding (7):
+  lib/test_printf: Add empty module_exit function
+  kselftest: Add test runner creation script
+  kselftest/lib: Use new shell runner to define tests
+  kselftest: Add test module framework header
+  lib: Use new kselftest header
+  lib/string: Add strscpy_pad() function
+  lib: Add test module for strscpy_pad
+
+ Documentation/dev-tools/kselftest.rst        | 108 ++++++++++++-
+ include/linux/string.h                       |   4 +
+ lib/Kconfig.debug                            |   3 +
+ lib/Makefile                                 |   1 +
+ lib/string.c                                 |  47 +++++-
+ lib/test_bitmap.c                            |  20 +--
+ lib/test_printf.c                            |  17 +--
+ lib/test_strscpy.c                           | 150 +++++++++++++++++++
+ tools/testing/selftests/kselftest_module.h   |  48 ++++++
+ tools/testing/selftests/kselftest_module.sh  |  75 ++++++++++
+ tools/testing/selftests/lib/Makefile         |   2 +-
+ tools/testing/selftests/lib/bitmap.sh        |  25 ++--
+ tools/testing/selftests/lib/config           |   1 +
+ tools/testing/selftests/lib/prime_numbers.sh |  23 ++-
+ tools/testing/selftests/lib/printf.sh        |  25 ++--
+ tools/testing/selftests/lib/strscpy.sh       |  17 +++
+ 16 files changed, 490 insertions(+), 76 deletions(-)
+ create mode 100644 lib/test_strscpy.c
+ create mode 100644 tools/testing/selftests/kselftest_module.h
+ create mode 100755 tools/testing/selftests/kselftest_module.sh
+ create mode 100755 tools/testing/selftests/lib/strscpy.sh
 
 -- 
+2.20.1
 
-Thanks,
-
-David / dhildenb
