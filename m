@@ -2,333 +2,188 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE96C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9571AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9680D20840
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551908643;
-	bh=Ly6NXQF3Gw/yoxzVye5dj9vRLAIMWvB6EdZYoVjiSFU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fPpTJyEo2a+WIylDRlSWG2qw4zHMWnF05070kQlCjSQYUVcMlea+KHB122YSUAgWB
-	 yhXifVFZ9plxPjCLrPVUgC7gFympWUzo6H+zGdMyBNTGq7E8W20VSVzCX2I4rT/crq
-	 tnnQSZ/k7S/BsoDA6MVGDOgUtNAg92pTn15XzIq0=
+	by mail.kernel.org (Postfix) with ESMTP id 5331620663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:45:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jmxyu8p/";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WPm9Ch4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfCFVoC (ORCPT
+        id S1726237AbfCFVpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:44:02 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49753 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726324AbfCFVn4 (ORCPT
+        Wed, 6 Mar 2019 16:45:42 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:57668 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfCFVpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:43:56 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 47E2422096;
-        Wed,  6 Mar 2019 16:43:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 06 Mar 2019 16:43:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Sb7RFk83l8Vcj3U+cnFSuDpUnZGWyA3kTrb6zDO/X6Q=; b=a4HNEoBI
-        lbPK9x9EeqRiPT1E4Q69YNxmg3ic0XTNgdqi8xskwylMoGwrDf5YBCCdc9PQlkOK
-        go0oXHNEKljj4QT1805ytZx1kGEY/ctafDYOUswvBDM+hcg5YMTRkKCD72YAd1YR
-        nfuw/y/V+46HtN1Bvc8r5aKBSuc2IWbppiPF5XxPi8f2LXvQD2ENlXz1smsQSHWO
-        81VaaIvAX4Q4Qk1Ey4xxkW3H8CGhqYJofwWc1FzER4JkleyhWnERM6uow51T9AEV
-        7W5igiephot1XLHIx+Wl9L3KX55CVVqzE5OgrXWLbjpe5QxQ6ZTmJJ6tgwGzPlnU
-        AylP5BkCAJ47rA==
-X-ME-Sender: <xms:Gz-AXJae97jRxtV3Idna-GSX19gd_xKcRpR27deGglZ7dnIXrYNr2g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeeigdekjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvgedrudeiledrhedrudehkeenucfrrghrrghmpehmrghilhhfrhhomhepthhosghi
-    nheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepie
-X-ME-Proxy: <xmx:Gz-AXJyVl1FRfN-78dybK-AKLv-k8MGBRyOrk40u3B-ltxmRT8jXsw>
-    <xmx:Gz-AXEcZxPGAwnapyuSBeDxYI70ZOg5dfcXdoib-2mpUUtx7ITMwRg>
-    <xmx:Gz-AXHIL4TrlUTslyAErnjCWqSEHzek9U5Nrai-F1MijhqSuQlmx9w>
-    <xmx:Gz-AXJwMc0iyDww5bk65NeW49LPjQxVjRWBo1fkP6p-OBONycqtF1A>
-Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 51071E4362;
-        Wed,  6 Mar 2019 16:43:49 -0500 (EST)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 7/7] lib: Add test module for strscpy_pad
-Date:   Thu,  7 Mar 2019 08:42:26 +1100
-Message-Id: <20190306214226.14598-8-tobin@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190306214226.14598-1-tobin@kernel.org>
-References: <20190306214226.14598-1-tobin@kernel.org>
+        Wed, 6 Mar 2019 16:45:41 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9F5A56072E; Wed,  6 Mar 2019 21:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551908740;
+        bh=7JRR5fw6AB1tiYyouM+rns2k7PCD/iPYRURf7ekrz1o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jmxyu8p/d6uv/NxKrsLGj7st9qI1Qk0YdhWHmfyYlIAyG6GzOhxC3hsxDf/5sLInS
+         d5/VCytwA2wX+I6PdNzYeepqJ/zzC740leYnrH9IkElHc52lnndp+0Nf/upoDAqiz8
+         LhnyT09z1EZ67CHPjJ/TUhUC1+E/jfhDO0eVSM/A=
+Received: from [10.226.60.81] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0821604BE;
+        Wed,  6 Mar 2019 21:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551908739;
+        bh=7JRR5fw6AB1tiYyouM+rns2k7PCD/iPYRURf7ekrz1o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WPm9Ch4fuV1A2Hv9BGAUv0pnTMuB4QjukQRonLw7mJr05pPtotXvdOG4FxC19LFB6
+         grrg8mq6gLRXSefSNKGulWHOJG68WF/msw1LmGp3pdsM8h9beTkc7mPbIskyoU3mii
+         a7MpQzf33YsiVJP3ZtT8Jpd3PkTCWcPX8K6ODg+U=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0821604BE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 6/8] clk: Allow parents to be specified without string
+ names
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Chen-Yu Tsai <wens@csie.org>
+References: <20190226223429.193873-1-sboyd@kernel.org>
+ <20190226223429.193873-7-sboyd@kernel.org>
+ <c5b12b52-0aa0-417b-50cd-b7d6fd9fc992@codeaurora.org>
+ <155189453289.20095.9593541968121360874@swboyd.mtv.corp.google.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <576e9531-e3b6-d6d2-d025-66be4773ecc2@codeaurora.org>
+Date:   Wed, 6 Mar 2019 14:45:38 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <155189453289.20095.9593541968121360874@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a test module for the new strscpy_pad() function.  Tie it into the
-kselftest infrastructure for lib/ tests.
+On 3/6/2019 10:48 AM, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2019-03-02 13:25:06)
+>> On 2/26/2019 3:34 PM, Stephen Boyd wrote:
+>>> The common clk framework is lacking in ability to describe the clk
+>>> topology without specifying strings for every possible parent-child
+>>> link. There are a few drawbacks to the current approach:
+>>>
+>>>    1) String comparisons are used for everything, including describing
+>>>    topologies that are 'local' to a single clock controller.
+>>>
+>>>    2) clk providers (e.g. i2c clk drivers) need to create globally unique
+>>>    clk names to avoid collisions in the clk namespace, leading to awkward
+>>>    name generation code in various clk drivers.
+>>>
+>>>    3) DT bindings may not fully describe the clk topology and linkages
+>>>    between clk controllers because drivers can easily rely on globally unique
+>>>    strings to describe connections between clks.
+>>>
+>>> This leads to confusing DT bindings, complicated clk name generation
+>>> code, and inefficient string comparisons during clk registration just so
+>>> that the clk framework can detect the topology of the clk tree.
+>>> Furthermore, some drivers call clk_get() and then __clk_get_name() to
+>>> extract the globally unique clk name just so they can specify the parent
+>>> of the clk they're registering. We have of_clk_parent_fill() but that
+>>> mostly only works for single clks registered from a DT node, which isn't
+>>> the norm. Let's simplify this all by introducing two new ways of
+>>> specifying clk parents.
+>>>
+>>> The first method is an array of pointers to clk_hw structures
+>>> corresponding to the parents at that index. This works for clks that are
+>>> registered when we have access to all the clk_hw pointers for the
+>>> parents.
+>>>
+>>> The second method is a mix of clk_hw pointers and strings of local and
+>>> global parent clk names. If the .name member of the map is set we'll
+>>> look for that clk by performing a DT based lookup of the device the clk
+>>> is registered with and the .name specified in the map. If that fails,
+>>> we'll fallback to the .fallback member and perform a global clk name
+>>> lookup like we've always done before.
+>>>
+>>> Using either one of these new methods is entirely optional. Existing
+>>> drivers will continue to work, and they can migrate to this new approach
+>>> as they see fit. Eventually, we'll want to get rid of the 'parent_names'
+>>> array in struct clk_init_data and use one of these new methods instead.
+>>>
+>>
+>> I don't know exactly what regressed from V1, but this change breaks all
+>> clock drivers as far as I can tell.  All clocks from old and new (ie
+>> 8998 mmcc rebased onto this) drivers end up as orphans.
+>>
+>> Is there some data I can provide to help you figure out the issue?
+>>
+> 
+> Can you try this patch? It fixes a pointer blunder that I'm sad about.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- lib/Kconfig.debug                      |   3 +
- lib/Makefile                           |   1 +
- lib/test_strscpy.c                     | 150 +++++++++++++++++++++++++
- tools/testing/selftests/lib/Makefile   |   2 +-
- tools/testing/selftests/lib/config     |   1 +
- tools/testing/selftests/lib/strscpy.sh |  17 +++
- 6 files changed, 173 insertions(+), 1 deletion(-)
- create mode 100644 lib/test_strscpy.c
- create mode 100755 tools/testing/selftests/lib/strscpy.sh
+That did the trick.  Everything seems to work again.  I haven't 
+identified any additional issues.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d4df5b24d75e..441c1571495c 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1805,6 +1805,9 @@ config TEST_HEXDUMP
- config TEST_STRING_HELPERS
- 	tristate "Test functions located in the string_helpers module at runtime"
- 
-+config TEST_STRSCPY
-+	tristate "Test strscpy*() family of functions at runtime"
-+
- config TEST_KSTRTOX
- 	tristate "Test kstrto*() family of functions at runtime"
- 
-diff --git a/lib/Makefile b/lib/Makefile
-index e1b59da71418..82e027f73a3e 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
- obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
- obj-$(CONFIG_TEST_PRINTF) += test_printf.o
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
-+obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
- obj-$(CONFIG_TEST_BITFIELD) += test_bitfield.o
- obj-$(CONFIG_TEST_UUID) += test_uuid.o
- obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
-diff --git a/lib/test_strscpy.c b/lib/test_strscpy.c
-new file mode 100644
-index 000000000000..95665e8a0f97
---- /dev/null
-+++ b/lib/test_strscpy.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/string.h>
-+
-+#include "../tools/testing/selftests/kselftest_module.h"
-+
-+/*
-+ * Kernel module for testing 'strscpy' family of functions.
-+ */
-+
-+KSTM_MODULE_GLOBALS();
-+
-+/*
-+ * tc() - Run a specific test case.
-+ * @src: Source string, argument to strscpy_pad()
-+ * @count: Size of destination buffer, argument to strscpy_pad()
-+ * @expected: Expected return value from call to strscpy_pad()
-+ * @terminator: 1 if there should be a terminating null byte 0 otherwise.
-+ * @chars: Number of characters from the src string expected to be
-+ *         written to the dst buffer.
-+ * @pad: Number of pad characters expected (in the tail of dst buffer).
-+ *       (@pad does not include the null terminator byte.)
-+ *
-+ * Calls strscpy_pad() and verifies the return value and state of the
-+ * destination buffer after the call returns.
-+ */
-+static int __init tc(char *src, int count, int expected,
-+		     int chars, int terminator, int pad)
-+{
-+	int nr_bytes_poison;
-+	int max_expected;
-+	int max_count;
-+	int written;
-+	char buf[6];
-+	int index, i;
-+	const char POISON = 'z';
-+
-+	total_tests++;
-+
-+	if (!src) {
-+		pr_err("null source string not supported\n");
-+		return -1;
-+	}
-+
-+	memset(buf, POISON, sizeof(buf));
-+	/* Future proofing test suite, validate args */
-+	max_count = sizeof(buf) - 2; /* Space for null and to verify overflow */
-+	max_expected = count - 1;     /* Space for the null */
-+	if (count > max_count) {
-+		pr_err("count (%d) is too big (%d) ... aborting", count, max_count);
-+		return -1;
-+	}
-+	if (expected > max_expected) {
-+		pr_warn("expected (%d) is bigger than can possibly be returned (%d)",
-+			expected, max_expected);
-+	}
-+
-+	written = strscpy_pad(buf, src, count);
-+	if ((written) != (expected)) {
-+		pr_err("%d != %d (written, expected)\n", written, expected);
-+		goto fail;
-+	}
-+
-+	if (count && written == -E2BIG) {
-+		if (strncmp(buf, src, count - 1) != 0) {
-+			pr_err("buffer state invalid for -E2BIG\n");
-+			goto fail;
-+		}
-+		if (buf[count - 1] != '\0') {
-+			pr_err("too big string is not null terminated correctly\n");
-+			goto fail;
-+		}
-+	}
-+
-+	for (i = 0; i < chars; i++) {
-+		if (buf[i] != src[i]) {
-+			pr_err("buf[i]==%c != src[i]==%c\n", buf[i], src[i]);
-+			goto fail;
-+		}
-+	}
-+
-+	if (terminator) {
-+		if (buf[count - 1] != '\0') {
-+			pr_err("string is not null terminated correctly\n");
-+			goto fail;
-+		}
-+	}
-+
-+	for (i = 0; i < pad; i++) {
-+		index = chars + terminator + i;
-+		if (buf[index] != '\0') {
-+			pr_err("padding missing at index: %d\n", i);
-+			goto fail;
-+		}
-+	}
-+
-+	nr_bytes_poison = sizeof(buf) - chars - terminator - pad;
-+	for (i = 0; i < nr_bytes_poison; i++) {
-+		index = sizeof(buf) - 1 - i; /* Check from the end back */
-+		if (buf[index] != POISON) {
-+			pr_err("poison value missing at index: %d\n", i);
-+			goto fail;
-+		}
-+	}
-+
-+	return 0;
-+fail:
-+	failed_tests++;
-+	return -1;
-+}
-+
-+static void __init selftest(void)
-+{
-+	/*
-+	 * tc() uses a destination buffer of size 6 and needs at
-+	 * least 2 characters spare (one for null and one to check for
-+	 * overflow).  This means we should only call tc() with
-+	 * strings up to a maximum of 4 characters long and 'count'
-+	 * should not exceed 4.  To test with longer strings increase
-+	 * the buffer size in tc().
-+	 */
-+
-+	/* tc(src, count, expected, chars, terminator, pad) */
-+	KSTM_CHECK_ZERO(tc("a", 0, -E2BIG, 0, 0, 0));
-+	KSTM_CHECK_ZERO(tc("", 0, -E2BIG, 0, 0, 0));
-+
-+	KSTM_CHECK_ZERO(tc("a", 1, -E2BIG, 0, 1, 0));
-+	KSTM_CHECK_ZERO(tc("", 1, 0, 0, 1, 0));
-+
-+	KSTM_CHECK_ZERO(tc("ab", 2, -E2BIG, 1, 1, 0));
-+	KSTM_CHECK_ZERO(tc("a", 2, 1, 1, 1, 0));
-+	KSTM_CHECK_ZERO(tc("", 2, 0, 0, 1, 1));
-+
-+	KSTM_CHECK_ZERO(tc("abc", 3, -E2BIG, 2, 1, 0));
-+	KSTM_CHECK_ZERO(tc("ab", 3, 2, 2, 1, 0));
-+	KSTM_CHECK_ZERO(tc("a", 3, 1, 1, 1, 1));
-+	KSTM_CHECK_ZERO(tc("", 3, 0, 0, 1, 2));
-+
-+	KSTM_CHECK_ZERO(tc("abcd", 4, -E2BIG, 3, 1, 0));
-+	KSTM_CHECK_ZERO(tc("abc", 4, 3, 3, 1, 0));
-+	KSTM_CHECK_ZERO(tc("ab", 4, 2, 2, 1, 1));
-+	KSTM_CHECK_ZERO(tc("a", 4, 1, 1, 1, 2));
-+	KSTM_CHECK_ZERO(tc("", 4, 0, 0, 1, 3));
-+}
-+
-+KSTM_MODULE_LOADERS(test_strscpy);
-+MODULE_AUTHOR("Tobin C. Harding <tobin@kernel.org>");
-+MODULE_LICENSE("GPL");
-diff --git a/tools/testing/selftests/lib/Makefile b/tools/testing/selftests/lib/Makefile
-index 70d5711e3ac8..9f26635f3e57 100644
---- a/tools/testing/selftests/lib/Makefile
-+++ b/tools/testing/selftests/lib/Makefile
-@@ -3,6 +3,6 @@
- # No binaries, but make sure arg-less "make" doesn't trigger "run_tests"
- all:
- 
--TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh
-+TEST_PROGS := printf.sh bitmap.sh prime_numbers.sh strscpy.sh
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
-index 126933bcc950..14a77ea4a8da 100644
---- a/tools/testing/selftests/lib/config
-+++ b/tools/testing/selftests/lib/config
-@@ -1,3 +1,4 @@
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
- CONFIG_PRIME_NUMBERS=m
-+CONFIG_TEST_STRSCPY=m
-diff --git a/tools/testing/selftests/lib/strscpy.sh b/tools/testing/selftests/lib/strscpy.sh
-new file mode 100755
-index 000000000000..f3ba4b90e602
---- /dev/null
-+++ b/tools/testing/selftests/lib/strscpy.sh
-@@ -0,0 +1,17 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+module=test_strscpy
-+description="strscpy"
-+
-+#
-+# Shouldn't need to edit anything below here.
-+#
-+
-+file="kselftest_module.sh"
-+path="../$file"
-+if [[ ! $KBUILD_SRC == "" ]]; then
-+    path="${KBUILD_SRC}/tools/testing/selftests/$file"
-+fi
-+
-+$path $module $description
+> 
+> ----8<-----
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 37aea7884166..d12afd256dc5 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3297,15 +3297,17 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
+>   	return clk;
+>   }
+>   
+> -static int clk_cpy_name(const char *dst, const char *src, bool must_exist)
+> +static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
+>   {
+> +	const char *dst;
+> +
+>   	if (!src) {
+>   		if (must_exist)
+>   			return -EINVAL;
+>   		return 0;
+>   	}
+>   
+> -	dst = kstrdup_const(src, GFP_KERNEL);
+> +	*dst_p = dst = kstrdup_const(src, GFP_KERNEL);
+>   	if (!dst)
+>   		return -ENOMEM;
+>   
+> @@ -3341,14 +3343,14 @@ static int clk_core_populate_parent_map(struct clk_core *core)
+>   			WARN(!parent_names[i],
+>   				"%s: invalid NULL in %s's .parent_names\n",
+>   				__func__, core->name);
+> -			ret = clk_cpy_name(parent->name, parent_names[i],
+> +			ret = clk_cpy_name(&parent->name, parent_names[i],
+>   					   true);
+>   		} else if (parent_data) {
+>   			parent->hw = parent_data[i].hw;
+> -			ret = clk_cpy_name(parent->fw_name,
+> +			ret = clk_cpy_name(&parent->fw_name,
+>   					   parent_data[i].fw_name, false);
+>   			if (!ret)
+> -				ret = clk_cpy_name(parent->name,
+> +				ret = clk_cpy_name(&parent->name,
+>   						   parent_data[i].name,
+>   						   false);
+>   		} else if (parent_hws) {
+> 
+
+
 -- 
-2.20.1
-
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
