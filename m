@@ -2,185 +2,105 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12815C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CC0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA1D620684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E59520684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XcS9iC2A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="biMSM7Tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfCFKtY (ORCPT
+        id S1729675AbfCFKtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:49:24 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46687 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729735AbfCFKtX (ORCPT
+        Wed, 6 Mar 2019 05:49:53 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38382 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729102AbfCFKtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:49:23 -0500
-Received: by mail-qt1-f195.google.com with SMTP id z25so12235299qti.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:49:22 -0800 (PST)
+        Wed, 6 Mar 2019 05:49:53 -0500
+Received: by mail-pg1-f196.google.com with SMTP id m2so8101477pgl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:49:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fgeGBEqnX+iQl+97sQ81TXmrdkDJ4ve/9zXijHF960I=;
-        b=XcS9iC2Aoz0oiUpUno05gesfjn2T34QCr7KNGaaw5lddnQQs2NTsHrZXT1ccBhJjs4
-         NZoojjcz2WZsfaN5XxYVtOKfAkDYfyTrG2qVXK0+Kmmh9qABu+OppX49tkp4BjkP+Y7p
-         uQX5i7L/ccG5z5V+Gldr+sYYF5jRP5ZtBuH/Y=
+        bh=egjR5LHpoq9DWtyI6KtfcBA3jqVQzBSKEJYRcKx5t7s=;
+        b=biMSM7TpyaIzBRyDpBwjZElO7R70lXIpVg6yjXq+PmKft/IJWTpmjiVFPU2zq9aGfU
+         2w1Kml3d8+4riXyI50JnSLyK7cGNJ7X3s63+zGWbxyCts3ReBdDOaWqgtG1NN+V9Zafo
+         d8F/z1H9Rp6ZnpnwAsitwQWEM4jTMGuEhJuugz56uXUDyQxw22HdH4R+Wk33OJZDrxCn
+         oBVQM9CMVlvDuDi3bAk8ll9++QOrIgpao7pBUqvFtL5/MnzvxHUeSzaGXor+hFsn02kP
+         +KYoUyjCGonO+KrS63eeiKPsKQuAoH9lYh84pdEUoiwH9NtAOYKuihl7Yor02ogvnVDG
+         BA8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fgeGBEqnX+iQl+97sQ81TXmrdkDJ4ve/9zXijHF960I=;
-        b=Lg8B2suNGrDEhbJWlfyyz2uILwP2xqQSr4PaHOeSEEyVdsopejJDgnbCGKLP3/0/dD
-         qHEn8z5wyYdRDmMB6yFjQOMGhSGbDdUm1Gl1WpSKPmF0jzjGkVRLTl3Etyc+L6MqRiDz
-         RhRn9rkArx2cv/hUaRkfr3kjg/qWCsgb/Ck0qlRHLktGf5GBv8p/8BOLuDnIriPbZ/uK
-         qB5YP7tkmzn+S296iTohVtS+2AwdYV53E4Vc6T0mRELydXC/cI4Ax6vxtRX6vm2OzVbr
-         E9FzFYgrwD22Iy09nR07I2qhp9QgtYh0/WSy5BVyd0m2k8hvbV6C1tDoS4PzufA7bPOG
-         V/Hw==
-X-Gm-Message-State: APjAAAU9BEv2QuMP5MfHzCkyDtk3/OrmvEmknpZa+B49Wl11/a5QXaje
-        snJTr65Fece+g6LT6q/scANYWWQeO4F37eVSIGAvow==
-X-Google-Smtp-Source: APXvYqzS8d63ALRS1PmA5gX4QCe+z9D0yWlSnSV7FPE01eXobHZTPy90Yinqvjknw84BaZYIF08SghneVVe9EmfWT7A=
-X-Received: by 2002:ac8:2805:: with SMTP id 5mr5199763qtq.75.1551869361868;
- Wed, 06 Mar 2019 02:49:21 -0800 (PST)
+        bh=egjR5LHpoq9DWtyI6KtfcBA3jqVQzBSKEJYRcKx5t7s=;
+        b=dAS8r9ks/+u507RqWoCgMCYs2R3a24T/8x7eSRZpaOyYvxolUEfrj/fgZEoMFVNc4R
+         KhFcHU5rb2UlmFVTlE2SopoB+LpF0FNXSMB0fXDEn05EUlOIpCJjjYGKCGVOy8SxFwE6
+         Vv+tb9Vn8cXNkRBo7R4djo3OpjcpGXN8TRosHEY7v3pfcV8ilkzaQfMdR8ePz4uXPnrQ
+         qRkrxOCKnjnoS+XNznMdWhMoPgeKgtP//G8rF+a5SGSdZVCqOfMisiVU6OdfLoNEf9Q8
+         5cXFsIHFqN2Dq+qMgX1r25rFBQsxZlPgh2WxU9T8ACP44G6NMXjluAA5gn3LhCMYAojm
+         EJFw==
+X-Gm-Message-State: APjAAAX9OmrYAWwKfKrDxIj0it8mckNJGqu4RjhLrfn+3SOFRNiQcTA+
+        AD24i94bzEkQAGVtebUfFTkKFovDwmOMlYBEYI8=
+X-Google-Smtp-Source: APXvYqxXoVypsenBIujXHXhmO5in+XHxdig43yAcf7967DPxj38gZdv3anMXzwVtndvZlaLoJioS6m+sPjbKMkDEf/g=
+X-Received: by 2002:a63:2004:: with SMTP id g4mr5728589pgg.337.1551869392319;
+ Wed, 06 Mar 2019 02:49:52 -0800 (PST)
 MIME-Version: 1.0
-References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
- <1551186660-16902-4-git-send-email-qii.wang@mediatek.com> <CANMq1KArROL7F+KDWktg6vzZyXifZrKCO8khf_QGRoiLkfDegw@mail.gmail.com>
-In-Reply-To: <CANMq1KArROL7F+KDWktg6vzZyXifZrKCO8khf_QGRoiLkfDegw@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 6 Mar 2019 18:49:10 +0800
-Message-ID: <CANMq1KBt7LeR=Od2LmswUSZMV_XZE+zn2LbnqU+SzywKqmDP7w@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] i2c: mediatek: Add arb clock in i2c driver
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
+References: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
+ <1551865552.9298.24.camel@pengutronix.de> <20190306095147.xyf3d62bywx4v6ji@shell.armlinux.org.uk>
+In-Reply-To: <20190306095147.xyf3d62bywx4v6ji@shell.armlinux.org.uk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 Mar 2019 12:49:40 +0200
+Message-ID: <CAHp75Vc_Nfm7tAwGtLuYgrPGPFQzx3a4ppx0+mXhF=q_X8jT7w@mail.gmail.com>
+Subject: Re: Smarter Kconfig help
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
         linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Leilk Liu <leilk.liu@mediatek.com>, xinping.qian@mediatek.com,
-        liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peng Hao <peng.hao2@zte.com.cn>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One thing I missed from Matthias' comment on v4:
-https://patchwork.kernel.org/patch/10822083/
+On Wed, Mar 6, 2019 at 11:52 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Wed, Mar 06, 2019 at 10:45:52AM +0100, Lucas Stach wrote:
+> > Am Dienstag, den 05.03.2019, 17:31 +0000 schrieb Russell King - ARM Linux admin:
 
-On Wed, Mar 6, 2019 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > While I totally agree that the irqsteer driver should only default Y on
+> > 64bit i.MX SoCs, I'm not really sure what to do about the Kconfig help
+> > text.
+> >
+> > Enumerating SoCs in the Kconfig of a IP block driver is always prone to
+> > get outdated. Just as the first example I've been able to come up with,
+> > the MMC_SDHCI_ESDHC_IMX help text says: "This selects the Freescale
+> > eSDHC/uSDHC controller support found on i.MX25, i.MX35 i.MX5x and
+> > i.MX6x.", while the same IP block is to be found on i.MX7 and various
+> > i.MX8.
+> >
+> > For the Kconfig user, who needs to decide if an option is relevant,
+> > outdated SoC information is probably just as bad as no information at
+> > all.
 >
-> On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
-> >
-> > When two i2c controllers are internally connected to the same
-> > GPIO pins, the arb clock is needed to ensure that the waveforms
-> > do not interfere with each other.
-> >
-> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
->
-> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
->
-> > ---
-> >  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
-> >  1 file changed, 22 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > index 428ac99..14d6b38 100644
-> > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > @@ -35,6 +35,7 @@
-> >  #include <linux/slab.h>
-> >
-> >  #define I2C_RS_TRANSFER                        (1 << 4)
-> > +#define I2C_ARB_LOST                   (1 << 3)
-> >  #define I2C_HS_NACKERR                 (1 << 2)
-> >  #define I2C_ACKERR                     (1 << 1)
-> >  #define I2C_TRANSAC_COMP               (1 << 0)
-> > @@ -181,6 +182,7 @@ struct mtk_i2c {
-> >         struct clk *clk_main;           /* main clock for i2c bus */
-> >         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
-> >         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC */
-> > +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
-> >         bool have_pmic;                 /* can use i2c pins from PMIC */
-> >         bool use_push_pull;             /* IO config push-pull mode */
-> >
-> > @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
-> >                 if (ret)
-> >                         goto err_pmic;
-> >         }
-> > +
-> > +       if (i2c->clk_arb) {
-> > +               ret = clk_prepare_enable(i2c->clk_arb);
-> > +               if (ret)
-> > +                       goto err_arb;
-> > +       }
-> > +
-> >         return 0;
-> >
-> > +err_arb:
-> > +       if (i2c->have_pmic)
-> > +               clk_disable_unprepare(i2c->clk_pmic);
-> >  err_pmic:
-> >         clk_disable_unprepare(i2c->clk_main);
-> >  err_main:
-> > @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
-> >
-> >  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
-> >  {
-> > +       if (i2c->clk_arb)
-> > +               clk_disable_unprepare(i2c->clk_arb);
-> > +
-> >         if (i2c->have_pmic)
-> >                 clk_disable_unprepare(i2c->clk_pmic);
-> >
-> > @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >
-> >         /* Clear interrupt status */
-> >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > -              I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-> > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+> How about "This option does not apply to AArch32 based SoCs" or
 
-Is it ok to set I2C_ARB_LOST on _all_ SoC that this driver supports?
-If so, please at least say so in the commit message.
+Negative is usually error prone.
 
-> >
-> >         mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
-> >
-> >         /* Enable interrupt */
-> >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > -              I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> >
-> >         /* Set transfer and transaction len */
-> >         if (i2c->op == I2C_MASTER_WRRD) {
-> > @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >
-> >         /* Clear interrupt mask */
-> >         mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > -              I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> >
-> >         if (i2c->op == I2C_MASTER_WR) {
-> >                 dma_unmap_single(i2c->dev, wpaddr,
-> > @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
-> >                 return PTR_ERR(i2c->clk_dma);
-> >         }
-> >
-> > +       i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
-> > +       if (IS_ERR(i2c->clk_arb))
-> > +               i2c->clk_arb = NULL;
-> > +
-> >         clk = i2c->clk_main;
-> >         if (i2c->have_pmic) {
-> >                 i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
-> > --
-> > 1.7.9.5
-> >
+> "This option should be enabled for i.MX7 and later SoCs" ?
+
+Why it should be? It can / could be I guess.
+
+-- 
+With Best Regards,
+Andy Shevchenko
