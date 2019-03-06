@@ -2,104 +2,157 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D15DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3C3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F0F20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38B620663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 21:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ic1ityeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfCFVzT (ORCPT
+        id S1726384AbfCFV4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 16:55:19 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:34507 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfCFVzR (ORCPT
+        Wed, 6 Mar 2019 16:56:06 -0500
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:43111 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfCFV4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 16:55:17 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26Lt8W81896320
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 13:55:08 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26Lt7vB1896317;
-        Wed, 6 Mar 2019 13:55:07 -0800
-Date:   Wed, 6 Mar 2019 13:55:07 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Louis Taylor <tipbot@zytor.com>
-Message-ID: <tip-08c25ca37f0b37311dbac1426c356165182c4c99@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        ndesaulniers@google.com, natechancellor@gmail.com,
-        louis@kragniz.eu, mingo@kernel.org
-Reply-To: ndesaulniers@google.com, tglx@linutronix.de, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          natechancellor@gmail.com, louis@kragniz.eu
-In-Reply-To: <20190302184929.28971-1-louis@kragniz.eu>
-References: <20190302184929.28971-1-louis@kragniz.eu>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/boot/KASLR: Always return a value from
- process_mem_region
-Git-Commit-ID: 08c25ca37f0b37311dbac1426c356165182c4c99
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 6 Mar 2019 16:56:06 -0500
+Received: by mail-pf1-f181.google.com with SMTP id q17so9678377pfh.10;
+        Wed, 06 Mar 2019 13:56:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=doWDRphVEnglfL89Tp64Jf1WtVGQTVDfI9OaD8Of7NU=;
+        b=Ic1ityeu8FGyas3S1s7YKTfa8d2Uajg74ls5CfH7I9pZCjKz6m4Sjjiawhj294msfY
+         5anLh5n+hRe47dm435+IoXcJNAm90rsNUHKcrWaQYoegGwVqG2DyiM3xiqNhm3iWuQqV
+         T2A2Fyt9K6VlcHAeb1aGg/iIGB9hDVB9kFWNKRR0FQckNJJm7yuZPyDwr1C33UHpcYs0
+         GyzqIZ87JniF3KOvP4QgWWdKNgJJVEyeZ/ouP5trpIQVS3RkDmmWtEjKCgVXrbNAHEyn
+         dDnnvI0xeYLmDNz8CIXjP3U1OdKV2yqYt5q9FofsQcrdSYJl03Lu5dLe/zUvhDVVsB6N
+         dPUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=doWDRphVEnglfL89Tp64Jf1WtVGQTVDfI9OaD8Of7NU=;
+        b=Lz8UqYLV+Kh8QV3DRsAHcsjfQzjRCYKGEiONU7pKWPEt8DFe8o7hU5SuQlME0uoVFg
+         JQ/zLxN61TBfzenYh9qdyVRriQid3tJSW/FdUISoarZxbvLOHmTbRf675lh1A1407Lcv
+         Zr26tILAYhF9Q66+lVsGGa2KX64xM6aCNUqPHERmhMQHCqEBaChUjv1q+hADG6RnmF6R
+         TMnILIe2XhIbNh7ldKcNaM3VnQ6vHaKTDtBsndjpLvcPR6wo5pRP5MtpTz5/2l460Qqi
+         LwP3juXfZp+z22gI2x5jFS5hShyG1tzFtP4/7/HzCskyokab5nXLAmPQ9kUBKGlwMG3k
+         NUFw==
+X-Gm-Message-State: APjAAAV+nhsil35oSOvqq2i0+DxmQLpUG12E6QWQJ6tNC2kQ7lSYN8sM
+        /FmnZVvafqexb1afJ0R5nqBhWmsb84g=
+X-Google-Smtp-Source: APXvYqxBSQe2b6ZOkvfHbE2rIZxu4DveqM0oeJzu7nv9vsPHAWYyv75wwg2as2CcVaznu/6UdLtvyQ==
+X-Received: by 2002:a62:4793:: with SMTP id p19mr9621486pfi.76.1551909364694;
+        Wed, 06 Mar 2019 13:56:04 -0800 (PST)
+Received: from myunghoj-Precision-5530 ([118.220.181.225])
+        by smtp.gmail.com with ESMTPSA id n18sm8575334pfh.93.2019.03.06.13.56.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 13:56:04 -0800 (PST)
+Date:   Thu, 7 Mar 2019 06:55:59 +0900
+From:   Myungho Jung <mhjungk@gmail.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] xfrm: Reset secpath in xfrm failure
+Message-ID: <20190306215556.GA6104@myunghoj-Precision-5530>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  08c25ca37f0b37311dbac1426c356165182c4c99
-Gitweb:     https://git.kernel.org/tip/08c25ca37f0b37311dbac1426c356165182c4c99
-Author:     Louis Taylor <louis@kragniz.eu>
-AuthorDate: Sat, 2 Mar 2019 18:49:29 +0000
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 6 Mar 2019 22:53:16 +0100
+In esp4_gro_receive() and esp6_gro_receive(), secpath can be allocated
+without adding xfrm state to xvec. Then, sp->xvec[sp->len - 1] would
+fail and result in dereferencing invalid pointer in esp4_gso_segment()
+and esp6_gso_segment(). Reset secpath if xfrm function returns error.
 
-x86/boot/KASLR: Always return a value from process_mem_region
-
-When compiling with -Wreturn-type, clang warns:
-
-arch/x86/boot/compressed/kaslr.c:704:1: warning: control may reach end of
-      non-void function [-Wreturn-type]
-
-This function's return statement should have been placed outside the
-
-Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the kernel in immovable memory only")
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: bhe@redhat.com
-Cc: kirill.shutemov@linux.intel.com
-Cc: jflat@chromium.org
-Link: https://lkml.kernel.org/r/20190302184929.28971-1-louis@kragniz.eu
+Fixes: 7785bba299a8 ("esp: Add a software GRO codepath")
+Reported-by: syzbot+b69368fd933c6c592f4c@syzkaller.appspotmail.com
+Signed-off-by: Myungho Jung <mhjungk@gmail.com>
 ---
- arch/x86/boot/compressed/kaslr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+  - Add fixes tag.
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index fa0332dda9f2..2e53c056ba20 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -697,8 +697,8 @@ static bool process_mem_region(struct mem_vector *region,
- 			return 1;
+ net/ipv4/esp4_offload.c | 9 +++++++--
+ net/ipv6/esp6_offload.c | 9 +++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/net/ipv4/esp4_offload.c b/net/ipv4/esp4_offload.c
+index 8756e0e790d2..7329e40c73f6 100644
+--- a/net/ipv4/esp4_offload.c
++++ b/net/ipv4/esp4_offload.c
+@@ -51,14 +51,18 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
+ 		if (!sp)
+ 			goto out;
+ 
+-		if (sp->len == XFRM_MAX_DEPTH)
++		if (sp->len == XFRM_MAX_DEPTH) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
+ 				      (xfrm_address_t *)&ip_hdr(skb)->daddr,
+ 				      spi, IPPROTO_ESP, AF_INET);
+-		if (!x)
++		if (!x) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		sp->xvec[sp->len++] = x;
+ 		sp->olen++;
+@@ -66,6 +70,7 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
+ 		xo = xfrm_offload(skb);
+ 		if (!xo) {
+ 			xfrm_state_put(x);
++			secpath_reset(skb);
+ 			goto out;
  		}
  	}
--	return 0;
- #endif
-+	return 0;
- }
+diff --git a/net/ipv6/esp6_offload.c b/net/ipv6/esp6_offload.c
+index d46b4eb645c2..399c688d192e 100644
+--- a/net/ipv6/esp6_offload.c
++++ b/net/ipv6/esp6_offload.c
+@@ -73,14 +73,18 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
+ 		if (!sp)
+ 			goto out;
  
- #ifdef CONFIG_EFI
+-		if (sp->len == XFRM_MAX_DEPTH)
++		if (sp->len == XFRM_MAX_DEPTH) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
+ 				      (xfrm_address_t *)&ipv6_hdr(skb)->daddr,
+ 				      spi, IPPROTO_ESP, AF_INET6);
+-		if (!x)
++		if (!x) {
++			secpath_reset(skb);
+ 			goto out;
++		}
+ 
+ 		sp->xvec[sp->len++] = x;
+ 		sp->olen++;
+@@ -88,6 +92,7 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
+ 		xo = xfrm_offload(skb);
+ 		if (!xo) {
+ 			xfrm_state_put(x);
++			secpath_reset(skb);
+ 			goto out;
+ 		}
+ 	}
+-- 
+2.17.1
+
