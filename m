@@ -2,115 +2,138 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48632C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A4FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2D1206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78B620854
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lYHeCI8P"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gLoUYn1X";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BGDW7Rwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbfCFRkE (ORCPT
+        id S1730457AbfCFRoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:40:04 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46740 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfCFRkE (ORCPT
+        Wed, 6 Mar 2019 12:44:12 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:37746 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfCFRoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:40:04 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x26HXgnD196522;
-        Wed, 6 Mar 2019 17:39:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=fr7D4Rs1y0bsowizgCo34pLfBPffKHe7r20bIqHzoZQ=;
- b=lYHeCI8PMTwf+4GdtBRKB/bJgSwXWFr3R6DK07wdsGQnfhfIzr1YKoJc7XQCJcnGfv/k
- klXIpAoXS5xvZMxJcB4HMgDNYzhKDoedzhW6WLfYxVbvxaTqKrDBjFq9ggZc5lgN9Lkz
- FloXiRLQVD+4LUsCjDOLUxp+mAHQd7DtpGlLoobLp5x8a4VuaE37/Q+Z5utKiXdNnKNH
- tgDmRRqXZYbRoABRID9Wg8mMsOdygdWoDDzRLdnFmpwJr9+X2QwtjYauEwFbxtnSmXTR
- irZSoH1qCIdfxXUTLu67IuqJmRVvvEZ9Og67sVc+StngzLBd3vQhuI5ITl3petD0hACQ AA== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2qyjfrn52p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Mar 2019 17:39:46 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x26HdjNO024254
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Mar 2019 17:39:45 GMT
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x26HdhEe004381;
-        Wed, 6 Mar 2019 17:39:44 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Mar 2019 09:39:43 -0800
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] scsi: NCR5380: Mark expected switch fall-through
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190228202759.GA5883@embeddedor>
-        <alpine.LNX.2.21.1903011143550.8@nippy.intranet>
-Date:   Wed, 06 Mar 2019 12:39:40 -0500
-In-Reply-To: <alpine.LNX.2.21.1903011143550.8@nippy.intranet> (Finn Thain's
-        message of "Fri, 1 Mar 2019 12:16:57 +1100 (AEDT)")
-Message-ID: <yq1imwvzyub.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 6 Mar 2019 12:44:11 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 734A160909; Wed,  6 Mar 2019 17:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551894250;
+        bh=RbITpgL7h0Dp8KAyMPyUKF3kb4X2pLqJDvwDItWVtOM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gLoUYn1Xxflf9hnKpzw/i3qiqSU2uLJ4GvKwdLvLHSUUMYZT81jLBOmhur9gkZEG6
+         96kXjqMOaideMLjfggf0c6qeuKQ+aBsJCdqWxUFcB3H5AFz4NS3jeXsG9vLTbDz3CA
+         eA3viEeaPFulRbRF+NEw2Ot47TitkM5vQhSOQCnU=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id BC98A601FE;
+        Wed,  6 Mar 2019 17:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551894249;
+        bh=RbITpgL7h0Dp8KAyMPyUKF3kb4X2pLqJDvwDItWVtOM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BGDW7Rwcv1IR5wFb4pkBspUHe4yBDoaPO3LpPw3l8+ZMowmBpzq4QfsRMr7AlSC3X
+         QbpeLN0Hc0qrT9MBMTbgIHcTMQXnTk7FPNshs4Q9xOXc3xefJc7dmhdMp4hI8HFKjf
+         DRMuBukBanUcnjBL9Oy8MP1TnflMz/PFgFeFRIUo=
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9187 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903060122
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 Mar 2019 23:14:09 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     myungjoo.ham@samsung.com
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        skannan@codeaurora.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v4] PM / devfreq: Restart previous governor if new
+ governor fails to start
+In-Reply-To: <20190305071808epcms1p89cd924ae1c7fc344b7e554f5f18592d2@epcms1p8>
+References: <946aa4e13aec4f84e6ae2d91e772fb1f@codeaurora.org>
+ <20181212135313.30268-1-sibis@codeaurora.org>
+ <20181214014527epcms1p6c783b4cd1602bbcbcb6e725f840db479@epcms1p6>
+ <39d3a906-b734-9bb8-c60a-48948bb21338@codeaurora.org>
+ <CGME20181212135338epcas5p12f7a8cd1c7aab5d5c936cbc5c33eee07@epcms1p8>
+ <20190305071808epcms1p89cd924ae1c7fc344b7e554f5f18592d2@epcms1p8>
+Message-ID: <effa576a5581b866f0f8549a084560d9@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-03-05 12:48, MyungJoo Ham wrote:
+>> Hey MyungJoo, Kyungmin
+>> Did you get a chance to think about how you
+>> want this fix implemented?
+>> 
+>> On 2019-02-19 10:42, Sibi Sankar wrote:
+>>> Hey MyungJoo,
+>>> 
+>>> On 12/14/18 7:15 AM, MyungJoo Ham wrote:
+>>>>> From: Saravana Kannan <skannan@codeaurora.org>
+>>>>> 
+>>>>> If the new governor fails to start, switch back to old governor so
+>>>>> that the
+>>>>> devfreq state is not left in some weird limbo.
+>>>>> 
+>>>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>>>>> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> 
+>>>> Hello,
+>>>> 
+>>>> In overall, the idea and the implementation looks good.
+>>>> 
+>>>> However, I have a question:
+>>>> 
+>>>> What if the following line fails?
+>>>> 
+>>>> +		df->governor->event_handler(df, DEVFREQ_GOV_START,
+>>>> +					    NULL);
+>>>> 
+>>>> Don't we still need something to handle for such events?
+>>> 
+>>> The original discussion went as follows:
+>>> governor_store is expected to be used only on cases
+>>> where devfreq_add_device() succeeded i.e prev->governor
+>>> is expected to be present and DEVFREQ_GOV_START is
+>>> expected to succeed. Hence falling back to the previous
+>>> governor seems like a sensible idea.
+>>> 
+>>> This would also prevent DEVFREQ_GOV_STOP from being called
+>>> on a governor were DEVFREQ_GOV_START had failed which is
+>>> ideal.
+>>> 
+>>> That being said DEVFREQ_GOV_START can still fail for the
+>>> prev-governor due to some change in state of the system.
+>>> Do you want to handle this case by clearing the state of
+>>> governor rather than switching to previous governor?
+>>> 
+> 
+> If moving back to previous governor fails after
+> failing for "next" governor, we may assume it's fatal
+> and stop the device; we can simply return errors.
+> 
+> In such a case, df->governor may need to be NULL as well.
 
-Hi Finn,
+Thanks. Will make the necessary changes in the
+next re-spin.
 
-Please submit this as a formal patch. Thanks!
-
-> Here's an alternative patch, which has the virtue that a simple heuristic 
-> will work. This patch does not require that other static analysis tools 
-> will follow gcc's weird rules about hyphens. (I assume they don't but I 
-> didn't check.)
->
-> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-> index 7fed9bb72784..fe0535affc14 100644
-> --- a/drivers/scsi/NCR5380.c
-> +++ b/drivers/scsi/NCR5380.c
-> @@ -1932,13 +1932,13 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->  					if (!hostdata->connected)
->  						return;
->  
-> -					/* Fall through to reject message */
-> -
-> +					/* Reject message */
-> +					/* Fall through */
-> +				default:
->  					/*
->  					 * If we get something weird that we aren't expecting,
-> -					 * reject it.
-> +					 * log it.
->  					 */
-> -				default:
->  					if (tmp == EXTENDED_MESSAGE)
->  						scmd_printk(KERN_INFO, cmd,
->  						            "rejecting unknown extended message code %02x, length %d\n",
+> 
+> 
+> Cheers,
+> MyungJoo
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
