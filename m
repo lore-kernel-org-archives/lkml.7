@@ -2,250 +2,96 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C96BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20331206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA710206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JARs0q7a"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MahfiR1S";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nEidN36a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfCFQfz (ORCPT
+        id S1728496AbfCFQko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:35:55 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49988 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfCFQfy (ORCPT
+        Wed, 6 Mar 2019 11:40:44 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:37330 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727976AbfCFQkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:35:54 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x26GZTdS122582;
-        Wed, 6 Mar 2019 10:35:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551890129;
-        bh=+NyjXpvPvY1gbMytdUJvxlZjmbe1R0SCy//cwga7IuY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JARs0q7a1pnZs7yiPa5EYRAsA4DeAfpybPU8cuIfdzdjWAZwzXqn5Z0dpmJlO+lF1
-         NXjv10qCuCTsRGLq8Wr7e+0wH1rcYky4rf1Z5lfrmOeJvs+s/vWgzgQ8/V1f5E+j5L
-         vfHp1P8tMgVon+3j20UdRB8adnisK63LfpU5qm7c=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x26GZTKg077850
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Mar 2019 10:35:29 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 6
- Mar 2019 10:35:28 -0600
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Wed, 6 Mar 2019 10:35:28 -0600
-Received: from [172.22.114.173] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x26GZSEP025964;
-        Wed, 6 Mar 2019 10:35:28 -0600
-Subject: Re: [RFC][PATCH 5/5 v2] kselftests: Add dma-heap test
-To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
- <1551819273-640-6-git-send-email-john.stultz@linaro.org>
- <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <7deadc25-c8b2-3b58-1867-86f7db3188fa@ti.com>
-Date:   Wed, 6 Mar 2019 10:35:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 11:40:43 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 10F4760909; Wed,  6 Mar 2019 16:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551890443;
+        bh=zrepmgwdw8R5c4JYjVQcWC+iDB9ym8RfBvg9XSTqh3U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MahfiR1SVbp4VoOMe5N7/BQPerRDrJHkh7vNiwUrLZufWCtjo66yenTrct9Qg/U/M
+         racX07P76iA/xJP8C4+PKJueIGjXakXO0YaD8KJ7e15n7V9wuS1ToY4ruSwiokcoaF
+         lrLqrofqSFGf/uYBTaHFqsFnkEeT19J+zFntMEI8=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 98B3C602F8;
+        Wed,  6 Mar 2019 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551890442;
+        bh=zrepmgwdw8R5c4JYjVQcWC+iDB9ym8RfBvg9XSTqh3U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nEidN36aJRL1Udn4UrspFbvY4ddViXbv5H9Ou0/9ZBYo3OzFuXV8tPiSHNmKVeSuh
+         lVhRBvZ1AKu2dUE+5BoYcIjLt9BCY8PL1MlFlqiRqdgK2Yol4x2KshGNYqOeT+k/9B
+         LM9lgPRflF3Ud+gb9tp0nnq29c9KcX0tt1akHaSI=
 MIME-Version: 1.0
-In-Reply-To: <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 Mar 2019 22:10:42 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Josh Boyer <jwboyer@kernel.org>
+Cc:     Hemantg <hemantg@codeaurora.org>,
+        Linux Firmware <linux-firmware@kernel.org>,
+        BlueZ development <linux-bluetooth@vger.kernel.org>,
+        Linux-arm Msm <linux-arm-msm@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        rjliao@codeauroa.com
+Subject: Fw files for QCA BT Chip QCA6174
+Message-ID: <84b02324ea2fb251b4037dee8994306a@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/19 10:14 AM, Benjamin Gaignard wrote:
-> Le mar. 5 mars 2019 à 21:54, John Stultz <john.stultz@linaro.org> a écrit :
->>
->> Add very trivial allocation test for dma-heaps.
->>
->> TODO: Need to actually do some validation on
->> the returned dma-buf.
->>
->> Cc: Laura Abbott <labbott@redhat.com>
->> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->> Cc: Greg KH <gregkh@linuxfoundation.org>
->> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> Cc: Liam Mark <lmark@codeaurora.org>
->> Cc: Brian Starkey <Brian.Starkey@arm.com>
->> Cc: Andrew F. Davis <afd@ti.com>
->> Cc: Chenbo Feng <fengc@google.com>
->> Cc: Alistair Strachan <astrachan@google.com>
->> Cc: dri-devel@lists.freedesktop.org
->> Signed-off-by: John Stultz <john.stultz@linaro.org>
->> ---
->> v2: Switched to use reworked dma-heap apis
->> ---
->>  tools/testing/selftests/dmabuf-heaps/Makefile      | 11 +++
->>  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 96 ++++++++++++++++++++++
->>  2 files changed, 107 insertions(+)
->>  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->>  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->>
->> diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testing/selftests/dmabuf-heaps/Makefile
->> new file mode 100644
->> index 0000000..c414ad3
->> --- /dev/null
->> +++ b/tools/testing/selftests/dmabuf-heaps/Makefile
->> @@ -0,0 +1,11 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +CFLAGS += -static -O3 -Wl,-no-as-needed -Wall
->> +#LDLIBS += -lrt -lpthread -lm
->> +
->> +# these are all "safe" tests that don't modify
->> +# system time or require escalated privileges
->> +TEST_GEN_PROGS = dmabuf-heap
->> +
->> +
->> +include ../lib.mk
->> +
->> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->> new file mode 100644
->> index 0000000..06837a4
->> --- /dev/null
->> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->> @@ -0,0 +1,96 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <dirent.h>
->> +#include <errno.h>
->> +#include <fcntl.h>
->> +#include <stdio.h>
->> +#include <string.h>
->> +#include <unistd.h>
->> +#include <sys/ioctl.h>
->> +#include <sys/mman.h>
->> +#include <sys/types.h>
->> +
->> +#include "../../../../include/uapi/linux/dma-heap.h"
->> +
->> +#define DEVPATH "/dev/dma_heap"
->> +
->> +int dmabuf_heap_open(char *name)
->> +{
->> +       int ret, fd;
->> +       char buf[256];
->> +
->> +       ret = sprintf(buf, "%s/%s", DEVPATH, name);
->> +       if (ret < 0) {
->> +               printf("sprintf failed!\n");
->> +               return ret;
->> +       }
->> +
->> +       fd = open(buf, O_RDWR);
->> +       if (fd < 0)
->> +               printf("open %s failed!\n", buf);
->> +       return fd;
->> +}
->> +
->> +int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags, int *dmabuf_fd)
->> +{
->> +       struct dma_heap_allocation_data data = {
->> +               .len = len,
->> +               .flags = flags,
->> +       };
->> +       int ret;
->> +
->> +       if (dmabuf_fd == NULL)
->> +               return -EINVAL;
->> +
->> +       ret = ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
->> +       if (ret < 0)
->> +               return ret;
->> +       *dmabuf_fd = (int)data.fd;
->> +       return ret;
->> +}
->> +
->> +#define ONE_MEG (1024*1024)
->> +
->> +void do_test(char *heap_name)
->> +{
->> +       int heap_fd = -1, dmabuf_fd = -1;
->> +       int ret;
->> +
->> +       printf("Testing heap: %s\n", heap_name);
->> +
->> +       heap_fd = dmabuf_heap_open(heap_name);
->> +       if (heap_fd < 0)
->> +               return;
->> +
->> +       printf("Allocating 1 MEG\n");
->> +       ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
->> +       if (ret)
->> +               goto out;
->> +
->> +       /* DO SOMETHING WITH THE DMABUF HERE? */
-> 
-> You can do a call to mmap and write a pattern in the buffer.
-> 
 
-mmap is optional for DMA-BUFs, only attach/map are required. To test
-those we would need a dummy device, so a test kernel module may be
-needed to really exercise this.
+Hi,
 
-I have one I use for ION buffer testing, it consumes a DMA-BUF passed
-from userspace, attach/maps it to a dummy device then return the
-physical address of the first page of the buffer for validation. Might
-be a good test, but dummy devices don't always have the proper dma
-attributes set like a real device does, so it may also fail for some
-otherwise valid buffers.
+The following changes since commit 
+54b0a748c8966c93aaa8726402e0b69cb51cd5d2:
 
-Andrew
+   WHENCE: Correct errant entries (2019-02-21 07:21:45 -0500)
 
-> Benjamin
->> +
->> +out:
->> +       if (dmabuf_fd >= 0)
->> +               close(dmabuf_fd);
->> +       if (heap_fd >= 0)
->> +               close(heap_fd);
->> +}
->> +
->> +
->> +int main(void)
->> +{
->> +       DIR *d;
->> +       struct dirent *dir;
->> +
->> +       d = opendir(DEVPATH);
->> +       if (!d) {
->> +               printf("No %s directory?\n", DEVPATH);
->> +               return -1;
->> +       }
->> +
->> +       while ((dir = readdir(d)) != NULL)
->> +               do_test(dir->d_name);
->> +
->> +
->> +       return 0;
->> +}
->> --
->> 2.7.4
->>
-> 
-> 
+are available in the Git repository at:
+
+   https://github.com/bgodavar/qca6174_bt_fw.git
+
+for you to fetch changes up to c99beda7e0368961d024ddc8e45a46f118100cc7:
+
+   QCA: Add the fw files for BT Chip QCA6174. (2019-02-25 15:36:36 +0530)
+
+----------------------------------------------------------------
+Balakrishna Godavarthi (1):
+       QCA: Add the fw files for BT Chip QCA6174.
+
+  WHENCE                    |   2 ++
+  qca/nvm_00440302.bin      | Bin 0 -> 2010 bytes
+  qca/rampatch_00440302.bin | Bin 0 -> 64940 bytes
+  3 files changed, 2 insertions(+)
+  create mode 100644 qca/nvm_00440302.bin
+  create mode 100644 qca/rampatch_00440302.bin
+
+
+-- 
+Regards
+Balakrishna.
