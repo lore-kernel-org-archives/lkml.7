@@ -2,329 +2,146 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA17C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92DFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7F420684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoaW0qNz"
+	by mail.kernel.org (Postfix) with ESMTP id A7A2720684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfCFKpm (ORCPT
+        id S1729687AbfCFKtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:45:42 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41647 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbfCFKpm (ORCPT
+        Wed, 6 Mar 2019 05:49:08 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46028 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727367AbfCFKtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:45:42 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n2so12824347wrw.8;
-        Wed, 06 Mar 2019 02:45:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:mime-version:subject:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aL12gokwnY/RlIfz3R2182VWDKZfCIP367EeuUje6XU=;
-        b=CoaW0qNzUzWMxtN+jbfpFdWcWmQCowIfDQGfekSPODQHE2p3I9F4NW3h0s7Ts7v+Iy
-         cwnkqMVgswcZkgEdMsGSj64lgIy1wYpg+Q5ImfTzgEy5nG46CJYYAkEFXCSRVECJePRf
-         T9wvXMcRwn+x1VotNd+9Z6P1XUNw3T94XGiKNGaUL2rgyC6ZBPduRDONjvv2Susgu+g6
-         myLVfE5lWVPOn60YWBjLndmTzlckHvtr8j/6n6+OWKmkP4TLRGM4o4lU8mqkg1Rb7Yc2
-         ztQ7Bn6DuJN30Qv1QoVg46fOKPsiANRB5x62phFbh5f64rBk19MsRAMKw/v7yvKj9Yc5
-         FWKA==
+        Wed, 6 Mar 2019 05:49:08 -0500
+Received: by mail-qk1-f194.google.com with SMTP id v139so6473860qkb.12;
+        Wed, 06 Mar 2019 02:49:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:mime-version:subject:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aL12gokwnY/RlIfz3R2182VWDKZfCIP367EeuUje6XU=;
-        b=DnB9mmy1Qxj+pZ0H6mao76N5lruwNw6C7yyWgv/Z0TXSPN20k1sr29v7tags7z9pBR
-         5ar6U58JILOZOqKaWJFXx3y7X2+rQd25PoLDRmTfT23P3TP2XcPAtx3RfRFj4SlO2n7K
-         C5Ir5GlNSseB6QbCMoL062W3jve0DHoRmWE1qNq8Fx7AmStYjjeuIgdvy0ki5BL3M6V+
-         rnKrgp2GlAU7LyNueTB61nYEgnHy4mH2diJgBPT6/DrdE9g6mlQrLBKSDsPEJ6UBJPxc
-         xWzY69sNL2YQvKQ9Zw6RTyDKf19fhL6O92GhHeztObQTvXxbO/Kjhqggfw7OqSJh9oTN
-         Y9bg==
-X-Gm-Message-State: APjAAAU9w47mIDbqQB0TsdODUkKJTJUGYfhVCq7MbMHdipN1QFZ3RW0A
-        f7aqTomSguEU+pohNvX/W9TunaEc
-X-Google-Smtp-Source: APXvYqx9zua042qRfe/GPv/TKmGCWyH5EI/UCpAzDDgLxcfBW1J6XhJ/fKaDqLjv2S1JmNx1nzz0Ug==
-X-Received: by 2002:adf:f70c:: with SMTP id r12mr2671333wrp.54.1551869139488;
-        Wed, 06 Mar 2019 02:45:39 -0800 (PST)
-Received: from [192.168.77.22] (val06-1-88-182-161-34.fbx.proxad.net. [88.182.161.34])
-        by smtp.gmail.com with ESMTPSA id z8sm1027945wmi.28.2019.03.06.02.45.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 02:45:38 -0800 (PST)
-From:   Christophe de Dinechin <christophe.de.dinechin@gmail.com>
-X-Google-Original-From: Christophe de Dinechin <christophe@dinechin.org>
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [RFC PATCH V2 2/5] vhost: fine grain userspace memory accessors
-In-Reply-To: <1551856692-3384-3-git-send-email-jasowang@redhat.com>
-Date:   Wed, 6 Mar 2019 11:45:31 +0100
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        netdev@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
-        Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
-        aarcange@redhat.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4C1386C5-F153-43DD-8B14-CC752FA5A07A@dinechin.org>
-References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
- <1551856692-3384-3-git-send-email-jasowang@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-X-Mailer: Apple Mail (2.3445.9.1)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=epWvn+RLfp14vrAtwiF1NcHhwp8ZZ9/6sQ/IaOSIzTs=;
+        b=YCiDxxLK/Pza26gxSxLYKprxrqjh81SagLGPcMiJCvCm4tcC/gPABXlLE45t7uHKdW
+         agk0sbxHUJJ0IVGpgQhkvTY7OToM15ShzcmSZtq81zQjqvhUdc4HV8wMtO/rnlrrWrXX
+         FeDyUmFQ/vny2cy0Dx5Y7yrLF8X9m6We1fTWHFJw4uvX7RZmyDjut8+LHuZMLoTDBnQ/
+         RafKDTZ+c55+RxVdg54AF//qOhi9R0d5P2Lx6UW6El04WrocYG2fdS+lmYlaqIhIU/fE
+         8hEEuSTpnpc8kCfbJPQ5V3iBurlQFT/Q9csNgTqsyJdztEgHEN8d3yM3G2afFAxKX2Om
+         zBFQ==
+X-Gm-Message-State: APjAAAXV/5AhOqNuGaEkr1q+pJAkDy+8iki3o9JaZAXytm3hyBoQTWAQ
+        P6Jx4eHTNr5cZk1o6LvXDBIgnybHcqKmHaxLw+gemW8J
+X-Google-Smtp-Source: APXvYqxGmS0iaHj/jTX8fUQW6vmMIkwCB0Hwlci+4x04oFhQQkZHR6zDNuiziJ3GKpu4o2QtEf54uWWnB8LjIWC1K6Y=
+X-Received: by 2002:ae9:dec2:: with SMTP id s185mr4966307qkf.107.1551869346673;
+ Wed, 06 Mar 2019 02:49:06 -0800 (PST)
+MIME-Version: 1.0
+References: <1551735420-16202-1-git-send-email-eajames@linux.ibm.com>
+ <1551735420-16202-3-git-send-email-eajames@linux.ibm.com> <CAK8P3a0eS11_T9wk4iLRT7A94Lh9gSf5QNGH4--pdA5HdEGMCw@mail.gmail.com>
+ <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+In-Reply-To: <84551e54-0382-6042-48cb-842d79214a98@linux.ibm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 6 Mar 2019 11:48:49 +0100
+Message-ID: <CAK8P3a2kcaVGXifqrBLt9PfD1n2M6WCBxDDcaF8d7EdYxGRvVg@mail.gmail.com>
+Subject: Re: [PATCH 2/6] drivers/misc: Add Aspeed XDMA engine driver
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org,
+        Andrew Jeffery <andrew@aj.id.au>,
+        gregkh <gregkh@linuxfoundation.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 5, 2019 at 10:45 PM Eddie James <eajames@linux.ibm.com> wrote:
+> On 3/5/19 2:01 AM, Arnd Bergmann wrote:
+> > On Mon, Mar 4, 2019 at 10:37 PM Eddie James <eajames@linux.ibm.com> wrote:
+> >> The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
+> >> between the SOC (acting as a BMC) and a host processor in a server.
+> >>
+> >> This commit adds a driver to control the XDMA engine and adds functions
+> >> to initialize the hardware and memory and start DMA operations.
+> >>
+> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > Hi Eddie,
+> >
+> > Thanks for your submission! Overall this looks well-implemented, but
+> > I fear we already have too many ways of doing the same thing at
+> > the moment, and I would hope to avoid adding yet another user space
+> > interface for a specific hardware that does this.
+> >
+> > Your interface appears to be a fairly low-level variant, just doing
+> > single DMA transfers through ioctls, but configuring the PCIe
+> > endpoint over sysfs.
+>
+> Hi, thanks for the quick response!
+>
+> There is actually no PCIe configuration done in this driver. The two
+> sysfs entries control the system control unit (SCU) on the AST2500
+> purely to enable and disable entire PCIe devices. It might be possible
+> to control those devices more finely with a PCI endpoint driver, but
+> there is no need to do so. The XDMA engine does that by itself to
+> perform DMA fairly automatically.
+>
+> If the sysfs entries are really troublesome, we can probably remove
+> those and find another way to control the SCU.
 
+I think the main advantage of tying this to a PCIe endpoint driver
+is that this would give us a logical object in the kernel that we
+can add the user space interface to, and have the protocol on
+top of it be portable between different SoCs.
 
-> On 6 Mar 2019, at 08:18, Jason Wang <jasowang@redhat.com> wrote:
->=20
-> This is used to hide the metadata address from virtqueue helpers. This
-> will allow to implement a vmap based fast accessing to metadata.
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
-> drivers/vhost/vhost.c | 94 =
-+++++++++++++++++++++++++++++++++++++++++----------
-> 1 file changed, 77 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 400aa78..29709e7 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -869,6 +869,34 @@ static inline void __user =
-*__vhost_get_user(struct vhost_virtqueue *vq,
-> 	ret; \
-> })
->=20
-> +static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
-> +{
-> +	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->avail_idx),
-> +			      vhost_avail_event(vq));
-> +}
-> +
-> +static inline int vhost_put_used(struct vhost_virtqueue *vq,
-> +				 struct vring_used_elem *head, int idx,
-> +				 int count)
-> +{
-> +	return vhost_copy_to_user(vq, vq->used->ring + idx, head,
-> +				  count * sizeof(*head));
-> +}
-> +
-> +static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
-> +
-> +{
-> +	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->used_flags),
-> +			      &vq->used->flags);
-> +}
-> +
-> +static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
-> +
-> +{
-> +	return vhost_put_user(vq, cpu_to_vhost16(vq, vq->last_used_idx),
-> +			      &vq->used->idx);
-> +}
-> +
-> #define vhost_get_user(vq, x, ptr, type)		\
-> ({ \
-> 	int ret; \
-> @@ -907,6 +935,43 @@ static void vhost_dev_unlock_vqs(struct vhost_dev =
-*d)
-> 		mutex_unlock(&d->vqs[i]->mutex);
-> }
->=20
-> +static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
-> +				      __virtio16 *idx)
-> +{
-> +	return vhost_get_avail(vq, *idx, &vq->avail->idx);
-> +}
-> +
-> +static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
-> +				       __virtio16 *head, int idx)
-> +{
-> +	return vhost_get_avail(vq, *head,
-> +			       &vq->avail->ring[idx & (vq->num - 1)]);
-> +}
-> +
-> +static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
-> +					__virtio16 *flags)
-> +{
-> +	return vhost_get_avail(vq, *flags, &vq->avail->flags);
-> +}
-> +
-> +static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
-> +				       __virtio16 *event)
-> +{
-> +	return vhost_get_avail(vq, *event, vhost_used_event(vq));
-> +}
-> +
-> +static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
-> +				     __virtio16 *idx)
-> +{
-> +	return vhost_get_used(vq, *idx, &vq->used->idx);
-> +}
-> +
-> +static inline int vhost_get_desc(struct vhost_virtqueue *vq,
-> +				 struct vring_desc *desc, int idx)
-> +{
-> +	return vhost_copy_from_user(vq, desc, vq->desc + idx, =
-sizeof(*desc));
-> +}
-> +
-> static int vhost_new_umem_range(struct vhost_umem *umem,
-> 				u64 start, u64 size, u64 end,
-> 				u64 userspace_addr, int perm)
-> @@ -1840,8 +1905,7 @@ int vhost_log_write(struct vhost_virtqueue *vq, =
-struct vhost_log *log,
-> static int vhost_update_used_flags(struct vhost_virtqueue *vq)
-> {
-> 	void __user *used;
-> -	if (vhost_put_user(vq, cpu_to_vhost16(vq, vq->used_flags),
-> -			   &vq->used->flags) < 0)
-> +	if (vhost_put_used_flags(vq))
-> 		return -EFAULT;
-> 	if (unlikely(vq->log_used)) {
-> 		/* Make sure the flag is seen before log. */
-> @@ -1858,8 +1922,7 @@ static int vhost_update_used_flags(struct =
-vhost_virtqueue *vq)
->=20
-> static int vhost_update_avail_event(struct vhost_virtqueue *vq, u16 =
-avail_event)
-> {
-> -	if (vhost_put_user(vq, cpu_to_vhost16(vq, vq->avail_idx),
-> -			   vhost_avail_event(vq)))
-> +	if (vhost_put_avail_event(vq))
-> 		return -EFAULT;
-> 	if (unlikely(vq->log_used)) {
-> 		void __user *used;
-> @@ -1895,7 +1958,7 @@ int vhost_vq_init_access(struct vhost_virtqueue =
-*vq)
-> 		r =3D -EFAULT;
-> 		goto err;
-> 	}
-> -	r =3D vhost_get_used(vq, last_used_idx, &vq->used->idx);
-> +	r =3D vhost_get_used_idx(vq, &last_used_idx);
-> 	if (r) {
-> 		vq_err(vq, "Can't access used idx at %p\n",
-> 		       &vq->used->idx);
+> > Please have a look at the drivers/pci/endpoint framework first
+> > and see if you can work on top of that interface instead.
+> > Even if it doesn't quite do what you need here, we may be
+> > able to extend it in a way that works for you, and lets others
+> > use the same user interface extensions in the future.
+> >
+> > It may also be necessary to split out the DMA engine portion
+> > into a regular drivers/dma/ back-end to make that fit in with
+> > the PCIe endpoint framework.
+>
+> Right, I did look into the normal DMA framework. There were a couple of
+> problems. First and foremost, the "device" (really, host processor)
+> address that we use is 64 bit, but the AST2500 is of course 32 bit. So I
+> couldn't find a good way to get the address through the DMA API into the
+> driver. It's entirely possible I missed something there though.
 
-=46rom the error case, it looks like you are not entirely encapsulating
-knowledge of what the accessor uses, i.e. it=E2=80=99s not:
+32-bit ARM SoCs can be built with a 64-bit dma_addr_t. Would that
+help you here?
 
-		vq_err(vq, "Can't access used idx at %p\n",
-		       &last_user_idx);
+> The other issue was that the vast majority of the DMA framework was
+> unused, resulting in a large amount of boilerplate that did nothing
+> except satisfy the API... I thought simplicity would be better in this case.
 
-Maybe move error message within accessor?
+Simplicity is important indeed, but we have to weigh it against
+having a consistent interface. What the dmaengine driver would
+give us in combination with the PCIe endpoint driver is that it abstracts
+the hardware from the protocol on top, which could then be done
+in a way that is not specific to an AST2xxx chip.
 
-> @@ -2094,7 +2157,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue =
-*vq,
-> 	last_avail_idx =3D vq->last_avail_idx;
->=20
-> 	if (vq->avail_idx =3D=3D vq->last_avail_idx) {
-> -		if (unlikely(vhost_get_avail(vq, avail_idx, =
-&vq->avail->idx))) {
-> +		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
-> 			vq_err(vq, "Failed to access avail idx at %p\n",
-> 				&vq->avail->idx);
-> 			return -EFAULT;
+> Let me know what you think... I could certainly switch to ioctl instead
+> of the write() if that's better. Or if you really think the DMA
+> framework is required here, let me know.
 
-Same here.
+I don't think that replacing the ioctl() with a write() call specifically
+would make much of a difference here. The question I'd like to
+discuss further is what high-level user space interface you actually
+need in order to implement what kind of functionality. We can then
+look at whether this interface can be implemented on top of a
+PCIe endpoint and a dmaengine driver in a portable way. If all
+of those are true, then I'd definitely go with the modular approach
+of having two standard drivers for the PCIe endpoint (should be
+a trivial wrapper) and the dma engine (not trivial, but there are
+many examples), plus a generic front-end in
+drivers/pci/endpoint/functions/.
 
-> @@ -2121,8 +2184,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue =
-*vq,
->=20
-> 	/* Grab the next descriptor number they're advertising, and =
-increment
-> 	 * the index we've seen. */
-> -	if (unlikely(vhost_get_avail(vq, ring_head,
-> -		     &vq->avail->ring[last_avail_idx & (vq->num - 1)]))) =
-{
-> +	if (unlikely(vhost_get_avail_head(vq, &ring_head, =
-last_avail_idx))) {
-> 		vq_err(vq, "Failed to read head: idx %d address %p\n",
-> 		       last_avail_idx,
-> 		       &vq->avail->ring[last_avail_idx % vq->num]);
-> @@ -2157,8 +2219,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue =
-*vq,
-> 			       i, vq->num, head);
-> 			return -EINVAL;
-> 		}
-> -		ret =3D vhost_copy_from_user(vq, &desc, vq->desc + i,
-> -					   sizeof desc);
-> +		ret =3D vhost_get_desc(vq, &desc, i);
-> 		if (unlikely(ret)) {
-> 			vq_err(vq, "Failed to get descriptor: idx %d =
-addr %p\n",
-> 			       i, vq->desc + i);
-> @@ -2251,7 +2312,7 @@ static int __vhost_add_used_n(struct =
-vhost_virtqueue *vq,
->=20
-> 	start =3D vq->last_used_idx & (vq->num - 1);
-> 	used =3D vq->used->ring + start;
-> -	if (vhost_copy_to_user(vq, used, heads, count * sizeof *used)) {
-> +	if (vhost_put_used(vq, heads, start, count)) {
-> 		vq_err(vq, "Failed to write used");
-> 		return -EFAULT;
-> 	}
-> @@ -2293,8 +2354,7 @@ int vhost_add_used_n(struct vhost_virtqueue *vq, =
-struct vring_used_elem *heads,
->=20
-> 	/* Make sure buffer is written before we update index. */
-> 	smp_wmb();
-> -	if (vhost_put_user(vq, cpu_to_vhost16(vq, vq->last_used_idx),
-> -			   &vq->used->idx)) {
-> +	if (vhost_put_used_idx(vq)) {
-> 		vq_err(vq, "Failed to increment used idx");
-> 		return -EFAULT;
-> 	}
-> @@ -2327,7 +2387,7 @@ static bool vhost_notify(struct vhost_dev *dev, =
-struct vhost_virtqueue *vq)
->=20
-> 	if (!vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX)) {
-> 		__virtio16 flags;
-> -		if (vhost_get_avail(vq, flags, &vq->avail->flags)) {
-> +		if (vhost_get_avail_flags(vq, &flags)) {
-> 			vq_err(vq, "Failed to get flags");
-> 			return true;
-> 		}
-> @@ -2341,7 +2401,7 @@ static bool vhost_notify(struct vhost_dev *dev, =
-struct vhost_virtqueue *vq)
-> 	if (unlikely(!v))
-> 		return true;
->=20
-> -	if (vhost_get_avail(vq, event, vhost_used_event(vq))) {
-> +	if (vhost_get_used_event(vq, &event)) {
-> 		vq_err(vq, "Failed to get used event idx");
-> 		return true;
-> 	}
-> @@ -2386,7 +2446,7 @@ bool vhost_vq_avail_empty(struct vhost_dev *dev, =
-struct vhost_virtqueue *vq)
-> 	if (vq->avail_idx !=3D vq->last_avail_idx)
-> 		return false;
->=20
-> -	r =3D vhost_get_avail(vq, avail_idx, &vq->avail->idx);
-> +	r =3D vhost_get_avail_idx(vq, &avail_idx);
-> 	if (unlikely(r))
-> 		return false;
-> 	vq->avail_idx =3D vhost16_to_cpu(vq, avail_idx);
-> @@ -2422,7 +2482,7 @@ bool vhost_enable_notify(struct vhost_dev *dev, =
-struct vhost_virtqueue *vq)
-> 	/* They could have slipped one in as we were doing that: make
-> 	 * sure it's written, then check again. */
-> 	smp_mb();
-> -	r =3D vhost_get_avail(vq, avail_idx, &vq->avail->idx);
-> +	r =3D vhost_get_avail_idx(vq, &avail_idx);
-> 	if (r) {
-> 		vq_err(vq, "Failed to check avail idx at %p: %d\n",
-> 		       &vq->avail->idx, r);
-> --=20
-> 1.8.3.1
->=20
-
+     Arnd
