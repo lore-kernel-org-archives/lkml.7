@@ -2,122 +2,126 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689D9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64101C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBD720684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3376720684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="cLak+fkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfCFNC3 (ORCPT
+        id S1726904AbfCFNG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 08:02:29 -0500
-Received: from mga05.intel.com ([192.55.52.43]:18290 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbfCFNC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 08:02:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 05:02:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,448,1544515200"; 
-   d="scan'208";a="325930658"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Mar 2019 05:02:24 -0800
-Subject: Re: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
- CMD_TIMING
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        riteshh@codeaurora.org, Asutosh Das <asutoshd@codeaurora.org>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
- <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
-Date:   Wed, 6 Mar 2019 15:00:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Wed, 6 Mar 2019 08:06:28 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45426 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfCFNG1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 08:06:27 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 125so8148688pgc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 05:06:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=lYFisdL+emxX/yjhRwvfei8UQc72RGGLjL/HzcIurDc=;
+        b=cLak+fkRb0O9N36cRBXR0tIORoqVJxZ7ho2DOkLt9kahJGvAC87zHhp1EhS+FaCI6N
+         64Nca7nkQJmc8Ta4Xu5NycVUDhC+r0AdMVUYL3w+51kWq9QtPbdBEF2WaGRHDv03lA3V
+         0/b/Rf4n74LhnFC3Kksz+CwFlyn5hivfSwNhTuzAZU7m6SVWyix3v7rS4wyqjjZOlQuX
+         zX1kyt/LbnnJgOYR9xb2o+9l5g/v3e371TkOhKxTCH3gTa3ftEUk55v9oRM+IqBC2dUn
+         i9j2ihAYu03W9iivIo1u4bpyt44/sSHgVPZS+Sg9DcAbppyJSuoiEyGosF4XIvC4e9Zr
+         KhEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lYFisdL+emxX/yjhRwvfei8UQc72RGGLjL/HzcIurDc=;
+        b=kWjiBDp1CaU6s5UfpJb38Sl2xanGmJHgFL68Fwzb8p2M8t4fRMWselss9LAqgz5d5C
+         5i9hOpTxpnlMnwFxsyHQyfyZeGVNNYsd1tmj2wDlU8RZWiMavzCs7p5HNQ3XthQTa1pl
+         LGMalqRGokEOcsOLGtZxTMeeeunxGTtDOg4dKGXRdVEr68EuYv/NmeIV6MYHikh01oJJ
+         qrCC222skd4rI5GSp6OLYM05NDn/LRdWr4eQfFJqIuE198m+a4nm+SE8BxdwKzyX8lmW
+         jX+sTYiuRkqmB4uLwTJ6L8+d6BT2H17z3mlDJNGwDcCBkoHqYKp6TYTWaJFIjHz9u0Dv
+         tFiQ==
+X-Gm-Message-State: APjAAAWD8qeFvWhtqZKQWcpbkQ0c/Sc0pYsaa/W17A3FmccMe/LQZ4MI
+        sacV3ODoQf6b9dtr65Ed3CbQgw==
+X-Google-Smtp-Source: APXvYqzAzhlyQEbt3pF4RlErlixy++ggRJiOcUf8oHOCw2kVjZAxkP62zfdXeK2RBjhWPna+/sKHbg==
+X-Received: by 2002:a62:4553:: with SMTP id s80mr7069624pfa.141.1551877586275;
+        Wed, 06 Mar 2019 05:06:26 -0800 (PST)
+Received: from kshutemo-mobl1.localdomain (fmdmzpr04-ext.fm.intel.com. [192.55.54.39])
+        by smtp.gmail.com with ESMTPSA id h10sm3128992pfo.128.2019.03.06.05.06.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 05:06:25 -0800 (PST)
+Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
+        id 98357301186; Wed,  6 Mar 2019 16:06:21 +0300 (+03)
+Date:   Wed, 6 Mar 2019 16:06:21 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Oliver <oohall@gmail.com>, Jan Kara <jack@suse.cz>,
+        linux-nvdimm@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
+Message-ID: <20190306130621.qrwybv5dpv3bzyym@kshutemo-mobl1>
+References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
+ <20190228083522.8189-2-aneesh.kumar@linux.ibm.com>
+ <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
+ <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com>
+ <87k1hc8iqa.fsf@linux.ibm.com>
+ <20190306124453.126d36d8@naga.suse.cz>
+ <df01bf6e-84a1-53fb-bf0c-0957af2f79e1@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df01bf6e-84a1-53fb-bf0c-0957af2f79e1@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
-> This patch adds a quirk for setting CMD_TIMING to 1 in descriptor
-> for DCMD with R1B response type to allow the command to be sent to
-> device during data activity or busy time.
+On Wed, Mar 06, 2019 at 06:15:25PM +0530, Aneesh Kumar K.V wrote:
+> On 3/6/19 5:14 PM, Michal Suchánek wrote:
+> > On Wed, 06 Mar 2019 14:47:33 +0530
+> > "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> wrote:
+> > 
+> > > Dan Williams <dan.j.williams@intel.com> writes:
+> > > 
+> > > > On Thu, Feb 28, 2019 at 1:40 AM Oliver <oohall@gmail.com> wrote:
+> > > > > 
+> > > > > On Thu, Feb 28, 2019 at 7:35 PM Aneesh Kumar K.V
+> > > > > <aneesh.kumar@linux.ibm.com> wrote:
+> > > Also even if the user decided to not use THP, by
+> > > echo "never" > transparent_hugepage/enabled , we should continue to map
+> > > dax fault using huge page on platforms that can support huge pages.
+> > 
+> > Is this a good idea?
+> > 
+> > This knob is there for a reason. In some situations having huge pages
+> > can severely impact performance of the system (due to host-guest
+> > interaction or whatever) and the ability to really turn off all THP
+> > would be important in those cases, right?
+> > 
 > 
-> Tegra186 CQHCI host has bug where it selects DATA_PRESENT_SELECT
-> to 1 by CQHCI controller for DCMDs with R1B response type and
-> since DCMD does not trigger any data transfer, DCMD task complete
-> happens leaving the DATA FSM of host controller in wait state for
-> data.
-> 
-> This effects the data transfer task issued after R1B DCMD task
-> and no interrupt is generated for the data transfer task.
-> 
-> SW WAR for this issue is to set CMD_TIMING bit to 1 in DCMD task
-> descriptor and as DCMD task descriptor preparation is done by
-> cqhci driver, this patch adds cqequirk to handle this.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/mmc/host/cqhci.c | 5 ++++-
->  drivers/mmc/host/cqhci.h | 1 +
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index a8af682a9182..b34c07125f32 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -521,7 +521,10 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
->  	} else {
->  		if (mrq->cmd->flags & MMC_RSP_R1B) {
->  			resp_type = 0x3;
-> -			timing = 0x0;
-> +			if (cq_host->quirks & CQHCI_QUIRK_CMD_TIMING_R1B_DCMD)
-> +				timing = 0x1;
-> +			else
-> +				timing = 0x0;
+> My understanding was that is not true for dax pages? These are not regular
+> memory that got allocated. They are allocated out of /dev/dax/ or
+> /dev/pmem*. Do we have a reason not to use hugepages for mapping pages in
+> that case?
 
-I was thinking it would be nice if there was a generic way for drivers to
-make changes to descriptors before a task is started.  Currently there is
-host->ops->write_l() which would make it possible by checking for CQHCI_TDBR
-register and, in this case, the DCMD tag.  We would need to export
-get_desc(), perhaps rename it cqhci_get_desc() and put it in cqhci.h since
-it is an inline function.
+Yes. Like when you don't want dax to compete for TLB with mission-critical
+application (which uses hugetlb for instance).
 
-Alternatively we could add host->ops for descriptor preparation.
-
-What do people think?
-
->  		} else {
->  			resp_type = 0x2;
->  			timing = 0x1;
-> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
-> index 9e68286a07b4..f96d8565cc07 100644
-> --- a/drivers/mmc/host/cqhci.h
-> +++ b/drivers/mmc/host/cqhci.h
-> @@ -170,6 +170,7 @@ struct cqhci_host {
->  
->  	u32 quirks;
->  #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
-> +#define CQHCI_QUIRK_CMD_TIMING_R1B_DCMD	0x2
->  
->  	bool enabled;
->  	bool halted;
-> 
-
+-- 
+ Kirill A. Shutemov
