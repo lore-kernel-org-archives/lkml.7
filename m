@@ -2,152 +2,98 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1F7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF07C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5693D20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="okLiffP1"
+	by mail.kernel.org (Postfix) with ESMTP id ACC9420661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfCFKZB (ORCPT
+        id S1728712AbfCFK1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:25:01 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:49161 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfCFKZA (ORCPT
+        Wed, 6 Mar 2019 05:27:08 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:32866 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728559AbfCFK1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:25:00 -0500
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190306102457epoutp040f3174217fb76ce4991b7f7ae3e0739a~JV6GIl8QP1357913579epoutp04t;
-        Wed,  6 Mar 2019 10:24:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190306102457epoutp040f3174217fb76ce4991b7f7ae3e0739a~JV6GIl8QP1357913579epoutp04t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551867897;
-        bh=QI3oIPxTSWLrK2Hdkbt5ELX8u7Zgdw3biwK+q9omWXA=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=okLiffP1ng0Q0GEzcHEFn7u48hUOp9B5xO30XvLcf90tcqNOV2mc1HT5T+rsFKv+9
-         O9Vw4KKCdwHbrallWk+dmP4NP2i03jwgGDGH0Cz8wlmNHN3c9RWldNMskagWtHTZYl
-         qUt2iBl4Jw3Cuky2B6vzFr3eVB1jqBWDdK4HI7eo=
-Received: from epsmges2p3.samsung.com (unknown [182.195.42.71]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20190306102457epcas2p109141d364dfae40d99b88e54b7839291~JV6F172DG2610626106epcas2p1P;
-        Wed,  6 Mar 2019 10:24:57 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        56.39.04134.9FF9F7C5; Wed,  6 Mar 2019 19:24:57 +0900 (KST)
-Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20190306102457epcas2p136fcb099d5635ee498eefd17979fc880~JV6FnGkQz0486304863epcas2p1k;
-        Wed,  6 Mar 2019 10:24:57 +0000 (GMT)
-X-AuditID: b6c32a47-8c3ff70000001026-72-5c7f9ff928ed
-Received: from epmmp1.local.host ( [203.254.227.16]) by
-        epsmgms2p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        12.64.03689.9FF9F7C5; Wed,  6 Mar 2019 19:24:57 +0900 (KST)
-Received: from AMDC3061.digital.local ([106.116.147.40]) by mmp1.samsung.com
-        (Oracle Communications Messaging Server 7.0.5.31.0 64bit (built May  5
-        2014)) with ESMTPA id <0PNX00K2GWXCAJ20@mmp1.samsung.com>; Wed, 06 Mar 2019
-        19:24:57 +0900 (KST)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     broonie@kernel.org, lgirdwood@gmail.com
-Cc:     sbkim73@samsung.com, krzk@kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, alsa-devel@alsa-project.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] ASoC: samsung: i2s: Fix DAPM routes for capture stream
-Date:   Wed, 06 Mar 2019 11:24:45 +0100
-Message-id: <20190306102445.1640-1-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCmue7P+fUxBi83yVlcuXiIyWLjjPWs
-        FlMfPmGzOH9+A7vFtysdTBaXd81hs5hxfh+Txdojd9ktDr9pZ7W4uOILkwOXx4bPTWweO2fd
-        ZffYtKqTzaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgytp54yV6wWaBi77UvLA2M+3m7GDk5
-        JARMJNbdWcvaxcjFISSwg1Fi0e8vbCAJIYHvjBK33/vAFO05eYodomg3o8TBnl8sEM4vRolr
-        vXMZQarYBAwleo/2gdkiAtoSc252sIEUMQu8ZZSY92wXK0hCWMBdYv3pt+wgNouAqsSrLxOZ
-        QGxeASuJ6fOOMEGsk5dYveEAM0izhMAENontzadYIRIuErdOX4UqkpZ4tmojI4RdLbFrezdU
-        QwejRMuF7cwQCWuJw8cvgjUzC/BJdBz+C7SZAyjOK9HRJgRhekjM358G8XKsRPfjU8wTGMUX
-        MDKsYhRLLSjOTU8tNiow1itOzC0uzUvXS87P3cQIjjUt9x2M2875HGIU4GBU4uGd0FoXI8Sa
-        WFZcmXuIUYKDWUmEt2lufYwQb0piZVVqUX58UWlOavEhRmkOFiVx3ofSc6OFBNITS1KzU1ML
-        UotgskwcnFINjKunMyve8jm6cmFbGWO2ZYTcZJG5sp5bYto4dlxqm5fm/VzuwsRqFeu3idxH
-        Vvtl8Yje+RUqvVT87SYLkaq18xT5d+pfl1zYcym9jj9R7YvUbc0w9xXtC3im8gfsulRctzu0
-        Ot974/YQNu8v3exTHXt76+M/iJbsmiu7M/m5TrfX4ogzv4RnKrEUZyQaajEXFScCAD9hFK2x
-        AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmluLIzCtJLcpLzFFi42I5/e+xgO7P+fUxBp3z+C2uXDzEZLFxxnpW
-        i6kPn7BZnD+/gd3i25UOJovLu+awWcw4v4/JYu2Ru+wWh9+0s1pcXPGFyYHLY8PnJjaPnbPu
-        sntsWtXJ5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZW0+8ZC/YLFCx99oXlgbG/bxdjJwc
-        EgImEntOnmLvYuTiEBLYySix/9sbZpCEkMAvRok1H11BbDYBQ4neo32MILaIgLbEnJsdbCAN
-        zAJvGSUazrSxgSSEBdwl1p9+yw5iswioSrz6MpEJxOYVsJKYPu8IE8Q2eYnVGw4wT2DkWsDI
-        sIpRMrWgODc9t9iowCgvtVyvODG3uDQvXS85P3cTIzBoth3W6t/B+HhJ/CFGAQ5GJR7eCa11
-        MUKsiWXFlbmHGCU4mJVEeJvm1scI8aYkVlalFuXHF5XmpBYfYpTmYFES5+XPPxYpJJCeWJKa
-        nZpakFoEk2Xi4JRqYBQ+Yil38mT1vukPL+7njpy/Jv7Crgty+mFril+GCIrdOflSzYDPtlJL
-        yZbhuVbyp1vPp0bP4Jn66Ubu4hVCfLzhb8JKRNR/u3rO63/+4XZ48g45G0N+qWUyMyySl1x/
-        +EyDt+yWtsXWuPWvPl+ye3h1mZPC7HcH/ubpTzWcqPmpvSPkNvOjI7uVWIozEg21mIuKEwE8
-        GxvTFgIAAA==
-X-CMS-MailID: 20190306102457epcas2p136fcb099d5635ee498eefd17979fc880
-CMS-TYPE: 102P
-X-CMS-RootMailID: 20190306102457epcas2p136fcb099d5635ee498eefd17979fc880
-References: <CGME20190306102457epcas2p136fcb099d5635ee498eefd17979fc880@epcas2p1.samsung.com>
+        Wed, 6 Mar 2019 05:27:07 -0500
+Received: by mail-qt1-f193.google.com with SMTP id z39so12217383qtz.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 02:27:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CSeOuhnVpG+O/XMLRISqa+zO/p/JxBsd2lVZegfOtAE=;
+        b=VP3gL1hJJTbAP9aY6j6hx7J1SiwIfacAzLpfJcfctbb1gab0CHna9JH3mJYxeh319a
+         3hReTNRgcdSmQSjhqfCyWX+iNwAvmqSLdTFQF2B73xjrI98ODXmoCqJhKqQ1xy6r7qjY
+         f2ufnVa8QzzbtJmaemkIKpFyZGkagVayHudqQ5FXf6GMnBMrNJFvwznN7YMYnsqs7k4z
+         Lxe4aE+pYk3Puj48Zoe2k0JO0JrXPChDRaR2fXXLlzIO3hecsWrW2xM4RxoPB1gUMdbM
+         2wcGquJpkj6kXm8V6KOduMI5czqKOCKCuGf+BasY4ds8eMGr/Ejv51xL4YRSvBO4yI60
+         IdQw==
+X-Gm-Message-State: APjAAAUA4BooxYMF3viuHIsIzS0W9ZEpDCYKovPEgbs8uShATv/KTHyo
+        VzG7KdLmRLFNKJ5hvc2mZvyqnHfpClFJFHyHdkqfm/rV
+X-Google-Smtp-Source: APXvYqx8KXF2sVH+kCoN66rCFdIhCx5S1tAN7BNbc9XkL0WASGOtHPlJRmgDHIyw4pXWTxuHzbi+XfPwGYdOq6NGtk4=
+X-Received: by 2002:a0c:b501:: with SMTP id d1mr5728256qve.115.1551868026847;
+ Wed, 06 Mar 2019 02:27:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20190304200026.1140281-1-arnd@arndb.de> <be817f74-3441-47c1-6958-233d6e1172c4@arm.com>
+In-Reply-To: <be817f74-3441-47c1-6958-233d6e1172c4@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 6 Mar 2019 11:26:49 +0100
+Message-ID: <CAK8P3a3FUtGceVWK530E-iOWqh=p=Q-KKZCkNCeXh2UhFc3m9A@mail.gmail.com>
+Subject: Re: [PATCH] mm/hmm: fix unused variable warnings
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch sets missing stream_name of capture part of the DAI driver
-so we can define DAPM routing properly also for the capture stream.
+On Tue, Mar 5, 2019 at 1:18 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+> On 03/05/2019 01:30 AM, Arnd Bergmann wrote:
+> > When CONFIG_HUGETLB_PAGE is disabled, the only use of the variable 'h'
+> > is compiled out, and the compiler thinks it is unnecessary:
+> >
+> > mm/hmm.c: In function 'hmm_range_snapshot':
+> > mm/hmm.c:1015:19: error: unused variable 'h' [-Werror=unused-variable]
+> >     struct hstate *h = hstate_vma(vma);
+>
+> After doing some Kconfig hacks like (ARCH_WANT_GENERAL_HUGETLB = n) on an
+> X86 system I got (HUGETLB_PAGE = n and HMM = y) config. But was unable to
+> hit the build error. Helper is_vm_hugetlb_page() seems to always return
+> false when HUGETLB_PAGE = n. Would not the compiler remove the entire code
+> block including the declaration for 'h' ?
+>
+> #ifdef CONFIG_HUGETLB_PAGE
+> #include <linux/mm.h>
+> static inline bool is_vm_hugetlb_page(struct vm_area_struct *vma)
+> {
+>         return !!(vma->vm_flags & VM_HUGETLB);
+> }
+> #else
+> static inline bool is_vm_hugetlb_page(struct vm_area_struct *vma)
+> {
+>         return false;
+> }
+> #endif
 
-While at it "Playback" suffix is added to the playback stream names
-to clearly identify playback/capture.
+The is_vm_hugetlb_page() check is unrelated to the warning here,
+the problem is that huge_page_shift() is defined as
 
-Together with related dts patch this fixes NULL pointer dereference
-when opening ALSA device for recording on Odroid XU3.
+#define huge_page_shift(h) PAGE_SHIFT
 
-Fixes: 64aba9bca5bd ("ASoC: samsung: i2s: Add widgets and routes for DPCM support")
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- sound/soc/samsung/i2s.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+when CONFIG_HUGETLB_PAGE is disabled, so after preprocessing,
+the only reference to the variable is removed.
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index 4231001226f4..ab471d550d17 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -1130,11 +1130,11 @@ static const struct snd_soc_dapm_widget samsung_i2s_widgets[] = {
- };
- 
- static const struct snd_soc_dapm_route samsung_i2s_dapm_routes[] = {
--	{ "Playback Mixer", NULL, "Primary" },
--	{ "Playback Mixer", NULL, "Secondary" },
-+	{ "Playback Mixer", NULL, "Primary Playback" },
-+	{ "Playback Mixer", NULL, "Secondary Playback" },
- 
- 	{ "Mixer DAI TX", NULL, "Playback Mixer" },
--	{ "Playback Mixer", NULL, "Mixer DAI RX" },
-+	{ "Primary Capture", NULL, "Mixer DAI RX" },
- };
- 
- static const struct snd_soc_component_driver samsung_i2s_component = {
-@@ -1155,7 +1155,8 @@ static int i2s_alloc_dais(struct samsung_i2s_priv *priv,
- 			  int num_dais)
- {
- 	static const char *dai_names[] = { "samsung-i2s", "samsung-i2s-sec" };
--	static const char *stream_names[] = { "Primary", "Secondary" };
-+	static const char *stream_names[] = { "Primary Playback",
-+					      "Secondary Playback" };
- 	struct snd_soc_dai_driver *dai_drv;
- 	struct i2s_dai *dai;
- 	int i;
-@@ -1201,6 +1202,7 @@ static int i2s_alloc_dais(struct samsung_i2s_priv *priv,
- 	dai_drv->capture.channels_max = 2;
- 	dai_drv->capture.rates = i2s_dai_data->pcm_rates;
- 	dai_drv->capture.formats = SAMSUNG_I2S_FMTS;
-+	dai_drv->capture.stream_name = "Primary Capture";
- 
- 	return 0;
- }
--- 
-2.17.1
-
+     Arnd
