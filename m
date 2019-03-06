@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D88C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF97C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF12206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FD2206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oDpvVEqX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UKz3VNDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfCGAA0 (ORCPT
+        id S1726623AbfCGAAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:00:26 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:42575 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfCGAAW (ORCPT
+        Wed, 6 Mar 2019 19:00:14 -0500
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:49142 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfCGAAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:00:22 -0500
-Received: by mail-pf1-f201.google.com with SMTP id p9so15436498pfn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:21 -0800 (PST)
+        Wed, 6 Mar 2019 19:00:11 -0500
+Received: by mail-vk1-f201.google.com with SMTP id j1so7389907vkj.15
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Slizqb5/EuTPaUwcXF3KMpeQ4PrQTQCbKq0uAOfUYTM=;
-        b=oDpvVEqXJpIrSthsVtrG1ShhFNsu55AnYk1HsI+XwYF/iW9kwSA2kBAvPZw+7yQjfw
-         vzSxG4bd1r2co7712oCcMqt74ttgVvINiMXH2LrnEfxsC4EDf5f61m15hsOZGc8wurdo
-         z6ZJHSMjH/LZX7w3vZkraygwiuGz5NTi58N3Acqfjmle8xv12Sll71j3ifjGa63q/qlQ
-         gchCUqX0bdhLA2vxyqg9QdSl6LJ/vHnekwBmOl8If6OxlO2ffb/B1kyfZHeRiHVFHwfz
-         eRYI39TbxMswh6rAd0+mFAm9dDOPwVdoNwsAl4QTQpyBtiPMO+KPc50P2B8V0cHzf08F
-         IMuQ==
+        bh=PqjENvzleKHq5r7VnPhuqFw2a2C+H2yOqXdiGG7oaFo=;
+        b=UKz3VNDTrFINv1Zw1JIFlqxV6jtbW7ksegxAkGlnfJsvZM35PiRWCSDU3Foos2uiey
+         19kv+vj6oA5hcbIwcgitp8WcFyB64OdSGSJ/jVFTor6v9eKAvxBalM5dQZBERK/hVX/K
+         F3OfCSW1PtffLcFO9mRmYFX1aJamjaEvbYwb0uULRCQmdb1uVatPgt7rAIiBcIfcOpew
+         UQYi0FtKWccFFwG/ALEqEyjM3VfvjODjBz/ir7sywBOSGb+/7kr67LQr6Z2/bKTgIdAB
+         xx5E2HnliBJTFtriJjYVkSBtEJYM5VtBjvOJFlDe6NuVu8GdwK+i01HjUm+aiz26RW6f
+         z7oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Slizqb5/EuTPaUwcXF3KMpeQ4PrQTQCbKq0uAOfUYTM=;
-        b=mOZ1TFw4aa+/lYaJHxUrK9jmOEdTXxEY5oixHI2+UMstv8iJqkPjPkSELfUdIKFE8r
-         DOJNM13APj2nsplMfpvh+RneeJSUdNTDcn/1UfqLb62MXnUygGY0pX+X/d0b6trPOgPo
-         ru7GZ4Ne3CGatiTaWbLARdpIWjKImVJJry8t8t44j26RL/hAkIc8LTp/AHwm9zoNZrzN
-         LXe4+uYbtjx4orJsR/I1sahUK6YOzQ/5LjrsdFKmgS1Y/geBYRf/z/XygbEbYn9CBb3T
-         jJLwBNMofob+7Rm4NBgDWyAI+WIwiTeeN740cZZX5YhNUxWYrCymY1kDRpXdk3YEGH0K
-         GEqQ==
-X-Gm-Message-State: APjAAAWulwTlc0mFVugu6RILQUXnDDxOETV/iYuubOppuQBz/hYdMU8N
-        7t6oxXBw2gqiQHz4pCZYV3ITB2HGW5bp2SapBRA4UA==
-X-Google-Smtp-Source: APXvYqzfz1Mm6zPNOwyLTXv7LVSJYhgRqpTmBGV1FsT7o7dpYl1eV0/IRR3lSRHTQ2w2htmMx8UY+sNjaz8NhBbQOd9Png==
-X-Received: by 2002:aa7:8215:: with SMTP id k21mr3854968pfi.78.1551916821402;
- Wed, 06 Mar 2019 16:00:21 -0800 (PST)
-Date:   Wed,  6 Mar 2019 15:59:07 -0800
+        bh=PqjENvzleKHq5r7VnPhuqFw2a2C+H2yOqXdiGG7oaFo=;
+        b=oIx9yKb87tk78zhl00PZfzUDQArEY692eeDz5IioftEPJS9RcNl3nHuXlreGpw6hbb
+         CGZikNFt1noKuMs60Dr5KomDURsJOrxUR7FsLv6x5W6LcW91rsV49kdeKRvOuRmM871r
+         GPuKUvDMRMgBT+jG5NsbcwnB3M4663cQ15Rbc/TEN81aaGGUkh/1W3DNEqWDwYW+LL39
+         +qfMUq51TtZSZFSTvhqHP/7Kzodfd8Ht9ciECxCS//9LxXRYiIc1DQk6zeyrtOhwIfSw
+         cfGCvq9BZQ6JI/VeHp02gj8iyigCsZEW0iWLQMpZh6bgAngK+sH5u2/EtXDrMPmNdzxv
+         t2tw==
+X-Gm-Message-State: APjAAAXrv/QzG2JWQvImbrFtuXUdUx+R8/6nh4EE2en5GZKep8I7RH3r
+        sNAydFR2a7P2ILwbapzl+N4ZH/MEjiM1Nxy9yQ8nBg==
+X-Google-Smtp-Source: APXvYqz4xl5JcRRYnkdfh5b5R4DGoQ7iBnjDI80Ifuo8n1LWoBqkTumYb8oFwWgTadiqg8qVnykG8rL9vu6Uy49JuXnWkw==
+X-Received: by 2002:ab0:b98:: with SMTP id c24mr6860349uak.19.1551916810289;
+ Wed, 06 Mar 2019 16:00:10 -0800 (PST)
+Date:   Wed,  6 Mar 2019 15:59:03 -0800
 In-Reply-To: <20190306235913.6631-1-matthewgarrett@google.com>
-Message-Id: <20190306235913.6631-22-matthewgarrett@google.com>
+Message-Id: <20190306235913.6631-18-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190306235913.6631-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 21/27] x86/mmiotrace: Lock down the testmmiotrace module
+Subject: [PATCH 17/27] acpi: Disable APEI error injection if the kernel is
+ locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -69,37 +70,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Linn Crosetto <linn@hpe.com>
 
-The testmmiotrace module shouldn't be permitted when the kernel is locked
-down as it can be used to arbitrarily read and write MMIO space.
+ACPI provides an error injection mechanism, EINJ, for debugging and testing
+the ACPI Platform Error Interface (APEI) and other RAS features.  If
+supported by the firmware, ACPI specification 5.0 and later provide for a
+way to specify a physical memory address to which to inject the error.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: David Howells <dhowells@redhat.com
-cc: Thomas Gleixner <tglx@linutronix.de>
-cc: Steven Rostedt <rostedt@goodmis.org>
-cc: Ingo Molnar <mingo@kernel.org>
-cc: "H. Peter Anvin" <hpa@zytor.com>
-cc: x86@kernel.org
+Injecting errors through EINJ can produce errors which to the platform are
+indistinguishable from real hardware errors.  This can have undesirable
+side-effects, such as causing the platform to mark hardware as needing
+replacement.
+
+While it does not provide a method to load unauthenticated privileged code,
+the effect of these errors may persist across reboots and affect trust in
+the underlying hardware, so disable error injection through EINJ if
+the kernel is locked down.
+
+Signed-off-by: Linn Crosetto <linn@hpe.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
+cc: linux-acpi@vger.kernel.org
 Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
 ---
- arch/x86/mm/testmmiotrace.c | 3 +++
+ drivers/acpi/apei/einj.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
-index f6ae6830b341..bbaad357f5d7 100644
---- a/arch/x86/mm/testmmiotrace.c
-+++ b/arch/x86/mm/testmmiotrace.c
-@@ -115,6 +115,9 @@ static int __init init(void)
- {
- 	unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
+diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
+index fcccbfdbdd1a..9fe6bbab2e7d 100644
+--- a/drivers/acpi/apei/einj.c
++++ b/drivers/acpi/apei/einj.c
+@@ -518,6 +518,9 @@ static int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
+ 	int rc;
+ 	u64 base_addr, size;
  
-+	if (kernel_is_locked_down("MMIO trace testing"))
++	if (kernel_is_locked_down("ACPI error injection"))
 +		return -EPERM;
 +
- 	if (mmio_address == 0) {
- 		pr_err("you have to use the module argument mmio_address.\n");
- 		pr_err("DO NOT LOAD THIS MODULE UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!\n");
+ 	/* If user manually set "flags", make sure it is legal */
+ 	if (flags && (flags &
+ 		~(SETWA_FLAGS_APICID|SETWA_FLAGS_MEM|SETWA_FLAGS_PCIE_SBDF)))
 -- 
 2.21.0.352.gf09ad66450-goog
 
