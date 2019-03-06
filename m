@@ -2,118 +2,117 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49046C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D702C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1798420675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54CC20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 02:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjFWfCza"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+XlbTbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbfCFCZf (ORCPT
+        id S1728944AbfCFChe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 21:25:35 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41351 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfCFCZf (ORCPT
+        Tue, 5 Mar 2019 21:37:34 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40434 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfCFChd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 21:25:35 -0500
-Received: by mail-qt1-f193.google.com with SMTP id v10so11234724qtp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 18:25:34 -0800 (PST)
+        Tue, 5 Mar 2019 21:37:33 -0500
+Received: by mail-ed1-f65.google.com with SMTP id 10so9007393eds.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 18:37:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=inlvL6h8BBPdw6YSdCNIUxqA7naCUQMPpbxUU32LN7c=;
-        b=VjFWfCza1FrBJS2z7OJ6IYNd3HjNUautEE6TrIMATQHWXEhOdX9ZuBfGN7wUJzuxiT
-         7GxYgF8K4OsvcLivHZ27dfkPN812qlJ+0RR15jsef607mw0kiEj7ovitWcs2I6Z7ShC8
-         cY84P+MkDrG8F0vfD7aTNYWW/K4s71gAfB207TcZ4nv8Eg5VJ4v8R6H36O3m6XA4ZbtM
-         suYEri1wKBvphnkpHxz+wSpwleYFOCiS9XG7t6yn60vCbcubdHTvc2MgaFImn/LObqvS
-         GCeAyEIrtCxtDb8fJM2+SlQmAqpB16c1txwb6MZFvKGtZHmMo7k9Qi1C1N/chMsknSHT
-         a3bw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dto52epf/L30pO15g7OSuLPsnvnnkRo2oO4/kvhk0PM=;
+        b=N+XlbTbGePT1MOOD1qNtA8RURD7aqIs3sNXjIv9GsUfhaohR+hIlZEZQFBh0JpfnFX
+         5Pbqk9Op1eZ+RDsymZWJVlF98yKwGvV0Cueiw9ey8vuJkMMZ8u4aDggUcl7AfC7ZesWY
+         sWZW205tOvE/hvPeWtbdBzRHyv40+ausSHtTtrFGuB+GW2n/LVWXRCZd5kqcVSpPK13l
+         yuuqDJAEIYiKJVrbIdTf8RNdh7wz9tsPoEXkEbiV+hPLZtkW6SL4yx3i28q4ESp6+eH3
+         GD2s+PFZHv3FbMJw/AaxU8aL7dyti4I9y75zBaFOwnfjo5SXvWztdPOSe9gkV6q1TXPq
+         2ddg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=inlvL6h8BBPdw6YSdCNIUxqA7naCUQMPpbxUU32LN7c=;
-        b=qTmgOeGjUyQTPfmf0wfWPHY9XSd41++xgDE8yX3viK3YfkyOShEmLgoRGY3ZlVofpL
-         uLPNBw9pfprgnh15LsxckCmokIeI3kC2goPfjq7QYr7mBX5JDIMG+uoXQLywfdNUcddF
-         /EPfzqmvfxDHq++7DcpIRbMgk1XQWzehD6aAXkBpOjP9uu8VXhAk8pkbuTSkpcPqpYCZ
-         Txi5SchvToNq1FpKIy9YcrLeMn1ELiFntc/+l/Sa5HSO98sXC5YbjlMoCw2AQiMCKdza
-         kZPXfV8G9LMeOUuzR/KpWYVcruxZ3dXlNOyuRAj00FlyfOFqBHZMW46Lxvi/ksHui50a
-         Gnpw==
-X-Gm-Message-State: APjAAAXANc+NfpQmF6MjzoqLaNMEns5xdd98foAc2j5GCU10PG3yxWs3
-        WaumgAPa0piVD9NSVfd1xdJYlRb/
-X-Google-Smtp-Source: APXvYqxlcJdb4m6iCyAn9WzDKCCvgR1jbCxPfU3MCpEfRUxaR63c5V+MQQ/0b53Q4kTAm1Ly2SuxiA==
-X-Received: by 2002:ac8:1c5d:: with SMTP id j29mr3921813qtk.113.1551839133759;
-        Tue, 05 Mar 2019 18:25:33 -0800 (PST)
-Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
-        by smtp.gmail.com with ESMTPSA id b142sm442204qka.74.2019.03.05.18.25.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 05 Mar 2019 18:25:33 -0800 (PST)
-Date:   Tue, 5 Mar 2019 21:25:31 -0500
-From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
-To:     linux-kernel@vger.kernel.org, axboe@kernel.dk
-Cc:     xen-devel@lists.xenproject.org
-Subject: [GIT PULL] (xen) stable/for-jens-5.1 to your 'for-5.1/block' branch.
-Message-ID: <20190306022530.GC25368@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dto52epf/L30pO15g7OSuLPsnvnnkRo2oO4/kvhk0PM=;
+        b=YT8q9KRK8yMQErTgSraRs8aXdTqAfGo47MK7GJsnnW5dBsFKCO3H5vEfate0C7hN5J
+         LVRMxSgWCDa9vBH0cpx/CRNiMKluyAe84oig9A/rmybN5xOzUMDDUoWOZMWsigl4tk5W
+         YWL+jHwxzdEXbVKH4a39ooFEQXmQxAuW5c/oroggrLhpR4JAni9/fHFRKJZmxZHlKZg+
+         Q4OTTNTuiw5QXeFkRtyLgyKdx5FpgLJHErQ6QSYou94+o7cySTdiiKsUo+WY3h9LvvGn
+         qoQwV2ONTHJ/hrt/aWJA9VXKHR6sNfQhrUph+8WyXSjpuJ3iiCyq+FYjXXZe4FxaPWMq
+         r6tw==
+X-Gm-Message-State: APjAAAUAsXnAbw338UAoBP+OzpHKjyOOFa2jnoDh+NhKWCVlgyUzu8W3
+        6tILpDH+c3s7WLxx6PIq6+k7Lb88961kHxOlTeE=
+X-Google-Smtp-Source: APXvYqzOrOSGSILsO0pYkE9COKykD9R5JdO9lbNmAwkEyvcJQMoYfNtxwwzetFKT85oOe7o1uXdi9niKoqRBjXcnGh8=
+X-Received: by 2002:a50:b136:: with SMTP id k51mr21911999edd.111.1551839852133;
+ Tue, 05 Mar 2019 18:37:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1551710008-3283-1-git-send-email-albin_yang@163.com>
+In-Reply-To: <1551710008-3283-1-git-send-email-albin_yang@163.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Wed, 6 Mar 2019 10:36:54 +0800
+Message-ID: <CAEbi=3d5MtuADekfHLCs=jAcAF6b9GgvvKcndvWQX31Ry-McgA@mail.gmail.com>
+Subject: Re: [PATCH] nds32: fix semicolon code style issue
+To:     Yang Wei <albin_yang@163.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        rppt@linux.vnet.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
+        yang.wei9@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Yang Wei <albin_yang@163.com> =E6=96=BC 2019=E5=B9=B43=E6=9C=884=E6=97=A5 =
+=E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:33=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Yang Wei <yang.wei9@zte.com.cn>
+>
+> Delete superfluous semicolons.
+>
+> Signed-off-by: Yang Wei <yang.wei9@zte.com.cn>
+> ---
+>  arch/nds32/kernel/cacheinfo.c | 2 +-
+>  arch/nds32/mm/init.c          | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/nds32/kernel/cacheinfo.c b/arch/nds32/kernel/cacheinfo.=
+c
+> index 0a7bc69..aab98e4 100644
+> --- a/arch/nds32/kernel/cacheinfo.c
+> +++ b/arch/nds32/kernel/cacheinfo.c
+> @@ -13,7 +13,7 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+>         this_leaf->level =3D level;
+>         this_leaf->type =3D type;
+>         this_leaf->coherency_line_size =3D CACHE_LINE_SIZE(cache_type);
+> -       this_leaf->number_of_sets =3D CACHE_SET(cache_type);;
+> +       this_leaf->number_of_sets =3D CACHE_SET(cache_type);
+>         this_leaf->ways_of_associativity =3D CACHE_WAY(cache_type);
+>         this_leaf->size =3D this_leaf->number_of_sets *
+>             this_leaf->coherency_line_size * this_leaf->ways_of_associati=
+vity;
+> diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
+> index 253f79f..e2eb4eb 100644
+> --- a/arch/nds32/mm/init.c
+> +++ b/arch/nds32/mm/init.c
+> @@ -264,7 +264,7 @@ void __set_fixmap(enum fixed_addresses idx,
+>
+>         BUG_ON(idx <=3D FIX_HOLE || idx >=3D __end_of_fixed_addresses);
+>
+> -       pte =3D (pte_t *)&fixmap_pmd_p[pte_index(addr)];;
+> +       pte =3D (pte_t *)&fixmap_pmd_p[pte_index(addr)];
+>
+>         if (pgprot_val(flags)) {
+>                 set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
 
---1ccMZA6j1vT5UqiK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Jens,
-
-Apologies for doing it right at the merge window time. This patchset has been brewing
-for quite a while.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/konrad/xen.git stable/for-jens-5.1
-
-This patchset makes the backend more robust by reading a negotiation
-variable only once and not twice.
-
-Thank you!
-
- drivers/block/xen-blkback/xenbus.c | 99 ++++++++++++++++++++++----------------
- 1 file changed, 57 insertions(+), 42 deletions(-)
-
-Dongli Zhang (2):
-      xen/blkback: add stack variable 'blkif' in connect_ring()
-      xen/blkback: rework connect_ring() to avoid inconsistent xenstore 'ring-page-order' set by malicious blkfront
-
-
---1ccMZA6j1vT5UqiK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcfy+aAAoJEFKlDoTx2wm/L9EP/1hInhOLDpzp4j9svuArMEtf
-2HbAezkSPcAXhhXr+yXCxrLYqZldxG00ohwQikogxugqDiPWGzR1NU+7FvmkUDg7
-0EJAumsuTT/Ok7vNt0TlrNATKYvE2RQroOJ8KknNFA3vOXaN4WPaT/Qr0KIyJnli
-10PgigQzvLvkbdXg91cZfVHLAcTVWp48FT0r2q/KFI1r0ehiOEzmdrB8bnZ9hxQ8
-yvRFHBNEeHd2UGJpLZ2Cq6KwfDXae4GKW201n03QHN4obgI8tKjlZmDWZS52RK+Q
-C+KaSlCVwISr4CMibWAsOJ3ChL/e/y7TB02MNDyF9EBS8przv3BjdLfPBEE4XUn1
-EpAvNUGiV4TlCR0A4NEaJimcZD0pBBEFpyjX6ja2c1bEBu/iuCK8pgsg34NIze3k
-XPcM/ovxesyOrBgCQ3E/QceiBHULYulTskv+vv67P6/DCie/Jcg2PD2YbxyKLq/M
-DKk6VHJNRMl2CwiKx8EyIBD11vDd8WMWP86i/0GSqqh7ckV8C6MjgT8UtNgZDr21
-wh+Efg3hgsC7d4XfbT9zu9uVMsMhSV+EzF1ajDXTBF1wsGmbwxkoMtqyejziitHZ
-WntO/bAAfkbB3dXpUcS+XLhN4HIUXemfnZdDLCFxy9T2l7VMydswi7X5YlnyaxRt
-ANzNPES7tCHFeNwGr8hW
-=L583
------END PGP SIGNATURE-----
-
---1ccMZA6j1vT5UqiK--
+Thank you, Yang Wei.
+Acked-by: Greentime Hu <greentime@andestech.com>
