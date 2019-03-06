@@ -2,137 +2,115 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A1EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48632C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95991206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2D1206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3TFpu3I5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lYHeCI8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfCFRhe (ORCPT
+        id S1730502AbfCFRkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:37:34 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45134 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfCFRhe (ORCPT
+        Wed, 6 Mar 2019 12:40:04 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46740 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfCFRkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:37:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3q/G9TebFVdhg7pZgAg+fZcyfwi245rQAJ0OdBWs7b8=; b=3TFpu3I5BjPxZvj9j1lp/x1TT
-        CENB9STh8oyHsnuaEagi5aBx/HNAcdPJcbf69uoYOZEDRyMKQOhzwmoZimbRwBrt+XgcxMq9n3tXY
-        fOC4dEJC/ii9b1H424LtqjbzLPW16LfS4Qn4B4kGjANT2YUQvQaX0HlnuhAsb4ClVh7+Mp2qCpq7G
-        h6j2SJ9OkaTPMUJJjVzpXz/PDBhDgsFlGA8EP3HmfI02m+gVH1sJksWk6UBcoJqGsIoYAXiRyoCdY
-        3++i2RN3rWAklA2qK0rsE6Q8bmT0vqSC4zs2ZEzxr28D6dcfim/IJn0IsOo5OjOs5jKP6PfrI65ZO
-        WUeW0FgWg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1aTk-0004Mx-QG; Wed, 06 Mar 2019 17:37:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 480FD2029B174; Wed,  6 Mar 2019 18:37:15 +0100 (CET)
-Date:   Wed, 6 Mar 2019 18:37:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>, jgross@suse.com
-Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
-Message-ID: <20190306173715.GA32534@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.078767622@infradead.org>
- <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
- <20190301144556.GY32477@hirez.programming.kicks-ass.net>
- <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
- <20190301152305.GJ32494@hirez.programming.kicks-ass.net>
- <20190306131347.GX32534@hirez.programming.kicks-ass.net>
- <20190306171451.GZ32534@hirez.programming.kicks-ass.net>
+        Wed, 6 Mar 2019 12:40:04 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x26HXgnD196522;
+        Wed, 6 Mar 2019 17:39:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=fr7D4Rs1y0bsowizgCo34pLfBPffKHe7r20bIqHzoZQ=;
+ b=lYHeCI8PMTwf+4GdtBRKB/bJgSwXWFr3R6DK07wdsGQnfhfIzr1YKoJc7XQCJcnGfv/k
+ klXIpAoXS5xvZMxJcB4HMgDNYzhKDoedzhW6WLfYxVbvxaTqKrDBjFq9ggZc5lgN9Lkz
+ FloXiRLQVD+4LUsCjDOLUxp+mAHQd7DtpGlLoobLp5x8a4VuaE37/Q+Z5utKiXdNnKNH
+ tgDmRRqXZYbRoABRID9Wg8mMsOdygdWoDDzRLdnFmpwJr9+X2QwtjYauEwFbxtnSmXTR
+ irZSoH1qCIdfxXUTLu67IuqJmRVvvEZ9Og67sVc+StngzLBd3vQhuI5ITl3petD0hACQ AA== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2qyjfrn52p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Mar 2019 17:39:46 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x26HdjNO024254
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Mar 2019 17:39:45 GMT
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x26HdhEe004381;
+        Wed, 6 Mar 2019 17:39:44 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Mar 2019 09:39:43 -0800
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] scsi: NCR5380: Mark expected switch fall-through
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190228202759.GA5883@embeddedor>
+        <alpine.LNX.2.21.1903011143550.8@nippy.intranet>
+Date:   Wed, 06 Mar 2019 12:39:40 -0500
+In-Reply-To: <alpine.LNX.2.21.1903011143550.8@nippy.intranet> (Finn Thain's
+        message of "Fri, 1 Mar 2019 12:16:57 +1100 (AEDT)")
+Message-ID: <yq1imwvzyub.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306171451.GZ32534@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9187 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903060122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 06:14:51PM +0100, Peter Zijlstra wrote:
-> On Wed, Mar 06, 2019 at 02:13:47PM +0100, Peter Zijlstra wrote:
-> > +static __always_inline unsigned long smap_save(void)
-> > +{
-> > +	unsigned long flags = arch_local_save_flags();
-> > +	clac();
-> > +	return flags;
-> > +}
-> > +
-> > +static __always_inline void smap_restore(unsigned long flags)
-> > +{
-> > +	arch_local_irq_restore(flags);
-> > +}
-> 
-> ARGH; the bloody paravirt me harder nonsense makes that pvops calls.
-> 
-> And that (obviously) explodes.. Anybody got any clue why that Xen
-> trainwreck wants to paravirt: "PUSHF;POP" and "PUSH;POPF" !?
-> 
-> Also; I suppose I can ALTERNATIVE the whole thing, because Xen will not
-> be having SMAP in the first place I suppose.
 
-The below seems to 'work'.
+Hi Finn,
 
---- a/arch/x86/include/asm/smap.h
-+++ b/arch/x86/include/asm/smap.h
-@@ -46,8 +46,6 @@
- 
- #ifdef CONFIG_X86_SMAP
- 
--#include <asm/irqflags.h>
--
- static __always_inline void clac(void)
- {
- 	/* Note: a barrier is implicit in alternative() */
-@@ -62,14 +60,19 @@ static __always_inline void stac(void)
- 
- static __always_inline unsigned long smap_save(void)
- {
--	unsigned long flags = arch_local_save_flags();
--	clac();
-+	unsigned long flags;
-+
-+	asm volatile (ALTERNATIVE("", "pushf; pop %0; " __stringify(__ASM_CLAC),
-+				  X86_FEATURE_SMAP)
-+		      : "=rm" (flags) : : "memory", "cc");
-+
- 	return flags;
- }
- 
- static __always_inline void smap_restore(unsigned long flags)
- {
--	arch_local_irq_restore(flags);
-+	asm volatile (ALTERNATIVE("", "push %0; popf", X86_FEATURE_SMAP)
-+		      : : "g" (flags) : "memory", "cc");
- }
- 
- /* These macros can be used in asm() statements */
+Please submit this as a formal patch. Thanks!
+
+> Here's an alternative patch, which has the virtue that a simple heuristic 
+> will work. This patch does not require that other static analysis tools 
+> will follow gcc's weird rules about hyphens. (I assume they don't but I 
+> didn't check.)
+>
+> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+> index 7fed9bb72784..fe0535affc14 100644
+> --- a/drivers/scsi/NCR5380.c
+> +++ b/drivers/scsi/NCR5380.c
+> @@ -1932,13 +1932,13 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>  					if (!hostdata->connected)
+>  						return;
+>  
+> -					/* Fall through to reject message */
+> -
+> +					/* Reject message */
+> +					/* Fall through */
+> +				default:
+>  					/*
+>  					 * If we get something weird that we aren't expecting,
+> -					 * reject it.
+> +					 * log it.
+>  					 */
+> -				default:
+>  					if (tmp == EXTENDED_MESSAGE)
+>  						scmd_printk(KERN_INFO, cmd,
+>  						            "rejecting unknown extended message code %02x, length %d\n",
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
