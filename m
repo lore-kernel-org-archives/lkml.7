@@ -2,161 +2,76 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED629C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 03:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FA3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 03:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75E52075B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 03:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2AE620684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 03:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbfCFDXZ (ORCPT
+        id S1729027AbfCFD1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 22:23:25 -0500
-Received: from mx21.baidu.com ([220.181.3.85]:44515 "EHLO baidu.com"
+        Tue, 5 Mar 2019 22:27:36 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4774 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728992AbfCFDXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 22:23:24 -0500
-Received: from M1-MAIL-EX02.internal.baidu.com (unknown [10.44.83.51])
-        by Forcepoint Email with ESMTPS id B58D3436B5A23;
-        Wed,  6 Mar 2019 11:23:15 +0800 (CST)
-Received: from BC-Mail-Ex15.internal.baidu.com (172.31.40.51) by
- M1-MAIL-EX02.internal.baidu.com (10.44.83.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1531.3; Wed, 6 Mar 2019 11:23:16 +0800
-Received: from BC-Mail-Ex13.internal.baidu.com (172.31.40.49) by
- BC-Mail-Ex15.internal.baidu.com (172.31.40.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1531.3; Wed, 6 Mar 2019 11:23:16 +0800
-Received: from BC-Mail-Ex13.internal.baidu.com ([172.31.40.49]) by
- Bc-Mail-Ex13.internal.baidu.com ([172.31.40.49]) with mapi id 15.01.1531.010;
- Wed, 6 Mar 2019 11:23:16 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Paul Moore <paul@paul-moore.com>
-CC:     Eric Paris <eparis@redhat.com>,
-        "linux-audit@redhat.com" <linux-audit@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGF1ZGl0OiBmaXggYSBtZW1sZWFrIGNhdXNlZCBi?=
- =?utf-8?Q?y_auditing_load_module?=
-Thread-Topic: [PATCH] audit: fix a memleak caused by auditing load module
-Thread-Index: AQHU015GTPrk5LbesEazqwpDeyDWr6X97ztA
-Date:   Wed, 6 Mar 2019 03:23:16 +0000
-Message-ID: <0100abb43ecf4a1fbb4d61364b246767@baidu.com>
-References: <1551784466-15610-1-git-send-email-lirongqing@baidu.com>
- <CAHC9VhQaoWM1nuvm_UeX_np_y0QAenQeWE8XWDUVh1oAOsy9XA@mail.gmail.com>
-In-Reply-To: <CAHC9VhQaoWM1nuvm_UeX_np_y0QAenQeWE8XWDUVh1oAOsy9XA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.24.150.31]
-x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex15_2019-03-06 11:23:16:802
-x-baidu-bdmsfe-viruscheck: BC-Mail-Ex15_GRAY_Inside_WithoutAtta_2019-03-06
- 11:23:16:787
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726600AbfCFD1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 22:27:36 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EEE373A750BB7B0FE1D3;
+        Wed,  6 Mar 2019 11:27:33 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 6 Mar 2019 11:27:23 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net] net: hns3: add dma_rmb() for rx description
+Date:   Wed, 6 Mar 2019 11:26:37 +0800
+Message-ID: <1551842797-11883-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-Baidu-BdMsfe-DateCheck: 1_M1-MAIL-EX02_2019-03-06 11:23:16:891
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFBhdWwgTW9vcmUgW21h
-aWx0bzpwYXVsQHBhdWwtbW9vcmUuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMTnlubQz5pyINeaX
-pSAyMjoxOA0KPiDmlLbku7bkuro6IExpLFJvbmdxaW5nIDxsaXJvbmdxaW5nQGJhaWR1LmNvbT4N
-Cj4g5oqE6YCBOiBFcmljIFBhcmlzIDxlcGFyaXNAcmVkaGF0LmNvbT47IGxpbnV4LWF1ZGl0QHJl
-ZGhhdC5jb207DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4g5Li76aKYOiBSZTog
-W1BBVENIXSBhdWRpdDogZml4IGEgbWVtbGVhayBjYXVzZWQgYnkgYXVkaXRpbmcgbG9hZCBtb2R1
-bGUNCj4gDQo+IE9uIFR1ZSwgTWFyIDUsIDIwMTkgYXQgNjoxNCBBTSBMaSBSb25nUWluZyA8bGly
-b25ncWluZ0BiYWlkdS5jb20+IHdyb3RlOg0KPiA+IHdlIHNob3VsZCBhbHdheXMgZnJlZSBjb250
-ZXh0LT5tb2R1bGUubmFtZSwgc2luY2UgaXQgd2lsbCBiZSBhbGxvY2F0ZWQNCj4gPiB1bmNvbmRp
-dGlvbmFsbHkgYW5kIGF1ZGl0X2xvZ19zdGFydCgpIGNhbiBmYWlsIHdpdGggb3RoZXIgcmVhc29u
-cywgYW5kDQo+ID4gYXVkaXRfbG9nX2V4aXQgbWF5YmUgbm90IGNhbGxlZA0KPiA+DQo+ID4gdW5y
-ZWZlcmVuY2VkIG9iamVjdCAweGZmZmY4OGFmOTA4MzdkMjAgKHNpemUgOCk6DQo+ID4gICBjb21t
-ICJtb2Rwcm9iZSIsIHBpZCAxMDM2LCBqaWZmaWVzIDQyOTQ3MDQ4NjcgKGFnZSAzMDY5LjEzOHMp
-DQo+ID4gICBoZXggZHVtcCAoZmlyc3QgOCBieXRlcyk6DQo+ID4gICAgIDY5IDc4IDY3IDYyIDY1
-IDAwIGZmIGZmICAgICAgICAgICAgICAgICAgICAgICAgICBpeGdiZS4uLg0KPiA+ICAgYmFja3Ry
-YWNlOg0KPiA+ICAgICBbPDAwMDAwMDAwMDhkYTI4ZmU+XSBfX2F1ZGl0X2xvZ19rZXJuX21vZHVs
-ZSsweDMzLzB4ODANCj4gPiAgICAgWzwwMDAwMDAwMGMxNDkxZTYxPl0gbG9hZF9tb2R1bGUrMHg2
-NGYvMHgzODUwDQo+ID4gICAgIFs8MDAwMDAwMDA3ZmM5YWUzZj5dIF9fZG9fc3lzX2luaXRfbW9k
-dWxlKzB4MjE4LzB4MjUwDQo+ID4gICAgIFs8MDAwMDAwMDAwMGQ0YTQ3OD5dIGRvX3N5c2NhbGxf
-NjQrMHgxMTcvMHg0MDANCj4gPiAgICAgWzwwMDAwMDAwMDQ5MjRkZWQ4Pl0gZW50cnlfU1lTQ0FM
-TF82NF9hZnRlcl9od2ZyYW1lKzB4NDkvMHhiZQ0KPiA+ICAgICBbPDAwMDAwMDAwN2RjMzMxZGQ+
-XSAweGZmZmZmZmZmZmZmZmZmZmYNCj4gPg0KPiA+IEZpeGVzOiBjYTg2Y2FkNzM4MGUzICgiYXVk
-aXQ6IGxvZyBtb2R1bGUgbmFtZSBvbiBpbml0X21vZHVsZSIpDQo+ID4gU2lnbmVkLW9mZi1ieTog
-WmhhbmcgWXUgPHpoYW5neXUzMUBiYWlkdS5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgUm9u
-Z1FpbmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPg0KPiA+IC0tLQ0KPiA+ICBrZXJuZWwvYXVkaXRz
-Yy5jIHwgMjIgKysrKysrKysrKysrKysrKysrKystLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjAg
-aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9rZXJu
-ZWwvYXVkaXRzYy5jIGIva2VybmVsL2F1ZGl0c2MuYyBpbmRleA0KPiA+IGIyZDFmMDQzZi4uMmJk
-ODAzNzVmIDEwMDY0NA0KPiA+IC0tLSBhL2tlcm5lbC9hdWRpdHNjLmMNCj4gPiArKysgYi9rZXJu
-ZWwvYXVkaXRzYy5jDQo+ID4gQEAgLTExODYsOCArMTE4NiwxMyBAQCBzdGF0aWMgdm9pZCBzaG93
-X3NwZWNpYWwoc3RydWN0IGF1ZGl0X2NvbnRleHQNCj4gKmNvbnRleHQsIGludCAqY2FsbF9wYW5p
-YykNCj4gPiAgICAgICAgIGludCBpOw0KPiA+DQo+ID4gICAgICAgICBhYiA9IGF1ZGl0X2xvZ19z
-dGFydChjb250ZXh0LCBHRlBfS0VSTkVMLCBjb250ZXh0LT50eXBlKTsNCj4gPiAtICAgICAgIGlm
-ICghYWIpDQo+ID4gKyAgICAgICBpZiAoIWFiKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChj
-b250ZXh0LT50eXBlID09IEFVRElUX0tFUk5fTU9EVUxFKSB7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAga2ZyZWUoY29udGV4dC0+bW9kdWxlLm5hbWUpOw0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGNvbnRleHQtPm1vZHVsZS5uYW1lID0gTlVMTDsNCj4gPiArICAgICAgICAgICAg
-ICAgfQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm47DQo+ID4gKyAgICAgICB9DQo+IA0KPiBI
-ZWxsby4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBhdGNoLCBidXQgSSBoYXZlIHRvIGFzayBpZiB5
-b3UndmUgY29uc2lkZXJlZCBmcmVlaW5nIHRoZSBtb2R1bGUNCj4gbmFtZSBpbiBhdWRpdF9mcmVl
-X2NvbnRleHQoKT8gIFRoYXQgc2VlbXMgbGlrZSB0aGUgY29ycmVjdCB3YXkgdG8gc29sdmUgdGhp
-cw0KPiBpc3N1ZS4NCj4gDQoNCkl0IGRvZXMgbm90IHdvcmsgdGhhdCBtb3ZlIHRoZSBmcmVlaW5n
-IG9mIG1vZHVsZS5uYW1lIGluIGF1ZGl0X2ZyZWVfY29udGV4dA0KDQpTaW5jZSB3ZSBzaG91bGQg
-ZnJlZSBtb2R1bGUubmFtZSBiYXNlZCBvbiBjb250ZXh0LT50eXBlcyBpcyBBVURJVF9LRVJOX01P
-RFVMRSwgDQpidXQgX19hdWRpdF9zeXNjYWxsX2V4aXQgaXMgY2FsbGVkIGZpcnN0LCBhbmQgd2ls
-bCBzZXQgY29udGV4dC0+dHlwZSB0byAwLA0KV2hlbiBhdWRpdF9mcmVlX2NvbnRleHQgaXMgY2Fs
-bGVkLCBjb250ZXh0LT50eXBlIGlzIDAsIHdpbGwgY2F1c2UgdG8gZmFpbC4NCg0KSSB3aWxsIGNo
-YW5nZSB0aGlzIHBhdGNoZXMgYXMgYmVsb3c6DQoNCmNvbW1pdCBlZTMyZWMyMzU0YjQ3YTgyNGU1
-ZTYzZDRmNDY1NjdkNTc3YTAyODI0IChIRUFEIC0+IG1hc3RlcikNCkF1dGhvcjogTGkgUm9uZ1Fp
-bmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPg0KRGF0ZTogICBUdWUgTWFyIDUgMTU6NDI6MDkgMjAx
-OSArMDgwMA0KDQogICAgYXVkaXQ6IGZpeCBhIG1lbWxlYWsgY2F1c2VkIGJ5IGF1ZGl0aW5nIGxv
-YWQgbW9kdWxlDQogICAgDQogICAgbW9kdWxlLm5hbWUgd2lsbCBiZSBhbGxvY2F0ZWQgdW5jb25k
-aXRpb25hbGx5IHdoZW4gYXVkaXRpbmcgbG9hZA0KICAgIG1vZHVsZSwgYW5kIGF1ZGl0X2xvZ19z
-dGFydCgpIGNhbiBmYWlsIHdpdGggb3RoZXIgcmVhc29ucywgb3INCiAgICBhdWRpdF9sb2dfZXhp
-dCBtYXliZSBub3QgY2FsbGVkLCBjYXVzZWQgbW9kdWxlLm5hbWUgaXMgcmVsZWFzZWQNCiAgICAN
-CiAgICBzbyBhbHdheXMgZnJlZSBtb2R1bGUubmFtZSBpbiBhdWRpdF9mcmVlX2NvbnRleHQNCiAg
-ICANCiAgICB1bnJlZmVyZW5jZWQgb2JqZWN0IDB4ZmZmZjg4YWY5MDgzN2QyMCAoc2l6ZSA4KToN
-CiAgICAgIGNvbW0gIm1vZHByb2JlIiwgcGlkIDEwMzYsIGppZmZpZXMgNDI5NDcwNDg2NyAoYWdl
-IDMwNjkuMTM4cykNCiAgICAgIGhleCBkdW1wIChmaXJzdCA4IGJ5dGVzKToNCiAgICAgICAgNjkg
-NzggNjcgNjIgNjUgMDAgZmYgZmYgICAgICAgICAgICAgICAgICAgICAgICAgIGl4Z2JlLi4uDQog
-ICAgICBiYWNrdHJhY2U6DQogICAgICAgIFs8MDAwMDAwMDAwOGRhMjhmZT5dIF9fYXVkaXRfbG9n
-X2tlcm5fbW9kdWxlKzB4MzMvMHg4MA0KICAgICAgICBbPDAwMDAwMDAwYzE0OTFlNjE+XSBsb2Fk
-X21vZHVsZSsweDY0Zi8weDM4NTANCiAgICAgICAgWzwwMDAwMDAwMDdmYzlhZTNmPl0gX19kb19z
-eXNfaW5pdF9tb2R1bGUrMHgyMTgvMHgyNTANCiAgICAgICAgWzwwMDAwMDAwMDAwZDRhNDc4Pl0g
-ZG9fc3lzY2FsbF82NCsweDExNy8weDQwMA0KICAgICAgICBbPDAwMDAwMDAwNDkyNGRlZDg+XSBl
-bnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0OS8weGJlDQogICAgICAgIFs8MDAwMDAw
-MDA3ZGMzMzFkZD5dIDB4ZmZmZmZmZmZmZmZmZmZmZg0KICAgIA0KICAgIEZpeGVzOiBjYTg2Y2Fk
-NzM4MGUzICgiYXVkaXQ6IGxvZyBtb2R1bGUgbmFtZSBvbiBpbml0X21vZHVsZSIpDQogICAgU2ln
-bmVkLW9mZi1ieTogWmhhbmcgWXUgPHpoYW5neXUzMUBiYWlkdS5jb20+DQogICAgU2lnbmVkLW9m
-Zi1ieTogTGkgUm9uZ1FpbmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPg0KDQpkaWZmIC0tZ2l0IGEv
-a2VybmVsL2F1ZGl0c2MuYyBiL2tlcm5lbC9hdWRpdHNjLmMNCmluZGV4IGIyZDFmMDQzZi4uMDc3
-MjhiMDdhIDEwMDY0NA0KLS0tIGEva2VybmVsL2F1ZGl0c2MuYw0KKysrIGIva2VybmVsL2F1ZGl0
-c2MuYw0KQEAgLTk2NCw2ICs5NjQsOSBAQCBpbnQgYXVkaXRfYWxsb2Moc3RydWN0IHRhc2tfc3Ry
-dWN0ICp0c2spDQogDQogc3RhdGljIGlubGluZSB2b2lkIGF1ZGl0X2ZyZWVfY29udGV4dChzdHJ1
-Y3QgYXVkaXRfY29udGV4dCAqY29udGV4dCkNCiB7DQorICAgICAgIGlmIChjb250ZXh0LT50eXBl
-ID09IEFVRElUX0tFUk5fTU9EVUxFKQ0KKyAgICAgICAgICAgICAgIGtmcmVlKGNvbnRleHQtPm1v
-ZHVsZS5uYW1lKTsNCisNCiAgICAgICAgYXVkaXRfZnJlZV9uYW1lcyhjb250ZXh0KTsNCiAgICAg
-ICAgdW5yb2xsX3RyZWVfcmVmcyhjb250ZXh0LCBOVUxMLCAwKTsNCiAgICAgICAgZnJlZV90cmVl
-X3JlZnMoY29udGV4dCk7DQpAQCAtMTI4Miw2ICsxMjg1LDggQEAgc3RhdGljIHZvaWQgc2hvd19z
-cGVjaWFsKHN0cnVjdCBhdWRpdF9jb250ZXh0ICpjb250ZXh0LCBpbnQgKmNhbGxfcGFuaWMpDQog
-ICAgICAgICAgICAgICAgaWYgKGNvbnRleHQtPm1vZHVsZS5uYW1lKSB7DQogICAgICAgICAgICAg
-ICAgICAgICAgICBhdWRpdF9sb2dfdW50cnVzdGVkc3RyaW5nKGFiLCBjb250ZXh0LT5tb2R1bGUu
-bmFtZSk7DQogICAgICAgICAgICAgICAgICAgICAgICBrZnJlZShjb250ZXh0LT5tb2R1bGUubmFt
-ZSk7DQorICAgICAgICAgICAgICAgICAgICAgICBjb250ZXh0LT5tb2R1bGUubmFtZSA9IE5VTEw7
-DQorICAgICAgICAgICAgICAgICAgICAgICBjb250ZXh0LT50eXBlID0gMDsNCiAgICAgICAgICAg
-ICAgICB9IGVsc2UNCiAgICAgICAgICAgICAgICAgICAgICAgIGF1ZGl0X2xvZ19mb3JtYXQoYWIs
-ICIobnVsbCkiKTsNCiANCkBAIC0xNTgzLDYgKzE1ODgsMTEgQEAgdm9pZCBfX2F1ZGl0X3N5c2Nh
-bGxfZXhpdChpbnQgc3VjY2VzcywgbG9uZyByZXR1cm5fY29kZSkNCiAgICAgICAgaWYgKCFsaXN0
-X2VtcHR5KCZjb250ZXh0LT5raWxsZWRfdHJlZXMpKQ0KICAgICAgICAgICAgICAgIGF1ZGl0X2tp
-bGxfdHJlZXMoJmNvbnRleHQtPmtpbGxlZF90cmVlcyk7DQogDQorICAgICAgIGlmIChjb250ZXh0
-LT50eXBlID09IEFVRElUX0tFUk5fTU9EVUxFKSB7DQorICAgICAgICAgICAgICAga2ZyZWUoY29u
-dGV4dC0+bW9kdWxlLm5hbWUpOw0KKyAgICAgICAgICAgICAgIGNvbnRleHQtPm1vZHVsZS5uYW1l
-ID0gTlVMTDsNCisgICAgICAgfQ0KKw0KICAgICAgICBhdWRpdF9mcmVlX25hbWVzKGNvbnRleHQp
-Ow0KICAgICAgICB1bnJvbGxfdHJlZV9yZWZzKGNvbnRleHQsIE5VTEwsIDApOw0KICAgICAgICBh
-dWRpdF9mcmVlX2F1eChjb250ZXh0KTsNCg0KDQotUm9uZ1FpbmcgDQoNCj4gLVBhdWwNCj4gDQo+
-IC0tDQo+IHBhdWwgbW9vcmUNCj4gd3d3LnBhdWwtbW9vcmUuY29tDQo=
+From: Jian Shen <shenjian15@huawei.com>
+
+HW can not guarantee complete write desc->rx.size, even though
+HNS3_RXD_VLD_B has been set. Driver needs to add dma_rmb()
+instruction to make sure desc->rx.size is always valid.
+
+Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+V1->V2: fixes comment from David Miller
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 3cb43b1..3b8598a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2472,6 +2472,8 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+ 		desc = &ring->desc[ring->next_to_clean];
+ 		desc_cb = &ring->desc_cb[ring->next_to_clean];
+ 		bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
++		/* make sure HW write desc complete */
++		dma_rmb();
+ 		if (!(bd_base_info & BIT(HNS3_RXD_VLD_B)))
+ 			return -ENXIO;
+ 
+-- 
+2.7.4
+
