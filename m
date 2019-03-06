@@ -2,83 +2,210 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2100C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE68AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3AD20684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0E320684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 10:56:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YStbOKY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfCFKyZ (ORCPT
+        id S1730165AbfCFK45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 05:54:25 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:37525 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfCFKyY (ORCPT
+        Wed, 6 Mar 2019 05:56:57 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38672 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfCFK45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 05:54:24 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MowT0-1hJTvh10Fa-00qRCV; Wed, 06 Mar 2019 11:54:19 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     netdev@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] appletalk: Add atalk.h header files to MAINTAINERS file
-Date:   Wed,  6 Mar 2019 11:52:37 +0100
-Message-Id: <20190306105249.2165038-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190306105249.2165038-1-arnd@arndb.de>
-References: <20190306105249.2165038-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:JMQw8Awr6G37WwGOfVRwI4KS6Q79JUrX0ye3tEGwB2Is07dQswW
- U096LGjc11M2HHZMAX3ztLB8/5+mJbdkvUI8woQVTwTSxn6RguLYCVckjBwD7yrlyqui/4Z
- BxDILTNak6DlObJ38kVO++ov1t158Zz67G1vN+bXyM7g+Nlh9BuvhcA/2mAfZ88yiJUsOCf
- hEMdij6/nKTq1HTm39VrQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CWyEpVprRso=:lEics7Ifb7ACrlAX8wzrvJ
- qOYakD+39zQIZzmBhXlr09D0bcsnnGnu9VBauOHWiACVcj7BxBZugNOgX0rVJwNLgkj0kuwv+
- /l0YRuHLLnCW/I8fHgTAkmNfDJJlrYzFmxpfi5Gzo8LmLfDHLlwDDi0rJr/DXZgxjGjDr+Cdn
- XLLGoSOMcRiqmQv9M7wUl5lTDRzwOqspuiLAfFhP3nz3eorzynhmCVrX0pTapkUC7SO24Wnbt
- 3dQz6VcHbbMWv1RYYsiamxnSBOmGEk181cCUcQczYtkbnMQib36nvaBYhUbIciUVlBkeCn+t5
- /GwMHnn0p0mo706YEnVMOD7RS1atmRP4yj0135eBUKjV2qMtya5Bol5TjvEqRzX/tTZZsRIag
- QdQVVtiAoON12Nrm65yW6fMvFjqZHeZcX+n8Henacdsvqjiz69zrHbRNDwqgJUpnYadqMA4nj
- BaXRqQoXc1+y9d1MOEVjvFHLD2W49F24REwCAqtitZkM0KWBHonSkuveafi+5ZJBWrjVGHtdm
- fMKxU7OKu3CuoeYHJelrMKroYdwdsqZz6rmI+qeomz79bnLvxtcx5ikmyTriN68x5iTMzoqRn
- KYgtqgSEGKTsTXmc7qYhxVocwd1s/pIOnqAMrryEjxUDhhrVno0QlVT2K0Ha52/IaV7qQQn0C
- pHbK8LqbETU2cM8SYEx49zLf8Epli1GHeaow0x5GYSDXawOhY6kyMRHDxzE2jvdP7qg57S/Cu
- /OthPbCbMj83kjE/s6DUgWsCGdH7s2r2gVz1fA==
+        Wed, 6 Mar 2019 05:56:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a188so5387001wmf.3;
+        Wed, 06 Mar 2019 02:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:mime-version:subject:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=gFMy4yKGmwRBdn1oGAfnbpGsUUHokTp7MYJG67jJIv8=;
+        b=YStbOKY2rA1qaeoZNioqvQlDymdnkW28AEDFz4M6byT4SIPNasLc3L+LA11thqnyE9
+         sWOqbu7IOlk+aUjpYRnE3fAJG/nJ4TeDQ1SUd8/nIPiDKN+MdPjYiHv4+vIh+vfjA07s
+         uKK91oy7ZS6HswFlct2O339LoJdkCuzlGrBtLH6lnX4afhvieD0dFvLxgwZ3tIf9K3fG
+         AHE4Ny9ve8ALXF9VJXGLyrn/e/SYsDd2u10UKHlSW9eBDZER5iMzFAVYQSN3up+kFFIC
+         7MLbZNaxUoGTfGjLWSONKJo5ptmLdFXqKid89g/69kvMp0Mgkr8fu/yIwR4tHxsowiOp
+         0pSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:mime-version:subject:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=gFMy4yKGmwRBdn1oGAfnbpGsUUHokTp7MYJG67jJIv8=;
+        b=LrQDoAh59iel0Nrng+l5LQIzTHs92H4xeSzhcKal2z2uuNnz8Gubg3meu/VCrcfFaq
+         rIa4T4pZgTlp8WAfeNSg7mVf6yOQOXjWijzzFMnbCZk3qaSe87tW4zNBzRF7W6Qm6Yf9
+         ZWD4OmnL4L599YZmLJh4xPF/wtwP2JUMLBYFvYPOHAJe96/KVZL61AM++kHIxLDeAID4
+         rxnz8qNkTRBEkRl2Pw5f4B9L8qaeoVumvcTuvrsBq6lHt3DoaYuJ7kkR4ogXQhFFvjAF
+         4kd9Lw1lYNwF8SkinoxRSMcwv4yeX4muPDc06TT2WLPmA80+amwvWqtQorgxWCFmaG+A
+         CS4Q==
+X-Gm-Message-State: APjAAAUTGqIrC0roUr8EgW+9ABqHu74bCw7gBoOKDfuu3tqF9ObE2YoL
+        ykKMBR4AIyyYbrtCjG4TMqOCMQuG
+X-Google-Smtp-Source: APXvYqxew9xO+g2MmJASOG7KsbOm4KUtyLBdg2SjHTlceW73LGPVilfYbBxMcZE3ULKxRQTcA7MNfw==
+X-Received: by 2002:a1c:cf41:: with SMTP id f62mr2084998wmg.1.1551869814219;
+        Wed, 06 Mar 2019 02:56:54 -0800 (PST)
+Received: from [192.168.77.22] (val06-1-88-182-161-34.fbx.proxad.net. [88.182.161.34])
+        by smtp.gmail.com with ESMTPSA id t202sm5032798wmt.0.2019.03.06.02.56.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 02:56:53 -0800 (PST)
+From:   Christophe de Dinechin <christophe.de.dinechin@gmail.com>
+X-Google-Original-From: Christophe de Dinechin <christophe@dinechin.org>
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [RFC PATCH V2 4/5] vhost: introduce helpers to get the size of
+ metadata area
+In-Reply-To: <1551856692-3384-5-git-send-email-jasowang@redhat.com>
+Date:   Wed, 6 Mar 2019 11:56:48 +0100
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, aarcange@redhat.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <608E47C2-5130-41DE-9D52-02807EBCDD43@dinechin.org>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-5-git-send-email-jasowang@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the path names here so that git-send-email can pick up the
-netdev@vger.kernel.org Cc line automatically for a patch that
-only touches the headers.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1e64279f338a..1f344f0c2254 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1059,6 +1059,8 @@ L:	netdev@vger.kernel.org
- S:	Odd fixes
- F:	drivers/net/appletalk/
- F:	net/appletalk/
-+F:	include/linux/atalk.h
-+F:	include/uapi/linux/atalk.h
- 
- APPLIED MICRO (APM) X-GENE DEVICE TREE SUPPORT
- M:	Khuong Dinh <khuong@os.amperecomputing.com>
--- 
-2.20.0
+> On 6 Mar 2019, at 08:18, Jason Wang <jasowang@redhat.com> wrote:
+>=20
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+> drivers/vhost/vhost.c | 46 =
+++++++++++++++++++++++++++++------------------
+> 1 file changed, 28 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 2025543..1015464 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -413,6 +413,27 @@ static void vhost_dev_free_iovecs(struct =
+vhost_dev *dev)
+> 		vhost_vq_free_iovecs(dev->vqs[i]);
+> }
+>=20
+> +static size_t vhost_get_avail_size(struct vhost_virtqueue *vq, int =
+num)
+
+Nit: Any reason not to make `num` unsigned or size_t?
+
+> +{
+> +	size_t event =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) =
+? 2 : 0;
+> +
+> +	return sizeof(*vq->avail) +
+> +	       sizeof(*vq->avail->ring) * num + event;
+> +}
+> +
+> +static size_t vhost_get_used_size(struct vhost_virtqueue *vq, int =
+num)
+> +{
+> +	size_t event =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) =
+? 2 : 0;
+> +
+> +	return sizeof(*vq->used) +
+> +	       sizeof(*vq->used->ring) * num + event;
+> +}
+> +
+> +static size_t vhost_get_desc_size(struct vhost_virtqueue *vq, int =
+num)
+> +{
+> +	return sizeof(*vq->desc) * num;
+> +}
+> +
+> void vhost_dev_init(struct vhost_dev *dev,
+> 		    struct vhost_virtqueue **vqs, int nvqs, int =
+iov_limit)
+> {
+> @@ -1253,13 +1274,9 @@ static bool vq_access_ok(struct vhost_virtqueue =
+*vq, unsigned int num,
+> 			 struct vring_used __user *used)
+>=20
+> {
+> -	size_t s =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 =
+: 0;
+> -
+> -	return access_ok(desc, num * sizeof *desc) &&
+> -	       access_ok(avail,
+> -			 sizeof *avail + num * sizeof *avail->ring + s) =
+&&
+> -	       access_ok(used,
+> -			sizeof *used + num * sizeof *used->ring + s);
+> +	return access_ok(desc, vhost_get_desc_size(vq, num)) &&
+> +	       access_ok(avail, vhost_get_avail_size(vq, num)) &&
+> +	       access_ok(used, vhost_get_used_size(vq, num));
+> }
+>=20
+> static void vhost_vq_meta_update(struct vhost_virtqueue *vq,
+> @@ -1311,22 +1328,18 @@ static bool iotlb_access_ok(struct =
+vhost_virtqueue *vq,
+>=20
+> int vq_meta_prefetch(struct vhost_virtqueue *vq)
+> {
+> -	size_t s =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 =
+: 0;
+> 	unsigned int num =3D vq->num;
+>=20
+> 	if (!vq->iotlb)
+> 		return 1;
+>=20
+> 	return iotlb_access_ok(vq, VHOST_ACCESS_RO, =
+(u64)(uintptr_t)vq->desc,
+> -			       num * sizeof(*vq->desc), VHOST_ADDR_DESC) =
+&&
+> +			       vhost_get_desc_size(vq, num), =
+VHOST_ADDR_DESC) &&
+> 	       iotlb_access_ok(vq, VHOST_ACCESS_RO, =
+(u64)(uintptr_t)vq->avail,
+> -			       sizeof *vq->avail +
+> -			       num * sizeof(*vq->avail->ring) + s,
+> +			       vhost_get_avail_size(vq, num),
+> 			       VHOST_ADDR_AVAIL) &&
+> 	       iotlb_access_ok(vq, VHOST_ACCESS_WO, =
+(u64)(uintptr_t)vq->used,
+> -			       sizeof *vq->used +
+> -			       num * sizeof(*vq->used->ring) + s,
+> -			       VHOST_ADDR_USED);
+> +			       vhost_get_used_size(vq, num), =
+VHOST_ADDR_USED);
+> }
+> EXPORT_SYMBOL_GPL(vq_meta_prefetch);
+>=20
+> @@ -1343,13 +1356,10 @@ bool vhost_log_access_ok(struct vhost_dev =
+*dev)
+> static bool vq_log_access_ok(struct vhost_virtqueue *vq,
+> 			     void __user *log_base)
+> {
+> -	size_t s =3D vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 =
+: 0;
+> -
+> 	return vq_memory_access_ok(log_base, vq->umem,
+> 				   vhost_has_feature(vq, =
+VHOST_F_LOG_ALL)) &&
+> 		(!vq->log_used || log_access_ok(log_base, vq->log_addr,
+> -					sizeof *vq->used +
+> -					vq->num * sizeof *vq->used->ring =
++ s));
+> +				  vhost_get_used_size(vq, vq->num)));
+> }
+>=20
+> /* Can we start vq? */
+> --=20
+> 1.8.3.1
+>=20
 
