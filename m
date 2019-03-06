@@ -4,230 +4,649 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13184C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A36C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E063720675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6075A20828
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 08:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbfCFI44 (ORCPT
+        id S1729178AbfCFI61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 03:56:56 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27460 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729561AbfCFI4X (ORCPT
+        Wed, 6 Mar 2019 03:58:27 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:37906 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbfCFI60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 03:56:23 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x268sqWU015101;
-        Wed, 6 Mar 2019 09:55:50 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhgaxr3b-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 06 Mar 2019 09:55:50 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AD89634;
-        Wed,  6 Mar 2019 08:55:49 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7FCA62407;
-        Wed,  6 Mar 2019 08:55:49 +0000 (GMT)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 6 Mar 2019 09:55:48
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
-Subject: [PATCH 3/8] iio: adc: stm32-dfsdm: move dma enable from start_conv() to start_dma()
-Date:   Wed, 6 Mar 2019 09:55:19 +0100
-Message-ID: <1551862524-25098-4-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551862524-25098-1-git-send-email-fabrice.gasnier@st.com>
-References: <1551862524-25098-1-git-send-email-fabrice.gasnier@st.com>
+        Wed, 6 Mar 2019 03:58:26 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x268wB9p004921, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtitcasv01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x268wB9p004921
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
+        Wed, 6 Mar 2019 16:58:11 +0800
+Received: from localhost (172.22.88.128) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
+ 16:58:10 +0800
+From:   <ricky_wu@realtek.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <colin.king@canonical.com>, <axboe@kernel.dk>,
+        <linux-kernel@vger.kernel.org>
+CC:     RickyWu <ricky_wu@realtek.com>
+Subject: [PATCH v2] misc: rtsx: Enable OCP for rts522a rts524a rts525a rts5260
+Date:   Wed, 6 Mar 2019 16:57:50 +0800
+Message-ID: <20190306085750.2387-1-ricky_wu@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_04:,,
- signatures=0
+X-Originating-IP: [172.22.88.128]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move DMA enable (e.g. set RDMAEN bit) away from start_conv() that is used
-for both buffer and single conversions. Thus, single conv rely on
-interrupt, not dma.
-Note: take care to prepare all DMA stuff and set RDMAEN before starting
-filter (can be set only when DFEN=0).
+From: RickyWu <ricky_wu@realtek.com>
 
-This is precursor patch to ease support of triggered buffer mode.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+this enables and adds OCP function for Realtek A series cardreader chips
+and fixes some OCP flow in rts5260.c
+Signed-off-by: RickyWu <ricky_wu@realtek.com>
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c | 77 +++++++++++++++++++--------------------
- 1 file changed, 38 insertions(+), 39 deletions(-)
+ drivers/misc/cardreader/rts5227.c  |  64 +++++++++++---
+ drivers/misc/cardreader/rts5249.c  |  32 +++++--
+ drivers/misc/cardreader/rts5260.c  | 134 +++++++++++------------------
+ drivers/misc/cardreader/rtsx_pcr.c |  40 +++++++--
+ drivers/misc/cardreader/rtsx_pcr.h |   5 ++
+ 5 files changed, 164 insertions(+), 111 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 8690672..818627f 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -429,12 +429,10 @@ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
+diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+index 024dcba8d6c8..5c98e2221889 100644
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -170,35 +170,46 @@ static int rts5227_card_power_on(struct rtsx_pcr *pcr, int card)
+ {
+ 	int err;
+ 
++	if (pcr->option.ocp_en)
++		rtsx_pci_enable_ocp(pcr);
++
+ 	rtsx_pci_init_cmd(pcr);
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
+ 			SD_POWER_MASK, SD_PARTIAL_POWER_ON);
++
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
+ 			LDO3318_PWR_MASK, 0x02);
++
+ 	err = rtsx_pci_send_cmd(pcr, 100);
+ 	if (err < 0)
+ 		return err;
+ 
+ 	/* To avoid too large in-rush current */
+-	udelay(150);
+-
++	msleep(20);
+ 	rtsx_pci_init_cmd(pcr);
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
+ 			SD_POWER_MASK, SD_POWER_ON);
++
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
+ 			LDO3318_PWR_MASK, 0x06);
++
++	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_OE,
++			SD_OUTPUT_EN, SD_OUTPUT_EN);
++	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_OE,
++			MS_OUTPUT_EN, MS_OUTPUT_EN);
+ 	return rtsx_pci_send_cmd(pcr, 100);
  }
  
- static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc,
--				  const struct iio_chan_spec *chan,
--				  bool dma)
-+				  const struct iio_chan_spec *chan)
+ static int rts5227_card_power_off(struct rtsx_pcr *pcr, int card)
  {
- 	struct regmap *regmap = adc->dfsdm->regmap;
- 	int ret;
--	unsigned int dma_en = 0;
+-	rtsx_pci_init_cmd(pcr);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
+-			SD_POWER_MASK | PMOS_STRG_MASK,
+-			SD_POWER_OFF | PMOS_STRG_400mA);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
+-			LDO3318_PWR_MASK, 0X00);
+-	return rtsx_pci_send_cmd(pcr, 100);
++	if (pcr->option.ocp_en)
++		rtsx_pci_disable_ocp(pcr);
++
++	rtsx_pci_write_register(pcr, CARD_PWR_CTL, SD_POWER_MASK |
++			PMOS_STRG_MASK, SD_POWER_OFF | PMOS_STRG_400mA);
++	rtsx_pci_write_register(pcr, PWR_GATE_CTRL, LDO3318_PWR_MASK, 0X00);
++
++	return 0;
+ }
  
- 	ret = stm32_dfsdm_start_channel(adc->dfsdm, chan->channel);
- 	if (ret < 0)
-@@ -444,25 +442,12 @@ static int stm32_dfsdm_start_conv(struct stm32_dfsdm_adc *adc,
- 	if (ret < 0)
- 		goto stop_channels;
- 
--	if (dma) {
--		/* Enable DMA transfer*/
--		dma_en =  DFSDM_CR1_RDMAEN(1);
--	}
--	/* Enable DMA transfer*/
--	ret = regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--				 DFSDM_CR1_RDMAEN_MASK, dma_en);
--	if (ret < 0)
--		goto filter_unconfigure;
--
- 	ret = stm32_dfsdm_start_filter(adc->dfsdm, adc->fl_id);
- 	if (ret < 0)
--		goto stop_dma;
-+		goto filter_unconfigure;
- 
+ static int rts5227_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
+@@ -348,6 +359,32 @@ static int rts522a_extra_init_hw(struct rtsx_pcr *pcr)
  	return 0;
+ }
  
--stop_dma:
--	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_RDMAEN_MASK, 0);
- filter_unconfigure:
- 	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
- 			   DFSDM_CR1_CFG_MASK, 0);
-@@ -479,10 +464,6 @@ static void stm32_dfsdm_stop_conv(struct stm32_dfsdm_adc *adc,
- 
- 	stm32_dfsdm_stop_filter(adc->dfsdm, adc->fl_id);
- 
--	/* Clean conversion options */
--	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
--			   DFSDM_CR1_RDMAEN_MASK, 0);
--
- 	regmap_update_bits(regmap, DFSDM_CR1(adc->fl_id),
- 			   DFSDM_CR1_CFG_MASK, 0);
- 
-@@ -599,15 +580,36 @@ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
- 
- 	cookie = dmaengine_submit(desc);
- 	ret = dma_submit_error(cookie);
--	if (ret) {
--		dmaengine_terminate_all(adc->dma_chan);
--		return ret;
--	}
-+	if (ret)
-+		goto err_stop_dma;
- 
- 	/* Issue pending DMA requests */
- 	dma_async_issue_pending(adc->dma_chan);
- 
-+	/* Enable DMA transfer*/
-+	ret = regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR1(adc->fl_id),
-+				 DFSDM_CR1_RDMAEN_MASK, DFSDM_CR1_RDMAEN_MASK);
-+	if (ret < 0)
-+		goto err_stop_dma;
++static int rts522a_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
++{
++	int err;
 +
- 	return 0;
++	if (voltage == OUTPUT_3V3) {
++		err = rtsx_pci_write_phy_register(pcr, 0x08, 0x57E4);
++		if (err < 0)
++			return err;
++	} else if (voltage == OUTPUT_1V8) {
++		err = rtsx_pci_write_phy_register(pcr, 0x11, 0x3C02);
++		if (err < 0)
++			return err;
++		err = rtsx_pci_write_phy_register(pcr, 0x08, 0x54A4);
++		if (err < 0)
++			return err;
++	} else {
++		return -EINVAL;
++	}
 +
-+err_stop_dma:
-+	dmaengine_terminate_all(adc->dma_chan);
-+
-+	return ret;
++	/* set pad drive */
++	rtsx_pci_init_cmd(pcr);
++	rts5227_fill_driving(pcr, voltage);
++	return rtsx_pci_send_cmd(pcr, 100);
 +}
 +
-+static void stm32_dfsdm_adc_dma_stop(struct iio_dev *indio_dev)
-+{
-+	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
 +
-+	if (!adc->dma_chan)
-+		return;
+ /* rts522a operations mainly derived from rts5227, except phy/hw init setting.
+  */
+ static const struct pcr_ops rts522a_pcr_ops = {
+@@ -360,7 +397,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
+ 	.disable_auto_blink = rts5227_disable_auto_blink,
+ 	.card_power_on = rts5227_card_power_on,
+ 	.card_power_off = rts5227_card_power_off,
+-	.switch_output_voltage = rts5227_switch_output_voltage,
++	.switch_output_voltage = rts522a_switch_output_voltage,
+ 	.cd_deglitch = NULL,
+ 	.conv_clk_and_div_n = NULL,
+ 	.force_power_down = rts5227_force_power_down,
+@@ -371,4 +408,11 @@ void rts522a_init_params(struct rtsx_pcr *pcr)
+ 	rts5227_init_params(pcr);
+ 
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
 +
-+	regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR1(adc->fl_id),
-+			   DFSDM_CR1_RDMAEN_MASK, 0);
-+	dmaengine_terminate_all(adc->dma_chan);
++	pcr->option.ocp_en = 1;
++	if (pcr->option.ocp_en)
++		pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
++	pcr->hw_param.ocp_glitch = SD_OCP_GLITCH_10M;
++	pcr->option.sd_800mA_ocp_thd = RTS522A_OCP_THD_800;
++
+ }
+diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+index dbe013abdb83..0f72a7e0fdab 100644
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -284,6 +284,10 @@ static int rtsx_base_disable_auto_blink(struct rtsx_pcr *pcr)
+ static int rtsx_base_card_power_on(struct rtsx_pcr *pcr, int card)
+ {
+ 	int err;
++	struct rtsx_cr_option *option = &pcr->option;
++
++	if (option->ocp_en)
++		rtsx_pci_enable_ocp(pcr);
+ 
+ 	rtsx_pci_init_cmd(pcr);
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
+@@ -306,12 +310,15 @@ static int rtsx_base_card_power_on(struct rtsx_pcr *pcr, int card)
+ 
+ static int rtsx_base_card_power_off(struct rtsx_pcr *pcr, int card)
+ {
+-	rtsx_pci_init_cmd(pcr);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
+-			SD_POWER_MASK, SD_POWER_OFF);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
+-			LDO3318_PWR_MASK, 0x00);
+-	return rtsx_pci_send_cmd(pcr, 100);
++	struct rtsx_cr_option *option = &pcr->option;
++
++	if (option->ocp_en)
++		rtsx_pci_disable_ocp(pcr);
++
++	rtsx_pci_write_register(pcr, CARD_PWR_CTL, SD_POWER_MASK, SD_POWER_OFF);
++
++	rtsx_pci_write_register(pcr, PWR_GATE_CTRL, LDO3318_PWR_MASK, 0x00);
++	return 0;
  }
  
- static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
-@@ -623,24 +625,22 @@ static int stm32_dfsdm_postenable(struct iio_dev *indio_dev)
- 	if (ret < 0)
- 		return ret;
+ static int rtsx_base_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
+@@ -629,6 +636,13 @@ void rts524a_init_params(struct rtsx_pcr *pcr)
  
--	ret = stm32_dfsdm_start_conv(adc, chan, true);
-+	ret = stm32_dfsdm_adc_dma_start(indio_dev);
- 	if (ret) {
--		dev_err(&indio_dev->dev, "Can't start conversion\n");
-+		dev_err(&indio_dev->dev, "Can't start DMA\n");
- 		goto stop_dfsdm;
- 	}
- 
--	if (adc->dma_chan) {
--		ret = stm32_dfsdm_adc_dma_start(indio_dev);
--		if (ret) {
--			dev_err(&indio_dev->dev, "Can't start DMA\n");
--			goto err_stop_conv;
--		}
-+	ret = stm32_dfsdm_start_conv(adc, chan);
-+	if (ret) {
-+		dev_err(&indio_dev->dev, "Can't start conversion\n");
-+		goto err_stop_dma;
- 	}
- 
- 	return 0;
- 
--err_stop_conv:
--	stm32_dfsdm_stop_conv(adc, chan);
-+err_stop_dma:
-+	stm32_dfsdm_adc_dma_stop(indio_dev);
- stop_dfsdm:
- 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
- 
-@@ -652,11 +652,10 @@ static int stm32_dfsdm_predisable(struct iio_dev *indio_dev)
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
- 	const struct iio_chan_spec *chan = &indio_dev->channels[0];
- 
--	if (adc->dma_chan)
--		dmaengine_terminate_all(adc->dma_chan);
--
- 	stm32_dfsdm_stop_conv(adc, chan);
- 
-+	stm32_dfsdm_adc_dma_stop(indio_dev);
+ 	pcr->reg_pm_ctrl3 = RTS524A_PM_CTRL3;
+ 	pcr->ops = &rts524a_pcr_ops;
 +
- 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
++	pcr->option.ocp_en = 1;
++	if (pcr->option.ocp_en)
++		pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
++	pcr->hw_param.ocp_glitch = SD_OCP_GLITCH_10M;
++	pcr->option.sd_800mA_ocp_thd = RTS524A_OCP_THD_800;
++
+ }
+ 
+ static int rts525a_card_power_on(struct rtsx_pcr *pcr, int card)
+@@ -737,4 +751,10 @@ void rts525a_init_params(struct rtsx_pcr *pcr)
+ 
+ 	pcr->reg_pm_ctrl3 = RTS524A_PM_CTRL3;
+ 	pcr->ops = &rts525a_pcr_ops;
++
++	pcr->option.ocp_en = 1;
++	if (pcr->option.ocp_en)
++		pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
++	pcr->hw_param.ocp_glitch = SD_OCP_GLITCH_10M;
++	pcr->option.sd_800mA_ocp_thd = RTS525A_OCP_THD_800;
+ }
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index a493b01c5bc6..505d0cb42fca 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -64,11 +64,13 @@ static void rts5260_fill_driving(struct rtsx_pcr *pcr, u8 voltage)
+ 		drive_sel = pcr->sd30_drive_sel_1v8;
+ 	}
+ 
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD30_CLK_DRIVE_SEL,
++	rtsx_pci_write_register(pcr, SD30_CLK_DRIVE_SEL,
+ 			 0xFF, driving[drive_sel][0]);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD30_CMD_DRIVE_SEL,
++
++	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
+ 			 0xFF, driving[drive_sel][1]);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD30_DAT_DRIVE_SEL,
++
++	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
+ 			 0xFF, driving[drive_sel][2]);
+ }
+ 
+@@ -193,7 +195,7 @@ static int sd_set_sample_push_timing_sd30(struct rtsx_pcr *pcr)
+ 		| SD_ASYNC_FIFO_NOT_RST, SD_30_MODE | SD_ASYNC_FIFO_NOT_RST);
+ 	rtsx_pci_write_register(pcr, CLK_CTL, CLK_LOW_FREQ, CLK_LOW_FREQ);
+ 	rtsx_pci_write_register(pcr, CARD_CLK_SOURCE, 0xFF,
+-				CRC_VAR_CLK0 | SD30_FIX_CLK | SAMPLE_VAR_CLK1);
++			CRC_VAR_CLK0 | SD30_FIX_CLK | SAMPLE_VAR_CLK1);
+ 	rtsx_pci_write_register(pcr, CLK_CTL, CLK_LOW_FREQ, 0);
  
  	return 0;
-@@ -736,7 +735,7 @@ static int stm32_dfsdm_single_conv(struct iio_dev *indio_dev,
- 	if (ret < 0)
- 		goto stop_dfsdm;
+@@ -207,22 +209,16 @@ static int rts5260_card_power_on(struct rtsx_pcr *pcr, int card)
+ 	if (option->ocp_en)
+ 		rtsx_pci_enable_ocp(pcr);
  
--	ret = stm32_dfsdm_start_conv(adc, chan, false);
-+	ret = stm32_dfsdm_start_conv(adc, chan);
- 	if (ret < 0) {
- 		regmap_update_bits(adc->dfsdm->regmap, DFSDM_CR2(adc->fl_id),
- 				   DFSDM_CR2_REOCIE_MASK, DFSDM_CR2_REOCIE(0));
+-	rtsx_pci_init_cmd(pcr);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_CONFIG2,
+-			 DV331812_VDD1, DV331812_VDD1);
+-	err = rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
+-	if (err < 0)
+-		return err;
+ 
+-	rtsx_pci_init_cmd(pcr);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_VCC_CFG0,
++	rtsx_pci_write_register(pcr, LDO_CONFIG2, DV331812_VDD1, DV331812_VDD1);
++	rtsx_pci_write_register(pcr, LDO_VCC_CFG0,
+ 			 RTS5260_DVCC_TUNE_MASK, RTS5260_DVCC_33);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_VCC_CFG1,
+-			 LDO_POW_SDVDD1_MASK, LDO_POW_SDVDD1_ON);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_CONFIG2,
+-			 DV331812_POWERON, DV331812_POWERON);
+-	err = rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
+ 
++	rtsx_pci_write_register(pcr, LDO_VCC_CFG1, LDO_POW_SDVDD1_MASK,
++			LDO_POW_SDVDD1_ON);
++
++	rtsx_pci_write_register(pcr, LDO_CONFIG2,
++			 DV331812_POWERON, DV331812_POWERON);
+ 	msleep(20);
+ 
+ 	if (pcr->extra_caps & EXTRA_CAPS_SD_SDR50 ||
+@@ -242,8 +238,8 @@ static int rts5260_card_power_on(struct rtsx_pcr *pcr, int card)
+ 	/* Reset SD_CFG3 register */
+ 	rtsx_pci_write_register(pcr, SD_CFG3, SD30_CLK_END_EN, 0);
+ 	rtsx_pci_write_register(pcr, REG_SD_STOP_SDCLK_CFG,
+-				SD30_CLK_STOP_CFG_EN | SD30_CLK_STOP_CFG1 |
+-				SD30_CLK_STOP_CFG0, 0);
++			SD30_CLK_STOP_CFG_EN | SD30_CLK_STOP_CFG1 |
++			SD30_CLK_STOP_CFG0, 0);
+ 
+ 	rtsx_pci_write_register(pcr, REG_PRE_RW_MODE, EN_INFINITE_MODE, 0);
+ 
+@@ -273,9 +269,9 @@ static int rts5260_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
+ 	}
+ 
+ 	/* set pad drive */
+-	rtsx_pci_init_cmd(pcr);
+ 	rts5260_fill_driving(pcr, voltage);
+-	return rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
++
++	return 0;
+ }
+ 
+ static void rts5260_stop_cmd(struct rtsx_pcr *pcr)
+@@ -290,13 +286,9 @@ static void rts5260_stop_cmd(struct rtsx_pcr *pcr)
+ 
+ static void rts5260_card_before_power_off(struct rtsx_pcr *pcr)
+ {
+-	struct rtsx_cr_option *option = &pcr->option;
+-
+ 	rts5260_stop_cmd(pcr);
+ 	rts5260_switch_output_voltage(pcr, OUTPUT_3V3);
+ 
+-	if (option->ocp_en)
+-		rtsx_pci_disable_ocp(pcr);
+ }
+ 
+ static int rts5260_card_power_off(struct rtsx_pcr *pcr, int card)
+@@ -304,13 +296,12 @@ static int rts5260_card_power_off(struct rtsx_pcr *pcr, int card)
+ 	int err = 0;
+ 
+ 	rts5260_card_before_power_off(pcr);
+-
+-	rtsx_pci_init_cmd(pcr);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_VCC_CFG1,
++	err = rtsx_pci_write_register(pcr, LDO_VCC_CFG1,
+ 			 LDO_POW_SDVDD1_MASK, LDO_POW_SDVDD1_OFF);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_CONFIG2,
++	err = rtsx_pci_write_register(pcr, LDO_CONFIG2,
+ 			 DV331812_POWERON, DV331812_POWEROFF);
+-	err = rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
++	if (pcr->option.ocp_en)
++		rtsx_pci_disable_ocp(pcr);
+ 
+ 	return err;
+ }
+@@ -322,41 +313,29 @@ static void rts5260_init_ocp(struct rtsx_pcr *pcr)
+ 	if (option->ocp_en) {
+ 		u8 mask, val;
+ 
+-		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
+-					RTS5260_DVCC_OCP_EN |
+-					RTS5260_DVCC_OCP_CL_EN,
+-					RTS5260_DVCC_OCP_EN |
+-					RTS5260_DVCC_OCP_CL_EN);
+-		rtsx_pci_write_register(pcr, RTS5260_DVIO_CTRL,
+-					RTS5260_DVIO_OCP_EN |
+-					RTS5260_DVIO_OCP_CL_EN,
+-					RTS5260_DVIO_OCP_EN |
+-					RTS5260_DVIO_OCP_CL_EN);
+ 
+ 		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
+-					RTS5260_DVCC_OCP_THD_MASK,
+-					option->sd_400mA_ocp_thd);
+-
+-		rtsx_pci_write_register(pcr, RTS5260_DVIO_CTRL,
+-					RTS5260_DVIO_OCP_THD_MASK,
+-					RTS5260_DVIO_OCP_THD_350);
++				RTS5260_DVCC_OCP_THD_MASK,
++				option->sd_800mA_ocp_thd);
+ 
+ 		rtsx_pci_write_register(pcr, RTS5260_DV331812_CFG,
+-					RTS5260_DV331812_OCP_THD_MASK,
+-					RTS5260_DV331812_OCP_THD_210);
++				RTS5260_DV331812_OCP_THD_MASK,
++				RTS5260_DV331812_OCP_THD_270);
+ 
+-		mask = SD_OCP_GLITCH_MASK | SDVIO_OCP_GLITCH_MASK;
++		mask = SD_OCP_GLITCH_MASK;
+ 		val = pcr->hw_param.ocp_glitch;
+ 		rtsx_pci_write_register(pcr, REG_OCPGLITCH, mask, val);
++		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
++					RTS5260_DVCC_OCP_EN |
++					RTS5260_DVCC_OCP_CL_EN,
++					RTS5260_DVCC_OCP_EN |
++					RTS5260_DVCC_OCP_CL_EN);
+ 
+ 		rtsx_pci_enable_ocp(pcr);
+ 	} else {
+ 		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
+ 					RTS5260_DVCC_OCP_EN |
+ 					RTS5260_DVCC_OCP_CL_EN, 0);
+-		rtsx_pci_write_register(pcr, RTS5260_DVIO_CTRL,
+-					RTS5260_DVIO_OCP_EN |
+-					RTS5260_DVIO_OCP_CL_EN, 0);
+ 	}
+ }
+ 
+@@ -364,14 +343,9 @@ static void rts5260_enable_ocp(struct rtsx_pcr *pcr)
+ {
+ 	u8 val = 0;
+ 
+-	rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN, 0);
+-
+ 	val = SD_OCP_INT_EN | SD_DETECT_EN;
+-	val |= SDVIO_OCP_INT_EN | SDVIO_DETECT_EN;
+ 	rtsx_pci_write_register(pcr, REG_OCPCTL, 0xFF, val);
+-	rtsx_pci_write_register(pcr, REG_DV3318_OCPCTL,
+-				DV3318_DETECT_EN | DV3318_OCP_INT_EN,
+-				DV3318_DETECT_EN | DV3318_OCP_INT_EN);
++
+ }
+ 
+ static void rts5260_disable_ocp(struct rtsx_pcr *pcr)
+@@ -379,15 +353,11 @@ static void rts5260_disable_ocp(struct rtsx_pcr *pcr)
+ 	u8 mask = 0;
+ 
+ 	mask = SD_OCP_INT_EN | SD_DETECT_EN;
+-	mask |= SDVIO_OCP_INT_EN | SDVIO_DETECT_EN;
+ 	rtsx_pci_write_register(pcr, REG_OCPCTL, mask, 0);
+-	rtsx_pci_write_register(pcr, REG_DV3318_OCPCTL,
+-				DV3318_DETECT_EN | DV3318_OCP_INT_EN, 0);
+ 
+-	rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN,
+-				OC_POWER_DOWN);
+ }
+ 
++
+ static int rts5260_get_ocpstat(struct rtsx_pcr *pcr, u8 *val)
+ {
+ 	return rtsx_pci_read_register(pcr, REG_OCPSTAT, val);
+@@ -404,9 +374,7 @@ static void rts5260_clear_ocpstat(struct rtsx_pcr *pcr)
+ 	u8 val = 0;
+ 
+ 	mask = SD_OCP_INT_CLR | SD_OC_CLR;
+-	mask |= SDVIO_OCP_INT_CLR | SDVIO_OC_CLR;
+ 	val = SD_OCP_INT_CLR | SD_OC_CLR;
+-	val |= SDVIO_OCP_INT_CLR | SDVIO_OC_CLR;
+ 
+ 	rtsx_pci_write_register(pcr, REG_OCPCTL, mask, val);
+ 	rtsx_pci_write_register(pcr, REG_DV3318_OCPCTL,
+@@ -425,36 +393,22 @@ static void rts5260_process_ocp(struct rtsx_pcr *pcr)
+ 
+ 	rtsx_pci_get_ocpstat(pcr, &pcr->ocp_stat);
+ 	rts5260_get_ocpstat2(pcr, &pcr->ocp_stat2);
+-	if (pcr->card_exist & SD_EXIST)
+-		rtsx_sd_power_off_card3v3(pcr);
+-	else if (pcr->card_exist & MS_EXIST)
+-		rtsx_ms_power_off_card3v3(pcr);
+-
+-	if (!(pcr->card_exist & MS_EXIST) && !(pcr->card_exist & SD_EXIST)) {
+-		if ((pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER |
+-			SDVIO_OC_NOW | SDVIO_OC_EVER)) ||
+-			(pcr->ocp_stat2 & (DV3318_OCP_NOW | DV3318_OCP_EVER)))
+-			rtsx_pci_clear_ocpstat(pcr);
++
++	if ((pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER)) ||
++		(pcr->ocp_stat2 & (DV3318_OCP_NOW | DV3318_OCP_EVER))) {
++		rtsx_pci_card_power_off(pcr, RTSX_SD_CARD);
++		rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
++		rtsx_pci_clear_ocpstat(pcr);
+ 		pcr->ocp_stat = 0;
+ 		pcr->ocp_stat2 = 0;
+ 	}
+ 
+-	if ((pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER |
+-			SDVIO_OC_NOW | SDVIO_OC_EVER)) ||
+-			(pcr->ocp_stat2 & (DV3318_OCP_NOW | DV3318_OCP_EVER))) {
+-		if (pcr->card_exist & SD_EXIST)
+-			rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
+-		else if (pcr->card_exist & MS_EXIST)
+-			rtsx_pci_write_register(pcr, CARD_OE, MS_OUTPUT_EN, 0);
+-	}
+ }
+ 
+ static int rts5260_init_hw(struct rtsx_pcr *pcr)
+ {
+ 	int err;
+ 
+-	rtsx_pci_init_ocp(pcr);
+-
+ 	rtsx_pci_init_cmd(pcr);
+ 
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, L1SUB_CONFIG1,
+@@ -483,6 +437,8 @@ static int rts5260_init_hw(struct rtsx_pcr *pcr)
+ 	if (err < 0)
+ 		return err;
+ 
++	rtsx_pci_init_ocp(pcr);
++
+ 	return 0;
+ }
+ 
+@@ -499,6 +455,12 @@ static void rts5260_pwr_saving_setting(struct rtsx_pcr *pcr)
+ 		pcr_dbg(pcr, "Set parameters for L1.2.");
+ 		rtsx_pci_write_register(pcr, PWR_GLOBAL_CTRL,
+ 					0xFF, PCIE_L1_2_EN);
++		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
++					RTS5260_DVCC_OCP_EN |
++					RTS5260_DVCC_OCP_CL_EN,
++					RTS5260_DVCC_OCP_EN |
++					RTS5260_DVCC_OCP_CL_EN);
++
+ 		rtsx_pci_write_register(pcr, PWR_FE_CTL,
+ 					0xFF, PCIE_L1_2_PD_FE_EN);
+ 	} else if (lss_l1_1) {
+@@ -742,7 +704,7 @@ void rts5260_init_params(struct rtsx_pcr *pcr)
+ 	option->ocp_en = 1;
+ 	if (option->ocp_en)
+ 		hw_param->interrupt_en |= SD_OC_INT_EN;
+-	hw_param->ocp_glitch = SD_OCP_GLITCH_10M | SDVIO_OCP_GLITCH_800U;
++	hw_param->ocp_glitch = SD_OCP_GLITCH_100U | SDVIO_OCP_GLITCH_800U;
+ 	option->sd_400mA_ocp_thd = RTS5260_DVCC_OCP_THD_550;
+ 	option->sd_800mA_ocp_thd = RTS5260_DVCC_OCP_THD_970;
+ }
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index da445223f4cc..0d320e0ab4c9 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -703,7 +703,10 @@ EXPORT_SYMBOL_GPL(rtsx_pci_card_pull_ctl_disable);
+ 
+ static void rtsx_pci_enable_bus_int(struct rtsx_pcr *pcr)
+ {
+-	pcr->bier = TRANS_OK_INT_EN | TRANS_FAIL_INT_EN | SD_INT_EN;
++	struct rtsx_hw_param *hw_param = &pcr->hw_param;
++
++	pcr->bier = TRANS_OK_INT_EN | TRANS_FAIL_INT_EN | SD_INT_EN
++		| hw_param->interrupt_en;
+ 
+ 	if (pcr->num_slots > 1)
+ 		pcr->bier |= MS_INT_EN;
+@@ -969,8 +972,19 @@ static void rtsx_pci_card_detect(struct work_struct *work)
+ 
+ static void rtsx_pci_process_ocp(struct rtsx_pcr *pcr)
+ {
+-	if (pcr->ops->process_ocp)
++	if (pcr->ops->process_ocp) {
+ 		pcr->ops->process_ocp(pcr);
++	} else {
++		if (!pcr->option.ocp_en)
++			return;
++		rtsx_pci_get_ocpstat(pcr, &pcr->ocp_stat);
++		if (pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER)) {
++			rtsx_pci_card_power_off(pcr, RTSX_SD_CARD);
++			rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
++			rtsx_pci_clear_ocpstat(pcr);
++			pcr->ocp_stat = 0;
++		}
++	}
+ }
+ 
+ static int rtsx_pci_process_ocp_interrupt(struct rtsx_pcr *pcr)
+@@ -1039,7 +1053,7 @@ static irqreturn_t rtsx_pci_isr(int irq, void *dev_id)
+ 		}
+ 	}
+ 
+-	if (pcr->card_inserted || pcr->card_removed)
++	if ((pcr->card_inserted || pcr->card_removed) && !(int_reg & SD_OC_INT))
+ 		schedule_delayed_work(&pcr->carddet_work,
+ 				msecs_to_jiffies(200));
+ 
+@@ -1144,10 +1158,12 @@ void rtsx_pci_enable_ocp(struct rtsx_pcr *pcr)
+ {
+ 	u8 val = SD_OCP_INT_EN | SD_DETECT_EN;
+ 
+-	if (pcr->ops->enable_ocp)
++	if (pcr->ops->enable_ocp) {
+ 		pcr->ops->enable_ocp(pcr);
+-	else
++	} else {
++		rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN, 0);
+ 		rtsx_pci_write_register(pcr, REG_OCPCTL, 0xFF, val);
++	}
+ 
+ }
+ 
+@@ -1155,10 +1171,13 @@ void rtsx_pci_disable_ocp(struct rtsx_pcr *pcr)
+ {
+ 	u8 mask = SD_OCP_INT_EN | SD_DETECT_EN;
+ 
+-	if (pcr->ops->disable_ocp)
++	if (pcr->ops->disable_ocp) {
+ 		pcr->ops->disable_ocp(pcr);
+-	else
++	} else {
+ 		rtsx_pci_write_register(pcr, REG_OCPCTL, mask, 0);
++		rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN,
++				OC_POWER_DOWN);
++	}
+ }
+ 
+ void rtsx_pci_init_ocp(struct rtsx_pcr *pcr)
+@@ -1169,7 +1188,7 @@ void rtsx_pci_init_ocp(struct rtsx_pcr *pcr)
+ 		struct rtsx_cr_option *option = &(pcr->option);
+ 
+ 		if (option->ocp_en) {
+-			u8 val = option->sd_400mA_ocp_thd;
++			u8 val = option->sd_800mA_ocp_thd;
+ 
+ 			rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN, 0);
+ 			rtsx_pci_write_register(pcr, REG_OCPPARA1,
+@@ -1204,6 +1223,7 @@ void rtsx_pci_clear_ocpstat(struct rtsx_pcr *pcr)
+ 		u8 val = SD_OCP_INT_CLR | SD_OC_CLR;
+ 
+ 		rtsx_pci_write_register(pcr, REG_OCPCTL, mask, val);
++		udelay(100);
+ 		rtsx_pci_write_register(pcr, REG_OCPCTL, mask, 0);
+ 	}
+ }
+@@ -1213,7 +1233,6 @@ int rtsx_sd_power_off_card3v3(struct rtsx_pcr *pcr)
+ 	rtsx_pci_write_register(pcr, CARD_CLK_EN, SD_CLK_EN |
+ 		MS_CLK_EN | SD40_CLK_EN, 0);
+ 	rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
+-
+ 	rtsx_pci_card_power_off(pcr, RTSX_SD_CARD);
+ 
+ 	msleep(50);
+@@ -1313,6 +1332,9 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
+ 		break;
+ 	}
+ 
++	/*init ocp*/
++	rtsx_pci_init_ocp(pcr);
++
+ 	/* Enable clk_request_n to enable clock power management */
+ 	rtsx_pci_write_config_byte(pcr, pcr->pcie_cap + PCI_EXP_LNKCTL + 1, 1);
+ 	/* Enter L1 when host tx idle */
+diff --git a/drivers/misc/cardreader/rtsx_pcr.h b/drivers/misc/cardreader/rtsx_pcr.h
+index 6ea1655db0bb..300fc31d8e67 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.h
++++ b/drivers/misc/cardreader/rtsx_pcr.h
+@@ -46,6 +46,11 @@
+ 
+ #define SSC_CLOCK_STABLE_WAIT	130
+ 
++#define RTS524A_OCP_THD_800	0x04
++#define RTS525A_OCP_THD_800	0x05
++#define RTS522A_OCP_THD_800	0x06
++
++
+ int __rtsx_pci_write_phy_register(struct rtsx_pcr *pcr, u8 addr, u16 val);
+ int __rtsx_pci_read_phy_register(struct rtsx_pcr *pcr, u8 addr, u16 *val);
+ 
 -- 
-2.7.4
+2.17.1
 
