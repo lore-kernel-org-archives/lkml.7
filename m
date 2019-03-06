@@ -2,171 +2,101 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0E8C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36750C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E8A20840
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C588D206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i8JwL2yV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbfCFJlg (ORCPT
+        id S1729824AbfCFJoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:41:36 -0500
-Received: from charybdis-ext.suse.de ([195.135.221.2]:7170 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbfCFJlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:41:36 -0500
-Received: by suse.de (Postfix, from userid 1000)
-        id A3FDF44A0; Wed,  6 Mar 2019 10:41:34 +0100 (CET)
-Date:   Wed, 6 Mar 2019 10:41:34 +0100
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "hughd@google.com" <hughd@google.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
- __nr_hugepages_store_common()
-Message-ID: <20190306094130.q5v7qfgbekatnmyk@d104.suse.de>
-References: <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
- <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
- <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
- <5C74A2DA.1030304@huawei.com>
- <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
- <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
- <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
- <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
- <20190305000402.GA4698@hori.linux.bs1.fc.nec.co.jp>
- <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
-User-Agent: NeoMutt/20170421 (1.8.2)
+        Wed, 6 Mar 2019 04:44:16 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:33388 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbfCFJoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 04:44:16 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x269i5wd178554;
+        Wed, 6 Mar 2019 09:44:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=Ta2O7DF2/9sJVKubh+k6nXiTfVoZACDiA2PHCH49IPI=;
+ b=i8JwL2yVjtY3nbaJfOkHpuZZqqbEnDoZuL9jVH5TymH/qibTUUF760TmpB2LtVPk0AGH
+ fIBrsOvPtWiyiV1tOqiSQslp3Zl5CaRF8ge0PT0BPI48moyolfqlQlFHwOROSu3GL1Rr
+ kvxtOR09Ab5dz9smV9x/HjKT0s3ys3yOs4ffHxdCIGD/KUDW/dBXkLo5vYhBfXNe3Yzg
+ bmxGuRNczS8MzmBmjqJ+1rYSTCbTk/NV88YuEoe8Ox7Hwi5F4MlgHyvzvnR9qxDnteUi
+ 1Q/+3wwZKDDBFk2JVdlAxZwKxOhV07j3nX9FOZc4nukP+Hm5CvLJk96k/8V/cwbU1zui fw== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by aserp2130.oracle.com with ESMTP id 2qyfbeb11p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Mar 2019 09:44:09 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x269i7cm018805
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Mar 2019 09:44:08 GMT
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x269i6XL028425;
+        Wed, 6 Mar 2019 09:44:06 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Mar 2019 01:44:06 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.2\))
+Subject: Re: [PATCH] mm/filemap: fix minor typo
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20190304155240.19215-1-ldufour@linux.ibm.com>
+Date:   Wed, 6 Mar 2019 02:44:06 -0700
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D730117D-A44D-4380-8E58-E809A86BD245@oracle.com>
+References: <20190304155240.19215-1-ldufour@linux.ibm.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+X-Mailer: Apple Mail (2.3445.104.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9186 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903060067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 08:15:40PM -0800, Mike Kravetz wrote:
-> In addition, the code in __nr_hugepages_store_common() which tries to
-> handle the case of not being able to allocate a node mask would likely
-> result in incorrect behavior.  Luckily, it is very unlikely we will
-> ever take this path.  If we do, simply return ENOMEM.
 
-Hi Mike,
-
-I still thnk that we could just get rid of the NODEMASK_ALLOC machinery
-here, it adds a needlessly complexity IMHO.
-Note that before "(5df66d306ec9: mm: fix comment for NODEMASK_ALLOC)",
-the comment about the size was wrong, showing a much bigger size that it
-actually was, and I would not be surprised if people started to add
-NODEMASK_ALLOC here and there because of that.
-
-Actually, there was a little talk about removing NODEMASK_ALLOC altogether,
-but some further checks must be done before.
-
-> Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-
-But the overall change looks good to me:
-
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 > ---
->  mm/hugetlb.c | 42 +++++++++++++++++++++++++++++++++---------
->  1 file changed, 33 insertions(+), 9 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index c5c4558e4a79..5a190a652cac 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -2274,7 +2274,7 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
->  }
->  
->  #define persistent_huge_pages(h) (h->nr_huge_pages - h->surplus_huge_pages)
-> -static int set_max_huge_pages(struct hstate *h, unsigned long count,
-> +static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
->  						nodemask_t *nodes_allowed)
->  {
->  	unsigned long min_count, ret;
-> @@ -2289,6 +2289,28 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count,
->  		goto decrease_pool;
->  	}
->  
-> +	spin_lock(&hugetlb_lock);
-> +
-> +	/*
-> +	 * Check for a node specific request.
-> +	 * Changing node specific huge page count may require a corresponding
-> +	 * change to the global count.  In any case, the passed node mask
-> +	 * (nodes_allowed) will restrict alloc/free to the specified node.
-> +	 */
-> +	if (nid != NUMA_NO_NODE) {
-> +		unsigned long old_count = count;
-> +
-> +		count += h->nr_huge_pages - h->nr_huge_pages_node[nid];
-> +		/*
-> +		 * User may have specified a large count value which caused the
-> +		 * above calculation to overflow.  In this case, they wanted
-> +		 * to allocate as many huge pages as possible.  Set count to
-> +		 * largest possible value to align with their intention.
-> +		 */
-> +		if (count < old_count)
-> +			count = ULONG_MAX;
-> +	}
-> +
->  	/*
->  	 * Increase the pool size
->  	 * First take pages out of surplus state.  Then make up the
-> @@ -2300,7 +2322,6 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count,
->  	 * pool might be one hugepage larger than it needs to be, but
->  	 * within all the constraints specified by the sysctls.
->  	 */
-> -	spin_lock(&hugetlb_lock);
->  	while (h->surplus_huge_pages && count > persistent_huge_pages(h)) {
->  		if (!adjust_pool_surplus(h, nodes_allowed, -1))
->  			break;
-> @@ -2421,16 +2442,19 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
->  			nodes_allowed = &node_states[N_MEMORY];
->  		}
->  	} else if (nodes_allowed) {
-> +		/* Node specific request */
-> +		init_nodemask_of_node(nodes_allowed, nid);
-> +	} else {
->  		/*
-> -		 * per node hstate attribute: adjust count to global,
-> -		 * but restrict alloc/free to the specified node.
-> +		 * Node specific request, but we could not allocate the few
-> +		 * words required for a node mask.  We are unlikely to hit
-> +		 * this condition.  Since we can not pass down the appropriate
-> +		 * node mask, just return ENOMEM.
->  		 */
-> -		count += h->nr_huge_pages - h->nr_huge_pages_node[nid];
-> -		init_nodemask_of_node(nodes_allowed, nid);
-> -	} else
-> -		nodes_allowed = &node_states[N_MEMORY];
-> +		return -ENOMEM;
-> +	}
->  
-> -	err = set_max_huge_pages(h, count, nodes_allowed);
-> +	err = set_max_huge_pages(h, count, nid, nodes_allowed);
->  	if (err)
->  		goto out;
->  
-> -- 
-> 2.17.2
-> 
+> mm/filemap.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index cace3eb8069f..377cedaa3ae5 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -1440,7 +1440,7 @@ pgoff_t page_cache_next_miss(struct =
+address_space *mapping,
+> EXPORT_SYMBOL(page_cache_next_miss);
+>=20
+> /**
+> - * page_cache_prev_miss() - Find the next gap in the page cache.
+> + * page_cache_prev_miss() - Find the previous gap in the page cache.
+>  * @mapping: Mapping.
+>  * @index: Index.
+>  * @max_scan: Maximum range to search.
+> --=20
+> 2.21.0
+>=20
 
--- 
-Oscar Salvador
-SUSE L3
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
