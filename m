@@ -2,163 +2,124 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC64C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB10C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D7A20652
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C95520652
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbfCFMpa (ORCPT
+        id S1730151AbfCFMqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 07:45:30 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4652 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726317AbfCFMpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 07:45:30 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 29121D80806560970C7E;
-        Wed,  6 Mar 2019 20:45:27 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Wed, 6 Mar 2019
- 20:45:17 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <sakari.ailus@linux.intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] media: cpia2: Fix use-after-free in cpia2_exit
-Date:   Wed, 6 Mar 2019 20:45:08 +0800
-Message-ID: <20190306124508.18920-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 6 Mar 2019 07:46:02 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46172 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726317AbfCFMqB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 07:46:01 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x26CYqdX009610
+        for <linux-kernel@vger.kernel.org>; Wed, 6 Mar 2019 07:46:00 -0500
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r2cxndtja-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:46:00 -0500
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Wed, 6 Mar 2019 12:45:57 -0000
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 6 Mar 2019 12:45:53 -0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x26CjqnR24641564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Mar 2019 12:45:52 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DDDD124058;
+        Wed,  6 Mar 2019 12:45:52 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91B85124055;
+        Wed,  6 Mar 2019 12:45:28 +0000 (GMT)
+Received: from [9.199.59.8] (unknown [9.199.59.8])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  6 Mar 2019 12:45:27 +0000 (GMT)
+Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
+To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>, Oliver <oohall@gmail.com>,
+        Jan Kara <jack@suse.cz>, linux-nvdimm@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
+ <20190228083522.8189-2-aneesh.kumar@linux.ibm.com>
+ <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
+ <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com>
+ <87k1hc8iqa.fsf@linux.ibm.com> <20190306124453.126d36d8@naga.suse.cz>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Wed, 6 Mar 2019 18:15:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190306124453.126d36d8@naga.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030612-0060-0000-0000-00000317A706
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010714; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01170428; UDB=6.00611703; IPR=6.00951068;
+ MB=3.00025857; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-06 12:45:55
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030612-0061-0000-0000-000048858CD3
+Message-Id: <df01bf6e-84a1-53fb-bf0c-0957af2f79e1@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=982 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903060087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On 3/6/19 5:14 PM, Michal Suchánek wrote:
+> On Wed, 06 Mar 2019 14:47:33 +0530
+> "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> wrote:
+> 
+>> Dan Williams <dan.j.williams@intel.com> writes:
+>>
+>>> On Thu, Feb 28, 2019 at 1:40 AM Oliver <oohall@gmail.com> wrote:
+>>>>
+>>>> On Thu, Feb 28, 2019 at 7:35 PM Aneesh Kumar K.V
+>>>> <aneesh.kumar@linux.ibm.com> wrote:
+>   
+>> Also even if the user decided to not use THP, by
+>> echo "never" > transparent_hugepage/enabled , we should continue to map
+>> dax fault using huge page on platforms that can support huge pages.
+> 
+> Is this a good idea?
+> 
+> This knob is there for a reason. In some situations having huge pages
+> can severely impact performance of the system (due to host-guest
+> interaction or whatever) and the ability to really turn off all THP
+> would be important in those cases, right?
+> 
 
-Syzkaller report this:
+My understanding was that is not true for dax pages? These are not 
+regular memory that got allocated. They are allocated out of /dev/dax/ 
+or /dev/pmem*. Do we have a reason not to use hugepages for mapping 
+pages in that case?
 
-BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
-Read of size 8 at addr ffff8881f59a6b70 by task syz-executor.0/8363
-
-CPU: 0 PID: 8363 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- usb_remove_newid_files drivers/usb/core/driver.c:212 [inline]
- usb_deregister+0x12a/0x3b0 drivers/usb/core/driver.c:1005
- cpia2_exit+0xa/0x16 [cpia2]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f86f3754c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f86f37556bc
-R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
-
-Allocated by task 8363:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
- driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
- usb_register_driver+0x267/0x520 drivers/usb/core/driver.c:965
- 0xffffffffc1b4817c
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8363:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
- slab_free_hook mm/slub.c:1430 [inline]
- slab_free_freelist_hook mm/slub.c:1457 [inline]
- slab_free mm/slub.c:3005 [inline]
- kfree+0xe1/0x270 mm/slub.c:3957
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- usb_register_driver+0x341/0x520 drivers/usb/core/driver.c:980
- 0xffffffffc1b4817c
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881f59a6b40
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 48 bytes inside of
- 256-byte region [ffff8881f59a6b40, ffff8881f59a6c40)
-The buggy address belongs to the page:
-page:ffffea0007d66980 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6c02e00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881f59a6a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881f59a6a80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->ffff8881f59a6b00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881f59a6b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881f59a6c00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-
-cpia2_init does not check return value of cpia2_init, if it failed
-in usb_register_driver, there is already cleanup using driver_unregister.
-No need call cpia2_usb_cleanup on module exit.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/media/usb/cpia2/cpia2_v4l.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/media/usb/cpia2/cpia2_v4l.c b/drivers/media/usb/cpia2/cpia2_v4l.c
-index 95c0bd4..45caf78 100644
---- a/drivers/media/usb/cpia2/cpia2_v4l.c
-+++ b/drivers/media/usb/cpia2/cpia2_v4l.c
-@@ -1240,8 +1240,7 @@ static int __init cpia2_init(void)
- 	LOG("%s v%s\n",
- 	    ABOUT, CPIA_VERSION);
- 	check_parameters();
--	cpia2_usb_init();
--	return 0;
-+	return cpia2_usb_init();
- }
- 
- 
--- 
-2.7.0
-
+-aneesh
 
