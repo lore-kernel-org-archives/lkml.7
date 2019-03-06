@@ -2,213 +2,112 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892EAC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F3AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D3D206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A3A206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mExFPkFx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d97dQHyB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfCFQZX (ORCPT
+        id S1729566AbfCFQ0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:25:23 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36741 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfCFQZX (ORCPT
+        Wed, 6 Mar 2019 11:26:24 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:40477 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfCFQ0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:25:23 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p25so13487820qtb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:25:22 -0800 (PST)
+        Wed, 6 Mar 2019 11:26:23 -0500
+Received: by mail-vk1-f195.google.com with SMTP id d84so2955593vke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:26:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TLFNRaBXKZns1+8KdSrlpQM+Fx38R+PSvw7GHUE0UyQ=;
-        b=mExFPkFxzhZwwgDc8Iiv/OP6/UoPj699I3u/Zaoh9iDqrcedzjMWCQ7H0ddSeD2S6q
-         MItIlD7YeYCStj7UezZI0nLL/giXtsyzgEHq7PmmGQfpFbOuX3pnC7u5/g/HBDXWBXbf
-         zdDt/mP+tC67xtGszwTEv3P1NE9KvT0piKTfQ=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oOmhbkbDb9nmgxY5MIrOXAc6gEQuMCb0zk4aZvHNhe8=;
+        b=d97dQHyB425y3xtdXvgO0a3N2EycPCSeE3gXI3z7xTQrWYvUPsRUqRBBxyJos3UTho
+         ta3bJrkpf/8527kR547m/10EtLymEFSuYL/BIpM5DLjIgtWpUDIxHKVmiBn/MfCGKNaO
+         9qhjjzQiWBG0zaptEARAD65ilky4PP1pdCk14=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TLFNRaBXKZns1+8KdSrlpQM+Fx38R+PSvw7GHUE0UyQ=;
-        b=NSxoK4CxLQr9/jMfenloxmlLRThkjuEdD3XPpd8vYK0sfbTmj1KQ+AqUyHYiK4toV7
-         53txDMU5s6QqBFeUNukDWgyKqcdw7hLZg7ozRua7XmxFnliCFWgEr4c+cZ9SzlE7KEWY
-         5cWomBbdGDNMseXzEolLkgtRYxMIycwiJ5UYewa4yF2jVNy40+HDDO5LbOrYr5yOAimQ
-         8UL2hiLUF5D/20NL2GAhaswmiv9+IOB6JTyY70OU9t/khm7eNNDXkClV01ZBqJNDuxe3
-         oBKd2eUEFJ03UQeNScu4potIgLq3DMZwmRC0ykNwmSGNZrWqAmvhEKGWzqk4C/07Vwy0
-         ksZA==
-X-Gm-Message-State: APjAAAXlLn+5Ed420ZYFzR5wM8apHlXXyVqAVMd4QiS5PTQnzdDlNDB7
-        2CXDfdCVesVqluAiWDxOHh6UpQ==
-X-Google-Smtp-Source: APXvYqzcrKQw6+sLInw6mV4NIizF2Oy6RZ5vBLLoODVN6ZGWsVQGoHNU7QfNQxHlseqA/x8Y4pdqeg==
-X-Received: by 2002:a0c:88db:: with SMTP id 27mr6880276qvo.41.1551889521472;
-        Wed, 06 Mar 2019 08:25:21 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id w8sm1626418qkw.80.2019.03.06.08.25.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Mar 2019 08:25:20 -0800 (PST)
-Date:   Wed, 6 Mar 2019 11:25:19 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v1 2/2] mm: add priority threshold to
- __purge_vmap_area_lazy()
-Message-ID: <20190306162519.GB193418@google.com>
-References: <20190124115648.9433-1-urezki@gmail.com>
- <20190124115648.9433-3-urezki@gmail.com>
- <20190128224528.GB38107@google.com>
- <20190129173936.4sscooiybzbhos77@pc636>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oOmhbkbDb9nmgxY5MIrOXAc6gEQuMCb0zk4aZvHNhe8=;
+        b=B9KJmTuy1t33nsGrnyU5aJQKtjf1uVi6hc5JI+AfPNLptDZgOXz8E96So0a2nqm3U0
+         KWhaNRLf6ECcjgPhjbU1CpICrFWG9FktNcvwbxFWkP+28PoCk75/HsILn/s5g4oCjbxT
+         Up3OOfec/mfhAAAHVZKuIayBXlFFpjkvneJauOZ6GFp3yBBDnUk5zTejm98uJTLhdcsZ
+         vtWoOVfcygDwyfrOnaFINiyZXoGsj91yjzDhExHrs0o+4pXJxyBfInLTmKJLS5Q3KomA
+         OLks7cUwrltOx7DPCc2QIBEc3Xs6ZeYC/zYzJQnOwuxAdQoCeilTz0eqhtvnj5Kop3wJ
+         +oug==
+X-Gm-Message-State: APjAAAX46KvEkiyKunPEOEs7E2lF4mYM7oj1Hs4EXyK3as3p0uvxHVqI
+        YY43/XU1kZkdbJEFAzIvyOck8dUN4bw=
+X-Google-Smtp-Source: APXvYqxEHlr2fbjJORI1JGyCbNVPmdq5EMonxQDHTxO0OG2yB/IAY5jnsvX+osBfkX0Wd4ltG7URJQ==
+X-Received: by 2002:a1f:a295:: with SMTP id l143mr3536067vke.66.1551889581388;
+        Wed, 06 Mar 2019 08:26:21 -0800 (PST)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id f13sm366995vso.19.2019.03.06.08.26.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 08:26:20 -0800 (PST)
+Received: by mail-vs1-f46.google.com with SMTP id y19so2577603vsc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:26:20 -0800 (PST)
+X-Received: by 2002:a67:6983:: with SMTP id e125mr4195030vsc.222.1551889579612;
+ Wed, 06 Mar 2019 08:26:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190129173936.4sscooiybzbhos77@pc636>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <201903061919.b2BJj7iX%fengguang.wu@intel.com>
+In-Reply-To: <201903061919.b2BJj7iX%fengguang.wu@intel.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 6 Mar 2019 08:26:07 -0800
+X-Gmail-Original-Message-ID: <CAGXu5jKiW9-pnKbRh05_SmYm8TwjoRpsrA8472+Gct_YjVr+Jw@mail.gmail.com>
+Message-ID: <CAGXu5jKiW9-pnKbRh05_SmYm8TwjoRpsrA8472+Gct_YjVr+Jw@mail.gmail.com>
+Subject: Re: [tip:x86/asm 2/4] arch/x86/include/asm/special_insns.h:31:9:
+ error: 'X86_CR0_WP' undeclared
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     kbuild-all@01.org, LKML <linux-kernel@vger.kernel.org>,
+        tipbuild@zytor.com, kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 29, 2019 at 06:39:36PM +0100, Uladzislau Rezki wrote:
-> On Mon, Jan 28, 2019 at 05:45:28PM -0500, Joel Fernandes wrote:
-> > On Thu, Jan 24, 2019 at 12:56:48PM +0100, Uladzislau Rezki (Sony) wrote:
-> > > commit 763b218ddfaf ("mm: add preempt points into
-> > > __purge_vmap_area_lazy()")
-> > > 
-> > > introduced some preempt points, one of those is making an
-> > > allocation more prioritized over lazy free of vmap areas.
-> > > 
-> > > Prioritizing an allocation over freeing does not work well
-> > > all the time, i.e. it should be rather a compromise.
-> > > 
-> > > 1) Number of lazy pages directly influence on busy list length
-> > > thus on operations like: allocation, lookup, unmap, remove, etc.
-> > > 
-> > > 2) Under heavy stress of vmalloc subsystem i run into a situation
-> > > when memory usage gets increased hitting out_of_memory -> panic
-> > > state due to completely blocking of logic that frees vmap areas
-> > > in the __purge_vmap_area_lazy() function.
-> > > 
-> > > Establish a threshold passing which the freeing is prioritized
-> > > back over allocation creating a balance between each other.
-> > 
-> > I'm a bit concerned that this will introduce the latency back if vmap_lazy_nr
-> > is greater than half of lazy_max_pages(). Which IIUC will be more likely if
-> > the number of CPUs is large.
-> > 
-> The threshold that we establish is two times more than lazy_max_pages(),
-> i.e. in case of 4 system CPUs lazy_max_pages() is 24576, therefore the
-> threshold is 49152, if PAGE_SIZE is 4096.
-> 
-> It means that we allow rescheduling if vmap_lazy_nr < 49152. If vmap_lazy_nr 
-> is higher then we forbid rescheduling and free areas until it becomes lower
-> again to stabilize the system. By doing that, we will not allow vmap_lazy_nr
-> to be enormously increased.
+On Wed, Mar 6, 2019 at 3:43 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/asm
+> head:   a0bf7fc24303a538396aa8d32450d05c1929b9f0
+> commit: d309ba034fac1a149d00cac79318973e9ba81848 [2/4] x86/asm: Pin sensitive CR0 bits
+> config: um-x86_64_defconfig (attached as .config)
+> compiler: gcc-8 (Debian 8.3.0-2) 8.3.0
+> reproduce:
+>         git checkout d309ba034fac1a149d00cac79318973e9ba81848
+>         # save the attached .config to linux build tree
+>         make ARCH=um SUBARCH=x86_64
 
-Sorry for late reply.
+Gah, I did not build-test um. :(
 
-This sounds reasonable. Such an extreme situation of vmap_lazy_nr being twice
-the lazy_max_pages() is probably only possible using a stress test anyway
-since (hopefully) the try_purge_vmap_area_lazy() call is happening often
-enough to keep the vmap_lazy_nr low.
+>
+> All errors (new ones prefixed by >>):
+>
+>    In file included from arch/x86/include/asm/cacheflush.h:7,
+>                     from include/linux/highmem.h:12,
+>                     from net//core/sock.c:117:
+>    arch/x86/include/asm/special_insns.h: In function 'native_write_cr0':
+> >> arch/x86/include/asm/special_insns.h:31:9: error: 'X86_CR0_WP' undeclared (first use in this function)
+>      val |= X86_CR0_WP;
+>             ^~~~~~~~~~
 
-Have you experimented with what is the highest threshold that prevents the
-issues you're seeing? Have you tried 3x or 4x the vmap_lazy_nr?
+Should I just add something like:
 
-I also wonder what is the cost these days of the global TLB flush on the most
-common Linux architectures and if the whole purge vmap_area lazy stuff is
-starting to get a bit dated, and if we can do the purging inline as areas are
-freed. There is a cost to having this mechanism too as you said, which is as
-the list size grows, all other operations also take time.
+#ifdef __arch_um__
+# define X86_CR0_WP 0
+#endif
 
-thanks,
-
- - Joel
+?
 
 
-> > In fact, when vmap_lazy_nr is high, that's when the latency will be the worst
-> > so one could say that that's when you *should* reschedule since the frees are
-> > taking too long and hurting real-time tasks.
-> > 
-> > Could this be better solved by tweaking lazy_max_pages() such that purging is
-> > more aggressive?
-> > 
-> > Another approach could be to detect the scenario you brought up (allocations
-> > happening faster than free), somehow, and avoid a reschedule?
-> > 
-> This is what i am trying to achieve by this change. 
-> 
-> Thank you for your comments.
-> 
-> --
-> Vlad Rezki
-> > > 
-> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > ---
-> > >  mm/vmalloc.c | 18 ++++++++++++------
-> > >  1 file changed, 12 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > index fb4fb5fcee74..abe83f885069 100644
-> > > --- a/mm/vmalloc.c
-> > > +++ b/mm/vmalloc.c
-> > > @@ -661,23 +661,27 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
-> > >  	struct llist_node *valist;
-> > >  	struct vmap_area *va;
-> > >  	struct vmap_area *n_va;
-> > > -	bool do_free = false;
-> > > +	int resched_threshold;
-> > >  
-> > >  	lockdep_assert_held(&vmap_purge_lock);
-> > >  
-> > >  	valist = llist_del_all(&vmap_purge_list);
-> > > +	if (unlikely(valist == NULL))
-> > > +		return false;
-> > > +
-> > > +	/*
-> > > +	 * TODO: to calculate a flush range without looping.
-> > > +	 * The list can be up to lazy_max_pages() elements.
-> > > +	 */
-> > >  	llist_for_each_entry(va, valist, purge_list) {
-> > >  		if (va->va_start < start)
-> > >  			start = va->va_start;
-> > >  		if (va->va_end > end)
-> > >  			end = va->va_end;
-> > > -		do_free = true;
-> > >  	}
-> > >  
-> > > -	if (!do_free)
-> > > -		return false;
-> > > -
-> > >  	flush_tlb_kernel_range(start, end);
-> > > +	resched_threshold = (int) lazy_max_pages() << 1;
-> > >  
-> > >  	spin_lock(&vmap_area_lock);
-> > >  	llist_for_each_entry_safe(va, n_va, valist, purge_list) {
-> > > @@ -685,7 +689,9 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
-> > >  
-> > >  		__free_vmap_area(va);
-> > >  		atomic_sub(nr, &vmap_lazy_nr);
-> > > -		cond_resched_lock(&vmap_area_lock);
-> > > +
-> > > +		if (atomic_read(&vmap_lazy_nr) < resched_threshold)
-> > > +			cond_resched_lock(&vmap_area_lock);
-> > >  	}
-> > >  	spin_unlock(&vmap_area_lock);
-> > >  	return true;
-> > > -- 
-> > > 2.11.0
-> > > 
+-- 
+Kees Cook
