@@ -2,91 +2,129 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78301C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 04:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1418C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 04:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F3420684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 04:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DE620675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 04:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PneuEQz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfCFEIF (ORCPT
+        id S1727181AbfCFEMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 23:08:05 -0500
-Received: from regular1.263xmail.com ([211.150.99.136]:37924 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfCFEIF (ORCPT
+        Tue, 5 Mar 2019 23:12:09 -0500
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39191 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfCFEMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 23:08:05 -0500
-X-Greylist: delayed 362 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Mar 2019 23:08:03 EST
-Received: from jiaolitao?raisecom.com (unknown [192.168.167.129])
-        by regular1.263xmail.com (Postfix) with ESMTP id 9B7064E3;
-        Wed,  6 Mar 2019 12:01:54 +0800 (CST)
-X-263anti-spam: KSV:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ABS-CHECKED: 4
-Received: from localhost.localdomain (194.195.37.106.static.bjtelecom.net [106.37.195.194])
-        by smtp.263.net (postfix) whith ESMTP id P1234T140524484818688S1551844910225279_;
-        Wed, 06 Mar 2019 12:01:54 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <343bba039cdaeb20f05b0d6b3a86b10e>
-X-RL-SENDER: jiaolitao@raisecom.com
-X-SENDER: 006714@raisecom.com
-X-LOGIN-NAME: jiaolitao@raisecom.com
-X-FST-TO: davem@davemloft.net
-X-SENDER-IP: 106.37.195.194
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 5
-From:   Litao Jiao <jiaolitao@raisecom.com>
-To:     davem@davemloft.net
-Cc:     petrm@mellanox.com, idosch@mellanox.com, roopa@cumulusnetworks.com,
-        sd@queasysnail.net, sbrivio@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiaolitao@raisecom.com
-Subject: [PATCH] vxlan: do not need BH again in vxlan_cleanup()
-Date:   Wed,  6 Mar 2019 12:01:48 +0800
-Message-Id: <1551844908-8152-1-git-send-email-jiaolitao@raisecom.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 5 Mar 2019 23:12:09 -0500
+Received: by mail-it1-f193.google.com with SMTP id l15so8134468iti.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 20:12:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=StaGLvBUS5TkIV4j1JexcDZXarlMywUEPr5FgW/yy0o=;
+        b=PneuEQz/skP/WogMeUOW+UYsnaNE/hhVPn4Zv7tbSkwSNBVpHGZBTsOFMOlRXox3dq
+         4gNhG4yWKXNgsToj0PufVCK0vKMTZvDZIRi2hR+xwSpsXhJRPx7feF3xe7PxoqQpj2xl
+         a7ES/NWzqQ1YKpH0+LLop6IVIBGc213WPiNGM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=StaGLvBUS5TkIV4j1JexcDZXarlMywUEPr5FgW/yy0o=;
+        b=XFcsZZlSp7wDeuT3QtqWPEgIbVZsP+qKFwjR/lCCjATuGyN0C40dDQnyIwZRhsyyzU
+         toI+LjPhfp5Gy3TRvrL/CHyQrc7U6ftHHgu2xmk79SdgeOxqc/Kz4V2ovhmw4SkKaqKI
+         kZkHDEdG3cZJvouCN8FO7yOyYOXrvxcb1ntI6GSmWHHjfve9W74LkjZgp4K5K7onpwqV
+         PVjqRKQmu0qsrQcle55HXeHCaTSvTJyIRdFzElvpdBJ55rcYBTC0j/MOF2Yn+On6Gy4S
+         MNHqxq8Ez7kB39ZFRB1zJRkVp/fDSD7QsguLuR40FzxQsPN5Nxym64dVstybR+QWLX5h
+         OlhQ==
+X-Gm-Message-State: APjAAAU45Iws3SymCt1+R2vMaq0TaMUjfZP0fw8zKdVFtS6zhuucuZ8b
+        k5FxqFu9Dhk1P8EzwNwaLlONLUR+K2bYu5AxdHCjzg0On/I=
+X-Google-Smtp-Source: APXvYqzzglElDR1D4t81plRiZtamMX56ugLYpYTHsVMIRqPBa76+GJwz3Vhuamnt3DPyIOFqzcF9CAFlAI2q+Jptzao=
+X-Received: by 2002:a24:338a:: with SMTP id k132mr930699itk.123.1551845528178;
+ Tue, 05 Mar 2019 20:12:08 -0800 (PST)
+MIME-Version: 1.0
+References: <20190305044936.22267-1-dbasehore@chromium.org>
+ <20190305044936.22267-2-dbasehore@chromium.org> <155181177527.20095.15680753964583935841@swboyd.mtv.corp.google.com>
+ <CAGAzgso9-1j2XDsHQn+RbSTtV8Vqideu_nG=2qCJD94iyaxFFQ@mail.gmail.com>
+In-Reply-To: <CAGAzgso9-1j2XDsHQn+RbSTtV8Vqideu_nG=2qCJD94iyaxFFQ@mail.gmail.com>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Tue, 5 Mar 2019 20:11:57 -0800
+Message-ID: <CAGAzgsp0fWbH1f7gRKvhTotvdHMAL8gWw1bTKpVHfW9hJddXAw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] clk: Remove recursion in clk_core_{prepare,enable}()
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-doc@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        aisheng.dong@nxp.com, mchehab+samsung@kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, jbrunet@baylibre.com,
+        Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vxlan_cleanup() is a timer callback, it is already
-and only running in BH context.
+On Tue, Mar 5, 2019 at 5:35 PM dbasehore . <dbasehore@chromium.org> wrote:
+>
+> On Tue, Mar 5, 2019 at 10:49 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Derek Basehore (2019-03-04 20:49:31)
+> > > From: Stephen Boyd <sboyd@codeaurora.org>
+> > >
+> > > Enabling and preparing clocks can be written quite naturally with
+> > > recursion. We start at some point in the tree and recurse up the
+> > > tree to find the oldest parent clk that needs to be enabled or
+> > > prepared. Then we enable/prepare and return to the caller, going
+> > > back to the clk we started at and enabling/preparing along the
+> > > way. This also unroll the recursion in unprepare,disable which can
+> > > just be done in the order of walking up the clk tree.
+> > >
+> > > The problem is recursion isn't great for kernel code where we
+> > > have a limited stack size. Furthermore, we may be calling this
+> > > code inside clk_set_rate() which also has recursion in it, so
+> > > we're really not looking good if we encounter a tall clk tree.
+> > >
+> > > Let's create a stack instead by looping over the parent chain and
+> > > collecting clks of interest. Then the enable/prepare becomes as
+> > > simple as iterating over that list and calling enable.
+> > >
+> > > Modified verison of https://lore.kernel.org/patchwork/patch/814369/
+> > > -Fixed kernel warning
+> > > -unrolled recursion in unprepare/disable too
+> > >
+> > > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > ---
+> >
+> > From the original post:
+> >
+> > "I have some vague fear that this may not work if a clk op is framework
+> > reentrant and attemps to call consumer clk APIs from within the clk ops.
+> > If the reentrant call tries to add a clk that's already in the list then
+> > we'll corrupt the list. Ugh."
+> >
+> > Do we have this sort of problem here? Or are you certain that we don't
+> > have clks that prepare or enable something that is already in the
+> > process of being prepared or enabled?
+>
+> I can look into whether anything's doing this and add a WARN_ON which
+> returns an error if we ever hit that case. If this is happening on
+> some platform, we'd want to correct that anyways.
+>
 
-Signed-off-by: Litao Jiao <jiaolitao@raisecom.com>
----
- drivers/net/vxlan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Also, if we're ever able to move to another locking scheme (hopefully
+soon...), we can make the prepare/enable locks non-reentrant. Then if
+anyone recursively calls back into the framework for another
+prepare/enable, they will deadlock. I guess that's one way of making
+sure no one does that.
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 2aae11f..98dde11 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2616,7 +2616,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
- 		struct hlist_node *p, *n;
- 
--		spin_lock_bh(&vxlan->hash_lock);
-+		spin_lock(&vxlan->hash_lock);
- 		hlist_for_each_safe(p, n, &vxlan->fdb_head[h]) {
- 			struct vxlan_fdb *f
- 				= container_of(p, struct vxlan_fdb, hlist);
-@@ -2638,7 +2638,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 			} else if (time_before(timeout, next_timer))
- 				next_timer = timeout;
- 		}
--		spin_unlock_bh(&vxlan->hash_lock);
-+		spin_unlock(&vxlan->hash_lock);
- 	}
- 
- 	mod_timer(&vxlan->age_timer, next_timer);
--- 
-1.9.1
-
-
-
+> >
