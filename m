@@ -2,96 +2,153 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5B1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3572C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A71206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9889920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfCFJqB (ORCPT
+        id S1729852AbfCFJsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:46:01 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36153 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729695AbfCFJqB (ORCPT
+        Wed, 6 Mar 2019 04:48:31 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57130 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729496AbfCFJsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:46:01 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1h1T7b-0006X3-3u; Wed, 06 Mar 2019 10:45:55 +0100
-Message-ID: <1551865552.9298.24.camel@pengutronix.de>
-Subject: Re: Smarter Kconfig help
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Peng Hao <peng.hao2@zte.com.cn>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Wed, 06 Mar 2019 10:45:52 +0100
-In-Reply-To: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
-References: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
+        Wed, 6 Mar 2019 04:48:30 -0500
+X-UUID: 40513bd1cf1341a2bed720a313634723-20190306
+X-UUID: 40513bd1cf1341a2bed720a313634723-20190306
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1638892303; Wed, 06 Mar 2019 17:48:24 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 6 Mar 2019 17:48:24 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 6 Mar 2019 17:48:24 +0800
+Message-ID: <1551865704.1001.3.camel@mtksdaap41>
+Subject: Re: [PATCH V6 0/8] make mt7623 clock of hdmi stable
+From:   CK Hu <ck.hu@mediatek.com>
+To:     wangyan wang <wangyan.wang@mediatek.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        "Colin Ian King" <colin.king@canonical.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
+Date:   Wed, 6 Mar 2019 17:48:24 +0800
+In-Reply-To: <1551837141.23995.13.camel@mtksdaap41>
+References: <20190225020912.29120-1-wangyan.wang@mediatek.com>
+         <1551837141.23995.13.camel@mtksdaap41>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+Hi, Wangyan:
 
-Am Dienstag, den 05.03.2019, 17:31 +0000 schrieb Russell King - ARM Linux admin:
-> Guys,
+On Wed, 2019-03-06 at 09:52 +0800, CK Hu wrote:
+> On Mon, 2019-02-25 at 10:09 +0800, wangyan wang wrote:
+> > From: Wangyan Wang <wangyan.wang@mediatek.com>
+> > 
+> > V6 adopt maintainer's suggestion.
+> > Here is the change list between V5 & V6
+> > 1. change "unsigned char mux_flags;" to "u8 mux_flags;" to
+> > match with the struct in " clk: mediatek: add MUX_GATE_FLAGS_2".
+> > 
 > 
-> We need to be smarter when writing Kconfig help.  I'm just going
-> through updating my build trees with the results of 5.0 development,
-> and a number of the help texts are next to useless.  For example,
+> Hi, Wangyan:
 > 
-> PVPANIC - is this something that should be enabled for a host or
-> guest kernel?  Answer: you have to read the driver code to find out.
+> I'm not familiar with this clock system, so I still have some question
+> about it, if you could describe more clear, it would help us to speed up
+> this review process.
 > 
-> IMX_IRQSTEER - which i.MX SoCs does this apply to?  The help text
-> just says:
+> In [1], I find the clock that dpi and hdmi_phy controls,
 > 
->   "Support for the i.MX IRQSTEER interrupt multiplexer/remapper."
+> 	dpi0: dpi@14014000 {
+> 		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
+> 			 <&mmsys CLK_MM_DPI1_ENGINE>,
+> 			 <&topckgen CLK_TOP_TVDPLL>;
+> 		clock-names = "pixel", "engine", "pll";
+> 	};
 > 
-> which doesn't say which SoCs this should be enabled for - it turns
-> out that grepping for the driver's DT compatible string, none of
-> the 32-bit ARM cores have support for this, yet we still default
-> it to enabled there.  It seems the help text should at the very
-> least tell the user that this is not applicable to i.MX SoCs with
-> 32-bit ARM cores.
 > 
-> I'm sure there's many other instances of this... I suspect that
-> it's caused by review concentrating mostly on the technical aspects
-> of the code and the Kconfig help text just gets forgotten about.
+> 	hdmi_phy: phy@10209100 {
+> 		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
+> 		clock-names = "pll_ref";
+> 	};
 > 
-> Can we at least improve these two options please?
+> In [2], You say that to prevent changing tvdpll would let hdmi stable,
+> and this clock is controlled by dpi, why do you modify the control flow
+> in hdmi_phy? If these two have relationship, please describe more clear
+> because I'm not familiar with this clock system.
+> 
 
-While I totally agree that the irqsteer driver should only default Y on
-64bit i.MX SoCs, I'm not really sure what to do about the Kconfig help
-text.
+As discuss offline, in [3] we can find out that CLK_APMIXED_HDMI_REF is
+derived from tvdpll, so tvdpll is the parent clock of hdmi_phy_pll.
+Therefore, this series should modify hdmi_phy flow as well.
 
-Enumerating SoCs in the Kconfig of a IP block driver is always prone to
-get outdated. Just as the first example I've been able to come up with,
-the MMC_SDHCI_ESDHC_IMX help text says: "This selects the Freescale
-eSDHC/uSDHC controller support found on i.MX25, i.MX35 i.MX5x and
-i.MX6x.", while the same IP block is to be found on i.MX7 and various
-i.MX8.
-
-For the Kconfig user, who needs to decide if an option is relevant,
-outdated SoC information is probably just as bad as no information at
-all.
+[3]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clk/mediatek/clk-mt2701.c?h=v5.0#n973
 
 Regards,
-Lucas
+CK
+
+> And I think that patch 'drm/mediatek: using new factor for tvdpll in
+> MT2701' is the major patch to prevent modifying tvdpll because it reduce
+> the factor case. Does MT8173 has the same problem? Just ask, I does not
+> require you to modify MT8173 part.
+> [1]
+> https://github.com/frank-w/BPI-R2-4.14/blob/663f7def421952eb49b2d698eadaff12d02622d2/arch/arm/boot/dts/mt7623.dtsi
+> [2]
+> http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017693.html
+> 
+> 
+> Regards,
+> CK
+> 
+> 
+> > 
+> > chunhui dai (8):
+> >   drm/mediatek: recalculate hdmi phy clock of MT2701 by querying
+> >     hardware
+> >   drm/mediatek: move the setting of fixed divider
+> >   drm/mediatek: using different flags of clk for HDMI phy
+> >   drm/mediatek: fix the rate and divder of hdmi phy for MT2701
+> >   clk: mediatek: add MUX_GATE_FLAGS_2
+> >   clk: mediatek: using CLK_MUX_ROUND_CLOSEST for the clock of dpi1_sel
+> >   drm/mediatek: using new factor for tvdpll in MT2701
+> >   drm/mediatek: fix the rate of parent for hdmi phy in MT2701
+> > 
+> >  drivers/clk/mediatek/clk-mt2701.c              |  4 +-
+> >  drivers/clk/mediatek/clk-mtk.c                 |  2 +-
+> >  drivers/clk/mediatek/clk-mtk.h                 | 20 ++++++---
+> >  drivers/gpu/drm/mediatek/mtk_dpi.c             |  8 ++--
+> >  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 34 ++++------------
+> >  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  7 +---
+> >  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 56 +++++++++++++++++++++++---
+> >  drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c | 23 +++++++++++
+> >  8 files changed, 102 insertions(+), 52 deletions(-)
+> > 
+> 
+
+
