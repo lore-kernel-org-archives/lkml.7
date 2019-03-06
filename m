@@ -2,68 +2,108 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0ECC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572BAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3572720661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346B6205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfCFUGb (ORCPT
+        id S1730486AbfCFUIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:06:31 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:50485 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727204AbfCFUGa (ORCPT
+        Wed, 6 Mar 2019 15:08:55 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34259 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfCFUIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:06:30 -0500
-Received: from [167.98.27.226] (helo=ct-lt-1124)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1h1cnz-0005BV-W3; Wed, 06 Mar 2019 20:06:20 +0000
-Received: from tpreston by ct-lt-1124 with local (Exim 4.89)
-        (envelope-from <tpreston@ct-lt-1124>)
-        id 1h1cnz-0004XR-98; Wed, 06 Mar 2019 20:06:19 +0000
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Thomas Preston <thomas.preston@codethink.co.uk>
-Subject: [PATCH] drm/i915/ddi: Fix default eDP detection on port A
-Date:   Wed,  6 Mar 2019 20:06:18 +0000
-Message-Id: <20190306200618.17405-1-thomas.preston@codethink.co.uk>
-X-Mailer: git-send-email 2.11.0
+        Wed, 6 Mar 2019 15:08:55 -0500
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.11] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9B140FF806;
+        Wed,  6 Mar 2019 20:08:07 +0000 (UTC)
+Subject: Re: [PATCH v5 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190306190005.7036-1-alex@ghiti.fr>
+ <20190306190005.7036-5-alex@ghiti.fr>
+ <7c81abe0-5f9d-32f9-1e9a-70ab06d48f8e@intel.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <82a3f572-e9c1-0151-3d7d-a646f5e5302c@ghiti.fr>
+Date:   Wed, 6 Mar 2019 15:08:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <7c81abe0-5f9d-32f9-1e9a-70ab06d48f8e@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We rely on VBT DDI port info for eDP detection on GEN9 platforms and
-above. This breaks GEN9 platforms which don't have VBT because port A
-eDP now defaults to false. Fix this by defaulting to true when VBT is
-missing.
+On 3/6/19 2:16 PM, Dave Hansen wrote:
+> On 3/6/19 11:00 AM, Alexandre Ghiti wrote:
+>> +static int set_max_huge_pages(struct hstate *h, unsigned long count,
+>> +			      nodemask_t *nodes_allowed)
+>>   {
+>>   	unsigned long min_count, ret;
+>>   
+>> -	if (hstate_is_gigantic(h) && !gigantic_page_supported())
+>> -		return h->max_huge_pages;
+>> +	/*
+>> +	 * Gigantic pages allocation depends on the capability for large page
+>> +	 * range allocation. If the system cannot provide alloc_contig_range,
+>> +	 * allow users to free gigantic pages.
+>> +	 */
+>> +	if (hstate_is_gigantic(h) && !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
+>> +		spin_lock(&hugetlb_lock);
+>> +		if (count > persistent_huge_pages(h)) {
+>> +			spin_unlock(&hugetlb_lock);
+>> +			return -EINVAL;
+>> +		}
+>> +		goto decrease_pool;
+>> +	}
+> We talked about it during the last round and I don't seen any mention of
+> it here in comments or the changelog: Why is this a goto?  Why don't we
+> just let the code fall through to the "decrease_pool" label?  Why is
+> this new block needed at all?  Can't we just remove the old check and
+> let it be?
 
-Fixes: commit a98d9c1d7e9b ("drm/i915/ddi: Rely on VBT DDI port info for eDP detection")
-Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
----
- drivers/gpu/drm/i915/intel_bios.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/i915/intel_bios.c b/drivers/gpu/drm/i915/intel_bios.c
-index 1faa494e2bc9..efbbfb64b55f 100644
---- a/drivers/gpu/drm/i915/intel_bios.c
-+++ b/drivers/gpu/drm/i915/intel_bios.c
-@@ -1629,6 +1629,7 @@ init_vbt_missing_defaults(struct drm_i915_private *dev_priv)
- 		info->supports_dvi = (port != PORT_A && port != PORT_E);
- 		info->supports_hdmi = info->supports_dvi;
- 		info->supports_dp = (port != PORT_E);
-+		info->supports_edp = (port == PORT_A);
- 	}
- }
- 
--- 
-2.11.0
+I'll get rid of the goto, I don't know how to justify it properly in a 
+comment,
+maybe because it is not necessary.
+This is not a new block, this means exactly the same as before (remember
+gigantic_page_supported() actually meant CONTIG_ALLOC before this series),
+except that now we allow a user to free boottime allocated gigantic pages.
+And no we cannot just remove the check and let it be since it would modify
+the current behaviour, which is to return an error when trying to allocate
+gigantic pages whereas alloc_contig_range is not defined. I thought it was
+clearly commented above, I can try to make it more explicit.
 
