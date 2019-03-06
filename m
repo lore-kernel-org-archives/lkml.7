@@ -2,271 +2,324 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ED9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97D0C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77F320684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5B720684
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 23:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9/FAKn2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAuZ8i3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfCFXtO (ORCPT
+        id S1726143AbfCFXzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 18:49:14 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36192 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCFXtN (ORCPT
+        Wed, 6 Mar 2019 18:55:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45644 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFXy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 18:49:13 -0500
-Received: by mail-io1-f67.google.com with SMTP id r136so11831388iod.3;
-        Wed, 06 Mar 2019 15:49:12 -0800 (PST)
+        Wed, 6 Mar 2019 18:54:59 -0500
+Received: by mail-pf1-f194.google.com with SMTP id v21so9895039pfm.12;
+        Wed, 06 Mar 2019 15:54:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0ZJxg0re0sQe/Au75y8ZSXg+6UbrYcDQ07qRUdbYQWs=;
-        b=q9/FAKn2N6SBXZKLgsIVsvtBnynSj05oulvGX9a4ZWCJqP+4P6EUxnUpRdpUeYIwTY
-         BiOQMebIjg4bTiohF2VH9m6fxLOGQrpov8XdUGNw64bQTIRDVdksvPKigSjK5q+YDQrE
-         LJELV5eXSSSvSg79fwI+wWPjh38BpDaffZkl9BOrfeCkTtFIF4Pq7IlIP5o0oJaQBj0f
-         7UMU/69D1PRYi9Pp+0jlc/3KCuh/0YLsDsq5o4t54HdJV6vW5q3NToJsme0W4NP0ApXs
-         tP0wHl377H+Vc5K1KVUNhn1c48q5L0JC+do/Vu/Hkk090xxGO+miobgUYA/ExKiZAtH1
-         TTMg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U8OzCzrlqLZ6KobCTgtfavOqwIbWF6/ADR96fWt0LK0=;
+        b=RAuZ8i3f6niprk+xmlh3uwEEgufWvxEm3yZEwC8R751cjjPsRto5Iwf5LN37Blifko
+         dk/q84Pcx1u49eocJRzK3ApMeBP9A/UOdhMVdTFzCCbJrdVUfGPSDvNE+yfaG9p33Df0
+         CrxWaigcwgv+SWnF8zeX/UJpHTeyVSec54+8R0jQ2Yszhh+KacnPglvO+pNGrm8uhFrL
+         BKVjM79G1cevGBWKArS6coS9s5YE57t9uA+WFSnJG5G3LG0Kc+kpVoVCxcOe7Rh7GIrU
+         vy2+OxfF21d8lMs96cma5De3iwNDXt71E+3GwF7vJkLy0O8HjttVuwNh7uogt83VFGnF
+         jECA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0ZJxg0re0sQe/Au75y8ZSXg+6UbrYcDQ07qRUdbYQWs=;
-        b=Dv2xRY53j9Fe7KtvsacAKZs7QDmjTfYcl5viF0zNhflj3VD1JLvexT03sOtMgefF7u
-         7jE4/ZvU6j762AqB4E2NbNWr4Pep54vgC0ReB6qjTYAdIdkMeB5AoMF1CcRPWRLEF8Bx
-         nrr5xaTEzUtxjSB4rezNz9Ek/9u9O8oUmGlc/xQsPKZfycWvHwp2eoupHWx28MAIZxTr
-         yRpURSAOUvfDPOeIeOSV5NNS9wZhOvQoAKNrn+SN7BXWrCYHAH3gWvJZCDt3hCEwRkbZ
-         nN4xohDKUkLS1D4MiM7fCDRWDcU34vUcOst2qY3jOQ1dFqNidczecHpG/K2pExslt1v/
-         QVaA==
-X-Gm-Message-State: APjAAAUm+jby7gsVk7AjOneW5JlqUu/2jG/QS3YBzkTD6mYERYud7M+u
-        WXN+7+y2CA/j3eOw2QkVZaOD+iuU5K31qICIPms=
-X-Google-Smtp-Source: APXvYqzTEMW5j0VJ9hw7N6CzbqIujjtpRLTHaUnyhREmr/np/u/5qwoRZ7Q9MPL4Ss/Lh8YbvsOezHJYuviPIK1Leck=
-X-Received: by 2002:a6b:e219:: with SMTP id z25mr4592197ioc.116.1551916152354;
- Wed, 06 Mar 2019 15:49:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155220.12944-1-nitesh@redhat.com>
-In-Reply-To: <20190306155220.12944-1-nitesh@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 6 Mar 2019 15:49:01 -0800
-Message-ID: <CAKgT0Ue=kGB4D2oV1WUmWHiYhrXa64KWBP2ZhLgHNgvWyOng5A@mail.gmail.com>
-Subject: Re: [RFC][QEMU Patch] KVM: Enable QEMU to free the pages hinted by
- the guest
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U8OzCzrlqLZ6KobCTgtfavOqwIbWF6/ADR96fWt0LK0=;
+        b=W3nKxeN2ti2RHDsep5GNmFVW5f8Us8SfsrtOAlNgLIWDJB8XQUdpmZVrYw79Ehh5GZ
+         o2RgDRffAhsMu69LMfTDiT2cGXISFPDAXXDCDWq8lW9VAR7jDEFHddieNOJ7Xd3CBXDI
+         wN5R3Px5kQgNgtK4M++NzvNzXQSI9TK5pzTL+F8vDoA7HcQ1xocCDSvLzImZ8uLF1m1E
+         cR86Eu5BEgIB+LQlS63h6RrjFCN3GzXAMyNzEipxV/KsLseDjeiLE1LMdny54QUZL7BA
+         lDSY0zqKvubqRgRy0IczgVp4/vEj31Tt6gX7/GHeecYTgLYrQFPpgGXvhSHCkfDNGjlQ
+         prnA==
+X-Gm-Message-State: APjAAAXhEnN7ObXjnP6Tm4TyO3I9jNpeXzwZNVT/1ko8IRVrlvtlg9Yr
+        +1ukvuqZY4CV1QMVApKOU1Y=
+X-Google-Smtp-Source: APXvYqxHyPA0yA638BndcUsu91DX/hqt48TwofG1HIqStykj82Z0dyOWsxEwb3neG9vXvR+aAuMsog==
+X-Received: by 2002:a63:5fce:: with SMTP id t197mr8566506pgb.415.1551916498643;
+        Wed, 06 Mar 2019 15:54:58 -0800 (PST)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id m21sm4955272pfa.14.2019.03.06.15.54.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 15:54:57 -0800 (PST)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder versions
+Date:   Wed,  6 Mar 2019 15:54:54 -0800
+Message-Id: <20190306235455.26348-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 7:52 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->
-> This patch enables QEMU to perform MADVISE_DONTNEED on the pages
-> reported by the guest.
->
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  hw/virtio/trace-events                        |  1 +
->  hw/virtio/virtio-balloon.c                    | 90 +++++++++++++++++++
->  include/hw/virtio/virtio-balloon.h            |  2 +-
->  .../standard-headers/linux/virtio_balloon.h   |  1 +
->  4 files changed, 93 insertions(+), 1 deletion(-)
->
-> diff --git a/hw/virtio/trace-events b/hw/virtio/trace-events
-> index 07bcbe9e85..e3ab66f126 100644
-> --- a/hw/virtio/trace-events
-> +++ b/hw/virtio/trace-events
-> @@ -46,3 +46,4 @@ virtio_balloon_handle_output(const char *name, uint64_t gpa) "section name: %s g
->  virtio_balloon_get_config(uint32_t num_pages, uint32_t actual) "num_pages: %d actual: %d"
->  virtio_balloon_set_config(uint32_t actual, uint32_t oldactual) "actual: %d oldactual: %d"
->  virtio_balloon_to_target(uint64_t target, uint32_t num_pages) "balloon target: 0x%"PRIx64" num_pages: %d"
-> +virtio_balloon_hinting_request(unsigned long pfn, unsigned int num_pages) "Guest page hinting request: %lu num_pages: %d"
-> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-> index a12677d4d5..7ab1471017 100644
-> --- a/hw/virtio/virtio-balloon.c
-> +++ b/hw/virtio/virtio-balloon.c
-> @@ -33,6 +33,13 @@
->
->  #define BALLOON_PAGE_SIZE  (1 << VIRTIO_BALLOON_PFN_SHIFT)
->
-> +struct guest_pages {
-> +       unsigned long pfn;
-> +       unsigned int order;
-> +};
-> +
-> +void page_hinting_request(uint64_t addr, uint32_t len);
-> +
->  static void balloon_page(void *addr, int deflate)
->  {
->      if (!qemu_balloon_is_inhibited()) {
-> @@ -207,6 +214,85 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
->      balloon_stats_change_timer(s, 0);
->  }
->
-> +static void *gpa2hva(MemoryRegion **p_mr, hwaddr addr, Error **errp)
-> +{
-> +    MemoryRegionSection mrs = memory_region_find(get_system_memory(),
-> +                                                 addr, 1);
-> +
-> +    if (!mrs.mr) {
-> +        error_setg(errp, "No memory is mapped at address 0x%" HWADDR_PRIx, addr);
-> +        return NULL;
-> +    }
-> +
-> +    if (!memory_region_is_ram(mrs.mr) && !memory_region_is_romd(mrs.mr)) {
-> +        error_setg(errp, "Memory at address 0x%" HWADDR_PRIx "is not RAM", addr);
-> +        memory_region_unref(mrs.mr);
-> +        return NULL;
-> +    }
-> +
-> +    *p_mr = mrs.mr;
-> +    return qemu_map_ram_ptr(mrs.mr->ram_block, mrs.offset_within_region);
-> +}
-> +
-> +void page_hinting_request(uint64_t addr, uint32_t len)
-> +{
-> +    Error *local_err = NULL;
-> +    MemoryRegion *mr = NULL;
-> +    int ret = 0;
-> +    struct guest_pages *guest_obj;
-> +    int i = 0;
-> +    void *hvaddr_to_free;
-> +    unsigned long pfn, pfn_end;
-> +    uint64_t gpaddr_to_free;
-> +    void * temp_addr = gpa2hva(&mr, addr, &local_err);
-> +
-> +    if (local_err) {
-> +        error_report_err(local_err);
-> +        return;
-> +    }
-> +    guest_obj = temp_addr;
-> +    while (i < len) {
-> +        pfn = guest_obj[i].pfn;
-> +       pfn_end = guest_obj[i].pfn + (1 << guest_obj[i].order) - 1;
-> +       trace_virtio_balloon_hinting_request(pfn,(1 << guest_obj[i].order));
-> +       while (pfn <= pfn_end) {
-> +               gpaddr_to_free = pfn << VIRTIO_BALLOON_PFN_SHIFT;
-> +               hvaddr_to_free = gpa2hva(&mr, gpaddr_to_free, &local_err);
-> +               if (local_err) {
-> +                       error_report_err(local_err);
-> +                       return;
-> +               }
-> +               ret = qemu_madvise((void *)hvaddr_to_free, 4096, QEMU_MADV_DONTNEED);
+From: John Hubbard <jhubbard@nvidia.com>
 
-So the structure of this function is going to cause significant
-performance issues. Because we are freeing the memory 4K at a time we
-are kicking the pages out of using THP and as a result each page fault
-will occur on a 4K boundary instead of a THP boundary.
+Hi Andrew and all,
 
-As a result I am seeing the first pass of memhog take around 35s, but
-the second pass takes 57s or so because we are no longer faulting in
-THP pages and instead having to fault in 4K pages.
+Can we please apply this (destined for 5.2) once the time is right?
+(I see that -mm just got merged into the main tree today.)
 
-We should be trying to madvise the lesser of either PAGE_SIZE <<
-guest_obj[i[.order or the size of the memory region minus our offset.
+We seem to have pretty solid consensus on the concept and details of the
+put_user_pages() approach. Or at least, if we don't, someone please speak
+up now. Christopher Lameter, especially, since you had some concerns
+recently.
 
-> +               if (ret == -1)
-> +                   printf("\n%d:%s Error: Madvise failed with error:%d\n", __LINE__, __func__, ret);
-> +               pfn++;
-> +       }
-> +       i++;
-> +    }
-> +}
-> +
-> +static void virtio_balloon_page_hinting(VirtIODevice *vdev, VirtQueue *vq)
-> +{
-> +    VirtQueueElement *elem = NULL;
-> +    uint64_t temp_addr;
-> +    uint32_t temp_len;
-> +    size_t size, t_size = 0;
-> +
-> +    elem = virtqueue_pop(vq, sizeof(VirtQueueElement));
-> +    if (!elem) {
-> +       printf("\npop error\n");
-> +       return;
-> +    }
-> +    size = iov_to_buf(elem->out_sg, elem->out_num, 0, &temp_addr, sizeof(temp_addr));
-> +    t_size += size;
-> +    size = iov_to_buf(elem->out_sg, elem->out_num, 8, &temp_len, sizeof(temp_len));
-> +    t_size += size;
-> +    page_hinting_request(temp_addr, temp_len);
-> +    virtqueue_push(vq, elem, t_size);
-> +    virtio_notify(vdev, vq);
-> +    g_free(elem);
-> +}
-> +
->  static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
->  {
->      VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-> @@ -376,6 +462,7 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
->      VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
->      f |= dev->host_features;
->      virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
-> +    virtio_add_feature(&f, VIRTIO_BALLOON_F_HINTING);
->      return f;
->  }
->
-> @@ -445,6 +532,7 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
->      s->ivq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
->      s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
->      s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
-> +    s->hvq = virtio_add_queue(vdev, 128, virtio_balloon_page_hinting);
->
->      reset_stats(s);
->  }
-> @@ -488,6 +576,8 @@ static void virtio_balloon_instance_init(Object *obj)
->
->      object_property_add(obj, "guest-stats", "guest statistics",
->                          balloon_stats_get_all, NULL, NULL, s, NULL);
-> +    object_property_add(obj, "guest-page-hinting", "guest page hinting",
-> +                        NULL, NULL, NULL, s, NULL);
->
->      object_property_add(obj, "guest-stats-polling-interval", "int",
->                          balloon_stats_get_poll_interval,
-> diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-> index e0df3528c8..774498a6ca 100644
-> --- a/include/hw/virtio/virtio-balloon.h
-> +++ b/include/hw/virtio/virtio-balloon.h
-> @@ -32,7 +32,7 @@ typedef struct virtio_balloon_stat_modern {
->
->  typedef struct VirtIOBalloon {
->      VirtIODevice parent_obj;
-> -    VirtQueue *ivq, *dvq, *svq;
-> +    VirtQueue *ivq, *dvq, *svq, *hvq;
->      uint32_t num_pages;
->      uint32_t actual;
->      uint64_t stats[VIRTIO_BALLOON_S_NR];
-> diff --git a/include/standard-headers/linux/virtio_balloon.h b/include/standard-headers/linux/virtio_balloon.h
-> index 4dbb7dc6c0..f50c0d95ea 100644
-> --- a/include/standard-headers/linux/virtio_balloon.h
-> +++ b/include/standard-headers/linux/virtio_balloon.h
-> @@ -34,6 +34,7 @@
->  #define VIRTIO_BALLOON_F_MUST_TELL_HOST        0 /* Tell before reclaiming pages */
->  #define VIRTIO_BALLOON_F_STATS_VQ      1 /* Memory Stats virtqueue */
->  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM        2 /* Deflate balloon on OOM */
-> +#define VIRTIO_BALLOON_F_HINTING       5 /* Page hinting virtqueue */
->
->  /* Size of a PFN in the balloon interface. */
->  #define VIRTIO_BALLOON_PFN_SHIFT 12
-> --
-> 2.17.2
->
+Therefore, here is the first patch--only. This allows us to begin
+converting the get_user_pages() call sites to use put_user_page(), instead
+of put_page(). This is in order to implement tracking of get_user_page()
+pages.
+
+Normally I'd include a user of this code, but in this case, I think we have
+examples of how it will work in the RFC and related discussions [1]. What
+matters more at this point is unblocking the ability to start fixing up
+various subsystems, through git trees other than linux-mm. For example, the
+Infiniband example conversion now needs to pick up some prerequisite
+patches via the RDMA tree. It seems likely that other call sites may need
+similar attention, and so having put_user_pages() available would really
+make this go more quickly.
+
+Previous cover letter follows:
+==============================
+
+A discussion of the overall problem is below.
+
+As mentioned in patch 0001, the steps are to fix the problem are:
+
+1) Provide put_user_page*() routines, intended to be used
+   for releasing pages that were pinned via get_user_pages*().
+
+2) Convert all of the call sites for get_user_pages*(), to
+   invoke put_user_page*(), instead of put_page(). This involves dozens of
+   call sites, and will take some time.
+
+3) After (2) is complete, use get_user_pages*() and put_user_page*() to
+   implement tracking of these pages. This tracking will be separate from
+   the existing struct page refcounting.
+
+4) Use the tracking and identification of these pages, to implement
+   special handling (especially in writeback paths) when the pages are
+   backed by a filesystem.
+
+Overview
+========
+
+Some kernel components (file systems, device drivers) need to access
+memory that is specified via process virtual address. For a long time, the
+API to achieve that was get_user_pages ("GUP") and its variations. However,
+GUP has critical limitations that have been overlooked; in particular, GUP
+does not interact correctly with filesystems in all situations. That means
+that file-backed memory + GUP is a recipe for potential problems, some of
+which have already occurred in the field.
+
+GUP was first introduced for Direct IO (O_DIRECT), allowing filesystem code
+to get the struct page behind a virtual address and to let storage hardware
+perform a direct copy to or from that page. This is a short-lived access
+pattern, and as such, the window for a concurrent writeback of GUP'd page
+was small enough that there were not (we think) any reported problems.
+Also, userspace was expected to understand and accept that Direct IO was
+not synchronized with memory-mapped access to that data, nor with any
+process address space changes such as munmap(), mremap(), etc.
+
+Over the years, more GUP uses have appeared (virtualization, device
+drivers, RDMA) that can keep the pages they get via GUP for a long period
+of time (seconds, minutes, hours, days, ...). This long-term pinning makes
+an underlying design problem more obvious.
+
+In fact, there are a number of key problems inherent to GUP:
+
+Interactions with file systems
+==============================
+
+File systems expect to be able to write back data, both to reclaim pages,
+and for data integrity. Allowing other hardware (NICs, GPUs, etc) to gain
+write access to the file memory pages means that such hardware can dirty
+the pages, without the filesystem being aware. This can, in some cases
+(depending on filesystem, filesystem options, block device, block device
+options, and other variables), lead to data corruption, and also to kernel
+bugs of the form:
+
+    kernel BUG at /build/linux-fQ94TU/linux-4.4.0/fs/ext4/inode.c:1899!
+    backtrace:
+        ext4_writepage
+        __writepage
+        write_cache_pages
+        ext4_writepages
+        do_writepages
+        __writeback_single_inode
+        writeback_sb_inodes
+        __writeback_inodes_wb
+        wb_writeback
+        wb_workfn
+        process_one_work
+        worker_thread
+        kthread
+        ret_from_fork
+
+...which is due to the file system asserting that there are still buffer
+heads attached:
+
+        ({                                                      \
+                BUG_ON(!PagePrivate(page));                     \
+                ((struct buffer_head *)page_private(page));     \
+        })
+
+Dave Chinner's description of this is very clear:
+
+    "The fundamental issue is that ->page_mkwrite must be called on every
+    write access to a clean file backed page, not just the first one.
+    How long the GUP reference lasts is irrelevant, if the page is clean
+    and you need to dirty it, you must call ->page_mkwrite before it is
+    marked writeable and dirtied. Every. Time."
+
+This is just one symptom of the larger design problem: filesystems do not
+actually support get_user_pages() being called on their pages, and letting
+hardware write directly to those pages--even though that pattern has been
+going on since about 2005 or so.
+
+Long term GUP
+=============
+
+Long term GUP is an issue when FOLL_WRITE is specified to GUP (so, a
+writeable mapping is created), and the pages are file-backed. That can lead
+to filesystem corruption. What happens is that when a file-backed page is
+being written back, it is first mapped read-only in all of the CPU page
+tables; the file system then assumes that nobody can write to the page, and
+that the page content is therefore stable. Unfortunately, the GUP callers
+generally do not monitor changes to the CPU pages tables; they instead
+assume that the following pattern is safe (it's not):
+
+    get_user_pages()
+
+    Hardware can keep a reference to those pages for a very long time,
+    and write to it at any time. Because "hardware" here means "devices
+    that are not a CPU", this activity occurs without any interaction
+    with the kernel's file system code.
+
+    for each page
+        set_page_dirty
+        put_page()
+
+In fact, the GUP documentation even recommends that pattern.
+
+Anyway, the file system assumes that the page is stable (nothing is writing
+to the page), and that is a problem: stable page content is necessary for
+many filesystem actions during writeback, such as checksum, encryption,
+RAID striping, etc. Furthermore, filesystem features like COW (copy on
+write) or snapshot also rely on being able to use a new page for as memory
+for that memory range inside the file.
+
+Corruption during write back is clearly possible here. To solve that, one
+idea is to identify pages that have active GUP, so that we can use a bounce
+page to write stable data to the filesystem. The filesystem would work
+on the bounce page, while any of the active GUP might write to the
+original page. This would avoid the stable page violation problem, but note
+that it is only part of the overall solution, because other problems
+remain.
+
+Other filesystem features that need to replace the page with a new one can
+be inhibited for pages that are GUP-pinned. This will, however, alter and
+limit some of those filesystem features. The only fix for that would be to
+require GUP users to monitor and respond to CPU page table updates.
+Subsystems such as ODP and HMM do this, for example. This aspect of the
+problem is still under discussion.
+
+Direct IO
+=========
+
+Direct IO can cause corruption, if userspace does Direct-IO that writes to
+a range of virtual addresses that are mmap'd to a file.  The pages written
+to are file-backed pages that can be under write back, while the Direct IO
+is taking place.  Here, Direct IO races with a write back: it calls
+GUP before page_mkclean() has replaced the CPU pte with a read-only entry.
+The race window is pretty small, which is probably why years have gone by
+before we noticed this problem: Direct IO is generally very quick, and
+tends to finish up before the filesystem gets around to do anything with
+the page contents.  However, it's still a real problem.  The solution is
+to never let GUP return pages that are under write back, but instead,
+force GUP to take a write fault on those pages.  That way, GUP will
+properly synchronize with the active write back.  This does not change the
+required GUP behavior, it just avoids that race.
+
+Changes since v2:
+
+ * Reduced down to just one patch, in order to avoid dependencies between
+   subsystem git repos.
+
+ * Rebased to latest linux.git: commit afe6fe7036c6 ("Merge tag
+   'armsoc-late' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc")
+
+ * Added Ira's review tag, based on
+   https://lore.kernel.org/lkml/20190215002312.GC7512@iweiny-DESK2.sc.intel.com/
+
+
+[1] https://lore.kernel.org/r/20190208075649.3025-3-jhubbard@nvidia.com
+    (RFC v2: mm: gup/dma tracking)
+
+Cc: Christian Benvenuti <benve@cisco.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christopher Lameter <cl@linux.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: Tom Talpey <tom@talpey.com>
+
+
+John Hubbard (1):
+  mm: introduce put_user_page*(), placeholder versions
+
+ include/linux/mm.h | 24 ++++++++++++++
+ mm/swap.c          | 82 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+)
+
+-- 
+2.21.0
+
