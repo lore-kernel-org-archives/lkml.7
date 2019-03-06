@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-14.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83608C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925DBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513EA21734
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B37920840
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 15:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfCFPgX (ORCPT
+        id S1729224AbfCFPiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 10:36:23 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35690 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfCFPgX (ORCPT
+        Wed, 6 Mar 2019 10:38:24 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35475 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfCFPiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 10:36:23 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p48so13276836qtk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:36:22 -0800 (PST)
+        Wed, 6 Mar 2019 10:38:24 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z13so7029957qki.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 07:38:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J+FeZe6PSCOtLAAuNZaCxy4v5LXwB6YxaeesmlZNuV0=;
-        b=Y5dvUYPUfyArN67YbGfv0p91qt4xtt3R+x7Kkq5vKBwyUzT4W25pAWSw9EJl7UxU//
-         fyh7TNrzpMzCD8Tw5p+IZhppTGkWsKngCJDPBLTgZ+oZITtI/hthA0axNVFnrslcPkHB
-         jgmkr8XBAHX/aIDnVAY8w7zd/1/pLqWyJ+0u6AaUL8xzIaLwVb/+y1X4gBnb7Q6U9ypL
-         ThBglznkNH7GJpQemjd9Xie/tkYrS6JrPKgpce7w3pzOKTzWjjq+FHT62n+7nH9SI9Jd
-         LW0byMfYMDq9CDVUZIoutn1upicUbQngD70sn7D+KufANV7NzI7Ligc6m3NpLToLoU1M
-         1ijg==
-X-Gm-Message-State: APjAAAXHrYJ8IzrXzcwx7JdA4bTqjOSMSahkV8sfS9dRwuCWOrDDN+LS
-        ReQ9bNM8lzXSdaaVy0FcapjLxDPxrScdnU700+I=
-X-Google-Smtp-Source: APXvYqxgtj8wrj9LK2YWP2uiA0RzycbeCeEhzl1TFMJ22p5xsTSYFn+1J4W2JlZi7sJwDH7A5AgHikqbew1MjvvFvCk=
-X-Received: by 2002:a0c:98c8:: with SMTP id g8mr6857391qvd.161.1551886582156;
- Wed, 06 Mar 2019 07:36:22 -0800 (PST)
+        bh=vb/51HfBRNvH5tlNql7v+bee6R5v2plRzp+9JvaJ5os=;
+        b=fgLrnADRN5weRV8g5Hi2iDeHo76f1g05Hr+CCo9bt3SyNHA0y93nLxs7c+jvlV/zUo
+         mybxTsV+T3R/uYhkwGvRnfwoQPip418Uktjgpt3ZQdaeNM+OWg/mDX+JFobXrlomFW7r
+         giniWMjK23iP0CrbE868lm+vcmlgeAdvyzjRmbtjEIfczbyq4OTrfiNdVSRxdcyL040D
+         xBa7fWTrHNSwPzueSnwq2DkrDnXXG53IoP8xfUr1y65t0ZMLQIFkmNSBCBDu5/su+WRq
+         JV9xpZMOMsqB7Su7k5MDR4JG1WrznetVGGC7boLiQzUwtNwY6+w55g0Z3iSG/Lms3hZk
+         Rc5Q==
+X-Gm-Message-State: APjAAAVPQGDYRe4Tpwxn0k8SuvkkpsBh0xJqnDqbN1TBtvKtuAKzb/xZ
+        e2MFxhCKbQx3wpsDhXPtcDXo846DoaEJjuVMF1+M60Bx
+X-Google-Smtp-Source: APXvYqzraQrDz6klirIWQ6N0kDyca8I5mFa2H+ZApKjtg8F10n6MOBpz06COiOd1nBJr6/mihpptmvdvA0sJMGD2r7s=
+X-Received: by 2002:a37:8dc5:: with SMTP id p188mr5996763qkd.330.1551886702857;
+ Wed, 06 Mar 2019 07:38:22 -0800 (PST)
 MIME-Version: 1.0
 References: <CAK8P3a1mnNrpf5moqi4x9BaTNpE9ZUgs-VBjXoG7=AxENwYtbQ@mail.gmail.com>
 In-Reply-To: <CAK8P3a1mnNrpf5moqi4x9BaTNpE9ZUgs-VBjXoG7=AxENwYtbQ@mail.gmail.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 6 Mar 2019 16:36:05 +0100
-Message-ID: <CAK8P3a2+OspNio3=mLoYPjOg_rbYeomYa8TrRaLwU=ZF1ec20w@mail.gmail.com>
-Subject: [GIT PULL 5/6] ARM: New SoC family support for 5.1
+Date:   Wed, 6 Mar 2019 16:38:06 +0100
+Message-ID: <CAK8P3a3Daeqb3hfYvR0P=mjyONZVavfMbK8As8X5G+n4+k6sSQ@mail.gmail.com>
+Subject: [GIT PULL 6/6] ARM: SoC late updates for 5.1
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     soc@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -56,122 +56,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
+The following changes since commit f17b5f06cb92ef2250513a1e154c47b78df07d40:
 
-  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
+  Linux 5.0-rc4 (2019-01-27 15:18:05 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-newsoc
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-late
 
-for you to fetch changes up to c889e2a0b053703be7e7591c9a574975440e5502:
+for you to fetch changes up to 2547635054af399303f8b91292ea121e13b84bb1:
 
-  Merge branch 'milbeaut/newsoc' into arm/newsoc (2019-03-01 15:21:04 +0100)
+  Merge tag 'omap-for-v5.1/cpsw-signed' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap into
+arm/late (2019-02-22 22:13:46 +0100)
 
 ----------------------------------------------------------------
-ARM: New SoC family support
+ARM: SoC: late updates for 5.1
 
-Two new SoC families are added this time.
+Here are two branches that came relatively late during the linux-5.0
+development cycle and have dependencies on the other branches:
 
-Sugaya Taichi submitted support for the Milbeaut SoC family from
-Socionext and explains:
+- On the TI OMAP platform, the CPSW Ethernet PHY mode selection driver
+  is being replaced, this puts the final pieces in place
 
- "SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
-  computer vision. It also features advanced functionalities such as 360-degree,
-  real-time spherical stitching with multi cameras, image stabilization for
-  without mechanical gimbals, and rolling shutter correction. More detail is
-  below:
-  https://www.socionext.com/en/products/assp/milbeaut/SC2000.html"
+- On the DaVinci platform, the interrupt handling code in arch/arm
+  gets moved into a regular device driver in drivers/irqchip.
 
-Interestingly, this one has a history dating back to older chips
-made by Socionext and previously Matsushita/Panasonic based on their
-own mn10300 CPU architecture that was removed from the kernel last year.
-
-Manivannan Sadhasivam adds support for another SoC family, this is the
-Bitmain BM1880 chip used in the Sophon Edge TPU developer board.
-The chip is intended for Deep Learning applications, and comes
-with dual-core Arm Cortex-A53 to run Linux as well as a RISC-V
-microcontroller core to control the tensor unit.
-For the moment, the TPU is not accessible in mainline Linux, so
-we treat it as a generic Arm SoC.
-More information is available at https://www.sophon.ai/
+Since they both had some time in linux-next after the 5.0-rc8
+release, I'm sending them along with the other updates.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 ----------------------------------------------------------------
-Arnd Bergmann (2):
-      Merge tag 'bitmain-initial-soc-v5.1' of
-git://git.kernel.org/.../mani/linux-bitmain into arm/newsoc
-      Merge branch 'milbeaut/newsoc' into arm/newsoc
 
-Manivannan Sadhasivam (5):
-      dt-bindings: arm: Document Bitmain BM1880 SoC
-      arm64: Add ARCH_BITMAIN platform
-      arm64: dts: bitmain: Add BM1880 SoC support
-      arm64: dts: bitmain: Add Sophon Egde board support
-      MAINTAINERS: Add entry for Bitmain SoC platform
+Arnd Bergmann (3):
+      Merge tag 'davinci-for-v5.1/soc-part3' of
+git://git.kernel.org/.../nsekhar/linux-davinci into arm/late
+      Merge tag 'omap-for-v5.1/cpsw-signed' of
+git://git.kernel.org/.../tmlind/linux-omap into arm/late
+      Merge tag 'armsoc-late' into HEAD
 
-Sugaya Taichi (9):
-      dt-bindings: sram: milbeaut: Add binding for Milbeaut smp-sram
-      dt-bindings: arm: Add SMP enable-method for Milbeaut
-      dt-bindings: Add documentation for Milbeaut SoCs
-      ARM: milbeaut: Add basic support for Milbeaut m10v SoC
-      dt-bindings: timer: Add Milbeaut M10V timer description
-      clocksource/drivers/timer-milbeaut: Introduce timer for Milbeaut SoCs
-      ARM: dts: milbeaut: Add device tree set for the Milbeaut M10V board
-      ARM: configs: Add Milbeaut M10V defconfig
-      ARM: multi_v7_defconfig: add ARCH_MILBEAUT and ARCH_MILBEAUT_M10V
+Bartosz Golaszewski (37):
+      input: davinci_keyscan: remove unnecessary includes
+      ARM: davinci: remove intc_host_map from davinci_soc_info struct
+      ARM: davinci: aintc: use irq domain
+      ARM: davinci: select GENERIC_IRQ_MULTI_HANDLER
+      ARM: davinci: remove davinci_intc_type
+      ARM: davinci: pull davinci_intc_base into the respective intc drivers
+      ARM: davinci: wrap HW interrupt numbers with a macro
+      ARM: davinci: select SPARSE_IRQ
+      ARM: davinci: make irqs.h a local header
+      ARM: davinci: aintc: drop GPL license boilerplate
+      ARM: davinci: aintc: wrap davinci_irq_init() with a helper
+      ARM: davinci: aintc: use a common prefix for symbols in the driver
+      ARM: davinci: aintc: drop the 00 prefix from register offsets
+      ARM: davinci: aintc: use writel_relaxed()
+      irqchip: davinci-aintc: add a new config structure
+      ARM: davinci: aintc: use the new irqchip config structure in dm* SoCs
+      ARM: davinci: aintc: use the new config structure
+      ARM: davinci: aintc: unify error handling
+      ARM: davinci: aintc: request memory region before remapping it
+      ARM: davinci: aintc: remove the timer-specific irq_set_handler()
+      ARM: davinci: aintc: remove unnecessary includes
+      irqchip: davinci-aintc: move the driver to drivers/irqchip
+      ARM: davinci: cp-intc: remove cp_intc.h
+      ARM: davinci: cp-intc: add a wrapper around cp_intc_init()
+      irqchip: davinci-cp-intc: add a new config structure
+      ARM: davinci: cp-intc: add the new config structures for da8xx SoCs
+      ARM: davinci: cp-intc: use a common prefix for all symbols
+      ARM: davinci: cp-intc: convert all hex numbers to lowercase
+      ARM: davinci: cp-intc: use the new-style config structure
+      ARM: davinci: cp-intc: request the memory region before remapping it
+      ARM: davinci: cp-intc: improve coding style
+      ARM: davinci: cp-intc: unify error handling
+      ARM: davinci: cp-intc: use readl/writel_relaxed()
+      ARM: davinci: cp-intc: drop GPL license boilerplate
+      ARM: davinci: cp-intc: remove redundant comments
+      irqchip: davinci-cp-intc: move the driver to drivers/irqchip
+      ARM: davinci: remove intc related fields from davinci_soc_info
 
- Documentation/devicetree/bindings/arm/bitmain.yaml
-|  18 +++++++
- Documentation/devicetree/bindings/arm/cpus.yaml                      |   1 +
- Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
-|  22 ++++++++
- Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
-|  24 +++++++++
- Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
-|  17 ++++++
- MAINTAINERS                                                          |   7 +++
- arch/arm/Kconfig                                                     |   2 +
- arch/arm/Makefile                                                    |   1 +
- arch/arm/boot/dts/Makefile                                           |   1 +
- arch/arm/boot/dts/milbeaut-m10v-evb.dts
-|  32 +++++++++++
- arch/arm/boot/dts/milbeaut-m10v.dtsi
-|  95 ++++++++++++++++++++++++++++++++
- arch/arm/configs/milbeaut_m10v_defconfig
-| 119 ++++++++++++++++++++++++++++++++++++++++
- arch/arm/configs/multi_v7_defconfig                                  |   2 +
- arch/arm/mach-milbeaut/Kconfig
-|  20 +++++++
- arch/arm/mach-milbeaut/Makefile                                      |   1 +
- arch/arm/mach-milbeaut/platsmp.c
-| 143 ++++++++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/Kconfig.platforms                                         |   5 ++
- arch/arm64/boot/dts/Makefile                                         |   1 +
- arch/arm64/boot/dts/bitmain/Makefile                                 |   3 ++
- arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-|  50 +++++++++++++++++
- arch/arm64/boot/dts/bitmain/bm1880.dtsi
-| 119 ++++++++++++++++++++++++++++++++++++++++
- drivers/clocksource/Kconfig                                          |   9 ++++
- drivers/clocksource/Makefile                                         |   1 +
- drivers/clocksource/timer-milbeaut.c
-| 161 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 24 files changed, 854 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bitmain.yaml
- create mode 100644
-Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
- create mode 100644 Documentation/devicetree/bindings/sram/milbeaut-smp-sram.txt
- create mode 100644
-Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
- create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dts
- create mode 100644 arch/arm/boot/dts/milbeaut-m10v.dtsi
- create mode 100644 arch/arm/configs/milbeaut_m10v_defconfig
- create mode 100644 arch/arm/mach-milbeaut/Kconfig
- create mode 100644 arch/arm/mach-milbeaut/Makefile
- create mode 100644 arch/arm/mach-milbeaut/platsmp.c
- create mode 100644 arch/arm64/boot/dts/bitmain/Makefile
- create mode 100644 arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
- create mode 100644 arch/arm64/boot/dts/bitmain/bm1880.dtsi
- create mode 100644 drivers/clocksource/timer-milbeaut.c
+Grygorii Strashko (1):
+      net: ethernet: ti: cpsw: deprecate cpsw-phy-sel driver
+
+ arch/arm/Kconfig                                 |   2 +
+ arch/arm/mach-davinci/Kconfig                    |  19 ++----
+ arch/arm/mach-davinci/Makefile                   |   3 -
+ arch/arm/mach-davinci/asp.h                      |   8 +--
+ arch/arm/mach-davinci/board-da830-evm.c          |   5 +-
+ arch/arm/mach-davinci/board-da850-evm.c          |   5 +-
+ arch/arm/mach-davinci/board-dm355-evm.c          |   2 +-
+ arch/arm/mach-davinci/board-dm355-leopard.c      |   2 +-
+ arch/arm/mach-davinci/board-dm365-evm.c          |   2 +-
+ arch/arm/mach-davinci/board-dm644x-evm.c         |   8 ++-
+ arch/arm/mach-davinci/board-dm646x-evm.c         |   6 +-
+ arch/arm/mach-davinci/board-mityomapl138.c       |   3 +-
+ arch/arm/mach-davinci/board-neuros-osd2.c        |   2 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c      |   3 +-
+ arch/arm/mach-davinci/board-sffsdr.c             |   2 +-
+ arch/arm/mach-davinci/common.c                   |   3 -
+ arch/arm/mach-davinci/cp_intc.c                  | 215
+--------------------------------------------------------------
+ arch/arm/mach-davinci/cp_intc.h                  |  57 -----------------
+ arch/arm/mach-davinci/da830.c                    | 128
++++++++------------------------------
+ arch/arm/mach-davinci/da850.c                    | 154
++++++++++-----------------------------------
+ arch/arm/mach-davinci/davinci.h                  |   4 ++
+ arch/arm/mach-davinci/devices-da8xx.c            | 147
++++++++++++++++++++++---------------------
+ arch/arm/mach-davinci/devices.c                  |  40 ++++++------
+ arch/arm/mach-davinci/dm355.c                    |  78 +++++++++++++----------
+ arch/arm/mach-davinci/dm365.c                    | 102
++++++++++++++++++-------------
+ arch/arm/mach-davinci/dm644x.c                   |  68 ++++++++++++--------
+ arch/arm/mach-davinci/dm646x.c                   |  82 ++++++++++++++----------
+ arch/arm/mach-davinci/include/mach/common.h      |  14 ++--
+ arch/arm/mach-davinci/include/mach/da8xx.h       |   2 +
+ arch/arm/mach-davinci/include/mach/entry-macro.S |  39 ------------
+ arch/arm/mach-davinci/irq.c                      | 117
+----------------------------------
+ arch/arm/mach-davinci/{include/mach => }/irqs.h  |   4 --
+ arch/arm/mach-davinci/usb-da8xx.c                |   9 +--
+ arch/arm/mach-davinci/usb.c                      |  15 +++--
+ drivers/input/keyboard/davinci_keyscan.c         |   4 --
+ drivers/irqchip/Kconfig                          |  10 +++
+ drivers/irqchip/Makefile                         |   2 +
+ drivers/irqchip/irq-davinci-aintc.c              | 163
++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/irqchip/irq-davinci-cp-intc.c            | 260
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/Kconfig                  |   6 +-
+ drivers/net/ethernet/ti/cpsw.h                   |   6 ++
+ include/linux/irqchip/irq-davinci-aintc.h        |  27 ++++++++
+ include/linux/irqchip/irq-davinci-cp-intc.h      |  25 ++++++++
+ 43 files changed, 889 insertions(+), 964 deletions(-)
