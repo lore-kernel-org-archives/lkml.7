@@ -2,50 +2,48 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C88C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B96C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00EE206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302B920675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 06:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="f7aA5nT+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="arOp9k7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfCFGaw (ORCPT
+        id S1729089AbfCFGa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 01:30:52 -0500
-Received: from mail-eopbgr50089.outbound.protection.outlook.com ([40.107.5.89]:43681
+        Wed, 6 Mar 2019 01:30:57 -0500
+Received: from mail-eopbgr50080.outbound.protection.outlook.com ([40.107.5.80]:11489
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729052AbfCFGat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 01:30:49 -0500
+        id S1729063AbfCFGaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 01:30:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OxA5U5MVsfsm3lW7LN7xp2DkbqIjvZA2xazTALkP7V8=;
- b=f7aA5nT+sC37GwOLja4lIoTEkCqJPngspRGqU8cNivrFGQAlfwZ7RzwQraB7RKrVmUo3errV96S6MJs+l5gdyjTUf8eRuUhQeqDe8P/e4/RQ+jnXNc9faE0jpuK1S5O+8hCqo+X3+s0rTE88yzrhjBcY+8qTcko0xNmxlEpODSY=
+ bh=gC3JqbsctjR9Zfq8KvrJNyIX0h08B5bpWFDR9qTyfVw=;
+ b=arOp9k7wywqBQDDyemY/HF+FHtYZS4eWLZpOjZirWJkxjMjabT9gdR+EFoQZxEs3rZsmD0XmgU2e4U9oPM2IzqbL1cozcKnkjEpBsrBJ9bYYLM28u6TDvcSUmatI/oCgUZElnCwsFqCjq6srVAPMfNhQCWL+8Vw3HghWtoFd8Ew=
 Received: from AM6PR04MB5016.eurprd04.prod.outlook.com (20.177.34.88) by
  AM6PR04MB4373.eurprd04.prod.outlook.com (20.177.38.91) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.19; Wed, 6 Mar 2019 06:30:43 +0000
+ 15.20.1665.19; Wed, 6 Mar 2019 06:30:45 +0000
 Received: from AM6PR04MB5016.eurprd04.prod.outlook.com
  ([fe80::5841:afe:53fd:42bb]) by AM6PR04MB5016.eurprd04.prod.outlook.com
  ([fe80::5841:afe:53fd:42bb%6]) with mapi id 15.20.1665.020; Wed, 6 Mar 2019
- 06:30:43 +0000
+ 06:30:45 +0000
 From:   Clark Wang <xiaoning.wang@nxp.com>
 To:     "broonie@kernel.org" <broonie@kernel.org>
 CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 5/8] spi: lpspi: use the core way to implement cs-gpio
- function
-Thread-Topic: [PATCH V2 5/8] spi: lpspi: use the core way to implement cs-gpio
- function
-Thread-Index: AQHU0+YfHXSSQ+2wq020IOJyOSoR1w==
-Date:   Wed, 6 Mar 2019 06:30:43 +0000
-Message-ID: <20190306063020.793-6-xiaoning.wang@nxp.com>
+Subject: [PATCH V2 6/8] spi: lpspi: add dma mode support
+Thread-Topic: [PATCH V2 6/8] spi: lpspi: add dma mode support
+Thread-Index: AQHU0+Yh6Oh4Uxb7nEmgG98iwvig9g==
+Date:   Wed, 6 Mar 2019 06:30:45 +0000
+Message-ID: <20190306063020.793-7-xiaoning.wang@nxp.com>
 References: <20190306063020.793-1-xiaoning.wang@nxp.com>
 In-Reply-To: <20190306063020.793-1-xiaoning.wang@nxp.com>
 Accept-Language: zh-CN, en-US
@@ -61,47 +59,47 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.71]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 35d5a628-3ee0-4bb8-c103-08d6a1fd421a
+x-ms-office365-filtering-correlation-id: f4e305fb-8209-4fcc-634b-08d6a1fd4354
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB4373;
 x-ms-traffictypediagnostic: AM6PR04MB4373:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB4373;23:20bLht99nuDOF94PM91smTBvIFEt9UUD/rqbhFh?=
- =?iso-8859-1?Q?yuUtkPZ3apguLx/pXM2WOA6AmWPUUdgZVcPxQ/th+ZlQaHlLgqaJUP6e9w?=
- =?iso-8859-1?Q?tc6RkM1q5HSZMh2UWO1DQQVyiGEv4Ws/v4eaf2RjYyATWTwBkhzb9nfY0p?=
- =?iso-8859-1?Q?iqOR2BFNk8jolY/bWvYjzf1urZRL8x4VC7tq1AyORuLSz4MipaoBjswld6?=
- =?iso-8859-1?Q?wXM2oD+j83Z+3pzZTjcDNSBOY27PtQ8SggF1KsZbEu1BGj+8w3jmARogVP?=
- =?iso-8859-1?Q?xRpZl0E0aAZthluTDrp7vHj+W0IUWX5i7twcqrpFJRtydiZj0a9sbsfOU8?=
- =?iso-8859-1?Q?QLB5sCySqWDLSlOL67hD7rqM2ufs/UVyGtEpv+OL0RYMRopxvkNvAuiIcR?=
- =?iso-8859-1?Q?8jx+c147ERAc3top2SU/Xdyg70dGNyIWveQodukQc47V31/CZQ+PPn5spx?=
- =?iso-8859-1?Q?zt3Xl+kHV7DccTNQFjG51uOJ73UghJh+FTqlkdvFAR2XqDCCQgkw9EoX0E?=
- =?iso-8859-1?Q?3sa6EzcXnTUXiKjEwn26x6SVRBaLbrPgAtzySeIZEqGQeBdz0O/XzOqoJk?=
- =?iso-8859-1?Q?yhHUgWr7ntX2gbZw0QZRX/8G1TWdyp0gw73qUSoVll2ioJSHAvqisQBqk7?=
- =?iso-8859-1?Q?cW8G0QpSyW2Y17KcLvhXfZK8ZCXx0itUnEt9iylPjQLB48WZZ0uoeZht0m?=
- =?iso-8859-1?Q?vnTrGQw45v6pwbb2AGz+5rb6oPDmvz/QbFkv3c5ozaIqDII3zIgSRRtOLW?=
- =?iso-8859-1?Q?5SQOxJirAMcJidH4GvAHMu08vYVQsbYGvk04Eph2I1YgahsdpE8nN/V/6l?=
- =?iso-8859-1?Q?9JJKlMzDZvqJGOb4TNgY4+ZeO3SXdVqkcnRenC+rA7Niz62cHYcWBRJwpd?=
- =?iso-8859-1?Q?ZBkStKOLvw9MpuqehJFl5u2UOtiyHTQBGXmzE/1+7rZjW0bH+OprvMom92?=
- =?iso-8859-1?Q?UFh+Aoan7oxg5js9DbARQUX+To7SaxmHQflfmtIreV4EEWSwY5E+Tg9SKv?=
- =?iso-8859-1?Q?QHj3rVrwL0ySK7sV6naY/rS5IW7UdYmoKzunWotroYy9OmjaK4yWsEmB3I?=
- =?iso-8859-1?Q?0fHXmpBKXnUkxHEfiJRQxAQVeSsKsdqog/cupVgxYL1W8W/yGH75BKU6hM?=
- =?iso-8859-1?Q?m/7VBVcWvTkNOyJM/i91xMlWFYOqbetkXL/sjJYHYA9ITiwwXjeTPRjLZj?=
- =?iso-8859-1?Q?b+f8nw9mwD4K29NWGjnBbNln5/9f2Djc16y6Y4oDS/7ZTlFFWFhGdqlQC7?=
- =?iso-8859-1?Q?pqxbGggYEqwcqHlVpISiQLyvj3uD22MxjB8xcwFM63NbwQr8j8cyJ1Rl1d?=
- =?iso-8859-1?Q?NGi4B/RffHH5eUIu7EJ/ThPdAtY0ksZMqm+aCz8BH89gGzhi1o1F+JPLsZ?=
- =?iso-8859-1?Q?Xc+7bQCAbpg4+YLxhcTCCH+JKNSCJ?=
-x-microsoft-antispam-prvs: <AM6PR04MB43733CFFCAFAEF8D698A543CF3730@AM6PR04MB4373.eurprd04.prod.outlook.com>
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB4373;23:lx8TP3XXymNTEnyC8VNYKt159PUy4eRW1+97542?=
+ =?iso-8859-1?Q?DgW3MHsjdRAQvDy5mhLJSs8ap2liNJKipP7tQR/dIa8kbcyKV2tZMvFbeN?=
+ =?iso-8859-1?Q?I2j1AcLY0EeJVHK/9x1XtNdBWISpu4YKgdQVjOC1Mg5QHNiThsi0yKH7tI?=
+ =?iso-8859-1?Q?ZN+96gIDtwwd0QojRFC+D4sPgWM/HaJiC/72js3OzvAZA2j0t4MVnSFQbb?=
+ =?iso-8859-1?Q?CXOqWPWZxsaw6GjbAvX96o7R/2SVusfhPuFcFa1yQF8sTt9haRzJBlGMFd?=
+ =?iso-8859-1?Q?k8ViDb+PZut7j+g7eFh/Y/13wdLx8Gtqd7UxOF9Q3PyIHdMsMfGO+VmfGI?=
+ =?iso-8859-1?Q?XiHamzegifXk/iS3tloiS9wOyIx8xOh0frWibV73UoUrABKAkkmehCb8yI?=
+ =?iso-8859-1?Q?/zmFxetubBIdA467/LdG6lK3ZXoLdxUo58D4YmviwwsJvH75paDlIlieq0?=
+ =?iso-8859-1?Q?QHb751AdnTb8RjxxzgPj/vAWexqR+0wWkD4FrD8IbX92Y+OpBL9XKb//Ze?=
+ =?iso-8859-1?Q?SKfC/BzZD2iuP+nrFm+HlP3nIIOTY2FZ8u6s1lL7HCJzWwf9CSIcbp7iI+?=
+ =?iso-8859-1?Q?RA8+WHX0RXhKHeb0WRKUzcWG+haVb7H3rEiJ3eh1r+pDhGtkRwfvPhcubN?=
+ =?iso-8859-1?Q?uNgFCJQsytI68ImF/37ffjRl3ChwFN/fgWTdYKljA26TZRoXZQI84RUY2z?=
+ =?iso-8859-1?Q?XuLTZCadglpoACdFDnL6eT9wg3VoSn+t6AVIZ1Ob5FIibc+Xs5mqAjTfdV?=
+ =?iso-8859-1?Q?rtjxc1Iyj+BTBu8iPUVaht27t9nUeCR8HUCSeISaIamU+plETt0eC8zsSB?=
+ =?iso-8859-1?Q?V+7tZGAEe22OrSVl0xTvqowgBq1alyAJl3ON2AS5IEkOFXksImgZJhkNAJ?=
+ =?iso-8859-1?Q?QBJ6uU5znRe3h0lxl6nXia6y+cz0qO/GTEpWnBM1BxJ3Acbeq8VUD9epLF?=
+ =?iso-8859-1?Q?7yS54MrULz0uiPCBFjJ452HjTxr0MnxMPRzWpxmoqxRja5hmTE4QPy4tiO?=
+ =?iso-8859-1?Q?WYq2jiV1e+tiWIgnFOAPhk8fpdY0D5OK85/8x3xbiqq44CT+VRgeZxc9R2?=
+ =?iso-8859-1?Q?zvGErrtZGK0fb58hW6zpwBjQk3wrM6hwuXqpIdaxZmuUTISkIZqVFqO3tF?=
+ =?iso-8859-1?Q?MkpuG1xcO3o46q98O+VocNcO3F42KWlX56DgAEp/72ouXcJlNlesg/I3e9?=
+ =?iso-8859-1?Q?OchaJINVcHDEaZvxe24SzIQNMu4eKt05GNGQfZaAgV+06hD9GZKQnG/6y2?=
+ =?iso-8859-1?Q?btA2mCjITOgOzKxtfHzbgKHHuq+BYCVB91990cuNhjt/a3rqRAKTr8NnAB?=
+ =?iso-8859-1?Q?emXWSkdzuiKtDqsEL35J/fzzCio8EQY6PKq1rpVXdRob849YhkyJp0Zrck?=
+ =?iso-8859-1?Q?kD87BQATr+I5PuiUb3hmnYZjW/uvu?=
+x-microsoft-antispam-prvs: <AM6PR04MB4373D1B7E352F7E5626712B7F3730@AM6PR04MB4373.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0968D37274
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(97736004)(6116002)(386003)(8936002)(6506007)(106356001)(52116002)(1730700003)(8676002)(26005)(81156014)(81166006)(14444005)(256004)(105586002)(102836004)(50226002)(2501003)(76176011)(99286004)(6512007)(305945005)(71200400001)(6436002)(5640700003)(6486002)(4326008)(53936002)(71190400001)(476003)(25786009)(486006)(66066001)(2616005)(7736002)(186003)(68736007)(446003)(1076003)(11346002)(54906003)(478600001)(316002)(36756003)(6916009)(2351001)(14454004)(86362001)(2906002)(5660300002)(3846002)(43043002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4373;H:AM6PR04MB5016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(366004)(39860400002)(396003)(199004)(189003)(97736004)(6116002)(386003)(8936002)(6506007)(106356001)(52116002)(1730700003)(8676002)(26005)(81156014)(81166006)(14444005)(256004)(105586002)(102836004)(30864003)(50226002)(2501003)(76176011)(99286004)(6512007)(305945005)(71200400001)(6436002)(5640700003)(6486002)(4326008)(53936002)(71190400001)(476003)(25786009)(486006)(66066001)(2616005)(7736002)(186003)(68736007)(446003)(1076003)(11346002)(54906003)(478600001)(316002)(36756003)(6916009)(2351001)(14454004)(86362001)(2906002)(5660300002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4373;H:AM6PR04MB5016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GVEpmaAdILzt0ehTyE/GqqnYm75HyjmM/JyVZJEzWYQfctD4cHUwckUtdsD92yr1ItReyi/oG7IBN0ihZVGH7/iFsy89Jtiq0JRgi0vQKBmvTVuyRc5ukVBfpa+9PMuBFuTteKcUDTSn5SPOhr6bS0Bm1pFq5vqaH3vdFiMUaaREXsESK2X1Lzj+LMlngmu2Qk+EWE/DklHat6MGIM5JddCQWfxvjdeYV9kwdwgamTpwXVBo1IPv9qh/C9/wFtM47OjeORIEAZHwaAH/gTPu4jgkI14DgCPWwK2eAYibvTijYe4laU9Mkn2L/ZlOCHpWvXYyGrTfMRQeEDpdWJM8R4MpSzAzYaiUvUZ05grYYfJdZsr1UmnEyKXPzjd8LVEY8vPsN0Q6uYyA4XdUGqNHJ+GDbI1eqhv6PIZ+VroA8i8=
+x-microsoft-antispam-message-info: ZNxMxpSHcrjuuE6iXhcnfu6Xlc+YAjwY20UuP699UTTHovPkxEwkPLrnoPdIhjYaPvEnyzmJoHRmUieczyLQRoU6SiLXQndxBmAaCb0RkaKW0S8Vq66XDmV3G1FYb55vQfJWTMAGkhixTH1jPWV6ODUdnFQXtKqXNB6YPzA8bMTW2Esb/Mj38kmPe/CsSymCGRegqyjNBzLokwquqHqWO6Xtah3UK55etBkVS84uqaZXG9KOJuxU8qG8zCUNIsvGHNG9vHIiXt9TXMFokd9mNtKueY0dChuZZ5o092fE8ztImUMtYTFl7YRCiSnArtTvnNYeSDcYDYe7+tA7IgI5NIZup4Im9linIK8I9BAOO+OH4uBV+lmm6V51a1Ah6B5Fatcy3nwPbVI+yNqV/z3f1s7cg6Bqdgfgkdmx68U5HQ8=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35d5a628-3ee0-4bb8-c103-08d6a1fd421a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2019 06:30:43.1384
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4e305fb-8209-4fcc-634b-08d6a1fd4354
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2019 06:30:45.1768
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -112,221 +110,482 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the default implementation of transfer_one_msg/chipselect/setup
-functions in spi core to implement cs-gpio control.
-Use fsl_lpspi_prepare_message to init the cs_gpio pin.
+Add dma mode support for LPSPI. Any frame longer than half txfifosize will
+be sent by dma mode.
+
+For now, there are some limits:
+1. The maximum transfer speed in master mode depends on the slave device,
+   at least 40MHz(tested by spi-nor on 8qm-lpddr4-arm2 base board);
+2. The maximum transfer speed in slave mode is 15MHz(imx7ulp),
+   22MHz(8qm/qxp). In order to reach the maximum speed which is mentioned
+   in datasheet, the load of connect wires between master and slave
+   should be less than 15pF.
 
 Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
 Acked-by: Fugang Duan <Fugang.duan@nxp.com>
 ---
 V2:
- - use core way to implement cs-gpio control. Removed the redundant code
-   in the driver.
+ - replace a if judgement by switch statement
+ - seperate a Debug print fix into next patch
 ---
- drivers/spi/spi-fsl-lpspi.c | 101 +++++++++++++++++++++++-------------
- 1 file changed, 66 insertions(+), 35 deletions(-)
+ drivers/spi/spi-fsl-lpspi.c | 312 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 301 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 69635cde0e22..a25e0e03f058 100644
+index a25e0e03f058..9ff32fb67a29 100644
 --- a/drivers/spi/spi-fsl-lpspi.c
 +++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -9,6 +9,7 @@
+@@ -8,6 +8,8 @@
+ #include <linux/clk.h>
  #include <linux/completion.h>
  #include <linux/delay.h>
++#include <linux/dmaengine.h>
++#include <linux/dma-mapping.h>
  #include <linux/err.h>
-+#include <linux/gpio.h>
+ #include <linux/gpio.h>
  #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-@@ -16,8 +17,10 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
+@@ -20,6 +22,7 @@
+ #include <linux/of_gpio.h>
  #include <linux/pinctrl/consumer.h>
  #include <linux/platform_device.h>
-+#include <linux/platform_data/spi-imx.h>
++#include <linux/platform_data/dma-imx.h>
+ #include <linux/platform_data/spi-imx.h>
  #include <linux/pm_runtime.h>
  #include <linux/slab.h>
- #include <linux/spi/spi.h>
-@@ -91,6 +94,7 @@ struct fsl_lpspi_data {
+@@ -31,6 +34,9 @@
+=20
+ #define FSL_LPSPI_RPM_TIMEOUT 50 /* 50ms */
+=20
++/* The maximum bytes that edma can transfer once.*/
++#define FSL_LPSPI_MAX_EDMA_BYTES  ((1 << 15) - 1)
++
+ /* i.MX7ULP LPSPI registers */
+ #define IMX7ULP_VERID	0x0
+ #define IMX7ULP_PARAM	0x4
+@@ -64,6 +70,8 @@
+ #define IER_FCIE	BIT(9)
+ #define IER_RDIE	BIT(1)
+ #define IER_TDIE	BIT(0)
++#define DER_RDDE	BIT(1)
++#define DER_TDDE	BIT(0)
+ #define CFGR1_PCSCFG	BIT(27)
+ #define CFGR1_PINCFG	(BIT(24)|BIT(25))
+ #define CFGR1_PCSPOL	BIT(8)
+@@ -91,6 +99,7 @@ struct lpspi_config {
+ struct fsl_lpspi_data {
+ 	struct device *dev;
+ 	void __iomem *base;
++	unsigned long base_phys;
  	struct clk *clk_ipg;
  	struct clk *clk_per;
  	bool is_slave;
-+	bool is_first_byte;
-=20
- 	void *rx_buf;
- 	const void *tx_buf;
-@@ -106,6 +110,8 @@ struct fsl_lpspi_data {
- 	struct completion xfer_done;
+@@ -111,6 +120,11 @@ struct fsl_lpspi_data {
 =20
  	bool slave_aborted;
+=20
++	/* DMA */
++	bool usedma;
++	struct completion dma_rx_completion;
++	struct completion dma_tx_completion;
 +
-+	int chipselect[0];
+ 	int chipselect[0];
  };
 =20
- static const struct of_device_id fsl_lpspi_dt_ids[] =3D {
-@@ -178,6 +184,20 @@ static int lpspi_unprepare_xfer_hardware(struct spi_co=
-ntroller *controller)
+@@ -158,6 +172,35 @@ static void fsl_lpspi_intctrl(struct fsl_lpspi_data *f=
+sl_lpspi,
+ 	writel(enable, fsl_lpspi->base + IMX7ULP_IER);
+ }
+=20
++static int fsl_lpspi_bytes_per_word(const int bpw)
++{
++	return DIV_ROUND_UP(bpw, BITS_PER_BYTE);
++}
++
++static bool fsl_lpspi_can_dma(struct spi_controller *controller,
++			      struct spi_device *spi,
++			      struct spi_transfer *transfer)
++{
++	unsigned int bytes_per_word;
++
++	if (!controller->dma_rx)
++		return false;
++
++	bytes_per_word =3D fsl_lpspi_bytes_per_word(transfer->bits_per_word);
++
++	switch (bytes_per_word)
++	{
++		case 1:
++		case 2:
++		case 4:
++			break;
++		default:
++			return false;
++	}
++
++	return true;
++}
++
+ static int lpspi_prepare_xfer_hardware(struct spi_controller *controller)
+ {
+ 	struct fsl_lpspi_data *fsl_lpspi =3D
+@@ -245,11 +288,13 @@ static void fsl_lpspi_set_cmd(struct fsl_lpspi_data *=
+fsl_lpspi)
+ 		 * For the first transfer, clear TCR_CONTC to assert SS.
+ 		 * For subsequent transfer, set TCR_CONTC to keep SS asserted.
+ 		 */
+-		temp |=3D TCR_CONT;
+-		if (fsl_lpspi->is_first_byte)
+-			temp &=3D ~TCR_CONTC;
+-		else
+-			temp |=3D TCR_CONTC;
++		if (!fsl_lpspi->usedma) {
++			temp |=3D TCR_CONT;
++			if (fsl_lpspi->is_first_byte)
++				temp &=3D ~TCR_CONTC;
++			else
++				temp |=3D TCR_CONTC;
++		}
+ 	}
+ 	writel(temp, fsl_lpspi->base + IMX7ULP_TCR);
+=20
+@@ -260,7 +305,11 @@ static void fsl_lpspi_set_watermark(struct fsl_lpspi_d=
+ata *fsl_lpspi)
+ {
+ 	u32 temp;
+=20
+-	temp =3D fsl_lpspi->watermark >> 1 | (fsl_lpspi->watermark >> 1) << 16;
++	if (!fsl_lpspi->usedma)
++		temp =3D fsl_lpspi->watermark >> 1 |
++		       (fsl_lpspi->watermark >> 1) << 16;
++	else
++		temp =3D fsl_lpspi->watermark >> 1;
+=20
+ 	writel(temp, fsl_lpspi->base + IMX7ULP_FCR);
+=20
+@@ -302,6 +351,53 @@ static int fsl_lpspi_set_bitrate(struct fsl_lpspi_data=
+ *fsl_lpspi)
  	return 0;
  }
 =20
-+static int fsl_lpspi_prepare_message(struct spi_controller *controller,
-+				     struct spi_message *msg)
++static int fsl_lpspi_dma_configure(struct spi_controller *controller)
 +{
++	int ret;
++	enum dma_slave_buswidth buswidth;
++	struct dma_slave_config rx =3D {}, tx =3D {};
 +	struct fsl_lpspi_data *fsl_lpspi =3D
-+					spi_controller_get_devdata(controller);
-+	struct spi_device *spi =3D msg->spi;
-+	int gpio =3D fsl_lpspi->chipselect[spi->chip_select];
++				spi_controller_get_devdata(controller);
 +
-+	if (gpio_is_valid(gpio))
-+		gpio_direction_output(gpio, spi->mode & SPI_CS_HIGH ? 0 : 1);
++	switch (fsl_lpspi_bytes_per_word(fsl_lpspi->config.bpw)) {
++	case 4:
++		buswidth =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
++		break;
++	case 2:
++		buswidth =3D DMA_SLAVE_BUSWIDTH_2_BYTES;
++		break;
++	case 1:
++		buswidth =3D DMA_SLAVE_BUSWIDTH_1_BYTE;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	tx.direction =3D DMA_MEM_TO_DEV;
++	tx.dst_addr =3D fsl_lpspi->base_phys + IMX7ULP_TDR;
++	tx.dst_addr_width =3D buswidth;
++	tx.dst_maxburst =3D 1;
++	ret =3D dmaengine_slave_config(controller->dma_tx, &tx);
++	if (ret) {
++		dev_err(fsl_lpspi->dev, "TX dma configuration failed with %d\n",
++			ret);
++		return ret;
++	}
++
++	rx.direction =3D DMA_DEV_TO_MEM;
++	rx.src_addr =3D fsl_lpspi->base_phys + IMX7ULP_RDR;
++	rx.src_addr_width =3D buswidth;
++	rx.src_maxburst =3D 1;
++	ret =3D dmaengine_slave_config(controller->dma_rx, &rx);
++	if (ret) {
++		dev_err(fsl_lpspi->dev, "RX dma configuration failed with %d\n",
++			ret);
++		return ret;
++	}
 +
 +	return 0;
 +}
 +
- static void fsl_lpspi_write_tx_fifo(struct fsl_lpspi_data *fsl_lpspi)
+ static int fsl_lpspi_config(struct fsl_lpspi_data *fsl_lpspi)
  {
- 	u8 txfifo_cnt;
-@@ -210,8 +230,7 @@ static void fsl_lpspi_read_rx_fifo(struct fsl_lpspi_dat=
-a *fsl_lpspi)
- 		fsl_lpspi->rx(fsl_lpspi);
- }
+ 	u32 temp;
+@@ -327,10 +423,16 @@ static int fsl_lpspi_config(struct fsl_lpspi_data *fs=
+l_lpspi)
+ 	temp |=3D CR_RRF | CR_RTF | CR_MEN;
+ 	writel(temp, fsl_lpspi->base + IMX7ULP_CR);
 =20
--static void fsl_lpspi_set_cmd(struct fsl_lpspi_data *fsl_lpspi,
--			      bool is_first_xfer)
-+static void fsl_lpspi_set_cmd(struct fsl_lpspi_data *fsl_lpspi)
- {
- 	u32 temp =3D 0;
-=20
-@@ -227,7 +246,7 @@ static void fsl_lpspi_set_cmd(struct fsl_lpspi_data *fs=
-l_lpspi,
- 		 * For subsequent transfer, set TCR_CONTC to keep SS asserted.
- 		 */
- 		temp |=3D TCR_CONT;
--		if (is_first_xfer)
-+		if (fsl_lpspi->is_first_byte)
- 			temp &=3D ~TCR_CONTC;
- 		else
- 			temp |=3D TCR_CONTC;
-@@ -396,8 +415,7 @@ static int fsl_lpspi_reset(struct fsl_lpspi_data *fsl_l=
-pspi)
++	temp =3D 0;
++	if (fsl_lpspi->usedma)
++		temp =3D DER_TDDE | DER_RDDE;
++	writel(temp, fsl_lpspi->base + IMX7ULP_DER);
++
  	return 0;
  }
 =20
--static int fsl_lpspi_transfer_one(struct spi_controller *controller,
--				  struct spi_device *spi,
-+static int fsl_lpspi_pio_transfer(struct spi_controller *controller,
- 				  struct spi_transfer *t)
+-static int fsl_lpspi_setup_transfer(struct spi_device *spi,
++static int fsl_lpspi_setup_transfer(struct spi_controller *controller,
++				     struct spi_device *spi,
+ 				     struct spi_transfer *t)
  {
  	struct fsl_lpspi_data *fsl_lpspi =3D
-@@ -422,40 +440,27 @@ static int fsl_lpspi_transfer_one(struct spi_controll=
-er *controller,
- 	return 0;
+@@ -363,6 +465,11 @@ static int fsl_lpspi_setup_transfer(struct spi_device =
+*spi,
+ 	else
+ 		fsl_lpspi->watermark =3D fsl_lpspi->txfifosize;
+=20
++	if (fsl_lpspi_can_dma(controller, spi, t))
++		fsl_lpspi->usedma =3D 1;
++	else
++		fsl_lpspi->usedma =3D 0;
++
+ 	return fsl_lpspi_config(fsl_lpspi);
  }
 =20
--static int fsl_lpspi_transfer_one_msg(struct spi_controller *controller,
--				      struct spi_message *msg)
-+static int fsl_lpspi_transfer_one(struct spi_controller *controller,
-+				  struct spi_device *spi,
-+				  struct spi_transfer *t)
+@@ -401,8 +508,10 @@ static int fsl_lpspi_reset(struct fsl_lpspi_data *fsl_=
+lpspi)
  {
- 	struct fsl_lpspi_data *fsl_lpspi =3D
--				spi_controller_get_devdata(controller);
--	struct spi_device *spi =3D msg->spi;
--	struct spi_transfer *xfer;
--	bool is_first_xfer =3D true;
--	int ret =3D 0;
--
--	msg->status =3D 0;
--	msg->actual_length =3D 0;
--
--	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
--		ret =3D fsl_lpspi_setup_transfer(spi, xfer);
--		if (ret < 0)
--			goto complete;
--
--		fsl_lpspi_set_cmd(fsl_lpspi, is_first_xfer);
--
--		is_first_xfer =3D false;
-+					spi_controller_get_devdata(controller);
-+	int ret;
-=20
--		ret =3D fsl_lpspi_transfer_one(controller, spi, xfer);
--		if (ret < 0)
--			goto complete;
-+	fsl_lpspi->is_first_byte =3D true;
-+	ret =3D fsl_lpspi_setup_transfer(spi, t);
-+	if (ret < 0)
-+		return ret;
-=20
--		msg->actual_length +=3D xfer->len;
--	}
-+	fsl_lpspi_set_cmd(fsl_lpspi);
-+	fsl_lpspi->is_first_byte =3D false;
-=20
--complete:
--	msg->status =3D ret;
--	spi_finalize_current_message(controller);
-+	ret =3D fsl_lpspi_pio_transfer(controller, t);
-+	if (ret < 0)
-+		return ret;
-=20
--	return ret;
-+	return 0;
- }
-=20
- static irqreturn_t fsl_lpspi_isr(int irq, void *dev_id)
-@@ -531,10 +536,13 @@ static int fsl_lpspi_init_rpm(struct fsl_lpspi_data *=
-fsl_lpspi)
-=20
- static int fsl_lpspi_probe(struct platform_device *pdev)
- {
-+	struct device_node *np =3D pdev->dev.of_node;
- 	struct fsl_lpspi_data *fsl_lpspi;
- 	struct spi_controller *controller;
-+	struct spi_imx_master *lpspi_platform_info =3D
-+		dev_get_platdata(&pdev->dev);
- 	struct resource *res;
--	int ret, irq;
-+	int i, ret, irq;
  	u32 temp;
 =20
- 	if (of_property_read_bool((&pdev->dev)->of_node, "spi-slave"))
-@@ -558,7 +566,30 @@ static int fsl_lpspi_probe(struct platform_device *pde=
-v)
- 	fsl_lpspi->is_slave =3D of_property_read_bool((&pdev->dev)->of_node,
- 						    "spi-slave");
+-	/* Disable all interrupt */
+-	fsl_lpspi_intctrl(fsl_lpspi, 0);
++	if (!fsl_lpspi->usedma) {
++		/* Disable all interrupt */
++		fsl_lpspi_intctrl(fsl_lpspi, 0);
++	}
 =20
--	controller->transfer_one_message =3D fsl_lpspi_transfer_one_msg;
-+	if (!fsl_lpspi->is_slave) {
-+		for (i =3D 0; i < controller->num_chipselect; i++) {
-+			int cs_gpio =3D of_get_named_gpio(np, "cs-gpios", i);
+ 	/* W1C for all flags in SR */
+ 	temp =3D 0x3F << 8;
+@@ -415,6 +524,176 @@ static int fsl_lpspi_reset(struct fsl_lpspi_data *fsl=
+_lpspi)
+ 	return 0;
+ }
+=20
++static void fsl_lpspi_dma_rx_callback(void *cookie)
++{
++	struct fsl_lpspi_data *fsl_lpspi =3D (struct fsl_lpspi_data *)cookie;
 +
-+			if (!gpio_is_valid(cs_gpio) && lpspi_platform_info)
-+				cs_gpio =3D lpspi_platform_info->chipselect[i];
++	complete(&fsl_lpspi->dma_rx_completion);
++}
 +
-+			fsl_lpspi->chipselect[i] =3D cs_gpio;
-+			if (!gpio_is_valid(cs_gpio))
-+				continue;
++static void fsl_lpspi_dma_tx_callback(void *cookie)
++{
++	struct fsl_lpspi_data *fsl_lpspi =3D (struct fsl_lpspi_data *)cookie;
 +
-+			ret =3D devm_gpio_request(&pdev->dev,
-+						fsl_lpspi->chipselect[i],
-+						DRIVER_NAME);
-+			if (ret) {
-+				dev_err(&pdev->dev, "can't get cs gpios\n");
-+				goto out_controller_put;
-+			}
-+		}
-+		controller->cs_gpios =3D fsl_lpspi->chipselect;
-+		controller->prepare_message =3D fsl_lpspi_prepare_message;
++	complete(&fsl_lpspi->dma_tx_completion);
++}
++
++static int fsl_lpspi_calculate_timeout(struct fsl_lpspi_data *fsl_lpspi,
++				       int size)
++{
++	unsigned long timeout =3D 0;
++
++	/* Time with actual data transfer and CS change delay related to HW */
++	timeout =3D (8 + 4) * size / fsl_lpspi->config.speed_hz;
++
++	/* Add extra second for scheduler related activities */
++	timeout +=3D 1;
++
++	/* Double calculated timeout */
++	return msecs_to_jiffies(2 * timeout * MSEC_PER_SEC);
++}
++
++static int fsl_lpspi_dma_transfer(struct spi_controller *controller,
++				struct fsl_lpspi_data *fsl_lpspi,
++				struct spi_transfer *transfer)
++{
++	struct dma_async_tx_descriptor *desc_tx, *desc_rx;
++	unsigned long transfer_timeout;
++	unsigned long timeout;
++	struct sg_table *tx =3D &transfer->tx_sg, *rx =3D &transfer->rx_sg;
++	int ret;
++
++	ret =3D fsl_lpspi_dma_configure(controller);
++	if (ret)
++		return ret;
++
++	desc_rx =3D dmaengine_prep_slave_sg(controller->dma_rx,
++				rx->sgl, rx->nents, DMA_DEV_TO_MEM,
++				DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++	if (!desc_rx)
++		return -EINVAL;
++
++	desc_rx->callback =3D fsl_lpspi_dma_rx_callback;
++	desc_rx->callback_param =3D (void *)fsl_lpspi;
++	dmaengine_submit(desc_rx);
++	reinit_completion(&fsl_lpspi->dma_rx_completion);
++	dma_async_issue_pending(controller->dma_rx);
++
++	desc_tx =3D dmaengine_prep_slave_sg(controller->dma_tx,
++				tx->sgl, tx->nents, DMA_MEM_TO_DEV,
++				DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++	if (!desc_tx) {
++		dmaengine_terminate_all(controller->dma_tx);
++		return -EINVAL;
 +	}
 +
-+	controller->transfer_one =3D fsl_lpspi_transfer_one;
- 	controller->prepare_transfer_hardware =3D lpspi_prepare_xfer_hardware;
- 	controller->unprepare_transfer_hardware =3D lpspi_unprepare_xfer_hardware=
-;
- 	controller->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
++	desc_tx->callback =3D fsl_lpspi_dma_tx_callback;
++	desc_tx->callback_param =3D (void *)fsl_lpspi;
++	dmaengine_submit(desc_tx);
++	reinit_completion(&fsl_lpspi->dma_tx_completion);
++	dma_async_issue_pending(controller->dma_tx);
++
++	fsl_lpspi->slave_aborted =3D false;
++
++	if (!fsl_lpspi->is_slave) {
++		transfer_timeout =3D fsl_lpspi_calculate_timeout(fsl_lpspi,
++							       transfer->len);
++
++		/* Wait eDMA to finish the data transfer.*/
++		timeout =3D wait_for_completion_timeout(&fsl_lpspi->dma_tx_completion,
++						      transfer_timeout);
++		if (!timeout) {
++			dev_err(fsl_lpspi->dev, "I/O Error in DMA TX\n");
++			dmaengine_terminate_all(controller->dma_tx);
++			dmaengine_terminate_all(controller->dma_rx);
++			fsl_lpspi_reset(fsl_lpspi);
++			return -ETIMEDOUT;
++		}
++
++		timeout =3D wait_for_completion_timeout(&fsl_lpspi->dma_rx_completion,
++						      transfer_timeout);
++		if (!timeout) {
++			dev_err(fsl_lpspi->dev, "I/O Error in DMA RX\n");
++			dmaengine_terminate_all(controller->dma_tx);
++			dmaengine_terminate_all(controller->dma_rx);
++			fsl_lpspi_reset(fsl_lpspi);
++			return -ETIMEDOUT;
++		}
++	} else {
++		if (wait_for_completion_interruptible(&fsl_lpspi->dma_tx_completion) ||
++			fsl_lpspi->slave_aborted) {
++			dev_dbg(fsl_lpspi->dev,
++				"I/O Error in DMA TX interrupted\n");
++			dmaengine_terminate_all(controller->dma_tx);
++			dmaengine_terminate_all(controller->dma_rx);
++			fsl_lpspi_reset(fsl_lpspi);
++			return -EINTR;
++		}
++
++		if (wait_for_completion_interruptible(&fsl_lpspi->dma_rx_completion) ||
++			fsl_lpspi->slave_aborted) {
++			dev_dbg(fsl_lpspi->dev,
++				"I/O Error in DMA RX interrupted\n");
++			dmaengine_terminate_all(controller->dma_tx);
++			dmaengine_terminate_all(controller->dma_rx);
++			fsl_lpspi_reset(fsl_lpspi);
++			return -EINTR;
++		}
++	}
++
++	fsl_lpspi_reset(fsl_lpspi);
++
++	return 0;
++}
++
++static void fsl_lpspi_dma_exit(struct spi_controller *controller)
++{
++	if (controller->dma_rx) {
++		dma_release_channel(controller->dma_rx);
++		controller->dma_rx =3D NULL;
++	}
++
++	if (controller->dma_tx) {
++		dma_release_channel(controller->dma_tx);
++		controller->dma_tx =3D NULL;
++	}
++}
++
++static int fsl_lpspi_dma_init(struct device *dev,
++			      struct fsl_lpspi_data *fsl_lpspi,
++			      struct spi_controller *controller)
++{
++	int ret;
++
++	/* Prepare for TX DMA: */
++	controller->dma_tx =3D dma_request_slave_channel_reason(dev, "tx");
++	if (IS_ERR(controller->dma_tx)) {
++		ret =3D PTR_ERR(controller->dma_tx);
++		dev_dbg(dev, "can't get the TX DMA channel, error %d!\n", ret);
++		controller->dma_tx =3D NULL;
++		goto err;
++	}
++
++	/* Prepare for RX DMA: */
++	controller->dma_rx =3D dma_request_slave_channel_reason(dev, "rx");
++	if (IS_ERR(controller->dma_rx)) {
++		ret =3D PTR_ERR(controller->dma_rx);
++		dev_dbg(dev, "can't get the RX DMA channel, error %d\n", ret);
++		controller->dma_rx =3D NULL;
++		goto err;
++	}
++
++	init_completion(&fsl_lpspi->dma_rx_completion);
++	init_completion(&fsl_lpspi->dma_tx_completion);
++	controller->can_dma =3D fsl_lpspi_can_dma;
++	controller->max_dma_len =3D FSL_LPSPI_MAX_EDMA_BYTES;
++
++	return 0;
++err:
++	fsl_lpspi_dma_exit(controller);
++	return ret;
++}
++
+ static int fsl_lpspi_pio_transfer(struct spi_controller *controller,
+ 				  struct spi_transfer *t)
+ {
+@@ -449,14 +728,17 @@ static int fsl_lpspi_transfer_one(struct spi_controll=
+er *controller,
+ 	int ret;
+=20
+ 	fsl_lpspi->is_first_byte =3D true;
+-	ret =3D fsl_lpspi_setup_transfer(spi, t);
++	ret =3D fsl_lpspi_setup_transfer(controller, spi, t);
+ 	if (ret < 0)
+ 		return ret;
+=20
+ 	fsl_lpspi_set_cmd(fsl_lpspi);
+ 	fsl_lpspi->is_first_byte =3D false;
+=20
+-	ret =3D fsl_lpspi_pio_transfer(controller, t);
++	if (fsl_lpspi->usedma)
++		ret =3D fsl_lpspi_dma_transfer(controller, fsl_lpspi, t);
++	else
++		ret =3D fsl_lpspi_pio_transfer(controller, t);
+ 	if (ret < 0)
+ 		return ret;
+=20
+@@ -606,6 +888,7 @@ static int fsl_lpspi_probe(struct platform_device *pdev=
+)
+ 		ret =3D PTR_ERR(fsl_lpspi->base);
+ 		goto out_controller_put;
+ 	}
++	fsl_lpspi->base_phys =3D res->start;
+=20
+ 	irq =3D platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+@@ -647,6 +930,13 @@ static int fsl_lpspi_probe(struct platform_device *pde=
+v)
+ 	fsl_lpspi->txfifosize =3D 1 << (temp & 0x0f);
+ 	fsl_lpspi->rxfifosize =3D 1 << ((temp >> 8) & 0x0f);
+=20
++	ret =3D fsl_lpspi_dma_init(&pdev->dev, fsl_lpspi, controller);
++	if (ret =3D=3D -EPROBE_DEFER)
++		goto out_controller_put;
++
++	if (ret < 0)
++		dev_err(&pdev->dev, "dma setup error %d, use pio\n", ret);
++
+ 	ret =3D devm_spi_register_controller(&pdev->dev, controller);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "spi_register_controller error.\n");
 --=20
 2.17.1
 
