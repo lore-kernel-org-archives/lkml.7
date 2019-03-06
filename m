@@ -2,102 +2,250 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2878C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15BD20840
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20331206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 16:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="K4E5Pm7K"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JARs0q7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfCFQfd (ORCPT
+        id S1729921AbfCFQfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 11:35:33 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40588 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfCFQfc (ORCPT
+        Wed, 6 Mar 2019 11:35:55 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49988 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727436AbfCFQfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 11:35:32 -0500
-Received: by mail-ot1-f65.google.com with SMTP id v20so11302662otk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 08:35:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=foh1KeCRhfMylUuRDzfDprJeF5O+H3d0DU7HYjOcXk8=;
-        b=K4E5Pm7KZyz8SdpPtqPCFgcwK6u1PWJSezWdpIOfuoovj51j5Q8Xe9T2p6vs+uih7G
-         +rhy0aCfE81hZax3MaD+jHhZPJqNN5v5y3Y+W1QpWOm5S0VjJ2khP1GMDWYoUmr9+UHB
-         V1kmIMhRwrQSw6tK4Z+BPzwvU684/q6xRPt45xHD7SH5M5ngl7IRuduuiaMn7oaGCliJ
-         q8bKDsJXNra7kudCwFUSeR0ShPUAy84v7F6qGoy3Tp9hDL20JPU43/M1UnWwrk6+wNri
-         Tcn3GiRdva+KJTsyjomRXAVIdl9zPzNFfXJsfnZ+fPK2ZTOX9uDyWU6kMOZROhA0OXgS
-         GG9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=foh1KeCRhfMylUuRDzfDprJeF5O+H3d0DU7HYjOcXk8=;
-        b=AdgH/R//nVOwhn24LerP6XNeHwaKrHmp9U6ks3AsqSsXJUF8bfGfYpxZ89dxF7xGgj
-         wcMrrYkJAu4PHWs5SWG4Bw0xY9SX7HxuPf4c+nLhCE6SmXKibMzIwKIaYra6mxVv3tH2
-         tQRhwEPxkQ9onWLy32DIscDV6K8tYl26jv8LICWZwRtOcFA0wPdU5fDxIR0EtbVNS8MU
-         sQVH6X29l2xqNE5b6FcxbqW9z4saDYs1HAmkQDQUMUVRFQKBa1c6cHMpXg4Ajdo6OFQL
-         f9Ov0ov6Ra7wOO4x336Tn+WIadfoHv/u3F72SYP2bfoiQaajhAHY5I+kHuet4Mp+8Q7h
-         bWGA==
-X-Gm-Message-State: APjAAAVrrtx5cNXgLSUOe1VAatqfKabtK/VS7DMeNSrqB8L9MxtMbb+8
-        bBqgi5xjOjfdLTioK2TtPcfF5uDCxmsuE9s/UW45CQ==
-X-Google-Smtp-Source: APXvYqzTxZpXdUJ9hOx3g8oxM40WfEMJOBbMHcA0ByjOUxR5Uv8dxYtnvkjq0guIm9zhbA/IX9nRPWudMVOeY0lLbYo=
-X-Received: by 2002:a9d:224a:: with SMTP id o68mr5216791ota.214.1551890132048;
- Wed, 06 Mar 2019 08:35:32 -0800 (PST)
+        Wed, 6 Mar 2019 11:35:54 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x26GZTdS122582;
+        Wed, 6 Mar 2019 10:35:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551890129;
+        bh=+NyjXpvPvY1gbMytdUJvxlZjmbe1R0SCy//cwga7IuY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JARs0q7a1pnZs7yiPa5EYRAsA4DeAfpybPU8cuIfdzdjWAZwzXqn5Z0dpmJlO+lF1
+         NXjv10qCuCTsRGLq8Wr7e+0wH1rcYky4rf1Z5lfrmOeJvs+s/vWgzgQ8/V1f5E+j5L
+         vfHp1P8tMgVon+3j20UdRB8adnisK63LfpU5qm7c=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x26GZTKg077850
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Mar 2019 10:35:29 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 6
+ Mar 2019 10:35:28 -0600
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Wed, 6 Mar 2019 10:35:28 -0600
+Received: from [172.22.114.173] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x26GZSEP025964;
+        Wed, 6 Mar 2019 10:35:28 -0600
+Subject: Re: [RFC][PATCH 5/5 v2] kselftests: Add dma-heap test
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        John Stultz <john.stultz@linaro.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <1551819273-640-6-git-send-email-john.stultz@linaro.org>
+ <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <7deadc25-c8b2-3b58-1867-86f7db3188fa@ti.com>
+Date:   Wed, 6 Mar 2019 10:35:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190306095709.23138-1-yongxin.liu@windriver.com>
-In-Reply-To: <20190306095709.23138-1-yongxin.liu@windriver.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 6 Mar 2019 08:35:21 -0800
-Message-ID: <CAPcyv4h7a8QSvJiUqCd=r3KPaWwiPC_-9x3Jip6eY2XGJ5Wc0w@mail.gmail.com>
-Subject: Re: [PATCH RT] nvdimm: make lane acquirement RT aware
-To:     Yongxin Liu <yongxin.liu@windriver.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+M3ks6AUmmYbXscjTRo+Vr-6cV8okafsDn2Tg3tskvzrV_dbA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 2:05 AM Yongxin Liu <yongxin.liu@windriver.com> wrote:
->
-> Currently, nvdimm driver isn't RT compatible.
-> nd_region_acquire_lane() disables preemption with get_cpu() which
-> causes "scheduling while atomic" spews on RT, when using fio to test
-> pmem as block device.
->
-> In this change, we replace get_cpu/put_cpu with local_lock_cpu/
-> local_unlock_cpu, and introduce per CPU variable "ndl_local_lock".
-> Due to preemption on RT, this lock can avoid race condition for the
-> same lane on the same CPU. When CPU number is greater than the lane
-> number, lane can be shared among CPUs. "ndl_lock->lock" is used to
-> protect the lane in this situation.
->
-> This patch is derived from Dan Williams and Pankaj Gupta's proposal from
-> https://www.mail-archive.com/linux-nvdimm@lists.01.org/msg13359.html
-> and https://www.spinics.net/lists/linux-rt-users/msg20280.html.
-> Many thanks to them.
->
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Pankaj Gupta <pagupta@redhat.com>
-> Cc: linux-rt-users <linux-rt-users@vger.kernel.org>
-> Cc: linux-nvdimm <linux-nvdimm@lists.01.org>
-> Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+On 3/6/19 10:14 AM, Benjamin Gaignard wrote:
+> Le mar. 5 mars 2019 à 21:54, John Stultz <john.stultz@linaro.org> a écrit :
+>>
+>> Add very trivial allocation test for dma-heaps.
+>>
+>> TODO: Need to actually do some validation on
+>> the returned dma-buf.
+>>
+>> Cc: Laura Abbott <labbott@redhat.com>
+>> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>> Cc: Greg KH <gregkh@linuxfoundation.org>
+>> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+>> Cc: Liam Mark <lmark@codeaurora.org>
+>> Cc: Brian Starkey <Brian.Starkey@arm.com>
+>> Cc: Andrew F. Davis <afd@ti.com>
+>> Cc: Chenbo Feng <fengc@google.com>
+>> Cc: Alistair Strachan <astrachan@google.com>
+>> Cc: dri-devel@lists.freedesktop.org
+>> Signed-off-by: John Stultz <john.stultz@linaro.org>
+>> ---
+>> v2: Switched to use reworked dma-heap apis
+>> ---
+>>  tools/testing/selftests/dmabuf-heaps/Makefile      | 11 +++
+>>  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 96 ++++++++++++++++++++++
+>>  2 files changed, 107 insertions(+)
+>>  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+>>  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+>>
+>> diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testing/selftests/dmabuf-heaps/Makefile
+>> new file mode 100644
+>> index 0000000..c414ad3
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/dmabuf-heaps/Makefile
+>> @@ -0,0 +1,11 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +CFLAGS += -static -O3 -Wl,-no-as-needed -Wall
+>> +#LDLIBS += -lrt -lpthread -lm
+>> +
+>> +# these are all "safe" tests that don't modify
+>> +# system time or require escalated privileges
+>> +TEST_GEN_PROGS = dmabuf-heap
+>> +
+>> +
+>> +include ../lib.mk
+>> +
+>> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+>> new file mode 100644
+>> index 0000000..06837a4
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+>> @@ -0,0 +1,96 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +#include <dirent.h>
+>> +#include <errno.h>
+>> +#include <fcntl.h>
+>> +#include <stdio.h>
+>> +#include <string.h>
+>> +#include <unistd.h>
+>> +#include <sys/ioctl.h>
+>> +#include <sys/mman.h>
+>> +#include <sys/types.h>
+>> +
+>> +#include "../../../../include/uapi/linux/dma-heap.h"
+>> +
+>> +#define DEVPATH "/dev/dma_heap"
+>> +
+>> +int dmabuf_heap_open(char *name)
+>> +{
+>> +       int ret, fd;
+>> +       char buf[256];
+>> +
+>> +       ret = sprintf(buf, "%s/%s", DEVPATH, name);
+>> +       if (ret < 0) {
+>> +               printf("sprintf failed!\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       fd = open(buf, O_RDWR);
+>> +       if (fd < 0)
+>> +               printf("open %s failed!\n", buf);
+>> +       return fd;
+>> +}
+>> +
+>> +int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags, int *dmabuf_fd)
+>> +{
+>> +       struct dma_heap_allocation_data data = {
+>> +               .len = len,
+>> +               .flags = flags,
+>> +       };
+>> +       int ret;
+>> +
+>> +       if (dmabuf_fd == NULL)
+>> +               return -EINVAL;
+>> +
+>> +       ret = ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
+>> +       if (ret < 0)
+>> +               return ret;
+>> +       *dmabuf_fd = (int)data.fd;
+>> +       return ret;
+>> +}
+>> +
+>> +#define ONE_MEG (1024*1024)
+>> +
+>> +void do_test(char *heap_name)
+>> +{
+>> +       int heap_fd = -1, dmabuf_fd = -1;
+>> +       int ret;
+>> +
+>> +       printf("Testing heap: %s\n", heap_name);
+>> +
+>> +       heap_fd = dmabuf_heap_open(heap_name);
+>> +       if (heap_fd < 0)
+>> +               return;
+>> +
+>> +       printf("Allocating 1 MEG\n");
+>> +       ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       /* DO SOMETHING WITH THE DMABUF HERE? */
+> 
+> You can do a call to mmap and write a pattern in the buffer.
+> 
 
-Looks ok to me in concept.
+mmap is optional for DMA-BUFs, only attach/map are required. To test
+those we would need a dummy device, so a test kernel module may be
+needed to really exercise this.
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+I have one I use for ION buffer testing, it consumes a DMA-BUF passed
+from userspace, attach/maps it to a dummy device then return the
+physical address of the first page of the buffer for validation. Might
+be a good test, but dummy devices don't always have the proper dma
+attributes set like a real device does, so it may also fail for some
+otherwise valid buffers.
+
+Andrew
+
+> Benjamin
+>> +
+>> +out:
+>> +       if (dmabuf_fd >= 0)
+>> +               close(dmabuf_fd);
+>> +       if (heap_fd >= 0)
+>> +               close(heap_fd);
+>> +}
+>> +
+>> +
+>> +int main(void)
+>> +{
+>> +       DIR *d;
+>> +       struct dirent *dir;
+>> +
+>> +       d = opendir(DEVPATH);
+>> +       if (!d) {
+>> +               printf("No %s directory?\n", DEVPATH);
+>> +               return -1;
+>> +       }
+>> +
+>> +       while ((dir = readdir(d)) != NULL)
+>> +               do_test(dir->d_name);
+>> +
+>> +
+>> +       return 0;
+>> +}
+>> --
+>> 2.7.4
+>>
+> 
+> 
