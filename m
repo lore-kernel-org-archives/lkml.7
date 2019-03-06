@@ -2,149 +2,249 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78054C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B5AC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F7E20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:53:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hs0pketZ"
+	by mail.kernel.org (Postfix) with ESMTP id 12175206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfCFWxL (ORCPT
+        id S1726139AbfCFW4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:53:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45096 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfCFWxI (ORCPT
+        Wed, 6 Mar 2019 17:56:23 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:49001 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCFW4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:53:08 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d24so12420054ljc.12;
-        Wed, 06 Mar 2019 14:53:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3tVU/OeoqMr+PZYKr0GcwSg6aU4eH1Ge3wbhogIE2Vw=;
-        b=hs0pketZ4EM8d6oq+QMgeo6iNqiSQOat3KGtNW+rw+WWM6mWK1seKiN5CK+CqiHyg4
-         cTG/ngr4K5www2OH9kXo7hyUShAQ44nTIoRyWPdoHxAuKI16lQrlYH7K2vMJk4fCHWft
-         3sSgSOyqGg9EQ5Tp7fwvsYgt7+TW22hOKeCBS+42+FLwjxhcN5b0dZfjQJmBH2L0s5zB
-         upR6TKqPkGipb7UCvGk3N6zbrAs1vN9EPm2zwdCYqkvQHt3sVQNMLBJh0M6i3wWja4Kz
-         i7X61j4P3ztNUquNt2XWpjodaFQmdwbtAxlxOhfzHEElKoUWuChX2G3mpc4r6msi/n2b
-         D/ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3tVU/OeoqMr+PZYKr0GcwSg6aU4eH1Ge3wbhogIE2Vw=;
-        b=JTfXsQbn28vOkBc1V/C4a5V6cKhh3mwfgdiLieHR4eHOachC4NuTzuzKjVrMKxoclQ
-         dOProbGuWicDYFUxppqDUeB1AD9IyPk/zUVN8JxKhKbIDBEzDpWB9aMCi4TvUVupj9BP
-         gYb0PKekVsiMit233O50M1m/2uxH6W6fueZlB5X2PAUHjsl64OiJK7uEsj9bjC/yubcE
-         2s1bsy7yilzsF24eja0MDgUnjhienOTgolGDzA8fUouC7c92nPp/covM/M4gTL3fvdJP
-         r7RBo3cxY1/NLprlAQAGrAyPYXnpeQz32Igsse/OESJq9U1w6QXTWZiSe5G5oSulVq8/
-         oH3Q==
-X-Gm-Message-State: APjAAAXBkSHwmZq2AinZ21/zxwtfm1UDEphMF0gvQA/cVsoB4SJBwZi6
-        aFAAAItMySwO94k3EL2BiZk=
-X-Google-Smtp-Source: APXvYqxuqRjHPJBp7zeadIzpUq6QlL1D+/kCFDfl3ncQHhUgR7Gmfy0xseCqyL9HgRoUE8f4p4wrKA==
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr3827561ljg.34.1551912786281;
-        Wed, 06 Mar 2019 14:53:06 -0800 (PST)
-Received: from localhost.localdomain (ppp94-29-37-86.pppoe.spdop.ru. [94.29.37.86])
-        by smtp.gmail.com with ESMTPSA id x18sm536961ljc.67.2019.03.06.14.53.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 14:53:05 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-Date:   Thu,  7 Mar 2019 01:50:07 +0300
-Message-Id: <20190306225009.3391-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190306225009.3391-1-digetx@gmail.com>
-References: <20190306225009.3391-1-digetx@gmail.com>
+        Wed, 6 Mar 2019 17:56:22 -0500
+Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id AAD79100006;
+        Wed,  6 Mar 2019 22:56:20 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 23:56:20 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 5.1
+Message-ID: <20190306225620.GA17610@piout.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
-the TLB_FLUSH register differs from later Tegra generations that have 128
-ASID's.
+Hello Linus,
 
-In a result the PTE's are now flushed correctly from TLB and this fixes
-problems with graphics (randomly failing tests) on Tegra30.
+Here is the pull-request for the RTC subsystem for 5.1.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/iommu/tegra-smmu.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+There is an unusual amount of new drivers this cycle, and this explains
+the number of insertions. Other than that, the changes are the usual
+fixes and feature addition.
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 5182c7d6171e..8d30653cd13a 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -102,7 +102,6 @@ static inline u32 smmu_readl(struct tegra_smmu *smmu, unsigned long offset)
- #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
--#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
- #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
- 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
- #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
-@@ -205,8 +204,12 @@ static inline void smmu_flush_tlb_asid(struct tegra_smmu *smmu,
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_MATCH_ALL;
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -216,8 +219,12 @@ static inline void smmu_flush_tlb_section(struct tegra_smmu *smmu,
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_SECTION(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -227,8 +234,12 @@ static inline void smmu_flush_tlb_group(struct tegra_smmu *smmu,
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_GROUP(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
+
+  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.1
+
+for you to fetch changes up to e91b94fd2bc411b5926031496bbc3de9a96bb1c6:
+
+  rtc: pic32: convert to SPDX identifier (2019-03-04 20:23:15 +0100)
+
+----------------------------------------------------------------
+RTC for 5.0
+
+Subsystem:
+ - new quartz-load-femtofarads DT property for quartz load capacitance
+ - remove rtc_class_ops.read_callback
+
+New drivers:
+ - Abracon AB-RTCMC-32.768kHz-EOZ9
+ - Amlogic Meson RTC
+ - Cadence RTC IP
+ - Microcrystal RV3028
+ - Whwave sd3078
+
+Drivers:
+ - cmos: ignore bogus century byte
+ - ds1307: rework rx8130 support
+ - isl1208: add isl1209 support, nvmem support
+ - rs5C372: report invalid time when the oscillator stopped
+ - rx8581: add rx8571 support
+
+----------------------------------------------------------------
+Alexandre Belloni (20):
+      rtc: pcf8523: Add rv8523 compatible
+      rtc: imx-sc: depend on HAVE_ARM_SMCCC
+      rtc: meson: remove useless rtc_nvmem_unregister call
+      rtc: rv3028: add new driver
+      rtc: hid-sensor-time: stop selecting IIO
+      rtc: remove rtc_class_ops.read_callback
+      rtc: imx-sc: use rtc_time64_to_tm
+      rtc: zynqmp: fix possible race condition
+      rtc: zynqmp: let the core handle range
+      rtc: tx4939: remove useless test
+      rtc: tx4939: set range
+      rtc: tx4939: switch to rtc_time64_to_tm/rtc_tm_to_time64
+      rtc: tx4939: use .set_time
+      rtc: tx4939: convert to SPDX identifier
+      rtc: rv8803: let the core handle range
+      rtc: rv8803: convert to SPDX identifier
+      rtc: update my email address
+      rtc: pic32: convert to devm_rtc_allocate_device
+      rtc: pic32: let the core handle range
+      rtc: pic32: convert to SPDX identifier
+
+Alexey Roslyakov (1):
+      rtc: pcf85063: remove dead code
+
+Anson Huang (2):
+      rtc: snvs: make sure clock is enabled for interrupt handle
+      rtc: imx-sc: add rtc set time support
+
+Artem Panfilov (2):
+      dt-bindings: rtc: add ABEOZ9
+      rtc: add AB-RTCMC-32.768kHz-EOZ9 RTC support
+
+Biju Das (2):
+      dt-bindings: rtc: add rx8571 compatible
+      rtc: rx8581: Add support for Epson rx8571 RTC
+
+Colin Ian King (4):
+      rtc: ds1672: fix unintended sign extension
+      rtc: 88pm860x: fix unintended sign extension
+      rtc: 88pm80x: fix unintended sign extension
+      rtc: pm8xxx: fix unintended sign extension
+
+Dianlong Li (3):
+      dt-bindings: define vendor prefix for whwave, Inc.
+      dt-bindings: rtc: sd3078: add device tree documentation
+      rtc: sd3078: new driver.
+
+Eric Wong (1):
+      rtc: cmos: ignore bogus century byte
+
+Jan Kotas (2):
+      dt-bindings: rtc: Add bindings for Cadence RTC
+      rtc: Add Cadence RTC driver
+
+Kangjie Lu (2):
+      rtc: coh901331: fix a missing check of clk_prepare
+      rtc: hym8563: fix a missing check of block data read
+
+Marek Szyprowski (2):
+      rtc: s3c: Rewrite clock handling
+      rtc: s3c: Use generic helper to get driver data
+
+Marek Vasut (2):
+      dt-bindings: rtc: Add RV1805 to abracon,abx80x bindings
+      rtc: abx80x: Configure reserved bits in RV1805
+
+Martin Blumenstingl (2):
+      dt-bindings: rtc: add device-tree bindings for the Amlogic Meson RTC
+      rtc: support for the Amlogic Meson RTC
+
+Oliver.Rohe@wago.com (2):
+      rtc: rs5c372: r2221: fix to use the correct XSTP bit
+      rtc: rs5c372: Fix reading from rtc when the oscillator got interrupted.
+
+Sam Ravnborg (6):
+      devicetree: property-units: Add femtofarads unit
+      dt-bindings: rtc: Add quartz-load-femtofarads property
+      dt-binding: pcf8523: add xtal load capacitance
+      dt-binding: pcf85063: add xtal load capacitance
+      rtc: pcf8523: set xtal load capacitance from DT
+      rtc: pcf85063: set xtal load capacitance from DT
+
+Trent Piepho (5):
+      rtc: isl1208: fix negative digital trim reporting
+      rtc: isl1208: Introduce driver state struct
+      rtc: isl1208: Support more chip variations
+      rtc: isl1208: Add new style nvmem support to driver
+      dt-bindings: rtc: Update for new chip in isl1208 series
+
+Uwe Kleine-König (5):
+      rtc: ds1307: Move register definitions to start of file
+      rtc: ds1307: forward declare chips array instead of a bunch of functions
+      rtc: ds1307: correct register offset for rx8130
+      rtc: ds1307: rx8130: honor Voltage Loss Flag when reading the time
+      rtc: ds1307: rx8130: Fix alarm handling
+
+Wei Yongjun (1):
+      rtc: sd3078: make symbol 'sd3078_driver' static
+
+YueHaibing (1):
+      rtc: sd3078: fix platform_no_drv_owner.cocci warnings
+
+ZhangXiaoxu (1):
+      rtc: Fix UBSAN overflow warning
+
+ .../devicetree/bindings/property-units.txt         |    1 +
+ .../devicetree/bindings/rtc/abracon,abx80x.txt     |    1 +
+ Documentation/devicetree/bindings/rtc/cdns,rtc.txt |   25 +
+ .../devicetree/bindings/rtc/isil,isl1208.txt       |   38 +
+ .../devicetree/bindings/rtc/isil,isl1219.txt       |   29 -
+ .../devicetree/bindings/rtc/nxp,pcf85063.txt       |   18 +
+ .../devicetree/bindings/rtc/nxp,pcf8523.txt        |   18 +
+ .../devicetree/bindings/rtc/rtc-meson.txt          |   35 +
+ Documentation/devicetree/bindings/rtc/rtc.txt      |   23 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ MAINTAINERS                                        |    6 +
+ drivers/rtc/Kconfig                                |   58 +-
+ drivers/rtc/Makefile                               |    5 +
+ drivers/rtc/dev.c                                  |    5 -
+ drivers/rtc/lib.c                                  |    6 +-
+ drivers/rtc/rtc-88pm80x.c                          |   21 +-
+ drivers/rtc/rtc-88pm860x.c                         |   21 +-
+ drivers/rtc/rtc-ab-eoz9.c                          |  465 +++++++++
+ drivers/rtc/rtc-abx80x.c                           |   71 +-
+ drivers/rtc/rtc-cadence.c                          |  423 ++++++++
+ drivers/rtc/rtc-coh901331.c                        |    6 +-
+ drivers/rtc/rtc-ds1307.c                           | 1095 ++++++++++----------
+ drivers/rtc/rtc-ds1672.c                           |    3 +-
+ drivers/rtc/rtc-hym8563.c                          |    2 +
+ drivers/rtc/rtc-imx-sc.c                           |   21 +-
+ drivers/rtc/rtc-isl1208.c                          |  167 ++-
+ drivers/rtc/rtc-mc146818-lib.c                     |    2 +-
+ drivers/rtc/rtc-meson.c                            |  407 ++++++++
+ drivers/rtc/rtc-pcf85063.c                         |   46 +-
+ drivers/rtc/rtc-pcf8523.c                          |   29 +-
+ drivers/rtc/rtc-pic32.c                            |   34 +-
+ drivers/rtc/rtc-pm8xxx.c                           |    6 +-
+ drivers/rtc/rtc-rs5c372.c                          |   76 +-
+ drivers/rtc/rtc-rv3028.c                           |  732 +++++++++++++
+ drivers/rtc/rtc-rv8803.c                           |   15 +-
+ drivers/rtc/rtc-rx8581.c                           |  114 +-
+ drivers/rtc/rtc-s3c.c                              |   87 +-
+ drivers/rtc/rtc-sd3078.c                           |  231 +++++
+ drivers/rtc/rtc-snvs.c                             |    6 +
+ drivers/rtc/rtc-tx4939.c                           |   26 +-
+ drivers/rtc/rtc-zynqmp.c                           |   18 +-
+ include/linux/rtc.h                                |    3 +-
+ 42 files changed, 3585 insertions(+), 811 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1208.txt
+ delete mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1219.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson.txt
+ create mode 100644 drivers/rtc/rtc-ab-eoz9.c
+ create mode 100644 drivers/rtc/rtc-cadence.c
+ create mode 100644 drivers/rtc/rtc-meson.c
+ create mode 100644 drivers/rtc/rtc-rv3028.c
+ create mode 100644 drivers/rtc/rtc-sd3078.c
+
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
