@@ -2,84 +2,211 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9F7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8330C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB29206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:56:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xqismq3M"
+	by mail.kernel.org (Postfix) with ESMTP id B4A68206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 09:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfCFJ4f (ORCPT
+        id S1729945AbfCFJ45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 04:56:35 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34687 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbfCFJ4e (ORCPT
+        Wed, 6 Mar 2019 04:56:57 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:41673 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbfCFJ44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 04:56:34 -0500
-Received: by mail-lj1-f195.google.com with SMTP id l5so10315340lje.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 01:56:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yEgciwo74r6L4X4QmqakPxxm+3jaaTZZ7kRHGY9cfkY=;
-        b=Xqismq3M/3qd2q2EUQWoh7lfLWHeHWwGek+X3MxfChEmF+8nU33my4UlHUDn+ASct+
-         HQYFGcn+MiDbMLdabxo2jBj+lgEoCvbv/MSysSUhDKoWMWp7eEEFiL9WJJGhcNNm4EVA
-         UPKuFAV+6I5K0g2hTEAXltIxJ7hzIysMPbSo6BTYPc9Hm53HlStjb6T/l6fqPecjwiQw
-         7EtUQB0y/W2Jewk0EsItYGykw/q9X3TT2Ei612DpDgYGmg7VfFbJaXW94n7ury2YyGwh
-         ifDzIvsTnWB14M2n5u8VvinWebcEEci3T3B5yopHhLn2tY8aemP+c7trIQ5yX3aN098x
-         XF3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yEgciwo74r6L4X4QmqakPxxm+3jaaTZZ7kRHGY9cfkY=;
-        b=sx85qx9RBqYuo8tNvU8fnZ6fFdhfErA/PggwNcC8GcYmtjrS1vUOu4LTRhoY0b6i3Y
-         ihrj45IFTeXORT0pi2OruA6yz3el1RYdM3P89vYoBz9R/iwNIzq9C7lfRkflFwIsQ7TA
-         DliEMcba4ESOy6RbJGQIMQOTDQs/y5Qi+4OHQrsG53XUFhozeB4CpiY4fBbtvRjVWbUe
-         aIUEdIUMifhoBRWGe4PjD9aPJ78zzQ7AAMQJR3ZR05YYwKX2FS6NsBSJX1SqMvxpwNUw
-         LggGwfBjfTEtwwA079AIGTI/1ehuzhKxSsl9wvl+0pKa0cyNp9Y+ZRjE+EKJmrvTMMdf
-         QCGA==
-X-Gm-Message-State: APjAAAX5ka/sSf7kLWZxktGo66tXUDv+9E5X0hIjoKYYHJbSmsyFAsWV
-        e0TmOBlqxc+IxLmXYS3quw0U3tGNgAXy37O0em0QSzM7
-X-Google-Smtp-Source: APXvYqx4IKWDa9aqgKWKw2x50pzvvxMwXQ/w0d7pMwnSwULOXilXkCyNBhsKdHILwXk1h0EpxbCmIjtE9mKorwMZNrg=
-X-Received: by 2002:a2e:780a:: with SMTP id t10mr1656075ljc.19.1551866192846;
- Wed, 06 Mar 2019 01:56:32 -0800 (PST)
+        Wed, 6 Mar 2019 04:56:56 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x269uR9k1654018
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 6 Mar 2019 01:56:27 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x269uRQj1654014;
+        Wed, 6 Mar 2019 01:56:27 -0800
+Date:   Wed, 6 Mar 2019 01:56:27 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kees Cook <tipbot@zytor.com>
+Message-ID: <tip-a0bf7fc24303a538396aa8d32450d05c1929b9f0@git.kernel.org>
+Cc:     mingo@kernel.org, linux@dominikbrodowski.net,
+        gregkh@linuxfoundation.org, sean.j.christopherson@intel.com,
+        kernel-hardening@lists.openwall.com, solar@openwall.com,
+        jannh@google.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, hpa@zytor.com, keescook@chromium.org
+Reply-To: jannh@google.com, solar@openwall.com,
+          sean.j.christopherson@intel.com,
+          kernel-hardening@lists.openwall.com, linux@dominikbrodowski.net,
+          gregkh@linuxfoundation.org, mingo@kernel.org,
+          keescook@chromium.org, tglx@linutronix.de, hpa@zytor.com,
+          peterz@infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190227200132.24707-4-keescook@chromium.org>
+References: <20190227200132.24707-4-keescook@chromium.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/asm] lkdtm: Check for SMEP clearing protections
+Git-Commit-ID: a0bf7fc24303a538396aa8d32450d05c1929b9f0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190301184816.784-1-mans@mansr.com> <20190301184816.784-3-mans@mansr.com>
-In-Reply-To: <20190301184816.784-3-mans@mansr.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 6 Mar 2019 10:56:21 +0100
-Message-ID: <CANiq72nFOhrjN0nfBQc28dDyY0XPwWrJwWSkXv0yxGb-B2M-JQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] auxdisplay: charlcd: make backlight initial state configurable
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 7:48 PM Mans Rullgard <mans@mansr.com> wrote:
->
-> +#ifdef CONFIG_CHARLCD_BL_ON
-> +#define LCD_INIT_BL "\x1b[L+"
-> +#elif defined (CONFIG_CHARLCD_BL_FLASH)
+Commit-ID:  a0bf7fc24303a538396aa8d32450d05c1929b9f0
+Gitweb:     https://git.kernel.org/tip/a0bf7fc24303a538396aa8d32450d05c1929b9f0
+Author:     Kees Cook <keescook@chromium.org>
+AuthorDate: Wed, 27 Feb 2019 12:01:32 -0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 6 Mar 2019 10:49:50 +0100
 
-Style nitpick: no space after "elif defined". Do you mind if I change
-it before sending it to linux-next? Otherwise, looks fine to me.
-Thanks!
+lkdtm: Check for SMEP clearing protections
 
-CC'ing Willy in case he wants to take a look for charlcd.c
+This adds an x86-specific test for pinned cr4 bits. A successful test
+will validate pinning and check the ROP-style call-middle-of-function
+defense, if needed. For example, in the case of native_write_cr4()
+looking like this:
 
-Cheers,
-Miguel
+ffffffff8171bce0 <native_write_cr4>:
+ffffffff8171bce0:       48 8b 35 79 46 f2 00    mov    0xf24679(%rip),%rsi
+ffffffff8171bce7:       48 09 f7                or     %rsi,%rdi
+ffffffff8171bcea:       0f 22 e7                mov    %rdi,%cr4
+...
+ffffffff8171bd5a:       c3                      retq
+
+The UNSET_SMEP test will jump to ffffffff8171bcea (the mov to cr4)
+instead of ffffffff8171bce0 (native_write_cr4() entry) to simulate a
+direct-call bypass attempt.
+
+Expected successful results:
+
+  # echo UNSET_SMEP > /sys/kernel/debug/provoke-crash/DIRECT
+  # dmesg
+  [   79.594433] lkdtm: Performing direct entry UNSET_SMEP
+  [   79.596459] lkdtm: trying to clear SMEP normally
+  [   79.598406] lkdtm: ok: SMEP did not get cleared
+  [   79.599981] lkdtm: trying to clear SMEP with call gadget
+  [   79.601810] ------------[ cut here ]------------
+  [   79.603421] Attempt to unpin cr4 bits: 100000; bypass attack?!
+  ...
+  [   79.650170] ---[ end trace 2452ca0f6126242e ]---
+  [   79.650937] lkdtm: ok: SMEP removal was reverted
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Solar Designer <solar@openwall.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
+Link: https://lkml.kernel.org/r/20190227200132.24707-4-keescook@chromium.org
+
+---
+ drivers/misc/lkdtm/bugs.c  | 61 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/misc/lkdtm/core.c  |  1 +
+ drivers/misc/lkdtm/lkdtm.h |  1 +
+ 3 files changed, 63 insertions(+)
+
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 7eebbdfbcacd..6176384b4f85 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -255,3 +255,64 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+ 
+ 	pr_err("FAIL: accessed page after stack!\n");
+ }
++
++void lkdtm_UNSET_SMEP(void)
++{
++#ifdef CONFIG_X86_64
++#define MOV_CR4_DEPTH	64
++	void (*direct_write_cr4)(unsigned long val);
++	unsigned char *insn;
++	unsigned long cr4;
++	int i;
++
++	cr4 = native_read_cr4();
++
++	if ((cr4 & X86_CR4_SMEP) != X86_CR4_SMEP) {
++		pr_err("FAIL: SMEP not in use\n");
++		return;
++	}
++	cr4 &= ~(X86_CR4_SMEP);
++
++	pr_info("trying to clear SMEP normally\n");
++	native_write_cr4(cr4);
++	if (cr4 == native_read_cr4()) {
++		pr_err("FAIL: pinning SMEP failed!\n");
++		cr4 |= X86_CR4_SMEP;
++		pr_info("restoring SMEP\n");
++		native_write_cr4(cr4);
++		return;
++	}
++	pr_info("ok: SMEP did not get cleared\n");
++
++	/*
++	 * To test the post-write pinning verification we need to call
++	 * directly into the the middle of native_write_cr4() where the
++	 * cr4 write happens, skipping the pinning. This searches for
++	 * the cr4 writing instruction.
++	 */
++	insn = (unsigned char *)native_write_cr4;
++	for (i = 0; i < MOV_CR4_DEPTH; i++) {
++		/* mov %rdi, %cr4 */
++		if (insn[i] == 0x0f && insn[i+1] == 0x22 && insn[i+2] == 0xe7)
++			break;
++	}
++	if (i >= MOV_CR4_DEPTH) {
++		pr_info("ok: cannot locate cr4 writing call gadget\n");
++		return;
++	}
++	direct_write_cr4 = (void *)(insn + i);
++
++	pr_info("trying to clear SMEP with call gadget\n");
++	direct_write_cr4(cr4);
++	if (native_read_cr4() & X86_CR4_SMEP) {
++		pr_info("ok: SMEP removal was reverted\n");
++	} else {
++		pr_err("FAIL: cleared SMEP not detected!\n");
++		cr4 |= X86_CR4_SMEP;
++		pr_info("restoring SMEP\n");
++		native_write_cr4(cr4);
++	}
++#else
++	pr_err("FAIL: this test is x86_64-only\n");
++#endif
++}
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index 2837dc77478e..fd668776414b 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -132,6 +132,7 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(CORRUPT_LIST_ADD),
+ 	CRASHTYPE(CORRUPT_LIST_DEL),
+ 	CRASHTYPE(CORRUPT_USER_DS),
++	CRASHTYPE(UNSET_SMEP),
+ 	CRASHTYPE(CORRUPT_STACK),
+ 	CRASHTYPE(CORRUPT_STACK_STRONG),
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 3c6fd327e166..9c78d7e21c13 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -26,6 +26,7 @@ void lkdtm_CORRUPT_LIST_DEL(void);
+ void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
++void lkdtm_UNSET_SMEP(void);
+ 
+ /* lkdtm_heap.c */
+ void lkdtm_OVERWRITE_ALLOCATION(void);
