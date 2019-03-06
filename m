@@ -2,126 +2,97 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8624BC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF817C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFE02064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81EE2064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 11:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfCFLI5 (ORCPT
+        id S1730341AbfCFLJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 06:08:57 -0500
-Received: from foss.arm.com ([217.140.101.70]:59258 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfCFLI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 06:08:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BC5B80D;
-        Wed,  6 Mar 2019 03:08:56 -0800 (PST)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E73713F71D;
-        Wed,  6 Mar 2019 03:08:53 -0800 (PST)
-Subject: Re: [PATCH] tty/sysrq: Convert show_lock to raw_spinlock_t
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190304172053.17340-1-julien.grall@arm.com>
- <545fb96e-0f07-758e-5c79-a725e74e3387@arm.com>
- <20190304220152.nozgclpu2jx3zgvy@linutronix.de>
- <75159b6e-0733-e300-e4f5-d519ca7f6b13@arm.com>
- <20190304181521.06e42396@gandalf.local.home>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <1ba3a2cf-36ff-bce0-8d2d-6e8ed8a81056@arm.com>
-Date:   Wed, 6 Mar 2019 11:08:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 6 Mar 2019 06:09:14 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:36845 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfCFLJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 06:09:13 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N14xe-1h7QSn0c5S-012Vhh; Wed, 06 Mar 2019 12:09:07 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] extcon-ptn5150: fix COMPILE_TEST dependencies
+Date:   Wed,  6 Mar 2019 12:08:57 +0100
+Message-Id: <20190306110906.2622957-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190304181521.06e42396@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:KC4iYkvGtYdhiUP3vD9B3Tevzaf0ckV5iiY6/4+X7YAF6iqCLkT
+ jO4eSlcx40dobzhFrGGrNOpYIpu1DWPyvlIatlbHhzoao4Xjn8rTiodRQiNsVV+wPeDN4Pa
+ ymaZwZkyhz69X/JI94frVY1narYa5T0BKFRg4iRNVeqBDXZF0BkcxNERrYB1+U9/I34lbVQ
+ 80I0+zzbC59lJEhLFzgLg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DIcRHNM81FA=:vqTtp2fETiYjd9qjOBnzgj
+ LnY6R2vq+dw0UsqGvmL+NfCKa174JhqSOw4lsQL2a8kq4GxCGP3L7Heba0iuUd2n9RFedEV/C
+ CB03gtpJg1uuSJ0vaGrkIECaHEhiR8y95L7AXMs0kqnYFdJ7cvchJYY7WmozNh/zychoHQI1H
+ FpTtmPZqggXKKr0yApmf3/oIbJ4Lgh5Oe8xGTbpbEaTClCz3WsYpm3wK8+xMidiWqq25fUoVC
+ SlnxPDYXmVDorfd7MyWktgxvKrbR6m+ZAzwnYu7fFxyp3bNuL7qNKF/kRw8fNXcbHvWnQ86gR
+ 2gdzkM8ESo6AH78kiX/jrju+8Q6cSRLxdJbcXJ1mw6pJC/EPij3/8uB3HryG3RBx14LQkKQrA
+ niNz2yVnr0Nia3459ABXkOsNIrhwl4gMhxElWgmnSVBFDx8V1SKB+Of5H0KO4kPGw2Z3B9B1d
+ 4hQ1nzgZ0tKr0UOqKKzVGIRanrxm16AXya86BoJnp71p7TXpZ6nETbww/nGLeFD1bt3RKXuOE
+ MuEWND29o04b5jP2yROM/z4IBwyR1X98ytXrGm5k6/xxdLUYIPZTzrjanT8Z9m3KFwN3KQAH9
+ qg8QQOhTWhi6pAanUJ6jqrfj584zhK3mCfztpNjkYVhALBxAFZdZxs8YYKkxu7ufgdNzFNTkB
+ zGdIUc33KUTpEyUM2NV15QDG/Cz0Dk61TTL3wXVIbLGLJuMmoeyxP8E+FedMOx5ujMpfZXVX+
+ L09QvvPbTWNy9uWy/I1bhwqNN8bVrHbq8h/SeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+The PTN5150 dependencies look like they were meant to do the
+right thing, but they actually should not allow building without
+I2C for compile testing, as that results in a Kconfig warning
+and subsequent build failure:
 
-On 04/03/2019 23:15, Steven Rostedt wrote:
-> On Mon, 4 Mar 2019 22:25:41 +0000
-> Julien Grall <Julien.Grall@arm.com> wrote:
->> On 04/03/2019 22:01, Sebastian Andrzej Siewior wrote:
->>> On 2019-03-04 17:21:57 [+0000], Julien Grall wrote:
->>>> (CC correctly linux-rt-users)
->>>>
->>>> On 04/03/2019 17:20, Julien Grall wrote:
->>>>> At the moment show_lock is implemented using spin_lock_t and called from
->>>>> an interrupt context on Arm64. The following backtrace was triggered by:
->>>>>
->>>>> 42sh# echo l > /proc/sysrq-trigger
->>>>>
->>>>> [ 4432.073756] sysrq: SysRq : Show backtrace of all active CPUs
->>>>> [ 4432.403422] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:974
->>>>> [ 4432.403424] sysrq: CPU6:
->>>>> [ 4432.403426] in_atomic(): 1, irqs_disabled(): 128, pid: 2410, name: kworker/u16:2
->>>>>
->>>>> [...]
->>>>>
->>>>> [ 4432.403581] Call trace:
->>>>> [ 4432.403584]  dump_backtrace+0x0/0x148
->>>>> [ 4432.403586]  show_stack+0x14/0x20
->>>>> [ 4432.403588]  dump_stack+0x9c/0xd4
->>>>> [ 4432.403592]  ___might_sleep+0x1cc/0x298
->>>>> [ 4432.403595]  rt_spin_lock+0x5c/0x70
->>>>> [ 4432.403596]  showacpu+0x34/0x68
->>>>> [ 4432.403599]  flush_smp_call_function_queue+0xd4/0x278
->>>>> [ 4432.403602]  generic_smp_call_function_single_interrupt+0x10/0x18
->>>>> [ 4432.403605]  handle_IPI+0x26c/0x668
->>>>> [ 4432.403607]  gic_handle_irq+0x9c/0xa0
->>>>> [ 4432.403609]  el1_irq+0xb4/0x13c
->>>>>
->>>>> With RT-patches, spin_lock can now sleep and therefore cannot be used from
->>>>> interrupt context. Use a raw_spin_lock instead to prevent the lock to
->>>>> sleep.
->>>>>
->>>>> Signed-off-by: Julien Grall <julien.grall@arm.com>
->>>
->>> I don't have to look at this properly but this looks is wrong.
->>
->> May I ask why does it look wrong? On Arm64, this code is called from an
->> IRQ disabled context (see the check in flush_smp_call_function_queue).
-> 
-> I'll answer.
->
-> It's going to call printk, and depending on consoles and such, it may
-> not print anything (a printk without atomic consoles shows nothing).
-> 
-> That said, perhaps we need to do something like the "safe printk",
-> where it only loads it into the log buffers and doesn't do the actual
-> prints.
-> 
-> Hmm, do we do that now? I need to look at the latest printk code in RT.
+WARNING: unmet direct dependencies detected for REGMAP_I2C
+  Depends on [m]: I2C [=m]
+  Selected by [y]:
+  - EXTCON_PTN5150 [=y] && EXTCON [=y] && (I2C [=m] && GPIOLIB [=y] || COMPILE_TEST [=y])
+  Selected by [m]:
+  - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
+  - KEYBOARD_CAP11XX [=m] && !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && OF [=y] && I2C [=m]
+  - INPUT_DRV260X_HAPTICS [=m] && !UML && INPUT_MISC [=y] && INPUT [=y] && I2C [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
+  - ... [many others]
 
-Thank you for the explanation.
+Add parentheses around the expression so we can compile-test
+without GPIOLIB but not without I2C.
 
-I am not entirely familiar with printk, so I may have overlooked something.
+Fixes: 4ed754de2d66 ("extcon: Add support for ptn5150 extcon driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/extcon/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Looking at the printk code (see vprintk_emit), the message will be loaded in the 
-log buffer. The log buffer will be printed out by klogd if vprintk_emit were 
-called from a context where IRQs or preemption is disabled.
-
-So I think the printk should still happen from atomic context but it will get 
-delayed until we are out from the atomic context.
-
-Cheers,
-
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index 8e17149655f0..540e8cd16ee6 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -116,7 +116,7 @@ config EXTCON_PALMAS
+ 
+ config EXTCON_PTN5150
+ 	tristate "NXP PTN5150 CC LOGIC USB EXTCON support"
+-	depends on I2C && GPIOLIB || COMPILE_TEST
++	depends on I2C && (GPIOLIB || COMPILE_TEST)
+ 	select REGMAP_I2C
+ 	help
+ 	  Say Y here to enable support for USB peripheral and USB host
 -- 
-Julien Grall
+2.20.0
+
