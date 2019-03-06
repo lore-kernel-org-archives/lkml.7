@@ -2,192 +2,90 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6047EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8D7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3379620684
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D405920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbfCFRCX (ORCPT
+        id S1727847AbfCFRDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:02:23 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25721 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726636AbfCFRCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:02:21 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x26GuHKW022932;
-        Wed, 6 Mar 2019 18:01:57 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhgb16m0-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 06 Mar 2019 18:01:57 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5968734;
-        Wed,  6 Mar 2019 17:01:56 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30C6950D7;
-        Wed,  6 Mar 2019 17:01:56 +0000 (GMT)
-Received: from [10.48.0.237] (10.75.127.51) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 6 Mar
- 2019 18:01:55 +0100
-Subject: Re: [PATCH 4/5] mmc: mmci: stm32: define get_dctrl_cfg
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1551694625-6414-1-git-send-email-ludovic.Barre@st.com>
- <1551694625-6414-5-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFr3PLOdozCmfE7Lin0FhzgLnN120RZmMwk=K8RzGvveow@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <bbbb79de-b480-718c-abec-ee4af0e88d71@st.com>
-Date:   Wed, 6 Mar 2019 18:01:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 6 Mar 2019 12:03:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49008 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726226AbfCFRDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:03:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E9382BC2B;
+        Wed,  6 Mar 2019 17:03:46 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 18:03:46 +0100
+From:   Jiri Bohac <jbohac@suse.cz>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Omar Sandoval <osandov@fb.com>, Baoquan He <bhe@redhat.com>,
+        Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4] x86/gart/kcore: Exclude GART aperture from kcore
+Message-ID: <20190306170346.zs6orsyu327c6m2p@dwarf.suse.cz>
+References: <20190306113859.19263-1-kasong@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFr3PLOdozCmfE7Lin0FhzgLnN120RZmMwk=K8RzGvveow@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-06_11:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306113859.19263-1-kasong@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On Wed, Mar 06, 2019 at 07:38:59PM +0800, Kairui Song wrote:
+> +int register_mem_pfn_is_ram(int (*fn)(unsigned long pfn))
+> +{
+> +	if (mem_pfn_is_ram)
+> +		return -EBUSY;
+> +	mem_pfn_is_ram = fn;
+> +	return 0;
+> +}
+> +
+> +void unregister_mem_pfn_is_ram(void)
+> +{
+> +	mem_pfn_is_ram = NULL;
+> +}
+> +
+> +static int pfn_is_ram(unsigned long pfn)
+> +{
+> +	if (mem_pfn_is_ram)
+> +		return mem_pfn_is_ram(pfn);
+> +	else
+> +		return 1;
+> +}
+> +
 
-On 3/6/19 2:31 PM, Ulf Hansson wrote:
-> On Mon, 4 Mar 2019 at 11:17, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> This patch defines get_dctrl_cfg callback for sdmmc variant.
->> sdmmc variant has specific stm32 transfer modes.
->> sdmmc data transfer mode selection could be:
->> -Block data transfer ending on block count.
->> -SDIO multibyte data transfer.
->> -MMC Stream data transfer (not used).
->> -Block data transfer ending with STOP_TRANSMISSION command.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.h             |  5 +++++
->>   drivers/mmc/host/mmci_stm32_sdmmc.c | 21 +++++++++++++++++++++
->>   2 files changed, 26 insertions(+)
->>
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index 6f28f71..eb5d99af 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -131,6 +131,11 @@
->>   /* Control register extensions in the Qualcomm versions */
->>   #define MCI_DPSM_QCOM_DATA_PEND        BIT(17)
->>   #define MCI_DPSM_QCOM_RX_DATA_PEND BIT(20)
->> +/* Control register extensions in STM32 versions */
->> +#define MCI_DPSM_STM32_MODE_BLOCK      (0 << 2)
->> +#define MCI_DPSM_STM32_MODE_SDIO       (1 << 2)
->> +#define MCI_DPSM_STM32_MODE_STREAM     (2 << 2)
->> +#define MCI_DPSM_STM32_MODE_BLOCK_STOP (3 << 2)
->>
->>   #define MMCIDATACNT            0x030
->>   #define MMCISTATUS             0x034
->> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
->> index cfbfc6f..e7bf744 100644
->> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
->> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
->> @@ -265,10 +265,31 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
->>          }
->>   }
->>
->> +u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
->> +{
->> +       struct variant_data *variant = host->variant;
->> +       int blksz_bits;
->> +       u32 datactrl;
->> +
->> +       blksz_bits = ffs(host->data->blksz) - 1;
->> +       datactrl = variant->datactrl_dpsm_enable | blksz_bits << 4;
->> +
->> +       if (host->mmc->card && mmc_card_sdio(host->mmc->card) &&
->> +           host->data->blocks == 1)
-> 
-> These settings are not limited to deal with the block size bits.
-> 
-> Don't get me wrong, it seems reasonable to include them, but the
-> generic code in mmci_start_data() also have code to cope with SDIO. I
-> think we should start by splitting that up into a couple of
-> helper/library functions, and make the legacy variant to use them.
-> This should probably be done as a preparation to your series, so you
-> can build on top of that.
+If anyone were ever to use unregister_mem_pfn_is_ram(),
+pfn_is_ram() would become racy.
 
-I think you wish helper functions for each group of datactrl feature,
-like for dpsm direction|sdio|ios timming. Each variant call theses 
-helpers to define its own datactrl value. it's possible, no problem.
+In V2 you had this:
+	+       fn = mem_pfn_is_ram;
+	+       if (fn)
+	+               ret = fn(pfn);
 
-In mmci_start_data will remain the part on clk_reg for sdio card
-	if (host->mmc->card && mmc_card_sdio(host->mmc->card)) {
-		u32 clk;
+I agree it's unnecessary since nothing uses
+unregister_mem_pfn_is_ram(). But then I think it would be best to
+just drop the unregister function.
 
-		/*
-		 * The ST Micro variant for SDIO small write transfers
-		 * needs to have clock H/W flow control disabled,
-		 * otherwise the transfer will not start. The threshold
-		 * depends on the rate of MCLK.
-		 */
-		if (variant->st_sdio && data->flags & MMC_DATA_WRITE &&
-		    (host->size < 8 ||
-		     (host->size <= 8 && host->mclk > 50000000)))
-			clk = host->clk_reg & ~variant->clkreg_enable;
-		else
-			clk = host->clk_reg | variant->clkreg_enable;
+Otherwise the patch looks good to me.
 
-		mmci_write_clkreg(host, clk);
-	}
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
-it's OK ?
-
-> 
-> Does it make sense? If not, please tell and I can try to provide some
-> patch to show you what I mean.
-> 
-> 
->> +               datactrl |= MCI_DPSM_STM32_MODE_SDIO;
->> +       else if (host->data->stop && !host->mrq->sbc)
->> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK_STOP;
->> +       else
->> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK;
->> +
->> +       return datactrl;
->> +}
->> +
->>   static struct mmci_host_ops sdmmc_variant_ops = {
->>          .validate_data = sdmmc_idma_validate_data,
->>          .prep_data = sdmmc_idma_prep_data,
->>          .unprep_data = sdmmc_idma_unprep_data,
->> +       .get_datactrl_cfg = sdmmc_get_dctrl_cfg,
->>          .dma_setup = sdmmc_idma_setup,
->>          .dma_start = sdmmc_idma_start,
->>          .dma_finalize = sdmmc_idma_finalize,
->> --
->> 2.7.4
->>
-> 
-> Kind regards
-> Uffe
-> 
