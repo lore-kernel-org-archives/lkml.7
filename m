@@ -2,85 +2,211 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2CDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE30C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EB02064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7D72133F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 12:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="nfEmlKKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbfCFM36 (ORCPT
+        id S1730130AbfCFMfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 07:29:58 -0500
-Received: from Galois.linutronix.de ([146.0.238.70]:49803 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfCFM35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 07:29:57 -0500
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h1VgD-0003Rm-9y; Wed, 06 Mar 2019 13:29:49 +0100
-Date:   Wed, 6 Mar 2019 13:29:48 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Miroslav Lichvar <mlichvar@redhat.com>
-cc:     John Stultz <john.stultz@linaro.org>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH] ntp: Avoid undefined behaviour in
- second_overflow()
-In-Reply-To: <20190306095442.GM21520@localhost>
-Message-ID: <alpine.DEB.2.21.1903061327350.1646@nanos.tec.linutronix.de>
-References: <1551835710-53773-1-git-send-email-wangxiongfeng2@huawei.com> <CALAqxLXFGKDzxT-S9DDnjRRYvDB1Qq3T-tHYYGQXg3c47HtTbQ@mail.gmail.com> <20190306095442.GM21520@localhost>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 6 Mar 2019 07:35:10 -0500
+Received: from mail-eopbgr680064.outbound.protection.outlook.com ([40.107.68.64]:24919
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729247AbfCFMfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 07:35:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2ANdLjgbEmfxgy5jGrjDSJW7Ka76GREtBBb+YcWK5ZY=;
+ b=nfEmlKKwdwTZFesiiFkk0kvWjRGyJQTEp07A6V/ct/mNAokZpzNELj10lrSThOvOllYC38iM+iMljxfNSRKVLGZruRpVA3ypYpdXZl9KIpZgOHQpW0yfc2YpveyC05pA0UXJHirZtFcy4GFY00aLNTqcxmtemA9LZOOOHq8PjqM=
+Received: from MWHPR0201CA0063.namprd02.prod.outlook.com
+ (2603:10b6:301:73::40) by BY2PR0201MB0774.namprd02.prod.outlook.com
+ (2a01:111:e400:2c8c::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1665.18; Wed, 6 Mar
+ 2019 12:35:03 +0000
+Received: from SN1NAM02FT017.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by MWHPR0201CA0063.outlook.office365.com
+ (2603:10b6:301:73::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1686.18 via Frontend
+ Transport; Wed, 6 Mar 2019 12:35:03 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT017.mail.protection.outlook.com (10.152.72.115) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1643.11
+ via Frontend Transport; Wed, 6 Mar 2019 12:35:02 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1h1VlG-0006I2-Dw; Wed, 06 Mar 2019 04:35:02 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1h1VlB-0004FE-Bs; Wed, 06 Mar 2019 04:34:57 -0800
+Received: from [172.30.17.111]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1h1Vl3-0004Dc-99; Wed, 06 Mar 2019 04:34:49 -0800
+Subject: Re: [PATCH v2] tty: xilinx_uartps: Correct return value in probe
+To:     Rajan Vaja <rajan.vaja@xilinx.com>, <gregkh@linuxfoundation.org>,
+        <jslaby@suse.com>
+CC:     <linux-kernel@vger.kernel.org>, <JOLLYS@xilinx.com>,
+        <anirudh@xilinx.com>, <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1543927882-15091-1-git-send-email-rajan.vaja@xilinx.com>
+ <1551433028-25207-1-git-send-email-rajan.vaja@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <0755f963-5f02-d5c7-57e8-d19e3dd2be7f@xilinx.com>
+Date:   Wed, 6 Mar 2019 13:34:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1551433028-25207-1-git-send-email-rajan.vaja@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39850400004)(396003)(2980300002)(189003)(199004)(14444005)(76176011)(186003)(31696002)(26005)(23676004)(2486003)(36756003)(316002)(110136005)(229853002)(6666004)(8936002)(478600001)(9786002)(77096007)(64126003)(106002)(54906003)(50466002)(58126008)(44832011)(486006)(426003)(446003)(230700001)(11346002)(36386004)(126002)(2616005)(106466001)(2906002)(305945005)(4326008)(5660300002)(476003)(65806001)(47776003)(2201001)(356004)(81166006)(63266004)(6246003)(31686004)(336012)(8676002)(65826007)(65956001)(81156014)(107986001);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR0201MB0774;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f0bffb1f-eac6-4339-858e-08d6a23027e7
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BY2PR0201MB0774;
+X-MS-TrafficTypeDiagnostic: BY2PR0201MB0774:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Exchange-Diagnostics: 1;BY2PR0201MB0774;20:1D/2ppR9pfHChfpZsfEau5KA7fQNDqVxgGIEnpyqp2LJ2SUxscMd2fyCjpua/b/eEfOjkJ8FU80n/rzqZYlx1v6hmzBrjUkytHUl4/dhqHHkuCqYdV8Njeac+cyTZ5yMUnMKb4ReWzJhuRTHwnTWVgn3ZdC8GDAaLoIR3e8yiX/LzHQGameh20cicXGKuOROyRwR3NR21QRLm5NicKvp/hQKXLKbDy8vofuUqD+bznmu5XfiB/3D1TtZDktO0PZKGVybA8YE333rmavPdk9CTC41TjZLE8MuNPoBnxOACjO8/Izm+Hl+VNKre/a5imFuhz9nKoXJEUJyQRRCDfseg4eZ+zJgbfxzZPELxTQtFHNnhYo1ICDki4CFsDOzVvynnSQu/VESFCNQxrDHRXaCUgfOrl7slrQButwumTiDKNQXlere2oLwgJZE+N0F4EM0KnejMpqtkK41jxC8q7jls37Rm0XCIcTNLO3mE7YPEuZXN9D18oQj188m3h6wKhG0
+X-Microsoft-Antispam-PRVS: <BY2PR0201MB0774AADB275A0594506B8E0DC6730@BY2PR0201MB0774.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 0968D37274
+X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtCWTJQUjAyMDFNQjA3NzQ7MjM6ZGI5T3k0SzF6YkM2V1dZQm92Y1RxOVB5?=
+ =?utf-8?B?ZEdua3I2S3RoNTNlM0lMeDhnTUNJb1VraTM4c1ZqVHJkZjIvbWlqTVFnMFF4?=
+ =?utf-8?B?K25JekVQVTVPcTFhL1d5NE51UDk2VXI4V25CVnNXNVVDWFhOT3RGMlZiUno5?=
+ =?utf-8?B?UVpFSG53bGVjdGlBaEtJYlRtNWljQi9QWStpQmkzVGN5NXF3UGRrbHNQNXBT?=
+ =?utf-8?B?eVFuRU5FN2I5TEZMR1ZQdUdSRVA1WUxqcDVzUjRxMXc5dEs1OEIzOHQ0bmpM?=
+ =?utf-8?B?Y1JYRHpjb0xTVzRId3ErZ0lYR1dzN0ZSSExxYmNzRUxRYUtHRzN4QVY5ZVZI?=
+ =?utf-8?B?Ny9YK0doS29TNy83bGNxQnFEM1YyKzV1bTErOWJaUm1wYThzZGdjcE1TenBt?=
+ =?utf-8?B?R2drNEdpNUdYVzkzNllyQXhoWFpMNndCWFFqcVRWS1VDUU1KRG1GNFFqWEdU?=
+ =?utf-8?B?Q3NQY28rdnhZeFRtcGlwMWhOeGtaeGM0dkU1WVdGQmJtTENxbVZQYTZMMzFp?=
+ =?utf-8?B?NkRSa2dHMWY4WURvbDVlSjlkenFrcUdWOSt6aU9yNEg0MGpoNmJtOTdjQTNB?=
+ =?utf-8?B?SmY4L1AvSWNWbmM3WGhjbXZ6NG5tcmxHdWlrbmhUVEJJMG1IRGZDQWxDNGxq?=
+ =?utf-8?B?OHgrUHFMU204Rkp2U1ZRdWZNZXBtUnh4bWNWOVgvZmVtcG1LZnZXN3VnOFJU?=
+ =?utf-8?B?NVhXdmpjTERvNnFHR2dGNml5Q3dmNExORjRJOVNTajNhaEtBSmltSDJDVUp5?=
+ =?utf-8?B?eHZTSnE5RVFMbFpBVFFpTElWeXRLVTdoQlkxQjR1eFJxeWdld2JBcUFlVml3?=
+ =?utf-8?B?NzFncndlcWNEUkg3cngwU2E4elBGRHBwVFJJUGZNNEdKYlhQK1YwWm9WU25R?=
+ =?utf-8?B?L1RGZ3RMTENLbW9HSEpHY053RGJQMUlFTWdtbE9BbnV2MVlsR3ZJVTM0bFF3?=
+ =?utf-8?B?dkNTZlRZWEVhVDhJNEJUR2Nvb090SGJSWFZXRUxEYzNJcGpIemR2OThQQkZk?=
+ =?utf-8?B?MytMUXd6Q2JHa2pCS0YyTHkveTcrdTUvUUFYcVVJeTBSejdiRDNNaFEvNFho?=
+ =?utf-8?B?MU1jUTFtZXZSMUZNN3pyYXhXL0tQWHZ4dFlLYllLbnZmV3d1TjBGL2VtYWFy?=
+ =?utf-8?B?VlZiVlQvWEU2Y0dEWDRldkhGM21qcGNYNU1Sc09FdXRURVU1TDA2Y1BKWVBY?=
+ =?utf-8?B?MzY5MWpZdSt5UDFiZ21wbER1ZU0wVENRM1cxelVDNzNVaEVRRGU2MDI2aHph?=
+ =?utf-8?B?dDQxVk1ZeWxPbGE2cEFTM2JKYS9lRncydytrcFBMbGd2QjRnN25nTFJRb1dx?=
+ =?utf-8?B?bjlXcFpoNEo1ek9yQVBSUDlEM3I4QlkzczYzblYvN2UwcWhjYVQzTk4yMnFB?=
+ =?utf-8?B?OTZURHV5MVlXWkc2SHdlSkpodytOZGQ2VkpLRDd6L2pIc2xiMG01ZjlRbEor?=
+ =?utf-8?B?QUF2SlFyMjJQUk5JV1JwL3hOT3NVdmZYaWRJUXk4RUJHalRnMlN1VkxkZGh1?=
+ =?utf-8?B?TXZIdXdXcS9aZlJZOGlvVzZ2VFd2WUZwdC85V2NqZjRDbkUvYkg1cVEyNmpF?=
+ =?utf-8?B?NGhIc2NodnpBWEpiTG1kbnc2REFYRUQ4ODJKanBIM2czVG96SFpBdkIzV2M2?=
+ =?utf-8?B?d25wTWllYzdRclZUUjlYcUtFRks1Ym1BRGU2TFNmSFJuSlZWWE52dUYwc2Nk?=
+ =?utf-8?Q?axZty8KiJJURSk4c/IQtVwLDf6FC8IVT87KuQISLm?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 1uvLD5Uz8dYZiOn7pdJ1BLXx8W23bpFpIhElJIw6KdhVvGWSf2vb4YjJymASo3/ZOukq/hbEU0t7hKh1lhKBtLBbcUDoLS6ej+mC7k1oi03Sb3ihshuRkLyx0u76AUVdpVw/yMd4uai0IlIxUlbdRtHgIxB4e7JJljl7PqMRJ9Xxv00DNMRU7nrby+UvV6XE6E+vvK4Hb4IX+92C2SP4YaVl3jNgOyih9swt8JaIs4QGKdmCeo2juAiURCE883uY9JRLFUhRII5JV1sZmhEw1hqydyGWXmC3d704UQ7qmn2BI0L8spVditdsziVwSIP8R9+w8tmVBsjqWtvSZiaiYRoNEY/sGPuTYv7BF4cFNRWpcAUBxkgbpeqgwko5JWNRQyKHH4WL15/OD9+ZO+edNBT0yRTPvaE3krzBOAD5sks=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2019 12:35:02.8305
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0bffb1f-eac6-4339-858e-08d6a23027e7
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR0201MB0774
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Mar 2019, Miroslav Lichvar wrote:
-> On Tue, Mar 05, 2019 at 05:42:25PM -0800, John Stultz wrote:
-> > > --- a/kernel/time/ntp.c
-> > > +++ b/kernel/time/ntp.c
-> > > @@ -677,6 +677,8 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
-> > >
-> > >         if (txc->modes & ADJ_MAXERROR)
-> > >                 time_maxerror = txc->maxerror;
-> > > +       if (time_maxerror > NTP_PHASE_LIMIT)
-> > > +               time_maxerror = NTP_PHASE_LIMIT;
-> > 
-> > This looks sane to me.
-> > Acked-by: John Stultz <john.stultz@linaro.org>
-> > 
-> > Though it makes me wonder a bit more about the sanity checking on the
-> > other parameters passed via adjtimex(), tick_usec for instance looks
-> > like it could be similarly problematic.
+On 01. 03. 19 10:37, Rajan Vaja wrote:
+> Existing driver checks for alternate clock if devm_clk_get() fails
+> and returns error code for last clock failure. If xilinx_uartps is
+> called before clock driver, devm_clk_get() returns -EPROBE_DEFER.
+> In this case, probe should not check for alternate clock as main
+> clock is already present in DTS and return -EPROBE_DEFER only.
 > 
-> The tick length is checked earlier in timekeeping_validate_timex(), so
-> that should be ok.
+> This patch fixes it by not checking for alternate clock when main
+> clock get returns -EPROBE_DEFER.
 > 
-> What I'd like to see clamped is the system time itself. ktime_t
-> overflows on Apr 11 2262. clock_settime() and adjtimex(ADJ_SETOFFSET)
-> can set the time close to the overflow and let everything break.
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+> Changes in v2:
+>   * Handle dynamic port allocation error cases
+> ---
+>  drivers/tty/serial/xilinx_uartps.c | 32 +++++++++++++++++++-------------
+>  1 file changed, 19 insertions(+), 13 deletions(-)
 > 
-> Boot a VM and try this:
+> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+> index 094f295..f7ae73e 100644
+> --- a/drivers/tty/serial/xilinx_uartps.c
+> +++ b/drivers/tty/serial/xilinx_uartps.c
+> @@ -1547,27 +1547,33 @@ static int cdns_uart_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "pclk");
+> +	if (PTR_ERR(cdns_uart_data->pclk) == -EPROBE_DEFER) {
+> +		rc = PTR_ERR(cdns_uart_data->pclk);
+> +		goto err_out_unregister_driver;
+> +	}
+> +
+>  	if (IS_ERR(cdns_uart_data->pclk)) {
+>  		cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "aper_clk");
+> -		if (!IS_ERR(cdns_uart_data->pclk))
+> -			dev_err(&pdev->dev, "clock name 'aper_clk' is deprecated.\n");
+> +		if (IS_ERR(cdns_uart_data->pclk)) {
+> +			rc = PTR_ERR(cdns_uart_data->pclk);
+> +			goto err_out_unregister_driver;
+> +		}
+> +		dev_err(&pdev->dev, "clock name 'aper_clk' is deprecated.\n");
+>  	}
+> -	if (IS_ERR(cdns_uart_data->pclk)) {
+> -		dev_err(&pdev->dev, "pclk clock not found.\n");
+> -		rc = PTR_ERR(cdns_uart_data->pclk);
+> +
+> +	cdns_uart_data->uartclk = devm_clk_get(&pdev->dev, "uart_clk");
+> +	if (PTR_ERR(cdns_uart_data->uartclk) == -EPROBE_DEFER) {
+> +		rc = PTR_ERR(cdns_uart_data->uartclk);
+>  		goto err_out_unregister_driver;
+>  	}
+>  
+> -	cdns_uart_data->uartclk = devm_clk_get(&pdev->dev, "uart_clk");
+>  	if (IS_ERR(cdns_uart_data->uartclk)) {
+>  		cdns_uart_data->uartclk = devm_clk_get(&pdev->dev, "ref_clk");
+> -		if (!IS_ERR(cdns_uart_data->uartclk))
+> -			dev_err(&pdev->dev, "clock name 'ref_clk' is deprecated.\n");
+> -	}
+> -	if (IS_ERR(cdns_uart_data->uartclk)) {
+> -		dev_err(&pdev->dev, "uart_clk clock not found.\n");
+> -		rc = PTR_ERR(cdns_uart_data->uartclk);
+> -		goto err_out_unregister_driver;
+> +		if (IS_ERR(cdns_uart_data->uartclk)) {
+> +			rc = PTR_ERR(cdns_uart_data->uartclk);
+> +			goto err_out_unregister_driver;
+> +		}
+> +		dev_err(&pdev->dev, "clock name 'ref_clk' is deprecated.\n");
+>  	}
+>  
+>  	rc = clk_prepare_enable(cdns_uart_data->pclk);
 > 
-> # date -s 'Apr 11 23:47:15 UTC 2262'
 
-So once Arnd is done with y2038, we'll ask him to look into y2262 :)
-
-Seriously, yes we should do clamping there.
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
 
 Thanks,
-
-	tglx
+Michal
