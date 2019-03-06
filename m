@@ -2,122 +2,186 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95B9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57CEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9331C206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022D320663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 20:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xaUnYiOU"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="kh20bPJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbfCFUWi (ORCPT
+        id S1730579AbfCFUZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 15:22:38 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36840 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbfCFUWh (ORCPT
+        Wed, 6 Mar 2019 15:25:06 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58912 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfCFUZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 15:22:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=y5ZURR5r/3LLx6aWN+bszh3KYmschxGAEvSeXhlTRzs=; b=xaUnYiOUXr98+jAF+wCQ2UQ03
-        W/nBn1C9oLDm0V/ziHRHpOug/LC2bYOZtA3oreola8hBtc7WnuBHPf4/uoaBUl4DPrRyJhMRgvKFg
-        vI48mThBzaEvWfwxO+WamgfDqgh05XV9GPkLtXtUtbAKK9ugn+q0gq5OqSXhavtr2VcDXS6r52BSV
-        eBDr2YtkfcHprcVS4nzRY3q26rhD2zKJBA/LnaaHgHj7jAU/Jz7C3aKAsFIIjVB3gJWE1Ynn3vEO0
-        gg5rdts0TI6VUfJexn0q2tTwNE6HuuLhrcIuu5h7/xLfwUnaD7GtIeYqMVmJCWOqKX6gPozN5pqfA
-        Qtm/U36GQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51636)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1h1d3c-0001QL-22; Wed, 06 Mar 2019 20:22:28 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1h1d3V-0004Ka-6r; Wed, 06 Mar 2019 20:22:21 +0000
-Date:   Wed, 6 Mar 2019 20:22:21 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peng Hao <peng.hao2@zte.com.cn>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: Smarter Kconfig help
-Message-ID: <20190306202221.n654yxedjtdang5n@shell.armlinux.org.uk>
-References: <20190305173111.t3n6ycktht7kxuhq@shell.armlinux.org.uk>
- <1551865552.9298.24.camel@pengutronix.de>
- <20190306095147.xyf3d62bywx4v6ji@shell.armlinux.org.uk>
- <CAHp75Vc_Nfm7tAwGtLuYgrPGPFQzx3a4ppx0+mXhF=q_X8jT7w@mail.gmail.com>
- <20190306113436.5ucdjppibwl6pahz@shell.armlinux.org.uk>
- <20190306124221.bf6qj6zx6jbdcsey@shell.armlinux.org.uk>
- <80d7c75a-f537-ee10-a139-d342c6b0f2b4@metux.net>
+        Wed, 6 Mar 2019 15:25:06 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4CEE9891AF;
+        Thu,  7 Mar 2019 09:25:03 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1551903903;
+        bh=daaW0MLXbAXvRvVtikSqxJR2yQKsYnPTwbJNM0RisC4=;
+        h=From:To:CC:Subject:Date:References;
+        b=kh20bPJF10Z1FLarO9EOlKAzu0gVOYDLGGl2dD//m321FFYVkFLycsxR2lT2I/UYC
+         /TogMGusEJtKU9DpXRufoS4xiH81ViW/AWv4nw8uBDLUOyQkZUNfIN8vjMjjbd0wti
+         sa4pKYWDU8tAz8NrUzOwgbZHeg5j8g7Fve4UgLEsm9fZR8uCygX/GyEPYXC0RK/DFm
+         b4RIx7PzGcp3PI+4EBuQCypH+ErXG+i3u6sflC8YEVv1W88GgEvfmt47rTsC6zlEkq
+         lIIYAyQfiQA6gOHa6vRd6VdREPo3VOMozRhnhNx7Q+UkkPZCk3yZ0j3C9O3alIzmb3
+         lf/ssMvF+NzWw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5c802c9f0001>; Thu, 07 Mar 2019 09:25:03 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Thu, 7 Mar 2019 09:25:03 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Thu, 7 Mar 2019 09:25:03 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Brodie Greenfield <Brodie.Greenfield@alliedtelesis.co.nz>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Luuk Paulussen" <Luuk.Paulussen@alliedtelesis.co.nz>
+Subject: Re: [PATCH 2/2] ip6mr: Make cache queue length configurable
+Thread-Topic: [PATCH 2/2] ip6mr: Make cache queue length configurable
+Thread-Index: AQHU1FoDNb1gh95Ta0OWaTZ7nknt0w==
+Date:   Wed, 6 Mar 2019 20:25:02 +0000
+Message-ID: <f78eb1a745a74b81a10db4cc5ce3fb87@svr-chch-ex1.atlnz.lc>
+References: <20190306201956.30248-1-brodie.greenfield@alliedtelesis.co.nz>
+ <20190306201956.30248-3-brodie.greenfield@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80d7c75a-f537-ee10-a139-d342c6b0f2b4@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 09:16:02PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 06.03.19 13:42, Russell King - ARM Linux admin wrote:
-> 
-> > In case it isn't clear, this is the *exact* point here - I don't know> whether this option should be enabled for iMX6 or not, and the only>
-> way I found out was to grep the dts files in arch/arm/boot/dts for> the
-> driver's compatible string.  What that reveals is that *no* 32-bit> dts
-> files contain the compatible string, and so I summise that *no*> 32-bit
-> iMX SoC should have this driver enabled.
-> The problem is a bit more generic. I often have to spend lots of time
-> to find out which configs to enable on a specific board, to get certain
-> features (eg. network, sata, display, gpu, ...). Even worse: many
-> options require other stuff enabled before even showing up. And when
-> disabling unneeded stuff, it leaves lots of other things enabled.
-> (we don't have some `apt autoremove` kconfig counterpart :().
-> 
-> I've decided to cope w/ that on a higher level and written a little
-> config generator tool for that - here you can enable high level
-> features (eg. 'network' or 'display', etc) and it will generate the
-> actual .config:
-> 
-> 	https://github.com/metux/kmct
-> 
-> > The excuse that "we can't list the explicit SoCs" to me seems to be> a very lame excuse
-> 
-> Maybe this actually means "nobody here volounteered to actually maintain
-> these help texts" ?
-> 
-> > The best that I can come up with right now, given what little I know> from grepping the 32-bit DTS files, is that the help text should at>
-> least indicate that it *isn't* applicable to 32-bit SoCs, or if you>
-> prefer, *is* applicable to 64-bit SoCs.  Beyond that, I have no>
-> information to formulate a better suggestion.
-> Perhaps just fix the text based on your knowledge and send a patch to
-> the maintainers. They'll propably tell you if it's incorrect.
-
-Frankly, no.  I don't want to be going round endlessly writing help
-texts.
-
-We need the effort to be properly distributed - we need those who
-_know_ the feature they're developing to write a proper help text.
-One way to achieve that is to make a proper informative help text
-a pre-requisit of accepting the code.
-
-The quality of the help text is just as important as the quality of
-the code, and we really should be paying the same amount of attention
-to both.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+On 7/03/19 9:20 AM, Brodie Greenfield wrote:=0A=
+> We want to be able to keep more spaces available in our queue for=0A=
+> processing incoming IPv6 multicast traffic (adding (S,G) entries) - this=
+=0A=
+> lets us learn more groups faster, rather than dropping them at this stage=
+.=0A=
+> =0A=
+> Signed-off-by: Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>=
+=0A=
+> ---=0A=
+>   Documentation/networking/ip-sysctl.txt | 8 ++++++++=0A=
+>   include/net/netns/ipv6.h               | 1 +=0A=
+>   net/ipv6/af_inet6.c                    | 1 +=0A=
+>   net/ipv6/ip6mr.c                       | 4 +++-=0A=
+>   net/ipv6/sysctl_net_ipv6.c             | 7 +++++++=0A=
+>   5 files changed, 20 insertions(+), 1 deletion(-)=0A=
+> =0A=
+> diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/netwo=
+rking/ip-sysctl.txt=0A=
+> index 02f77e932adf..68eada3ca915 100644=0A=
+> --- a/Documentation/networking/ip-sysctl.txt=0A=
+> +++ b/Documentation/networking/ip-sysctl.txt=0A=
+> @@ -1481,6 +1481,14 @@ skip_notify_on_dev_down - BOOLEAN=0A=
+>   	on userspace caches to track link events and evict routes.=0A=
+>   	Default: false (generate message)=0A=
+>   =0A=
+> +ip_mr_cache_queue_length - INTEGER=0A=
+=0A=
+Should be "ip6_mr_cache_queue_length" for this patch.=0A=
+=0A=
+> +	Limit the number of multicast packets we can have in the queue to be=0A=
+> +	resolved.=0A=
+> +	Bear in mind that when an unresolved multicast packet is received,=0A=
+> +	there is an O(n) traversal of the queue. This should be considered=0A=
+> +	if increasing.=0A=
+> +	Default: 10=0A=
+> +=0A=
+>   IPv6 Fragmentation:=0A=
+>   =0A=
+>   ip6frag_high_thresh - INTEGER=0A=
+> diff --git a/include/net/netns/ipv6.h b/include/net/netns/ipv6.h=0A=
+> index ef1ed529f33c..84b58424c799 100644=0A=
+> --- a/include/net/netns/ipv6.h=0A=
+> +++ b/include/net/netns/ipv6.h=0A=
+> @@ -46,6 +46,7 @@ struct netns_sysctl_ipv6 {=0A=
+>   	int max_hbh_opts_len;=0A=
+>   	int seg6_flowlabel;=0A=
+>   	bool skip_notify_on_dev_down;=0A=
+> +	unsigned int ip6_mr_cache_queue_length;=0A=
+>   };=0A=
+>   =0A=
+>   struct netns_ipv6 {=0A=
+> diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c=0A=
+> index d99753b5e39b..6551bb63e5a2 100644=0A=
+> --- a/net/ipv6/af_inet6.c=0A=
+> +++ b/net/ipv6/af_inet6.c=0A=
+> @@ -856,6 +856,7 @@ static int __net_init inet6_net_init(struct net *net)=
+=0A=
+>   	net->ipv6.sysctl.max_hbh_opts_cnt =3D IP6_DEFAULT_MAX_HBH_OPTS_CNT;=0A=
+>   	net->ipv6.sysctl.max_dst_opts_len =3D IP6_DEFAULT_MAX_DST_OPTS_LEN;=0A=
+>   	net->ipv6.sysctl.max_hbh_opts_len =3D IP6_DEFAULT_MAX_HBH_OPTS_LEN;=0A=
+> +	net->ipv6.sysctl.ip6_mr_cache_queue_length =3D 10;=0A=
+>   	atomic_set(&net->ipv6.fib6_sernum, 1);=0A=
+>   =0A=
+>   	err =3D ipv6_init_mibs(net);=0A=
+> diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c=0A=
+> index cc01aa3f2b5e..bb445871437e 100644=0A=
+> --- a/net/ipv6/ip6mr.c=0A=
+> +++ b/net/ipv6/ip6mr.c=0A=
+> @@ -1135,6 +1135,7 @@ static int ip6mr_cache_report(struct mr_table *mrt,=
+ struct sk_buff *pkt,=0A=
+>   static int ip6mr_cache_unresolved(struct mr_table *mrt, mifi_t mifi,=0A=
+>   				  struct sk_buff *skb, struct net_device *dev)=0A=
+>   {=0A=
+> +	struct net *net =3D dev_net(dev);=0A=
+>   	struct mfc6_cache *c;=0A=
+>   	bool found =3D false;=0A=
+>   	int err;=0A=
+> @@ -1153,7 +1154,8 @@ static int ip6mr_cache_unresolved(struct mr_table *=
+mrt, mifi_t mifi,=0A=
+>   		 *	Create a new entry if allowable=0A=
+>   		 */=0A=
+>   =0A=
+> -		if (atomic_read(&mrt->cache_resolve_queue_len) >=3D 10 ||=0A=
+> +		if (atomic_read(&mrt->cache_resolve_queue_len) >=3D=0A=
+> +		    net->ipv6.sysctl.ip6_mr_cache_queue_length ||=0A=
+>   		    (c =3D ip6mr_cache_alloc_unres()) =3D=3D NULL) {=0A=
+>   			spin_unlock_bh(&mfc_unres_lock);=0A=
+>   =0A=
+> diff --git a/net/ipv6/sysctl_net_ipv6.c b/net/ipv6/sysctl_net_ipv6.c=0A=
+> index e15cd37024fd..a27299d4cc34 100644=0A=
+> --- a/net/ipv6/sysctl_net_ipv6.c=0A=
+> +++ b/net/ipv6/sysctl_net_ipv6.c=0A=
+> @@ -159,6 +159,13 @@ static struct ctl_table ipv6_table_template[] =3D {=
+=0A=
+>   		.mode		=3D 0644,=0A=
+>   		.proc_handler	=3D proc_dointvec=0A=
+>   	},=0A=
+> +	{=0A=
+> +		.procname	=3D "ip6_mr_cache_queue_length",=0A=
+> +		.data		=3D &init_net.ipv6.sysctl.ip6_mr_cache_queue_length,=0A=
+> +		.maxlen		=3D sizeof(int),=0A=
+> +		.mode		=3D 0644,=0A=
+> +		.proc_handler	=3D proc_dointvec=0A=
+> +	},=0A=
+>   	{ }=0A=
+>   };=0A=
+>   =0A=
+> =0A=
+=0A=
