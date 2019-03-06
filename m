@@ -2,1097 +2,373 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22067C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08756C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAC920675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04CE20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 22:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q3IVc/hW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCFWoP (ORCPT
+        id S1726172AbfCFWpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 17:44:15 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60892 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfCFWoP (ORCPT
+        Wed, 6 Mar 2019 17:45:50 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45427 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfCFWpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 17:44:15 -0500
-Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:798c:6bb0:a97a:4a09:e6d8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C77D6280379;
-        Wed,  6 Mar 2019 22:44:00 +0000 (GMT)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     lucmaga@gmail.com, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org, andrealmeid@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com
-Subject: [PATCH 8/8] media: vimc: propagate pixel format in the stream
-Date:   Wed,  6 Mar 2019 19:42:44 -0300
-Message-Id: <20190306224244.21070-9-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190306224244.21070-1-helen.koike@collabora.com>
-References: <20190306224244.21070-1-helen.koike@collabora.com>
+        Wed, 6 Mar 2019 17:45:50 -0500
+Received: by mail-lf1-f66.google.com with SMTP id f16so10167686lfk.12;
+        Wed, 06 Mar 2019 14:45:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i5itA89J/tYrYODEBG5jmbM+0HmRYjtjVgjZwzskYHw=;
+        b=q3IVc/hWHFL6REcPhXTA3AHkvN9qTA3hSVWeqKRd1aBsdpFPNhH2oXpjRWw1LB620i
+         S2U3oT6rfQIovMo+kXyhgb0/L0LI/j+2nEVYJA4GTduuFP1bog/v6PiozzoSa9fmvYMU
+         fSJxUFdrV7kjTOqEwj5TlKRjvTz1KqVxpBZpdgSwRm6icgGuLpuhbj037wdW1oDEgy2U
+         YboTfL1xtD02ub5ckOPUWVoPgm71qcNgXeb2tdFOANs08WaXsyQO+uNmx4s7FW7EaBsF
+         vrN1EudE/4JSSbqTvolOb3jJxUPYrF+4xNXCoGnvEUuDWHx5PA5IUHE25C9cSm4j6toT
+         aYnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=i5itA89J/tYrYODEBG5jmbM+0HmRYjtjVgjZwzskYHw=;
+        b=MKP9A0C/eHLEOqwBPwy0S4UrNRhVwvC7L47kSK6whI/kOF2x2PlDFVZs9WvFPMxgNw
+         pWTuPLd7SoN1QM5xM8KYR2scAELsDusP1oC6U8cKOLHNXWu4JjhXNcf9idFdYJMpePeq
+         ikwTGxGjrgL71lgCkKhoryVMTKQrrhAcSN1/Z+Ycq801JJknPyVifJvy4xMXnM+vO6FX
+         XI6L201HHcF839Yy3UPzOGSHtDi6YFqfJWcflJEteUhuwIPgknyMM8U7bXXuRxQ/SyRY
+         5mkvtKtDchJRXHZlaih/0XqAruC7bpUdtpLEkQvEhQpmghn6G0+HUtoRhEaXECmYbJx0
+         0Xjg==
+X-Gm-Message-State: APjAAAVyCOtZP+BE+pQpVkKk86Oj+t3Zck4VPn0bmSlLv6eu+FzNrl7v
+        nxqlIbPHFYZJswSqbLIMxkQ=
+X-Google-Smtp-Source: APXvYqykSP5ustfW7bB8VXOKGc987iAYF7DCDvC8jIesYpaHQ0LArZ3wTIsSTWDVg4x7OaaajIwb6g==
+X-Received: by 2002:a19:a2cf:: with SMTP id l198mr501480lfe.34.1551912346493;
+        Wed, 06 Mar 2019 14:45:46 -0800 (PST)
+Received: from mobilestation ([95.79.187.182])
+        by smtp.gmail.com with ESMTPSA id x87sm538061ljb.91.2019.03.06.14.45.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 06 Mar 2019 14:45:45 -0800 (PST)
+Date:   Thu, 7 Mar 2019 01:45:43 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+Subject: Re: [PATCH v2 07/12] NTB: Introduce functions to calculate
+ multi-port resource index
+Message-ID: <20190306224542.4eu2dvsixfzc75gr@mobilestation>
+Mail-Followup-To: Serge Semin <fancer.lancer@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>, linux-kernel@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kselftest@vger.kernel.org,
+        Jon Mason <jdmason@kudzu.us>, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+References: <20190213175454.7506-1-logang@deltatee.com>
+ <20190213175454.7506-8-logang@deltatee.com>
+ <20190306012420.wjeatxgb7nwq3j5q@mobilestation>
+ <bd72f24f-5982-0fe7-59df-2fbbfe9f798a@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd72f24f-5982-0fe7-59df-2fbbfe9f798a@deltatee.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Media bus codes were being mapped to pixelformats, which causes a
-limitation on vimc because not all pixelformats can be mapped to media
-bus codes.
-Also, media bus codes are an internal configuration from the device.
-Userspace only assures media bus codes matches between pads and expects
-the image in a given pixelformat. So we can allow almost any media bus
-format to be configured between pads, except for debayer that expects a
-media bus code of type bayer in the sink pad.
+On Wed, Mar 06, 2019 at 12:11:11PM -0700, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-03-05 6:24 p.m., Serge Semin wrote:
+> >> + * In a 5 peer system, this function will return the following matrix
+> >> + *
+> >> + * pidx \ port    0    1    2    3    4
+> >> + * 0              0    0    1    2    3
+> >> + * 1              0    1    2    3    4
+> >> + * 2              0    1    2    3    4
+> >> + * 3              0    1    2    3    4
+> >> + *
+> 
+> Oh, first, oops: looks like I copied this down wrong anyway; the code
+> was what I had intended, but the documented example should have been:
+> 
+> pidx \ local_port     0    1    2    3    4
+>  0                    0    0    1    2    3
+>  1                    0    1    1    2    3
+>  2                    0    1    2    2    3
+>  3                    0    1    2    3    3
+> 
+> And this is definitely the correct table we are aiming for.
+> ntb_peer_resource_idx() is supposed to return the result of
+> ntb_peer_port_idx(ntb, local_port) when run on the peer specified by pidx.
+> 
+> Note: this table also makes sense because it only uses 4 resources for 5
+> ports which is the best case scenario. (In other words, to communicate
+> between N ports, N-1 resources are required on each peer).
+> 
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Yes, it does use as much and as tight resources as it possible, but
+only for the case of pure integer ports numbering. While in case if
+there are gaps in the port numbers space (which is the only case we have
+in supported hardware at this moment) it will lead to a failure if there
+are ports with higher numbers, than there are MWs available (MWs availability
+depends on the IDT chip firmware). Additionally it creates gaps in the MWs
+space if physical ports are numbered with gaps. Since the only multi-port
+device we've got now is IDT and it always has it' ports numbered with gaps as I
+described, then the current implementation will definitely produced the
+problems.
 
----
+> > This table is too simplified to represent a generic case of port-index
+> > mapping table. In particular the IDT PCIe switch got it ports numbered
+> > with uneven integers like: 0 2 4 6 8 12 16 20 or 0 8 16, and so on.
+> > Moreover some of the ports might be disabled or may have NTB functions
+> > deactivated, in which case these ports shouldn't be considered by NTB subsystem
+> > at all. Basically we may have any increasing subset of that port
+> > numbers depending on the current IDT PCIe-switch ports setup.
+> 
+> Yes, I did not consider situations where there would be gaps in the
+> "port number" space. It wasn't at all clear from the code that this was
+> possible. Switchtec hardware could be configured for such an
+> arrangement, but I don't know why anyone would do that as it just
+> needlessly complicates everything.
+> 
+> As you point out, with a gap, we end up with something that is wrong:
+> 
+> pidx \ port     0    1    3    4    5
+>  0              0    0    2    3    4
+>  1              0    1    2    3    4
+>  2              0    1    3    3    4
+>  3              0    1    3    4    4
+> 
+> Here, the relationship between ntb_peer_resource_idx() and
+> ntb_peer_port_idx() is not maintained and it seems to prescribe 5
+> resources for 5 ports. If there were more gaps it would be even more wrong.
+> 
 
- drivers/media/platform/vimc/vimc-capture.c  |  76 +++--
- drivers/media/platform/vimc/vimc-common.c   | 307 ++++++++------------
- drivers/media/platform/vimc/vimc-common.h   |  13 +
- drivers/media/platform/vimc/vimc-debayer.c  |  78 +++--
- drivers/media/platform/vimc/vimc-scaler.c   |  60 ++--
- drivers/media/platform/vimc/vimc-sensor.c   |  48 +--
- drivers/media/platform/vimc/vimc-streamer.c |   2 +
- drivers/media/platform/vimc/vimc-streamer.h |   6 +
- 8 files changed, 281 insertions(+), 309 deletions(-)
+Exactly. The table will look even worse for the port numbers: 0 2 4 6 8 12 16 20.
 
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index e976a9d6b460..6377974879d7 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -28,6 +28,32 @@
- 
- #define VIMC_CAP_DRV_NAME "vimc-capture"
- 
-+static const u32 vimc_cap_supported_pixftm[] = {
-+	V4L2_PIX_FMT_BGR24,
-+	V4L2_PIX_FMT_RGB24,
-+	V4L2_PIX_FMT_ARGB32,
-+	V4L2_PIX_FMT_SBGGR8,
-+	V4L2_PIX_FMT_SGBRG8,
-+	V4L2_PIX_FMT_SGRBG8,
-+	V4L2_PIX_FMT_SRGGB8,
-+	V4L2_PIX_FMT_SBGGR10,
-+	V4L2_PIX_FMT_SGBRG10,
-+	V4L2_PIX_FMT_SGRBG10,
-+	V4L2_PIX_FMT_SRGGB10,
-+	V4L2_PIX_FMT_SBGGR10ALAW8,
-+	V4L2_PIX_FMT_SGBRG10ALAW8,
-+	V4L2_PIX_FMT_SGRBG10ALAW8,
-+	V4L2_PIX_FMT_SRGGB10ALAW8,
-+	V4L2_PIX_FMT_SBGGR10DPCM8,
-+	V4L2_PIX_FMT_SGBRG10DPCM8,
-+	V4L2_PIX_FMT_SGRBG10DPCM8,
-+	V4L2_PIX_FMT_SRGGB10DPCM8,
-+	V4L2_PIX_FMT_SBGGR12,
-+	V4L2_PIX_FMT_SGBRG12,
-+	V4L2_PIX_FMT_SGRBG12,
-+	V4L2_PIX_FMT_SRGGB12,
-+};
-+
- struct vimc_cap_device {
- 	struct vimc_ent_device ved;
- 	struct video_device vdev;
-@@ -101,29 +127,25 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
- 				    struct v4l2_format *f)
- {
- 	struct v4l2_pix_format *format = &f->fmt.pix;
--	const struct vimc_pix_map *vpix;
- 
- 	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
- 				VIMC_FRAME_MAX_WIDTH) & ~1;
- 	format->height = clamp_t(u32, format->height, VIMC_FRAME_MIN_HEIGHT,
- 				 VIMC_FRAME_MAX_HEIGHT) & ~1;
- 
--	/* Don't accept a pixelformat that is not on the table */
--	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
--	if (!vpix) {
--		format->pixelformat = fmt_default.pixelformat;
--		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
--	}
--	/* TODO: Add support for custom bytesperline values */
--	format->bytesperline = format->width * vpix->bpp;
--	format->sizeimage = format->bytesperline * format->height;
-+	vimc_colorimetry_clamp(format);
- 
- 	if (format->field == V4L2_FIELD_ANY)
- 		format->field = fmt_default.field;
- 
--	vimc_colorimetry_clamp(format);
-+	/* TODO: Add support for custom bytesperline values */
- 
--	return 0;
-+	/* Don't accept a pixelformat that is not on the table */
-+	if (!v4l2_format_info(format->pixelformat))
-+		format->pixelformat = fmt_default.pixelformat;
-+
-+	return v4l2_fill_pixfmt(format, format->pixelformat,
-+				format->width, format->height);
- }
- 
- static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
-@@ -159,27 +181,31 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
- static int vimc_cap_enum_fmt_vid_cap(struct file *file, void *priv,
- 				     struct v4l2_fmtdesc *f)
- {
--	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(f->index);
--
--	if (!vpix)
-+	if (f->index >= ARRAY_SIZE(vimc_cap_supported_pixftm))
- 		return -EINVAL;
- 
--	f->pixelformat = vpix->pixelformat;
-+	f->pixelformat = vimc_cap_supported_pixftm[f->index];
- 
- 	return 0;
- }
- 
-+static bool vimc_cap_is_pixfmt_supported(u32 pixelformat)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vimc_cap_supported_pixftm); i++)
-+		if (vimc_cap_supported_pixftm[i] == pixelformat)
-+			return true;
-+	return false;
-+}
-+
- static int vimc_cap_enum_framesizes(struct file *file, void *fh,
- 				    struct v4l2_frmsizeenum *fsize)
- {
--	const struct vimc_pix_map *vpix;
--
- 	if (fsize->index)
- 		return -EINVAL;
- 
--	/* Only accept code in the pix map table */
--	vpix = vimc_pix_map_by_code(fsize->pixel_format);
--	if (!vpix)
-+	if (!vimc_cap_is_pixfmt_supported(fsize->pixel_format))
- 		return -EINVAL;
- 
- 	fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
-@@ -253,6 +279,7 @@ static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
- 		return ret;
- 	}
- 
-+	vcap->stream.producer_pixfmt = vcap->format.pixelformat;
- 	ret = vimc_streamer_s_stream(&vcap->stream, &vcap->ved, 1);
- 	if (ret) {
- 		media_pipeline_stop(entity);
-@@ -403,7 +430,6 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
- {
- 	struct v4l2_device *v4l2_dev = master_data;
- 	struct vimc_platform_data *pdata = comp->platform_data;
--	const struct vimc_pix_map *vpix;
- 	struct vimc_cap_device *vcap;
- 	struct video_device *vdev;
- 	struct vb2_queue *q;
-@@ -458,10 +484,8 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
- 
- 	/* Set default frame format */
- 	vcap->format = fmt_default;
--	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
--	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
--	vcap->format.sizeimage = vcap->format.bytesperline *
--				 vcap->format.height;
-+	v4l2_fill_pixfmt(&vcap->format, vcap->format.pixelformat,
-+			 vcap->format.width, vcap->format.height);
- 
- 	/* Fill the vimc_ent_device struct */
- 	vcap->ved.ent = &vcap->vdev.entity;
-diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-index 0adbfd8fd26d..b07bbf0564b9 100644
---- a/drivers/media/platform/vimc/vimc-common.c
-+++ b/drivers/media/platform/vimc/vimc-common.c
-@@ -20,192 +20,127 @@
- 
- #include "vimc-common.h"
- 
--/*
-- * NOTE: non-bayer formats need to come first (necessary for enum_mbus_code
-- * in the scaler)
-- */
--static const struct vimc_pix_map vimc_pix_map_list[] = {
--	/* TODO: add all missing formats */
--
--	/* RGB formats */
--	{
--		.code = MEDIA_BUS_FMT_BGR888_1X24,
--		.pixelformat = V4L2_PIX_FMT_BGR24,
--		.bpp = 3,
--		.bayer = false,
--	},
--	{
--		.code = MEDIA_BUS_FMT_RGB888_1X24,
--		.pixelformat = V4L2_PIX_FMT_RGB24,
--		.bpp = 3,
--		.bayer = false,
--	},
--	{
--		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
--		.pixelformat = V4L2_PIX_FMT_ARGB32,
--		.bpp = 4,
--		.bayer = false,
--	},
--
--	/* Bayer formats */
--	{
--		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SBGGR8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SGBRG8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SGRBG8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SRGGB8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
--		.pixelformat = V4L2_PIX_FMT_SBGGR10,
--		.bpp = 2,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
--		.pixelformat = V4L2_PIX_FMT_SGBRG10,
--		.bpp = 2,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
--		.pixelformat = V4L2_PIX_FMT_SGRBG10,
--		.bpp = 2,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
--		.pixelformat = V4L2_PIX_FMT_SRGGB10,
--		.bpp = 2,
--		.bayer = true,
--	},
--
--	/* 10bit raw bayer a-law compressed to 8 bits */
--	{
--		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
--		.bpp = 1,
--		.bayer = true,
--	},
--
--	/* 10bit raw bayer DPCM compressed to 8 bits */
--	{
--		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
--		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
--		.bpp = 1,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
--		.pixelformat = V4L2_PIX_FMT_SBGGR12,
--		.bpp = 2,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
--		.pixelformat = V4L2_PIX_FMT_SGBRG12,
--		.bpp = 2,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
--		.pixelformat = V4L2_PIX_FMT_SGRBG12,
--		.bpp = 2,
--		.bayer = true,
--	},
--	{
--		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
--		.pixelformat = V4L2_PIX_FMT_SRGGB12,
--		.bpp = 2,
--		.bayer = true,
--	},
-+const u32 vimc_mbus_list[] = {
-+	MEDIA_BUS_FMT_FIXED,
-+	MEDIA_BUS_FMT_RGB444_1X12,
-+	MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE,
-+	MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE,
-+	MEDIA_BUS_FMT_RGB555_2X8_PADHI_BE,
-+	MEDIA_BUS_FMT_RGB555_2X8_PADHI_LE,
-+	MEDIA_BUS_FMT_RGB565_1X16,
-+	MEDIA_BUS_FMT_BGR565_2X8_BE,
-+	MEDIA_BUS_FMT_BGR565_2X8_LE,
-+	MEDIA_BUS_FMT_RGB565_2X8_BE,
-+	MEDIA_BUS_FMT_RGB565_2X8_LE,
-+	MEDIA_BUS_FMT_RGB666_1X18,
-+	MEDIA_BUS_FMT_RBG888_1X24,
-+	MEDIA_BUS_FMT_RGB666_1X24_CPADHI,
-+	MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-+	MEDIA_BUS_FMT_BGR888_1X24,
-+	MEDIA_BUS_FMT_GBR888_1X24,
-+	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_RGB888_2X12_BE,
-+	MEDIA_BUS_FMT_RGB888_2X12_LE,
-+	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-+	MEDIA_BUS_FMT_ARGB8888_1X32,
-+	MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-+	MEDIA_BUS_FMT_RGB101010_1X30,
-+	MEDIA_BUS_FMT_RGB121212_1X36,
-+	MEDIA_BUS_FMT_RGB161616_1X48,
-+	MEDIA_BUS_FMT_Y8_1X8,
-+	MEDIA_BUS_FMT_UV8_1X8,
-+	MEDIA_BUS_FMT_UYVY8_1_5X8,
-+	MEDIA_BUS_FMT_VYUY8_1_5X8,
-+	MEDIA_BUS_FMT_YUYV8_1_5X8,
-+	MEDIA_BUS_FMT_YVYU8_1_5X8,
-+	MEDIA_BUS_FMT_UYVY8_2X8,
-+	MEDIA_BUS_FMT_VYUY8_2X8,
-+	MEDIA_BUS_FMT_YUYV8_2X8,
-+	MEDIA_BUS_FMT_YVYU8_2X8,
-+	MEDIA_BUS_FMT_Y10_1X10,
-+	MEDIA_BUS_FMT_Y10_2X8_PADHI_LE,
-+	MEDIA_BUS_FMT_UYVY10_2X10,
-+	MEDIA_BUS_FMT_VYUY10_2X10,
-+	MEDIA_BUS_FMT_YUYV10_2X10,
-+	MEDIA_BUS_FMT_YVYU10_2X10,
-+	MEDIA_BUS_FMT_Y12_1X12,
-+	MEDIA_BUS_FMT_UYVY12_2X12,
-+	MEDIA_BUS_FMT_VYUY12_2X12,
-+	MEDIA_BUS_FMT_YUYV12_2X12,
-+	MEDIA_BUS_FMT_YVYU12_2X12,
-+	MEDIA_BUS_FMT_UYVY8_1X16,
-+	MEDIA_BUS_FMT_VYUY8_1X16,
-+	MEDIA_BUS_FMT_YUYV8_1X16,
-+	MEDIA_BUS_FMT_YVYU8_1X16,
-+	MEDIA_BUS_FMT_YDYUYDYV8_1X16,
-+	MEDIA_BUS_FMT_UYVY10_1X20,
-+	MEDIA_BUS_FMT_VYUY10_1X20,
-+	MEDIA_BUS_FMT_YUYV10_1X20,
-+	MEDIA_BUS_FMT_YVYU10_1X20,
-+	MEDIA_BUS_FMT_VUY8_1X24,
-+	MEDIA_BUS_FMT_YUV8_1X24,
-+	MEDIA_BUS_FMT_UYYVYY8_0_5X24,
-+	MEDIA_BUS_FMT_UYVY12_1X24,
-+	MEDIA_BUS_FMT_VYUY12_1X24,
-+	MEDIA_BUS_FMT_YUYV12_1X24,
-+	MEDIA_BUS_FMT_YVYU12_1X24,
-+	MEDIA_BUS_FMT_YUV10_1X30,
-+	MEDIA_BUS_FMT_UYYVYY10_0_5X30,
-+	MEDIA_BUS_FMT_AYUV8_1X32,
-+	MEDIA_BUS_FMT_UYYVYY12_0_5X36,
-+	MEDIA_BUS_FMT_YUV12_1X36,
-+	MEDIA_BUS_FMT_YUV16_1X48,
-+	MEDIA_BUS_FMT_UYYVYY16_0_5X48,
-+	MEDIA_BUS_FMT_SBGGR8_1X8,
-+	MEDIA_BUS_FMT_SGBRG8_1X8,
-+	MEDIA_BUS_FMT_SGRBG8_1X8,
-+	MEDIA_BUS_FMT_SRGGB8_1X8,
-+	MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
-+	MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
-+	MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
-+	MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
-+	MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
-+	MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
-+	MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
-+	MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
-+	MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_BE,
-+	MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE,
-+	MEDIA_BUS_FMT_SBGGR10_2X8_PADLO_BE,
-+	MEDIA_BUS_FMT_SBGGR10_2X8_PADLO_LE,
-+	MEDIA_BUS_FMT_SBGGR10_1X10,
-+	MEDIA_BUS_FMT_SGBRG10_1X10,
-+	MEDIA_BUS_FMT_SGRBG10_1X10,
-+	MEDIA_BUS_FMT_SRGGB10_1X10,
-+	MEDIA_BUS_FMT_SBGGR12_1X12,
-+	MEDIA_BUS_FMT_SGBRG12_1X12,
-+	MEDIA_BUS_FMT_SGRBG12_1X12,
-+	MEDIA_BUS_FMT_SRGGB12_1X12,
-+	MEDIA_BUS_FMT_SBGGR14_1X14,
-+	MEDIA_BUS_FMT_SGBRG14_1X14,
-+	MEDIA_BUS_FMT_SGRBG14_1X14,
-+	MEDIA_BUS_FMT_SRGGB14_1X14,
-+	MEDIA_BUS_FMT_SBGGR16_1X16,
-+	MEDIA_BUS_FMT_SGBRG16_1X16,
-+	MEDIA_BUS_FMT_SGRBG16_1X16,
-+	MEDIA_BUS_FMT_SRGGB16_1X16,
-+	MEDIA_BUS_FMT_JPEG_1X8,
-+	MEDIA_BUS_FMT_S5C_UYVY_JPEG_1X8,
-+	MEDIA_BUS_FMT_AHSV8888_1X32,
- };
- 
--const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i)
-+/* Helper function to enumerate mbus codes */
-+int vimc_enum_mbus_code(struct v4l2_subdev *sd,
-+			struct v4l2_subdev_pad_config *cfg,
-+			struct v4l2_subdev_mbus_code_enum *code)
- {
--	if (i >= ARRAY_SIZE(vimc_pix_map_list))
--		return NULL;
--
--	return &vimc_pix_map_list[i];
--}
--EXPORT_SYMBOL_GPL(vimc_pix_map_by_index);
--
--const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
--{
--	unsigned int i;
--
--	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
--		if (vimc_pix_map_list[i].code == code)
--			return &vimc_pix_map_list[i];
--	}
--	return NULL;
--}
--EXPORT_SYMBOL_GPL(vimc_pix_map_by_code);
--
--const struct vimc_pix_map *vimc_pix_map_by_pixelformat(u32 pixelformat)
--{
--	unsigned int i;
-+	if (code->index >= ARRAY_SIZE(vimc_mbus_list))
-+		return -EINVAL;
- 
--	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
--		if (vimc_pix_map_list[i].pixelformat == pixelformat)
--			return &vimc_pix_map_list[i];
--	}
--	return NULL;
-+	code->code = vimc_mbus_list[code->index];
-+	return 0;
- }
--EXPORT_SYMBOL_GPL(vimc_pix_map_by_pixelformat);
-+EXPORT_SYMBOL_GPL(vimc_enum_mbus_code);
- 
- /* Helper function to allocate and initialize pads */
- struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
-@@ -277,15 +212,13 @@ static int vimc_get_mbus_format(struct media_pad *pad,
- 							 struct video_device,
- 							 entity);
- 		struct vimc_ent_device *ved = video_get_drvdata(vdev);
--		const struct vimc_pix_map *vpix;
- 		struct v4l2_pix_format vdev_fmt;
- 
- 		if (!ved->vdev_get_format)
- 			return -ENOIOCTLCMD;
- 
- 		ved->vdev_get_format(ved, &vdev_fmt);
--		vpix = vimc_pix_map_by_pixelformat(vdev_fmt.pixelformat);
--		v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix->code);
-+		v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, 0);
- 	} else {
- 		return -EINVAL;
- 	}
-@@ -325,8 +258,12 @@ int vimc_link_validate(struct media_link *link)
- 	/* The width, height and code must match. */
- 	if (source_fmt.format.width != sink_fmt.format.width
- 	    || source_fmt.format.height != sink_fmt.format.height
--	    || source_fmt.format.code != sink_fmt.format.code)
-+	    || (source_fmt.format.code && sink_fmt.format.code &&
-+		source_fmt.format.code != sink_fmt.format.code)) {
-+		pr_err("vimc: format doesn't match in link %s->%s\n",
-+			link->source->entity->name, link->sink->entity->name);
- 		return -EPIPE;
-+	}
- 
- 	/*
- 	 * The field order must match, or the sink field order must be NONE
-diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-index 07987eab988f..30ce902ace4d 100644
---- a/drivers/media/platform/vimc/vimc-common.h
-+++ b/drivers/media/platform/vimc/vimc-common.h
-@@ -22,6 +22,8 @@
- #include <media/media-device.h>
- #include <media/v4l2-device.h>
- 
-+#include "vimc-streamer.h"
-+
- #define VIMC_PDEV_NAME "vimc"
- 
- /* VIMC-specific controls */
-@@ -115,12 +117,23 @@ struct vimc_pix_map {
- struct vimc_ent_device {
- 	struct media_entity *ent;
- 	struct media_pad *pads;
-+	struct vimc_stream *stream;
- 	void * (*process_frame)(struct vimc_ent_device *ved,
- 				const void *frame);
- 	void (*vdev_get_format)(struct vimc_ent_device *ved,
- 			      struct v4l2_pix_format *fmt);
- };
- 
-+/**
-+ * vimc_enum_mbus_code - enumerate mbus codes
-+ *
-+ * Helper function to be pluged in .enum_mbus_code from
-+ * struct v4l2_subdev_pad_ops.
-+ */
-+int vimc_enum_mbus_code(struct v4l2_subdev *sd,
-+			struct v4l2_subdev_pad_config *cfg,
-+			struct v4l2_subdev_mbus_code_enum *code);
-+
- /**
-  * vimc_pads_init - initialize pads
-  *
-diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-index 20826f209731..51b411739e27 100644
---- a/drivers/media/platform/vimc/vimc-debayer.c
-+++ b/drivers/media/platform/vimc/vimc-debayer.c
-@@ -26,6 +26,9 @@
- #include "vimc-common.h"
- 
- #define VIMC_DEB_DRV_NAME "vimc-debayer"
-+/* This module only supports tranforming a bayer format to V4L2_PIX_FMT_RGB24 */
-+#define VIMC_DEB_SRC_PIXFMT V4L2_PIX_FMT_RGB24
-+#define VIMC_DEB_SRC_MBUS_FMT_DEFAULT MEDIA_BUS_FMT_RGB888_1X24
- 
- static unsigned int deb_mean_win_size = 3;
- module_param(deb_mean_win_size, uint, 0000);
-@@ -44,6 +47,7 @@ enum vimc_deb_rgb_colors {
- };
- 
- struct vimc_deb_pix_map {
-+	u32 pixelformat;
- 	u32 code;
- 	enum vimc_deb_rgb_colors order[2][2];
- };
-@@ -73,61 +77,73 @@ static const struct v4l2_mbus_framefmt sink_fmt_default = {
- 
- static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SBGGR8,
- 		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
- 		.order = { { VIMC_DEB_BLUE, VIMC_DEB_GREEN },
- 			   { VIMC_DEB_GREEN, VIMC_DEB_RED } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SGBRG8,
- 		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
- 		.order = { { VIMC_DEB_GREEN, VIMC_DEB_BLUE },
- 			   { VIMC_DEB_RED, VIMC_DEB_GREEN } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SGRBG8,
- 		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
- 		.order = { { VIMC_DEB_GREEN, VIMC_DEB_RED },
- 			   { VIMC_DEB_BLUE, VIMC_DEB_GREEN } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SRGGB8,
- 		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
- 		.order = { { VIMC_DEB_RED, VIMC_DEB_GREEN },
- 			   { VIMC_DEB_GREEN, VIMC_DEB_BLUE } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SBGGR10,
- 		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
- 		.order = { { VIMC_DEB_BLUE, VIMC_DEB_GREEN },
- 			   { VIMC_DEB_GREEN, VIMC_DEB_RED } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SGBRG10,
- 		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
- 		.order = { { VIMC_DEB_GREEN, VIMC_DEB_BLUE },
- 			   { VIMC_DEB_RED, VIMC_DEB_GREEN } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SGRBG10,
- 		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
- 		.order = { { VIMC_DEB_GREEN, VIMC_DEB_RED },
- 			   { VIMC_DEB_BLUE, VIMC_DEB_GREEN } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SRGGB10,
- 		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
- 		.order = { { VIMC_DEB_RED, VIMC_DEB_GREEN },
- 			   { VIMC_DEB_GREEN, VIMC_DEB_BLUE } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SBGGR12,
- 		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
- 		.order = { { VIMC_DEB_BLUE, VIMC_DEB_GREEN },
- 			   { VIMC_DEB_GREEN, VIMC_DEB_RED } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SGBRG12,
- 		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
- 		.order = { { VIMC_DEB_GREEN, VIMC_DEB_BLUE },
- 			   { VIMC_DEB_RED, VIMC_DEB_GREEN } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SGRBG12,
- 		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
- 		.order = { { VIMC_DEB_GREEN, VIMC_DEB_RED },
- 			   { VIMC_DEB_BLUE, VIMC_DEB_GREEN } }
- 	},
- 	{
-+		.pixelformat = V4L2_PIX_FMT_SRGGB12,
- 		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
- 		.order = { { VIMC_DEB_RED, VIMC_DEB_GREEN },
- 			   { VIMC_DEB_GREEN, VIMC_DEB_BLUE } }
-@@ -168,41 +184,32 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev *sd,
- 				   struct v4l2_subdev_pad_config *cfg,
- 				   struct v4l2_subdev_mbus_code_enum *code)
- {
--	/* We only support one format for source pads */
--	if (IS_SRC(code->pad)) {
--		struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
--
--		if (code->index)
--			return -EINVAL;
--
--		code->code = vdeb->src_code;
--	} else {
-+	/* For the sink pad we only support codes in the map_list */
-+	if (IS_SINK(code->pad)) {
- 		if (code->index >= ARRAY_SIZE(vimc_deb_pix_map_list))
- 			return -EINVAL;
- 
- 		code->code = vimc_deb_pix_map_list[code->index].code;
-+		return 0;
- 	}
- 
--	return 0;
-+	return vimc_enum_mbus_code(sd, cfg, code);
- }
- 
- static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
- 				    struct v4l2_subdev_pad_config *cfg,
- 				    struct v4l2_subdev_frame_size_enum *fse)
- {
--	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
--
- 	if (fse->index)
- 		return -EINVAL;
- 
-+	/* For the sink pad we only support codes in the map_list */
- 	if (IS_SINK(fse->pad)) {
- 		const struct vimc_deb_pix_map *vpix =
- 			vimc_deb_pix_map_by_code(fse->code);
- 
- 		if (!vpix)
- 			return -EINVAL;
--	} else if (fse->code != vdeb->src_code) {
--		return -EINVAL;
- 	}
- 
- 	fse->min_width = VIMC_FRAME_MIN_WIDTH;
-@@ -270,11 +277,11 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- 
- 	/*
- 	 * Do not change the format of the source pad,
--	 * it is propagated from the sink
-+	 * it is propagated from the sink (except for the code)
- 	 */
- 	if (IS_SRC(fmt->pad)) {
-+		vdeb->src_code = fmt->format.code;
- 		fmt->format = *sink_fmt;
--		/* TODO: Add support for other formats */
- 		fmt->format.code = vdeb->src_code;
- 	} else {
- 		/* Set the new format in the sink pad */
-@@ -306,7 +313,7 @@ static const struct v4l2_subdev_pad_ops vimc_deb_pad_ops = {
- 	.set_fmt		= vimc_deb_set_fmt,
- };
- 
--static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(struct vimc_deb_device *vdeb,
-+static void vimc_deb_set_rgb_pix_rgb24(struct vimc_deb_device *vdeb,
- 						  unsigned int lin,
- 						  unsigned int col,
- 						  unsigned int rgb[3])
-@@ -323,25 +330,38 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
- 	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
- 
- 	if (enable) {
--		const struct vimc_pix_map *vpix;
-+		u32 src_pixelformat = vdeb->ved.stream->producer_pixfmt;
-+		const struct v4l2_format_info *pix_info;
- 		unsigned int frame_size;
- 
- 		if (vdeb->src_frame)
- 			return 0;
- 
--		/* Calculate the frame size of the source pad */
--		vpix = vimc_pix_map_by_code(vdeb->src_code);
--		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
--				vpix->bpp;
--
--		/* Save the bytes per pixel of the sink */
--		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
--		vdeb->sink_bpp = vpix->bpp;
-+		/* We only support translating bayer to RGB24 */
-+		if (src_pixelformat != V4L2_PIX_FMT_RGB24) {
-+			dev_err(vdeb->dev,
-+				"translating to pixfmt (%s) is not supported\n",
-+				v4l2_get_fourcc_name(src_pixelformat));
-+			return -EINVAL;
-+		}
- 
- 		/* Get the corresponding pixel map from the table */
- 		vdeb->sink_pix_map =
- 			vimc_deb_pix_map_by_code(vdeb->sink_fmt.code);
- 
-+		/* Request bayer format from the pipeline for the sink pad */
-+		vdeb->ved.stream->producer_pixfmt =
-+			vdeb->sink_pix_map->pixelformat;
-+
-+		/* Calculate frame_size of the source */
-+		pix_info = v4l2_format_info(src_pixelformat);
-+		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
-+			     pix_info->bpp[0];
-+
-+		/* Get bpp from the sink */
-+		pix_info = v4l2_format_info(vdeb->sink_pix_map->pixelformat);
-+		vdeb->sink_bpp = pix_info->bpp[0];
-+
- 		/*
- 		 * Allocate the frame buffer. Use vmalloc to be able to
- 		 * allocate a large amount of memory
-@@ -542,14 +562,14 @@ static int vimc_deb_comp_bind(struct device *comp, struct device *master,
- 
- 	/* Initialize the frame format */
- 	vdeb->sink_fmt = sink_fmt_default;
-+	vdeb->src_code = VIMC_DEB_SRC_MBUS_FMT_DEFAULT;
- 	/*
- 	 * TODO: Add support for more output formats, we only support
--	 * RGB888 for now
-+	 * RGB24 for now.
- 	 * NOTE: the src format is always the same as the sink, except
- 	 * for the code
- 	 */
--	vdeb->src_code = MEDIA_BUS_FMT_RGB888_1X24;
--	vdeb->set_rgb_src = vimc_deb_set_rgb_mbus_fmt_rgb888_1x24;
-+	vdeb->set_rgb_src = vimc_deb_set_rgb_pix_rgb24;
- 
- 	return 0;
- }
-diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-index 2028afa4ef7a..245116b1c241 100644
---- a/drivers/media/platform/vimc/vimc-scaler.c
-+++ b/drivers/media/platform/vimc/vimc-scaler.c
-@@ -35,6 +35,12 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
- #define IS_SRC(pad)	(pad)
- #define MAX_ZOOM	8
- 
-+static const u32 vimc_sca_supported_pixftm[] = {
-+	V4L2_PIX_FMT_BGR24,
-+	V4L2_PIX_FMT_RGB24,
-+	V4L2_PIX_FMT_ARGB32,
-+};
-+
- struct vimc_sca_device {
- 	struct vimc_ent_device ved;
- 	struct v4l2_subdev sd;
-@@ -57,6 +63,16 @@ static const struct v4l2_mbus_framefmt sink_fmt_default = {
- 	.colorspace = V4L2_COLORSPACE_DEFAULT,
- };
- 
-+static bool vimc_sca_is_pixfmt_supported(u32 pixelformat)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vimc_sca_supported_pixftm); i++)
-+		if (vimc_sca_supported_pixftm[i] == pixelformat)
-+			return true;
-+	return false;
-+}
-+
- static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
- 			     struct v4l2_subdev_pad_config *cfg)
- {
-@@ -76,35 +92,13 @@ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
--static int vimc_sca_enum_mbus_code(struct v4l2_subdev *sd,
--				   struct v4l2_subdev_pad_config *cfg,
--				   struct v4l2_subdev_mbus_code_enum *code)
--{
--	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
--
--	/* We don't support bayer format */
--	if (!vpix || vpix->bayer)
--		return -EINVAL;
--
--	code->code = vpix->code;
--
--	return 0;
--}
--
- static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
- 				    struct v4l2_subdev_pad_config *cfg,
- 				    struct v4l2_subdev_frame_size_enum *fse)
- {
--	const struct vimc_pix_map *vpix;
--
- 	if (fse->index)
- 		return -EINVAL;
- 
--	/* Only accept code in the pix map table in non bayer format */
--	vpix = vimc_pix_map_by_code(fse->code);
--	if (!vpix || vpix->bayer)
--		return -EINVAL;
--
- 	fse->min_width = VIMC_FRAME_MIN_WIDTH;
- 	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
- 
-@@ -141,13 +135,6 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
- 
- static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
- {
--	const struct vimc_pix_map *vpix;
--
--	/* Only accept code in the pix map table in non bayer format */
--	vpix = vimc_pix_map_by_code(fmt->code);
--	if (!vpix || vpix->bayer)
--		fmt->code = sink_fmt_default.code;
--
- 	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
- 			     VIMC_FRAME_MAX_WIDTH) & ~1;
- 	fmt->height = clamp_t(u32, fmt->height, VIMC_FRAME_MIN_HEIGHT,
-@@ -208,7 +195,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
- 
- static const struct v4l2_subdev_pad_ops vimc_sca_pad_ops = {
- 	.init_cfg		= vimc_sca_init_cfg,
--	.enum_mbus_code		= vimc_sca_enum_mbus_code,
-+	.enum_mbus_code		= vimc_enum_mbus_code,
- 	.enum_frame_size	= vimc_sca_enum_frame_size,
- 	.get_fmt		= vimc_sca_get_fmt,
- 	.set_fmt		= vimc_sca_set_fmt,
-@@ -219,15 +206,22 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
- 	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
- 
- 	if (enable) {
--		const struct vimc_pix_map *vpix;
-+		u32 pixelformat = vsca->ved.stream->producer_pixfmt;
-+		const struct v4l2_format_info *pix_info;
- 		unsigned int frame_size;
- 
- 		if (vsca->src_frame)
- 			return 0;
- 
-+		if (!vimc_sca_is_pixfmt_supported(pixelformat)) {
-+			dev_err(vsca->dev, "pixfmt (%s) is not supported\n",
-+				v4l2_get_fourcc_name(pixelformat));
-+			return -EINVAL;
-+		}
-+
- 		/* Save the bytes per pixel of the sink */
--		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
--		vsca->bpp = vpix->bpp;
-+		pix_info = v4l2_format_info(pixelformat);
-+		vsca->bpp = pix_info->bpp[0];
- 
- 		/* Calculate the width in bytes of the src frame */
- 		vsca->src_line_size = vsca->sink_fmt.width *
-diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
-index d7891d3bbeaa..75df96cc5e39 100644
---- a/drivers/media/platform/vimc/vimc-sensor.c
-+++ b/drivers/media/platform/vimc/vimc-sensor.c
-@@ -65,34 +65,13 @@ static int vimc_sen_init_cfg(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
--static int vimc_sen_enum_mbus_code(struct v4l2_subdev *sd,
--				   struct v4l2_subdev_pad_config *cfg,
--				   struct v4l2_subdev_mbus_code_enum *code)
--{
--	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
--
--	if (!vpix)
--		return -EINVAL;
--
--	code->code = vpix->code;
--
--	return 0;
--}
--
- static int vimc_sen_enum_frame_size(struct v4l2_subdev *sd,
- 				    struct v4l2_subdev_pad_config *cfg,
- 				    struct v4l2_subdev_frame_size_enum *fse)
- {
--	const struct vimc_pix_map *vpix;
--
- 	if (fse->index)
- 		return -EINVAL;
- 
--	/* Only accept code in the pix map table */
--	vpix = vimc_pix_map_by_code(fse->code);
--	if (!vpix)
--		return -EINVAL;
--
- 	fse->min_width = VIMC_FRAME_MIN_WIDTH;
- 	fse->max_width = VIMC_FRAME_MAX_WIDTH;
- 	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
-@@ -117,14 +96,17 @@ static int vimc_sen_get_fmt(struct v4l2_subdev *sd,
- 
- static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
- {
--	const struct vimc_pix_map *vpix =
--				vimc_pix_map_by_code(vsen->mbus_format.code);
-+	u32 pixelformat = vsen->ved.stream->producer_pixfmt;
-+	const struct v4l2_format_info *pix_info;
-+
-+	pix_info = v4l2_format_info(pixelformat);
- 
- 	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
- 			 vsen->mbus_format.height, vsen->mbus_format.field);
--	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
-+	tpg_s_bytesperline(&vsen->tpg, 0,
-+			   vsen->mbus_format.width * pix_info->bpp[0]);
- 	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
--	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
-+	tpg_s_fourcc(&vsen->tpg, pixelformat);
- 	/* TODO: add support for V4L2_FIELD_ALTERNATE */
- 	tpg_s_field(&vsen->tpg, vsen->mbus_format.field, false);
- 	tpg_s_colorspace(&vsen->tpg, vsen->mbus_format.colorspace);
-@@ -135,13 +117,6 @@ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
- 
- static void vimc_sen_adjust_fmt(struct v4l2_mbus_framefmt *fmt)
- {
--	const struct vimc_pix_map *vpix;
--
--	/* Only accept code in the pix map table */
--	vpix = vimc_pix_map_by_code(fmt->code);
--	if (!vpix)
--		fmt->code = fmt_default.code;
--
- 	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
- 			     VIMC_FRAME_MAX_WIDTH) & ~1;
- 	fmt->height = clamp_t(u32, fmt->height, VIMC_FRAME_MIN_HEIGHT,
-@@ -193,7 +168,7 @@ static int vimc_sen_set_fmt(struct v4l2_subdev *sd,
- 
- static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
- 	.init_cfg		= vimc_sen_init_cfg,
--	.enum_mbus_code		= vimc_sen_enum_mbus_code,
-+	.enum_mbus_code		= vimc_enum_mbus_code,
- 	.enum_frame_size	= vimc_sen_enum_frame_size,
- 	.get_fmt		= vimc_sen_get_fmt,
- 	.set_fmt		= vimc_sen_set_fmt,
-@@ -215,7 +190,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 				container_of(sd, struct vimc_sen_device, sd);
- 
- 	if (enable) {
--		const struct vimc_pix_map *vpix;
-+		u32 pixelformat = vsen->ved.stream->producer_pixfmt;
-+		const struct v4l2_format_info *pix_info;
- 		unsigned int frame_size;
- 
- 		if (vsen->kthread_sen)
-@@ -223,8 +199,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 			return 0;
- 
- 		/* Calculate the frame size */
--		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
--		frame_size = vsen->mbus_format.width * vpix->bpp *
-+		pix_info = v4l2_format_info(pixelformat);
-+		frame_size = vsen->mbus_format.width * pix_info->bpp[0] *
- 			     vsen->mbus_format.height;
- 
- 		/*
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index 5a3bda62fbc8..c19093b6c787 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -52,6 +52,7 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
- 	while (stream->pipe_size) {
- 		stream->pipe_size--;
- 		ved = stream->ved_pipeline[stream->pipe_size];
-+		ved->stream = NULL;
- 		stream->ved_pipeline[stream->pipe_size] = NULL;
- 
- 		if (!is_media_entity_v4l2_subdev(ved->ent))
-@@ -87,6 +88,7 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- 			return -EINVAL;
- 		}
- 		stream->ved_pipeline[stream->pipe_size++] = ved;
-+		ved->stream = stream;
- 
- 		if (is_media_entity_v4l2_subdev(ved->ent)) {
- 			sd = media_entity_to_v4l2_subdev(ved->ent);
-diff --git a/drivers/media/platform/vimc/vimc-streamer.h b/drivers/media/platform/vimc/vimc-streamer.h
-index a7c5ac5ace4f..2b3667408794 100644
---- a/drivers/media/platform/vimc/vimc-streamer.h
-+++ b/drivers/media/platform/vimc/vimc-streamer.h
-@@ -25,6 +25,11 @@
-  * processed in the pipeline.
-  * @pipe_size:		size of @ved_pipeline
-  * @kthread:		thread that generates the frames of the stream.
-+ * @producer_pixfmt:	the pixel format requested from the pipeline. This must
-+ * be set just before calling vimc_streamer_s_stream(ent, 1). This value is
-+ * propagated up to the source of the base image (usually a sensor node) and
-+ * can be modified by entities during s_stream callback to request a different
-+ * format from rest of the pipeline.
-  *
-  * When the user call stream_on in a video device, struct vimc_stream is
-  * used to keep track of all entities and subdevices that generates and
-@@ -35,6 +40,7 @@ struct vimc_stream {
- 	struct vimc_ent_device *ved_pipeline[VIMC_STREAMER_PIPELINE_MAX_SIZE];
- 	unsigned int pipe_size;
- 	struct task_struct *kthread;
-+	u32 producer_pixfmt;
- };
- 
- /**
--- 
-2.20.1
+> >> +static inline int ntb_peer_resource_idx(struct ntb_dev *ntb, int pidx)
+> >> +{
+> >> +	int local_port, peer_port;
+> >> +
+> >> +	if (pidx >= ntb_peer_port_count(ntb))
+> >> +		return -EINVAL;
+> >> +
+> >> +	local_port = ntb_port_number(ntb);
+> >> +	peer_port = ntb_peer_port_number(ntb, pidx);
+> >> +
+> >> +	if (peer_port < local_port)
+> >> +		return local_port - 1;
+> >> +	else
+> >> +		return local_port;
+> >> +}
+> >> +
+> > 
+> > Instead of redefining the port-index table we can just fix the
+> > ntb_peer_resource_idx() method, so it would return a global port index
+> > instead of some number based on the port number. It can be done just by
+> > the next modification:
+> > 
+> > +     if (peer_port <= local_port)
+> > +             return pidx;
+> > +     else
+> > +             return pidx + 1;
+> > 
+> 
+> This creates a table that looks like:
+> 
+> pidx \ port     0    1    2    3    4
+>  0              1    0    0    0    0
+>  1              2    2    1    1    1
+>  2              3    3    3    2    2
+>  3              4    4    4    4    3
+> 
+> Which is not correct. In fact, it seems to require 5 resources for 5
+> ports. This appears to be what is done in the current ntb_perf and I
+> think I figured it out several months ago but it's way too messy and
+> hard to understand and I don't want to spend the time to figure it out
+> again.
+> 
 
+Yes, this is how it used to be done in ntb_pingpong and is still done in the
+ntb_perf driver. And it is correctly working. As I already described and
+you wrote further, this table provides a Logical Ports numbering space:
+
+peer port \ local port   0  2  4  6  8  12  16  20
+        0                0  0  0  0  0   0   0   0
+        2                1  1  1  1  1   1   1   1
+        4                2  2  2  2  2   2   2   2
+        6                3  3  3  3  3   3   3   3
+        8                4  4  4  4  4   4   4   4
+       12                5  5  5  5  5   5   5   5
+       16                6  6  6  6  6   6   6   6
+       20                7  7  7  7  7   7   7   7
+
+(although I'd call it Global Port Indexes space)
+
+Currently local port indexes don't enumerate the local port number. So
+if you convert that table into the one you provided in the function
+comment, then it'll look like this (similar to what you called incorrect):
+
+pidx \ port     0  2  4  6  8  12  16  20
+ 0              1  0  0  0  0   0   0   0
+ 1              2  2  1  1  1   1   1   1
+ 2              3  3  3  2  2   2   2   2
+ 3              4  4  4  4  3   3   3   3
+ 4              5  5  5  5  5   4   4   4
+ 5              6  6  6  6  6   6   5   5
+ 6              7  7  7  7  7   7   7   6
+
+Yes, by using this table we'll waste one resource as always existing
+gap (is it the only incorrect thing you had in mind?). But it is smaller
+problem than to use physical port numbers, which produces much bigger gaps
+in case of your table implementation as well.
+
+Note, in addition in this case you'd need to reconsider your algorithm of the
+resources initialization. Lets for example take alook at Port 0. You'd need
+to have its outbound memory windows [1-7] pointing to the peers with ports
+[2,4,...,20] (correspond to pidx [0-6] of Port 0). So in this case Port 2 would
+have a port 0 inbound MW #1 retrieving data from Port 0 outbound MW #1, Port 4
+would have a port 0 inbound MW #2 retrieving data from Port 0 outbound MW #2,
+and so on.
+
+So your current approach is inbound MW-centralized, while mine is developed
+around the outbound MWs.
+
+> IMO, in order to support gaps, we'd need to, on some layer, create an
+> un-gapped numbering scheme for the ports. I think the easiest thing is
+> to just have Logical and Physical port numbers; so we would have
+> something like:
+> 
+> Physical Port Number: 0  2  4  6  8  12  16  20
+> Logical Port Number:  0  1  2  3  4  5   6   7
+> Peer Index (Port 0):  x  0  1  2  3  4   5   6
+> Port Index (Port 8):  0  1  2  3  x  4   5   6
+> (etc)
+
+That's what I suggested in the two possible solutions:
+1st solution: replace current pidx with Logical Port Number,
+2nd solution: alter ntb_peer_resource_idx() so it would return the Logical Port Number.
+
+IMO In case of the 2nd solution I'd also suggest to rename the
+ntb_peer_resource_idx() method into ntb_peer_port_global_idx(),
+and then consider the current port indexes used in the NTB API
+as local port indexes. The resource indexing can be abstracted
+by a macro like this:
+#define ntb_peer_resource_idx ntb_peer_port_global_idx
+
+Finally in order to close the space up we'd also need to define
+a method: ntb_port_global_idx(), which would return a Logical (global)
+index of local port.
+
+> 
+> Where the Physical Port Number is whatever the hardware uses and the
+> logical port number is a numbering scheme starting with zero with no
+> gaps. Then the port indexes are still as we currently have them. If we
+> say that the port numbers we have now are the Logical Port Number, then
+> ntb_peer_resource_idx() is correct.
+> 
+
+Current port numbers are the physical port numbers with gaps. That's why we
+introduced the port-index NTB API abstraction in the first place, to have these gaps
+eliminated and to provide a simple way of bulk setup. Although that abstraction
+turned out not that suitable to distribute the shared resources. So
+the Logical (Global) indexing is needed to do it (that's what ntb_pingpong used
+to do and ntb_perf still does now).
+
+> I would strongly argue that the clients don't need to know anything
+> about the Physical Port Number and these should be handled strictly
+> inside the drivers. If multiple drivers need to do something similar to
+> map the logical to physical port numbers then we should introduce helper
+> functions to allow them to do so. If the Physical Numbers are not
+> contained in the driver than the API would need to be expanded to expose
+> which numbers are actually used to avoid needing to constantly loop
+> through all the indexes to find this out.
+> 
+
+Absolutely agree with you. The main idea of NTB API was to provide a set
+of methods to access the NTB hardware without any abstractions but
+with possible useful helpers, like your NTB MSI library, or transport library,
+or anything else. So the physical port numbers must be available for
+the client drivers.
+
+> On a similar vein, I'd  suggest that most clients shouldn't even really
+> need to do anything with the Logical Port Number and should deal largely
+> with Port Indexes. Ideally, Logical Port Numbers should only be used by
+> helper code in the common layer to help assign resources used by the
+> clients (like ntb_peer_resource_idx()).
+> 
+
+This is the main question. Do we really need the current port indexes
+implementation at all? After all these years of NTB API usage I don't really
+see it useful in any case except to loop over the outbound MW resources
+automatically skipping the local port (usefulness of this is also questionable).
+As I already said I created the port-index table this way due to the IDT NTB
+MWs peculiarity, which doesn't seem to me a big problem now comparing to all
+these additional complications we intend to introduce.
+
+The rest of the drivers code really need to have the Logical (global)
+port indexes, at least to distribute the shared resources, and don't use
+the current pidx that much.
+
+Wouldn't it be better to just redefine the current port-index table
+in the following way?
+ntb_port_number() - local physical port number,
+ntb_port_idx() - local port logical (global) index,
+ntb_peer_port_count() - total number of ports NTB device provide (including the local one),
+ntb_peer_port_number() - physical port number of the peer with passed logical port index,
+ntb_peer_port_idx - logical port index of the passed physical port number.
+
+while currently we have:
+ntb_port_number() - local physical port number,
+ntb_peer_port_count() - total number of ports NTB device provide (excluding the local one),
+ntb_peer_port_number() - physical port number of the peer with passed port index,
+ntb_peer_port_idx - port index of the passed physical port number;
+
+-Sergey
+
+> This world view isn't far off from what we have now, though you *may*
+> need to adjust your IDT driver and we will have to eventually clean up
+> the existing test clients to use the new helper functions.
+> 
+> > Personally I'd prefer the first solution even though it may lead to the
+> > "Unsupported TLP" errors and cause a greater code changes. Here is why:
+> > 1) the error might be IDT-specific, so we shouldn't limit the API due to
+> > one particular hardware peculiarity,
+> > 2) port-index table with global indexes implementation shall simplify the IDT
+> > NTB hw driver and provide a cleaner NTB API with simpler shared resources
+> > utilization code.
+> 
+> > The final decision is after the NTB subsystem maintainers. If they agree with
+> > solution #1 I'll send a corresponding patchset on this week, so you can
+> > alter this patchset being based on it.
+> 
+> I think what we have right now is close enough and we just have to clean
+> up the code and fix things. I don't think we need to do another big
+> change to the semantics. I *certainly* don't want to risk breaking
+> everything again to do it.
+>  Logan
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
+> To post to this group, send email to linux-ntb@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/bd72f24f-5982-0fe7-59df-2fbbfe9f798a%40deltatee.com.
+> For more options, visit https://groups.google.com/d/optout.
