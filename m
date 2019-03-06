@@ -2,123 +2,118 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBCBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B61C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411BF20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E1220675
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 13:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9fO3VP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfCFNb6 (ORCPT
+        id S1726945AbfCFNcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 08:31:58 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:60623 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfCFNb6 (ORCPT
+        Wed, 6 Mar 2019 08:32:19 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38294 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfCFNcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 08:31:58 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x26DVHWe1724181
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Mar 2019 05:31:17 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x26DVFLx1724177;
-        Wed, 6 Mar 2019 05:31:15 -0800
-Date:   Wed, 6 Mar 2019 05:31:15 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kees Cook <tipbot@zytor.com>
-Message-ID: <tip-3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f@git.kernel.org>
-Cc:     kernel-hardening@lists.openwall.com, keescook@chromium.org,
-        hpa@zytor.com, sean.j.christopherson@intel.com, jannh@google.com,
-        solar@openwall.com, linux@dominikbrodowski.net, mingo@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, peterz@infradead.org
-Reply-To: keescook@chromium.org, kernel-hardening@lists.openwall.com,
-          mingo@kernel.org, tglx@linutronix.de, linux@dominikbrodowski.net,
-          solar@openwall.com, jannh@google.com, gregkh@linuxfoundation.org,
-          peterz@infradead.org, sean.j.christopherson@intel.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190227200132.24707-3-keescook@chromium.org>
-References: <20190227200132.24707-3-keescook@chromium.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/asm] x86/asm: Avoid taking an exception before cr4 restore
-Git-Commit-ID: 3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 6 Mar 2019 08:32:19 -0500
+Received: by mail-vs1-f67.google.com with SMTP id h132so2191978vsd.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 05:32:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=icS4CXrHorSX6h7XZWIhVC5ZyqED36hLDEh9f7uHtAg=;
+        b=f9fO3VP5Nof0ILA6Xe2ez/JjICO2mQvOsdv4Z6U77Bn98ixtzup+j3XBnq9S0HoD8x
+         RWX4GW8iBcofO87kz0hj54gFQdUKABBVu3qwnLSUnYO7h9L2N85RWeWhcW+XGzxocfhr
+         5lfzfzI2pnfgHgTPhbzY/4sMvfgS2pAZUmLyp3kZxMmdvfNsDXlFwx+853TNzNbCOrRr
+         yleG3N5+zZ/uS+CjH77uOEO5sbi3LJvasIE0fNonzWkDQrLOcc05koQj2PoTUpc7G1Nc
+         44rdaglqJbRPd8arLYGKKP5x3+vzjjKY4YToV6A5M2GSPo+A8kzCJ7YVjJDLy8TLyrLX
+         W5zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=icS4CXrHorSX6h7XZWIhVC5ZyqED36hLDEh9f7uHtAg=;
+        b=VhnzhIDd/3aDBmaNL+wgyRcFttUF656vQAmmdKR4nXcaCAVG2PJzfifiE+KEHtU7/s
+         MBx7DiWFGyEsr3bLbnz1lamQVmJ3+gvErcHyL+J5PQm+VZdUoV4hGq3AXrqvVLPNLqnG
+         jiH2OEpJ6bI8hu+jswPr3noF8VdM/xuGLNo0DKVbdXaSl6AO4m/BOj0qKoFK3qt/9XxK
+         dhVzbfPJIivC/lOztNHd9ZPpZ33cbjYi1r0dI2A6KOkJ5rlx02nV7JjHy5xjMk9i7sLN
+         UnU2/ZuyALBnO7b6vbZdMluPKcpaXwpSljlv0uZ3ZtF2aym9TeIZx/BX+oUOF2fN6Rx+
+         KXzA==
+X-Gm-Message-State: APjAAAWBAQ1iKMnipGbfJJXKkF3Kmi+Rga0oCp0b18F6epw7gLe2KXqR
+        D6McTHA6b/RlW/NEseAKLREqR1BblMhyVRVpi7VdkA==
+X-Google-Smtp-Source: APXvYqzDpZrMmjjpcPYt6O6aqAGQzh2oSWFfILvj5ebSfUMjlkxmm+7TTx/MT+652k7mpMm6/I2aT9eCYD4eTw0GL6g=
+X-Received: by 2002:a67:c902:: with SMTP id w2mr3889431vsk.191.1551879137902;
+ Wed, 06 Mar 2019 05:32:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1551694625-6414-1-git-send-email-ludovic.Barre@st.com> <1551694625-6414-4-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1551694625-6414-4-git-send-email-ludovic.Barre@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 6 Mar 2019 14:31:42 +0100
+Message-ID: <CAPDyKFqVssTzjQYQq1n+CVEFODzjUdSiv=OUPkhycWYcxMoHGQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] mmc: mmci: qcom: define get_dctrl_cfg
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f
-Gitweb:     https://git.kernel.org/tip/3c8dbef26202a83207611b3d6f4d2db5e5cbbc0f
-Author:     Kees Cook <keescook@chromium.org>
-AuthorDate: Wed, 27 Feb 2019 12:01:31 -0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 6 Mar 2019 13:25:55 +0100
+On Mon, 4 Mar 2019 at 11:17, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch defines get_dctrl_cfg callback for qcom variant.
+> qcom variant has a specific block size definition.
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci_qcom_dml.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
+> index 25d0a75..d7b083d 100644
+> --- a/drivers/mmc/host/mmci_qcom_dml.c
+> +++ b/drivers/mmc/host/mmci_qcom_dml.c
+> @@ -183,9 +183,17 @@ static int qcom_dma_setup(struct mmci_host *host)
+>         return 0;
+>  }
+>
+> +u32 qcom_get_dctrl_cfg(struct mmci_host *host)
 
-x86/asm: Avoid taking an exception before cr4 restore
+This can be static.
 
-Instead of taking a full WARN() exception before restoring a potentially
-missed CR4 bit, retain the missing bit for later reporting.
+> +{
+> +       struct variant_data *variant = host->variant;
+> +
+> +       return variant->datactrl_dpsm_enable | (host->data->blksz << 4);
+> +}
+> +
+>  static struct mmci_host_ops qcom_variant_ops = {
+>         .prep_data = mmci_dmae_prep_data,
+>         .unprep_data = mmci_dmae_unprep_data,
+> +       .get_datactrl_cfg = qcom_get_dctrl_cfg,
+>         .get_next_data = mmci_dmae_get_next_data,
+>         .dma_setup = qcom_dma_setup,
+>         .dma_release = mmci_dmae_release,
+> --
+> 2.7.4
+>
 
-Additionally update the comments to note the required use of "volatile".
-
-Suggested-by: Solar Designer <solar@openwall.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Link: https://lkml.kernel.org/r/20190227200132.24707-3-keescook@chromium.org
-
----
- arch/x86/include/asm/special_insns.h | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index fabda1400137..99607f142cad 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -76,18 +76,24 @@ extern volatile unsigned long cr4_pin;
- 
- static inline void native_write_cr4(unsigned long val)
- {
-+	unsigned long warn = 0;
-+
- again:
- 	val |= cr4_pin;
- 	asm volatile("mov %0,%%cr4": : "r" (val), "m" (__force_order));
- 	/*
- 	 * If the MOV above was used directly as a ROP gadget we can
- 	 * notice the lack of pinned bits in "val" and start the function
--	 * from the beginning to gain the cr4_pin bits for sure.
-+	 * from the beginning to gain the cr4_pin bits for sure. Note
-+	 * that "val" must be volatile to keep the compiler from
-+	 * optimizing away this check.
- 	 */
--	if (WARN_ONCE((val & cr4_pin) != cr4_pin,
--		      "Attempt to unpin cr4 bits: %lx, cr4 bypass attack?!",
--		      ~val & cr4_pin))
-+	if ((val & cr4_pin) != cr4_pin) {
-+		warn = ~val & cr4_pin;
- 		goto again;
-+	}
-+	WARN_ONCE(warn, "Attempt to unpin cr4 bits: %lx; bypass attack?!\n",
-+		  warn);
- }
- 
- #ifdef CONFIG_X86_64
+Kind regards
+Uffe
