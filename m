@@ -2,313 +2,144 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C2FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB6A20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5F220661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m4M/csyx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Un3dOhav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbfCFRtJ (ORCPT
+        id S1729026AbfCFRuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:49:09 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34343 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727500AbfCFRtH (ORCPT
+        Wed, 6 Mar 2019 12:50:39 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35518 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfCFRui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:49:07 -0500
-Received: by mail-qt1-f195.google.com with SMTP id w4so13822430qtc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:49:06 -0800 (PST)
+        Wed, 6 Mar 2019 12:50:38 -0500
+Received: by mail-pg1-f194.google.com with SMTP id e17so8999478pgd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:50:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BZwtFx2fooFRjiTR1TCKpWsbKo6ADG45oouWEdHr+9Q=;
-        b=m4M/csyxSRB84j6I57zfVmr8mQSwULuc27umU4eF0Q//esDgB5YZ4p2ZsWgfkukxRD
-         4yjvHtX4X9oQLUarWFFkdfcj4GSMKmJ6rJwQhDGh87gY8VBOx3LSXu8C3rHSbXppf8ZQ
-         MDyqGiwgi4ZuYeoxpp/TPITUfktu3vkSvfWtg=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=B7EJEtkYgfb94gn0V+wYAWAlkMGaZEXhZikhWNFzx8E=;
+        b=Un3dOhavekRu9eIUVknb/DioYxmCK72p6iqV9gkBtLnr9Nt5B2iAJeNWOwUEyKuGEP
+         kduL59acYwR+phaDMh3SnngPLH7L/XRJQBWTZPdymDhyXJQYfqNcWNGWnulZKDimDXeK
+         cKRW9Ac+lcnzZ7+a1bpKSe9OlYti7bbaw4NWc1ryC8Pdrzp3qNj/gGSZf0fk9Isk8Vlk
+         G6PHrSKIN5WLGWxO2p/hpPaCdd79emast888HMebputcrIEpJLFdyBMzZYXR9rVUg0oh
+         O5cwpe2dmIpMcDSuA2vT2N52sTb0EbSK4eAn2oQ5IbQ4FvOYM96Xc0QqXr8O1NGetjiT
+         7fPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BZwtFx2fooFRjiTR1TCKpWsbKo6ADG45oouWEdHr+9Q=;
-        b=MVg/ffrTUcZ1SFB/7nORYCAw1exH7SMoJyCRmCgIyKETpnZoUAcx66flPCV5tVTdDU
-         ISjkGTyDYXXeNoeOWmLis/Ch2XosD4/uaAQVAL373b9QCsI9SQTE9nRLXzMDb6xPo2p7
-         Qs5UEBOYij9fw525UNWizMrQRUVKb7NDDVFZtR17tzZEeTuYD8XaLb0hR2P5eETLMdHG
-         PP1pHdlVA7CD6mSK6bDIS46rSLtwhfNLfHHwPplL7KE+Mtjk6Gx0/Y5mdcd3K1BkwBCr
-         McKz60OknmVV7usU0AXxNNBLjiKrm409CJKKjh9UxwuJPwJKlCF/c55nMNTIVFD2ooMc
-         wamg==
-X-Gm-Message-State: APjAAAXoKX+hBRdstRj2923o2LZHi5+OgQzT6vwIQyeQuKWuv6//mGQk
-        Lk9c+gEz0XemYK2H6fCXcBOIqA==
-X-Google-Smtp-Source: APXvYqxsaDJBsmLrCsybAMOeo8iG9yeTUngwNzYZbzRHP1l5LM78cmoyqx301D8YV0q1fGD3iC1MYw==
-X-Received: by 2002:a0c:954d:: with SMTP id m13mr7138102qvm.243.1551894545801;
-        Wed, 06 Mar 2019 09:49:05 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id 14sm1085321qkj.93.2019.03.06.09.49.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Mar 2019 09:49:04 -0800 (PST)
-Date:   Wed, 6 Mar 2019 12:49:04 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190306174904.GA34256@google.com>
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <201903030526.3AuYFiuN%fengguang.wu@intel.com>
- <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
- <CAK7LNARGQE9y6hr7ZoTbn5-GkPBN2Gk-4=3=Cfnr7Oy-+q69kg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARGQE9y6hr7ZoTbn5-GkPBN2Gk-4=3=Cfnr7Oy-+q69kg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B7EJEtkYgfb94gn0V+wYAWAlkMGaZEXhZikhWNFzx8E=;
+        b=d9NCDIvRmZ80HzpNZtwcfKiVLmH5fVk9a/ZRRbiMRBQNsU4f4H4tBwYt3G4RTZa6Zz
+         umTZU1PuQ+56USbraDbWTAA/MFZPhTjkW64v8MT8NSoqrDvKF0459BhlXktGMh6QulWl
+         KXtEQkUCltwjDUfI6AvaYteBKRVZt8e9F1Yr1b8pJiVl55CZTHxmo757TvfBJmYI2MOu
+         nlFmjmTTLllM+REqiScCyp4XwL+b99GXy+hDwUjqa9KL7tjDmOB0BeO6qzfp/IahPTR3
+         E7MIsZKBvuLzysymt6z7eEawVgXWkCn0LfPNj5xIruCuRz03KOC/9TzKhW6R+8hcV/k6
+         FLrw==
+X-Gm-Message-State: APjAAAU63Wnkd54Jgyp9Tlotm4K/8ivGO97b0ADa9B8wHIb4RCfkdDzQ
+        TB+wcGw9ZDiVF2theBLSeCYoww==
+X-Google-Smtp-Source: APXvYqyMc6oMgJGxVZK+GzQ8iHff2LFWUwsN0S8ksMIBQx3ntYQfk9VFfwHfWhY433btAmxFsPNldQ==
+X-Received: by 2002:a62:bd17:: with SMTP id a23mr8253919pff.233.1551894633800;
+        Wed, 06 Mar 2019 09:50:33 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q62sm7264437pfi.183.2019.03.06.09.50.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 09:50:32 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: qcs404: Update memory map to v3
+Date:   Wed,  6 Mar 2019 09:51:20 -0800
+Message-Id: <20190306175120.22544-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
-Thanks for review, my replies are inline:
+Update the reserved-memory map to version 3, to adjust to changes in the
+remoteprocs.
 
-On Wed, Mar 06, 2019 at 09:26:14PM +0900, Masahiro Yamada wrote:
-> On Mon, Mar 4, 2019 at 1:15 AM Joel Fernandes <joelaf@google.com> wrote:
-> >
-> > This report is for an older version of the patch so ignore it. The
-> > issue is already resolved.
-> >
-> > On Sat, Mar 2, 2019 at 2:00 PM kbuild test robot <lkp@intel.com> wrote:
-> > >
-> > > Hi Joel,
-> > >
-> > > Thank you for the patch! Yet something to improve:
-> > >
-> > > [auto build test ERROR on linus/master]
-> > > [also build test ERROR on v5.0-rc8]
-> > > [cannot apply to next-20190301]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > >
-> > > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/Provide-in-kernel-headers-for-making-it-easy-to-extend-the-kernel/20190303-014850
-> > > config: sh-allmodconfig (attached as .config)
-> > > compiler: sh4-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
-> > > reproduce:
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # save the attached .config to linux build tree
-> > >         GCC_VERSION=8.2.0 make.cross ARCH=sh
-> > >
-> > > All errors (new ones prefixed by >>):
-> > >
-> > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
-> > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
-> > >
-> > > ---
-> > > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "kernel-team" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> 
-> 
-> 
-> Honestly speaking, I am worried about some flaws
-> in this feature, but anyway I read your code.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 30 ++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-I am not sure what you mean by that :-(. All the previous series's comments
-were addressed and it has been well tested by me and others. This looks quite
-solid to me. Sorry it took so many revisions, this was not that easy to get right.
-
-> Here are just comments from the build system point of view
-> in case something might be useful.
-> 
-> Please feel free to adopt some of them if you think they are good.
->> [1]
-> 
-> Please do not ignore kbuild test robot.
-> 
-> It never makes such a mistake like
-> replying to a new patch about the test result from old version.
-> 
-> The reports are really addressing this version (v4).
-> 
-> I see the error message even on x86.
-
-I did not mean to. By the way - the error does not cause any issues. It is
-just find being noisy. You are right I missed this, and I will correct this
-in v5. However, it does not cause any issues to the feature/functionality at all.
-
-> [2]
-> 
-> The shell script keeps running
-> even when an error occurs.
-> 
-> If any line in a shell script fails,
-> probably it went already wrong.
-> 
-> I highly recommend to add 'set -e'
-> at the very beginning of your shell script.
-> 
-> It will propagate the error to Make.
-
-Ok I will consider making it -e. But please note that, the script itself does
-not have any bugs. When you say it this way, it looks a bit bad to the
-onlooker as if there is bugs in the code, but there aren't any that I know
-off. All the comments in this round of review from view are just cosmetic
-changes.
-
-> [3]
-> 
-> targets += kheaders_data.tar.xz
-> targets += kheaders_data.h
-> targets += kheaders.md5
-> 
-> These three lines are unneeded because
-> 'targets' is necessary just for if_changed or if_changed_rule.
-> 
-> Instead, please add
-> 
-> clean-files := kheaders_data.tar.xz kheaders_data.h kheaders.md5
-
-Ok.
-
-> [4]
-> 
-> It is pointless to pass 'ikh_file_list'
-> from Makefile to the shell script.
-> 
-> 
-> You can directly describe the following in gen_ikh_data.sh
-> 
-> You do not need to use sed.
-> 
-> 
-> src_file_list="
-> include/
-> arch/$SRCARCH/Makefile
-> arch/$SRCARCH/include/
-> arch/$SRCARCH/kernel/module.lds
-> scripts/
-> Makefile
-> "
-> 
-> obj_file_list="
-> scripts/
-> include/
-> arch/$SRCARCH/include/
-> "
-
-Honestly, I prefer to keep it in Makefile.
-
-> if grep -q "^CONFIG_STACK_VALIDATION=y" $KCONFIG_CONFIG; then
->         obj_file_list="$obj_file_list tools/objtool/objtool"
-> fi
-> 
-> 
-> 
-> Be careful about module.lds
-> so that it will work for all architectures.
-
-Yes.
-
-> [5]
-> strip-comments.pl is short enough,
-> and I do not assume any other user.
-> 
-> 
-> IMHO, it would be cleaner to embed the one-liner perl
-> into the shell script, for example, like follows:
-> 
-> find  $cpio_dir -type f -print0 |
->  xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
-
-This does not work. I already tried it. But I guess I could generate the
-script on the fly.
-
-> [6]
-> It might be better to move
-> scripts/gen_ikh_data.sh to kernel/gen_ikh_data.sh
-> 
-> It will make this feature self-contained in kernel/.
-> And (more importantly to me), it would reduce my maintenance field.
-
-Sure.
-
-> [7]
-> I do not understand for what 'tarfile_md5' is used.
-> Is it necessary?
-
-It is just precaution, incase tar got corrupted and needs to be regenerated.
-
-> [8]
-> Is it more efficient to pipe the header files
-> to perl script like this?
-> 
-> 
->  cat (header) | perl 'do something' > (tmp directory)
-
-I don't think so.
-
-> [9]
-> 
-> I'd prefer avoiding 'pushd && popd' if possible.
-> 
-> Hint: Kbuild already runs at the top directory
-> of objtree.
-> 
-> 
-> It is OK if the change would mess up the script.
-
-This is needed to make out of tree builds work.
-
-> [10]
-> 
-> You can embed a binary directly into C file
-> without producing a giant header file.
-> 
-> I refactored kernel/configs.c
-> https://lore.kernel.org/patchwork/patch/1042013/
-> 
-> Be careful; my patch has not been merged yet into the mainline.
-> 
-> It has been a while in linux-next,
-> and I have not received any problem report.
-> 
-> So, I am guessing it will probably be merged
-> in the current MW.
-
-Ok I will consider doing this.
-
-Thanks for the review!
-
- - Joel
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index d6a91c31986a..298a6053c3e0 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -179,8 +179,13 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		memory@85600000 {
+-			reg = <0 0x85600000 0 0x90000>;
++		tz_apps_mem: memory@85900000 {
++			reg = <0 0x85900000 0 0x500000>;
++			no-map;
++		};
++
++		xbl_mem: memory@85e00000 {
++			reg = <0 0x85e00000 0 0x100000>;
+ 			no-map;
+ 		};
+ 
+@@ -189,28 +194,33 @@
+ 			no-map;
+ 		};
+ 
+-		memory@86100000 {
++		tz_mem: memory@86100000 {
+ 			reg = <0 0x86100000 0 0x300000>;
+ 			no-map;
+ 		};
+ 
+ 		wlan_fw_mem: memory@86400000 {
+-			reg = <0 0x86400000 0 0x1c00000>;
++			reg = <0 0x86400000 0 0x1100000>;
++			no-map;
++		};
++
++		adsp_fw_mem: memory@87500000 {
++			reg = <0 0x87500000 0 0x1a00000>;
+ 			no-map;
+ 		};
+ 
+-		adsp_fw_mem: memory@88000000 {
+-			reg = <0 0x88000000 0 0x1a00000>;
++		cdsp_fw_mem: memory@88f00000 {
++			reg = <0 0x88f00000 0 0x600000>;
+ 			no-map;
+ 		};
+ 
+-		cdsp_fw_mem: memory@89a00000 {
+-			reg = <0 0x89a00000 0 0x600000>;
++		wlan_msa_mem: memory@89500000 {
++			reg = <0 0x89500000 0 0x100000>;
+ 			no-map;
+ 		};
+ 
+-		wlan_msa_mem: memory@8a000000 {
+-			reg = <0 0x8a000000 0 0x100000>;
++		uefi_mem: memory@9f800000 {
++			reg = <0 0x9f800000 0 0x800000>;
+ 			no-map;
+ 		};
+ 	};
+-- 
+2.18.0
 
