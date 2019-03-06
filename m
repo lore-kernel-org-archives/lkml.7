@@ -3,96 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0FFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC54E21019
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551894329;
-	bh=fnaFw823APjxHulQ4+6wwEYV5Cn6l0+jzGalebq3cFY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vnFEwmIZkc8PZmbNPFo03jigvdbTPAyt/H4mpjs+vR8jIcyaUFt7PZhXmI3B5+FpZ
-	 QNb5nJbcnPLC5e5rNHzvHch/pf8wbt2rrvBtnl7E7vYg6CHt75jDrtbxLyysgLTIJ4
-	 2ktCUnBrflD5USGFfXsB5n3b+8nNwACJ09MXw6SU=
+	by mail.kernel.org (Postfix) with ESMTP id 1220920661
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p0sWcnyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730505AbfCFRp2 (ORCPT
+        id S1730516AbfCFRpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:45:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfCFRp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:45:27 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEED9213A2
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Mar 2019 17:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551894327;
-        bh=fnaFw823APjxHulQ4+6wwEYV5Cn6l0+jzGalebq3cFY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Tt75t3PXaPmNbY3DTWJzmy9Rs6w36M0YZa4XASyddvIfHPuG/skHNIJyFTshoObxL
-         n+7RBdXOaTlfo6hGqNZNmLr34oNIzSwInYVKcVpT/bfMo/NQu7Asb3uACAN2hkGENY
-         nTGGdRqHek6KNUqfqEOS7l6vARJwOZZfxTM2Kas8=
-Received: by mail-wr1-f44.google.com with SMTP id o17so14413141wrw.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 09:45:26 -0800 (PST)
-X-Gm-Message-State: APjAAAXZnHpd20tOYtw0qkTIGxFEH0JolNOdVnQBBFmSg3rvpm2y3n6H
-        3SnscpUY9gs4YwwQ+mILKbJ58mwIYlUYhf6UfJC+PQ==
-X-Google-Smtp-Source: APXvYqycCiWUyBWek2cV3rb2VRLlGPzW1OwTHX7jDqXVifhITwkrmYdgvwZ+wVv87HdZxGS8lIKrxdQZqeba+LPZxCw=
-X-Received: by 2002:adf:e747:: with SMTP id c7mr3724886wrn.176.1551894325330;
- Wed, 06 Mar 2019 09:45:25 -0800 (PST)
+        Wed, 6 Mar 2019 12:45:54 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:53628 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfCFRpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:45:54 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x26HifvD012750;
+        Wed, 6 Mar 2019 17:45:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=117+7s5aHfHE9VZJXTSzI6HVThmQW4xkPhoUgxH1L1M=;
+ b=p0sWcnyCZUtXdrK0+JVamEI691KJMxsmNZPy3VRZDXXGeprvPebBMTYzMiKUxQY30Xzi
+ Hlplmje/+VbSC4z/cTJ5+vZu8TaeCU8nnKiKpZWDfKLHzHC29jMnljNgI98leBdIjC6T
+ j32fdrpUPdM7XWmc1nZhXqDtwnmAIojBuVC9eFdp7nohw8o+yVK/YF63AhI6eF3O5KQX
+ W9RMnvA3wNX56Gw4D0YV9r4LTWbhbISSfYRgm6vf069uxU4wojPqvfx8aKtGm5iWv3PC
+ QqG42GjnKzIiwVXU63vY1EUTPJhDzfDTIAAU5Fh3E35XvafdXH4+32UQxyEUQh6EjfZV zA== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2130.oracle.com with ESMTP id 2qyh8udab8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Mar 2019 17:45:39 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x26HjdAh005994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Mar 2019 17:45:39 GMT
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x26HjbWD007596;
+        Wed, 6 Mar 2019 17:45:38 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Mar 2019 09:45:34 -0800
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Wei Li <liwei213@huawei.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] scsi: ufs: hisi: fix ufs_hba_variant_ops passing
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190304193917.702601-1-arnd@arndb.de>
+        <20190304193917.702601-4-arnd@arndb.de>
+Date:   Wed, 06 Mar 2019 12:45:31 -0500
+In-Reply-To: <20190304193917.702601-4-arnd@arndb.de> (Arnd Bergmann's message
+        of "Mon, 4 Mar 2019 20:39:11 +0100")
+Message-ID: <yq15zsvzykk.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <alpine.DEB.2.21.1903061323030.1646@nanos.tec.linutronix.de>
- <20190306141144.GD7930@mit.edu> <20190306165230.75b7d110@alans-desktop>
-In-Reply-To: <20190306165230.75b7d110@alans-desktop>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 6 Mar 2019 09:45:13 -0800
-X-Gmail-Original-Message-ID: <CALCETrW=ht70o8xt4+KyudScr4-h+mxZ_PnYHn46gpAzfskE4Q@mail.gmail.com>
-Message-ID: <CALCETrW=ht70o8xt4+KyudScr4-h+mxZ_PnYHn46gpAzfskE4Q@mail.gmail.com>
-Subject: Re: a.out coredumping: fix or delete?
-To:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9187 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=859 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903060123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 8:53 AM Alan Cox <gnomes@lxorguk.ukuu.org.uk> wrote:
->
-> On Wed, 6 Mar 2019 09:11:44 -0500
-> "Theodore Y. Ts'o" <tytso@mit.edu> wrote:
->
-> > On Wed, Mar 06, 2019 at 01:25:17PM +0100, Thomas Gleixner wrote:
-> > > > It's been 25 years since Linux added support for ELF.  Can we just
-> > > > delete the a.out support entirely now?  According to the Linux-ELF HOWTO,
-> > > > support was added in 1.1.52 (August 1994).  It's pretty much necromancy
-> > > > at this point.
-> > >
-> > > The Kernel-Necrophilia cult members might disagree. :)
-> > >
-> > > But yes, good riddance.
-> >
-> > Doesn't Minix 1.0 use a.out?  It *is* cool to be able to binaries from
-> > run dead operating systems.  :-)
->
-> Minixemu compiled fine ELF last time I checked 8). It does need  a 32bit
-> system as it still uses virtual 86 model.
->
 
-While I consider vm86() to be a giant turd, I also consider it to be
-supported and even wrote it a somewhat decent test suite :)
+Arnd,
+
+> Without CONFIG_OF, the of_match_node() helper does not evaluate
+> its argument, and the compiler warns about the unused variable:
+>
+> drivers/scsi/ufs/ufs-hisi.c: In function 'ufs_hisi_probe':
+> drivers/scsi/ufs/ufs-hisi.c:673:17: error: unused variable 'dev' [-Werror=unused-variable]
+
+Applied to 5.1/scsi-queue, thank you!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
