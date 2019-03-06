@@ -2,309 +2,115 @@ Return-Path: <SRS0=vY9Y=RJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5F6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC844C43381
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC30820842
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F51C20854
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Mar 2019 17:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="XbZJbzsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfCFRVc (ORCPT
+        id S1730458AbfCFRVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 12:21:32 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35830 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfCFRVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 12:21:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49B80EBD;
-        Wed,  6 Mar 2019 09:21:31 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 538CE3F575;
-        Wed,  6 Mar 2019 09:21:28 -0800 (PST)
-Date:   Wed, 6 Mar 2019 17:21:26 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 10/15] sched/fair: uclamp: Add uclamp support to
- energy_compute()
-Message-ID: <20190306172124.tpr32k6hawos7a3g@queper01-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-11-patrick.bellasi@arm.com>
+        Wed, 6 Mar 2019 12:21:47 -0500
+Received: from forwardcorp1o.cmail.yandex.net ([37.9.109.47]:41888 "EHLO
+        forwardcorp1o.cmail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730446AbfCFRVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 12:21:46 -0500
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.cmail.yandex.net (Yandex) with ESMTP id E64A720F87;
+        Wed,  6 Mar 2019 20:21:41 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id vMCNxkEDHw-LfWePQ4l;
+        Wed, 06 Mar 2019 20:21:41 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1551892901; bh=svhR2/tX9+r+vH6MDX+JmfKjG9q28BbX70lOscStCEg=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=XbZJbzsUScdF1Bru+p5YH3fAQqaUh3dopdNAc45dKqWZt+9eVJwYi0IhrHGbIDIJT
+         +oCud92s/7dxdlYTWWXoxUJao4sJTQ0OKwQd7y80lK38X+ygxfJ2lxyhv1kYAzFbPg
+         EBkYNDHG6mq7U1fdQNr5pfaJy0lxq3Y4IpzmD0FI=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:0:60f::1:1f])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id GClj5OiKAj-Lf4qRK8H;
+        Wed, 06 Mar 2019 20:21:41 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] sched/core: check format and overflows in cgroup2 cpu.max
+To:     Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>
+References: <155125520155.293746.7017401430432481979.stgit@buzz>
+ <20190305155741.GD50184@devbig004.ftw2.facebook.com>
+ <4c0f1d90-b147-e1cd-20c1-0cdd869f4f15@yandex-team.ru>
+ <20190306161154.GF50184@devbig004.ftw2.facebook.com>
+ <20190306164825.GY32477@hirez.programming.kicks-ass.net>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <7c418d64-734e-000c-052a-f6fc59fdcf8e@yandex-team.ru>
+Date:   Wed, 6 Mar 2019 20:21:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190208100554.32196-11-patrick.bellasi@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190306164825.GY32477@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick,
+On 06.03.2019 19:48, Peter Zijlstra wrote:
+> On Wed, Mar 06, 2019 at 08:11:54AM -0800, Tejun Heo wrote:
+>> Hello, Konstantin.
+>>
+>> On Tue, Mar 05, 2019 at 08:03:24PM +0300, Konstantin Khlebnikov wrote:
+>>>> Ditto as the blkio patch.  Unless there is a correctness problem, my
+>>>> preference is towards keeping the parsing functions simple and I don't
+>>>> think the kernel needs to play the role of strict input verifier here
+>>>> as long as the only foot getting shot is the user's own.
+>>>
+>>> IMHO non-strict interface more likely hides bugs and could cause
+>>> problems for future changes.
+>>>
+>>> Here is only only one fatal bug - buffer overflow in sscanf because
+>>> %s has no limit.
+>>
+>> Ah, indeed.  Can you please post a patch to fix that problem first?
 
-On Friday 08 Feb 2019 at 10:05:49 (+0000), Patrick Bellasi wrote:
-> The Energy Aware Scheduler (AES) estimates the energy impact of waking
+Done.
+Please see [PATCH] sched/core: fix buffer overflow in cgroup2 property cpu.max
 
-s/AES/EAS
+>>
+>>> Strict validation could be done as more strict sscanf variant or
+>>> some kind of extension for format string.
+>>
+>> I don't necessarily disagree with you; however, what often ends up
+>> with these manually crafted parsing approach are 1. code which is
+>> unnecessarily difficult to follow 2. different subset of validations
+>> and parsing bugs (of course) everywhere.
+>>
+>> Given the above, I tend to lean towards dump sscanf() parsing.  If we
+>> wanna improve the situation, I think the right thing to do is either
+>> improving sscanf or introducing new helpers to parse these things
+>> rather than hand-crafting each site.  It is really error-prone.
 
-> up a task on a given CPU. This estimation is based on:
->  a) an (active) power consumptions defined for each CPU frequency
+I'm playing with sscanf right now.
 
-s/consumptions/consumption
+Both problems (integer overflows and matching end of string)
+are relatively easy to fix without breaking sane compatibility.
 
->  b) an estimation of which frequency will be used on each CPU
->  c) an estimation of the busy time (utilization) of each CPU
 > 
-> Utilization clamping can affect both b) and c) estimations. A CPU is
-> expected to run:
->  - on an higher than required frequency, but for a shorter time, in case
->    its estimated utilization will be smaller then the minimum utilization
-
-s/then/than
-
->    enforced by uclamp
->  - on a smaller than required frequency, but for a longer time, in case
->    its estimated utilization is bigger then the maximum utilization
-
-s/then/than
-
->    enforced by uclamp
+> Always use a field width specifier with %s.  Which is exactly what the
+> proposed patch did IIRC.
 > 
-> While effects on busy time for both boosted/capped tasks are already
-> considered by compute_energy(), clamping effects on frequency selection
-> are currently ignored by that function.
-> 
-> Fix it by considering how CPU clamp values will be affected by a
-> task waking up and being RUNNABLE on that CPU.
-> 
-> Do that by refactoring schedutil_freq_util() to take an additional
-> task_struct* which allows EAS to evaluate the impact on clamp values of
-> a task being eventually queued in a CPU. Clamp values are applied to the
-> RT+CFS utilization only when a FREQUENCY_UTIL is required by
-> compute_energy().
-> 
-> Do note that switching from ENERGY_UTIL to FREQUENCY_UTIL in the
-> computation of cpu_util signal implies that we are more likely to
-> estimate the higherst OPP when a RT task is running in another CPU of
-
-s/higherst/highest
-
-> the same performance domain. This can have an impact on energy
-> estimation but:
->  - it's not easy to say which approach is better, since it quite likely
->    depends on the use case
->  - the original approach could still be obtained by setting a smaller
->    task-specific util_min whenever required
-> 
-> Since we are at that:
->  - rename schedutil_freq_util() into schedutil_cpu_util(),
->    since it's not only used for frequency selection.
->  - use "unsigned int" instead of "unsigned long" whenever the tracked
->    utilization value is not expected to overflow 32bit.
-
-We use unsigned long all over the place right ? All the task_util*()
-functions return unsigned long, the capacity-related functions too, and
-util_avg is an unsigned long in sched_avg. So I'm not sure if we want to
-do this TBH.
-
-> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> ---
-> Changes in v7:
->  Message-ID: <20190122151404.5rtosic6puixado3@queper01-lin>
->  - add a note on side-effects due to the usage of FREQUENCY_UTIL for
->    performance domain frequency estimation
->  - add a similer note to this changelog
-> ---
->  kernel/sched/cpufreq_schedutil.c | 18 ++++++++-------
->  kernel/sched/fair.c              | 39 +++++++++++++++++++++++++++-----
->  kernel/sched/sched.h             | 18 ++++-----------
->  3 files changed, 48 insertions(+), 27 deletions(-)
-> 
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 70a8b87fa29c..fdad719fca8b 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -195,10 +195,11 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
->   * based on the task model parameters and gives the minimal utilization
->   * required to meet deadlines.
->   */
-> -unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
-> -				  unsigned long max, enum schedutil_type type)
-> +unsigned int schedutil_cpu_util(int cpu, unsigned int util_cfs,
-> +				unsigned int max, enum schedutil_type type,
-> +				struct task_struct *p)
->  {
-> -	unsigned long dl_util, util, irq;
-> +	unsigned int dl_util, util, irq;
->  	struct rq *rq = cpu_rq(cpu);
->  
->  	if (!IS_BUILTIN(CONFIG_UCLAMP_TASK) &&
-> @@ -229,7 +230,7 @@ unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
->  	 */
->  	util = util_cfs + cpu_util_rt(rq);
->  	if (type == FREQUENCY_UTIL)
-> -		util = uclamp_util(rq, util);
-> +		util = uclamp_util_with(rq, util, p);
->  
->  	dl_util = cpu_util_dl(rq);
->  
-> @@ -283,13 +284,14 @@ unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
->  static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
->  {
->  	struct rq *rq = cpu_rq(sg_cpu->cpu);
-> -	unsigned long util = cpu_util_cfs(rq);
-> -	unsigned long max = arch_scale_cpu_capacity(NULL, sg_cpu->cpu);
-> +	unsigned int util_cfs = cpu_util_cfs(rq);
-> +	unsigned int cpu_cap = arch_scale_cpu_capacity(NULL, sg_cpu->cpu);
-
-Do you really need this one ? What's wrong with 'max' :-) ?
-
-> -	sg_cpu->max = max;
-> +	sg_cpu->max = cpu_cap;
->  	sg_cpu->bw_dl = cpu_bw_dl(rq);
->  
-> -	return schedutil_freq_util(sg_cpu->cpu, util, max, FREQUENCY_UTIL);
-> +	return schedutil_cpu_util(sg_cpu->cpu, util_cfs, cpu_cap,
-> +				  FREQUENCY_UTIL, NULL);
->  }
->  
->  /**
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 8c0aa76af90a..f6b0808e01ad 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6453,11 +6453,20 @@ static unsigned long cpu_util_next(int cpu, struct task_struct *p, int dst_cpu)
->  static long
->  compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
->  {
-> -	long util, max_util, sum_util, energy = 0;
-> +	unsigned int max_util, cfs_util, cpu_util, cpu_cap;
-> +	unsigned long sum_util, energy = 0;
->  	int cpu;
->  
->  	for (; pd; pd = pd->next) {
-> +		struct cpumask *pd_mask = perf_domain_span(pd);
-> +
-> +		/*
-> +		 * The energy model mandate all the CPUs of a performance
-
-s/mandate/mandates
-
-> +		 * domain have the same capacity.
-> +		 */
-> +		cpu_cap = arch_scale_cpu_capacity(NULL, cpumask_first(pd_mask));
->  		max_util = sum_util = 0;
-> +
->  		/*
->  		 * The capacity state of CPUs of the current rd can be driven by
->  		 * CPUs of another rd if they belong to the same performance
-> @@ -6468,11 +6477,29 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
->  		 * it will not appear in its pd list and will not be accounted
->  		 * by compute_energy().
->  		 */
-> -		for_each_cpu_and(cpu, perf_domain_span(pd), cpu_online_mask) {
-> -			util = cpu_util_next(cpu, p, dst_cpu);
-> -			util = schedutil_energy_util(cpu, util);
-> -			max_util = max(util, max_util);
-> -			sum_util += util;
-> +		for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
-> +			cfs_util = cpu_util_next(cpu, p, dst_cpu);
-> +
-> +			/*
-> +			 * Busy time computation: utilization clamping is not
-> +			 * required since the ratio (sum_util / cpu_capacity)
-> +			 * is already enough to scale the EM reported power
-> +			 * consumption at the (eventually clamped) cpu_capacity.
-> +			 */
-> +			sum_util += schedutil_cpu_util(cpu, cfs_util, cpu_cap,
-> +						       ENERGY_UTIL, NULL);
-> +
-> +			/*
-> +			 * Performance domain frequency: utilization clamping
-> +			 * must be considered since it affects the selection
-> +			 * of the performance domain frequency.
-> +			 * NOTE: in case RT tasks are running, by default the
-> +			 * FREQUENCY_UTIL's utilization can be max OPP.
-> +			 */
-> +			cpu_util = schedutil_cpu_util(cpu, cfs_util, cpu_cap,
-> +						      FREQUENCY_UTIL,
-> +						      cpu == dst_cpu ? p : NULL);
-> +			max_util = max(max_util, cpu_util);
->  		}
->  
->  		energy += em_pd_energy(pd->em_pd, max_util, sum_util);
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index de181b8a3a2a..b9acef080d99 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2335,6 +2335,7 @@ static inline unsigned long capacity_orig_of(int cpu)
->  #endif
->  
->  #ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
-> +
->  /**
->   * enum schedutil_type - CPU utilization type
-
-Since you're using this enum unconditionally in fair.c, you should to
-move it out of the #ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL block, I think.
-
->   * @FREQUENCY_UTIL:	Utilization used to select frequency
-> @@ -2350,15 +2351,9 @@ enum schedutil_type {
->  	ENERGY_UTIL,
->  };
->  
-> -unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
-> -				  unsigned long max, enum schedutil_type type);
-> -
-> -static inline unsigned long schedutil_energy_util(int cpu, unsigned long cfs)
-> -{
-> -	unsigned long max = arch_scale_cpu_capacity(NULL, cpu);
-> -
-> -	return schedutil_freq_util(cpu, cfs, max, ENERGY_UTIL);
-> -}
-> +unsigned int schedutil_cpu_util(int cpu, unsigned int util_cfs,
-> +				unsigned int max, enum schedutil_type type,
-> +				struct task_struct *p);
->  
->  static inline unsigned long cpu_bw_dl(struct rq *rq)
->  {
-> @@ -2387,10 +2382,7 @@ static inline unsigned long cpu_util_rt(struct rq *rq)
->  	return READ_ONCE(rq->avg_rt.util_avg);
->  }
->  #else /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
-> -static inline unsigned long schedutil_energy_util(int cpu, unsigned long cfs)
-> -{
-> -	return cfs;
-> -}
-> +#define schedutil_cpu_util(cpu, util_cfs, max, type, p) 0
->  #endif
->  
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
-> -- 
-> 2.20.1
+> Maybe that's something checkpatch could warn about.
 > 
 
-Thanks,
-Quentin
+This could be done mandatory.
+In-kernel sscanf always requires width for "%[...]".
