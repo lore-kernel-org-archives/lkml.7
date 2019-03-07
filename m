@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D62DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E44EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0AA2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A6E20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DKVfG3Er"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LA+ko5ym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbfCGR7C (ORCPT
+        id S1726691AbfCGR7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:59:02 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53566 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbfCGR64 (ORCPT
+        Thu, 7 Mar 2019 12:59:09 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52420 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726650AbfCGR7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:58:56 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27Hvfm8014924
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:58:55 -0800
+        Thu, 7 Mar 2019 12:59:06 -0500
+Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27Hu0h4014509
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:59:05 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=UQ9PGKZwpB6Sczcwb31AWVWXtELQC6S5mZ8nh/du5d0=;
- b=DKVfG3ErssjEuOHtJBR5kQi4tMA2hlrlMvORPhv21O1tV0NW7Xb9BKicv9YuT9K1gMgI
- QpciSYPz1g/Ke3ndddsBNixK1ZnHDcDl0dlQq6V5Wk147V0885U29mujrgQKi+6ZX83q
- S3nXJbmzoFZ+tViy+8Jo9O8y1ieRKzv1Epk= 
+ content-type; s=facebook; bh=b4AT6Y3T2Xxa1MN+HR4j3gheLGaZls2l3LPuOcWI0Ec=;
+ b=LA+ko5yme34It9Ank7M4PpV/HenbdYAkS2nMpCkCxb7FoH7+aH0iv23iYmG0GGJ5PmMP
+ degsyhP3GL5EsTAB3IvbKHF1wKDIE/MCno3nuh0Gm2+ewdo+ZwhyF06vIiVOaIXyytTQ
+ B2rjQ0KWtzxTdttu36660UEUpXBx6Sxo6nU= 
 Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r3607gmam-10
+        by mx0b-00082601.pphosted.com with ESMTP id 2r35sd0jvr-11
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:58:54 -0800
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:59:05 -0800
 Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 7 Mar 2019 09:58:41 -0800
+ Thu, 7 Mar 2019 09:58:32 -0800
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 6992462E1750; Thu,  7 Mar 2019 09:58:41 -0800 (PST)
+        id E32BD62E1750; Thu,  7 Mar 2019 09:58:30 -0800 (PST)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -51,9 +51,9 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
         <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v7 perf,bpf 14/15] perf: introduce side band thread
-Date:   Thu, 7 Mar 2019 09:58:09 -0800
-Message-ID: <20190307175810.249857-15-songliubraving@fb.com>
+Subject: [PATCH v7 perf,bpf 06/15] perf, bpf: save bpf_prog_info in a rbtree in perf_env
+Date:   Thu, 7 Mar 2019 09:58:01 -0800
+Message-ID: <20190307175810.249857-7-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190307175810.249857-1-songliubraving@fb.com>
 References: <20190307175810.249857-1-songliubraving@fb.com>
@@ -69,266 +69,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces side band thread that captures extended information
-for events like PERF_RECORD_BPF_EVENT.
+bpf_prog_info contains information necessary to annotate bpf programs.
+This patch saves bpf_prog_info for bpf programs loaded in the system.
 
-This new thread uses its own evlist that uses ring buffer with very low
-watermark for lower latency.
+Some big picture of the next few patches:
 
-To use side band thread, we need to:
+To fully annotate BPF programs with source code mapping, 4 different
+information are needed:
+    1) PERF_RECORD_KSYMBOL
+    2) PERF_RECORD_BPF_EVENT
+    3) bpf_prog_info
+    4) btf
 
-1. add side band event(s) by calling perf_evlist__add_sb_event();
-2. calls perf_evlist__start_sb_thread();
-3. at the end of perf run, perf_evlist__stop_sb_thread().
+Before this set, 1) and 2) in the list are already saved to perf.data
+file. For BPF programs that are already loaded before perf run, 1) and 2)
+are synthesized by perf_event__synthesize_bpf_events(). For short living
+BPF programs, 1) and 2) are generated by kernel.
 
-In the next patch, we use this thread to handle PERF_RECORD_BPF_EVENT.
+This set handles 3) and 4) from the list. Again, it is necessary to handle
+existing BPF program and short living program separately.
+
+This patch handles 3) for exising BPF programs while synthesizing 1) and
+2) in perf_event__synthesize_bpf_events(). These data are stored in
+perf_env. The next patch saves these data from perf_env to perf.data as
+headers.
+
+Similarly, the two patches after the next saves 4) of existing BPF
+programs to perf_env and perf.data.
+
+Another patch later will handle 3) and 4) for short living BPF programs
+by monitoring 1) and 2) in a dedicate thread.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- tools/perf/builtin-record.c |   5 ++
- tools/perf/builtin-top.c    |   5 ++
- tools/perf/util/evlist.c    | 113 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h    |  12 ++++
- tools/perf/util/evsel.h     |   6 ++
- 5 files changed, 141 insertions(+)
+ tools/perf/perf.c           |  1 +
+ tools/perf/util/bpf-event.c | 30 ++++++++++++-
+ tools/perf/util/bpf-event.h |  7 +++-
+ tools/perf/util/env.c       | 84 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/env.h       | 18 ++++++++
+ tools/perf/util/session.c   |  1 +
+ 6 files changed, 139 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2355e0a9eda0..435b94f1f3b3 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1106,6 +1106,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	struct perf_data *data = &rec->data;
- 	struct perf_session *session;
- 	bool disabled = false, draining = false;
-+	struct perf_evlist *sb_evlist = NULL;
- 	int fd;
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index a11cb006f968..72df4b6fa36f 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -298,6 +298,7 @@ static int run_builtin(struct cmd_struct *p, int argc, const char **argv)
+ 		use_pager = 1;
+ 	commit_pager_choice();
  
- 	atexit(record__sig_exit);
-@@ -1206,6 +1207,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_child;
- 	}
- 
-+	perf_evlist__start_sb_thread(sb_evlist, &rec->opts.target);
-+
- 	err = record__synthesize(rec, false);
- 	if (err < 0)
- 		goto out_child;
-@@ -1456,6 +1459,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 
- out_delete_session:
- 	perf_session__delete(session);
-+
-+	perf_evlist__stop_sb_thread(sb_evlist);
- 	return status;
- }
- 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index ccdf5689452f..ec69eb040933 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1524,6 +1524,7 @@ int cmd_top(int argc, const char **argv)
- 			"number of thread to run event synthesize"),
- 	OPT_END()
- 	};
-+	struct perf_evlist *sb_evlist = NULL;
- 	const char * const top_usage[] = {
- 		"perf top [<options>]",
- 		NULL
-@@ -1654,8 +1655,12 @@ int cmd_top(int argc, const char **argv)
- 
- 	top.record_opts.bpf_event = !top.no_bpf_event;
- 
-+	perf_evlist__start_sb_thread(sb_evlist, target);
-+
- 	status = __cmd_top(&top);
- 
-+	perf_evlist__stop_sb_thread(sb_evlist);
-+
- out_delete_evlist:
- 	perf_evlist__delete(top.evlist);
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 8c902276d4b4..a06a4f54b083 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -19,6 +19,7 @@
++	perf_env__init(&perf_env);
+ 	perf_env__set_cmdline(&perf_env, argc, argv);
+ 	status = p->fn(argc, argv);
+ 	perf_config__exit();
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index ff7ee149ec46..3ae60f74339b 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -10,6 +10,7 @@
  #include "debug.h"
- #include "units.h"
- #include "asm/bug.h"
-+#include "bpf-event.h"
- #include <signal.h>
- #include <unistd.h>
+ #include "symbol.h"
+ #include "machine.h"
++#include "env.h"
+ #include "session.h"
  
-@@ -1841,3 +1842,115 @@ struct perf_evsel *perf_evlist__reset_weak_group(struct perf_evlist *evsel_list,
+ #define ptr_to_u64(ptr)    ((__u64)(unsigned long)(ptr))
+@@ -54,17 +55,28 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 	struct bpf_event *bpf_event = &event->bpf_event;
+ 	struct bpf_prog_info_linear *info_linear;
+ 	struct perf_tool *tool = session->tool;
++	struct bpf_prog_info_node *info_node;
+ 	struct bpf_prog_info *info;
+ 	struct btf *btf = NULL;
+ 	bool has_btf = false;
++	struct perf_env *env;
+ 	u32 sub_prog_cnt, i;
+ 	int err = 0;
+ 	u64 arrays;
+ 
++	/*
++	 * for perf-record and perf-report use header.env;
++	 * otherwise, use global perf_env.
++	 */
++	env = session->data ? &session->header.env : &perf_env;
++
+ 	arrays = 1UL << BPF_PROG_INFO_JITED_KSYMS;
+ 	arrays |= 1UL << BPF_PROG_INFO_JITED_FUNC_LENS;
+ 	arrays |= 1UL << BPF_PROG_INFO_FUNC_INFO;
+ 	arrays |= 1UL << BPF_PROG_INFO_PROG_TAGS;
++	arrays |= 1UL << BPF_PROG_INFO_JITED_INSNS;
++	arrays |= 1UL << BPF_PROG_INFO_LINE_INFO;
++	arrays |= 1UL << BPF_PROG_INFO_JITED_LINE_INFO;
+ 
+ 	info_linear = bpf_program__get_prog_info_linear(fd, arrays);
+ 	if (IS_ERR_OR_NULL(info_linear)) {
+@@ -153,8 +165,8 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 						     machine, process);
  	}
- 	return leader;
- }
+ 
+-	/* Synthesize PERF_RECORD_BPF_EVENT */
+ 	if (opts->bpf_event) {
++		/* Synthesize PERF_RECORD_BPF_EVENT */
+ 		*bpf_event = (struct bpf_event){
+ 			.header = {
+ 				.type = PERF_RECORD_BPF_EVENT,
+@@ -167,6 +179,22 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 		memcpy(bpf_event->tag, info->tag, BPF_TAG_SIZE);
+ 		memset((void *)event + event->header.size, 0, machine->id_hdr_size);
+ 		event->header.size += machine->id_hdr_size;
 +
-+int perf_evlist__add_sb_event(struct perf_evlist **evlist,
-+			      struct perf_event_attr *attr,
-+			      perf_evsel__sb_cb_t cb,
-+			      void *data)
++		/* save bpf_prog_info to env */
++		info_node = malloc(sizeof(struct bpf_prog_info_node));
++		if (!info_node) {
++			err = -1;
++			goto out;
++		}
++
++		info_node->info_linear = info_linear;
++		perf_env__insert_bpf_prog_info(env, info_node);
++		info_linear = NULL;
++
++		/*
++		 * process after saving bpf_prog_info to env, so that
++		 * required information is ready for look up
++		 */
+ 		err = perf_tool__process_synth_event(tool, event,
+ 						     machine, process);
+ 	}
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 6698683612a7..fad932f7404f 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -3,14 +3,19 @@
+ #define __PERF_BPF_EVENT_H
+ 
+ #include <linux/compiler.h>
++#include <linux/rbtree.h>
+ #include "event.h"
+ 
+ struct machine;
+ union perf_event;
+ struct perf_sample;
+-struct perf_tool;
+ struct record_opts;
+ 
++struct bpf_prog_info_node {
++	struct bpf_prog_info_linear	*info_linear;
++	struct rb_node			rb_node;
++};
++
+ #ifdef HAVE_LIBBPF_SUPPORT
+ int machine__process_bpf_event(struct machine *machine, union perf_event *event,
+ 			       struct perf_sample *sample);
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 4c23779e271a..6e037a9660ca 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -3,15 +3,93 @@
+ #include "env.h"
+ #include "sane_ctype.h"
+ #include "util.h"
++#include "bpf-event.h"
+ #include <errno.h>
+ #include <sys/utsname.h>
++#include <bpf/libbpf.h>
+ 
+ struct perf_env perf_env;
+ 
++void perf_env__insert_bpf_prog_info(struct perf_env *env,
++				    struct bpf_prog_info_node *info_node)
 +{
-+	struct perf_evsel *evsel;
-+	bool new_evlist = (*evlist) == NULL;
++	__u32 prog_id = info_node->info_linear->info.id;
++	struct bpf_prog_info_node *node;
++	struct rb_node *parent = NULL;
++	struct rb_node **p;
 +
-+	if (*evlist == NULL)
-+		*evlist = perf_evlist__new();
-+	if (*evlist == NULL)
-+		return -1;
++	down_write(&env->bpf_progs.lock);
++	p = &env->bpf_progs.infos.rb_node;
 +
-+	if (!attr->sample_id_all) {
-+		pr_warning("enabling sample_id_all for all side band events\n");
-+		attr->sample_id_all = 1;
-+	}
-+
-+	evsel = perf_evsel__new_idx(attr, (*evlist)->nr_entries);
-+	if (!evsel)
-+		goto out_err;
-+
-+	evsel->side_band.cb = cb;
-+	evsel->side_band.data = data;
-+	perf_evlist__add(*evlist, evsel);
-+	return 0;
-+
-+out_err:
-+	if (new_evlist) {
-+		perf_evlist__delete(*evlist);
-+		*evlist = NULL;
-+	}
-+	return -1;
-+}
-+
-+static void *perf_evlist__poll_thread(void *arg)
-+{
-+	struct perf_evlist *evlist = arg;
-+	int i;
-+
-+	while (!(evlist->thread.done)) {
-+		perf_evlist__poll(evlist, 1000);
-+
-+		for (i = 0; i < evlist->nr_mmaps; i++) {
-+			struct perf_mmap *map = &evlist->mmap[i];
-+			union perf_event *event;
-+
-+			if (perf_mmap__read_init(map))
-+				continue;
-+			while ((event = perf_mmap__read_event(map)) != NULL) {
-+				struct perf_evsel *evsel = perf_evlist__event2evsel(evlist, event);
-+
-+				if (evsel && evsel->side_band.cb)
-+					evsel->side_band.cb(event, evsel->side_band.data);
-+				else
-+					pr_warning("cannot locate proper evsel for the side band event\n");
-+
-+				perf_mmap__consume(map);
-+			}
-+			perf_mmap__read_done(map);
++	while (*p != NULL) {
++		parent = *p;
++		node = rb_entry(parent, struct bpf_prog_info_node, rb_node);
++		if (prog_id < node->info_linear->info.id) {
++			p = &(*p)->rb_left;
++		} else if (prog_id > node->info_linear->info.id) {
++			p = &(*p)->rb_right;
++		} else {
++			pr_debug("duplicated bpf prog info %u\n", prog_id);
++			goto out;
 +		}
 +	}
-+	return NULL;
++
++	rb_link_node(&info_node->rb_node, parent, p);
++	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
++out:
++	up_write(&env->bpf_progs.lock);
 +}
 +
-+int perf_evlist__start_sb_thread(struct perf_evlist *evlist,
-+				 struct target *target)
++struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
++							__u32 prog_id)
 +{
-+	struct perf_evsel *counter;
++	struct bpf_prog_info_node *node = NULL;
++	struct rb_node *n;
 +
-+	if (!evlist)
-+		return 0;
++	down_read(&env->bpf_progs.lock);
++	n = env->bpf_progs.infos.rb_node;
 +
-+	if (perf_evlist__create_maps(evlist, target))
-+		goto out_delete_evlist;
-+
-+	evlist__for_each_entry(evlist, counter) {
-+		if (perf_evsel__open(counter, evlist->cpus,
-+				     evlist->threads) < 0)
-+			goto out_delete_evlist;
++	while (n) {
++		node = rb_entry(n, struct bpf_prog_info_node, rb_node);
++		if (prog_id < node->info_linear->info.id)
++			n = n->rb_left;
++		else if (prog_id > node->info_linear->info.id)
++			n = n->rb_right;
++		else
++			break;
 +	}
 +
-+	if (perf_evlist__mmap(evlist, UINT_MAX))
-+		goto out_delete_evlist;
-+
-+	evlist__for_each_entry(evlist, counter) {
-+		if (perf_evsel__enable(counter))
-+			goto out_delete_evlist;
-+	}
-+
-+	evlist->thread.done = 0;
-+	if (pthread_create(&evlist->thread.th, NULL, perf_evlist__poll_thread, evlist))
-+		goto out_delete_evlist;
-+
-+	return 0;
-+
-+out_delete_evlist:
-+	perf_evlist__delete(evlist);
-+	evlist = NULL;
-+	return -1;
++	up_read(&env->bpf_progs.lock);
++	return node;
 +}
 +
-+void perf_evlist__stop_sb_thread(struct perf_evlist *evlist)
++/* purge data in bpf_progs.infos tree */
++static void perf_env__purge_bpf(struct perf_env *env)
 +{
-+	if (!evlist)
-+		return;
-+	evlist->thread.done = 1;
-+	pthread_join(evlist->thread.th, NULL);
-+	perf_evlist__exit(evlist);
-+	evlist = NULL;
++	struct rb_root *root;
++	struct rb_node *next;
++
++	down_write(&env->bpf_progs.lock);
++
++	root = &env->bpf_progs.infos;
++	next = rb_first(root);
++
++	while (next) {
++		struct bpf_prog_info_node *node;
++
++		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
++		next = rb_next(&node->rb_node);
++		rb_erase(&node->rb_node, root);
++		free(node);
++	}
++	up_write(&env->bpf_progs.lock);
 +}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 868294491194..07395fbb4b3b 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -51,6 +51,10 @@ struct perf_evlist {
- 	struct perf_env	*env;
- 	u64		first_sample_time;
- 	u64		last_sample_time;
++
+ void perf_env__exit(struct perf_env *env)
+ {
+ 	int i;
+ 
++	perf_env__purge_bpf(env);
+ 	zfree(&env->hostname);
+ 	zfree(&env->os_release);
+ 	zfree(&env->version);
+@@ -38,6 +116,12 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->memory_nodes);
+ }
+ 
++void perf_env__init(struct perf_env *env)
++{
++	env->bpf_progs.infos = RB_ROOT;
++	init_rwsem(&env->bpf_progs.lock);
++}
++
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+ {
+ 	int i;
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d01b8355f4ca..e034e5b438e3 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -3,7 +3,9 @@
+ #define __PERF_ENV_H
+ 
+ #include <linux/types.h>
++#include <linux/rbtree.h>
+ #include "cpumap.h"
++#include "rwsem.h"
+ 
+ struct cpu_topology_map {
+ 	int	socket_id;
+@@ -64,8 +66,19 @@ struct perf_env {
+ 	struct memory_node	*memory_nodes;
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
++
++	/*
++	 * bpf_info_lock protects bpf rbtrees. This is needed because the
++	 * trees are accessed by different threads in perf-top
++	 */
 +	struct {
-+		pthread_t		th;
-+		volatile int		done;
-+	} thread;
++		struct rw_semaphore	lock;
++		struct rb_root		infos;
++	} bpf_progs;
  };
  
- struct perf_evsel_str_handler {
-@@ -84,6 +88,14 @@ int __perf_evlist__add_default_attrs(struct perf_evlist *evlist,
- 
- int perf_evlist__add_dummy(struct perf_evlist *evlist);
- 
-+int perf_evlist__add_sb_event(struct perf_evlist **evlist,
-+			      struct perf_event_attr *attr,
-+			      perf_evsel__sb_cb_t cb,
-+			      void *data);
-+int perf_evlist__start_sb_thread(struct perf_evlist *evlist,
-+				 struct target *target);
-+void perf_evlist__stop_sb_thread(struct perf_evlist *evlist);
++struct bpf_prog_info_node;
 +
- int perf_evlist__add_newtp(struct perf_evlist *evlist,
- 			   const char *sys, const char *name, void *handler);
+ extern struct perf_env perf_env;
  
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 29c5eb68c44b..94232ba9acce 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -73,6 +73,8 @@ struct perf_evsel_config_term {
+ void perf_env__exit(struct perf_env *env);
+@@ -80,4 +93,9 @@ const char *perf_env__arch(struct perf_env *env);
+ const char *perf_env__raw_arch(struct perf_env *env);
+ int perf_env__nr_cpus_avail(struct perf_env *env);
  
- struct perf_stat_evsel;
++void perf_env__init(struct perf_env *env);
++void perf_env__insert_bpf_prog_info(struct perf_env *env,
++				    struct bpf_prog_info_node *info_node);
++struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
++							__u32 prog_id);
+ #endif /* __PERF_ENV_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 026bf04bba74..3c858f1b254e 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -129,6 +129,7 @@ struct perf_session *perf_session__new(struct perf_data *data,
+ 	ordered_events__init(&session->ordered_events,
+ 			     ordered_events__deliver_event, NULL);
  
-+typedef int (perf_evsel__sb_cb_t)(union perf_event *event, void *data);
-+
- /** struct perf_evsel - event selector
-  *
-  * @evlist - evlist this evsel is in, if it is in one.
-@@ -151,6 +153,10 @@ struct perf_evsel {
- 	bool			collect_stat;
- 	bool			weak_group;
- 	const char		*pmu_name;
-+	struct {
-+		perf_evsel__sb_cb_t	*cb;
-+		void			*data;
-+	} side_band;
- };
- 
- union u64_swap {
++	perf_env__init(&session->header.env);
+ 	if (data) {
+ 		if (perf_data__open(data))
+ 			goto out_delete;
 -- 
 2.17.1
 
