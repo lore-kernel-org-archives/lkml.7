@@ -2,74 +2,87 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2677C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912B7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7217E20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0435A20835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfCGKFX (ORCPT
+        id S1726337AbfCGKGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:05:23 -0500
-Received: from www62.your-server.de ([213.133.104.62]:44310 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfCGKFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:05:22 -0500
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h1ptt-0000as-2O; Thu, 07 Mar 2019 11:05:17 +0100
-Received: from [178.197.249.29] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h1pts-000XQl-PC; Thu, 07 Mar 2019 11:05:16 +0100
-Subject: Re: [PATCH] bpf: fix sysctl.c warning
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Thu, 7 Mar 2019 05:06:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42162 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726127AbfCGKGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 05:06:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F271ACC6;
+        Thu,  7 Mar 2019 10:06:07 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 4AC60E1175; Thu,  7 Mar 2019 11:06:05 +0100 (CET)
+Date:   Thu, 7 Mar 2019 11:06:05 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-References: <20190304203443.1992942-1-arnd@arndb.de>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <1d79d4ec-99c7-1764-af8f-ea436a657eb0@iogearbox.net>
-Date:   Thu, 7 Mar 2019 11:05:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Wenwen Wang <wang6495@umn.edu>,
+        Ilya Lesokhin <ilyal@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Edward Cree <ecree@solarflare.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ethtool: reduce stack usage with clang
+Message-ID: <20190307100605.GA20309@unicorn.suse.cz>
+References: <20190307093408.3425010-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190304203443.1992942-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.2/25380/Wed Mar  6 10:23:41 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307093408.3425010-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 09:34 PM, Arnd Bergmann wrote:
-> When CONFIG_BPF_SYSCALL or CONFIG_SYSCTL is disabled, we get
-> a warning about an unused function:
+On Thu, Mar 07, 2019 at 10:33:35AM +0100, Arnd Bergmann wrote:
+> clang inlines the dev_ethtool() more aggressively than gcc does, leading
+> to a larger amount of used stack space:
 > 
-> kernel/sysctl.c:3331:12: error: 'proc_dointvec_minmax_bpf_stats' defined but not used [-Werror=unused-function]
->  static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+> net/core/ethtool.c:2536:24: error: stack frame size of 1216 bytes in function 'dev_ethtool' [-Werror,-Wframe-larger-than=]
 > 
-> The CONFIG_BPF_SYSCALL check was already handled, but the SYSCTL check
-> is needed on top.
+> Marking the sub-functions that require the most stack space as
+> noinline_for_stack gives us reasonable behavior on all compilers.
 > 
-> Fixes: 492ecee892c2 ("bpf: enable program stats")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  net/core/ethtool.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> index d4918ffddda8..fcbed78172a0 100644
+> --- a/net/core/ethtool.c
+> +++ b/net/core/ethtool.c
+...
+> @@ -2533,7 +2535,7 @@ static int ethtool_set_fecparam(struct net_device *dev, void __user *useraddr)
+>  
+>  /* The main entry point in this file.  Called from net/core/dev_ioctl.c */
+>  
+> -int dev_ethtool(struct net *net, struct ifreq *ifr)
+> +int noinline_for_stack dev_ethtool(struct net *net, struct ifreq *ifr)
+>  {
+>  	struct net_device *dev = __dev_get_by_name(net, ifr->ifr_name);
+>  	void __user *useraddr = ifr->ifr_data;
 
-Applied, thanks!
+Is this part really needed? AFAICS dev_ethtool() is only called from
+dev_ioctl() which is in a different compilation unit so that
+dev_ethtool() won't be inlined anyway.
+
+Michal Kubecek
