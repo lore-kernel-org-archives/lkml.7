@@ -2,93 +2,216 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEA5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BE0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930B320840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QkR3urYw"
+	by mail.kernel.org (Postfix) with ESMTP id A5F2320652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfCGF1L (ORCPT
+        id S1726463AbfCGFgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 00:27:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51662 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfCGF1L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 00:27:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f/8FXFE1OV6hPwHcCYhV8onI7uU0i7MJyIjwHVPXjCw=; b=QkR3urYwdkuomM3XmzPxm+ww+
-        6bfA3SFN7p1PCOmDQng82vBiehcGnO6nEcYjtFunlo6NCyg6cyiNjFMfjqtwcmw0KnilnhBfgG8XD
-        8ekb+1YVNMNT1Cy/NDNkVxe6kvqErdXWKkHuMzF0YJboKGuDL7ixHbE6Fj3mXT7AqzXY4iFczunVk
-        efQnDWI5T3Xs3LRMw/h9/wrNF8ypiPfDSbQuY3+8nWYGdXmr0DbH+taKivCHImsBB12AqdI0kszEU
-        L76Knpq8/u1Nks9/DivWRHcwY3uXMfmjCkpMAfMq0SZsIz54L5cDYcWzaLaNCciiq2QAnMebhAH/s
-        YBpNh9V3g==;
-Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1lYc-00081T-NZ; Thu, 07 Mar 2019 05:27:02 +0000
-Date:   Wed, 6 Mar 2019 21:27:01 -0800
-From:   Darren Hart <dvhart@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Wim Van Sebroeck <wim@iguana.be>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Shych <michaelsh@mellanox.com>,
-        Vadim Pasternak <vadimp@mellanox.com>
-Subject: Re: linux-next: manual merge of the drivers-x86 tree with the
- watchdog tree
-Message-ID: <20190307052701.GC44339@wrath>
-References: <20190304143735.308edd1e@canb.auug.org.au>
+        Thu, 7 Mar 2019 00:36:19 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42096 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726059AbfCGFgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 00:36:17 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 50CF3D505EBA99D43C05;
+        Thu,  7 Mar 2019 13:36:15 +0800 (CST)
+Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.206)
+ with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 7 Mar 2019 13:36:07
+ +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     Chao Yu <yuchao0@huawei.com>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Gao Xiang <gaoxiang25@huawei.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH for-4.19] staging: erofs: fix mis-acted TAIL merging behavior
+Date:   Thu, 7 Mar 2019 13:34:04 +0800
+Message-ID: <20190307053404.29108-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.14.5
+In-Reply-To: <20190301212203.5FE0C2084F@mail.kernel.org>
+References: <20190301212203.5FE0C2084F@mail.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304143735.308edd1e@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 02:37:35PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the drivers-x86 tree got a conflict in:
-> 
->   include/linux/platform_data/mlxreg.h
-> 
-> between commit:
-> 
->   9f03161a1bd8 ("platform_data/mlxreg: additions for Mellanox watchdog driver.")
-> 
-> from the watchdog tree and commit:
-> 
->   9b28aa1d0eae ("platform_data/mlxreg: Document fixes for core platform data")
-> 
-> from the drivers-x86 tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+commit a112152f6f3a2a88caa6f414d540bd49e406af60 upstream.
 
-Thanks Stephen.
+EROFS has an optimized path called TAIL merging, which is designed
+to merge multiple reads and the corresponding decompressions into
+one if these requests read continuous pages almost at the same time.
 
-I suspect this will be a rare occurence. That said - Vadim - could you please
-ensure that all the mellanox driver changes Cc the platform driver x86 mailing
-list by adding it to MAINTAINERS?
+In general, it behaves as follows:
+ ________________________________________________________________
+  ... |  TAIL  .  HEAD  |  PAGE  |  PAGE  |  TAIL    . HEAD | ...
+ _____|_combined page A_|________|________|_combined page B_|____
+        1  ]  ->  [  2                          ]  ->  [ 3
+If the above three reads are requested in the order 1-2-3, it will
+generate a large work chain rather than 3 individual work chains
+to reduce scheduling overhead and boost up sequential read.
 
+However, if Read 2 is processed slightly earlier than Read 1,
+currently it still generates 2 individual work chains (chain 1, 2)
+but it does in-place decompression for combined page A, moreover,
+if chain 2 decompresses ahead of chain 1, it will be a race and
+lead to corrupted decompressed page. This patch fixes it.
+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+---
+ drivers/staging/erofs/unzip_vle.c | 69 +++++++++++++++++++++++++--------------
+ 1 file changed, 44 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+index 1279241449f4..24bd1d6deb66 100644
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -57,15 +57,30 @@ enum z_erofs_vle_work_role {
+ 	Z_EROFS_VLE_WORK_SECONDARY,
+ 	Z_EROFS_VLE_WORK_PRIMARY,
+ 	/*
+-	 * The current work has at least been linked with the following
+-	 * processed chained works, which means if the processing page
+-	 * is the tail partial page of the work, the current work can
+-	 * safely use the whole page, as illustrated below:
+-	 * +--------------+-------------------------------------------+
+-	 * |  tail page   |      head page (of the previous work)     |
+-	 * +--------------+-------------------------------------------+
+-	 *   /\  which belongs to the current work
+-	 * [  (*) this page can be used for the current work itself.  ]
++	 * The current work was the tail of an exist chain, and the previous
++	 * processed chained works are all decided to be hooked up to it.
++	 * A new chain should be created for the remaining unprocessed works,
++	 * therefore different from Z_EROFS_VLE_WORK_PRIMARY_FOLLOWED,
++	 * the next work cannot reuse the whole page in the following scenario:
++	 *  ________________________________________________________________
++	 * |      tail (partial) page     |       head (partial) page       |
++	 * |  (belongs to the next work)  |  (belongs to the current work)  |
++	 * |_______PRIMARY_FOLLOWED_______|________PRIMARY_HOOKED___________|
++	 */
++	Z_EROFS_VLE_WORK_PRIMARY_HOOKED,
++	/*
++	 * The current work has been linked with the processed chained works,
++	 * and could be also linked with the potential remaining works, which
++	 * means if the processing page is the tail partial page of the work,
++	 * the current work can safely use the whole page (since the next work
++	 * is under control) for in-place decompression, as illustrated below:
++	 *  ________________________________________________________________
++	 * |  tail (partial) page  |          head (partial) page           |
++	 * | (of the current work) |         (of the previous work)         |
++	 * |  PRIMARY_FOLLOWED or  |                                        |
++	 * |_____PRIMARY_HOOKED____|____________PRIMARY_FOLLOWED____________|
++	 *
++	 * [  (*) the above page can be used for the current work itself.  ]
+ 	 */
+ 	Z_EROFS_VLE_WORK_PRIMARY_FOLLOWED,
+ 	Z_EROFS_VLE_WORK_MAX
+@@ -234,10 +249,10 @@ static int z_erofs_vle_work_add_page(
+ 	return ret ? 0 : -EAGAIN;
+ }
+ 
+-static inline bool try_to_claim_workgroup(
+-	struct z_erofs_vle_workgroup *grp,
+-	z_erofs_vle_owned_workgrp_t *owned_head,
+-	bool *hosted)
++static enum z_erofs_vle_work_role
++try_to_claim_workgroup(struct z_erofs_vle_workgroup *grp,
++		       z_erofs_vle_owned_workgrp_t *owned_head,
++		       bool *hosted)
+ {
+ 	DBG_BUGON(*hosted == true);
+ 
+@@ -251,6 +266,9 @@ static inline bool try_to_claim_workgroup(
+ 
+ 		*owned_head = grp;
+ 		*hosted = true;
++		/* lucky, I am the followee :) */
++		return Z_EROFS_VLE_WORK_PRIMARY_FOLLOWED;
++
+ 	} else if (grp->next == Z_EROFS_VLE_WORKGRP_TAIL) {
+ 		/*
+ 		 * type 2, link to the end of a existing open chain,
+@@ -260,12 +278,11 @@ static inline bool try_to_claim_workgroup(
+ 		if (Z_EROFS_VLE_WORKGRP_TAIL != cmpxchg(&grp->next,
+ 			Z_EROFS_VLE_WORKGRP_TAIL, *owned_head))
+ 			goto retry;
+-
+ 		*owned_head = Z_EROFS_VLE_WORKGRP_TAIL;
+-	} else
+-		return false;	/* :( better luck next time */
++		return Z_EROFS_VLE_WORK_PRIMARY_HOOKED;
++	}
+ 
+-	return true;	/* lucky, I am the followee :) */
++	return Z_EROFS_VLE_WORK_PRIMARY; /* :( better luck next time */
+ }
+ 
+ static struct z_erofs_vle_work *
+@@ -337,12 +354,8 @@ z_erofs_vle_work_lookup(struct super_block *sb,
+ 	*hosted = false;
+ 	if (!primary)
+ 		*role = Z_EROFS_VLE_WORK_SECONDARY;
+-	/* claim the workgroup if possible */
+-	else if (try_to_claim_workgroup(grp, owned_head, hosted))
+-		*role = Z_EROFS_VLE_WORK_PRIMARY_FOLLOWED;
+-	else
+-		*role = Z_EROFS_VLE_WORK_PRIMARY;
+-
++	else	/* claim the workgroup if possible */
++		*role = try_to_claim_workgroup(grp, owned_head, hosted);
+ 	return work;
+ }
+ 
+@@ -419,6 +432,9 @@ static inline void __update_workgrp_llen(struct z_erofs_vle_workgroup *grp,
+ 	}
+ }
+ 
++#define builder_is_hooked(builder) \
++	((builder)->role >= Z_EROFS_VLE_WORK_PRIMARY_HOOKED)
++
+ #define builder_is_followed(builder) \
+ 	((builder)->role >= Z_EROFS_VLE_WORK_PRIMARY_FOLLOWED)
+ 
+@@ -583,7 +599,7 @@ static int z_erofs_do_read_page(struct z_erofs_vle_frontend *fe,
+ 	struct z_erofs_vle_work_builder *const builder = &fe->builder;
+ 	const loff_t offset = page_offset(page);
+ 
+-	bool tight = builder_is_followed(builder);
++	bool tight = builder_is_hooked(builder);
+ 	struct z_erofs_vle_work *work = builder->work;
+ 
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+@@ -646,7 +662,7 @@ static int z_erofs_do_read_page(struct z_erofs_vle_frontend *fe,
+ 		builder->role = Z_EROFS_VLE_WORK_PRIMARY;
+ #endif
+ 
+-	tight &= builder_is_followed(builder);
++	tight &= builder_is_hooked(builder);
+ 	work = builder->work;
+ hitted:
+ 	cur = end - min_t(unsigned, offset + end - map->m_la, end);
+@@ -661,6 +677,9 @@ static int z_erofs_do_read_page(struct z_erofs_vle_frontend *fe,
+ 			(tight ? Z_EROFS_PAGE_TYPE_EXCLUSIVE :
+ 				Z_EROFS_VLE_PAGE_TYPE_TAIL_SHARED));
+ 
++	if (cur)
++		tight &= builder_is_followed(builder);
++
+ retry:
+ 	err = z_erofs_vle_work_add_page(builder, page, page_type);
+ 	/* should allocate an additional staging page for pagevec */
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.14.5
+
