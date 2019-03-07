@@ -6,74 +6,162 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9996C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB29C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7355720663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7217720663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfCGCWi (ORCPT
+        id S1727435AbfCGCXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:22:38 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:47599 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfCGCWh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:22:37 -0500
-Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MZTyo-1hYIHt3cf8-00WZmN; Thu, 07 Mar 2019 03:22:35 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH v2] drivers: uio: Kconfig: pedantic formatting
-Date:   Thu,  7 Mar 2019 03:22:34 +0100
-Message-Id: <1551925354-21162-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1551896023-14007-1-git-send-email-info@metux.net>
-References: <1551896023-14007-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:obEEiQ0kF/O2iiHDuLuLVrvkBa9tn3FfjNPLMCa+308iBMLh0Ja
- HLMhzM+J2pxxio5kiJYeov/Jep35tliwKiLGmaw9m0wuZTIJCTIK2xPjGuD8lYS1Ej2LqR7
- JfIbvhxLqqmcps4fNkTMSmLw//qKvJqOk0OZRmLcRwDqkdXIO6a75RQa8kgd5YD6uQSgFUq
- xzT9lKmEn77iK0dn6aUgg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:47K0Lxf1+G4=:DoHqQODNxiFvkXLpMOig58
- InvWLtuOgkAQHccmm/EtYPnSsrICVgOYnOrhXhd5uKhcf56ddC6CFeUEJfLccwfyjBsy7MrGx
- Sepbdkbgg1Ge7lTyuwh9icRZZvKLuAWjPVPukzszXxdnw39d9yT+0JZVKhWFe6VyPzAi9OSc1
- lp1Nf/T0ztluuZNZQAngyjxRwZIFMzMHXXZ9O6PDRpEQxCdP5T64Ch5eZqHokvsGgq7F+Evmj
- LO8Zt2ngNQ5cHStRIBYYq613J7h4F5jmc5ELRYEzJ9U2rOAS4coRszpILlQyMToiZ99PCvpkB
- AuXqw7kae4Vw+lYCngDWqISRWnkgIA8bWbV+n1ul5yq64cyhNVrHXqV2gFgw9GlORvxjIo0/l
- ODtOvW/tvJkeUE0VLoyzyO16NZ6F2dFvHOotWhmB2i0oQzTw2cqTQ1J5kHShpp7wXxD4WWsx7
- NAvn6nJRgXhE3jmQkd09HoYOuSOsqogt2VAxnsR315/A40k7UFIq2A72B+In8mLtWlCjN368V
- z/WhacA7Xujb+Vg/SiRfX1De1TcRWcsZo+Rja9POdyEMgCMP7TpP0ghp23AlC37DTKxj+PcRf
- BE+FRrQEga4qKzpNpWW8kL11sSiq4ievOTmg5Zn4GdwSQgiphj/sE2mg/Pa9huSOn3oKUIUol
- 0hm29md60E7WqVrg+0ZMq20j9Cn+5lRqtMztU9nsGW6rZBw2gfLHFFmLeFGHN/qcIcSGGgt1l
- 4XDmQtLRP3+68WQLn/2KAaMBY/508QT0Ylp3EA==
+        Wed, 6 Mar 2019 21:23:08 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37034 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726524AbfCGCXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 21:23:08 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A22FEFBE1EA096649BFA;
+        Thu,  7 Mar 2019 10:23:05 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
+ 10:22:25 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <joe@perches.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] appletalk: Correctly check return value of register_snap_client
+Date:   Thu, 7 Mar 2019 10:22:16 +0800
+Message-ID: <20190307022216.22464-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Formatting of Kconfig doesn't look so pretty, so just take
-a damp cloth and clean it up.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+register_snap_client may return NULL, all the callers
+check it, but only print a warning. This will result in
+NULL pointer dereference in unregister_snap_client and other
+places.
+
+It has always been used like this since v2.6
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/uio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: fix aarp_dl leak
+---
+ include/linux/atalk.h |  2 +-
+ net/appletalk/aarp.c  | 13 ++++++++++---
+ net/appletalk/ddp.c   | 20 ++++++++++++--------
+ 3 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 7e8dc78..4286b73 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -17,7 +17,7 @@ config UIO_CIF
- 	depends on PCI
- 	help
- 	  Driver for Hilscher CIF DeviceNet and Profibus cards.  This
--  	  driver requires a userspace component called cif that handles
-+	  driver requires a userspace component called cif that handles
- 	  all of the heavy lifting and can be found at:
- 	        <http://www.osadl.org/projects/downloads/UIO/user/>
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index 5a90f28..0e5265a 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_hdr(struct sk_buff *skb)
+ #define AARP_RESOLVE_TIME	(10 * HZ)
  
+ extern struct datalink_proto *ddp_dl, *aarp_dl;
+-extern void aarp_proto_init(void);
++extern int aarp_proto_init(void);
+ 
+ /* Inter module exports */
+ 
+diff --git a/net/appletalk/aarp.c b/net/appletalk/aarp.c
+index 49a16ce..d11372d 100644
+--- a/net/appletalk/aarp.c
++++ b/net/appletalk/aarp.c
+@@ -879,15 +879,22 @@ static struct notifier_block aarp_notifier = {
+ 
+ static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
+ 
+-void __init aarp_proto_init(void)
++int __init aarp_proto_init(void)
+ {
++	int rc;
++
+ 	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
+-	if (!aarp_dl)
++	if (!aarp_dl) {
+ 		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
++		return -ENOMEM;
++	}
+ 	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
+ 	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
+ 	add_timer(&aarp_timer);
+-	register_netdevice_notifier(&aarp_notifier);
++	rc = register_netdevice_notifier(&aarp_notifier);
++	if (rc)
++		unregister_snap_client(aarp_dl);
++	return rc;
+ }
+ 
+ /* Remove the AARP entries associated with a device. */
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 795fbc6..709d254 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1904,9 +1904,6 @@ static unsigned char ddp_snap_id[] = { 0x08, 0x00, 0x07, 0x80, 0x9B };
+ EXPORT_SYMBOL(atrtr_get_dev);
+ EXPORT_SYMBOL(atalk_find_dev_addr);
+ 
+-static const char atalk_err_snap[] __initconst =
+-	KERN_CRIT "Unable to register DDP with SNAP.\n";
+-
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+@@ -1921,17 +1918,22 @@ static int __init atalk_init(void)
+ 		goto out_proto;
+ 
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+-	if (!ddp_dl)
+-		printk(atalk_err_snap);
++	if (!ddp_dl) {
++		pr_crit("Unable to register DDP with SNAP.\n");
++		goto out_sock;
++	}
+ 
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+ 	rc = register_netdevice_notifier(&ddp_notifier);
+ 	if (rc)
+-		goto out_sock;
++		goto out_snap;
++
++	rc = aarp_proto_init();
++	if (rc)
++		goto out_dev;
+ 
+-	aarp_proto_init();
+ 	rc = atalk_proc_init();
+ 	if (rc)
+ 		goto out_aarp;
+@@ -1945,11 +1947,13 @@ static int __init atalk_init(void)
+ 	atalk_proc_exit();
+ out_aarp:
+ 	aarp_cleanup_module();
++out_dev:
+ 	unregister_netdevice_notifier(&ddp_notifier);
+-out_sock:
++out_snap:
+ 	dev_remove_pack(&ppptalk_packet_type);
+ 	dev_remove_pack(&ltalk_packet_type);
+ 	unregister_snap_client(ddp_dl);
++out_sock:
+ 	sock_unregister(PF_APPLETALK);
+ out_proto:
+ 	proto_unregister(&ddp_proto);
 -- 
-1.9.1
+2.7.0
+
 
