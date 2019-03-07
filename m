@@ -3,67 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20BEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A25C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A3F20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E8C20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfCGP7i (ORCPT
+        id S1726727AbfCGP7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 7 Mar 2019 10:59:41 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36485 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfCGP7i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Mar 2019 10:59:38 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:39252 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbfCGP7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:59:37 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BFE6236807;
-        Thu,  7 Mar 2019 15:59:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4859F5C1A1;
-        Thu,  7 Mar 2019 15:59:33 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190306235913.6631-3-matthewgarrett@google.com>
-References: <20190306235913.6631-3-matthewgarrett@google.com> <20190306235913.6631-1-matthewgarrett@google.com>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     dhowells@redhat.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/27] Add a SysRq option to lift kernel lockdown
+Received: by mail-qt1-f194.google.com with SMTP id p25so17649051qtb.3;
+        Thu, 07 Mar 2019 07:59:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RUg+lYsZP7w962oQo6Vktz83Dw9cdj8a3+anhAM+t+4=;
+        b=JavWXzMi0UzMCn1wkrHU8k22jgHZUpiCgstlcPJo2qzdpdLg7y7PmMOyX1yBzOM3pT
+         +ViMhaXLE8EBRho3yUlx89ZZLwLZMyXEB/D/GvjBWFeRSJO1UOrGVa3uZrB4hgUJiVvS
+         2kMILw2kYZtirbzzWcyx1BFLWHHVNJRmhhsDcSHcK0cB0PAc90P3LTdkds3vrkUVZog3
+         VayBdpPVceGEnw1lcpTF7dPCeNAGh0TNHoMjuU8neY2O/msNvS9E+8tcp+d5lRCPRZ1r
+         +eQzB5MDGYGQnI02OeDnnNK3QuiN5Oldr1hS2yXf5dkwvF1EZ28oIehUAWZcotoPBssk
+         7Xkw==
+X-Gm-Message-State: APjAAAU7C6ENK1i100gaBoYqy7hkKCuhIYj0hH0qCtdzl3tv+p2uG8Ab
+        Cb0q58g0UHMrqUG8ne5S04wQVsD5vYXE/CWtjkE=
+X-Google-Smtp-Source: APXvYqyVI2l2JLvyyldnF+vpyuccbq95rFjxwk+AtVNgkAJZb9q+pci9U7y/8lEvPEZiqmncrLEDoFs7Zdc1+05t/Iw=
+X-Received: by 2002:ac8:2bcf:: with SMTP id n15mr10364282qtn.96.1551974377813;
+ Thu, 07 Mar 2019 07:59:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <15832.1551974371.1@warthog.procyon.org.uk>
-Date:   Thu, 07 Mar 2019 15:59:31 +0000
-Message-ID: <15833.1551974371@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 07 Mar 2019 15:59:37 +0000 (UTC)
+References: <20190307093408.3425010-1-arnd@arndb.de> <20190307100605.GA20309@unicorn.suse.cz>
+In-Reply-To: <20190307100605.GA20309@unicorn.suse.cz>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 7 Mar 2019 16:59:19 +0100
+Message-ID: <CAK8P3a3YLD2K-bGXCiN4xQNQhGCLzVE4C9WonFGTo7LN30v4pg@mail.gmail.com>
+Subject: Re: [PATCH] ethtool: reduce stack usage with clang
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Wenwen Wang <wang6495@umn.edu>,
+        Ilya Lesokhin <ilyal@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Edward Cree <ecree@solarflare.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Garrett <matthewgarrett@google.com> wrote:
+On Thu, Mar 7, 2019 at 11:06 AM Michal Kubecek <mkubecek@suse.cz> wrote:
+>
+> On Thu, Mar 07, 2019 at 10:33:35AM +0100, Arnd Bergmann wrote:
 
-> +		/* Ban synthetic events from some sysrq functionality */
-> +		if ((from == SYSRQ_FROM_PROC || from == SYSRQ_FROM_SYNTHETIC) &&
-> +		    op_p->enable_mask & SYSRQ_DISABLE_USERSPACE)
-> +			printk("This sysrq operation is disabled from userspace.\n");
->  		/*
->  		 * Should we check for enabled operations (/proc/sysrq-trigger
->  		 * should not) and is the invoked operation enabled?
->  		 */
-> -		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
-> +		if (from == SYSRQ_FROM_KERNEL || sysrq_on_mask(op_p->enable_mask)) {
+> > @@ -2533,7 +2535,7 @@ static int ethtool_set_fecparam(struct net_device *dev, void __user *useraddr)
+> >
+> >  /* The main entry point in this file.  Called from net/core/dev_ioctl.c */
+> >
+> > -int dev_ethtool(struct net *net, struct ifreq *ifr)
+> > +int noinline_for_stack dev_ethtool(struct net *net, struct ifreq *ifr)
+> >  {
+> >       struct net_device *dev = __dev_get_by_name(net, ifr->ifr_name);
+> >       void __user *useraddr = ifr->ifr_data;
+>
+> Is this part really needed? AFAICS dev_ethtool() is only called from
+> dev_ioctl() which is in a different compilation unit so that
+> dev_ethtool() won't be inlined anyway.
 
-There's some missing logic here.  Probably an else is missing, but it seems
-more than that.
+No, you are right. I had accidentally left this in place from an earlier
+version. Sending a v2 now.
 
-David
+      Arnd
