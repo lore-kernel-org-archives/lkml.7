@@ -2,223 +2,91 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72AEC10F10
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DB3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A3820675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBCC20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:09:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lbZLnWKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfCGGE2 (ORCPT
+        id S1726471AbfCGGJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 01:04:28 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5215 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfCGGE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 01:04:28 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4ECBF644D555289D0B7B;
-        Thu,  7 Mar 2019 14:04:24 +0800 (CST)
-Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.209)
- with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 7 Mar 2019 14:04:17
- +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Gao Xiang <gaoxiang25@huawei.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH for-4.20] staging: erofs: compressed_pages should not be accessed again after freed
-Date:   Thu, 7 Mar 2019 14:02:27 +0800
-Message-ID: <20190307060227.35571-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20190301212202.3297720848@mail.kernel.org>
-References: <20190301212202.3297720848@mail.kernel.org>
+        Thu, 7 Mar 2019 01:09:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52132 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfCGGJc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 01:09:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EMfgQcm4c116FArKBhqY3syPSMSxIVCJr5YlP6qf2DQ=; b=lbZLnWKOli0dIk7Lzo6o4gUlw
+        mqCyi1vKXqKum/683Y7gfJzMVFpB0MzA10dI44vzL0TG31wlhLtKaQZ+uBOE3GHrz7Ge1Va36Q2rZ
+        lCaQcv2ubs9bUvZ5y4JBQCXl4nN67WYxLPa9OctsHD7jQRl6eEoWkZSCXqzcoGi5Jo2tAq4/Mtyrv
+        Jwyy7020T95STD+fmssE4EjrGcPUaDSNMw3+uEknDAJZyA5Skg/uGAQH3+vfm6E6XECARQAYDV7Ie
+        8/vRcxAIsdeSKLkDyLjEL0xsOM12OGTa1ffmU03AWWdAYhqDInTlilnAvAqW2RrLZDg4nGsbidRtI
+        PNvW1Bn9A==;
+Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1mDg-0003ag-Gu; Thu, 07 Mar 2019 06:09:28 +0000
+Date:   Wed, 6 Mar 2019 22:09:26 -0800
+From:   Darren Hart <dvhart@infradead.org>
+To:     Mattias Jacobsson <2pi@mok.nu>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] modpost: file2alias: define size of alias
+Message-ID: <20190307060926.GE44339@wrath>
+References: <20190207123022.7961-1-2pi@mok.nu>
+ <CAK7LNAQZ7PDZ4+uZu-FT4V8yw9oUGz6e++9xSshWJvALj3gN0Q@mail.gmail.com>
+ <20190219200837.d34cxg2d7gqxlvhs@mok.nu>
+ <CAK7LNASU=Jf7aYnnn_7DWgxLz4sf4=x1HZaoGQW2rSXVbFO9Bg@mail.gmail.com>
+ <20190223195749.7yswuedfv4qbiyik@mok.nu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190223195749.7yswuedfv4qbiyik@mok.nu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit af692e117cb8cd9d3d844d413095775abc1217f9 upstream.
+On Sat, Feb 23, 2019 at 08:57:50PM +0100, Mattias Jacobsson wrote:
+> On 2019-02-20, Masahiro Yamada wrote:
 
-This patch resolves the following page use-after-free issue,
-z_erofs_vle_unzip:
-    ...
-    for (i = 0; i < nr_pages; ++i) {
-        ...
-        z_erofs_onlinepage_endio(page);  (1)
-    }
+> > > > If you want all the patches to go through x86 platform-driver tree,
+> > > > I am fine with that too.
+> > >
+> > > I don't mind either way, however I've asked the x86 platform-driver
+> > > maintainers if they have a preference in this matter. You should have
+> > > received that mail otherwise see [1].
+> > >
+> > > [1]: https://lkml.kernel.org/r/082d3d38b7dde6050b6b3e518ada439eade65b2c.1550603967.git.2pi@mok.nu
+> > 
+> > 
+> > I saw it.  The 2/8 uses ALIAS_SIZE.
+> > 
+> > So, I think it will be better to include this one in your series.
+> > If necessary, please feel free to add
+> > 
+> > Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > 
+> 
+> Okey, will do. Thanks!
 
-    for (i = 0; i < clusterpages; ++i) {
-        page = compressed_pages[i];
 
-        if (page->mapping == mngda)      (2)
-            continue;
-        /* recycle all individual staging pages */
-        (void)z_erofs_gather_if_stagingpage(page_pool, page); (3)
-        WRITE_ONCE(compressed_pages[i], NULL);
-    }
-    ...
+Agree, I'll pull it in.
 
-After (1) is executed, page is freed and could be then reused, if
-compressed_pages is scanned after that, it could fall info (2) or
-(3) by mistake and that could finally be in a mess.
 
-This patch aims to solve the above issue only with little changes
-as much as possible in order to make the fix backport easier.
-
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
----
- drivers/staging/erofs/unzip_vle.c     | 38 ++++++++++++++++++-----------------
- drivers/staging/erofs/unzip_vle.h     |  3 +--
- drivers/staging/erofs/unzip_vle_lz4.c | 19 ++++++++----------
- 3 files changed, 29 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index 1c4b3e0343f5..7182769f546a 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -904,11 +904,10 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	if (llen > grp->llen)
- 		llen = grp->llen;
- 
--	err = z_erofs_vle_unzip_fast_percpu(compressed_pages,
--		clusterpages, pages, llen, work->pageofs,
--		z_erofs_onlinepage_endio);
-+	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
-+					    pages, llen, work->pageofs);
- 	if (err != -ENOTSUPP)
--		goto out_percpu;
-+		goto out;
- 
- 	if (sparsemem_pages >= nr_pages)
- 		goto skip_allocpage;
-@@ -929,8 +928,25 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	erofs_vunmap(vout, nr_pages);
- 
- out:
-+	/* must handle all compressed pages before endding pages */
-+	for (i = 0; i < clusterpages; ++i) {
-+		page = compressed_pages[i];
-+
-+#ifdef EROFS_FS_HAS_MANAGED_CACHE
-+		if (page->mapping == mngda)
-+			continue;
-+#endif
-+		/* recycle all individual staging pages */
-+		(void)z_erofs_gather_if_stagingpage(page_pool, page);
-+
-+		WRITE_ONCE(compressed_pages[i], NULL);
-+	}
-+
- 	for (i = 0; i < nr_pages; ++i) {
- 		page = pages[i];
-+		if (!page)
-+			continue;
-+
- 		DBG_BUGON(page->mapping == NULL);
- 
- 		/* recycle all individual staging pages */
-@@ -943,20 +959,6 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 		z_erofs_onlinepage_endio(page);
- 	}
- 
--out_percpu:
--	for (i = 0; i < clusterpages; ++i) {
--		page = compressed_pages[i];
--
--#ifdef EROFS_FS_HAS_MANAGED_CACHE
--		if (page->mapping == mngda)
--			continue;
--#endif
--		/* recycle all individual staging pages */
--		(void)z_erofs_gather_if_stagingpage(page_pool, page);
--
--		WRITE_ONCE(compressed_pages[i], NULL);
--	}
--
- 	if (pages == z_pagemap_global)
- 		mutex_unlock(&z_pagemap_global_lock);
- 	else if (unlikely(pages != pages_onstack))
-diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-index 3316bc36965d..684ff06fc7bf 100644
---- a/drivers/staging/erofs/unzip_vle.h
-+++ b/drivers/staging/erofs/unzip_vle.h
-@@ -218,8 +218,7 @@ extern int z_erofs_vle_plain_copy(struct page **compressed_pages,
- 
- extern int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
- 	unsigned clusterpages, struct page **pages,
--	unsigned outlen, unsigned short pageofs,
--	void (*endio)(struct page *));
-+	unsigned int outlen, unsigned short pageofs);
- 
- extern int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
- 	unsigned clusterpages, void *vaddr, unsigned llen,
-diff --git a/drivers/staging/erofs/unzip_vle_lz4.c b/drivers/staging/erofs/unzip_vle_lz4.c
-index 16ac335ee59f..8fa8a71a5445 100644
---- a/drivers/staging/erofs/unzip_vle_lz4.c
-+++ b/drivers/staging/erofs/unzip_vle_lz4.c
-@@ -105,8 +105,7 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
- 				  unsigned int clusterpages,
- 				  struct page **pages,
- 				  unsigned int outlen,
--				  unsigned short pageofs,
--				  void (*endio)(struct page *))
-+				  unsigned short pageofs)
- {
- 	void *vin, *vout;
- 	unsigned int nr_pages, i, j;
-@@ -128,19 +127,16 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
- 	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
- 				clusterpages * PAGE_SIZE, outlen);
- 
--	if (ret >= 0) {
--		outlen = ret;
--		ret = 0;
--	}
-+	if (ret < 0)
-+		goto out;
-+	ret = 0;
- 
- 	for (i = 0; i < nr_pages; ++i) {
- 		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
- 
- 		if (pages[i]) {
--			if (ret < 0) {
--				SetPageError(pages[i]);
--			} else if (clusterpages == 1 &&
--				   pages[i] == compressed_pages[0]) {
-+			if (clusterpages == 1 &&
-+			    pages[i] == compressed_pages[0]) {
- 				memcpy(vin + pageofs, vout + pageofs, j);
- 			} else {
- 				void *dst = kmap_atomic(pages[i]);
-@@ -148,12 +144,13 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
- 				memcpy(dst + pageofs, vout + pageofs, j);
- 				kunmap_atomic(dst);
- 			}
--			endio(pages[i]);
- 		}
- 		vout += PAGE_SIZE;
- 		outlen -= j;
- 		pageofs = 0;
- 	}
-+
-+out:
- 	preempt_enable();
- 
- 	if (clusterpages == 1)
 -- 
-2.14.5
-
+Darren Hart
+VMware Open Source Technology Center
