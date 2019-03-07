@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4C7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16414C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E393420835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1AA920835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfCGImc (ORCPT
+        id S1726136AbfCGImg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:42:32 -0500
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:42299 "EHLO
+        Thu, 7 Mar 2019 03:42:36 -0500
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:34645 "EHLO
         mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726156AbfCGImb (ORCPT
+        by vger.kernel.org with ESMTP id S1726341AbfCGImc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:42:31 -0500
+        Thu, 7 Mar 2019 03:42:32 -0500
 Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:54490 helo=purcell.lan)
         by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h1obV-000810-CG; Thu, 07 Mar 2019 09:42:13 +0100
+        id 1h1obO-000810-Fp; Thu, 07 Mar 2019 09:42:06 +0100
 From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
         shawn.lin@rock-chips.com
 Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
         Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
         Brian Norris <briannorris@chromium.org>,
+        Matthias Brugger <mbrugger@suse.com>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
         Douglas Anderson <dianders@chromium.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
         Vicente Bergas <vicencb@gmail.com>,
         Randy Li <ayaka@soulik.info>,
         Tony Xie <tony.xie@rock-chips.com>,
@@ -45,39 +45,100 @@ Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
         Lin Huang <hl@rock-chips.com>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 3/4] arm64: dts: rockchip: Define drive-impedance-ohm for RK3399's emmc-phy.
-Date:   Thu,  7 Mar 2019 09:41:55 +0100
-Message-Id: <20190307084159.25236-3-christoph.muellner@theobroma-systems.com>
+Subject: [PATCH v2 1/4] phy: rockchip-emmc: Allow to set drive impedance via DTS.
+Date:   Thu,  7 Mar 2019 09:41:53 +0100
+Message-Id: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
-References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous patch introduced the property 'drive-impedance-ohm'
-for the RK3399's emmc phy node. This patch sets this value
-explicitly to the default value of 50 Ohm.
+The rockchip-emmc PHY can be configured with different
+drive impedance values. Currenlty a value of 50 Ohm is
+hard coded into the driver.
+
+This patch introduces the DTS property 'drive-impedance-ohm'
+for the rockchip-emmc phy node, which uses the value from the DTS
+to setup the drive impedance accordingly.
 
 Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/phy/rockchip/phy-rockchip-emmc.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6cc1c9fa4ea6..b875364a7709 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1450,6 +1450,7 @@
- 			clock-names = "refclk";
- 			#phy-cells = <1>;
- 			resets = <&cru SRST_PCIEPHY>;
-+			drive-impedance-ohm = <50>;
- 			reset-names = "phy";
- 			status = "disabled";
- 		};
+diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
+index 19bf84f0bc67..b804c6bf4b55 100644
+--- a/drivers/phy/rockchip/phy-rockchip-emmc.c
++++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+@@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
+ 	unsigned int	reg_offset;
+ 	struct regmap	*reg_base;
+ 	struct clk	*emmcclk;
++	unsigned int drive_impedance;
+ };
+ 
+ static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
+@@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
+ {
+ 	struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
+ 
+-	/* Drive impedance: 50 Ohm */
++	/* Drive impedance: from DTS */
+ 	regmap_write(rk_phy->reg_base,
+ 		     rk_phy->reg_offset + GRF_EMMCPHY_CON6,
+-		     HIWORD_UPDATE(PHYCTRL_DR_50OHM,
++		     HIWORD_UPDATE(rk_phy->drive_impedance,
+ 				   PHYCTRL_DR_MASK,
+ 				   PHYCTRL_DR_SHIFT));
+ 
+@@ -314,6 +315,26 @@ static const struct phy_ops ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
++static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
++{
++	switch (dr_ohm) {
++	case 100:
++		return PHYCTRL_DR_100OHM;
++	case 66:
++		return PHYCTRL_DR_66OHM;
++	case 50:
++		return PHYCTRL_DR_50OHM;
++	case 40:
++		return PHYCTRL_DR_40OHM;
++	case 33:
++		return PHYCTRL_DR_33OHM;
++	}
++
++	dev_warn(&pdev->dev, "Invalid value %u for drive-impedance-ohm.\n",
++		 dr_ohm);
++	return PHYCTRL_DR_50OHM;
++}
++
+ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -322,6 +343,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ 	struct phy_provider *phy_provider;
+ 	struct regmap *grf;
+ 	unsigned int reg_offset;
++	u32 val;
+ 
+ 	if (!dev->parent || !dev->parent->of_node)
+ 		return -ENODEV;
+@@ -344,6 +366,10 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ 
+ 	rk_phy->reg_offset = reg_offset;
+ 	rk_phy->reg_base = grf;
++	rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
++
++	if (!of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val))
++		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
+ 
+ 	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+ 	if (IS_ERR(generic_phy)) {
 -- 
 2.11.0
 
