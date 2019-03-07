@@ -2,186 +2,149 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFADC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8711DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA1520661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980873;
-	bh=1LdIkuhKiOEs05eq+8MqY1sS/alaPXSH0UZlfhFR7eg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4oZjSQsmXOy61KaxiJYlEOHZb83ftzQHi6kTCavbzNboAvLlOLc3BcUlW4xxUaHH
-	 JxQAeyNdG9z1LNfAGq9hklG1Flc8ZhBHPrXkDlgJzLcHr46IHnvJi1W9Xz3KeiZE5j
-	 uASI73WSoIYneGlhFIb20FfMssaznTBQ29ezXaXk=
+	by mail.kernel.org (Postfix) with ESMTP id 6231F20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfCGRqM (ORCPT
+        id S1726719AbfCGRsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38540 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 12:48:01 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:36492 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfCGRqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:46:10 -0500
-Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726425AbfCGRqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:46:01 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942882087C;
-        Thu,  7 Mar 2019 17:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551980770;
-        bh=1LdIkuhKiOEs05eq+8MqY1sS/alaPXSH0UZlfhFR7eg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gTxI0Ki28uLND+qZm94oJkpjFvxc669OmJwokWTlQjzy31Ly5qYzKuPK0p1o6j0F3
-         Qch9I4igKVG0x2VqjMWFIdcqLua4mHien7wsnJu+PW6OD4d+BrMhdlB9h1ckMwg8y2
-         w0bMb1qubDspuF+1jSFcRur4vbgDFM70RxaJ3wZQ=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 20/35] perf thread: Generalize function to copy from thread addr space from intel-bts code
-Date:   Thu,  7 Mar 2019 14:44:18 -0300
-Message-Id: <20190307174433.28819-21-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
-References: <20190307174433.28819-1-acme@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9814881E13;
+        Thu,  7 Mar 2019 17:46:00 +0000 (UTC)
+Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AFE46013F;
+        Thu,  7 Mar 2019 17:45:58 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 11:45:56 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     hpa@zytor.com
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
+        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, rostedt@goodmis.org
+Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
+Message-ID: <20190307174556.m7nh2y4wt3lbhuxd@treble>
+References: <20190307114511.870090179@infradead.org>
+ <20190307120317.GD32477@hirez.programming.kicks-ass.net>
+ <20190307125526.GB32534@hirez.programming.kicks-ass.net>
+ <20190307131312.GC32534@hirez.programming.kicks-ass.net>
+ <20190307164705.qbu4ytdfdmsighas@treble>
+ <2F80FC70-5D2F-425F-BEB5-D70E981CC684@zytor.com>
+ <20190307171829.xww7is5qja32r7ux@treble>
+ <714E9D57-CCAE-4A69-AC3E-E6AFC525834E@zytor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <714E9D57-CCAE-4A69-AC3E-E6AFC525834E@zytor.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 07 Mar 2019 17:46:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On Thu, Mar 07, 2019 at 09:29:17AM -0800, hpa@zytor.com wrote:
+> On March 7, 2019 9:18:29 AM PST, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >On Thu, Mar 07, 2019 at 09:04:36AM -0800, hpa@zytor.com wrote:
+> >> On March 7, 2019 8:47:05 AM PST, Josh Poimboeuf <jpoimboe@redhat.com>
+> >wrote:
+> >> >On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
+> >> >> On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
+> >> >> > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
+> >> >> 
+> >> >> 
+> >> >> > > 01be     20d3:  31 c0                   xor    %eax,%eax
+> >> >> > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
+> >> >> > > 01c3     20d8:  77 08                   ja     20e2
+> >> ><__do_sys_waitid+0x1cd>
+> >> >> 
+> >> >> randconfig-build/kernel/exit.o: warning: objtool:  
+> >> >__do_sys_waitid()+0x1c3: (branch)
+> >> >> 
+> >> >> > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
+> >> >> > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
+> >> >> > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
+> >> >> > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
+> >> >> > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
+> >> >> > > 01e1     20f6:	00 
+> >> >> > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
+> >> >> > > 01e2     20f7:	84 c0                	test   %al,%al
+> >> >> > > 01e4     20f9:	75 2d                	jne    2128
+> >> ><__do_sys_waitid+0x213>
+> >> >> > 
+> >> >> > we do not take this branch and fall-through.
+> >> >> 
+> >> >> And that is the error, I think. We should've taken it and went to:
+> >> >> 
+> >> >>   return -EFAULT;
+> >> >> 
+> >> >> because:
+> >> >> 
+> >> >>  +1be	xor  %eax,%eax	eax=0
+> >> >>  +1cd   xor  $0x1,%eax	eax=1
+> >> >>  +1e2   test %al,%al	1&1==1 -> ZF=0
+> >> >>  +1e4   jnz
+> >> >> 
+> >> >> Is an unconditional code sequence, but there's no way objtool can
+> >do
+> >> >> that without becoming a full blown interpreter :/
+> >> >> 
+> >> >> > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov   
+> >> >$0xfffffffffffffff2,%r15
+> >> >> > > ffffffffffffe0eb }
+> >> >> > > 021a     212f:  48 8d 65 d8             lea   
+> >-0x28(%rbp),%rsp
+> >> >> > > 021e     2133:  4c 89 f8                mov    %r15,%rax
+> >> >> > > 0221     2136:  5b                      pop    %rbx
+> >> >> > > 0222     2137:  41 5c                   pop    %r12
+> >> >> > > 0224     2139:  41 5d                   pop    %r13
+> >> >> > > 0226     213b:  41 5e                   pop    %r14
+> >> >> > > 0228     213d:  41 5f                   pop    %r15
+> >> >> > > 022a     213f:  5d                      pop    %rbp
+> >> >> > > 022b     2140:  c3                      retq
+> >> >
+> >> >This "fixes" it, and also seems to help -Os make much code:
+> >> >
+> >> >diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> >> >index 445348facea9..8de63db58fdd 100644
+> >> >--- a/include/linux/compiler.h
+> >> >+++ b/include/linux/compiler.h
+> >> >@@ -67,7 +67,7 @@ void ftrace_likely_update(struct
+> >ftrace_likely_data
+> >> >*f, int val,
+> >> > 				.line = __LINE__,			\
+> >> > 			};						\
+> >> > 		______r = !!(cond);					\
+> >> >-		______f.miss_hit[______r]++;					\
+> >> >+		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
+> >> > 		______r;						\
+> >> > 	}))
+> >> > #endif /* CONFIG_PROFILE_ALL_BRANCHES */
+> >> 
+> >> if (cond)?  Or is ___r used elsewhere?
+> >
+> >______r is also the return value.  And it's needed because cond should
+> >only be evaluated once.
+> 
+> So put a true; and false; inside the if.
 
-Add a utility function to fetch executable code. Convert one
-user over to it. There are more places doing that, but they
-do significantly different actions, so they are not
-easy to fit into a single library function.
+Is that possible to do in a C macro?  Doesn't seem to work for me...
 
-Committer changes:
-
-. No need to cast around, make 'buf' be a void pointer.
-
-. Rename it to thread__memcpy() to reflect the fact it is about copying
-  a chunk of memory from a thread, i.e. from its address space.
-
-. No need to have it in a separate object file, move it to thread.[ch]
-
-. Check the return of map__load(), the original code didn't do it, but
-  since we're moving this around, check that as well.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/r/20190305144758.12397-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/intel-bts.c | 20 ++------------------
- tools/perf/util/thread.c    | 23 +++++++++++++++++++++++
- tools/perf/util/thread.h    |  3 +++
- 3 files changed, 28 insertions(+), 18 deletions(-)
-
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 0c0180c67574..47025bc727e1 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -328,35 +328,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
- {
- 	struct machine *machine = btsq->bts->machine;
- 	struct thread *thread;
--	struct addr_location al;
- 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
- 	ssize_t len;
--	int x86_64;
--	uint8_t cpumode;
-+	bool x86_64;
- 	int err = -1;
- 
--	if (machine__kernel_ip(machine, ip))
--		cpumode = PERF_RECORD_MISC_KERNEL;
--	else
--		cpumode = PERF_RECORD_MISC_USER;
--
- 	thread = machine__find_thread(machine, -1, btsq->tid);
- 	if (!thread)
- 		return -1;
- 
--	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
--		goto out_put;
--
--	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
--				  INTEL_PT_INSN_BUF_SZ);
-+	len = thread__memcpy(thread, machine, buf, ip, INTEL_PT_INSN_BUF_SZ, &x86_64);
- 	if (len <= 0)
- 		goto out_put;
- 
--	/* Load maps to ensure dso->is_64_bit has been updated */
--	map__load(al.map);
--
--	x86_64 = al.map->dso->is_64_bit;
--
- 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
- 		goto out_put;
- 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 4c179fef442d..50678d318185 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -12,6 +12,7 @@
- #include "debug.h"
- #include "namespaces.h"
- #include "comm.h"
-+#include "map.h"
- #include "symbol.h"
- #include "unwind.h"
- 
-@@ -393,3 +394,25 @@ struct thread *thread__main_thread(struct machine *machine, struct thread *threa
- 
- 	return machine__find_thread(machine, thread->pid_, thread->pid_);
- }
-+
-+int thread__memcpy(struct thread *thread, struct machine *machine,
-+		   void *buf, u64 ip, int len, bool *is64bit)
-+{
-+       u8 cpumode = PERF_RECORD_MISC_USER;
-+       struct addr_location al;
-+       long offset;
-+
-+       if (machine__kernel_ip(machine, ip))
-+               cpumode = PERF_RECORD_MISC_KERNEL;
-+
-+       if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso ||
-+	   al.map->dso->data.status == DSO_DATA_STATUS_ERROR ||
-+	   map__load(al.map) < 0)
-+               return -1;
-+
-+       offset = al.map->map_ip(al.map, ip);
-+       if (is64bit)
-+               *is64bit = al.map->dso->is_64_bit;
-+
-+       return dso__data_read_offset(al.map->dso, machine, offset, buf, len);
-+}
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 8276ffeec556..cf8375c017a0 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -113,6 +113,9 @@ struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
- void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
- 					struct addr_location *al);
- 
-+int thread__memcpy(struct thread *thread, struct machine *machine,
-+		   void *buf, u64 ip, int len, bool *is64bit);
-+
- static inline void *thread__priv(struct thread *thread)
- {
- 	return thread->priv;
 -- 
-2.20.1
-
+Josh
