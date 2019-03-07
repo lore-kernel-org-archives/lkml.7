@@ -2,215 +2,209 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F804C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB62C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE4B20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0085F20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ooB7eI8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfCGKXd (ORCPT
+        id S1726470AbfCGKXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:23:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:40693 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfCGKXd (ORCPT
+        Thu, 7 Mar 2019 05:23:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33040 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfCGKXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:23:33 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1h1qBW-0006U7-4V; Thu, 07 Mar 2019 10:23:30 +0000
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Faisal Latif <faisal.latif@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190302230637.8624-1-colin.king@canonical.com>
- <20190304063623.GA15253@mtr-leonro.mtl.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH][next] RDMA/nes: remove redundant check on udata
-Message-ID: <815dea03-ef9a-39c0-3ec5-cdd58a545911@canonical.com>
-Date:   Thu, 7 Mar 2019 10:23:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 7 Mar 2019 05:23:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c13so6393045wmb.0;
+        Thu, 07 Mar 2019 02:23:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=HrrVBsxFyLwBuncur9okJNCjKX3TcQI8oRuE8m58v7M=;
+        b=ooB7eI8Mav+1kOC6iZ15r1EHrOl5UFasbjSLDOwGAnhZve2N9TnYq9hSvmKUp6YNUX
+         U/wBsWtkNWajtsPl5U7c8KM23wERvVAM4CoRy0kSoMu61pTgv96WVq5G11LDD5jW8tkE
+         gdXFFL54FbGXwOMf2qc4DpBpslip9Bt2MFS15iCejMo86ME5CUrPI+3atdBfR45GC9II
+         SejxCXfFhQd0+JmNTPKBPbEEQ7YDE/eWUarDP34dmKhDEb7DFdWc8Hopkd0DglUdL8u7
+         mmIC1t9fpGDohn23HKdigXD7ypra9zpjwNQWS9jx7YSH8BcxK/pL0HbkqzbY0D05G0oa
+         xC2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HrrVBsxFyLwBuncur9okJNCjKX3TcQI8oRuE8m58v7M=;
+        b=aMpkzgjwCg7VPbRqZchPslNmEyyA+kleU+YBqAqbutSJnPbSkqdd1hecGgDp7rs4QB
+         VvhOCKwWPzP3aMr436k/zU6KSBAx5G2o3UGj9+vonWt5Xujc6Rosg6G6z2JinDEA2Rgr
+         Y2FZBVlbw8BtKNtILXHPJZPpUQTFnFPsgUJhgfiR/bygDW7pQuQWXkyAvNEpz1P7uetw
+         Kjg89JxUQ/VxB1FOfJYmSKBroHBlfYmDcYuatc3GFsVY3+yvzk6foOQ+jvvwpOOUIw/J
+         +Fx1NIFpBpysuMpoEMvAXvxWkvaS+ijz3+3/YXDV4kzNGqalkX2T4+4ahrvF79lAWWho
+         HBXw==
+X-Gm-Message-State: APjAAAWvCEA2EqJEzrN6eKh7SkA8hSbuLD89poYdXm8kj4Hwj8QoDaHL
+        nRYrQC2+kJsVsvkDDHqIwos=
+X-Google-Smtp-Source: APXvYqzTYm+sDiNrU0Ph7bvXF3CzUVJmMZ2E7Ar+s5UVVbODpSqJoqqohkk5RBTHzL5Qsq7UZmcY7w==
+X-Received: by 2002:a05:600c:2159:: with SMTP id v25mr4989016wml.17.1551954231268;
+        Thu, 07 Mar 2019 02:23:51 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id k20sm4847559wre.41.2019.03.07.02.23.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 02:23:50 -0800 (PST)
+Date:   Thu, 7 Mar 2019 11:23:49 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Steve Magnani <steve.magnani@digidescorp.com>
+Cc:     Jan Kara <jack@suse.cz>, reinoud@netbsd.org,
+        Colin King <colin.king@canonical.com>,
+        =?utf-8?Q?Vojt=C4=9Bch?= Vladyka <vojtech.vladyka@foxyco.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC] udftools: steps towards fsck
+Message-ID: <20190307102349.q5not23mve2soope@pali>
+References: <17e5fea5-8d76-c96d-8902-9050acba4288@digidescorp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190304063623.GA15253@mtr-leonro.mtl.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="myIfY0JvAYSBM2eA8Dl78STvQBfRD0KHQ"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <17e5fea5-8d76-c96d-8902-9050acba4288@digidescorp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---myIfY0JvAYSBM2eA8Dl78STvQBfRD0KHQ
-Content-Type: multipart/mixed; boundary="V9KKqdNrC9BAndZvoI3I7vIj8KsaMunRc";
- protected-headers="v1"
-From: Colin Ian King <colin.king@canonical.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Faisal Latif <faisal.latif@intel.com>, Doug Ledford
- <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <815dea03-ef9a-39c0-3ec5-cdd58a545911@canonical.com>
-Subject: Re: [PATCH][next] RDMA/nes: remove redundant check on udata
-References: <20190302230637.8624-1-colin.king@canonical.com>
- <20190304063623.GA15253@mtr-leonro.mtl.com>
-In-Reply-To: <20190304063623.GA15253@mtr-leonro.mtl.com>
+On Wednesday 06 March 2019 20:44:54 Steve Magnani wrote:
+> (Please remove at least LKML when responding. Mailing lists are a
+> scattershot attempt to reach others who might be interested in this topic
+> since I'm not aware of any linux-udf mailing list. )
 
---V9KKqdNrC9BAndZvoI3I7vIj8KsaMunRc
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+IIRC there is no linux-udf mailing list, but I do not see any reason why
+not to use linux-fsdevel or linux-kernel.
 
-On 04/03/2019 06:36, Leon Romanovsky wrote:
-> On Sat, Mar 02, 2019 at 11:06:36PM +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The non-null check on udata is redundant as this check was performed
->> just a few statements earlier and the check is always true as udata
->> must be non-null at this point. Remove redundant the check on udata
->> and the redundant else part that can never be executed.
->>
->> Detected by CoverityScan, CID#1477317 ("Logically dead code")
->>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/infiniband/hw/nes/nes_verbs.c | 73 +++++++++++++-------------=
--
->>  1 file changed, 34 insertions(+), 39 deletions(-)
->>
->> diff --git a/drivers/infiniband/hw/nes/nes_verbs.c b/drivers/infiniban=
-d/hw/nes/nes_verbs.c
->> index 828e4af3f951..526092d435df 100644
->> --- a/drivers/infiniband/hw/nes/nes_verbs.c
->> +++ b/drivers/infiniband/hw/nes/nes_verbs.c
->> @@ -1039,53 +1039,48 @@ static struct ib_qp *nes_create_qp(struct ib_p=
-d *ibpd,
->>  				}
->>  				if (req.user_qp_buffer)
->>  					nesqp->nesuqp_addr =3D req.user_qp_buffer;
->> -				if (udata) {
->> -					nesqp->user_mode =3D 1;
->=20
-> It was single place where user_mode was set, you should continue and
-> remove all code which depends on "if (nesqp->user_mode)".
+> A few months ago I stumbled across an interesting bit of abandonware in the
+> Sourceforge CVS repo that hosted UDF development through about 2004. Code
+> that originated here eventually became the modern-day udftools:
+> 
+>     https://sourceforge.net/p/linux-udf/code/
 
-This is not the only place where user_mode is being set; we currently hav=
-e:
+udftools project was moved to github:
+https://github.com/pali/udftools/
 
+Ben (original project developer) also updated sourceforce page and you
+can see there a big blue box "This project can now be found here." which
+points to github.
 
-        if (udata) {
-                if (ib_copy_from_udata(&req, udata, sizeof(struct
-nes_create_qp_req))) {
-                        nes_free_resource(nesadapter,
-nesadapter->allocated_qps, qp_num);
-                        kfree(nesqp->allocated_buffer);
-                        nes_debug(NES_DBG_QP, "ib_copy_from_udata()
-Failed \n");
-                        return ERR_PTR(-EFAULT);
-                }
-                if (req.user_wqe_buffers) {
-                        virt_wqs =3D 1;
-                }
-                if (req.user_qp_buffer)
-                        nesqp->nesuqp_addr =3D req.user_qp_buffer;
-                if (udata) {
-                        nesqp->user_mode =3D 1;
-			...
+> The 'udf' module in that repo contains a program from 1999 named 'chkudf',
+> which appears to have been written by Rob Simms. Being from the Y2K era, the
+> program has no awareness of anything beyond UDF2.01; in particular, its
+> comprehension of VAT reflects UDF1.50 and not the revamped design introduced
+> in UDF2.00. But it does have an ability to analyze the major UDF data
+> structures and to walk the filesystem.
 
+As project page was moved to github I converted also whole source code
+history. You can find there also that that old chkudf code...
 
-and I'm just removing the redudant 2nd if (udata) check, so the
-nesqp->user_mode =3D 1 assignment is still being kept hence it's not
-correct to remove all the if (nesqp->user_mode) releated code.
+https://github.com/pali/udftools/tree/87acf1a2306b7b60ed9d61b53c2a487ea5f3396c/src/chkudf
 
+But, I would like to let you know that Vojtěch (CCed) started working on
+udffsck implementation as part of his master thesis and current WIP code
+is available on github in pull request:
 
->=20
-> I looked on the change which triggered Coverity warning and looks like
-> your commit message should include this Fixes line:
-> Fixes: 899444505473 ("IB/{hw,sw}: Remove 'uobject->context' dependency =
-in object creation APIs")
+https://github.com/pali/udftools/pull/7
 
-Can that be added to the patch before it's applied?
+So it would be great if you look at new code and probably help Vojtěch
+to finish new effort as trying to port and fix 20 years old code which
+was already removed from udftools project...
 
->=20
-> Thanks
->=20
+> I've spent quite a bit of time enhancing and fixing bugs in this code, with
+> a short term goal of being able to report damage to UDF2.01 filesystems on
+> "hard disk" (magnetic and SSD) media. It's not quite to the point of being
+> release-ready, but I think the code is on the cusp of becoming useful to
+> others so I wanted to get some feedback on the approach.
+> 
+> I posted a GIT port (via SVN) of the CVS repo here, including all the
+> changes I've made so far:
+> 
+>     https://github.com/smagnani/chkudf.git
+> 
+> If you're interested in building the code you should be able to just run
+> 'make' within the chkudf folder. On Debian-derived systems you'll need
+> libblkid-dev installed in order to build.
+> 
+> Some questions for consideration:
+> 
+> * Would a udffsck limited to checking of UDF2.01 and earlier on "hard disk"
+> media be a sufficiently useful starting point to justify inclusion in
+> udftools? Obviously a tool with such limitations would have to be
+> particularly vigilant about ensuring that media-under-test doesn't exceed
+> its capabilities.
+> 
+> * If so, do you think the chkudf implementation could qualify? It's not
+> ready yet, but with an investment of some time and energy it could be made
+> more functionally complete and (maybe more importantly) more user-friendly.
+> 
+> In part this is a question of whether the chkudf design can support
+> enhancements to get (eventually) to UDF2.60 and optical media support,
+> balanced against the many years without an open-source udffsck and not
+> "letting the perfect become the enemy of the good."
+> 
+> * For any standards-based parser it's important to have examples of as many
+> variations as possible (both normal and pathological) in order to ensure
+> that corner cases and less common features are tested properly. Can anyone
+> point me to any good sources of UDF data for testing? There are always
+> commercial DVDs and Blu-Ray discs, of course, and I've cobbled together a
+> few special cases by hand (i.e., a filesystem with directory cycles), but I
+> have no examples with extended attributes or stream data. If I could find a
+> DVD of Mac software in a resale shop would that help? [Side note, I've
+> thought of enhancing chkudf to support a tool that would store all the UDF
+> structures of a filesystem in a tarball that could be used to reconstitute
+> that filesystem within a sparse file. Since none of the file contents would
+> be stored the tarballs would be relatively small even if they represent
+> terabyte-scale filesystems.
+> 
+> * Are there versions (or features) of UDF that are less important to support
+> than others (1.50? Strategy 4096? Named streams? etc.) I know 1.02, 2.01,
+> and 2.50 are in wide use.
 
-Colin
+Currently udftools support UDF revisions 1.01, 1.02, 1.50, 2.00, 2.01
+and for BD-R (without metadata partition) also 2.50 and 2.60.
 
+> * What kinds of repairs are most important to implement? I was thinking that
+> regeneration of the Logical Volume Integrity Descriptor and the unallocated
+> space bitmap are both important and hopefully relatively straightforward.
+> Beyond that...recovering ICBs to "lost+found"?
+> 
+> 
+> My 2 cents:
+> I didn't write this program. There are things I would have done differently,
+> but to this point I have tried to work within the existing design and code
+> style. After becoming more aware of differences between the various UDF
+> standards (in particular, the increase in complexity since 2.01) and the
+> many errata involved, I have a gut feeling that an implementation in a
+> language that supports inheritance might be a lot more manageable over the
+> long term - but it's not something I've spent a lot of time thinking about.
+> I've only recently become aware of UDFclient, and haven't had time to look
+> over its design yet. And, I can see the potential for followon utilities
+> such as a filesystem resizer - which might argue for making more of the code
+> library-based and not so heavy on printed output.
+> 
+> Bottom line...udffsck has to start somewhere, could it start with chkudf?
+> 
+> Thanks for reading.
+> ------------------------------------------------------------------------
+>  Steven J. Magnani               "I claim this network for MARS!
+>  www.digidescorp.com              Earthling, return my space modulator!"
+> 
+>  #include <standard.disclaimer>
+> 
 
---V9KKqdNrC9BAndZvoI3I7vIj8KsaMunRc--
-
---myIfY0JvAYSBM2eA8Dl78STvQBfRD0KHQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEcGLapPABucZhZwDPaMKH38aoAiYFAlyA8SEACgkQaMKH38ao
-AiZLhg/8DCRIoCDwHqdfnn7+FxVJzm2jnhm/Dm43Pygc4v6bIVuMiNtIKYcoj/S8
-XvZri29vTgth8VZBLx9oeAwkEWD/8QOVEPpvf6IBFZljEWlwRNyLKl/dkSsnOt3a
-IGH5TZntsieXELKeyFD8FStjOlU8A0klSakB3x57a1uvsOrT905ui/852ONi0/rg
-DPLnHdmMNxJdNGHbOFALMDDXiWthHX07Rj0c9P2WYgauTE80++uln08PfrVgYLZ9
-Jz6xTDb/RXhc75RRofLUGaBgfJlhI97UyfNBCXR3JdEUGGwsZkLyqbBSEOrkvBVX
-Nj0Vk5zRE1q/ilwwLfX6MbWEeHY4tZG2vh+nVUMFKwnSbqlLo2PBzWCMBK0b2/4i
-7W1MaVXxWYPkt1NqtfLbkVJlhND9rFIcgAfe5YQkGVkoSXqqp92t06EXrudfkVXX
-H6kYvAy8is3btUXVMKts1MJcF3XdQJ2Iua88Yeq3SpQefts8fU74HGCej6bQ0cV+
-oQO0p4sTWd6d8kqvSZvAr03VgJYa3XK9Wxz6FK3KpxXfVQVBJ+OTzNF/l1Zq5uvh
-/R9EvTNur4Bc/FIQVmgPtpcJov1CFuE9YvTBAE8fDnSj0HJ51Zg3ANKyd7YXGuij
-CGpkr5m/q1DE5pfh8YHJaQRsU99PEomeeMvlfp8uSj64vfMJxss=
-=F1uf
------END PGP SIGNATURE-----
-
---myIfY0JvAYSBM2eA8Dl78STvQBfRD0KHQ--
+-- 
+Pali Rohár
+pali.rohar@gmail.com
