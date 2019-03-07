@@ -2,95 +2,128 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89406C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3BDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6107820684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF48D20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551992110;
+	bh=Z8ExJUXfOihxLauWUj9aMlmQzss/q/n71+IPpaYmzJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gMQkgDl91PS29L2ouwA5bSTNgbgWJPZ4bmcQhIbsfHQnOcI8cGLPFYgQIcNwKoDeo
+	 y4l3efPUTxaOn00Cej/AAG/hOVxFJjaU9hQpahPRHzT+RmSBhgyLS6Ye6Fl/YFlpgk
+	 +dDjrVQse/i58Oaz/G02VQwh0KMAUL7CUXLGZs+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCGUyN (ORCPT
+        id S1726518AbfCGUzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:54:13 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:57377 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfCGUyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:54:13 -0500
-Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MHG0U-1hFFZX3Vuy-00DF2D; Thu, 07 Mar 2019 21:53:51 +0100
-Subject: Re: [PATCH 10/61] gpio: simplify getting .drvdata
-To:     Wolfram Sang <wsa@the-dreams.de>, Adam Ford <aford173@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Hoan Tran <hotran@apm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
- <20180419140641.27926-11-wsa+renesas@sang-engineering.com>
- <b0c1e303-ca95-8bc8-a5d4-65e75dc8398a@ti.com>
- <CACRpkday+d9iGeX+CRHTEyC=w+oNUK-8oTy0HqugO5PRhHn62w@mail.gmail.com>
- <20180430092947.GC2270@ulmo>
- <CAHCN7xLBa0JxcUs9i6Rr3hUNe5zymfb66icqNK0N3PMo51T-TA@mail.gmail.com>
- <20190307201807.GA950@kunai>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <e7cadedc-b8ca-36d5-88dd-447fbeaac27a@metux.net>
-Date:   Thu, 7 Mar 2019 21:53:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 7 Mar 2019 15:55:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbfCGUzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 15:55:08 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1BE720684;
+        Thu,  7 Mar 2019 20:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551992107;
+        bh=Z8ExJUXfOihxLauWUj9aMlmQzss/q/n71+IPpaYmzJo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=znI9BTlOoRGBn9f8JaFDuausGFCjHPcefx+jgvBgUPGPZlFz+hNvUVdPHVDpu9fyN
+         owr8HjpcYI1O0UuUWZORmem9xXzT4yMDD0NuRF6GK1hjDJEvgwp0eK8CDQyoKH5TzP
+         YB8Ta3uz+MMbKUcULyL57CzQZxalfixN/p1Nsspk=
+Date:   Thu, 7 Mar 2019 21:55:05 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Daniel Colascione <dancol@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Pavel Machek <pavel@ucw.cz>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atish patra <atishp04@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kara <jack@suse.cz>, Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        yhs@fb.com
+Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
+ kernel
+Message-ID: <20190307205505.GB30028@kroah.com>
+References: <20190119232503.GA149403@google.com>
+ <78AACAF1-8EBF-4DF3-BE94-5B14E78BA791@zytor.com>
+ <20190120155838.GA23827@google.com>
+ <20190306230944.GB7915@amd>
+ <CAKOZuetOePf89cXRkvmWeGnvG7zYN=SW1yyrZibuyOqZQFTGkg@mail.gmail.com>
+ <754146f0-8b57-8644-81c1-528b5ca7dba1@zytor.com>
+ <CAKOZuesjYZ2EH=BHBAJAFFaTOHjWU7BELJUV3QC9cjXVB2HhUw@mail.gmail.com>
+ <0c46ab5f-8bd6-6916-fc4a-b6f00d456011@metux.net>
+ <CAKOZuevksKGAPif_pUYVzFpbuBCxOZ5WzT6ukLCYm4TzyLUTMw@mail.gmail.com>
+ <5ebec282-57b0-6ebe-0876-ce0dd7b0c11c@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20190307201807.GA950@kunai>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:rORioEcuNxOqGCtA4G9wBudOePC2xQIAML2vCX12uhhkMNxeZXx
- PWRWsAJhVUkfETngiMgVOka0hTcicwQ9iRcfA7C2oS+6shsOYMzWgAUyWuQ9VqcCSry1mOW
- GZ6NbvEMysLyFB8qIMRNRT+zuxUNFm20YqXMybV6z6DuZni97dGUNyiScBkI+FR/yySEf6I
- Jczk+XbB9x56utZMtpt5w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xqCPBT68NxI=:wJlFcWLuvkhSk2nfUtPLVV
- oKK7J79sI3w/KgGQ4g0pI5+etezgW19kRjEmuKvAdNYsLD5DefmNIBKzBWbM4igmW0xbdEvOk
- 9ZRTr+OLM2M61dxkpADmGDvV14BJt/XkIf18TgOZIBXC3Jb7MSi0Sd4Qs0D+bdu0853CzzVGi
- IX/K2DtNkuJSMfLrJTAyWu2mY5HY+6Eed+T/mhjjZYFtANg8/VE/L0Xpx8DRZ5uEpPVMCKRAQ
- WC5mQzPhfE0ygXvfqvzMcORTdNGqUz+eIU/FG/7GP2Npe0rT8c00jYKI+Z1LMpwrBd2g/3i3L
- a4Htj8XaN5LmPJAYl7lGj2XLI4lLcHyy+IhdfWrT4ulEr8+5AgjhcbhAmtcSUB6Ri/brxAt3B
- bMtkV1i/K6uebSlSFqeeaMfKn0EAlISNTU4qI0vxPLW0oubfpgQ2M+bCFGFJPelSKu9hugAbu
- dYIGG7M07pkkjeUsxECfbehpj4Hp9c2gp3ktjIg5OsiW35XsI4hxWAuIvVJMewdtoeXTj7Twn
- H/cjveMq+Ba4ghBC5WnUOo9rKARRIQwq19mtVSoYJKSOIEGYxtyJ+ZymwkqAHTq7tapuUa7/u
- ZwAxQqEno2Ans3mcQEEfCT7tTm57SROn59B86q2zD77dA9/4IwUUVf3x7zbOauYYkUBdsPtit
- I2rbvmp+txAmlcK/yhvsBg9M4BznmPY+LCTboPPkYQ0G/eZaHg+JDN7ayLM3SaDAybK698a7b
- G7yZ23Yz/FNA4K6LRWw5xnYPPGSE4I7NSAxS5RRvLO1eOkB4A38PXlq3RN8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ebec282-57b0-6ebe-0876-ce0dd7b0c11c@metux.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.03.19 21:18, Wolfram Sang wrote:
+On Thu, Mar 07, 2019 at 09:41:24PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 07.03.19 02:49, Daniel Colascione wrote:
 > 
->> It's been almost a year later, and several Linux revisions, and this
->> still seems stuck somewhere/somehow.
+> > Entirely FS-less operation is uncommon, granted. :-) I guess I've just
+> > spent too much time debugging emulators that refuse to mount their> root filesystems. :-)
 > 
-> I wanted to respin this series once rc1 is released.
+> Fix these emulators ?
 > 
-Maybe just rebase and repost ?
+> > There are legitimate reasons why a device's> filesystems might not be rw-mountable though, and I can imagine a
+> > world where I want to attach tracing tools *very* early.
+> 
+> Ok, but the filesystem where the modules live is mountable, right ?
+> 
+> > Sure. There's some support for a ramdisk already in fastboot. But just
+> > including a blob in initrd doesn't *automatically* make it available
+> > to userspace in any uniform way. With Joel's approach --- which> defines both a propagation mechanism and an access interface --- we
+> 
+> I can define such an interface with a few words:
+> 
+> * the kernel headers lives in a (compressed) squashfs image in the
+>   module directory for the corresponding kernel version:
+>       /lib/modules/<version>-<flavour>/headers.img"
+> * this image shall be mounted at a canonical mountpoint, eg:
+>       /usr/src/linux-headers-<version>-<flavour>
+> * the kernel needs to support squashfs (may be module or built-in)
+> 
+> That's it. I don't need to touch a single line of kernel code for that,
+> just a very simple and small convention.
 
+Ick, no, no more squashfs please, let's just kill that mess once and for
+all :)
 
---mtx
+Again, putting this in a simple compressed tar image allows anyone to do
+whatever they need to with this.  If they want a full filesystem,
+uncompress it and use it there.  If they just want it in-memory where
+they can uncompress it and then discard it, that works too.
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+And if no one wants this, just don't select the config option and do not
+load the module with this data in it.  Just like /proc/config.gz is
+today.
+
+thanks,
+
+greg k-h
