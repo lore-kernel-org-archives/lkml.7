@@ -3,59 +3,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5833CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEE5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAAE20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3AC72063F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfCGR3r (ORCPT
+        id S1726427AbfCGRah convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:29:47 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52000 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbfCGR3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:29:44 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 248261479DEDC;
-        Thu,  7 Mar 2019 09:29:44 -0800 (PST)
-Date:   Thu, 07 Mar 2019 09:29:43 -0800 (PST)
-Message-Id: <20190307.092943.881338723409230235.davem@davemloft.net>
-To:     arnd@arndb.de
-Cc:     isdn@linux-pingi.de, ndesaulniers@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] isdn: isdnloop: fix pointer dereference bug
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190307093241.3380715-1-arnd@arndb.de>
-References: <20190307093241.3380715-1-arnd@arndb.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 Mar 2019 09:29:44 -0800 (PST)
+        Thu, 7 Mar 2019 12:30:37 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:47599 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726161AbfCGRag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:30:36 -0500
+Received: from [172.19.131.165] ([8.46.77.96])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x27HTSvi2273663
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 7 Mar 2019 09:30:00 -0800
+Date:   Thu, 07 Mar 2019 09:29:17 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190307171829.xww7is5qja32r7ux@treble>
+References: <20190307114511.870090179@infradead.org> <20190307120317.GD32477@hirez.programming.kicks-ass.net> <20190307125526.GB32534@hirez.programming.kicks-ass.net> <20190307131312.GC32534@hirez.programming.kicks-ass.net> <20190307164705.qbu4ytdfdmsighas@treble> <2F80FC70-5D2F-425F-BEB5-D70E981CC684@zytor.com> <20190307171829.xww7is5qja32r7ux@treble>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
+        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, rostedt@goodmis.org
+From:   hpa@zytor.com
+Message-ID: <714E9D57-CCAE-4A69-AC3E-E6AFC525834E@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu,  7 Mar 2019 10:32:07 +0100
+On March 7, 2019 9:18:29 AM PST, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>On Thu, Mar 07, 2019 at 09:04:36AM -0800, hpa@zytor.com wrote:
+>> On March 7, 2019 8:47:05 AM PST, Josh Poimboeuf <jpoimboe@redhat.com>
+>wrote:
+>> >On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
+>> >> On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
+>> >> > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
+>> >> 
+>> >> 
+>> >> > > 01be     20d3:  31 c0                   xor    %eax,%eax
+>> >> > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
+>> >> > > 01c3     20d8:  77 08                   ja     20e2
+>> ><__do_sys_waitid+0x1cd>
+>> >> 
+>> >> randconfig-build/kernel/exit.o: warning: objtool:  
+>> >__do_sys_waitid()+0x1c3: (branch)
+>> >> 
+>> >> > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
+>> >> > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
+>> >> > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
+>> >> > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
+>> >> > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
+>> >> > > 01e1     20f6:	00 
+>> >> > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
+>> >> > > 01e2     20f7:	84 c0                	test   %al,%al
+>> >> > > 01e4     20f9:	75 2d                	jne    2128
+>> ><__do_sys_waitid+0x213>
+>> >> > 
+>> >> > we do not take this branch and fall-through.
+>> >> 
+>> >> And that is the error, I think. We should've taken it and went to:
+>> >> 
+>> >>   return -EFAULT;
+>> >> 
+>> >> because:
+>> >> 
+>> >>  +1be	xor  %eax,%eax	eax=0
+>> >>  +1cd   xor  $0x1,%eax	eax=1
+>> >>  +1e2   test %al,%al	1&1==1 -> ZF=0
+>> >>  +1e4   jnz
+>> >> 
+>> >> Is an unconditional code sequence, but there's no way objtool can
+>do
+>> >> that without becoming a full blown interpreter :/
+>> >> 
+>> >> > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov   
+>> >$0xfffffffffffffff2,%r15
+>> >> > > ffffffffffffe0eb }
+>> >> > > 021a     212f:  48 8d 65 d8             lea   
+>-0x28(%rbp),%rsp
+>> >> > > 021e     2133:  4c 89 f8                mov    %r15,%rax
+>> >> > > 0221     2136:  5b                      pop    %rbx
+>> >> > > 0222     2137:  41 5c                   pop    %r12
+>> >> > > 0224     2139:  41 5d                   pop    %r13
+>> >> > > 0226     213b:  41 5e                   pop    %r14
+>> >> > > 0228     213d:  41 5f                   pop    %r15
+>> >> > > 022a     213f:  5d                      pop    %rbp
+>> >> > > 022b     2140:  c3                      retq
+>> >
+>> >This "fixes" it, and also seems to help -Os make much code:
+>> >
+>> >diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+>> >index 445348facea9..8de63db58fdd 100644
+>> >--- a/include/linux/compiler.h
+>> >+++ b/include/linux/compiler.h
+>> >@@ -67,7 +67,7 @@ void ftrace_likely_update(struct
+>ftrace_likely_data
+>> >*f, int val,
+>> > 				.line = __LINE__,			\
+>> > 			};						\
+>> > 		______r = !!(cond);					\
+>> >-		______f.miss_hit[______r]++;					\
+>> >+		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
+>> > 		______r;						\
+>> > 	}))
+>> > #endif /* CONFIG_PROFILE_ALL_BRANCHES */
+>> 
+>> if (cond)?  Or is ___r used elsewhere?
+>
+>______r is also the return value.  And it's needed because cond should
+>only be evaluated once.
 
-> clang has spotted an ancient code bug and warns about it with:
-> 
-> drivers/isdn/isdnloop/isdnloop.c:573:12: error: address of array 'card->rcard' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
-> 
-> This is an array of pointers, so we should check if a specific
-> pointer exists in the array before using it, not whether the
-> array itself exists.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Applied.
+So put a true; and false; inside the if.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
