@@ -2,94 +2,99 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLACK autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2B8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F44BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA81120643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D807520643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ZsvVh06m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B60hfypX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfCGMaV (ORCPT
+        id S1726259AbfCGMcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:30:21 -0500
-Received: from forward102o.mail.yandex.net ([37.140.190.182]:57687 "EHLO
-        forward102o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726166AbfCGMaV (ORCPT
+        Thu, 7 Mar 2019 07:32:45 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51354 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGMco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:30:21 -0500
-Received: from mxback11j.mail.yandex.net (mxback11j.mail.yandex.net [IPv6:2a02:6b8:0:1619::84])
-        by forward102o.mail.yandex.net (Yandex) with ESMTP id 5D4CC668054B;
-        Thu,  7 Mar 2019 15:30:18 +0300 (MSK)
-Received: from smtp1o.mail.yandex.net (smtp1o.mail.yandex.net [2a02:6b8:0:1a2d::25])
-        by mxback11j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 4RDH2LLGUP-UH5aVuE8;
-        Thu, 07 Mar 2019 15:30:18 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1551961818;
-        bh=dxD2XnRhQ95OzlYljk8PyJoOf/sgnXy+/iI0/yoKbys=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=ZsvVh06mga6EBN6IUIngl7XsVpp2/BCtPAA5Al3mOBcZE22vrQXlYDkuZlnKhXlF6
-         mC/jZH8xdIW0bQQwtB7XEyV9c0J3q5pTT1+CiXH4IaQmEkDWdaJ59lnMxvRUIQhx0w
-         dkmq0rNJcKMRx984d6IVqRyLzP7xuHmsaRrZ2SZI=
-Authentication-Results: mxback11j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id BzDenTRyYn-Tvr0R7XV;
-        Thu, 07 Mar 2019 15:30:15 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
- machines
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
- <20190307112041.GC13633@kroah.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <c84c9553-e31b-a175-59a3-aeb35afd0854@flygoat.com>
-Date:   Thu, 7 Mar 2019 20:30:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Thu, 7 Mar 2019 07:32:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x3s5JOKP4qCXZzU4hjE9cM90uEEJWbBvF2xoIeQgxGI=; b=B60hfypXvswHvJZt1sYbWI/LM
+        5+O2fKYAa5GL9aQfkTowzSD1ixFh18g5FoBe/LdXArTqyUnatIPZlY6/RSvJHpZ9GeJTMOVUowvnd
+        qdihvNnRlCzLH3IvCfjo4mh9/qX7RttEqholXtdBkGNyHHiCrIKu2TaMOJBfGStup0qoCBrRrnKzv
+        MbpYszB2m5rcft1/2jFq9JabaRadhuCCJLflmzBCbh/Eg5cFYXIYLhn1dUW7o8xv30UGluPgYlse3
+        uD+WRLuhqNTm/ZUqJ0P8SZz92YX2OpdeXbwvbpXL3y4XzgDBD32X328tN+ABeukNDJ3SNAbfzR5YV
+        A6+dB0vHA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1sBu-0005dy-Gp; Thu, 07 Mar 2019 12:32:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EFA6F20297BC0; Thu,  7 Mar 2019 13:32:00 +0100 (CET)
+Date:   Thu, 7 Mar 2019 13:32:00 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
+        luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com,
+        linux-kernel@vger.kernel.org, dvyukov@google.com,
+        rostedt@goodmis.org, andrew.cooper3@citrix.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH 05/20] x86/uaccess/xen: Suppress SMAP warnings
+Message-ID: <20190307123200.GE32477@hirez.programming.kicks-ass.net>
+References: <20190307114511.870090179@infradead.org>
+ <20190307115159.530608243@infradead.org>
+ <689d6dc2-77d6-018e-b156-979b2724be7b@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20190307112041.GC13633@kroah.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <689d6dc2-77d6-018e-b156-979b2724be7b@suse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 07, 2019 at 01:22:52PM +0100, Juergen Gross wrote:
+> On 07/03/2019 12:45, Peter Zijlstra wrote:
+> > drivers/xen/privcmd.o: warning: objtool: privcmd_ioctl()+0x1414: call to hypercall_page() with UACCESS enabled
+> > 
+> > Xen needs to do HV calls with AC=1 for hysterical raisins. Make the
+> > warning go away.
+> 
+> No, this is a hypercall with parameters passed through from user land
+> (Xen tools). So setting AC=1 is not related to hysterical reasons, but
+> to indicate that unprivileged buffers are okay here. So please change
+> the commit message to something like:
+> 
+> Some Xen hypercalls allow parameter buffers in user land, so they need
+> to set AC=1. Avoid the warning for those cases.
 
-ÔÚ 2019/3/7 ÏÂÎç7:20, Greg KH Ð´µÀ:
-> On Thu, Mar 07, 2019 at 04:08:20PM +0800, Jiaxun Yang wrote:
->> Some AMD based ThinkPads have a firmware bug that calling
->> "GBDC" will cause bluetooth on Intel wireless cards blocked.
->>
->> Probe these models by DMI match and disable bluetooth subdriver
->> if specified Intel wireless card exist.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
->>   drivers/platform/x86/thinkpad_acpi.c | 70 ++++++++++++++++++++++++++++
->>   1 file changed, 70 insertions(+)
-> <formletter>
->
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read:
->      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> for how to do this properly.
+*yuck* that's gross...
 
-Thanks for remind.
+And I understood from Andrew yesterday (but perhaps I misunderstood)
+that the whole privcmd thing was a bit of a hack.
 
-Should I resend this patch in correct way?
+But sure, I'll change the message.
 
-> </formletter>
+> > XXX: arguably we should rename ANNOTATE_NOSPEC_ALTERNATIVE to
+> >      ANNOTATE_IGNORE_ALTERNATIVE.
+> > 
+> > Cc: andrew.cooper3@citrix.com
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> 
+> Mind Cc-ing the maintainers of the code you are touching in future
+> patches?
 
---
-
-Jiaxun Yang
-
+Sure; my bad, I forgot to ask get_maintainers about this.
