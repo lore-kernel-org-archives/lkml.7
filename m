@@ -2,254 +2,175 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF17C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03887C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAD22085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o5ELAHzX"
+	by mail.kernel.org (Postfix) with ESMTP id CF8BA20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfCGLUx (ORCPT
+        id S1726485AbfCGLVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:20:53 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:20601 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCGLUw (ORCPT
+        Thu, 7 Mar 2019 06:21:01 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36705 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfCGLVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:20:52 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190307112047epoutp044e2be62048c89fdadefa1459ac3ef44f~JqUIAGcxl1631816318epoutp04N
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2019 11:20:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190307112047epoutp044e2be62048c89fdadefa1459ac3ef44f~JqUIAGcxl1631816318epoutp04N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551957647;
-        bh=KVhH1l9CGo/3tXGzL/9KY/4rmMejZB5ce/CWD+RBhOQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=o5ELAHzXrDbjnbifbWh8MIaGQVC3OpBi6nY3IXmD0/byML7hbRU8ILBylFg9B5U5H
-         YYJaQ/bqdVU1+0puZe2UOwrN04qRMEXzlNVP35KngJp0sVGO4ujY/SdreNm5tiU0K6
-         pSjFYX4SGoTV1gbYx1P0xXjixf9FG4Gd39xg5P/o=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.40.194]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20190307112044epcas5p391062bd1ae338323d3b084f1afe099d2~JqUFg-pqN0473304733epcas5p3Q;
-        Thu,  7 Mar 2019 11:20:44 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A0.B3.04136.C8EF08C5; Thu,  7 Mar 2019 20:20:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190307093333epcas5p25cc50478585532ea2f7c4a1275b04279~Jo2fzJ8Wq2554325543epcas5p27;
-        Thu,  7 Mar 2019 09:33:33 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190307093333epsmtrp21f9e6309b56f127149337362729705a9~Jo2fyILZx1332713327epsmtrp2R;
-        Thu,  7 Mar 2019 09:33:33 +0000 (GMT)
-X-AuditID: b6c32a4b-4afff70000001028-28-5c80fe8cac53
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4B.83.03601.D65E08C5; Thu,  7 Mar 2019 18:33:33 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.108.92.210]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190307093332epsmtip2e98a6ac077f3acd72465acde167860f1~Jo2es1WgP2367923679epsmtip2p;
-        Thu,  7 Mar 2019 09:33:32 +0000 (GMT)
-From:   Vishal Goel <vishal.goel@samsung.com>
-To:     casey@schaufler-ca.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     pankaj.m@samsung.com, a.sahrawat@samsung.com,
-        Vishal Goel <vishal.goel@samsung.com>
-Subject: [PATCH 1/1] Smack :- In this patch, global rule list has been
- removed. Now all smack rules will be read using "smack_known_list". This
- list contains all the smack labels and internally each smack label structure
- maintains the list of smack rules corresponding to that smack label. So
- there is no need to maintain extra list.
-Date:   Thu,  7 Mar 2019 14:53:23 +0530
-Message-Id: <1551950603-15570-1-git-send-email-vishal.goel@samsung.com>
-X-Mailer: git-send-email 1.9.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmlm7Pv4YYg2c/+C0u7k61uLftF5vF
-        5V1z2Cw+9Dxis7j3ZiuTxbrbpxkd2Dz6tqxi9Di6fxGbx+dNcgHMUTk2GamJKalFCql5yfkp
-        mXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUBrlRTKEnNKgUIBicXFSvp2NkX5
-        pSWpChn5xSW2SqkFKTkFhkYFesWJucWleel6yfm5VoYGBkamQJUJORk7vwUXPFep6H21mLWB
-        8Z1sFyMnh4SAicS+5gZGEFtIYDejxJxNHl2MXED2J0aJ688PMUE43xglfv26wA7Tsfv7ZnaI
-        xF5Gib/TjrJCOF8YJWbtWssCUsUmoC3RO+8uE4gtIpAo8eHJDrBuZoFIiV/bf7OB2MICV5kk
-        5nQKdDFycLAIqEp83JsAEuYVcJdoXPaeGWKZnMTJY5PB5ksIfGSVaDr0FirhIjH3yDRWCFtY
-        4tXxLVDXSUl8freXDaKhm1Hi6YczjBDOFEaJhc8nQHXbSzy4cZQdZDOzgKbE+l36EGFZiamn
-        1jFBHMon0fv7CRNEnFdixzwYW1Vi6qRuqGXSEodvnGGBsD0kJrz5zAYJyFiJA/tmME5glJ2F
-        sGEBI+MqRsnUguLc9NRi0wLjvNRy5IjaxAhOTlreOxg3nfM5xCjAwajEwxtxuj5GiDWxrLgy
-        9xCjBAezkgjvydcNMUK8KYmVValF+fFFpTmpxYcYTYEhOJFZSjQ5H5g480riDU2NzMwMLA1M
-        jS3MDJXEeefKzo0WEkhPLEnNTk0tSC2C6WPi4JRqYEwNufX8dnrhxOkHAs7nu8RxaFSauk60
-        DVFqmHBSuGDiKy+R5LkZeWrvFp8T3n5sC4Np5taDH8W5Dd5qsJamBancuhvWL6xw+8TX+j3W
-        v7ZNspnRvVHfJ+Cy9NHuG/ViWq28ghvr7/w2uhanFXTljXN0xDWhlWJ7FF+Kv2A3nBBzfoYC
-        L+OF2UosxRmJhlrMRcWJAEIQ3sVkAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNJMWRmVeSWpSXmKPExsWy7bCSvG7u04YYg4dzJS0u7k61uLftF5vF
-        5V1z2Cw+9Dxis7j3ZiuTxbrbpxkd2Dz6tqxi9Di6fxGbx+dNcgHMUVw2Kak5mWWpRfp2CVwZ
-        O78FFzxXqeh9tZi1gfGdbBcjJ4eEgInE7u+b2bsYuTiEBHYzSnw53cUGkZCWWNL5hh3CFpZY
-        +e85VNEnRom5rzpZQRJsAtoSvfPuMoHYIgLJErubpzOC2MwC0RLTnnWxgDQIC5xlkmhceIu5
-        i5GDg0VAVeLj3gSQGl4Bd4nGZe+ZIRbISZw8Npl1AiPPAkaGVYySqQXFuem5xYYFRnmp5XrF
-        ibnFpXnpesn5uZsYwUGipbWD8cSJ+EOMAhyMSjy8EafrY4RYE8uKK3MPMUpwMCuJ8DY+aogR
-        4k1JrKxKLcqPLyrNSS0+xCjNwaIkziuffyxSSCA9sSQ1OzW1ILUIJsvEwSnVwLjmSqo9u6TU
-        lpWy9exTJcSqan4/WPtEyD9iYZqrUImd83aLDeb9cSoz1t66eO5hHPvNrXFclwRM9z124t9z
-        L+PM69XF81zXnbhcwLhg4oek26lnhSu3K/XI/lyXreJjISLnvixM4jLH8YSCHGlO3dK9as8c
-        VuqseLWtynrHii8/7erVbyks+6DEUpyRaKjFXFScCAANWrbjDgIAAA==
-X-CMS-MailID: 20190307093333epcas5p25cc50478585532ea2f7c4a1275b04279
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190307093333epcas5p25cc50478585532ea2f7c4a1275b04279
-References: <CGME20190307093333epcas5p25cc50478585532ea2f7c4a1275b04279@epcas5p2.samsung.com>
+        Thu, 7 Mar 2019 06:21:00 -0500
+Received: by mail-ed1-f66.google.com with SMTP id g9so13119310eds.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 03:20:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UfbNEMDZSjewYqhzFxrobaAzmgPNaFmOIXJC013vE6E=;
+        b=EsqyJ5V0a0AxRjdW5BwnojIIqg7bm+xGdRvGhd/9Gvo0OWzV5QuC+HclMtUwgcmEQV
+         2nxK0orqnNTZD65HxfzyCpHIFBPRVNYPB5vRYC31KZGFB7hx/fBoHsmT6yx9M1mR57Ii
+         JX1jqNz4KCpXwTBq1sCbReKR+7djlyKOTNdZOIDTfIHTmn8Ofqfv9UaMnUeg+rBf26bM
+         djepolepKMrtx3hi9ADyU5+I8e/daEYyQTFcbB0TGE/Kw96AN+r8YcoKHy2djzTdwm1/
+         Pch9AN1gcxm/ZjafOFR8rYn65orcuQkbReZNqaxTcABxz/26MsDG+ju37L1+EDZ1RDQ1
+         3lSg==
+X-Gm-Message-State: APjAAAU5jJOO4o9ifktFi6TEFC4UbLSDbdsnMBDRq7VqFgKdyC/1y33c
+        SFelyEWo9zOHe5WRNQliVbuhqw==
+X-Google-Smtp-Source: APXvYqxjCTKlXWEBhBccNwuoe6xcYuncAD8sMP/hkbujKsAiCBL5TdovifpllAjd/2EuIIhC+/t8xQ==
+X-Received: by 2002:a17:906:1fda:: with SMTP id e26mr7244746ejt.53.1551957658616;
+        Thu, 07 Mar 2019 03:20:58 -0800 (PST)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id gl18sm833180ejb.49.2019.03.07.03.20.57
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 03:20:57 -0800 (PST)
+Subject: Re: False positive "do_IRQ: #.55 No irq handler for vector" messages
+ on AMD ryzen based laptops
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+References: <95e76875-f6b2-cbea-cd74-dc14ee77b2f8@redhat.com>
+ <alpine.DEB.2.21.1902192144390.1644@nanos.tec.linutronix.de>
+ <13dbe818-a364-4cd4-3ac4-78bd7e8d28e3@amd.com>
+ <9f17f1aa-f258-fb18-0736-04a5c03cf40e@redhat.com>
+ <cef82f75-8dc6-8198-ac41-492c200f6d57@redhat.com>
+ <57b32bc1-8ef2-1e1e-a70f-04444f5919a2@amd.com>
+ <6fbcd261-f9e2-1685-1ef7-f148007aab9d@redhat.com>
+ <51078b59-161a-0e13-6d8d-87d37c3375f2@redhat.com>
+ <62f91d1a-4dc7-9628-5c87-5ffca0cd1a0f@amd.com>
+ <92a886e1-1eca-7b94-2c62-9f42abc66bcf@redhat.com>
+ <20190305195432.GI8256@zn.tnic>
+ <e8d1128f-ff81-3dc9-90ae-86ce5d8f69b2@redhat.com>
+ <alpine.DEB.2.21.1903061112350.1646@nanos.tec.linutronix.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <f73c1410-db9c-deb7-6a23-5d54e2b9dcc7@redhat.com>
+Date:   Thu, 7 Mar 2019 12:20:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1903061112350.1646@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1) Small Memory Optimization
-For eg. if there are 20000 rules, then it will save 625KB(20000*32),
-which is critical for small embedded systems.
-2) Reducing the time taken in writing rules on load/load2 interface
-3) Since global rule list is just used to read the rules, so there
-will be no performance impact on system
+Hi,
 
-Signed-off-by: Vishal Goel <vishal.goel@samsung.com>
-Signed-off-by: Amit Sahrawat <a.sahrawat@samsung.com>
----
- security/smack/smackfs.c | 53 ++++++++++++++----------------------------------
- 1 file changed, 15 insertions(+), 38 deletions(-)
+On 06-03-19 11:14, Thomas Gleixner wrote:
+> Hans,
+> 
+> On Wed, 6 Mar 2019, Hans de Goede wrote:
+>> On 05-03-19 20:54, Borislav Petkov wrote:
+>>> On Tue, Mar 05, 2019 at 08:40:02PM +0100, Hans de Goede wrote:
+>>>> Finger pointing at the firmware if there are multiple vendors involved
+>>>> is really not going to help here. Esp. since most OEMs will just respond
+>>>> with "the machine works fine with Windows"
+>>>
+>>> Yes, because windoze simply doesn't report that spurious IRQ, most
+>>> likely.
+>>
+>> So maybe we need to lower the priority of the do_IRQ error from pr_emerg
+>> to pr_err then ?  That will stop throwing the errors in the users face each
+>> boot on distros which have chosen to set the quiet loglevel to such a level
+>> that pr_err messages are not shown on the console (*).
+> 
+> Well, we rather try to understand and fix the issue.
+> 
+> So if Tom's theory holds, then the patch below should cure it.
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index f6482e5..2a8a1f5 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -67,7 +67,6 @@ enum smk_inos {
- /*
-  * List locks
-  */
--static DEFINE_MUTEX(smack_master_list_lock);
- static DEFINE_MUTEX(smack_cipso_lock);
- static DEFINE_MUTEX(smack_ambient_lock);
- static DEFINE_MUTEX(smk_net4addr_lock);
-@@ -134,15 +133,7 @@ enum smk_inos {
- 
- /*
-  * Rule lists are maintained for each label.
-- * This master list is just for reading /smack/load and /smack/load2.
-  */
--struct smack_master_list {
--	struct list_head	list;
--	struct smack_rule	*smk_rule;
--};
--
--static LIST_HEAD(smack_rule_list);
--
- struct smack_parsed_rule {
- 	struct smack_known	*smk_subject;
- 	struct smack_known	*smk_object;
-@@ -211,7 +202,6 @@ static void smk_netlabel_audit_set(struct netlbl_audit *nap)
-  * @srp: the rule to add or replace
-  * @rule_list: the list of rules
-  * @rule_lock: the rule list lock
-- * @global: if non-zero, indicates a global rule
-  *
-  * Looks through the current subject/object/access list for
-  * the subject/object pair and replaces the access that was
-@@ -223,10 +213,9 @@ static void smk_netlabel_audit_set(struct netlbl_audit *nap)
-  */
- static int smk_set_access(struct smack_parsed_rule *srp,
- 				struct list_head *rule_list,
--				struct mutex *rule_lock, int global)
-+				struct mutex *rule_lock)
- {
- 	struct smack_rule *sp;
--	struct smack_master_list *smlp;
- 	int found = 0;
- 	int rc = 0;
- 
-@@ -258,22 +247,6 @@ static int smk_set_access(struct smack_parsed_rule *srp,
- 		sp->smk_access = srp->smk_access1 & ~srp->smk_access2;
- 
- 		list_add_rcu(&sp->list, rule_list);
--		/*
--		 * If this is a global as opposed to self and a new rule
--		 * it needs to get added for reporting.
--		 */
--		if (global) {
--			mutex_unlock(rule_lock);
--			smlp = kzalloc(sizeof(*smlp), GFP_KERNEL);
--			if (smlp != NULL) {
--				smlp->smk_rule = sp;
--				mutex_lock(&smack_master_list_lock);
--				list_add_rcu(&smlp->list, &smack_rule_list);
--				mutex_unlock(&smack_master_list_lock);
--			} else
--				rc = -ENOMEM;
--			return rc;
--		}
- 	}
- 
- out:
-@@ -540,9 +513,9 @@ static ssize_t smk_write_rules_list(struct file *file, const char __user *buf,
- 
- 		if (rule_list == NULL)
- 			rc = smk_set_access(&rule, &rule.smk_subject->smk_rules,
--				&rule.smk_subject->smk_rules_lock, 1);
-+				&rule.smk_subject->smk_rules_lock);
- 		else
--			rc = smk_set_access(&rule, rule_list, rule_lock, 0);
-+			rc = smk_set_access(&rule, rule_list, rule_lock);
- 
- 		if (rc)
- 			goto out;
-@@ -636,21 +609,23 @@ static void smk_rule_show(struct seq_file *s, struct smack_rule *srp, int max)
- 
- static void *load2_seq_start(struct seq_file *s, loff_t *pos)
- {
--	return smk_seq_start(s, pos, &smack_rule_list);
-+	return smk_seq_start(s, pos, &smack_known_list);
- }
- 
- static void *load2_seq_next(struct seq_file *s, void *v, loff_t *pos)
- {
--	return smk_seq_next(s, v, pos, &smack_rule_list);
-+	return smk_seq_next(s, v, pos, &smack_known_list);
- }
- 
- static int load_seq_show(struct seq_file *s, void *v)
- {
- 	struct list_head *list = v;
--	struct smack_master_list *smlp =
--		list_entry_rcu(list, struct smack_master_list, list);
-+	struct smack_rule *srp;
-+	struct smack_known *skp =
-+		list_entry_rcu(list, struct smack_known, list);
- 
--	smk_rule_show(s, smlp->smk_rule, SMK_LABELLEN);
-+	list_for_each_entry_rcu(srp, &skp->smk_rules, list)
-+		smk_rule_show(s, srp, SMK_LABELLEN);
- 
- 	return 0;
- }
-@@ -2352,10 +2327,12 @@ static ssize_t smk_write_access(struct file *file, const char __user *buf,
- static int load2_seq_show(struct seq_file *s, void *v)
- {
- 	struct list_head *list = v;
--	struct smack_master_list *smlp =
--		list_entry_rcu(list, struct smack_master_list, list);
-+	struct smack_rule *srp;
-+	struct smack_known *skp =
-+		list_entry_rcu(list, struct smack_known, list);
- 
--	smk_rule_show(s, smlp->smk_rule, SMK_LONGLABEL);
-+	list_for_each_entry_rcu(srp, &skp->smk_rules, list)
-+		smk_rule_show(s, srp, SMK_LONGLABEL);
- 
- 	return 0;
- }
--- 
-1.9.1
+Thank you for the patch, unfortunately the messages still happen
+with a kernel with the patch applied:
 
+[    0.741479] smp: Bringing up secondary CPUs ...
+[    0.741654] x86: Booting SMP configuration:
+[    0.741655] .... node  #0, CPUs:        #1
+[    0.742231] TSC synchronization [CPU#0 -> CPU#1]:
+[    0.742231] Measured 3346474670 cycles TSC warp between CPUs, turning off TSC
+  clock.
+[    0.742231] tsc: Marking TSC unstable due to check_tsc_sync_source failed
+[    0.321639] do_IRQ: 1.55 No irq handler for vector
+[    0.743371]   #2
+[    0.321639] do_IRQ: 2.55 No irq handler for vector
+[    0.743598]   #3
+[    0.321639] do_IRQ: 3.55 No irq handler for vector
+[    0.744306]   #4
+[    0.321639] do_IRQ: 4.55 No irq handler for vector
+[    0.744531]   #5
+[    0.321639] do_IRQ: 5.55 No irq handler for vector
+[    0.745241]   #6
+[    0.321639] do_IRQ: 6.55 No irq handler for vector
+[    0.745467]   #7
+[    0.321639] do_IRQ: 7.55 No irq handler for vector
+[    0.745627] smp: Brought up 1 node, 8 CPUs
+[    0.745627] smpboot: Max logical packages: 2
+[    0.745627] smpboot: Total of 8 processors activated (35133.37 BogoMIPS)
+
+I also tried suspend/resume. In that case there are no
+extra "No irq handler for vector" printed, this seems to
+only trigger once per CPU on boot only.
+
+I do get these messages during resume, but I guess these are unrelated:
+
+[  167.034247] ACPI: Low-level resume complete
+[  167.034247] ACPI: EC: EC started
+[  167.034247] PM: Restoring platform NVS memory
+[  167.034247] Enabling non-boot CPUs ...
+[  167.034247] x86: Booting SMP configuration:
+[  167.034247] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[  167.034247]  cache: parent cpu1 should not be sleeping
+[  167.034281] microcode: CPU1: patch_level=0x08101007
+[  167.034542] CPU1 is up
+[  167.034583] smpboot: Booting Node 0 Processor 2 APIC 0x2
+[  167.035347]  cache: parent cpu2 should not be sleeping
+[  167.035484] microcode: CPU2: patch_level=0x08101007
+[  167.035690] CPU2 is up
+[  167.035703] smpboot: Booting Node 0 Processor 3 APIC 0x3
+[  167.036447]  cache: parent cpu3 should not be sleeping
+[  167.036580] microcode: CPU3: patch_level=0x08101007
+[  167.036819] CPU3 is up
+[  167.036843] smpboot: Booting Node 0 Processor 4 APIC 0x4
+[  167.038227]  cache: parent cpu4 should not be sleeping
+[  167.038384] microcode: CPU4: patch_level=0x08101007
+etc.
+
+Regards,
+
+Hans
+
+
+> 8<---------------------
+> 
+> --- a/arch/x86/kernel/apic/apic.c
+> +++ b/arch/x86/kernel/apic/apic.c
+> @@ -1642,6 +1642,7 @@ static void end_local_APIC_setup(void)
+>    */
+>   void apic_ap_setup(void)
+>   {
+> +	clear_local_APIC();
+>   	setup_local_APIC();
+>   	end_local_APIC_setup();
+>   }
+> 
