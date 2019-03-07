@@ -2,104 +2,226 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAF1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7698FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845DD2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552000406;
-	bh=INjc24gcVImPOVJ/sMT6g77Zw1IbvRfAw2yxX06dDzA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C/KuCAdLGhsoZtIRcLgqD182l75cP6KN541hh7RlainQSbB+GPTEWicbCk4Z+Xc7v
-	 MHCIBe4lINwBoXnp8B/xilCkfnpih79W8yrnuNzMCZza8vrngalNwxEMnxOLuybfny
-	 UGDhEaNIjeulFjFZbi35dQohawpaBAbOcynW7mx0=
+	by mail.kernel.org (Postfix) with ESMTP id 38E922081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="rqpfRlj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfCGXNY (ORCPT
+        id S1726364AbfCGXO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 18:13:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726172AbfCGXNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 18:13:24 -0500
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C6BA2085A
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2019 23:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552000403;
-        bh=INjc24gcVImPOVJ/sMT6g77Zw1IbvRfAw2yxX06dDzA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EoksDNfCFXl5A+ve8NhBGl5MyXtiHYzJOCBKo9QpJSO0TGrfgd9ce9mPjw0thzXRC
-         LGCUy6HWulglN1N8sC3Xbx9xuMV2nZ6MipFy/oM2Wd0Em+M02u31PfP3WwWVMUsIxe
-         l5eZDJLZiGaQ/cUABiSbGaldUimU7iaB0rJE+8gw=
-Received: by mail-qk1-f172.google.com with SMTP id x9so10169146qkf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 15:13:23 -0800 (PST)
-X-Gm-Message-State: APjAAAXyxQHbSQIy91voV1bNrU29DybKTkS+3MkC150kuW3BBWJtOrB0
-        8crP59WQrjQC8xuTzs7x1vAZ9Iqw9p6x87Ggjg==
-X-Google-Smtp-Source: APXvYqyTIEKMIo+xzytE9QrZ1wmMm0DPywRYpBsHAmj72MSJaWnsavZw5xfRKKhsyprvsUZdkgG5oEXgvLOw3rJD2xU=
-X-Received: by 2002:a05:620a:13f1:: with SMTP id h17mr5451207qkl.147.1552000402566;
- Thu, 07 Mar 2019 15:13:22 -0800 (PST)
+        Thu, 7 Mar 2019 18:14:27 -0500
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:59354 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726172AbfCGXO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 18:14:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
+  t=1552000466; x=1583536466;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=63xsQBaVlqCrS5f8YNGnAuaHYyKeT8FqQmjINiy7uJo=;
+  b=rqpfRlj0b4aMky6fXMJAZ/zLWHfZzHBiPFMMSdaV/u+dtkZ9NK+MA5rD
+   gtzKuB6gNEtO/8w2y1qZgrdW+QdzR2PB8WaGheYwuT1GPK8ZKeyTQrR0f
+   HDnIx32sF4DzOdBuNEu0OxVU7NxUa/sWJ3aQiOr8HYD7FM+gy1wlQ16h0
+   E=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EFAAAnpYFchyWd50NkGgEBAQEBAgE?=
+ =?us-ascii?q?BAQEHAgEBAQGBUgQBAQEBCwGCZoECEicKjHiMW5gjFIFnCwEBGIRUAoRYNQg?=
+ =?us-ascii?q?NAQEDAQEHAQMCAQECEAEBARUJCCkvgjoigm8BAQEBAgEBESg/DAQCAQgRBAE?=
+ =?us-ascii?q?BHxAoJwgCBAENBQgagwCBbgifCj0Cb4EBiQcBAQGCHooogS8BjUGBEYMShE4?=
+ =?us-ascii?q?BEgGGAAKMHZd4BwKOTYQwIZM1LYpEkjgCBAIEBQIUgUgBNWdxcIM8ghYOCY4?=
+ =?us-ascii?q?eQAExi0CBH4EfAQE?=
+X-IPAS-Result: =?us-ascii?q?A2EFAAAnpYFchyWd50NkGgEBAQEBAgEBAQEHAgEBAQGBU?=
+ =?us-ascii?q?gQBAQEBCwGCZoECEicKjHiMW5gjFIFnCwEBGIRUAoRYNQgNAQEDAQEHAQMCA?=
+ =?us-ascii?q?QECEAEBARUJCCkvgjoigm8BAQEBAgEBESg/DAQCAQgRBAEBHxAoJwgCBAENB?=
+ =?us-ascii?q?QgagwCBbgifCj0Cb4EBiQcBAQGCHooogS8BjUGBEYMShE4BEgGGAAKMHZd4B?=
+ =?us-ascii?q?wKOTYQwIZM1LYpEkjgCBAIEBQIUgUgBNWdxcIM8ghYOCY4eQAExi0CBH4EfA?=
+ =?us-ascii?q?QE?=
+Received: from mx0b-00154901.pphosted.com (HELO mx0a-00154901.pphosted.com) ([67.231.157.37])
+  by esa6.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Mar 2019 17:14:25 -0600
+Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27N7uoZ020290;
+        Thu, 7 Mar 2019 18:14:24 -0500
+Received: from esa4.dell-outbound2.iphmx.com (esa4.dell-outbound2.iphmx.com [68.232.154.98])
+        by mx0b-00154901.pphosted.com with ESMTP id 2r35hg2q31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 07 Mar 2019 18:14:24 -0500
+From:   <Mario.Limonciello@dell.com>
+Received: from ausxipps306.us.dell.com ([143.166.148.156])
+  by esa4.dell-outbound2.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA256; 08 Mar 2019 05:14:22 +0600
+X-LoopCount0: from 10.166.132.169
+X-IronPort-AV: E=Sophos;i="5.58,453,1544508000"; 
+   d="scan'208";a="281673644"
+To:     <jiaxun.yang@flygoat.com>, <ibm-acpi@hmh.eng.br>
+CC:     <dvhart@infradead.org>, <andy@infradead.org>,
+        <ibm-acpi-devel@lists.sourceforge.net>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: RE: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
+ machines
+Thread-Topic: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
+ machines
+Thread-Index: AQHU1L3R7XMaBHjarE+WkPyjavlri6YAzRxQ
+Date:   Thu, 7 Mar 2019 23:14:21 +0000
+Message-ID: <28af3c22ad144cf69284aa6f91ee6565@ausx13mpc124.AMER.DELL.COM>
+References: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1549022873-40549-1-git-send-email-narmstrong@baylibre.com> <1549022873-40549-2-git-send-email-narmstrong@baylibre.com>
-In-Reply-To: <1549022873-40549-2-git-send-email-narmstrong@baylibre.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Mar 2019 17:13:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLa1QNYTo+Yj-5fC4k8C1bd+V8qi5LiHgLA_qZY+Gy5cg@mail.gmail.com>
-Message-ID: <CAL_JsqLa1QNYTo+Yj-5fC4k8C1bd+V8qi5LiHgLA_qZY+Gy5cg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sandy Huang <hjc@rock-chips.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        linux-amlogic@lists.infradead.org, Huicong Xu <xhc@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903070152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 1, 2019 at 6:08 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add support for SCDC Setup for TMDS Clock > 3.4GHz and enable TMDS
-> Scrambling when supported or mandatory.
->
-> This patch also adds an helper to setup the control bit to support
-> the high TMDS Bit Period/TMDS Clock-Period Ratio as required with
-> TMDS Clock > 3.4GHz for HDMI2.0 3840x2160@60/50 modes.
->
-> These changes were based on work done by Huicong Xu <xhc@rock-chips.com>
-> and Nickey Yang <nickey.yang@rock-chips.com> to support HDMI2.0 modes
-> on the Rockchip 4.4 BSP kernel at [1]
->
-> [1] https://github.com/rockchip-linux/kernel/tree/release-4.4
->
-> Cc: Nickey Yang <nickey.yang@rock-chips.com>
-> Cc: Huicong Xu <xhc@rock-chips.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+ -----Original Message-----
+> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+> owner@vger.kernel.org> On Behalf Of Jiaxun Yang
+> Sent: Thursday, March 7, 2019 2:08 AM
+> To: ibm-acpi@hmh.eng.br
+> Cc: dvhart@infradead.org; andy@infradead.org; ibm-acpi-
+> devel@lists.sourceforge.net; platform-driver-x86@vger.kernel.org; linux-
+> kernel@vger.kernel.org; stable@vger.kernel.org; Jiaxun Yang
+> Subject: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
+> machines
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> Some AMD based ThinkPads have a firmware bug that calling
+> "GBDC" will cause bluetooth on Intel wireless cards blocked.
+
+Since this is considered a firmware bug; has the OEM (and IBV) been notifie=
+d?  Is it
+fixed in a newer version of the firmware?
+
+If so, then this should probably only match particular broken firmware vers=
+ions.
+
+>=20
+> Probe these models by DMI match and disable bluetooth subdriver
+> if specified Intel wireless card exist.
+>=20
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 85 ++++++++++++++++++++++++++++++-
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  1 +
->  include/drm/bridge/dw_hdmi.h              |  1 +
->  3 files changed, 85 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/thinkpad_acpi.c | 70 ++++++++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index 726341f2b638..29e835f9368a 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -79,6 +79,7 @@
+>  #include <linux/jiffies.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/acpi.h>
+> +#include <linux/pci.h>
+>  #include <linux/pci_ids.h>
+>  #include <linux/power_supply.h>
+>  #include <sound/core.h>
+> @@ -4501,11 +4502,80 @@ static void bluetooth_exit(void)
+>  	bluetooth_shutdown();
+>  }
+>=20
+> +static const struct dmi_system_id bt_fwbug_list[] __initconst =3D {
+> +	{
+> +		.ident =3D "ThinkPad E485",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "20KU"),
+> +		},
+> +	},
+> +	{
+> +		.ident =3D "ThinkPad E585",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "20KV"),
+> +		},
+> +	},
+> +	{
+> +		.ident =3D "ThinkPad A285 - 20MW",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "20MW"),
+> +		},
+> +	},
+> +	{
+> +		.ident =3D "ThinkPad A285 - 20MX",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "20MX"),
+> +		},
+> +	},
+> +	{
+> +		.ident =3D "ThinkPad A485 - 20MU",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "20MU"),
+> +		},
+> +	},
+> +	{
+> +		.ident =3D "ThinkPad A485 - 20MV",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "20MV"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+> +static int __init have_bt_fwbug(void)
+> +{
+> +	/* Some AMD based ThinkPads have a firmware bug that calling
+> +	 * "GBDC" will cause bluetooth on Intel wireless cards blocked
+> +	 */
+> +	if (dmi_check_system(bt_fwbug_list)) {
+> +		if (pci_get_device(PCI_VENDOR_ID_INTEL, 0x24F3, NULL) || \
+> +		    pci_get_device(PCI_VENDOR_ID_INTEL, 0x24FD, NULL) || \
+> +		    pci_get_device(PCI_VENDOR_ID_INTEL, 0x2526, NULL))
+> +			return 1;
+> +		else
+> +			return 0;
+> +	} else {
+> +			return 0;
+> +	}
+> +}
+> +
+>  static int __init bluetooth_init(struct ibm_init_struct *iibm)
+>  {
+>  	int res;
+>  	int status =3D 0;
+>=20
+> +	if (have_bt_fwbug()) {
+> +		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
+> +			FW_BUG "disable bluetooth subdriver for Intel cards\n");
+> +		return 1;
+> +	}
+> +
+>  	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
+>  			"initializing bluetooth subdriver\n");
+>=20
+> --
+> 2.20.1
 
-This commit in drm-misc-next is breaking booting on the Rock960. I
-have FB and fbcon enabled. The boot hangs after this message:
-
-[    3.012334] [drm:rockchip_drm_fbdev_create] FB [1920x1080]-24
-kvaddr=(____ptrval____) offset=0 size=8294400
-
-Rob
