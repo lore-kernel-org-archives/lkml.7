@@ -2,89 +2,133 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95776C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D74C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE6420661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E64D20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfCGCJ3 (ORCPT
+        id S1726721AbfCGCLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:09:29 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39864 "EHLO huawei.com"
+        Wed, 6 Mar 2019 21:11:49 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42760 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726121AbfCGCJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:09:29 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A55D589D0820E1F171AC;
-        Thu,  7 Mar 2019 10:09:26 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
- 10:09:21 +0800
-Subject: Re: [PATCH] appletalk: Correctly handle return value of
- register_snap_client
-To:     David Miller <davem@davemloft.net>
-References: <20190306072740.18760-1-yuehaibing@huawei.com>
- <20190306.101739.246616987743523058.davem@davemloft.net>
-CC:     <joe@perches.com>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <ef564906-fdb7-d167-1dbd-12f4321ad9f2@huawei.com>
-Date:   Thu, 7 Mar 2019 10:09:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1726121AbfCGCLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 21:11:49 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A34591FC3C0FEEE3495B;
+        Thu,  7 Mar 2019 10:11:46 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
+ 10:11:39 +0800
+Subject: Re: [PATCH 3/8] aio_poll(): sanitize the logics after vfs_poll(), get
+ rid of leak on error
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>, <kgraul@linux.ibm.com>,
+        <ktkhai@virtuozzo.com>, <kyeongdon.kim@lge.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, <pabeni@redhat.com>,
+        <syzkaller-bugs@googlegroups.com>, <xiyou.wangcong@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, <bcrl@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-aio@kvack.org>,
+        <houtao1@huawei.com>, <yi.zhang@huawei.com>
+References: <CAHk-=wghRmdYKRAwakeHmjcpbLt9fJAHyU2x8s_NZONhz6RTOw@mail.gmail.com>
+ <20190307000316.31133-1-viro@ZenIV.linux.org.uk>
+ <20190307000316.31133-3-viro@ZenIV.linux.org.uk>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <0c631d6f-48b6-3691-eec5-29eb55817346@huawei.com>
+Date:   Thu, 7 Mar 2019 10:11:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190306.101739.246616987743523058.davem@davemloft.net>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190307000316.31133-3-viro@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
+X-Originating-IP: [10.184.213.217]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/7 2:17, David Miller wrote:
-> From: Yue Haibing <yuehaibing@huawei.com>
-> Date: Wed, 6 Mar 2019 15:27:40 +0800
-> 
->> @@ -879,15 +879,17 @@ static struct notifier_block aarp_notifier = {
->>  
->>  static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
->>  
->> -void __init aarp_proto_init(void)
->> +int __init aarp_proto_init(void)
->>  {
->>  	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
->> -	if (!aarp_dl)
->> -		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
->> +	if (!aarp_dl) {
->> +		pr_crit("Unable to register AARP with SNAP.\n");
->> +		return -ENOMEM;
->> +	}
->>  	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
->>  	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
->>  	add_timer(&aarp_timer);
->> -	register_netdevice_notifier(&aarp_notifier);
->> +	return register_netdevice_notifier(&aarp_notifier);
->>  }
->>  
-> 
-> Your error paths in the caller of aarp_proto_init() do not handle the case
-> where aarp_dl is created by register_netdevice_notifier() fails.  You have
-> to unregister aarp_dl if it is non-NULL.
++	if (async && !apt.error)  --->may be this should be if (!async && !apt.error) ?
 
-Thanks, will fix this.
-
+On 2019/3/7 8:03, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> So your out_dev label path needs to handle aarp_dl if non-NULL.
+> We want iocb_put() happening on errors, to balance the extra reference
+> we'd taken.  As it is, we end up with a leak.  The rules should be
+> 	* error: iocb_put() to deal with the extra ref, return error,
+> let the caller do another iocb_put().
+> 	* async: iocb_put() to deal with the extra ref, return 0.
+> 	* no error, event present immediately: aio_poll_complete() to
+> report it, iocb_put() to deal with the extra ref, return 0.
 > 
-> Probably best is to jump to out_aarp: instead and make aarp_cleanup_module
-> able to handle partial cleanups.
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>  fs/aio.c | 25 +++++++++++--------------
+>  1 file changed, 11 insertions(+), 14 deletions(-)
 > 
-> .
+> diff --git a/fs/aio.c b/fs/aio.c
+> index 3a8b894378e0..22b288997441 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -1724,6 +1724,7 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+>  	struct kioctx *ctx = aiocb->ki_ctx;
+>  	struct poll_iocb *req = &aiocb->poll;
+>  	struct aio_poll_table apt;
+> +	bool async = false;
+>  	__poll_t mask;
+>  
+>  	/* reject any unknown events outside the normal event mask. */
+> @@ -1760,30 +1761,26 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+>  
+>  	spin_lock_irq(&ctx->ctx_lock);
+>  	spin_lock(&req->head->lock);
+> -	if (req->woken) {
+> -		/* wake_up context handles the rest */
+> -		mask = 0;
+> +	if (req->woken) { /* already taken up by aio_poll_wake() */
+> +		async = true;
+>  		apt.error = 0;
+> -	} else if (mask || apt.error) {
+> -		/* if we get an error or a mask we are done */
+> -		WARN_ON_ONCE(list_empty(&req->wait.entry));
+> -		list_del_init(&req->wait.entry);
+> -	} else {
+> -		/* actually waiting for an event */
+> +	} else if (!mask && !apt.error) { /* actually waiting for an event */
+>  		list_add_tail(&aiocb->ki_list, &ctx->active_reqs);
+>  		aiocb->ki_cancel = aio_poll_cancel;
+> +		async = true;
+> +	} else { /* if we get an error or a mask we are done */
+> +		WARN_ON_ONCE(list_empty(&req->wait.entry));
+> +		list_del_init(&req->wait.entry);
+> +		/* no wakeup in the future either; aiocb is ours to dispose of */
+>  	}
+>  	spin_unlock(&req->head->lock);
+>  	spin_unlock_irq(&ctx->ctx_lock);
+>  
+>  out:
+> -	if (unlikely(apt.error))
+> -		return apt.error;
+> -
+> -	if (mask)
+> +	if (async && !apt.error)
+>  		aio_poll_complete(aiocb, mask);
+>  	iocb_put(aiocb);
+> -	return 0;
+> +	return apt.error;
+>  }
+>  
+>  static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
 > 
 
