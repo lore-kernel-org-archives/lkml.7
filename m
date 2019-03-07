@@ -2,89 +2,135 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FC0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDCDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7FB20854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9AE20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980819;
-	bh=1RSAAoDl+MfB8HGRc1Opl1CrXXA7wmKimpQdk1qa2rU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1GYriN7yFaL0k8uu2BkfiawwHxEiPZyogTnjp0/+OwwOXwlUP2ZJveyvb9m2TwWen
-	 +0/HFz5bK3RaE1ikOwA+NhQLyzxSBZem7EEF/O+EgZbF4vBaAMeEbtR2Q6WHv9WPzt
-	 6t4ZCq7pFboHMrOlfj26TQs00AO0aHdsmB5EVSe4=
+	s=default; t=1551980823;
+	bh=WSZ4lY5Uet+kGuhhHhoPdF4N5SazbmegUEP0ahp8Na0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b+YkY67tbVxd41M7o35EOj87YprC6MzgtY0MbVhzCrKE53A3J8fVTUNVWaTSERXRl
+	 tTzYLbbdxgXALf1ksqAGr7A0MyhyCrBvqVTzJ+Ow/sPaXU3J+h7tqdtpzaGxgDbp2R
+	 U6U78e0KAt0Os0kOFcH5taFFqi1teLY0r/R6BNg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfCGRq5 (ORCPT
+        id S1726973AbfCGRrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:46:57 -0500
-Received: from mail.linuxfoundation.org ([140.211.169.12]:36516 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbfCGRq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:46:56 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 17DE1C139;
-        Thu,  7 Mar 2019 17:46:55 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 09:46:54 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
- backed filesystem
-Message-Id: <20190307094654.35391e0066396b204d133927@linux-foundation.org>
-In-Reply-To: <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
-References: <20190129165428.3931-10-jglisse@redhat.com>
-        <CAPcyv4gNtDQf0mHwhZ8g3nX6ShsjA1tx2KLU_ZzTH1Z1AeA_CA@mail.gmail.com>
-        <20190129193123.GF3176@redhat.com>
-        <CAPcyv4gkYTZ-_Et1ZriAcoHwhtPEftOt2LnR_kW+hQM5-0G4HA@mail.gmail.com>
-        <20190129212150.GP3176@redhat.com>
-        <CAPcyv4hZMcJ6r0Pw5aJsx37+YKx4qAY0rV4Ascc9LX6eFY8GJg@mail.gmail.com>
-        <20190130030317.GC10462@redhat.com>
-        <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
-        <20190130183616.GB5061@redhat.com>
-        <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
-        <20190131041641.GK5061@redhat.com>
-        <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
-        <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
-        <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
-X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Mar 2019 12:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726943AbfCGRq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:46:59 -0500
+Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9876720661;
+        Thu,  7 Mar 2019 17:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551980819;
+        bh=WSZ4lY5Uet+kGuhhHhoPdF4N5SazbmegUEP0ahp8Na0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KNZHBvSQqaIAJJriA6mu8rEUGiCD9aiPfP9+Tj7BIBmipiQyPvlhk6t9+jGIF/mBI
+         sfcUNThkpFClEl5tKjGUVxbb+tQF6OpGxzRQsJGSkoFrCw5MRcj8mjCK0ZLDxwrXkA
+         VTab4aYo7sgvplqXv3B6L7rmfj20G72nry86+8r0=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 31/35] perf hist: Fix memory leak of srcline
+Date:   Thu,  7 Mar 2019 14:44:29 -0300
+Message-Id: <20190307174433.28819-32-acme@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
+References: <20190307174433.28819-1-acme@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Mar 2019 20:20:10 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+From: Jiri Olsa <jolsa@redhat.com>
 
-> My hesitation would be drastically reduced if there was a plan to
-> avoid dangling unconsumed symbols and functionality. Specifically one
-> or more of the following suggestions:
-> 
-> * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
-> surface for out-of-tree consumers to come grumble at us when we
-> continue to refactor the kernel as we are wont to do.
+We can't allocate he->srcline unconditionaly, only when new hist_entry
+is created. Moving he->srcline allocation into hist_entry__init
+function.
 
-The existing patches use EXPORT_SYMBOL() so that's a sticking point. 
-Jerome, what would happen is we made these EXPORT_SYMBOL_GPL()?
+Original-patch-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Nageswara R Sastry <nasastry@in.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20190305152536.21035-4-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/hist.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-> * A commitment to consume newly exported symbols in the same merge
-> window, or the following merge window. When that goal is missed revert
-> the functionality until such time that it can be consumed, or
-> otherwise abandoned.
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 74e307d17c49..f9eb95bf3938 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -419,6 +419,13 @@ static int hist_entry__init(struct hist_entry *he,
+ 		if (he->raw_data == NULL)
+ 			goto err_infos;
+ 	}
++
++	if (he->srcline) {
++		he->srcline = strdup(he->srcline);
++		if (he->srcline == NULL)
++			goto err_rawdata;
++	}
++
+ 	INIT_LIST_HEAD(&he->pairs.node);
+ 	thread__get(he->thread);
+ 	he->hroot_in  = RB_ROOT_CACHED;
+@@ -429,6 +436,9 @@ static int hist_entry__init(struct hist_entry *he,
+ 
+ 	return 0;
+ 
++err_rawdata:
++	free(he->raw_data);
++
+ err_infos:
+ 	if (he->branch_info) {
+ 		map__put(he->branch_info->from.map);
+@@ -605,7 +615,7 @@ __hists__add_entry(struct hists *hists,
+ 			.map	= al->map,
+ 			.sym	= al->sym,
+ 		},
+-		.srcline = al->srcline ? strdup(al->srcline) : NULL,
++		.srcline = (char *) al->srcline,
+ 		.socket	 = al->socket,
+ 		.cpu	 = al->cpu,
+ 		.cpumode = al->cpumode,
+@@ -962,7 +972,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+ 			.map = al->map,
+ 			.sym = al->sym,
+ 		},
+-		.srcline = al->srcline ? strdup(al->srcline) : NULL,
++		.srcline = (char *) al->srcline,
+ 		.parent = iter->parent,
+ 		.raw_data = sample->raw_data,
+ 		.raw_size = sample->raw_size,
+-- 
+2.20.1
 
-It sounds like we can tick this box.
-
-> * No new symbol exports and functionality while existing symbols go unconsumed.
-
-Unsure about this one?
