@@ -6,65 +6,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FE9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE207C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3781E20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB64720854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551993156;
-	bh=zujU5fYXV+gjmHGybhIXUolVWDUY+sSFZNFEunm/D9k=;
+	s=default; t=1551993160;
+	bh=hkwv/dazw2A/Cv6aivCdBAnBwyoSSJV4aZ0w/QhY4kA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiYV2L4ZYdqlrLR+m7x7zVSM03i4g2djAxDCiANOzgev8O1ToNacQG+aRkidu/vwF
-	 ZCvtmPD8YSptNjeS1iIL2WWbHhM6o+LTDBkN8s+cHGkicnrYUeYvv0mO4z3Wn3ySBY
-	 X5rdQgEwOKVJo/GmXKjqwguS2dxbO/F+axMC+Mn4=
+	b=Lx0L68RKA8ZMpth+vQ3oHm7tw6LEMv1sQ3KEFsLM5dtdO1GxnbQAbqdrNIkyaiVXu
+	 HYH81tuiI3onpHKwyN8eapixGovm145DOv6XEycjmiNscQfdVaO5+eTxbOPku6d1aD
+	 LrTN+jpdNaoJrmXPKETGS6OGcQSHIgrNYERMCLDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfCGVMf (ORCPT
+        id S1726412AbfCGVMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 16:12:35 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:56667 "EHLO
+        Thu, 7 Mar 2019 16:12:39 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:46891 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726186AbfCGVMa (ORCPT
+        by vger.kernel.org with ESMTP id S1726380AbfCGVMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 16:12:30 -0500
+        Thu, 7 Mar 2019 16:12:35 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id A49923026;
-        Thu,  7 Mar 2019 16:12:29 -0500 (EST)
+        by mailout.west.internal (Postfix) with ESMTP id A459E3540;
+        Thu,  7 Mar 2019 16:12:34 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:29 -0500
+  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=YZGcEdzI6yFT9z5i+ij7BvlkOK4yLoKhr9sL8DhOvvM=; b=zP387wsQ
-        iwB2Pj5oNg4P6RbCtq6r2w3NDmqeULhnnolFNcYtIWP22H+68MFMErEqoAzOhQfe
-        PU3ZdOBcUKlcTMvUSrbGn0ajR83uGSGq9Pg+XlpazZ5CctYqDzA/rqPiONMg4gi+
-        DvXhH4rcbFr7u2VN/WSqKOl+VcpoQtVaaz8Iw1d70KjyB84rQ9WYU0t2lP8S+q0b
-        4KBVRBNauzx/JSwYzOZv5uJ/Lz0uQC3kHnpEuRI6L/GiXyX6A1nHJyiLd3jSD27w
-        aP76+1I5KyPOB760UbCXNonfUEpqDkEWt6Iqv9JbviVzDj2XzQwrd62rix+rXg2V
-        rKWSqAGUhcDUNw==
-X-ME-Sender: <xms:PYmBXBFhPuCrzCMwXbGZteFZWegAOd3RXVMls0WRaMEIRYyUlyHqrQ>
+        fm2; bh=w6DnkOJdeCd08m/4a4WGsB39s0VMdxxDOkNHYP72TR8=; b=rSe+ZWxN
+        TJBdt0GtTxchF/IYxpnEqnpUCTAA3NGeZMP5+UAStGs3CTQXyjkCw+Ui+uhgc+f6
+        U9AqiJYXKh58OJBetVxzU4bTCyLVAxdxVi7ePTrvCrH9vuU9g3tDPP8EcUKsPVdF
+        XWWubhvcUzKwTZbPq2on1zXwKSm+Ox3CquusZY1uopbytZCZ3Th/lEbRsXKNzmns
+        N5/aLb4Adfsi0oTcL82jFN0Oi7Pob87feGrMgYrbeQTiBrkngHCDVGA9OGqGqguq
+        gSVYlrdHhVSIKrthFl9Jfd4VvbFlsSv8Z5aykIW5xOQaS01V/H5OUnCjkGn1yBCj
+        UmhuLO9ayPkm2w==
+X-ME-Sender: <xms:QomBXJ-Ofx2_E9-1UQ6GeOe8M6X8yMb31Z4A2sFOK6fet6MMPPtK2Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeekgdduhedtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghi
     nhcuvedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecukf
     hppeduvdegrdduieelrdehrdduheeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:PYmBXP-m0D-XZyOkDc56yxfNzModXOe8ExFymCxCnfwlFX3CBtR9Lw>
-    <xmx:PYmBXPxhdRqI-wPYcYu6w6V72ml7-ZTDYi77pqA4CVVu1KophXGrAQ>
-    <xmx:PYmBXHuYZbWSLZYIhwUX4q6d86AhK5-Mpa1ahlwzF31zgOxcAadaAQ>
-    <xmx:PYmBXAAxC7XOLToOYXp0bJGXr7aItOFh0NfzUugHplvSFog7N2graw>
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeef
+X-ME-Proxy: <xmx:QomBXIM7wjCxkawoIYlxLtAyDPZnDncXbJaYwZUKHRoJJ_PyHxslng>
+    <xmx:QomBXD-mFAHmjewsiqT85RImXsrlzo5ZP1re78Pfct2kQbfFPoQZEw>
+    <xmx:QomBXAIqqAKOqME0jz__6CQd-68jk4MAl2-U0QIWR5sK6TN9XvcfpQ>
+    <xmx:QomBXKwX2WewgJIiWaWRxJ6M4jbgYTlonbp36mhnxXKuDNjJRXo6Bg>
 Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4F77E10331;
-        Thu,  7 Mar 2019 16:12:26 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 445FC10310;
+        Thu,  7 Mar 2019 16:12:31 -0500 (EST)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] docs: Remove unnecessary reference link title
-Date:   Fri,  8 Mar 2019 08:11:47 +1100
-Message-Id: <20190307211153.28400-4-tobin@kernel.org>
+Subject: [PATCH 5/9] docs: Replace backtick with apostrophe.
+Date:   Fri,  8 Mar 2019 08:11:49 +1100
+Message-Id: <20190307211153.28400-6-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190307211153.28400-1-tobin@kernel.org>
 References: <20190307211153.28400-1-tobin@kernel.org>
@@ -75,58 +75,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Labels that precede a heading use the heading as the link title.
-Explicitly adding the link title defeats the purpose of this feature
-i.e. makes the reference less maintainable.
+Sphinx emits:
 
-Remove unnecessary reference link title.
+	WARNING: Inline interpreted text or phrase reference
+	start-string without end-string.
+
+This is caused by a spurious backtick.
+
+Replace backtick with apostrophe.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- Documentation/admin-guide/mm/numa_memory_policy.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ include/linux/kernel.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/mm/numa_memory_policy.rst b/Documentation/admin-guide/mm/numa_memory_policy.rst
-index d78c5b315f72..1ef0146eaa4d 100644
---- a/Documentation/admin-guide/mm/numa_memory_policy.rst
-+++ b/Documentation/admin-guide/mm/numa_memory_policy.rst
-@@ -20,8 +20,7 @@ which is an administrative mechanism for restricting the nodes from which
- memory may be allocated by a set of processes. Memory policies are a
- programming interface that a NUMA-aware application can take advantage of.  When
- both cpusets and policies are applied to a task, the restrictions of the cpuset
--takes priority.  See :ref:`Memory Policies and cpusets <mem_pol_and_cpusets>`
--below for more details.
-+takes priority.  See :ref:`mem_pol_and_cpusets` below for more details.
- 
- Memory Policy Concepts
- ======================
-@@ -56,7 +55,7 @@ Task/Process Policy
- 	[clone() w/o the CLONE_VM flag] and exec*().  This allows a parent task
- 	to establish the task policy for a child task exec()'d from an
- 	executable image that has no awareness of memory policy.  See the
--	:ref:`Memory Policy APIs <memory_policy_apis>` section,
-+	:ref:`memory_policy_apis` section,
- 	below, for an overview of the system call
- 	that a task may use to set/change its task/process policy.
- 
-@@ -77,7 +76,7 @@ VMA Policy
- 	A "VMA" or "Virtual Memory Area" refers to a range of a task's
- 	virtual address space.  A task may define a specific policy for a range
- 	of its virtual address space.   See the
--	:ref:`Memory Policy APIs <memory_policy_apis>` section,
-+	:ref:`memory_policy_apis` section,
- 	below, for an overview of the mbind() system call used to set a VMA
- 	policy.
- 
-@@ -142,7 +141,7 @@ Shared Policy
- 	Although hugetlbfs segments now support lazy allocation, their support
- 	for shared policy has not been completed.
- 
--	As mentioned above in :ref:`VMA policies <vma_policy>` section,
-+	As mentioned above in :ref:`vma_policy` section,
- 	allocations of page cache pages for regular files mmap()ed
- 	with MAP_SHARED ignore any VMA policy installed on the virtual
- 	address range backed by the shared file mapping.  Rather,
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 8f0e68e250a7..59c16c763086 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -134,7 +134,7 @@
+  * Rounds @x up to next multiple of @y. If @y will always be a power
+  * of 2, consider using the faster round_up().
+  *
+- * The `const' here prevents gcc-3.3 from calling __divdi3
++ * The 'const' here prevents gcc-3.3 from calling __divdi3
+  */
+ #define roundup(x, y) (					\
+ {							\
 -- 
 2.21.0
 
