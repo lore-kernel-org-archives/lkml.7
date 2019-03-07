@@ -2,156 +2,192 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4C5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D6BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD0E20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D0A20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nvB9b12C";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="haQ1ZLD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfCGXmH (ORCPT
+        id S1726311AbfCGXsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 18:42:07 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43625 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfCGXmG (ORCPT
+        Thu, 7 Mar 2019 18:48:11 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60252 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726172AbfCGXsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 18:42:06 -0500
-Received: by mail-io1-f72.google.com with SMTP id x22so14137968iob.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 15:42:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vignibn2W+OI+kWbg6mB9Vrsv1VhCbzj6ULrA6+bXs8=;
-        b=GXGk/Kn19HNMXwqP0r56quvoqmoktbErDSzG6cjJQHJhY8SvNaZU7KN9ts5Zt8w5so
-         SIAzGZ+qx4G/bEtHDd0Su/Il8DTgw26gVgyjh+G/5lGH07bE4WWd+C0VIRWXMbq/qps7
-         hUfMHlyx12bQr+wXWIkHm37FscMoZtTrO/YsS4XQ5afcDQyMeV4/4m83C1voTEwSjbEq
-         28TwG98D6OEdEk5b+DtfXGAaw4vu7GAWjrAMNBdYzK9QIUUEOXXSYgIMZiL8uYz1rQf1
-         3Umz3Fc1KjsosRLnnj2QKCBKwYfdhXAk88oc9ORWUIpYfleFLPdzNe8JMgSd7QEMkiDq
-         KzRg==
-X-Gm-Message-State: APjAAAXRFdzbGIayec4MteMfx1kY8VQyqJT6qM6EZlceKaJVut7tuYT9
-        XrGWRzlguh3Cu8637ZZOqv55XXCz30U7CkpZVLruY8xmWLpa
-X-Google-Smtp-Source: APXvYqx+6ctk+8L2//NNVP8RxFfagUYsHbLWxlXq8PBndXY+dCG16a0Xuglxahlb4iqNp5C4cCvFgUROTXRxl1zx9fpid0V3FWg5
+        Thu, 7 Mar 2019 18:48:10 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27NZ852017386;
+        Thu, 7 Mar 2019 15:47:31 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=0GgDR47nCstH9IqPrpbEFIxvdNOiUDqLAJoF4HvXYaA=;
+ b=nvB9b12CkPMcQ85yWBTKgfFIFFjSrc1Z3/5Zxtzz8lLZltqX4BFlwTqjXMC+DKuIZOj3
+ WjOkdHqj8IsYl4mWMk5lR8z1LSBQUdR3FAC46eqrvfcGCu75CazOVIORRV7zox1WS76c
+ rck1YY1qjxCqWu3PrLkwNgf/VVPUA41HYXk= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r3bw2r9b4-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 07 Mar 2019 15:47:31 -0800
+Received: from frc-hub01.TheFacebook.com (2620:10d:c021:18::171) by
+ frc-hub03.TheFacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 7 Mar 2019 15:47:19 -0800
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 7 Mar 2019 15:47:19 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0GgDR47nCstH9IqPrpbEFIxvdNOiUDqLAJoF4HvXYaA=;
+ b=haQ1ZLD/Nlb9JL9qgLERLq/BVNhzB8Eaz+IHqV3/Z09O+HZFKUlBSR0UPWwjPvuzMz0x2Z5LWD0BfBfsIBg/X5kozIirrttLRdcrHzRdlhnVV796n5x+SqReOYVacARc5cq6E+4uT6bjgrL3NCEM6a3IqKleABoX6PgnZbAYvAs=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1376.namprd15.prod.outlook.com (10.173.234.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.19; Thu, 7 Mar 2019 23:47:02 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1665.021; Thu, 7 Mar 2019
+ 23:47:02 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Stanislav Fomichev <sdf@fomichev.me>
+CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Kernel Team" <Kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: Re: [PATCH v7 perf,bpf 11/15] perf: add -lopcodes to feature-libbfd
+Thread-Topic: [PATCH v7 perf,bpf 11/15] perf: add -lopcodes to feature-libbfd
+Thread-Index: AQHU1Q95Afw72a5BokiECT48mwt8tKYA0EWAgAAFuoA=
+Date:   Thu, 7 Mar 2019 23:47:02 +0000
+Message-ID: <2D05DAB2-F16D-4310-9497-BC2C7CEF5B61@fb.com>
+References: <20190307175810.249857-1-songliubraving@fb.com>
+ <20190307175810.249857-12-songliubraving@fb.com>
+ <20190307232631.GA5481@mini-arch.hsd1.ca.comcast.net>
+In-Reply-To: <20190307232631.GA5481@mini-arch.hsd1.ca.comcast.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.102.3)
+x-originating-ip: [2620:10d:c090:200::3:415b]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 586af9cd-9c61-421a-c7b3-08d6a3573264
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1376;
+x-ms-traffictypediagnostic: MWHPR15MB1376:
+x-microsoft-exchange-diagnostics: 1;MWHPR15MB1376;20:VdFYXUbDBvOIVImLH92NZ7EjrUKhmKP7d9uhc4oI8xYkpJErusxUZFo45CkSg2XyiQrh9i+BppZk4v29YBnNw2leA3uI7+N3dvyro06Ej06JbFv6564MfFBWRlRiZSzlwd5Wi/bF1BX8mvFLKlRIi+xFilR2D1Yu2PRX0I100uI=
+x-microsoft-antispam-prvs: <MWHPR15MB137663203242A3D6B0128F8EB34C0@MWHPR15MB1376.namprd15.prod.outlook.com>
+x-forefront-prvs: 096943F07A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(396003)(136003)(39860400002)(189003)(199004)(81166006)(476003)(14454004)(57306001)(46003)(2906002)(2616005)(4326008)(11346002)(82746002)(7736002)(81156014)(446003)(53936002)(305945005)(8676002)(14444005)(256004)(478600001)(97736004)(25786009)(6916009)(6512007)(7416002)(8936002)(36756003)(186003)(71200400001)(71190400001)(6436002)(50226002)(68736007)(6486002)(99286004)(53546011)(5660300002)(102836004)(316002)(229853002)(83716004)(54906003)(76176011)(6506007)(6116002)(486006)(6246003)(86362001)(33656002)(105586002)(106356001)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1376;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 54Y4UpRyK3WYQwBYJ+mex8lcilxoLdsWhvKz8QcDzI97Cy66hcU9qPexMnp1MXlkPhoAygLCZo+xjjrrtg67oXrnaMsnUrgpieTCsNhKEcz1pN44u80XmVDlxpKIWpj3mWMA2IhjrzQ27FU68+P6qODqtCs6/KtilTrsSMy8hE9XD/ftMRRKNfAyrH34rYRMIawqBecEk1w/SIHWOt3Al01oXyYB+D4rVK9HAphzlrizhb9OjbBV/pgVkIYch0IMhvFQ92Ys/HeidALHS+5S0Qzr3eakHmMfOjB7YTNpug+Y5mnAOACO0vBt7RyI0nbXb0OOogu+trdQXKUpLD7gQ6ejPHTGc4gP2NYEItO3p6+fARkGiXQQPLYirMUyLQ0mwWT4VX0+22GpgKqxG+EypobK8YvPHKXc8bOPdutf/FI=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <37D2E46342A8DC4BA0AA71AA6BB18281@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a02:31d:: with SMTP id y29mr9384941jad.18.1552002124879;
- Thu, 07 Mar 2019 15:42:04 -0800 (PST)
-Date:   Thu, 07 Mar 2019 15:42:04 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000581fa9058389a78d@google.com>
-Subject: WARNING in __flush_work (2)
-From:   syzbot <syzbot+03bd8ee354763fad396d@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        gustavo.padovan@collabora.com, hamohammed.sa@gmail.com,
-        linux-kernel@vger.kernel.org, mahesh1.kumar@intel.com,
-        rodrigosiqueiramelo@gmail.com, seanpaul@chromium.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: 586af9cd-9c61-421a-c7b3-08d6a3573264
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2019 23:47:02.0510
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1376
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_14:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    1fc1cd8399ab Merge branch 'for-5.1' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10dab41b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=83f72881c3c30b7c
-dashboard link: https://syzkaller.appspot.com/bug?extid=03bd8ee354763fad396d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15186357200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1502c533200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+03bd8ee354763fad396d@syzkaller.appspotmail.com
-
-kauditd_printk_skb: 3 callbacks suppressed
-audit: type=1400 audit(1552001909.747:35): avc:  denied  { map } for   
-pid=8034 comm="bash" path="/bin/bash" dev="sda1" ino=1457  
-scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=system_u:object_r:file_t:s0 tclass=file permissive=1
-audit: type=1400 audit(1552001916.317:36): avc:  denied  { map } for   
-pid=8046 comm="syz-executor642" path="/root/syz-executor642773801"  
-dev="sda1" ino=16483 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-WARNING: CPU: 0 PID: 8046 at kernel/workqueue.c:3020  
-__flush_work+0x74c/0x8a0 kernel/workqueue.c:3020
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8046 Comm: syz-executor642 Not tainted 5.0.0+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:__flush_work+0x74c/0x8a0 kernel/workqueue.c:3020
-Code: 74 58 e8 77 12 26 00 fb 66 0f 1f 44 00 00 45 31 e4 e9 86 fd ff ff e8  
-63 12 26 00 0f 0b 45 31 e4 e9 77 fd ff ff e8 54 12 26 00 <0f> 0b 45 31 e4  
-e9 68 fd ff ff e8 45 12 26 00 4c 89 ff 45 31 e4 e8
-RSP: 0018:ffff888087e6f608 EFLAGS: 00010293
-RAX: ffff888098292340 RBX: ffff8880a623f000 RCX: ffffffff814a14cb
-RDX: 0000000000000000 RSI: ffffffff814a1b7c RDI: 0000000000000001
-RBP: ffff888087e6f778 R08: ffff888098292340 R09: ffffed1010fcdedd
-R10: ffffed1010fcdedc R11: 0000000000000003 R12: dffffc0000000000
-R13: ffff888087e6f750 R14: 0000000000000000 R15: 0000000000000001
-  flush_work+0x18/0x20 kernel/workqueue.c:3050
-  vkms_atomic_crtc_destroy_state drivers/gpu/drm/vkms/vkms_crtc.c:133  
-[inline]
-  vkms_atomic_crtc_destroy_state+0x2d/0x40  
-drivers/gpu/drm/vkms/vkms_crtc.c:125
-  drm_atomic_state_default_clear+0x37c/0xd60 drivers/gpu/drm/drm_atomic.c:171
-  drm_atomic_state_clear+0x9d/0xc0 drivers/gpu/drm/drm_atomic.c:240
-  __drm_atomic_state_free+0x3c/0xf0 drivers/gpu/drm/drm_atomic.c:256
-  kref_put include/linux/kref.h:67 [inline]
-  drm_atomic_state_put include/drm/drm_atomic.h:385 [inline]
-  drm_atomic_helper_set_config+0xe5/0x160  
-drivers/gpu/drm/drm_atomic_helper.c:2956
-  drm_mode_setcrtc+0x613/0x1490 drivers/gpu/drm/drm_crtc.c:748
-  drm_ioctl_kernel+0x23b/0x2e0 drivers/gpu/drm/drm_ioctl.c:758
-  drm_ioctl+0x545/0xa50 drivers/gpu/drm/drm_ioctl.c:858
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x443de9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffef4b0a4f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000443de9
-RDX: 0000000020000000 RSI: 00000000c06864a2 RDI: 0000000000000003
-RBP: 00000000006ce018 R08: 0000000000000000 R09: 00000000004002e0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401af0
-R13: 0000000000401b80 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> On Mar 7, 2019, at 3:26 PM, Stanislav Fomichev <sdf@fomichev.me> wrote:
+>=20
+> On 03/07, Song Liu wrote:
+>> Both libbfd and libopcodes are distributed with binutil-dev/devel. When
+>> libbfd presents, it is OK to assume libopcodes also presents. This has
+>> been a safe assumption for bpftool.
+>>=20
+>> This patch adds -lopcodes to perf/Makefile.config. libopcodes will be
+>> used in the next commit for bpf annotation.
+>>=20
+>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>> ---
+>> tools/perf/Makefile.config | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>> index b441c88cafa1..e0bafbc273af 100644
+>> --- a/tools/perf/Makefile.config
+>> +++ b/tools/perf/Makefile.config
+>> @@ -701,7 +701,7 @@ else
+>> endif
+>>=20
+>> ifeq ($(feature-libbfd), 1)
+>> -  EXTLIBS +=3D -lbfd
+>> +  EXTLIBS +=3D -lbfd -lopcodes
+> I think you need to add -lopcodes to the other feature checks as
+> well (to work on the systems which require -liberty and/or -lz for
+> libfd):
+>=20
+> --
+>=20
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index b441c88cafa1..3fa2f5d7d54f 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -701,7 +701,7 @@ else
+> endif
+>=20
+> ifeq ($(feature-libbfd), 1)
+> -  EXTLIBS +=3D -lbfd
+> +  EXTLIBS +=3D -lbfd -lopcodes
+> else
+>   # we are on a system that requires -liberty and (maybe) -lz
+>   # to link against -lbfd; test each case individually here
+> @@ -712,10 +712,10 @@ else
+>   $(call feature_check,libbfd-liberty-z)
+>=20
+>   ifeq ($(feature-libbfd-liberty), 1)
+> -    EXTLIBS +=3D -lbfd -liberty
+> +    EXTLIBS +=3D -lbfd -lopcodes -liberty
+>   else
+>     ifeq ($(feature-libbfd-liberty-z), 1)
+> -      EXTLIBS +=3D -lbfd -liberty -lz
+> +      EXTLIBS +=3D -lbfd -lopcodes -liberty -lz
+>     endif
+>   endif
+> endif
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
-syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Good point! I will fix it in next version.=20
+
+Thanks,
+Song
+
+>=20
+>> else
+>>   # we are on a system that requires -liberty and (maybe) -lz
+>>   # to link against -lbfd; test each case individually here
+>> --=20
+>> 2.17.1
+
