@@ -2,166 +2,120 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDFAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C445CC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6134320851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980ED208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfCGQlo (ORCPT
+        id S1726297AbfCGQo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:41:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33514 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfCGQln (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:41:43 -0500
-Received: by mail-wr1-f68.google.com with SMTP id i12so18206621wrw.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 08:41:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+8gO2bxUPhw8S0046E3aigenabecmfP2phoppMgq7UU=;
-        b=RBad4RlBDMT3vrjkA4AkpazPPvXoACPQGn1QvsYbMNbNYzxh8NPPJmNRi8t6TRatBD
-         7Hj450I1bcGtNyggh3DMp95mMwITxnnTT0Z4aefkJ0S486FttWRunpPRuVTE7vvOdgz2
-         2VX8vwk9Xe/1TzTZKH+J3ganBjSPc1PHKtng/mfmTZpzUAAdvtggxSs/xe8rDl0Zd68e
-         yGmdn3zaoPigv2uigeS3bVY4JIVC7yCoPmv66QlV5nDSnaMZki+irtCLZQb0pZZ86KuD
-         o2DG8s5UQfJg7yl9M/BWdsY3FHdeVYgDe6aFwuHnqF7cWc+33jdBC1FvROscC5rtJEOL
-         1dQg==
-X-Gm-Message-State: APjAAAXglKUVBZI1wK+8O5DtYY8YGhWaSTvzJHBzqV3kLZtDFwIEfrSp
-        jmdaqTexn7blOapv15l74p1yoampyq8=
-X-Google-Smtp-Source: APXvYqzY2Phknr26Hhii4EL6ADNmkSuyaDN2l0Mhey5ye3shT6Lnd7EQLDmEKBG0ZQr6igkOXK+9zQ==
-X-Received: by 2002:a5d:4e44:: with SMTP id r4mr7124344wrt.228.1551976901293;
-        Thu, 07 Mar 2019 08:41:41 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n6sm5972709wrt.23.2019.03.07.08.41.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 08:41:40 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RFC] x86/kvm/mmu: make mmu->prev_roots cache work for NPT case
-In-Reply-To: <20190307160633.GA4986@linux.intel.com>
-References: <0c13c94e-3226-8bfd-2dc7-c75aad1c03a2@redhat.com> <20190223111552.27221-1-vkuznets@redhat.com> <87ftrylqwm.fsf@vitty.brq.redhat.com> <20190307160633.GA4986@linux.intel.com>
-Date:   Thu, 07 Mar 2019 17:41:39 +0100
-Message-ID: <87a7i6ljr0.fsf@vitty.brq.redhat.com>
+        Thu, 7 Mar 2019 11:44:26 -0500
+Received: from foss.arm.com ([217.140.101.70]:48472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbfCGQo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 11:44:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5306B80D;
+        Thu,  7 Mar 2019 08:44:25 -0800 (PST)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB1783F575;
+        Thu,  7 Mar 2019 08:44:23 -0800 (PST)
+Subject: Re: [PATCH] irqchip: stm32: add a second level init to request
+ hwspinlock
+To:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>
+References: <1551975829-16350-1-git-send-email-fabien.dessenne@st.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <97040a1e-7a24-3d41-c3b7-43b551a70825@arm.com>
+Date:   Thu, 7 Mar 2019 16:44:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1551975829-16350-1-git-send-email-fabien.dessenne@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On 07/03/2019 16:23, Fabien Dessenne wrote:
+> Requesting hwspinlock, at the first time it is used, is not correct:
+> indeed, at that moment we are under raw_spin_lock_irqsave() context and
+> hwspin_lock_request_specific() may sleep ("BUG: sleeping function called
+> from invalid context").
+> Requesting hwspinlock during the init (stm32*_exti_of_init()) is also
+> not possible (the hwspinlock framework is not ready at that stage of the
+> kernel init).
+> As a consequence, add a second level init (probed with arch_initcall)
+> where we can safely request hwspinlock.
 
-> On Thu, Mar 07, 2019 at 03:07:05PM +0100, Vitaly Kuznetsov wrote:
->> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
->> 
->> > Alternative patch: remove the filtering from kvm_mmu_get_page() and check
->> > for direct on call sites. cr4_pae setting in kvm_calc_mmu_role_common()
->> > can be preserved for consistency.
->> >
->> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> > ---
->> >  arch/x86/kvm/mmu.c | 6 ++----
->> >  1 file changed, 2 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
->> > index f2d1d230d5b8..7fb8118f2af6 100644
->> > --- a/arch/x86/kvm/mmu.c
->> > +++ b/arch/x86/kvm/mmu.c
->> > @@ -2420,8 +2420,6 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
->> >  	role = vcpu->arch.mmu->mmu_role.base;
->> >  	role.level = level;
->> >  	role.direct = direct;
->> > -	if (role.direct)
->> > -		role.cr4_pae = 0;
->> >  	role.access = access;
->> >  	if (!vcpu->arch.mmu->direct_map
->> >  	    && vcpu->arch.mmu->root_level <= PT32_ROOT_LEVEL) {
->> > @@ -5176,7 +5174,7 @@ static bool detect_write_misaligned(struct kvm_mmu_page *sp, gpa_t gpa,
->> >  		 gpa, bytes, sp->role.word);
->> >  
->> >  	offset = offset_in_page(gpa);
->> > -	pte_size = sp->role.cr4_pae ? 8 : 4;
->> > +	pte_size = (sp->role.cr4_pae && !sp->role.direct) ? 8 : 4;
->> >  
->> >  	/*
->> >  	 * Sometimes, the OS only writes the last one bytes to update status
->> > @@ -5200,7 +5198,7 @@ static u64 *get_written_sptes(struct kvm_mmu_page *sp, gpa_t gpa, int *nspte)
->> >  	page_offset = offset_in_page(gpa);
->> >  	level = sp->role.level;
->> >  	*nspte = 1;
->> > -	if (!sp->role.cr4_pae) {
->> > +	if (!sp->role.cr4_pae || sp->role.direct) {
->> >  		page_offset <<= 1;	/* 32->64 */
->> >  		/*
->> >  		 * A 32-bit pde maps 4MB while the shadow pdes map
->> 
->> While I personally prefer this approach to not setting role.cr4_pae in
->> kvm_calc_mmu_role_common() I'd like to get maintainers opinion (I did
->> test the patch with ept=off but I have to admit I don't know much about
->> shadow page tables which actually use detect_write_misaligned()/
->> get_written_sptes())
->> 
->> Paolo, Radim, (anyone else) - any thoughts?
->
-> The changes to detect_write_misaligned() and get_written_sptes() are
-> wrong/unnecessary as those functions should only be called for indirect
-> shadow PTEs, e.g.:
->
-> 	for_each_gfn_indirect_valid_sp(vcpu->kvm, sp, gfn) {
-> 		if (detect_write_misaligned(sp, gpa, bytes) ||
-> 		      detect_write_flooding(sp)) {
-> 			kvm_mmu_prepare_zap_page(vcpu->kvm, sp, &invalid_list);
-> 			++vcpu->kvm->stat.mmu_flooded;
-> 			continue;
-> 		}
->
-> 		spte = get_written_sptes(sp, gpa, &npte);
-> 		if (!spte)
-> 			continue;
->
-> 		...
-> 	}
->
-> If anything, they could WARN_ON(sp->role.direct), but IMO that's overkill
-> since they're static helpers with a single call site (above).
->
-> I'm missing the background for this patch, why does clearing role.cr4_pae
-> for direct SPTEs cause problems with the prev_roots cache?
+No, this is fairly broken. You're playing with stuff you're not supposed
+to (OF_POPULATE? really?), and adding initcalls is completely unreliable
+(things depend on the link order and will randomly break).
 
-Oh, thank you for taking a look! You've probably missed my original v1
-patch where I tried to explaing the issue:
+If you need dependencies, implement them correctly. Turn this driver
+into a real device driver (in the platform device sense), and return
+PROBE_DEFER when you can't find your dependency.
 
-"I noticed that fast_cr3_switch() always fails when we switch back from
-L2 to L1 as it is not able to find a cached root. This is odd: host's
-CR3 usually stays the same, we expect to always follow the fast
-path. Turns out the problem is that page role is always mismatched
-because kvm_mmu_get_page() filters out cr4_pae when direct, the value is
-stored in page header and later compared with new_role in
-cached_root_available(). As cr4_pae is always set in long mode
-prev_roots cache is dysfunctional.
+Thanks,
 
-The problem appeared after we introduced kvm_calc_mmu_role_common():
-previously, we were only setting this bit for shadow MMU root but now we
-set it for everything. Restore the original behavior.
-
-Fixes: 7dcd57552008 ("x86/kvm/mmu: check if tdp/shadow MMU reconfiguration is needed")
-"
-
-and the patch was just removing role.cr4_pae setting and moving it to
-kvm_calc_shadow_mmu_root_page_role(). This is an alternative approach -
-always set cr4_pae but count on kvm_mmu_get_page() filtering out cr4_pae
-when direct is set.
-
+	M.
 -- 
-Vitaly
+Jazz is not dead. It just smells funny...
