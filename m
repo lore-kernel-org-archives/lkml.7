@@ -2,99 +2,166 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F44BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666A5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D807520643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B60hfypX"
+	by mail.kernel.org (Postfix) with ESMTP id 3330420835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfCGMcp (ORCPT
+        id S1726293AbfCGMdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:32:45 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51354 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGMco (ORCPT
+        Thu, 7 Mar 2019 07:33:09 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39789 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfCGMdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:32:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=x3s5JOKP4qCXZzU4hjE9cM90uEEJWbBvF2xoIeQgxGI=; b=B60hfypXvswHvJZt1sYbWI/LM
-        5+O2fKYAa5GL9aQfkTowzSD1ixFh18g5FoBe/LdXArTqyUnatIPZlY6/RSvJHpZ9GeJTMOVUowvnd
-        qdihvNnRlCzLH3IvCfjo4mh9/qX7RttEqholXtdBkGNyHHiCrIKu2TaMOJBfGStup0qoCBrRrnKzv
-        MbpYszB2m5rcft1/2jFq9JabaRadhuCCJLflmzBCbh/Eg5cFYXIYLhn1dUW7o8xv30UGluPgYlse3
-        uD+WRLuhqNTm/ZUqJ0P8SZz92YX2OpdeXbwvbpXL3y4XzgDBD32X328tN+ABeukNDJ3SNAbfzR5YV
-        A6+dB0vHA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1sBu-0005dy-Gp; Thu, 07 Mar 2019 12:32:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EFA6F20297BC0; Thu,  7 Mar 2019 13:32:00 +0100 (CET)
-Date:   Thu, 7 Mar 2019 13:32:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Juergen Gross <jgross@suse.com>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
-        luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com,
-        linux-kernel@vger.kernel.org, dvyukov@google.com,
-        rostedt@goodmis.org, andrew.cooper3@citrix.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH 05/20] x86/uaccess/xen: Suppress SMAP warnings
-Message-ID: <20190307123200.GE32477@hirez.programming.kicks-ass.net>
-References: <20190307114511.870090179@infradead.org>
- <20190307115159.530608243@infradead.org>
- <689d6dc2-77d6-018e-b156-979b2724be7b@suse.com>
+        Thu, 7 Mar 2019 07:33:08 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z84so9063466wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 04:33:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jaHZuHsZx3kSV8nyrEn89E5y39IWLwRofSTEoX/RSfo=;
+        b=FFBqw43RmhBcOBjwikcGqMx5eLg9sA/UxrwZP6cqDZRhxCQJ4iys0qFTYxXVr7y2gp
+         CAe1LQkcV56QNGNf9j7YUDpkQTPLdVHiAYR3ME6OuDMBHpKoe9hQMRVAZSsSmkYglPfD
+         vnPUzABsA+uu5VBaMbUBHfr4YZp49p8UZM18mNCS5YvOfgvtS37r901i5NFAjkQg6AQW
+         yU377LaZJCLqcb4dhvRvRHwWvS246KGDjjxExOSMS3OHU5IM2PcmeOI+fY1ja66D6Xr5
+         CwCHUhLTSiKGx96u0ScM06fTaS0bV8iDivocy8uJsLO4XGIoofGN0q779YZMNomCRAjn
+         oCzQ==
+X-Gm-Message-State: APjAAAXdPqLfo+IBRb2yGupq3PKN7L2frKwzZmnEgnHYsKVTPF/5HYU/
+        UYcsS9Us+riE0ei71HHxxHhUNIP5Ulg=
+X-Google-Smtp-Source: APXvYqzhA2Vxu117WosBmdIz1E2dMFgjuj5DoUdfgH9TwVme9gFkuEre4ve0S0YHt82c0a9OWVs7UA==
+X-Received: by 2002:a1c:1f51:: with SMTP id f78mr5310060wmf.28.1551961986672;
+        Thu, 07 Mar 2019 04:33:06 -0800 (PST)
+Received: from localhost.localdomain.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f68sm10063507wmg.5.2019.03.07.04.33.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 04:33:05 -0800 (PST)
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+To:     linux-audit@redhat.com
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: [RFC PATCH ghak10 v6 0/2] audit: Log changes that can affect the system clock
+Date:   Thu,  7 Mar 2019 13:32:52 +0100
+Message-Id: <20190307123254.348-1-omosnace@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <689d6dc2-77d6-018e-b156-979b2724be7b@suse.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 01:22:52PM +0100, Juergen Gross wrote:
-> On 07/03/2019 12:45, Peter Zijlstra wrote:
-> > drivers/xen/privcmd.o: warning: objtool: privcmd_ioctl()+0x1414: call to hypercall_page() with UACCESS enabled
-> > 
-> > Xen needs to do HV calls with AC=1 for hysterical raisins. Make the
-> > warning go away.
-> 
-> No, this is a hypercall with parameters passed through from user land
-> (Xen tools). So setting AC=1 is not related to hysterical reasons, but
-> to indicate that unprivileged buffers are okay here. So please change
-> the commit message to something like:
-> 
-> Some Xen hypercalls allow parameter buffers in user land, so they need
-> to set AC=1. Avoid the warning for those cases.
+This patchset implements auditing of (syscall-triggered) changes that
+can modify or indirectly affect the system clock. Some of these
+changes can already be detected by simply logging relevant syscalls,
+but this has some disadvantages:
+  a) It is usually not possible to find out from the syscall records
+     the amount by which the time was shifted.
+  b) Syscalls like adjtimex(2) or clock_adjtime(2) can be used also
+     for read-only operations, which might flood the audit log with
+     false positives. (Note that these patches don't solve this
+     problem yet due to the limitations of current record filtering
+     capabilities.)
 
-*yuck* that's gross...
+The main motivation is to provide better reliability of timestamps
+on the system as mandated by the FPT_STM.1 security functional
+requirement from Common Criteria. This requirement apparently demands
+that it is possible to reconstruct from audit trail the old and new
+values of the time when it is adjusted (see [1]).
 
-And I understood from Andrew yesterday (but perhaps I misunderstood)
-that the whole privcmd thing was a bit of a hack.
+The current version of the patchset logs the following changes:
+  - direct setting of system time to a given value
+  - direct injection of timekeeping offset
+  - adjustment of timekeeping's TAI offset
+  - NTP value adjustments:
+    - time_offset
+    - time_freq
+    - time_status
+    - time_adjust
+    - tick_usec
 
-But sure, I'll change the message.
+Changes to the following NTP values are not logged, as they are not
+important for security:
+  - time_maxerror
+  - time_esterror
+  - time_constant
 
-> > XXX: arguably we should rename ANNOTATE_NOSPEC_ALTERNATIVE to
-> >      ANNOTATE_IGNORE_ALTERNATIVE.
-> > 
-> > Cc: andrew.cooper3@citrix.com
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> Mind Cc-ing the maintainers of the code you are touching in future
-> patches?
+Audit kernel GitHub issue: https://github.com/linux-audit/audit-kernel/issues/10
+Audit kernel RFE page: https://github.com/linux-audit/audit-kernel/wiki/RFE-More-detailed-auditing-of-changes-to-system-clock
 
-Sure; my bad, I forgot to ask get_maintainers about this.
+Testing: Passed audit-testuite; functional tests TBD
+
+Changes in v6:
+  - Reorganized the patches to group changes by record type, not
+    kernel subsytem, as suggested in earlier discussions
+  - Added checks to ignore no-change events (new value == old value)
+  - Added TIME_INJOFFSET logging also to do_settimeofday64() to cover
+    syscalls such as settimeofday(2), stime(2), clock_settime(2)
+  - Created an RFE page on audit-kernel GitHub
+TODO:
+  - tests for audit-testsuite
+
+v5: https://www.redhat.com/archives/linux-audit/2018-August/msg00039.html
+Changes in v5:
+  - Dropped logging of some less important changes and update commit messages
+  - No longer mark the patchset as RFC
+
+v4: https://www.redhat.com/archives/linux-audit/2018-August/msg00023.html
+Changes in v4:
+  - Squashed first two patches into one
+  - Renamed ADJNTPVAL's "type" field to "op" to align with audit record
+    conventions
+  - Minor commit message editing
+  - Cc timekeeping/NTP people for feedback
+
+v3: https://www.redhat.com/archives/linux-audit/2018-July/msg00001.html
+Changes in v3:
+  - Switched to separate records for each variable
+  - Both old and new value is now reported for each change
+  - Injecting offset is reported via a separate record (since this
+    offset consists of two values and is added directly to the clock,
+    i.e. it doesn't make sense to log old and new value)
+  - Added example records produced by chronyd -q (see the commit message
+    of the last patch)
+
+v2: https://www.redhat.com/archives/linux-audit/2018-June/msg00114.html
+Changes in v2:
+  - The audit_adjtime() function has been modified to only log those
+    fields that contain values that are actually used, resulting in more
+    compact records.
+  - The audit_adjtime() call has been moved to do_adjtimex() in
+    timekeeping.c
+  - Added an additional patch (for review) that simplifies the detection
+    if the syscall is read-only.
+
+v1: https://www.redhat.com/archives/linux-audit/2018-June/msg00095.html
+
+[1] https://www.niap-ccevs.org/MMO/PP/pp_ca_v2.1.pdf -- section 5.1,
+    table 4
+
+Ondrej Mosnacek (2):
+  timekeeping: Audit clock adjustments
+  ntp: Audit NTP parameters adjustment
+
+ include/linux/audit.h      | 29 +++++++++++++++++++++++++++++
+ include/uapi/linux/audit.h |  2 ++
+ kernel/auditsc.c           | 15 +++++++++++++++
+ kernel/time/ntp.c          | 38 ++++++++++++++++++++++++++++++--------
+ kernel/time/timekeeping.c  |  6 ++++++
+ 5 files changed, 82 insertions(+), 8 deletions(-)
+
+-- 
+2.20.1
+
