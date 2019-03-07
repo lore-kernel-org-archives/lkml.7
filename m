@@ -2,95 +2,108 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57354C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13050C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2492A20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC96A20835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfCGHzT (ORCPT
+        id S1726170AbfCGH6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 02:55:19 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:36875 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCGHzT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 02:55:19 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MY5s5-1ha90m2mS5-00YRcO; Thu, 07 Mar 2019 08:52:25 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Waiman Long <longman@redhat.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] lockdep: avoid a clang warning
-Date:   Thu,  7 Mar 2019 08:52:12 +0100
-Message-Id: <20190307075222.3424524-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 7 Mar 2019 02:58:21 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57534 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725554AbfCGH6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 02:58:21 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ECEA3652F26AB03354C5;
+        Thu,  7 Mar 2019 15:58:18 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
+ 15:58:16 +0800
+Message-ID: <5C80CF16.70109@huawei.com>
+Date:   Thu, 7 Mar 2019 15:58:14 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:G8mhJwLDpTkj9/KY84pG4Ibbbquqd5jhJl4LFurbt6BePUkuR3K
- tnlJMDzsRkAVCVZ6XrnlzgS7towk12whK1psomvc4hxzgsoSfxUTQhYkd0Umceatgm9wJW+
- bXhIDXy6RP9Jeq1n3mfZcx6DOGAWKvwv2d3kCFtTVaJ1dH5vkOp2NEBG5goeEtGfJXXZddz
- QMn4oXEc4PSDHjM5po/9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NQsCYikYSZM=:twR1be6WSsfM60pj4/nvwT
- RVbZldgh3+3AbHBIT2qCqSUK9MKSfgtNWaTu8/axQLrwHVZ2FH9SS0MYy7BELidbHET8KTfSt
- db1ul+gtAnePPyEYK1nr3IEZ7EidagsKnA2Kyblvq5d4yP8epQcTpcm2XASXjsSsSbeerdavH
- 7Xqps1UPRFhUZV4lwL/5kE+fq4LWvif43MWvGmCtsN9vIgNKOICstJZ0mTlU6UqommEuMlc90
- Wvfy9WPI6zn5pk1DmssX4qi/Siq9hz1XU4KoZws3Q2pzUV6c8wssrhZjpj0fQJDBm1VkaFDid
- IF+RK75SaC4NzTmsWT+TdG0+aLs8R9pIUTwOVyd7rk3nGa3U32dmR4p+/NxSTlhqGTyNzI+WQ
- YfMY6DjwK37veXbCkrFQ4zs9JcarC2mqnIsHj30TXyLAcf11dvz/fyUl4WbvoBMrcIRPqKqu0
- PYLwrGEw1ay7SPXr1LukF9nKAhih4deejVNkzFHaO+DgpLL8heNsZvJcFRMrEtv2AJ6Eo0M7z
- gEMwQqkUxILeo3xr2THLfJCB+Po9DAulNJRL9LNBATXlhp62LI+/eEVlCMb/Z/j7raAm9JGVy
- oInMQO27iEkRbpRqiXWocDEHbLSqiUBk9YBsItl+GSL7FWKfuM3cWgQJujWb/ESPrICRVxBHw
- ZGutaj0LKkW7fHn4AW7TcTmOdNPuOnSOPjJWIIMKvbymGSVTZc26Sh9PBfbC5WEVVvR6+uxbV
- kJlRkQ4xUefUp0buDCSQkOvjZ0AUPKXzmVN7Qw==
+To:     Andrea Arcangeli <aarcange@redhat.com>
+CC:     Peter Xu <peterx@redhat.com>, Mike Rapoport <rppt@linux.ibm.com>,
+        "Dmitry Vyukov" <dvyukov@google.com>,
+        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
+        Michal Hocko <mhocko@kernel.org>, <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>
+Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
+References: <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com> <5C7D4500.3070607@huawei.com> <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com> <5C7E1A38.2060906@huawei.com> <20190306020540.GA23850@redhat.com> <5C7F6048.2050802@huawei.com> <20190306062625.GA3549@rapoport-lnx> <5C7F7992.7050806@huawei.com> <20190306081201.GC11093@xz-x1> <5C7FC5F4.40903@huawei.com> <20190306182944.GE23850@redhat.com>
+In-Reply-To: <20190306182944.GE23850@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns about a tentative array definition without a length:
+On 2019/3/7 2:29, Andrea Arcangeli wrote:
+> Hello Zhong,
+>
+> On Wed, Mar 06, 2019 at 09:07:00PM +0800, zhong jiang wrote:
+>> The patch use call_rcu to delay free the task_struct, but It is possible to free the task_struct
+>> ahead of get_mem_cgroup_from_mm. is it right?
+> Yes it is possible to free before get_mem_cgroup_from_mm, but if it's
+> freed before get_mem_cgroup_from_mm rcu_read_lock,
+> rcu_dereference(mm->owner) will return NULL in such case and there
+> will be no problem.
+Yes
+> The simple fix also clears the mm->owner of the failed-fork-mm before
+> doing the call_rcu. The call_rcu delays the freeing after no other CPU
+> runs in between rcu_read_lock/unlock anymore. That guarantees that
+> those critical section will see mm->owner == NULL if the freeing of
+> the task strut already happened.
+We has set the mm->owner to NULL when child process fails to fork ahead of freeing
+the task struct.
 
-kernel/locking/lockdep.c:845:12: error: tentative array definition assumed to have one element [-Werror]
+Have those critical section  chance to see the mm->owner, which is not NULL.
 
-There is no real reason to do this here, so just set the same length as
-in the real definition later in the same file.  It has to be hidden in
-an #ifdef or annotated __maybe_unused though, to avoid the unused-variable
-warning if CONFIG_PROVE_LOCKING is disabled.
+I has tested the patch.  Not Oops and panic appear  so far.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- kernel/locking/lockdep.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks,
+zhong jiang
+> The solution Mike suggested for this and that we were wondering as
+> ideal in the past for the signal issue too, is to move the uffd
+> delivery at a point where fork is guaranteed to succeed. We should
+> probably try that too to see how it looks like and if it can be done
+> in a not intrusive way, but the simple fix that uses RCU should work
+> too.
+>
+> Rolling back in case of errors inside fork itself isn't easily doable:
+> the moment we push the uffd ctx to the other side of the uffd pipe
+> there's no coming back as that information can reach the userland of
+> the uffd monitor/reader thread immediately after. The rolling back is
+> really the other thread failing at mmget_not_zero eventually. It's the
+> userland that has to rollback in such case when it gets a -ESRCH
+> retval.
+>
+> Note that this fork feature is only ever needed in the non-cooperative
+> case, these things never need to happen when userfaultfd is used by an
+> app (or a lib) that is aware that it is using userfaultfd.
+>
+> Thanks,
+> Andrea
+>
+> .
+>
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 21cb81fe6359..35a144dfddf5 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -842,7 +842,9 @@ static bool class_lock_list_valid(struct lock_class *c, struct list_head *h)
- 	return true;
- }
- 
--static u16 chain_hlocks[];
-+#ifdef CONFIG_PROVE_LOCKING
-+static u16 chain_hlocks[MAX_LOCKDEP_CHAIN_HLOCKS];
-+#endif
- 
- static bool check_lock_chain_key(struct lock_chain *chain)
- {
--- 
-2.20.0
 
