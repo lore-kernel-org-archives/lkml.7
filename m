@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE25C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431B7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7230120663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19872206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbfCGADc (ORCPT
+        id S1726696AbfCGADa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:03:32 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39972 "EHLO
+        Wed, 6 Mar 2019 19:03:30 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39962 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbfCGAD3 (ORCPT
+        with ESMTP id S1725793AbfCGAD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Mar 2019 19:03:29 -0500
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h1gVJ-00087C-N4; Thu, 07 Mar 2019 00:03:17 +0000
+        id 1h1gVJ-00086s-8T; Thu, 07 Mar 2019 00:03:17 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
@@ -35,9 +35,9 @@ Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
         zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
         houtao1@huawei.com, yi.zhang@huawei.com
-Subject: [PATCH 8/8] aio: move sanity checks and request allocation to io_submit_one()
-Date:   Thu,  7 Mar 2019 00:03:16 +0000
-Message-Id: <20190307000316.31133-8-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 3/8] aio_poll(): sanitize the logics after vfs_poll(), get rid of leak on error
+Date:   Thu,  7 Mar 2019 00:03:11 +0000
+Message-Id: <20190307000316.31133-3-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190307000316.31133-1-viro@ZenIV.linux.org.uk>
 References: <CAHk-=wghRmdYKRAwakeHmjcpbLt9fJAHyU2x8s_NZONhz6RTOw@mail.gmail.com>
@@ -51,145 +51,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-makes for somewhat cleaner control flow in __io_submit_one()
+We want iocb_put() happening on errors, to balance the extra reference
+we'd taken.  As it is, we end up with a leak.  The rules should be
+	* error: iocb_put() to deal with the extra ref, return error,
+let the caller do another iocb_put().
+	* async: iocb_put() to deal with the extra ref, return 0.
+	* no error, event present immediately: aio_poll_complete() to
+report it, iocb_put() to deal with the extra ref, return 0.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/aio.c | 86 +++++++++++++++++++++++++++++++---------------------------------
- 1 file changed, 42 insertions(+), 44 deletions(-)
+ fs/aio.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
 diff --git a/fs/aio.c b/fs/aio.c
-index af51b1360305..6993581b77b2 100644
+index 3a8b894378e0..22b288997441 100644
 --- a/fs/aio.c
 +++ b/fs/aio.c
-@@ -1788,36 +1788,15 @@ static int aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+@@ -1724,6 +1724,7 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+ 	struct kioctx *ctx = aiocb->ki_ctx;
+ 	struct poll_iocb *req = &aiocb->poll;
+ 	struct aio_poll_table apt;
++	bool async = false;
+ 	__poll_t mask;
+ 
+ 	/* reject any unknown events outside the normal event mask. */
+@@ -1760,30 +1761,26 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+ 
+ 	spin_lock_irq(&ctx->ctx_lock);
+ 	spin_lock(&req->head->lock);
+-	if (req->woken) {
+-		/* wake_up context handles the rest */
+-		mask = 0;
++	if (req->woken) { /* already taken up by aio_poll_wake() */
++		async = true;
+ 		apt.error = 0;
+-	} else if (mask || apt.error) {
+-		/* if we get an error or a mask we are done */
+-		WARN_ON_ONCE(list_empty(&req->wait.entry));
+-		list_del_init(&req->wait.entry);
+-	} else {
+-		/* actually waiting for an event */
++	} else if (!mask && !apt.error) { /* actually waiting for an event */
+ 		list_add_tail(&aiocb->ki_list, &ctx->active_reqs);
+ 		aiocb->ki_cancel = aio_poll_cancel;
++		async = true;
++	} else { /* if we get an error or a mask we are done */
++		WARN_ON_ONCE(list_empty(&req->wait.entry));
++		list_del_init(&req->wait.entry);
++		/* no wakeup in the future either; aiocb is ours to dispose of */
+ 	}
+ 	spin_unlock(&req->head->lock);
+ 	spin_unlock_irq(&ctx->ctx_lock);
+ 
+ out:
+-	if (unlikely(apt.error))
+-		return apt.error;
+-
+-	if (mask)
++	if (async && !apt.error)
+ 		aio_poll_complete(aiocb, mask);
+ 	iocb_put(aiocb);
+-	return 0;
++	return apt.error;
  }
  
  static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
--			   struct iocb __user *user_iocb, bool compat)
-+			   struct iocb __user *user_iocb, struct aio_kiocb *req,
-+			   bool compat)
- {
--	struct aio_kiocb *req;
- 	struct file *file;
- 	int ret;
- 
--	/* enforce forwards compatibility on users */
--	if (unlikely(iocb->aio_reserved2)) {
--		pr_debug("EINVAL: reserve field set\n");
--		return -EINVAL;
--	}
--
--	/* prevent overflows */
--	if (unlikely(
--	    (iocb->aio_buf != (unsigned long)iocb->aio_buf) ||
--	    (iocb->aio_nbytes != (size_t)iocb->aio_nbytes) ||
--	    ((ssize_t)iocb->aio_nbytes < 0)
--	   )) {
--		pr_debug("EINVAL: overflow check\n");
--		return -EINVAL;
--	}
--
--	req = aio_get_req(ctx);
--	if (unlikely(!req))
--		return -EAGAIN;
--
- 	req->ki_filp = fget(iocb->aio_fildes);
--	ret = -EBADF;
- 	if (unlikely(!req->ki_filp))
--		goto out_put_req;
-+		return -EBADF;
- 
- 	if (iocb->aio_flags & IOCB_FLAG_RESFD) {
- 		struct eventfd_ctx *eventfd;
-@@ -1828,17 +1807,15 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		 * event using the eventfd_signal() function.
- 		 */
- 		eventfd = eventfd_ctx_fdget((int) iocb->aio_resfd);
--		if (IS_ERR(eventfd)) {
--			ret = PTR_ERR(eventfd);
--			goto out_put_req;
--		}
-+		if (IS_ERR(eventfd))
-+			return PTR_ERR(req->ki_eventfd);
-+
- 		req->ki_eventfd = eventfd;
- 	}
- 
--	ret = put_user(KIOCB_KEY, &user_iocb->aio_key);
--	if (unlikely(ret)) {
-+	if (unlikely(put_user(KIOCB_KEY, &user_iocb->aio_key))) {
- 		pr_debug("EFAULT: aio_key\n");
--		goto out_put_req;
-+		return -EFAULT;
- 	}
- 
- 	req->ki_user_iocb = user_iocb;
-@@ -1873,30 +1850,51 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		break;
- 	}
- 	fput(file);
--
--	/*
--	 * If ret is 0, we'd either done aio_complete() ourselves or have
--	 * arranged for that to be done asynchronously.  Anything non-zero
--	 * means that we need to destroy req ourselves.
--	 */
--	if (ret)
--		goto out_put_req;
--	return 0;
--out_put_req:
--	iocb_put(req);
--	put_reqs_available(ctx, 1);
- 	return ret;
- }
- 
- static int io_submit_one(struct kioctx *ctx, struct iocb __user *user_iocb,
- 			 bool compat)
- {
-+	struct aio_kiocb *req;
- 	struct iocb iocb;
-+	int err;
- 
- 	if (unlikely(copy_from_user(&iocb, user_iocb, sizeof(iocb))))
- 		return -EFAULT;
- 
--	return __io_submit_one(ctx, &iocb, user_iocb, compat);
-+	/* enforce forwards compatibility on users */
-+	if (unlikely(iocb.aio_reserved2)) {
-+		pr_debug("EINVAL: reserve field set\n");
-+		return -EINVAL;
-+	}
-+
-+	/* prevent overflows */
-+	if (unlikely(
-+	    (iocb.aio_buf != (unsigned long)iocb.aio_buf) ||
-+	    (iocb.aio_nbytes != (size_t)iocb.aio_nbytes) ||
-+	    ((ssize_t)iocb.aio_nbytes < 0)
-+	   )) {
-+		pr_debug("EINVAL: overflow check\n");
-+		return -EINVAL;
-+	}
-+
-+	req = aio_get_req(ctx);
-+	if (unlikely(!req))
-+		return -EAGAIN;
-+
-+	err = __io_submit_one(ctx, &iocb, user_iocb, req, compat);
-+
-+	/*
-+	 * If err is 0, we'd either done aio_complete() ourselves or have
-+	 * arranged for that to be done asynchronously.  Anything non-zero
-+	 * means that we need to destroy req ourselves.
-+	 */
-+	if (unlikely(err)) {
-+		iocb_put(req);
-+		put_reqs_available(ctx, 1);
-+	}
-+	return err;
- }
- 
- /* sys_io_submit:
 -- 
 2.11.0
 
