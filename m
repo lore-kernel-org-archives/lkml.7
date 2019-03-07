@@ -2,220 +2,239 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23584C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DDEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF03220835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3581120835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GDGx6RA8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dYfVQo+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfCGFBk (ORCPT
+        id S1726216AbfCGFFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 00:01:40 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:63887 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725294AbfCGFBj (ORCPT
+        Thu, 7 Mar 2019 00:05:12 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:38942 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfCGFFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 00:01:39 -0500
-X-UUID: 60ad65441ace4759afd1f50797dda3b2-20190307
-X-UUID: 60ad65441ace4759afd1f50797dda3b2-20190307
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 314070692; Thu, 07 Mar 2019 13:01:33 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
- 2019 13:01:32 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Mar 2019 13:01:31 +0800
-Message-ID: <1551934891.30363.58.camel@mhfsdcap03>
-Subject: Re: [PATCH v5 5/5] i2c: mediatek: Add i2c support for MediaTek
- MT8183
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Leilk Liu <leilk.liu@mediatek.com>,
-        <xinping.qian@mediatek.com>, <liguo.zhang@mediatek.com>,
-        Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Mar 2019 13:01:31 +0800
-In-Reply-To: <CANMq1KBMwWEegui9439q2wVVLRyp6XT8=Om8H7EYGCR6bJw=eg@mail.gmail.com>
-References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
-         <1551186660-16902-6-git-send-email-qii.wang@mediatek.com>
-         <CANMq1KBMwWEegui9439q2wVVLRyp6XT8=Om8H7EYGCR6bJw=eg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Mar 2019 00:05:12 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E64D76016D; Thu,  7 Mar 2019 05:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551935110;
+        bh=wOo3nOKz8l6ZKzpi/npP1AQrh2Juc7+zrKfEvpUXp9c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GDGx6RA8LDGT0JhyoBIf3IAWjmJUBrw7QdaPvSlBv65hE8FUB0H/LsrAzOnbW5QZ1
+         49wowsETGu3ne3laLzyopF0eP/XFdYpe5mhF+o/8cZsx5NFdz0Khu7nk/md0rgEnQI
+         04sNCNFCkY3Lx7a9SCZpj64SVsnVF0DOXI+tKRoQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 286EA6016D;
+        Thu,  7 Mar 2019 05:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551935108;
+        bh=wOo3nOKz8l6ZKzpi/npP1AQrh2Juc7+zrKfEvpUXp9c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dYfVQo+rzi60BYCV39O8wPw5KCTW/bKrimldJOJrSqU2S0obA8vV9dCcX4uemlLiF
+         ws37HK76W8/1H/S908EP4O7NkO5HtY4YSe13HshE1yOfJrJgxvpFZ/H5y39DPZqzzB
+         vWHjiwFPlMGfVceBRJUhIRqBm5dg7KyJgTxMriWQ=
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 07 Mar 2019 10:35:08 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hemantg <hemantg@codeaurora.org>
+Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
+ vendor event
+In-Reply-To: <20190307004041.38059-3-mka@chromium.org>
+References: <20190307004041.38059-1-mka@chromium.org>
+ <20190307004041.38059-3-mka@chromium.org>
+Message-ID: <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-06 at 18:52 +0800, Nicolas Boichat wrote:
-> On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
-> >
-> > Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
-> > MT8183 has different register offsets. Ltiming_reg is added to
-> > adjust low width of SCL. Arb clock and dma_sync are needed.
-> >
-> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> > ---
-> >  drivers/i2c/busses/i2c-mt65xx.c |   53 +++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 51 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > index 75d88e1..82eedbd 100644
-> > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > @@ -133,6 +133,8 @@ enum I2C_REGS_OFFSET {
-> >         OFFSET_DEBUGCTRL,
-> >         OFFSET_TRANSFER_LEN_AUX,
-> >         OFFSET_CLOCK_DIV,
-> > +       /* MT8183 only regs */
-> > +       OFFSET_LTIMING,
-> >  };
-> >
-> >  static const u16 mt_i2c_regs_v1[] = {
-> > @@ -162,6 +164,32 @@ enum I2C_REGS_OFFSET {
-> >         [OFFSET_CLOCK_DIV] = 0x70,
-> >  };
-> >
-> > +static const u16 mt_i2c_regs_v2[] = {
-> > +       [OFFSET_DATA_PORT] = 0x0,
-> > +       [OFFSET_SLAVE_ADDR] = 0x4,
-> > +       [OFFSET_INTR_MASK] = 0x8,
-> > +       [OFFSET_INTR_STAT] = 0xc,
-> > +       [OFFSET_CONTROL] = 0x10,
-> > +       [OFFSET_TRANSFER_LEN] = 0x14,
-> > +       [OFFSET_TRANSAC_LEN] = 0x18,
-> > +       [OFFSET_DELAY_LEN] = 0x1c,
-> > +       [OFFSET_TIMING] = 0x20,
-> > +       [OFFSET_START] = 0x24,
-> > +       [OFFSET_EXT_CONF] = 0x28,
-> > +       [OFFSET_LTIMING] = 0x2c,
-> > +       [OFFSET_HS] = 0x30,
-> > +       [OFFSET_IO_CONFIG] = 0x34,
-> > +       [OFFSET_FIFO_ADDR_CLR] = 0x38,
-> > +       [OFFSET_TRANSFER_LEN_AUX] = 0x44,
-> > +       [OFFSET_CLOCK_DIV] = 0x48,
-> > +       [OFFSET_SOFTRESET] = 0x50,
-> > +       [OFFSET_DEBUGSTAT] = 0xe0,
-> > +       [OFFSET_DEBUGCTRL] = 0xe8,
-> > +       [OFFSET_FIFO_STAT] = 0xf4,
-> > +       [OFFSET_FIFO_THRESH] = 0xf8,
-> > +       [OFFSET_DCM_EN] = 0xf88,
-> > +};
-> > +
-> >  struct mtk_i2c_compatible {
-> >         const struct i2c_adapter_quirks *quirks;
-> >         const u16 *regs;
-> > @@ -195,6 +223,7 @@ struct mtk_i2c {
-> >         enum mtk_trans_op op;
-> >         u16 timing_reg;
-> >         u16 high_speed_reg;
-> > +       u16 ltiming_reg;
-> >         unsigned char auto_restart;
-> >         bool ignore_restart_irq;
-> >         const struct mtk_i2c_compatible *dev_comp;
-> > @@ -271,12 +300,24 @@ struct mtk_i2c {
-> >         .dma_sync = 0,
-> >  };
-> >
-> > +static const struct mtk_i2c_compatible mt8183_compat = {
-> > +       .regs = mt_i2c_regs_v2,
-> > +       .pmic_i2c = 0,
-> > +       .dcm = 0,
-> > +       .auto_restart = 1,
-> > +       .aux_len_reg = 1,
-> > +       .support_33bits = 1,
-> > +       .timing_adjust = 1,
-> > +       .dma_sync = 1,
-> > +};
-> > +
-> >  static const struct of_device_id mtk_i2c_of_match[] = {
-> >         { .compatible = "mediatek,mt2712-i2c", .data = &mt2712_compat },
-> >         { .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
-> >         { .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
-> >         { .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
-> >         { .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
-> > +       { .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
-> >         {}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
-> > @@ -361,6 +402,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
-> >
-> >         mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
-> >         mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
-> > +       if (i2c->dev_comp->regs == mt_i2c_regs_v2)
-> > +               mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
+hi Matthias,
+
+On 2019-03-07 06:10, Matthias Kaehlcke wrote:
+> Firmware download to the WCN3990 often fails with a 'TLV response size
+> mismatch' error:
 > 
-> Matthias wasn't super happy with this. One way is to add another field
-> in the compatible string. Another may be to have
-> mt_i2c_regs_v1[OFFSET_LTIMING] point at, say 0xffff (#define this as
-> I2C_REG_INVALID or something), and test for that?
+> [  133.064659] Bluetooth: hci0: setting up wcn3990
+> [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
+> [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+> [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
+> [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
 > 
-> Either way would scale better if we end up with more than 2 versions
-> of the register set in the future.
+> This is caused by a vendor event that corresponds to an earlier command
+> to change the baudrate. The event is not processed in the context of 
+> the
+> baudrate change and later interpreted as response to the firmware
+> download command (which is also a vendor command), but the driver 
+> detects
+> that the event doesn't have the expected amount of associated data.
 > 
+> More details:
+> 
+> For the WCN3990 the vendor command for a baudrate change isn't sent as
+> synchronous HCI command, because the controller sends the corresponding
+> vendor event with the new baudrate. The event is received and decoded
+> after the baudrate change of the host port.
+> 
+> Identify the 'unused' event when it is received and don't add it to
+> the queue of RX frames.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 54 ++++++++++++++++++++++++++++++++++---
+>  1 file changed, 51 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index ab8e59419dbc4..565681a6a1167 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -30,6 +30,7 @@
+> 
+>  #include <linux/kernel.h>
+>  #include <linux/clk.h>
+> +#include <linux/completion.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> @@ -55,6 +56,7 @@
+>  #define HCI_MAX_IBS_SIZE	10
+> 
+>  #define QCA_IN_BAND_SLEEP_ENABLED	BIT(0)
+> +#define QCA_DROP_VENDOR_EVENT		BIT(1)
+> 
+>  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
+>  #define IBS_TX_IDLE_TIMEOUT_MS		2000
+> @@ -108,6 +110,7 @@ struct qca_data {
+>  	struct work_struct ws_rx_vote_off;
+>  	struct work_struct ws_tx_vote_off;
+>  	unsigned long flags;
+> +	struct completion drop_ev_comp;
+> 
+>  	/* For debugging purpose */
+>  	u64 ibs_sent_wacks;
+> @@ -474,6 +477,7 @@ static int qca_open(struct hci_uart *hu)
+>  	INIT_WORK(&qca->ws_tx_vote_off, qca_wq_serial_tx_clock_vote_off);
+> 
+>  	qca->hu = hu;
+> +	init_completion(&qca->drop_ev_comp);
+> 
+>  	/* Assume we start with both sides asleep -- extra wakes OK */
+>  	qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
+> @@ -866,6 +870,33 @@ static int qca_recv_acl_data(struct hci_dev
+> *hdev, struct sk_buff *skb)
+>  	return hci_recv_frame(hdev, skb);
+>  }
+> 
+> +static int qca_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
+> +{
+> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+> +	struct qca_data *qca = hu->priv;
+> +
+> +	if (test_bit(QCA_DROP_VENDOR_EVENT, &qca->flags)) {
+> +		struct hci_event_hdr *hdr = (void *)skb->data;
+> +
+> +		/* For the WCN3990 the vendor command for a baudrate change
+> +		 * isn't sent as synchronous HCI command, because the
+> +		 * controller sends the corresponding vendor event with the
+> +		 * new baudrate. The event is received and properly decoded
+> +		 * after changing the baudrate of the host port. It needs to
+> +		 * be dropped, otherwise it can be mis-interpreted as
+> +		 * response to a later firmware download command (also a
+> +		 * vendor command).
+> +		 */
+> +
+> +		if (hdr->evt == HCI_EV_VENDOR)
+> +			complete(&qca->drop_ev_comp);
+> +
+> +		return 0;
+> +	}
+> +
+> +	return hci_recv_frame(hdev, skb);
+> +}
+> +
+>  #define QCA_IBS_SLEEP_IND_EVENT \
+>  	.type = HCI_IBS_SLEEP_IND, \
+>  	.hlen = 0, \
+> @@ -890,7 +921,7 @@ static int qca_recv_acl_data(struct hci_dev *hdev,
+> struct sk_buff *skb)
+>  static const struct h4_recv_pkt qca_recv_pkts[] = {
+>  	{ H4_RECV_ACL,             .recv = qca_recv_acl_data },
+>  	{ H4_RECV_SCO,             .recv = hci_recv_frame    },
+> -	{ H4_RECV_EVENT,           .recv = hci_recv_frame    },
+> +	{ H4_RECV_EVENT,           .recv = qca_recv_event    },
+>  	{ QCA_IBS_WAKE_IND_EVENT,  .recv = qca_ibs_wake_ind  },
+>  	{ QCA_IBS_WAKE_ACK_EVENT,  .recv = qca_ibs_wake_ack  },
+>  	{ QCA_IBS_SLEEP_IND_EVENT, .recv = qca_ibs_sleep_ind },
+> @@ -1091,6 +1122,7 @@ static int qca_set_speed(struct hci_uart *hu,
+> enum qca_speed_type speed_type)
+>  {
+>  	unsigned int speed, qca_baudrate;
+>  	struct qca_serdev *qcadev;
+> +	struct qca_data *qca = hu->priv;
+>  	int ret = 0;
+> 
+>  	if (speed_type == QCA_INIT_SPEED) {
+> @@ -1106,8 +1138,11 @@ static int qca_set_speed(struct hci_uart *hu,
+> enum qca_speed_type speed_type)
+>  		 * changing the baudrate of chip and host.
+>  		 */
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type == QCA_WCN3990)
+> +		if (qcadev->btsoc_type == QCA_WCN3990) {
+>  			hci_uart_set_flow_control(hu, true);
+> +			reinit_completion(&qca->drop_ev_comp);
+> +			set_bit(QCA_DROP_VENDOR_EVENT, &qca->flags);
+> +		}
+> 
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+>  		bt_dev_dbg(hu->hdev, "Set UART speed to %d", speed);
+> @@ -1118,8 +1153,21 @@ static int qca_set_speed(struct hci_uart *hu,
+> enum qca_speed_type speed_type)
+>  		host_set_baudrate(hu, speed);
+> 
+>  error:
+> -		if (qcadev->btsoc_type == QCA_WCN3990)
+> +		if (qcadev->btsoc_type == QCA_WCN3990) {
+>  			hci_uart_set_flow_control(hu, false);
+> +
+> +			/* Wait for the controller to send the vendor event
+> +			 * for the baudrate change command.
+> +			 */
+> +			if (!wait_for_completion_timeout(&qca->drop_ev_comp,
+> +						 msecs_to_jiffies(100))) {
+> +				bt_dev_err(hu->hdev,
+> +					   "Failed to change controller baudrate\n");
+> +				ret = -EPROTO;
+> +			}
+> +
+> +			clear_bit(QCA_DROP_VENDOR_EVENT, &qca->flags);
+> +		}
+>  	}
+> 
+>  	return ret;
 
-ok, I will add a flag(ltiming_adjust) in mtk_i2c_compatible.
+Can you test by reverting this change "94d6671473924".
+We need at least 15ms minimum delay for the soc to change its baud rate 
+and respond to the with command complete event.
+In my previous stress test we have not observed any issues.
 
-> >         /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
-> >         if (i2c->have_pmic)
-> > @@ -460,6 +503,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >         unsigned int clk_src;
-> >         unsigned int step_cnt;
-> >         unsigned int sample_cnt;
-> > +       unsigned int l_step_cnt;
-> > +       unsigned int l_sample_cnt;
-> >         unsigned int target_speed;
-> >         int ret;
-> >
-> > @@ -469,11 +514,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >         if (target_speed > MAX_FS_MODE_SPEED) {
-> >                 /* Set master code speed register */
-> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
-> > -                                             &step_cnt, &sample_cnt);
-> > +                                             &l_step_cnt, &l_sample_cnt);
-> >                 if (ret < 0)
-> >                         return ret;
-> >
-> > -               i2c->timing_reg = (sample_cnt << 8) | step_cnt;
-> > +               i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
-> >
-> >                 /* Set the high speed mode register */
-> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-> > @@ -483,6 +528,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >
-> >                 i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
-> >                         (sample_cnt << 12) | (step_cnt << 8);
-> > +               i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
-> > +                                  (sample_cnt << 12) | (step_cnt << 9);
-> >         } else {
-> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-> >                                               &step_cnt, &sample_cnt);
-> > @@ -493,6 +540,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >
-> >                 /* Disable the high speed transaction */
-> >                 i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
-> > +
-> > +               i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
-> >         }
-> >
-> >         return 0;
-> > --
-> > 1.7.9.5
-> >
-
-
+-- 
+Regards
+Balakrishna.
