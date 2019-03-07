@@ -2,102 +2,111 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BDAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A53C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D485F20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73C920840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fh7MAytp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="scqPx9y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfCGSsa (ORCPT
+        id S1726536AbfCGSta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:48:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44444 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbfCGSsa (ORCPT
+        Thu, 7 Mar 2019 13:49:30 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40522 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbfCGSt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:48:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wE1scT41lGtBH9l0UQsxcqywNitQszd2Aj4cYZf7vPI=; b=Fh7MAytpk67zm69D3egREHZM9
-        9q3JW8o3kEHkTAC5DJEexlCzbbYFooXQvFOWrlR+5ZenBzcvNDthne7pQunghodMrVk7xo7JsIYHZ
-        SwXr4+YJhwvbrMjOs+jNxfd41KViogzezxN2M4QYGLTMAdjBvpj8BBoYSyT16rNb94IK+wWWuLJ92
-        YmuTCK3WIh2yghuRc6oJiHYScA1/J5gb9Co1ByGvURxH7UY9tJfG192E2nCW5s1G3Qiue1m79GiUp
-        UumSQjYZOGmhUB7c1r0kBYUBe5cH59Wh0b2LcqVqy/fKLenGUd++saSXB5qvC8HPxtReR5argjy3c
-        LXqQZA3kg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1y40-00033X-Pl; Thu, 07 Mar 2019 18:48:16 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F407A202A2A1F; Thu,  7 Mar 2019 19:48:13 +0100 (CET)
-Date:   Thu, 7 Mar 2019 19:48:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
-Message-ID: <20190307184813.GL32477@hirez.programming.kicks-ass.net>
-References: <20190307114511.870090179@infradead.org>
- <20190307115200.697533978@infradead.org>
- <CAHk-=wgKDSSoV5WvO018hoPPSHO=TQ3wwnfOtCpaENceBe0Z6Q@mail.gmail.com>
- <20190307174135.GJ32477@hirez.programming.kicks-ass.net>
- <CAHk-=wgGZWXQj-J2xo0DY7150VrXOSqoD5Dj1_LGYaotqA6Z-Q@mail.gmail.com>
+        Thu, 7 Mar 2019 13:49:29 -0500
+Received: by mail-pf1-f194.google.com with SMTP id h1so12123989pfo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I5nD5lI25mx+rWheyjTpCjE5WYJxFv5Twp1sA2+3TRI=;
+        b=scqPx9y0jsqVXTi1Z9kIafcD8dyJTVgZYQoZkVPJaHfkv3F8P7qOeFs5Xbpa9yvCqV
+         3s8m1cIIlF6dKK/PL730QcEDixKPorZ8JxQf8EujFHL7CVGGJQ8p5Wf++JE2M/idHO6P
+         mtvicDMsFgg7JYaMlxH3N18bKuIpTAKMNwFrLXYBEVvvDzzwFNiLj1kRgBD9/j89ZpWJ
+         XWY1xvv/DO+U0HNZyv6v7XMOOT/TRqgUGMFmHLr++5g2CVTWgrbk3MA8ConAfow6sBoz
+         OF5nOWHIfFl3fTwGWCWypYjEPxPtrTr2+D+72gUx+CH0g+o/bdsL8j/yKSmV+L5qkr2R
+         McpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I5nD5lI25mx+rWheyjTpCjE5WYJxFv5Twp1sA2+3TRI=;
+        b=GRL7izi2qr80X02MgwgwHjSz1GH997Bx92pyGkNT2+sXDleuqnjTrlUS5sTbmSkM5k
+         mWkBlm8mTdtHvz6MoMNLN+Fy6hYg/xvVcCl3b6QtKNpbYhJ8eFdIBMDFyMiKif5wW3pE
+         nwGMQeytUzBI8+A65AUqw+vomgqDRiWaeWcdoZlKXQ//HTTzJLrVmsbl9rSUbsF03lkZ
+         OMoN0K9DBiQYAxHMKR7t0VA/o68PmAflE7rUKrlXjPC+JSF79RPRKlJqJnedWhViuobZ
+         O5LxLlfOGLAkDUpEvzji8v+u1l49607QI5/I/tGUqzRr5SYiTc5H+i0ZwfgAAYUTlHnP
+         LKJg==
+X-Gm-Message-State: APjAAAUSDtKGiDtagXsmtEIhh4/ZgyWFxFDzAbFVQiF9X21mZuBilzub
+        z5ILdujJsJZ56Geh1FDFrS7T2V+nulEe2yAvYIy7utcJkAc=
+X-Google-Smtp-Source: APXvYqwCtUH+AYE9/UAH/zRSTnUSYtGaNa7aKQjj79uR3oxKSMUzSbU4nfIHq7lNeI6PbnexurE9de+CRYw5CNLM58g=
+X-Received: by 2002:a63:c70c:: with SMTP id n12mr12914507pgg.302.1551984568234;
+ Thu, 07 Mar 2019 10:49:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgGZWXQj-J2xo0DY7150VrXOSqoD5Dj1_LGYaotqA6Z-Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190307184125.21419-1-natechancellor@gmail.com>
+In-Reply-To: <20190307184125.21419-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 7 Mar 2019 10:49:17 -0800
+Message-ID: <CAKwvOdmFduT6bd7=xAsC0YcaJZL6MUUoMzmb2dW9YMGD0x4eqg@mail.gmail.com>
+Subject: Re: [PATCH] scsi: qla4xxx: Don't call dma_free_coherent without dma_alloc_coherent
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     QLogic-Storage-Upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 09:54:14AM -0800, Linus Torvalds wrote:
-> On Thu, Mar 7, 2019 at 9:41 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > What's the call site that made you go "just add __memset() to the list"?
-> >
-> > __asan_{,un}poinson_stack_memory()
-> >   kasan_{,un}poison_shadow()
-> >     __memset()
-> 
-> Ugh. I think I almost just agree with your decision to just let that
-> memset go unchecked.
-> 
-> I'm not saying it's right, but it doesn't seem to be a fight worth fighting.
+On Thu, Mar 7, 2019 at 10:41 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/scsi/qla4xxx/ql4_os.c:5915:7: warning: variable 'buf_dma' is
+> used uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>
+> buf_dma is initialized by dma_alloc_coherent, which is only called in
+> the middle conditional statement. Use that same conditional to call
+> dma_free_coherent so that buf_dma is always initialized when used.
+>
+> Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/391
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/scsi/qla4xxx/ql4_os.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+> index 16a18d5d856f..88bb52456efd 100644
+> --- a/drivers/scsi/qla4xxx/ql4_os.c
+> +++ b/drivers/scsi/qla4xxx/ql4_os.c
+> @@ -5982,7 +5982,8 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
+>                           ddb_index[1]));
+>
+>  exit_boot_info_free:
+> -       dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
+> +       if (is_qla80XX(ha))
+> +               dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
 
-One think I could do; is add a filter to each function and only allow
-__memset from the kasan code, and not from anywhere else.
+Very tricky code flow to follow in this function, but this patch makes
+sense upon closer inspection.  Thanks for the patch Nathan
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Another thing I need to look at is why objtool only found memset_orig
-(from __memset) but not memset_erms, which if I read the code right, is
-a possible alternative there.
-
-> Because AC vs KASAN in general ends up smelling like "not a fight
-> worth fighting" to me. You've done a herculean job, but..
-
-I know,.. I've been so close to doing that so many times, but it
-seems like defeat, esp. since I'm so close now :-)
-
+-- 
+Thanks,
+~Nick Desaulniers
