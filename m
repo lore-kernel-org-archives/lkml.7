@@ -2,220 +2,259 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A721C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF9BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D6320449
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2057120675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:12:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Yesw0lRi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyYaa/Zd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfCGTKn (ORCPT
+        id S1726561AbfCGTME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:10:43 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:40429 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfCGTKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:10:42 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44FgFW6Kxfz9tyQ1;
-        Thu,  7 Mar 2019 20:10:39 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Yesw0lRi; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7O4mVB8x-SqD; Thu,  7 Mar 2019 20:10:39 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44FgFW4tHgz9tyPy;
-        Thu,  7 Mar 2019 20:10:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1551985839; bh=r98bFk+0JeAa5RHG+w4EX7hnDlIY+Lzi9W22ay+2kXs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Yesw0lRiQU1cDz7sH6Gdn3uZgIbFIWwQiOik4khGArTWUzLN5T+JgJuXxZxDbI1mQ
-         unjxGOvxhrEoeYY18k+zDfrAGms0Lsa8W2AvIjdHaWP0XOKOo87d5nWJeysibJQ/vA
-         fsWLeFp/o3Zs/f1z+QCJbIzSOvqmd1m/wZqMufNo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE9588BF27;
-        Thu,  7 Mar 2019 20:10:39 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id knXBY3POHDIy; Thu,  7 Mar 2019 20:10:39 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1090F8BEE3;
-        Thu,  7 Mar 2019 20:10:39 +0100 (CET)
-Subject: Re: [PATCH v2 03/10] powerpc/6xx: Store PGDIR physical address in a
- SPRG
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <cover.1550745320.git.christophe.leroy@c-s.fr>
- <297f30d8ba75cb0e9ebe0a776d96c19750105570.1550745320.git.christophe.leroy@c-s.fr>
- <20190307141143.GA26761@roeck-us.net>
- <2acc1691-0f74-8843-ecdd-64ba8705de20@c-s.fr>
- <20190307190748.GA21622@roeck-us.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <18f2d49d-4f3e-8e60-a6c5-6d305b3b17cb@c-s.fr>
-Date:   Thu, 7 Mar 2019 20:10:39 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 14:12:04 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33326 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfCGTME (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 14:12:04 -0500
+Received: by mail-qk1-f194.google.com with SMTP id x9so9742362qkf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 11:12:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cpfggOg3lyaSZBxbnfIxBL3zqoeOYTpPDR54+P8F1RI=;
+        b=JyYaa/ZdmxfhGOkWwuf34+liJt0Ui/ZSx7c7SlyviXtacQfPbm/v8iRDjsB03P9vsT
+         RsYRvpQzLj2U9XZBL/LpWpPF9aknlK9qct44HofmvGUmfzWaJO+iAl8PmmvtF461Wlqg
+         iWDXdMXTOSa9jULDFdPs6vhZGEo+WX2Ki5osPzVmHVLJmejm64+UPo0UpzXcp2RpBm4Z
+         j5ONyTusQdGmAuGGIIu9gM6jFCpVR6E6xtnhQfLXr/7XvPl5GhSP5QE12ZBw8uRIK/Sr
+         Ff3Rj8bgpGDFZEOrPS/o/V8haRYZmPH0Lta8ASQknvhwxzJ5t+t+qoTOh6CDSnvOaND5
+         ZDEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cpfggOg3lyaSZBxbnfIxBL3zqoeOYTpPDR54+P8F1RI=;
+        b=UWww6n9gWzlTET08HFhcCcp8i0q3EP2MBEhh7oMJmHrVwyLVK9gJOzAuH+xBOWbNt8
+         fcV+OckLvx8pNuh39WWIwt7gG/OxauJwNGB+lxAUitlxBeow0VvSKKfXaab306NY3IVI
+         oNf/sIVV8uvIokumUyBaeD1q52mAb24wL4XUx8/nU8AH3dqcW0JKcpzfsyGUh+xaGMx3
+         4kT+4xqQIvWbpVDJWaMuOaXwiTgKelJ3qlLACTKo4icl7gozKPQ9aJII55ppuockfM+g
+         LTjaspvtICYRZWbyW3dWLdueEQoftYWfdhuD5I8BXGVDxeDVVKTG1kWEAa/nQFueEs6d
+         VXRg==
+X-Gm-Message-State: APjAAAUQNYcXMmiGPwx0EQOAPbufykKRwn1hsR/7bMIHQIU6pY/nkARI
+        M11cZnvgEbgoEygMmantc/uimVLNQFE=
+X-Google-Smtp-Source: APXvYqwME5Oza9BsztDkuAQcodg5FH8wP/oQx9oXsXXmfbYhILkUe0twGXwz9sTX5Z0pdJddGvlieg==
+X-Received: by 2002:a05:620a:1403:: with SMTP id d3mr2631712qkj.16.1551985922492;
+        Thu, 07 Mar 2019 11:12:02 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id d51sm3742963qta.31.2019.03.07.11.12.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 11:12:01 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 063F04039C; Thu,  7 Mar 2019 16:11:58 -0300 (-03)
+Date:   Thu, 7 Mar 2019 16:11:57 -0300
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Ingo Molnar <mingo@kernel.org>, mgorman@techsingularity.net,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] tools/perf-bench: Add basic syscall benchmark
+Message-ID: <20190307191157.GB32240@kernel.org>
+References: <20190307185253.28432-1-dave@stgolabs.net>
 MIME-Version: 1.0
-In-Reply-To: <20190307190748.GA21622@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307185253.28432-1-dave@stgolabs.net>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, Mar 07, 2019 at 10:52:53AM -0800, Davidlohr Bueso escreveu:
+> The usefulness of having a standard way of testing syscall performance
+> has come up from time to time[0]. Furthermore, some of our testing
+> machinery (such as 'mmtests') already makes use of a simplified version
+> of the microbenchmark. This patch mainly takes the same idea to measure
+> syscall throughput compatible with 'perf-bench' via getppid(2), yet
+> without any of the additional template stuff from Ingo's version (based
+> on numa.c). The code is identical to what mmtests uses.
 
+You forgot to update tools/perf/Documentation/perf-bench.txt, and please
+take a look at tools/perf/util/pmu.c convert_scale() to see how to save
+the current locale, set the one you want, then restore the previous one,
+so that at the end of this benchmark the environment is back to where it
+was.
 
-Le 07/03/2019 à 20:07, Guenter Roeck a écrit :
-> On Thu, Mar 07, 2019 at 06:14:09PM +0000, Christophe Leroy wrote:
->> Hi,
->>
->> On 03/07/2019 02:11 PM, Guenter Roeck wrote:
->>> Hi,
->>>
->>> On Thu, Feb 21, 2019 at 10:37:55AM +0000, Christophe Leroy wrote:
->>>> Use SPRN_SPRG2 to store the current thread PGDIR and
->>>> avoid reading thread_struct.pgdir at every TLB miss.
->>>>
->>> This patch causes a number of silent (no crash) qemu boot stalls
->>> in -next. See
->>> https://kerneltests.org/builders/qemu-ppc-next/builds/1080/steps/qemubuildcommand/logs/stdio
->>> for an example.
->>
->> Oops.
->> Could you try the fix below ?
->>
+Thanks.
+
+- Arnaldo
+ 
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1067469.html
 > 
-> Yes, that does the trick. With this patch applied on top of next-20190306,
-> all my ppc qemu boot tests pass.
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>  tools/perf/bench/Build     |  1 +
+>  tools/perf/bench/bench.h   |  1 +
+>  tools/perf/bench/syscall.c | 80 ++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/builtin-bench.c |  8 +++++
+>  4 files changed, 90 insertions(+)
+>  create mode 100644 tools/perf/bench/syscall.c
 > 
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
+> diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+> index e4e321b6f883..839f9b790587 100644
+> --- a/tools/perf/bench/Build
+> +++ b/tools/perf/bench/Build
+> @@ -1,5 +1,6 @@
+>  perf-y += sched-messaging.o
+>  perf-y += sched-pipe.o
+> +perf-y += syscall.o
+>  perf-y += mem-functions.o
+>  perf-y += futex-hash.o
+>  perf-y += futex-wake.o
+> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> index fddb3ced9db6..31ad3283d41b 100644
+> --- a/tools/perf/bench/bench.h
+> +++ b/tools/perf/bench/bench.h
+> @@ -29,6 +29,7 @@
+>  int bench_numa(int argc, const char **argv);
+>  int bench_sched_messaging(int argc, const char **argv);
+>  int bench_sched_pipe(int argc, const char **argv);
+> +int bench_syscall_basic(int argc, const char **argv);
+>  int bench_mem_memcpy(int argc, const char **argv);
+>  int bench_mem_memset(int argc, const char **argv);
+>  int bench_futex_hash(int argc, const char **argv);
+> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+> new file mode 100644
+> index 000000000000..149129cca639
+> --- /dev/null
+> +++ b/tools/perf/bench/syscall.c
+> @@ -0,0 +1,80 @@
+> +/*
+> + *
+> + * syscall.c
+> + *
+> + * syscall: Benchmark for system call performance
+> + */
+> +#include "../perf.h"
+> +#include "../util/util.h"
+> +#include <subcmd/parse-options.h>
+> +#include "../builtin.h"
+> +#include "bench.h"
+> +
+> +#include <stdio.h>
+> +#include <locale.h>
+> +#include <sys/time.h>
+> +#include <sys/syscall.h>
+> +
+> +#define LOOPS_DEFAULT 10000000
+> +static	int loops = LOOPS_DEFAULT;
+> +
+> +static const struct option options[] = {
+> +	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
+> +	OPT_END()
+> +};
+> +
+> +static const char * const bench_syscall_usage[] = {
+> +	"perf bench syscall <options>",
+> +	NULL
+> +};
+> +
+> +int bench_syscall_basic(int argc, const char **argv)
+> +{
+> +	struct timeval start, stop, diff;
+> +	unsigned long long result_usec = 0;
+> +	int i;
+> +
+> +	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
+> +
+> +	gettimeofday(&start, NULL);
+> +
+> +	for (i = 0; i < loops; i++)
+> +		getppid();
+> +
+> +	gettimeofday(&stop, NULL);
+> +	timersub(&stop, &start, &diff);
+> +
+> +	switch (bench_format) {
+> +	case BENCH_FORMAT_DEFAULT:
+> +		setlocale(LC_NUMERIC, "");
+> +		printf("# Executed %'d getppid() calls\n", loops);
+> +
+> +		result_usec = diff.tv_sec * 1000000;
+> +		result_usec += diff.tv_usec;
+> +
+> +		printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
+> +		       diff.tv_sec,
+> +		       (unsigned long) (diff.tv_usec/1000));
+> +
+> +		printf(" %14lf usecs/op\n",
+> +		       (double)result_usec / (double)loops);
+> +		printf(" %'14d ops/sec\n",
+> +		       (int)((double)loops /
+> +			     ((double)result_usec / (double)1000000)));
+> +		break;
+> +
+> +	case BENCH_FORMAT_SIMPLE:
+> +		printf("%lu.%03lu\n",
+> +		       diff.tv_sec,
+> +		       (unsigned long) (diff.tv_usec / 1000));
+> +		break;
+> +
+> +	default:
+> +		/* reaching here is something disaster */
+> +		fprintf(stderr, "Unknown format:%d\n", bench_format);
+> +		exit(1);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index 334c77ffc1d9..4e9dd0f4eced 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -11,6 +11,7 @@
+>   * Available benchmark collection list:
+>   *
+>   *  sched ... scheduler and IPC performance
+> + *  syscall ... System call performance
+>   *  mem   ... memory access performance
+>   *  numa  ... NUMA scheduling and MM performance
+>   *  futex ... Futex performance
+> @@ -50,6 +51,12 @@ static struct bench sched_benchmarks[] = {
+>  	{ NULL,		NULL,						NULL			}
+>  };
+>  
+> +static struct bench syscall_benchmarks[] = {
+> +	{ "basic",	"Benchmark for basic getppid() system calls",	bench_syscall_basic	},
+> +	{ "all",	"Run all syscall benchmarks",			NULL			},
+> +	{ NULL,		NULL,						NULL			},
+> +};
+> +
+>  static struct bench mem_benchmarks[] = {
+>  	{ "memcpy",	"Benchmark for memcpy() functions",		bench_mem_memcpy	},
+>  	{ "memset",	"Benchmark for memset() functions",		bench_mem_memset	},
+> @@ -85,6 +92,7 @@ struct collection {
+>  
+>  static struct collection collections[] = {
+>  	{ "sched",	"Scheduler and IPC benchmarks",			sched_benchmarks	},
+> +	{ "syscall",	"System call benchmarks",			syscall_benchmarks	},
+>  	{ "mem",	"Memory access benchmarks",			mem_benchmarks		},
+>  #ifdef HAVE_LIBNUMA_SUPPORT
+>  	{ "numa",	"NUMA scheduling and MM benchmarks",		numa_benchmarks		},
+> -- 
+> 2.16.4
 
-Thanks for testing.
+-- 
 
-I'll send a proper patch tomorrow morning, sorry for that.
-
-Christophe
-
-> 
-> Guenter
-> 
->> diff --git a/arch/powerpc/kernel/cpu_setup_6xx.S
->> b/arch/powerpc/kernel/cpu_setup_6xx.S
->> index 6f1c11e0691f..7534ecff5e92 100644
->> --- a/arch/powerpc/kernel/cpu_setup_6xx.S
->> +++ b/arch/powerpc/kernel/cpu_setup_6xx.S
->> @@ -24,9 +24,6 @@ BEGIN_MMU_FTR_SECTION
->>   	li	r10,0
->>   	mtspr	SPRN_SPRG_603_LRU,r10		/* init SW LRU tracking */
->>   END_MMU_FTR_SECTION_IFSET(MMU_FTR_NEED_DTLB_SW_LRU)
->> -	lis	r10, (swapper_pg_dir - PAGE_OFFSET)@h
->> -	ori	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@l
->> -	mtspr	SPRN_SPRG_PGDIR, r10
->>
->>   BEGIN_FTR_SECTION
->>   	bl	__init_fpu_registers
->> diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
->> index ce6a972f2584..48051c8977c5 100644
->> --- a/arch/powerpc/kernel/head_32.S
->> +++ b/arch/powerpc/kernel/head_32.S
->> @@ -855,6 +855,9 @@ __secondary_start:
->>   	li	r3,0
->>   	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
->>   #endif
->> +	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
->> +	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
->> +	mtspr	SPRN_SPRG_PGDIR, r4
->>
->>   	/* enable MMU and jump to start_secondary */
->>   	li	r4,MSR_KERNEL
->> @@ -942,6 +945,9 @@ start_here:
->>   	li	r3,0
->>   	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
->>   #endif
->> +	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
->> +	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
->> +	mtspr	SPRN_SPRG_PGDIR, r4
->>
->>   	/* stack */
->>   	lis	r1,init_thread_union@ha
->> diff --git a/arch/powerpc/mm/hash_low_32.S b/arch/powerpc/mm/hash_low_32.S
->> index 1f13494efb2b..587e4550d83e 100644
->> --- a/arch/powerpc/mm/hash_low_32.S
->> +++ b/arch/powerpc/mm/hash_low_32.S
->> @@ -70,12 +70,12 @@ _GLOBAL(hash_page)
->>   	lis	r0,KERNELBASE@h		/* check if kernel address */
->>   	cmplw	0,r4,r0
->>   	ori	r3,r3,_PAGE_USER|_PAGE_PRESENT /* test low addresses as user */
->> -	mfspr	r5, SPRN_SPRG_PGDIR	/* virt page-table root */
->> +	mfspr	r5, SPRN_SPRG_PGDIR	/* phys page-table root */
->>   	blt+	112f			/* assume user more likely */
->> -	lis	r5,swapper_pg_dir@ha	/* if kernel address, use */
->> -	addi	r5,r5,swapper_pg_dir@l	/* kernel page table */
->> +	lis	r5, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
->> +	addi	r5 ,r5 , (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
->>   	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
->> -112:	tophys(r5, r5)
->> +112:
->>   #ifndef CONFIG_PTE_64BIT
->>   	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
->>   	lwz	r8,0(r5)		/* get pmd entry */
->>
->>
->> Thanks
->> Christophe
->>
->>>
->>> Unfortunately, it is not possible to revert the patch due to subsequent
->>> patches, so I was unable to test a revert.
->>>
->>> Bisect log is attached.
->>>
->>> Guenter
->>>
->>> ---
->>> # bad: [cf08baa29613dd899954089e7cc7dba1d478b365] Add linux-next specific files for 20190306
->>> # good: [1c163f4c7b3f621efff9b28a47abb36f7378d783] Linux 5.0
->>> git bisect start 'HEAD' 'v5.0'
->>> # bad: [6cc8f3499ec8d31904ab9083980a91736512cb37] Merge remote-tracking branch 'vfs/for-next'
->>> git bisect bad 6cc8f3499ec8d31904ab9083980a91736512cb37
->>> # good: [63bdf4284c38a48af21745ceb148a087b190cd21] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
->>> git bisect good 63bdf4284c38a48af21745ceb148a087b190cd21
->>> # good: [520b5fc601ab760fee7ea0c403b42d04e8ebfd93] Merge remote-tracking branch 'arm-soc/for-next'
->>> git bisect good 520b5fc601ab760fee7ea0c403b42d04e8ebfd93
->>> # bad: [d7f54e4e0d4e90f5df78da8d6a830bafad3b535a] Merge remote-tracking branch 'xtensa/xtensa-for-next'
->>> git bisect bad d7f54e4e0d4e90f5df78da8d6a830bafad3b535a
->>> # good: [0c1a78523542fb3d2e6c5ac7955c8ca8f6482e6f] Merge remote-tracking branch 'clk/clk-next'
->>> git bisect good 0c1a78523542fb3d2e6c5ac7955c8ca8f6482e6f
->>> # bad: [fb0b0a73b223fc113e961b1d921322844e9c30d9] powerpc: Enable kcov
->>> git bisect bad fb0b0a73b223fc113e961b1d921322844e9c30d9
->>> # good: [d0055df0c9c1471c389197a69f43e300185a75aa] Merge branch 'topic/dma' into next
->>> git bisect good d0055df0c9c1471c389197a69f43e300185a75aa
->>> # good: [0df977eafc792a5365a7f81d8d5920132e03afad] powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS
->>> git bisect good 0df977eafc792a5365a7f81d8d5920132e03afad
->>> # bad: [665bed2386e5dc29844ad78c7ef1464664b103ec] powerpc/8xx: replace most #ifdef by IS_ENABLED() in 8xx_mmu.c
->>> git bisect bad 665bed2386e5dc29844ad78c7ef1464664b103ec
->>> # bad: [78ca1108b10927b3d068c8da91352b0f4cd01fc5] powerpc/book3s32: Reorder _PAGE_XXX flags to simplify TLB handling
->>> git bisect bad 78ca1108b10927b3d068c8da91352b0f4cd01fc5
->>> # bad: [a8a121995b2e4f227fddc534c6bd5f1c02cbe2ee] powerpc/603: Don't handle kernel page TLB misses when not need
->>> git bisect bad a8a121995b2e4f227fddc534c6bd5f1c02cbe2ee
->>> # bad: [2c12393f577396a51b7e0537bd3eb29dcc26dc1b] powerpc/603: use physical address directly in TLB miss handlers.
->>> git bisect bad 2c12393f577396a51b7e0537bd3eb29dcc26dc1b
->>> # bad: [93c4a162b014d238a287f8264adb25c009c79e61] powerpc/6xx: Store PGDIR physical address in a SPRG
->>> git bisect bad 93c4a162b014d238a287f8264adb25c009c79e61
->>> # first bad commit: [93c4a162b014d238a287f8264adb25c009c79e61] powerpc/6xx: Store PGDIR physical address in a SPRG
->>>
+- Arnaldo
