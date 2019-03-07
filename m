@@ -2,178 +2,115 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5709C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B26EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845F22063F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJHkKfyV"
+	by mail.kernel.org (Postfix) with ESMTP id 50F1520840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfCGHug (ORCPT
+        id S1726296AbfCGHva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 02:50:36 -0500
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55103 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfCGHuf (ORCPT
+        Thu, 7 Mar 2019 02:51:30 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:39801 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfCGHva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 02:50:35 -0500
-Received: by mail-it1-f195.google.com with SMTP id w18so13803736itj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 23:50:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cJp2eLJMr18ddMbX5NPKvZMB/Q3r4SoGsDE/1Fx/CHM=;
-        b=tJHkKfyV8sCdn7Bjy3Ib3UYkvsxEdmQNFPetefvcVozo5PZe5aBjWCmg1RCWPgBdJZ
-         SvHPnuKi4mVeaMxqzpaOjOyx+wYfR6YggngzRpJWFcTOklp1hfbcNhWGhsH32bxtvHW9
-         0r4CwPNj9xfzfTQMuARnlqI38sT0a6w0FJRZLQanSgqeQI7NYnfThmCRKbtyXkEaYiF+
-         qf7P2QqYJUgEE+ynUddv7ExP6F6Zhwyzjj/rWeqew33YBv0PxKicPaib/ZgkN1KehSRc
-         OZD+JePNX5dIOoL9f3BS7bsKC/w1LNN5mwDeHE3Lils7T37UyGO8qvVmIiZBJ8+j8Jii
-         EK9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cJp2eLJMr18ddMbX5NPKvZMB/Q3r4SoGsDE/1Fx/CHM=;
-        b=ftV817EunAzGYiqC3tSAmiRjUJ+kUEL11FrKgfuSJPvDADpfv0EG+FabkM88VxU4XS
-         OGzd0CM3SAmJv+e0fxHeVyiXh9cZYt5QM1iLqYNsxH/f0DrdNgQuB00k5e/uJf5nS69z
-         P4Hd35YVtAEmTTQHwiuWDaRY7tnh+t8mdHeXlItOWpFwHC5f1ErVIA/wpUNR1h5d3uEy
-         bDgClgsdnRgYVy+biVJOx3Jm1lPCnY+PTpC30FnIMYr+zEJ2u+5IffbDSpGdRw5MJQSd
-         +lhPIy2Rw0bMx8RX1PHh81DHlMNWOJdUTsDyjck7UqkOlAe58r4qbb7GGT7zXJ0e8cKA
-         w0Xw==
-X-Gm-Message-State: APjAAAUW8g1FoRNRGlKeQuGUV2aVpN/raUdsQ83XQOQTZ1xbtbZ1PR+p
-        OFQzAR1FslitlYx5O/WaDWFCc8qhgBe+KFraIsN6rtIg
-X-Google-Smtp-Source: APXvYqwDOkNZB6TKyRRnSpxKJACeeUzCIn8ERbyzpQFcbbRIrzu/JmjbXaIWGOmFYFjydUByikVBfC/nRbXM3IDfE7o=
-X-Received: by 2002:a02:393:: with SMTP id e19mr7014397jae.95.1551945034323;
- Wed, 06 Mar 2019 23:50:34 -0800 (PST)
+        Thu, 7 Mar 2019 02:51:30 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1McYTD-1gW1pI21dd-00cwuj; Thu, 07 Mar 2019 08:51:25 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] page flags: prioritize kasan bits over last-cpuid
+Date:   Thu,  7 Mar 2019 08:51:05 +0100
+Message-Id: <20190307075124.3424302-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <1551861826-12592-1-git-send-email-laoar.shao@gmail.com>
- <20190306100907.GT32477@hirez.programming.kicks-ass.net> <CALOAHbC1zqzU8-ikcLOUMKY5cbyuW_B6MK5rz7G6rTK-SoyMTQ@mail.gmail.com>
- <20190306112707.GU32477@hirez.programming.kicks-ass.net> <CALOAHbB7EZ83R3gHcGa9oZWq=7CEgBkL2cXav_7N13u4U44+uA@mail.gmail.com>
- <20190306123834.GW32494@hirez.programming.kicks-ass.net> <CALOAHbBDArxamap+TsWXy227N-UOsKVDA-HkGVF1M0O2Fk8qEg@mail.gmail.com>
-In-Reply-To: <CALOAHbBDArxamap+TsWXy227N-UOsKVDA-HkGVF1M0O2Fk8qEg@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 7 Mar 2019 15:49:58 +0800
-Message-ID: <CALOAHbAC-aev3s_n+byWMyeoBo8knFdbKUcXUjsbM3D8iFRWOQ@mail.gmail.com>
-Subject: Re: [PATCH] sched: fair: fix missed CONFIG_SCHEDSTATS
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, LKML <linux-kernel@vger.kernel.org>,
-        shaoyafang@didiglobal.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:veH9Knc6kktqy1oegAvldWvaMKGPY1paYlybq/Hp0sKWNk7FLma
+ JKa79ay422Mv9MbcoOUDNPHaSLB7jZq+QX818+mOki0oF8NUOm7CgxX5lt/LtD+8jNI1ltM
+ Ym6zcNiH3yMmouiTvVBkleWG+2W7c53iCCf4dPAJ/V9MRoJ5X4t6pW9suuKVK09LSjjPh5h
+ +9kxEYL/z7zngiJq5sD9g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jfZPdugRt4A=:v5VK1smrr5w6HduxLQTC1P
+ G/vBUms3YCvASNGSAg3DimYiX8isn4Ux5x4KLOE4F4I26fbfEpJ/tsyCkrHX2EMmyTRXHm1d4
+ hkLZS4eJveZUwgohq3Hmn0yBYdgXCgduePN30/0oX52Hsy1vXHcUigfWo0WKk7SjH7AxpihOF
+ DxuRw+yIdN9d6jrDUltAK3FxD1lqUMzi0XEDDos6YlrkgcT0ygp9dPUtYmzXgBidKxD5YHOVB
+ q8xqOOD7eFodNVfl+EipnlNV9hdnwJq9BreYaMzOvmaEbyoRVNY4SiuSYERJKDfF4x1SyZ8l9
+ 0zyhnGFzfpRnHGx+PCq/UYfnG/0UqkGn+8UEprRiWgH5p+3uIEinBovAjy0TLQQAh1FwuLBdB
+ BgzNgpEfSifeovZyKQ4roCyHxE65V0enmy8Q0wTTfZ86yewWNMt9KfdqKgwvbnr5/071zOLGE
+ dWpv//RPTlRTSmO3+JAzKT3y6AEn2VpQQPO7bwT6Kpycv4+9tUCDgQTiQ7h60mw/I6sKltxK3
+ +7t7HsOS2a9sz49XIbuCgCzzf/eIc8xH21yEl3URdr5fA6p3lYvLodu+RvallU3Iyf3Xv7iYG
+ yEbWgmXQpYe4K6ZkPqLFg/5wf80oY8PNcdPUeyO5oguc54oidPa9isLS4dWoDJyrNKiCgBhtV
+ o7uEBrcHSjdkffw2pJ61l4ORYpRchWLKWKviMgV/elZWTBQxhR+HHUuoeKrSDOo0xO6k8zq9Z
+ GG43xegM+k4nvuXkDUievmvEZosehzGd1C6ofA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 8:53 PM Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> On Wed, Mar 6, 2019 at 8:38 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Mar 06, 2019 at 07:49:36PM +0800, Yafang Shao wrote:
-> >
-> >
-> > $ grep SCHEDSTAT defconfig-build/.config
-> > # CONFIG_SCHEDSTATS is not set
-> > $ obbjdump -dr defconfig-build/kernel/sched/fair.o | awk '/>:$/ { F=$2 } /sched_stat/ { print F " " $0 }'
-> > <update_curr>:                  24cd: R_X86_64_32S      __tracepoint_sched_stat_runtime+0x28
-> > <update_curr>:                  24d9: R_X86_64_PC32     __tracepoint_sched_stat_runtime+0x24
-> > $ patch -p1 < foo
-> > patching file kernel/sched/fair.c
-> > $ make O=defconfig-build kernel/sched/
-> > make[1]: Entering directory '/usr/src/linux-2.6/defconfig-build'
-> > Using .. as source for kernel
-> > GEN     Makefile
-> > CALL    ../scripts/checksyscalls.sh
-> > CALL    ../scripts/atomic/check-atomics.sh
-> > DESCEND  objtool
-> > CC      kernel/sched/fair.o
-> > AR      kernel/sched/built-in.a
-> > make[1]: Leaving directory '/usr/src/linux-2.6/defconfig-build'
-> > $ objdump -dr defconfig-build/kernel/sched/fair.o | awk '/>:$/ { F=$2 } /sched_stat/ { print F " " $0 }'
-> > $ cat foo
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 8213ff6e365d..6e5ceec3b662 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -839,7 +839,8 @@ static void update_curr(struct cfs_rq *cfs_rq)
-> >         if (entity_is_task(curr)) {
-> >                 struct task_struct *curtask = task_of(curr);
-> >
-> > -               trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
-> > +               if (schedstat_enabled())
-> > +                       trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
-> >                 cgroup_account_cputime(curtask, delta_exec);
-> >                 account_group_exec_runtime(curtask, delta_exec);
-> >         }
-> >
-> >
-> > _1_ line, where you wanted to add _6_ ugly #ifdefs
->
-> I get your point now.
->
-> Yes, these codes can be removed from the callsites in kernel/sched/fair.c,
-> but the definitions of these tracepoints are still there,
-> and then they will be exposed in /sys/kernel/debug/tracing/events/sched/.
->
-> You can try objdump the vmlinux.
-> $ objdump -dr kernel/sched/fair.o | awk '/>:$/ { F=$2 } /sched_stat/ {
-> print F " " $0 }'    // nothing
->
-> $ objdump -dr vmlinux  | awk '/>:$/ { F=$2 } /sched_stat/ { print F " " $0 }'
-> <perf_trace_sched_stat_runtime>: ffffffff810b3c30
-> <perf_trace_sched_stat_runtime>:  // it is still defined
->
->
-> My guess is they will be used by perf or bpf,
-> so they won't be optimized out by the compiler.
->
+ARM64 randdconfig builds regularly run into a build error, especially
+when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
 
-Hi Peter,
+ #error "KASAN: not enough bits in page flags for tag"
 
-If you do not like sprinkle #ifdef, we can use something like bellow
-to resovle this issue.
-I don't like bellow code really, but it can avoid exposing these
-tracepoints to the userspace.
+The last-cpuid bits are already contitional on the available space,
+so the result of the calculation is a bit random on whether they
+were already left out or not.
 
-What about your opinon ?
+Adding the kasan tag bits before last-cpuid makes it much more likely
+to end up with a successful build here, and should be reliable for
+randconfig at least, as long as that does not randomize NR_CPUS
+or NODES_SHIFT but uses the defaults.
 
+Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/page-flags-layout.h | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 9a4bdfa..a0291f2 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -336,6 +336,7 @@ static inline long __trace_sched_switch_state(bool
-preempt, struct task_struct *
-                  __entry->pid, __entry->old_pid)
- );
-
-+#ifdef CONFIG_SCHEDSTATS
- /*
-  * XXX the below sched_stat tracepoints only apply to SCHED_OTHER/BATCH/IDLE
-  *     adding sched_stat support to SCHED_FIFO/RR would be welcome.
-@@ -394,6 +395,14 @@ static inline long
-__trace_sched_switch_state(bool preempt, struct task_struct *
- DEFINE_EVENT(sched_stat_template, sched_stat_blocked,
-             TP_PROTO(struct task_struct *tsk, u64 delay),
-             TP_ARGS(tsk, delay));
+diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
+index 1dda31825ec4..9bc0751e68b2 100644
+--- a/include/linux/page-flags-layout.h
++++ b/include/linux/page-flags-layout.h
+@@ -76,21 +76,23 @@
+ #define LAST_CPUPID_SHIFT 0
+ #endif
+ 
+-#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT <= BITS_PER_LONG - NR_PAGEFLAGS
++#ifdef CONFIG_KASAN_SW_TAGS
++#define KASAN_TAG_WIDTH 8
 +#else
-+
-+#define trace_sched_stat_wait(...) do {} while (0)
-+#define trace_sched_stat_sleep(...) do {} while (0)
-+#define trace_sched_stat_iowait(...) do {} while (0)
-+#define trace_sched_stat_blocked(...) do {} while (0)
-+
++#define KASAN_TAG_WIDTH 0
 +#endif
-
++
++#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT+KASAN_TAG_WIDTH \
++	<= BITS_PER_LONG - NR_PAGEFLAGS
+ #define LAST_CPUPID_WIDTH LAST_CPUPID_SHIFT
+ #else
+ #define LAST_CPUPID_WIDTH 0
+ #endif
+ 
+-#ifdef CONFIG_KASAN_SW_TAGS
+-#define KASAN_TAG_WIDTH 8
+ #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
+ 	> BITS_PER_LONG - NR_PAGEFLAGS
+ #error "KASAN: not enough bits in page flags for tag"
+ #endif
+-#else
+-#define KASAN_TAG_WIDTH 0
+-#endif
+ 
  /*
-  * Tracepoint for accounting runtime (time the task is executing
+  * We are going to use the flags for the page to node mapping if its in
+-- 
+2.20.0
 
-
-Thanks
-Yafang
