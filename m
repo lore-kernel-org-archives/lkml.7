@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3CDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D012C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE6C2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C402081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZBbx5QDG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N7VAL+15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfCGLx7 (ORCPT
+        id S1726561AbfCGLw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:53:59 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:50992 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfCGLw6 (ORCPT
+        Thu, 7 Mar 2019 06:52:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39666 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfCGLwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:52:58 -0500
+        Thu, 7 Mar 2019 06:52:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hjvTEGR1I4zdmxJ7G4K8d54N9zsu/P3oWnWhP63l8eI=; b=ZBbx5QDGpNjPWflkTAZDgmiDWt
-        3jHskgr+eeBFXQ0SsBkNvnrmsmkwIZJsWouLko2x2lLMU5v2u0uXK+OXVoOKjtauh5xYp+XwJV/7h
-        dFyZgWB4uVGLHhNiNnVCoSxqON3/aY1tkZ27W0q0Syynm9ski4gQusXl5NkxIeL5rmC1vKmCX+dNF
-        K2RU+DnRmtwHQZYX14C7viCfOPJbHpuNO1oK8drKlFuuiiDG7b2EvqBJ9egRPpIZ+AC9YNWpbfz/q
-        rK48txkHjyPJAY+Gf2CoR6Jm/41GXuNuIAB4vfVappLewZGFyLswFnnri5lwUPh6lzh0cY0Jd7wWA
-        mEHuRs7A==;
+        bh=yJ1bCJlh1+xNZWhNi935RbqQH4eX3YSnCjfUf0Q33Jw=; b=N7VAL+152XLCspoZbxuizKJxDY
+        DACp3mg6bjdgi94i913i/kth0JdXBSnGOdMDou4464cs5/UubqiuKTvdjVNBnes9le68yN91TVnU/
+        urrHlZcMwdy+jJ+/vjvcU3fxNeZQqmFG2pTFhJSHXwFOouSU1LZXn5LXXw+9UM4qYpKqQ7nt2n78q
+        WwHuA1ha043R5hXk0HlwlnVNcYw+74y5dQGJTUKK4wY+O21Gnk1/M+iAjlY7CRbNqCzRulTGeC+vH
+        uAAbx0AjrDxyaM6bYy5tDXFUqtoDKtD1l+nA+K+DhBB5ISMH74aX0brwHiRm0n2ry2fb/SdXHfUXE
+        6IuEJpng==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1rZo-0005Pg-E9; Thu, 07 Mar 2019 11:52:40 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1rZm-0001Wh-Va; Thu, 07 Mar 2019 11:52:39 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D135020291FC4; Thu,  7 Mar 2019 12:52:35 +0100 (CET)
-Message-Id: <20190307115200.515578829@infradead.org>
+        id AD0B820297BD7; Thu,  7 Mar 2019 12:52:35 +0100 (CET)
+Message-Id: <20190307115159.881691431@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 07 Mar 2019 12:45:27 +0100
+Date:   Thu, 07 Mar 2019 12:45:20 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
         julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
@@ -50,7 +50,7 @@ To:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
         luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com
 Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
         dvyukov@google.com, rostedt@goodmis.org
-Subject: [PATCH 16/20] objtool: Rewrite alt->skip_orig
+Subject: [PATCH 09/20] x86/uaccess,kasan: Fix KASAN vs SMAP
 References: <20190307114511.870090179@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,77 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Really skip the original instruction flow, instead of letting it
-continue with NOPs.
+KASAN inserts extra code for every LOAD/STORE emitted by te compiler.
+Much of this code is simple and safe to run with AC=1, however the
+kasan_report() function, called on error, is most certainly not safe
+to call with AC=1.
 
-Since the alternative code flow already continues after the original
-instructions, only the alt-original is skipped.
+Therefore wrap kasan_report() in user_access_{save,restore}; which for
+x86 SMAP, saves/restores EFLAGS and clears AC before calling the real
+function.
 
+Also ensure all the functions are without __fentry__ hook. The
+function tracer is also not safe.
+
+Cc: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- tools/objtool/check.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ mm/kasan/Makefile |    3 +++
+ mm/kasan/common.c |   10 ++++++++++
+ mm/kasan/report.c |    3 +--
+ 3 files changed, 14 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -31,6 +31,7 @@
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-+	bool skip_orig;
- };
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -2,11 +2,13 @@
+ KASAN_SANITIZE := n
+ UBSAN_SANITIZE_common.o := n
+ UBSAN_SANITIZE_generic.o := n
++UBSAN_SANITIZE_generic_report.o := n
+ UBSAN_SANITIZE_tags.o := n
+ KCOV_INSTRUMENT := n
  
- const char *objname;
-@@ -623,9 +624,6 @@ static int add_call_destinations(struct
-  *    conditionally jumps to the _end_ of the entry.  We have to modify these
-  *    jumps' destinations to point back to .text rather than the end of the
-  *    entry in .altinstr_replacement.
-- *
-- * 4. It has been requested that we don't validate the !POPCNT feature path
-- *    which is a "very very small percentage of machines".
-  */
- static int handle_group_alt(struct objtool_file *file,
- 			    struct special_alt *special_alt,
-@@ -641,9 +639,6 @@ static int handle_group_alt(struct objto
- 		if (insn->offset >= special_alt->orig_off + special_alt->orig_len)
- 			break;
+ CFLAGS_REMOVE_common.o = -pg
+ CFLAGS_REMOVE_generic.o = -pg
++CFLAGS_REMOVE_generic_report.o = -pg
+ CFLAGS_REMOVE_tags.o = -pg
  
--		if (special_alt->skip_orig)
--			insn->type = INSN_NOP;
--
- 		insn->alt_group = true;
- 		last_orig_insn = insn;
- 	}
-@@ -808,6 +803,7 @@ static int add_special_section_alts(stru
- 		}
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+@@ -14,6 +16,7 @@ CFLAGS_REMOVE_tags.o = -pg
  
- 		alt->insn = new_insn;
-+		alt->skip_orig = special_alt->skip_orig;
- 		list_add_tail(&alt->list, &orig_insn->alts);
+ CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
  
- 		list_del(&special_alt->list);
-@@ -1883,7 +1879,12 @@ static int validate_branch(struct objtoo
- 		insn->visited = true;
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -34,6 +34,7 @@
+ #include <linux/types.h>
+ #include <linux/vmalloc.h>
+ #include <linux/bug.h>
++#include <linux/uaccess.h>
  
- 		if (!insn->ignore_alts) {
-+			bool skip_orig = false;
+ #include "kasan.h"
+ #include "../slab.h"
+@@ -612,6 +613,15 @@ void kasan_free_shadow(const struct vm_s
+ 		vfree(kasan_mem_to_shadow(vm->addr));
+ }
+ 
++extern void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
 +
- 			list_for_each_entry(alt, &insn->alts, list) {
-+				if (alt->skip_orig)
-+					skip_orig = true;
++void kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
++{
++	unsigned long flags = user_access_save();
++	__kasan_report(addr, size, is_write, ip);
++	user_access_restore(flags);
++}
 +
- 				ret = validate_branch(file, alt->insn, state);
- 				if (ret) {
- 					if (backtrace)
-@@ -1891,6 +1892,9 @@ static int validate_branch(struct objtoo
- 					return ret;
- 				}
- 			}
-+
-+			if (skip_orig)
-+				return 0;
- 		}
+ #ifdef CONFIG_MEMORY_HOTPLUG
+ static bool shadow_mapped(unsigned long addr)
+ {
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -281,8 +281,7 @@ void kasan_report_invalid_free(void *obj
+ 	end_report(&flags);
+ }
  
- 		switch (insn->type) {
+-void kasan_report(unsigned long addr, size_t size,
+-		bool is_write, unsigned long ip)
++void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+ {
+ 	struct kasan_access_info info;
+ 	void *tagged_addr;
 
 
