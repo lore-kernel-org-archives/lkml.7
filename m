@@ -2,283 +2,219 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28658C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F5AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D788A20835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE08620835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I32GWdA8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UrtSpJrU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SbDsk+98";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oFBS0GUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfCGKOn (ORCPT
+        id S1726241AbfCGKRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:14:43 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:59820 "EHLO
+        Thu, 7 Mar 2019 05:17:36 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:35148 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfCGKOn (ORCPT
+        with ESMTP id S1726015AbfCGKRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:14:43 -0500
+        Thu, 7 Mar 2019 05:17:36 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id ECB7060DB4; Thu,  7 Mar 2019 10:14:41 +0000 (UTC)
+        id DF0FF609D4; Thu,  7 Mar 2019 10:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551953682;
-        bh=M2TOpqcbtarcBUBJQkuYCtSFUHWktJ1n7cFvdlIUIuA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=I32GWdA8zRBTI+5OEPfbIqt0GDTL5jDAkGPz3Vyn7dZQOLeVdi03lGW301ty8OQXj
-         OZPBMpPSZhelzaKAzt3rQTWXAWD4zf/rkm0NcWiZoRjXqJJQ7q4CBfsfBYzvxYA5x9
-         GMjg+QwyqCh01dZ6drbBZpFIE1jibntNDZJMISi4=
-Received: from [10.206.24.224] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        s=default; t=1551953855;
+        bh=5z0OXUGHDdPqXwfCPrD15+Akap4RvFoJCp8G/dhl0RQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SbDsk+98qBZlxYlTH4AGluTLOVNsr7+Zqy9+eNgK8uaYPbJG8BMzaHDbmeBZtJuzY
+         OdUO4P7KZtFo6pl/x6cm1RUiMrsXZTxH/SjwP81qppfq7T+Vth/xkh9QYxM0hifzhp
+         W7nn6/huLb/BFzsgT8K+PS1Z0rZK3PQjGOs2P3fI=
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 235576087F;
-        Thu,  7 Mar 2019 10:14:37 +0000 (UTC)
+        (Authenticated sender: bgodavar@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33A9A606DB;
+        Thu,  7 Mar 2019 10:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551953681;
-        bh=M2TOpqcbtarcBUBJQkuYCtSFUHWktJ1n7cFvdlIUIuA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UrtSpJrUk2EPwRhbrWYQR+LVC0HPmtGQ8dpcIiRdLlzHut0lp6ubTWKEgXEcsd+b6
-         476/Mi9l568OUSdfNMCWxQNV3n1Rmkz5VHNQ6IrUFUrD9iN/MZYDH3jBMco2m+DXPS
-         ucnnmQgsedqdQBDMtCi2o5adtmdkCRDCDzoDxymM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 235576087F
+        s=default; t=1551953853;
+        bh=5z0OXUGHDdPqXwfCPrD15+Akap4RvFoJCp8G/dhl0RQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oFBS0GUNzdmGAIAhefZq5a/6qXoVfA3QTwTBBbTZY0h4Tx6iCB4g3UzlN9If/Rdf3
+         /v1cdZjJ1hh2UZ6Ky/zRi1vLSMAM+mbiGSqIyGGOoccj4FDjO4ipyy/TzWhTKelXzt
+         NjBPciWic3p2FHbPYUXPi5Qq0rYLO/+G6NEjI3l4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33A9A606DB
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH] clk: qcom: gcc-qcs404: Add CDSP related clocks and resets
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20190306055148.10823-1-bjorn.andersson@linaro.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <6277b6cf-e1ad-3994-b788-9aeca52bfebb@codeaurora.org>
-Date:   Thu, 7 Mar 2019 15:44:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, rjliao@codeaurora.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH v1] Bluetooth: hci_qca: Enable the ldisc for ROME for x86 platforms.
+Date:   Thu,  7 Mar 2019 15:47:22 +0530
+Message-Id: <20190307101722.25871-1-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190306055148.10823-1-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Bjorn,
+When using btattach to setup Rome over ldisc we observed a crash
+in qca_setup as it will try to access the serdev which is not
+available in the ldisc proto. This patch will fix the crash by
+support both the ldisc and serdev way in the qca hci_uart driver.
 
-I believe on few board variants these clocks could be protected and 
-would be added to protected-clocks list?
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 47 ++++++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 19 deletions(-)
 
-On 3/6/2019 11:21 AM, Bjorn Andersson wrote:
-> Add the clocks and resets need in order to control the Turing
-> remoteproc.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->   drivers/clk/qcom/gcc-qcs404.c               | 90 +++++++++++++++++++++
->   include/dt-bindings/clock/qcom,gcc-qcs404.h |  5 ++
->   2 files changed, 95 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-> index 5a62f64ada93..a54807eb3b28 100644
-> --- a/drivers/clk/qcom/gcc-qcs404.c
-> +++ b/drivers/clk/qcom/gcc-qcs404.c
-> @@ -260,6 +260,20 @@ static const char * const gcc_parent_names_15[] = {
->   	"core_bi_pll_test_se",
->   };
->   
-> +static const struct parent_map gcc_parent_map_16[] = {
-> +	{ P_XO, 0 },
-> +	{ P_GPLL0_OUT_MAIN, 1 },
-> +	{ P_GPLL0_OUT_AUX, 2 },
-> +	{ P_CORE_BI_PLL_TEST_SE, 7 },
-> +};
-> +
-> +static const char * const gcc_parent_names_16[] = {
-> +	"cxo",
-> +	"gpll0_out_main",
-> +	"gpll0_out_aux",
-> +	"core_bi_pll_test_se",
-> +};
-> +
->   static struct clk_fixed_factor cxo = {
->   	.mult = 1,
->   	.div = 1,
-> @@ -1194,6 +1208,28 @@ static struct clk_rcg2 vsync_clk_src = {
->   	},
->   };
->   
-> +static const struct freq_tbl ftbl_cdsp_bimc_clk_src[] = {
-> +	F(19200000, P_XO, 1, 0, 0),
-> +	F(133333333, P_GPLL0_OUT_MAIN, 6, 0, 0),
-> +	F(266666667, P_GPLL0_OUT_MAIN, 3, 0, 0),
-> +	F(320000000, P_GPLL0_OUT_MAIN, 2.5, 0, 0),
-> +	{ }
-> +};
-> +
-> +static struct clk_rcg2 cdsp_bimc_clk_src = {
-> +	.cmd_rcgr = 0x5e010,
-> +	.mnd_width = 0,
-> +	.hid_width = 5,
-> +	.parent_map = gcc_parent_map_16,
-> +	.freq_tbl = ftbl_cdsp_bimc_clk_src,
-> +	.clkr.hw.init = &(struct clk_init_data) {
-> +		.name = "cdsp_bimc_clk_src",
-> +		.parent_names = gcc_parent_names_16,
-> +		.num_parents = 4,
-> +		.ops = &clk_rcg2_ops,
-> +	},
-> +};
-> +
->   static struct clk_branch gcc_apss_ahb_clk = {
->   	.halt_reg = 0x4601c,
->   	.halt_check = BRANCH_HALT_VOTED,
-> @@ -1255,6 +1291,24 @@ static struct clk_branch gcc_bimc_gpu_clk = {
->   	},
->   };
->   
-> +static struct clk_branch gcc_bimc_cdsp_clk = {
-> +	.halt_reg = 0x31030,
-> +	.halt_check = BRANCH_HALT,
-> +	.clkr = {
-> +		.enable_reg = 0x31030,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data) {
-> +			.name = "gcc_bimc_cdsp_clk",
-> +			.parent_names = (const char *[]) {
-> +				"cdsp_bimc_clk_src",
-> +			},
-> +			.num_parents = 1,
-> +			.flags = CLK_SET_RATE_PARENT,
-> +			.ops = &clk_branch2_ops,
-> +		},
-> +	},
-> +};
-> +
->   static struct clk_branch gcc_bimc_mdss_clk = {
->   	.halt_reg = 0x31038,
->   	.halt_check = BRANCH_HALT,
-> @@ -1792,6 +1846,24 @@ static struct clk_branch gcc_gfx_tbu_clk = {
->   	},
->   };
->   
-> +static struct clk_branch gcc_cdsp_tbu_clk = {
-> +	.halt_reg = 0x1203c,
-> +	.halt_check = BRANCH_VOTED,
-> +	.clkr = {
-> +		.enable_reg = 0x13020,
-> +		.enable_mask = BIT(9),
-> +		.hw.init = &(struct clk_init_data) {
-> +			.name = "gcc_cdsp_tbu_clk",
-> +			.parent_names = (const char *[]) {
-> +				"cdsp_bimc_clk_src",
-> +			},
-> +			.num_parents = 1,
-> +			.flags = CLK_SET_RATE_PARENT,
-> +			.ops = &clk_branch2_ops,
-> +		},
-> +	},
-> +};
-> +
->   static struct clk_branch gcc_gp1_clk = {
->   	.halt_reg = 0x8000,
->   	.halt_check = BRANCH_HALT,
-> @@ -2304,6 +2376,19 @@ static struct clk_branch gcc_sdcc1_ice_core_clk = {
->   	},
->   };
->   
-> +static struct clk_branch gcc_cdsp_cfg_ahb_clk = {
-> +	.halt_reg = 0x5e004,
-> +	.halt_check = BRANCH_HALT,
-> +	.clkr = {
-> +		.enable_reg = 0x5e004,
-> +		.enable_mask = BIT(0),
-> +		.hw.init = &(struct clk_init_data) {
-> +			.name = "gcc_cdsp_cfg_ahb_cbcr",
-> +			.ops = &clk_branch2_ops,
-> +		},
-> +	},
-> +};
-> +
->   static struct clk_branch gcc_sdcc2_ahb_clk = {
->   	.halt_reg = 0x4301c,
->   	.halt_check = BRANCH_HALT,
-> @@ -2548,6 +2633,7 @@ static struct clk_regmap *gcc_qcs404_clocks[] = {
->   	[GCC_ESC0_CLK_SRC] = &esc0_clk_src.clkr,
->   	[GCC_APSS_AHB_CLK] = &gcc_apss_ahb_clk.clkr,
->   	[GCC_BIMC_GFX_CLK] = &gcc_bimc_gfx_clk.clkr,
-> +	[GCC_BIMC_CDSP_CLK] = &gcc_bimc_cdsp_clk.clkr,
->   	[GCC_BIMC_MDSS_CLK] = &gcc_bimc_mdss_clk.clkr,
->   	[GCC_BLSP1_AHB_CLK] = &gcc_blsp1_ahb_clk.clkr,
->   	[GCC_BLSP1_QUP0_I2C_APPS_CLK] = &gcc_blsp1_qup0_i2c_apps_clk.clkr,
-> @@ -2605,6 +2691,7 @@ static struct clk_regmap *gcc_qcs404_clocks[] = {
->   	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
->   	[GCC_SDCC1_APPS_CLK] = &gcc_sdcc1_apps_clk.clkr,
->   	[GCC_SDCC1_ICE_CORE_CLK] = &gcc_sdcc1_ice_core_clk.clkr,
-> +	[GCC_CDSP_CFG_AHB_CLK] = &gcc_cdsp_cfg_ahb_clk.clkr,
->   	[GCC_SDCC2_AHB_CLK] = &gcc_sdcc2_ahb_clk.clkr,
->   	[GCC_SDCC2_APPS_CLK] = &gcc_sdcc2_apps_clk.clkr,
->   	[GCC_SYS_NOC_USB3_CLK] = &gcc_sys_noc_usb3_clk.clkr,
-> @@ -2645,6 +2732,7 @@ static struct clk_regmap *gcc_qcs404_clocks[] = {
->   	[GCC_USB3_PHY_AUX_CLK_SRC] = &usb3_phy_aux_clk_src.clkr,
->   	[GCC_USB_HS_SYSTEM_CLK_SRC] = &usb_hs_system_clk_src.clkr,
->   	[GCC_VSYNC_CLK_SRC] = &vsync_clk_src.clkr,
-> +	[GCC_CDSP_BIMC_CLK_SRC] = &cdsp_bimc_clk_src.clkr,
->   	[GCC_USB_HS_INACTIVITY_TIMERS_CLK] =
->   			&gcc_usb_hs_inactivity_timers_clk.clkr,
->   	[GCC_BIMC_GPU_CLK] = &gcc_bimc_gpu_clk.clkr,
-> @@ -2653,6 +2741,7 @@ static struct clk_regmap *gcc_qcs404_clocks[] = {
->   	[GCC_GFX_TBU_CLK] = &gcc_gfx_tbu_clk.clkr,
->   	[GCC_SMMU_CFG_CLK] = &gcc_smmu_cfg_clk.clkr,
->   	[GCC_APSS_TCU_CLK] = &gcc_apss_tcu_clk.clkr,
-> +	[GCC_CDSP_TBU_CLK] = &gcc_cdsp_tbu_clk.clkr,
->   	[GCC_CRYPTO_AHB_CLK] = &gcc_crypto_ahb_clk.clkr,
->   	[GCC_CRYPTO_AXI_CLK] = &gcc_crypto_axi_clk.clkr,
->   	[GCC_CRYPTO_CLK] = &gcc_crypto_clk.clkr,
-> @@ -2664,6 +2753,7 @@ static struct clk_regmap *gcc_qcs404_clocks[] = {
->   
->   static const struct qcom_reset_map gcc_qcs404_resets[] = {
->   	[GCC_GENI_IR_BCR] = { 0x0F000 },
-> +	[GCC_CDSP_RESTART] = { 0x18000 },
->   	[GCC_USB_HS_BCR] = { 0x41000 },
->   	[GCC_USB2_HS_PHY_ONLY_BCR] = { 0x41034 },
->   	[GCC_QUSB2_PHY_BCR] = { 0x4103c },
-> diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> index 6ceb55ed72c6..454b3f43f538 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> @@ -146,6 +146,10 @@
->   #define GCC_MDP_TBU_CLK					138
->   #define GCC_QDSS_DAP_CLK				139
->   #define GCC_DCC_XO_CLK					140
-> +#define GCC_CDSP_CFG_AHB_CLK				143
-> +#define GCC_BIMC_CDSP_CLK				144
-> +#define GCC_CDSP_TBU_CLK				145
-> +#define GCC_CDSP_BIMC_CLK_SRC				146
->   
->   #define GCC_GENI_IR_BCR					0
->   #define GCC_USB_HS_BCR					1
-> @@ -161,5 +165,6 @@
->   #define GCC_PCIE_0_LINK_DOWN_BCR			11
->   #define GCC_PCIEPHY_0_PHY_BCR				12
->   #define GCC_EMAC_BCR					13
-> +#define GCC_CDSP_RESTART				14
->   
->   #endif
-> 
-
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 237aea34b69f..0a5c98d46864 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -963,7 +963,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+ {
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	struct qca_data *qca = hu->priv;
+-	struct qca_serdev *qcadev;
++	struct qca_serdev *qcadev = NULL;
+ 	struct sk_buff *skb;
+ 	u8 cmd[] = { 0x01, 0x48, 0xFC, 0x01, 0x00 };
+ 
+@@ -985,18 +985,19 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+ 	skb_queue_tail(&qca->txq, skb);
+ 	hci_uart_tx_wakeup(hu);
+ 
+-	qcadev = serdev_device_get_drvdata(hu->serdev);
++	if (hu->serdev)
++		qcadev = serdev_device_get_drvdata(hu->serdev);
+ 
+ 	/* Wait for the baudrate change request to be sent */
+-
+ 	while (!skb_queue_empty(&qca->txq))
+ 		usleep_range(100, 200);
+ 
+-	serdev_device_wait_until_sent(hu->serdev,
+-		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
++	if (hu->serdev)
++		serdev_device_wait_until_sent(hu->serdev,
++				msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+ 
+ 	/* Give the controller time to process the request */
+-	if (qcadev->btsoc_type == QCA_WCN3990)
++	if (qcadev && qcadev->btsoc_type == QCA_WCN3990)
+ 		msleep(10);
+ 	else
+ 		msleep(300);
+@@ -1072,10 +1073,12 @@ static unsigned int qca_get_speed(struct hci_uart *hu,
+ 
+ static int qca_check_speeds(struct hci_uart *hu)
+ {
+-	struct qca_serdev *qcadev;
++	struct qca_serdev *qcadev = NULL;
+ 
+-	qcadev = serdev_device_get_drvdata(hu->serdev);
+-	if (qcadev->btsoc_type == QCA_WCN3990) {
++	if (hu->serdev)
++		qcadev = serdev_device_get_drvdata(hu->serdev);
++
++	if (qcadev && qcadev->btsoc_type == QCA_WCN3990) {
+ 		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+ 		    !qca_get_speed(hu, QCA_OPER_SPEED))
+ 			return -EINVAL;
+@@ -1091,7 +1094,7 @@ static int qca_check_speeds(struct hci_uart *hu)
+ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ {
+ 	unsigned int speed, qca_baudrate;
+-	struct qca_serdev *qcadev;
++	struct qca_serdev *qcadev = NULL;
+ 	int ret = 0;
+ 
+ 	if (speed_type == QCA_INIT_SPEED) {
+@@ -1106,8 +1109,10 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		/* Disable flow control for wcn3990 to deassert RTS while
+ 		 * changing the baudrate of chip and host.
+ 		 */
+-		qcadev = serdev_device_get_drvdata(hu->serdev);
+-		if (qcadev->btsoc_type == QCA_WCN3990)
++		if (hu->serdev)
++			qcadev = serdev_device_get_drvdata(hu->serdev);
++
++		if (qcadev && qcadev->btsoc_type == QCA_WCN3990)
+ 			hci_uart_set_flow_control(hu, true);
+ 
+ 		qca_baudrate = qca_get_baudrate_value(speed);
+@@ -1119,7 +1124,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		host_set_baudrate(hu, speed);
+ 
+ error:
+-		if (qcadev->btsoc_type == QCA_WCN3990)
++		if (qcadev && qcadev->btsoc_type == QCA_WCN3990)
+ 			hci_uart_set_flow_control(hu, false);
+ 	}
+ 
+@@ -1181,11 +1186,15 @@ static int qca_setup(struct hci_uart *hu)
+ 	struct hci_dev *hdev = hu->hdev;
+ 	struct qca_data *qca = hu->priv;
+ 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+-	struct qca_serdev *qcadev;
++	struct qca_serdev *qcadev = NULL;
+ 	int ret;
+ 	int soc_ver = 0;
++	enum qca_btsoc_type btsoc_type = QCA_ROME;
+ 
+-	qcadev = serdev_device_get_drvdata(hu->serdev);
++	if (hu->serdev) {
++		qcadev = serdev_device_get_drvdata(hu->serdev);
++		btsoc_type = qcadev->btsoc_type;
++	}
+ 
+ 	ret = qca_check_speeds(hu);
+ 	if (ret)
+@@ -1194,7 +1203,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	/* Patch downloading has to be done without IBS mode */
+ 	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+ 
+-	if (qcadev->btsoc_type == QCA_WCN3990) {
++	if (qcadev && btsoc_type == QCA_WCN3990) {
+ 		bt_dev_info(hdev, "setting up wcn3990");
+ 
+ 		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
+@@ -1225,7 +1234,7 @@ static int qca_setup(struct hci_uart *hu)
+ 		qca_baudrate = qca_get_baudrate_value(speed);
+ 	}
+ 
+-	if (qcadev->btsoc_type != QCA_WCN3990) {
++	if (btsoc_type != QCA_WCN3990) {
+ 		/* Get QCA version information */
+ 		ret = qca_read_soc_version(hdev, &soc_ver);
+ 		if (ret)
+@@ -1234,7 +1243,7 @@ static int qca_setup(struct hci_uart *hu)
+ 
+ 	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
+ 	/* Setup patch / NVM configurations */
+-	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, soc_ver);
++	ret = qca_uart_setup(hdev, qca_baudrate, btsoc_type, soc_ver);
+ 	if (!ret) {
+ 		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+ 		qca_debugfs_init(hdev);
+@@ -1250,7 +1259,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	}
+ 
+ 	/* Setup bdaddr */
+-	if (qcadev->btsoc_type == QCA_WCN3990)
++	if (btsoc_type == QCA_WCN3990)
+ 		hu->hdev->set_bdaddr = qca_set_bdaddr;
+ 	else
+ 		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
---
