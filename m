@@ -2,111 +2,129 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F27C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EECC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50EFB2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E8D2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OY5YaEU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfCGRPm convert rfc822-to-8bit (ORCPT
+        id S1726558AbfCGRQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:15:42 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:52751 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726172AbfCGRPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:15:41 -0500
-Received: from [172.19.131.165] ([8.46.77.96])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x27HErM42268389
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 7 Mar 2019 09:14:57 -0800
-Date:   Thu, 07 Mar 2019 09:14:45 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190307114511.870090179@infradead.org>
-References: <20190307114511.870090179@infradead.org>
+        Thu, 7 Mar 2019 12:16:18 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34548 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGRQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:16:18 -0500
+Received: by mail-ed1-f67.google.com with SMTP id a16so14143694edn.1;
+        Thu, 07 Mar 2019 09:16:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q6MtqSnvkN42Z4rq12gEjJsLLTxX1BDFhkW479yq9mE=;
+        b=OY5YaEU3lnNl1Qw5EhFInBU/GFJ4+QkrYkp62QOXXS1OStwktgfDC5kFk84WNFGgDF
+         v0q11hMORc4bWWamYBAoclh6UfqldBGuxQVweWU+lcp6Lz+MuP9+QYpJLSsX9QZM2yFi
+         EDIOH22s4Xvpyxo4jlNyPp/Jk81PV+Vjmv0+2TTSPsF3Wmu6hPiykNbxtebSAxO2eQ93
+         nE6KNCtx297wJmHfWgRJtzpHH/ZO5iM8tQjyMIfAnEVUj1Y1T+ON/Qfng7lXPG/bBw7I
+         wUDHAHOA27q9k4yrf0DQKcfYxCCYLmduMikr3nplM6rL9nIF6SipE5A82tg/AWuEbAvu
+         j95A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q6MtqSnvkN42Z4rq12gEjJsLLTxX1BDFhkW479yq9mE=;
+        b=n7qHLaQ85ltMd909J4QGShm4ywkTBZEPCTplMkkXiEAMnPt3bYx2V4oVrKl9rYXohy
+         T0pEjv44q9MTcj0B2ScIGHIe5TVsKMoyaf5x4DIcKZv0GYsMVoPbhezNuPRxI8eky/LR
+         64rPXRUP4kKzTTe72qrkZIWlRbDTTmTHcwIBDA0QgaOQYetbkd/g6gq6eHBBkbs6GXb3
+         fKuTd6+CVI4iGBoxCcI6TMrzwdQZQULu8cb8UIliaq2Elp4EeAMIJAjIW377RKPJDlTa
+         gUwwQAlIX3FaRNnsk6kRvxkttaCOSQfXUxxIQjpSkqC73zVMClb8b1U2BqaAgd5njkLA
+         5n1w==
+X-Gm-Message-State: APjAAAUA6ar2kBkdS8cbd/eXyfKnOHMxd3xikeaUcBel2Oue3YgXkMEC
+        Xs9zeNkelA/3qVW2ZdjBTxY=
+X-Google-Smtp-Source: APXvYqx03/jTxe3alHOPP6+eOYIoxkrPdaREM7KE06BhTI9bfNRMgqApnRYtVPwC4IxdGgC+X3Y8Lw==
+X-Received: by 2002:a50:b16e:: with SMTP id l43mr27589347edd.99.1551978975997;
+        Thu, 07 Mar 2019 09:16:15 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id v13sm1470608edm.73.2019.03.07.09.16.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 09:16:15 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] iio: adc: stmpe-adc: Shuffle an if statement around in stmpe_adc_isr
+Date:   Thu,  7 Mar 2019 10:16:04 -0700
+Message-Id: <20190307171604.27791-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
-To:     Peter Zijlstra <peterz@infradead.org>,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
-        luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com
-CC:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        dvyukov@google.com, rostedt@goodmis.org
-From:   hpa@zytor.com
-Message-ID: <1321FA0E-51AA-4A4E-9249-8A745F510F93@zytor.com>
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 7, 2019 3:45:11 AM PST, Peter Zijlstra <peterz@infradead.org> wrote:
->Teach objtool to validate the UACCESS (SMAP, PAN) rules with are
->currently
->unenforced and (therefore obviously) violated.
->
->UACCESS sections should be small; we want to limit the amount of code
->that can
->touch userspace. Furthermore, UACCESS state isn't scheduled, this means
->that
->anything that directly calls into the scheduler will result in random
->code
->running with UACCESS enabled and possibly getting back into the UACCESS
->region
->with UACCESS disabled and causing faults.
->
->Forbid any CALL/RET while UACCESS is enabled; but provide a few
->exceptions.
->
->This builds x86_64-allmodconfig clean, and I've only got a few
->randconfig
->failures left (GCC-8) that I'm not quite understanding.
->
->---
-> arch/x86/ia32/ia32_signal.c                |  29 ++-
-> arch/x86/include/asm/asm.h                 |  24 --
-> arch/x86/include/asm/nospec-branch.h       |   4 +-
-> arch/x86/include/asm/smap.h                |  20 ++
-> arch/x86/include/asm/uaccess.h             |   5 +-
-> arch/x86/include/asm/uaccess_64.h          |   3 -
-> arch/x86/include/asm/xen/hypercall.h       |  26 +-
-> arch/x86/kernel/signal.c                   |   2 +-
-> arch/x86/lib/copy_user_64.S                |  48 ++++
-> arch/x86/lib/memcpy_64.S                   |   3 +-
-> arch/x86/lib/usercopy_64.c                 |  20 --
-> drivers/gpu/drm/i915/i915_gem_execbuffer.c |   6 +-
-> include/linux/uaccess.h                    |   2 +
-> kernel/trace/trace_branch.c                |   4 +
-> lib/Makefile                               |   1 +
-> lib/ubsan.c                                |   4 +
-> mm/kasan/Makefile                          |   3 +
-> mm/kasan/common.c                          |  10 +
-> mm/kasan/report.c                          |   3 +-
-> scripts/Makefile.build                     |   3 +
-> tools/objtool/Makefile                     |   2 +-
-> tools/objtool/arch.h                       |   8 +-
-> tools/objtool/arch/x86/decode.c            |  26 +-
-> tools/objtool/builtin-check.c              |   4 +-
-> tools/objtool/builtin.h                    |   2 +-
->tools/objtool/check.c                      | 382
->++++++++++++++++++++++-------
-> tools/objtool/check.h                      |   4 +-
-> tools/objtool/elf.c                        |  15 +-
-> tools/objtool/elf.h                        |   3 +-
-> tools/objtool/special.c                    |  10 +-
-> tools/objtool/warn.h                       |   8 +
-> 31 files changed, 511 insertions(+), 173 deletions(-)
->
->
-> 
+When building with -Wsometimes-uninitialized, Clang warns:
 
-This is phenomenal. Thank you so much for digging into this. I'm hoping this will greatly reduce the risk of future leakage.
+drivers/iio/adc/stmpe-adc.c:204:13: warning: variable 'data' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+
+Clang can't tell that data will never be used uninitialized because the
+two if statements take care of all cases. Remove the first if statement
+and make it the else branch of the second one so that it is apparent to
+Clang that all cases are covered.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/387
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/iio/adc/stmpe-adc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
+index 37f4b74a5d32..7921f827c6ec 100644
+--- a/drivers/iio/adc/stmpe-adc.c
++++ b/drivers/iio/adc/stmpe-adc.c
+@@ -184,9 +184,6 @@ static irqreturn_t stmpe_adc_isr(int irq, void *dev_id)
+ 	struct stmpe_adc *info = (struct stmpe_adc *)dev_id;
+ 	u16 data;
+ 
+-	if (info->channel > STMPE_TEMP_CHANNEL)
+-		return IRQ_NONE;
+-
+ 	if (info->channel <= STMPE_ADC_LAST_NR) {
+ 		int int_sta;
+ 
+@@ -205,6 +202,8 @@ static irqreturn_t stmpe_adc_isr(int irq, void *dev_id)
+ 		/* Read value */
+ 		stmpe_block_read(info->stmpe, STMPE_REG_TEMP_DATA, 2,
+ 				(u8 *) &data);
++	} else {
++		return IRQ_NONE;
+ 	}
+ 
+ 	info->value = (u32) be16_to_cpu(data);
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+2.21.0
+
