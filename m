@@ -2,182 +2,111 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F776C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B5BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA7D20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4420920675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="pRDB0JKv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aa7OqwoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfCGWK4 (ORCPT
+        id S1726419AbfCGWLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:10:56 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40881 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfCGWK4 (ORCPT
+        Thu, 7 Mar 2019 17:11:09 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39571 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfCGWLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:10:56 -0500
-Received: by mail-yw1-f66.google.com with SMTP id u70so220886ywf.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:10:55 -0800 (PST)
+        Thu, 7 Mar 2019 17:11:09 -0500
+Received: by mail-ed1-f67.google.com with SMTP id p27so14807028edc.6;
+        Thu, 07 Mar 2019 14:11:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8fGHXDrETn6TabDK8suVxtfSni42P/yTtu2dStlmLK0=;
-        b=pRDB0JKvv6tfCYaEfKCrtyA9qWFops5hSVOSCIKoMjRZ/2pUEGPrm43Yg8eHyZqGLo
-         bDtAHEnXTR6S8mX6lw3KG6Cnnj3/hXrUgxK5rn8VAgOVF6jEb21BOQPG9cDo6XGau6s2
-         EVGFn9Q5O3qkEyzwYodtWUgwjlUaESCsgNk9RUd8OCiD3901qrlmJAr4ejrkA9ewJBSK
-         Hm2sLgFU94ViOLL6VelFwkO+AKCqBJSng3uZRY6Dh19x2k/6k7xXuB1ipPY9ZAH9MMYh
-         xhqd1PIGWTdoOWjcTUAvTXHra8ML2DyEmQdZF3UtrMRo0NBpfPylt1DEpI56lQx2M0/G
-         hPpw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TXb0s9/VA6uDrjEIjqzsVE7IYs9tLVulYfN8P5V0iLI=;
+        b=aa7OqwoBj2RHugmTvRqNIv+wYV+9IVcdAEtwY7MLBh7tlDRkHMbDVGFGJIHfLkbu6v
+         qptFYqmFtQgZ8Q6QDC59QlZ1a9S/WLHDx6nNWld3dI+gnIhN9rhQT+POlpFY2MDcQYc/
+         wMpmo7+ZSdDeEhPdUG/I5BAFnoLxMSIgIR7b/VpTE2NH2s+Z6Ki7KUYdVsf/1MK+MwUU
+         gLbJesovR4+RYFdm28MFrAEKLsZdXZUuSY8o9vnCAXCnIEGWROMpzg7Ycggz4bi+xu+m
+         vMprnhhjlxRJ2ItgkcBauwpoz9E06nQ+ue8AMkx2oKchI0JPFI8eg0I+GbwCNc+SpB++
+         7b3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8fGHXDrETn6TabDK8suVxtfSni42P/yTtu2dStlmLK0=;
-        b=gJImbO+9l5oFQr+hEB6CJj9U5dY0sUwDIcfyDztl0W15LBgktbSe2ZOiHjS9Lxu8Xi
-         j2xX67WubKoUIxaC4gLogjn7MidlHsZStbXoi8tOLCG3HEy5SDqLzoCN61h9PeSNbA7G
-         yaUviUKsSMK/Pkz3AMmY/UKT3zXsRiqtL1z+T07a8RTWEQoyeXu7ejwgOh7aMyi9SdSG
-         EXvrJVcFmmhAq55Zbni419oQIpJKbmPuqrp8jUlpNSbKv3VFt2XhWpaM9WCloFb/PLSg
-         S6u8tf64CtZLtnGR7oyZSU/8uWsdx61sm1DTDfy8aA/HQAKiTdCntBXmYJo4SqEAEIhv
-         XcPw==
-X-Gm-Message-State: APjAAAXMTILE3DX3Mf3eZtlhyHmAx7LhDig1hKF2GskdqIpkm9hsu0/8
-        qXgcVfC9U2e0UXHkOMMa6jl+gw==
-X-Google-Smtp-Source: APXvYqxlY6+6icUcEkNYdZXTYelR9T0cimRfsKU9w2fu3lPODj9S1XiDdChJgoV3OHlgLOn8mLi7Eg==
-X-Received: by 2002:a81:a091:: with SMTP id x139mr12347457ywg.164.1551996655114;
-        Thu, 07 Mar 2019 14:10:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:180::be7f])
-        by smtp.gmail.com with ESMTPSA id h131sm2126941ywa.81.2019.03.07.14.10.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TXb0s9/VA6uDrjEIjqzsVE7IYs9tLVulYfN8P5V0iLI=;
+        b=NFs1+N/L+vJ0i5145B8GdEsIo/e2DZ1R/xaRgTMi09lURDflenvXVBK80nefR9Heb5
+         O5E3Bgf8VaK9rrTNn3vY9ex7ODg6SInznvNaMMvenU1kumeG5/EN7m94sqonA6rj6TWw
+         sfBbdxMNuzFQZK8EBYJDEt9nJvLoRONXjHMr5dpEprlfFGrSyqZuSyVSynBc0hpVsJT9
+         jjKaBT9t/2J3ClDzzUd2dtSMh7QyBiWhvI4ixc3+XFRE515CJkf32avrqB7kogzsg0aE
+         FP1/Xe4/MWBMR6GYiRPD06lHD5q9EXNIWsRMVmdGezdcAzJZ6LPO5ohlOz7dmWqQOiC8
+         nNaQ==
+X-Gm-Message-State: APjAAAU6s4VMLzpm+wGdPg3204qNbKLp+4ByuypglfPMth32N7KtqbUK
+        HfJV7fTp2omKwRBTzvZ0zxE=
+X-Google-Smtp-Source: APXvYqxOpn0PnfAMILcNUSR3uo3DT56bbTsi/NHLv8lSPsmFWAFn/bIrOgIu5W4I8TjMMrCwN68mTg==
+X-Received: by 2002:a50:b3ad:: with SMTP id s42mr30244511edd.142.1551996667286;
+        Thu, 07 Mar 2019 14:11:07 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id c50sm1688585edc.81.2019.03.07.14.11.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 14:10:54 -0800 (PST)
-Date:   Thu, 7 Mar 2019 17:10:53 -0500
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] blkcg: prevent priority inversion problem during
- sync()
-Message-ID: <20190307221051.ruhpp73q6ek2at3d@macbook-pro-91.dhcp.thefacebook.com>
-References: <20190307180834.22008-1-andrea.righi@canonical.com>
- <20190307180834.22008-2-andrea.righi@canonical.com>
+        Thu, 07 Mar 2019 14:11:06 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] bcache: Zero initialize bucket in bch_allocator_thread
+Date:   Thu,  7 Mar 2019 15:10:54 -0700
+Message-Id: <20190307221054.13126-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307180834.22008-2-andrea.righi@canonical.com>
-User-Agent: NeoMutt/20180716
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:08:32PM +0100, Andrea Righi wrote:
-> Prevent priority inversion problem when a high-priority blkcg issues a
-> sync() and it is forced to wait the completion of all the writeback I/O
-> generated by any other low-priority blkcg, causing massive latencies to
-> processes that shouldn't be I/O-throttled at all.
-> 
-> The idea is to save a list of blkcg's that are waiting for writeback:
-> every time a sync() is executed the current blkcg is added to the list.
-> 
-> Then, when I/O is throttled, if there's a blkcg waiting for writeback
-> different than the current blkcg, no throttling is applied (we can
-> probably refine this logic later, i.e., a better policy could be to
-> adjust the throttling I/O rate using the blkcg with the highest speed
-> from the list of waiters - priority inheritance, kinda).
-> 
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> ---
->  block/blk-cgroup.c               | 131 +++++++++++++++++++++++++++++++
->  block/blk-throttle.c             |  11 ++-
->  fs/fs-writeback.c                |   5 ++
->  fs/sync.c                        |   8 +-
->  include/linux/backing-dev-defs.h |   2 +
->  include/linux/blk-cgroup.h       |  23 ++++++
->  mm/backing-dev.c                 |   2 +
->  7 files changed, 178 insertions(+), 4 deletions(-)
-> 
-> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> index 2bed5725aa03..4305e78d1bb2 100644
-> --- a/block/blk-cgroup.c
-> +++ b/block/blk-cgroup.c
-> @@ -1351,6 +1351,137 @@ struct cgroup_subsys io_cgrp_subsys = {
->  };
->  EXPORT_SYMBOL_GPL(io_cgrp_subsys);
->  
-> +#ifdef CONFIG_CGROUP_WRITEBACK
-> +struct blkcg_wb_sleeper {
-> +	struct backing_dev_info *bdi;
-> +	struct blkcg *blkcg;
-> +	refcount_t refcnt;
-> +	struct list_head node;
-> +};
-> +
-> +static DEFINE_SPINLOCK(blkcg_wb_sleeper_lock);
-> +static LIST_HEAD(blkcg_wb_sleeper_list);
-> +
-> +static struct blkcg_wb_sleeper *
-> +blkcg_wb_sleeper_find(struct blkcg *blkcg, struct backing_dev_info *bdi)
-> +{
-> +	struct blkcg_wb_sleeper *bws;
-> +
-> +	list_for_each_entry(bws, &blkcg_wb_sleeper_list, node)
-> +		if (bws->blkcg == blkcg && bws->bdi == bdi)
-> +			return bws;
-> +	return NULL;
-> +}
-> +
-> +static void blkcg_wb_sleeper_add(struct blkcg_wb_sleeper *bws)
-> +{
-> +	list_add(&bws->node, &blkcg_wb_sleeper_list);
-> +}
-> +
-> +static void blkcg_wb_sleeper_del(struct blkcg_wb_sleeper *bws)
-> +{
-> +	list_del_init(&bws->node);
-> +}
-> +
-> +/**
-> + * blkcg_wb_waiters_on_bdi - check for writeback waiters on a block device
-> + * @blkcg: current blkcg cgroup
-> + * @bdi: block device to check
-> + *
-> + * Return true if any other blkcg different than the current one is waiting for
-> + * writeback on the target block device, false otherwise.
-> + */
-> +bool blkcg_wb_waiters_on_bdi(struct blkcg *blkcg, struct backing_dev_info *bdi)
-> +{
-> +	struct blkcg_wb_sleeper *bws;
-> +	bool ret = false;
-> +
-> +	spin_lock(&blkcg_wb_sleeper_lock);
-> +	list_for_each_entry(bws, &blkcg_wb_sleeper_list, node)
-> +		if (bws->bdi == bdi && bws->blkcg != blkcg) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	spin_unlock(&blkcg_wb_sleeper_lock);
-> +
-> +	return ret;
-> +}
+When building with -Wsometimes-uninitialized, Clang warns:
 
-No global lock please, add something to the bdi I think?  Also have a fast path
-of
+drivers/md/bcache/alloc.c:333:4: warning: variable 'bucket' is used
+uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
 
-if (list_empty(blkcg_wb_sleeper_list))
-   return false;
+fifo_pop expands to a conditional depending on '!fifo_empty(...)', which
+is the same condition as the while loop. It seems Clang can't piece
+together that this condition will never been false as long as we are in
+the while loop because they are the same condition. It's easy enough to
+silence this warning by just explicitly zero initializing bucket.
 
-we don't need to be super accurate here.  Thanks,
+Link: https://github.com/ClangBuiltLinux/linux/issues/396
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/md/bcache/alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Josef
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 5002838ea476..c72094901ac6 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -328,7 +328,7 @@ static int bch_allocator_thread(void *arg)
+ 		 * the free list:
+ 		 */
+ 		while (!fifo_empty(&ca->free_inc)) {
+-			long bucket;
++			long bucket = 0;
+ 
+ 			fifo_pop(&ca->free_inc, bucket);
+ 
+-- 
+2.21.0
+
