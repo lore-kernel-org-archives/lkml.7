@@ -3,106 +3,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2CDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AF2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB62820854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574872085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfCGSc3 (ORCPT
+        id S1726532AbfCGSeL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:32:29 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:54906 "EHLO mx1.redhat.com"
+        Thu, 7 Mar 2019 13:34:11 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:50492 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbfCGSc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:32:29 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E7FC305B238;
-        Thu,  7 Mar 2019 18:32:28 +0000 (UTC)
-Received: from ovpn-200-17.brq.redhat.com (ovpn-200-17.brq.redhat.com [10.40.200.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CB541001DF1;
-        Thu,  7 Mar 2019 18:32:15 +0000 (UTC)
-Message-ID: <1551983533.5436.8.camel@redhat.com>
-Subject: Re: [PATCH] hyper-v: Check for ring buffer in
- hv_get_bytes_to_read/write
-From:   Mohammed Gamal <mgamal@redhat.com>
-Reply-To: mgamal@redhat.com
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        kimbrownkd <kimbrownkd@gmail.com>
-Cc:     Sasha Levin <Alexander.Levin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 07 Mar 2019 20:32:13 +0200
-In-Reply-To: <DM5PR2101MB09182EAC78F8EEA57E27C26AD74C0@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <20190307163606.25212-1-mgamal@redhat.com>
-         <DM5PR2101MB09182EAC78F8EEA57E27C26AD74C0@DM5PR2101MB0918.namprd21.prod.outlook.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 07 Mar 2019 18:32:28 +0000 (UTC)
+        id S1726161AbfCGSeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 13:34:11 -0500
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1h1xq9-0003jG-Ce; Thu, 07 Mar 2019 19:33:57 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, arm@kernel.org,
+        kernel@collabora.com, Marek Szyprowski <m.szyprowski@samsung.com>,
+        Yannick =?ISO-8859-1?Q?Fertr=E9?= <yannick.fertre@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Olof Johansson <olof@lixom.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Simon Horman <horms+renesas@verge.net.au>
+Subject: Re: [PATCH v2] ARM: multi_v7_defconfig: Enable missing drivers for supported Chromebooks
+Date:   Thu, 07 Mar 2019 19:33:56 +0100
+Message-ID: <4389876.Ov8Zuus1em@diego>
+In-Reply-To: <20190307152031.13417-1-enric.balletbo@collabora.com>
+References: <20190307152031.13417-1-enric.balletbo@collabora.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-07 at 17:33 +0000, Michael Kelley wrote:
-> From: Mohammed Gamal <mgamal@redhat.com> Sent: Thursday, March 7,
-> 2019 8:36 AM
-> > 
-> > This patch adds a check for the presence of the ring buffer in
-> > hv_get_bytes_to_read/write() to avoid possible NULL pointer
-> > dereferences.
-> > If the ring buffer is not yet allocated, return 0 bytes to be
-> > read/written.
-> > 
-> > The root cause is that code that accesses the ring buffer including
-> > hv_get_bytes_to_read/write() could be vulnerable to the race
-> > condition
-> > discussed in https://lkml.org/lkml/2018/10/18/779>;
-> > 
-> > This race is being addressed by the patch series by Kimberly Brown
-> > in
-> > https://lkml.org/lkml/2019/2/21/1236 which is not final yet
-> > 
-> > Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+Am Donnerstag, 7. M�rz 2019, 16:20:31 CET schrieb Enric Balletbo i Serra:
+> Enable following drivers for merged devices:
+> - Batteries with BQ27XXX chips for Minnie boards.
+> - Elan eKTH I2C touchscreen for Minnie boards.
+> - GPIO charger for all Veyron boards.
+> - Rockchip SARADC driver for all rk3288 boards.
+> - Rockchip eFUSE driver for all rk3288 boards.
+> - TPM security chip for all Veyron boards.
+> - ChromeOS EC userspace interface for all chromebooks boards.
+> - ChromeOS EC light and proximity sensors for some chromebooks.
 > 
-> Could you elaborate on the code paths where
-> hv_get_bytes_to_read/write() could be called when the ring buffer
-> isn't yet allocated?  My sense is that Kim Brown's patch will address
-> all of the code paths that involved sysfs access from outside the
-> driver.  And within a driver, the ring buffer should never be
-> accessed
-> unless it is already allocated.  Is there another code path we're not
-> aware of?  I'm wondering if these changes are really needed once
-> Kim Brown's patch is finished.
-> 
-> Michael
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-I've seen one instance of the race in the netvsc driver when running
-traffic through it with iperf3 while continuously changing the channel
-settings.
+@arm-soc people, do you want to apply this directly, if so here is a
 
-The following code path deallocates the ring buffer:
-netvsc_set_channels() -> netvsc_detach() ->
-rndis_filter_device_remove() -> netvsc_device_remove() -> vmbus_close()
--> vmbus_free_ring() -> hv_ringbuffer_cleanup().
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-netvsc_send_pkt() -> hv_get_bytes_to_write() might get called
-concurrently after vmbus_close() and before vmbus_open() returns and
-sets up the new ring buffer. 
 
-The race is fairly hard to reproduce on recent upstream kernels, but I
-still managed to reproduce it.
+Heiko
+
+
