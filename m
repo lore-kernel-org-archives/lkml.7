@@ -2,118 +2,100 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC1CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C882C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B49320652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEE920652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfCGQAl (ORCPT
+        id S1726311AbfCGQCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:00:41 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:35995 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfCGQAk (ORCPT
+        Thu, 7 Mar 2019 11:02:24 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39358 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfCGQCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:00:40 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MfL5v-1gZlkv3lSl-00gs6s; Thu, 07 Mar 2019 17:00:26 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>, Wenwen Wang <wang6495@umn.edu>,
-        Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
+        Thu, 7 Mar 2019 11:02:24 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h8so11596888pgp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 08:02:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iPInsmPSHy9h09KAox4on6Wck/Zanl4gpMNIK2Gdkl0=;
+        b=LOoybaYBIywJfUnSpvTLISAxpNjh8SNxETg80xnF69bB0lOpv59W0Kp+XQ9j3XCq92
+         ISLnV4AWvGqh6M7aRWOR8y+Kkpv0182DF2pI9bbkIRJQfMvwH6YGibvoLaHJMaGVLrZe
+         uM9HgR1iARKPFoglKMzM0BTooySmCHKsn3WfoKVLe/o16wEjLj2nvTth/vgC2Z41OE5M
+         ZasxO10NBB6ZEj36l2HZMy3mqxWPBIYqIJJ3m3NSIUI87JJBydoTJ4oS0C/W48OgdgkY
+         /RqsGFMijs2abP1/kgj+HMiCfO9VrtgeQ4PXflgr7lnod5I0Aw6TUf+Mq+aOn14EW8gF
+         dD2A==
+X-Gm-Message-State: APjAAAU40uvA4qXDAY2QgILLe89UOnWZjwwXLTSg6hK6us6zCcC/xnPK
+        XuyscDY6jEkUN9oSHjGbOJeR4l3meR4=
+X-Google-Smtp-Source: APXvYqyV8roXup0tiYuh99s8pYxMTnFb7gElBS5JfofGJ1SnAgYM/gcO3FxJGZreeu22YdG5VrYuLg==
+X-Received: by 2002:a63:cc44:: with SMTP id q4mr12063893pgi.183.1551974543052;
+        Thu, 07 Mar 2019 08:02:23 -0800 (PST)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id b197sm18265068pga.89.2019.03.07.08.02.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 08:02:22 -0800 (PST)
+Message-ID: <1551974540.9796.69.camel@acm.org>
+Subject: Re: [PATCH] lockdep: avoid a clang warning
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ethtool: reduce stack usage with clang
-Date:   Thu,  7 Mar 2019 16:58:35 +0100
-Message-Id: <20190307160017.3120362-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:T2IDOyorbgsgPpj+Bqgq7HPPcnC7R+qzlnvnoj1X7TcTxjdySDI
- zUZqAMZ2WK3VCIVGfBHlgrFIEUlgcDCSazoE08hDgh6ahBC6cP8CCFRId4uFTDA0yyz5GVV
- fhjgtjkGgIz0T2t1cUSq9vZQVBM3jQD7T7FRyvoHOeglKsVoGWI2uLgWrmtK4k4hzJLCynU
- 7O6UE/gzzy14hkOMjclzw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M8mJxqWzkoo=:dx+1+v6weoaqHui1MVb2w9
- XKlalBcOz+yGzVOqhaVoAr8gvjnwDPXzMMWpkPsP4rsckKA1q+tBqBZilIBWISce754bCwx0P
- fTL9Qqj2ODSlLE1kyXJdFSzgLJCwsXLU99QwJAh5OL7eeP4HnVzY3Jzj55xtZYkXuXkikcn3j
- g2N/XMp9vaIllMmzHZD3i+SXkMCXOw4gnWsB6qyHOQhbA/IUjlaHgexPo8TDnlevYhdU44WFO
- E2EcBXwlPaheZ+C89iXmwkdMgS0Wz1nzSdzpH1H9bsnh578wFkhvoTSSwidj8y5qbjdIxyGsL
- qhvRTx+KRNyhC1WFbArMmbL0MkQWRFwLtn4GGc0e159wKxBp7ef/iGUpu5tufI2Kkm11Z5R7s
- JTUIdGm6S9Su8nYJQ+pRacQ3okDSU+qdUyU3XFYmoutl87tchUpIvTVrM5bEglnhnkbpSuYKr
- sadmFUq+6KZB1SmYRZD1PfFYTjhxIsZ6fDPY53lev4AUrHkd77CW4Y5cpTCzZXgbZ6Gjt38YL
- HVis3cZUOl6yPZuAVkr6esdi5n9GHzrScHzOxBmIamMltA0d7TKDYkr5y0/wOpb4u1YlHHL04
- Dlm5vepNoZfCCwofvpOU5M2QvAwIi0KKSpWw2xD0WpEpBj2gBQlDnomIKykA2Lf51tZoGhClJ
- H9yl/35o6EsWcFQf2IYgDZBmyeF2PurPiSsth3+UD5M7L/Q/Nr7/tYAoMpocH8dWX1SVVZuVp
- P5LljWTwfEnRDprZv9eeMIMl6d8JRJLk4/4F9A==
+Date:   Thu, 07 Mar 2019 08:02:20 -0800
+In-Reply-To: <20190307075222.3424524-1-arnd@arndb.de>
+References: <20190307075222.3424524-1-arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang inlines the dev_ethtool() more aggressively than gcc does, leading
-to a larger amount of used stack space:
+On Thu, 2019-03-07 at 08:52 +-0100, Arnd Bergmann wrote:
++AD4 Clang warns about a tentative array definition without a length:
++AD4 
++AD4 kernel/locking/lockdep.c:845:12: error: tentative array definition assumed to have one element +AFs--Werror+AF0
++AD4 
++AD4 There is no real reason to do this here, so just set the same length as
++AD4 in the real definition later in the same file.  It has to be hidden in
++AD4 an +ACM-ifdef or annotated +AF8AXw-maybe+AF8-unused though, to avoid the unused-variable
++AD4 warning if CONFIG+AF8-PROVE+AF8-LOCKING is disabled.
++AD4 
++AD4 Signed-off-by: Arnd Bergmann +ADw-arnd+AEA-arndb.de+AD4
++AD4 ---
++AD4  kernel/locking/lockdep.c +AHw 4 +-+-+--
++AD4  1 file changed, 3 insertions(+-), 1 deletion(-)
++AD4 
++AD4 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
++AD4 index 21cb81fe6359..35a144dfddf5 100644
++AD4 --- a/kernel/locking/lockdep.c
++AD4 +-+-+- b/kernel/locking/lockdep.c
++AD4 +AEAAQA -842,7 +-842,9 +AEAAQA static bool class+AF8-lock+AF8-list+AF8-valid(struct lock+AF8-class +ACo-c, struct list+AF8-head +ACo-h)
++AD4  	return true+ADs
++AD4  +AH0
++AD4  
++AD4 -static u16 chain+AF8-hlocks+AFsAXQA7
++AD4 +-+ACM-ifdef CONFIG+AF8-PROVE+AF8-LOCKING
++AD4 +-static u16 chain+AF8-hlocks+AFs-MAX+AF8-LOCKDEP+AF8-CHAIN+AF8-HLOCKS+AF0AOw
++AD4 +-+ACM-endif
++AD4  
++AD4  static bool check+AF8-lock+AF8-chain+AF8-key(struct lock+AF8-chain +ACo-chain)
++AD4  +AHs
 
-net/core/ethtool.c:2536:24: error: stack frame size of 1216 bytes in function 'dev_ethtool' [-Werror,-Wframe-larger-than=]
-
-Marking the sub-functions that require the most stack space as
-noinline_for_stack gives us reasonable behavior on all compilers.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: don't annotate dev_ethtool itself, as pointed out by Michal Kubecek
----
- net/core/ethtool.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-index d4918ffddda8..b1eb32419732 100644
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -2319,9 +2319,10 @@ static int ethtool_set_tunable(struct net_device *dev, void __user *useraddr)
- 	return ret;
- }
- 
--static int ethtool_get_per_queue_coalesce(struct net_device *dev,
--					  void __user *useraddr,
--					  struct ethtool_per_queue_op *per_queue_opt)
-+static noinline_for_stack int
-+ethtool_get_per_queue_coalesce(struct net_device *dev,
-+			       void __user *useraddr,
-+			       struct ethtool_per_queue_op *per_queue_opt)
- {
- 	u32 bit;
- 	int ret;
-@@ -2349,9 +2350,10 @@ static int ethtool_get_per_queue_coalesce(struct net_device *dev,
- 	return 0;
- }
- 
--static int ethtool_set_per_queue_coalesce(struct net_device *dev,
--					  void __user *useraddr,
--					  struct ethtool_per_queue_op *per_queue_opt)
-+static noinline_for_stack int
-+ethtool_set_per_queue_coalesce(struct net_device *dev,
-+			       void __user *useraddr,
-+			       struct ethtool_per_queue_op *per_queue_opt)
- {
- 	u32 bit;
- 	int i, ret = 0;
-@@ -2405,7 +2407,7 @@ static int ethtool_set_per_queue_coalesce(struct net_device *dev,
- 	return ret;
- }
- 
--static int ethtool_set_per_queue(struct net_device *dev,
-+static int noinline_for_stack ethtool_set_per_queue(struct net_device *dev,
- 				 void __user *useraddr, u32 sub_cmd)
- {
- 	struct ethtool_per_queue_op per_queue_opt;
--- 
-2.20.0
-
+Reviewed-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4-
