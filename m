@@ -2,155 +2,153 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55200C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D1FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2280E20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552001442;
-	bh=K0/CAaGIwXCnvaTwR76JHXuWKgzT4ZivzwonKKeDgMw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=e6W/5NU+1kYYMcqIFxcXcbB5bZATu6hmk+NBb/ffJyIMxqjHQ99Z84WfIviWjUK0G
-	 jgP4eGoyNtlyCV0JEgqeEeXmwZ69/hL9cSMYPvl44v6IUrUOFxlA1lIi2Yj3blNh+3
-	 uyqS+BheT1LOfc4dbLoscXNV74vQ65WLGFyLWwbA=
+	by mail.kernel.org (Postfix) with ESMTP id 6BB6320851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lb/GBvAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfCGXak (ORCPT
+        id S1726227AbfCGXap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 18:30:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726172AbfCGXak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 18:30:40 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C94E20675;
-        Thu,  7 Mar 2019 23:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552001439;
-        bh=K0/CAaGIwXCnvaTwR76JHXuWKgzT4ZivzwonKKeDgMw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LWTdcZO5eF9hOnFb9KvojFtsyLW/2Wjh1SFAtEkcWQdpbfkMOjMmA8GYsX82EQsUo
-         QQfBjize34dykj7oXS5sYOksXPWz3GBEqB0zm8K66BpiSKvSeHxQrB0GVMyq3TXgGa
-         SW1YI6IDAR4yGIhJgt2Rk/slAK9iNFqIvoFoibzY=
-Date:   Fri, 8 Mar 2019 08:30:33 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 02/35] perf probe: Clarify error message about not
- finding kernel modules debuginfo
-Message-Id: <20190308083033.cd4aceb08983875d07cabc1a@kernel.org>
-In-Reply-To: <20190307174433.28819-3-acme@kernel.org>
-References: <20190307174433.28819-1-acme@kernel.org>
-        <20190307174433.28819-3-acme@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Mar 2019 18:30:45 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36938 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726172AbfCGXal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 18:30:41 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s22so12654791pfh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 15:30:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tJqT7pM1IomMnnU+5F6jSTpHjIxUCEOsVig1V79DC/A=;
+        b=Lb/GBvAJlxHamq+q5GpxueAgxMtpkPrCglTjOS/u7MQ7ofVKaFxucj0km7T8Icxgqv
+         a1jTjFy5Y0lijV3UvqXuAslLt0uLrKir/0DFRsuQPMfwjqXmGe7nr9UAEXqFvLyyRo88
+         aBqkD7mLiSo6Ga+UzCVyXU0k8lPUi9hTfX5ao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tJqT7pM1IomMnnU+5F6jSTpHjIxUCEOsVig1V79DC/A=;
+        b=S48ZCZ6ftwwxiOwB957cWJhHlNkY9ptlZkS+jFqmf65kqPkFsgLcMB7LYZOhDfKyN2
+         Pb3AMu/rLFLDcnFaDsG5dZSqvKKMXAFwskExomAu91ZxSKGmt2wgZGWPU3zywH0xiyZY
+         gmCMlo7k+DcF7MJQiUaYmXpiOuWeGMQnmcn27ra3dNMmsTbU9QKwoLd389C2qdIuIr07
+         zJwKBtlDR516aawgAGiv4w0zbt3BmJ6wbMoubpB7cIR9A1wIwsx6ZKdH/rO97bq8WjDz
+         JhuWuB1fp2jrJDZvZnG257FVhUkIoWJS3RToKwCz9ra1SVbcbKYp6McMFrvtXE98QtBb
+         wHRQ==
+X-Gm-Message-State: APjAAAW/1hxPRQ1cHQSbaUuBgHDBww2lh7lmTZsLSnqY6cNe61VJbtMo
+        nSz+tlUTcgVh7NxwTITdUs/01g==
+X-Google-Smtp-Source: APXvYqxleXeEsD7rVLLcV5YMlWREG7KIPqNWxwr6PvxY/KqhnBJJNNvKhOuRnyAlB83mjt9XzuvVBg==
+X-Received: by 2002:a63:f5f:: with SMTP id 31mr13656075pgp.186.1552001440538;
+        Thu, 07 Mar 2019 15:30:40 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id 8sm9088117pfj.88.2019.03.07.15.30.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 15:30:40 -0800 (PST)
+Date:   Thu, 7 Mar 2019 15:30:39 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hemantg <hemantg@codeaurora.org>
+Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
+ vendor event
+Message-ID: <20190307233039.GA69116@google.com>
+References: <20190307004041.38059-1-mka@chromium.org>
+ <20190307004041.38059-3-mka@chromium.org>
+ <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
+ <20190307182009.GB138592@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190307182009.GB138592@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 Mar 2019 14:44:00 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Thu, Mar 07, 2019 at 10:20:09AM -0800, Matthias Kaehlcke wrote:
+> Hi Balakrishna,
+> 
+> On Thu, Mar 07, 2019 at 10:35:08AM +0530, Balakrishna Godavarthi wrote:
+> > hi Matthias,
+> > 
+> > On 2019-03-07 06:10, Matthias Kaehlcke wrote:
+> > > Firmware download to the WCN3990 often fails with a 'TLV response size
+> > > mismatch' error:
+> > > 
+> > > [  133.064659] Bluetooth: hci0: setting up wcn3990
+> > > [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
+> > > [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+> > > [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
+> > > [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
+> > > 
+> > > This is caused by a vendor event that corresponds to an earlier command
+> > > to change the baudrate. The event is not processed in the context of the
+> > > baudrate change and later interpreted as response to the firmware
+> > > download command (which is also a vendor command), but the driver
+> > > detects
+> > > that the event doesn't have the expected amount of associated data.
+> > > 
+> > > More details:
+> > > 
+> > > For the WCN3990 the vendor command for a baudrate change isn't sent as
+> > > synchronous HCI command, because the controller sends the corresponding
+> > > vendor event with the new baudrate. The event is received and decoded
+> > > after the baudrate change of the host port.
+> > > 
+> > > Identify the 'unused' event when it is received and don't add it to
+> > > the queue of RX frames.
+> > > 
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > ---
+> >
+> > ...
+> >
+> > Can you test by reverting this change "94d6671473924".
+> 
+> The issue is still reproducible.
+> 
+> > We need at least 15ms minimum delay for the soc to change its baud rate and
+> > respond to the with command complete event.
+> 
+> The baudrate change has clearly been successful when the problem is
+> observed, since the host receives the vendor event with the new
+> baudrate.
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> 'perf probe' supports using just the kernel module name, but that will
-> work only when the module is loaded, or using the full pathname to the
-> file with the DWARF debug info, but the warning was cryptic:
+I forgot to mention this earlier: the controller doesn't send a
+command complete event for the command, or at least not a correct
+one.
 
-Agreed, this looks good to me.
+That's the data that is received:
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+04 0e 04 01 00 00 00
+            ~~ ~~
 
-Thank you!
+This is *a* command complete event, but the opcode is 0x0000 instead
+of the earlier command. The same happens for the firmware
+download/read version command, which is the reason why the command
+complete injection mess
+(https://lore.kernel.org/patchwork/patch/1027955/) is needed in one
+way or another.
 
-> 
-> Before:
-> 
->   # perf probe -m cls_flower -L fl_change
->   Failed to find the path for cls_flower: No such file or directory
->     Error: Failed to show lines.
->   #
-> 
-> After:
-> 
->   # perf probe -m cls_flower -L fl_change
->   Module cls_flower is not loaded, please specify its full path name.
->     Error: Failed to show lines.
->   # perf probe -m /lib/modules/5.0.0-rc7+/kernel/net/sched/cls_flower.ko -L fl_change | head -7
->   <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
->         0  static int fl_change(struct net *net, struct sk_buff *in_skb,
->          		       struct tcf_proto *tp, unsigned long base,
->          		       u32 handle, struct nlattr **tca,
->          		       void **arg, bool ovr, struct netlink_ext_ack *extack)
->         4  {
->         5  	struct cls_fl_head *head = rtnl_dereference(tp->root);
->   #
-> 
-> The behaviour doesn't change when the module is loaded:
-> 
->   # modprobe cls_flower
->   # perf probe -m cls_flower -L fl_change | head -7
->   <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
->         0  static int fl_change(struct net *net, struct sk_buff *in_skb,
->                                struct tcf_proto *tp, unsigned long base,
->                                u32 handle, struct nlattr **tca,
->                                void **arg, bool ovr, struct netlink_ext_ack *extack)
->         4  {
->         5         struct cls_fl_head *head = rtnl_dereference(tp->root);
->   #
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-q4njvk9mshra00jacqjbzfn5@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/probe-event.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 0030f9b9bf7e..a1b8d9649ca7 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -472,9 +472,12 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
->  					strcpy(reason, "(unknown)");
->  			} else
->  				dso__strerror_load(dso, reason, STRERR_BUFSIZE);
-> -			if (!silent)
-> -				pr_err("Failed to find the path for %s: %s\n",
-> -					module ?: "kernel", reason);
-> +			if (!silent) {
-> +				if (module)
-> +					pr_err("Module %s is not loaded, please specify its full path name.\n", module);
-> +				else
-> +					pr_err("Failed to find the path for the kernel: %s\n", reason);
-> +			}
->  			return NULL;
->  		}
->  		path = dso->long_name;
-> -- 
-> 2.20.1
-> 
+I wished Qualcomm FW developers would get their act together and:
 
+- send actual command complete events
+- acknowledge a baudrate change request using the current baudrate
+  like Broadcom and Intel chips apparently do
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+this would have saved countless hours of debugging and implementing
+quirky workarounds ...
+
+Maybe there is hope for future chips (hint, hint)?
