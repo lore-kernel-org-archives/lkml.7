@@ -2,91 +2,117 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C7DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF54C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E4520851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0719E20643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:31:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWFdr07r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfCGPbG (ORCPT
+        id S1726672AbfCGPbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:31:06 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46467 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfCGPbG (ORCPT
+        Thu, 7 Mar 2019 10:31:49 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46415 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfCGPbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:31:06 -0500
-X-Originating-IP: 90.88.150.179
-Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9B9EC2001E;
-        Thu,  7 Mar 2019 15:31:03 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 16:31:03 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Gerhard Wiesinger <lists@wiesinger.com>
-Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
-Subject: Re: Banana Pi-R1 stabil
-Message-ID: <20190307153103.hsckxwzg2ypckicy@flea>
-References: <20190227092023.nvr34byfjranujfm@flea>
- <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
- <20190228093516.abual3564dkvx6un@flea>
- <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
- <20190301093038.oz56z22ivpntdcfw@flea>
- <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
- <20190305092830.ef45kxzhdnxlh63g@flea>
- <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
- <20190306073605.modlx4yhdzbg7sfz@flea>
- <34300c49-fe89-77cb-444a-f6de02d41a62@wiesinger.com>
+        Thu, 7 Mar 2019 10:31:48 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f2so13795411edy.13;
+        Thu, 07 Mar 2019 07:31:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jRxbOE53Ja7Pi5yq9dWyQSKq1h628jf5nvvkcUfp3NY=;
+        b=dWFdr07rpcwCQHP36QnW0uX3VCLJrFsczSQHDNGoUmSGTeTBqZ4HJe+hR5kElNgV0/
+         ZytjRdCcreF3O8ce9/MVGlyR5JK0JroMYyYDoMi7kQH9lUZ3Dk1bvfgWBMG21a5nlyLY
+         4UATE6IYmsDlpdqrkul08cLkdMA4Qe3MxjehZ27FgHp/mW00OLtMo4CPGNGy0rx3b25R
+         MjEqA6QZujICJnml4/QYruV0PmHGfoSKQALNmk8mrkMnDQHi2EFGM+wtLJTiMRsd3+tu
+         JxhBRpuT+SEiB7kBO8qaiSvTs2O87WOpVTXjaDnLmEXQK1S+nSMLb/v5Dx95IxtRi440
+         wtIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jRxbOE53Ja7Pi5yq9dWyQSKq1h628jf5nvvkcUfp3NY=;
+        b=ZA2JEPc5mPKQsDr/o87qsjqXvyneJutvcFJJ1GIRVszkPmoVy1zBzf9PXqz4F+nRmU
+         70P8CRh0eQqxaaqKRRglHS6Lcaa3t4NbYlEU7XQ+TE/7MRc86QBdwyrpuUMMskf3AQ52
+         sSyNE/sAXKp1jmPd2ssMpuRVjy4gxt7vkNUis8i8LMHEXW4cB8PkJ80dLHDBJ3Uk3oFZ
+         0PIaRi9pqt20NeLyB2zMAEa4xFkrjWx0fQIDRTbLIVJM3/mxSTbf2h5qy7Wty3r6m+5Z
+         pp83qeJjvyRzLoms+WrpD6O4Qp/cxyMVj50yuIxFcLRAjfgPkGgxzK5REjsDJVewafSt
+         cvjg==
+X-Gm-Message-State: APjAAAXXg2Fld85d5DMKOaAWbomBtcDA7K3gsoMuVeVQSm7RRZ3J4Pnm
+        W07SeRyjUmSxAXzwLmxoRvw=
+X-Google-Smtp-Source: APXvYqxLXjgKxhPUdOwtFhBcSv5tYJ+pB/7QI/BpnvzuJVuhxCVIKfYxN5SJ7Hb5HuEoth0xNlEmSA==
+X-Received: by 2002:a17:906:95c3:: with SMTP id n3mr8424519ejy.59.1551972706635;
+        Thu, 07 Mar 2019 07:31:46 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id a51sm1434907edd.57.2019.03.07.07.31.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 07:31:45 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:31:43 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] peak_usb: fix clang build warning
+Message-ID: <20190307153143.GI20201@archlinux-ryzen>
+References: <20190307103219.1539316-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yiolvsyzm44msxql"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <34300c49-fe89-77cb-444a-f6de02d41a62@wiesinger.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190307103219.1539316-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 07, 2019 at 11:31:55AM +0100, Arnd Bergmann wrote:
+> Clang points out undefined behavior when building the pcan_usb_pro driver:
+> 
+> drivers/net/can/usb/peak_usb/pcan_usb_pro.c:136:15: error: passing an object that undergoes default argument promotion to 'va_start' has undefined behavior [-Werror,-Wvarargs]
+> 
+> Changing the function prototype to avoid argument promotion in the
+> varargs call avoids the warning, and should make this well-defined.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
---yiolvsyzm44msxql
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Link: https://github.com/ClangBuiltLinux/linux/issues/109
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-On Wed, Mar 06, 2019 at 09:03:00PM +0100, Gerhard Wiesinger wrote:
-> while true; do echo "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D"; ech=
-o -n
-> "CPU_FREQ0: "; cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq;
-> echo -n "CPU_FREQ1: "; cat
-> /sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done&
-> ./stress/cpuburn-a7
+I wonder if the format specifier in the pr_err statement at the end of
+this function should be updated.
 
-Run cpufreq-ljt-stress-test
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---yiolvsyzm44msxql
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIE5NwAKCRDj7w1vZxhR
-xcShAQDBWSeEDEQjj/DWW1+cTKk9oxJ2h09VFL7aSTCsuY2JAgEAviFRRoIU8EKz
-hP9rJgcGmIkj0Q5nQwx8mx1dTm/Z1QA=
-=MYLM
------END PGP SIGNATURE-----
-
---yiolvsyzm44msxql--
+> ---
+>  drivers/net/can/usb/peak_usb/pcan_usb_pro.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+> index d516def846ab..b388406ac0f5 100644
+> --- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+> +++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+> @@ -127,7 +127,7 @@ static u8 *pcan_msg_init_empty(struct pcan_usb_pro_msg *pm,
+>  /*
+>   * add one record to a message being built
+>   */
+> -static int pcan_msg_add_rec(struct pcan_usb_pro_msg *pm, u8 id, ...)
+> +static int pcan_msg_add_rec(struct pcan_usb_pro_msg *pm, int id, ...)
+>  {
+>  	int len, i;
+>  	u8 *pc;
+> -- 
+> 2.20.0
+> 
