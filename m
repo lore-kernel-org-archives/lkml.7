@@ -2,130 +2,159 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60532C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047C0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1DD20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYIDiez8"
+	by mail.kernel.org (Postfix) with ESMTP id C2E6520840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfCGPRE (ORCPT
+        id S1726172AbfCGPRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:17:04 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35379 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCGPRD (ORCPT
+        Thu, 7 Mar 2019 10:17:13 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:48435 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfCGPRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:17:03 -0500
-Received: by mail-ed1-f67.google.com with SMTP id g19so13790852edp.2;
-        Thu, 07 Mar 2019 07:17:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EnBG/jYFGZXIPmXjPSsJ0Xe6CVDd0LXpmkp8WyNGT7k=;
-        b=LYIDiez8o5sGt/QW7Ty4zb2fWf8DdqHSowQasPybGtWXVQPcp3IE0iAEMNY35V8Mv2
-         Qb8ikF0g05oZZ7b23BZbjRgJSmiPONaSnXKdCaCUGRN3qoLSD2rWuhHW41XUvKYhVkQL
-         UKs3m1anzPcuLJu6VcS7wc8KyXr9wNylAChAz7PBa41rU8Q+a3/DQI5pZSqNkN7wrKAq
-         o1fYWAm8hRyIkZAsq4+JyDNPn4Jihc6/d3YS9Ayel3z48h56PabEf8es0MumZyCnc41q
-         CFTlJXaAzTGC7tg5j/P3kcqlLbfxBeGTAT/2CzzW+qp0HZH9bBEHEkgnQbDPFo4pYPnB
-         QdYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EnBG/jYFGZXIPmXjPSsJ0Xe6CVDd0LXpmkp8WyNGT7k=;
-        b=l71/aiGnkYGCIWB4f3oRcJdsyQ9yURbgy/kdJrIrO4uziamX17A6oM750BX4Fge4KN
-         GYp7rmnx5auJSk+PCMAwAk8GjR5DxGqKFQQJlcg5PwWQYGlz/TH2gwWx5zP8bWHm/elI
-         80P2iqCnX8G8j/mQTaOedjJDgzcYz1atAM2fgZXAOZeaikRkmpSF16GUJTOVDXsDLV+b
-         cTl+zOAfPFhhovWTkMD/R1WvyDRn/TeemgCBcNfDltma1Ir5Ymy1vbEt2G94Qsq/H5W0
-         eKvyTqeMsIMrHBFGlyoHfEU3n4HwrnFWqR0MCLQw5INMVk6jrXYHowqVmqke3ZWCbEMo
-         OW7A==
-X-Gm-Message-State: APjAAAWa5JehncpTlLkY/lbxXdkJbpVJzLogC63HtVE6mtbl1BTLg2hC
-        CNdJ0Ob/I9LjcHRcCZhdSVdoB8juX9Q=
-X-Google-Smtp-Source: APXvYqwx0JNp23U1y9Lc5OUNt0LfyqwHw8SYZa7Pmh6j89+sH2nsCeQ0fy4eJkiPcPHZ8J7omzm50Q==
-X-Received: by 2002:a17:906:b7c2:: with SMTP id fy2mr8282973ejb.9.1551971821280;
-        Thu, 07 Mar 2019 07:17:01 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id fy6sm935452ejb.52.2019.03.07.07.17.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:17:00 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:16:58 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] davinci_emac: always build in CONFIG_OF code
-Message-ID: <20190307151658.GB20201@archlinux-ryzen>
-References: <20190307093135.3354493-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 10:17:12 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MWz4j-1hYf5t0yZF-00XHZY; Thu, 07 Mar 2019 16:16:56 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, alsa-devel@alsa-project.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH 1/3] ASoC: ti: remove compat dma probing
+Date:   Thu,  7 Mar 2019 16:16:08 +0100
+Message-Id: <20190307151646.1016966-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307093135.3354493-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:IDAzRVFsZyLsEwWH6SxwekAejlCMqtnGRLZja5hBLGl3fy91UZa
+ Ku1wtdkzNmOj25OsZ8M/wQN/zRq0wthhXe0g9UMSDa4g33G3UWXsBzIlq0IBc91aLOFOKNZ
+ 8w1Py5tly5egyXEWbxD8e+FsXmgD4PIlTDlliZ+CP8Z11bllYWGCFYEO0l0e267Vkh0Iula
+ pxDdYoP2fqc2xt7rXmEsg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M6MD7ZxYHGE=:bFMuDkQiJcwoYAAjJf9rlq
+ LEcGnWy5knLhAvmsgWQiNVCRg2P/EXmHVtOW++5MhJEbz+RETAgrKuVhI9zrIy1c5H8JXuNYq
+ jsDtUCByH6pGE+6D4FGuXuI8+z8LZ9J83fG7I99CTLTbqjD25O5u28hDK0WhVshzjfMM4ls3A
+ FBRW6by33cCfNh67/mT+pn92rsJEC7nuHd4P/Yc7YnE01B+yvaqpogc4dw5v6qgl87mAI3/mt
+ KTRgZ/81bUVb2xgEBlRfmG3eiqp+oJzEkjnML9WQgrt6CanIBLIBOMvNPYQJuOkgp8fZoTyj/
+ InbFGuYuoXSzYn318WngfaDDUeBAtTJOqWQtynotg8ROQfleDOxKf25E7ds6DU4wT2l4+SM3c
+ sNCjEM+G49yq1IdRSHhAGK7qt48Ch/milKzFWu/h7XrsMYQBELR7WpQDIaC+gfAJ5lOBzFj5p
+ UwS00++2v+BOFXQJLnZY8MeatlSe41AK4H9jZjZ0g95OpPEC9lTecBAo5fxV+LBYDDSbnGvfH
+ rao68/PzhZF4WVaztUU+qje2QLwK5HwJH5631XDqO9nZTkxhoKwukC/HZfEUpMMUqXX1pljgK
+ 0GAopM2XXTWbRQpgjv2/XCYCmlM5wI12VVYD9hsIGEqMd/RoA+901vmdIpJyK5ondAyaRFtmq
+ Dcee8EvDTxDIPF/e8eoRsPY5LaMO9E/hTpvu9B1rrhsPuoc3ipZkQJ09WCn0p+TYwpLB6pviE
+ vlkXD1bkP3TIcaJK7vos7jJOWedAJxLvJv3Hsg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 10:31:20AM +0100, Arnd Bergmann wrote:
-> clang warns about what seems to be an unintended use of an obscure C
-> language feature where a forward declaration of an array remains usable
-> when the final definition is never seen:
-> 
-> drivers/net/ethernet/ti/davinci_emac.c:1694:34: error: tentative array definition assumed to have one element [-Werror]
-> static const struct of_device_id davinci_emac_of_match[];
-> 
-> There is no harm in always enabling the device tree matching code here,
-> and it makes the code behave in a more conventional way aside from
-> avoiding the warning.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+After running into a link error:
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+sound/soc/ti/edma-pcm.o:(.rodata+0x18): undefined reference to `edma_filter_fn'
 
-> ---
->  drivers/net/ethernet/ti/davinci_emac.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-> index 840820402cd0..57450b174fc4 100644
-> --- a/drivers/net/ethernet/ti/davinci_emac.c
-> +++ b/drivers/net/ethernet/ti/davinci_emac.c
-> @@ -2029,7 +2029,6 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
->  	.resume		= davinci_emac_resume,
->  };
->  
-> -#if IS_ENABLED(CONFIG_OF)
->  static const struct emac_platform_data am3517_emac_data = {
->  	.version		= EMAC_VERSION_2,
->  	.hw_ram_addr		= 0x01e20000,
-> @@ -2046,14 +2045,13 @@ static const struct of_device_id davinci_emac_of_match[] = {
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
-> -#endif
->  
->  /* davinci_emac_driver: EMAC platform driver structure */
->  static struct platform_driver davinci_emac_driver = {
->  	.driver = {
->  		.name	 = "davinci_emac",
->  		.pm	 = &davinci_emac_pm_ops,
-> -		.of_match_table = of_match_ptr(davinci_emac_of_match),
-> +		.of_match_table = davinci_emac_of_match,
->  	},
->  	.probe = davinci_emac_probe,
->  	.remove = davinci_emac_remove,
-> -- 
-> 2.20.0
-> 
+I checked all users of this, and they have new-style 'dma_slave_map' tables,
+so none of them should still need it. Removing the associated lines
+simplifies the code and avoids the build-time dependency on the
+respective dmaengine drivers.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: remove header inclusions as well
+
+I added the two dmaengine patches to the series this time, but
+we probably want to have those merged separately through the
+dmaengine tree, while this one should get merged as a bugfix
+through ASoC.
+---
+ sound/soc/ti/edma-pcm.c | 5 +----
+ sound/soc/ti/sdma-pcm.c | 9 +++------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/sound/soc/ti/edma-pcm.c b/sound/soc/ti/edma-pcm.c
+index 59e588abe54b..fdffb801b185 100644
+--- a/sound/soc/ti/edma-pcm.c
++++ b/sound/soc/ti/edma-pcm.c
+@@ -23,7 +23,6 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/dmaengine_pcm.h>
+-#include <linux/edma.h>
+ 
+ #include "edma-pcm.h"
+ 
+@@ -43,14 +42,12 @@ static const struct snd_pcm_hardware edma_pcm_hardware = {
+ static const struct snd_dmaengine_pcm_config edma_dmaengine_pcm_config = {
+ 	.pcm_hardware = &edma_pcm_hardware,
+ 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+-	.compat_filter_fn = edma_filter_fn,
+ 	.prealloc_buffer_size = 128 * 1024,
+ };
+ 
+ int edma_pcm_platform_register(struct device *dev)
+ {
+-	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config,
+-					SND_DMAENGINE_PCM_FLAG_COMPAT);
++	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config, 0);
+ }
+ EXPORT_SYMBOL_GPL(edma_pcm_platform_register);
+ 
+diff --git a/sound/soc/ti/sdma-pcm.c b/sound/soc/ti/sdma-pcm.c
+index 21a9c2499d48..a236350beb10 100644
+--- a/sound/soc/ti/sdma-pcm.c
++++ b/sound/soc/ti/sdma-pcm.c
+@@ -11,7 +11,6 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/dmaengine_pcm.h>
+-#include <linux/omap-dmaengine.h>
+ 
+ #include "sdma-pcm.h"
+ 
+@@ -31,7 +30,6 @@ static const struct snd_pcm_hardware sdma_pcm_hardware = {
+ static const struct snd_dmaengine_pcm_config sdma_dmaengine_pcm_config = {
+ 	.pcm_hardware = &sdma_pcm_hardware,
+ 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+-	.compat_filter_fn = omap_dma_filter_fn,
+ 	.prealloc_buffer_size = 128 * 1024,
+ };
+ 
+@@ -39,13 +37,12 @@ int sdma_pcm_platform_register(struct device *dev,
+ 			       char *txdmachan, char *rxdmachan)
+ {
+ 	struct snd_dmaengine_pcm_config *config;
+-	unsigned int flags = SND_DMAENGINE_PCM_FLAG_COMPAT;
++	unsigned int flags = 0;
+ 
+ 	/* Standard names for the directions: 'tx' and 'rx' */
+ 	if (!txdmachan && !rxdmachan)
+ 		return devm_snd_dmaengine_pcm_register(dev,
+-						&sdma_dmaengine_pcm_config,
+-						flags);
++						&sdma_dmaengine_pcm_config, 0);
+ 
+ 	config = devm_kzalloc(dev, sizeof(*config), GFP_KERNEL);
+ 	if (!config)
+@@ -65,7 +62,7 @@ int sdma_pcm_platform_register(struct device *dev,
+ 	config->chan_names[0] = txdmachan;
+ 	config->chan_names[1] = rxdmachan;
+ 
+-	return devm_snd_dmaengine_pcm_register(dev, config, flags);
++	return devm_snd_dmaengine_pcm_register(dev, config, 0);
+ }
+ EXPORT_SYMBOL_GPL(sdma_pcm_platform_register);
+ 
+-- 
+2.20.0
+
