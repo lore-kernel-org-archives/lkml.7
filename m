@@ -2,137 +2,105 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4023C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FF4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE1F20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F002081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfCGRSe (ORCPT
+        id S1726297AbfCGRVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:18:34 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:17940 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfCGRSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:18:34 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6606730031BE;
-        Thu,  7 Mar 2019 17:18:33 +0000 (UTC)
-Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7327D60BE5;
-        Thu,  7 Mar 2019 17:18:31 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 11:18:29 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     hpa@zytor.com
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
-        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
-Message-ID: <20190307171829.xww7is5qja32r7ux@treble>
-References: <20190307114511.870090179@infradead.org>
- <20190307120317.GD32477@hirez.programming.kicks-ass.net>
- <20190307125526.GB32534@hirez.programming.kicks-ass.net>
- <20190307131312.GC32534@hirez.programming.kicks-ass.net>
- <20190307164705.qbu4ytdfdmsighas@treble>
- <2F80FC70-5D2F-425F-BEB5-D70E981CC684@zytor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2F80FC70-5D2F-425F-BEB5-D70E981CC684@zytor.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 07 Mar 2019 17:18:33 +0000 (UTC)
+        Thu, 7 Mar 2019 12:21:00 -0500
+Received: from smtprelay0236.hostedemail.com ([216.40.44.236]:37205 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726161AbfCGRVA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:21:00 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 91721100E86C5;
+        Thu,  7 Mar 2019 17:20:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cord55_229b6f3b7ec33
+X-Filterd-Recvd-Size: 2830
+Received: from XPS-9350 (unknown [172.56.44.251])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  7 Mar 2019 17:20:35 +0000 (UTC)
+Message-ID: <b83ed0ab05b12484a70d5f3db742a7a141718a00.camel@perches.com>
+Subject: Re: [PATCH 1/2] futex: mark futex_detect_cmpxchg() as 'noinline'
+From:   Joe Perches <joe@perches.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190307091514.2489338-1-arnd@arndb.de>
+References: <20190307091514.2489338-1-arnd@arndb.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+Mime-Version: 1.0
+Date:   Thu, 07 Mar 2019 09:19:04 -0800
+User-Agent: Evolution 3.30.1-1build1 
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 09:04:36AM -0800, hpa@zytor.com wrote:
-> On March 7, 2019 8:47:05 AM PST, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
-> >> On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
-> >> > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
-> >> 
-> >> 
-> >> > > 01be     20d3:  31 c0                   xor    %eax,%eax
-> >> > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
-> >> > > 01c3     20d8:  77 08                   ja     20e2
-> ><__do_sys_waitid+0x1cd>
-> >> 
-> >> randconfig-build/kernel/exit.o: warning: objtool:  
-> >__do_sys_waitid()+0x1c3: (branch)
-> >> 
-> >> > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
-> >> > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
-> >> > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
-> >> > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
-> >> > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
-> >> > > 01e1     20f6:	00 
-> >> > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
-> >> > > 01e2     20f7:	84 c0                	test   %al,%al
-> >> > > 01e4     20f9:	75 2d                	jne    2128
-> ><__do_sys_waitid+0x213>
-> >> > 
-> >> > we do not take this branch and fall-through.
-> >> 
-> >> And that is the error, I think. We should've taken it and went to:
-> >> 
-> >>   return -EFAULT;
-> >> 
-> >> because:
-> >> 
-> >>  +1be	xor  %eax,%eax	eax=0
-> >>  +1cd   xor  $0x1,%eax	eax=1
-> >>  +1e2   test %al,%al	1&1==1 -> ZF=0
-> >>  +1e4   jnz
-> >> 
-> >> Is an unconditional code sequence, but there's no way objtool can do
-> >> that without becoming a full blown interpreter :/
-> >> 
-> >> > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov   
-> >$0xfffffffffffffff2,%r15
-> >> > > ffffffffffffe0eb }
-> >> > > 021a     212f:  48 8d 65 d8             lea    -0x28(%rbp),%rsp
-> >> > > 021e     2133:  4c 89 f8                mov    %r15,%rax
-> >> > > 0221     2136:  5b                      pop    %rbx
-> >> > > 0222     2137:  41 5c                   pop    %r12
-> >> > > 0224     2139:  41 5d                   pop    %r13
-> >> > > 0226     213b:  41 5e                   pop    %r14
-> >> > > 0228     213d:  41 5f                   pop    %r15
-> >> > > 022a     213f:  5d                      pop    %rbp
-> >> > > 022b     2140:  c3                      retq
-> >
-> >This "fixes" it, and also seems to help -Os make much code:
-> >
-> >diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> >index 445348facea9..8de63db58fdd 100644
-> >--- a/include/linux/compiler.h
-> >+++ b/include/linux/compiler.h
-> >@@ -67,7 +67,7 @@ void ftrace_likely_update(struct ftrace_likely_data
-> >*f, int val,
-> > 				.line = __LINE__,			\
-> > 			};						\
-> > 		______r = !!(cond);					\
-> >-		______f.miss_hit[______r]++;					\
-> >+		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
-> > 		______r;						\
-> > 	}))
-> > #endif /* CONFIG_PROFILE_ALL_BRANCHES */
+On Thu, 2019-03-07 at 10:14 +0100, Arnd Bergmann wrote:
+> On 32-bit ARM, I got a link failure in futex_init() when building
+> with clang in some random configurations:
 > 
-> if (cond)?  Or is ___r used elsewhere?
+> kernel/futex.o:(.text.fixup+0x5c): relocation truncated to fit: R_ARM_JUMP24 against `.init.text'
+> 
+> As far as I can tell, the problem is that a branch is over 16MB
+> apart in those configurations, but only if it branches back to
+> the init text.
+> 
+> Marking the futex_detect_cmpxchg() function as noinline and
+> not __init avoids the problem for me.
 
-______r is also the return value.  And it's needed because cond should
-only be evaluated once.
+Perhaps the __init and __exit #defines should be noinline
+to allow discarding of the code.
 
--- 
-Josh
+These defines are already marked with __section so I'd've
+expected these to be noinline anyway.
+
+---
+ include/linux/init.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 5255069f5a9f..806215a74064 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -47,7 +47,7 @@
+ 
+ /* These are for everybody (although not all archs will actually
+    discard it in modules) */
+-#define __init		__section(.init.text) __cold  __latent_entropy __noinitretpoline
++#define __init		__section(.init.text) __cold  __latent_entropy __noinitretpoline noinline
+ #define __initdata	__section(.init.data)
+ #define __initconst	__section(.init.rodata)
+ #define __exitdata	__section(.exit.data)
+@@ -80,7 +80,7 @@
+ #define __exitused  __used
+ #endif
+ 
+-#define __exit          __section(.exit.text) __exitused __cold notrace
++#define __exit          __section(.exit.text) __exitused __cold notrace noinline
+ 
+ /* Used for MEMORY_HOTPLUG */
+ #define __meminit        __section(.meminit.text) __cold notrace \
+
+
+
