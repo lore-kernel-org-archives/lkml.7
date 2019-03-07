@@ -6,53 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A31C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67D3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8723120661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E3820661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980844;
-	bh=DZicw97hCTLOW7TQvUtJJlHs9QiNS2ot294pvV8tQpU=;
+	s=default; t=1551980857;
+	bh=K5myyb6aDJyxfGS23Px04yxGvvCZI7z989KJXOfeqtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YtAOAqGfYvot5bbosNPuBDiZCRZlHcAwAQgVQznBvm0O/5ASMJq9u4ANQjqsS2T41
-	 QIzvE7LXPJB3fQfu6LXgOX/zHbUHehd2S7GnkyxL0crQK5n0B0QiiL4DuJTrfF62W9
-	 Sjau98BHkNYU2iEkWXIEVJbRmeyWVWjWLHYvBFEg=
+	b=2e51Df14xZUA9sxxW8QONWAR57DjUG7XRhUDfVE5m0HR70+4MjboMk/trhpcLyqeR
+	 zZq164VWKwt+2aHONrR7aavXcTYHROcW5bAEnxR5ZBHfQBTcn5HHJ51XJndPDyuuHK
+	 TYVaZIapkD15TkayVUq7g/x07/2bWUvUPhA5H1iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfCGRrX (ORCPT
+        id S1726904AbfCGRqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:47:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40098 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 12:46:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbfCGRrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:47:18 -0500
+        id S1726520AbfCGRqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:46:37 -0500
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E1FB20854;
-        Thu,  7 Mar 2019 17:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C470B2146E;
+        Thu,  7 Mar 2019 17:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551980838;
-        bh=DZicw97hCTLOW7TQvUtJJlHs9QiNS2ot294pvV8tQpU=;
+        s=default; t=1551980796;
+        bh=K5myyb6aDJyxfGS23Px04yxGvvCZI7z989KJXOfeqtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsIHjzv2PvYUZPZqCZgEEkqFsxS3i5LIYdSUyL2f5SVdRIHKVJQ0b7AiKzhiI39cp
-         uZhzsP/dMGFkQ29aRlIABKO7GixYoFVkvQc/llzEuVOEqa8NZiKLGrL36diTCkAexa
-         6njMcNvNOfFeWVOJHlJzVMKiC5nED0hF6FvzI9xM=
+        b=iEsrddhxaYVjEftPfhKhF2tJHuJ7IvbJg+9BEQ7HNrH7oILa2tyhZbufB46Jh1A2h
+         zR1PijuTRa23GU/TSBJ3d3WiP/dePQ+sMCzG8JURPnDwDZk2fPMOEswkfhIbtM/JbB
+         ZanwFSs8HceqwEyc9893CJy3r7IhWsEGHWpTk3Ks=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Nageswara R Sastry <nasastry@in.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Tony Jones <tonyj@suse.de>, Tom Zanussi <tzanussi@gmail.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 35/35] perf data: Force perf_data__open|close zero data->file.path
-Date:   Thu,  7 Mar 2019 14:44:33 -0300
-Message-Id: <20190307174433.28819-36-acme@kernel.org>
+Subject: [PATCH 26/35] perf script python: add Python3 support to check-perf-trace.py
+Date:   Thu,  7 Mar 2019 14:44:24 -0300
+Message-Id: <20190307174433.28819-27-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
@@ -63,48 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Tony Jones <tonyj@suse.de>
 
-Making sure the data->file.path is zeroed on perf_data__open error path
-and in perf_data__close, so we don't double free it in case someone call
-it twice.
+Support both Python 2 and Python 3 in the check-perf-trace.py script.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Cc: Nageswara R Sastry <nasastry@in.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20190305152536.21035-9-jolsa@kernel.org
+There may be differences in the ordering of output lines due to
+differences in dictionary ordering etc.  However the format within lines
+should be unchanged.
+
+The use of from __future__ implies the minimum supported version of
+Python2 is now v2.6
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Cc: Tom Zanussi <tzanussi@gmail.com>
+Link: http://lkml.kernel.org/r/20190302011903.2416-4-tonyj@suse.de
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/scripts/python/check-perf-trace.py | 31 ++++++++++---------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 7bd5ddeb7a41..e098e189f93e 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -237,7 +237,7 @@ static int open_file(struct perf_data *data)
- 	     open_file_read(data) : open_file_write(data);
+diff --git a/tools/perf/scripts/python/check-perf-trace.py b/tools/perf/scripts/python/check-perf-trace.py
+index f4838db3e518..d2c22954800d 100644
+--- a/tools/perf/scripts/python/check-perf-trace.py
++++ b/tools/perf/scripts/python/check-perf-trace.py
+@@ -7,6 +7,8 @@
+ # events, etc.  Basically, if this script runs successfully and
+ # displays expected results, Python scripting support should be ok.
  
- 	if (fd < 0) {
--		free(data->file.path);
-+		zfree(&data->file.path);
- 		return -1;
- 	}
++from __future__ import print_function
++
+ import os
+ import sys
  
-@@ -270,7 +270,7 @@ int perf_data__open(struct perf_data *data)
+@@ -19,7 +21,7 @@ from perf_trace_context import *
+ unhandled = autodict()
  
- void perf_data__close(struct perf_data *data)
- {
--	free(data->file.path);
-+	zfree(&data->file.path);
- 	close(data->file.fd);
- }
+ def trace_begin():
+-	print "trace_begin"
++	print("trace_begin")
+ 	pass
  
+ def trace_end():
+@@ -33,7 +35,7 @@ def irq__softirq_entry(event_name, context, common_cpu,
+ 
+ 	print_uncommon(context)
+ 
+-	print "vec=%s\n" % (symbol_str("irq__softirq_entry", "vec", vec)),
++	print("vec=%s" % (symbol_str("irq__softirq_entry", "vec", vec)))
+ 
+ def kmem__kmalloc(event_name, context, common_cpu,
+ 		  common_secs, common_nsecs, common_pid, common_comm,
+@@ -44,10 +46,10 @@ def kmem__kmalloc(event_name, context, common_cpu,
+ 
+ 	print_uncommon(context)
+ 
+-	print "call_site=%u, ptr=%u, bytes_req=%u, " \
+-		"bytes_alloc=%u, gfp_flags=%s\n" % \
++	print("call_site=%u, ptr=%u, bytes_req=%u, "
++		"bytes_alloc=%u, gfp_flags=%s" %
+ 		(call_site, ptr, bytes_req, bytes_alloc,
+-		flag_str("kmem__kmalloc", "gfp_flags", gfp_flags)),
++		flag_str("kmem__kmalloc", "gfp_flags", gfp_flags)))
+ 
+ def trace_unhandled(event_name, context, event_fields_dict):
+ 	try:
+@@ -56,26 +58,27 @@ def trace_unhandled(event_name, context, event_fields_dict):
+ 		unhandled[event_name] = 1
+ 
+ def print_header(event_name, cpu, secs, nsecs, pid, comm):
+-	print "%-20s %5u %05u.%09u %8u %-20s " % \
++	print("%-20s %5u %05u.%09u %8u %-20s " %
+ 		(event_name, cpu, secs, nsecs, pid, comm),
++		end=' ')
+ 
+ # print trace fields not included in handler args
+ def print_uncommon(context):
+-	print "common_preempt_count=%d, common_flags=%s, " \
+-		"common_lock_depth=%d, " % \
++	print("common_preempt_count=%d, common_flags=%s, "
++		"common_lock_depth=%d, " %
+ 		(common_pc(context), trace_flag_str(common_flags(context)),
+-		common_lock_depth(context))
++		common_lock_depth(context)))
+ 
+ def print_unhandled():
+ 	keys = unhandled.keys()
+ 	if not keys:
+ 		return
+ 
+-	print "\nunhandled events:\n\n",
++	print("\nunhandled events:\n")
+ 
+-	print "%-40s  %10s\n" % ("event", "count"),
+-	print "%-40s  %10s\n" % ("----------------------------------------", \
+-				"-----------"),
++	print("%-40s  %10s" % ("event", "count"))
++	print("%-40s  %10s" % ("----------------------------------------",
++				"-----------"))
+ 
+ 	for event_name in keys:
+-		print "%-40s  %10d\n" % (event_name, unhandled[event_name])
++		print("%-40s  %10d\n" % (event_name, unhandled[event_name]))
 -- 
 2.20.1
 
