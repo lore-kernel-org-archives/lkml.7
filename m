@@ -7,169 +7,155 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF635C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF784C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794C220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF7520675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Iik2LK6C"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LLAENmU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfCGA6Q (ORCPT
+        id S1726355AbfCGA6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:58:16 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:10000 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfCGA6P (ORCPT
+        Wed, 6 Mar 2019 19:58:48 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:18043 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfCGA6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:58:15 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190307005811epoutp0203fb0d443bdc05fb20538cc572865fee~Jh0hZoDci1677616776epoutp02c
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2019 00:58:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190307005811epoutp0203fb0d443bdc05fb20538cc572865fee~Jh0hZoDci1677616776epoutp02c
+        Wed, 6 Mar 2019 19:58:48 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190307005845epoutp048f1f6f338aa16de410bb5e9212d79b11~Jh1BEngDB1470014700epoutp04z
+        for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2019 00:58:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190307005845epoutp048f1f6f338aa16de410bb5e9212d79b11~Jh1BEngDB1470014700epoutp04z
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551920291;
-        bh=aZeTDhYbaUn9gCGAJ8a6cL+mzCECNnsmkBXn81xZ7vI=;
+        s=mail20170921; t=1551920325;
+        bh=nwEhyaWsra4BNCfNS0VttJzozicRxypqhT/mMRXQxdM=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Iik2LK6Cg1s1NElvsWGtIGUpPArEWhfO+dyhkMKHTRv6V88V9NOcUwO4DCzJT+cRl
-         wRQRYOvn+dorxkVwJCDm5XCqrpIDZnWs1UqFOexB05uxs+TzgAPMw4G/VP8PXXJM5h
-         bBWT9Yi0FQTo2jhy9O1kytzWeyxT/mLigfcNqmfw=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190307005808epcas1p4113330af98ba4c607b3bc693245e1ff6~Jh0elTiLp2284722847epcas1p4Z;
-        Thu,  7 Mar 2019 00:58:08 +0000 (GMT)
+        b=LLAENmU5lRxy7o+JdCWpjuOeHzMfPpCQZansiQ7tnTE5v+k5DCCv7Lg3gY49/VX+V
+         7XN12iQKo7YaRQGL3xH33I+X9QeXE65FBV1nsGfq8mCT5F9SdmvRyiyTn/nGtblmsI
+         CHI0zUfr9HsKn7MDwsz8X20EIC3RU72ldFdxNk+c=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190307005841epcas1p2389beb3b731ddb1e2c7ef85963b2afb9~Jh0926KCV1310913109epcas1p2-;
+        Thu,  7 Mar 2019 00:58:41 +0000 (GMT)
 Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
         epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3A.8E.04173.E9C608C5; Thu,  7 Mar 2019 09:58:06 +0900 (KST)
+        86.CE.04173.0CC608C5; Thu,  7 Mar 2019 09:58:40 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190307005805epcas1p165911dcb440d1d01454994291c71679e~Jh0cLftkL2109221092epcas1p1D;
-        Thu,  7 Mar 2019 00:58:05 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190307005840epcas1p4d6a27167393a1c9adfabc2580f466b7f~Jh08WATWo1251812518epcas1p4M;
+        Thu,  7 Mar 2019 00:58:40 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190307005805epsmtrp2c8107af17da79401913e4b21541f1a25~Jh0cKpGxe2898928989epsmtrp2X;
-        Thu,  7 Mar 2019 00:58:05 +0000 (GMT)
-X-AuditID: b6c32a36-5c1ff7000000104d-8d-5c806c9ef459
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.17.03971.D9C608C5; Thu,  7 Mar 2019 09:58:05 +0900 (KST)
+        20190307005840epsmtrp280c806eec49d9533ede791411a392168~Jh08VN4uC2971329713epsmtrp2J;
+        Thu,  7 Mar 2019 00:58:40 +0000 (GMT)
+X-AuditID: b6c32a36-5c1ff7000000104d-66-5c806cc0ed4d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9D.75.03601.0CC608C5; Thu,  7 Mar 2019 09:58:40 +0900 (KST)
 Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190307005805epsmtip2135f34f2973efe9a7bbb5490d14bc06e~Jh0b_tsCF0243802438epsmtip2q;
-        Thu,  7 Mar 2019 00:58:05 +0000 (GMT)
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190307005840epsmtip13852b9ec4f1c3797cb33ab803f4e8268~Jh08MOJdg2301023010epsmtip1S;
+        Thu,  7 Mar 2019 00:58:40 +0000 (GMT)
 Subject: Re: [PATCH] extcon-ptn5150: fix COMPILE_TEST dependencies
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+To:     Arnd Bergmann <arnd@arndb.de>,
         MyungJoo Ham <myungjoo.ham@samsung.com>
 Cc:     Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
         linux-kernel@vger.kernel.org
 From:   Chanwoo Choi <cw00.choi@samsung.com>
 Organization: Samsung Electronics
-Message-ID: <5dfa1660-d6f0-2307-77e7-baed8cb2eb62@samsung.com>
-Date:   Thu, 7 Mar 2019 09:58:05 +0900
+Message-ID: <24376645-b7e6-ee6e-5d77-a91fa62bbc00@samsung.com>
+Date:   Thu, 7 Mar 2019 09:58:40 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <bcfbf645-c865-a7ad-ada6-bd77ac665f32@infradead.org>
+In-Reply-To: <20190306110906.2622957-1-arnd@arndb.de>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJJsWRmVeSWpSXmKPExsWy7bCmnu68nIYYgxlbhS3+TjrGbnF51xw2
-        i9uNK9gs3t6ZzmLxcv90VgdWj9+/JjF67Jx1l91j8wotj74tqxg9Pm+SC2CNyrbJSE1MSS1S
-        SM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAdqtpFCWmFMKFApILC5W
-        0rezKcovLUlVyMgvLrFVSi1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjOmNI8gaVgBn/F
-        +hPaDYy/uLsYOTgkBEwkFs5j6mLk4hAS2MEoMf3WAlYI5xOjROuKyVDON0aJyR1n2bsYOcE6
-        nv39ywKR2MsoMfXVNSjnPaPE6wmX2UCqhAWcJPofT2QEsUUEiiTutm1hBbGZBUIkZpxZDFbD
-        JqAlsf/FDTCbX0BR4uqPx2D1vAJ2Ei+XTQCLswioSDzfvIkZxBYViJB4/3Q3C0SNoMTJmU/A
-        bE4BR4nHZ9exQcwXl7j1ZD4ThC0v0bx1NjPIcRIC99kk7k1fCvWCi8TSrhYWCFtY4tXxLVBx
-        KYnP7/ayQdjVEitPHmGDaO5glNiy/wIrRMJYYv/SyUyg0GMW0JRYv0sfYhmfxLuvPayQQOWV
-        6GgTgqhWlrj84C4ThC0psbi9E2q8h0Tvtw3MExgVZyF5ZxaSF2YheWEWwrIFjCyrGMVSC4pz
-        01OLDQuMkCN7EyM4WWqZ7WBcdM7nEKMAB6MSD2/E6foYIdbEsuLK3EOMEhzMSiK8ihkNMUK8
-        KYmVValF+fFFpTmpxYcYTYGhPZFZSjQ5H5jI80riDU2NjI2NLUwMzUwNDZXEedc7OMcICaQn
-        lqRmp6YWpBbB9DFxcEo1MG7UTpi5fl3xQ0FV38CMjQpzbwVcuhxj9KQgf11LnNCP4rlzL2df
-        bbINn34uPfslA9fMuo0yHd/dH09/zHjowvw8YSvOzUqR2xkt3qsa775/IuPogdVMHXUrN920
-        i5lrtvr6oSzT9Iu+TN77XX1CChSOX9Dk89ml178rrn8th/Mexc2NoqbbViixFGckGmoxFxUn
-        AgDAE1bzrAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJXnduTkOMwcQXmhZ/Jx1jt7i8aw6b
-        xe3GFWwWb+9MZ7F4uX86qwOrx+9fkxg9ds66y+6xeYWWR9+WVYwenzfJBbBGcdmkpOZklqUW
-        6dslcGVMaZ7AUjCDv2L9Ce0Gxl/cXYycHBICJhLP/v5lAbGFBHYzSkxbKAsRl5SYdvEocxcj
-        B5AtLHH4cHEXIxdQyVtGiUkXWxhBaoQFnCT6H08Es0UEiiQmXLnCCmIzC4RIdF85zgjRsJ9R
-        YsuBZUwgCTYBLYn9L26wgdj8AooSV388BmvmFbCTeLlsAlicRUBF4vnmTcwgtqhAhMTdiy9Y
-        IGoEJU7OfAJmcwo4Sjw+u44NYpm6xJ95l5ghbHGJW0/mM0HY8hLNW2czT2AUnoWkfRaSlllI
-        WmYhaVnAyLKKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4arQ0dzBeXhJ/iFGAg1GJ
-        hzfidH2MEGtiWXFl7iFGCQ5mJRFexYyGGCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJ
-        pCeWpGanphakFsFkmTg4pRoYWdsvaNgp1724bvX17HlZXkeb/MBPW7y4mw5oZv/a8j0lnynR
-        89VThohEfv1TEzsb2L08Nc1FZSUMNn1RVZRQUapZ0XHTLr2Gu/Ugm4Hh1uo732PrZ/Zwp826
-        KHo+2T6uxy/LY89Rjcd5VaEZTCJhJ1Suc51WPtXfP9epedXlxR0PIqpCnimxFGckGmoxFxUn
-        AgCT9wn8lgIAAA==
-X-CMS-MailID: 20190307005805epcas1p165911dcb440d1d01454994291c71679e
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmnu6BnIYYg4ddqhZ/Jx1jt7i8aw6b
+        xe3GFWwWL/dPZ3Vg8fj9axKjx85Zd9k9+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUzL91W
+        yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
+        I7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/18rQwMDIFKgwITujZ/cFtoLbvBVTjk1gbWB8w9XF
+        yMkhIWAiMWdTK0sXIxeHkMAORoldP+ezQjifGCWuvZ3HDuF8Y5TY8rCVuYuRA6xl9xlTiPhe
+        RonLPzYzQzjvGSX+r+9mBJkrLOAk0f94IpgtIuAlMfPdVHYQm1kgRGLGmcVsIDabgJbE/hc3
+        wGx+AUWJqz8eg9XzCthJrJl3FqyeRUBFYk77XFYQW1QgQuL9090sEDWCEidnPgGzOQVMJXY/
+        PcQMMV9c4taT+UwQtrxE89bZYMdJCJxhk/j3cTE7xNMuEg+adkHZwhKvjm+BsqUkPr/bywZh
+        V0usPHmEDaK5A+j9/RdYIRLGEvuXTmYCBQWzgKbE+l36EMv4JN597WGFhBCvREebEES1ssTl
+        B3eZIGxJicXtnVDjPST2fZnANoFRcRaSd2YheWEWkhdmISxbwMiyilEstaA4Nz212LDACDm2
+        NzGCk6OW2Q7GRed8DjEKcDAq8fBGnK6PEWJNLCuuzD3EKMHBrCTCq5jRECPEm5JYWZValB9f
+        VJqTWnyI0RQY2hOZpUST84GJO68k3tDUyNjY2MLE0MzU0FBJnHe9g3OMkEB6YklqdmpqQWoR
+        TB8TB6dUA+Ou3ti++WmFm+xO+x/+a/L1/cXoChOpV9GvZU82H9zE4Mf96dCmmzHJcQ9v7yv4
+        evx8SdmR4IX7RJL/5lgGrubpOHYv4kJzXdOxTub/D/dcvDMhOsxx1VK3ny9aK64d0ovsSXqg
+        nBxYIf81bf3WnfdD2XmezGk0XHGWVaHgRXTKy7bNFS6VqpFKLMUZiYZazEXFiQD8ABEgpAMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsWy7bCSnO6BnIYYg5t/+S3+TjrGbnF51xw2
+        i9uNK9gsXu6fzurA4vH71yRGj52z7rJ79G1ZxejxeZNcAEsUl01Kak5mWWqRvl0CV0bP7gts
+        Bbd5K6Ycm8DawPiGq4uRg0NCwERi9xnTLkYuDiGB3YwSDQc/snYxcgLFJSWmXTzKDFEjLHH4
+        cDFEzVtGia1f7rCD1AgLOEn0P57ICGKLCHhJzHw3FSzOLBAi0X3lOCNEQwejxIu7X8GK2AS0
+        JPa/uMEGYvMLKEpc/fEYLM4rYCexZt5ZsGYWARWJOe1zwY4QFYiQuHvxBQtEjaDEyZlPwGxO
+        AVOJ3U8PMUMsU5f4M+8SlC0ucevJfCYIW16ieets5gmMwrOQtM9C0jILScssJC0LGFlWMUqm
+        FhTnpucWGxYY5aWW6xUn5haX5qXrJefnbmIER4mW1g7GEyfiDzEKcDAq8fBGnK6PEWJNLCuu
+        zD3EKMHBrCTCq5jRECPEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFM
+        lomDU6qBUbGzLGBOXfr5X5sd7K+IrFP6bXH41luvpu9rav99nbPr5aPf33bN9N2wcMnbO8oP
+        G97NnOXzdTKvl2CO1Utvv/M2qdXpvP/Ete8JWbTvvPJsqipXt+0lnx/KUxsvW5zozPRJ1mc8
+        5rVDqP3JBINlqmt8lMrtOtJlrmknSrOl/Fbutl/7VCFNSImlOCPRUIu5qDgRAE00hiaOAgAA
+X-CMS-MailID: 20190307005840epcas1p4d6a27167393a1c9adfabc2580f466b7f
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190306154931epcas2p38e412aba6c0e5ed7650bbbedfc641de9
-References: <20190306110906.2622957-1-arnd@arndb.de>
-        <CGME20190306154931epcas2p38e412aba6c0e5ed7650bbbedfc641de9@epcas2p3.samsung.com>
-        <bcfbf645-c865-a7ad-ada6-bd77ac665f32@infradead.org>
+X-CMS-RootMailID: 20190306110913epcas4p1a346e77b3523020d04ee385b5eac80e9
+References: <CGME20190306110913epcas4p1a346e77b3523020d04ee385b5eac80e9@epcas4p1.samsung.com>
+        <20190306110906.2622957-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+Hi,
 
-On 19. 3. 7. 오전 12:49, Randy Dunlap wrote:
-> On 3/6/19 3:08 AM, Arnd Bergmann wrote:
->> The PTN5150 dependencies look like they were meant to do the
->> right thing, but they actually should not allow building without
->> I2C for compile testing, as that results in a Kconfig warning
->> and subsequent build failure:
->>
->> WARNING: unmet direct dependencies detected for REGMAP_I2C
->>   Depends on [m]: I2C [=m]
->>   Selected by [y]:
->>   - EXTCON_PTN5150 [=y] && EXTCON [=y] && (I2C [=m] && GPIOLIB [=y] || COMPILE_TEST [=y])
->>   Selected by [m]:
->>   - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
->>   - KEYBOARD_CAP11XX [=m] && !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && OF [=y] && I2C [=m]
->>   - INPUT_DRV260X_HAPTICS [=m] && !UML && INPUT_MISC [=y] && INPUT [=y] && I2C [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
->>   - ... [many others]
->>
->> Add parentheses around the expression so we can compile-test
->> without GPIOLIB but not without I2C.
->>
->> Fixes: 4ed754de2d66 ("extcon: Add support for ptn5150 extcon driver")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 19. 3. 6. 오후 8:08, Arnd Bergmann wrote:
+> The PTN5150 dependencies look like they were meant to do the
+> right thing, but they actually should not allow building without
+> I2C for compile testing, as that results in a Kconfig warning
+> and subsequent build failure:
 > 
-> Hi Chanwoo,
+> WARNING: unmet direct dependencies detected for REGMAP_I2C
+>   Depends on [m]: I2C [=m]
+>   Selected by [y]:
+>   - EXTCON_PTN5150 [=y] && EXTCON [=y] && (I2C [=m] && GPIOLIB [=y] || COMPILE_TEST [=y])
+>   Selected by [m]:
+>   - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
+>   - KEYBOARD_CAP11XX [=m] && !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && OF [=y] && I2C [=m]
+>   - INPUT_DRV260X_HAPTICS [=m] && !UML && INPUT_MISC [=y] && INPUT [=y] && I2C [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
+>   - ... [many others]
 > 
-> You might want to drop my patch and use this one from Arnd instead...
-
-Thanks for your comment. I'll do that.
-
+> Add parentheses around the expression so we can compile-test
+> without GPIOLIB but not without I2C.
 > 
+> Fixes: 4ed754de2d66 ("extcon: Add support for ptn5150 extcon driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/extcon/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->> ---
->>  drivers/extcon/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->> index 8e17149655f0..540e8cd16ee6 100644
->> --- a/drivers/extcon/Kconfig
->> +++ b/drivers/extcon/Kconfig
->> @@ -116,7 +116,7 @@ config EXTCON_PALMAS
->>  
->>  config EXTCON_PTN5150
->>  	tristate "NXP PTN5150 CC LOGIC USB EXTCON support"
->> -	depends on I2C && GPIOLIB || COMPILE_TEST
->> +	depends on I2C && (GPIOLIB || COMPILE_TEST)
->>  	select REGMAP_I2C
->>  	help
->>  	  Say Y here to enable support for USB peripheral and USB host
->>
-> 
+> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+> index 8e17149655f0..540e8cd16ee6 100644
+> --- a/drivers/extcon/Kconfig
+> +++ b/drivers/extcon/Kconfig
+> @@ -116,7 +116,7 @@ config EXTCON_PALMAS
+>  
+>  config EXTCON_PTN5150
+>  	tristate "NXP PTN5150 CC LOGIC USB EXTCON support"
+> -	depends on I2C && GPIOLIB || COMPILE_TEST
+> +	depends on I2C && (GPIOLIB || COMPILE_TEST)
+>  	select REGMAP_I2C
+>  	help
+>  	  Say Y here to enable support for USB peripheral and USB host
 > 
 
+Applied it to extcon-fixes branch for v5.0-rc2.
 
 -- 
 Best Regards,
