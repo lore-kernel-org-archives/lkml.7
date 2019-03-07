@@ -2,97 +2,87 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAB2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724A7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C3020663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA0120663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfCGC7U (ORCPT
+        id S1727572AbfCGDAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:59:20 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:33066 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbfCGC7T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:59:19 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 6250929E5B;
-        Wed,  6 Mar 2019 21:59:16 -0500 (EST)
-Date:   Thu, 7 Mar 2019 13:59:33 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Andreas Schwab <schwab@linux-m68k.org>
-cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25:
- warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
-In-Reply-To: <mvmh8chzo7j.fsf@linux-m68k.org>
-Message-ID: <alpine.LNX.2.21.1903071329140.513@nippy.intranet>
-References: <201903042049.npxcZzps%fengguang.wu@intel.com>        <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>        <alpine.LNX.2.21.1903051154200.135@nippy.intranet>        <alpine.LNX.2.21.1903051357410.135@nippy.intranet>      
-  <CAMuHMdUuwudbk15GUPPxL+-Gt4zhhSomk-wMAHeTOkoaDOCUAA@mail.gmail.com>        <alpine.LNX.2.21.1903051948290.147@nippy.intranet> <mvmh8chzo7j.fsf@linux-m68k.org>
+        Wed, 6 Mar 2019 22:00:31 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:36356 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfCGDAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 22:00:31 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E3DE30821B4;
+        Thu,  7 Mar 2019 03:00:31 +0000 (UTC)
+Received: from [10.72.12.83] (ovpn-12-83.pek2.redhat.com [10.72.12.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 791DA1001DD9;
+        Thu,  7 Mar 2019 03:00:21 +0000 (UTC)
+Subject: Re: [PATCH] vhost: silence an unused-variable warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190306110602.2529137-1-arnd@arndb.de>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6b55ea04-72d7-6130-e29e-977c4afad0b5@redhat.com>
+Date:   Thu, 7 Mar 2019 11:00:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190306110602.2529137-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 07 Mar 2019 03:00:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Mar 2019, Andreas Schwab wrote:
 
-> On Mar 05 2019, Finn Thain <fthain@telegraphics.com.au> wrote:
-> 
-> > interesting that the kernel's strlen implementation in 
-> > include/linux/string.h can't achieve this.
-> 
-> This implementation is only available if ARCH_HAS_FORTIFY_SOURCE.
-> 
+On 2019/3/6 下午7:05, Arnd Bergmann wrote:
+> On some architectures, the MMU can be disabled, leading to access_ok()
+> becoming an empty macro that does not evaluate its size argument,
+> which in turn produces an unused-variable warning:
+>
+> drivers/vhost/vhost.c:1191:9: error: unused variable 's' [-Werror,-Wunused-variable]
+>          size_t s = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
+>
+> Mark the variable as __maybe_unused to shut up that warning.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/vhost/vhost.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index a2e5dc7716e2..5ace833de746 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -1188,7 +1188,7 @@ static bool vq_access_ok(struct vhost_virtqueue *vq, unsigned int num,
+>   			 struct vring_used __user *used)
+>   
+>   {
+> -	size_t s = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
+> +	size_t s __maybe_unused = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
+>   
+>   	return access_ok(desc, num * sizeof *desc) &&
+>   	       access_ok(avail,
 
-I see. Perhaps we could add another definition to that file:
 
-#if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
-...
-#else
-__FORTIFY_INLINE __kernel_size_t strlen(const char *p)
-{
-	return __builtin_strlen(p);
-}
-#endif
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-I didn't test that. But the following patch seems to work...
 
-diff --git a/arch/m68k/include/asm/string.h b/arch/m68k/include/asm/string.h
-index f759d944c449..3cff6b128ed3 100644
---- a/arch/m68k/include/asm/string.h
-+++ b/arch/m68k/include/asm/string.h
-@@ -71,4 +71,6 @@ extern void *memset(void *, int, __kernel_size_t);
- extern void *memcpy(void *, const void *, __kernel_size_t);
- #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
- 
-+#define strlen(s) __builtin_strlen(s)
-+
- #endif /* _M68K_STRING_H_ */
-diff --git a/lib/string.c b/lib/string.c
-index 38e4ca08e757..fe970f2160e5 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -472,6 +472,7 @@ char *strim(char *s)
- EXPORT_SYMBOL(strim);
- 
- #ifndef __HAVE_ARCH_STRLEN
-+#undef strlen
- /**
-  * strlen - Find the length of a string
-  * @s: The string to be sized
-
--- 
-
-> Andreas.
-> 
-> 
