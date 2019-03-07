@@ -2,626 +2,477 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C48C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A0CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DB120675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8747820675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z+x8qGnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfCGJok (ORCPT
+        id S1726277AbfCGJqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:44:40 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:51027 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfCGJok (ORCPT
+        Thu, 7 Mar 2019 04:46:02 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36880 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCGJqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:44:40 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x279iLwx013122, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtitcasv01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x279iLwx013122
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
-        Thu, 7 Mar 2019 17:44:21 +0800
-Received: from localhost (172.22.88.128) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
- 17:44:20 +0800
-From:   <ricky_wu@realtek.com>
-To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <colin.king@canonical.com>, <axboe@kernel.dk>,
-        <linux-kernel@vger.kernel.org>
-CC:     RickyWu <ricky_wu@realtek.com>
-Subject: [PATCH v3] misc: rtsx: Enable OCP for rts522a rts524a rts525a rts5260
-Date:   Thu, 7 Mar 2019 17:44:15 +0800
-Message-ID: <20190307094415.4853-1-ricky_wu@realtek.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 7 Mar 2019 04:46:01 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w6so16608462wrs.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 01:45:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ve7V2yCQOjpTGdtJ5sMOFtR2Kned9l6VanYo0E1+O4A=;
+        b=z+x8qGnDW49OZa9udojJcrkxslsvSK+7uJfF8iLuLra7YksLRO/SEZ7GzbvQTiK/JB
+         AQ1AiK70vujSlfS/8936kqbq7+InRm3kqu05YW/GLNlK9Axn0mKSXdJISZpzLBm/8pZw
+         cE3fwdDCxL7DJjRAV2qBViX06tZ0edYlCpNnyFZcsIlGXTXVmogE1n9rWw6vhVNerBJb
+         lHYNVMQtr5g3gp4vZ3XcBdHUNh2PinIVGIBDY2u15wz+eL4p0sWao34J9GWVNKsqKSX7
+         CBnFlGSrRbFcRiYg9PHEGPues/oWzci792GbgAervU4YcGKTmkCZ52MKo2TVjWFEeJYl
+         XWGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ve7V2yCQOjpTGdtJ5sMOFtR2Kned9l6VanYo0E1+O4A=;
+        b=qBoirUJYW6hGlRc0UnaCK5kpVt1rnHEtKPlwYcOZlnRrzJ7dQyWAjO7gg9Cs7zhPhh
+         S67vIl0qy67FrhQyeGhujeNvb6U3LKTOhD/M/Hzn1XUilZvQCZCuAhfpMOVyRCh/1Aax
+         bs5syn1gMSvyXMQnG9HhNRUQm+HiqVIy/W3+c9TYLruaTbSIQ8SfbGY1YMbYzvlxiLt/
+         ArftDFNjzvbqrK+sniS//eP0BvLX5aLETTRVAxEIUXDNR5IIFL037YmrjURTski0j0fL
+         jRWD1uvztnCIuHchqKRxuzpK4fX+kxRwQLBJD5Nt0USGSdzzMCZr2LEJsI9ap8lCyg37
+         EW7Q==
+X-Gm-Message-State: APjAAAU1+z2920BmeBi1oYFDPr2rq2txMOv6eDaXhXMPOeaXhK6ihARi
+        1vl2XEyofWZZBiyezIiWIdQrh1GWqOtq0A==
+X-Google-Smtp-Source: APXvYqzx0OojWRbjI+xBZ+LV2wYthhIKkc3/nqnYRCqDytTWj86OEcp1jO/TmJnBARRn9xvmBro/qg==
+X-Received: by 2002:a5d:458b:: with SMTP id p11mr6330064wrq.22.1551951957996;
+        Thu, 07 Mar 2019 01:45:57 -0800 (PST)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c12sm1399847wrt.68.2019.03.07.01.45.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 01:45:57 -0800 (PST)
+Subject: Re: [PATCH v2 8/8] usb: dwc3: Add Amlogic G12A DWC3 glue
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-9-narmstrong@baylibre.com>
+ <1551924176.2210.104.camel@mhfsdcap03>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <6eaff413-d2c7-125a-f165-e4226c7a153e@baylibre.com>
+Date:   Thu, 7 Mar 2019 10:45:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.22.88.128]
+In-Reply-To: <1551924176.2210.104.camel@mhfsdcap03>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: RickyWu <ricky_wu@realtek.com>
+On 07/03/2019 03:02, Chunfeng Yun wrote:
+> Hi,
+> On Mon, 2019-03-04 at 11:38 +0100, Neil Armstrong wrote:
+>> Adds support for Amlogic G12A USB Control Glue HW.
+>>
+>> The Amlogic G12A SoC Family embeds 2 USB Controllers :
+>> - a DWC3 IP configured as Host for USB2 and USB3
+>> - a DWC2 IP configured as Peripheral USB2 Only
+>>
+>> A glue connects these both controllers to 2 USB2 PHYs, and optionnally
+>> to an USB3+PCIE Combo PHY shared with the PCIE controller.
+>>
+>> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
+>> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
+>> setups the on-chip OTG mode selection for this PHY.
+>>
+>> This drivers supports the on-probe setup of the OTG mode, and manually
+>> via a debugfs interface. The IRQ mode change detect is yet to be added
+>> in a future patchset, mainly due to lack of hardware to validate on.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/usb/dwc3/Kconfig           |  10 +
+>>  drivers/usb/dwc3/Makefile          |   1 +
+>>  drivers/usb/dwc3/dwc3-meson-g12a.c | 601 +++++++++++++++++++++++++++++
+>>  3 files changed, 612 insertions(+)
+>>  create mode 100644 drivers/usb/dwc3/dwc3-meson-g12a.c
+>>
+>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>> index 1a0404fda596..21ce7368d325 100644
+>> --- a/drivers/usb/dwc3/Kconfig
+>> +++ b/drivers/usb/dwc3/Kconfig
+>> @@ -93,6 +93,16 @@ config USB_DWC3_KEYSTONE
+>>  	  Support of USB2/3 functionality in TI Keystone2 platforms.
+>>  	  Say 'Y' or 'M' here if you have one such device
+>>  
+>> +config USB_DWC3_MESON_G12A
+>> +       tristate "Amlogic Meson G12A Platforms"
+>> +       depends on OF && COMMON_CLK
+>> +       depends on ARCH_MESON || COMPILE_TEST
+>> +       default USB_DWC3
+>> +       select USB_ROLE_SWITCH
+>> +       help
+>> +         Support USB2/3 functionality in Amlogic G12A platforms.
+>> +	 Say 'Y' or 'M' if you have one such device.
+>> +
+>>  config USB_DWC3_OF_SIMPLE
+>>         tristate "Generic OF Simple Glue Layer"
+>>         depends on OF && COMMON_CLK
+>> diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+>> index 6e3ef6144e5d..ae86da0dc5bd 100644
+>> --- a/drivers/usb/dwc3/Makefile
+>> +++ b/drivers/usb/dwc3/Makefile
+>> @@ -47,6 +47,7 @@ obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
+>>  obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
+>>  obj-$(CONFIG_USB_DWC3_HAPS)		+= dwc3-haps.o
+>>  obj-$(CONFIG_USB_DWC3_KEYSTONE)		+= dwc3-keystone.o
+>> +obj-$(CONFIG_USB_DWC3_MESON_G12A)	+= dwc3-meson-g12a.o
+>>  obj-$(CONFIG_USB_DWC3_OF_SIMPLE)	+= dwc3-of-simple.o
+>>  obj-$(CONFIG_USB_DWC3_ST)		+= dwc3-st.o
+>>  obj-$(CONFIG_USB_DWC3_QCOM)		+= dwc3-qcom.o
+>> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+>> new file mode 100644
+>> index 000000000000..75942614a034
+>> --- /dev/null
+>> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+>> @@ -0,0 +1,601 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * USB Glue for Amlogic G12A SoCs
+>> + *
+>> + * Copyright (c) 2019 BayLibre, SAS
+>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>> + */
+>> +
+>> +/*
+>> + * The USB is organized with a glue around the DWC3 Controller IP as :
+>> + * - Control registers for each USB2 Ports
+>> + * - Control registers for the USB PHY layer
+>> + * - SuperSpeed PHY can be enabled only if port is used
+>> + *
+>> + * TOFIX:
+>> + * - Add dynamic OTG switching with ID change interrupt
+>> + */
+>> +
+> [...]
+>> +
+>> +static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+>> +{
+>> +	struct dwc3_meson_g12a	*priv;
+>> +	struct device		*dev = &pdev->dev;
+>> +	struct device_node	*np = dev->of_node;
+>> +	void __iomem *base;
+>> +	struct resource *res;
+>> +	enum phy_mode otg_id;
+>> +	int ret, i;
+>> +
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(base))
+>> +		return PTR_ERR(base);
+>> +
+>> +	priv->regmap = devm_regmap_init_mmio(dev, base,
+>> +					     &phy_meson_g12a_usb3_regmap_conf);
+>> +	if (IS_ERR(priv->regmap))
+>> +		return PTR_ERR(priv->regmap);
+>> +
+>> +	priv->vbus = devm_regulator_get_optional(dev, "vbus");
+>> +	if (IS_ERR(priv->vbus)) {
+>> +		if (PTR_ERR(priv->vbus) == -EPROBE_DEFER)
+>> +			return PTR_ERR(priv->vbus);
+>> +		priv->vbus = NULL;
+>> +	}
+>> +
+>> +	priv->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(priv->clk))
+>> +		return PTR_ERR(priv->clk);
+>> +
+>> +	ret = clk_prepare_enable(priv->clk);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	platform_set_drvdata(pdev, priv);
+>> +	priv->dev = dev;
+>> +
+>> +	priv->reset = devm_reset_control_get(dev, NULL);
+>> +	if (IS_ERR(priv->reset)) {
+>> +		ret = PTR_ERR(priv->reset);
+>> +		dev_err(dev, "failed to get device reset, err=%d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = reset_control_reset(priv->reset);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = dwc3_meson_g12a_get_phys(priv);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = regulator_enable(priv->vbus);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Get dr_mode */
+>> +	priv->otg_mode = usb_get_dr_mode(dev);
+>> +
+>> +	dwc3_meson_g12a_usb_init(priv);
+>> +
+>> +	/* Set PHY Power */
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+>> +		ret = phy_power_on(priv->phys[i]);
+>> +		if (ret)
+>> +			goto err_phys_put;
+>> +	}
+>> +
+>> +	/* Init PHYs */
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+>> +		ret = phy_init(priv->phys[i]);
+>> +		if (ret)
+>> +			goto err_phys_power;
+>> +	}
+> usually phy_init() first
 
-this enables and adds OCP function for Realtek A series cardreader chips
-and fixes some OCP flow in rts5260.c
+OK, i usually saw power_on before, but I'll swap them.
 
-Signed-off-by: RickyWu <ricky_wu@realtek.com>
----
- drivers/misc/cardreader/rts5227.c  |  58 ++++++++++--
- drivers/misc/cardreader/rts5249.c  |  29 ++++--
- drivers/misc/cardreader/rts5260.c  | 136 ++++++++++-------------------
- drivers/misc/cardreader/rtsx_pcr.c |  38 ++++++--
- drivers/misc/cardreader/rtsx_pcr.h |   5 ++
- 5 files changed, 154 insertions(+), 112 deletions(-)
+> 
+>> +
+>> +	ret = of_platform_populate(np, NULL, NULL, dev);
+>> +	if (ret) {
+>> +		clk_disable_unprepare(priv->clk);
+>> +		clk_put(priv->clk);
+>> +
+>> +		goto err_phys_exit;
+>> +	}
+>> +
+>> +	/* Setup OTG mode corresponding to the ID pin */
+>> +	if (priv->otg_mode == USB_DR_MODE_OTG) {
+>> +		/* TOFIX Handle ID mode toggling via IRQ */
+>> +		otg_id = dwc3_meson_g12a_get_id(priv);
+>> +		if (otg_id != priv->otg_phy_mode) {
+>> +			if (dwc3_meson_g12a_otg_mode_set(priv, otg_id))
+>> +				dev_warn(dev, "Failed to switch OTG mode\n");
+>> +		}
+>> +	}
+>> +
+>> +	/* Setup role switcher */
+>> +	priv->switch_desc.usb2_port = dwc3_meson_g12_find_child(dev,
+>> +								"snps,dwc3");
+>> +	priv->switch_desc.udc = dwc3_meson_g12_find_child(dev, "snps,dwc2");
+>> +	priv->switch_desc.allow_userspace_control = true;
+>> +	priv->switch_desc.set = dwc3_meson_g12a_role_set;
+>> +	priv->switch_desc.get = dwc3_meson_g12a_role_get;
+> to me, use a local variable for switch_desc
 
-diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
-index 024dcba8d6c8..95394c6ca5c7 100644
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -170,6 +170,9 @@ static int rts5227_card_power_on(struct rtsx_pcr *pcr, int card)
- {
- 	int err;
- 
-+	if (pcr->option.ocp_en)
-+		rtsx_pci_enable_ocp(pcr);
-+
- 	rtsx_pci_init_cmd(pcr);
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
- 			SD_POWER_MASK, SD_PARTIAL_POWER_ON);
-@@ -180,25 +183,30 @@ static int rts5227_card_power_on(struct rtsx_pcr *pcr, int card)
- 		return err;
- 
- 	/* To avoid too large in-rush current */
--	udelay(150);
-+	msleep(20);
- 
- 	rtsx_pci_init_cmd(pcr);
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
- 			SD_POWER_MASK, SD_POWER_ON);
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
- 			LDO3318_PWR_MASK, 0x06);
-+	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_OE,
-+			SD_OUTPUT_EN, SD_OUTPUT_EN);
-+	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_OE,
-+			MS_OUTPUT_EN, MS_OUTPUT_EN);
- 	return rtsx_pci_send_cmd(pcr, 100);
- }
- 
- static int rts5227_card_power_off(struct rtsx_pcr *pcr, int card)
- {
--	rtsx_pci_init_cmd(pcr);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
--			SD_POWER_MASK | PMOS_STRG_MASK,
--			SD_POWER_OFF | PMOS_STRG_400mA);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
--			LDO3318_PWR_MASK, 0X00);
--	return rtsx_pci_send_cmd(pcr, 100);
-+	if (pcr->option.ocp_en)
-+		rtsx_pci_disable_ocp(pcr);
-+
-+	rtsx_pci_write_register(pcr, CARD_PWR_CTL, SD_POWER_MASK |
-+			PMOS_STRG_MASK, SD_POWER_OFF | PMOS_STRG_400mA);
-+	rtsx_pci_write_register(pcr, PWR_GATE_CTRL, LDO3318_PWR_MASK, 0X00);
-+
-+	return 0;
- }
- 
- static int rts5227_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
-@@ -348,6 +356,32 @@ static int rts522a_extra_init_hw(struct rtsx_pcr *pcr)
- 	return 0;
- }
- 
-+static int rts522a_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
-+{
-+	int err;
-+
-+	if (voltage == OUTPUT_3V3) {
-+		err = rtsx_pci_write_phy_register(pcr, 0x08, 0x57E4);
-+		if (err < 0)
-+			return err;
-+	} else if (voltage == OUTPUT_1V8) {
-+		err = rtsx_pci_write_phy_register(pcr, 0x11, 0x3C02);
-+		if (err < 0)
-+			return err;
-+		err = rtsx_pci_write_phy_register(pcr, 0x08, 0x54A4);
-+		if (err < 0)
-+			return err;
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	/* set pad drive */
-+	rtsx_pci_init_cmd(pcr);
-+	rts5227_fill_driving(pcr, voltage);
-+	return rtsx_pci_send_cmd(pcr, 100);
-+}
-+
-+
- /* rts522a operations mainly derived from rts5227, except phy/hw init setting.
-  */
- static const struct pcr_ops rts522a_pcr_ops = {
-@@ -360,7 +394,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
- 	.disable_auto_blink = rts5227_disable_auto_blink,
- 	.card_power_on = rts5227_card_power_on,
- 	.card_power_off = rts5227_card_power_off,
--	.switch_output_voltage = rts5227_switch_output_voltage,
-+	.switch_output_voltage = rts522a_switch_output_voltage,
- 	.cd_deglitch = NULL,
- 	.conv_clk_and_div_n = NULL,
- 	.force_power_down = rts5227_force_power_down,
-@@ -371,4 +405,10 @@ void rts522a_init_params(struct rtsx_pcr *pcr)
- 	rts5227_init_params(pcr);
- 
- 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
-+
-+	pcr->option.ocp_en = 1;
-+	pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
-+	pcr->hw_param.ocp_glitch = SD_OCP_GLITCH_10M;
-+	pcr->option.sd_800mA_ocp_thd = RTS522A_OCP_THD_800;
-+
- }
-diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
-index dbe013abdb83..a3273669fb9c 100644
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -283,8 +283,12 @@ static int rtsx_base_disable_auto_blink(struct rtsx_pcr *pcr)
- 
- static int rtsx_base_card_power_on(struct rtsx_pcr *pcr, int card)
- {
-+	struct rtsx_cr_option *option = &pcr->option;
- 	int err;
- 
-+	if (option->ocp_en)
-+		rtsx_pci_enable_ocp(pcr);
-+
- 	rtsx_pci_init_cmd(pcr);
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
- 			SD_POWER_MASK, SD_VCC_PARTIAL_POWER_ON);
-@@ -306,12 +310,15 @@ static int rtsx_base_card_power_on(struct rtsx_pcr *pcr, int card)
- 
- static int rtsx_base_card_power_off(struct rtsx_pcr *pcr, int card)
- {
--	rtsx_pci_init_cmd(pcr);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, CARD_PWR_CTL,
--			SD_POWER_MASK, SD_POWER_OFF);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PWR_GATE_CTRL,
--			LDO3318_PWR_MASK, 0x00);
--	return rtsx_pci_send_cmd(pcr, 100);
-+	struct rtsx_cr_option *option = &pcr->option;
-+
-+	if (option->ocp_en)
-+		rtsx_pci_disable_ocp(pcr);
-+
-+	rtsx_pci_write_register(pcr, CARD_PWR_CTL, SD_POWER_MASK, SD_POWER_OFF);
-+
-+	rtsx_pci_write_register(pcr, PWR_GATE_CTRL, LDO3318_PWR_MASK, 0x00);
-+	return 0;
- }
- 
- static int rtsx_base_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
-@@ -629,6 +636,11 @@ void rts524a_init_params(struct rtsx_pcr *pcr)
- 
- 	pcr->reg_pm_ctrl3 = RTS524A_PM_CTRL3;
- 	pcr->ops = &rts524a_pcr_ops;
-+
-+	pcr->option.ocp_en = 1;
-+	pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
-+	pcr->hw_param.ocp_glitch = SD_OCP_GLITCH_10M;
-+	pcr->option.sd_800mA_ocp_thd = RTS524A_OCP_THD_800;
- }
- 
- static int rts525a_card_power_on(struct rtsx_pcr *pcr, int card)
-@@ -737,4 +749,9 @@ void rts525a_init_params(struct rtsx_pcr *pcr)
- 
- 	pcr->reg_pm_ctrl3 = RTS524A_PM_CTRL3;
- 	pcr->ops = &rts525a_pcr_ops;
-+
-+	pcr->option.ocp_en = 1;
-+	pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
-+	pcr->hw_param.ocp_glitch = SD_OCP_GLITCH_10M;
-+	pcr->option.sd_800mA_ocp_thd = RTS525A_OCP_THD_800;
- }
-diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
-index a493b01c5bc6..ff303a770fef 100644
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -64,11 +64,13 @@ static void rts5260_fill_driving(struct rtsx_pcr *pcr, u8 voltage)
- 		drive_sel = pcr->sd30_drive_sel_1v8;
- 	}
- 
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD30_CLK_DRIVE_SEL,
-+	rtsx_pci_write_register(pcr, SD30_CLK_DRIVE_SEL,
- 			 0xFF, driving[drive_sel][0]);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD30_CMD_DRIVE_SEL,
-+
-+	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
- 			 0xFF, driving[drive_sel][1]);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD30_DAT_DRIVE_SEL,
-+
-+	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
- 			 0xFF, driving[drive_sel][2]);
- }
- 
-@@ -193,7 +195,7 @@ static int sd_set_sample_push_timing_sd30(struct rtsx_pcr *pcr)
- 		| SD_ASYNC_FIFO_NOT_RST, SD_30_MODE | SD_ASYNC_FIFO_NOT_RST);
- 	rtsx_pci_write_register(pcr, CLK_CTL, CLK_LOW_FREQ, CLK_LOW_FREQ);
- 	rtsx_pci_write_register(pcr, CARD_CLK_SOURCE, 0xFF,
--				CRC_VAR_CLK0 | SD30_FIX_CLK | SAMPLE_VAR_CLK1);
-+		       CRC_VAR_CLK0 | SD30_FIX_CLK | SAMPLE_VAR_CLK1);
- 	rtsx_pci_write_register(pcr, CLK_CTL, CLK_LOW_FREQ, 0);
- 
- 	return 0;
-@@ -207,22 +209,16 @@ static int rts5260_card_power_on(struct rtsx_pcr *pcr, int card)
- 	if (option->ocp_en)
- 		rtsx_pci_enable_ocp(pcr);
- 
--	rtsx_pci_init_cmd(pcr);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_CONFIG2,
--			 DV331812_VDD1, DV331812_VDD1);
--	err = rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
--	if (err < 0)
--		return err;
- 
--	rtsx_pci_init_cmd(pcr);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_VCC_CFG0,
--			 RTS5260_DVCC_TUNE_MASK, RTS5260_DVCC_33);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_VCC_CFG1,
--			 LDO_POW_SDVDD1_MASK, LDO_POW_SDVDD1_ON);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_CONFIG2,
--			 DV331812_POWERON, DV331812_POWERON);
--	err = rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
-+	rtsx_pci_write_register(pcr, LDO_CONFIG2, DV331812_VDD1, DV331812_VDD1);
-+	rtsx_pci_write_register(pcr, LDO_VCC_CFG0,
-+			 	RTS5260_DVCC_TUNE_MASK, RTS5260_DVCC_33);
- 
-+	rtsx_pci_write_register(pcr, LDO_VCC_CFG1, LDO_POW_SDVDD1_MASK,
-+				LDO_POW_SDVDD1_ON);
-+
-+	rtsx_pci_write_register(pcr, LDO_CONFIG2,
-+			 	DV331812_POWERON, DV331812_POWERON);
- 	msleep(20);
- 
- 	if (pcr->extra_caps & EXTRA_CAPS_SD_SDR50 ||
-@@ -273,9 +269,9 @@ static int rts5260_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
- 	}
- 
- 	/* set pad drive */
--	rtsx_pci_init_cmd(pcr);
- 	rts5260_fill_driving(pcr, voltage);
--	return rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
-+
-+	return 0;
- }
- 
- static void rts5260_stop_cmd(struct rtsx_pcr *pcr)
-@@ -290,29 +286,22 @@ static void rts5260_stop_cmd(struct rtsx_pcr *pcr)
- 
- static void rts5260_card_before_power_off(struct rtsx_pcr *pcr)
- {
--	struct rtsx_cr_option *option = &pcr->option;
--
- 	rts5260_stop_cmd(pcr);
- 	rts5260_switch_output_voltage(pcr, OUTPUT_3V3);
- 
--	if (option->ocp_en)
--		rtsx_pci_disable_ocp(pcr);
- }
- 
- static int rts5260_card_power_off(struct rtsx_pcr *pcr, int card)
- {
--	int err = 0;
--
- 	rts5260_card_before_power_off(pcr);
-+	rtsx_pci_write_register(pcr, LDO_VCC_CFG1,
-+				LDO_POW_SDVDD1_MASK, LDO_POW_SDVDD1_OFF);
-+	rtsx_pci_write_register(pcr, LDO_CONFIG2,
-+				DV331812_POWERON, DV331812_POWEROFF);
-+	if (pcr->option.ocp_en)
-+		rtsx_pci_disable_ocp(pcr);
- 
--	rtsx_pci_init_cmd(pcr);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_VCC_CFG1,
--			 LDO_POW_SDVDD1_MASK, LDO_POW_SDVDD1_OFF);
--	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, LDO_CONFIG2,
--			 DV331812_POWERON, DV331812_POWEROFF);
--	err = rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
--
--	return err;
-+	return 0;
- }
- 
- static void rts5260_init_ocp(struct rtsx_pcr *pcr)
-@@ -322,41 +311,29 @@ static void rts5260_init_ocp(struct rtsx_pcr *pcr)
- 	if (option->ocp_en) {
- 		u8 mask, val;
- 
--		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
--					RTS5260_DVCC_OCP_EN |
--					RTS5260_DVCC_OCP_CL_EN,
--					RTS5260_DVCC_OCP_EN |
--					RTS5260_DVCC_OCP_CL_EN);
--		rtsx_pci_write_register(pcr, RTS5260_DVIO_CTRL,
--					RTS5260_DVIO_OCP_EN |
--					RTS5260_DVIO_OCP_CL_EN,
--					RTS5260_DVIO_OCP_EN |
--					RTS5260_DVIO_OCP_CL_EN);
- 
- 		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
- 					RTS5260_DVCC_OCP_THD_MASK,
--					option->sd_400mA_ocp_thd);
--
--		rtsx_pci_write_register(pcr, RTS5260_DVIO_CTRL,
--					RTS5260_DVIO_OCP_THD_MASK,
--					RTS5260_DVIO_OCP_THD_350);
-+					option->sd_800mA_ocp_thd);
- 
- 		rtsx_pci_write_register(pcr, RTS5260_DV331812_CFG,
- 					RTS5260_DV331812_OCP_THD_MASK,
--					RTS5260_DV331812_OCP_THD_210);
-+					RTS5260_DV331812_OCP_THD_270);
- 
--		mask = SD_OCP_GLITCH_MASK | SDVIO_OCP_GLITCH_MASK;
-+		mask = SD_OCP_GLITCH_MASK;
- 		val = pcr->hw_param.ocp_glitch;
- 		rtsx_pci_write_register(pcr, REG_OCPGLITCH, mask, val);
-+		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
-+					RTS5260_DVCC_OCP_EN |
-+					RTS5260_DVCC_OCP_CL_EN,
-+					RTS5260_DVCC_OCP_EN |
-+					RTS5260_DVCC_OCP_CL_EN);
- 
- 		rtsx_pci_enable_ocp(pcr);
- 	} else {
- 		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
- 					RTS5260_DVCC_OCP_EN |
- 					RTS5260_DVCC_OCP_CL_EN, 0);
--		rtsx_pci_write_register(pcr, RTS5260_DVIO_CTRL,
--					RTS5260_DVIO_OCP_EN |
--					RTS5260_DVIO_OCP_CL_EN, 0);
- 	}
- }
- 
-@@ -364,14 +341,8 @@ static void rts5260_enable_ocp(struct rtsx_pcr *pcr)
- {
- 	u8 val = 0;
- 
--	rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN, 0);
--
- 	val = SD_OCP_INT_EN | SD_DETECT_EN;
--	val |= SDVIO_OCP_INT_EN | SDVIO_DETECT_EN;
- 	rtsx_pci_write_register(pcr, REG_OCPCTL, 0xFF, val);
--	rtsx_pci_write_register(pcr, REG_DV3318_OCPCTL,
--				DV3318_DETECT_EN | DV3318_OCP_INT_EN,
--				DV3318_DETECT_EN | DV3318_OCP_INT_EN);
- }
- 
- static void rts5260_disable_ocp(struct rtsx_pcr *pcr)
-@@ -379,15 +350,10 @@ static void rts5260_disable_ocp(struct rtsx_pcr *pcr)
- 	u8 mask = 0;
- 
- 	mask = SD_OCP_INT_EN | SD_DETECT_EN;
--	mask |= SDVIO_OCP_INT_EN | SDVIO_DETECT_EN;
- 	rtsx_pci_write_register(pcr, REG_OCPCTL, mask, 0);
--	rtsx_pci_write_register(pcr, REG_DV3318_OCPCTL,
--				DV3318_DETECT_EN | DV3318_OCP_INT_EN, 0);
--
--	rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN,
--				OC_POWER_DOWN);
- }
- 
-+
- static int rts5260_get_ocpstat(struct rtsx_pcr *pcr, u8 *val)
- {
- 	return rtsx_pci_read_register(pcr, REG_OCPSTAT, val);
-@@ -404,9 +370,7 @@ static void rts5260_clear_ocpstat(struct rtsx_pcr *pcr)
- 	u8 val = 0;
- 
- 	mask = SD_OCP_INT_CLR | SD_OC_CLR;
--	mask |= SDVIO_OCP_INT_CLR | SDVIO_OC_CLR;
- 	val = SD_OCP_INT_CLR | SD_OC_CLR;
--	val |= SDVIO_OCP_INT_CLR | SDVIO_OC_CLR;
- 
- 	rtsx_pci_write_register(pcr, REG_OCPCTL, mask, val);
- 	rtsx_pci_write_register(pcr, REG_DV3318_OCPCTL,
-@@ -425,36 +389,22 @@ static void rts5260_process_ocp(struct rtsx_pcr *pcr)
- 
- 	rtsx_pci_get_ocpstat(pcr, &pcr->ocp_stat);
- 	rts5260_get_ocpstat2(pcr, &pcr->ocp_stat2);
--	if (pcr->card_exist & SD_EXIST)
--		rtsx_sd_power_off_card3v3(pcr);
--	else if (pcr->card_exist & MS_EXIST)
--		rtsx_ms_power_off_card3v3(pcr);
--
--	if (!(pcr->card_exist & MS_EXIST) && !(pcr->card_exist & SD_EXIST)) {
--		if ((pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER |
--			SDVIO_OC_NOW | SDVIO_OC_EVER)) ||
--			(pcr->ocp_stat2 & (DV3318_OCP_NOW | DV3318_OCP_EVER)))
--			rtsx_pci_clear_ocpstat(pcr);
-+
-+	if ((pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER)) ||
-+		(pcr->ocp_stat2 & (DV3318_OCP_NOW | DV3318_OCP_EVER))) {
-+		rtsx_pci_card_power_off(pcr, RTSX_SD_CARD);
-+		rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
-+		rtsx_pci_clear_ocpstat(pcr);
- 		pcr->ocp_stat = 0;
- 		pcr->ocp_stat2 = 0;
- 	}
- 
--	if ((pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER |
--			SDVIO_OC_NOW | SDVIO_OC_EVER)) ||
--			(pcr->ocp_stat2 & (DV3318_OCP_NOW | DV3318_OCP_EVER))) {
--		if (pcr->card_exist & SD_EXIST)
--			rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
--		else if (pcr->card_exist & MS_EXIST)
--			rtsx_pci_write_register(pcr, CARD_OE, MS_OUTPUT_EN, 0);
--	}
- }
- 
- static int rts5260_init_hw(struct rtsx_pcr *pcr)
- {
- 	int err;
- 
--	rtsx_pci_init_ocp(pcr);
--
- 	rtsx_pci_init_cmd(pcr);
- 
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, L1SUB_CONFIG1,
-@@ -483,6 +433,8 @@ static int rts5260_init_hw(struct rtsx_pcr *pcr)
- 	if (err < 0)
- 		return err;
- 
-+	rtsx_pci_init_ocp(pcr);
-+
- 	return 0;
- }
- 
-@@ -499,6 +451,12 @@ static void rts5260_pwr_saving_setting(struct rtsx_pcr *pcr)
- 		pcr_dbg(pcr, "Set parameters for L1.2.");
- 		rtsx_pci_write_register(pcr, PWR_GLOBAL_CTRL,
- 					0xFF, PCIE_L1_2_EN);
-+		rtsx_pci_write_register(pcr, RTS5260_DVCC_CTRL,
-+					RTS5260_DVCC_OCP_EN |
-+					RTS5260_DVCC_OCP_CL_EN,
-+					RTS5260_DVCC_OCP_EN |
-+					RTS5260_DVCC_OCP_CL_EN);
-+
- 		rtsx_pci_write_register(pcr, PWR_FE_CTL,
- 					0xFF, PCIE_L1_2_PD_FE_EN);
- 	} else if (lss_l1_1) {
-@@ -742,7 +700,7 @@ void rts5260_init_params(struct rtsx_pcr *pcr)
- 	option->ocp_en = 1;
- 	if (option->ocp_en)
- 		hw_param->interrupt_en |= SD_OC_INT_EN;
--	hw_param->ocp_glitch = SD_OCP_GLITCH_10M | SDVIO_OCP_GLITCH_800U;
-+	hw_param->ocp_glitch = SD_OCP_GLITCH_100U | SDVIO_OCP_GLITCH_800U;
- 	option->sd_400mA_ocp_thd = RTS5260_DVCC_OCP_THD_550;
- 	option->sd_800mA_ocp_thd = RTS5260_DVCC_OCP_THD_970;
- }
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index da445223f4cc..e8072804d83a 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -703,7 +703,10 @@ EXPORT_SYMBOL_GPL(rtsx_pci_card_pull_ctl_disable);
- 
- static void rtsx_pci_enable_bus_int(struct rtsx_pcr *pcr)
- {
--	pcr->bier = TRANS_OK_INT_EN | TRANS_FAIL_INT_EN | SD_INT_EN;
-+	struct rtsx_hw_param *hw_param = &pcr->hw_param;
-+
-+	pcr->bier = TRANS_OK_INT_EN | TRANS_FAIL_INT_EN | SD_INT_EN |
-+		hw_param->interrupt_en;
- 
- 	if (pcr->num_slots > 1)
- 		pcr->bier |= MS_INT_EN;
-@@ -969,8 +972,19 @@ static void rtsx_pci_card_detect(struct work_struct *work)
- 
- static void rtsx_pci_process_ocp(struct rtsx_pcr *pcr)
- {
--	if (pcr->ops->process_ocp)
-+	if (pcr->ops->process_ocp) {
- 		pcr->ops->process_ocp(pcr);
-+	} else {
-+		if (!pcr->option.ocp_en)
-+			return;
-+		rtsx_pci_get_ocpstat(pcr, &pcr->ocp_stat);
-+		if (pcr->ocp_stat & (SD_OC_NOW | SD_OC_EVER)) {
-+			rtsx_pci_card_power_off(pcr, RTSX_SD_CARD);
-+			rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
-+			rtsx_pci_clear_ocpstat(pcr);
-+			pcr->ocp_stat = 0;
-+		}
-+	}
- }
- 
- static int rtsx_pci_process_ocp_interrupt(struct rtsx_pcr *pcr)
-@@ -1039,7 +1053,7 @@ static irqreturn_t rtsx_pci_isr(int irq, void *dev_id)
- 		}
- 	}
- 
--	if (pcr->card_inserted || pcr->card_removed)
-+	if ((pcr->card_inserted || pcr->card_removed) && !(int_reg & SD_OC_INT))
- 		schedule_delayed_work(&pcr->carddet_work,
- 				msecs_to_jiffies(200));
- 
-@@ -1144,10 +1158,12 @@ void rtsx_pci_enable_ocp(struct rtsx_pcr *pcr)
- {
- 	u8 val = SD_OCP_INT_EN | SD_DETECT_EN;
- 
--	if (pcr->ops->enable_ocp)
-+	if (pcr->ops->enable_ocp) {
- 		pcr->ops->enable_ocp(pcr);
--	else
-+	} else {
-+		rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN, 0);
- 		rtsx_pci_write_register(pcr, REG_OCPCTL, 0xFF, val);
-+	}
- 
- }
- 
-@@ -1155,10 +1171,13 @@ void rtsx_pci_disable_ocp(struct rtsx_pcr *pcr)
- {
- 	u8 mask = SD_OCP_INT_EN | SD_DETECT_EN;
- 
--	if (pcr->ops->disable_ocp)
-+	if (pcr->ops->disable_ocp) {
- 		pcr->ops->disable_ocp(pcr);
--	else
-+	} else {
- 		rtsx_pci_write_register(pcr, REG_OCPCTL, mask, 0);
-+		rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN,
-+				OC_POWER_DOWN);
-+	}
- }
- 
- void rtsx_pci_init_ocp(struct rtsx_pcr *pcr)
-@@ -1169,7 +1188,7 @@ void rtsx_pci_init_ocp(struct rtsx_pcr *pcr)
- 		struct rtsx_cr_option *option = &(pcr->option);
- 
- 		if (option->ocp_en) {
--			u8 val = option->sd_400mA_ocp_thd;
-+			u8 val = option->sd_800mA_ocp_thd;
- 
- 			rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN, 0);
- 			rtsx_pci_write_register(pcr, REG_OCPPARA1,
-@@ -1204,6 +1223,7 @@ void rtsx_pci_clear_ocpstat(struct rtsx_pcr *pcr)
- 		u8 val = SD_OCP_INT_CLR | SD_OC_CLR;
- 
- 		rtsx_pci_write_register(pcr, REG_OCPCTL, mask, val);
-+		udelay(100);
- 		rtsx_pci_write_register(pcr, REG_OCPCTL, mask, 0);
- 	}
- }
-@@ -1313,6 +1333,8 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
- 		break;
- 	}
- 
-+	rtsx_pci_init_ocp(pcr);
-+
- 	/* Enable clk_request_n to enable clock power management */
- 	rtsx_pci_write_config_byte(pcr, pcr->pcie_cap + PCI_EXP_LNKCTL + 1, 1);
- 	/* Enter L1 when host tx idle */
-diff --git a/drivers/misc/cardreader/rtsx_pcr.h b/drivers/misc/cardreader/rtsx_pcr.h
-index 6ea1655db0bb..300fc31d8e67 100644
---- a/drivers/misc/cardreader/rtsx_pcr.h
-+++ b/drivers/misc/cardreader/rtsx_pcr.h
-@@ -46,6 +46,11 @@
- 
- #define SSC_CLOCK_STABLE_WAIT	130
- 
-+#define RTS524A_OCP_THD_800	0x04
-+#define RTS525A_OCP_THD_800	0x05
-+#define RTS522A_OCP_THD_800	0x06
-+
-+
- int __rtsx_pci_write_phy_register(struct rtsx_pcr *pcr, u8 addr, u16 val);
- int __rtsx_pci_read_phy_register(struct rtsx_pcr *pcr, u8 addr, u16 *val);
- 
--- 
-2.17.1
+I'm never fan of changing a local global variable for a driver instance,
+is it strictly required ?
+
+> 
+>> +
+>> +	priv->role_switch = usb_role_switch_register(dev, &priv->switch_desc);
+>> +	if (IS_ERR(priv->role_switch))
+>> +		dev_warn(dev, "Unable to register Role Switch\n");
+>> +
+>> +	pm_runtime_set_active(dev);
+>> +	pm_runtime_enable(dev);
+>> +	pm_runtime_get_sync(dev);
+>> +
+>> +	return 0;
+>> +
+>> +err_phys_exit:
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+>> +		phy_exit(priv->phys[i]);
+>> +
+>> +err_phys_power:
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+>> +		phy_power_off(priv->phys[i]);
+>> +
+>> +err_phys_put:
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+>> +		phy_put(priv->phys[i]);
+>> +
+> The phys are got by devm_phy_optional_get(), no need call phy_put()
+
+You are right, this is a leftover from v1.
+
+>> +	return ret;
+>> +}
+>> +
+>> +static int dwc3_meson_g12a_remove(struct platform_device *pdev)
+>> +{
+>> +	struct dwc3_meson_g12a *priv = platform_get_drvdata(pdev);
+>> +	struct device *dev = &pdev->dev;
+>> +	int i;
+>> +
+>> +	usb_role_switch_unregister(priv->role_switch);
+>> +
+>> +	of_platform_depopulate(dev);
+>> +
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+>> +		phy_power_off(priv->phys[i]);
+>> +		phy_exit(priv->phys[i]);
+>> +		phy_put(priv->phys[i]);
+> ditto
+
+Thanks for the review,
+Neil
+
+>> +	}
+>> +
+>> +	clk_disable_unprepare(priv->clk);
+>> +	clk_put(priv->clk);
+>> +
+>> +	pm_runtime_disable(dev);
+>> +	pm_runtime_put_noidle(dev);
+>> +	pm_runtime_set_suspended(dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __maybe_unused dwc3_meson_g12a_runtime_suspend(struct device *dev)
+>> +{
+>> +	struct dwc3_meson_g12a	*priv = dev_get_drvdata(dev);
+>> +
+>> +	clk_disable(priv->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __maybe_unused dwc3_meson_g12a_runtime_resume(struct device *dev)
+>> +{
+>> +	struct dwc3_meson_g12a	*priv = dev_get_drvdata(dev);
+>> +
+>> +	return clk_enable(priv->clk);
+>> +}
+>> +
+>> +static int __maybe_unused dwc3_meson_g12a_suspend(struct device *dev)
+>> +{
+>> +	struct dwc3_meson_g12a *priv = dev_get_drvdata(dev);
+>> +	int i;
+>> +
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+>> +		if (priv->phys[i])
+>> +			phy_exit(priv->phys[i]);
+>> +
+>> +	reset_control_assert(priv->reset);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __maybe_unused dwc3_meson_g12a_resume(struct device *dev)
+>> +{
+>> +	struct dwc3_meson_g12a *priv = dev_get_drvdata(dev);
+>> +	int i, ret;
+>> +
+>> +	reset_control_deassert(priv->reset);
+>> +
+>> +	dwc3_meson_g12a_usb_init(priv);
+>> +
+>> +	/* Init PHYs */
+>> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+>> +		if (priv->phys[i]) {
+>> +			ret = phy_init(priv->phys[i]);
+>> +			if (ret)
+>> +				return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops dwc3_meson_g12a_dev_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(dwc3_meson_g12a_suspend, dwc3_meson_g12a_resume)
+>> +	SET_RUNTIME_PM_OPS(dwc3_meson_g12a_runtime_suspend,
+>> +			dwc3_meson_g12a_runtime_resume, NULL)
+>> +};
+>> +
+>> +static const struct of_device_id dwc3_meson_g12a_match[] = {
+>> +	{ .compatible = "amlogic,meson-g12a-usb-ctrl" },
+>> +	{ /* Sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, dwc3_meson_g12a_match);
+>> +
+>> +static struct platform_driver dwc3_meson_g12a_driver = {
+>> +	.probe		= dwc3_meson_g12a_probe,
+>> +	.remove		= dwc3_meson_g12a_remove,
+>> +	.driver		= {
+>> +		.name	= "dwc3-meson-g12a",
+>> +		.of_match_table = dwc3_meson_g12a_match,
+>> +		.pm	= &dwc3_meson_g12a_dev_pm_ops,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(dwc3_meson_g12a_driver);
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("Amlogic Meson G12A USB Glue Layer");
+>> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+> 
+> 
 
