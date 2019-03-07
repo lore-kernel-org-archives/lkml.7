@@ -2,121 +2,148 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA6FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D250206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551925547;
-	bh=2QU0MDrpwdun4/cHB8qGjVqbgDWBHSzhyPsv//TX8GI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=VMY0j734noahLWEDXJe5L8Cfa88v/n2ZMUrJJ3v2ckKg2T/mBuZJRF05bYDjqY1C6
-	 gSvLgwjDV1LvDeVpHwKvF3ZJRD2VUFwvBZmHy3zUJtShXb7X/BQO8FatGP6DJ4CWY4
-	 TdODWToITBczqa3KBZ1XzEKmakTCZvGr7MxNy3+8=
+	by mail.kernel.org (Postfix) with ESMTP id 57DA320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfCGCZp (ORCPT
+        id S1727383AbfCGC21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:25:45 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:37091 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbfCGCZp (ORCPT
+        Wed, 6 Mar 2019 21:28:27 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:59795 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfCGC20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:25:45 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E96A9220F9;
-        Wed,  6 Mar 2019 21:25:43 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 06 Mar 2019 21:25:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm2; bh=oxKc3nC4ChsFsCBUy2NStnah7Bm/f
-        rt0us14liNc9fY=; b=2VOwoyYGJmIUFKkoTAPuRvuP4r0aGFoeJjqvz6FP/FiZ0
-        H74g3Lq+5AK6+58vRq9lupnXPA4o9+S9eJifShwqSCVUE520D/H1ljHzj85uEenY
-        4PuKBhMTETnp0k9qfsbiSMFToPXScdV2YMbp79Stg6Exi5Mu9SaEPDMnrLyIORX2
-        Vn705rgjZYdqD7sOcubLCccMnGI7cB//i1wWHwgY50SYztlYsBB3LfhCoHO7/67U
-        02kxLQkAVq8ABOWvFoUMTNrvAxlQUPfbCksKxFM58YcdrTdz4NOD5fRLi45HIgQA
-        PBzePX50jIrD2gVyrU+iaPxVXA0EG88k4dPXu7JDA==
-X-ME-Sender: <xms:JoGAXM1hvk0IYr3CAsEyqh5gV6lmFOD79JF6jLMw1WPB9GYK00_WZg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeejgdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkgggtugfofgesthdtredtofervdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucffoh
-    hmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdegrdduieelrdehrdduheeknecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:JoGAXHzeMfp4FeQ0bKdZuCkR8QkhAvC1k4JOo0vYF5FUnXZQLt69qg>
-    <xmx:JoGAXP-JZiaUKbEg3t7AdxFsHVXIuQ2fS20IDAqM0yKwiEuKuMP61Q>
-    <xmx:JoGAXF2tiDU3ewXifsShOgsv6LpJw6tk4Vkb74W8M-2JHbXjFdLKcQ>
-    <xmx:J4GAXCCmAeruDdzPCnzwQ_-9tfZE_mfFPNdRYdeCzKlmQc6nbzO_aw>
-Received: from localhost (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B88B3E469F;
-        Wed,  6 Mar 2019 21:25:41 -0500 (EST)
-Date:   Thu, 7 Mar 2019 13:25:22 +1100
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] leaking_addresses: changes for v5.1-rc1
-Message-ID: <20190307022522.GA3942@eros.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: Mutt 1.11.3 (2019-02-01)
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Wed, 6 Mar 2019 21:28:26 -0500
+Received: from orion.localdomain ([95.118.27.116]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M4sD3-1h3eRi12bH-001wYu for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019
+ 03:28:25 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scripts: helper for mailing patches from git to the maintainers
+Date:   Thu,  7 Mar 2019 03:28:19 +0100
+Message-Id: <1551925699-22445-2-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1551925699-22445-1-git-send-email-info@metux.net>
+References: <1551895583-11955-1-git-send-email-info@metux.net>
+ <1551925699-22445-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:eLq08S9yJi/7NjfcPCnymgRHnGBC5hPYxgXrn55rntWKm09+lEo
+ eCy5LR0tJHC36OdA4rUpCXGOJ0b5QJcnKCLf92hMFBvEwHWSaQ3Kisv9PN/IaeyuJ09d/Ir
+ ii1z3KY1lS5232OsklZlW0LxYFCHZX06w2AqsP6ZsR62xPNgliVZIa8lJeW8u4AffRl4zG3
+ aNBxz9KvpyX2HkwV2GKtg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yd2YEll4ngc=:RqABgsP05HnLsds2nBHBNQ
+ IaoiMe4nnkV40BQjuO02b3ccNu3oSGLXumpAh8pXFZPwDLR4exj0DstT3gJkDhebm5NNkpsyS
+ FpPOVjMCA0d35aTAwOHdmIl6DnlqFJWRXFSJTPZhpmeIu6DfyCBpzjjkb5cQClJ2BOk5gfUSR
+ HRCSAIBjF8LafUC9OgH1qiSADnstVBP0MM+7GEUkyaP7gebyjlG/0XoAxrO/o6Bqk3PW897uu
+ aSY4ypRJdIVY5eng9scYmuwTS8xXZlcvGoSdJfoxeUQPejQF9g0il0H4JnkJKLFSqWRigpabz
+ FrzVBYG4XjbSs63Xu3CtUcihD6ZaVJvMRkSFQBEvkeZNxMLV1NO7PNUmyjg43XNZohMLmesnA
+ 0YbvnpAATpD7/J0fsafZkQfxdxVC9xwwwo1AqEtKhFluQuUgjOwAD5xdbm836MZP/LkOmcuDL
+ OfrG9JfXXfkz6j9j3gew9/vnGtaqArZvB43Uhr/QvVUhVeb3Cl6qk2/3vnLHJGrTTCqyuO4i7
+ 4t7Akk5D7GdzQZwla382qAvINx0lo13cOYiGvCyLLbvDQ0+LXMIRZ+e+9n/ROa4TWa2ImB1qO
+ HnWrV0cciB4rd6apTv9zb+p5MTYPQBTUHCT5FW9sOaAQSvw5m/kw00uYvZHrVN9YAqsULaN0H
+ G5b7C1GMUjBSEahNfwlJgasAm4teQlU+TGqttPrwxbd97bR1aiT5YHRx+i2MOoE8uxCZxikwC
+ aa7XOQYLZXHHj+hUOO+5cpmGHKMpyabddiv24A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+This is a little helper script for mailing patches out of a git
+branch to the corresponding maintainers.
 
-Please consider pulling changes to scripts/leaking_addresses.pl
+Essentially, it scans the touched files, asks get_maintainer.pl
+for their maintainers and calls git-send-email for mailing out
+the patches.
 
-I've started using my kernel.org email address.  I believe its the key
-you care about not the email address this email is sent from, the tag is
-signed as usual.
+Syntax:
 
-thanks,
-Tobin.
+  ./scripts/git-send-patch <ref> [<optional git-send-email args>]
 
+Examples:
 
-The following changes since commit 1c163f4c7b3f621efff9b28a47abb36f7378d783:
+  ./scripts/git-send-patch HEAD^
+  ./scripts/git-send-patch linus/master --dry-run
 
-  Linux 5.0 (2019-03-03 15:21:29 -0800)
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ scripts/git-send-patch | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100755 scripts/git-send-patch
 
-are available in the Git repository at:
+diff --git a/scripts/git-send-patch b/scripts/git-send-patch
+new file mode 100755
+index 0000000..b54790f
+--- /dev/null
++++ b/scripts/git-send-patch
+@@ -0,0 +1,62 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++[ -x "$GIT" ]       || export GIT=git
++[ -d "$KERNELSRC" ] || export KERNELSRC=.
++
++LKML="linux-kernel@vger.kernel.org"
++
++check_ksrc() {
++    if [ -d $KERNELSRC/arch ] && \
++       [ -d $KERNELSRC/block ] && \
++       [ -d $KERNELSRC/init ] && \
++       [ -d $KERNELSRC/kernel ] && \
++       [ -d $KERNELSRC/sound ] && \
++       [ -d $KERNELSRC/drivers ] && \
++       [ -d $KERNELSRC/net ] && \
++       [ -d $KERNELSRC/include ] && \
++       [ -f $KERNELSRC/COPYING ] && \
++       [ -f $KERNELSRC/MAINTAINERS ] && \
++       [ -f $KERNELSRC/CREDITS ] && \
++       [ -f $KERNELSRC/Kconfig ] && \
++       [ -f $KERNELSRC/Makefile ]; then
++        return 0
++    else
++        echo "$0: cant find the kernel source tree. please call me from the topdir" >&2
++        exit 1
++    fi
++}
++
++check_ksrc
++
++get_files() {
++    $GIT diff --name-only "$REF"
++}
++
++get_maintainers() {
++    $KERNELSRC/scripts/get_maintainer.pl --m --l --remove-duplicates `get_files` |
++        grep -v "$LKML" | \
++        grep -E "(maintainer|reviewer|open list)" | \
++        grep -o '[[:alnum:]+\.\_\-]*@[[:alnum:]+\.\_\-]*'
++}
++
++construct_params() {
++    echo -n "--to=$LKML "
++    for a in `get_maintainers`; do
++        echo -n "--cc=$a "
++    done
++}
++
++if [ ! "$1" ]; then
++    echo "$0: missing git revision to send out" >&2
++    echo "" >&2
++    echo "for example: 'HEAD^' for sending just the last patch" >&2
++    echo >&2
++    echo "$0 <git-ref> [<extra params for git-send-mail>]"
++    exit 1
++fi
++
++REF="$1"
++shift
++
++$GIT send-email `construct_params` "$REF" "$@"
+-- 
+1.9.1
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tobin/leaks.git tags/leaks-5.1-rc1
-
-for you to fetch changes up to 9ac060a708e054233265f8febfcef009ac3da826:
-
-  leaking_addresses: Completely remove --version flag (2019-03-07 08:53:18 +1100)
-
-----------------------------------------------------------------
-leaking_addresses patches for 5.1-rc1
-
-Here are two super trivial patches to the leaking addresses script for
-the 5.1-rc1 merge window.  One fixes the debugging output which is
-currently broken in a bunch of places, the other removes the --version
-command line option.
-
-Both patches have been tested and sitting in linux-next tree for a month
-or so.
-
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-
-----------------------------------------------------------------
-Tobin C. Harding (2):
-      leaking_addresses: Fix calls to dprint
-      leaking_addresses: Completely remove --version flag
-
- scripts/leaking_addresses.pl | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
