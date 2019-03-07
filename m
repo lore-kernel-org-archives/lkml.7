@@ -2,189 +2,129 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DCAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1B9C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B955A20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E8820652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="L7oPiFvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfCGP5B (ORCPT
+        id S1726375AbfCGP5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:57:01 -0500
-Received: from mga03.intel.com ([134.134.136.65]:36762 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfCGP5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:57:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 07:57:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
-   d="scan'208";a="326324259"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Mar 2019 07:56:59 -0800
-Received: from [10.251.89.100] (abudanko-mobl.ccr.corp.intel.com [10.251.89.100])
-        by linux.intel.com (Postfix) with ESMTP id 2BE1658073B;
-        Thu,  7 Mar 2019 07:56:56 -0800 (PST)
-Subject: Re: [PATCH v5 07/10] perf record: implement -z,--compression_level=n
- option and compression
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
- <87fa1906-2d6a-a00a-7ba5-b570d0cbf9cc@linux.intel.com>
- <20190305122534.GB16615@krava>
- <ee765c0e-6e5c-e879-aaa6-40f314f85a5e@linux.intel.com>
- <20190307121429.GB29474@krava>
- <002e7e10-b0ef-df2a-261c-88fd9c00364d@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <39de5b2e-8f38-8fd6-2ed6-2dbb34d00790@linux.intel.com>
-Date:   Thu, 7 Mar 2019 18:56:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 10:57:55 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34919 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfCGP5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 10:57:54 -0500
+Received: by mail-ed1-f68.google.com with SMTP id g19so13914010edp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:57:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/GqXQBmkdSqQ1wOgMWWR75IMCgWdLAO+p+34fsZNkW0=;
+        b=L7oPiFvzIfbGYD2pUSC18v9jv5jkA+3ecOiEnebD0FF8RkhRAS8I3oA3BTQrymmW3F
+         aeGv5JT50ZUgJQ2C7m2qLBXUx74E73VH3307clL9tiMDUeXqeDDJmOR34mxDS8wK67oY
+         wXsRUjiPPgFalXXzXSFFwmDFdlHQenbrej9pF+H6Hig72zuI6ELOPSK8M3j5ZNnkMG9n
+         vLTDpN6PWy0PdEAPCJaf+CPBxE553hnWZ4Om8s7ckg7h5KC5Rv2ppxui8R8IMCLItbBw
+         4123tPMj6/ZdzQfW2UIATYen3Vh/MT72h+aCWBSldxKGjtfLJNX38KjQz0JeLFr+2l8y
+         tMTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/GqXQBmkdSqQ1wOgMWWR75IMCgWdLAO+p+34fsZNkW0=;
+        b=ZNR7wQSvyAQoBVldk01Py57UtSkfpBeQXf1T1GuB8VOhTBkIAvIEaK7vJ/DLpUFTTw
+         S840vheFImFvGDOJKMWpQVbsiQMhmfO82x+9AkHo6MPpKXDxAf4t2LVE2I7DuKW+00xx
+         Vx8BYlYyCqJ4WzyuneYiJ/2S5AvqjIHJ2fwwzSc2X7Pn3TuPD277T8U+QQf4E8INhCER
+         qPcQO8O+gi+oa2Zfcdv5VWWqpNnSiTUTQul5FXzmd3qCDO3j1T76iQG9l+0omMlraYxr
+         MC41v3yXl8c06fs6jp+AVy5e3IpdaBWRbR5tQeT6b32JszgBdXJmYAWtOKvYDnrJDDRa
+         qYaQ==
+X-Gm-Message-State: APjAAAXMK0btQEiuim5xm4bSmC+3z/eG9kF7b85bOk2Vh//jLJNiMPGU
+        /w2CAxKeoY/gPOZzH78O/zLNeA==
+X-Google-Smtp-Source: APXvYqyjmE27orYbGEaM615J3UNweo0x7hvQqNs0J8AHFX4ISC/e0/9eSj/liVzQep/nRuZ5RKSdDg==
+X-Received: by 2002:a50:e70a:: with SMTP id a10mr28965559edn.70.1551974272677;
+        Thu, 07 Mar 2019 07:57:52 -0800 (PST)
+Received: from [192.168.0.36] (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.googlemail.com with ESMTPSA id z49sm1448730edb.15.2019.03.07.07.57.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 07:57:51 -0800 (PST)
+Subject: Re: [PATCH] pblk: fix max_io calculation
+To:     =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+References: <20190307121853.14503-1-javier@javigon.com>
+From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Message-ID: <8b13dcf3-4486-0e14-b718-417c7fc42a7b@lightnvm.io>
+Date:   Thu, 7 Mar 2019 16:57:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <002e7e10-b0ef-df2a-261c-88fd9c00364d@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190307121853.14503-1-javier@javigon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/7/19 1:18 PM, Javier González wrote:
+> When calculating the maximun I/O size allowed into the buffer, consider
+> the write size (ws_opt) used by the write thread in order to cover the
+> case in which, due to flushes, the mem and subm pointers are disaligned
+> by (ws_opt - 1). This case currently translates into a stall when
+> an I/O of the largest possible size is submitted.
+> 
+> Fixes: f9f9d1ae2c66 ("lightnvm: pblk: prevent stall due to wb threshold")
+> 
+> Signed-off-by: Javier González <javier@javigon.com>
+> ---
+> 
+> Matias: Can you apply this as a fix to 5.1. This is a case I missed when fixing
+> the wb threshold, which is also scheduled for 5.1
+> 
+> Thanks,
+> Javier
+> 
+>   drivers/lightnvm/pblk-rl.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/lightnvm/pblk-rl.c b/drivers/lightnvm/pblk-rl.c
+> index b014957dde0b..a5f8bc2defbc 100644
+> --- a/drivers/lightnvm/pblk-rl.c
+> +++ b/drivers/lightnvm/pblk-rl.c
+> @@ -233,10 +233,15 @@ void pblk_rl_init(struct pblk_rl *rl, int budget, int threshold)
+>   	/* To start with, all buffer is available to user I/O writers */
+>   	rl->rb_budget = budget;
+>   	rl->rb_user_max = budget;
+> -	rl->rb_max_io = threshold ? (budget - threshold) : (budget - 1);
+>   	rl->rb_gc_max = 0;
+>   	rl->rb_state = PBLK_RL_HIGH;
+>   
+> +	/* Maximize I/O size and ansure that back threshold is respected */
+> +	if (threshold)
+> +		rl->rb_max_io = budget - pblk->min_write_pgs_data - threshold;
+> +	else
+> +		rl->rb_max_io = budget - pblk->min_write_pgs_data - 1;
+> +
+>   	atomic_set(&rl->rb_user_cnt, 0);
+>   	atomic_set(&rl->rb_gc_cnt, 0);
+>   	atomic_set(&rl->rb_space, -1);
+> 
 
-On 07.03.2019 18:26, Alexey Budankov wrote:
-> 
-> On 07.03.2019 15:14, Jiri Olsa wrote:
->> On Thu, Mar 07, 2019 at 11:39:46AM +0300, Alexey Budankov wrote:
->>>
->>> On 05.03.2019 15:25, Jiri Olsa wrote:
->>>> On Fri, Mar 01, 2019 at 06:58:32PM +0300, Alexey Budankov wrote:
->>>>
->>>> SNIP
->>>>
->>>>>  
->>>>>  	/*
->>>>>  	 * Increment md->refcount to guard md->data[idx] buffer
->>>>> @@ -350,7 +357,7 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
->>>>>  	md->prev = head;
->>>>>  	perf_mmap__consume(md);
->>>>>  
->>>>> -	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
->>>>> +	rc = push(to, md->aio.data[idx], size0 + size, *off, &md->aio.cblocks[idx]);
->>>>>  	if (!rc) {
->>>>>  		*off += size0 + size;
->>>>>  	} else {
->>>>> @@ -556,13 +563,15 @@ int perf_mmap__read_init(struct perf_mmap *map)
->>>>>  }
->>>>>  
->>>>>  int perf_mmap__push(struct perf_mmap *md, void *to,
->>>>> -		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
->>>>> +		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
->>>>> +		    perf_mmap__compress_fn_t compress, void *comp_data)
->>>>>  {
->>>>>  	u64 head = perf_mmap__read_head(md);
->>>>>  	unsigned char *data = md->base + page_size;
->>>>>  	unsigned long size;
->>>>>  	void *buf;
->>>>>  	int rc = 0;
->>>>> +	size_t mmap_len = perf_mmap__mmap_len(md);
->>>>>  
->>>>>  	rc = perf_mmap__read_init(md);
->>>>>  	if (rc < 0)
->>>>> @@ -574,7 +583,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
->>>>>  		buf = &data[md->start & md->mask];
->>>>>  		size = md->mask + 1 - (md->start & md->mask);
->>>>>  		md->start += size;
->>>>> -
->>>>> +		if (compress) {
->>>>> +			size = compress(comp_data, md->data, mmap_len, buf, size);
->>>>> +			buf = md->data;
->>>>> +		}
->>>>>  		if (push(md, to, buf, size) < 0) {
->>>>>  			rc = -1;
->>>>>  			goto out;
->>>>
->>>> when we discussed the compress callback should be another layer
->>>> in perf_mmap__push I was thinking more of the layered/fifo design,
->>>> like:
->>>>
->>>> normaly we call:
->>>>
->>>> 	perf_mmap__push(... push = record__pushfn ...)
->>>> 		-> reads mmap data and calls push(data), which translates as:
->>>>
->>>> 		record__pushfn(data);
->>>> 			- which stores the data
->>>>
->>>>
->>>> for compressed it'd be:
->>>>
->>>> 	perf_mmap__push(... push = compressed_push ...)
->>>>
->>>> 		-> reads mmap data and calls push(data), which translates as:
->>>>
->>>> 		compressed_push(data)
->>>> 			-> reads data, compresses them and calls, next push callback in line:
->>>>
->>>> 			record__pushfn(data)
->>>> 				- which stores the data
->>>>
->>>>
->>>> there'd need to be the logic for compressed_push to
->>>> remember the 'next push' function
->>>
->>> That is suboptimal for AIO. Also compression is an independent operation that 
->>> could be applied on any of push stages you mean.
->>
->> not sure what you mean by suboptimal, but I think
->> that it can still happen in subsequent push callback
->>
->>>
->>>>
->>>> but I think this was the original idea behind the
->>>> perf_mmap__push -> it gets the data and pushes them for
->>>> the next processing.. it should stay as simple as that
->>>
->>> Agree on keeping simplicity and, at the moment, there is no any push to the next 
->>> processing in the code so provided implementation fits as for serial as for AIO
->>> at the same time sticking to simplicity as much as possibly. If you see something 
->>> that would fit better please speak up and share.
->>
->> I have to insist that perf_mmap__push stays untouched
->> and we do other processing in the push callbacks
-> 
-> What is about perf_mmap__aio_push()?
-> 
-> Without compression it does 
-> 	memcpy(), memcpy(), aio_push()
-> 
-> With compression its does
-> 	memcpy_with_compression(), memcpy_with_compression(), aio_push()
-> 
-> and deviation that increases amount of copy operations i.e. implementing three or more 
-> is suboptimal in terms of runtime overhead and data loss decrease
-> 
-> Compression for serial streaming can be implemented in push() callback.
-> AIO case would go with compression over a parameter in aio_push().
+Hi Jens,
 
-I meant compress_fn and comp_data parameters _for_ aio_push().
+If possible, could you please pick this one up for 5.1? It fixes a 
+previous patch that was introduced in 5.1 that should fix a stall, but 
+didn't quite catch it.
 
-> So the both trace writing schemas could be optimally extended.
-> 
-> ~Alexey
-> 
->>
->> jirka
->>
-> 
+Thank you,
+-Matias
