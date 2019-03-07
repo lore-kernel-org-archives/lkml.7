@@ -2,105 +2,132 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36A4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F6DC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91EBA20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551993187;
-	bh=DmOiyGQaDUGZGtfRVExAqG0qOh5YnPHUyVXUy/dbXxw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpoYtsDUyl0gfaMB94xJA48RfQN0fnsvJ7fhq1pelZHOfquPu7pg1mqb7ng3NpYC1
-	 iaOpkSZo1Vx4XG6Tnv50yGBc7cElDidBwP1/ADPGEWskRf/TDIfolnesoSRXJtudDa
-	 urPDPpKhoaw33eYW2IFH0sWL8mr1PtepGF9hZV0g=
+	by mail.kernel.org (Postfix) with ESMTP id E106920675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:15:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FdtsdR24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfCGVNG (ORCPT
+        id S1726351AbfCGVPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 16:13:06 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41321 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726351AbfCGVMd (ORCPT
+        Thu, 7 Mar 2019 16:15:05 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39029 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfCGVPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 16:12:33 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 335483556;
-        Thu,  7 Mar 2019 16:12:32 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=w2fXLe4ZgTkW2x4QyojPjWlfikwMYKP+enATmuiNyAs=; b=Cv+/mBIl
-        6AJ2oPpwVUFnwz8xlfOR0Z6dsrSFVdMQ4hcVLTKE5nZL/uMA737r2K9u06JcORnu
-        qh6+oqpRAwRHPp5VAnAzZ/LUCNX5flbGSnWX1r7RFoCW0e0sLCh46dvs4EIgBh7J
-        URcer0MeBN9VPbJq9L2DjpgEqWdaRJu1SdivJPCP2tBw9Vcdf4PTfXj1J/l24UIF
-        jHx5ddRydrR6aWKRqP+AAYsG2vf6p6U8NsPHAD5LxbdWXYSAPRuxFki9oTMgEYVw
-        HV66GTNqG1ztWtqpiDZK/eCxRUfCu0F6yWUg8l2i2cy60NCEJd26qcySJcYGXW6A
-        Yaft0lveWAXsKQ==
-X-ME-Sender: <xms:P4mBXGPrOz88WQCW0xk6Q1DQc2ruB7dw-zP0QZT8j2gHXNZr3_Zrng>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeekgdduhedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghi
-    nhcuvedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecukf
-    hppeduvdegrdduieelrdehrdduheeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:P4mBXH_n6dImpnc4YAhqSUsbarQjmU-3MVT2Pj82fkTmguzT2KCcYA>
-    <xmx:P4mBXP0PgJi13C5M_xbaSo30rvpU6OVheJ9_cPy-SDIljbZmWLLJSQ>
-    <xmx:P4mBXBKQ1Y0N-4IDDhxXQ6cWKh2cCaGd2m3DO2EPzFlYL3oAprsblw>
-    <xmx:P4mBXE6LL2rRvWS_AJAM10dF0jk3_i-IBMyH2PUFH0amMnWUpNJ5oA>
-Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 79AA510344;
-        Thu,  7 Mar 2019 16:12:29 -0500 (EST)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] docs: Use reference to link to rst file
-Date:   Fri,  8 Mar 2019 08:11:48 +1100
-Message-Id: <20190307211153.28400-5-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190307211153.28400-1-tobin@kernel.org>
-References: <20190307211153.28400-1-tobin@kernel.org>
+        Thu, 7 Mar 2019 16:15:05 -0500
+Received: by mail-io1-f67.google.com with SMTP id x3so14897474ior.6;
+        Thu, 07 Mar 2019 13:15:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4kwQTfJDf2GGq+4EPc/xPnv60WmjD15BGPGOMXGyJQo=;
+        b=FdtsdR24Sk28iB9JIojUoGU2XQWH1ZSrJg7xlAwvOdI0fL8oePoAM9Y0fIfFXKKlYb
+         RkgKU8a56dm6ii2OoTqBirOKFGGuVz6+gm5AmR6HubhyUs64AkEx79Jw8L+bTWm8hGRC
+         41Am4csx1DEnDPOqOExJ8CzdVHVLWzCbdcXx3miUNrcMyEYYw8gOhVf4PpwNWT0rC+tc
+         c7Crsj8THobz0SUXoQOOobDnkQrbSe5PeBgxn9ki6B9IdjMZ6TfvNo5fDPIa/yIaWDpz
+         k1IgWREt7px4JptQeQGTcwZspt6IJU4z0lQ2mtrvIqBEJvVkqA54LbN86X3K7g8+5erT
+         SI8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4kwQTfJDf2GGq+4EPc/xPnv60WmjD15BGPGOMXGyJQo=;
+        b=ZRpBRMCRm86unNc6xO2pWOCj0BIM4V2BWMH66rq2Y81SawKlJf0ua1LPMUQyfbQ1Qm
+         f/Pzc/4lcalhzisVXERO2sI+tY6AkDgmdrxFu1yPkVyIAF6ohm9Dss4HW+HZPqNiP8nm
+         yffnuU9khKtydvfWo8U6H7xJbfG//W+HkDfXTG9rXawhorSGCIDbb/WeiGASCmPEmm/5
+         VDBlEHgjApKdU2T8CJ2AZUdzmDwtcq2n0Czs+yc49AAkBQ3Qz8JQUYuwsxMM0qAb5l9S
+         tmHBYVoDxd1QzwfyMiNpktofPzQ7M0z6OPY/faDB//FqqSUGBMIHfNdZ1OQLboie5FCl
+         REXA==
+X-Gm-Message-State: APjAAAWmY1lzJQBB6Nu+vXzYLf/DtgOZFUaWsm44isUQKq81HNxGdOHj
+        1jsn/NQT47s9lfrIiiFUyCX41WIHr44Y7zFWPEw=
+X-Google-Smtp-Source: APXvYqz02VverKWnZ4mSUuKRqA24qCdg7ndh+nOVzx3JlPIXPRUnrXkmqzh/ZBO3E46Ggx3HeEo1VHde+44BqMELJG0=
+X-Received: by 2002:a6b:e219:: with SMTP id z25mr7425326ioc.116.1551993303724;
+ Thu, 07 Mar 2019 13:15:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190306155048.12868-1-nitesh@redhat.com> <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
+ <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com> <CAKgT0UdNPADF+8NMxnWuiB_+_M6_0jTt5NfoOvFN9qbPjGWNtw@mail.gmail.com>
+ <2269c59c-968c-bbff-34c4-1041a2b1898a@redhat.com> <CAKgT0UdHkDB1vFMp7T9_pdoiuDW4qvgxhqsNztPQXrRCAmYNng@mail.gmail.com>
+ <20190307134744-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190307134744-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 7 Mar 2019 13:14:52 -0800
+Message-ID: <CAKgT0Ue=Y-6-mzqzZ+tJYvfOd4ZeK59okeZKjfJ7LHwhbdpY_w@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        David Hildenbrand <david@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current document includes the path to an RST doc file.  Since this is an
-RST file we can make this a link.  Keeps the path as the link title
-since that what the original author wrote.
+On Thu, Mar 7, 2019 at 10:53 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Thu, Mar 07, 2019 at 10:45:58AM -0800, Alexander Duyck wrote:
+> > To that end what I think w may want to do is instead just walk the LRU
+> > list for a given zone/order in reverse order so that we can try to
+> > identify the pages that are most likely to be cold and unused and
+> > those are the first ones we want to be hinting on rather than the ones
+> > that were just freed. If we can look at doing something like adding a
+> > jiffies value to the page indicating when it was last freed we could
+> > even have a good point for determining when we should stop processing
+> > pages in a given zone/order list.
+> >
+> > In reality the approach wouldn't be too different from what you are
+> > doing now, the only real difference would be that we would just want
+> > to walk the LRU list for the given zone/order rather then pulling
+> > hints on what to free from the calls to free_one_page. In addition we
+> > would need to add a couple bits to indicate if the page has been
+> > hinted on, is in the middle of getting hinted on, and something such
+> > as the jiffies value I mentioned which we could use to determine how
+> > old the page is.
+>
+> Do we really need bits in the page?
+> Would it be bad to just have a separate hint list?
 
-Use reference to link to rst file.
+The issue is lists are expensive to search. If we have a single bit in
+the page we can check it as soon as we have the page.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- Documentation/vm/numa.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> If you run out of free memory you can check the hint
+> list, if you find stuff there you can spin
+> or kick the hypervisor to hurry up.
 
-diff --git a/Documentation/vm/numa.rst b/Documentation/vm/numa.rst
-index 185d8a568168..5cae13e9a08b 100644
---- a/Documentation/vm/numa.rst
-+++ b/Documentation/vm/numa.rst
-@@ -109,8 +109,8 @@ System administrators and application designers can restrict a task's migration
- to improve NUMA locality using various CPU affinity command line interfaces,
- such as taskset(1) and numactl(1), and program interfaces such as
- sched_setaffinity(2).  Further, one can modify the kernel's default local
--allocation behavior using Linux NUMA memory policy.
--[see Documentation/admin-guide/mm/numa_memory_policy.rst.]
-+allocation behavior using Linux NUMA memory policy. [see
-+:ref:`Documentation/admin-guide/mm/numa_memory_policy.rst <numa_memory_policy>`].
- 
- System administrators can restrict the CPUs and nodes' memories that a non-
- privileged user can specify in the scheduling or NUMA commands and functions
--- 
-2.21.0
+This implies you are keeping a separate list of pages for what has
+been hinted on. If we are pulling pages out of the LRU list for that
+it will require the zone lock to move the pages back and forth and for
+higher core counts that isn't going to scale very well, and if you are
+trying to pull out a page that is currently being hinted on you will
+run into the same issue of having to wait for the hint to be completed
+before proceeding.
 
+> Core mm/ changes, so nothing's easy, I know.
+
+We might be able to reuse some existing page flags. For example, there
+is the PG_young and PG_idle flags that would actually be a pretty good
+fit in terms of what we are looking for in behavior. We could set
+PG_young when the page is initially freed, then clear it when we start
+to perform the hint, and set PG_idle once the hint has been completed.
+
+The check for if we could use a page would be pretty fast as a result
+as well since if PG_young or PG_idle are set it means the page is free
+to use so the check in arch_alloc_page would be pretty cheap since we
+could probably test for both bits in one read.
