@@ -2,148 +2,125 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4679AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D00CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1414720851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551972189;
-	bh=lCO3T/XpRXUd0bBBzJFZCQZ2nBBRK9+DkfsiRbJa12c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sUk3npetd59suJjNN4om1NT9tR650RD9De71pWMIni5mzXQJtHOPL2T6MWXbSkGjY
-	 ppZuBqUNjLxLcFtfBIQr0ZFEAVuP8ekyH2IfMZwPNQHgNuRgdeLTOyQpKQvUSjdgux
-	 HpcYO8oTCu0fU9gJCvhcnKHfMU0fXkJ/1SR+A1zU=
+	by mail.kernel.org (Postfix) with ESMTP id 0C5B620643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gScKYK/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfCGPXH (ORCPT
+        id S1726428AbfCGPZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:23:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfCGPXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:23:07 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE1A20840;
-        Thu,  7 Mar 2019 15:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551972185;
-        bh=lCO3T/XpRXUd0bBBzJFZCQZ2nBBRK9+DkfsiRbJa12c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T8cROAQMU7pzNz0iJSmrs9g07QSB0UTZJB0ZtrY7ra7fexbvXRJbYCW8G1h/8jKjF
-         CmX5g1gM9KLgorDDRSvvLft3pqx9ESdoMt05DBS+Vl2Vn+o9MSqOROaTTgrBCt/j5r
-         WTHEiZQXaaOBwh/La/WHteiU06L01I8fs23noqmM=
-Date:   Thu, 7 Mar 2019 16:23:03 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>, atishp04@gmail.com,
-        dancol@google.com, Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Thu, 7 Mar 2019 10:25:39 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35920 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGPZi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 10:25:38 -0500
+Received: by mail-ed1-f66.google.com with SMTP id g9so13793313eds.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:25:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=d4oCP9D61A30YQhDSKeAS0gHpgsh2C8u7srCjP6Vupg=;
+        b=gScKYK/eiNt9bX9fP2HWfvbMQdpaD6on54O61kKCT8N6XvWmrYk6BEorg3NFIPlDJL
+         Pbov/ORT0F1rxiPmRyGdpbPkKL5D6lpKNmA5KyAgXflq7ZNKq5z5JGDZrHleQElAJurn
+         lEpnrweYT1Vd4eQyDIBXzup/NbrjVZX4XJ964LVYEaRPrOrtJC5/T7VT78XOv+1V2LOL
+         U48rESF3pA6Z4i1340rj4LubSAgtl5SNKJRLYvkJHqkZZUMRRulpPdtP7Dn6SDE4d8cn
+         JsSDfITDQJlAMll85DYGg1eqYNe1YPO0dE30MVRoE3mBxEd0OUVrYVVJqAQFCy8eZGx6
+         pM0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d4oCP9D61A30YQhDSKeAS0gHpgsh2C8u7srCjP6Vupg=;
+        b=BDEcRRSBD9CXmmBfGjCBV/lz13+F+AHPCs4KVDH7s1ZmqqmR5gGouY1f9GxrlOEWEf
+         HSt0vBjshmPi5PCTT/kjZ0xx5zgLGUDetSUQocJBg5oaxrb33atWDlOKPSsIEw1cfmjR
+         XA6IETOgVXl3hlMyoUDPyRa2Ie6h1RCojvSi/xQI/oZu9D70ikHSxcf2D2uiC9wPp19X
+         2m58rsEDAXJXLzCqm5VsbN/n6aum4PDRsd5zrAgGF8FTcQ/AUAGFysn8o9GfsHEwhMP1
+         xoFLntFcP/oxdyB4BEBNjTPseDBI7W/JbZLGTOn204xRHPtFVXhFWC7WsibTQnnIibiP
+         6FKA==
+X-Gm-Message-State: APjAAAWXOZl69eU+z9+5kJG5uifHFih74c/nWo3t62i6tLFbVD8FVj0o
+        GYYV5J4brWtG1OIyXfxiEJw=
+X-Google-Smtp-Source: APXvYqwiyqRpa9iPcivYFZcTtv4uiuYwvUClLApNsSSUJc3oQHZG+Vf7cc0rdi5Dm0zNZw2dlt/2+w==
+X-Received: by 2002:a50:b482:: with SMTP id w2mr28837696edd.41.1551972336641;
+        Thu, 07 Mar 2019 07:25:36 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id n25sm1411854edd.83.2019.03.07.07.25.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 07:25:35 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:25:33 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Tony Lindgren <tony@atomide.com>,
         Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>, qais.yousef@arm.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, yhs@fb.com
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190307152303.GA9819@kroah.com>
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
- <20190307150343.GB258852@google.com>
+        Vishal Thanki <vishalthanki@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+Message-ID: <20190307152533.GG20201@archlinux-ryzen>
+References: <20190307101145.636705-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307150343.GB258852@google.com>
+In-Reply-To: <20190307101145.636705-1-arnd@arndb.de>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 10:03:43AM -0500, Joel Fernandes wrote:
-> On Thu, Mar 07, 2019 at 09:58:24AM +0100, Geert Uytterhoeven wrote:
-> > Hi Joel,
-> > 
-> > On Fri, Mar 1, 2019 at 5:10 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > > Introduce in-kernel headers and other artifacts which are made available
-> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > > it possible to build kernel modules, run eBPF programs, and other
-> > > tracing programs that need to extend the kernel for tracing purposes
-> > > without any dependency on the file system having headers and build
-> > > artifacts.
-> > >
-> > > On Android and embedded systems, it is common to switch kernels but not
-> > > have kernel headers available on the file system. Raw kernel headers
-> > > also cannot be copied into the filesystem like they can be on other
-> > > distros, due to licensing and other issues. There's no linux-headers
-> > > package on Android. Further once a different kernel is booted, any
-> > > headers stored on the file system will no longer be useful. By storing
-> > > the headers as a compressed archive within the kernel, we can avoid these
-> > > issues that have been a hindrance for a long time.
-> > >
-> > > The feature is also buildable as a module just in case the user desires
-> > > it not being part of the kernel image. This makes it possible to load
-> > > and unload the headers on demand. A tracing program, or a kernel module
-> > > builder can load the module, do its operations, and then unload the
-> > > module to save kernel memory. The total memory needed is 3.8MB.
-> > >
-> > > The code to read the headers is based on /proc/config.gz code and uses
-> > > the same technique to embed the headers.
-> > >
-> > > To build a module, the below steps have been tested on an x86 machine:
-> > > modprobe kheaders
-> > > rm -rf $HOME/headers
-> > > mkdir -p $HOME/headers
-> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > cd my-kernel-module
-> > > make -C $HOME/headers M=$(pwd) modules
-> > > rmmod kheaders
-> > 
-> > As the usage pattern will be accessing the individual files, what about
-> > implementing a file system that provides read-only access to the internal
-> > kheaders archive?
-> > 
-> >     mount kheaders $HOME/headers -t kheaders
+On Thu, Mar 07, 2019 at 11:11:30AM +0100, Arnd Bergmann wrote:
+> Building with clang shows a variable that is only used by the
+> suspend/resume functions but defined outside of their #ifdef block:
 > 
-> I thought about it already. This is easier said than done though. The archive
-> is compressed from 40MB to 3.6MB. If we leave it uncompressed in RAM, then it
-> will take up the entire 40MB of RAM and in Android we don't even use
-> disk-based swap.
+> sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
 > 
-> So we will need some kind of intra file compressed memory representation that
-> a filesystem can use for the backing store. I thought of RAM-backed squashfs
-> but it requires squashfs-tools to be installed at build time (which my host
-> distro itself didn't have).
+> We commonly fix these by marking the PM functions as __maybe_unused,
+> but here that would grow the davinci_mcasp structure, so instead
+> add another #ifdef here.
 > 
-> It is just so much easier to use tar + xz at build time, and leave the
-> decompression task to the user. After decompression, the files will live on
-> the disk and the page-cache mechanism will free memory when/if the files fall
-> off the LRUs.
-> 
-> WDYT?
+> Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I think the compressed tarball is much simpler/easier overall.  If
-someone really wants the filesystem, they just uncompress it into a
-tmpfs mount.  It's much less moving kernel code to worry about.
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-thanks,
-
-greg k-h
+> ---
+>  sound/soc/ti/davinci-mcasp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+> index a3a67a8f0f54..9fbc759fdefe 100644
+> --- a/sound/soc/ti/davinci-mcasp.c
+> +++ b/sound/soc/ti/davinci-mcasp.c
+> @@ -45,6 +45,7 @@
+>  
+>  #define MCASP_MAX_AFIFO_DEPTH	64
+>  
+> +#ifdef CONFIG_PM
+>  static u32 context_regs[] = {
+>  	DAVINCI_MCASP_TXFMCTL_REG,
+>  	DAVINCI_MCASP_RXFMCTL_REG,
+> @@ -68,6 +69,7 @@ struct davinci_mcasp_context {
+>  	u32	*xrsr_regs; /* for serializer configuration */
+>  	bool	pm_state;
+>  };
+> +#endif
+>  
+>  struct davinci_mcasp_ruledata {
+>  	struct davinci_mcasp *mcasp;
+> -- 
+> 2.20.0
+> 
