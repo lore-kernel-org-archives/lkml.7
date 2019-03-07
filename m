@@ -2,102 +2,112 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8A7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD0BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A663920851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673AF20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:41:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXR7LlF+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfCGSlE (ORCPT
+        id S1726585AbfCGSls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:41:04 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32637 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726268AbfCGSlB (ORCPT
+        Thu, 7 Mar 2019 13:41:48 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44247 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfCGSls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:41:01 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27IV7Gj025996;
-        Thu, 7 Mar 2019 19:40:51 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r2ng26gum-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 07 Mar 2019 19:40:51 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A43A831;
-        Thu,  7 Mar 2019 18:40:50 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8C0365832;
-        Thu,  7 Mar 2019 18:40:50 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019
- 19:40:50 +0100
-Received: from localhost (10.129.4.33) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019 19:40:49 +0100
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3 2/2] irqchip: stm32: don't set rising configuration registers at init
-Date:   Thu, 7 Mar 2019 19:40:36 +0100
-Message-ID: <1551984036-23027-3-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551984036-23027-1-git-send-email-fabien.dessenne@st.com>
-References: <1551984036-23027-1-git-send-email-fabien.dessenne@st.com>
+        Thu, 7 Mar 2019 13:41:48 -0500
+Received: by mail-ed1-f66.google.com with SMTP id b20so14320160edw.11;
+        Thu, 07 Mar 2019 10:41:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3eGWZ91k0O89tXU3fGBURUnf8Nm4L6rvytseCpGbqT4=;
+        b=AXR7LlF+e2FMBRmIm8Vskckt6UiHHa35tDn5uWYi8v4AO5kIjGuAsB13URpSn54YA1
+         f2TXSPCx6hpdYQXTSWDALQUqo54xa4aad3xoEeyDB7rHtwusdPPmVZVaTa3BtIeVbFNm
+         K1wGOKqq6IpNgzMqthWywPqNLdEpK6tzS6R3AUvkrlWl94Kz1myHycWzUgMFEpn/p1uO
+         L2RxzJ+76ApJfKl9sUqqlGR/hVdMENsDTEeI0VZl5GfNslwrX+fICYVFluKdInH5Yile
+         WoOJEG5esd1+BiGueEuRcJXQWhVgbetD0fGU1MDvGnYhQyYzhngzapm/SwJyeLeT4k0A
+         bK0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3eGWZ91k0O89tXU3fGBURUnf8Nm4L6rvytseCpGbqT4=;
+        b=t8wNpPogKC2n0fYeua3QsmFAdL/VDKjSarVQNydoU5dV5ajDNaPHWtlp7dPyTtuBlY
+         XouAIL2EcvtpH8buET+uC/AuY1jTurY7YKKOlTGl3RAAksgJaVwQvJjE8shJhkqiaoCF
+         oUMjwLFyjZLpsGw9klW9rCe+AzO+g4ueh/p0wJ2ld9JoS0xUDalpbKvQXLYjISjhIKq1
+         kdXwjb/ub9CsnKvidLkRsXOakw/rnysCtnSicVf/DXZ43XvkdoKsLJOJpF9VKfzdApv/
+         AIqZsaPVqOBSkRWcGlGkOGE/F2kSck33NV0aPTZ5SlQswlKK+oDHBcws3MXrodp4+roQ
+         /I8Q==
+X-Gm-Message-State: APjAAAVGQTxAQsr4Agnu8GAqC/x3LOMoLhnkU3oYbPh6kOqK7vfd2ibf
+        KUtKX23GibQyjjtY93oTH1I=
+X-Google-Smtp-Source: APXvYqzowx45WsXwJIYTPmJW1snIJjo9ZPNQZtk4FUSw6JuTgIkkwAGhXeS3920MSQHXdDZs9DhGuw==
+X-Received: by 2002:a50:978e:: with SMTP id e14mr27926732edb.234.1551984105890;
+        Thu, 07 Mar 2019 10:41:45 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id x34sm1555565edm.70.2019.03.07.10.41.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 10:41:45 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     QLogic-Storage-Upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] scsi: qla4xxx: Don't call dma_free_coherent without dma_alloc_coherent
+Date:   Thu,  7 Mar 2019 11:41:25 -0700
+Message-Id: <20190307184125.21419-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.129.4.33]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_10:,,
- signatures=0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rising configuration status register (rtsr) is not banked.
-As it is shared with the co-processor, it should not be written at probe
-time, else the co-processor configuration will be lost.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Fixes: f9fc1745501e ("irqchip/stm32: Add host and driver data structures")
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+drivers/scsi/qla4xxx/ql4_os.c:5915:7: warning: variable 'buf_dma' is
+used uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
+
+buf_dma is initialized by dma_alloc_coherent, which is only called in
+the middle conditional statement. Use that same conditional to call
+dma_free_coherent so that buf_dma is always initialized when used.
+
+Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
+Link: https://github.com/ClangBuiltLinux/linux/issues/391
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/irqchip/irq-stm32-exti.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index dab37fb..6b19bff 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -716,7 +716,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 	const struct stm32_exti_bank *stm32_bank;
- 	struct stm32_exti_chip_data *chip_data;
- 	void __iomem *base = h_data->base;
--	u32 irqs_mask;
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 16a18d5d856f..88bb52456efd 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -5982,7 +5982,8 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
+ 			  ddb_index[1]));
  
- 	stm32_bank = h_data->drv_data->exti_banks[bank_idx];
- 	chip_data = &h_data->chips_data[bank_idx];
-@@ -725,10 +724,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 
- 	raw_spin_lock_init(&chip_data->rlock);
- 
--	/* Determine number of irqs supported */
--	writel_relaxed(~0UL, base + stm32_bank->rtsr_ofst);
--	irqs_mask = readl_relaxed(base + stm32_bank->rtsr_ofst);
--
- 	/*
- 	 * This IP has no reset, so after hot reboot we should
- 	 * clear registers to avoid residue
+ exit_boot_info_free:
+-	dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
++	if (is_qla80XX(ha))
++		dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
+ exit_boot_info:
+ 	ha->pri_ddb_idx = ddb_index[0];
+ 	ha->sec_ddb_idx = ddb_index[1];
 -- 
-2.7.4
+2.21.0
 
