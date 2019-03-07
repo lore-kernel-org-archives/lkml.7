@@ -2,150 +2,89 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6BEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FC0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE1C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7FB20854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980817;
-	bh=+dGAeyqN/+g+kHvUcbqgVrXgiMzZtCztop45pUegvkA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=atvKD2WrbS1sSiYVzASaJy4wDKedXAdr8y6jCxZbvXCnZvDhIyFev/lLJXNn23iou
-	 dUhEjp5bMQA0Ynr6xBWdI8CychGCES60tvfRfdZVUDZ64tQpWWjz2cliDtUhOE+KR7
-	 LYGcAeTl4ZbQOiuzkIVlK7F2JSTriVwSwVbeEktU=
+	s=default; t=1551980819;
+	bh=1RSAAoDl+MfB8HGRc1Opl1CrXXA7wmKimpQdk1qa2rU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1GYriN7yFaL0k8uu2BkfiawwHxEiPZyogTnjp0/+OwwOXwlUP2ZJveyvb9m2TwWen
+	 +0/HFz5bK3RaE1ikOwA+NhQLyzxSBZem7EEF/O+EgZbF4vBaAMeEbtR2Q6WHv9WPzt
+	 6t4ZCq7pFboHMrOlfj26TQs00AO0aHdsmB5EVSe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfCGRq4 (ORCPT
+        id S1726960AbfCGRq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 7 Mar 2019 12:46:57 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:36516 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbfCGRq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Mar 2019 12:46:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfCGRqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:46:55 -0500
-Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B159A2087C;
-        Thu,  7 Mar 2019 17:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551980814;
-        bh=+dGAeyqN/+g+kHvUcbqgVrXgiMzZtCztop45pUegvkA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sM2ax7qo6oT6nLNRDGac5aGbG8L058+HGJCv6LQf+1KbWKHfxIapXtgRp5OxLz/RD
-         1FcBLZ0+UU+JTMVZaqDLHrF3Uj1ObxiF47dLGtWLMUAO4ZtE2uiR3JPxED+fIn4GtY
-         JYpstnFJOpAVbm/S+0BR/+mkvGTNTdOYjr+5Lc5M=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        nageswara r sastry <nasastry@in.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 30/35] perf hist: Add error path into hist_entry__init
-Date:   Thu,  7 Mar 2019 14:44:28 -0300
-Message-Id: <20190307174433.28819-31-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
-References: <20190307174433.28819-1-acme@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 17DE1C139;
+        Thu,  7 Mar 2019 17:46:55 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 09:46:54 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-Id: <20190307094654.35391e0066396b204d133927@linux-foundation.org>
+In-Reply-To: <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+References: <20190129165428.3931-10-jglisse@redhat.com>
+        <CAPcyv4gNtDQf0mHwhZ8g3nX6ShsjA1tx2KLU_ZzTH1Z1AeA_CA@mail.gmail.com>
+        <20190129193123.GF3176@redhat.com>
+        <CAPcyv4gkYTZ-_Et1ZriAcoHwhtPEftOt2LnR_kW+hQM5-0G4HA@mail.gmail.com>
+        <20190129212150.GP3176@redhat.com>
+        <CAPcyv4hZMcJ6r0Pw5aJsx37+YKx4qAY0rV4Ascc9LX6eFY8GJg@mail.gmail.com>
+        <20190130030317.GC10462@redhat.com>
+        <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
+        <20190130183616.GB5061@redhat.com>
+        <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+        <20190131041641.GK5061@redhat.com>
+        <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+        <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+        <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Tue, 5 Mar 2019 20:20:10 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
 
-Adding error path into hist_entry__init to unify error handling, so
-every new member does not need to free everything else.
+> My hesitation would be drastically reduced if there was a plan to
+> avoid dangling unconsumed symbols and functionality. Specifically one
+> or more of the following suggestions:
+> 
+> * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
+> surface for out-of-tree consumers to come grumble at us when we
+> continue to refactor the kernel as we are wont to do.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: nageswara r sastry <nasastry@in.ibm.com>
-Link: http://lkml.kernel.org/r/20190305152536.21035-3-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/hist.c | 39 +++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+The existing patches use EXPORT_SYMBOL() so that's a sticking point. 
+Jerome, what would happen is we made these EXPORT_SYMBOL_GPL()?
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 669f961316f0..74e307d17c49 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -396,11 +396,8 @@ static int hist_entry__init(struct hist_entry *he,
- 		 * adding new entries.  So we need to save a copy.
- 		 */
- 		he->branch_info = malloc(sizeof(*he->branch_info));
--		if (he->branch_info == NULL) {
--			map__zput(he->ms.map);
--			free(he->stat_acc);
--			return -ENOMEM;
--		}
-+		if (he->branch_info == NULL)
-+			goto err;
- 
- 		memcpy(he->branch_info, template->branch_info,
- 		       sizeof(*he->branch_info));
-@@ -419,21 +416,8 @@ static int hist_entry__init(struct hist_entry *he,
- 
- 	if (he->raw_data) {
- 		he->raw_data = memdup(he->raw_data, he->raw_size);
--
--		if (he->raw_data == NULL) {
--			map__put(he->ms.map);
--			if (he->branch_info) {
--				map__put(he->branch_info->from.map);
--				map__put(he->branch_info->to.map);
--				free(he->branch_info);
--			}
--			if (he->mem_info) {
--				map__put(he->mem_info->iaddr.map);
--				map__put(he->mem_info->daddr.map);
--			}
--			free(he->stat_acc);
--			return -ENOMEM;
--		}
-+		if (he->raw_data == NULL)
-+			goto err_infos;
- 	}
- 	INIT_LIST_HEAD(&he->pairs.node);
- 	thread__get(he->thread);
-@@ -444,6 +428,21 @@ static int hist_entry__init(struct hist_entry *he,
- 		he->leaf = true;
- 
- 	return 0;
-+
-+err_infos:
-+	if (he->branch_info) {
-+		map__put(he->branch_info->from.map);
-+		map__put(he->branch_info->to.map);
-+		free(he->branch_info);
-+	}
-+	if (he->mem_info) {
-+		map__put(he->mem_info->iaddr.map);
-+		map__put(he->mem_info->daddr.map);
-+	}
-+err:
-+	map__zput(he->ms.map);
-+	free(he->stat_acc);
-+	return -ENOMEM;
- }
- 
- static void *hist_entry__zalloc(size_t size)
--- 
-2.20.1
+> * A commitment to consume newly exported symbols in the same merge
+> window, or the following merge window. When that goal is missed revert
+> the functionality until such time that it can be consumed, or
+> otherwise abandoned.
 
+It sounds like we can tick this box.
+
+> * No new symbol exports and functionality while existing symbols go unconsumed.
+
+Unsure about this one?
