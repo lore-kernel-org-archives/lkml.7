@@ -2,161 +2,119 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D906C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9A0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2415220840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D654E20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfCGLCe (ORCPT
+        id S1726477AbfCGLDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:02:34 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:51610 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfCGLCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:02:34 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9648880F91;
-        Thu,  7 Mar 2019 11:02:33 +0000 (UTC)
-Received: from krava (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DE6AB1001E70;
-        Thu,  7 Mar 2019 11:02:31 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 12:02:31 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events
- by CPU
-Message-ID: <20190307110231.GB8979@krava>
-References: <20190305144758.12397-1-andi@firstfloor.org>
- <20190305144758.12397-4-andi@firstfloor.org>
- <6d837d6b-da67-9878-dcc5-a2b0f2dc6826@intel.com>
+        Thu, 7 Mar 2019 06:03:03 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43862 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfCGLDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 06:03:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F15E0EBD;
+        Thu,  7 Mar 2019 03:03:01 -0800 (PST)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52B823F706;
+        Thu,  7 Mar 2019 03:03:00 -0800 (PST)
+Date:   Thu, 7 Mar 2019 11:02:58 +0000
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
+ frequency on global turbo changes
+Message-ID: <20190307110256.padefvq4e52ly3nm@queper01-lin>
+References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
+ <20190305104256.7kvedlttuovmptpc@queper01-lin>
+ <2336151.IZk3Z8DVvP@aspire.rjw.lan>
+ <6357319.Iupbu3ldGQ@aspire.rjw.lan>
+ <20190305114406.GV32494@hirez.programming.kicks-ass.net>
+ <20190305120040.y2vmnxrch6kgya3e@queper01-lin>
+ <CAJZ5v0hYU763Jx0Ku0HsNMd261z7E0PhZ88_PH6MT=OLYYUAaQ@mail.gmail.com>
+ <20190305173746.p32xolcpueudlzwn@queper01-lin>
+ <CAJZ5v0jJxMw6_6Ep=fee8VGEbqpFKQtA2kX5t1scNwX3GhaTTg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6d837d6b-da67-9878-dcc5-a2b0f2dc6826@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 07 Mar 2019 11:02:33 +0000 (UTC)
+In-Reply-To: <CAJZ5v0jJxMw6_6Ep=fee8VGEbqpFKQtA2kX5t1scNwX3GhaTTg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 04:23:40PM +0200, Adrian Hunter wrote:
-> On 5/03/19 4:47 PM, Andi Kleen wrote:
-> > From: Andi Kleen <ak@linux.intel.com>
-> > 
-> > The --cpu option only filtered samples. Filter other perf events,
-> > such as COMM, FORK, SWITCH by the CPU too.
-> 
-> Because tasks can migrate from cpu to cpu, we probably need to process most
-> of the events anyway, even if they are not printed.
+Hi Rafael,
 
-agreed, I wonder we could just make the perf_event__fprintf conditional
-
-jirka
-
+On Wednesday 06 Mar 2019 at 11:05:47 (+0100), Rafael J. Wysocki wrote:
+> Please recall that the iowait boosting algo was different to start
+> with, though: it jumped to the max right away and then backed off.
+> That turned out to be overly aggressive in general and led to some
+> undesired "jittery" behavior, which is why it was changed.
 > 
-> > 
-> > Reported-by: Jiri Olsa <jolsa@kernel.org>
-> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> > ---
-> >  tools/perf/builtin-script.c | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index fbc440bdf880..3813f60d1dc0 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -2038,6 +2038,9 @@ static int process_comm_event(struct perf_tool *tool,
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  	int ret = -1;
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
-> >  	if (thread == NULL) {
-> >  		pr_debug("problem processing COMM event, skipping it.\n");
-> > @@ -2073,6 +2076,9 @@ static int process_namespaces_event(struct perf_tool *tool,
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  	int ret = -1;
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	thread = machine__findnew_thread(machine, event->namespaces.pid,
-> >  					 event->namespaces.tid);
-> >  	if (thread == NULL) {
-> > @@ -2108,6 +2114,9 @@ static int process_fork_event(struct perf_tool *tool,
-> >  	struct perf_session *session = script->session;
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	if (perf_event__process_fork(tool, event, sample, machine) < 0)
-> >  		return -1;
-> >  
-> > @@ -2141,6 +2150,9 @@ static int process_exit_event(struct perf_tool *tool,
-> >  	struct perf_session *session = script->session;
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
-> >  	if (thread == NULL) {
-> >  		pr_debug("problem processing EXIT event, skipping it.\n");
-> > @@ -2174,6 +2186,9 @@ static int process_mmap_event(struct perf_tool *tool,
-> >  	struct perf_session *session = script->session;
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
-> >  		return -1;
-> >  
-> > @@ -2206,6 +2221,9 @@ static int process_mmap2_event(struct perf_tool *tool,
-> >  	struct perf_session *session = script->session;
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
-> >  		return -1;
-> >  
-> > @@ -2238,6 +2256,9 @@ static int process_switch_event(struct perf_tool *tool,
-> >  	struct perf_session *session = script->session;
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	if (perf_event__process_switch(tool, event, sample, machine) < 0)
-> >  		return -1;
-> >  
-> > @@ -2266,6 +2287,9 @@ process_lost_event(struct perf_tool *tool,
-> >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-> >  	struct thread *thread;
-> >  
-> > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-> > +		return 0;
-> > +
-> >  	thread = machine__findnew_thread(machine, sample->pid,
-> >  					 sample->tid);
-> >  	if (thread == NULL)
-> > 
-> 
+> Thus it looks like the platforms on which it still jumps to the max
+> right away may actually benefit from changing it to more steps. :-)
+
+On the energy side of things at least ... ;-)
+
+> In turn, the platforms where it takes more than 3 steps for the boost
+> to get to the max would get a slight performance improvement from this
+> changes and I'm not sure why that could be bad.
+
+For energy possibly ? IIUC this thread:
+
+    https://patchwork.kernel.org/patch/9735885/
+
+the original intent of the ramp thing for the iowait boost was to reduce
+power consumption.
+
+> Moreover, it didn't depend on the min originally, just on the max and
+> just because I wanted the number of backoff steps needed to go back
+> down to zero to be independent of the platform IIRC.  The dependency
+> on the min is sort of artificial here and leads to arbitrary
+> differences in behavior between different platforms which isn't
+> particularly fortunate.
+
+It's a question of perspective I would say. Right now you can say the
+behaviour is somewhat coherent across platforms: getting an IOWAIT boost
+means you'll run twice as fast regardless of your board. With the '128
+approach', you may or may not run faster, depending on your set of OPPs.
+
+Also on recent big little SoCs, the capacity ratio can be pretty high.
+You can get little CPUs with 300 of capacity or so. The arbitrary 128
+thing is basically gonna go near max freq in one step, although the CPUs
+actually 20 available OPPs or so. And I guess that's a shame.
+
+For these reasons, I feel like it's not completely idiotic to have a
+platform-dependent starting point, although arguably min_freq might not
+always be the best choice.
+
+> With all of that in mind, I would go right away to making the boost
+> independent of min and max (the final number of steps to reach the max
+> is TBD in practice, but 3 looks like a good enough compromise to me).
+
+Perhaps the energy model could help find a good starting point, and a
+good number of steps ?
+
+FWIW there should be a slot at OSPM to discuss how sugov could be made
+smarter using the EM :-).
+
+> FWIW, the internal governor in intel_pstate has been changed along
+> these lines already (the changes is waiting for Linus to pull it ATM).
+
+Thanks,
+Quentin
