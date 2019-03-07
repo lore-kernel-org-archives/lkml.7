@@ -2,101 +2,142 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24BBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6637C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817962063F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FFF2063F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ago94CZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfCGRhg (ORCPT
+        id S1726410AbfCGRiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:37:36 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39033 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbfCGRhf (ORCPT
+        Thu, 7 Mar 2019 12:38:19 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42553 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfCGRiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:37:35 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HVsWa025809;
-        Thu, 7 Mar 2019 18:37:21 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhkngckf-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 07 Mar 2019 18:37:21 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DDCDC31;
-        Thu,  7 Mar 2019 17:37:20 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C873D5698;
-        Thu,  7 Mar 2019 17:37:20 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019
- 18:37:20 +0100
-Received: from localhost (10.129.4.33) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019 18:37:20 +0100
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 2/2] irqchip: stm32: don't set rising configuration registers at init
-Date:   Thu, 7 Mar 2019 18:36:51 +0100
-Message-ID: <1551980211-9709-3-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551980211-9709-1-git-send-email-fabien.dessenne@st.com>
-References: <1551980211-9709-1-git-send-email-fabien.dessenne@st.com>
+        Thu, 7 Mar 2019 12:38:19 -0500
+Received: by mail-ed1-f68.google.com with SMTP id j89so14175362edb.9;
+        Thu, 07 Mar 2019 09:38:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pYDdORtI49zbFv1HqxWCX32wqb6wh+6jCM2eUFdE2lM=;
+        b=ago94CZuJLIrJXpXcbli2DSvDbViS5xrLxDWs229kYca99FVeMEke7S/U1ZPGPlNg3
+         k4323GFsMLnOBQfMqQZOgvad/YFF5LqCzbwe8kDSN/GSGV7hpO2wpeXp3Ia7wRtz9/Uy
+         CQE2Ug1X6JEuXWA888zoEusStuOPs9wDZ3D7LTBqAUUBoxQ+wuPNGzbOLSjXfxcraJ+Z
+         3zxaLrPcaUSUYedeT51lsmIZBV3SVbTM1RkLG7bqjzThjyExZebSlbJ/nv/qk+GbeWJ1
+         T6WYM4Sb9hDOsl5WavHSQXtywIKGT6ij90BGj3jtMOd0PbJl+J51ccVh8tfOGiXMH4Qq
+         kQLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pYDdORtI49zbFv1HqxWCX32wqb6wh+6jCM2eUFdE2lM=;
+        b=YqmpvHquSpILRcViaFX7sLjlBpdkEu9KL6YP8WZPAbPWCPvd1SUY4AXXTpg0OgjwMu
+         4oelzVsbiuTx3Q7nTsX63ujHm1QeHIjV3OKkIk8tKU71HiDD1uEYdQsQkUYLGirQvKt0
+         jyGdNzlLyeE2mP7lkdv2g/el8jnJbaHJIBXSQ+HKKZS0jQyKV5suJ1HRDxNghnHcFq70
+         EOTWo9Cx4mZItAwO0gb/8Nh+TDEOEBmo9UnoMIbQ0hyXcMzPdI/ZmzmfGyFC8BMc9n1k
+         GD6B7Ofhz/jsTfOYMx8fjZT48u2vPgsNT6OfYrkfdk/8CZHyg2Z28W72okI1fIJvjmX7
+         Vxow==
+X-Gm-Message-State: APjAAAVQm/dvJg4DvlDOp32EqJyLygtwG8IKh/w6XT8p3q2752hNWVqB
+        zT0jdtwstmAtjTZM8eUGUt5ysM2Z4izmdg==
+X-Google-Smtp-Source: APXvYqwfQaJoZazjdCNEPGvA9lcW9B+570wcFvuwnsRkM0H4B9pgAjmIo7qKhcIciV5sR9bZcYk2pg==
+X-Received: by 2002:a50:a5f4:: with SMTP id b49mr28958736edc.23.1551980296785;
+        Thu, 07 Mar 2019 09:38:16 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id x36sm1505073eda.94.2019.03.07.09.38.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 09:38:16 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ACPI / sysfs: Restructure get_status
+Date:   Thu,  7 Mar 2019 10:38:02 -0700
+Message-Id: <20190307173802.3448-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.129.4.33]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_09:,,
- signatures=0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rising configuration status register (rtsr) is not banked.
-As it is shared with the co-processor, it should not be written at probe
-time, else the co-processor configuration will be lost.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+drivers/acpi/sysfs.c:667:13: warning: variable 'result' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+
+Clang can't determine that all cases are covered by the two separate if
+statements. We could combine then to look like this:
+
+    int result;
+
+    if (...) {
+        ...
+    } else if {
+        ...
+    } else {
+        result -EINVAL;
+    }
+
+    return result;
+
+However, at that point, we can further simplify this function by only
+using result when absolutely needed and just direct returning the value
+of the function.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/388
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/irqchip/irq-stm32-exti.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/acpi/sysfs.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index dab37fb..6b19bff 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -716,7 +716,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 	const struct stm32_exti_bank *stm32_bank;
- 	struct stm32_exti_chip_data *chip_data;
- 	void __iomem *base = h_data->base;
--	u32 irqs_mask;
- 
- 	stm32_bank = h_data->drv_data->exti_banks[bank_idx];
- 	chip_data = &h_data->chips_data[bank_idx];
-@@ -725,10 +724,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 
- 	raw_spin_lock_init(&chip_data->rlock);
- 
--	/* Determine number of irqs supported */
--	writel_relaxed(~0UL, base + stm32_bank->rtsr_ofst);
--	irqs_mask = readl_relaxed(base + stm32_bank->rtsr_ofst);
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index 41324f0b1bee..6ed785cadad9 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -651,23 +651,18 @@ static void acpi_global_event_handler(u32 event_type, acpi_handle device,
+ static int get_status(u32 index, acpi_event_status *status,
+ 		      acpi_handle *handle)
+ {
+-	int result;
 -
- 	/*
- 	 * This IP has no reset, so after hot reboot we should
- 	 * clear registers to avoid residue
+-	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
+-		return -EINVAL;
+-
+ 	if (index < num_gpes) {
+-		result = acpi_get_gpe_device(index, handle);
++		int result = acpi_get_gpe_device(index, handle);
+ 		if (result) {
+ 			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
+ 					"Invalid GPE 0x%x", index));
+ 			return result;
+ 		}
+-		result = acpi_get_gpe_status(*handle, index, status);
++		return acpi_get_gpe_status(*handle, index, status);
+ 	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
+-		result = acpi_get_event_status(index - num_gpes, status);
++		return acpi_get_event_status(index - num_gpes, status);
+ 
+-	return result;
++	return -EINVAL;
+ }
+ 
+ static ssize_t counter_show(struct kobject *kobj,
 -- 
-2.7.4
+2.21.0
 
