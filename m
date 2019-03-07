@@ -2,135 +2,110 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FBAC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D471C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D753E20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="ojceyxaP"
+	by mail.kernel.org (Postfix) with ESMTP id 1F7E820840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfCGWOR (ORCPT
+        id S1726293AbfCGWP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:14:17 -0500
-Received: from vulcan.natalenko.name ([104.207.131.136]:17934 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGWOR (ORCPT
+        Thu, 7 Mar 2019 17:15:59 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:39767 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGWP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:14:17 -0500
-X-Greylist: delayed 568 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Mar 2019 17:14:15 EST
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id DECA84F4FAE;
-        Thu,  7 Mar 2019 23:04:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1551996285;
-        h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Dh1v6nRRoPDMR08JHSiAFiJ7kRk4SEnXotOw9B/r+Y=;
-        b=ojceyxaPPC8ineATAXPfrZ9B1kXAFrn8yFnASj89Io/HBa9KViEy4IVnrVOrCqDxgfICRP
-        i2Rh4LSoG9DUGGeDpnnV4DMN/0QfwgkB4MAfGBH19VqiVIWWCq9nxJlEYMFlzvkX/8v9xp
-        +elDdB295jZT5G6i00G4uNYD9Jsj3fY=
+        Thu, 7 Mar 2019 17:15:59 -0500
+Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mhnnc-1gX4CG0lea-00dryB; Thu, 07 Mar 2019 23:11:28 +0100
+Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
+ kernel
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Pavel Machek <pavel@ucw.cz>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atish patra <atishp04@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kara <jack@suse.cz>, Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        yhs@fb.com
+References: <20190119232503.GA149403@google.com>
+ <78AACAF1-8EBF-4DF3-BE94-5B14E78BA791@zytor.com>
+ <20190120155838.GA23827@google.com> <20190306230944.GB7915@amd>
+ <CAKOZuetOePf89cXRkvmWeGnvG7zYN=SW1yyrZibuyOqZQFTGkg@mail.gmail.com>
+ <754146f0-8b57-8644-81c1-528b5ca7dba1@zytor.com>
+ <CAKOZuesjYZ2EH=BHBAJAFFaTOHjWU7BELJUV3QC9cjXVB2HhUw@mail.gmail.com>
+ <0c46ab5f-8bd6-6916-fc4a-b6f00d456011@metux.net>
+ <CAKOZuevksKGAPif_pUYVzFpbuBCxOZ5WzT6ukLCYm4TzyLUTMw@mail.gmail.com>
+ <5ebec282-57b0-6ebe-0876-ce0dd7b0c11c@metux.net>
+ <20190307205505.GB30028@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <5e558126-9038-1ca5-4519-7b5864ca9fa1@metux.net>
+Date:   Thu, 7 Mar 2019 23:11:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190307205505.GB30028@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 07 Mar 2019 23:04:45 +0100
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, broonie@kernel.org,
-        bfq-iosched@googlegroups.com, fra.fra.800@gmail.com
-Subject: Re: [PATCH BUGFIX IMPROVEMENT 0/8] block, bfq: fix bugs, reduce exec
- time and boost performance
-In-Reply-To: <20190307162554.77205-1-paolo.valente@linaro.org>
-References: <20190307162554.77205-1-paolo.valente@linaro.org>
-Message-ID: <44c14c771a77db13289bd99d2fc0d029@natalenko.name>
-X-Sender: oleksandr@natalenko.name
-User-Agent: Roundcube Webmail/1.3.8
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=arc-20170712; t=1551996285;
-        h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Dh1v6nRRoPDMR08JHSiAFiJ7kRk4SEnXotOw9B/r+Y=;
-        b=P2BGJxoJ8bURWBijItkeqU9zLkJV4VYfI4goLHneNBgRaZ//23iIkt+Q/3C0uCSz69AjUQ
-        LXerPGWYtBp93ycaHOgSugelIFwxZRy474quP8jpu8cWbFjEGcfQz2GTucBAmuh4N2aodP
-        XwYcmiGwqhDGQupyZTH+n0AeBAC8ccQ=
-ARC-Seal: i=1; s=arc-20170712; d=natalenko.name; t=1551996286; a=rsa-sha256;
-        cv=none;
-        b=PdQEbygoHNRe0+vd6A0oM6azJ93L4vJu/9b4CpAZIFX+ZWCv2iorLPyS7vcAdeWLcnRo1g
-        70OQRZ1CUhThlkXaqT+VB6uXT6TXWzluGRNdD0vBskAEWklYg4QbnMX5MpVspy6JUT/N9U
-        dvfeU3fpTo1cJo68PpvXBkaDwx8uRbU=
-ARC-Authentication-Results: i=1;
-        vulcan.natalenko.name;
-        auth=pass smtp.auth=oleksandr@natalenko.name smtp.mailfrom=oleksandr@natalenko.name
+X-Provags-ID: V03:K1:uNHDc1vwsilvfnytZZnjZFhbo4iFIljuaLhsiywyHRse+80WyM/
+ GnHSLC3p+pyS0Y+KVzPihft8B0zjDsqIl4K8S2WQKujpbBBUejz/ZcWcCkdGs+Enrm7rGv8
+ 1Nh92C0QcQDhiU2gtnl7lweLMH+jkRb5qGg0lo5NVtIqEncLBEfXBz11YYV9KFChfkFeGS6
+ 2titgnjdKx5r3HAPOqQlw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kfCuygT8KeE=:roVvJS4UdsEyGwhMLrOlRd
+ 2FamOXbZvtvugZFhyFsSBEhT00sh9MgzJNxhLZoKM+WGMYkc6VCGUetfafElfybAvWvFiwibj
+ QHjaEvb3GGuabd7+hrsUJvP9XZC9HCwaJJ0Mn/gGOVVMeF4pzry0gTSJoTtUb02VLqqcf3vyA
+ DckiN4rV3XNfOvHzXsxAAX+UAUJgRM+MAF6voqhgN2iH4agHil0DQ2IMojjViTN+Orw0CJGsO
+ mvTKGkNauJ+AZPXvzZ+wNvU4l7gqbP5ufmUNePYZ2+jHWUrEyTfPGhLRN8/iipRXgQIuC6/Yg
+ h/2TlY37C17y7a9JccaJvXhqznHJZudBPQvi3bHfUqVUIS9XSEIlPsfeoDr6iUvsPRQsiay4J
+ gUPE+7x4f3LMHI7QJ3q5E0H39x1x8Fno1OwnJUSVb1Td0eF7J79QPQKk5aEyJDD+fFf2fXvEb
+ qnXlZDNyEjK4WKMAdpZA7ztX0/T3yDLcw+MjhhEHnD0ccXXBmksJ9aSdRBmmcP80r+Z1p2IPV
+ SNe5Iun6B+ZoYve1fHVacyOLJjO1ii+LnQ+On5DSfD6Zhz8jCrt6KU+JLihrwJAj+UzW3sbcn
+ rqLD3RfXWdeV5BhL8H/E2qeEkoJ2N7JAfALKmZXNnsjb1o5qEjsn/pLhJmKKswnUadRKtGTqm
+ C5Gqq9W6kwtlyfVwCKGvwJH6EI4xQzQsurRUgqArS5Nmo+qhQIGMKX0KhiX8Jfrpqr7U9pZck
+ gsUtK3ehX066ALq85L0FGGXqj8ZAZG9pSuL4TrAC0HglFNSZizQpzEaBExEd/6pT6snuql4xd
+ zHFlHwmv4TbwbPISDHSQ39C+YUywuMQ0T0218X5C2VmK3vyt8Yw7eKhJo3oYN8uz91FhkDd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On 07.03.19 21:55, Greg KH wrote:
 
-On 07.03.2019 17:25, Paolo Valente wrote:
-> since I didn't make it to submit these ones for 5.1, let me be
-> early for 5.2 :)
-> 
-> These patches fix some bug affecting performance, reduce execution
-> time a little bit, and boost throughput and responsiveness.
-> 
-> They are meant to be applied on top of the last series I submitted:
-> https://lkml.org/lkml/2019/1/29/368
-> 
-> Thanks,
-> Paolo
-> 
-> Francesco Pollicino (2):
->   block, bfq: print SHARED instead of pid for shared queues in logs
->   block, bfq: save & resume weight on a queue merge/split
-> 
-> Paolo Valente (6):
->   block, bfq: increase idling for weight-raised queues
->   block, bfq: do not idle for lowest-weight queues
->   block, bfq: tune service injection basing on request service times
->   block, bfq: do not merge queues on flash storage with queueing
->   block, bfq: do not tag totally seeky queues as soft rt
->   block, bfq: always protect newly-created queues from existing active
->     queues
-> 
->  block/bfq-cgroup.c  |   3 +-
->  block/bfq-iosched.c | 786 ++++++++++++++++++++++++++++++++++++--------
->  block/bfq-iosched.h |  87 +++--
->  block/bfq-wf2q.c    |   2 +-
->  4 files changed, 704 insertions(+), 174 deletions(-)
-> 
-> --
-> 2.20.1
+> Ick, no, no more squashfs please, let's just kill that mess once and for
+> all :)
 
-Fails for me with:
+okay, then: s/squashfs/whatever_fs_image_or_archive_you_like/;
 
-===
-[11966s] ld: block/bfq-wf2q.o: in function `bfq_pid_to_str':
-[11966s] bfq-wf2q.c:(.text+0x3b0): multiple definition of 
-`bfq_pid_to_str'; block/bfq-iosched.o:bfq-iosched.c:(.text+0x1ab0): 
-first defined here
-[11966s] ld: block/bfq-cgroup.o: in function `bfq_pid_to_str':
-[11966s] bfq-cgroup.c:(.text+0x3a0): multiple definition of 
-`bfq_pid_to_str'; block/bfq-iosched.o:bfq-iosched.c:(.text+0x1ab0): 
-first defined here
-[11966s] make: *** [Makefile:1021: vmlinux] Error 1
-===
+> Again, putting this in a simple compressed tar image allows anyone to do
+> whatever they need to with this.  If they want a full filesystem,
+> uncompress it and use it there.  If they just want it in-memory where
+> they can uncompress it and then discard it, that works too.
+
+And let me stress the point: doesn't need any kernel changes at all,
+when it's just a file in the same place where the .ko's live.
+
+
+--mtx
 
 -- 
-   Oleksandr Natalenko (post-factum)
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
