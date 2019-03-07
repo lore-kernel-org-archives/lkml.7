@@ -6,65 +6,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43ABC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FE9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD5320675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3781E20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551993153;
-	bh=lWvqODGdP87wTZvAsqmzfS3PcmF6+NyDEQKCiFwZ5J4=;
+	s=default; t=1551993156;
+	bh=zujU5fYXV+gjmHGybhIXUolVWDUY+sSFZNFEunm/D9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qUyYQSN94WjidAHvS9fv6/TZhXxzTTcfkqHXgMk1rPLjjJF+PAxx1ELML86Wpb2f
-	 rVIUT3asktPuQTZc+sA1/NnU4eT3BEYGYiEw67Z9sDcfBff63Bq1bUeLGFsx41o9Lu
-	 ImcQI9fDbuEufTsL8IL0zfcxyMmHn0kFiBiq9/eQ=
+	b=xiYV2L4ZYdqlrLR+m7x7zVSM03i4g2djAxDCiANOzgev8O1ToNacQG+aRkidu/vwF
+	 ZCvtmPD8YSptNjeS1iIL2WWbHhM6o+LTDBkN8s+cHGkicnrYUeYvv0mO4z3Wn3ySBY
+	 X5rdQgEwOKVJo/GmXKjqwguS2dxbO/F+axMC+Mn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfCGVMc (ORCPT
+        id S1726379AbfCGVMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 16:12:32 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:44645 "EHLO
+        Thu, 7 Mar 2019 16:12:35 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:56667 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726224AbfCGVM2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726186AbfCGVMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 16:12:28 -0500
+        Thu, 7 Mar 2019 16:12:30 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 53DC33556;
-        Thu,  7 Mar 2019 16:12:27 -0500 (EST)
+        by mailout.west.internal (Postfix) with ESMTP id A49923026;
+        Thu,  7 Mar 2019 16:12:29 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:27 -0500
+  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=yul0rYWeVhXSUyknp6WDYiMWC3yNoiMnSNHOntK0nOk=; b=oIuCYf/N
-        ywjtUo/yYXybjx5Xck/KGBVQTB+RJbpZU7+TsLXDyaye9o1AiksThpw7dCeKkjr0
-        jPsOm8PRNoJz5wwEPuZ1ZwND/afFKYHDqMhEE60kz2wMyGhfQJzenAYGD9cWh5Gt
-        TUNO1jrL7i9GBr5DrUxQSauXuH0C8FoVVuue1Yp9Xf5hyxWqD9pT18HAAWfusjC7
-        KylPw/F9YgBdAuQj2bfmh3S0doSkV/1iHnOqre3ZtBcwwaJUC2httorn7ajsfcCs
-        sMO/fsY4YfwnEsnGPQO94Gzjc1S4V5Le4eaxVHJqDiqpmmbFJ11npSAfAmFSJ3D5
-        v9P6m5DDmGVA1g==
-X-ME-Sender: <xms:OomBXDTQ2vBlcDskgBgggoeqehhdGjdggCTOhz_JyjMPlbDCr-Ay7A>
+        fm2; bh=YZGcEdzI6yFT9z5i+ij7BvlkOK4yLoKhr9sL8DhOvvM=; b=zP387wsQ
+        iwB2Pj5oNg4P6RbCtq6r2w3NDmqeULhnnolFNcYtIWP22H+68MFMErEqoAzOhQfe
+        PU3ZdOBcUKlcTMvUSrbGn0ajR83uGSGq9Pg+XlpazZ5CctYqDzA/rqPiONMg4gi+
+        DvXhH4rcbFr7u2VN/WSqKOl+VcpoQtVaaz8Iw1d70KjyB84rQ9WYU0t2lP8S+q0b
+        4KBVRBNauzx/JSwYzOZv5uJ/Lz0uQC3kHnpEuRI6L/GiXyX6A1nHJyiLd3jSD27w
+        aP76+1I5KyPOB760UbCXNonfUEpqDkEWt6Iqv9JbviVzDj2XzQwrd62rix+rXg2V
+        rKWSqAGUhcDUNw==
+X-ME-Sender: <xms:PYmBXBFhPuCrzCMwXbGZteFZWegAOd3RXVMls0WRaMEIRYyUlyHqrQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeekgdduhedtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghi
     nhcuvedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecukf
     hppeduvdegrdduieelrdehrdduheeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:OomBXF0V2hMk8rnK4kAvlvNFCpP3hCr_2ChwkoaxwZCZOzus3DEWiw>
-    <xmx:OomBXLx7UPFB_X2Ysfhv75xwNvOL0-QrfWtkRprA18agbr-FSjehzg>
-    <xmx:OomBXAvdmXqexAWzJTebQggklkbcwhBvvhW_B3-3XWNVrMs-qSABLQ>
-    <xmx:OomBXObFgbgi7eMRHiXcjX5b2jFUS24CDTmxcJ9SfT5rrGoMlTY8TQ>
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:PYmBXP-m0D-XZyOkDc56yxfNzModXOe8ExFymCxCnfwlFX3CBtR9Lw>
+    <xmx:PYmBXPxhdRqI-wPYcYu6w6V72ml7-ZTDYi77pqA4CVVu1KophXGrAQ>
+    <xmx:PYmBXHuYZbWSLZYIhwUX4q6d86AhK5-Mpa1ahlwzF31zgOxcAadaAQ>
+    <xmx:PYmBXAAxC7XOLToOYXp0bJGXr7aItOFh0NfzUugHplvSFog7N2graw>
 Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E70BE10310;
-        Thu,  7 Mar 2019 16:12:24 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4F77E10331;
+        Thu,  7 Mar 2019 16:12:26 -0500 (EST)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] docs: Add colon clearing sphinx warning
-Date:   Fri,  8 Mar 2019 08:11:46 +1100
-Message-Id: <20190307211153.28400-3-tobin@kernel.org>
+Subject: [PATCH 3/9] docs: Remove unnecessary reference link title
+Date:   Fri,  8 Mar 2019 08:11:47 +1100
+Message-Id: <20190307211153.28400-4-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190307211153.28400-1-tobin@kernel.org>
 References: <20190307211153.28400-1-tobin@kernel.org>
@@ -75,48 +75,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx emits various warnings all caused by missing colons before code
-blocks:
+Labels that precede a heading use the heading as the link title.
+Explicitly adding the link title defeats the purpose of this feature
+i.e. makes the reference less maintainable.
 
-	WARNING: Inline emphasis start-string without end-string.
-	WARNING: Block quote ends without a blank line; unexpected unindent.
-	ERROR: Unexpected indentation.
-	WARNING: Block quote ends without a blank line; unexpected unindent.
-
-Add the colon, clearing sphinx warnings.
+Remove unnecessary reference link title.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- Documentation/vm/slub.rst | 2 +-
- include/linux/wait.h      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/mm/numa_memory_policy.rst | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/vm/slub.rst b/Documentation/vm/slub.rst
-index 195928808bac..610510d90c33 100644
---- a/Documentation/vm/slub.rst
-+++ b/Documentation/vm/slub.rst
-@@ -66,7 +66,7 @@ Trying to find an issue in the dentry cache? Try::
- to only enable debugging on the dentry cache.  You may use an asterisk at the
- end of the slab name, in order to cover all slabs with the same prefix.  For
- example, here's how you can poison the dentry cache as well as all kmalloc
--slabs:
-+slabs::
+diff --git a/Documentation/admin-guide/mm/numa_memory_policy.rst b/Documentation/admin-guide/mm/numa_memory_policy.rst
+index d78c5b315f72..1ef0146eaa4d 100644
+--- a/Documentation/admin-guide/mm/numa_memory_policy.rst
++++ b/Documentation/admin-guide/mm/numa_memory_policy.rst
+@@ -20,8 +20,7 @@ which is an administrative mechanism for restricting the nodes from which
+ memory may be allocated by a set of processes. Memory policies are a
+ programming interface that a NUMA-aware application can take advantage of.  When
+ both cpusets and policies are applied to a task, the restrictions of the cpuset
+-takes priority.  See :ref:`Memory Policies and cpusets <mem_pol_and_cpusets>`
+-below for more details.
++takes priority.  See :ref:`mem_pol_and_cpusets` below for more details.
  
- 	slub_debug=P,kmalloc-*,dentry
+ Memory Policy Concepts
+ ======================
+@@ -56,7 +55,7 @@ Task/Process Policy
+ 	[clone() w/o the CLONE_VM flag] and exec*().  This allows a parent task
+ 	to establish the task policy for a child task exec()'d from an
+ 	executable image that has no awareness of memory policy.  See the
+-	:ref:`Memory Policy APIs <memory_policy_apis>` section,
++	:ref:`memory_policy_apis` section,
+ 	below, for an overview of the system call
+ 	that a task may use to set/change its task/process policy.
  
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index ed7c122cb31f..deedfe2b9ffe 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -101,7 +101,7 @@ init_waitqueue_func_entry(struct wait_queue_entry *wq_entry, wait_queue_func_t f
-  * lead to sporadic and non-obvious failure.
-  *
-  * Use either while holding wait_queue_head::lock or when used for wakeups
-- * with an extra smp_mb() like:
-+ * with an extra smp_mb() like::
-  *
-  *      CPU0 - waker                    CPU1 - waiter
-  *
+@@ -77,7 +76,7 @@ VMA Policy
+ 	A "VMA" or "Virtual Memory Area" refers to a range of a task's
+ 	virtual address space.  A task may define a specific policy for a range
+ 	of its virtual address space.   See the
+-	:ref:`Memory Policy APIs <memory_policy_apis>` section,
++	:ref:`memory_policy_apis` section,
+ 	below, for an overview of the mbind() system call used to set a VMA
+ 	policy.
+ 
+@@ -142,7 +141,7 @@ Shared Policy
+ 	Although hugetlbfs segments now support lazy allocation, their support
+ 	for shared policy has not been completed.
+ 
+-	As mentioned above in :ref:`VMA policies <vma_policy>` section,
++	As mentioned above in :ref:`vma_policy` section,
+ 	allocations of page cache pages for regular files mmap()ed
+ 	with MAP_SHARED ignore any VMA policy installed on the virtual
+ 	address range backed by the shared file mapping.  Rather,
 -- 
 2.21.0
 
