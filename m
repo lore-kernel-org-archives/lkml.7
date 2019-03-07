@@ -2,150 +2,115 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59728C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACD3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2299C20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dsda7h2/"
+	by mail.kernel.org (Postfix) with ESMTP id 0132E20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551981693;
+	bh=O+bRqHthnwvyPcuC0Q+KKKGemMBCFF9fEIk1FchSqbI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tUKfBUg7vK+mLEzRAxku5VJyC+vHVtvKLdki73jhOKXhDZhP+j8FNMHT1BH6ZIBKu
+	 nLGyeIhFB7esAQFHWJYsMkmjyFylFvdzUIgfwEWfk/QG6CmVBni2rZhoULRqtFGG7a
+	 P0SSFn/heuUuCmweRqdO7hMopw5wPkleA5NSC0IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfCGSAp (ORCPT
+        id S1726689AbfCGSBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:00:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39870 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbfCGSAp (ORCPT
+        Thu, 7 Mar 2019 13:01:31 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42304 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGSBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:00:45 -0500
-Received: by mail-ed1-f67.google.com with SMTP id p27so14235592edc.6;
-        Thu, 07 Mar 2019 10:00:43 -0800 (PST)
+        Thu, 7 Mar 2019 13:01:31 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d14so15062999ljl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:01:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=80PbBrlLVjNDnkbdPPlTlo4rmy0Dx+45IEhmeAmWXDY=;
-        b=Dsda7h2/CPiv7QuZI5alniBrtiXASBhNWAvKcJvTkeDUq9ApCSvAdQbyhj/LIoYcDH
-         NGyX6Gn4IXl3liA9NaqG1zkN0QFtYkR+bswL6k+j6647CxuxS2Dy9b6AE3S349y7u0ej
-         xr3FTpBYZy+d3yF2U5xa5xNHL16RikYISVh6taIKX3dmxVJzOkGQPUNZORNOfM2pvyEy
-         bYefUPqdXllbr1xATwi1hYFO+q9GBAMkgCgnwWh1ZzqSzUc8CeAXb8mc4wz4qM5rSlRA
-         THFAoDURYJ7A0PeYCIsx0sj4NEUeadvaUnO2i0pIes6Z5V0xfuK6UDQw2M4B618DrEEd
-         5b0w==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=36kE0MkjNErUKnrp0BPqSQ3I9YheVL32EsxlaB1Zqaw=;
+        b=FhHNRP++Rj3t91SJAsxCUhLZm4eFqEeYml1UPR53Ma/g+zafmKyQmDN65Ti9LF/3Qy
+         TSxxWQ4K/u6Wt94HMWR6D9o12999pFmVRMwXgVNmJ998JblJrwL4nUhrBgwNQ6pFzFuS
+         DwgwVWKQWA7y4n9Y2fF8yvWvafIW3g9otyucA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=80PbBrlLVjNDnkbdPPlTlo4rmy0Dx+45IEhmeAmWXDY=;
-        b=eZNtGtB8IoQvoHOl9A9h+hK/bdCnH+VxtYdcwqEpsHgXstY8wQpOkGp/Wxb+V8T4DU
-         g8jtzzaw62b0McCMl0ciRyZROt9arUDZ/Z3+vYB934HlZ4YQo+AriV3pEzfDhp0rjPmO
-         WfLtjHC17gC/2OWrifPwepl0kUfip3gRReR/Va2ViagD6j4P8xSEmGcR2U9THA9Ugf1L
-         fJnFJmgDVnesW8uCkaNcIaPG24BDEaU0evTCoQ7F7oRnXqufT+syLlWw1bwF60V52PHu
-         YFuSqwUCONaopJLjCgHJ6gerIc9QZSwCSCteT5/PvxBc/SZUrb6Vj534iCHwAQINVTW4
-         LOuQ==
-X-Gm-Message-State: APjAAAV3LIXhwKqt9w/Jds5hAr9+Z+ihkHbo3AT/gcbevrq8cdRnC0pX
-        6iYdofKZwklGSgBTgjrFHZE=
-X-Google-Smtp-Source: APXvYqzbxwDlNucMfu962ZRy3qrgQay23arYXt0G41hpmzMBTCKJoQi9biOatWyIGBRCQr/WQkJJ1w==
-X-Received: by 2002:a17:906:70d6:: with SMTP id g22mr8806152ejk.215.1551981642787;
-        Thu, 07 Mar 2019 10:00:42 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id y21sm1501108edb.54.2019.03.07.10.00.41
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=36kE0MkjNErUKnrp0BPqSQ3I9YheVL32EsxlaB1Zqaw=;
+        b=LCOoWUb7/BLNyb03Noxndnh+u0exA7iAqnGcDDV7kDMFVDlm/lqvVm91izfEP7RQFH
+         3su6lQ2YVu8u33OygUpbXvR+otim+dw4hcvQuxMBfFuuL3a1HdwOmvu3nUWgKJaB9wc6
+         Eeh+xySNWP8XffCEELovXFJweTj/Zob3AxvVntKJNztc7ThCYcHlfWSHgMjsrekl7cgC
+         3U2dIV2/tsBtzIKlJMZq+JfAhBf5o2FBawO8KXLUzQyD5gs4nbw/w0XuWcYzrFq5Wbjc
+         9pvvO++jMFxItF7ARw9KSHR3yUtvyFheg98pJN3173zOn/xdmS5Sw7Iro5uQbEa1z6mn
+         kgfw==
+X-Gm-Message-State: APjAAAU2v3navmjJ5opFNdVHV6XQbhcXM+6jUoqj9iDjwAnWKSL7kBVw
+        GTs4FZRvtS2+JfHSLCf5zkIV2ECy+74=
+X-Google-Smtp-Source: APXvYqwtsRO/h51dyTPiEPu1jH6+p7wzX6v5dlu6NEVp4fpCl61eB56HC467P0aQ5OytsVVp0T8a9A==
+X-Received: by 2002:a2e:9607:: with SMTP id v7mr6720271ljh.154.1551981688503;
+        Thu, 07 Mar 2019 10:01:28 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id s73sm515055lfe.3.2019.03.07.10.01.28
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 10:00:42 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] net: stmmac: Avoid sometimes uninitialized Clang warnings
-Date:   Thu,  7 Mar 2019 11:00:28 -0700
-Message-Id: <20190307180027.6226-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190307162101.29204-1-natechancellor@gmail.com>
-References: <20190307162101.29204-1-natechancellor@gmail.com>
+        Thu, 07 Mar 2019 10:01:28 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id z25so15070447ljk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:01:28 -0800 (PST)
+X-Received: by 2002:a2e:208a:: with SMTP id g10mr6579542lji.135.1551981269940;
+ Thu, 07 Mar 2019 09:54:29 -0800 (PST)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190307114511.870090179@infradead.org> <20190307115200.697533978@infradead.org>
+ <CAHk-=wgKDSSoV5WvO018hoPPSHO=TQ3wwnfOtCpaENceBe0Z6Q@mail.gmail.com> <20190307174135.GJ32477@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190307174135.GJ32477@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 7 Mar 2019 09:54:14 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgGZWXQj-J2xo0DY7150VrXOSqoD5Dj1_LGYaotqA6Z-Q@mail.gmail.com>
+Message-ID: <CAHk-=wgGZWXQj-J2xo0DY7150VrXOSqoD5Dj1_LGYaotqA6Z-Q@mail.gmail.com>
+Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
+On Thu, Mar 7, 2019 at 9:41 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > What's the call site that made you go "just add __memset() to the list"?
+>
+> __asan_{,un}poinson_stack_memory()
+>   kasan_{,un}poison_shadow()
+>     __memset()
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+Ugh. I think I almost just agree with your decision to just let that
+memset go unchecked.
 
-Clang is concerned with the use of stmmac_do_void_callback (which
-stmmac_get_timestamp and stmmac_config_sub_second_increment wrap),
-as it may fail to initialize these values if the if condition was ever
-false (meaning the callbacks don't exist). It's not wrong because the
-callbacks (get_timestamp and config_sub_second_increment respectively)
-are the ones that initialize the variables. While it's unlikely that the
-callbacks are ever going to disappear and make that condition false, we
-can easily avoid this warning by zero initialize the variables.
+I'm not saying it's right, but it doesn't seem to be a fight worth fighting.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/384
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+Again, maybe we could avoid the static checking entirely for the
+complex configs, and just make preempt_schedule() not do it for AC
+regions.
 
-v1 -> v2:
+Because AC vs KASAN in general ends up smelling like "not a fight
+worth fighting" to me. You've done a herculean job, but..
 
-* Respect reverse Christmas tree variable ordering in
-  stmmac_hwtstamp_set.
-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index e2a13ec2e30b..97c5e1aad88f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -480,7 +480,7 @@ static void stmmac_get_tx_hwtstamp(struct stmmac_priv *priv,
- 				   struct dma_desc *p, struct sk_buff *skb)
- {
- 	struct skb_shared_hwtstamps shhwtstamp;
--	u64 ns;
-+	u64 ns = 0;
- 
- 	if (!priv->hwts_tx_en)
- 		return;
-@@ -519,7 +519,7 @@ static void stmmac_get_rx_hwtstamp(struct stmmac_priv *priv, struct dma_desc *p,
- {
- 	struct skb_shared_hwtstamps *shhwtstamp = NULL;
- 	struct dma_desc *desc = p;
--	u64 ns;
-+	u64 ns = 0;
- 
- 	if (!priv->hwts_rx_en)
- 		return;
-@@ -564,8 +564,8 @@ static int stmmac_hwtstamp_set(struct net_device *dev, struct ifreq *ifr)
- 	u32 snap_type_sel = 0;
- 	u32 ts_master_en = 0;
- 	u32 ts_event_en = 0;
-+	u32 sec_inc = 0;
- 	u32 value = 0;
--	u32 sec_inc;
- 	bool xmac;
- 
- 	xmac = priv->plat->has_gmac4 || priv->plat->has_xgmac;
--- 
-2.21.0
-
+                 Linus
