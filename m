@@ -2,81 +2,152 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FF8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DA9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D812920835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812A120835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfCGImZ (ORCPT
+        id S1726392AbfCGIma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:42:25 -0500
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:38361 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726057AbfCGImZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:42:25 -0500
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:54490 helo=purcell.lan)
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h1obR-000810-Sa; Thu, 07 Mar 2019 09:42:10 +0100
-From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        shawn.lin@rock-chips.com
-Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 2/4] dt-bindings: phy: Add a new property drive-impedance-ohm for RK's emmc PHY
-Date:   Thu,  7 Mar 2019 09:41:54 +0100
-Message-Id: <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
-References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
+        Thu, 7 Mar 2019 03:42:30 -0500
+Received: from mga03.intel.com ([134.134.136.65]:11381 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726342AbfCGIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 03:42:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 00:42:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="120360431"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 07 Mar 2019 00:42:29 -0800
+Received: from [10.125.252.109] (abudanko-mobl.ccr.corp.intel.com [10.125.252.109])
+        by linux.intel.com (Postfix) with ESMTP id BA5D05805B4;
+        Thu,  7 Mar 2019 00:42:27 -0800 (PST)
+Subject: Re: [PATCH v5 02/10] perf record: implement
+ -f,--mmap-flush=<threshold> option
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+ <3600e56e-0431-080e-9df8-e376cdea1aad@linux.intel.com>
+ <20190305122609.GH16615@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <fbc599b5-e399-0278-0402-13bafa0b9c5c@linux.intel.com>
+Date:   Thu, 7 Mar 2019 11:42:26 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190305122609.GH16615@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents the new proprty drive-impedance-ohm for
-Rockchip's eMMC PHY node.
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
----
- Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 3 +++
- 1 file changed, 3 insertions(+)
+On 05.03.2019 15:26, Jiri Olsa wrote:
+> On Fri, Mar 01, 2019 at 06:41:44PM +0300, Alexey Budankov wrote:
+>>
+>> Implemented -f,--mmap-flush option that specifies minimal size of data
+>> chunk that is extracted from mmaped kernel buffer to store into a trace.
+>>
+>>   $ tools/perf/perf record -f 1024 -e cycles -- matrix.gcc
+>>   $ tools/perf/perf record --aio -f 1024 -e cycles -- matrix.gcc
+>>
+>> Option can serve two purposes the first one is to increase the compression
+>> ratio of a trace data and the second one is to avoid live-lock-like self 
+>> monitoring in system wide (-a) profiling mode.
+>>
+>> The default option value is 1 byte what means that every time trace
+>> writing thread finds some new data in the mmaped buffer the data is
+>> extracted, possibly compressed and written to a trace. Larger data chunks
+>> are compressed more effectively in comparison to smaller chunks so
+>> extraction of larger chunks from the kernel buffer is preferable from
+>> perspective of trace size reduction. So the implemented option allows 
+>> specifying minimal data chunk size that is more than 1 byte to influence 
+>> data compression ratio. Also at some cases executing more write syscalls 
+>> with smaller data size can take longer than executing less write syscalls 
+>> with bigger data size due to syscall overhead so extracting bigger data 
+>> chunks specified by the option value could additionally decrease runtime 
+>> overhead.
+>>
+>> Profiling in system wide mode with compression (-a -z) can additionally 
+>> induce data into the kernel buffers along with the data from monitored 
+>> processes. If performance data rate and volume from the monitored processes 
+>> is high then trace streaming and compression activity in the tool is also 
+>> high and it can lead to subtle live-lock effect of endless activity when 
+>> compression of single new byte from some of mmaped kernel buffer leads to 
+>> eneration of the next single byte at some mmaped buffer so perf tool trace 
+>> writing thread never stops on polling event file descriptors.
+>>
+>> Implemented sync param is the mean to force data move independently from
+>> the threshold value. Despite the provided flush value from the command
+>> line, the tool needs capability to drain memory buffers, at least in the
+>> end of the collection.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/Documentation/perf-record.txt | 13 ++++++
+>>  tools/perf/builtin-record.c              | 53 +++++++++++++++++++++---
+>>  tools/perf/perf.h                        |  1 +
+>>  tools/perf/util/evlist.c                 |  6 +--
+>>  tools/perf/util/evlist.h                 |  3 +-
+>>  tools/perf/util/mmap.c                   |  4 +-
+>>  tools/perf/util/mmap.h                   |  3 +-
+>>  7 files changed, 71 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>> index 8f0c2be34848..9fa33ce9bc00 100644
+>> --- a/tools/perf/Documentation/perf-record.txt
+>> +++ b/tools/perf/Documentation/perf-record.txt
+>> @@ -459,6 +459,19 @@ Set affinity mask of trace reading thread according to the policy defined by 'mo
+>>    node - thread affinity mask is set to NUMA node cpu mask of the processed mmap buffer
+>>    cpu  - thread affinity mask is set to cpu of the processed mmap buffer
+>>  
+>> +-f::
+>> +--mmap-flush=n::
+>> +Specify minimal number of bytes that is extracted from mmap data pages and stored
+>> +into a trace. Maximal allowed value is a quarter of the size of mmaped data pages.
+>> +The default option value is 1 what means that every time trace writing thread finds
+>> +some new data in the mmaped buffer the data is extracted, possibly compressed (-z)
+>> +and written to a trace. Larger data chunks are compressed more effectively in
+>> +comparison to smaller chunks so extraction of larger chunks from the mmap data pages
+>> +is preferable from perspective of trace size reduction. Also at some cases
+>> +executing less trace write syscalls with bigger data size can take shorter than
+>> +executing more trace write syscalls with smaller data size thus lowering runtime
+>> +profiling overhead.
+> 
+> I was wondering if that's the same we would achieve with ring buffer
+> watermak config on kernel side.. but I guess it does not hurt to
+> have something on user side.. I'm just not sure it makes sense to have
+> a config option for that
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-index e3ea55763b0a..5f5d999dacc3 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-@@ -13,6 +13,9 @@ specified by name:
- 		(because most boards can get basic functionality without having
- 		access to it), it is strongly suggested.
-  - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
-+ - drive-impedance-ohm: Specifies the drive impedance in Ohm.
-+                        Possible values are 33, 40, 50, 66 and 100.
-+                        If not set, the default value of 50 will be applied.
- 
- Example:
- 
--- 
-2.11.0
+Watermark acts similar but not the same as this option. Watermark signals tool thread 
+that blocks on poll() and it is not the HPC case of high data rate and volume when the 
+thread mostly checks mmaped buffer content in CPU busy loop almost never blocking on poll(). 
 
+~Alexey
+
+> 
+> I'd understand if we configure some sane value when compression is
+> enabled.. if it makes sense to have this option, I'd allow it only
+> when compression is enabled
+> 
+> jirka
+> 
