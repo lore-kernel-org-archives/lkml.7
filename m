@@ -2,117 +2,140 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF54C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE45FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0719E20643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F0B20643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWFdr07r"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tJoPwnix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfCGPbt (ORCPT
+        id S1726536AbfCGPdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:31:49 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46415 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfCGPbs (ORCPT
+        Thu, 7 Mar 2019 10:33:10 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:65019 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfCGPdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:31:48 -0500
-Received: by mail-ed1-f67.google.com with SMTP id f2so13795411edy.13;
-        Thu, 07 Mar 2019 07:31:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jRxbOE53Ja7Pi5yq9dWyQSKq1h628jf5nvvkcUfp3NY=;
-        b=dWFdr07rpcwCQHP36QnW0uX3VCLJrFsczSQHDNGoUmSGTeTBqZ4HJe+hR5kElNgV0/
-         ZytjRdCcreF3O8ce9/MVGlyR5JK0JroMYyYDoMi7kQH9lUZ3Dk1bvfgWBMG21a5nlyLY
-         4UATE6IYmsDlpdqrkul08cLkdMA4Qe3MxjehZ27FgHp/mW00OLtMo4CPGNGy0rx3b25R
-         MjEqA6QZujICJnml4/QYruV0PmHGfoSKQALNmk8mrkMnDQHi2EFGM+wtLJTiMRsd3+tu
-         JxhBRpuT+SEiB7kBO8qaiSvTs2O87WOpVTXjaDnLmEXQK1S+nSMLb/v5Dx95IxtRi440
-         wtIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jRxbOE53Ja7Pi5yq9dWyQSKq1h628jf5nvvkcUfp3NY=;
-        b=ZA2JEPc5mPKQsDr/o87qsjqXvyneJutvcFJJ1GIRVszkPmoVy1zBzf9PXqz4F+nRmU
-         70P8CRh0eQqxaaqKRRglHS6Lcaa3t4NbYlEU7XQ+TE/7MRc86QBdwyrpuUMMskf3AQ52
-         sSyNE/sAXKp1jmPd2ssMpuRVjy4gxt7vkNUis8i8LMHEXW4cB8PkJ80dLHDBJ3Uk3oFZ
-         0PIaRi9pqt20NeLyB2zMAEa4xFkrjWx0fQIDRTbLIVJM3/mxSTbf2h5qy7Wty3r6m+5Z
-         pp83qeJjvyRzLoms+WrpD6O4Qp/cxyMVj50yuIxFcLRAjfgPkGgxzK5REjsDJVewafSt
-         cvjg==
-X-Gm-Message-State: APjAAAXXg2Fld85d5DMKOaAWbomBtcDA7K3gsoMuVeVQSm7RRZ3J4Pnm
-        W07SeRyjUmSxAXzwLmxoRvw=
-X-Google-Smtp-Source: APXvYqxLXjgKxhPUdOwtFhBcSv5tYJ+pB/7QI/BpnvzuJVuhxCVIKfYxN5SJ7Hb5HuEoth0xNlEmSA==
-X-Received: by 2002:a17:906:95c3:: with SMTP id n3mr8424519ejy.59.1551972706635;
-        Thu, 07 Mar 2019 07:31:46 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id a51sm1434907edd.57.2019.03.07.07.31.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:31:45 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:31:43 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] peak_usb: fix clang build warning
-Message-ID: <20190307153143.GI20201@archlinux-ryzen>
-References: <20190307103219.1539316-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 10:33:09 -0500
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x27FWmWD000306;
+        Fri, 8 Mar 2019 00:32:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x27FWmWD000306
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1551972769;
+        bh=YfjIYW+HIpiORMy8KChbuYS376y1l9RYm9Nuz1YEA7o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tJoPwnixyySnw82kFgsPg7NTXztsYi4mXUS6Gh5EQOVYgqV3kIEsPIlWkLcsYKcHK
+         X4zJurMsZ3NbMx5QWuT1e0GbKPwQSuOEdZyutWoXfL0HDVtOVCIRiGpF16tMCTbh4D
+         3EtrvGGNyDvELnqVNpXXTJjghx9aiHUH3V7piHP77vme+Xvg3TnRNH3AmCkuNsQI0G
+         aXa6Bi7S5lpz85n4Acjvtvlbeo88HoavxP1Q58QnsvBAGe72ksCPcBLM7YBT4qm+oG
+         JYCOzkN3dBzm79vOdBe4ot9q7Zhy0dmhcvQZzTlRbjzvDe0imzKMkI+6KAdW9YKjSC
+         hzaUNlEuwM48A==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id r201so4711340vsc.11;
+        Thu, 07 Mar 2019 07:32:48 -0800 (PST)
+X-Gm-Message-State: APjAAAW9Kj4dVO3jbvUhkI1CRr0+3UHyspwgfAMQHtfMi69TiRQ1IvDk
+        84S8uO7TDXuLZwSZIYugtr4PD2zCBpQ+tzWCoxg=
+X-Google-Smtp-Source: APXvYqwDt2znfVxQAk+IImUjxJoCf/Q9DzIFXca8aGCtr+3PNEFKsozIXAINE13If7WxOJGDxIiD0t3j91W2au/T6qM=
+X-Received: by 2002:a05:6102:18f:: with SMTP id r15mr7143871vsq.215.1551972767661;
+ Thu, 07 Mar 2019 07:32:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307103219.1539316-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190221215901.23970-1-ar@cs.msu.ru>
+In-Reply-To: <20190221215901.23970-1-ar@cs.msu.ru>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 8 Mar 2019 00:32:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQrN1e1GYRd760pWiAdgY9_7Jda3QD_zozTNHpHOim4Xg@mail.gmail.com>
+Message-ID: <CAK7LNAQrN1e1GYRd760pWiAdgY9_7Jda3QD_zozTNHpHOim4Xg@mail.gmail.com>
+Subject: Re: [PATCH] scripts/package/Makefile: put proper config in source tarball
+To:     Arseny Maslennikov <ar@cs.msu.ru>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Riku Voipio <riku.voipio@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:31:55AM +0100, Arnd Bergmann wrote:
-> Clang points out undefined behavior when building the pcan_usb_pro driver:
-> 
-> drivers/net/can/usb/peak_usb/pcan_usb_pro.c:136:15: error: passing an object that undergoes default argument promotion to 'va_start' has undefined behavior [-Werror,-Wvarargs]
-> 
-> Changing the function prototype to avoid argument promotion in the
-> varargs call avoids the warning, and should make this well-defined.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Fri, Feb 22, 2019 at 7:19 AM Arseny Maslennikov <ar@cs.msu.ru> wrote:
+>
+> It is widely known that one can build a kernel without a .config in the
+> source tree
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/109
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+"without a .config in the source file"  means
+KCONFIG_CONFIG will probably contain '..' or absolute path.
 
-I wonder if the format specifier in the pr_err statement at the end of
-this function should be updated.
 
+
+ex1)  KCONFIG_CONFIG=../my_dir/.config
+
+ex2)  KCONFIG_CONFIG=/absolute/pass/to/my/.config
+
+
+
+
+
+> by setting KCONFIG_CONFIG equal to the actual configuration
+> file path.
+>
+> When making a *-pkg target, make(1) prepares a source tarball and tries
+> to pack `.config' in there regardless of the value of KCONFIG_CONFIG,
+> failing spectacularly if .config is absent and packing the wrong config
+> if it exists.
+> Let's fix that.
+
+
+Did you notice the log 'Removing leading ...' from tar
+for case ex1), ex2) ?
+
+
+masahiro@grover:~/ref/linux$ make -j8  KCONFIG_CONFIG=../.config  deb-pkg
+make clean
+/bin/bash ./scripts/package/mkdebian
+  TAR     linux-5.0.0+.tar.gz
+tar: Removing leading `../' from member names
+   ...
+
+
+Even if I apply 3/3, it will produce a broken source package
+since the tar will rip off the leading directory path,
+then it mismatches to KCONFIG_CONFIG recorded in debian/rules.
+
+A simple case like KCONFIG_CONFIG=my.config will work,
+but I am not convinced with 3/3.
+
+
+
+
+> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
 > ---
->  drivers/net/can/usb/peak_usb/pcan_usb_pro.c | 2 +-
+>  scripts/package/Makefile | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-> index d516def846ab..b388406ac0f5 100644
-> --- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-> +++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-> @@ -127,7 +127,7 @@ static u8 *pcan_msg_init_empty(struct pcan_usb_pro_msg *pm,
->  /*
->   * add one record to a message being built
->   */
-> -static int pcan_msg_add_rec(struct pcan_usb_pro_msg *pm, u8 id, ...)
-> +static int pcan_msg_add_rec(struct pcan_usb_pro_msg *pm, int id, ...)
->  {
->  	int len, i;
->  	u8 *pc;
-> -- 
-> 2.20.0
-> 
+>
+> diff --git a/scripts/package/Makefile b/scripts/package/Makefile
+> index 453fecee62f0..100a0d28ad25 100644
+> --- a/scripts/package/Makefile
+> +++ b/scripts/package/Makefile
+> @@ -27,7 +27,7 @@ KDEB_SOURCENAME ?= linux-$(KERNELRELEASE)
+>  KBUILD_PKG_ROOTCMD ?="fakeroot -u"
+>  export KDEB_SOURCENAME
+>  # Include only those top-level files that are needed by make, plus the GPL copy
+> -TAR_CONTENT := $(KBUILD_ALLDIRS) .config .scmversion Makefile \
+> +TAR_CONTENT := $(KBUILD_ALLDIRS) $(KCONFIG_CONFIG) .scmversion Makefile \
+>                 Kbuild Kconfig COPYING $(wildcard localversion*)
+>  MKSPEC     := $(srctree)/scripts/package/mkspec
+>
+> --
+> 2.20.1
+>
+
+
+--
+Best Regards
+Masahiro Yamada
