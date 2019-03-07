@@ -2,102 +2,97 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A6EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158ABC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFFB20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551957805;
-	bh=vOdi4/CBsio+8xIKEThXZ3Iu5znTrm8uDn1Lh8Jjf3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rU5rLrpsLmrW4g9K9+mB+LkooLYvZfdOcUnvC2aD56kswY4NcrtPRKXFb/wELyhrJ
-	 iDZjmiHku4XmLOWQQXn9tu19GV0dgR9ccIvWS87SecWfu4MhNskr+Bq3IFl4MYnXjM
-	 UvIG/c2F+FJ/Bfj3oX9wjN0755BM1ybWAdFUWY+k=
+	by mail.kernel.org (Postfix) with ESMTP id CCA9920684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JL05PTTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfCGLXY (ORCPT
+        id S1726411AbfCGLXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:23:24 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53880 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCGLXY (ORCPT
+        Thu, 7 Mar 2019 06:23:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60728 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGLXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:23:24 -0500
+        Thu, 7 Mar 2019 06:23:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OTh72GeCa30m9/TRNI1fkMt+9s6nS8N+/Ws82U7Vw20=; b=PiWUBz9W/lCRjc85/IUWxuoxu
-        Fxy/FqfGChP+azbdXZNAbpTVCk5rpAKn81icy4Uo//Q6cKq93A4BwCzSPWiM5Bs/pE6S1GEq2r0Vs
-        CzJOPwLtGwlYecmppEhwQulypqDvLUD0alu3uTYtPJSGb36eo5d2ne5qwZhsLmYv7MQdM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h1r7N-0005RP-LT; Thu, 07 Mar 2019 11:23:17 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id B33721128841; Thu,  7 Mar 2019 11:23:16 +0000 (GMT)
-Date:   Thu, 7 Mar 2019 11:23:16 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: work around clang bug in SPI_BPW_RANGE_MASK()
-Message-ID: <20190307112316.GD6529@sirena.org.uk>
-References: <20190307105619.2780591-1-arnd@arndb.de>
+         bh=D49fxiZzzew1ACx7OtBrAb2Sx6NFo0CjwTFKUZSMwa8=; b=JL05PTTswcupxPD1bSmjGlflY
+        llFVwsllc2TOy9hEYO/COZyfKMj2WIGdvy72E10cdLE/9Luw0pC5wcJeXgCFxS2BwvTNmkLo/89Mb
+        dOaR27DRWcXzfbXZQBhBUyZXeFMigmEIk46aTo/g7DAk85Y5Gqm9r2AgjNfvicY9L/xdN8X//386e
+        UFvGfZjjJoGnvW7nWwcLVQXfbhc3ahuLAqU/LMKva5rM8OIkv1z2VDkJ1HLPFjS8KMaoOOnOEAq2x
+        TK9BQ23OO1oK+FGzY6HLFofurHax0u39am0WW41hnlF/1GL3/HLHMkfySVdP+yLVF5mtO2vqZNszu
+        EELmyBQ7A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1r7q-0008D3-HZ; Thu, 07 Mar 2019 11:23:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6323E2029B186; Thu,  7 Mar 2019 12:23:44 +0100 (CET)
+Date:   Thu, 7 Mar 2019 12:23:44 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
+ frequency on global turbo changes
+Message-ID: <20190307112344.GC32477@hirez.programming.kicks-ass.net>
+References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
+ <20190305104256.7kvedlttuovmptpc@queper01-lin>
+ <2336151.IZk3Z8DVvP@aspire.rjw.lan>
+ <6357319.Iupbu3ldGQ@aspire.rjw.lan>
+ <20190305114406.GV32494@hirez.programming.kicks-ass.net>
+ <20190305120040.y2vmnxrch6kgya3e@queper01-lin>
+ <CAJZ5v0hYU763Jx0Ku0HsNMd261z7E0PhZ88_PH6MT=OLYYUAaQ@mail.gmail.com>
+ <20190305173746.p32xolcpueudlzwn@queper01-lin>
+ <CAJZ5v0jJxMw6_6Ep=fee8VGEbqpFKQtA2kX5t1scNwX3GhaTTg@mail.gmail.com>
+ <20190307110256.padefvq4e52ly3nm@queper01-lin>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uxuisgdDHaNETlh8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307105619.2780591-1-arnd@arndb.de>
-X-Cookie: All celebrity voices impersonated.
+In-Reply-To: <20190307110256.padefvq4e52ly3nm@queper01-lin>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 07, 2019 at 11:02:58AM +0000, Quentin Perret wrote:
+> Also on recent big little SoCs, the capacity ratio can be pretty high.
+> You can get little CPUs with 300 of capacity or so. The arbitrary 128
+> thing is basically gonna go near max freq in one step, although the CPUs
+> actually 20 available OPPs or so. And I guess that's a shame.
 
---uxuisgdDHaNETlh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah, but remember; with the latest patch the iowait_boost is scaled on
+max. So in order to hit that 300, you first have to hit 1024.
 
-On Thu, Mar 07, 2019 at 11:56:07AM +0100, Arnd Bergmann wrote:
++       boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
++       return max(boost, util);
 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+So iowait_boost goes from 128 to 1024 in 4 wakeups (the first sets 128,
+the next 3 get it to 1024), but the effective value is, given @max ==
+300:
 
->  #define SPI_BPW_MASK(bits) BIT((bits) - 1)
-> -#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
-> -#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
-> +#define SPI_BIT_MASK(bits) ((BIT((bits) - 1) << 1) - 1)
-> +#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - (BIT((min) - 1) - 1))
+  128 -> 37
+  256 -> 75
+  512 -> 150
+ 1024 -> 300
 
-Can we have a comment that this is for the clang warning please so
-nobody goes in and simplifies the code?
-
---uxuisgdDHaNETlh8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyA/yMACgkQJNaLcl1U
-h9DKhwf/SozTac0wQSMSrUHIwpvylWyr+FBIm0JsAJoURYCL+uTKN/vJJqlIOarw
-v7Xl06lpLSYGjxgVs7grdlA+FmiJbcNpJDJV3V1fThKuqHyt5rZ75R4uMvVu7Tea
-C+642mKN9GMqEsnB9nz4Po+n6krbez65AW6fKE30Oaa5yMebQ7vz6gf6Z1a22zM2
-sJiNXkCu51A6jrb+H/l3gtd/iSTDCfvQvOvX2bE1ihQhJl5C9Y+Sev+wgxGvfTPq
-wG+qNBTX43NSpV8LNg6p1pNBDUDxDR5HWYDlAuy8svmiDBo3pcHxXco1iq8rASRk
-yxY1mB8uzXI6tehvTKLYM1ZbOTAFeQ==
-=n2rH
------END PGP SIGNATURE-----
-
---uxuisgdDHaNETlh8--
+so irrespective of the number of OPPs and their spread, it takes 4
+wakeups to get to max.
