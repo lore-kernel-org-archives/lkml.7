@@ -2,126 +2,182 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A7CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCABC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A52820854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:26:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+LtFYWX"
+	by mail.kernel.org (Postfix) with ESMTP id 0323620643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfCGP0i (ORCPT
+        id S1726532AbfCGP0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:26:38 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45842 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGP0i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:26:38 -0500
-Received: by mail-ed1-f68.google.com with SMTP id f19so13770908eds.12;
-        Thu, 07 Mar 2019 07:26:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yotb0BDf1wLqkP6HU8zfxiMRzCtG3Cx+Y/EAufUXSqw=;
-        b=I+LtFYWX6Kaf+7jk8GUd+4a/K5xs8dgSarhacNAoO8IljKF1A7x3Ai6AmBQN5Je1fK
-         Ff03eMFUe+LAta9J4h9IqoKUvNC/kaG92MJRkWW8rXj8o2ir4Ysvoc7RByP+0dvhViwo
-         7SZ1XUpB1mKjAdCdbivHy93JujSNxus8Jzz1ng0uAHawY2zee7JCsUp3quF/jZZ7enP7
-         7gdTyGQkHt7KPzh2w6QmI0gFNiPxFvM68wBHkoD4ejyNgyu1XpsmtCOLJgz4sgodVMbS
-         mwvh0Oxg2MsFr8t0YNMb/biEfY+MV6U3qAfK8kZvpAizBuSZl/JebXJbMq1cCsVfORY/
-         Q2Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yotb0BDf1wLqkP6HU8zfxiMRzCtG3Cx+Y/EAufUXSqw=;
-        b=bj5/4MS3OjYiYAhopLhDhe+ITYXM0DuqrNfWBNOJfxCz9CJ646zMK5r7LyA/7f/FRm
-         e/nAyGTd2ABdpdOpcQMj0FuQQPAS/o1Am9tk9FgYQ9/xPRO74zPsnDx8eaI5+6FSbAZf
-         JnSjv6n828/TQQFo6GvUy4aaVKTl3/Ei67B3iJ8EO4GxBfA8P6FxglE0KD+U5PRbL/hj
-         HYcMbvYsdZQ+Ral/AXpVeyNslZo+QHoacvUexn1W8JWdUY2eRqtzc4+IsFZiXZm381hk
-         oYX/gRWMsKAzB7aLpE7uzDXHArQzuxMfLUNJEH7csJytvn3StNi2umUXEtj9D2VT8+50
-         V23w==
-X-Gm-Message-State: APjAAAUWivGcV40cr6CuHV4dy8d9A4cTice2wXRyckVv0BJ3sEJuM94b
-        1W68AEpDPkOPSz+32ihvjBk=
-X-Google-Smtp-Source: APXvYqxMRN+YvuUaaLWlhLYnlDY4ct8YWkwnZdNm23O0rvS/0yoS4SG2qBOXIT9EMrvf+TiEi5bf6A==
-X-Received: by 2002:aa7:c3d3:: with SMTP id l19mr28358532edr.117.1551972395936;
-        Thu, 07 Mar 2019 07:26:35 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id o8sm931301eju.0.2019.03.07.07.26.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:26:35 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:26:33 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: pxa2xx: remove incorrect __init annotation
-Message-ID: <20190307152633.GH20201@archlinux-ryzen>
-References: <20190307102250.1140038-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 10:26:54 -0500
+Received: from mga06.intel.com ([134.134.136.31]:40996 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfCGP0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 10:26:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 07:26:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="138866317"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 07 Mar 2019 07:26:52 -0800
+Received: from [10.251.89.100] (abudanko-mobl.ccr.corp.intel.com [10.251.89.100])
+        by linux.intel.com (Postfix) with ESMTP id 2EC6958073B;
+        Thu,  7 Mar 2019 07:26:49 -0800 (PST)
+Subject: Re: [PATCH v5 07/10] perf record: implement -z,--compression_level=n
+ option and compression
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+ <87fa1906-2d6a-a00a-7ba5-b570d0cbf9cc@linux.intel.com>
+ <20190305122534.GB16615@krava>
+ <ee765c0e-6e5c-e879-aaa6-40f314f85a5e@linux.intel.com>
+ <20190307121429.GB29474@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <002e7e10-b0ef-df2a-261c-88fd9c00364d@linux.intel.com>
+Date:   Thu, 7 Mar 2019 18:26:47 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307102250.1140038-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190307121429.GB29474@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:22:41AM +0100, Arnd Bergmann wrote:
-> pxa_cpufreq_init_voltages() is marked __init but usually inlined into
-> the non-__init pxa_cpufreq_init() function. When building with clang,
-> it can stay as a standalone function in a discarded section, and produce
-> this warning:
-> 
-> WARNING: vmlinux.o(.text+0x616a00): Section mismatch in reference from the function pxa_cpufreq_init() to the function .init.text:pxa_cpufreq_init_voltages()
-> The function pxa_cpufreq_init() references
-> the function __init pxa_cpufreq_init_voltages().
-> This is often because pxa_cpufreq_init lacks a __init
-> annotation or the annotation of pxa_cpufreq_init_voltages is wrong.
-> 
-> Fixes: 50e77fcd790e ("ARM: pxa: remove __init from cpufreq_driver->init()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-> ---
->  drivers/cpufreq/pxa2xx-cpufreq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On 07.03.2019 15:14, Jiri Olsa wrote:
+> On Thu, Mar 07, 2019 at 11:39:46AM +0300, Alexey Budankov wrote:
+>>
+>> On 05.03.2019 15:25, Jiri Olsa wrote:
+>>> On Fri, Mar 01, 2019 at 06:58:32PM +0300, Alexey Budankov wrote:
+>>>
+>>> SNIP
+>>>
+>>>>  
+>>>>  	/*
+>>>>  	 * Increment md->refcount to guard md->data[idx] buffer
+>>>> @@ -350,7 +357,7 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+>>>>  	md->prev = head;
+>>>>  	perf_mmap__consume(md);
+>>>>  
+>>>> -	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
+>>>> +	rc = push(to, md->aio.data[idx], size0 + size, *off, &md->aio.cblocks[idx]);
+>>>>  	if (!rc) {
+>>>>  		*off += size0 + size;
+>>>>  	} else {
+>>>> @@ -556,13 +563,15 @@ int perf_mmap__read_init(struct perf_mmap *map)
+>>>>  }
+>>>>  
+>>>>  int perf_mmap__push(struct perf_mmap *md, void *to,
+>>>> -		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
+>>>> +		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
+>>>> +		    perf_mmap__compress_fn_t compress, void *comp_data)
+>>>>  {
+>>>>  	u64 head = perf_mmap__read_head(md);
+>>>>  	unsigned char *data = md->base + page_size;
+>>>>  	unsigned long size;
+>>>>  	void *buf;
+>>>>  	int rc = 0;
+>>>> +	size_t mmap_len = perf_mmap__mmap_len(md);
+>>>>  
+>>>>  	rc = perf_mmap__read_init(md);
+>>>>  	if (rc < 0)
+>>>> @@ -574,7 +583,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+>>>>  		buf = &data[md->start & md->mask];
+>>>>  		size = md->mask + 1 - (md->start & md->mask);
+>>>>  		md->start += size;
+>>>> -
+>>>> +		if (compress) {
+>>>> +			size = compress(comp_data, md->data, mmap_len, buf, size);
+>>>> +			buf = md->data;
+>>>> +		}
+>>>>  		if (push(md, to, buf, size) < 0) {
+>>>>  			rc = -1;
+>>>>  			goto out;
+>>>
+>>> when we discussed the compress callback should be another layer
+>>> in perf_mmap__push I was thinking more of the layered/fifo design,
+>>> like:
+>>>
+>>> normaly we call:
+>>>
+>>> 	perf_mmap__push(... push = record__pushfn ...)
+>>> 		-> reads mmap data and calls push(data), which translates as:
+>>>
+>>> 		record__pushfn(data);
+>>> 			- which stores the data
+>>>
+>>>
+>>> for compressed it'd be:
+>>>
+>>> 	perf_mmap__push(... push = compressed_push ...)
+>>>
+>>> 		-> reads mmap data and calls push(data), which translates as:
+>>>
+>>> 		compressed_push(data)
+>>> 			-> reads data, compresses them and calls, next push callback in line:
+>>>
+>>> 			record__pushfn(data)
+>>> 				- which stores the data
+>>>
+>>>
+>>> there'd need to be the logic for compressed_push to
+>>> remember the 'next push' function
+>>
+>> That is suboptimal for AIO. Also compression is an independent operation that 
+>> could be applied on any of push stages you mean.
 > 
-> diff --git a/drivers/cpufreq/pxa2xx-cpufreq.c b/drivers/cpufreq/pxa2xx-cpufreq.c
-> index 46254e583982..74e0e0c20c46 100644
-> --- a/drivers/cpufreq/pxa2xx-cpufreq.c
-> +++ b/drivers/cpufreq/pxa2xx-cpufreq.c
-> @@ -143,7 +143,7 @@ static int pxa_cpufreq_change_voltage(const struct pxa_freqs *pxa_freq)
->  	return ret;
->  }
->  
-> -static void __init pxa_cpufreq_init_voltages(void)
-> +static void pxa_cpufreq_init_voltages(void)
->  {
->  	vcc_core = regulator_get(NULL, "vcc_core");
->  	if (IS_ERR(vcc_core)) {
-> @@ -159,7 +159,7 @@ static int pxa_cpufreq_change_voltage(const struct pxa_freqs *pxa_freq)
->  	return 0;
->  }
->  
-> -static void __init pxa_cpufreq_init_voltages(void) { }
-> +static void pxa_cpufreq_init_voltages(void) { }
->  #endif
->  
->  static void find_freq_tables(struct cpufreq_frequency_table **freq_table,
-> -- 
-> 2.20.0
+> not sure what you mean by suboptimal, but I think
+> that it can still happen in subsequent push callback
+> 
+>>
+>>>
+>>> but I think this was the original idea behind the
+>>> perf_mmap__push -> it gets the data and pushes them for
+>>> the next processing.. it should stay as simple as that
+>>
+>> Agree on keeping simplicity and, at the moment, there is no any push to the next 
+>> processing in the code so provided implementation fits as for serial as for AIO
+>> at the same time sticking to simplicity as much as possibly. If you see something 
+>> that would fit better please speak up and share.
+> 
+> I have to insist that perf_mmap__push stays untouched
+> and we do other processing in the push callbacks
+
+What is about perf_mmap__aio_push()?
+
+Without compression it does 
+	memcpy(), memcpy(), aio_push()
+
+With compression its does
+	memcpy_with_compression(), memcpy_with_compression(), aio_push()
+
+and deviation that increases amount of copy operations i.e. implementing three or more 
+is suboptimal in terms of runtime overhead and data loss decrease
+
+Compression for serial streaming can be implemented in push() callback.
+AIO case would go with compression over a parameter in aio_push().
+So the both trace writing schemas could be optimally extended.
+
+~Alexey
+
+> 
+> jirka
 > 
