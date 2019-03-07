@@ -2,123 +2,128 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68FBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A000C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B234120675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25A52146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gJHAGcpJ"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UxhcCfpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfCGJri (ORCPT
+        id S1726313AbfCGJry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:47:38 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41399 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfCGJrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:47:37 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k11so9854720pgb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 01:47:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jPfiCleF3bjVjjATgBhjBOFQh99VX5DtV+OrPYgQRig=;
-        b=gJHAGcpJzj2U23/8RXnceWsRsVWyqQyioKEgnlRcMl9wM7CTAerp62E32UiFEWqjV2
-         e+zeesQep/z9f2/uFPCq7VBS7XEFWBpWElmOYQp5maiPpVFIYpp4lCMFJg43ro0Wq+89
-         1kWBdFkm0rVa0JWBssFagrG6oisvYAcIcAfS0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jPfiCleF3bjVjjATgBhjBOFQh99VX5DtV+OrPYgQRig=;
-        b=fzQ29N8aj0we5CKdFdSIDP6Bwe6jMRRH0HDm2VIY094I3CgFjLeiw5n8dY9vhH6GzM
-         rCfcC+kHudlXpAPbmla2c7ShJIP6GR1yFEA0cf8wOf2gNF3nRHOLW3XabUQ5Cs/1mHSx
-         5oq6Sj6TEzjMHe/1tHuiogrsvZycl6bovsz3e7ZVbeC9w3K2AXf8PYSkiO3GfajkSErb
-         elO5ng5wVuum8s0etpALnV/35Mis+//F/WCOXWAczcRjF9hNQ68dXk5yFHZBliniH51H
-         R8XVgsPrxY5iKWq4peiKCA5jXV8v10QfyJb4EUAgBW7G9u3vOShaRTJgsQ7NXSfaL3pV
-         RrTw==
-X-Gm-Message-State: APjAAAU1FcJij9TLD3eOHT5T1LEN87mx9pbJfGtsuUaeiMvICCQiRG3M
-        6mUTwHAyiVpHKA+GJJYle9P1HWWgaGE=
-X-Google-Smtp-Source: APXvYqwQqtznP/sKqSi0qVmXrhAmAoezyxx2EKugmDcYaQAvobU+lIRZpgaJeZc3jAaZ34p3Fp5hxg==
-X-Received: by 2002:a63:5a49:: with SMTP id k9mr3355143pgm.14.1551952056240;
-        Thu, 07 Mar 2019 01:47:36 -0800 (PST)
-Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id n23sm4902288pgv.86.2019.03.07.01.47.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 01:47:35 -0800 (PST)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mm/swap: Avoid undefined behavior in __swapoffset
-Date:   Thu,  7 Mar 2019 17:46:50 +0800
-Message-Id: <20190307094653.119425-1-pihsun@chromium.org>
-X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 7 Mar 2019 04:47:54 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:9365 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbfCGJrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 04:47:53 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44FQm65R7Xz9v09d;
+        Thu,  7 Mar 2019 10:47:50 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=UxhcCfpA; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ymhWtgtwKwUd; Thu,  7 Mar 2019 10:47:50 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44FQm64HFtz9v09c;
+        Thu,  7 Mar 2019 10:47:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1551952070; bh=GRjJRshyGa4oONJpjdDLtJiVesc7qjaIeWrn3R7faqo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=UxhcCfpA2B/d3FUWlQOOikNs9sPthLGQ/3tqtIoSrsYAJhmmNSSc8ABbhE48SIbMU
+         7PNZfQP4XpRUm7Af2jzIYOpinbQaQomccYghrUxgezf5V6INXz7guXgNU3eJepz7ql
+         Q7F6dIOhVa9DkxnC8u5vPrpLihC/jcOM07ZntFk8=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E4E68B8EB;
+        Thu,  7 Mar 2019 10:47:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 9Fd0E95XeN1D; Thu,  7 Mar 2019 10:47:51 +0100 (CET)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 569488B8C2;
+        Thu,  7 Mar 2019 10:47:51 +0100 (CET)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 026AF6F9CB; Thu,  7 Mar 2019 09:47:50 +0000 (UTC)
+Message-Id: <0365f99ce2b9273e269a241394957cba924f995e.1551951985.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/highmem: change BUG_ON() to WARN_ON()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  7 Mar 2019 09:47:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use offsetof to calculate offset of a field to avoid UBSAN warning like:
+In arch/powerpc/mm/highmem.c, BUG_ON() is called only when
+CONFIG_DEBUG_HIGHMEM is selected, this means the BUG_ON() is
+not vital and can be replaced by a a WARN_ON
 
-===================================================================
-UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
-member access within null pointer of type 'union swap_header'
-CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
-Call trace:
- dump_backtrace+0x0/0x194
- show_stack+0x20/0x2c
- __dump_stack+0x20/0x28
- dump_stack+0x70/0x94
- ubsan_epilogue+0x14/0x44
- ubsan_type_mismatch_common+0xf4/0xfc
- __ubsan_handle_type_mismatch_v1+0x34/0x54
- __se_sys_swapon+0x654/0x1084
- __arm64_sys_swapon+0x1c/0x24
- el0_svc_common+0xa8/0x150
- el0_svc_compat_handler+0x2c/0x38
- el0_svc_compat+0x8/0x18
-==================================================================
+At the sametime, use IS_ENABLED() instead of #ifdef to clean a bit.
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- include/linux/swap.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/highmem.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index fc50e21b3b88..4bfb5c4ac108 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -157,9 +157,9 @@ struct swap_extent {
- /*
-  * Max bad pages in the new format..
-  */
--#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
- #define MAX_SWAP_BADPAGES \
--	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
-+	((offsetof(union swap_header, magic.magic) - \
-+	  offsetof(union swap_header, info.badpages)) / sizeof(int))
+diff --git a/arch/powerpc/mm/highmem.c b/arch/powerpc/mm/highmem.c
+index 82a0e37557a5..b68c9f20fbdf 100644
+--- a/arch/powerpc/mm/highmem.c
++++ b/arch/powerpc/mm/highmem.c
+@@ -43,9 +43,7 @@ void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+ 	type = kmap_atomic_idx_push();
+ 	idx = type + KM_TYPE_NR*smp_processor_id();
+ 	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
+-#ifdef CONFIG_DEBUG_HIGHMEM
+-	BUG_ON(!pte_none(*(kmap_pte-idx)));
+-#endif
++	WARN_ON(IS_ENABLED(CONFIG_DEBUG_HIGHMEM) && !pte_none(*(kmap_pte - idx)));
+ 	__set_pte_at(&init_mm, vaddr, kmap_pte-idx, mk_pte(page, prot), 1);
+ 	local_flush_tlb_page(NULL, vaddr);
  
- enum {
- 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
+@@ -56,7 +54,7 @@ EXPORT_SYMBOL(kmap_atomic_prot);
+ void __kunmap_atomic(void *kvaddr)
+ {
+ 	unsigned long vaddr = (unsigned long) kvaddr & PAGE_MASK;
+-	int type __maybe_unused;
++	int type;
+ 
+ 	if (vaddr < __fix_to_virt(FIX_KMAP_END)) {
+ 		pagefault_enable();
+@@ -66,12 +64,11 @@ void __kunmap_atomic(void *kvaddr)
+ 
+ 	type = kmap_atomic_idx();
+ 
+-#ifdef CONFIG_DEBUG_HIGHMEM
+-	{
++	if (IS_ENABLED(CONFIG_DEBUG_HIGHMEM)) {
+ 		unsigned int idx;
+ 
+ 		idx = type + KM_TYPE_NR * smp_processor_id();
+-		BUG_ON(vaddr != __fix_to_virt(FIX_KMAP_BEGIN + idx));
++		WARN_ON(vaddr != __fix_to_virt(FIX_KMAP_BEGIN + idx));
+ 
+ 		/*
+ 		 * force other mappings to Oops if they'll try to access
+@@ -80,7 +77,6 @@ void __kunmap_atomic(void *kvaddr)
+ 		pte_clear(&init_mm, vaddr, kmap_pte-idx);
+ 		local_flush_tlb_page(NULL, vaddr);
+ 	}
+-#endif
+ 
+ 	kmap_atomic_idx_pop();
+ 	pagefault_enable();
 -- 
-2.21.0.352.gf09ad66450-goog
+2.13.3
 
