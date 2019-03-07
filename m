@@ -2,127 +2,94 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECBCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3EFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F45220840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613D620840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfCGQu0 (ORCPT
+        id S1726380AbfCGQvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:50:26 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:41728 "EHLO mx1.redhat.com"
+        Thu, 7 Mar 2019 11:51:25 -0500
+Received: from mga14.intel.com ([192.55.52.115]:45735 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbfCGQu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:50:26 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B9F6285C7;
-        Thu,  7 Mar 2019 16:50:25 +0000 (UTC)
-Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3487D5C1B5;
-        Thu,  7 Mar 2019 16:50:23 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 10:50:21 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
-        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
-Message-ID: <20190307165021.nforh2xvvznb56j3@treble>
-References: <20190307114511.870090179@infradead.org>
- <20190307120317.GD32477@hirez.programming.kicks-ass.net>
- <20190307125526.GB32534@hirez.programming.kicks-ass.net>
- <20190307131312.GC32534@hirez.programming.kicks-ass.net>
- <20190307164705.qbu4ytdfdmsighas@treble>
+        id S1726161AbfCGQvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 11:51:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 08:51:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="325140064"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Mar 2019 08:51:24 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id C924E3013CC; Thu,  7 Mar 2019 08:51:23 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:51:23 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCHv2 5/8] perf tools: Get precise_ip from the pmu config
+Message-ID: <20190307165123.GE7535@tassilo.jf.intel.com>
+References: <20190305152536.21035-1-jolsa@kernel.org>
+ <20190305152536.21035-6-jolsa@kernel.org>
+ <20190305161319.GC17272@tassilo.jf.intel.com>
+ <20190305162854.GB4533@krava>
+ <20190305164017.GD17272@tassilo.jf.intel.com>
+ <20190307153500.GC29474@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307164705.qbu4ytdfdmsighas@treble>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 07 Mar 2019 16:50:25 +0000 (UTC)
+In-Reply-To: <20190307153500.GC29474@krava>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 10:47:05AM -0600, Josh Poimboeuf wrote:
-> On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
-> > On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
-> > > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
-> > 
-> > 
-> > > > 01be     20d3:  31 c0                   xor    %eax,%eax
-> > > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
-> > > > 01c3     20d8:  77 08                   ja     20e2 <__do_sys_waitid+0x1cd>
-> > 
-> > randconfig-build/kernel/exit.o: warning: objtool:   __do_sys_waitid()+0x1c3: (branch)
-> > 
-> > > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
-> > > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
-> > > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
-> > > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
-> > > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
-> > > > 01e1     20f6:	00 
-> > > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
-> > > > 01e2     20f7:	84 c0                	test   %al,%al
-> > > > 01e4     20f9:	75 2d                	jne    2128 <__do_sys_waitid+0x213>
+On Thu, Mar 07, 2019 at 04:35:00PM +0100, Jiri Olsa wrote:
+> On Tue, Mar 05, 2019 at 08:40:17AM -0800, Andi Kleen wrote:
+> > On Tue, Mar 05, 2019 at 05:28:54PM +0100, Jiri Olsa wrote:
+> > > On Tue, Mar 05, 2019 at 08:13:19AM -0800, Andi Kleen wrote:
+> > > > On Tue, Mar 05, 2019 at 04:25:33PM +0100, Jiri Olsa wrote:
+> > > > > Getting precise_ip field from the perf_pmu::max_precise
+> > > > > config read from sysfs. If it's not available falling
+> > > > > back to current detection function.
+> > > > 
+> > > > max_precise depends on the event.  This won't work for all
+> > > > events. For example only instructions and cycles support
+> > > > ppp
 > > > 
-> > > we do not take this branch and fall-through.
+> > > I'm getting  precise_ip=3 on mem-* events as well, that's why I
+> > > was fixing this.. now it's not working for any event
 > > 
-> > And that is the error, I think. We should've taken it and went to:
+> > I don't think it means anything for mem-*
 > > 
-> >   return -EFAULT;
-> > 
-> > because:
-> > 
-> >  +1be	xor  %eax,%eax	eax=0
-> >  +1cd   xor  $0x1,%eax	eax=1
-> >  +1e2   test %al,%al	1&1==1 -> ZF=0
-> >  +1e4   jnz
-> > 
-> > Is an unconditional code sequence, but there's no way objtool can do
-> > that without becoming a full blown interpreter :/
-> > 
-> > > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov    $0xfffffffffffffff2,%r15
-> > > > ffffffffffffe0eb }
-> > > > 021a     212f:  48 8d 65 d8             lea    -0x28(%rbp),%rsp
-> > > > 021e     2133:  4c 89 f8                mov    %r15,%rax
-> > > > 0221     2136:  5b                      pop    %rbx
-> > > > 0222     2137:  41 5c                   pop    %r12
-> > > > 0224     2139:  41 5d                   pop    %r13
-> > > > 0226     213b:  41 5e                   pop    %r14
-> > > > 0228     213d:  41 5f                   pop    %r15
-> > > > 022a     213f:  5d                      pop    %rbp
-> > > > 022b     2140:  c3                      retq
+> > There's some support for it on Goldmont plus for other events,
+> > but it doesn't support mem-*. On big core it's only
+> > for instructions and cycles, all implemented with the same
+> > event. All other PEBS events only have two levels
+> > switching between the two IPs.
 > 
-> This "fixes" it, and also seems to help -Os make much code:
+> ok, so how about this, it's the change I posted merged with the patch
 
-much *smaller* code
+Still seems like a hack. Even though I don't know of a case that
+would break now. But it would be better to have the precise probing
+in the open retry loop, instead of trying to reinvent it here.
 
-> 
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index 445348facea9..8de63db58fdd 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -67,7 +67,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
->  				.line = __LINE__,			\
->  			};						\
->  		______r = !!(cond);					\
-> -		______f.miss_hit[______r]++;					\
-> +		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
->  		______r;						\
->  	}))
->  #endif /* CONFIG_PROFILE_ALL_BRANCHES */
-
--- 
-Josh
+-Andi
