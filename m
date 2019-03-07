@@ -2,86 +2,134 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A25C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D8EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E8C20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395DA20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="P5/EiTyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbfCGP7l (ORCPT
+        id S1726728AbfCGP7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:59:41 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36485 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbfCGP7i (ORCPT
+        Thu, 7 Mar 2019 10:59:51 -0500
+Received: from mail-it1-f193.google.com ([209.85.166.193]:36606 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfCGP7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:59:38 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p25so17649051qtb.3;
-        Thu, 07 Mar 2019 07:59:38 -0800 (PST)
+        Thu, 7 Mar 2019 10:59:49 -0500
+Received: by mail-it1-f193.google.com with SMTP id v83so16558639itf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YR2PiZD6BHr8hgVqVgUGtVxLkfx0p0sFvLP49y5X5EI=;
+        b=P5/EiTyU4KfgnW2+IBT7ZH5KGDuij6zl65bbE5KcMtmJWTWMR2Ui7E7uFQ2ss9mDTw
+         ryFFeSc5FcaIb59hlJgyi1cXKO/QH8ZQLbfUOH2FX9xPrZr3q0fmgPfxPenrJUL5UXg4
+         uqZdAML7UD/m2bahGJDnkKQfA73U94svTUhYwHSgiy9VQwxLRbs3rq7Zfk9GYelDsR3I
+         QtZq3G9g9qD1UNBpzhgn76A6P5bdZMPkPc4kyGRhA5aaGgzUk/vr+1gzuvsKUn/WHbla
+         mpHeKlBTEQSmOyQ5TM0Nuq2//uCb/i3MuqkYztI3K6cXTH2P3ZXa6A5YaacLVYNikIu0
+         2ShQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RUg+lYsZP7w962oQo6Vktz83Dw9cdj8a3+anhAM+t+4=;
-        b=JavWXzMi0UzMCn1wkrHU8k22jgHZUpiCgstlcPJo2qzdpdLg7y7PmMOyX1yBzOM3pT
-         +ViMhaXLE8EBRho3yUlx89ZZLwLZMyXEB/D/GvjBWFeRSJO1UOrGVa3uZrB4hgUJiVvS
-         2kMILw2kYZtirbzzWcyx1BFLWHHVNJRmhhsDcSHcK0cB0PAc90P3LTdkds3vrkUVZog3
-         VayBdpPVceGEnw1lcpTF7dPCeNAGh0TNHoMjuU8neY2O/msNvS9E+8tcp+d5lRCPRZ1r
-         +eQzB5MDGYGQnI02OeDnnNK3QuiN5Oldr1hS2yXf5dkwvF1EZ28oIehUAWZcotoPBssk
-         7Xkw==
-X-Gm-Message-State: APjAAAU7C6ENK1i100gaBoYqy7hkKCuhIYj0hH0qCtdzl3tv+p2uG8Ab
-        Cb0q58g0UHMrqUG8ne5S04wQVsD5vYXE/CWtjkE=
-X-Google-Smtp-Source: APXvYqyVI2l2JLvyyldnF+vpyuccbq95rFjxwk+AtVNgkAJZb9q+pci9U7y/8lEvPEZiqmncrLEDoFs7Zdc1+05t/Iw=
-X-Received: by 2002:ac8:2bcf:: with SMTP id n15mr10364282qtn.96.1551974377813;
- Thu, 07 Mar 2019 07:59:37 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YR2PiZD6BHr8hgVqVgUGtVxLkfx0p0sFvLP49y5X5EI=;
+        b=GeWZk7qc2erOjbFPMxwa94WNe+ZDXWQ1by043rE4mKkhIHbcbLNetGQj1pM6nt2K1U
+         bEKDmSQCK7P1ntAw8uGV8kMA9ZuPC8RAobgWvtt5aqw1TGL4xeMzDWxkcQ9LuJ8rreqW
+         z3uTFxYkc17DZDoPPKPo6tFXDfxt+xd3Y74AwX4tnpIadvLxAuRPMonEBEhYFlsMFfp8
+         IF/4l7ShiXUgcae/3lFHnngyER6GBkWMrQD0WvtIjNgqc9yqftxRSDyxF7kTJHIuPq5X
+         q0I/hK/6BEOCgeX/fGGbRgVSYMpIRsf35DaxDs9HvMV4XdfUO7/jE6GkUe70whAsk6AY
+         /Dtw==
+X-Gm-Message-State: APjAAAWrMrwpZfNiRhN8R8c2YlYEtKeLImwKpNi6Fzh2fLQEEVNuQJzk
+        1BnpO6qAFE+YzpXraXrzIDoc9LM92NE4bw==
+X-Google-Smtp-Source: APXvYqxmvbSmWH8FSqy1YOBptTvP1Jy52VMXPnwHGvYyYDU/NCxcwDU+qN3Zu9EUcEonMK20GUp5zw==
+X-Received: by 2002:a24:1c4d:: with SMTP id c74mr5540098itc.36.1551974387250;
+        Thu, 07 Mar 2019 07:59:47 -0800 (PST)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id x25sm259164ion.78.2019.03.07.07.59.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 07:59:46 -0800 (PST)
+Subject: Re: [PATCH] pblk: fix max_io calculation
+To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
+        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190307121853.14503-1-javier@javigon.com>
+ <8b13dcf3-4486-0e14-b718-417c7fc42a7b@lightnvm.io>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a2f98eea-2407-49ad-4ff6-c1e92762d2f8@kernel.dk>
+Date:   Thu, 7 Mar 2019 08:59:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190307093408.3425010-1-arnd@arndb.de> <20190307100605.GA20309@unicorn.suse.cz>
-In-Reply-To: <20190307100605.GA20309@unicorn.suse.cz>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 7 Mar 2019 16:59:19 +0100
-Message-ID: <CAK8P3a3YLD2K-bGXCiN4xQNQhGCLzVE4C9WonFGTo7LN30v4pg@mail.gmail.com>
-Subject: Re: [PATCH] ethtool: reduce stack usage with clang
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Wenwen Wang <wang6495@umn.edu>,
-        Ilya Lesokhin <ilyal@mellanox.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Edward Cree <ecree@solarflare.com>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8b13dcf3-4486-0e14-b718-417c7fc42a7b@lightnvm.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 11:06 AM Michal Kubecek <mkubecek@suse.cz> wrote:
->
-> On Thu, Mar 07, 2019 at 10:33:35AM +0100, Arnd Bergmann wrote:
+On 3/7/19 8:57 AM, Matias Bjørling wrote:
+> On 3/7/19 1:18 PM, Javier González wrote:
+>> When calculating the maximun I/O size allowed into the buffer, consider
+>> the write size (ws_opt) used by the write thread in order to cover the
+>> case in which, due to flushes, the mem and subm pointers are disaligned
+>> by (ws_opt - 1). This case currently translates into a stall when
+>> an I/O of the largest possible size is submitted.
+>>
+>> Fixes: f9f9d1ae2c66 ("lightnvm: pblk: prevent stall due to wb threshold")
+>>
+>> Signed-off-by: Javier González <javier@javigon.com>
+>> ---
+>>
+>> Matias: Can you apply this as a fix to 5.1. This is a case I missed when fixing
+>> the wb threshold, which is also scheduled for 5.1
+>>
+>> Thanks,
+>> Javier
+>>
+>>   drivers/lightnvm/pblk-rl.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/lightnvm/pblk-rl.c b/drivers/lightnvm/pblk-rl.c
+>> index b014957dde0b..a5f8bc2defbc 100644
+>> --- a/drivers/lightnvm/pblk-rl.c
+>> +++ b/drivers/lightnvm/pblk-rl.c
+>> @@ -233,10 +233,15 @@ void pblk_rl_init(struct pblk_rl *rl, int budget, int threshold)
+>>   	/* To start with, all buffer is available to user I/O writers */
+>>   	rl->rb_budget = budget;
+>>   	rl->rb_user_max = budget;
+>> -	rl->rb_max_io = threshold ? (budget - threshold) : (budget - 1);
+>>   	rl->rb_gc_max = 0;
+>>   	rl->rb_state = PBLK_RL_HIGH;
+>>   
+>> +	/* Maximize I/O size and ansure that back threshold is respected */
+>> +	if (threshold)
+>> +		rl->rb_max_io = budget - pblk->min_write_pgs_data - threshold;
+>> +	else
+>> +		rl->rb_max_io = budget - pblk->min_write_pgs_data - 1;
+>> +
+>>   	atomic_set(&rl->rb_user_cnt, 0);
+>>   	atomic_set(&rl->rb_gc_cnt, 0);
+>>   	atomic_set(&rl->rb_space, -1);
+>>
+> 
+> Hi Jens,
+> 
+> If possible, could you please pick this one up for 5.1? It fixes a 
+> previous patch that was introduced in 5.1 that should fix a stall, but 
+> didn't quite catch it.
 
-> > @@ -2533,7 +2535,7 @@ static int ethtool_set_fecparam(struct net_device *dev, void __user *useraddr)
-> >
-> >  /* The main entry point in this file.  Called from net/core/dev_ioctl.c */
-> >
-> > -int dev_ethtool(struct net *net, struct ifreq *ifr)
-> > +int noinline_for_stack dev_ethtool(struct net *net, struct ifreq *ifr)
-> >  {
-> >       struct net_device *dev = __dev_get_by_name(net, ifr->ifr_name);
-> >       void __user *useraddr = ifr->ifr_data;
->
-> Is this part really needed? AFAICS dev_ethtool() is only called from
-> dev_ioctl() which is in a different compilation unit so that
-> dev_ethtool() won't be inlined anyway.
+Applied
 
-No, you are right. I had accidentally left this in place from an earlier
-version. Sending a v2 now.
+-- 
+Jens Axboe
 
-      Arnd
