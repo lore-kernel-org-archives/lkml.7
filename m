@@ -2,149 +2,95 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8711DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E89FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6231F20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FEC20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551980887;
+	bh=k81k8pJN0QhYbWoT4O9814n7hxYVrGWqh2Xqg6P3qnQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OAlxaKV0qrs2VOJ+ArtRfcD042oYnwsCSTPh4Fe7NRHvhEymJ8F1Gbd5PjeOj40vw
+	 +GfQ80hPMtYw7UoKlySLBuSCI8M2pe2/3RrQ9Y8xhiH+mhGcW0c+K8i/crkCU0L3fW
+	 bZLSF/VMBNnE2uHgsfh595yMMHk5Qwp/cfLODb3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfCGRsB (ORCPT
+        id S1726670AbfCGRsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:48:01 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:36492 "EHLO mx1.redhat.com"
+        Thu, 7 Mar 2019 12:48:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbfCGRqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:46:01 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726765AbfCGRqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:46:03 -0500
+Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9814881E13;
-        Thu,  7 Mar 2019 17:46:00 +0000 (UTC)
-Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AFE46013F;
-        Thu,  7 Mar 2019 17:45:58 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 11:45:56 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     hpa@zytor.com
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
-        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
-Message-ID: <20190307174556.m7nh2y4wt3lbhuxd@treble>
-References: <20190307114511.870090179@infradead.org>
- <20190307120317.GD32477@hirez.programming.kicks-ass.net>
- <20190307125526.GB32534@hirez.programming.kicks-ass.net>
- <20190307131312.GC32534@hirez.programming.kicks-ass.net>
- <20190307164705.qbu4ytdfdmsighas@treble>
- <2F80FC70-5D2F-425F-BEB5-D70E981CC684@zytor.com>
- <20190307171829.xww7is5qja32r7ux@treble>
- <714E9D57-CCAE-4A69-AC3E-E6AFC525834E@zytor.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CA0620661;
+        Thu,  7 Mar 2019 17:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551980763;
+        bh=k81k8pJN0QhYbWoT4O9814n7hxYVrGWqh2Xqg6P3qnQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R5dlRwVzjcuKpVdYj36A7Wax39Vs7ENti9y1xSyGy0SbK7bJ2dKvy68QihWw+gAlv
+         7MxpifOOO04knxSSFK0624S3Md9APzFIhWEYibn9aTSWvfjPIJYj16QDjgHNNQiScD
+         jXFY5oke0ZM/j4BU4BqcwpW/H9JIDQx14g8n89DA=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yang Wei <albin_yang@163.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 18/35] perf clang: Remove needless extra semicolon
+Date:   Thu,  7 Mar 2019 14:44:16 -0300
+Message-Id: <20190307174433.28819-19-acme@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
+References: <20190307174433.28819-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <714E9D57-CCAE-4A69-AC3E-E6AFC525834E@zytor.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 07 Mar 2019 17:46:00 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 09:29:17AM -0800, hpa@zytor.com wrote:
-> On March 7, 2019 9:18:29 AM PST, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >On Thu, Mar 07, 2019 at 09:04:36AM -0800, hpa@zytor.com wrote:
-> >> On March 7, 2019 8:47:05 AM PST, Josh Poimboeuf <jpoimboe@redhat.com>
-> >wrote:
-> >> >On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
-> >> >> On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
-> >> >> > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
-> >> >> 
-> >> >> 
-> >> >> > > 01be     20d3:  31 c0                   xor    %eax,%eax
-> >> >> > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
-> >> >> > > 01c3     20d8:  77 08                   ja     20e2
-> >> ><__do_sys_waitid+0x1cd>
-> >> >> 
-> >> >> randconfig-build/kernel/exit.o: warning: objtool:  
-> >> >__do_sys_waitid()+0x1c3: (branch)
-> >> >> 
-> >> >> > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
-> >> >> > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
-> >> >> > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
-> >> >> > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
-> >> >> > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
-> >> >> > > 01e1     20f6:	00 
-> >> >> > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
-> >> >> > > 01e2     20f7:	84 c0                	test   %al,%al
-> >> >> > > 01e4     20f9:	75 2d                	jne    2128
-> >> ><__do_sys_waitid+0x213>
-> >> >> > 
-> >> >> > we do not take this branch and fall-through.
-> >> >> 
-> >> >> And that is the error, I think. We should've taken it and went to:
-> >> >> 
-> >> >>   return -EFAULT;
-> >> >> 
-> >> >> because:
-> >> >> 
-> >> >>  +1be	xor  %eax,%eax	eax=0
-> >> >>  +1cd   xor  $0x1,%eax	eax=1
-> >> >>  +1e2   test %al,%al	1&1==1 -> ZF=0
-> >> >>  +1e4   jnz
-> >> >> 
-> >> >> Is an unconditional code sequence, but there's no way objtool can
-> >do
-> >> >> that without becoming a full blown interpreter :/
-> >> >> 
-> >> >> > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov   
-> >> >$0xfffffffffffffff2,%r15
-> >> >> > > ffffffffffffe0eb }
-> >> >> > > 021a     212f:  48 8d 65 d8             lea   
-> >-0x28(%rbp),%rsp
-> >> >> > > 021e     2133:  4c 89 f8                mov    %r15,%rax
-> >> >> > > 0221     2136:  5b                      pop    %rbx
-> >> >> > > 0222     2137:  41 5c                   pop    %r12
-> >> >> > > 0224     2139:  41 5d                   pop    %r13
-> >> >> > > 0226     213b:  41 5e                   pop    %r14
-> >> >> > > 0228     213d:  41 5f                   pop    %r15
-> >> >> > > 022a     213f:  5d                      pop    %rbp
-> >> >> > > 022b     2140:  c3                      retq
-> >> >
-> >> >This "fixes" it, and also seems to help -Os make much code:
-> >> >
-> >> >diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> >> >index 445348facea9..8de63db58fdd 100644
-> >> >--- a/include/linux/compiler.h
-> >> >+++ b/include/linux/compiler.h
-> >> >@@ -67,7 +67,7 @@ void ftrace_likely_update(struct
-> >ftrace_likely_data
-> >> >*f, int val,
-> >> > 				.line = __LINE__,			\
-> >> > 			};						\
-> >> > 		______r = !!(cond);					\
-> >> >-		______f.miss_hit[______r]++;					\
-> >> >+		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
-> >> > 		______r;						\
-> >> > 	}))
-> >> > #endif /* CONFIG_PROFILE_ALL_BRANCHES */
-> >> 
-> >> if (cond)?  Or is ___r used elsewhere?
-> >
-> >______r is also the return value.  And it's needed because cond should
-> >only be evaluated once.
-> 
-> So put a true; and false; inside the if.
+From: Yang Wei <yang.wei9@zte.com.cn>
 
-Is that possible to do in a C macro?  Doesn't seem to work for me...
+Delete a superfluous semicolon in getBPFObjectFromModule().
 
+Signed-off-by: Yang Wei <yang.wei9@zte.com.cn>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Yang Wei <albin_yang@163.com>
+Link: http://lkml.kernel.org/r/1551710174-3349-1-git-send-email-albin_yang@163.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/c++/clang.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/c++/clang.cpp b/tools/perf/util/c++/clang.cpp
+index 39c0004f2886..fc361c3f8570 100644
+--- a/tools/perf/util/c++/clang.cpp
++++ b/tools/perf/util/c++/clang.cpp
+@@ -156,7 +156,7 @@ getBPFObjectFromModule(llvm::Module *Module)
+ #endif
+ 	if (NotAdded) {
+ 		llvm::errs() << "TargetMachine can't emit a file of this type\n";
+-		return std::unique_ptr<llvm::SmallVectorImpl<char>>(nullptr);;
++		return std::unique_ptr<llvm::SmallVectorImpl<char>>(nullptr);
+ 	}
+ 	PM.run(*Module);
+ 
 -- 
-Josh
+2.20.1
+
