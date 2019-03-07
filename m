@@ -2,68 +2,67 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C1AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94345C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D4320661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551981059;
-	bh=+dWOV4dHf7KqYajkAfzwHXIC4tZYpvuWInJU8t6SOxY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Qe9XRjb+qD3b0JTzcT1uci4Nn7XafhLZyPW8zpOO3uz/qC1S3+Njqdn+BUhPRORSu
-	 2LMfDwaU+66dnYMpY/Pm+K6n89Ttpi5JFjB3EW/q0kz73Z48AZgUPuSXZM60Mrez4y
-	 l+C1aZHCouctFKO0T+XMDmWdbjhtKPLTSykUjNQE=
+	by mail.kernel.org (Postfix) with ESMTP id 70F8620661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfCGRuF (ORCPT
+        id S1726452AbfCGRxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:50:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfCGRuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:50:03 -0500
-Subject: Re: [GIT PULL] ext2 and udf fixes for v5.1-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551981003;
-        bh=+dWOV4dHf7KqYajkAfzwHXIC4tZYpvuWInJU8t6SOxY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ZHg9u+wpzs0FwR/Swr4qZ8LmCMdu8ka36HdRMijssaY+B7PMazD11QISScNjboRJp
-         ViIJOqK5oiSDDXJZepCacGNycAZr3RqGuxDECv21eQq7/Dx8hWk5wejcYGacjb8L3g
-         Jt0LibNbwA5p+CdfH1nS24qp5T72lNlHEIgRbl8I=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190301150859.GA15758@quack2.suse.cz>
-References: <20190301150859.GA15758@quack2.suse.cz>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190301150859.GA15758@quack2.suse.cz>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git
- fs_for_v5.1-rc1
-X-PR-Tracked-Commit-Id: 52b9666efd8b0874d334de718a7d561e7b0eb1cc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a9913f23f39f4aa74956587a03e78b758a10c314
-Message-Id: <155198100308.21542.8386617478142938065.pr-tracker-bot@kernel.org>
-Date:   Thu, 07 Mar 2019 17:50:03 +0000
-To:     Jan Kara <jack@suse.cz>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+        Thu, 7 Mar 2019 12:53:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38696 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfCGRxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:53:02 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C51D927F510
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     lee.jones@linaro.org
+Cc:     groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com,
+        bleung@chromium.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mfd: cros_ec: instantiate CrOS FP and TP devices
+Date:   Thu,  7 Mar 2019 18:52:51 +0100
+Message-Id: <20190307175253.14785-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 1 Mar 2019 16:08:59 +0100:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git fs_for_v5.1-rc1
+This patch adds support to instantiate two special CrOS EC devices, one
+is fingerprint and another one is a touchpad. This patchset depends on
+the following patches to apply cleanly and build.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a9913f23f39f4aa74956587a03e78b758a10c314
+- mfd: cros: Update EC protocol to match current EC code
+  - https://lore.kernel.org/patchwork/patch/1046363
 
-Thank you!
+- mfd: cros_ec: instantiate properly CrOS ISH MCU device
+  - https://lore.kernel.org/patchwork/patch/1047022
+
+Best regards,
+ Enric
+
+Vincent Palatin (1):
+  mfd: cros_ec: instantiate properly CrOS FP MCU device
+
+Wei-Ning Huang (1):
+  mfd: cros_ec: instantiate properly CrOS Touchpad MCU device
+
+ drivers/mfd/cros_ec_dev.c   | 20 ++++++++++++++++++++
+ include/linux/mfd/cros_ec.h |  2 ++
+ 2 files changed, 22 insertions(+)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
