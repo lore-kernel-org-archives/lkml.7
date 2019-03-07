@@ -2,93 +2,111 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63859C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5E320851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BC020840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbfCGUSL (ORCPT
+        id S1726264AbfCGUUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:18:11 -0500
-Received: from sauhun.de ([88.99.104.3]:54966 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfCGUSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:18:10 -0500
-Received: from localhost (p54B334C5.dip0.t-ipconnect.de [84.179.52.197])
-        by pokefinder.org (Postfix) with ESMTPSA id 2BCD82E3551;
-        Thu,  7 Mar 2019 21:18:08 +0100 (CET)
-Date:   Thu, 7 Mar 2019 21:18:07 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Hoan Tran <hotran@apm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 10/61] gpio: simplify getting .drvdata
-Message-ID: <20190307201807.GA950@kunai>
-References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
- <20180419140641.27926-11-wsa+renesas@sang-engineering.com>
- <b0c1e303-ca95-8bc8-a5d4-65e75dc8398a@ti.com>
- <CACRpkday+d9iGeX+CRHTEyC=w+oNUK-8oTy0HqugO5PRhHn62w@mail.gmail.com>
- <20180430092947.GC2270@ulmo>
- <CAHCN7xLBa0JxcUs9i6Rr3hUNe5zymfb66icqNK0N3PMo51T-TA@mail.gmail.com>
+        Thu, 7 Mar 2019 15:20:09 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39124 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGUUI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 15:20:08 -0500
+Received: from [IPv6:2804:431:d719:9975:b343:652b:e214:3dca] (unknown [IPv6:2804:431:d719:9975:b343:652b:e214:3dca])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 69626260A49;
+        Thu,  7 Mar 2019 20:20:05 +0000 (GMT)
+Subject: Re: [PATCH 5/8] media: vimc: stream: cleanup frame field from struct
+ vimc_stream
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     lucmaga@gmail.com, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        kernel@collabora.com
+References: <20190306224244.21070-1-helen.koike@collabora.com>
+ <20190306224244.21070-6-helen.koike@collabora.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <adbfa62c-e5f6-4c24-76b4-cac299cdd800@collabora.com>
+Date:   Thu, 7 Mar 2019 17:19:15 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xLBa0JxcUs9i6Rr3hUNe5zymfb66icqNK0N3PMo51T-TA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190306224244.21070-6-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've tested the stream (with the default media bus format and using an 
+alternative one) using a custom user space application and tested all 
+capture entities using qv4l2 -d /dev/videoX (where X is each of the 
+capture entities). Also, I have checked v4l2-compliance -d /dev/videoX 
+and with v4l2-compliance --streaming=5 -d /dev/videoX and no regressions 
+where found.
 
-
-> It's been almost a year later, and several Linux revisions, and this
-> still seems stuck somewhere/somehow.
-
-I wanted to respin this series once rc1 is released.
-
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyBfHsACgkQFA3kzBSg
-Kbb87BAAgY8Zdjph2MvnTtWsLVlR20N3tzC48BqMW6+mCkS/GBg4G+shi+L5bN9r
-eKruZXQ505sEuRpB/v1PC7QlGJ0Bp5Dk7VVaQolgC7Jx2ubqRYhaW2UWkz3Mr5RO
-3yfmDc1jo4B3z7d4Cqyi7qWcFSB2i4hjR/CA6kz0EXC5LcAPTACDSmliFtoZPvQ/
-wWbpWQN6kO8JYAluEjxOI+EtQL22fha/FrRKEY91X3yPtIzZYA89ZacOsBlKFBKU
-SouRZmq7htq6eatqg7XV4y3X4ZxsOkL0gxWCZiGX4iE9yamM/eF0+6WD6zaVHoKa
-W24fFnqyi+yg7sYZ1iNdokb0JHR/sCZJffPjKKD1OnJFjUedXFA1JazIEDfNARyM
-/Sh/hrcIb4n6CXe1sQ3YHEZkaLffqICJW+OIEWkUI0kSAbSFnKCVxHVb6F0r/I+Q
-PZ3SnruxYHrDWgegpZQkjE9rsZRCkG5KDNZ2fahXW9BUaIXfuWRyzoXaiVW8Matb
-vbyKCym1vwq0SxHIGyCqEYK0GBt6Yx9y/JelHChYWyyiKe+g6SLgctFycF8Fn/Fh
-sbdGgmrtsg+eIepcAvkw/+fvA3ITCCN0QX9WRzrUjftrG6MRoFni1+ec4nXJkwgI
-p+565C1niZxFqf1wRcZT86WxiYI01T0pLi1bKOwunvZ8Riym9b4=
-=vuew
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+On 3/6/19 7:42 PM, Helen Koike wrote:
+> There is no need to have the frame field in the vimc_stream struct.
+>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Tested-by: André Almeida <andre.almeida@collabora.com>
+> ---
+>
+>   drivers/media/platform/vimc/vimc-streamer.c | 10 ++++------
+>   drivers/media/platform/vimc/vimc-streamer.h |  1 -
+>   2 files changed, 4 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+> index 392754c18046..b7c1fdef5f0d 100644
+> --- a/drivers/media/platform/vimc/vimc-streamer.c
+> +++ b/drivers/media/platform/vimc/vimc-streamer.c
+> @@ -117,6 +117,7 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>   static int vimc_streamer_thread(void *data)
+>   {
+>   	struct vimc_stream *stream = data;
+> +	u8 *frame = NULL;
+>   	int i;
+>   
+>   	set_freezable();
+> @@ -127,12 +128,9 @@ static int vimc_streamer_thread(void *data)
+>   			break;
+>   
+>   		for (i = stream->pipe_size - 1; i >= 0; i--) {
+> -			stream->frame = stream->ved_pipeline[i]->process_frame(
+> -					stream->ved_pipeline[i],
+> -					stream->frame);
+> -			if (!stream->frame)
+> -				break;
+> -			if (IS_ERR(stream->frame))
+> +			frame = stream->ved_pipeline[i]->process_frame(
+> +					stream->ved_pipeline[i], frame);
+> +			if (!frame || IS_ERR(frame))
+>   				break;
+>   		}
+>   		//wait for 60hz
+> diff --git a/drivers/media/platform/vimc/vimc-streamer.h b/drivers/media/platform/vimc/vimc-streamer.h
+> index 752af2e2d5a2..dc1d0be431cb 100644
+> --- a/drivers/media/platform/vimc/vimc-streamer.h
+> +++ b/drivers/media/platform/vimc/vimc-streamer.h
+> @@ -19,7 +19,6 @@ struct vimc_stream {
+>   	struct media_pipeline pipe;
+>   	struct vimc_ent_device *ved_pipeline[VIMC_STREAMER_PIPELINE_MAX_SIZE];
+>   	unsigned int pipe_size;
+> -	u8 *frame;
+>   	struct task_struct *kthread;
+>   };
+>   
