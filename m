@@ -2,141 +2,117 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D617C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DE8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E31920840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731A420840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="tdL9DOC6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="6P1ihIWD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7OgvY7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfCGPVx (ORCPT
+        id S1726578AbfCGPWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:21:53 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:48985 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726166AbfCGPVw (ORCPT
+        Thu, 7 Mar 2019 10:22:11 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41181 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGPWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:21:52 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 2B56236C0;
-        Thu,  7 Mar 2019 10:21:51 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 07 Mar 2019 10:21:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ZWOjpVoFygjKpj3QCFIE67u4a+B
-        gT9KskygU8uLvIpc=; b=tdL9DOC60Xq66uJCV7IU+QBkWsfemp43Wb6IVfmsBzG
-        9QDfFk0q1rB+H6zHNmuJEz+fzIeVk0RpqdHj2FoGXwS8lxV+DixzoMKVP3RoPow5
-        ObPc0XT1Xb4JKshvfjxUVIkq94hWVjX1sLL4SSHKo8wW8/wP7E9WlO2z9KjX73+u
-        0RgeEqEuOehyeO0QXeciKzY79FQRrPvZVhTFO77qNpZM1i4Gn97GtqNiZVOFCP3Q
-        bRDrehYHrFpIeIomOOLMu5neOVYs7FczOclcrO172Hubibv+iHCsEaKylWJE/ygV
-        mHYHeOZ53DbnTFJ+y5hgl4w3jxUo7hL1qUw2gR9OuUg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZWOjpV
-        oFygjKpj3QCFIE67u4a+BgT9KskygU8uLvIpc=; b=6P1ihIWDEH2f7JITupxm3S
-        +v7mm6RTpmKEHXUs6x8ILvvdCU6R3N0x8Njt9qCIGJu7wHJaEwVVObbmRWtrblzf
-        En5Snv1yx8xHAcfyMqQs0dCpCwIEG33UvsOcg/QECQ6jso/wxDqLyYoYOFFBjaKC
-        WGa8cSBEKGuZ7aXAKybaIFcy8PBC916Xw3GbucXv5iSrYypSMWUNgcq39rRLNTIL
-        WwCYTnX1QJjxU4Q/38LaL8lK/ZZYVItTas8oKx2o5aSSmFiuuydnC/Iy/KYlAbvI
-        bNa8f78oWReaB8V1iKZJfHijKfC1oBHhrWv6ldxhLqmP266pwcECL8BO1r6JjW9w
-        ==
-X-ME-Sender: <xms:DjeBXIQQv0yao2CIrE75CKxqxq-aH-aeKgUS2JNE-SzzKp_waUkYEw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeekgdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:DjeBXAuUjlEiS5zs2L6mDriK6KjBG2U4fZgT5xtgsng6iiqyIZmMyw>
-    <xmx:DjeBXEy7oLhNt31BqqJ3gHs6jZnkPbt7tyPDADhFbE4mNtqY84U4vw>
-    <xmx:DjeBXAfEdXEjBVrkkwdsTYyaZg2N3lXTsxVGGWcESlZXsGIGtPsblw>
-    <xmx:DjeBXKzpeKkD5uQ87SX8jEkGO4OeKBsik-E_mQq0DooY74qKhO3upQ>
-Received: from localhost (5356596b.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A06E810336;
-        Thu,  7 Mar 2019 10:21:49 -0500 (EST)
-Date:   Thu, 7 Mar 2019 16:21:47 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Sasha Levin <sashal@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, stable@vger.kernel.org
-Subject: Re: [PATCH for-4.19] staging: erofs: fix mis-acted TAIL merging
- behavior
-Message-ID: <20190307152147.GA24453@kroah.com>
-References: <20190301212203.5FE0C2084F@mail.kernel.org>
- <20190307053404.29108-1-gaoxiang25@huawei.com>
- <20190307122539.GD21325@kroah.com>
- <5b7e1914-f8e5-da3d-4492-17d6afc00fb1@huawei.com>
+        Thu, 7 Mar 2019 10:22:10 -0500
+Received: by mail-ed1-f67.google.com with SMTP id x7so13775058eds.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:22:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OH1+4LcBj06RcAtfzMYBSlC6+Qd57B9iZTps1DUx5dk=;
+        b=h7OgvY7LGEGkdi1fIqi/P4NXg1BEcWBfJUqKdsk2bE0M3I1O8IA0HEGc/Y9r76hqwe
+         yvec4osySaNU45RxKBoC4Wc3aMwGbs3p4jAVaSKN9K0y0nJ93tMgANltCalA95jVEbHg
+         VnQkA9rAiyAxAlVn8zJ/eorhhFF3nJn25TlPJ3Tnb1EZEjUb9uvsL5UkEwHsoXivGaov
+         F8+Y+1fGbatEajATiHT3regHkad/tbD1H/0g5yRKKDoWipdoBWZ2uNM1987EeOgvomRi
+         mxWHsq9gtBId74z6x+OehNuA79LbusKHeMBosIbLwq1lgvDlmQHq0vDjkxftGsAn+AMi
+         Dmww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OH1+4LcBj06RcAtfzMYBSlC6+Qd57B9iZTps1DUx5dk=;
+        b=nQo+iflTrrwrTCVlulHJUxgrSzSv88lebcXte52/fhpMu7w3zEfQsdFzLRTjv/FVAt
+         VManjInnSp11MPZb8sSNSOmu5b0/OezGcnNt1nH0pW/ho+5EfBX2mSVsCcC+WYL/s8BW
+         9424cVmIWQsvl8biegXr+XWpE/LGH/MbKYwYI/GUQ/RSkDjECahIVk0eQNpo6COCcxG7
+         9Vh++p3MDxSsTJA/rI6qo07r70qOiCX343cp8JCqp4rDdI36LJGq2uHkuj7Uza5mnbX8
+         D7j3Uj3U3yT0lq19YGu7D9sI28ejCRyaoVaTQakdDR+FQB8MrPHhsH3FkTaclEl14xI+
+         zgig==
+X-Gm-Message-State: APjAAAX8ATWYETXnjVar0q7SfQrSEJfCUiA13sYTkUP5Zb2viGtlLpkX
+        z6WgatTO5IZl2Fd2MFOxO+Y=
+X-Google-Smtp-Source: APXvYqxVyKM56NQU41LGrKs5wKe2GXv8jmoo58rV+ezEwFmSNGo/tYiyLfGoYHptXEkp1RSnbQoLHw==
+X-Received: by 2002:a50:82c7:: with SMTP id 65mr28946906edg.7.1551972128585;
+        Thu, 07 Mar 2019 07:22:08 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id p44sm1403031edc.1.2019.03.07.07.22.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 07:22:08 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:22:06 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: ams-delta: remove duplicate 'const'
+Message-ID: <20190307152206.GF20201@archlinux-ryzen>
+References: <20190307101101.613881-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b7e1914-f8e5-da3d-4492-17d6afc00fb1@huawei.com>
+In-Reply-To: <20190307101101.613881-1-arnd@arndb.de>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 09:04:06PM +0800, Gao Xiang wrote:
-> Hi Greg,
+On Thu, Mar 07, 2019 at 11:10:49AM +0100, Arnd Bergmann wrote:
+> clang points out that SOC_ENUM_SINGLE_EXT_DECL() contains a 'const'
+> modifier already, so adding another one does not make it more const:
 > 
-> On 2019/3/7 20:25, Greg KH wrote:
-> > On Thu, Mar 07, 2019 at 01:34:04PM +0800, Gao Xiang wrote:
-> >> commit a112152f6f3a2a88caa6f414d540bd49e406af60 upstream.
-> >>
-> >> EROFS has an optimized path called TAIL merging, which is designed
-> >> to merge multiple reads and the corresponding decompressions into
-> >> one if these requests read continuous pages almost at the same time.
-> >>
-> >> In general, it behaves as follows:
-> >>  ________________________________________________________________
-> >>   ... |  TAIL  .  HEAD  |  PAGE  |  PAGE  |  TAIL    . HEAD | ...
-> >>  _____|_combined page A_|________|________|_combined page B_|____
-> >>         1  ]  ->  [  2                          ]  ->  [ 3
-> >> If the above three reads are requested in the order 1-2-3, it will
-> >> generate a large work chain rather than 3 individual work chains
-> >> to reduce scheduling overhead and boost up sequential read.
-> >>
-> >> However, if Read 2 is processed slightly earlier than Read 1,
-> >> currently it still generates 2 individual work chains (chain 1, 2)
-> >> but it does in-place decompression for combined page A, moreover,
-> >> if chain 2 decompresses ahead of chain 1, it will be a race and
-> >> lead to corrupted decompressed page. This patch fixes it.
-> >>
-> >> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-> >> Cc: <stable@vger.kernel.org> # 4.19+
-> >> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> >> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> >> ---
-> >>  drivers/staging/erofs/unzip_vle.c | 69 +++++++++++++++++++++++++--------------
-> >>  1 file changed, 44 insertions(+), 25 deletions(-)
-> >>
-> > 
-> > thanks for the backport, now applied.
+> sound/soc/ti/ams-delta.c:203:14: error: duplicate 'const' declaration specifier [-Werror,-Wduplicate-decl-specifier]
+> static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+>              ^
+> include/sound/soc.h:351:2: note: expanded from macro 'SOC_ENUM_SINGLE_EXT_DECL'
+>         const struct soc_enum name = SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(xtexts), xtexts)
 > 
-> Yes, it seems that Sasha's bot cannot cherry-pick it directly,
-> therefore I made this patch for 4.19 by hand...
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+>  sound/soc/ti/ams-delta.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> BTW, there is another patch called "staging: erofs: compressed_pages should not be accessed again after freed"
-> in the same condition... And I also send 4.19 and 4.20 version to stable mailing list,
-> could you also kindly check them out?
-
-Yes, please give me a chance to catch up on stable pending patches to
-process:
-
-	$ mdfrm -c ~/mail/stable/
-	585 messages in /home/gregkh/mail/stable/
-
-You are in good company :)
-
-greg k-h
+> diff --git a/sound/soc/ti/ams-delta.c b/sound/soc/ti/ams-delta.c
+> index 4dce494dfbd3..b9611db14c86 100644
+> --- a/sound/soc/ti/ams-delta.c
+> +++ b/sound/soc/ti/ams-delta.c
+> @@ -200,7 +200,7 @@ static int ams_delta_get_audio_mode(struct snd_kcontrol *kcontrol,
+>  	return 0;
+>  }
+>  
+> -static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+> +static SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+>  				      ams_delta_audio_mode);
+>  
+>  static const struct snd_kcontrol_new ams_delta_audio_controls[] = {
+> -- 
+> 2.20.0
+> 
