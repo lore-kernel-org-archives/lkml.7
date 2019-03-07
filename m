@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA6AC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80A2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF62206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE7620684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fa65DUiP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nNz7CBxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfCGAlC (ORCPT
+        id S1726399AbfCGAlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:41:02 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42689 "EHLO
+        Wed, 6 Mar 2019 19:41:07 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41457 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfCGAlB (ORCPT
+        with ESMTP id S1726387AbfCGAlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:41:01 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n74so9984157pfi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:41:01 -0800 (PST)
+        Wed, 6 Mar 2019 19:41:03 -0500
+Received: by mail-pf1-f196.google.com with SMTP id d25so9983708pfn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:41:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bzyw/FtnJm42S211Z4jwpMLy///sVqYqjHEjihMGnWc=;
-        b=Fa65DUiPt0OKc5L+El+Ke/snQVMtahC81LLsTp2Yx7P+ktf6X/+hKfugvViZm6XpSS
-         YKq8EE59N54UfN0K9yAy1YwNcGdKdXGiulKCjd5fXQp7K+GjAq4iBTXVoO6tlID6MrKh
-         VFDeCTYKHIZuZ6WitSatIciXiw6PrPBJ1Weik=
+        bh=MthmIBJFwwjcmfi1mqDbs2C1CNaXAwGGv8neZZfCz18=;
+        b=nNz7CBxV06a4YhD0Cf+C/tC4pov2TuTIyH3Su1sgjZr+v0SXKMehF7AF7LqaJFN1QE
+         kItSnoiPjVbVbmiSlWaSYUieZ3XWkGtWxReAzbuzgYrbkKHTUPZhqmB1zg2d8IiZhivq
+         JIrqsWcVj9+RXAuWbmaGH1NPap5tkQBKyfjE8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bzyw/FtnJm42S211Z4jwpMLy///sVqYqjHEjihMGnWc=;
-        b=CQ3WQMc3UXQu2NY75i26QYWFRGnm5F2KPvDlEFoYiF/qxCrDy23n4B0CF2zkJ+Lm8n
-         1eMFNrPBHcMDRdgY+XRO+OB7zb9/mjqw5TqDZ28h3uQLzfmpWuo/OJup7vjrSZFhBuyB
-         GuTnvUbk8xrGEBrv0Yl0zC6vL59PFqzvsco46dEss+SdP1X1FwPOe24HktBKT8Plwwau
-         7208ED4K43t2E8zusGxOf6tPnz6kozhJ6oZlx6oH7miktmu3la75r4sYtAiYrC0ycBu8
-         /VUaUi5JUCUAIHu9Pe5Z2CNjpXSzmMokUivfd9EORWs7S1JyWtRJbWSEl4qEHCDXqz9f
-         9N5w==
-X-Gm-Message-State: APjAAAVaU3iCYX958qkUv6zHlpXRdBaRUVnajOJfPAWpwuK4J0/iFWCc
-        TCrhUMIS3Tz/P/nCDb2kCTXdYQ==
-X-Google-Smtp-Source: APXvYqyl4Ipm7+UwH5VAS93wtw/ofppGV4lp9xy8BeSyWqlwFcDZefFTBHkd3V0KMB5W7tGhGlapqA==
-X-Received: by 2002:aa7:8051:: with SMTP id y17mr10021766pfm.92.1551919261248;
+        bh=MthmIBJFwwjcmfi1mqDbs2C1CNaXAwGGv8neZZfCz18=;
+        b=glZ720hN5wGS7awNPbYsW1AzVK4XP+2b4rnY31gjzK+FiPqxTANGF0RAUhN0eKxuqO
+         lFf9iJjFGzMJp5+skRmZMUAbjVcm1Iy6tWIaDBJlNFjRjxCL42jR/4evy/BwPKsmI4Q9
+         b9d4WzzK0yVCPlYYUkToeZEmFfZzlNFU2mjipWpzkaKc1kVbr8UBVFeiez/2NEh2n+jy
+         oT9/UUKgw6f9yVhWUxp3qSINwUCngP+u/Z/S5ir62twLlPhUBWpPmcDKeUdQbbKhscRN
+         Fq+P8bpNAlnL75VqkSjxM0mkpj5VRo3Av/2ZUf+59YfP++xnqtWPnXw4PbUyCv6eIK/B
+         eBhw==
+X-Gm-Message-State: APjAAAXJuyFoj0M86B6qe2fs5FT/EtseUcjsXLxuQfcbjdaf3VnCa6N9
+        f1zvTAX9W/NYCvcAMEQZDKD0Aw==
+X-Google-Smtp-Source: APXvYqyJB6DSL7PVApjNuCSex4T2W7mcBkCjz2GGpfsjDhKKY/4WLvm7MW34X3NIHKe/JlU+oeL2RQ==
+X-Received: by 2002:aa7:918b:: with SMTP id x11mr10476498pfa.228.1551919261979;
         Wed, 06 Mar 2019 16:41:01 -0800 (PST)
 Received: from mka.mtv.corp.google.com ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id o76sm8361985pfa.156.2019.03.06.16.41.00
+        by smtp.gmail.com with ESMTPSA id o76sm8361985pfa.156.2019.03.06.16.41.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 16:41:00 -0800 (PST)
+        Wed, 06 Mar 2019 16:41:01 -0800 (PST)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
         Johan Hedberg <johan.hedberg@gmail.com>
@@ -60,9 +60,9 @@ Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
         Balakrishna Godavarthi <bgodavar@codeaurora.org>,
         Hemantg <hemantg@codeaurora.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to QCA_<flags>
-Date:   Wed,  6 Mar 2019 16:40:40 -0800
-Message-Id: <20190307004041.38059-2-mka@chromium.org>
+Subject: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change vendor event
+Date:   Wed,  6 Mar 2019 16:40:41 -0800
+Message-Id: <20190307004041.38059-3-mka@chromium.org>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
 In-Reply-To: <20190307004041.38059-1-mka@chromium.org>
 References: <20190307004041.38059-1-mka@chromium.org>
@@ -73,67 +73,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IN_BAND_SLEEP_ENABLED.
-The constant represents a flag (multiple flags can be set at once),
-not a unique state of the controller or driver. Also use the BIT()
-macro to specify the position of the flag instead of an integer
-literal.
+Firmware download to the WCN3990 often fails with a 'TLV response size
+mismatch' error:
+
+[  133.064659] Bluetooth: hci0: setting up wcn3990
+[  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
+[  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+[  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
+[  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
+
+This is caused by a vendor event that corresponds to an earlier command
+to change the baudrate. The event is not processed in the context of the
+baudrate change and later interpreted as response to the firmware
+download command (which is also a vendor command), but the driver detects
+that the event doesn't have the expected amount of associated data.
+
+More details:
+
+For the WCN3990 the vendor command for a baudrate change isn't sent as
+synchronous HCI command, because the controller sends the corresponding
+vendor event with the new baudrate. The event is received and decoded
+after the baudrate change of the host port.
+
+Identify the 'unused' event when it is received and don't add it to
+the queue of RX frames.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- drivers/bluetooth/hci_qca.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/bluetooth/hci_qca.c | 54 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 51 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 237aea34b69f1..ab8e59419dbc4 100644
+index ab8e59419dbc4..565681a6a1167 100644
 --- a/drivers/bluetooth/hci_qca.c
 +++ b/drivers/bluetooth/hci_qca.c
-@@ -54,8 +54,7 @@
- #define HCI_IBS_WAKE_ACK	0xFC
+@@ -30,6 +30,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/clk.h>
++#include <linux/completion.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -55,6 +56,7 @@
  #define HCI_MAX_IBS_SIZE	10
  
--/* Controller states */
--#define STATE_IN_BAND_SLEEP_ENABLED	1
-+#define QCA_IN_BAND_SLEEP_ENABLED	BIT(0)
+ #define QCA_IN_BAND_SLEEP_ENABLED	BIT(0)
++#define QCA_DROP_VENDOR_EVENT		BIT(1)
  
  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
  #define IBS_TX_IDLE_TIMEOUT_MS		2000
-@@ -775,7 +774,7 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
- 	/* Don't go to sleep in middle of patch download or
- 	 * Out-Of-Band(GPIOs control) sleep is selected.
- 	 */
--	if (!test_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
-+	if (!test_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
- 		skb_queue_tail(&qca->txq, skb);
- 		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
- 		return 0;
-@@ -1192,7 +1191,7 @@ static int qca_setup(struct hci_uart *hu)
- 		return ret;
+@@ -108,6 +110,7 @@ struct qca_data {
+ 	struct work_struct ws_rx_vote_off;
+ 	struct work_struct ws_tx_vote_off;
+ 	unsigned long flags;
++	struct completion drop_ev_comp;
  
- 	/* Patch downloading has to be done without IBS mode */
--	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-+	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
+ 	/* For debugging purpose */
+ 	u64 ibs_sent_wacks;
+@@ -474,6 +477,7 @@ static int qca_open(struct hci_uart *hu)
+ 	INIT_WORK(&qca->ws_tx_vote_off, qca_wq_serial_tx_clock_vote_off);
  
- 	if (qcadev->btsoc_type == QCA_WCN3990) {
- 		bt_dev_info(hdev, "setting up wcn3990");
-@@ -1236,7 +1235,7 @@ static int qca_setup(struct hci_uart *hu)
- 	/* Setup patch / NVM configurations */
- 	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, soc_ver);
- 	if (!ret) {
--		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-+		set_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
- 		qca_debugfs_init(hdev);
- 	} else if (ret == -ENOENT) {
- 		/* No patch/nvm-config found, run with original fw/config */
-@@ -1294,7 +1293,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
- 	 * data in skb's.
- 	 */
- 	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
--	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-+	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
- 	qca_flush(hu);
- 	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+ 	qca->hu = hu;
++	init_completion(&qca->drop_ev_comp);
  
+ 	/* Assume we start with both sides asleep -- extra wakes OK */
+ 	qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
+@@ -866,6 +870,33 @@ static int qca_recv_acl_data(struct hci_dev *hdev, struct sk_buff *skb)
+ 	return hci_recv_frame(hdev, skb);
+ }
+ 
++static int qca_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
++{
++	struct hci_uart *hu = hci_get_drvdata(hdev);
++	struct qca_data *qca = hu->priv;
++
++	if (test_bit(QCA_DROP_VENDOR_EVENT, &qca->flags)) {
++		struct hci_event_hdr *hdr = (void *)skb->data;
++
++		/* For the WCN3990 the vendor command for a baudrate change
++		 * isn't sent as synchronous HCI command, because the
++		 * controller sends the corresponding vendor event with the
++		 * new baudrate. The event is received and properly decoded
++		 * after changing the baudrate of the host port. It needs to
++		 * be dropped, otherwise it can be mis-interpreted as
++		 * response to a later firmware download command (also a
++		 * vendor command).
++		 */
++
++		if (hdr->evt == HCI_EV_VENDOR)
++			complete(&qca->drop_ev_comp);
++
++		return 0;
++	}
++
++	return hci_recv_frame(hdev, skb);
++}
++
+ #define QCA_IBS_SLEEP_IND_EVENT \
+ 	.type = HCI_IBS_SLEEP_IND, \
+ 	.hlen = 0, \
+@@ -890,7 +921,7 @@ static int qca_recv_acl_data(struct hci_dev *hdev, struct sk_buff *skb)
+ static const struct h4_recv_pkt qca_recv_pkts[] = {
+ 	{ H4_RECV_ACL,             .recv = qca_recv_acl_data },
+ 	{ H4_RECV_SCO,             .recv = hci_recv_frame    },
+-	{ H4_RECV_EVENT,           .recv = hci_recv_frame    },
++	{ H4_RECV_EVENT,           .recv = qca_recv_event    },
+ 	{ QCA_IBS_WAKE_IND_EVENT,  .recv = qca_ibs_wake_ind  },
+ 	{ QCA_IBS_WAKE_ACK_EVENT,  .recv = qca_ibs_wake_ack  },
+ 	{ QCA_IBS_SLEEP_IND_EVENT, .recv = qca_ibs_sleep_ind },
+@@ -1091,6 +1122,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ {
+ 	unsigned int speed, qca_baudrate;
+ 	struct qca_serdev *qcadev;
++	struct qca_data *qca = hu->priv;
+ 	int ret = 0;
+ 
+ 	if (speed_type == QCA_INIT_SPEED) {
+@@ -1106,8 +1138,11 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		 * changing the baudrate of chip and host.
+ 		 */
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+-		if (qcadev->btsoc_type == QCA_WCN3990)
++		if (qcadev->btsoc_type == QCA_WCN3990) {
+ 			hci_uart_set_flow_control(hu, true);
++			reinit_completion(&qca->drop_ev_comp);
++			set_bit(QCA_DROP_VENDOR_EVENT, &qca->flags);
++		}
+ 
+ 		qca_baudrate = qca_get_baudrate_value(speed);
+ 		bt_dev_dbg(hu->hdev, "Set UART speed to %d", speed);
+@@ -1118,8 +1153,21 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		host_set_baudrate(hu, speed);
+ 
+ error:
+-		if (qcadev->btsoc_type == QCA_WCN3990)
++		if (qcadev->btsoc_type == QCA_WCN3990) {
+ 			hci_uart_set_flow_control(hu, false);
++
++			/* Wait for the controller to send the vendor event
++			 * for the baudrate change command.
++			 */
++			if (!wait_for_completion_timeout(&qca->drop_ev_comp,
++						 msecs_to_jiffies(100))) {
++				bt_dev_err(hu->hdev,
++					   "Failed to change controller baudrate\n");
++				ret = -EPROTO;
++			}
++
++			clear_bit(QCA_DROP_VENDOR_EVENT, &qca->flags);
++		}
+ 	}
+ 
+ 	return ret;
 -- 
 2.21.0.352.gf09ad66450-goog
 
