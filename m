@@ -2,69 +2,105 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC43FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C18720851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551992126;
-	bh=5r639Man69NVlhCkmwwdQa5NuM9IotL1m9vSHKNcnz0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=F6MdGNKDAldrbVhSGQEjvprsi5E8BFgEqlr+eV5+QXlmXJAYS2W/V0FjYd+K/xWup
-	 nvmbyXy6zR/N6fk1YNafoIvFFu7kQXKv6Hlqavc+FtJl9Cvij6tYtks27gaXtADvmM
-	 K2BHHMYYjLRj8NCZB74oaxyre5IkUIwFexxJCEak=
+	by mail.kernel.org (Postfix) with ESMTP id 7F77520840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfCGUzU (ORCPT
+        id S1726269AbfCGU6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:55:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60880 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 15:58:18 -0500
+Received: from sauhun.de ([88.99.104.3]:55344 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfCGUzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:55:16 -0500
-Subject: Re: [GIT PULL] SELinux patches for v5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551992115;
-        bh=5r639Man69NVlhCkmwwdQa5NuM9IotL1m9vSHKNcnz0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=sBqnA4vH2ZZOhMlDbRg5eQYiZ1s4JaFBZjtSbt9d75DnPJ0vT0k88nQiRTwtV2Lv2
-         ZVuiQ/Wc7OqQQF98ZZRtl0qXVHY9JURPJgT92LEDhLifLi6wsm0wX0jFXnnTEibKfE
-         UyE+PEakLl1WvOFdGGcYpKUENOc5kxJiApXTjuN0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHC9VhRbDONFkYe5J2KtFSRdKcz5Z3vdJFuiZCi_EQiJHFaNtA@mail.gmail.com>
-References: <CAHC9VhRbDONFkYe5J2KtFSRdKcz5Z3vdJFuiZCi_EQiJHFaNtA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHC9VhRbDONFkYe5J2KtFSRdKcz5Z3vdJFuiZCi_EQiJHFaNtA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
- tags/selinux-pr-20190305
-X-PR-Tracked-Commit-Id: 45189a1998e00f6375ebd49d1e18161acddd73de
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3ac96c30ccfa802501dd2f4941e4508ea54b0b8a
-Message-Id: <155199211579.24626.7678959468205082133.pr-tracker-bot@kernel.org>
-Date:   Thu, 07 Mar 2019 20:55:15 +0000
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        id S1726216AbfCGU6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 15:58:17 -0500
+Received: from localhost (p54B334C5.dip0.t-ipconnect.de [84.179.52.197])
+        by pokefinder.org (Postfix) with ESMTPSA id 03C7C2E3551;
+        Thu,  7 Mar 2019 21:58:14 +0100 (CET)
+Date:   Thu, 7 Mar 2019 21:58:14 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Hoan Tran <hotran@apm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 10/61] gpio: simplify getting .drvdata
+Message-ID: <20190307205814.GB950@kunai>
+References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+ <20180419140641.27926-11-wsa+renesas@sang-engineering.com>
+ <b0c1e303-ca95-8bc8-a5d4-65e75dc8398a@ti.com>
+ <CACRpkday+d9iGeX+CRHTEyC=w+oNUK-8oTy0HqugO5PRhHn62w@mail.gmail.com>
+ <20180430092947.GC2270@ulmo>
+ <CAHCN7xLBa0JxcUs9i6Rr3hUNe5zymfb66icqNK0N3PMo51T-TA@mail.gmail.com>
+ <20190307201807.GA950@kunai>
+ <e7cadedc-b8ca-36d5-88dd-447fbeaac27a@metux.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
+Content-Disposition: inline
+In-Reply-To: <e7cadedc-b8ca-36d5-88dd-447fbeaac27a@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 5 Mar 2019 17:17:30 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20190305
+--eAbsdosE1cNLO4uF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3ac96c30ccfa802501dd2f4941e4508ea54b0b8a
+On Thu, Mar 07, 2019 at 09:53:50PM +0100, Enrico Weigelt, metux IT consult =
+wrote:
+> On 07.03.19 21:18, Wolfram Sang wrote:
+> >=20
+> >> It's been almost a year later, and several Linux revisions, and this
+> >> still seems stuck somewhere/somehow.
+> >=20
+> > I wanted to respin this series once rc1 is released.
+> >=20
+> Maybe just rebase and repost ?
 
-Thank you!
+Then I'd miss all the new drivers which may need this fixed. Coccinelle
+makes respinning a breeze, so no problem with that.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+--eAbsdosE1cNLO4uF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyBheIACgkQFA3kzBSg
+KbZj9Q/7BfZMRib+CTRXwFZJ3DHfp+wLWcSFipubqzbJkW8tAqgjyYR4X56NSUOo
+lwaQ5ymhPZuHGYSPYWBhxLKZSVzVyR1XeTyn7+LLctnA2rtfPS5VxXkbYRdAOsdW
+gqRCUiyz5FCuskho/7JwO82N2UBPyH+aOnhkA7nD7Xk2GoFcJXzG7nA/ECqvYOrm
+s6PXZb3tYdTmeT1n5t2AA7GrD3z0U6501rulyi+fTfC5L0cE9vX/vWWZe4H1Pi6S
+rGKl555Oa4tvXGYcJ2GJQXcbk9Mc2Csgch/jWR3d9mg9L5dVmVrkh1meZA/6VEgT
+H/2qvV03XFyCpr9wCOghH/d7LE72MTjWRSlmEKHG52fgYV1+HQrMFGc3OPn+GU6Q
+NN9IYpmVGHe0joajA638iPn+EGE+twimvV8vBDvNNXKubt7nxuFxfMNhdnQ7ZmnJ
+XTeG4jMiWZx2zOnZc5J2CjKib1mPTtvViI7lLF29t3A19gTst37bsWhZJ31lyh3M
+rH6qMapWa9hbkbZikW1EmP1aFRgQAv0xbzq7FnHRppqKkFNNAvQZ+tL8Gm33nUww
+1wkTzDJjJljc4/kkkViSKTX+F8TGW6eUcI3upBktCvdI6j/A47wi5c5oZZ8x+dDs
+uEIWFWfOkZxPnUGhly24Sd1y4O1sHBnbTwkW+793MERzqD4LwYk=
+=4j4A
+-----END PGP SIGNATURE-----
+
+--eAbsdosE1cNLO4uF--
