@@ -2,116 +2,117 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D570C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF622064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1MU/6RI"
+	by mail.kernel.org (Postfix) with ESMTP id 8D3532064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfCGPg0 (ORCPT
+        id S1726597AbfCGPiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:36:26 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:47012 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfCGPgZ (ORCPT
+        Thu, 7 Mar 2019 10:38:03 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34566 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfCGPiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:36:25 -0500
-Received: by mail-ed1-f66.google.com with SMTP id f2so13809852edy.13;
-        Thu, 07 Mar 2019 07:36:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7FMCMEKfEnbJpETgr0p4VyI+09oL5xnXo+j4oOwHufA=;
-        b=q1MU/6RIxopvCXzN1fOt1gQnU8HF8NLvKWL1aCrN/xp+CY1zpP5ECX9ez5gmQkjEHo
-         uhzGESXKaPtOihyNkiND7parnW3hx9+Eg60dGgMTwwbCgDtxuuIElMKd8JRH7nkDqd7k
-         woULA9+NgV6tmo6owMYuBFZQIVl72L6i8dthboIUmgzKhwHd7pbwYdJvFHI2P+dkeirv
-         SFSO1ywjda8LxOi0qbdchEG1dRB8VgJe4n9MCPGzMsQCDtsC34lJWtm1QJ7dwfLE5F/q
-         K+R0a6WfkxHFwFGw9+KCytBOmyuiPl5SVIuPO+4Vj0P3RGvyZEbe3GQ4ZEQLn2Nv/OKE
-         +2hw==
+        Thu, 7 Mar 2019 10:38:03 -0500
+Received: by mail-qt1-f195.google.com with SMTP id w4so17554111qtc.1;
+        Thu, 07 Mar 2019 07:38:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7FMCMEKfEnbJpETgr0p4VyI+09oL5xnXo+j4oOwHufA=;
-        b=l8WrZRruDm98XFcXFMmCY499lmzeKj4KtS+KW03JZGuMC6yCsC+IiVvUcl2B2E8t+1
-         3+YdS4kO3BP86CalvTL8+HaAWNhBXwqDVbMSdhFYxU/sxJgQqIWk3Y3SNoSjE8Sr8Zbk
-         09WwVfBjdlyEzDCN2FtoY9NC6qegKloxA0kxw7d1JQGmuBAC4pr0GV9mP2lVvJaGVzAZ
-         fCLXKwjR0PE/r+RNKqtM8HqTs5DpmxiYXBfxl40SK6PoPfez8IY/sxvDPBi2nTT7KlvU
-         HAeu7xk0EyhvPRlka+rNx75JO8ibYLG79iztPNBuaptewT+YLSXJ3oLTI88JnoSMJaJf
-         rJJg==
-X-Gm-Message-State: APjAAAXTXuNLcfmtaS5rQhjjdPq6VeDbRWIvHqxgYhb467vY5J4OJW36
-        DseMnNECzmk/Xq/1q7tfkpH26O21qoH7/A==
-X-Google-Smtp-Source: APXvYqzBsQwbN1JdIYmThWlIv0QFdeqRBftJ5hBIYkOkZxdcDA5XCwT4GyTUdGVepNO3H7gQbGIPDQ==
-X-Received: by 2002:a50:ad4b:: with SMTP id z11mr28082610edc.157.1551972983594;
-        Thu, 07 Mar 2019 07:36:23 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id q46sm1408266edd.0.2019.03.07.07.36.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:36:22 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:36:20 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: omap2: remove incorrect __init annotation
-Message-ID: <20190307153620.GK20201@archlinux-ryzen>
-References: <20190307103557.1688556-1-arnd@arndb.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VkXGilJKTSdO40PgePMAV7Pj8MUYdEkZ8wYhenCp+lw=;
+        b=jbE17J4pqBSbTdr8RUejvUCY58RamvW8NBWJrY+wyQDPT3SjKUmJnbU6kJ7hpEmFOc
+         apEerpP/jCDQNNlltC79PC5BaxdbSbFa3hv/eciYXoUZVr6oM5L7FzjGYj9XpFyz/sPO
+         sy/u1BT9UApZ4lHkmWjF9UX6VjzWlCXfrg7znqt+uu/Zdj3eLXQ9DUv4/ctTBMhX5xsN
+         +zFmdmq7wSxvQJzpBKhM+tPUfggPIg1f1xUmLFhGp3UOhHRYddnaSZoUg4JUW8l6MwIp
+         c1EGT4IP7/gZmQ4nE9tCPjr9VGNYfAkuSM1/C4KVgNIxpx9MWYYcDd6Xo5N8nFsaMFAM
+         rLtg==
+X-Gm-Message-State: APjAAAWzRhKPG3FUTjqp8YRjPqwOnATnIOfqGbrplPFV+/SRhSelx8R3
+        Xkj7rbR8xUyrx7NZxIWhNrrKclA+bnMCVXWtHaw=
+X-Google-Smtp-Source: APXvYqz0Y7a0DUFsdJKB7R6zj7SgorZ08vC5y3TlZm3XZjpfXKIZ68TRH2JkMGuRfpB5i0Kg9a2OytUlEc+/XiS4AVM=
+X-Received: by 2002:a0c:b501:: with SMTP id d1mr11295988qve.115.1551973081153;
+ Thu, 07 Mar 2019 07:38:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307103557.1688556-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190307091218.2343836-1-arnd@arndb.de> <20190307152805.GA25101@redhat.com>
+In-Reply-To: <20190307152805.GA25101@redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 7 Mar 2019 16:37:42 +0100
+Message-ID: <CAK8P3a2fuD-UBJET_OBKekCxrTDpnAxb0Bpu2LCCXaVT3pXTMQ@mail.gmail.com>
+Subject: Re: [PATCH] signal: fix building with clang
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:35:50AM +0100, Arnd Bergmann wrote:
-> omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-> we get a warning with clang-8:
-> 
-> WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-> The function omap3xxx_prm_late_init() references
-> the function __init omap3xxx_prm_enable_io_wakeup().
-> This is often because omap3xxx_prm_late_init lacks a __init
-> annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
-> 
-> When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-> inlined, so we never noticed in the past.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Thu, Mar 7, 2019 at 4:28 PM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 03/07, Arnd Bergmann wrote:
+> >
+> > clang warns about the sigset_t manipulating functions (sigaddset, sigdelset,
+> > sigisemptyset, ...) because it performs semantic analysis before discarding
+> > dead code, unlike gcc that does this in the reverse order.
+> >
+> > The result is a long list of warnings like:
+> >
+> > In file included from arch/arm64/include/asm/ftrace.h:21:
+> > include/linux/compat.h:489:10: error: array index 3 is past the end of the array (which contains 2 elements) [-Werror,-Warray-bounds]
+> >         case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
+>
+> stupid question... I have no idea if this can work or not, but may be we can just do
+>
+>         --- x/Makefile
+>         +++ x/Makefile
+>         @@ -701,6 +701,7 @@ KBUILD_CPPFLAGS += $(call cc-option,-Qun
+>          KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
+>          KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+>          KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+>         +KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+>          # Quiet clang warning: comparison of unsigned expression < 0 is always false
+>          KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+>          # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+>
+> ?
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+I would definitely not go that far, since the warning is generally
+rather useful,
+but we could try something more localized
 
-> ---
->  arch/arm/mach-omap2/prm3xxx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-> index 05858f966f7d..dfa65fc2c82b 100644
-> --- a/arch/arm/mach-omap2/prm3xxx.c
-> +++ b/arch/arm/mach-omap2/prm3xxx.c
-> @@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
->   * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
->   * No return value.
->   */
-> -static void __init omap3xxx_prm_enable_io_wakeup(void)
-> +static void omap3xxx_prm_enable_io_wakeup(void)
->  {
->  	if (prm_features & PRM_HAS_IO_WAKEUP)
->  		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
-> -- 
-> 2.20.0
-> 
+__diag_push();
+__diag_ignore(clang, 7, "-Warray-bounds");
+...
+__diag_pop();
+
+> > I turn the nice switch()/case statements
+> > into preprocessor conditionals, and where that is not possible, use the
+> > '%' operator
+>
+> I can't say what looks worse... to me it would be either use ifdef's or %'s
+> everywhere in signal.h, with this patch the code doesn't look consistent.
+> But I won't insist.
+
+I tried using just #ifdefs, but that did not work inside of macros.
+We could use % everywhere, or possible wrap it inside of another
+macro.
+
+        Arnd
