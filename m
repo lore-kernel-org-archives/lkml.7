@@ -2,103 +2,202 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25A3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E95C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836D920840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:53:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="npNbQ9ug"
+	by mail.kernel.org (Postfix) with ESMTP id 30AC120851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfCGSxP (ORCPT
+        id S1726694AbfCGSxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:53:15 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33712 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbfCGSxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:53:14 -0500
-Received: by mail-qt1-f195.google.com with SMTP id z39so18375855qtz.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:53:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=p/uycB6wwfQ9mpJ/cDj3nrD1aSO5NRmGJ7t1JhstDM8=;
-        b=npNbQ9ugg6BqXhBShFoxcI+GsIl/fQL1QQiivFdQuXTzcRUGxcFBOnos1rPrqOcUGZ
-         LpkY8q7OeZ3u/jLDGFI/8r0tIdwcF5zyhjcZWU+ryrwQKbz64WJoswuqcgOs4CUHTFtC
-         dwnK7AXsVkVipwWteXZBUzl6ojcGHfXjpr4nYNV5oBbRYe3jcn+xMH0IaqALsvmJnuCa
-         RvKS76TIqHjNR9CkiOP9V9iNNQXcV4niHNxVQq3vwmCDvpWLMtTat1aI0+ysmKUVfypQ
-         qcBWRpQgKdyhCZRIQ9G2JzzIhI41U5fnxDzBOllsFQ+1lAhsX4OucCWzjXwQmHK607we
-         v4tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=p/uycB6wwfQ9mpJ/cDj3nrD1aSO5NRmGJ7t1JhstDM8=;
-        b=AlFxLECHzpNaA34rJjt7NydfTgSrbCaNACy9rsrWYTDDRpSNnHYSyPvg06fsYOEf63
-         xKHi0l7YzYzS79ji7Vdsnz5r+7XDPmuk0wNW8PWU8GWBW/pdpKARIa/Ywr+WugcjsHOf
-         N2IIzcTdW2M+LlOC/w5kcsxfwmuBuO5odvUcFmrSJktmlqfKSuIbPtHP2XUQYA1iUR/o
-         5GMOWZ7+CSxRv+8jstaeTBayq9USLLwyFodYug4PBAr7+4DVSNnkcj6IOrumC/7nj7Ky
-         WA2O+9ATqxeEJrZ5IaQweQroQQF8Lm0W1AaAKE8jrR8Q5pv1wDapK/6BSEMmFI4pLGaI
-         82eg==
-X-Gm-Message-State: APjAAAV6zmKMDPnQdKexHeRXKD58NRINa8vhSd9ViUpg//ZuTPYWx5vA
-        hdCVZCSwYvCDhwE3cwMN+9QhkQ==
-X-Google-Smtp-Source: APXvYqzGLcM4sdL4fQMyRvzu7ZEKQ3Jrxk7x05or0Uat2bPqh6vF/YVXkc6OhqMJ9BzxmD4BoExgEg==
-X-Received: by 2002:ac8:22d1:: with SMTP id g17mr11423320qta.30.1551984793227;
-        Thu, 07 Mar 2019 10:53:13 -0800 (PST)
-Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x6sm2514892qtr.9.2019.03.07.10.53.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 10:53:12 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     aryabinin@virtuozzo.com, glider@google.com, dvyukov@google.com,
-        andreyknvl@google.com, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] kasan: fix variable 'tag' set but not used warning
-Date:   Thu,  7 Mar 2019 13:52:44 -0500
-Message-Id: <20190307185244.54648-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Thu, 7 Mar 2019 13:53:46 -0500
+Received: from smtp.nue.novell.com ([195.135.221.5]:48513 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbfCGSxp (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Thu, 7 Mar 2019 13:53:45 -0500
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Thu, 07 Mar 2019 19:53:43 +0100
+Received: from linux-r8p5.suse.cz (nwb-a10-snat.microfocus.com [10.120.13.202])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Thu, 07 Mar 2019 18:53:21 +0000
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     acme@kernel.org
+Cc:     mingo@kernel.org, mgorman@techsingularity.net, dave@stgolabs.net,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH] tools/perf-bench: Add basic syscall benchmark
+Date:   Thu,  7 Mar 2019 10:52:53 -0800
+Message-Id: <20190307185253.28432-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-set_tag() compiles away when CONFIG_KASAN_SW_TAGS=n, so make
-arch_kasan_set_tag() a static inline function to fix warnings below.
+The usefulness of having a standard way of testing syscall performance
+has come up from time to time[0]. Furthermore, some of our testing
+machinery (such as 'mmtests') already makes use of a simplified version
+of the microbenchmark. This patch mainly takes the same idea to measure
+syscall throughput compatible with 'perf-bench' via getppid(2), yet
+without any of the additional template stuff from Ingo's version (based
+on numa.c). The code is identical to what mmtests uses.
 
-mm/kasan/common.c: In function '__kasan_kmalloc':
-mm/kasan/common.c:475:5: warning: variable 'tag' set but not used
-[-Wunused-but-set-variable]
-  u8 tag;
-     ^~~
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1067469.html
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- mm/kasan/kasan.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/bench/Build     |  1 +
+ tools/perf/bench/bench.h   |  1 +
+ tools/perf/bench/syscall.c | 80 ++++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/builtin-bench.c |  8 +++++
+ 4 files changed, 90 insertions(+)
+ create mode 100644 tools/perf/bench/syscall.c
 
-diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index 3e0c11f7d7a1..3ce956efa0cb 100644
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -163,7 +163,10 @@ static inline u8 random_tag(void)
- #endif
- 
- #ifndef arch_kasan_set_tag
--#define arch_kasan_set_tag(addr, tag)	((void *)(addr))
-+static inline const void *arch_kasan_set_tag(const void *addr, u8 tag)
+diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+index e4e321b6f883..839f9b790587 100644
+--- a/tools/perf/bench/Build
++++ b/tools/perf/bench/Build
+@@ -1,5 +1,6 @@
+ perf-y += sched-messaging.o
+ perf-y += sched-pipe.o
++perf-y += syscall.o
+ perf-y += mem-functions.o
+ perf-y += futex-hash.o
+ perf-y += futex-wake.o
+diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+index fddb3ced9db6..31ad3283d41b 100644
+--- a/tools/perf/bench/bench.h
++++ b/tools/perf/bench/bench.h
+@@ -29,6 +29,7 @@
+ int bench_numa(int argc, const char **argv);
+ int bench_sched_messaging(int argc, const char **argv);
+ int bench_sched_pipe(int argc, const char **argv);
++int bench_syscall_basic(int argc, const char **argv);
+ int bench_mem_memcpy(int argc, const char **argv);
+ int bench_mem_memset(int argc, const char **argv);
+ int bench_futex_hash(int argc, const char **argv);
+diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+new file mode 100644
+index 000000000000..149129cca639
+--- /dev/null
++++ b/tools/perf/bench/syscall.c
+@@ -0,0 +1,80 @@
++/*
++ *
++ * syscall.c
++ *
++ * syscall: Benchmark for system call performance
++ */
++#include "../perf.h"
++#include "../util/util.h"
++#include <subcmd/parse-options.h>
++#include "../builtin.h"
++#include "bench.h"
++
++#include <stdio.h>
++#include <locale.h>
++#include <sys/time.h>
++#include <sys/syscall.h>
++
++#define LOOPS_DEFAULT 10000000
++static	int loops = LOOPS_DEFAULT;
++
++static const struct option options[] = {
++	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
++	OPT_END()
++};
++
++static const char * const bench_syscall_usage[] = {
++	"perf bench syscall <options>",
++	NULL
++};
++
++int bench_syscall_basic(int argc, const char **argv)
 +{
-+	return addr;
++	struct timeval start, stop, diff;
++	unsigned long long result_usec = 0;
++	int i;
++
++	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
++
++	gettimeofday(&start, NULL);
++
++	for (i = 0; i < loops; i++)
++		getppid();
++
++	gettimeofday(&stop, NULL);
++	timersub(&stop, &start, &diff);
++
++	switch (bench_format) {
++	case BENCH_FORMAT_DEFAULT:
++		setlocale(LC_NUMERIC, "");
++		printf("# Executed %'d getppid() calls\n", loops);
++
++		result_usec = diff.tv_sec * 1000000;
++		result_usec += diff.tv_usec;
++
++		printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
++		       diff.tv_sec,
++		       (unsigned long) (diff.tv_usec/1000));
++
++		printf(" %14lf usecs/op\n",
++		       (double)result_usec / (double)loops);
++		printf(" %'14d ops/sec\n",
++		       (int)((double)loops /
++			     ((double)result_usec / (double)1000000)));
++		break;
++
++	case BENCH_FORMAT_SIMPLE:
++		printf("%lu.%03lu\n",
++		       diff.tv_sec,
++		       (unsigned long) (diff.tv_usec / 1000));
++		break;
++
++	default:
++		/* reaching here is something disaster */
++		fprintf(stderr, "Unknown format:%d\n", bench_format);
++		exit(1);
++		break;
++	}
++
++	return 0;
 +}
- #endif
- #ifndef arch_kasan_reset_tag
- #define arch_kasan_reset_tag(addr)	((void *)(addr))
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index 334c77ffc1d9..4e9dd0f4eced 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -11,6 +11,7 @@
+  * Available benchmark collection list:
+  *
+  *  sched ... scheduler and IPC performance
++ *  syscall ... System call performance
+  *  mem   ... memory access performance
+  *  numa  ... NUMA scheduling and MM performance
+  *  futex ... Futex performance
+@@ -50,6 +51,12 @@ static struct bench sched_benchmarks[] = {
+ 	{ NULL,		NULL,						NULL			}
+ };
+ 
++static struct bench syscall_benchmarks[] = {
++	{ "basic",	"Benchmark for basic getppid() system calls",	bench_syscall_basic	},
++	{ "all",	"Run all syscall benchmarks",			NULL			},
++	{ NULL,		NULL,						NULL			},
++};
++
+ static struct bench mem_benchmarks[] = {
+ 	{ "memcpy",	"Benchmark for memcpy() functions",		bench_mem_memcpy	},
+ 	{ "memset",	"Benchmark for memset() functions",		bench_mem_memset	},
+@@ -85,6 +92,7 @@ struct collection {
+ 
+ static struct collection collections[] = {
+ 	{ "sched",	"Scheduler and IPC benchmarks",			sched_benchmarks	},
++	{ "syscall",	"System call benchmarks",			syscall_benchmarks	},
+ 	{ "mem",	"Memory access benchmarks",			mem_benchmarks		},
+ #ifdef HAVE_LIBNUMA_SUPPORT
+ 	{ "numa",	"NUMA scheduling and MM benchmarks",		numa_benchmarks		},
 -- 
-2.17.2 (Apple Git-113)
+2.16.4
 
