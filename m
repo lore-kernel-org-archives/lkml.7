@@ -7,152 +7,125 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18435C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60532C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0FA20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1DD20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Px2QTwwI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYIDiez8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfCGPOn (ORCPT
+        id S1726409AbfCGPRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:14:43 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34163 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCGPOm (ORCPT
+        Thu, 7 Mar 2019 10:17:04 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35379 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfCGPRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:14:42 -0500
-Received: by mail-ed1-f68.google.com with SMTP id a16so13780229edn.1;
-        Thu, 07 Mar 2019 07:14:40 -0800 (PST)
+        Thu, 7 Mar 2019 10:17:03 -0500
+Received: by mail-ed1-f67.google.com with SMTP id g19so13790852edp.2;
+        Thu, 07 Mar 2019 07:17:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Al0gMUiptC3pGkCnIsL4iS5CkzCA3B5rSRiNXpe/8Po=;
-        b=Px2QTwwI9FHwdPpckmfLm+y0x3fxzKp5PM0QAB1HaPHpDYV+jEEV426sWAedYpM9Qx
-         V7+0bXQshmKfihlZUoNyV6YoG1/yaLLvsdsHLG8MfwXd1QaZDNYJPOFWfap+H5gbixUJ
-         Aj8ZpxtKaLpQ3vr3hHFxwN6zDOCpy6QueDqmENf5Et6XhQm0jzht2KA18lIr85oAn2ki
-         8ZFknfHAofjlsLO8zLF/ktR8Kl8IuOOKsY3gdkriio+PdnUUrFM8f8FLjSQ0wzR+1qh/
-         Gw8AvvMdweX2np+8Z/scrPjNDARdBZxPHhTLVYQmXcM/WKnkJhCNj0eArgaK2gKibCxe
-         FtXg==
+        bh=EnBG/jYFGZXIPmXjPSsJ0Xe6CVDd0LXpmkp8WyNGT7k=;
+        b=LYIDiez8o5sGt/QW7Ty4zb2fWf8DdqHSowQasPybGtWXVQPcp3IE0iAEMNY35V8Mv2
+         Qb8ikF0g05oZZ7b23BZbjRgJSmiPONaSnXKdCaCUGRN3qoLSD2rWuhHW41XUvKYhVkQL
+         UKs3m1anzPcuLJu6VcS7wc8KyXr9wNylAChAz7PBa41rU8Q+a3/DQI5pZSqNkN7wrKAq
+         o1fYWAm8hRyIkZAsq4+JyDNPn4Jihc6/d3YS9Ayel3z48h56PabEf8es0MumZyCnc41q
+         CFTlJXaAzTGC7tg5j/P3kcqlLbfxBeGTAT/2CzzW+qp0HZH9bBEHEkgnQbDPFo4pYPnB
+         QdYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Al0gMUiptC3pGkCnIsL4iS5CkzCA3B5rSRiNXpe/8Po=;
-        b=awMTOteDQT59YzHQUuP6XfF9ueZPxE31q4nRJgbgoYDSlIQ1U9KOBnoCuRpSJUCpIT
-         qPzQJ474zPoeOmkVuxsZOTa8zYGUcO8qtwoA9gLdnOZQRWPfWc7QElnd7YpG73Na+U7m
-         B8gXVPaEOXPc0+f3JQivFvE/wD9ToTIicB1lLw/etwU+BXkrT6lHvtcCYPLjczGHxnqV
-         f7WM80jl8D8kxpGfJcmO9SmKC9Q3Pv60C/mXTa42lEYyZZLpRYY6Cf/F/tiUGl1riYux
-         CUAqumggA69eI1Z3ctWEL19aGjmi3wFKFpEnImuTAyTjs4Cj1R7w7hIi+bLH58FwJvgI
-         VU9g==
-X-Gm-Message-State: APjAAAWzOmj9JTAikFcOYR0+/YLVAF1JpO6ptcyueC9JqKwDY3hc/Vse
-        uJ9hPg4zoCsVbwGKLSXhwgk=
-X-Google-Smtp-Source: APXvYqy2KjzMLnsqMkxKTU26p5atbCYIYlkbUXGNNgFi0fHOsTbmq631GPNGgjM0sj4qBFmZDm8q3g==
-X-Received: by 2002:a17:906:e9cc:: with SMTP id kb12mr8339861ejb.81.1551971679760;
-        Thu, 07 Mar 2019 07:14:39 -0800 (PST)
+        bh=EnBG/jYFGZXIPmXjPSsJ0Xe6CVDd0LXpmkp8WyNGT7k=;
+        b=l71/aiGnkYGCIWB4f3oRcJdsyQ9yURbgy/kdJrIrO4uziamX17A6oM750BX4Fge4KN
+         GYp7rmnx5auJSk+PCMAwAk8GjR5DxGqKFQQJlcg5PwWQYGlz/TH2gwWx5zP8bWHm/elI
+         80P2iqCnX8G8j/mQTaOedjJDgzcYz1atAM2fgZXAOZeaikRkmpSF16GUJTOVDXsDLV+b
+         cTl+zOAfPFhhovWTkMD/R1WvyDRn/TeemgCBcNfDltma1Ir5Ymy1vbEt2G94Qsq/H5W0
+         eKvyTqeMsIMrHBFGlyoHfEU3n4HwrnFWqR0MCLQw5INMVk6jrXYHowqVmqke3ZWCbEMo
+         OW7A==
+X-Gm-Message-State: APjAAAWa5JehncpTlLkY/lbxXdkJbpVJzLogC63HtVE6mtbl1BTLg2hC
+        CNdJ0Ob/I9LjcHRcCZhdSVdoB8juX9Q=
+X-Google-Smtp-Source: APXvYqwx0JNp23U1y9Lc5OUNt0LfyqwHw8SYZa7Pmh6j89+sH2nsCeQ0fy4eJkiPcPHZ8J7omzm50Q==
+X-Received: by 2002:a17:906:b7c2:: with SMTP id fy2mr8282973ejb.9.1551971821280;
+        Thu, 07 Mar 2019 07:17:01 -0800 (PST)
 Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id q24sm1413612edg.20.2019.03.07.07.14.38
+        by smtp.gmail.com with ESMTPSA id fy6sm935452ejb.52.2019.03.07.07.17.00
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:14:38 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:14:37 -0700
+        Thu, 07 Mar 2019 07:17:00 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:16:58 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>,
+Cc:     "David S. Miller" <davem@davemloft.net>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
-Message-ID: <20190307151437.GA20201@archlinux-ryzen>
-References: <20190307093311.3406888-1-arnd@arndb.de>
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] davinci_emac: always build in CONFIG_OF code
+Message-ID: <20190307151658.GB20201@archlinux-ryzen>
+References: <20190307093135.3354493-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307093311.3406888-1-arnd@arndb.de>
+In-Reply-To: <20190307093135.3354493-1-arnd@arndb.de>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 10:33:02AM +0100, Arnd Bergmann wrote:
-> The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
-> dynamically allocate a struct member, but this is normally intended for
-> local variables.
+On Thu, Mar 07, 2019 at 10:31:20AM +0100, Arnd Bergmann wrote:
+> clang warns about what seems to be an unintended use of an obscure C
+> language feature where a forward declaration of an array remains usable
+> when the final definition is never seen:
 > 
-> Building with clang, I get a warning for a few locations that check the
-> address of the cpumask_var_t:
+> drivers/net/ethernet/ti/davinci_emac.c:1694:34: error: tentative array definition assumed to have one element [-Werror]
+> static const struct of_device_id davinci_emac_of_match[];
 > 
-> drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+> There is no harm in always enabling the device tree matching code here,
+> and it makes the code behave in a more conventional way aside from
+> avoiding the warning.
 > 
-> As far as I can tell, the code is still correct, as the truth value of
-> the pointer is what we need in this configuration.  To get rid of the
-> warning, I split out the check into a separate function, and hide that
-> portion if CONFIG_CPUMASK_OFFSTACK is disabled.
-> 
-> Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
 > ---
->  drivers/net/ethernet/cisco/enic/enic_main.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+>  drivers/net/ethernet/ti/davinci_emac.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-> index 9a7f70db20c7..f652a8bd163e 100644
-> --- a/drivers/net/ethernet/cisco/enic/enic_main.c
-> +++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-> @@ -112,6 +112,15 @@ static struct enic_intr_mod_range mod_range[ENIC_MAX_LINK_SPEEDS] = {
->  	{3,  6}, /* 10 - 40 Gbps */
+> diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
+> index 840820402cd0..57450b174fc4 100644
+> --- a/drivers/net/ethernet/ti/davinci_emac.c
+> +++ b/drivers/net/ethernet/ti/davinci_emac.c
+> @@ -2029,7 +2029,6 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
+>  	.resume		= davinci_emac_resume,
 >  };
 >  
-> +static inline int enic_affinity_mask_empty(struct enic *enic, int i)
-> +{
-> +#ifdef CONFIG_CPUMASK_OFFSTACK
-> +	if (!enic->msix[i].affinity_mask)
-> +		return 1;
-> +#endif
-> +	return cpumask_empty(enic->msix[i].affinity_mask);
-> +}
-> +
->  static void enic_init_affinity_hint(struct enic *enic)
->  {
->  	int numa_node = dev_to_node(&enic->pdev->dev);
-> @@ -119,8 +128,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+> -#if IS_ENABLED(CONFIG_OF)
+>  static const struct emac_platform_data am3517_emac_data = {
+>  	.version		= EMAC_VERSION_2,
+>  	.hw_ram_addr		= 0x01e20000,
+> @@ -2046,14 +2045,13 @@ static const struct of_device_id davinci_emac_of_match[] = {
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
+> -#endif
 >  
->  	for (i = 0; i < enic->intr_count; i++) {
->  		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
-> -		    (enic->msix[i].affinity_mask &&
-> -		     !cpumask_empty(enic->msix[i].affinity_mask)))
-> +		    !enic_affinity_mask_empty(enic, i))
->  			continue;
->  		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
->  				       GFP_KERNEL))
-> @@ -148,8 +156,7 @@ static void enic_set_affinity_hint(struct enic *enic)
->  	for (i = 0; i < enic->intr_count; i++) {
->  		if (enic_is_err_intr(enic, i)		||
->  		    enic_is_notify_intr(enic, i)	||
-> -		    !enic->msix[i].affinity_mask	||
-> -		    cpumask_empty(enic->msix[i].affinity_mask))
-> +		    enic_affinity_mask_empty(enic, i))
->  			continue;
->  		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
->  					    enic->msix[i].affinity_mask);
-> @@ -161,8 +168,7 @@ static void enic_set_affinity_hint(struct enic *enic)
->  	for (i = 0; i < enic->wq_count; i++) {
->  		int wq_intr = enic_msix_wq_intr(enic, i);
->  
-> -		if (enic->msix[wq_intr].affinity_mask &&
-> -		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
-> +		if (!enic_affinity_mask_empty(enic, wq_intr))
->  			netif_set_xps_queue(enic->netdev,
->  					    enic->msix[wq_intr].affinity_mask,
->  					    i);
+>  /* davinci_emac_driver: EMAC platform driver structure */
+>  static struct platform_driver davinci_emac_driver = {
+>  	.driver = {
+>  		.name	 = "davinci_emac",
+>  		.pm	 = &davinci_emac_pm_ops,
+> -		.of_match_table = of_match_ptr(davinci_emac_of_match),
+> +		.of_match_table = davinci_emac_of_match,
+>  	},
+>  	.probe = davinci_emac_probe,
+>  	.remove = davinci_emac_remove,
 > -- 
 > 2.20.0
 > 
-
-A slightly less intrusive change would be using cpumask_available, which
-was specifically introduced for this purpose in commit f7e30f01a9e2
-("cpumask: Add helper cpumask_available()").
