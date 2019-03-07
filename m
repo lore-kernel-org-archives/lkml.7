@@ -2,77 +2,123 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821B9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3E2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BAA2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B182081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfCGRMP convert rfc822-to-8bit (ORCPT
+        id S1726526AbfCGRMU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:12:15 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:56325 "EHLO
+        Thu, 7 Mar 2019 12:12:20 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:35783 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfCGRMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:12:15 -0500
+        id S1726351AbfCGRMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:12:18 -0500
 Received: from [172.19.131.165] ([8.46.77.96])
         (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x27HBAXR2267629
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x27HBMrG2267650
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 7 Mar 2019 09:11:14 -0800
-Date:   Thu, 07 Mar 2019 09:10:38 -0800
+        Thu, 7 Mar 2019 09:11:27 -0800
+Date:   Thu, 07 Mar 2019 09:04:36 -0800
 User-Agent: K-9 Mail for Android
-In-Reply-To: <CAHk-=wgKDSSoV5WvO018hoPPSHO=TQ3wwnfOtCpaENceBe0Z6Q@mail.gmail.com>
-References: <20190307114511.870090179@infradead.org> <20190307115200.697533978@infradead.org> <CAHk-=wgKDSSoV5WvO018hoPPSHO=TQ3wwnfOtCpaENceBe0Z6Q@mail.gmail.com>
+In-Reply-To: <20190307164705.qbu4ytdfdmsighas@treble>
+References: <20190307114511.870090179@infradead.org> <20190307120317.GD32477@hirez.programming.kicks-ass.net> <20190307125526.GB32534@hirez.programming.kicks-ass.net> <20190307131312.GC32534@hirez.programming.kicks-ass.net> <20190307164705.qbu4ytdfdmsighas@treble>
 MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
+Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
+CC:     torvalds@linux-foundation.org, tglx@linutronix.de,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
+        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, rostedt@goodmis.org
 From:   hpa@zytor.com
-Message-ID: <5127C62D-E97D-40B0-85B3-16F30B7ED514@zytor.com>
+Message-ID: <2F80FC70-5D2F-425F-BEB5-D70E981CC684@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 7, 2019 8:33:26 AM PST, Linus Torvalds <torvalds@linux-foundation.org> wrote:
->On Thu, Mar 7, 2019 at 3:52 AM Peter Zijlstra <peterz@infradead.org>
->wrote:
->>
->> XXX: are we sure we want __memset marked AC-safe?
+On March 7, 2019 8:47:05 AM PST, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
+>> On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
+>> > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
+>> 
+>> 
+>> > > 01be     20d3:  31 c0                   xor    %eax,%eax
+>> > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
+>> > > 01c3     20d8:  77 08                   ja     20e2
+><__do_sys_waitid+0x1cd>
+>> 
+>> randconfig-build/kernel/exit.o: warning: objtool:  
+>__do_sys_waitid()+0x1c3: (branch)
+>> 
+>> > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
+>> > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
+>> > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
+>> > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
+>> > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
+>> > > 01e1     20f6:	00 
+>> > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
+>> > > 01e2     20f7:	84 c0                	test   %al,%al
+>> > > 01e4     20f9:	75 2d                	jne    2128
+><__do_sys_waitid+0x213>
+>> > 
+>> > we do not take this branch and fall-through.
+>> 
+>> And that is the error, I think. We should've taken it and went to:
+>> 
+>>   return -EFAULT;
+>> 
+>> because:
+>> 
+>>  +1be	xor  %eax,%eax	eax=0
+>>  +1cd   xor  $0x1,%eax	eax=1
+>>  +1e2   test %al,%al	1&1==1 -> ZF=0
+>>  +1e4   jnz
+>> 
+>> Is an unconditional code sequence, but there's no way objtool can do
+>> that without becoming a full blown interpreter :/
+>> 
+>> > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov   
+>$0xfffffffffffffff2,%r15
+>> > > ffffffffffffe0eb }
+>> > > 021a     212f:  48 8d 65 d8             lea    -0x28(%rbp),%rsp
+>> > > 021e     2133:  4c 89 f8                mov    %r15,%rax
+>> > > 0221     2136:  5b                      pop    %rbx
+>> > > 0222     2137:  41 5c                   pop    %r12
+>> > > 0224     2139:  41 5d                   pop    %r13
+>> > > 0226     213b:  41 5e                   pop    %r14
+>> > > 0228     213d:  41 5f                   pop    %r15
+>> > > 022a     213f:  5d                      pop    %rbp
+>> > > 022b     2140:  c3                      retq
 >
->It's certainly one of the safer functions to call with AC set, but it
->sounds wrong anyway. It's not like it's likely to leak kernel data
->(most memset's are with 0, and even the non-zero ones I can't imagine
->are sensitive - more like poison values etc).
+>This "fixes" it, and also seems to help -Os make much code:
 >
->What's the call site that made you go "just add __memset() to the
->list"?
->
->            Linus
+>diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+>index 445348facea9..8de63db58fdd 100644
+>--- a/include/linux/compiler.h
+>+++ b/include/linux/compiler.h
+>@@ -67,7 +67,7 @@ void ftrace_likely_update(struct ftrace_likely_data
+>*f, int val,
+> 				.line = __LINE__,			\
+> 			};						\
+> 		______r = !!(cond);					\
+>-		______f.miss_hit[______r]++;					\
+>+		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
+> 		______r;						\
+> 	}))
+> #endif /* CONFIG_PROFILE_ALL_BRANCHES */
 
-Agreed... it seems fishy at least.
-
+if (cond)?  Or is ___r used elsewhere?
 -- 
 Sent from my Android device with K-9 Mail. Please excuse my brevity.
