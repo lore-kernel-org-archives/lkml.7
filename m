@@ -2,79 +2,100 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B84C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B7820449
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CF620449
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551986592;
+	bh=jdYQrUmMLqF9kubl5TC71vseG4ARLU1lrulObhBhZIM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=P2t4d5objNHWk2Xl49/BqrNRWIWxtbIEG3SnWNiTpMQtP2T9rkhyFkQZ0XLSCwGoO
+	 zyPOubnp7HxI8TlXSailrfKV5bU9RFi8SKQwruMRlDWrsdQnvlM5P9ro4oilCVjrbp
+	 aiknEOE+iMh+GBoFpNQdoz+1+xwBnUINnlvXt3LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbfCGTU7 (ORCPT
+        id S1726641AbfCGTXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:20:59 -0500
-Received: from relay1.mentorg.com ([192.94.38.131]:58733 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfCGTU6 (ORCPT
+        Thu, 7 Mar 2019 14:23:11 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33683 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGTXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:20:58 -0500
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1h1yZS-0002WZ-W7 from joseph_myers@mentor.com ; Thu, 07 Mar 2019 11:20:47 -0800
-Received: from digraph.polyomino.org.uk (137.202.0.90) by
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Thu, 7 Mar 2019 19:20:43 +0000
-Received: from jsm28 (helo=localhost)
-        by digraph.polyomino.org.uk with local-esmtp (Exim 4.90_1)
-        (envelope-from <joseph@codesourcery.com>)
-        id 1h1yZP-0004QY-3c; Thu, 07 Mar 2019 19:20:43 +0000
-Date:   Thu, 7 Mar 2019 19:20:43 +0000
-From:   Joseph Myers <joseph@codesourcery.com>
-X-X-Sender: jsm28@digraph.polyomino.org.uk
-To:     Lukasz Majewski <lukma@denx.de>
-CC:     Zack Weinberg <zackw@panix.com>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>
-Subject: Re: [Y2038] Question regarding support of old time interfaces beyond
- y2038
-In-Reply-To: <20190307085329.2b6cbeb7@jawa>
-Message-ID: <alpine.DEB.2.21.1903071917120.16241@digraph.polyomino.org.uk>
-References: <20190305162351.5aadde66@jawa> <CAKCAbMjiW8=X1u8nm6nEkAz+MyF=msN97Fr59=v01HbHb=U6UA@mail.gmail.com> <20190307085329.2b6cbeb7@jawa>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 7 Mar 2019 14:23:10 -0500
+Received: by mail-wr1-f67.google.com with SMTP id i12so18788957wrw.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 11:23:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=yDxD3XRdKqaq0labhy2zx3dkWl61h1ZKwbUIxM/vgqc=;
+        b=aMFxp0S6ZAocvhzYncgy85tJR9rI8OU4GXdhUyOqYqjwpJF+dCkaUKn+9S0P/dAcpT
+         jRbziFcWMzMNClTfTJhDO4k/+5jCQ2PvqBaFwLT3Sg9pXD4GaXYEfiqDIQJpPX/5PUpl
+         lU3U1MV3weTRaQOtdwysXySpe5Lh3AE5N93S8/zCyZBvEVDMkQYB8aQgFoyiw5/ZffJJ
+         zRBSMVqlKK0Xc8+ZsW/iCp39CZdIOcAb43awb742S3HvUr0+tEKnfFXHbWz/HCSWNLWP
+         2qxgI55tGMNRQPXrH99i0U3Nzwj11+Kx+ggpxM78wcPho1uKQg5j7syOaWtZEn70/rgm
+         QuDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=yDxD3XRdKqaq0labhy2zx3dkWl61h1ZKwbUIxM/vgqc=;
+        b=EEVnX6WuSdxAy0JhByr+b27a2Q0ti6OJbW7QasWvDxkalxZGqRaHAEMlwICIjakSPg
+         0QWypdEbg6GWzSlgB1twdNLt86aK5/2bkxgM+Oww72vzPiGJJlRzshmsBnE0TzO1Pb3R
+         vd+lnF5znPJvjogj6OIiNCSWpUtRMZiIpxnPeXD8xIrUCDNwh8u121dnepAAHoM6JFGi
+         DFo2tecn+twRzwxomrWHLyD9VjCk6wawj6iDrCfMNXibB3w+Eub5f7464TRL3dWAukMR
+         CBlo5vkKWIlRGHBsXnuMwhMk3g1+NBGCcMJFeSZWC06MJJ3EdesgLHfUw6H0+EmndFE+
+         UnfQ==
+X-Gm-Message-State: APjAAAVVOwkl8qUYg8XqO2qah01DH3mExPcy8kVrFwg8QND8q6IOqNaV
+        MMDcCi1gko8gi5bc1+GW9/0=
+X-Google-Smtp-Source: APXvYqxyeaC1lF5sgHH1LPQ+hEpVV7IQrI59cyayS38ql//j6iWLMyS+RP7cJrO97Hj1iuIp9P9Pmw==
+X-Received: by 2002:adf:fdc3:: with SMTP id i3mr7604274wrs.252.1551986588932;
+        Thu, 07 Mar 2019 11:23:08 -0800 (PST)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id d1sm6275685wrs.13.2019.03.07.11.23.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 11:23:08 -0800 (PST)
+Date:   Thu, 7 Mar 2019 20:23:05 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/kdump changes for v5.1
+Message-ID: <20190307192305.GA33711@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019, Lukasz Majewski wrote:
+Linus,
 
-> > 1) We should be clear that most of these will continue to be supported
-> > as C library interfaces even if they are not system calls.  Some of
-> > them are obsolete enough and/or rarely used enough that we might not
-> > bother (the older ways to set the system clock, for instance).
-> 
-> The question here is about the decision if even the old time APIs shall
-> be supported on 32 bit systems which are going to be Y2038 proof (like
-> the 'stime').
+Please pull the latest x86-kdump-for-linus git tree from:
 
-The glibc API should support the same set of functions both with and 
-without _TIME_BITS=64.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-kdump-for-linus
 
-I think it would be reasonable to obsolete the stime function in glibc 
-(meaning turn it into a compat symbol, not available for linking new 
-programs and not present at all for new architectures).  But that's 
-orthogonal to supporting 64-bit times on 32-bit platforms in glibc.  If 
-stime is obsoleted before (or in the same release as) that 64-bit time 
-support, no 64-bit version of stime is needed in glibc.  If obsoleted in a 
-later release, glibc would need to get a 64-bit version (and both versions 
-would turn into compat symbols if the interface is obsoleted).
+   # HEAD: f263245a0ce2c4e23b89a58fa5f7dfc048e11929 kdump: Document kernel data exported in the vmcoreinfo note
 
--- 
-Joseph S. Myers
-joseph@codesourcery.com
+Add the AMD SME mask to the vmcoreinfo, and also document our vmcoreinfo 
+fields.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Lianbo Jiang (2):
+      x86/kdump: Export the SME mask to vmcoreinfo
+      kdump: Document kernel data exported in the vmcoreinfo note
+
