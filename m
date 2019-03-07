@@ -2,264 +2,154 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B60C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F9EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B26220851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A0D20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551988446;
+	bh=yrrqD8L0aFKquKjy6Fw+wsLPmI1G+ZfTrMwYkdhZPLY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=i69ZNvkpeM4BQvf9wWnS2cqFN7j+ltAaEe82AWCbVafu4xE/6v6SnQWS4xcYcE3sE
+	 S/FNY1KFVO2g1j8iIghdIibstUTKE+FYq15hKJXPhUwS/y/krd+3VoiwckQb40E3Wm
+	 lx+wCzmPB8Km3kugM/TUeg5Yi+nS6G7XnKNU/KX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfCGTt2 (ORCPT
+        id S1726227AbfCGTyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:49:28 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:54354 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfCGTt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:49:28 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 312613087BB0;
-        Thu,  7 Mar 2019 19:49:27 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1EF85D9C9;
-        Thu,  7 Mar 2019 19:49:17 +0000 (UTC)
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
- <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
- <CAKgT0UdNPADF+8NMxnWuiB_+_M6_0jTt5NfoOvFN9qbPjGWNtw@mail.gmail.com>
- <2269c59c-968c-bbff-34c4-1041a2b1898a@redhat.com>
- <CAKgT0UdHkDB1vFMp7T9_pdoiuDW4qvgxhqsNztPQXrRCAmYNng@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <e234c51b-cdd5-08b6-6b6f-5d48c4b2e91e@redhat.com>
-Date:   Thu, 7 Mar 2019 20:49:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 7 Mar 2019 14:54:05 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42678 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfCGTyE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 14:54:04 -0500
+Received: by mail-wr1-f68.google.com with SMTP id r5so18886560wrg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 11:54:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WQyQmja2ae3D5kGmpQXvyk1KJCwj//VzuS1oFvg6xmo=;
+        b=OvUyJMUQBJx3fI3Abxc9ZJzeUdQNi8axfxHFj33Lg2ULGaWJiT9WqX2JUuZO63eODU
+         x3uNuv1VjgSilFttNq/P7C+5cy0PdvX3gWqYo8y8rcr87AniocnU4MqZD7xkRDNLLJgx
+         6Cbt0liGssop06GVKLbifpT5Pivz6y6d0jmqMuaaCzC1nmplf1+vM0vLcRGiKz7aD0EM
+         +PH1rnNkbuEH6xbrFbKgcyPSqv2OXJV0R/KTO469ovnCZjWDQbS5+AcMOR8VXFU9UubH
+         SBChef1ZMyC7iZaLm4nTGoRJjEpriq+6HdMxdQSaK/04S273/5nhQbgZd1rUtng1a0lB
+         zRPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=WQyQmja2ae3D5kGmpQXvyk1KJCwj//VzuS1oFvg6xmo=;
+        b=Qv6i1e8yAlYkmB7JYuBo5amVvlnRtY6mljvkesiB5fho52pNgj9kBB7oCY3ZMDHoTo
+         aSDsSAnUP+QoA6dMMd1PHEDQZGIejkSanDlXgr0xcUFWQ+KE7YSPoC4I31qnZ36FfR+p
+         OHQtqWdQpqxb6RuPyBp6hohBcWOhI28tIzpsmE3IqS8UreKQKd4aNFInVbZvh+d2qNKO
+         SVkNsZtvfXQu7tUc+cqNwi6WlVgLrdlAfa2iVKV1IfxU4A+doS2E+CtgrDWsuCYkDvtC
+         bV8Hg1SaOX/TmtIn9peysYWcPpvobK5EnN1cbB+fxeEDM0i6Oq4/FCbD06b/oS/EagKt
+         c2Mw==
+X-Gm-Message-State: APjAAAXWnFa53JKwvMCP/rQxN9cSe2gLTBGLdPW9mXjtrlxsf/snQprM
+        DFe1VhjnaadtCKQ9nTGGALI=
+X-Google-Smtp-Source: APXvYqxYZEVsTIQLIHq/sVY5BD8twXnXFvbBNG54w3bc5xWZzVWFZ3f8JJbk4Ah8AAE1hAErc0O5Iw==
+X-Received: by 2002:adf:9f54:: with SMTP id f20mr8312581wrg.88.1551988442792;
+        Thu, 07 Mar 2019 11:54:02 -0800 (PST)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id k20sm5858301wre.41.2019.03.07.11.54.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 11:54:02 -0800 (PST)
+Date:   Thu, 7 Mar 2019 20:54:00 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/mm change for v5.1
+Message-ID: <20190307195400.GA72443@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UdHkDB1vFMp7T9_pdoiuDW4qvgxhqsNztPQXrRCAmYNng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 07 Mar 2019 19:49:27 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.03.19 19:45, Alexander Duyck wrote:
-> On Thu, Mar 7, 2019 at 5:09 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->>
->>
->> On 3/6/19 5:05 PM, Alexander Duyck wrote:
->>> On Wed, Mar 6, 2019 at 11:07 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->>>>
->>>> On 3/6/19 1:00 PM, Alexander Duyck wrote:
->>>>> On Wed, Mar 6, 2019 at 7:51 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->>>>>> The following patch-set proposes an efficient mechanism for handing freed memory between the guest and the host. It enables the guests with no page cache to rapidly free and reclaims memory to and from the host respectively.
->>>>>>
->>>>>> Benefit:
->>>>>> With this patch-series, in our test-case, executed on a single system and single NUMA node with 15GB memory, we were able to successfully launch 5 guests(each with 5 GB memory) when page hinting was enabled and 3 without it. (Detailed explanation of the test procedure is provided at the bottom under Test - 1).
->>>>>>
->>>>>> Changelog in v9:
->>>>>>         * Guest free page hinting hook is now invoked after a page has been merged in the buddy.
->>>>>>         * Free pages only with order FREE_PAGE_HINTING_MIN_ORDER(currently defined as MAX_ORDER - 1) are captured.
->>>>>>         * Removed kthread which was earlier used to perform the scanning, isolation & reporting of free pages.
->>>>> Without a kthread this has the potential to get really ugly really
->>>>> fast. If we are going to run asynchronously we should probably be
->>>>> truly asynchonous and just place a few pieces of data in the page that
->>>>> a worker thread can use to identify which pages have been hinted and
->>>>> which pages have not.
->>>> Can you please explain what do you mean by truly asynchronous?
->>>>
->>>> With this implementation also I am not reporting the pages synchronously.
->>> The problem is you are making it pseudo synchronous by having to push
->>> pages off to a side buffer aren't you? In my mind we should be able to
->>> have the page hinting go on with little to no interference with
->>> existing page allocation and freeing.
->> We have to opt one of the two options:
->> 1. Block allocation by using a flag or acquire a lock to prevent the
->> usage of pages we are hinting.
->> 2. Remove the page set entirely from the buddy. (This is what I am doing
->> right now)
->>
->> The reason I would prefer the second approach is that we are not
->> blocking the allocation in any way and as we are only working with a
->> smaller set of pages we should be fine.
->> However, with the current approach as we are reporting asynchronously
->> there is a chance that we end up hinting more than 2-3 times for a
->> single workload run. In situation where this could lead to low memory
->> condition in the guest, the hinting will anyways fail as the guest will
->> not allow page isolation.
->> I can possibly try and test the same to ensure that we don't get OOM due
->> to hinting when the guest is under memory pressure.
-> 
-> So in either case you are essentially blocking allocation since the
-> memory cannot be used. My concern is more with guaranteeing forward
-> progress for as many CPUs as possible.
-> 
-> With your current design you have one minor issue in that you aren't
-> taking the lock to re-insert the pages back into the buddy allocator.
-> When you add that step in it means you are going to be blocking
-> allocation on that zone while you are reinserting the pages.
-> 
-> Also right now you are using the calls to free_one_page to generate a
-> list of hints where to search. I'm thinking that may not be the best
-> approach since what we want to do is provide hints on idle free pages,
-> not just pages that will be free for a short period of time.
-> 
-> To that end what I think w may want to do is instead just walk the LRU
-> list for a given zone/order in reverse order so that we can try to
-> identify the pages that are most likely to be cold and unused and
-> those are the first ones we want to be hinting on rather than the ones
-> that were just freed. If we can look at doing something like adding a
-> jiffies value to the page indicating when it was last freed we could
-> even have a good point for determining when we should stop processing
-> pages in a given zone/order list.
-> 
-> In reality the approach wouldn't be too different from what you are
-> doing now, the only real difference would be that we would just want
-> to walk the LRU list for the given zone/order rather then pulling
-> hints on what to free from the calls to free_one_page. In addition we
-> would need to add a couple bits to indicate if the page has been
-> hinted on, is in the middle of getting hinted on, and something such
-> as the jiffies value I mentioned which we could use to determine how
-> old the page is.
-> 
->>>
->>>>> Then we can have that one thread just walking
->>>>> through the zone memory pulling out fixed size pieces at a time and
->>>>> providing hints on that. By doing that we avoid the potential of
->>>>> creating a batch of pages that eat up most of the system memory.
->>>>>
->>>>>>         * Pages, captured in the per cpu array are sorted based on the zone numbers. This is to avoid redundancy of acquiring zone locks.
->>>>>>         * Dynamically allocated space is used to hold the isolated guest free pages.
->>>>> I have concerns that doing this per CPU and allocating memory
->>>>> dynamically can result in you losing a significant amount of memory as
->>>>> it sits waiting to be hinted.
->>>> It should not as the buddy will keep merging the pages and we are only
->>>> capturing MAX_ORDER - 1.
->>>> This was the issue with the last patch-series when I was capturing all
->>>> order pages resulting in the per-cpu array to be filled with lower order
->>>> pages.
->>>>>>         * All the pages are reported asynchronously to the host via virtio driver.
->>>>>>         * Pages are returned back to the guest buddy free list only when the host response is received.
->>>>> I have been thinking about this. Instead of stealing the page couldn't
->>>>> you simply flag it that there is a hint in progress and simply wait in
->>>>> arch_alloc_page until the hint has been processed?
->>>> With the flag, I am assuming you mean to block the allocation until
->>>> hinting is going on, which is an issue. That was one of the issues
->>>> discussed earlier which I wanted to solve with this implementation.
->>> With the flag we would allow the allocation, but would have to
->>> synchronize with the hinting at that point. I got the idea from the
->>> way the s390 code works. They have both an arch_free_page and an
->>> arch_alloc_page. If I understand correctly the arch_alloc_page is what
->>> is meant to handle the case of a page that has been marked for
->>> hinting, but may not have been hinted on yet. My thought for now is to
->>> keep it simple and use a page flag to indicate that a page is
->>> currently pending a hint.
->> I am assuming this page flag will be located in the page structure.
->>> We should be able to spin in such a case and
->>> it would probably still perform better than a solution where we would
->>> not have the memory available and possibly be under memory pressure.
->> I had this same idea earlier. However, the thing about which I was not
->> sure is if adding a flag in the page structure will be acceptable upstream.
->>>
->>>>> The problem is in
->>>>> stealing pages you are going to introduce false OOM issues when the
->>>>> memory isn't available because it is being hinted on.
->>>> I think this situation will arise when the guest is under memory
->>>> pressure. In such situations any attempt to perform isolation will
->>>> anyways fail and we may not be reporting anything at that time.
->>> What I want to avoid is the scenario where an application grabs a
->>> large amount of memory, then frees said memory, and we are sitting on
->>> it for some time because we decide to try and hint on the large chunk.
->> I agree.
->>> By processing this sometime after the pages are sent to the buddy
->>> allocator in a separate thread, and by processing a small fixed window
->>> of memory at a time we can avoid making freeing memory expensive, and
->>> still provide the hints in a reasonable time frame.
->>
->> My impression is that the current window on which I am working may give
->> issues for smaller size guests. But otherwise, we are already working
->> with a smaller fixed window of memory.
->>
->> I can further restrict this to just 128 entries and test which would
->> bring down the window of memory. Let me know what you think.
-> 
-> The problem is 128 entries is still pretty big when you consider you
-> are working with 4M pages. If I am not mistaken that is a half
-> gigabyte of memory. For lower order pages 128 would probably be fine,
-> but with the higher order pages we may want to contain things to
-> something smaller like 16MB to 64MB worth of memory.
->
+Linus,
 
-I agree, I also still consider it too big for 4MB pages. It would be
-different e.g. for 128KB pages.
+Please pull the latest x86-mm-for-linus git tree from:
 
--- 
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
 
-Thanks,
+   # HEAD: ad8cfb9c42ef83ecf4079bc7d77e6557648e952b mm/gup: Remove the 'write' parameter from gup_fast_permitted()
 
-David / dhildenb
+A single GUP cleanup.
+
+  out-of-topic modifications in x86-mm-for-linus:
+  -------------------------------------------------
+  mm/gup.c                           # ad8cfb9c42ef: mm/gup: Remove the 'write' p
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ira Weiny (1):
+      mm/gup: Remove the 'write' parameter from gup_fast_permitted()
+
+
+ arch/x86/include/asm/pgtable_64.h | 3 +--
+ mm/gup.c                          | 6 +++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+index 9c85b54bf03c..0bb566315621 100644
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -259,8 +259,7 @@ extern void init_extra_mapping_uc(unsigned long phys, unsigned long size);
+ extern void init_extra_mapping_wb(unsigned long phys, unsigned long size);
+ 
+ #define gup_fast_permitted gup_fast_permitted
+-static inline bool gup_fast_permitted(unsigned long start, int nr_pages,
+-		int write)
++static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
+ {
+ 	unsigned long len, end;
+ 
+diff --git a/mm/gup.c b/mm/gup.c
+index 05acd7e2eb22..b63e88eca31b 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1786,7 +1786,7 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
+  * Check if it's allowed to use __get_user_pages_fast() for the range, or
+  * we need to fall back to the slow version:
+  */
+-bool gup_fast_permitted(unsigned long start, int nr_pages, int write)
++bool gup_fast_permitted(unsigned long start, int nr_pages)
+ {
+ 	unsigned long len, end;
+ 
+@@ -1828,7 +1828,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+ 	 * block IPIs that come from THPs splitting.
+ 	 */
+ 
+-	if (gup_fast_permitted(start, nr_pages, write)) {
++	if (gup_fast_permitted(start, nr_pages)) {
+ 		local_irq_save(flags);
+ 		gup_pgd_range(start, end, write, pages, &nr);
+ 		local_irq_restore(flags);
+@@ -1870,7 +1870,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages, int write,
+ 	if (unlikely(!access_ok((void __user *)start, len)))
+ 		return -EFAULT;
+ 
+-	if (gup_fast_permitted(start, nr_pages, write)) {
++	if (gup_fast_permitted(start, nr_pages)) {
+ 		local_irq_disable();
+ 		gup_pgd_range(addr, end, write, pages, &nr);
+ 		local_irq_enable();
+
