@@ -2,395 +2,146 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1382C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A24AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DBB2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D08B20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:41:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g381IUCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfCGDTz (ORCPT
+        id S1726318AbfCGDlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 22:19:55 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:45277 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbfCGDTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 22:19:54 -0500
-Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MowOm-1gjUK71CEo-00qQfF; Thu, 07 Mar 2019 04:19:45 +0100
-Subject: Re: [PATCH 4/5] Add driver for SUNIX Multi-I/O board
-To:     Morris Ku <saumah@gmail.com>, gregkh@linuxfoundation.org
-Cc:     morris_ku@sunix.com, linux-kernel@vger.kernel.org
-References: <20190227071842.4253-1-saumah@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <a3578ee0-9c00-2460-e441-e8d56f472bca@metux.net>
-Date:   Thu, 7 Mar 2019 04:19:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190227071842.4253-1-saumah@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 6 Mar 2019 22:41:02 -0500
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:2496
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725793AbfCGDlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 22:41:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lXIi+ENDHBJshqNSADg3NxAmFTxh+R9euepCSvIrsKA=;
+ b=g381IUCftsrLJMMqo1OV0E1X+HBT4TCPSPApC1x8T03EjLBpXlZ4DzQ2E3gyZ0D7wP5eLfplc9a9MZPZ901AeTe44zAWVCGd3DH1t1zRTMhbdxxhfNUzjTz3GDE3zGICONuJvuT1IGxo28OZOocHmAERwbYwyvvJp05F/e6PI/E=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3707.eurprd04.prod.outlook.com (52.134.65.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Thu, 7 Mar 2019 03:40:57 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1cb4:3e1c:fc85:7ed7]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1cb4:3e1c:fc85:7ed7%2]) with mapi id 15.20.1686.018; Thu, 7 Mar 2019
+ 03:40:57 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: clock: imx8mq: add hdmi phy 27m clock
+Thread-Topic: [PATCH 1/3] dt-bindings: clock: imx8mq: add hdmi phy 27m clock
+Thread-Index: AQHU1JeTcAnJKveUoE2WRuXtJHSgfA==
+Date:   Thu, 7 Mar 2019 03:40:57 +0000
+Message-ID: <1551929772-22633-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:/Hp4JqXNh6eAFeZuo6tfYj+M14hHDd+DUeUbjlwDZr18XJqwYoF
- ynwyT+pOvGTsPtr0VcbwZLL+QF04CYcQjP5Ec7e/9npxOLh+EvCBo37XdpMijOCcxyFo2Jy
- bI48qHIflKoT8W5CGf63Yy7rndyQuSCfkrG8RRBQc2xKFCFH8hygW1G+nESuIkPvckqGZVs
- bJjqI/b9nncf8ALih6j0Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eC3QWj5ST9I=:5LSJemD9UPANqg/rqvxuvg
- 6U1e40hPR0jhdGefIdE2LX4mcTqYSL45yGx9H6K6aKodJC8DnMXgFWo7wSbIO2WF/BxYUVp4T
- /rwhmB+1tZWaqOo6l+Dxq5mJSY5j/zAsmMZ4OGJnoW3zREaPXps9ZmJ2HwYuTiwJgtfbEHLVX
- FORXPOYqDrHVQXBG6dUVRfop1TIUtfQ8eqKEDENHsz0eB/d7uavn1TnKXVDOASisUxi7R+CCB
- +FDKgmMQ8wNmsbpuGeFzebUBc835FnhyfyxBetQZCd3if3Bt/uBBALNpnZPoPjxHY5AME7ZL2
- woTTPi6p/PvBehP2DWnD+MWsn71275RmQPO9qoMxPm0V+fZnIR3+1Z/c0Ky1kXHK3UkxLv2qs
- 61ZX11D2qBrRFjs3o7gaMtleahJkfIaJVgeNxmCT0Bzewu9bO6mvccHToaaocN2B6+oi4asDg
- ubaMMnk+udxnlUOrgDoTOUGO9kvp5PlEcAQy5e8aBq/AfX+PP7YWjq7IdE8RZBPDQvqGobsWM
- oEa00yjx8K/m9ynpija0LCe263Lj0jl8cZjG0xulZk17rCFr/j3d8zOl8dTnbrDO6vX/apYEm
- XmqmUbqYeEv86th9VpM/XDWbAXpXuFdL+0wY00sEBXVkNhm0wgmARJ+y/hwfumCAx6k16GN1G
- 8/wgoDtMeTnCxPcSPZEQu6mkv+vgFrYjy/ynDDjk9XVGxaZa/CkPLzPgAHxLr76MjtCZtUdlV
- Vi9zb28E6pCXMiSu1vtCZC6iD+LipLUtl+jVPfy6GcGp8Zaz+DkI+xkqRiU=
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0P153CA0046.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:203:17::34) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3d6601e0-3fc3-48f0-a7d8-08d6a2aeb562
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3707;
+x-ms-traffictypediagnostic: DB3PR0402MB3707:
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;DB3PR0402MB3707;23:eW5wXK2hGkHC4xjJSsgedufRZDD6JaS39yGG8?=
+ =?iso-8859-1?Q?mgmxmCDI7EQpLN75wWk2DX6h8i2cyN8OJtK+yjjIpGF+LvNa2cDy2z3maY?=
+ =?iso-8859-1?Q?zvOO0aA2MR/FEjgX1434Yw+l3iJUXji49uTNpiroj6bmkXFTbz3tlTw9LZ?=
+ =?iso-8859-1?Q?t0+7pICIq6VP77bm8SLe55mEQ6tKv51fGvratoPA2o2PZMWwW+tZoJ+Sni?=
+ =?iso-8859-1?Q?RKgvnKoLPsMzBhZhb3nrIHzCQcH9StL7yLLeOsX76JW5zwyrQGzOY75MCy?=
+ =?iso-8859-1?Q?QDdStOjXkNxfqR6uFYYSr75EpdOu2YhU2xFS9xJtWCIlU+3+ig4VLlaRQA?=
+ =?iso-8859-1?Q?blCzHCba+3z4wsubbHgTSvk58YtRvtJaHeEzKr1LhLQI6gYFVumVHO/JqK?=
+ =?iso-8859-1?Q?EhgAmTnbjT+WFsWwzfZSq0D9iEYO05g+UdmbYCZgtiCdirx+Ad6XKgHWwX?=
+ =?iso-8859-1?Q?ZHEjxGs4cp6SrJc6oCdf9MGHCkYaV+NXURdJWQdieu7krhfRaaRLTMCso8?=
+ =?iso-8859-1?Q?rjbxGxQNmCHy6EEZgXvic2SBC+ZNCP8u5I+K+MP710j8kWKbS6GHGPpXNt?=
+ =?iso-8859-1?Q?6tooBkbtV7oelufQY6ii6wSVqEyL224ZTQdZZKkXrrl/6Zr45KEKTyhJ9u?=
+ =?iso-8859-1?Q?IbV3xUaEfrAlNb9zUXDp76saXF6f0eowfw8//FxoN3Nmvc0xKhuaw+Sa4B?=
+ =?iso-8859-1?Q?61hDDDXOhIV8Wr31Ysfap3AT9PLKBcgV/Pp/+hU5SdqNLA3I9HU11lAXNj?=
+ =?iso-8859-1?Q?fyr3CfQdUU8F6pNBeYu7V9p6zeGu30OL8I3557xgi1kyMkKQbyagyHTFEc?=
+ =?iso-8859-1?Q?vCY65UD5crxY5HA5OStdQdiZij8HL7l2jxeeOPl8GQXz04MRKUPly1/7b7?=
+ =?iso-8859-1?Q?NwWphhmRYMQ7Yi223MV31zHXoQ8muzuGRy5zeG54YaQW2zVOe6GqD2VAzk?=
+ =?iso-8859-1?Q?nS6jcDlqCi2+4i99K/VMlDLiXrOdeVNq9kqsJLQAz4ETYfl2Rx/gamC06R?=
+ =?iso-8859-1?Q?5heGX4f5+NL7QdT5VCI1Lt266Vs9KAvyZQobhZZlbzQRsUwMGK9sSu64tu?=
+ =?iso-8859-1?Q?58tP1lkPOOxP7AzX7aUaTAvfRAdmUrNGYh4FcQMU9CvQU+lsdaKXB8kBMu?=
+ =?iso-8859-1?Q?xD/tTAdHlmpoRhj6cms1nE63or/U5ZyYQdkdbzDafXBNF3izuN4gnwcdCf?=
+ =?iso-8859-1?Q?9W4P9uuciRsZ9XLf5+ubkLPqOYJiH2ZEe/0cparikkHRxf/bIP6JZHQVJ/?=
+ =?iso-8859-1?Q?LFFqLFMxLhIgmxAExlGF0a3lUdowob3ws7++YWzE/QSiGVGNDpF3rxuLbN?=
+ =?iso-8859-1?Q?OrjMUJ03VsYR3KFt3bVvVOiyd?=
+x-microsoft-antispam-prvs: <DB3PR0402MB37070A4AED63DB9A26173DD2F54C0@DB3PR0402MB3707.eurprd04.prod.outlook.com>
+x-forefront-prvs: 096943F07A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(39860400002)(346002)(376002)(366004)(189003)(199004)(4744005)(99286004)(6116002)(26005)(186003)(6506007)(386003)(102836004)(52116002)(486006)(2616005)(476003)(3846002)(97736004)(50226002)(81156014)(8936002)(2501003)(81166006)(8676002)(68736007)(7736002)(305945005)(7416002)(256004)(478600001)(110136005)(14454004)(105586002)(71200400001)(66066001)(71190400001)(316002)(106356001)(2906002)(6436002)(14444005)(6486002)(5660300002)(36756003)(53936002)(6512007)(2201001)(86362001)(4326008)(25786009)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3707;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7a51Evb3qIm2iLYAuTjWeG/G4WegrgrpgE0XcfekdE99BJVh/7GfwPPShemA3FDdWlXLfqYB9jfnBYwOKR/F6ioHMGEQzkuuViqLyz3kTJipFPZwloHqnKp740xJkahTQMsr/6pS120e0S59bdqcykGOtQWacT6kPOp6fp7k1WGbkTLbMR7dDXhf5PaINEdM/TNJEqOAQR8Q9h0u5MUeBt/CLKMYaS2sfs9pweyz85rxy7oW7GVvR37Jv3tgAWa58W1wgdSRYVWF+XW+XExywvbgDyplj5GtuQM/ViMvMVeC+vnr1GOxv+oBoS3FDafv4Cdp7G/PK3N3YhQbeHN58yX5b5eKW1hus+/VOxyL1FOX4T6mSDd2FNgFJtC3cnBhg0UbP+X9J+gxOgXlrPIx/DVHiPCCxul5xHW5o+WpfYY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d6601e0-3fc3-48f0-a7d8-08d6a2aeb562
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2019 03:40:57.5888
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3707
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.02.19 08:18, Morris Ku wrote:
+Add IMX8MQ_CLK_HDMI_PHY_27M clock for i.MX8MQ clock tree.
 
-Hi,
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ include/dt-bindings/clock/imx8mq-clock.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings=
+/clock/imx8mq-clock.h
+index b58cc64..f50ef4e9 100644
+--- a/include/dt-bindings/clock/imx8mq-clock.h
++++ b/include/dt-bindings/clock/imx8mq-clock.h
+@@ -400,5 +400,7 @@
+ #define IMX8MQ_CLK_GPIO4_ROOT			273
+ #define IMX8MQ_CLK_GPIO5_ROOT			274
+=20
+-#define IMX8MQ_CLK_END				275
++#define IMX8MQ_CLK_HDMI_PHY_27M			275
++
++#define IMX8MQ_CLK_END				276
+ #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
+--=20
+2.7.4
 
-first of all: the code is pretty unreadable. I doubt that anybody here
-seriously likes to review that (nor take it into mainline).
-
-Formatting should be consistent - see other drivers.
-
-./scripts/checkpatch.pl is your friend. You really shut run it and fix
-everything it complaints before posting patches. (some maintainers can
-get angry if you don't ;-)
-
-> Support SUNIX serial board.
-> 
-> ---
->  char/snx/snx_serial.c | 4771 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 4771 insertions(+)
->  create mode 100644 char/snx/snx_serial.c
-> 
-> diff --git a/char/snx/snx_serial.c b/char/snx/snx_serial.c
-> new file mode 100644
-> index 00000000..94caac1a
-> --- /dev/null
-> +++ b/char/snx/snx_serial.c
-> @@ -0,0 +1,4771 @@
-> +#include "snx_common.h"
-> +#include "driver_extd.h"
-> +
-> +#define SNX_ioctl_DBG	0
-> +#define	EEPROM_ACCESS_DELAY_COUNT			100000
-
-is this eeprom stuff really specific to the serial ports ?
-if not, it probably should go to a separate file, which is called by all
-the others, IMHO.
-
-> +
-> +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37))
-> +		static DEFINE_SEMAPHORE(ser_port_sem);
-> +#else
-> +		static DECLARE_MUTEX(ser_port_sem);
-> +#endif
-
-Drop that. We have only one kernel version here, the current one.
-
-> +
-> +
-> +#define SNX_HIGH_BITS_OFFSET	((sizeof(long)-sizeof(int))*8)
-> +#define sunix_ser_users(state)	((state)->count + ((state)->info ? (state)->info->blocked_open : 0))
-> +
-> +
-> +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0))
-> +static struct tty_port snx_service_port;
-> +#endif
-
-are you really sure this has to be a global field, instead of allocated
-per-device ?
-
-> +
-> +
-> +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0))
-> +
-> +struct serial_uart_config {
-> +	char	*name;
-> +	int		dfl_xmit_fifo_size;
-> +	int		flags;
-> +};
-> +#endif
-> +
-> +static const struct serial_uart_config snx_uart_config[PORT_SER_MAX_UART + 1] = {
-
-why +1 ?
-
-maybe PORT_SER_MAX_UART and use ARRAY_SIZE() macro instead.
-
-> +	{ "unknown",    1,      0 },
-> +	{ "8250",       1,      0 },
-> +	{ "16450",      1,      0 },
-> +	{ "16550",      1,      0 },
-> +	{ "16550A",     16,     UART_CLEAR_FIFO | UART_USE_FIFO },
-> +	{ "Cirrus",     1,    	0 },
-> +	{ "ST16650",    1,    	0 },
-> +	{ "ST16650V2",  32,    	UART_CLEAR_FIFO | UART_USE_FIFO },
-> +	{ "TI16750",    64,    	UART_CLEAR_FIFO | UART_USE_FIFO },
-> +};
->
-> +
-> +
-> +#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 0))
-> +static int		sunix_ser_refcount;
-> +static struct tty_struct			*sunix_ser_tty[SNX_SER_TOTAL_MAX + 1];
-> +static struct termios				*sunix_ser_termios[SNX_SER_TOTAL_MAX + 1];
-> +static struct termios				*sunix_ser_termios_locked[SNX_SER_TOTAL_MAX + 1];
-> +#endif
-
-obsolete. drop that.
-
-> +
-> +
-> +static _INLINE_ void snx_ser_handle_cts_change(struct snx_ser_port *, unsigned int);
-
-what exactly does _INLINE_ suppose to mean ?
-
-<snip>
-
-> +extern int 		sunix_ser_interrupt(struct sunix_board *, struct sunix_ser_port *);
-
-why "extern" here ? where is that function coming from ?
-
-<snip>
-
-> +static unsigned char READ_INTERRUPT_VECTOR_BYTE(struct sunix_ser_port *);
-
-I doubt that upper case function names fit in the kernel coding style.
-
-<snip>
-
-> +		case SNX_SER_DUMP_PORT_INFO:
-> +		{
-> +			int i;
-> +			struct snx_ser_port_info snx_port_info[SNX_SER_TOTAL_MAX];
-> +			struct snx_ser_port *sdn = NULL;
-> +
-> +			memset(snx_port_info, 0, (sizeof(struct snx_ser_port_info) * SNX_SER_TOTAL_MAX));
-> +
-> +			if (line == 0) {
-> +				for (i = 0; i < SNX_SER_TOTAL_MAX; i++) {
-> +					sdn = (struct snx_ser_port *) &sunix_ser_table[i];
-> +
-> +					memcpy(&snx_port_info[i].board_name_info[0], &sdn->pb_info.board_name[0], SNX_BOARDNAME_LENGTH);
-> +
-> +					snx_port_info[i].bus_number_info = sdn->bus_number;
-> +					snx_port_info[i].dev_number_info = sdn->dev_number;
-> +					snx_port_info[i].port_info       = sdn->line;
-> +					snx_port_info[i].base_info       = sdn->iobase;
-> +					snx_port_info[i].irq_info        = sdn->irq;
-> +				}
-> +
-> +				if (copy_to_user((void *)arg, snx_port_info, SNX_SER_TOTAL_MAX * sizeof(struct snx_ser_port_info))) {
-> +					ret = -EFAULT;
-> +				} else {
-> +					ret = 0;
-> +				}
-> +			} else {
-> +				ret = 0;
-> +		}
-> +
-> +			ret = 0;
-> +			break;
-> +		}
-> +
-> +		case SNX_SER_DUMP_DRIVER_VER:
-> +		{
-> +			char driver_ver[SNX_DRIVERVERSION_LENGTH];
-> +			memset(driver_ver, 0, (sizeof(char) * SNX_DRIVERVERSION_LENGTH));
-> +
-> +			if (line == 0) {
-> +
-> +				memcpy(&driver_ver[0], SNX_DRIVER_VERSION, sizeof(SNX_DRIVER_VERSION));
-> +
-> +				if (copy_to_user((void *)arg, &driver_ver, (sizeof(char) * SNX_DRIVERVERSION_LENGTH))) {
-> +					ret = -EFAULT;
-> +				} else {
-> +					ret = 0;
-> +				}
-> +			} else {
-> +				ret = 0;
-> +			}
-> +
-> +			break;
-> +		}
-> +
-> +
-> +		case SNX_COMM_GET_BOARD_CNT:
-> +		{
-> +			SNX_DRVR_BOARD_CNT gb;
-> +
-> +			memset(&gb, 0, (sizeof(SNX_DRVR_BOARD_CNT)));
-> +
-> +			gb.cnt = snx_board_count;
-> +
-> +			if (copy_to_user((void *)arg, &gb, (sizeof(SNX_DRVR_BOARD_CNT)))) {
-> +				ret = -EFAULT;
-> +			} else {
-> +			ret = 0;
-> +			}
-> +
-> +			break;
-> +		}
-> +
-> +		case SNX_COMM_GET_BOARD_INFO:
-> +		{
-> +			struct sunix_board *sb = NULL;
-> +			SNX_DRVR_BOARD_INFO		board_info;
-> +
-> +			memset(&board_info, 0, (sizeof(SNX_DRVR_BOARD_INFO)));
-> +
-> +			if (copy_from_user(&board_info, (void *)arg, (sizeof(SNX_DRVR_BOARD_INFO)))) {
-> +				ret = -EFAULT;
-> +			} else {
-> +				ret = 0;
-> +			}
-> +
-> +			sb = &sunix_board_table[board_info.board_id - 1];
-> +
-> +			board_info.subvender_id = sb->pb_info.sub_vendor_id;
-> +			board_info.subsystem_id = sb->pb_info.sub_device_id;
-> +			board_info.oem_id = sb->oem_id;
-> +			board_info.uart_cnt = sb->uart_cnt;
-> +			board_info.gpio_chl_cnt = sb->gpio_chl_cnt;
-> +			board_info.board_uart_type = sb->board_uart_type;
-> +			board_info.board_gpio_type = sb->board_gpio_type;
-> +
-> +			if (copy_to_user((void *)arg, &board_info, (sizeof(SNX_DRVR_BOARD_INFO)))) {
-> +				ret = -EFAULT;
-> +			} else {
-> +				ret = 0;
-> +			}
-> +			break;
-> +		}
-> +
-
-what exactly is that for ?
-
-> +		case SNX_GPIO_GET:
-
-gpio stuff doesn't belong into a serial / tty.
-for that we have the gpio subsystem. (see drivers/gpio/*)
-
-> +		case SNX_UART_GET_TYPE:
-> +		{
-> +			struct sunix_board 	*sb = NULL;
-> +			SNX_DRVR_UART_GET_TYPE gb;
-> +
-> +			int bar3_base_Address;
-> +			int bar1_base_Address;
-> +
-> +			int bar3_byte5;
-> +			int uart_type;
-> +			int	RS422state;
-> +			int	AHDCstate;
-> +
-> +			memset(&gb, 0, (sizeof(SNX_DRVR_UART_GET_TYPE)));
-> +
-> +			if (copy_from_user(&gb, (void *)arg, (sizeof(SNX_DRVR_UART_GET_TYPE)))) {
-> +				ret = -EFAULT;
-> +			} else {
-> +				ret = 0;
-> +			}
-> +
-> +			sb = &sunix_board_table[gb.board_id - 1];
-> +
-> +			bar3_base_Address = pci_resource_start(sb->pdev, 3);
-> +			bar1_base_Address = pci_resource_start(sb->pdev, 1);
-> +
-> +			bar3_byte5 = inb(bar3_base_Address + 5);
-> +			uart_type = (bar3_byte5 & 0xC0) >> 6;
-> +
-> +			if (gb.uart_num <= 4) {
-> +				AHDCstate = inb(bar3_base_Address + 2) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
-> +				RS422state = inb(bar3_base_Address + 3) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
-> +			} else if (gb.uart_num <= 8) {
-> +				AHDCstate = inb(bar1_base_Address + 0x32) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
-> +				RS422state = inb(bar1_base_Address + 0x33) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
-> +			} else if (gb.uart_num <= 12) {
-> +				AHDCstate = inb(bar1_base_Address + 0x32 + 0x40) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
-> +				RS422state = inb(bar1_base_Address + 0x33 + 0x40) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
-> +			} else if (gb.uart_num <= 16) {
-> +				AHDCstate = inb(bar1_base_Address + 0x32 + 0x80) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
-> +				RS422state = inb(bar1_base_Address + 0x33 + 0x80) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
-> +			} else {
-> +				//cmn_err(CE_NOTE, "WARNING : we get an incorrect port number (port = %d)!",gb.uart_num);
-> +				break;
-> +			}
-> +
-> +				switch (uart_type) {
-> +				case 0: // RS-232
-> +				{
-> +					gb.uart_type = 0;
-> +					break;
-> +				}
-> +				case 1: // RS-422/485
-> +				{
-> +					if (AHDCstate && RS422state) {
-> +						gb.uart_type = 3;
-> +					} else if (AHDCstate && !RS422state) {
-> +						gb.uart_type = 2;
-> +					} else if (!AHDCstate && RS422state) {
-> +						gb.uart_type = 1;
-> +					} else {
-> +						gb.uart_type = -1;
-> +					}
-> +					break;
-> +				}
-> +				case 2:
-> +				{
-> +					if (AHDCstate && RS422state) {
-> +						gb.uart_type = 3;
-> +					} else if (AHDCstate && !RS422state) {
-> +						gb.uart_type = 2;
-> +					} else if (!AHDCstate && RS422state) {
-> +						gb.uart_type = 1;
-> +					} else if (!AHDCstate && !RS422state) {
-> +						gb.uart_type = 0;
-> +					} else {
-> +						gb.uart_type = -1;
-> +					}
-> +					break;
-> +				}
-> +			}
-> +
-> +			if (copy_to_user((void *)arg, &gb, (sizeof(SNX_DRVR_UART_GET_TYPE)))) {
-> +				ret = -EFAULT;
-> +			} else {
-> +			ret = 0;
-> +			}
-> +
-
-what is that for ?
-
-> +		case SNX_UART_GET_ACS:
-> +		{
-
-what is an "ACS" ?
-
-In general: don't arbitrarily introduce new ioctl()s, especially not
-device specific ones - unless there is a damn good reason.
-
-
---mtx
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
