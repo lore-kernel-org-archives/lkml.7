@@ -2,229 +2,114 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBC1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5756C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E8A2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4484F2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r8q+1AVt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PkYNxo1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbfCGRZK (ORCPT
+        id S1726483AbfCGR0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:25:10 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40240 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCGRZK (ORCPT
+        Thu, 7 Mar 2019 12:26:08 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:50890 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfCGR0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:25:10 -0500
-Received: by mail-pf1-f196.google.com with SMTP id h1so11944037pfo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:25:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1uA6Wnc1JXO6Z/KXP18r76DXk74dLIbMETnvZuX2eQo=;
-        b=r8q+1AVtcLlSCG/omYgZqF8a93jYl60llXuHFROd7Q7mKoI6gJoc7vydhlJjLUbrra
-         HbjXWJ5Xvldqdqd2JMSLTCxVopXfNgeov4DZMl3jnR/6S4LOQlOUCqHXfzcxu75gV+mT
-         mTgOi+M/Pj7XILsv4MAg5FQAxpflcBpdSG4xdtAx5Yje4W1mkamSf36RwMQ3fjKfhUDi
-         vt+TFi8RQEiTKrxTtORluBXZsPtQSuwUx7bwg0tntz96U5l1QKATYB5H+yW30j6nOWtN
-         Aij0hqLowb82E7vjZbdelB+S35TZ+v4AzHRabQlrNPZ0LdzPzYx1pbHcPYIdDx7Kiiw5
-         UNHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1uA6Wnc1JXO6Z/KXP18r76DXk74dLIbMETnvZuX2eQo=;
-        b=BwJ+ARj0rbYuhLXwW6vv9FLdZQyK2hS9Im40lpw94ya2iOaQYDKBLsIfw/DYVQSmvX
-         Oy+mID62KFTMKxr+6lPGreDKtcBfEc3DZ8HAQY/bHDoPNiQTz7B4DtcdMzeBnxZKNgjp
-         nx4hXP/VKnn+zvvWPsN5SVdIUwLjDOrcSBpG3+HpTAIyiR0h55gbew9GJliW6nd1xFLW
-         KX982l6FVOHBVDdfOTg2T+UAAU4iKfs3Zf2ZxWx8k+jrIz8Spo6m5YLcBD/XuLJYH985
-         1KWfJjXhlXLqocq9g+9WR0k7K8CVBg0Irf22yCXc8ZUzjt8Fcw2ex2hPAdjVQr8htd6T
-         60DA==
-X-Gm-Message-State: APjAAAXtHAniCahLjzgKK02YAl2NrIC3vNCLif8a6DoeCF09GvWsMevE
-        LvsFieSg5uEUtAuFZTjaedDv
-X-Google-Smtp-Source: APXvYqy/EVBjgFmSxedN5fV/SRT9nKOanUhI6AchQDwARZBhUzCGXswXZzYo6NfEpqapfGE3MLLOEQ==
-X-Received: by 2002:a65:468f:: with SMTP id h15mr12513524pgr.391.1551979508978;
-        Thu, 07 Mar 2019 09:25:08 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2405:204:740f:d61c:f9e8:217e:aed4:aa31])
-        by smtp.gmail.com with ESMTPSA id z67sm16870723pfi.152.2019.03.07.09.25.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 09:25:08 -0800 (PST)
-Date:   Thu, 7 Mar 2019 22:55:01 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        amit.kucheria@linaro.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: bitmain: Add GPIO Line names for Sophon
- Edge board
-Message-ID: <20190307172501.GB9268@Mani-XPS-13-9360>
-References: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
- <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+        Thu, 7 Mar 2019 12:26:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zmZYJ14HC3xR/N0nbcdrUP79LPl6Auw13bU4hZ9Su0w=; b=PkYNxo1QhA9NDN/9QuxfN/1/8
+        fLR7f10mKtBj7ETzuIdUlecNyqVzi8zghn2weogd5tsXk4EMrZAGB+BJa9Y9glZIsSr7hhr32f1k+
+        WlkKHdhteIfULj7bu5+UymR3EhgBSniOKjXDo9K1ESbRONeH7/UwZR0YQZad5zYc34LHkFQGk40VV
+        MdnqOODEt68tfkm0/x7GzRHu/qgOSolkIqoXRweBe45O6zCLMgMVcXrdmG9LEXtm4wNiT6SUDjmzI
+        04IwolKBOIIAsREj2RpaltdPnk+X5atN1hF0V71rbY0+rkHOlEZjcb7GAP0/8GrOFEd4abr4h4BsU
+        isz0fA7+A==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54998)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1h1wmD-0007HG-Kb; Thu, 07 Mar 2019 17:25:49 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1h1wm6-00054f-3W; Thu, 07 Mar 2019 17:25:42 +0000
+Date:   Thu, 7 Mar 2019 17:25:41 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Joe Perches <joe@perches.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] futex: mark futex_detect_cmpxchg() as 'noinline'
+Message-ID: <20190307172541.2262ccaxjk43twi4@shell.armlinux.org.uk>
+References: <20190307091514.2489338-1-arnd@arndb.de>
+ <b83ed0ab05b12484a70d5f3db742a7a141718a00.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b83ed0ab05b12484a70d5f3db742a7a141718a00.camel@perches.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 05:20:22PM +0530, Manivannan Sadhasivam wrote:
-> Add GPIO line names for Sophon Edge board based on BM1880 SoC from
-> Bitmain. Line names are based on the board schematics as well as the
-> 96Boards Consumer Edition specification v1.0.
+On Thu, Mar 07, 2019 at 09:19:04AM -0800, Joe Perches wrote:
+> On Thu, 2019-03-07 at 10:14 +0100, Arnd Bergmann wrote:
+> > On 32-bit ARM, I got a link failure in futex_init() when building
+> > with clang in some random configurations:
+> > 
+> > kernel/futex.o:(.text.fixup+0x5c): relocation truncated to fit: R_ARM_JUMP24 against `.init.text'
+> > 
+> > As far as I can tell, the problem is that a branch is over 16MB
+> > apart in those configurations, but only if it branches back to
+> > the init text.
+> > 
+> > Marking the futex_detect_cmpxchg() function as noinline and
+> > not __init avoids the problem for me.
 > 
+> Perhaps the __init and __exit #defines should be noinline
+> to allow discarding of the code.
 
-Applied for v5.2 with Linus's Reviewed-by tag.
+How does that help this case?  The problem is futex_detect_cmpxchg()
+being placed in .init.text which is too far from .text.fixup.
+Whether it is inlined or not is immaterial since both
+futex_detect_cmpxchg() and its only caller futex_init() are both __init
+functions.
 
-Thanks,
-Mani
+It seems to me to be completely sane to have:
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../boot/dts/bitmain/bm1880-sophon-edge.dts   | 114 ++++++++++++++++++
->  1 file changed, 114 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-> index 6a3255597138..6bdf4c101c61 100644
-> --- a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-> +++ b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
-> @@ -8,6 +8,28 @@
->  
->  #include "bm1880.dtsi"
->  
-> +/*
-> + * GPIO name legend: proper name = the GPIO line is used as GPIO
-> + *         NC = not connected (pin out but not routed from the chip to
-> + *              anything the board)
-> + *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
-> + *         LSEC = Low Speed External Connector
-> + *         HSEC = High Speed External Connector
-> + *
-> + * Line names are taken from the schematic "sophon-edge-schematics"
-> + * version, 1.0210.
-> + *
-> + * For the lines routed to the external connectors the
-> + * lines are named after the 96Boards CE Specification 1.0,
-> + * Appendix "Expansion Connector Signal Description".
-> + *
-> + * When the 96Board naming of a line and the schematic name of
-> + * the same line are in conflict, the 96Board specification
-> + * takes precedence. This is only for the informational
-> + * lines i.e. "[FOO]", the GPIO named lines "GPIO-A" thru "GPIO-L"
-> + * are the only ones actually used for GPIO.
-> + */
-> +
->  / {
->  	compatible = "bitmain,sophon-edge", "bitmain,bm1880";
->  	model = "Sophon Edge";
-> @@ -32,6 +54,98 @@
->  		clock-frequency = <500000000>;
->  		#clock-cells = <0>;
->  	};
-> +
-> +	soc {
-> +		gpio0: gpio@50027000 {
-> +			porta: gpio-controller@0 {
-> +				gpio-line-names =
-> +					"GPIO-A", /* GPIO0, LSEC pin 23 */
-> +					"GPIO-C", /* GPIO1, LSEC pin 25 */
-> +					"[GPIO2_PHY0_RST]", /* GPIO2 */
-> +					"GPIO-E", /* GPIO3, LSEC pin 27 */
-> +					"[USB_DET]", /* GPIO4 */
-> +					"[EN_P5V]", /* GPIO5 */
-> +					"[VDDIO_MS1_SEL]", /* GPIO6 */
-> +					"GPIO-G", /* GPIO7, LSEC pin 29 */
-> +					"[BM_TUSB_RST_L]", /* GPIO8 */
-> +					"[EN_P5V_USBHUB]", /* GPIO9 */
-> +					"NC",
-> +					"LED_WIFI", /* GPIO11 */
-> +					"LED_BT", /* GPIO12 */
-> +					"[BM_BLM8221_EN_L]", /* GPIO13 */
-> +					"NC", /* GPIO14 */
-> +					"NC", /* GPIO15 */
-> +					"NC", /* GPIO16 */
-> +					"NC", /* GPIO17 */
-> +					"NC", /* GPIO18 */
-> +					"NC", /* GPIO19 */
-> +					"NC", /* GPIO20 */
-> +					"NC", /* GPIO21 */
-> +					"NC", /* GPIO22 */
-> +					"NC", /* GPIO23 */
-> +					"NC", /* GPIO24 */
-> +					"NC", /* GPIO25 */
-> +					"NC", /* GPIO26 */
-> +					"NC", /* GPIO27 */
-> +					"NC", /* GPIO28 */
-> +					"NC", /* GPIO29 */
-> +					"NC", /* GPIO30 */
-> +					"NC"; /* GPIO31 */
-> +			};
-> +		};
-> +
-> +		gpio1: gpio@50027400 {
-> +			portb: gpio-controller@0 {
-> +				gpio-line-names =
-> +					"NC", /* GPIO32 */
-> +					"NC", /* GPIO33 */
-> +					"[I2C0_SDA]", /* GPIO34, LSEC pin 17 */
-> +					"[I2C0_SCL]", /* GPIO35, LSEC pin 15 */
-> +					"[JTAG0_TDO]", /* GPIO36 */
-> +					"[JTAG0_TCK]", /* GPIO37 */
-> +					"[JTAG0_TDI]", /* GPIO38 */
-> +					"[JTAG0_TMS]", /* GPIO39 */
-> +					"[JTAG0_TRST_X]", /* GPIO40 */
-> +					"[JTAG1_TDO]", /* GPIO41 */
-> +					"[JTAG1_TCK]", /* GPIO42 */
-> +					"[JTAG1_TDI]", /* GPIO43 */
-> +					"[CPU_TX]", /* GPIO44 */
-> +					"[CPU_RX]", /* GPIO45 */
-> +					"[UART1_TXD]", /* GPIO46 */
-> +					"[UART1_RXD]", /* GPIO47 */
-> +					"[UART0_TXD]", /* GPIO48 */
-> +					"[UART0_RXD]", /* GPIO49 */
-> +					"GPIO-I", /* GPIO50, LSEC pin 31 */
-> +					"GPIO-K", /* GPIO51, LSEC pin 33 */
-> +					"USER_LED2", /* GPIO52 */
-> +					"USER_LED1", /* GPIO53 */
-> +					"[UART0_RTS]", /* GPIO54 */
-> +					"[UART0_CTS]", /* GPIO55 */
-> +					"USER_LED4", /* GPIO56, JTAG1_TRST_X */
-> +					"USER_LED3", /* GPIO57, JTAG1_TMS */
-> +					"[I2S0_SCLK]", /* GPIO58 */
-> +					"[I2S0_FS]", /* GPIO59 */
-> +					"[I2S0_SDI]", /* GPIO60 */
-> +					"[I2S0_SDO]", /* GPIO61 */
-> +					"GPIO-B", /* GPIO62, LSEC pin 24 */
-> +					"GPIO-F"; /* GPIO63, I2S1_SCLK, LSEC pin 28 */
-> +			};
-> +		};
-> +
-> +		gpio2: gpio@50027800 {
-> +			portc: gpio-controller@0 {
-> +				gpio-line-names =
-> +					"GPIO-D", /* GPIO64, I2S1_FS, LSEC pin 26 */
-> +					"GPIO-J", /* GPIO65, I2S1_SDI, LSEC pin 32 */
-> +					"GPIO-H", /* GPIO66, I2S1_SDO, LSEC pin 30 */
-> +					"GPIO-L", /* GPIO67, LSEC pin 34 */
-> +					"[SPI0_CS]", /* GPIO68, SPI1_CS, LSEC pin 12 */
-> +					"[SPI0_DIN]", /* GPIO69, SPI1_SDI, LSEC pin 10 */
-> +					"[SPI0_DOUT]", /* GPIO70, SPI1_SDO, LSEC pin 14 */
-> +					"[SPI0_SCLK]"; /* GPIO71, SPI1_SCK, LSEC pin 8 */
-> +			};
-> +		};
-> +	};
->  };
->  
->  &uart0 {
-> -- 
-> 2.17.1
-> 
+static void __init foo(...)
+{
+}
+
+static int __init foo_init(...)
+{
+	foo();
+}
+
+and have the expectation that the compiler _can_, if it desires, inline
+foo() into foo_init().
+
+Let me re-iterate: the inlining of futex_detect_cmpxchg() into
+futex_init() is not the issue here.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
