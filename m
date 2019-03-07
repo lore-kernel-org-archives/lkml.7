@@ -2,251 +2,358 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86277C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DC8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4395220652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE2720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lnkTDz6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfCGJNM (ORCPT
+        id S1726242AbfCGJN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:13:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:43833 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfCGJNL (ORCPT
+        Thu, 7 Mar 2019 04:13:28 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57988 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfCGJN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:13:11 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MWRmF-1hZZT41bOV-00XuJT; Thu, 07 Mar 2019 10:12:21 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH] signal: fix building with clang
-Date:   Thu,  7 Mar 2019 10:11:52 +0100
-Message-Id: <20190307091218.2343836-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 7 Mar 2019 04:13:28 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x279DGLe094528;
+        Thu, 7 Mar 2019 03:13:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551949996;
+        bh=OjAQKZ44BWBXft/K5ef1iaq468BRRq463KpZrG2zlo0=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=lnkTDz6P/K1lM9t47cdIV4J+rKcbfQVqW3hYbf1AmxV2H0gks+5sG6I/vbcz7jJGE
+         ZoclxHuHHjdsx5Sfi3Fh7QmSzJbxgAbNTEYb3by9NY8fltr9eOzz0j2GODCNeFf0AB
+         SVSDAXVK19iVpwang5oCUcY9vMTHfOAZjYpug2qg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x279DGgY113843
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 Mar 2019 03:13:16 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 7
+ Mar 2019 03:13:16 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Thu, 7 Mar 2019 03:13:16 -0600
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x279DD9b002430;
+        Thu, 7 Mar 2019 03:13:13 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 3/9] PCI: keystone: Convert to using hierarchy domain
+ for legacy interrupts
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190221101518.22604-1-kishon@ti.com>
+ <20190221101518.22604-4-kishon@ti.com>
+ <20190221162413.GA5815@e107981-ln.cambridge.arm.com>
+ <20190223121143.14c1f150@why.wild-wind.fr.eu.org>
+Message-ID: <4c55487d-213f-f5f5-6d67-93a417d2a0d7@ti.com>
+Date:   Thu, 7 Mar 2019 14:42:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:1+k5oZrni0eA0F/3l43JgAAbOgdZFo05OvCQvb4XIPIV+Y+dMnF
- WqSpPXtS8GbQEzMyC4Pd07ZZ0SKmHJMn8wT1vOMcXaEdXZTy96iaq/5d3K1sRsh0ZbLACMT
- zUNzGZiYpLbwNRf7SRvnq9b/Y5IS8zpJgS5IPHIvsdAfIUWR3e5aZrkVno0Xf2KwBXTWr90
- nqhi3cAK9fOQyWPWPAINg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wodNbODB7+8=:AMnyYdtHaV0nkCYIECevsw
- 2PM6NWTjEHoWP0Q2FNayumcOTjqBj/2GkyBTF5J3GxgqEF0ghe5QJiL+qggn8GJbKk8x6XWMe
- N65Ka4PkrRLmFxdel6QQ1eE2x83hqmhddkjgVeKuYHXdCPECvPJ67kkPNIGGsWiAK5QYxLa5K
- tvD9Z7bLm3PYGtqPSfOqmOLjnaZMQ5lexjYslgzqcBUehaUukx7xM75AlZwDu/1UL+i+ZjLO+
- ol8x7KH6UrlhIWjddLlXmT1p8hDn85iZRTm6UBqyyCUunfN0gTHkJ85+HxXP6eLULiMEGk5gS
- 5CR59nn4XLcTCnrt/mCUq/cbHoAqV+oZG0T/HXTfMP2///Zglb2lu5DfGeJC9FR+rD7ca7CaG
- h0I04GhGCtWDJfcMVBh7kARJYFEwxdSNbDskx6TtH5f3m21FknDXoka2T6W6NRzCF+HZWUW1r
- QlyzRFDa1726QdUl6niz89rizlAtKYdlT8rxvgOx3quCOq7gKJrvmkmpN/GAW0WzEvpB4C4B8
- 5qY+jzuWbTuJcyLlaS26UQFnQnuXrakV+bCX4plEQfODm24aaICbF7Q3gVDnN7j2vuQrX+xW5
- 4ovCagvx7C5spmgj68OXH80jhNlsf5oYli/VxSxwjevURv1t0xh/Kcu2lig+RBQRPrbd9K+7K
- PEWdpvwcP4ibzyGrPEn+tV/HpBtEY9UhrKwwDXnaMJ1St0I6KUvO3KUrcnh3ZFIljThahKMV0
- fkXApGvEBxFk6PJA3IfX4oL9cjqEOiIgY/t0Vw==
+In-Reply-To: <20190223121143.14c1f150@why.wild-wind.fr.eu.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns about the sigset_t manipulating functions (sigaddset, sigdelset,
-sigisemptyset, ...) because it performs semantic analysis before discarding
-dead code, unlike gcc that does this in the reverse order.
+Hi,
 
-The result is a long list of warnings like:
+On 23/02/19 5:41 PM, Marc Zyngier wrote:
+> On Thu, 21 Feb 2019 16:24:14 +0000
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> 
+>> On Thu, Feb 21, 2019 at 03:45:12PM +0530, Kishon Vijay Abraham I wrote:
+>>> K2G provides separate IRQ lines for each of the four legacy interrupts.
+>>> Model this using hierarchy domain instead of linear domain with chained
+>>> IRQ handler.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  drivers/pci/controller/dwc/pci-keystone.c | 205 +++++++++++++---------
+>>>  1 file changed, 118 insertions(+), 87 deletions(-)  
+>>
+>> Hi Kishon,
+>>
+>> I CC'ed Marc because you are actually re-writing an interrupt controller
+>> driver so I would be happier to merge this refactoring if Marc can have
+>> a look and he is satisfied with it - more so because most of the code can
+>> be reused by other host bridge drivers with similar behaviour.
+> 
+> Cheers Lorenzo.
+> 
+> It doesn't look too bad, but there is a couple of points I'd like to see
+> clarified. Comments below.
+> 
+>>
+>> I will have a look too, unfortunately it is becoming a bit tight for
+>> v5.1 but let's see how it goes.
+>>
+>> Thanks,
+>> Lorenzo
+>>
+>>> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+>>> index 47f0dcf638f2..7f1648453f54 100644
+>>> --- a/drivers/pci/controller/dwc/pci-keystone.c
+>>> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+>>> @@ -61,6 +61,7 @@
+>>>  
+>>>  #define IRQ_STATUS(n)			(0x184 + ((n) << 4))
+>>>  #define IRQ_ENABLE_SET(n)		(0x188 + ((n) << 4))
+>>> +#define IRQ_ENABLE_CLR(n)		(0x18C + ((n) << 4))
+>>>  #define INTx_EN				BIT(0)
+>>>  
+>>>  #define ERR_IRQ_STATUS			0x1c4
+>>> @@ -87,7 +88,6 @@ struct keystone_pcie {
+>>>  	struct dw_pcie		*pci;
+>>>  	/* PCI Device ID */
+>>>  	u32			device_id;
+>>> -	int			legacy_host_irqs[PCI_NUM_INTX];
+>>>  	struct			device_node *legacy_intc_np;
+>>>  
+>>>  	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
+>>> @@ -96,7 +96,6 @@ struct keystone_pcie {
+>>>  	struct phy		**phy;
+>>>  	struct device_link	**link;
+>>>  	struct			device_node *msi_intc_np;
+>>> -	struct irq_domain	*legacy_irq_domain;
+>>>  	struct device_node	*np;
+>>>  
+>>>  	int error_irq;
+>>> @@ -199,26 +198,6 @@ static int ks_pcie_msi_host_init(struct pcie_port *pp)
+>>>  	return dw_pcie_allocate_domains(pp);
+>>>  }
+>>>  
+>>> -static void ks_pcie_handle_legacy_irq(struct keystone_pcie *ks_pcie,
+>>> -				      int offset)
+>>> -{
+>>> -	struct dw_pcie *pci = ks_pcie->pci;
+>>> -	struct device *dev = pci->dev;
+>>> -	u32 pending;
+>>> -	int virq;
+>>> -
+>>> -	pending = ks_pcie_app_readl(ks_pcie, IRQ_STATUS(offset));
+>>> -
+>>> -	if (BIT(0) & pending) {
+>>> -		virq = irq_linear_revmap(ks_pcie->legacy_irq_domain, offset);
+>>> -		dev_dbg(dev, ": irq: irq_offset %d, virq %d\n", offset, virq);
+>>> -		generic_handle_irq(virq);
+>>> -	}
+>>> -
+>>> -	/* EOI the INTx interrupt */
+>>> -	ks_pcie_app_writel(ks_pcie, IRQ_EOI, offset);
+>>> -}
+>>> -
+>>>  static void ks_pcie_enable_error_irq(struct keystone_pcie *ks_pcie)
+>>>  {
+>>>  	ks_pcie_app_writel(ks_pcie, ERR_IRQ_ENABLE_SET, ERR_IRQ_ALL);
+>>> @@ -256,39 +235,117 @@ static irqreturn_t ks_pcie_handle_error_irq(struct keystone_pcie *ks_pcie)
+>>>  	return IRQ_HANDLED;
+>>>  }
+>>>  
+>>> -static void ks_pcie_ack_legacy_irq(struct irq_data *d)
+>>> +void ks_pcie_irq_eoi(struct irq_data *data)
+>>>  {
+>>> +	struct keystone_pcie *ks_pcie = irq_data_get_irq_chip_data(data);
+>>> +	irq_hw_number_t hwirq = data->hwirq;
+>>> +
+>>> +	ks_pcie_app_writel(ks_pcie, IRQ_EOI, hwirq);
+>>> +	irq_chip_eoi_parent(data);
+>>>  }
+>>>  
+>>> -static void ks_pcie_mask_legacy_irq(struct irq_data *d)
+>>> +void ks_pcie_irq_enable(struct irq_data *data)
+>>>  {
+>>> +	struct keystone_pcie *ks_pcie = irq_data_get_irq_chip_data(data);
+>>> +	irq_hw_number_t hwirq = data->hwirq;
+>>> +
+>>> +	ks_pcie_app_writel(ks_pcie, IRQ_ENABLE_SET(hwirq), INTx_EN);
+>>> +	irq_chip_enable_parent(data);
+>>>  }
+>>>  
+>>> -static void ks_pcie_unmask_legacy_irq(struct irq_data *d)
+>>> +void ks_pcie_irq_disable(struct irq_data *data)
+>>>  {
+>>> +	struct keystone_pcie *ks_pcie = irq_data_get_irq_chip_data(data);
+>>> +	irq_hw_number_t hwirq = data->hwirq;
+>>> +
+>>> +	ks_pcie_app_writel(ks_pcie, IRQ_ENABLE_CLR(hwirq), INTx_EN);
+>>> +	irq_chip_disable_parent(data);
+>>>  }
+>>>  
+>>>  static struct irq_chip ks_pcie_legacy_irq_chip = {
+>>> -	.name = "Keystone-PCI-Legacy-IRQ",
+>>> -	.irq_ack = ks_pcie_ack_legacy_irq,
+>>> -	.irq_mask = ks_pcie_mask_legacy_irq,
+>>> -	.irq_unmask = ks_pcie_unmask_legacy_irq,
+>>> +	.name			= "Keystone-PCI-Legacy-IRQ",
+>>> +	.irq_enable		= ks_pcie_irq_enable,
+>>> +	.irq_disable		= ks_pcie_irq_disable,
+>>> +	.irq_eoi		= ks_pcie_irq_eoi,
+>>> +	.irq_mask		= irq_chip_mask_parent,
+>>> +	.irq_unmask		= irq_chip_unmask_parent,
+>>> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+>>> +	.irq_set_type		= irq_chip_set_type_parent,
+>>> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
+>>>  };
+>>>  
+>>> -static int ks_pcie_init_legacy_irq_map(struct irq_domain *d,
+>>> -				       unsigned int irq,
+>>> -				       irq_hw_number_t hw_irq)
+>>> +static int ks_pcie_legacy_irq_domain_alloc(struct irq_domain *domain,
+>>> +					   unsigned int virq,
+>>> +					   unsigned int nr_irqs, void *data)
+>>>  {
+>>> -	irq_set_chip_and_handler(irq, &ks_pcie_legacy_irq_chip,
+>>> -				 handle_level_irq);
+>>> -	irq_set_chip_data(irq, d->host_data);
+>>> +	struct keystone_pcie *ks_pcie = domain->host_data;
+>>> +	struct device_node *np = ks_pcie->legacy_intc_np;
+>>> +	struct irq_fwspec parent_fwspec, *fwspec = data;
+>>> +	struct of_phandle_args out_irq;
+>>> +	int ret, i;
+>>> +
+>>> +	if (nr_irqs != 1)
+>>> +		return -EINVAL;
+>>> +
+>>> +	ret = of_irq_parse_one(np, fwspec->param[0], &out_irq);
+>>> +	if (ret < 0) {
+>>> +		pr_err("Failed to parse interrupt node\n");
+>>> +		return ret;
+>>> +	}
+> 
+> What it this trying to do? Fishing out the interrupts from DT based on
+> the legacy pin? This looks at best obscure. I wonder why you don't do
+> that at probe time instead. Anyway, this requires documenting.
 
-In file included from arch/arm64/include/asm/ftrace.h:21:
-include/linux/compat.h:489:10: error: array index 3 is past the end of the array (which contains 2 elements) [-Werror,-Warray-bounds]
-        case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-                ^     ~
-include/linux/compat.h:138:2: note: array 'sig' declared here
-        compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-        ^
-include/linux/compat.h:489:42: error: array index 2 is past the end of the array (which contains 2 elements) [-Werror,-Warray-bounds]
-        case 2: v.sig[3] = (set->sig[1] >> 32); v.sig[2] = set->sig[1];
-                                                ^     ~
-include/linux/compat.h:138:2: note: array 'sig' declared here
-        compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-        ^
+The device-tree of PCIe node looks something like below.
 
-As a (rather ugly) workaround, I turn the nice switch()/case statements
-into preprocessor conditionals, and where that is not possible, use the
-'%' operator to modify the warning case into an operation that clang
-will not warn about. Since that only matters for dead code, the actual
-behavior does not change.
+interrupt-map = <0 0 0 1 &pcie_intc0 0 IRQ_TYPE_EDGE_RISING>, /* INT A */
+		<0 0 0 2 &pcie_intc0 1 IRQ_TYPE_EDGE_RISING>, /* INT B */
+		<0 0 0 3 &pcie_intc0 2 IRQ_TYPE_EDGE_RISING>, /* INT C */
+		<0 0 0 4 &pcie_intc0 3 IRQ_TYPE_EDGE_RISING>; /* INT D */
+pcie_intc0: legacy-interrupt-controller {
+	interrupt-controller;
+	#interrupt-cells = <2>;
+	interrupt-parent = <&gic>;
+	interrupts = <GIC_SPI 48 IRQ_TYPE_EDGE_RISING>,
+		     <GIC_SPI 49 IRQ_TYPE_EDGE_RISING>,
+		     <GIC_SPI 50 IRQ_TYPE_EDGE_RISING>,
+		     <GIC_SPI 51 IRQ_TYPE_EDGE_RISING>;
+};
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=38789
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/mips/include/uapi/asm/signal.h |  3 +-
- include/linux/signal.h              | 72 ++++++++++++++---------------
- 2 files changed, 37 insertions(+), 38 deletions(-)
+INTA corresponds to HWIRQ '0' of the hierarchy irq domain we create in this
+driver which in turn corresponds to GIC_SPI '48' of GIC.
 
-diff --git a/arch/mips/include/uapi/asm/signal.h b/arch/mips/include/uapi/asm/signal.h
-index 53104b10aae2..8e71a2f778f7 100644
---- a/arch/mips/include/uapi/asm/signal.h
-+++ b/arch/mips/include/uapi/asm/signal.h
-@@ -11,9 +11,10 @@
- #define _UAPI_ASM_SIGNAL_H
- 
- #include <linux/types.h>
-+#include <asm/bitsperlong.h>
- 
- #define _NSIG		128
--#define _NSIG_BPW	(sizeof(unsigned long) * 8)
-+#define _NSIG_BPW	__BITS_PER_LONG
- #define _NSIG_WORDS	(_NSIG / _NSIG_BPW)
- 
- typedef struct {
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index 9702016734b1..b967d502ab61 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -82,35 +82,33 @@ static inline int sigismember(sigset_t *set, int _sig)
- 
- static inline int sigisemptyset(sigset_t *set)
- {
--	switch (_NSIG_WORDS) {
--	case 4:
--		return (set->sig[3] | set->sig[2] |
--			set->sig[1] | set->sig[0]) == 0;
--	case 2:
--		return (set->sig[1] | set->sig[0]) == 0;
--	case 1:
--		return set->sig[0] == 0;
--	default:
--		BUILD_BUG();
--		return 0;
--	}
-+#if _NSIG_WORDS == 4
-+	return (set->sig[3] | set->sig[2] |
-+		set->sig[1] | set->sig[0]) == 0;
-+#elif _NSIG_WORDS == 2
-+	return (set->sig[1] | set->sig[0]) == 0;
-+#elif _NSIG_WORDS == 1
-+	return set->sig[0] == 0;
-+#else
-+	BUILD_BUG();
-+#endif
- }
- 
- static inline int sigequalsets(const sigset_t *set1, const sigset_t *set2)
- {
--	switch (_NSIG_WORDS) {
--	case 4:
--		return	(set1->sig[3] == set2->sig[3]) &&
--			(set1->sig[2] == set2->sig[2]) &&
--			(set1->sig[1] == set2->sig[1]) &&
--			(set1->sig[0] == set2->sig[0]);
--	case 2:
--		return	(set1->sig[1] == set2->sig[1]) &&
--			(set1->sig[0] == set2->sig[0]);
--	case 1:
--		return	set1->sig[0] == set2->sig[0];
--	}
-+#if _NSIG_WORDS == 4
-+	return	(set1->sig[3] == set2->sig[3]) &&
-+		(set1->sig[2] == set2->sig[2]) &&
-+		(set1->sig[1] == set2->sig[1]) &&
-+		(set1->sig[0] == set2->sig[0]);
-+#elif _NSIG_WORDS == 2
-+	return	(set1->sig[1] == set2->sig[1]) &&
-+		(set1->sig[0] == set2->sig[0]);
-+#elif _NSIG_WORDS == 1
-+	return	set1->sig[0] == set2->sig[0];
-+#else
- 	return 0;
-+#endif
- }
- 
- #define sigmask(sig)	(1UL << ((sig) - 1))
-@@ -125,14 +123,14 @@ static inline void name(sigset_t *r, const sigset_t *a, const sigset_t *b) \
- 									\
- 	switch (_NSIG_WORDS) {						\
- 	case 4:								\
--		a3 = a->sig[3]; a2 = a->sig[2];				\
--		b3 = b->sig[3]; b2 = b->sig[2];				\
--		r->sig[3] = op(a3, b3);					\
--		r->sig[2] = op(a2, b2);					\
-+		a3 = a->sig[3%_NSIG_WORDS]; a2 = a->sig[2%_NSIG_WORDS];	\
-+		b3 = b->sig[3%_NSIG_WORDS]; b2 = b->sig[2%_NSIG_WORDS];	\
-+		r->sig[3%_NSIG_WORDS] = op(a3, b3);			\
-+		r->sig[2%_NSIG_WORDS] = op(a2, b2);			\
- 		/* fall through */					\
- 	case 2:								\
--		a1 = a->sig[1]; b1 = b->sig[1];				\
--		r->sig[1] = op(a1, b1);					\
-+		a1 = a->sig[1%_NSIG_WORDS]; b1 = b->sig[1%_NSIG_WORDS];	\
-+		r->sig[1%_NSIG_WORDS] = op(a1, b1);			\
- 		/* fall through */					\
- 	case 1:								\
- 		a0 = a->sig[0]; b0 = b->sig[0];				\
-@@ -161,10 +159,10 @@ _SIG_SET_BINOP(sigandnsets, _sig_andn)
- static inline void name(sigset_t *set)					\
- {									\
- 	switch (_NSIG_WORDS) {						\
--	case 4:	set->sig[3] = op(set->sig[3]);				\
--		set->sig[2] = op(set->sig[2]);				\
-+	case 4:	set->sig[3%_NSIG_WORDS] = op(set->sig[3%_NSIG_WORDS]);	\
-+		set->sig[2%_NSIG_WORDS] = op(set->sig[2%_NSIG_WORDS]);	\
- 		/* fall through */					\
--	case 2:	set->sig[1] = op(set->sig[1]);				\
-+	case 2:	set->sig[1%_NSIG_WORDS] = op(set->sig[1%_NSIG_WORDS]);	\
- 		/* fall through */					\
- 	case 1:	set->sig[0] = op(set->sig[0]);				\
- 		    break;						\
-@@ -185,7 +183,7 @@ static inline void sigemptyset(sigset_t *set)
- 	default:
- 		memset(set, 0, sizeof(sigset_t));
- 		break;
--	case 2: set->sig[1] = 0;
-+	case 2: set->sig[1%_NSIG_WORDS] = 0;
- 		/* fall through */
- 	case 1:	set->sig[0] = 0;
- 		break;
-@@ -198,7 +196,7 @@ static inline void sigfillset(sigset_t *set)
- 	default:
- 		memset(set, -1, sizeof(sigset_t));
- 		break;
--	case 2: set->sig[1] = -1;
-+	case 2: set->sig[1%_NSIG_WORDS] = -1;
- 		/* fall through */
- 	case 1:	set->sig[0] = -1;
- 		break;
-@@ -229,7 +227,7 @@ static inline void siginitset(sigset_t *set, unsigned long mask)
- 	default:
- 		memset(&set->sig[1], 0, sizeof(long)*(_NSIG_WORDS-1));
- 		break;
--	case 2: set->sig[1] = 0;
-+	case 2: set->sig[1%_NSIG_WORDS] = 0;
- 	case 1: ;
- 	}
- }
-@@ -241,7 +239,7 @@ static inline void siginitsetinv(sigset_t *set, unsigned long mask)
- 	default:
- 		memset(&set->sig[1], -1, sizeof(long)*(_NSIG_WORDS-1));
- 		break;
--	case 2: set->sig[1] = -1;
-+	case 2: set->sig[1%_NSIG_WORDS] = -1;
- 	case 1: ;
- 	}
- }
--- 
-2.20.0
+We could create an array of parent_fwspec for each of the four interrupt lines
+in legacy-interrupt-controller during probe and use it directly here while
+invoking irq_domain_alloc_irqs_parent. I think you want me to do that instead
+of using of_irq_parse_one here?
+> 
+>>> +
+>>> +	parent_fwspec.fwnode = &out_irq.np->fwnode;
+>>> +	parent_fwspec.param_count = out_irq.args_count;
+>>> +
+>>> +	for (i = 0; i < out_irq.args_count; i++)
+>>> +		parent_fwspec.param[i] = out_irq.args[i];
+> 
+> This feels like a duplicate of of_phandle_args_to_fwspec(). If you need
+> such a helper, please export it from the irqdomain code.
 
+sure.
+> 
+>>> +
+>>> +	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
+>>> +	if (ret < 0) {
+>>> +		pr_err("Failed to allocate parent irq %u: %d\n",
+>>> +		       parent_fwspec.param[0], ret);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, fwspec->param[0],
+>>> +					    &ks_pcie_legacy_irq_chip, ks_pcie);
+>>> +	if (ret < 0) {
+>>> +		pr_err("Failed to set hwirq and chip\n");
+>>> +		goto err_set_hwirq_and_chip;
+>>> +	}
+>>>  
+>>>  	return 0;
+>>> +
+>>> +err_set_hwirq_and_chip:
+>>> +	irq_domain_free_irqs_parent(domain, virq, 1);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int ks_pcie_irq_domain_translate(struct irq_domain *domain,
+>>> +					struct irq_fwspec *fwspec,
+>>> +					unsigned long *hwirq,
+>>> +					unsigned int *type)
+>>> +{
+>>> +	if (is_of_node(fwspec->fwnode)) {
+> 
+> If you don't plan to support ACPI, you can drop this.
+
+okay.
+> 
+>>> +		if (fwspec->param_count != 2)
+>>> +			return -EINVAL;
+> 
+> From the DT binding:
+> 
+> pcie_intc: Interrupt controller device node for Legacy IRQ chip
+>         interrupt-cells: should be set to 1
+> 
+> So why do we have 2 cells here?
+
+With '1' cells, it's not possible to specify irq trigger type. DT binding has
+to be fixed. I'll fix this in the next revision of the patch series.
+> 
+>>> +
+>>> +		if (fwspec->param[0] >= PCI_NUM_INTX)
+>>> +			return -EINVAL;
+> 
+> Most of the OF code assumes that the pin number describing the legacy
+> interrupt is 1-based, while you obviously treat it as 0-based. How does
+> it work?
+
+INTA corresponds to '0' of the hierarchy interrupt domain (using interrupt-map).
+> 
+>>> +
+>>> +		*hwirq = fwspec->param[0];
+>>> +		*type = fwspec->param[1];
+> 
+> As far as I remember, PCI legacy interrupts are level triggered, so
+> there should be no need to advertise the trigger (which is consistent
+> with the way the binding is written).
+
+It is pulse triggered at subsystem level. Quoting the TRM
+"The interrupt request signal at the PCIe SS boundary is a pulse signal that is
+triggered each time an assert interrupt message is received." The PCIe
+subsystem also has a level signal (interrupt pending signal) but the interrupt
+request signal is the one that is connected to GIC.
+
+Thanks
+Kishon
