@@ -2,162 +2,181 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLACK
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1A5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A790C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A5A20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F49D2146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9DbNFMd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ozk7XYZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfCGIXw (ORCPT
+        id S1726242AbfCGIZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:23:52 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44489 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfCGIXv (ORCPT
+        Thu, 7 Mar 2019 03:25:32 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34886 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfCGIZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:23:51 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j3so10667743pgm.11;
-        Thu, 07 Mar 2019 00:23:50 -0800 (PST)
+        Thu, 7 Mar 2019 03:25:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id y15so8357673wma.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 00:25:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xlSoW9n3/vhZTtvHjrlW/OG/u/jg3swLcYjt4fKauOM=;
-        b=r9DbNFMdx884oMolSYmPmYcNrg1ZhwGTL9jmgTmpZR8CFU/LsSGZVx9+IC5nCNFUvC
-         hMSdKGMkjbdp7uYvfAdQKdr7qwWx1EZw2RNq4TUSsqzwcGpxnWTi8qQ15NmRO88cv2u5
-         d1CnIz0t6OG4i5IIgQhMpzyF1yS7fSDP39RWvAbezb0KVmJo7/9w6/+HNxgUcnWKK37v
-         uL5GquTIJQdRnX3wUQ2WWDAW+gQQj4SAUwN4ewUnAuigYfs99K1yQ2gX+cTLHtMZl0Ey
-         yFgZA0iYskqI2OmdxZsU7jrKzNXfj0JBXPq6hmny9an27VHCj+Qf8N7eZbB80K2v7tUo
-         5k4Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=iByZZ0z3++dmogEJzqW9wd3kSy/x3E8tMax0I8dX9SU=;
+        b=Ozk7XYZhfJM526uKrQcKHMap2YvaprhB4UeY56Ss/ZbtjHGIIIyk8vdSV17gtbU+M0
+         HN0M1XIQvEeD0V+0uTcmCuToSSXhhrVueEWg7g9fC88K77b1KY/Fz1YdMNA3PwJPdDs4
+         PTZuPyho75Ks0M1pHYB59mUFfWU+CXHh5WmyZWsTtx3xQyLl+PY1e7+r2SfFwoqoZb8T
+         /N62PFDeuHYmTJlkWrWf8+uuid0Lm0tMxuBQ4obKFqG7cySaPW1sIv72YYN8jRt9O+yZ
+         i7rzFA43M2Ybi26nhInNgwTaHj+brpm0kiu4DvSidUg6zX42RfoHFzT4Pg23aJN2uTAl
+         hOpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xlSoW9n3/vhZTtvHjrlW/OG/u/jg3swLcYjt4fKauOM=;
-        b=iSQWeSKea2SLcFJqYaL0iglNmFfbhy4HcbfiUMCsS8PUjvfzTGNLc75UA1Oai3+ahr
-         kBmJa8F0fW3m81GoOCsmmEPqaLjfrftZoFUqJsGcGHcfw0maxXMKWzbh984aLzEczmAx
-         79h79BYjv4kKnR0ZJtSb5pgw8ieXZVXrjMis+syNMS3UqKtO7w6xVMFgCUnO2QE7nuwI
-         MFzYE+KaPiYjOc7X3OwZEom04zzmM1XhNAjrwx1W1pqRXVjyXitZo0p2RE+wPS7WqGaK
-         qHrTXtuz12TyxwbUSrwcy/OZd6BvRuFle/Ilk+JE0j8yUJjQADZscmDzpV2LDXndrwvP
-         5wgw==
-X-Gm-Message-State: APjAAAWavSdp2u7XKbbKjRHa7KJuUCHJDVNPzfysZPE32UR5VZNj8aw8
-        8BjvV4hjw/UB25frlmr5uo09ui7/XScyZmJGQ/cdUhr25g0=
-X-Google-Smtp-Source: APXvYqyCvVJ6r2pkwgpVwmEmrJgpMCka+tTOIkEr6udWA4j0z9MxIoaHAu6Qs5jnjb0d1xyvqxGNcvCpSPlfY++OlUc=
-X-Received: by 2002:aa7:930b:: with SMTP id 11mr11658794pfj.49.1551947030319;
- Thu, 07 Mar 2019 00:23:50 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=iByZZ0z3++dmogEJzqW9wd3kSy/x3E8tMax0I8dX9SU=;
+        b=tXmgAq57Vf7DlFIV8Jfaj7LBn6d1ehzOSZg/6lxj5kOUXAW6aLMibvta9B7WNEHncn
+         rXHcfP5j+tJR7gyFgAXM4L4crdijiN8fd1nRrf1gCY6ZedHenX5zj+dUBU68OcOSSJeI
+         j8obH2ZYZxg8MSvoLVUnNCIZvhxCv3yhHn9s/L+fazSytC3iO1x9F+Viaj2yORpJ/QG2
+         ESWdhgUPfvWnFgeSwDtrPiV8LFiH8XghHe7xEgc5CVt6AvgYivate+YxBQ8LZjIXNaa+
+         BeVCJTLwO/VvJqTf9i+ZWix20L8lfj899fFTSw8syP0HJbuw6N1JhpQzyZRUhi4dBiyp
+         Amrg==
+X-Gm-Message-State: APjAAAVacx46bSKSFhu4WMD96jnKkug8mi/0oMWBng6UjJztnlWXMYDV
+        dDG5wavjreCsD/5rEs/NN2fDpg==
+X-Google-Smtp-Source: APXvYqwTxcnD+4anLx2oOQ1jLNLOzx9j46Xs76KBbdCSI6bk6e+VcSNXFmstFHBfP7EkCoU3YoC4Gw==
+X-Received: by 2002:a1c:5f86:: with SMTP id t128mr4797036wmb.87.1551947127439;
+        Thu, 07 Mar 2019 00:25:27 -0800 (PST)
+Received: from dell ([2.27.35.194])
+        by smtp.gmail.com with ESMTPSA id u14sm527016wrr.42.2019.03.07.00.25.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 00:25:26 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:25:24 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        Alessandro Rubini <rubini@gnudd.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Cory Maccarrone <darkstar6262@gmail.com>,
+        Davide Ciminaghi <ciminaghi@gnudd.com>,
+        Dong Aisheng <dong.aisheng@linaro.org>,
+        Graeme Gregory <gg@slimlogic.co.uk>,
+        Guennadi Liakhovetski <g.liakhovetski@gmx.de>,
+        Haojian Zhuang <haojian.zhuang@marvell.com>,
+        Jin Park <jinyoungp@nvidia.com>,
+        Jorge Eduardo Candelaria <jedu@slimlogic.co.uk>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@opensource.wolfsonmicro.com>,
+        Mattias Nilsson <mattias.i.nilsson@stericsson.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Venu Byravarasu <vbyravarasu@nvidia.com>,
+        linux-omap@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH v5 00/18] mfd: demodularization of non-modular drivers
+Message-ID: <20190307082524.GB4634@dell>
+References: <1547404609-14161-1-git-send-email-paul.gortmaker@windriver.com>
+ <20190116132431.GE23399@dell>
+ <20190306231003.GD7915@amd>
+ <20190307041808.GK26690@windriver.com>
 MIME-Version: 1.0
-References: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
-In-Reply-To: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 7 Mar 2019 10:23:38 +0200
-Message-ID: <CAHp75VeXPezw1Qyku2WvRPxF6euOX2BNdwFJTP37W9pdWRuynw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some machines
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190307041808.GK26690@windriver.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 10:09 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Some AMD based ThinkPads have a firmware bug that calling
-> "GBDC" will cause bluetooth on Intel wireless cards blocked.
->
-> Probe these models by DMI match and disable bluetooth subdriver
-> if specified Intel wireless card exist.
+On Wed, 06 Mar 2019, Paul Gortmaker wrote:
 
-Thanks for a patch. My comments below.
+> [Re: [PATCH v5 00/18] mfd: demodularization of non-modular drivers] On 07/03/2019 (Thu 00:10) Pavel Machek wrote:
+> 
+> > On Wed 2019-01-16 13:24:31, Lee Jones wrote:
+> > > [...]
+> > > 
+> > > > Paul Gortmaker (18):
+> > > >   mfd: aat2870-core: Make it explicitly non-modular
+> > > >   mfd: adp5520: Make it explicitly non-modular
+> > > >   mfd: as3711: Make it explicitly non-modular
+> > > >   mfd: db8500-prcmu: drop unused MODULE_ tags from non-modular code
+> > > >   mfd: htc-i2cpld: Make it explicitly non-modular
+> > > >   mfd: max8925-core: drop unused MODULE_ tags from non-modular code
+> > > >   mfd: rc5t583: Make it explicitly non-modular
+> > > >   mfd: sta2x11: drop unused MODULE_ tags from non-modular code
+> > > >   mfd: syscon: Make it explicitly non-modular
+> > > >   mfd: tps65090: Make it explicitly non-modular
+> > > >   mfd: tps65910: Make it explicitly non-modular
+> > > >   mfd: tps80031: Make it explicitly non-modular
+> > > >   mfd: wm831x-spi: Make it explicitly non-modular
+> > > >   mfd: wm831x-i2c: Make it explicitly non-modular
+> > > >   mfd: wm831x-core: drop unused module infrastructure from non-modular code
+> > > >   mfd: wm8350-i2c: Make it explicitly non-modular
+> > > >   mfd: wm8350-core: drop unused module infrastructure from non-modular code
+> > > >   mfd: wm8400-core: Make it explicitly non-modular
+> > > > 
+> > > >  drivers/mfd/aat2870-core.c      | 40 +++-------------------------------------
+> > > >  drivers/mfd/adp5520.c           | 30 +++++++-----------------------
+> > > >  drivers/mfd/as3711.c            | 14 --------------
+> > > >  drivers/mfd/db8500-prcmu.c      | 10 ++++------
+> > > >  drivers/mfd/htc-i2cpld.c        | 18 +-----------------
+> > > >  20 files changed, 41 insertions(+), 332 deletions(-)
+> > > 
+> > > All applied!
+> > 
+> > Is it good idea?
+> 
+> Pavel, I think yes it is good, and I hope you will allow me the chance
+> to convince you of the same.  It removes dead code, and removes the
+> chance that people mistakenly believe any of these drivers were
+> currently possible as modules, when they were really NOT at all modular.
+> 
+> > We want distro kernels on ARM, too, which means people will eventually
+> > want these as a modules, no?
+> 
+> And at the risk of repeating something I've said a lot already, this
+> is fine, and I 100% support people converting drivers to being modular,
+> in the case where there is demand, and where people with the hardware
+> who are willing to test that the modular use-case actually works.
+> 
+> If people want it to be modular, then this work actually helps.  You
+> don't have drivers "hiding in the shadows" that pretend to be modules.
+> Such drivers do not at all help with the "distro kernels" use case.
+> 
+> If a driver author responds and says they intended to make their driver
+> a module, I 100% support them, and will drop the code removal patch and
+> also have supported them in making their work tristate.  If the choice
+> to convert to tristate happens a year or more from now, it is trivial to
+> reclaim the unused-but-deleted code from git.
+> 
+> But, again as I have said many times -- I can't know every detail of
+> each driver to know if module/tristate makes any sense, as a use-case or
+> if even technically possible (such as in DMA/IOMMU or similar low level
+> core systems).   So the right option is to remove the dead code and not
+> impact the existing driver behaviour, and make it clear in the process
+> to the authors and users, that the driver was never modular to begin
+> with --  and in doing so, give them all a chance to comment and react.
+> 
+> Pavel, I hope this more extended explanation makes sense to you, and
+> that you simply have not seen me write these same details in the past.
 
-(and take your time, there is merge window going on, so, your fix is
-probably material for v5.1-rc2)
+Blimey.  That's a really long winded way of saying:
 
-> @@ -79,6 +79,7 @@
->  #include <linux/jiffies.h>
->  #include <linux/workqueue.h>
->  #include <linux/acpi.h>
-
-> +#include <linux/pci.h>
->  #include <linux/pci_ids.h>
-
-The new include has included the old one with IDs.
-
->  #include <linux/power_supply.h>
->  #include <sound/core.h>
-> @@ -4501,11 +4502,80 @@ static void bluetooth_exit(void)
->         bluetooth_shutdown();
->  }
-
-> +static int __init have_bt_fwbug(void)
-> +{
-> +       /* Some AMD based ThinkPads have a firmware bug that calling
-> +        * "GBDC" will cause bluetooth on Intel wireless cards blocked
-> +        */
-
-/*
- * Comments in multi-line style example.
- * Should look like this one.
- */
-
-> +       if (dmi_check_system(bt_fwbug_list)) {
-
-> +               if (pci_get_device(PCI_VENDOR_ID_INTEL, 0x24F3, NULL) || \
-> +                   pci_get_device(PCI_VENDOR_ID_INTEL, 0x24FD, NULL) || \
-> +                   pci_get_device(PCI_VENDOR_ID_INTEL, 0x2526, NULL))
-
-You can do a table and use pci_match_device().
-On top of it
-
-if (x) {
- if (y)
-  ...
-}
-
-equivalent to
-
-if (x && y) {
- ...
-}
-
-> +                       return 1;
-> +               else
-> +                       return 0;
-> +       } else {
-> +                       return 0;
-> +       }
-> +}
-
-> +       if (have_bt_fwbug()) {
-> +               vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
-> +                       FW_BUG "disable bluetooth subdriver for Intel cards\n");
-> +               return 1;
-> +       }
->         vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
->                         "initializing bluetooth subdriver\n");
-
-Below I see the following:
-        /* bluetooth not supported on 570, 600e/x, 770e, 770x, A21e, A2xm/p,
-          G4x, R30, R31, R40e, R50e, T20-22, X20-21 */
-       tp_features.bluetooth = hkey_handle &&
-           acpi_evalf(hkey_handle, &status, "GBDC", "qd");
-
-Is it possible to integrate your stuff to this one?
-Or can you do similar, like tp_features.bluetooth = !have_bt_fwbug(); ?
+  "Modular-ness is actually broken in these drivers; [Paul]'s patches
+   make that point clear for all to see.  If people (authors/distros)
+   wish them to be modular, they need to fix them properly."
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
