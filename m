@@ -2,113 +2,127 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28121C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272672081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCFC20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIt+RkQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfCGOHK (ORCPT
+        id S1726233AbfCGOLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:07:10 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42414 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfCGOHJ (ORCPT
+        Thu, 7 Mar 2019 09:11:48 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:32968 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfCGOLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:07:09 -0500
-Received: by mail-wr1-f67.google.com with SMTP id r5so17572310wrg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 06:07:08 -0800 (PST)
+        Thu, 7 Mar 2019 09:11:48 -0500
+Received: by mail-pg1-f195.google.com with SMTP id h11so11364190pgl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 06:11:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9LeTIkdxMwZvglFvizWchN+b3CkwK+5wg9lYTOOyRLw=;
+        b=BIt+RkQP7xn4VMu5EZCLcF4/fAcyOjxDJ/caPi6v0qVmX3X7V867du25cUTqhfXAPQ
+         Uz3cXlWyGrl7B0616/obZ5oxFNHM1XmRNMTbS4k9ThhHepyV/gJbRvuWHCUB+dSTGcnH
+         iYiOkT+GM8DbJlevNF2UUvC9US5Fzw78hxXzHUfZk3nDZyD9QT/PlGeWMwy7rsx/SizT
+         johES3WqgNLfs1RQ2cbzlqe/0s9w3pCuwLS0/4j+Hg6kCXtFsHiinQy/oIJlIenPQxU9
+         RvEvQpokwfVBN0FKDmxBSSW9dWarSOWrkJIKzAD02a+jeGQTTQOQ/ZPg2BiXBJ1dFWhI
+         H3eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=2o2B7xDdcH1gS2/tnHUgkGtCKZpPUoNskyO457Jl6dE=;
-        b=CtB2tS0CEQxJplLoUZZqwCBuwe+B09JmR4gk+krVK1HG6j9BD833O8A9F6JyfCS/4J
-         FxRpG0WfcgJSaI6oWGPVOcIALpbuE37twH/drtkh2xLBvauf0k0EfGCFa/5Rzr1d2eML
-         jazKjH2LJa68Gn0g2mZUYUhbwWhPF0A55rqHBdbi3b2wUoBL7eIGXnQl79DTrYtQWfwN
-         CKHBDktaIYUqJ6FRMURoY/WBDfBy2qe3NEXYcHIqS10S/4dYaC5WX9WxGVGMNdRAaVIu
-         tcxMy+v5u6HJ2q+eofLqWyBiBI6qbVPGNvoYyHbzTfsCB2YQm8CPnrKoGFLwxizY7qCh
-         EwxA==
-X-Gm-Message-State: APjAAAU7ilVNKUn3HhLEnMKqL+CSHjjpl3IJQOUZrMEDZUWXlPiYMpJF
-        JCSeDkikfeMfx8vPf5VhEMzA1vMDq/c=
-X-Google-Smtp-Source: APXvYqyBS38UaGRmfnLvdXIOHIR+mDQY76HfriSwWgMakg+CwCqql30NIaZdQxtSRXa4WW5DlJBajA==
-X-Received: by 2002:adf:e2ca:: with SMTP id d10mr156192wrj.250.1551967627237;
-        Thu, 07 Mar 2019 06:07:07 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c67sm4254037wmd.47.2019.03.07.06.07.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 06:07:06 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     kvm@vger.kernel.org, Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RFC] x86/kvm/mmu: make mmu->prev_roots cache work for NPT case
-In-Reply-To: <20190223111552.27221-1-vkuznets@redhat.com>
-References: <0c13c94e-3226-8bfd-2dc7-c75aad1c03a2@redhat.com> <20190223111552.27221-1-vkuznets@redhat.com>
-Date:   Thu, 07 Mar 2019 15:07:05 +0100
-Message-ID: <87ftrylqwm.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9LeTIkdxMwZvglFvizWchN+b3CkwK+5wg9lYTOOyRLw=;
+        b=iQ57tK/JyeuYqi8Qn5NMT73l2b9mEgk0eI8BgUiz6sATF0cQTX6zbQ1JkjHFtLUz28
+         3AQAimY6ya6s9nvgy2SUMu8rHQsBSCx15ntBaZwG2Cq9h5WAmCAsWxJKTFZfGrlQL6tL
+         EpnS1je6OmAKDASQFhvQYBR8qpy6sI3lOcMwP2BVBYJOB5ZVB2zhWcfARHf1ueyKbesu
+         IRwToAA0FN6kcLGLTXb25RY+YSW19gLRFdghZ7pZGrUW30EO1gyHXlj+MZzY3QdnQZgl
+         scfPX2MXYWj4sM73RsaUojGrewaPP9J0XULcxuk4nAHCbN/Ky6wg4G8wNKxJK41lOrMg
+         UBxg==
+X-Gm-Message-State: APjAAAWoK4BA550ydjUf7vH6IiSid8PU5xNU1A9IC7PRu7ehhHhDFr7l
+        fOLYfP0bcTaG+VTwJAvB7tY=
+X-Google-Smtp-Source: APXvYqz5TcqtUPkAid/VyGs5g12QymmVgaWrtbhvtXvjtoF8haf/JDiLPIRDtWGga+IvXJw/q25SLg==
+X-Received: by 2002:a63:43:: with SMTP id 64mr11521398pga.64.1551967906120;
+        Thu, 07 Mar 2019 06:11:46 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a1sm7704690pfn.26.2019.03.07.06.11.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 06:11:45 -0800 (PST)
+Date:   Thu, 7 Mar 2019 06:11:43 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 03/10] powerpc/6xx: Store PGDIR physical address in a
+ SPRG
+Message-ID: <20190307141143.GA26761@roeck-us.net>
+References: <cover.1550745320.git.christophe.leroy@c-s.fr>
+ <297f30d8ba75cb0e9ebe0a776d96c19750105570.1550745320.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <297f30d8ba75cb0e9ebe0a776d96c19750105570.1550745320.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+Hi,
 
-> Alternative patch: remove the filtering from kvm_mmu_get_page() and check
-> for direct on call sites. cr4_pae setting in kvm_calc_mmu_role_common()
-> can be preserved for consistency.
->
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/mmu.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-> index f2d1d230d5b8..7fb8118f2af6 100644
-> --- a/arch/x86/kvm/mmu.c
-> +++ b/arch/x86/kvm/mmu.c
-> @@ -2420,8 +2420,6 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
->  	role = vcpu->arch.mmu->mmu_role.base;
->  	role.level = level;
->  	role.direct = direct;
-> -	if (role.direct)
-> -		role.cr4_pae = 0;
->  	role.access = access;
->  	if (!vcpu->arch.mmu->direct_map
->  	    && vcpu->arch.mmu->root_level <= PT32_ROOT_LEVEL) {
-> @@ -5176,7 +5174,7 @@ static bool detect_write_misaligned(struct kvm_mmu_page *sp, gpa_t gpa,
->  		 gpa, bytes, sp->role.word);
->  
->  	offset = offset_in_page(gpa);
-> -	pte_size = sp->role.cr4_pae ? 8 : 4;
-> +	pte_size = (sp->role.cr4_pae && !sp->role.direct) ? 8 : 4;
->  
->  	/*
->  	 * Sometimes, the OS only writes the last one bytes to update status
-> @@ -5200,7 +5198,7 @@ static u64 *get_written_sptes(struct kvm_mmu_page *sp, gpa_t gpa, int *nspte)
->  	page_offset = offset_in_page(gpa);
->  	level = sp->role.level;
->  	*nspte = 1;
-> -	if (!sp->role.cr4_pae) {
-> +	if (!sp->role.cr4_pae || sp->role.direct) {
->  		page_offset <<= 1;	/* 32->64 */
->  		/*
->  		 * A 32-bit pde maps 4MB while the shadow pdes map
+On Thu, Feb 21, 2019 at 10:37:55AM +0000, Christophe Leroy wrote:
+> Use SPRN_SPRG2 to store the current thread PGDIR and
+> avoid reading thread_struct.pgdir at every TLB miss.
+> 
+This patch causes a number of silent (no crash) qemu boot stalls
+in -next. See
+https://kerneltests.org/builders/qemu-ppc-next/builds/1080/steps/qemubuildcommand/logs/stdio
+for an example.
 
-While I personally prefer this approach to not setting role.cr4_pae in
-kvm_calc_mmu_role_common() I'd like to get maintainers opinion (I did
-test the patch with ept=off but I have to admit I don't know much about
-shadow page tables which actually use detect_write_misaligned()/
-get_written_sptes())
+Unfortunately, it is not possible to revert the patch due to subsequent
+patches, so I was unable to test a revert.
 
-Paolo, Radim, (anyone else) - any thoughts?
+Bisect log is attached.
 
--- 
-Vitaly
+Guenter
+
+---
+# bad: [cf08baa29613dd899954089e7cc7dba1d478b365] Add linux-next specific files for 20190306
+# good: [1c163f4c7b3f621efff9b28a47abb36f7378d783] Linux 5.0
+git bisect start 'HEAD' 'v5.0'
+# bad: [6cc8f3499ec8d31904ab9083980a91736512cb37] Merge remote-tracking branch 'vfs/for-next'
+git bisect bad 6cc8f3499ec8d31904ab9083980a91736512cb37
+# good: [63bdf4284c38a48af21745ceb148a087b190cd21] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+git bisect good 63bdf4284c38a48af21745ceb148a087b190cd21
+# good: [520b5fc601ab760fee7ea0c403b42d04e8ebfd93] Merge remote-tracking branch 'arm-soc/for-next'
+git bisect good 520b5fc601ab760fee7ea0c403b42d04e8ebfd93
+# bad: [d7f54e4e0d4e90f5df78da8d6a830bafad3b535a] Merge remote-tracking branch 'xtensa/xtensa-for-next'
+git bisect bad d7f54e4e0d4e90f5df78da8d6a830bafad3b535a
+# good: [0c1a78523542fb3d2e6c5ac7955c8ca8f6482e6f] Merge remote-tracking branch 'clk/clk-next'
+git bisect good 0c1a78523542fb3d2e6c5ac7955c8ca8f6482e6f
+# bad: [fb0b0a73b223fc113e961b1d921322844e9c30d9] powerpc: Enable kcov
+git bisect bad fb0b0a73b223fc113e961b1d921322844e9c30d9
+# good: [d0055df0c9c1471c389197a69f43e300185a75aa] Merge branch 'topic/dma' into next
+git bisect good d0055df0c9c1471c389197a69f43e300185a75aa
+# good: [0df977eafc792a5365a7f81d8d5920132e03afad] powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS
+git bisect good 0df977eafc792a5365a7f81d8d5920132e03afad
+# bad: [665bed2386e5dc29844ad78c7ef1464664b103ec] powerpc/8xx: replace most #ifdef by IS_ENABLED() in 8xx_mmu.c
+git bisect bad 665bed2386e5dc29844ad78c7ef1464664b103ec
+# bad: [78ca1108b10927b3d068c8da91352b0f4cd01fc5] powerpc/book3s32: Reorder _PAGE_XXX flags to simplify TLB handling
+git bisect bad 78ca1108b10927b3d068c8da91352b0f4cd01fc5
+# bad: [a8a121995b2e4f227fddc534c6bd5f1c02cbe2ee] powerpc/603: Don't handle kernel page TLB misses when not need
+git bisect bad a8a121995b2e4f227fddc534c6bd5f1c02cbe2ee
+# bad: [2c12393f577396a51b7e0537bd3eb29dcc26dc1b] powerpc/603: use physical address directly in TLB miss handlers.
+git bisect bad 2c12393f577396a51b7e0537bd3eb29dcc26dc1b
+# bad: [93c4a162b014d238a287f8264adb25c009c79e61] powerpc/6xx: Store PGDIR physical address in a SPRG
+git bisect bad 93c4a162b014d238a287f8264adb25c009c79e61
+# first bad commit: [93c4a162b014d238a287f8264adb25c009c79e61] powerpc/6xx: Store PGDIR physical address in a SPRG
