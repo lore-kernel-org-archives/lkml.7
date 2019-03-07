@@ -2,108 +2,239 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13050C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A317EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC96A20835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F13220835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfCGH6V (ORCPT
+        id S1726233AbfCGH7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 02:58:21 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57534 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725554AbfCGH6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 02:58:21 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ECEA3652F26AB03354C5;
-        Thu,  7 Mar 2019 15:58:18 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
- 15:58:16 +0800
-Message-ID: <5C80CF16.70109@huawei.com>
-Date:   Thu, 7 Mar 2019 15:58:14 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
-MIME-Version: 1.0
-To:     Andrea Arcangeli <aarcange@redhat.com>
-CC:     Peter Xu <peterx@redhat.com>, Mike Rapoport <rppt@linux.ibm.com>,
-        "Dmitry Vyukov" <dvyukov@google.com>,
-        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        Michal Hocko <mhocko@kernel.org>, <cgroups@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
+        Thu, 7 Mar 2019 02:59:05 -0500
+Received: from mga02.intel.com ([134.134.136.20]:42863 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbfCGH7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 02:59:05 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 23:59:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="326217055"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.107])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Mar 2019 23:59:03 -0800
+Date:   Thu, 7 Mar 2019 15:59:16 +0800
+From:   kernel test robot <rong.a.chen@intel.com>
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     "lkp@01.org" <lkp@01.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-References: <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com> <5C7D4500.3070607@huawei.com> <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com> <5C7E1A38.2060906@huawei.com> <20190306020540.GA23850@redhat.com> <5C7F6048.2050802@huawei.com> <20190306062625.GA3549@rapoport-lnx> <5C7F7992.7050806@huawei.com> <20190306081201.GC11093@xz-x1> <5C7FC5F4.40903@huawei.com> <20190306182944.GE23850@redhat.com>
-In-Reply-To: <20190306182944.GE23850@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+        Johannes Berg <johannes.berg@intel.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [LKP] [mac80211] c752cac9db:
+ hwsim.ap_vlan_iface_cleanup_multibss_per_sta_vif.fail
+Message-ID: <20190307075916.GQ25100@shao2-debian>
+References: <20190307070450.GO25100@shao2-debian>
+ <F7CD281DE3E379468C6D07993EA72F84D17B4425@RTITMBSVM04.realtek.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D17B4425@RTITMBSVM04.realtek.com.tw>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/7 2:29, Andrea Arcangeli wrote:
-> Hello Zhong,
->
-> On Wed, Mar 06, 2019 at 09:07:00PM +0800, zhong jiang wrote:
->> The patch use call_rcu to delay free the task_struct, but It is possible to free the task_struct
->> ahead of get_mem_cgroup_from_mm. is it right?
-> Yes it is possible to free before get_mem_cgroup_from_mm, but if it's
-> freed before get_mem_cgroup_from_mm rcu_read_lock,
-> rcu_dereference(mm->owner) will return NULL in such case and there
-> will be no problem.
-Yes
-> The simple fix also clears the mm->owner of the failed-fork-mm before
-> doing the call_rcu. The call_rcu delays the freeing after no other CPU
-> runs in between rcu_read_lock/unlock anymore. That guarantees that
-> those critical section will see mm->owner == NULL if the freeing of
-> the task strut already happened.
-We has set the mm->owner to NULL when child process fails to fork ahead of freeing
-the task struct.
+On Thu, Mar 07, 2019 at 07:49:11AM +0000, Tony Chuang wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: kernel test robot [mailto:rong.a.chen@intel.com]
+> > Sent: Thursday, March 07, 2019 3:05 PM
+> > To: Tony Chuang
+> > Cc: Johannes Berg; Larry Finger; LKML; Linus Torvalds; lkp@01.org
+> > Subject: [LKP] [mac80211] c752cac9db:
+> > hwsim.ap_vlan_iface_cleanup_multibss_per_sta_vif.fail
+> > 
+> > FYI, we noticed the following commit (built with gcc-8):
+> > 
+> > commit: c752cac9db1b0c469db7ba9d17af4ba708984db5 ("mac80211: fix
+> > GFP_KERNEL under tasklet context")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > 
+> > in testcase: hwsim
+> > with following parameters:
+> > 
+> > 	group: hwsim-02
+> > 
+> > 
+> > 
+> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2
+> > -m 4G
+> > 
+> > caused below changes (please refer to attached dmesg/kmsg for entire
+> > log/backtrace):
+> > 
+> 
+> <...>
+> 
+> > 
+> > 2019-03-06 14:51:15 	./run-tests.py ap_vlan_iface_cleanup_multibss
+> > DEV: wlan0: 02:00:00:00:00:00
+> > DEV: wlan1: 02:00:00:00:01:00
+> > DEV: wlan2: 02:00:00:00:02:00
+> > APDEV: wlan3
+> > APDEV: wlan4
+> > START ap_vlan_iface_cleanup_multibss 1/1
+> > Test: AP VLAN operation in multi-BSS multi-VLAN case
+> > RTNETLINK answers: File exists
+> > Starting AP wlan4
+> > Starting interface wlan3
+> > Connect STA wlan0 to AP
+> > Connect STA wlan1 to AP
+> > wlan0 -> VLAN 2
+> > test wlan1 == VLAN 1
+> > wlan1 -> VLAN 2
+> > test wlan0 == VLAN 2
+> > PASS ap_vlan_iface_cleanup_multibss 3.037115 2019-03-06 14:51:19.362536
+> > passed all 1 test case(s)
+> > 2019-03-06 14:51:19 	./run-tests.py
+> > ap_vlan_iface_cleanup_multibss_per_sta_vif
+> > DEV: wlan0: 02:00:00:00:00:00
+> > DEV: wlan1: 02:00:00:00:01:00
+> > DEV: wlan2: 02:00:00:00:02:00
+> > APDEV: wlan3
+> > APDEV: wlan4
+> > START ap_vlan_iface_cleanup_multibss_per_sta_vif 1/1
+> > Test: AP VLAN operation in multi-BSS multi-VLAN case with per-sta-vif set
+> > Starting AP wlan4
+> > Starting interface wlan3
+> > Connect STA wlan0 to AP
+> > Connect STA wlan1 to AP
+> > dev1->dev2 unicast data delivery failed
+> > Traceback (most recent call last):
+> >   File "./run-tests.py", line 466, in main
+> >     t(dev, apdev)
+> >   File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 505, in
+> > test_ap_vlan_iface_cleanup_multibss_per_sta_vif
+> >     'multi-bss-iface-per_sta_vif.conf')
+> >   File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 413, in
+> > ap_vlan_iface_cleanup_multibss
+> >     hwsim_utils.test_connectivity_iface(dev[1], hapd1, "brvlan1")
+> >   File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 176, in
+> > test_connectivity_iface
+> >     max_tries=max_tries, timeout=timeout)
+> >   File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 169, in
+> > test_connectivity
+> >     raise Exception(last_err)
+> > Exception: dev1->dev2 unicast data delivery failed
+> > FAIL ap_vlan_iface_cleanup_multibss_per_sta_vif 6.917146 2019-03-06
+> > 14:51:26.784664
+> > passed 0 test case(s)
+> > skipped 0 test case(s)
+> > failed tests: ap_vlan_iface_cleanup_multibss_per_sta_vif
+> 
+> <...>
+> 
+> > 
+> > 
+> > To reproduce:
+> > 
+> >         # build kernel
+> > 	cd linux
+> > 	cp config-4.19.0-12453-gc752cac .config
+> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 olddefconfig
+> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 prepare
+> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 modules_prepare
+> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 SHELL=/bin/bash
+> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 bzImage
+> > 
+> > 
+> >         git clone https://github.com/intel/lkp-tests.git
+> >         cd lkp-tests
+> >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this
+> > email
+> > 
+> > 
+> > 
+> > Thanks,
+> > Rong Chen
+> 
+> 
+> It looks really strange that this patch failed the test.
+> And I checked the dmesg, the log shows me that
+> 
+> PASS ap_vlan_iface_cleanup_multibss_per_sta_vif
+> 
+> At line 24000.
 
-Have those critical section  chance to see the mm->owner, which is not NULL.
+Hi,
 
-I has tested the patch.  Not Oops and panic appear  so far.
+This doesn't happen every time. Here is a bad result:
 
-Thanks,
-zhong jiang
-> The solution Mike suggested for this and that we were wondering as
-> ideal in the past for the signal issue too, is to move the uffd
-> delivery at a point where fork is guaranteed to succeed. We should
-> probably try that too to see how it looks like and if it can be done
-> in a not intrusive way, but the simple fix that uses RCU should work
-> too.
->
-> Rolling back in case of errors inside fork itself isn't easily doable:
-> the moment we push the uffd ctx to the other side of the uffd pipe
-> there's no coming back as that information can reach the userland of
-> the uffd monitor/reader thread immediately after. The rolling back is
-> really the other thread failing at mmget_not_zero eventually. It's the
-> userland that has to rollback in such case when it gets a -ESRCH
-> retval.
->
-> Note that this fork feature is only ever needed in the non-cooperative
-> case, these things never need to happen when userfaultfd is used by an
-> app (or a lib) that is aware that it is using userfaultfd.
->
-> Thanks,
-> Andrea
->
-> .
->
+2019-03-06 14:51:19     ./run-tests.py ap_vlan_iface_cleanup_multibss_per_sta_vif 
+DEV: wlan0: 02:00:00:00:00:00
+DEV: wlan1: 02:00:00:00:01:00
+DEV: wlan2: 02:00:00:00:02:00
+APDEV: wlan3
+APDEV: wlan4
+START ap_vlan_iface_cleanup_multibss_per_sta_vif 1/1
+Test: AP VLAN operation in multi-BSS multi-VLAN case with per-sta-vif set
+Starting AP wlan4
+Starting interface wlan3
+Connect STA wlan0 to AP
+Connect STA wlan1 to AP
+dev1->dev2 unicast data delivery failed
+Traceback (most recent call last):
+  File "./run-tests.py", line 466, in main
+    t(dev, apdev)
+  File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 505, in test_ap_vlan_iface_cleanup_multibss_per_sta_vif
+    'multi-bss-iface-per_sta_vif.conf')
+  File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 413, in ap_vlan_iface_cleanup_multibss
+    hwsim_utils.test_connectivity_iface(dev[1], hapd1, "brvlan1")
+  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 176, in test_connectivity_iface
+    max_tries=max_tries, timeout=timeout)
+  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 169, in test_connectivity
+    raise Exception(last_err)
+Exception: dev1->dev2 unicast data delivery failed
+FAIL ap_vlan_iface_cleanup_multibss_per_sta_vif 6.917146 2019-03-06 14:51:26.784664
+passed 0 test case(s)
+skipped 0 test case(s)
+failed tests: ap_vlan_iface_cleanup_multibss_per_sta_vif
 
+81c5dce2cd0bb0ec c752cac9db1b0c469db7ba9d17a
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :90          11%          10:91    hwsim.ap_wpa2_eap_aka_sql.fail
+           :90           9%           8:91    stderr.Failed_to_connect_to_hostapd-wpa_ctrl_open:No_such_file_or_directory
+         90:90        -100%            :91    dmesg.BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
+           :90           6%           5:91    dmesg.RIP:__ieee80211_beacon_get[mac80211]
+           :90           1%           1:91    dmesg.RIP:console_unlock
+           :90           6%           5:91    dmesg.WARNING:at_net/mac80211/tx.c:#__ieee80211_beacon_get/0x
+         90:90         -94%           5:91    dmesg.boot_failures
+      21732:90      -24148%            :91    dmesg.timestamp:BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
+           :90       14125%       12712:91    dmesg.timestamp:RIP:__ieee80211_beacon_get[mac80211]
+           :90        3137%        2822:91    dmesg.timestamp:RIP:console_unlock
+           :90       14125%       12712:91    dmesg.timestamp:WARNING:at_net/mac80211/tx.c:#__ieee80211_beacon_get/0x
+      22439:90       70264%       85676:91    dmesg.timestamp:last
 
+Best Regards,
+Rong Chen
+
+> 
+> So I think I need to reproduce this to confirm it.
+> Or anyone has any idea please let me know.
+> Thanks
+> 
+> Yan-Hsuan
+> _______________________________________________
+> LKP mailing list
+> LKP@lists.01.org
+> https://lists.01.org/mailman/listinfo/lkp
