@@ -2,132 +2,164 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B2DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB53C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE2A20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC25F20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="hg7NUf0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfCGWHB (ORCPT
+        id S1726351AbfCGWHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:07:01 -0500
-Received: from hera.aquilenet.fr ([185.233.100.1]:57528 "EHLO
-        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGWHA (ORCPT
+        Thu, 7 Mar 2019 17:07:05 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38178 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGWHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:07:00 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by hera.aquilenet.fr (Postfix) with ESMTP id 0AB4B126DF;
-        Thu,  7 Mar 2019 23:06:59 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
-Received: from hera.aquilenet.fr ([127.0.0.1])
-        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rHdssakLjNzt; Thu,  7 Mar 2019 23:06:58 +0100 (CET)
-Received: from function (dhcp-97-35.dsi-ext.ens-lyon.fr [140.77.97.35])
-        by hera.aquilenet.fr (Postfix) with ESMTPSA id 6A1A4126DC;
-        Thu,  7 Mar 2019 23:06:58 +0100 (CET)
-Received: from samy by function with local (Exim 4.92)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1h21AH-0006fz-TN; Thu, 07 Mar 2019 23:06:57 +0100
-Date:   Thu, 7 Mar 2019 23:06:57 +0100
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     gregkh@linuxfoundation.org
-Cc:     speakup@braille.uwo.ca, linux-kernel@vger.kernel.org
-Subject: staging/speakup_soft: Fix alternate speech with other synths
-Message-ID: <20190307220657.huhswewazlo5mp5x@function>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        gregkh@linuxfoundation.org, speakup@braille.uwo.ca,
+        Thu, 7 Mar 2019 17:07:04 -0500
+Received: by mail-yw1-f65.google.com with SMTP id x20so394760ywd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:07:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5XqGPOhHxWelDgT11+htERfFUnfLr39ckjM2oBzWcuM=;
+        b=hg7NUf0VaR7rWE9ExshFRFdJUBKdlHgyhBWn7fpjNak6rkxf3itb5EAT/yLjZIgs5I
+         PqLKwWBjIsOsCasCwpoEFwHh16ddfXVwzx9FvJOt76zVAt4KwA9lhQLTSvqp5aVi9nfp
+         OLc7ZTSc9ofuBPPFhBVgn/JjmxwiAw9grGfKYve8t2h6dJP3YdzsJykQ137aLgGZcVQQ
+         VrQpJ1IQzv2koxKRIhT5auG+a8z/d8jXn2c446S8wZ18mlVD4GQIa840ydnLLmZDEn/g
+         lEWpO6x46h8n6/oPsjC6Pv+gSDsVjdOI2iSkuv6c3RhQmZsXH5qCpEjvo+HCT7qI+dgu
+         iS0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5XqGPOhHxWelDgT11+htERfFUnfLr39ckjM2oBzWcuM=;
+        b=K9CIVCJ6aC9bbt/Zlil9sOhI/7S5QXShplEdSKfqopIeJnbiCZ38kYtnrnFsQdqNG/
+         j8fGyORi+n4ipTUi68vAJAXXeEajAlAsy6ARwhPTjQhjXqHL322AINHYlL2/CY2o2UCk
+         NbXs7yrupj8RQlyhHLyZIxF/lXJIPqgHGmBR0nZ/oPfZ7SJBoDhyXoAuYppM91VZMEHi
+         GP6qygsHMlJajDLFNWJVk7b9PzsdExwSNd+Yx2KduMr6aJZEqJ9phdBJ9tV2bDu7rLdO
+         /fGKV+39UessSjrRxfNDZtHpcYU4QlLUNIA9o5T+5uv98efZlWJDdprimpBVA3VVBXTw
+         ZfdA==
+X-Gm-Message-State: APjAAAVx7CCbsf1yAL8gy9xp9vf9YcYuZ93beHI7/JjWB020wULxbChf
+        MBdjFeSLTRp5CFApo7pCE+IHxA==
+X-Google-Smtp-Source: APXvYqxHCw18zCev+Plm9gMVQweneGhgqaylB5ml13zkDQOASfRadHyY4JnucJb5+loFSggeJzfBaQ==
+X-Received: by 2002:a81:b8d:: with SMTP id 135mr12004691ywl.152.1551996422797;
+        Thu, 07 Mar 2019 14:07:02 -0800 (PST)
+Received: from localhost ([2620:10d:c091:180::be7f])
+        by smtp.gmail.com with ESMTPSA id k187sm1953929ywc.47.2019.03.07.14.07.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 14:07:02 -0800 (PST)
+Date:   Thu, 7 Mar 2019 17:07:01 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
+        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] blkcg: implement sync() isolation
+Message-ID: <20190307220659.5qmye2pxmto7nlei@macbook-pro-91.dhcp.thefacebook.com>
+References: <20190307180834.22008-1-andrea.righi@canonical.com>
+ <20190307180834.22008-4-andrea.righi@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190307180834.22008-4-andrea.righi@canonical.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching from speakup_soft to another synth, speakup_soft would
-keep calling synth_buffer_getc() from softsynthx_read.
+On Thu, Mar 07, 2019 at 07:08:34PM +0100, Andrea Righi wrote:
+> Keep track of the inodes that have been dirtied by each blkcg cgroup and
+> make sure that a blkcg issuing a sync() can trigger the writeback + wait
+> of only those pages that belong to the cgroup itself.
+> 
+> This behavior is applied only when io.sync_isolation is enabled in the
+> cgroup, otherwise the old behavior is applied: sync() triggers the
+> writeback of any dirty page.
+> 
+> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+> ---
+>  block/blk-cgroup.c         | 47 ++++++++++++++++++++++++++++++++++
+>  fs/fs-writeback.c          | 52 +++++++++++++++++++++++++++++++++++---
+>  fs/inode.c                 |  1 +
+>  include/linux/blk-cgroup.h | 22 ++++++++++++++++
+>  include/linux/fs.h         |  4 +++
+>  mm/page-writeback.c        |  1 +
+>  6 files changed, 124 insertions(+), 3 deletions(-)
+> 
+> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+> index 4305e78d1bb2..7d3b26ba4575 100644
+> --- a/block/blk-cgroup.c
+> +++ b/block/blk-cgroup.c
+> @@ -1480,6 +1480,53 @@ void blkcg_stop_wb_wait_on_bdi(struct backing_dev_info *bdi)
+>  	spin_unlock(&blkcg_wb_sleeper_lock);
+>  	rcu_read_unlock();
+>  }
+> +
+> +/**
+> + * blkcg_set_mapping_dirty - set owner of a dirty mapping
+> + * @mapping: target address space
+> + *
+> + * Set the current blkcg as the owner of the address space @mapping (the first
+> + * blkcg that dirties @mapping becomes the owner).
+> + */
+> +void blkcg_set_mapping_dirty(struct address_space *mapping)
+> +{
+> +	struct blkcg *curr_blkcg, *blkcg;
+> +
+> +	if (mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK) ||
+> +	    mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+> +		return;
+> +
+> +	rcu_read_lock();
+> +	curr_blkcg = blkcg_from_current();
+> +	blkcg = blkcg_from_mapping(mapping);
+> +	if (curr_blkcg != blkcg) {
+> +		if (blkcg)
+> +			css_put(&blkcg->css);
+> +		css_get(&curr_blkcg->css);
+> +		rcu_assign_pointer(mapping->i_blkcg, curr_blkcg);
+> +	}
+> +	rcu_read_unlock();
+> +}
+> +
+> +/**
+> + * blkcg_set_mapping_clean - clear the owner of a dirty mapping
+> + * @mapping: target address space
+> + *
+> + * Unset the owner of @mapping when it becomes clean.
+> + */
+> +
+> +void blkcg_set_mapping_clean(struct address_space *mapping)
+> +{
+> +	struct blkcg *blkcg;
+> +
+> +	rcu_read_lock();
+> +	blkcg = rcu_dereference(mapping->i_blkcg);
+> +	if (blkcg) {
+> +		css_put(&blkcg->css);
+> +		RCU_INIT_POINTER(mapping->i_blkcg, NULL);
+> +	}
+> +	rcu_read_unlock();
+> +}
+>  #endif
+>  
 
-Let's thus make synth.c export the knowledge of the current synth, so
-that speakup_soft can determine whether it should be running.
+Why do we need this?  We already have the inode_attach_wb(), which has the
+blkcg_css embedded in it for whoever dirtied the inode first.  Can we not just
+use that?  Thanks,
 
-speakup_soft also needs to set itself alive, otherwise the switch would
-let it remain silent.
-
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
----
- drivers/staging/speakup/speakup_soft.c |   16 +++++++++++-----
- drivers/staging/speakup/spk_priv.h     |    1 +
- drivers/staging/speakup/synth.c        |    6 ++++++
- 3 files changed, 18 insertions(+), 5 deletions(-)
-
---- a/drivers/staging/speakup/speakup_soft.c
-+++ b/drivers/staging/speakup/speakup_soft.c
-@@ -208,12 +208,15 @@ static ssize_t softsynthx_read(struct fi
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(&speakup_info.spinlock, flags);
-+	synth_soft.alive = 1;
- 	while (1) {
- 		prepare_to_wait(&speakup_event, &wait, TASK_INTERRUPTIBLE);
--		if (!unicode)
--			synth_buffer_skip_nonlatin1();
--		if (!synth_buffer_empty() || speakup_info.flushing)
--			break;
-+		if (synth_current() == &synth_soft) {
-+			if (!unicode)
-+				synth_buffer_skip_nonlatin1();
-+			if (!synth_buffer_empty() || speakup_info.flushing)
-+				break;
-+		}
- 		spin_unlock_irqrestore(&speakup_info.spinlock, flags);
- 		if (fp->f_flags & O_NONBLOCK) {
- 			finish_wait(&speakup_event, &wait);
-@@ -233,6 +236,8 @@ static ssize_t softsynthx_read(struct fi
- 
- 	/* Keep 3 bytes available for a 16bit UTF-8-encoded character */
- 	while (chars_sent <= count - bytes_per_ch) {
-+		if (synth_current() != &synth_soft)
-+			break;
- 		if (speakup_info.flushing) {
- 			speakup_info.flushing = 0;
- 			ch = '\x18';
-@@ -329,7 +334,8 @@ static __poll_t softsynth_poll(struct fi
- 	poll_wait(fp, &speakup_event, wait);
- 
- 	spin_lock_irqsave(&speakup_info.spinlock, flags);
--	if (!synth_buffer_empty() || speakup_info.flushing)
-+	if (synth_current() == &synth_soft &&
-+	    (!synth_buffer_empty() || speakup_info.flushing))
- 		ret = EPOLLIN | EPOLLRDNORM;
- 	spin_unlock_irqrestore(&speakup_info.spinlock, flags);
- 	return ret;
---- a/drivers/staging/speakup/spk_priv.h
-+++ b/drivers/staging/speakup/spk_priv.h
-@@ -72,6 +72,7 @@ int synth_request_region(unsigned long s
- int synth_release_region(unsigned long start, unsigned long n);
- int synth_add(struct spk_synth *in_synth);
- void synth_remove(struct spk_synth *in_synth);
-+struct spk_synth *synth_current(void);
- 
- extern struct speakup_info_t speakup_info;
- 
---- a/drivers/staging/speakup/synth.c
-+++ b/drivers/staging/speakup/synth.c
-@@ -495,4 +495,10 @@ void synth_remove(struct spk_synth *in_s
- }
- EXPORT_SYMBOL_GPL(synth_remove);
- 
-+struct spk_synth *synth_current(void)
-+{
-+	return synth;
-+}
-+EXPORT_SYMBOL_GPL(synth_current);
-+
- short spk_punc_masks[] = { 0, SOME, MOST, PUNC, PUNC | B_SYM };
+Josef
