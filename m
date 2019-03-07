@@ -2,164 +2,156 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0725C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9ACC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80ACB20854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89162064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CYC9OSi0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EbizsL6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfCGCnE (ORCPT
+        id S1727527AbfCGCoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:43:04 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:54142 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbfCGCnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:43:04 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 6 Mar 2019 21:44:05 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:33112 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfCGCoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 21:44:05 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8D69760909; Thu,  7 Mar 2019 02:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551926643;
+        bh=tpy3gy/j5LWxldahggaG28CHJ2ASS23n1wt1ObL76bo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CYC9OSi0l9mAi4IP3x52Ia5MJbcfAIwR+5lPPcgBn+8kXQ/GCLGGT6x3LlLwJSkUI
+         hPAgK3PFCB9ZdGxCugfHMxR+/MNOhybJzKpi6bXxdZ3HBkwvb+u+JbJZCZ6QKsIGs/
+         0gs7kvBxgKycI+IWshhz8kJVG/jPsTOt5Snoaltk=
+Received: from [10.206.24.232] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BE5C5308FB8A;
-        Thu,  7 Mar 2019 02:43:03 +0000 (UTC)
-Received: from [10.72.12.83] (ovpn-12-83.pek2.redhat.com [10.72.12.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0E06608C1;
-        Thu,  7 Mar 2019 02:42:51 +0000 (UTC)
-Subject: Re: [RFC PATCH V2 4/5] vhost: introduce helpers to get the size of
- metadata area
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        Linux-MM <linux-mm@kvack.org>, aarcange@redhat.com
-References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
- <1551856692-3384-5-git-send-email-jasowang@redhat.com>
- <CAFqt6zYynfCn_SG6w98dHMA5rS6euPb+ihXtQcALE47K0LQb7g@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <035c74bb-71eb-71db-f5f5-ed9d1a12d733@redhat.com>
-Date:   Thu, 7 Mar 2019 10:42:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        (Authenticated sender: riteshh@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E9B08606DB;
+        Thu,  7 Mar 2019 02:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551926642;
+        bh=tpy3gy/j5LWxldahggaG28CHJ2ASS23n1wt1ObL76bo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EbizsL6I2bDPPBjqb5/mWwYzJlBzSpdE/ddYDGpvtuX20PAVRc5XoSMeVTE7IJD9a
+         hgxbsLz3PbqWAkWakd2LmY2RZdwQFaJ+YO+xWLRFVH7RIG8SgVzq/o/J3cpqdA6/mE
+         xvUWg/kumV48QuAPMdHAPQ94V6m7amiHrYqA+YaE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E9B08606DB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=riteshh@codeaurora.org
+Subject: Re: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
+ CMD_TIMING
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Asutosh Das <asutoshd@codeaurora.org>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+ <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
+ <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
+From:   Ritesh Harjani <riteshh@codeaurora.org>
+Message-ID: <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
+Date:   Thu, 7 Mar 2019 08:13:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-In-Reply-To: <CAFqt6zYynfCn_SG6w98dHMA5rS6euPb+ihXtQcALE47K0LQb7g@mail.gmail.com>
+In-Reply-To: <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 07 Mar 2019 02:43:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/3/7 上午2:43, Souptick Joarder wrote:
-> On Wed, Mar 6, 2019 at 12:48 PM Jason Wang <jasowang@redhat.com> wrote:
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> Is the change log left with any particular reason ?
-
-
-Nope, will add the log.
-
-Thanks
-
-
+On 3/6/2019 6:30 PM, Adrian Hunter wrote:
+> On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
+>> This patch adds a quirk for setting CMD_TIMING to 1 in descriptor
+>> for DCMD with R1B response type to allow the command to be sent to
+>> device during data activity or busy time.
+>>
+>> Tegra186 CQHCI host has bug where it selects DATA_PRESENT_SELECT
+>> to 1 by CQHCI controller for DCMDs with R1B response type and
+>> since DCMD does not trigger any data transfer, DCMD task complete
+>> happens leaving the DATA FSM of host controller in wait state for
+>> data.
+>>
+>> This effects the data transfer task issued after R1B DCMD task
+>> and no interrupt is generated for the data transfer task.
+>>
+>> SW WAR for this issue is to set CMD_TIMING bit to 1 in DCMD task
+>> descriptor and as DCMD task descriptor preparation is done by
+>> cqhci driver, this patch adds cqequirk to handle this.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 >> ---
->>   drivers/vhost/vhost.c | 46 ++++++++++++++++++++++++++++------------------
->>   1 file changed, 28 insertions(+), 18 deletions(-)
+>>   drivers/mmc/host/cqhci.c | 5 ++++-
+>>   drivers/mmc/host/cqhci.h | 1 +
+>>   2 files changed, 5 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->> index 2025543..1015464 100644
->> --- a/drivers/vhost/vhost.c
->> +++ b/drivers/vhost/vhost.c
->> @@ -413,6 +413,27 @@ static void vhost_dev_free_iovecs(struct vhost_dev *dev)
->>                  vhost_vq_free_iovecs(dev->vqs[i]);
->>   }
->>
->> +static size_t vhost_get_avail_size(struct vhost_virtqueue *vq, int num)
->> +{
->> +       size_t event = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
->> +
->> +       return sizeof(*vq->avail) +
->> +              sizeof(*vq->avail->ring) * num + event;
->> +}
->> +
->> +static size_t vhost_get_used_size(struct vhost_virtqueue *vq, int num)
->> +{
->> +       size_t event = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
->> +
->> +       return sizeof(*vq->used) +
->> +              sizeof(*vq->used->ring) * num + event;
->> +}
->> +
->> +static size_t vhost_get_desc_size(struct vhost_virtqueue *vq, int num)
->> +{
->> +       return sizeof(*vq->desc) * num;
->> +}
->> +
->>   void vhost_dev_init(struct vhost_dev *dev,
->>                      struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
->>   {
->> @@ -1253,13 +1274,9 @@ static bool vq_access_ok(struct vhost_virtqueue *vq, unsigned int num,
->>                           struct vring_used __user *used)
->>
->>   {
->> -       size_t s = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
->> -
->> -       return access_ok(desc, num * sizeof *desc) &&
->> -              access_ok(avail,
->> -                        sizeof *avail + num * sizeof *avail->ring + s) &&
->> -              access_ok(used,
->> -                       sizeof *used + num * sizeof *used->ring + s);
->> +       return access_ok(desc, vhost_get_desc_size(vq, num)) &&
->> +              access_ok(avail, vhost_get_avail_size(vq, num)) &&
->> +              access_ok(used, vhost_get_used_size(vq, num));
->>   }
->>
->>   static void vhost_vq_meta_update(struct vhost_virtqueue *vq,
->> @@ -1311,22 +1328,18 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
->>
->>   int vq_meta_prefetch(struct vhost_virtqueue *vq)
->>   {
->> -       size_t s = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
->>          unsigned int num = vq->num;
->>
->>          if (!vq->iotlb)
->>                  return 1;
->>
->>          return iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->desc,
->> -                              num * sizeof(*vq->desc), VHOST_ADDR_DESC) &&
->> +                              vhost_get_desc_size(vq, num), VHOST_ADDR_DESC) &&
->>                 iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->avail,
->> -                              sizeof *vq->avail +
->> -                              num * sizeof(*vq->avail->ring) + s,
->> +                              vhost_get_avail_size(vq, num),
->>                                 VHOST_ADDR_AVAIL) &&
->>                 iotlb_access_ok(vq, VHOST_ACCESS_WO, (u64)(uintptr_t)vq->used,
->> -                              sizeof *vq->used +
->> -                              num * sizeof(*vq->used->ring) + s,
->> -                              VHOST_ADDR_USED);
->> +                              vhost_get_used_size(vq, num), VHOST_ADDR_USED);
->>   }
->>   EXPORT_SYMBOL_GPL(vq_meta_prefetch);
->>
->> @@ -1343,13 +1356,10 @@ bool vhost_log_access_ok(struct vhost_dev *dev)
->>   static bool vq_log_access_ok(struct vhost_virtqueue *vq,
->>                               void __user *log_base)
->>   {
->> -       size_t s = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
->> -
->>          return vq_memory_access_ok(log_base, vq->umem,
->>                                     vhost_has_feature(vq, VHOST_F_LOG_ALL)) &&
->>                  (!vq->log_used || log_access_ok(log_base, vq->log_addr,
->> -                                       sizeof *vq->used +
->> -                                       vq->num * sizeof *vq->used->ring + s));
->> +                                 vhost_get_used_size(vq, vq->num)));
->>   }
->>
->>   /* Can we start vq? */
->> --
->> 1.8.3.1
+>> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+>> index a8af682a9182..b34c07125f32 100644
+>> --- a/drivers/mmc/host/cqhci.c
+>> +++ b/drivers/mmc/host/cqhci.c
+>> @@ -521,7 +521,10 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
+>>   	} else {
+>>   		if (mrq->cmd->flags & MMC_RSP_R1B) {
+>>   			resp_type = 0x3;
+>> -			timing = 0x0;
+>> +			if (cq_host->quirks & CQHCI_QUIRK_CMD_TIMING_R1B_DCMD)
+>> +				timing = 0x1;
+>> +			else
+>> +				timing = 0x0;
+> I was thinking it would be nice if there was a generic way for drivers to
+> make changes to descriptors before a task is started.  Currently there is
+> host->ops->write_l() which would make it possible by checking for CQHCI_TDBR
+> register and, in this case, the DCMD tag.  We would need to export
+> get_desc(), perhaps rename it cqhci_get_desc() and put it in cqhci.h since
+> it is an inline function.
+
+We take spin_lock_irqsave after the descriptor is prepared and before 
+writing to TDBR.
+Not sure but tomorrow this may become a limitation for drivers to make 
+changes to
+descriptors if they edit descriptors in host->ops->write_l() call.
+Though in this case it is not required here.
+
+>
+> Alternatively we could add host->ops for descriptor preparation.
+
+Both ways sounds good to me.
+But maybe adding a host->ops for descriptor preparation is better way to go,
+since that will be the right interface exposed to make changes to 
+descriptors.
+
+>
+> What do people think?
+>
+>>   		} else {
+>>   			resp_type = 0x2;
+>>   			timing = 0x1;
+>> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+>> index 9e68286a07b4..f96d8565cc07 100644
+>> --- a/drivers/mmc/host/cqhci.h
+>> +++ b/drivers/mmc/host/cqhci.h
+>> @@ -170,6 +170,7 @@ struct cqhci_host {
+>>   
+>>   	u32 quirks;
+>>   #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
+>> +#define CQHCI_QUIRK_CMD_TIMING_R1B_DCMD	0x2
+>>   
+>>   	bool enabled;
+>>   	bool halted;
 >>
