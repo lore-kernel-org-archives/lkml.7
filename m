@@ -2,347 +2,140 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7A8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7239E20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D80220854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqoz3bkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfCGP6w (ORCPT
+        id S1726686AbfCGP72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:58:52 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34183 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726518AbfCGP6s (ORCPT
+        Thu, 7 Mar 2019 10:59:28 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36708 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfCGP72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:58:48 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27FkcsM001047;
-        Thu, 7 Mar 2019 16:58:42 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r2ng25n7s-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 07 Mar 2019 16:58:42 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 00FCB3A;
-        Thu,  7 Mar 2019 15:58:41 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C8C465323;
-        Thu,  7 Mar 2019 15:58:41 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019
- 16:58:41 +0100
-Received: from localhost (10.129.4.33) by webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019 16:58:41 +0100
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        <linux-remoteproc@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 2/2] hwspinlock: add the 'in_atomic' API
-Date:   Thu, 7 Mar 2019 16:58:23 +0100
-Message-ID: <1551974303-24542-3-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551974303-24542-1-git-send-email-fabien.dessenne@st.com>
-References: <1551974303-24542-1-git-send-email-fabien.dessenne@st.com>
+        Thu, 7 Mar 2019 10:59:28 -0500
+Received: by mail-ed1-f65.google.com with SMTP id g9so13894378eds.3;
+        Thu, 07 Mar 2019 07:59:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6eZ42+5uHfqNutpf/blYlgoSh21KgioZXCYaxr8IDTw=;
+        b=sqoz3bkgQRKcB46jQ6b8/6cddBHzu2fs/5qAoWxML+GV4BbJwwI/Gqf1qqvwaxBtlV
+         ugypQjKWhvd590Ii7gb2gBNzn8uqGu0XG4rmNJRrPyTP/i8tbZQtMvzUDX6PhS0dcRwq
+         1cvk+Eak6Q1CQ4pVH2ApKWn38mAYBUCQwsbZvXhrvpso7rfSz0BvBd1sPvvqYFKCDOjO
+         V6c/angT4PyhyEL82HGAdYcm/3IaWZeRox9eapNlWLXh1pwMDxIZ6yFQaQ9oiMtNykkj
+         tNrkC1Z6t/PuA+QcqhxP1QimfW0rptKdA+d0XILwNavMKb/oZC5gnNFnvYfiL0etv41r
+         uEcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6eZ42+5uHfqNutpf/blYlgoSh21KgioZXCYaxr8IDTw=;
+        b=DudpVF/wp71tLGkAldKDu9cR9NqMxjiqhcWwU/u1XXp+a6a1s+dlL1oKORckjWCXe+
+         cUZAhw70XZfxb4xbYEFcuaCFeelz1B4/GK+s+F+GUGkGHEMPmbiUf9xU2KGpGfhKvqH8
+         DlISjdPzUMAinA6w9WNtiijpEzBU6NZLdtRKlagIpLAxkH9YdD0fGta0WCYwmpe8l/eP
+         PVwePFgbG2Ay39eFu5sOfaukVHPfOLw1SXWC8QlZydfUyp0tM7dwQjedo5QEeX64IB/A
+         JRvSwXIZZqBiyI7kZFFqrWDMrsoiXjpvdj+NX++3lfj8IFArnSEYovV4nlgU1Ir+Z+ct
+         pVmw==
+X-Gm-Message-State: APjAAAWwsV2q6Ify/Uf0nkuAYT8FZD1tGIEqkPWbC14jBjM3NKLMpFLI
+        7DF3wOkVvh03fNpogbwWCZcdxPEFO8kx7w==
+X-Google-Smtp-Source: APXvYqyMl5/lRqmHuqbowFmvekdbrvbwNlWHrK7AFhjbcXWaV+JH1oCtD4Vgu8t/1fJDeY1GOjLVbQ==
+X-Received: by 2002:a50:9154:: with SMTP id f20mr28113695eda.68.1551974365768;
+        Thu, 07 Mar 2019 07:59:25 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id s24sm1434843edd.23.2019.03.07.07.59.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 07:59:25 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:59:23 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] enic: fix build warning without
+ CONFIG_CPUMASK_OFFSTACK
+Message-ID: <20190307155923.GA22197@archlinux-ryzen>
+References: <20190307155230.2923527-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.129.4.33]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_08:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307155230.2923527-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the 'in_atomic' mode which can be called from an atomic context.
-This mode relies on the existing 'raw' mode (no lock, no preemption/irq
-disabling) with the difference that the timeout is not based on jiffies
-(jiffies won't increase when irq are disabled) but handled with
-busy-waiting udelay() calls.
+On Thu, Mar 07, 2019 at 04:52:24PM +0100, Arnd Bergmann wrote:
+> The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
+> dynamically allocate a struct member, but this is normally intended for
+> local variables.
+> 
+> Building with clang, I get a warning for a few locations that check the
+> address of the cpumask_var_t:
+> 
+> drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+> 
+> As far as I can tell, the code is still correct, as the truth value of
+> the pointer is what we need in this configuration. To get rid of
+> the warning, use cpumask_available() instead of checking the
+> pointer directly.
+> 
+> Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- Documentation/hwspinlock.txt         | 39 +++++++++++++++++++++++
- drivers/hwspinlock/hwspinlock_core.c | 43 +++++++++++++++++--------
- include/linux/hwspinlock.h           | 61 ++++++++++++++++++++++++++++++++++--
- 3 files changed, 127 insertions(+), 16 deletions(-)
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-diff --git a/Documentation/hwspinlock.txt b/Documentation/hwspinlock.txt
-index c3403f9..6f03713 100644
---- a/Documentation/hwspinlock.txt
-+++ b/Documentation/hwspinlock.txt
-@@ -153,6 +153,22 @@ The function will never sleep.
- 
- ::
- 
-+  int hwspin_lock_timeout_in_atomic(struct hwspinlock *hwlock, unsigned int to);
-+
-+Lock a previously-assigned hwspinlock with a timeout limit (specified in
-+msecs). If the hwspinlock is already taken, the function will busy loop
-+waiting for it to be released, but give up when the timeout elapses.
-+
-+This function shall be called only from an atomic context and the timeout
-+value shall not exceed a few msecs.
-+
-+Returns 0 when successful and an appropriate error code otherwise (most
-+notably -ETIMEDOUT if the hwspinlock is still busy after timeout msecs).
-+
-+The function will never sleep.
-+
-+::
-+
-   int hwspin_trylock(struct hwspinlock *hwlock);
- 
- 
-@@ -218,6 +234,19 @@ The function will never sleep.
- 
- ::
- 
-+  int hwspin_trylock_in_atomic(struct hwspinlock *hwlock);
-+
-+Attempt to lock a previously-assigned hwspinlock, but immediately fail if
-+it is already taken.
-+
-+This function shall be called only from an atomic context.
-+
-+Returns 0 on success and an appropriate error code otherwise (most
-+notably -EBUSY if the hwspinlock was already taken).
-+The function will never sleep.
-+
-+::
-+
-   void hwspin_unlock(struct hwspinlock *hwlock);
- 
- Unlock a previously-locked hwspinlock. Always succeed, and can be called
-@@ -264,6 +293,16 @@ This function will never sleep.
- 
- ::
- 
-+  void hwspin_unlock_in_atomic(struct hwspinlock *hwlock);
-+
-+Unlock a previously-locked hwspinlock.
-+
-+The caller should **never** unlock an hwspinlock which is already unlocked.
-+Doing so is considered a bug (there is no protection against this).
-+This function will never sleep.
-+
-+::
-+
-   int hwspin_lock_get_id(struct hwspinlock *hwlock);
- 
- Retrieve id number of a given hwspinlock. This is needed when an
-diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
-index 2bad40d..1d61fad 100644
---- a/drivers/hwspinlock/hwspinlock_core.c
-+++ b/drivers/hwspinlock/hwspinlock_core.c
-@@ -9,6 +9,7 @@
- 
- #define pr_fmt(fmt)    "%s: " fmt, __func__
- 
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/spinlock.h>
-@@ -23,6 +24,9 @@
- 
- #include "hwspinlock_internal.h"
- 
-+/* retry delay used in atomic context */
-+#define HWSPINLOCK_RETRY_DELAY_US	100
-+
- /* radix tree tags */
- #define HWSPINLOCK_UNUSED	(0) /* tags an hwspinlock as unused */
- 
-@@ -68,11 +72,11 @@ static DEFINE_MUTEX(hwspinlock_tree_lock);
-  * user need some time-consuming or sleepable operations under the hardware
-  * lock, they need one sleepable lock (like mutex) to protect the operations.
-  *
-- * If the mode is not HWLOCK_RAW, upon a successful return from this function,
-- * preemption (and possibly interrupts) is disabled, so the caller must not
-- * sleep, and is advised to release the hwspinlock as soon as possible. This is
-- * required in order to minimize remote cores polling on the hardware
-- * interconnect.
-+ * If the mode is neither HWLOCK_IN_ATOMIC nor HWLOCK_RAW, upon a successful
-+ * return from this function, preemption (and possibly interrupts) is disabled,
-+ * so the caller must not sleep, and is advised to release the hwspinlock as
-+ * soon as possible. This is required in order to minimize remote cores polling
-+ * on the hardware interconnect.
-  *
-  * The user decides whether local interrupts are disabled or not, and if yes,
-  * whether he wants their previous state to be saved. It is up to the user
-@@ -112,6 +116,7 @@ int __hwspin_trylock(struct hwspinlock *hwlock, int mode, unsigned long *flags)
- 		ret = spin_trylock_irq(&hwlock->lock);
- 		break;
- 	case HWLOCK_RAW:
-+	case HWLOCK_IN_ATOMIC:
- 		ret = 1;
- 		break;
- 	default:
-@@ -136,6 +141,7 @@ int __hwspin_trylock(struct hwspinlock *hwlock, int mode, unsigned long *flags)
- 			spin_unlock_irq(&hwlock->lock);
- 			break;
- 		case HWLOCK_RAW:
-+		case HWLOCK_IN_ATOMIC:
- 			/* Nothing to do */
- 			break;
- 		default:
-@@ -179,11 +185,14 @@ EXPORT_SYMBOL_GPL(__hwspin_trylock);
-  * user need some time-consuming or sleepable operations under the hardware
-  * lock, they need one sleepable lock (like mutex) to protect the operations.
-  *
-- * If the mode is not HWLOCK_RAW, upon a successful return from this function,
-- * preemption is disabled (and possibly local interrupts, too), so the caller
-- * must not sleep, and is advised to release the hwspinlock as soon as possible.
-- * This is required in order to minimize remote cores polling on the
-- * hardware interconnect.
-+ * If the mode is HWLOCK_IN_ATOMIC (called from an atomic context) the timeout
-+ * is handled with busy-waiting delays, hence shall not exceed few msecs.
-+ *
-+ * If the mode is neither HWLOCK_IN_ATOMIC nor HWLOCK_RAW, upon a successful
-+ * return from this function, preemption (and possibly interrupts) is disabled,
-+ * so the caller must not sleep, and is advised to release the hwspinlock as
-+ * soon as possible. This is required in order to minimize remote cores polling
-+ * on the hardware interconnect.
-  *
-  * The user decides whether local interrupts are disabled or not, and if yes,
-  * whether he wants their previous state to be saved. It is up to the user
-@@ -198,7 +207,7 @@ int __hwspin_lock_timeout(struct hwspinlock *hwlock, unsigned int to,
- 					int mode, unsigned long *flags)
- {
- 	int ret;
--	unsigned long expire;
-+	unsigned long expire, atomic_delay = 0;
- 
- 	expire = msecs_to_jiffies(to) + jiffies;
- 
-@@ -212,8 +221,15 @@ int __hwspin_lock_timeout(struct hwspinlock *hwlock, unsigned int to,
- 		 * The lock is already taken, let's check if the user wants
- 		 * us to try again
- 		 */
--		if (time_is_before_eq_jiffies(expire))
--			return -ETIMEDOUT;
-+		if (mode == HWLOCK_IN_ATOMIC) {
-+			udelay(HWSPINLOCK_RETRY_DELAY_US);
-+			atomic_delay += HWSPINLOCK_RETRY_DELAY_US;
-+			if (atomic_delay > to * 1000)
-+				return -ETIMEDOUT;
-+		} else {
-+			if (time_is_before_eq_jiffies(expire))
-+				return -ETIMEDOUT;
-+		}
- 
- 		/*
- 		 * Allow platform-specific relax handlers to prevent
-@@ -276,6 +292,7 @@ void __hwspin_unlock(struct hwspinlock *hwlock, int mode, unsigned long *flags)
- 		spin_unlock_irq(&hwlock->lock);
- 		break;
- 	case HWLOCK_RAW:
-+	case HWLOCK_IN_ATOMIC:
- 		/* Nothing to do */
- 		break;
- 	default:
-diff --git a/include/linux/hwspinlock.h b/include/linux/hwspinlock.h
-index 0afe693..bfe7c1f 100644
---- a/include/linux/hwspinlock.h
-+++ b/include/linux/hwspinlock.h
-@@ -14,9 +14,10 @@
- #include <linux/sched.h>
- 
- /* hwspinlock mode argument */
--#define HWLOCK_IRQSTATE	0x01	/* Disable interrupts, save state */
--#define HWLOCK_IRQ	0x02	/* Disable interrupts, don't save state */
--#define HWLOCK_RAW	0x03
-+#define HWLOCK_IRQSTATE		0x01 /* Disable interrupts, save state */
-+#define HWLOCK_IRQ		0x02 /* Disable interrupts, don't save state */
-+#define HWLOCK_RAW		0x03
-+#define HWLOCK_IN_ATOMIC	0x04 /* Called while in atomic context */
- 
- struct device;
- struct device_node;
-@@ -223,6 +224,23 @@ static inline int hwspin_trylock_raw(struct hwspinlock *hwlock)
- }
- 
- /**
-+ * hwspin_trylock_in_atomic() - attempt to lock a specific hwspinlock
-+ * @hwlock: an hwspinlock which we want to trylock
-+ *
-+ * This function attempts to lock an hwspinlock, and will immediately fail
-+ * if the hwspinlock is already taken.
-+ *
-+ * This function shall be called only from an atomic context.
-+ *
-+ * Returns 0 if we successfully locked the hwspinlock, -EBUSY if
-+ * the hwspinlock was already taken, and -EINVAL if @hwlock is invalid.
-+ */
-+static inline int hwspin_trylock_in_atomic(struct hwspinlock *hwlock)
-+{
-+	return __hwspin_trylock(hwlock, HWLOCK_IN_ATOMIC, NULL);
-+}
-+
-+/**
-  * hwspin_trylock() - attempt to lock a specific hwspinlock
-  * @hwlock: an hwspinlock which we want to trylock
-  *
-@@ -313,6 +331,28 @@ int hwspin_lock_timeout_raw(struct hwspinlock *hwlock, unsigned int to)
- }
- 
- /**
-+ * hwspin_lock_timeout_in_atomic() - lock an hwspinlock with timeout limit
-+ * @hwlock: the hwspinlock to be locked
-+ * @to: timeout value in msecs
-+ *
-+ * This function locks the underlying @hwlock. If the @hwlock
-+ * is already taken, the function will busy loop waiting for it to
-+ * be released, but give up when @timeout msecs have elapsed.
-+ *
-+ * This function shall be called only from an atomic context and the timeout
-+ * value shall not exceed a few msecs.
-+ *
-+ * Returns 0 when the @hwlock was successfully taken, and an appropriate
-+ * error code otherwise (most notably an -ETIMEDOUT if the @hwlock is still
-+ * busy after @timeout msecs). The function will never sleep.
-+ */
-+static inline
-+int hwspin_lock_timeout_in_atomic(struct hwspinlock *hwlock, unsigned int to)
-+{
-+	return __hwspin_lock_timeout(hwlock, to, HWLOCK_IN_ATOMIC, NULL);
-+}
-+
-+/**
-  * hwspin_lock_timeout() - lock an hwspinlock with timeout limit
-  * @hwlock: the hwspinlock to be locked
-  * @to: timeout value in msecs
-@@ -387,6 +427,21 @@ static inline void hwspin_unlock_raw(struct hwspinlock *hwlock)
- }
- 
- /**
-+ * hwspin_unlock_in_atomic() - unlock hwspinlock
-+ * @hwlock: a previously-acquired hwspinlock which we want to unlock
-+ *
-+ * This function will unlock a specific hwspinlock.
-+ *
-+ * @hwlock must be already locked (e.g. by hwspin_trylock()) before calling
-+ * this function: it is a bug to call unlock on a @hwlock that is already
-+ * unlocked.
-+ */
-+static inline void hwspin_unlock_in_atomic(struct hwspinlock *hwlock)
-+{
-+	__hwspin_unlock(hwlock, HWLOCK_IN_ATOMIC, NULL);
-+}
-+
-+/**
-  * hwspin_unlock() - unlock hwspinlock
-  * @hwlock: a previously-acquired hwspinlock which we want to unlock
-  *
--- 
-2.7.4
-
+> ---
+> v2: use cpumask_available() instead of open-coding a copy
+> ---
+>  drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+> index 9a7f70db20c7..733d9172425b 100644
+> --- a/drivers/net/ethernet/cisco/enic/enic_main.c
+> +++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+> @@ -119,7 +119,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+>  
+>  	for (i = 0; i < enic->intr_count; i++) {
+>  		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
+> -		    (enic->msix[i].affinity_mask &&
+> +		    (cpumask_available(enic->msix[i].affinity_mask) &&
+>  		     !cpumask_empty(enic->msix[i].affinity_mask)))
+>  			continue;
+>  		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
+> @@ -148,7 +148,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+>  	for (i = 0; i < enic->intr_count; i++) {
+>  		if (enic_is_err_intr(enic, i)		||
+>  		    enic_is_notify_intr(enic, i)	||
+> -		    !enic->msix[i].affinity_mask	||
+> +		    !cpumask_available(enic->msix[i].affinity_mask) ||
+>  		    cpumask_empty(enic->msix[i].affinity_mask))
+>  			continue;
+>  		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
+> @@ -161,7 +161,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+>  	for (i = 0; i < enic->wq_count; i++) {
+>  		int wq_intr = enic_msix_wq_intr(enic, i);
+>  
+> -		if (enic->msix[wq_intr].affinity_mask &&
+> +		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
+>  		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
+>  			netif_set_xps_queue(enic->netdev,
+>  					    enic->msix[wq_intr].affinity_mask,
+> -- 
+> 2.20.0
+> 
