@@ -2,79 +2,83 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED18DC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB01C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C695A2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10F82081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfCGOE3 (ORCPT
+        id S1726283AbfCGOFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:04:29 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:50435 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfCGOE3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:04:29 -0500
-Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MyNoa-1gsDwd0iXk-00yghV; Thu, 07 Mar 2019 15:04:27 +0100
-Subject: Re: [PATCH v2] fs: cifs: Kconfig: pedantic formatting
-To:     Steve French <smfrench@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>
-References: <1551896652-26579-1-git-send-email-info@metux.net>
- <1551910979-1026-1-git-send-email-info@metux.net>
- <CAH2r5msizwcru6xHMBmrQP8MSci=gNcHo3T6ti+zS-Btj72hQA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c165b745-d092-27c4-f238-59c2c65e4717@metux.net>
-Date:   Thu, 7 Mar 2019 15:04:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 7 Mar 2019 09:05:38 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:45964 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726159AbfCGOFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 09:05:37 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B9615D61A;
+        Thu,  7 Mar 2019 14:05:37 +0000 (UTC)
+Received: from krava (unknown [10.40.206.1])
+        by smtp.corp.redhat.com (Postfix) with SMTP id F09375C545;
+        Thu,  7 Mar 2019 14:05:34 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 15:05:34 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kernel-team@fb.com, peterz@infradead.org, acme@redhat.com,
+        jolsa@kernel.org, namhyung@kernel.org
+Subject: Re: [PATCH v6 perf,bpf 14/15] perf: introduce side band thread
+Message-ID: <20190307140534.GA7233@krava>
+References: <20190306071359.2359896-1-songliubraving@fb.com>
+ <20190306071359.2359896-15-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <CAH2r5msizwcru6xHMBmrQP8MSci=gNcHo3T6ti+zS-Btj72hQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:XO/E+n+VZjYrGr7s95WZnAS8ky3vFjsxCL+5PPcr12FfaS/drB1
- tW540EQK3APsoOdBLq98iUdqA/druzhRtPsiiPeqpXmO5jpG8xb5LeRLf4NwYJRp2IR9qW0
- NYFl9FlsJckAiSbAYPsVGvwFytDg3idtw863MsE2tEWSGwy9ir+GDI2OKFwZdrBv/pCCMuh
- Z0isqX9Dz3U6C6VqoZa3Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+vrOoByVJ8c=:rw028+AeFWMQKlrRTYU6iv
- VraeC9N93Dt4AFshmfAit1cZeHEK2EtBXxkHxB3vEUZoVqzgmio84DcbBsOkldoQ5gaMBqtbk
- PXexKuqS/cEZDQDFfWkCyw9N5o+GZmmIDF7oB8xEqDG9H/Z0Ljh2azWj7109CR4WiKCEGqKK0
- YzKkGtRCDdWq4rt9swmMthcdWEWXIGtt/VT5D+QnpmaYP5W16CW3nYSDA1t3p+HeFMH3JMpm0
- nAJFqkah/SgkQrJr5m7ZJKzQGN8UegdzB5cvOLtLPAqYdQsFB9LWtHOd6VOmXdiLTg+MUd1F0
- Ij8j7p/MIgABybeR/1tf3qx6+xmdwWGLKD65RVuM0LwSxiWIQIBKz059Z1Iei23CB0Pf3+3VO
- Ag7jpFkf3FfQzj2WuO7LyJsSfyBKU520T7V6Qk93Yxsrva8EZspNZGfekRA2+lWa95mFZHDgN
- nroZunjdKSqKoPzXTDt/WKAnKXttLyVSrZaTaO7xw5muEpLVFnpjMeYEtK9DTVKTr3dHCmaO3
- THoS5RPPfAM8x/Tyonsa0K+cNojTbYL7j+3RET6mXxGvURCPOJybZKGmbzFbIdwi4bmr1Dxwv
- gxZB/rwiFBOzdf/u5y+Ny7wHYR1tZtbVZrrGCYf6om+W6m5LhHZwwxpPjZg+RPSwjuVYd9wA9
- wrPZfzA6iBHXTCY/E5Rle8aJOqdieadnVB9IxDaNwP/DI2S4lRDOhqT6/CqoJwHBbFxfWd8oO
- 650Re20EWIh4+8gENV8Uhe9GpOmwEpKxdXU3E9GozYQu8nIu26DaPsZ1u4A=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306071359.2359896-15-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 07 Mar 2019 14:05:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.03.19 05:00, Steve French wrote:
-> Is this just converting spaces to tabs?
+On Tue, Mar 05, 2019 at 11:13:58PM -0800, Song Liu wrote:
 
-Yes, it's just fixing the indentions to be consistent with the
-the rest of the Kconfig files. No semantic changes.
+SNIP
 
-In the longer run, we should patch up checkpatch.pl to check this,
-but that's another story.
+> +void perf_evlist__stop_sb_thread(struct perf_evlist *evlist)
+> +{
+> +	if (!evlist)
+> +		return;
+> +	evlist->thread.done = 1;
+> +	pthread_join(evlist->thread.th, NULL);
+> +	perf_evlist__exit(evlist);
+> +	evlist = NULL;
+> +}
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index 868294491194..ed8cab1b7438 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -51,6 +51,11 @@ struct perf_evlist {
+>  	struct perf_env	*env;
+>  	u64		first_sample_time;
+>  	u64		last_sample_time;
+> +	struct {
+> +		pthread_t		th;
+> +		struct perf_evsel	*evsel;
 
---mtx
+what's the evsel pointer for?
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> +		volatile int		done;
+> +	} thread;
+>  };
+
+SNIP
