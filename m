@@ -2,67 +2,96 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E43CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7EDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCB620684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8620684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ptEG8JFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfCGGP4 (ORCPT
+        id S1726585AbfCGGRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 01:15:56 -0500
-Received: from relay1.mentorg.com ([192.94.38.131]:34423 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfCGGPz (ORCPT
+        Thu, 7 Mar 2019 01:17:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53924 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfCGGRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 01:15:55 -0500
-Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1h1mJo-00043k-7u from Jiada_Wang@mentor.com ; Wed, 06 Mar 2019 22:15:48 -0800
-Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Wed, 6 Mar 2019 22:15:45 -0800
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <kuninori.morimoto.gx@renesas.com>
-CC:     <jiada_wang@mentor.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH linux-next v2 0/2] misc fix in src.c
-Date:   Thu, 7 Mar 2019 15:15:52 +0900
-Message-ID: <20190307061554.26486-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
+        Thu, 7 Mar 2019 01:17:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Nuzvgt+0bCgDn99zJCQZr1qLpXedrWjKvBQ4c3M6DNQ=; b=ptEG8JFhU0Vu3y8ijMKIMG+gJ
+        S1OHWvF8J237LPtl+7qN5eFLk45RNrD6PUT4YqZeFJv/dpXGtWY2kY9+HVPtJDl+I7J/ljgbm3Fra
+        Hdz+/aKHMfjYvkI0EkN58u8+d+yYWuVtqtgjHHoxd+q09ZdFD+ftZljHpOG5bRbVjIvdKyIWCb3ui
+        s2mtEOOPFBIXBUcd9/XDH6nCXyNhD4+h1ig9gLkR3MnQeKsC0s5HoKnuDiGlF5Jousg6cAr2yTfmw
+        +damstOcqQi8Pb7UvKDdW+0ZIvic6yAviLMJJy9gkCzOraMMRvKnTrPcucwEjmzg7V1iBpvhv7fOF
+        1kZQeJR0A==;
+Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1mKz-0006kn-Vt; Thu, 07 Mar 2019 06:17:01 +0000
+Date:   Wed, 6 Mar 2019 22:17:00 -0800
+From:   Darren Hart <dvhart@infradead.org>
+To:     Mattias Jacobsson <2pi@mok.nu>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] modpost: file2alias: define size of alias
+Message-ID: <20190307061700.GF44339@wrath>
+References: <20190207123022.7961-1-2pi@mok.nu>
+ <CAK7LNAQZ7PDZ4+uZu-FT4V8yw9oUGz6e++9xSshWJvALj3gN0Q@mail.gmail.com>
+ <20190219200837.d34cxg2d7gqxlvhs@mok.nu>
+ <CAK7LNASU=Jf7aYnnn_7DWgxLz4sf4=x1HZaoGQW2rSXVbFO9Bg@mail.gmail.com>
+ <20190223195749.7yswuedfv4qbiyik@mok.nu>
+ <20190307060926.GE44339@wrath>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307060926.GE44339@wrath>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-two issues were found due to linux-next commit
-7674bec4fc09 ("ASoC: rsnd: update BSDSR/BSDISR handling")
-this patch-set address these two issues
+On Wed, Mar 06, 2019 at 10:09:26PM -0800, Darren Hart wrote:
+> On Sat, Feb 23, 2019 at 08:57:50PM +0100, Mattias Jacobsson wrote:
+> > On 2019-02-20, Masahiro Yamada wrote:
+> 
+> > > > > If you want all the patches to go through x86 platform-driver tree,
+> > > > > I am fine with that too.
+> > > >
+> > > > I don't mind either way, however I've asked the x86 platform-driver
+> > > > maintainers if they have a preference in this matter. You should have
+> > > > received that mail otherwise see [1].
+> > > >
+> > > > [1]: https://lkml.kernel.org/r/082d3d38b7dde6050b6b3e518ada439eade65b2c.1550603967.git.2pi@mok.nu
+> > > 
+> > > 
+> > > I saw it.  The 2/8 uses ALIAS_SIZE.
+> > > 
+> > > So, I think it will be better to include this one in your series.
+> > > If necessary, please feel free to add
+> > > 
+> > > Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > 
+> > 
+> > Okey, will do. Thanks!
+> 
+> 
+> Agree, I'll pull it in.
 
----
-v2: Update rsnd_of_match table instead of set priv->flags in probe
+Masahiro, may I include your Acked-by on the 2/8 patch as well?
 
-v1: initial version
-
-Jiada Wang (2):
-  ASoC: rsnd: src: Avoid a potential deadlock
-  ASoC: rsnd: src: fix compiler warnings
-
- sound/soc/sh/rcar/core.c |  3 +++
- sound/soc/sh/rcar/rsnd.h |  5 +++++
- sound/soc/sh/rcar/src.c  | 21 +++++++--------------
- 3 files changed, 15 insertions(+), 14 deletions(-)
+platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
 
 -- 
-2.19.2
-
+Darren Hart
+VMware Open Source Technology Center
