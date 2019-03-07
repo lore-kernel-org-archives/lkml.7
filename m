@@ -2,215 +2,146 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE20C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF663C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0132081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S443FOeo"
+	by mail.kernel.org (Postfix) with ESMTP id 81CDD2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfCGOto (ORCPT
+        id S1726278AbfCGOuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:49:44 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35134 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGOtn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:49:43 -0500
-Received: by mail-qt1-f193.google.com with SMTP id p48so17335193qtk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 06:49:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wk+Zp6CmdEl+rwUHirABi5bFji8WOLksmtyNzmIEkZ0=;
-        b=S443FOeoILMW8SauUs0/8IFwiPYA40KYyJk7sh0uhXeUCYJuNtUwksdxukcxhTLAF6
-         5Pyu52svdfLFJx/dqc05HZOmNNyWYYFgqESKMkcljYkRz4PaTttJeyA9wUTkAqGEi+fp
-         IsE+DDGl5kLfEgShUT3H/pp+0/eFpFZCvo9nQEEpNECfsBdKxZltZEE6m6mNbwtk2B85
-         UQgVb/5f9+W6hoaZiaYJVxH+TxAOSqcvW1bdoMrDKyq7MEAhJaOSfadSsiUsvZw/Ij5m
-         sdzrB9dwdJIxY7y9g0kWHYzxgNLPLBoaCJCnptqzn7sFhZkEfIT2S3q5fNr361dhikM5
-         98dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wk+Zp6CmdEl+rwUHirABi5bFji8WOLksmtyNzmIEkZ0=;
-        b=WHo6YUSZZnDl0WmJAW1Fm4zf5Xy64mji9EuFVSAoNaCY9kBCGdf58FROj8uXwHQSJV
-         mbyL64N6mStEE3OcwMLPyBH5ZKTixWNVEtJN45nfEnSgjJ28dezPGYmjZBISx07GO59h
-         NIiqqecUJWhZoX0Q7SxX5jgMUgzUUo+2caeCzVG7/39Fl0sUWAkoZ+HfAuUM3nkAmT/r
-         bgjt9fkcUV4MOPkkel+JbulaTt1YCGO+z42+ORc8l6OJilVYoOKQAvMajLEeQBTggVq5
-         pyJOmB0W4aemOQ9PkXSsNT1dBBcJFFtYZ3EI+s3lPlrY4cYR3l/nXtdffh0PsbDQrPcC
-         XccQ==
-X-Gm-Message-State: APjAAAXfRU72RxWhZNFvSUrkJaCQeH1UMEcs7yb8cYKywl4ePL+D1y4/
-        FBxvlnazw25W55pjK/824dUWB4158w/dUYREC5g=
-X-Google-Smtp-Source: APXvYqw1drbPMo82yDVTc1V79Yl94h0KL32HLFrcu8ZKpYkVRN+sx4NhEjsAxapB4gr4Sdutweb7P8p0c7H9u60V0no=
-X-Received: by 2002:a0c:963d:: with SMTP id 58mr10965020qvx.25.1551970182274;
- Thu, 07 Mar 2019 06:49:42 -0800 (PST)
+        Thu, 7 Mar 2019 09:50:54 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60110 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbfCGOuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 09:50:54 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BDA1A81DFC;
+        Thu,  7 Mar 2019 14:50:53 +0000 (UTC)
+Received: from thinkpad.redhat.com (ovpn-204-24.brq.redhat.com [10.40.204.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C5A0165E7;
+        Thu,  7 Mar 2019 14:50:50 +0000 (UTC)
+From:   Laurent Vivier <lvivier@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH] powerpc/mm: move warning from resize_hpt_for_hotplug()
+Date:   Thu,  7 Mar 2019 15:50:50 +0100
+Message-Id: <20190307145050.17886-1-lvivier@redhat.com>
 MIME-Version: 1.0
-References: <20190228002725.57444-1-gwendal@chromium.org> <CAFqH_52tWw8pGwY5fdAPQ6npbfWA7o4OhtPxvbUbCh5TdnbSew@mail.gmail.com>
- <CABXOdTfqPKq34OVDmJ9qjTr0nqarhpN=f37m3xH9iuHxex+xrw@mail.gmail.com>
- <CAFqH_50ZQtbOqG+u9VLT8m=9jvv_XQsghUTCuySu-=vho6rLKw@mail.gmail.com> <CABXOdTf3kt9EnyBB=8BjpiOOJ3=OaVodqKxTJkZC6=sTqry2jg@mail.gmail.com>
-In-Reply-To: <CABXOdTf3kt9EnyBB=8BjpiOOJ3=OaVodqKxTJkZC6=sTqry2jg@mail.gmail.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Thu, 7 Mar 2019 15:49:30 +0100
-Message-ID: <CAFqH_53uYy0oTTYSJkkgM+Sz+uJYpJ3pAq0LtRjCKaZF0FS0gg@mail.gmail.com>
-Subject: Re: [PATCH] mfd: cros: Update EC protocol to match current EC code
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 07 Mar 2019 14:50:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
-Missatge de Guenter Roeck <groeck@google.com> del dia dc., 6 de mar=C3=A7
-2019 a les 19:58:
->
-> On Wed, Mar 6, 2019 at 10:27 AM Enric Balletbo Serra
-> <eballetbo@gmail.com> wrote:
-> >
-> > Hi Guenter,
-> >
-> > Missatge de Guenter Roeck <groeck@google.com> del dia dc., 6 de mar=C3=
-=A7
-> > 2019 a les 18:20:
-> > >
-> > > [resending in plain text mode ]
-> > >
-> > > On Wed, Mar 6, 2019 at 8:57 AM Enric Balletbo Serra <eballetbo@gmail.=
-com> wrote:
-> > > >
-> > > > Hi Gwendal,
-> > > >
-> > > > Many thanks to send this upstream.
-> > > >
-> > > > Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dj., 28 =
-de
-> > > > febr. 2019 a les 1:31:
-> > > > >
-> > > > > Chromebook Embedded Controller protocol is defined in the kernel =
-at
-> > > > > cros_ec_commands.h.
-> > > > > The source of trust for the EC protocol is at
-> > > > > https://chromium.googlesource.com/chromiumos/platform/ec/+/master=
-/include/ec_commands.h
-> > > > >
-> > > > > Only needed changes have been picked up from this file to the ker=
-nel
-> > > > > include file leading to gaps between the upstream version and wha=
-t the
-> > > > > latest ECs can do.
-> > > > >
-> > > > > Fill the gaps to ease future integrations. Changes from the origi=
-nal
-> > > > > files is header/footer for license and include files for alignmen=
-t.
-> > > > >
-> > > > > Check this include file works on ChomeOS kernel 4.14 and 4.19 on =
-eve.
-> > > > >
-> > > > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > > > > ---
-> > > > >  include/linux/mfd/cros_ec_commands.h | 3627 ++++++++++++++++++++=
-+-----
-> > > >
+resize_hpt_for_hotplug() reports a warning when it cannot
+resize the hash page table ("Unable to resize hash page
+table to target order") but in some cases it's not a problem
+and can make user thinks something has not worked properly.
 
-Just for if I was not clear after the discussion this is an ack from my sid=
-e
+This patch moves the warning to arch_remove_memory() to
+only report the problem when it is needed.
 
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+---
+ arch/powerpc/include/asm/sparsemem.h  |  4 ++--
+ arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
+ arch/powerpc/mm/mem.c                 |  3 ++-
+ arch/powerpc/platforms/pseries/lpar.c |  1 -
+ 4 files changed, 10 insertions(+), 15 deletions(-)
 
-> > > > I'm wondering if we should move this file to include/uapi at some
-> > > > point as this file is also used as user-space API for some userspac=
-e
-> > > > applications.
-> > > >
-> > > > While we are here I'd suggest if we can also fix the few errors (3)
-> > > > and warnings (5) spotted by checkpatch. With that it's an ack from =
-my
-> > > > side.
-> > > >
-> > > > Being strict, though, on most cases the variables are going to be u=
-sed
-> > > > in code that can be seen by user-space programs so maybe we should
-> > > > really need to switch to __u8/__u16/etc exportable data types inste=
-ad
-> > > > of the uint8_t/uint16_t/etc types (those are not aimed to be used
-> > > > within the kernel). For those types that are internal we should use
-> > > > in-kernel type (u8/u16/etc)
-> > > >
-> > > > There is also the use of the BIT macro instead of the (1 << x), I k=
-now
-> > > > that this is a maintainer preference.
-> > > >
-> > > Is all that even possible ?
-> >
-> > Sorry, if I wasn't clear from my side, I should have marked those as
-> > nit, as in this case, I don't really mind, but I remember Lee
-> > requesting some of those changes for this file.
-> >
-> > What I want to avoid is the desynchronization again. As this file
-> > belongs to the MFD subsystem Lee needs to be happy with it or at least
-> > know that we're not following the kernel style because is an imported
-> > file (i.e not using the BIT macro, doing this example because I know
-> > he takes care of this).
-> >
-> > So I think that the main question here is if an imported file like
-> > this is acceptable in the include/linux/mfd?
-> >
->
-> I find it highly (and more and more) confusing about what is
-> acceptable in the kernel and where, and what isn't. There are imported
-> files all over the place, and they seem to be widely acceptable and
-> accepted. It is difficult to keep track of what is acceptable and what
-> isn't on a per subsystem basis. I'll step back and keep my confusion
-> to myself.
->
+diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
+index 68da49320592..3192d454a733 100644
+--- a/arch/powerpc/include/asm/sparsemem.h
++++ b/arch/powerpc/include/asm/sparsemem.h
+@@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, unsigned long end, int ni
+ extern int remove_section_mapping(unsigned long start, unsigned long end);
+ 
+ #ifdef CONFIG_PPC_BOOK3S_64
+-extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
++extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
+ #else
+-static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
++static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_NUMA
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index 0cc7fbc3bd1c..40bb2a8326bb 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(void)
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-void resize_hpt_for_hotplug(unsigned long new_mem_size)
++int resize_hpt_for_hotplug(unsigned long new_mem_size)
+ {
+ 	unsigned target_hpt_shift;
+ 
+ 	if (!mmu_hash_ops.resize_hpt)
+-		return;
++		return 0;
+ 
+ 	target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
+ 
+@@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_size)
+ 	 * current shift
+ 	 */
+ 	if ((target_hpt_shift > ppc64_pft_size)
+-	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
+-		int rc;
+-
+-		rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
+-		if (rc && (rc != -ENODEV))
+-			printk(KERN_WARNING
+-			       "Unable to resize hash page table to target order %d: %d\n",
+-			       target_hpt_shift, rc);
+-	}
++	    || (target_hpt_shift < (ppc64_pft_size - 1)))
++		return mmu_hash_ops.resize_hpt(target_hpt_shift);
++
++	return 0;
+ }
+ 
+ int hash__create_section_mapping(unsigned long start, unsigned long end, int nid)
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 33cc6f676fa6..0d40d970cf4a 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, u64 size,
+ 	 */
+ 	vm_unmap_aliases();
+ 
+-	resize_hpt_for_hotplug(memblock_phys_mem_size());
++	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) == -ENOSPC)
++		pr_warn("Hash collision while resizing HPT\n");
+ 
+ 	return ret;
+ }
+diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+index f2a9f0adc2d3..b407034a80ba 100644
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -918,7 +918,6 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+ 	if (rc != 0) {
+ 		switch (state.commit_rc) {
+ 		case H_PTEG_FULL:
+-			pr_warn("Hash collision while resizing HPT\n");
+ 			return -ENOSPC;
+ 
+ 		default:
+-- 
+2.20.1
 
-In theory, I should be cc'ied if someone sends a modification to this
-file, also Guenter and Benson. So we can take care that is synced with
-the EC code and doesn't diverge again. I think that this is the main
-purpose.
-
-Thanks,
- Enric
-
-> > > After all, this is an imported file, and
-> > > we don't usually expect that imported files meet the Linux kernel
-> > > coding style.
-> > >
-> >
-> > I remember seeing somewhere that the EC code was following the Linux
-> > kernel style? Now I am not able to find where.
-> >
->
-> You are correct: https://www.chromium.org/chromium-os/ec-development
->
-> Running checkpatch over the code, it doesn't look like that is
-> followed, though, much less enforced.
->
-> Guenter
->
-> > Thanks,
-> >  Enric
-> >
-> > > Thanks,
-> > > Guenter
-> > >
-> > > > [snip]
-> > > >
-> > > > Thanks,
-> > > >  Enric
