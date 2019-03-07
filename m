@@ -2,259 +2,164 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF9BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C8EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2057120675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:12:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyYaa/Zd"
+	by mail.kernel.org (Postfix) with ESMTP id A01C620449
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfCGTME (ORCPT
+        id S1726669AbfCGTMq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:12:04 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33326 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfCGTME (ORCPT
+        Thu, 7 Mar 2019 14:12:46 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41682 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfCGTMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:12:04 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x9so9742362qkf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 11:12:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cpfggOg3lyaSZBxbnfIxBL3zqoeOYTpPDR54+P8F1RI=;
-        b=JyYaa/ZdmxfhGOkWwuf34+liJt0Ui/ZSx7c7SlyviXtacQfPbm/v8iRDjsB03P9vsT
-         RsYRvpQzLj2U9XZBL/LpWpPF9aknlK9qct44HofmvGUmfzWaJO+iAl8PmmvtF461Wlqg
-         iWDXdMXTOSa9jULDFdPs6vhZGEo+WX2Ki5osPzVmHVLJmejm64+UPo0UpzXcp2RpBm4Z
-         j5ONyTusQdGmAuGGIIu9gM6jFCpVR6E6xtnhQfLXr/7XvPl5GhSP5QE12ZBw8uRIK/Sr
-         Ff3Rj8bgpGDFZEOrPS/o/V8haRYZmPH0Lta8ASQknvhwxzJ5t+t+qoTOh6CDSnvOaND5
-         ZDEQ==
+        Thu, 7 Mar 2019 14:12:45 -0500
+Received: by mail-ot1-f68.google.com with SMTP id t7so15108612otk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 11:12:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cpfggOg3lyaSZBxbnfIxBL3zqoeOYTpPDR54+P8F1RI=;
-        b=UWww6n9gWzlTET08HFhcCcp8i0q3EP2MBEhh7oMJmHrVwyLVK9gJOzAuH+xBOWbNt8
-         fcV+OckLvx8pNuh39WWIwt7gG/OxauJwNGB+lxAUitlxBeow0VvSKKfXaab306NY3IVI
-         oNf/sIVV8uvIokumUyBaeD1q52mAb24wL4XUx8/nU8AH3dqcW0JKcpzfsyGUh+xaGMx3
-         4kT+4xqQIvWbpVDJWaMuOaXwiTgKelJ3qlLACTKo4icl7gozKPQ9aJII55ppuockfM+g
-         LTjaspvtICYRZWbyW3dWLdueEQoftYWfdhuD5I8BXGVDxeDVVKTG1kWEAa/nQFueEs6d
-         VXRg==
-X-Gm-Message-State: APjAAAUQNYcXMmiGPwx0EQOAPbufykKRwn1hsR/7bMIHQIU6pY/nkARI
-        M11cZnvgEbgoEygMmantc/uimVLNQFE=
-X-Google-Smtp-Source: APXvYqwME5Oza9BsztDkuAQcodg5FH8wP/oQx9oXsXXmfbYhILkUe0twGXwz9sTX5Z0pdJddGvlieg==
-X-Received: by 2002:a05:620a:1403:: with SMTP id d3mr2631712qkj.16.1551985922492;
-        Thu, 07 Mar 2019 11:12:02 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id d51sm3742963qta.31.2019.03.07.11.12.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 11:12:01 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 063F04039C; Thu,  7 Mar 2019 16:11:58 -0300 (-03)
-Date:   Thu, 7 Mar 2019 16:11:57 -0300
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Ingo Molnar <mingo@kernel.org>, mgorman@techsingularity.net,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tools/perf-bench: Add basic syscall benchmark
-Message-ID: <20190307191157.GB32240@kernel.org>
-References: <20190307185253.28432-1-dave@stgolabs.net>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=r5B1Q+YmHy9SUdGBKf9gycOuLgQ9gPPMw8UFpi0au7E=;
+        b=mXMstCSXLxZr1YCvP9wXd3ejtOBRY2IwFJ9hlLO7C89b7ruf/eGJZOR4AGeG4Cs1f9
+         VZ1qLjuT3PEgpbxD0x3x6nAzs5U3NATht27IiELyxpXjicjmDzO0RlDCf7okZTTEK9jd
+         8q6Ia7wdC0izVKkr7nrjLv648wt7g69HCDsFk9vTHUL8b68ey5E1V6uxA2w9u5YJ/J82
+         31s6rU5DEAysVxlVCQW2WT8GtvqJw9raNuGekNs2kCuKR+RGKO7Mw5x8+B6lYgv0fVLZ
+         wayydmi5J/Yh1GuBt4CeKuebg0UC8cuGsneNUB4skOsnfr8h+o3157Ld6op/RzFh39YM
+         xRIQ==
+X-Gm-Message-State: APjAAAUYoHWgGpRjks1J+vgNKvk3XNtYKIvkqTDTitpP5KkIlAiYfmhe
+        U1lXcXnMMKaF1fJxgMIou8JS+W2FG/d7WBGreA7plA==
+X-Google-Smtp-Source: APXvYqxXGnQ07h8mKO5yYWJL5RTXi5g9Smdm69uPpMgtoyDjgbs9onDQj87FEnseUeQa3bx6hekac6lwAqzTCQCyyc0=
+X-Received: by 2002:a9d:7657:: with SMTP id o23mr9605905otl.260.1551985963986;
+ Thu, 07 Mar 2019 11:12:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307185253.28432-1-dave@stgolabs.net>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by 2002:a8a:153:0:0:0:0:0 with HTTP; Thu, 7 Mar 2019 11:12:43 -0800 (PST)
+In-Reply-To: <20190306101353.9938-1-alazar@bitdefender.com>
+References: <20190306101353.9938-1-alazar@bitdefender.com>
+From:   Stefano Garzarella <sgarzare@redhat.com>
+Date:   Thu, 7 Mar 2019 20:12:43 +0100
+Message-ID: <CAGxU2F5o94ARkqZVf5FRMaZNET9X7M82kej7Od+mg3MQ7iJV3A@mail.gmail.com>
+Subject: Re: [PATCH v2] vsock/virtio: fix kernel panic from virtio_transport_reset_no_sock
+To:     =?UTF-8?Q?Adalbert_Laz=C4=83r?= <alazar@bitdefender.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandru Herghelegiu <aherghelegiu@bitdefender.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 07, 2019 at 10:52:53AM -0800, Davidlohr Bueso escreveu:
-> The usefulness of having a standard way of testing syscall performance
-> has come up from time to time[0]. Furthermore, some of our testing
-> machinery (such as 'mmtests') already makes use of a simplified version
-> of the microbenchmark. This patch mainly takes the same idea to measure
-> syscall throughput compatible with 'perf-bench' via getppid(2), yet
-> without any of the additional template stuff from Ingo's version (based
-> on numa.c). The code is identical to what mmtests uses.
-
-You forgot to update tools/perf/Documentation/perf-bench.txt, and please
-take a look at tools/perf/util/pmu.c convert_scale() to see how to save
-the current locale, set the one you want, then restore the previous one,
-so that at the end of this benchmark the environment is back to where it
-was.
-
-Thanks.
-
-- Arnaldo
- 
-> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1067469.html
-> 
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+On Wed, Mar 6, 2019 at 11:13 AM Adalbert Lazăr <alazar@bitdefender.com> wrote:
+>
+> Previous to commit 22b5c0b63f32 ("vsock/virtio: fix kernel panic
+> after device hot-unplug"), vsock_core_init() was called from
+> virtio_vsock_probe(). Now, virtio_transport_reset_no_sock() can be called
+> before vsock_core_init() has the chance to run.
+>
+> [Wed Feb 27 14:17:09 2019] BUG: unable to handle kernel NULL pointer dereference at 0000000000000110
+> [Wed Feb 27 14:17:09 2019] #PF error: [normal kernel read fault]
+> [Wed Feb 27 14:17:09 2019] PGD 0 P4D 0
+> [Wed Feb 27 14:17:09 2019] Oops: 0000 [#1] SMP PTI
+> [Wed Feb 27 14:17:09 2019] CPU: 3 PID: 59 Comm: kworker/3:1 Not tainted 5.0.0-rc7-390-generic-hvi #390
+> [Wed Feb 27 14:17:09 2019] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+> [Wed Feb 27 14:17:09 2019] Workqueue: virtio_vsock virtio_transport_rx_work [vmw_vsock_virtio_transport]
+> [Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+> [Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+> [Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+> [Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+> [Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+> [Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+> [Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+> [Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+> [Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+> [Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+> [Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [Wed Feb 27 14:17:09 2019] Call Trace:
+> [Wed Feb 27 14:17:09 2019]  virtio_transport_recv_pkt+0x63/0x820 [vmw_vsock_virtio_transport_common]
+> [Wed Feb 27 14:17:09 2019]  ? kfree+0x17e/0x190
+> [Wed Feb 27 14:17:09 2019]  ? detach_buf_split+0x145/0x160
+> [Wed Feb 27 14:17:09 2019]  ? __switch_to_asm+0x40/0x70
+> [Wed Feb 27 14:17:09 2019]  virtio_transport_rx_work+0xa0/0x106 [vmw_vsock_virtio_transport]
+> [Wed Feb 27 14:17:09 2019] NET: Registered protocol family 40
+> [Wed Feb 27 14:17:09 2019]  process_one_work+0x167/0x410
+> [Wed Feb 27 14:17:09 2019]  worker_thread+0x4d/0x460
+> [Wed Feb 27 14:17:09 2019]  kthread+0x105/0x140
+> [Wed Feb 27 14:17:09 2019]  ? rescuer_thread+0x360/0x360
+> [Wed Feb 27 14:17:09 2019]  ? kthread_destroy_worker+0x50/0x50
+> [Wed Feb 27 14:17:09 2019]  ret_from_fork+0x35/0x40
+> [Wed Feb 27 14:17:09 2019] Modules linked in: vmw_vsock_virtio_transport vmw_vsock_virtio_transport_common input_leds vsock serio_raw i2c_piix4 mac_hid qemu_fw_cfg autofs4 cirrus ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_net psmouse drm net_failover pata_acpi virtio_blk failover floppy
+>
+> Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
+> Reported-by: Alexandru Herghelegiu <aherghelegiu@bitdefender.com>
+> Signed-off-by: Adalbert Lazăr <alazar@bitdefender.com>
+> Co-developed-by: Stefan Hajnoczi <stefanha@redhat.com>
 > ---
->  tools/perf/bench/Build     |  1 +
->  tools/perf/bench/bench.h   |  1 +
->  tools/perf/bench/syscall.c | 80 ++++++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/builtin-bench.c |  8 +++++
->  4 files changed, 90 insertions(+)
->  create mode 100644 tools/perf/bench/syscall.c
-> 
-> diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-> index e4e321b6f883..839f9b790587 100644
-> --- a/tools/perf/bench/Build
-> +++ b/tools/perf/bench/Build
-> @@ -1,5 +1,6 @@
->  perf-y += sched-messaging.o
->  perf-y += sched-pipe.o
-> +perf-y += syscall.o
->  perf-y += mem-functions.o
->  perf-y += futex-hash.o
->  perf-y += futex-wake.o
-> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-> index fddb3ced9db6..31ad3283d41b 100644
-> --- a/tools/perf/bench/bench.h
-> +++ b/tools/perf/bench/bench.h
-> @@ -29,6 +29,7 @@
->  int bench_numa(int argc, const char **argv);
->  int bench_sched_messaging(int argc, const char **argv);
->  int bench_sched_pipe(int argc, const char **argv);
-> +int bench_syscall_basic(int argc, const char **argv);
->  int bench_mem_memcpy(int argc, const char **argv);
->  int bench_mem_memset(int argc, const char **argv);
->  int bench_futex_hash(int argc, const char **argv);
-> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-> new file mode 100644
-> index 000000000000..149129cca639
-> --- /dev/null
-> +++ b/tools/perf/bench/syscall.c
-> @@ -0,0 +1,80 @@
-> +/*
-> + *
-> + * syscall.c
-> + *
-> + * syscall: Benchmark for system call performance
-> + */
-> +#include "../perf.h"
-> +#include "../util/util.h"
-> +#include <subcmd/parse-options.h>
-> +#include "../builtin.h"
-> +#include "bench.h"
+>  net/vmw_vsock/virtio_transport_common.c | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
+>
+
+Thanks, LGTM!
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+
+
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 3ae3a33da70b..602715fc9a75 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -662,6 +662,8 @@ static int virtio_transport_reset(struct vsock_sock *vsk,
+>   */
+>  static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+>  {
+> +       const struct virtio_transport *t;
+> +       struct virtio_vsock_pkt *reply;
+>         struct virtio_vsock_pkt_info info = {
+>                 .op = VIRTIO_VSOCK_OP_RST,
+>                 .type = le16_to_cpu(pkt->hdr.type),
+> @@ -672,15 +674,21 @@ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+>         if (le16_to_cpu(pkt->hdr.op) == VIRTIO_VSOCK_OP_RST)
+>                 return 0;
+>
+> -       pkt = virtio_transport_alloc_pkt(&info, 0,
+> -                                        le64_to_cpu(pkt->hdr.dst_cid),
+> -                                        le32_to_cpu(pkt->hdr.dst_port),
+> -                                        le64_to_cpu(pkt->hdr.src_cid),
+> -                                        le32_to_cpu(pkt->hdr.src_port));
+> -       if (!pkt)
+> +       reply = virtio_transport_alloc_pkt(&info, 0,
+> +                                          le64_to_cpu(pkt->hdr.dst_cid),
+> +                                          le32_to_cpu(pkt->hdr.dst_port),
+> +                                          le64_to_cpu(pkt->hdr.src_cid),
+> +                                          le32_to_cpu(pkt->hdr.src_port));
+> +       if (!reply)
+>                 return -ENOMEM;
+>
+> -       return virtio_transport_get_ops()->send_pkt(pkt);
+> +       t = virtio_transport_get_ops();
+> +       if (!t) {
+> +               virtio_transport_free_pkt(reply);
+> +               return -ENOTCONN;
+> +       }
 > +
-> +#include <stdio.h>
-> +#include <locale.h>
-> +#include <sys/time.h>
-> +#include <sys/syscall.h>
-> +
-> +#define LOOPS_DEFAULT 10000000
-> +static	int loops = LOOPS_DEFAULT;
-> +
-> +static const struct option options[] = {
-> +	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
-> +	OPT_END()
-> +};
-> +
-> +static const char * const bench_syscall_usage[] = {
-> +	"perf bench syscall <options>",
-> +	NULL
-> +};
-> +
-> +int bench_syscall_basic(int argc, const char **argv)
-> +{
-> +	struct timeval start, stop, diff;
-> +	unsigned long long result_usec = 0;
-> +	int i;
-> +
-> +	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
-> +
-> +	gettimeofday(&start, NULL);
-> +
-> +	for (i = 0; i < loops; i++)
-> +		getppid();
-> +
-> +	gettimeofday(&stop, NULL);
-> +	timersub(&stop, &start, &diff);
-> +
-> +	switch (bench_format) {
-> +	case BENCH_FORMAT_DEFAULT:
-> +		setlocale(LC_NUMERIC, "");
-> +		printf("# Executed %'d getppid() calls\n", loops);
-> +
-> +		result_usec = diff.tv_sec * 1000000;
-> +		result_usec += diff.tv_usec;
-> +
-> +		printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
-> +		       diff.tv_sec,
-> +		       (unsigned long) (diff.tv_usec/1000));
-> +
-> +		printf(" %14lf usecs/op\n",
-> +		       (double)result_usec / (double)loops);
-> +		printf(" %'14d ops/sec\n",
-> +		       (int)((double)loops /
-> +			     ((double)result_usec / (double)1000000)));
-> +		break;
-> +
-> +	case BENCH_FORMAT_SIMPLE:
-> +		printf("%lu.%03lu\n",
-> +		       diff.tv_sec,
-> +		       (unsigned long) (diff.tv_usec / 1000));
-> +		break;
-> +
-> +	default:
-> +		/* reaching here is something disaster */
-> +		fprintf(stderr, "Unknown format:%d\n", bench_format);
-> +		exit(1);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> index 334c77ffc1d9..4e9dd0f4eced 100644
-> --- a/tools/perf/builtin-bench.c
-> +++ b/tools/perf/builtin-bench.c
-> @@ -11,6 +11,7 @@
->   * Available benchmark collection list:
->   *
->   *  sched ... scheduler and IPC performance
-> + *  syscall ... System call performance
->   *  mem   ... memory access performance
->   *  numa  ... NUMA scheduling and MM performance
->   *  futex ... Futex performance
-> @@ -50,6 +51,12 @@ static struct bench sched_benchmarks[] = {
->  	{ NULL,		NULL,						NULL			}
->  };
->  
-> +static struct bench syscall_benchmarks[] = {
-> +	{ "basic",	"Benchmark for basic getppid() system calls",	bench_syscall_basic	},
-> +	{ "all",	"Run all syscall benchmarks",			NULL			},
-> +	{ NULL,		NULL,						NULL			},
-> +};
-> +
->  static struct bench mem_benchmarks[] = {
->  	{ "memcpy",	"Benchmark for memcpy() functions",		bench_mem_memcpy	},
->  	{ "memset",	"Benchmark for memset() functions",		bench_mem_memset	},
-> @@ -85,6 +92,7 @@ struct collection {
->  
->  static struct collection collections[] = {
->  	{ "sched",	"Scheduler and IPC benchmarks",			sched_benchmarks	},
-> +	{ "syscall",	"System call benchmarks",			syscall_benchmarks	},
->  	{ "mem",	"Memory access benchmarks",			mem_benchmarks		},
->  #ifdef HAVE_LIBNUMA_SUPPORT
->  	{ "numa",	"NUMA scheduling and MM benchmarks",		numa_benchmarks		},
-> -- 
-> 2.16.4
+> +       return t->send_pkt(reply);
+>  }
+>
+>  static void virtio_transport_wait_close(struct sock *sk, long timeout)
+>
+
 
 -- 
-
-- Arnaldo
+Stefano Garzarella
+Software Engineer @ Red Hat
