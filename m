@@ -2,113 +2,116 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C6EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C12C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D566220643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8340120643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551961397;
+	bh=9MKT18nsRZPfF4X7TxKITIX6OyJ7Yo0ADu/onCUUIFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jkW5LRoeB4MkzN2jR94Z7Vg86Jj9nTJqrN581+G5/wNnYCvRFdHgnUF/szI6SlQOa
+	 iSGHga7jVWgYqQ+RqkrmUfoyW6zYNMlSUJ+C3l/8/XTn7fvi1GhQKjDEK2Zv4goFdi
+	 NXU+cD96fJpQOD7SYxaC7pc1Sbz7opNKAffS0RU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfCGMW5 (ORCPT
+        id S1726308AbfCGMXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:22:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43410 "EHLO mx1.suse.de"
+        Thu, 7 Mar 2019 07:23:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43586 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbfCGMW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:22:56 -0500
+        id S1726127AbfCGMXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 07:23:15 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7EF1AB61B;
-        Thu,  7 Mar 2019 12:22:54 +0000 (UTC)
-Subject: Re: [PATCH 05/20] x86/uaccess/xen: Suppress SMAP warnings
-To:     Peter Zijlstra <peterz@infradead.org>,
-        torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
-        luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com
-Cc:     linux-kernel@vger.kernel.org, dvyukov@google.com,
-        rostedt@goodmis.org, andrew.cooper3@citrix.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20190307114511.870090179@infradead.org>
- <20190307115159.530608243@infradead.org>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <689d6dc2-77d6-018e-b156-979b2724be7b@suse.com>
-Date:   Thu, 7 Mar 2019 13:22:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        by mx1.suse.de (Postfix) with ESMTP id 7DE58BE21;
+        Thu,  7 Mar 2019 12:23:14 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 13:23:13 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/swap: Avoid undefined behavior in __swapoffset
+Message-ID: <20190307122313.GA30234@dhcp22.suse.cz>
+References: <20190307094653.119425-1-pihsun@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190307115159.530608243@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307094653.119425-1-pihsun@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2019 12:45, Peter Zijlstra wrote:
-> drivers/xen/privcmd.o: warning: objtool: privcmd_ioctl()+0x1414: call to hypercall_page() with UACCESS enabled
+On Thu 07-03-19 17:46:50, Pi-Hsun Shih wrote:
+> Use offsetof to calculate offset of a field to avoid UBSAN warning like:
 > 
-> Xen needs to do HV calls with AC=1 for hysterical raisins. Make the
-> warning go away.
+> ===================================================================
+> UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
+> member access within null pointer of type 'union swap_header'
+> CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
+> Call trace:
+>  dump_backtrace+0x0/0x194
+>  show_stack+0x20/0x2c
+>  __dump_stack+0x20/0x28
+>  dump_stack+0x70/0x94
+>  ubsan_epilogue+0x14/0x44
+>  ubsan_type_mismatch_common+0xf4/0xfc
+>  __ubsan_handle_type_mismatch_v1+0x34/0x54
+>  __se_sys_swapon+0x654/0x1084
+>  __arm64_sys_swapon+0x1c/0x24
+>  el0_svc_common+0xa8/0x150
+>  el0_svc_compat_handler+0x2c/0x38
+>  el0_svc_compat+0x8/0x18
+> ==================================================================
 
-No, this is a hypercall with parameters passed through from user land
-(Xen tools). So setting AC=1 is not related to hysterical reasons, but
-to indicate that unprivileged buffers are okay here. So please change
-the commit message to something like:
+Could you be more specific about what exactly is undefined here and
+why offsetof is any better. AFAIR it uses the same construct unless a
+compiler defines a built in.
 
-Some Xen hypercalls allow parameter buffers in user land, so they need
-to set AC=1. Avoid the warning for those cases.
+I do not object the change itself because it is cleaner to use the
+existing helper but I am wondering why this is fixing ubsan. Is ubsan
+defining the compiler variant and consider it safe?
 
-> XXX: arguably we should rename ANNOTATE_NOSPEC_ALTERNATIVE to
->      ANNOTATE_IGNORE_ALTERNATIVE.
 > 
-> Cc: andrew.cooper3@citrix.com
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> ---
+>  include/linux/swap.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index fc50e21b3b88..4bfb5c4ac108 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -157,9 +157,9 @@ struct swap_extent {
+>  /*
+>   * Max bad pages in the new format..
+>   */
+> -#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
+>  #define MAX_SWAP_BADPAGES \
+> -	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
+> +	((offsetof(union swap_header, magic.magic) - \
+> +	  offsetof(union swap_header, info.badpages)) / sizeof(int))
+>  
+>  enum {
+>  	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
+> -- 
+> 2.21.0.352.gf09ad66450-goog
+> 
 
-Mind Cc-ing the maintainers of the code you are touching in future
-patches?
-
-With the commit message adjusted:
-
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
+-- 
+Michal Hocko
+SUSE Labs
