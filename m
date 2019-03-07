@@ -2,116 +2,123 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95FFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE28DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AD820652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A9520652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InzJcqTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCGPwn (ORCPT
+        id S1726578AbfCGPw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:52:43 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:36047 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfCGPwn (ORCPT
+        Thu, 7 Mar 2019 10:52:59 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41434 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfCGPw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:52:43 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mj8eD-1gY4Ht27Eb-00f8pI; Thu, 07 Mar 2019 16:52:32 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
-Date:   Thu,  7 Mar 2019 16:52:24 +0100
-Message-Id: <20190307155230.2923527-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:KoZi1R4fOqB4e75Y1+qFioY60GfAUcFHJFAVYc2AriyZz0/erqb
- TrQ2dyp6Sry6PY2weIasG/q5Mz03RsLnzCTaDF3h1v1bUnl3QZy4FoBCgwWw/fvPAxq9J3f
- COaRYcY8vnxERHKwujPeOGJLazgPSoQ3rJecx63RG7MBGyE+O+RwYToSOnx7/0YlVBaOCQw
- 3yhpqXqXTyOotWf8HnutA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pXyhY2Zy6Q8=:lG0nQjK2TFzbwaZn7McGMJ
- y9NkbB1V/0BR813bnPC+ghnpAdXImbco0l4VLYfe97XNjcoN8XCIA99Rc7Xxf+o5syrId7rUm
- V10uqUGga40z33UdGQFzdknzqX0Bb8KTtwseuFVfkUfFf19nsuFo3FgdHg9qujnZplecyoFOv
- 1nlpcYVYqJg2j4N65RD503/HvI1aPKzggeay0nk4DVHspSwPCz/I1r9+rqhFB9GGwQuDBaIck
- jGqqAvpRlxR3sNywMn+04wpYiaNtAIYIpnXBHygN+G5TZ8a8P4+dmubWey6CwG5ya8LWgw0Og
- PbZfhGXpPF1DNOh/9b/tAknLNbUcA2wn5RPJcaG67Vqs4Ah5WGNjngNKJZsd0nt9RZxH696Qf
- jEqfIanqOQNF1lY/t3vaP96zKpmNONPkOo8NfeNAp+jLyrEW4zVRMND3fO99cTJ75KtG/dHMt
- AzNPAu4/Xnvn5QRFYhyhuQ4IrH40ewaT4oL2j5Jeh3ejrCvm1HAj5wgqcsafBwlIGwcmWzwGz
- ncTcFLpL59m6CfKSbABGX/lpWNE1Lt2p5q8IhjQz4GmIbAlaAuJkrw9yTCUaSJHxW+gX4L7gR
- Gj5Kbadlf8QYtEEnitNXSwEIYVoToowubhm++KLWQefrP0WNkIwc2vJkaNYPVCwN1ndBi0EAX
- d+aq86UmayrZuQti3LBkZlJiqB/Z1eOSst8P6u9zTyE7TfiJBmcDDUYW8MCo6qTNrwSkxzA0A
- F56QomdQcbczv3/YDqBDJrnYfqKlSiG9+W5kyQ==
+        Thu, 7 Mar 2019 10:52:59 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y7so12047897lfg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:52:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=j2DjH/aV1FFHkAFZz9xIgY7GkGEKFIGoN/8Qv71OJ3U=;
+        b=InzJcqTW1ouYnlnInMOMbejjkCdT2aZUV0BCW7UEMwvXfEmwTh3zMktLXo8uh79zwP
+         NmGigouBAb/u7KQtO51tfjYDS5J6HXq+xyen/jMuMuHzQhWKnAlai0Fjsz8BXD97ghTF
+         VHY2YaicX7phfSkuJOGXfZ4xi2cbsRZwfXMNWS/81u+EIItuYrEs2+0beeKN3dwlVejk
+         fXkOeDqrIHeZWO+7ZqfE+asWGXS/6N8KtiMl2fl1byLCQlGcgHT8sMyDCyoRZnJ0AV+i
+         8nhEnO63w+JycC0Qo+GEILYXUwRUNr2OWTEqdkWNwhzxB8khtB6C1fd5K8MyujKYK47T
+         kaFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=j2DjH/aV1FFHkAFZz9xIgY7GkGEKFIGoN/8Qv71OJ3U=;
+        b=tPzRniyAhZR4uL7rKNDry7av/weJeuFmd51gnOTmctEFUwNeD+oT0K5qeP33cXPaSt
+         wCmSZHG/xId3t9HHRH+ajgWYZESLDdu7D6CvpBYP14Tna8j9551WJGj4NDMPMw2tJD6k
+         13Tkyhz64CW1VQzzQ0JZN5ZUk7+RVLWdEBAblrAMaBg/+JjCFvThj544+n86w5LzMcH/
+         BlwdYyUUOqvWofM3wuMQbZSkMcaLA/o8iBXvnhhz6OKStCILuaBQs4Eq+M6yeuPVs7nI
+         AacjU0OUkPvU8iPn/uSdaSpuugJVNpFiX28Yt8zL/vZf3iOTRjh+1KQyfdfCcdDo+1LT
+         LePg==
+X-Gm-Message-State: APjAAAWHIhVRQJL2g3h2iXHMl7Cev5sUkmS0fPJxrQaUAEWM+Hla6Dqd
+        IAg8x2FqRSU4ktovMjp2DyA=
+X-Google-Smtp-Source: APXvYqz/coxBvqUBHz73ObvRBc5Ki8aAKtv3anw+fiom+QZl/jH/inH+fexDo+Kamjt8nNOCRxG7Ew==
+X-Received: by 2002:a19:8d4f:: with SMTP id p76mr1987112lfd.17.1551973976710;
+        Thu, 07 Mar 2019 07:52:56 -0800 (PST)
+Received: from octofox.hsd1.ca.comcast.net. (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id q1sm895695lfe.12.2019.03.07.07.52.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 07:52:56 -0800 (PST)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PULL 0/8] xtensa updates for v5.1
+Date:   Thu,  7 Mar 2019 07:52:18 -0800
+Message-Id: <20190307155218.26272-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
-dynamically allocate a struct member, but this is normally intended for
-local variables.
+Hi Linus,
 
-Building with clang, I get a warning for a few locations that check the
-address of the cpumask_var_t:
+please pull the following batch of updates for the Xtensa architecture:
 
-drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+The following changes since commit 8834f5600cf3c8db365e18a3d5cac2c2780c81e5:
 
-As far as I can tell, the code is still correct, as the truth value of
-the pointer is what we need in this configuration. To get rid of
-the warning, use cpumask_available() instead of checking the
-pointer directly.
+  Linux 5.0-rc5 (2019-02-03 13:48:04 -0800)
 
-Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: use cpumask_available() instead of open-coding a copy
----
- drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+are available in the git repository at:
 
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index 9a7f70db20c7..733d9172425b 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -119,7 +119,7 @@ static void enic_init_affinity_hint(struct enic *enic)
- 
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
--		    (enic->msix[i].affinity_mask &&
-+		    (cpumask_available(enic->msix[i].affinity_mask) &&
- 		     !cpumask_empty(enic->msix[i].affinity_mask)))
- 			continue;
- 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
-@@ -148,7 +148,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i)		||
- 		    enic_is_notify_intr(enic, i)	||
--		    !enic->msix[i].affinity_mask	||
-+		    !cpumask_available(enic->msix[i].affinity_mask) ||
- 		    cpumask_empty(enic->msix[i].affinity_mask))
- 			continue;
- 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
-@@ -161,7 +161,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->wq_count; i++) {
- 		int wq_intr = enic_msix_wq_intr(enic, i);
- 
--		if (enic->msix[wq_intr].affinity_mask &&
-+		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
- 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
- 			netif_set_xps_queue(enic->netdev,
- 					    enic->msix[wq_intr].affinity_mask,
+  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190307
+
+for you to fetch changes up to 60deebe6149a3f02fa6a9fa988dda500effda43f:
+
+  xtensa: simplify trap_init (2019-02-07 12:35:32 -0800)
+
+----------------------------------------------------------------
+Xtensa updates for v5.1:
+
+- use generic spinlock/rwlock implementations
+- clean up IPI processing
+- document boot parameters passing to the kernel
+- fix get_wchan
+- various cleanups in time.c, process.c, traps.c and thread_info.h
+
+----------------------------------------------------------------
+Max Filippov (8):
+      xtensa: document boot parameter passing
+      xtensa: SMP: rework IPI processing
+      xtensa: clean up arch/xtensa/kernel/time.c
+      xtensa: provide xchg for sizes 1 and 2
+      xtensa: use generic spinlock/rwlock implementation
+      xtensa: fix get_wchan
+      xtensa: drop unused definitions
+      xtensa: simplify trap_init
+
+ Documentation/xtensa/booting.txt         |  19 ++++
+ arch/xtensa/Kconfig                      |   2 +
+ arch/xtensa/include/asm/Kbuild           |   2 +
+ arch/xtensa/include/asm/cmpxchg.h        |  36 +++++-
+ arch/xtensa/include/asm/spinlock.h       | 185 +------------------------------
+ arch/xtensa/include/asm/spinlock_types.h |  15 +--
+ arch/xtensa/include/asm/thread_info.h    |   9 --
+ arch/xtensa/kernel/process.c             |   6 +-
+ arch/xtensa/kernel/smp.c                 |  38 ++++---
+ arch/xtensa/kernel/time.c                |  53 +++++----
+ arch/xtensa/kernel/traps.c               |   5 +-
+ 11 files changed, 113 insertions(+), 257 deletions(-)
+ create mode 100644 Documentation/xtensa/booting.txt
+
 -- 
-2.20.0
-
+Thanks.
+-- Max
