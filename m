@@ -2,97 +2,78 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF929C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F40C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D94820661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:54:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqZS0H/i"
+	by mail.kernel.org (Postfix) with ESMTP id 2C2D120661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfCGRyc (ORCPT
+        id S1726759AbfCGRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:54:32 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46456 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfCGRyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:54:31 -0500
-Received: by mail-pf1-f194.google.com with SMTP id g6so11995746pfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:54:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i1E4iENPCWdT2C4QeTm1iBis4EFtMd3s1mWmYsVGpNM=;
-        b=RqZS0H/ivQpTcktytXHy/lqkxba9ommM+Nnxrite6YkxaDM3uLGGMPG+09MpM/1npL
-         41OOo/OZBo3GEWIir3kfhgK0SAu3CAJCr1b21m/VMtmjpC72sk1aXwrNmK6PB3VsdXyw
-         GNlr1xlheqOILs2VheSkMeiihTsOvhK5ic7dKnXgspQi5xSihz1oCBRBV0J9WA8vgQvR
-         05hRwP3Db3+7TI1rL5U9gii2F7zLGmAGjlBMllO9Obu4AXg9IipqMAGBijlfWCA5UTbr
-         aGTffvZx79vp4EdOyNDRzd7+bxXaA8DKapVLoF3ERwMiBORlvp/ZRErOuiA9HXaEbMn8
-         P+Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i1E4iENPCWdT2C4QeTm1iBis4EFtMd3s1mWmYsVGpNM=;
-        b=Hy2ZfEVvr9NKUyNbzYLE4lpdARRDbVLZjnUGmRhF/4qZt3OxfJ6HQJKEht4bqUdZH2
-         oPMQH7ZhVpiKhdIGvpCx1hq7NYdx6/mDmke1h1YEzG5hIj2O5foXUYWQAzWcaNjTAxrG
-         IYz6p965RFVa/RtNTVqXlUq+3/8c1v4yKt1HL+8cWM0+Hd9jbqh1vP9B0rD8gs/GYDQ6
-         x40YQiydSmCVp7fzrrJqAasu3u3jpJjNO0UQwQYxNZzLgNmHJa7ZWVbrQerWtI1JqaTB
-         7YB4kBgIp7IO3E0o52Pw8wgKmcy8GhotP8ppF+Z3dUuupxB/ZatwLtod1cz2ERvw9Q+N
-         0NtA==
-X-Gm-Message-State: APjAAAUnBN0OqQHigP/gH+0v+P8MdbGF63QI9PCRdxxjkMPru59XGKdl
-        JrS6yOXGQNff3VNYNZF63chTl3B4X3y2DFcJEmjxsw==
-X-Google-Smtp-Source: APXvYqy4peGbU17UbH85NO5uI5I0DgZxsk+9kg3qi1cY9tvmP/cg1wmafOMz1RPUGXShLD2znZjXEMflpYwqDL//8L4=
-X-Received: by 2002:a63:40c1:: with SMTP id n184mr11935550pga.225.1551981270756;
- Thu, 07 Mar 2019 09:54:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20190307162101.29204-1-natechancellor@gmail.com> <20190307.094952.931716686086981512.davem@davemloft.net>
-In-Reply-To: <20190307.094952.931716686086981512.davem@davemloft.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 7 Mar 2019 09:54:19 -0800
-Message-ID: <CAKwvOdk3iedWAbKOTR2UvQn-JLMZuU4_Jz6J=rDdjz0=_tNAGg@mail.gmail.com>
-Subject: Re: [PATCH] net: stmmac: Avoid sometimes uninitialized Clang warnings
+        Thu, 7 Mar 2019 12:54:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49000 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726217AbfCGRyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:54:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2EEFFAC3F;
+        Thu,  7 Mar 2019 17:54:34 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id DD52BDA83C; Thu,  7 Mar 2019 18:55:50 +0100 (CET)
+Date:   Thu, 7 Mar 2019 18:55:50 +0100
+From:   David Sterba <dsterba@suse.cz>
 To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] btrfs: Turn an 'else if' into an 'else' in
+ btrfs_uuid_tree_add
+Message-ID: <20190307175550.GO31119@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20190307163515.2168-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307163515.2168-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 9:49 AM David Miller <davem@davemloft.net> wrote:
->
-> From: Nathan Chancellor <natechancellor@gmail.com>
-> Date: Thu,  7 Mar 2019 09:21:01 -0700
->
-> > @@ -565,7 +565,7 @@ static int stmmac_hwtstamp_set(struct net_device *dev, struct ifreq *ifr)
-> >       u32 ts_master_en = 0;
-> >       u32 ts_event_en = 0;
-> >       u32 value = 0;
-> > -     u32 sec_inc;
-> > +     u32 sec_inc = 0;
-> >       bool xmac;
->
-> Please don't break the reverse christmas tree ordering here, thank you.
+On Thu, Mar 07, 2019 at 09:35:15AM -0700, Nathan Chancellor wrote:
+> When building with -Wsometimes-uninitialized, Clang warns:
+> 
+> fs/btrfs/uuid-tree.c:129:13: warning: variable 'eb' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+> fs/btrfs/uuid-tree.c:129:13: warning: variable 'offset' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+> 
+> Clang can't tell that all cases are covered with this final else if.
 
-Every codebase has its own unique code style. *wonders how
-clang-format could or could not handle that rule*
+The chain of conditions is
 
-Thanks for sending the patch Nathan; if you could resend with the
-declaration order changed so that the line width decreases going down
-in the order, you can add my Reviewed-by tag.
--- 
-Thanks,
-~Nick Desaulniers
+if (ret >= 0)
+else if (ret == -EEXIST)
+else if (ret < 0)
+
+I'd think that compiler should be able to somehow represent the coverage
+of the ranges and report if it's not complete and leading to some
+uninitialized variables.
+
+What if the last condition is 'ret < -EINVAL' obscuring the numerical
+value, it'd be easy to miss that there are 20 unhandled values. In such
+case the final 'else' would be the right thing to do.
+
+Anyway, I'll apply the patch because it makes the code easier to follow.
+Thanks.
