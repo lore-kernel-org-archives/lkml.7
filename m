@@ -2,88 +2,119 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9A2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51827C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CC520840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="S+86QOvy"
+	by mail.kernel.org (Postfix) with ESMTP id 2CD1020840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfCGQrB (ORCPT
+        id S1726444AbfCGQrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:47:01 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50358 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGQrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:47:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pCwswwmYIHnrFxXlhIsNRSupNq7yZrqqEkBsIkIIXjg=; b=S+86QOvyVOYAl2ApACnbkgTat
-        3SaTuIuvHtEO0LNKQJFZyVrJWFQnqJ9IvXGPWRjGbISv4NUDNgxE35Ej34u5SFQNmypuFF9jKVBeh
-        8K2lAbdetvzw3XCOSYYVwq41h+tfQBhjVujSMNd5VeUK0wPxKFO4DloYSCT4z56wW4OYc94uhaqjo
-        gJFEDF0mNPG2W6uJ5k/Ab2hrgiY7Y1qG+fU8FoiVPPVmSUI89vru3+X1zlqBE8+6F9/2euoD/oQqu
-        LNIOffrXCq0gQYZN+pgs7kfPvzUWEdFjP99mWLWdPAhayJ0e1hfKW96BblfmqkIThp9KMECRHilwz
-        ZwUSN6H2A==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54996)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1h1wAY-00075h-18; Thu, 07 Mar 2019 16:46:54 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1h1wAT-00053S-Fk; Thu, 07 Mar 2019 16:46:49 +0000
-Date:   Thu, 7 Mar 2019 16:46:49 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srinivas.kandagatla@linaro.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 6/6] mmc: mmci: replace blksz_datactrlXX by
- get_datactrl_cfg callback
-Message-ID: <20190307164649.ywhgdikxf4nhb2sd@shell.armlinux.org.uk>
-References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com>
- <1551976742-4358-7-git-send-email-ludovic.Barre@st.com>
+        Thu, 7 Mar 2019 11:47:12 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:44976 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfCGQrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 11:47:12 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9522830D78C5;
+        Thu,  7 Mar 2019 16:47:11 +0000 (UTC)
+Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F16395C1B5;
+        Thu,  7 Mar 2019 16:47:08 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 10:47:05 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
+        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, rostedt@goodmis.org
+Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
+Message-ID: <20190307164705.qbu4ytdfdmsighas@treble>
+References: <20190307114511.870090179@infradead.org>
+ <20190307120317.GD32477@hirez.programming.kicks-ass.net>
+ <20190307125526.GB32534@hirez.programming.kicks-ass.net>
+ <20190307131312.GC32534@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1551976742-4358-7-git-send-email-ludovic.Barre@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190307131312.GC32534@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 07 Mar 2019 16:47:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 05:39:02PM +0100, Ludovic Barre wrote:
-> -	if (data->flags & MMC_DATA_READ)
-> -		datactrl |= MCI_DPSM_DIRECTION;
+On Thu, Mar 07, 2019 at 02:13:12PM +0100, Peter Zijlstra wrote:
+> On Thu, Mar 07, 2019 at 01:55:26PM +0100, Peter Zijlstra wrote:
+> > On Thu, Mar 07, 2019 at 01:03:17PM +0100, Peter Zijlstra wrote:
+> 
+> 
+> > > 01be     20d3:  31 c0                   xor    %eax,%eax
+> > > 01c0     20d5:  4c 39 eb                cmp    %r13,%rbx
+> > > 01c3     20d8:  77 08                   ja     20e2 <__do_sys_waitid+0x1cd>
+> 
+> randconfig-build/kernel/exit.o: warning: objtool:   __do_sys_waitid()+0x1c3: (branch)
+> 
+> > > 01cd     20e2:	83 f0 01             	xor    $0x1,%eax
+> > > 01d0     20e5:	48 89 c2             	mov    %rax,%rdx
+> > > 01d3     20e8:	83 e2 01             	and    $0x1,%edx
+> > > 01d6     20eb:	48 83 c2 02          	add    $0x2,%rdx
+> > > 01da     20ef:	48 ff 04 d5 00 00 00 	incq   0x0(,%rdx,8)
+> > > 01e1     20f6:	00 
+> > > 01de 			20f3: R_X86_64_32S	_ftrace_branch+0x148
+> > > 01e2     20f7:	84 c0                	test   %al,%al
+> > > 01e4     20f9:	75 2d                	jne    2128 <__do_sys_waitid+0x213>
+> > 
+> > we do not take this branch and fall-through.
+> 
+> And that is the error, I think. We should've taken it and went to:
+> 
+>   return -EFAULT;
+> 
+> because:
+> 
+>  +1be	xor  %eax,%eax	eax=0
+>  +1cd   xor  $0x1,%eax	eax=1
+>  +1e2   test %al,%al	1&1==1 -> ZF=0
+>  +1e4   jnz
+> 
+> Is an unconditional code sequence, but there's no way objtool can do
+> that without becoming a full blown interpreter :/
+> 
+> > > 0213     2128:  49 c7 c7 f2 ff ff ff    mov    $0xfffffffffffffff2,%r15
+> > > ffffffffffffe0eb }
+> > > 021a     212f:  48 8d 65 d8             lea    -0x28(%rbp),%rsp
+> > > 021e     2133:  4c 89 f8                mov    %r15,%rax
+> > > 0221     2136:  5b                      pop    %rbx
+> > > 0222     2137:  41 5c                   pop    %r12
+> > > 0224     2139:  41 5d                   pop    %r13
+> > > 0226     213b:  41 5e                   pop    %r14
+> > > 0228     213d:  41 5f                   pop    %r15
+> > > 022a     213f:  5d                      pop    %rbp
+> > > 022b     2140:  c3                      retq
 
-Given that this is currently an invariant between all, it doesn't make
-sense to have a separate public function and combine it into the
-get_datactrl_cfg() implementations.  You may as well leave it in place
-here, after you call get_datactrl_cfg().
+This "fixes" it, and also seems to help -Os make much code:
 
-> +	datactrl = host->ops->get_datactrl_cfg(host);
-
-Otherwise, I don't see a problem with this, although it would be nice to
-avoid the overhead of so many public functions, which could be done by
-adding them as inline functions in mmci.h
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 445348facea9..8de63db58fdd 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -67,7 +67,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 				.line = __LINE__,			\
+ 			};						\
+ 		______r = !!(cond);					\
+-		______f.miss_hit[______r]++;					\
++		if (______r) ______f.miss_hit[1]++; else ______f.miss_hit[0]++; \
+ 		______r;						\
+ 	}))
+ #endif /* CONFIG_PROFILE_ALL_BRANCHES */
