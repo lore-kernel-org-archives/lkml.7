@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E84620840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00A620652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfCGJPq (ORCPT
+        id S1726336AbfCGJQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:15:46 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:34585 "EHLO
+        Thu, 7 Mar 2019 04:16:01 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:58063 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfCGJPq (ORCPT
+        with ESMTP id S1726120AbfCGJQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:15:46 -0500
+        Thu, 7 Mar 2019 04:16:00 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MEC8L-1hBxzM2n1p-00AGZI; Thu, 07 Mar 2019 10:15:17 +0100
+ 1MavF5-1gVWVq1TCt-00cUMs; Thu, 07 Mar 2019 10:15:33 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Russell King <linux@armlinux.org.uk>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -31,67 +31,90 @@ To:     Russell King <linux@armlinux.org.uk>,
         Darren Hart <dvhart@infradead.org>
 Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] futex: mark futex_detect_cmpxchg() as 'noinline'
-Date:   Thu,  7 Mar 2019 10:14:48 +0100
-Message-Id: <20190307091514.2489338-1-arnd@arndb.de>
+        Mikael Pettersson <mikpe@it.uu.se>,
+        Mikael Pettersson <mikpelinux@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
+Date:   Thu,  7 Mar 2019 10:14:49 +0100
+Message-Id: <20190307091514.2489338-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190307091514.2489338-1-arnd@arndb.de>
+References: <20190307091514.2489338-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:S3kUtMzoNI8KlQ2wKB+ejkwBPfOfIgqsOL/AUMi0Cb+3hosjQHE
- vtgKLV6Ss6vzmeqtYoaAXMilaBkzsri1RGXH5CGNpXl2PtoT/xbylPuhxbfiVT6P5k0yQGi
- ckcewuAugshOAWkiBb1xkm8/ohk0wZotaZqX2VPU0TjcKvX1KcMd9onAwIOXXYdAL/t+E0Y
- P6pOctJCZ+sWe28t7YT2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mcwu7Q9Iyxs=:LmRcAUw+K9SxQVksjd8NUm
- Le0p9KwIkdAGTwiV+h9k3ObOg/tyurz2w+wSt9FkYYKhyxklQvPkz5DUnBFuNUP+sdbnmDAzW
- A2dB/dhghmACaxbWgoPARsSg1AI7YRzHLhFgyDcMtyRDR+FFp5SmAkUS0RduZK8Ny1DZcZOai
- +u+NrFulVIYOJtr+9fHp6pF1p3AYhiKrIM4n+n4DYvvSlDnGhPGgmVYxtkAfYCCIxabwfg6yk
- w/z+hOLE0g94gQRHbv9ZrO8RRxEADgN0TgVedrF0aaECokFiYKZgee3JFL3mkmjsLQctvG2tR
- 8bIwnqIYrpI5oW5++OK9qx7klx8szfQ4RAhdwO+RZGXDVxvsYsfUOyD682399ibKegDlLOvSU
- LRAJRWgs5mqbKWP5wKShrJfPX20CSALs/LGwoJdu3fAv0l6VRFxLDoc7yLm/824sXbBNB2p1u
- 7BLUAvCuazFxIxM021/Z7u7VqcZWtY0N4Iog+k7saV9k1rZ6gXjrthGjIP2tA+4GBPtAvgWvP
- Z6/uDAZjqCfu2YPv4KnRA6uDtLoaugvgVH3QC2mKf0fxvPX30QsIS50SCwEqVI3UuJGEk4haq
- M9PYCebeM72Wy0RFJLYv0Q0I3dppPfscgDdU76Hl8LYRgC8SfgxLjcE8yMHuQUhPQiKQJ2zOP
- zT03HV8SIa4opwW9msq9b1bZ7n94K6yMr+R/dlmcoXltKkUFRcm9/NeMTDdcb2dIqR4yNkd3g
- 0i5GTPB16FGCN9xNN7RBu2QSlkTqhTNdMqbcGg==
+X-Provags-ID: V03:K1:d8KGsnS5I5jJ69letBdYqJMsef6CKlINAH4fRowUoENhI3Wj5Oz
+ XQzXp+l7Zv0gYInCjyd3uARXmT6Dz0ERe80AM40RF0ipFK4jBAF+/1bOH+W/X9myqZpdQ3t
+ ovCX5yOkGgDRJJXGWQPdIFbRGyzhBmeHqo4vm0J8gnT8G9QvNHxUlwgrQOtlqkJBtVijf+G
+ nQisNIXf/OnQwkH/rnp4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zcJO1LULneg=:37AzrR9WoMpjoMCrxyWa08
+ zJKL7raTOs/Vaht+hOTaY87qL5QvUbW9tib1GjK8WfUAo76qh5rrvvS6/yDoqF8JBNIeXUUgv
+ MBmIyq2oNNJN8oBI7iy7ExGk+PLZy+NDs7BQFMbkKMJp/lTulMXKMfhOhuzkjiuiRCI6kAFHF
+ SGUZQyeAkzf/Ql2sif15cIsEBSRDo9rX1CiS3G9fsPLgpymnBkMrNkrBeT45OTH8eD04sVLmT
+ LNFfYhveQ+9mSpptIn+knDxhK7MDzdmBX7bOV4mOzazZOoOZthl3YWz2MU/SodJdLxpkl716I
+ Fo/fPIFQWWYRu8Qn/NJfi7qHG8c7ecavvyqtiErHv5bz/y5Mkmy/WILVFlf2y4ljFwXCD2cFV
+ 2QX3ZZlG8MZLcnGzahakZildLgjRlfWpRTj6V00nN7p7f6dxZEd0NHffpZ8DUAkUHncuUblWT
+ 92YtibFG6rX3hiDUpiNln0cllH9z3Q4ydka5d3jSPSgfNyJZyAnEHXzT/jNWhTmxaU4gtxt19
+ wOj5NWEnb0/q5NdVpA7LYh7M67v9bZdGrbAqli8bEvoqhSIeuVyzd6DOmRp9U7QHn+Url8jIL
+ 47asrP6AHLijJor9S59D/l+5nRlmMa7ngCCtb0flx4p8SSjzj6hj7QPRkvH3WjqM62efDNkzY
+ 5bspvKYd3rE7Z0Q6ZyyzHoEs37bXqZbQ2bdSzIr74RwwYwO7PuCyUQXspmqwFxv3tnVko9Cfn
+ dqFQgE0nNcLniH3o3yaRXtVqcwz9Ehlsk84RpA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit ARM, I got a link failure in futex_init() when building
-with clang in some random configurations:
+Passing registers containing zero as both the address (NULL pointer)
+and data into cmpxchg_futex_value_locked() leads clang to assign
+the same register for both inputs on ARM, which triggers a warning
+explaining that this instruction has unpredictable behavior on ARMv5.
 
-kernel/futex.o:(.text.fixup+0x5c): relocation truncated to fit: R_ARM_JUMP24 against `.init.text'
+/tmp/futex-7e740e.s: Assembler messages:
+/tmp/futex-7e740e.s:12713: Warning: source register same as write-back base
 
-As far as I can tell, the problem is that a branch is over 16MB
-apart in those configurations, but only if it branches back to
-the init text.
+This patch was suggested by Mikael Pettersson back in 2011 (!) with gcc-4.4,
+as Mikael wrote:
+ "One way of fixing this is to make uaddr an input/output register, since
+ "that prevents it from overlapping any other input or output."
 
-Marking the futex_detect_cmpxchg() function as noinline and
-not __init avoids the problem for me.
+but then withdrawn as the warning was determined to be harmless, and it
+apparently never showed up again with later gcc versions.
 
+Now the same problem is back when compiling with clang, and we are trying
+to get clang to build the kernel without warnings, as gcc normally does.
+
+Cc: Mikael Pettersson <mikpe@it.uu.se>
+Cc: Mikael Pettersson <mikpelinux@gmail.com>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Link: https://lore.kernel.org/linux-arm-kernel/20009.45690.158286.161591@pilspetsen.it.uu.se/
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/futex.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/futex.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index c3b73b0311bc..dda77ed9f445 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -3849,7 +3849,7 @@ SYSCALL_DEFINE6(futex_time32, u32 __user *, uaddr, int, op, u32, val,
- }
- #endif /* CONFIG_COMPAT_32BIT_TIME */
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index 0a46676b4245..79790912974e 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -110,13 +110,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 	preempt_disable();
+ 	__ua_flags = uaccess_save_and_enable();
+ 	__asm__ __volatile__("@futex_atomic_cmpxchg_inatomic\n"
+-	"1:	" TUSER(ldr) "	%1, [%4]\n"
+-	"	teq	%1, %2\n"
++	"1:	" TUSER(ldr) "	%1, [%2]\n"
++	"	teq	%1, %3\n"
+ 	"	it	eq	@ explicit IT needed for the 2b label\n"
+-	"2:	" TUSER(streq) "	%3, [%4]\n"
++	"2:	" TUSER(streq) "	%4, [%2]\n"
+ 	__futex_atomic_ex_table("%5")
+-	: "+r" (ret), "=&r" (val)
+-	: "r" (oldval), "r" (newval), "r" (uaddr), "Ir" (-EFAULT)
++	: "+&r" (ret), "=&r" (val), "+&r" (uaddr)
++	: "r" (oldval), "r" (newval), "Ir" (-EFAULT)
+ 	: "cc", "memory");
+ 	uaccess_restore(__ua_flags);
  
--static void __init futex_detect_cmpxchg(void)
-+static noinline void futex_detect_cmpxchg(void)
- {
- #ifndef CONFIG_HAVE_FUTEX_CMPXCHG
- 	u32 curval;
 -- 
 2.20.0
 
