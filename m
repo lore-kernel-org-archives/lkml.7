@@ -2,95 +2,129 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08088C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54CFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8582064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CF42064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="YIVLXneV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4YUwzGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfCGQ5r (ORCPT
+        id S1726431AbfCGQ57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:57:47 -0500
-Received: from one.firstfloor.org ([193.170.194.197]:50030 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbfCGQ5r (ORCPT
+        Thu, 7 Mar 2019 11:57:59 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38576 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfCGQ57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:57:47 -0500
-Received: by one.firstfloor.org (Postfix, from userid 503)
-        id 8413A86862; Thu,  7 Mar 2019 17:57:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1551977865;
-        bh=GVRsn4ZDA8IKDSiK9W8F4bMbrba09R26fN8V7lTmIDs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YIVLXneVYxTIFZbmY+muGCDElCBnUn9B2F9O89RtWsgq/NoqMSpe5HpBkTyOdRLiK
-         7npt+mbcGT5ySWj1fbNEqzOXMSHuOupvkpXOH75cnuuMW2omSZkmpmKyNPQeWqZ03+
-         lTXMA/c1v4m3gbWmhsVL8aGNdJHKApUYYTEDNqpY=
-Date:   Thu, 7 Mar 2019 08:57:45 -0800
-From:   Andi Kleen <andi@firstfloor.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: Support sample context in perf report
-Message-ID: <20190307165745.wtrhawl3mh2glyxu@two.firstfloor.org>
-References: <20190305144758.12397-1-andi@firstfloor.org>
- <20190307105743.GA8979@krava>
+        Thu, 7 Mar 2019 11:57:59 -0500
+Received: by mail-ed1-f68.google.com with SMTP id h58so14066448edb.5;
+        Thu, 07 Mar 2019 08:57:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NpQjR7YIc0TU364fqOl5eewsZhUQFvSsNWi6Lt8cpao=;
+        b=U4YUwzGJ4l9PdJK9K2320/2lVWPFPiBzeQfbImX6PiiDrw6eqhRNITSZW46Lwsbg1b
+         fI6KRTUZFOZw7zAF7tfXM1mm+oLnht0iYlkiLWESWaWCOr6FjlLbi6X2udivzh3mn9zW
+         YFBZ5hGLk1kBQRx8o7BHZv8vd+12Ia/o5CgMYNVco82cfEPs6S9oL2lHKme4Lu1aTDim
+         cLvs+2TzPEYOvWrkWALjIHRhHIWpKz1wxzoC2pRMs/ECBGPjRPDcel198XtGD7nTSTzj
+         5sK8SNBqqvjly+9C51X4ss7Vm7ScCDk3WqV72aH3wS+5w6W1WDfr0fpTsD5dqL2667Ga
+         CMbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NpQjR7YIc0TU364fqOl5eewsZhUQFvSsNWi6Lt8cpao=;
+        b=f5D5Ul5c+eJKWzfqyRBduPBRMpTTCHfwpO4fOxuJnXFl/W4INRJEmPz0EKQvx4FUq2
+         mRFbvp5pt0WFV/PJuEP2vIm3GQzVhcuqMp0HZyNnrcg4pVKT8lLGQkcLQ76VmFH6nKbd
+         aLcPvf9jfjP0hsU0WCNDrOpVb1CWRBSWurqmVU4in8IKa2wGZxHetWST7ZJAJuzKknC4
+         BMDzF0GEcrmysk161pwIEtWI4v+P+jGHWgFz+goaUJue6TM3wHW12wXICegffiy1su+N
+         1g4UBjeeBoiLsduuGNoQVU3xpBHKlyM7Xfdhd+LCueyywiMkEtVPZtdCUu9vqlDmDuWY
+         Zt+A==
+X-Gm-Message-State: APjAAAXx6a1yO3PL6EfAEZY0yOwnSER46512IT0JR4SWZmLNoAaWO/tc
+        brqDFZyb4TxbKXTLqRZ0+wk=
+X-Google-Smtp-Source: APXvYqwA3hDfWJwEek/o+IOMnpLpL4g/qABJlftAxfTERzaw2OFSOXfs1vhp33Hxmm0ANWErO93dEg==
+X-Received: by 2002:a50:9125:: with SMTP id e34mr28328340eda.183.1551977876983;
+        Thu, 07 Mar 2019 08:57:56 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id y17sm987695ejj.10.2019.03.07.08.57.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 08:57:55 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] net: atm: Use IS_ENABLED in atm_dev_ioctl
+Date:   Thu,  7 Mar 2019 09:57:42 -0700
+Message-Id: <20190307165741.19870-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307105743.GA8979@krava>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:57:43AM +0100, Jiri Olsa wrote:
-> On Tue, Mar 05, 2019 at 06:47:43AM -0800, Andi Kleen wrote:
-> > [Changes: 
-> > v4:
-> > Address review comments. 
-> > Fix --cpu filtering.
-> > Fix a sampling bug.
-> > Add support for configuring custom script menu entries in perfconfig.
-> > Fix display of more samples than fit on screen.
-> > Fix some buffer overruns in legacy code.
-> > Add more tips
-> 
-> hi,
-> getting gcc error on your branch, similar like last time:
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Okay I figured out now why I'm not seeing this. It's because my perf
-builds are with DEBUG=1, and Makefile.config has this insanity:
+net/atm/resources.c:256:6: warning: variable 'number' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+net/atm/resources.c:212:7: warning: variable 'iobuf_len' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
 
-ifeq ($(DEBUG),0)
-  ifeq ($(feature-fortify-source), 1)
-      CFLAGS += -D_FORTIFY_SOURCE=2
-  endif
-endif
+Clang won't realize that compat is 0 when CONFIG_COMPAT is not set until
+the constant folding stage, which happens after this semantic analysis.
+Use IS_ENABLED instead so that the zero is present at the semantic
+analysis stage, which eliminates this warning.
 
-Anyways the warnings are false positives because the strings can never
-be that big. In fact I think they're harmful because it discourages
-adding safety margins to stack buffers.
+Link: https://github.com/ClangBuiltLinux/linux/issues/386
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-Anyways you can use this patch as a workaround.
+I don't think this looks the greatest because of the IS_ENABLED + #ifdef
+but the only other solution I could think of looks way uglier to me:
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 364f5c577d00..3e795bd1279d 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2554,7 +2554,7 @@ do_run_script(struct hist_browser *browser __maybe_unused,
+https://gist.github.com/74650e9139f704a5435f82fc80d59969
+
+ net/atm/resources.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/net/atm/resources.c b/net/atm/resources.c
+index bada395ecdb1..3e9f6391319e 100644
+--- a/net/atm/resources.c
++++ b/net/atm/resources.c
+@@ -203,13 +203,9 @@ int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat)
+ 	int __user *sioc_len;
+ 	int __user *iobuf_len;
+ 
+-#ifndef CONFIG_COMPAT
+-	compat = 0; /* Just so the compiler _knows_ */
+-#endif
+-
+ 	switch (cmd) {
+ 	case ATM_GETNAMES:
+-		if (compat) {
++		if (IS_ENABLED(CONFIG_COMPAT) && compat) {
+ #ifdef CONFIG_COMPAT
+ 			struct compat_atm_iobuf __user *ciobuf = arg;
+ 			compat_uptr_t cbuf;
+@@ -253,7 +249,7 @@ int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat)
+ 		break;
  	}
  
- 	if (act->time) {
--		char start[64], end[64];
-+		char start[32], end[32];
- 		unsigned long starttime = act->time;
- 		unsigned long endtime = act->time + symbol_conf.time_quantum;
- 
+-	if (compat) {
++	if (IS_ENABLED(CONFIG_COMPAT) && compat) {
+ #ifdef CONFIG_COMPAT
+ 		struct compat_atmif_sioc __user *csioc = arg;
+ 		compat_uptr_t carg;
+-- 
+2.21.0
+
