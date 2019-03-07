@@ -2,195 +2,128 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8913C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256DCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60CA20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19B020851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wVnnyjyf"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eGmMPxZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfCGXH5 (ORCPT
+        id S1726323AbfCGXML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 18:07:57 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34182 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfCGXH4 (ORCPT
+        Thu, 7 Mar 2019 18:12:11 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40719 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726172AbfCGXML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 18:07:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y18so46289lfe.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 15:07:54 -0800 (PST)
+        Thu, 7 Mar 2019 18:12:11 -0500
+Received: by mail-qk1-f195.google.com with SMTP id h28so10135152qkk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 15:12:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EB7/0a2E9BzFbgGC/gbvxAFQ2SqMkQRXHWKhdlJRuc0=;
-        b=wVnnyjyf3seKBXPdSs0JsEKNgZfo+JmGUnFp/yh8H09TZtUda22ENwMsZKOQKIU+Vc
-         mCLBDdLER60GK6FZY03J7YM5wBNvKjQVxrYJbOVX/rpzOGB6rOPKxckKESiVumPqw5z9
-         FOoqT4jaOAm0y7QFum5SY5svRGYohIrQW6lrf0PKvwcmwrqHa/SAkhMUefMIqO6MaAiZ
-         pwokzCpAP0OLKrY8IJHViPlrnrbqT1cBSW9/hRV8phdDrBhSjM4B+IV2FaM4UBrj+x30
-         3Nx0xwlMFL871eRe8XuxH4w/BfHDSaP8zIMTqFwznxZJu54ka5kytuDAEazNNI6ue/Ny
-         My4w==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M3bALdIkkTXR5Cl9wrkQz8PrR1SUO0MiBjS3cu5nIVU=;
+        b=eGmMPxZPHYxgib0WVlf0KAJZUvJqIszcB29lMR3bfoCY4qGVJz61Qh7LzWV8NUYgDQ
+         g/+xaKYjl90EiSgfmwzNZEuiGh+Xpdp9q8dZf1owvGS91v+ac4/YDN4Hk2ya0UUAjXeW
+         3O6O9EcZVmW5I1WQFqEBiDVE3BNOMAp0UHwUo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EB7/0a2E9BzFbgGC/gbvxAFQ2SqMkQRXHWKhdlJRuc0=;
-        b=JRyBOB9s7wPk5ZdjpEB+5ahLeJe54jqu1B5otmAJODuxPdBXXRhffo+mOXpXYGh2jS
-         MCLutbUqFYbOakqIzRwBOA8fPr/WUX9r73lJhoxXjiIN5cePz8wt42RVB0xyvLdjIl/Q
-         GytIW1aHXgoPIlT/dJo/28Q9qhU1G4hEx+VVeIzdXP+KJ8/1Yf72m8jIdydQMLywVg1r
-         Rptj/1Pb9OFsopjNbt4dK11G566nk1YMv/SjulGCzURUu4PviS76GG3BKkgQxoU40MqS
-         MXbMSJyB+sMrm9Ici4DkC4XOOfOWUOvpwtIkajmOYpEWy+4md80hIThXAoGLdTIhC85M
-         vXUg==
-X-Gm-Message-State: APjAAAX7uuiTHwLZOYSWreE2n/LP//dN1B8YY6jsF4MKNEU9sO/Fajtq
-        GnP8NuVjaJ4Lt+wt7CBE6SAu+ssJorNshB+H9SzuaQ==
-X-Google-Smtp-Source: APXvYqy2+QJC9qQVSHFr9SqejPUmdUXYPF+gfpPgNnHEcOGLaWDbCZFlRwqZGMskg4u6kAVU7tWj+Nzqdxk4F8tkBNM=
-X-Received: by 2002:ac2:52ae:: with SMTP id r14mr8976981lfm.66.1552000073495;
- Thu, 07 Mar 2019 15:07:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M3bALdIkkTXR5Cl9wrkQz8PrR1SUO0MiBjS3cu5nIVU=;
+        b=kpidGNeX1jFEqw27dW80x/Ge7NDQhID8heoPyANuq7VU9Y1FjRNMVXdjz8ZwtmSBmx
+         suKX4+/10TXJ4ok6RkLq/Zu5UmvgfBPB2Rso5JqmuxY431vXZGnw15R77Jg/y0KYdJCc
+         Uy8JSCGF3v7RGk6uGHQ5ueL6NtV/Nnde+/G/XtOqoDwDL+YxY3dE2mbnZzeGxUWAM3GS
+         WdIRg/T3FYzMz4CoBXBGiVk6c2JeBffxrbyG/HFGpdyV0aJyV/0ozPrmhJA8zsMLOzeC
+         wKXw4KqVVDvrNbgAu0P4lz16t6kfLu0tSW4oQ7PxNw1WqfUCg1WS4WtcIEp/cUXvm99H
+         XCKQ==
+X-Gm-Message-State: APjAAAUJ8ysB4qCJwfn7ObIH+YzL4+/UKPhArspAw95aDzR26Y6kSdx2
+        K3lk64weflPUK+VPR6q+v/fqXg==
+X-Google-Smtp-Source: APXvYqxWVObFtxc8k9qGwgpv8swA9U5M/tTW2j1JQwAybhEyWe7eCOqUCuBW7F0561tKaDSiK3xe6g==
+X-Received: by 2002:a37:6d41:: with SMTP id i62mr241170qkc.209.1552000329639;
+        Thu, 07 Mar 2019 15:12:09 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id b66sm3600500qkj.57.2019.03.07.15.12.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 15:12:08 -0800 (PST)
+Date:   Thu, 7 Mar 2019 18:12:07 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Daniel Colascione <dancol@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atish patra <atishp04@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kara <jack@suse.cz>, Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        yhs@fb.com
+Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
+ kernel
+Message-ID: <20190307231207.GA51897@google.com>
+References: <20190120155838.GA23827@google.com>
+ <20190306230944.GB7915@amd>
+ <CAKOZuetOePf89cXRkvmWeGnvG7zYN=SW1yyrZibuyOqZQFTGkg@mail.gmail.com>
+ <754146f0-8b57-8644-81c1-528b5ca7dba1@zytor.com>
+ <CAKOZuesjYZ2EH=BHBAJAFFaTOHjWU7BELJUV3QC9cjXVB2HhUw@mail.gmail.com>
+ <0c46ab5f-8bd6-6916-fc4a-b6f00d456011@metux.net>
+ <CAKOZuevksKGAPif_pUYVzFpbuBCxOZ5WzT6ukLCYm4TzyLUTMw@mail.gmail.com>
+ <5ebec282-57b0-6ebe-0876-ce0dd7b0c11c@metux.net>
+ <20190307205505.GB30028@kroah.com>
+ <5e558126-9038-1ca5-4519-7b5864ca9fa1@metux.net>
 MIME-Version: 1.0
-References: <20180702190154.6864-1-srinivas.pandruvada@linux.intel.com>
- <9712316ab62bef25953c523bce02e260a9ea40fe.camel@linux.intel.com>
- <20180730152256.GF1206094@devbig004.ftw2.facebook.com> <bf4b860c-6f82-4a3f-8b81-5f5c93f4389e@redhat.com>
- <20180730173345.GI1206094@devbig004.ftw2.facebook.com> <CAMHSBOVOK15nchZRFGTZUu8KSbBiK3SFzgW1amLjXb1iv_gJ5g@mail.gmail.com>
- <54d2b8e6-332b-117a-b982-77a535152246@redhat.com>
-In-Reply-To: <54d2b8e6-332b-117a-b982-77a535152246@redhat.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 7 Mar 2019 15:07:16 -0800
-Message-ID: <CACK8Z6GzOHJbh-M=0AxNbBoi3TqVehrs5xYsi2cUhW_dxz6vxg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] ata: libahci: devslp fixes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, alan.cox@intel.com,
-        "IDE/ATA development list" <linux-ide@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e558126-9038-1ca5-4519-7b5864ca9fa1@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Enrico,
 
-On Thu, Mar 7, 2019 at 12:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 07-03-19 21:27, Gwendal Grignou wrote:
-> > Srinivas,
-> >
-> > I am looking at problem on a laptop machine that suspends to S01x, but
-> > link_management is set to max_performance, because the machine is
-> > connected to a charger.
->
-> What is setting it to max_performance when charging?  I assume chrome-os is
-> running something in userspace to do this (like TLP, but I guess you are not
-> using TLP) ?
+On Thu, Mar 07, 2019 at 11:11:22PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 07.03.19 21:55, Greg KH wrote:
+> 
+> > Ick, no, no more squashfs please, let's just kill that mess once and for
+> > all :)
+> 
+> okay, then: s/squashfs/whatever_fs_image_or_archive_you_like/;
+> 
+> > Again, putting this in a simple compressed tar image allows anyone to do
+> > whatever they need to with this.  If they want a full filesystem,
+> > uncompress it and use it there.  If they just want it in-memory where
+> > they can uncompress it and then discard it, that works too.
+> 
+> And let me stress the point: doesn't need any kernel changes at all,
+> when it's just a file in the same place where the .ko's live.
 
-Yes, we have a udev script that does this.
+Yes, but you're missing the point that some people would also opt to build it
+into the kernel during their development/debugging (Config=y). For such
+folks, they don't want to update the FS with anything during debug runs
+either. Your "whole same place where the .ko lives" doesn't address Daniel's
+usecase. You may say "initrd", but this is a much cleaner solution to that
+IMO. There is no initrd needed and the path to the header files will be at a
+standard location that is already pre-decided by the kernel.
 
->
-> Have you run benchmarks with max_performance vs the default?
-> I seriously doubt there will be a significant difference, esp.
-> with a chrome-os style workload.
->
-> > Given DVLSP must be set before the laptop suspends ["""One of the
-> > requirement for modern x86 system to enter lowest power mode  (SLP_S0)
-> > is SATA IP block to be off."""], the machine never reaches S01x.
-> > Does it make sense to change the target_lpm_policy at suspend
-> > (ata_port_suspend()) to min_power and bring it back to the original
-> > value on resume?
->
-> If userspace messes with the setting, then userspace should also
-> put it back before suspending...
->
-> The upstream kernel's default behavior is to have the target level set
-> to a fixed level independent of the charging state. Could it be this
-> fixed level is actually max-performance ? If that is the default the
-> kernel comes up with, that would indicate a kernel bug.
+As Greg said, you are welcome to keep it disabled for yourself if you don't
+want it. This doesn't affect anyone else who doesn't use it.
 
-Side note: max-performance indeed can be the default forced by the
-kernel for some (broken) SATA devices:
 
-        if (dev->horkage & ATA_HORKAGE_NOLPM) {
-                ata_dev_warn(dev, "LPM support broken, forcing max_power\n");
-                dev->link->ap->target_lpm_policy = ATA_LPM_MAX_POWER;
-        }
-
-So definitely these systems won't be able to go into S0ix today.
-
-But I think the main idea that we are asking is:
-
-1) Yes, we acknowledge that the userspace has set it max-performance.
-
-2) However, given that the kernel already knows that:
-       - while in suspend, there is no real value in retaining the
-max-performance.
-       - On the contrary, we know system will fail to go into lower
-power mode because of max-suspend.
-
-3) Does it not make sense to use this knowledge and switch to
-min_power when we are actually going to suspend (even if user
-specified max-performance), and restore max-performance on resume?
-
-Or may be there are issues that this causes, that we're not aware of?
-Can you please provide us some pointers?
-
-Thanks,
-
-Rajat
-
->
-> Regards,
->
-> Hans
->
->
->
-> >
-> > Gwendal.
-> >
-> >
-> > On Mon, Jul 30, 2018 at 10:33 AM Tejun Heo <tj@kernel.org> wrote:
-> >>
-> >> On Mon, Jul 30, 2018 at 05:26:45PM +0200, Hans de Goede wrote:
-> >>> Hi,
-> >>>
-> >>> On 30-07-18 17:22, Tejun Heo wrote:
-> >>>> On Mon, Jul 30, 2018 at 08:15:47AM -0700, Srinivas Pandruvada wrote:
-> >>>>> Hi Tejan,
-> >>>>>
-> >>>>> On Mon, 2018-07-02 at 12:01 -0700, Srinivas Pandruvada wrote:
-> >>>>>> Some minor fixes to be able to correctly set devslp register
-> >>>>>> to optimize power.
-> >>>>>>
-> >>>>>> Srinivas Pandruvada (2):
-> >>>>>>    ata: libahci: Correct setting of DEVSLP register
-> >>>>>>    ata: libahci: Allow reconfigure of DEVSLP register
-> >>>>>>
-> >>>>> Are you applying this series?
-> >>>>
-> >>>> I was waiting for Hans's reviews.  Hans, what do you think?
-> >>>
-> >>> Ah I missed that this was another series. With the caveat that
-> >>> I do not really know that much about devslp, both patches
-> >>> seem sensible to me, so both are:
-> >>>
-> >>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >>
-> >> Applied 1-2 to libata/for-4.19.
-> >>
-> >> Thanks.
-> >>
-> >> --
-> >> tejun
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe linux-ide" in
-> >> the body of a message to majordomo@vger.kernel.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
