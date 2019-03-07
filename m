@@ -2,182 +2,337 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9E3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F159EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1C620835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC7820835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Y9Aqhn0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfCGE6I (ORCPT
+        id S1726197AbfCGFAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 23:58:08 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:8522 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726127AbfCGE6I (ORCPT
+        Thu, 7 Mar 2019 00:00:10 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:46146 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfCGFAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 23:58:08 -0500
-X-UUID: 53ec318dcbf743ab9b199bfe5cd5c022-20190307
-X-UUID: 53ec318dcbf743ab9b199bfe5cd5c022-20190307
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 828892857; Thu, 07 Mar 2019 12:57:59 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
- 2019 12:57:58 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Mar 2019 12:57:57 +0800
-Message-ID: <1551934677.30363.55.camel@mhfsdcap03>
-Subject: Re: [PATCH v5 3/5] i2c: mediatek: Add arb clock in i2c driver
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Leilk Liu <leilk.liu@mediatek.com>,
-        <xinping.qian@mediatek.com>, <liguo.zhang@mediatek.com>,
-        Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Mar 2019 12:57:57 +0800
-In-Reply-To: <CANMq1KBt7LeR=Od2LmswUSZMV_XZE+zn2LbnqU+SzywKqmDP7w@mail.gmail.com>
-References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
-         <1551186660-16902-4-git-send-email-qii.wang@mediatek.com>
-         <CANMq1KArROL7F+KDWktg6vzZyXifZrKCO8khf_QGRoiLkfDegw@mail.gmail.com>
-         <CANMq1KBt7LeR=Od2LmswUSZMV_XZE+zn2LbnqU+SzywKqmDP7w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Mar 2019 00:00:09 -0500
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x274xmsP003673;
+        Thu, 7 Mar 2019 13:59:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x274xmsP003673
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1551934789;
+        bh=EhslO5mW2tJvOiZPDEwlUauDtM5OB51SHkG98AZ1Ay4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y9Aqhn0kQESTTEMWphSBeR0j70mvISayDrniv1RfGZvbIA7YveCIaerXT1H2WtXnq
+         6+PICfsyBdid7YRvrKFkk/6mhDixwQIw0Tcj1t5Z64tiITDNBUCK8L7fWW9Up3T1pc
+         zcCiNnJRqzjhEM5WVOzuYNpLkMahxAPuEDR7DuObaR5TzVlgrgzPl0DRKcF5pPmVW/
+         666amDMmrnSlYEbUgcF2KBmK1uvLhBeDclfhs07v0ovUqoaR+ooFx8rXNwOBw4z9Ri
+         Q6eaZsuQ/0ZxmU5rmVoAnuUPM2hdzPst0t4ECOAvNpFIDvM77CYr0kiBeoCxjw25r6
+         /1/d6tckRhVmA==
+X-Nifty-SrcIP: [209.85.221.172]
+Received: by mail-vk1-f172.google.com with SMTP id v131so3410173vkd.3;
+        Wed, 06 Mar 2019 20:59:49 -0800 (PST)
+X-Gm-Message-State: APjAAAWMIAdbU1NUJZhc/efY+DhffFuWsCOX9guJ3OrhySniSRyonwhA
+        E6vUpNX421uRpacE1tgRYHQyNMeMvcf+4kl3erg=
+X-Google-Smtp-Source: APXvYqwgVadxJTWQr9yPUtRUxPsGO1lU+FNu08vSz8dcwdIqlMA7cTm7tG99M0hhZBp0tIEQLRVSdCIOKi4UPodoVcY=
+X-Received: by 2002:a1f:9350:: with SMTP id v77mr5008152vkd.84.1551934788070;
+ Wed, 06 Mar 2019 20:59:48 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <201903030526.3AuYFiuN%fengguang.wu@intel.com> <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
+ <CAK7LNARGQE9y6hr7ZoTbn5-GkPBN2Gk-4=3=Cfnr7Oy-+q69kg@mail.gmail.com> <20190306174904.GA34256@google.com>
+In-Reply-To: <20190306174904.GA34256@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 7 Mar 2019 13:59:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARe2AT+LNGh6Xqvd=iW2HmdMcmH-rJqzvPw0Fnumu88SA@mail.gmail.com>
+Message-ID: <CAK7LNARe2AT+LNGh6Xqvd=iW2HmdMcmH-rJqzvPw0Fnumu88SA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-06 at 18:49 +0800, Nicolas Boichat wrote:
-> One thing I missed from Matthias' comment on v4:
-> https://patchwork.kernel.org/patch/10822083/
-> 
-> On Wed, Mar 6, 2019 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+On Thu, Mar 7, 2019 at 5:13 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> Hi Masahiro,
+> Thanks for review, my replies are inline:
+>
+> On Wed, Mar 06, 2019 at 09:26:14PM +0900, Masahiro Yamada wrote:
+> > On Mon, Mar 4, 2019 at 1:15 AM Joel Fernandes <joelaf@google.com> wrote:
+> > >
+> > > This report is for an older version of the patch so ignore it. The
+> > > issue is already resolved.
+> > >
+> > > On Sat, Mar 2, 2019 at 2:00 PM kbuild test robot <lkp@intel.com> wrote:
+> > > >
+> > > > Hi Joel,
+> > > >
+> > > > Thank you for the patch! Yet something to improve:
+> > > >
+> > > > [auto build test ERROR on linus/master]
+> > > > [also build test ERROR on v5.0-rc8]
+> > > > [cannot apply to next-20190301]
+> > > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> > > >
+> > > > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/Provide-in-kernel-headers-for-making-it-easy-to-extend-the-kernel/20190303-014850
+> > > > config: sh-allmodconfig (attached as .config)
+> > > > compiler: sh4-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
+> > > > reproduce:
+> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > > >         chmod +x ~/bin/make.cross
+> > > >         # save the attached .config to linux build tree
+> > > >         GCC_VERSION=8.2.0 make.cross ARCH=sh
+> > > >
+> > > > All errors (new ones prefixed by >>):
+> > > >
+> > > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
+> > > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
+> > > >
+> > > > ---
+> > > > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> > > >
+> > > > --
+> > > > You received this message because you are subscribed to the Google Groups "kernel-team" group.
+> > > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
 > >
-> > On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
-> > >
-> > > When two i2c controllers are internally connected to the same
-> > > GPIO pins, the arb clock is needed to ensure that the waveforms
-> > > do not interfere with each other.
-> > >
-> > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 > >
-> > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 > >
-> > > ---
-> > >  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
-> > >  1 file changed, 22 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > > index 428ac99..14d6b38 100644
-> > > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > > @@ -35,6 +35,7 @@
-> > >  #include <linux/slab.h>
-> > >
-> > >  #define I2C_RS_TRANSFER                        (1 << 4)
-> > > +#define I2C_ARB_LOST                   (1 << 3)
-> > >  #define I2C_HS_NACKERR                 (1 << 2)
-> > >  #define I2C_ACKERR                     (1 << 1)
-> > >  #define I2C_TRANSAC_COMP               (1 << 0)
-> > > @@ -181,6 +182,7 @@ struct mtk_i2c {
-> > >         struct clk *clk_main;           /* main clock for i2c bus */
-> > >         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
-> > >         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC */
-> > > +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
-> > >         bool have_pmic;                 /* can use i2c pins from PMIC */
-> > >         bool use_push_pull;             /* IO config push-pull mode */
-> > >
-> > > @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
-> > >                 if (ret)
-> > >                         goto err_pmic;
-> > >         }
-> > > +
-> > > +       if (i2c->clk_arb) {
-> > > +               ret = clk_prepare_enable(i2c->clk_arb);
-> > > +               if (ret)
-> > > +                       goto err_arb;
-> > > +       }
-> > > +
-> > >         return 0;
-> > >
-> > > +err_arb:
-> > > +       if (i2c->have_pmic)
-> > > +               clk_disable_unprepare(i2c->clk_pmic);
-> > >  err_pmic:
-> > >         clk_disable_unprepare(i2c->clk_main);
-> > >  err_main:
-> > > @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
-> > >
-> > >  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
-> > >  {
-> > > +       if (i2c->clk_arb)
-> > > +               clk_disable_unprepare(i2c->clk_arb);
-> > > +
-> > >         if (i2c->have_pmic)
-> > >                 clk_disable_unprepare(i2c->clk_pmic);
-> > >
-> > > @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> > >
-> > >         /* Clear interrupt status */
-> > >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > > -              I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-> > > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-> 
-> Is it ok to set I2C_ARB_LOST on _all_ SoC that this driver supports?
-> If so, please at least say so in the commit message.
-> 
+> > Honestly speaking, I am worried about some flaws
+> > in this feature, but anyway I read your code.
+>
+> I am not sure what you mean by that :-(. All the previous series's comments
+> were addressed and it has been well tested by me and others. This looks quite
+> solid to me. Sorry it took so many revisions, this was not that easy to get right.
+>
+> > Here are just comments from the build system point of view
+> > in case something might be useful.
+> >
+> > Please feel free to adopt some of them if you think they are good.
+> >> [1]
+> >
+> > Please do not ignore kbuild test robot.
+> >
+> > It never makes such a mistake like
+> > replying to a new patch about the test result from old version.
+> >
+> > The reports are really addressing this version (v4).
+> >
+> > I see the error message even on x86.
+>
+> I did not mean to. By the way - the error does not cause any issues. It is
+> just find being noisy. You are right I missed this, and I will correct this
+> in v5. However, it does not cause any issues to the feature/functionality at all.
+>
+> > [2]
+> >
+> > The shell script keeps running
+> > even when an error occurs.
+> >
+> > If any line in a shell script fails,
+> > probably it went already wrong.
+> >
+> > I highly recommend to add 'set -e'
+> > at the very beginning of your shell script.
+> >
+> > It will propagate the error to Make.
+>
+> Ok I will consider making it -e. But please note that, the script itself does
+> not have any bugs.
 
-Yes, old and new SoC have the I2C_ARB_LOST bit, but there was no need
-for multi-master before, so we didn't set it up specifically, I have
-test the patch on the old SoCs. I will add a note in the commit message.
+Heh.
+I do not know why you are so confident with your code, though.
 
-> > >
-> > >         mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
-> > >
-> > >         /* Enable interrupt */
-> > >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > > -              I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> > > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> > >
-> > >         /* Set transfer and transaction len */
-> > >         if (i2c->op == I2C_MASTER_WRRD) {
-> > > @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> > >
-> > >         /* Clear interrupt mask */
-> > >         mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > > -              I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> > > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> > >
-> > >         if (i2c->op == I2C_MASTER_WR) {
-> > >                 dma_unmap_single(i2c->dev, wpaddr,
-> > > @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
-> > >                 return PTR_ERR(i2c->clk_dma);
-> > >         }
-> > >
-> > > +       i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
-> > > +       if (IS_ERR(i2c->clk_arb))
-> > > +               i2c->clk_arb = NULL;
-> > > +
-> > >         clk = i2c->clk_main;
-> > >         if (i2c->have_pmic) {
-> > >                 i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
-> > > --
-> > > 1.7.9.5
-> > >
+OK, let's say this script has no bug.
+
+But, the script may fail for a different reason.
+For example, what if cpio is not installed on the user's machine.
+
+In such a situation, this script will produce empty
+kernel/kheaders_data.tar.xz, but the build system
+will continue running, and succeed.
+
+Don't you think it will better to let the build immediately fail
+than letting the user debug a wrongly created image ?
 
 
+
+> When you say it this way, it looks a bit bad to the
+> onlooker as if there is bugs in the code, but there aren't any that I know
+> off. All the comments in this round of review from view are just cosmetic
+> changes.
+>
+> > [3]
+> >
+> > targets += kheaders_data.tar.xz
+> > targets += kheaders_data.h
+> > targets += kheaders.md5
+> >
+> > These three lines are unneeded because
+> > 'targets' is necessary just for if_changed or if_changed_rule.
+> >
+> > Instead, please add
+> >
+> > clean-files := kheaders_data.tar.xz kheaders_data.h kheaders.md5
+>
+> Ok.
+>
+> > [4]
+> >
+> > It is pointless to pass 'ikh_file_list'
+> > from Makefile to the shell script.
+> >
+> >
+> > You can directly describe the following in gen_ikh_data.sh
+> >
+> > You do not need to use sed.
+> >
+> >
+> > src_file_list="
+> > include/
+> > arch/$SRCARCH/Makefile
+> > arch/$SRCARCH/include/
+> > arch/$SRCARCH/kernel/module.lds
+> > scripts/
+> > Makefile
+> > "
+> >
+> > obj_file_list="
+> > scripts/
+> > include/
+> > arch/$SRCARCH/include/
+> > "
+>
+> Honestly, I prefer to keep it in Makefile.
+>
+> > if grep -q "^CONFIG_STACK_VALIDATION=y" $KCONFIG_CONFIG; then
+> >         obj_file_list="$obj_file_list tools/objtool/objtool"
+> > fi
+> >
+> >
+> >
+> > Be careful about module.lds
+> > so that it will work for all architectures.
+>
+> Yes.
+>
+> > [5]
+> > strip-comments.pl is short enough,
+> > and I do not assume any other user.
+> >
+> >
+> > IMHO, it would be cleaner to embed the one-liner perl
+> > into the shell script, for example, like follows:
+> >
+> > find  $cpio_dir -type f -print0 |
+> >  xargs -0 -P8 -n1 perl -pi -e 'BEGIN {undef $/;}; s/\/\*((?!SPDX).)*?\*\///smg;'
+>
+> This does not work. I already tried it. But I guess I could generate the
+> script on the fly.
+
+
+I tested my code, and it worked for me.
+
+perl -e <command_line>
+
+is useful to run short code directly.
+
+I do not know why you say it does not work.
+
+
+
+Masahiro
+
+
+> > [6]
+> > It might be better to move
+> > scripts/gen_ikh_data.sh to kernel/gen_ikh_data.sh
+> >
+> > It will make this feature self-contained in kernel/.
+> > And (more importantly to me), it would reduce my maintenance field.
+>
+> Sure.
+>
+> > [7]
+> > I do not understand for what 'tarfile_md5' is used.
+> > Is it necessary?
+>
+> It is just precaution, incase tar got corrupted and needs to be regenerated.
+>
+> > [8]
+> > Is it more efficient to pipe the header files
+> > to perl script like this?
+> >
+> >
+> >  cat (header) | perl 'do something' > (tmp directory)
+>
+> I don't think so.
+>
+> > [9]
+> >
+> > I'd prefer avoiding 'pushd && popd' if possible.
+> >
+> > Hint: Kbuild already runs at the top directory
+> > of objtree.
+> >
+> >
+> > It is OK if the change would mess up the script.
+>
+> This is needed to make out of tree builds work.
+>
+> > [10]
+> >
+> > You can embed a binary directly into C file
+> > without producing a giant header file.
+> >
+> > I refactored kernel/configs.c
+> > https://lore.kernel.org/patchwork/patch/1042013/
+> >
+> > Be careful; my patch has not been merged yet into the mainline.
+> >
+> > It has been a while in linux-next,
+> > and I have not received any problem report.
+> >
+> > So, I am guessing it will probably be merged
+> > in the current MW.
+>
+> Ok I will consider doing this.
+>
+> Thanks for the review!
+>
+>  - Joel
+>
