@@ -2,88 +2,133 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F56C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C76C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B8F20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAF820835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MyY/T+4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfCGKNd (ORCPT
+        id S1726556AbfCGKNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:13:33 -0500
-Received: from sauhun.de ([88.99.104.3]:50932 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfCGKNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:13:31 -0500
-Received: from localhost (p54B334C5.dip0.t-ipconnect.de [84.179.52.197])
-        by pokefinder.org (Postfix) with ESMTPSA id 1F8F12E3551;
-        Thu,  7 Mar 2019 11:13:28 +0100 (CET)
-Date:   Thu, 7 Mar 2019 11:13:27 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: davinci: remove extraneous __init annotation
-Message-ID: <20190307101327.hs3evq4hv6i4bdvu@katana>
-References: <20190307101024.594587-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 05:13:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34631 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfCGKNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 05:13:24 -0500
+Received: by mail-wm1-f68.google.com with SMTP id o10so6364248wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 02:13:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FPxNdvt+kGcCG8uzNQ9lroy0iRhdBt0KuB6zFefUSXk=;
+        b=MyY/T+4heOH9NyLJAPUtf+h+tOOTQ8w5lyCiHswAOkciuxnZZ6cy4xY5fRJAIrbjih
+         Xp54rf/2Zv++De+fDp4m9fGyqICPYROXsUdk/YZoseajrB1xo4P2YMJtPYvsdF4F2Ui2
+         39pm5ovfhNJokRMnByEP0I1o5wWOt8a2SRShhX7x29DT9G/5FZucynJqqJA+IbbMSxmJ
+         HWljc38inYK6/Bm0k1Ig0UIBE0G48KLlHPWINZJS0p5Dbl59bHDsCQHfQblTwclFU6tJ
+         Gjq6MplvHraf/q+8pEIAE4kMDPXOENrR85NTf7T7mAu8I/z9Dr8WcKSr1b8liB6QzeZR
+         Twxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FPxNdvt+kGcCG8uzNQ9lroy0iRhdBt0KuB6zFefUSXk=;
+        b=ZmEH10zK9bk36vaRrsHXvcKkgKgE/IwtXIsq0eb/PDYo/xdD9wgP+58OKZItJmG2ez
+         aM7XMWYPB0EN5kVnQ7f9RH4suGnsx25b2898HXApNMDzA4IIkEx+++AJipJOAjZlNCyY
+         b7XZPmbylC9Jc3XUhD/mDhfqgwHVit8LcaV0Y8zFN0ZzcRXgaV1KUORULnqdcK/bLNCM
+         NGVc7rZtQ35wmx7bveVGoNM1hrlCE0ku46DrL3hwtmMcol5ZVXhnKJUVf7zxb0FoSglx
+         ss8qd3wH4tbQhwXJ4GW7FwOHPpbLJNcteJ/nL4L9habVl7p+X91QVQkUkon6CZ3NATMD
+         FySA==
+X-Gm-Message-State: APjAAAUuAugCHdWjc9n1Ybb1dEE0lgr0iFAWiagGCG1G2VC1mglWhBJa
+        3xdEvxtRZfJ9oodyfW3Ahak1YA==
+X-Google-Smtp-Source: APXvYqyIc4wKrIBuiP1HgJ3aapQUwC47zh24QaW859GlrZr2bB+ott7Dgb9yKFprUDl42jBNuA1waQ==
+X-Received: by 2002:a1c:a885:: with SMTP id r127mr5582093wme.74.1551953602372;
+        Thu, 07 Mar 2019 02:13:22 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id n9sm3529767wmi.33.2019.03.07.02.13.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 07 Mar 2019 02:13:21 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org,
+        ktadakam@qti.qualcomm.com,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 7/8] misc: fastrpc: fix remote page size calculation
+Date:   Thu,  7 Mar 2019 10:12:28 +0000
+Message-Id: <20190307101229.7856-8-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190307101229.7856-1-srinivas.kandagatla@linaro.org>
+References: <20190307101229.7856-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2cja6kbcvwnu3gnt"
-Content-Disposition: inline
-In-Reply-To: <20190307101024.594587-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remote page size should be calculated based on address and size, fix this!
+Without this we will endup with one page less in cases where the buffer
+is across 3 pages.
 
---2cja6kbcvwnu3gnt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context Invoke method")
+Reported-by: Krishnaiah Tadakamalla <ktadakam@qti.qualcomm.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/misc/fastrpc.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-On Thu, Mar 07, 2019 at 11:10:11AM +0100, Arnd Bergmann wrote:
-> Building with clang finds a mistaken __init tag:
->=20
-> WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from th=
-e function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host=
-()
-> The function davinci_mmcsd_probe() references
-> the function __init init_mmcsd_host().
-> This is often because davinci_mmcsd_probe lacks a __init
-> annotation or the annotation of init_mmcsd_host is wrong.
->=20
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 17bbb017bb08..d0e2e2620087 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -712,6 +712,7 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
+ 	struct fastrpc_phy_page *pages;
+ 	int inbufs, i, oix, err = 0;
+ 	u64 len, rlen, pkt_size;
++	u64 pg_start, pg_end;
+ 	uintptr_t args;
+ 	int metalen;
+ 
+@@ -751,8 +752,6 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
+ 		if (!len)
+ 			continue;
+ 
+-		pages[i].size = roundup(len, PAGE_SIZE);
+-
+ 		if (ctx->maps[i]) {
+ 			struct vm_area_struct *vma = NULL;
+ 
+@@ -764,6 +763,11 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
+ 				pages[i].addr += ctx->args[i].ptr -
+ 						 vma->vm_start;
+ 
++			pg_start = (ctx->args[i].ptr & PAGE_MASK) >> PAGE_SHIFT;
++			pg_end = ((ctx->args[i].ptr + len - 1) & PAGE_MASK) >>
++				  PAGE_SHIFT;
++			pages[i].size = (pg_end - pg_start + 1) * PAGE_SIZE;
++
+ 		} else {
+ 
+ 			if (ctx->olaps[oix].offset == 0) {
+@@ -782,6 +786,9 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
+ 					(pkt_size - rlen);
+ 			pages[i].addr = pages[i].addr &	PAGE_MASK;
+ 
++			pg_start = (args & PAGE_MASK) >> PAGE_SHIFT;
++			pg_end = ((args + len - 1) & PAGE_MASK) >> PAGE_SHIFT;
++			pages[i].size = (pg_end - pg_start + 1) * PAGE_SIZE;
+ 			args = args + mlen;
+ 			rlen -= mlen;
+ 		}
+-- 
+2.21.0
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-
---2cja6kbcvwnu3gnt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyA7sIACgkQFA3kzBSg
-KbZjDA/+My5zSwY80FAs1DuuLQiD/w+094gAyjoRHuPuB7rL50q/7BYOqhngvF5C
-73UEqW5dK4USmwJKiVPkAYUEeuASoZaMj/QIFsQ6SYrQb76iORg1VIybPQDxkoEP
-gblMThfKd68W241OB+JncbdnM6ALmezU/Iz3/BU0GH3jkwJZ0MLP0nBiz/tt1+/8
-O0XFUhfrV1L29pUnjzoVz99YnagquVrjlnkLb51ggESV+FPx03ZDoBdDGMW3XPVO
-efe/qGDNt6v56vDJnQghT/571o024CuDCSFhqTLiHyaqLIaG6SA7dNzxZWildE70
-5RgdXvQAhO6eUC0u8U/714gfVQ4IYxTtYX5NyA+aF0aY6s2O9I1kmLM08zmxB1oL
-SJ9S2p1F5ng1M1hpdnBbK5T+LjfTnqayR63Jy15iR03eqS9hjp2qadVkexkebibS
-JmFBP70A9aoPBswhlfyG1NsHgHWUTKFdJoQYaqfe4CLnILRSAjHPtSwo94U1i+kq
-kilN871gOxuEI89Z5KixzICge2k8Oujfrlq3qix4axTO/mFhiw9Bqj6KrWquJQzZ
-1SKqTj7tF9LuznIxC2qw5htk4/E1EPP74k8zOSWSqqTiG/PftqmlVYZgoqWsnMEk
-557VePLqA9UiLl+B9iPYPVfNfk52qnKFzMKwO0H7V3gBeqAPYmk=
-=WY7N
------END PGP SIGNATURE-----
-
---2cja6kbcvwnu3gnt--
