@@ -2,102 +2,132 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33902C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B512064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C052064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbfCGIaR (ORCPT
+        id S1726285AbfCGIa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:30:17 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2064 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726015AbfCGIaR (ORCPT
+        Thu, 7 Mar 2019 03:30:57 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45534 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCGIa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:30:17 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x278PlLq021905;
-        Thu, 7 Mar 2019 09:30:01 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r2ng234gy-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 07 Mar 2019 09:30:01 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DFAD331;
-        Thu,  7 Mar 2019 08:29:58 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AC8E82452;
-        Thu,  7 Mar 2019 08:29:58 +0000 (GMT)
-Received: from [10.48.0.160] (10.75.127.48) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 7 Mar
- 2019 09:29:57 +0100
-Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-To:     Bich HEMON <bich.hemon@st.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <3a2ceff7-5634-6305-5d54-356af524de7a@st.com>
-Date:   Thu, 7 Mar 2019 09:29:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 03:30:56 -0500
+Received: by mail-vs1-f67.google.com with SMTP id n14so3957793vsp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 00:30:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gb4KXmP16O/0dsL+aVHbdGKiNn6WELO1QnvnFFFXLJs=;
+        b=cm2MhHFqubwk0SW2lcfu+lpvDp70viloCCt1/VMbOSyyVk/u/s8VhFueppW4SAJlr2
+         wOaZVtJ5YSB3CKeI4i0JLlIxk6IozvxUnSeDJt7IUHARmthKduvKBYIZZcbSrY8zDLtT
+         WjP/Bd1KLm2/XmWlf959EOUav5bHKn6ZJbJXe6gjS+ry9rpemPY80eORrYa6iHd4Yo3U
+         L/5SgxOrXYFod9dEhIH1DbIWrKsDTdXSqLErkICysiyBBBshWpomHCPsHHufnwkrCRsd
+         L2RcxixgT69QHh50Y866RQY1OtHKT1FsSCeI+wt1vv+0m+ba7qZ8iy1i/rv4qJ1+k/Jr
+         uLlQ==
+X-Gm-Message-State: APjAAAVVqaBzO7rHFnl5Bv8D8q6ExoF71ht4BTthmqzV2ZFr7IDmFlxs
+        W3ws44w22oWGFPvMFowkx5hLfLdIOe93dcbsg18=
+X-Google-Smtp-Source: APXvYqysAN/crQgPKZzn8EzBkRg3jypf7xCATy5UPtueObAw262gBeL/w484PTrpLhPe5ooVt93Za+c3iTkYR/+JzsU=
+X-Received: by 2002:a67:fc9a:: with SMTP id x26mr6326984vsp.166.1551947454837;
+ Thu, 07 Mar 2019 00:30:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_04:,,
- signatures=0
+References: <201903042049.npxcZzps%fengguang.wu@intel.com> <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
+ <alpine.LNX.2.21.1903051154200.135@nippy.intranet> <alpine.LNX.2.21.1903051357410.135@nippy.intranet>
+ <CAMuHMdUuwudbk15GUPPxL+-Gt4zhhSomk-wMAHeTOkoaDOCUAA@mail.gmail.com>
+ <alpine.LNX.2.21.1903051948290.147@nippy.intranet> <mvmh8chzo7j.fsf@linux-m68k.org>
+ <alpine.LNX.2.21.1903071329140.513@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.21.1903071329140.513@nippy.intranet>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 7 Mar 2019 09:30:43 +0100
+Message-ID: <CAMuHMdVzLTO-yYJJ=HqVySX6gqes9cnyspungsB5maduzNt0RA@mail.gmail.com>
+Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25:
+ warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi Finn,
 
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+On Thu, Mar 7, 2019 at 3:59 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+> On Tue, 5 Mar 2019, Andreas Schwab wrote:
+> > On Mar 05 2019, Finn Thain <fthain@telegraphics.com.au> wrote:
+> >
+> > > interesting that the kernel's strlen implementation in
+> > > include/linux/string.h can't achieve this.
+> >
+> > This implementation is only available if ARCH_HAS_FORTIFY_SOURCE.
+> >
+>
+> I see. Perhaps we could add another definition to that file:
+>
+> #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+> ...
+> #else
+> __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+> {
+>         return __builtin_strlen(p);
+> }
+> #endif
+>
+> I didn't test that. But the following patch seems to work...
+>
+> diff --git a/arch/m68k/include/asm/string.h b/arch/m68k/include/asm/string.h
+> index f759d944c449..3cff6b128ed3 100644
+> --- a/arch/m68k/include/asm/string.h
+> +++ b/arch/m68k/include/asm/string.h
+> @@ -71,4 +71,6 @@ extern void *memset(void *, int, __kernel_size_t);
+>  extern void *memcpy(void *, const void *, __kernel_size_t);
+>  #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
+>
+> +#define strlen(s) __builtin_strlen(s)
 
-Thanks
+Shouldn't you add
 
-On 3/6/19 4:12 PM, Bich HEMON wrote:
-> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> 
-> It conforms with Reference Manual I2C timing section.
-> 
-> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-> Signed-off-by: Bich Hemon <bich.hemon@st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 13e1213..4284fc9 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -432,7 +432,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
->  	dnf_delay = setup->dnf * i2cclk;
->  
-> -	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
-> +	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
->  		af_delay_min - (setup->dnf + 3) * i2cclk;
->  
->  	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
-> 
+    #define __HAVE_ARCH_STRLEN
+
+here...
+
+> +
+>  #endif /* _M68K_STRING_H_ */
+> diff --git a/lib/string.c b/lib/string.c
+> index 38e4ca08e757..fe970f2160e5 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -472,6 +472,7 @@ char *strim(char *s)
+>  EXPORT_SYMBOL(strim);
+>
+>  #ifndef __HAVE_ARCH_STRLEN
+> +#undef strlen
+
+... so you can drop this change?
+
+>  /**
+>   * strlen - Find the length of a string
+>   * @s: The string to be sized
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
