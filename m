@@ -2,102 +2,294 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943D1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACFAC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9262081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C7F20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJbuSDeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfCGWe4 (ORCPT
+        id S1726285AbfCGWgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:34:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37888 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726217AbfCGWez (ORCPT
+        Thu, 7 Mar 2019 17:36:06 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52176 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfCGWgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:34:55 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27MJ6tU004962
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 17:34:54 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r3ae34m23-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 17:34:54 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 7 Mar 2019 22:34:51 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Mar 2019 22:34:48 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x27MYltN55574654
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 7 Mar 2019 22:34:47 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A52BAE2CA;
-        Thu,  7 Mar 2019 22:34:47 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 572ADAE2CC;
-        Thu,  7 Mar 2019 22:34:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.211])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Mar 2019 22:34:46 +0000 (GMT)
-Subject: Re: [PATCH v2] x86/ima: require signed kernel modules
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        "Bruno E . O . Meneguele" <bmeneg@redhat.com>
-Date:   Thu, 07 Mar 2019 17:34:35 -0500
-In-Reply-To: <CACdnJuuPyL3Qo4jAiJDQvUF9Ctch6Yo2bKezEuQ2KaM5ZZ1vqw@mail.gmail.com>
-References: <1550060279-8624-1-git-send-email-zohar@linux.ibm.com>
-         <CACdnJuuPyL3Qo4jAiJDQvUF9Ctch6Yo2bKezEuQ2KaM5ZZ1vqw@mail.gmail.com>
+        Thu, 7 Mar 2019 17:36:05 -0500
+Received: by mail-it1-f196.google.com with SMTP id e24so18018339itl.1;
+        Thu, 07 Mar 2019 14:36:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ekxiUXeLJ2RIYTCQxRaX4seXlOohBS+8PUfBLLMLNlA=;
+        b=RJbuSDebtolMBUcZ5Slh2zwxszBKn0q39a5N3hmItvKWPvUS82rg97qqDRLbYGxedH
+         zNb0gg0nbQmBot72AUdpid1A2Rwxh16f7yNEEh3FDaT9BbwkXrqGoPF1fgh5nl9SyLnl
+         vTzEt1SqGTCnepLaBhGNQF6qPQMWbOlQvu8n/XnJiSZMXwuzZMxbRdag0gRnuNaxcQIR
+         CfWrsFPH6ZZQ8jrVh4TL+65FmbqWpWMk8NKDnoz+tyZZWhHPLZg4rpWEFLwVfEPerkEX
+         jLgJ1FJ35WlBQ7iM+A6K0vJnyt8Od6RDaWct2l5WiRpp+BTAptlsLTluiQhBCNURN2sC
+         3+Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ekxiUXeLJ2RIYTCQxRaX4seXlOohBS+8PUfBLLMLNlA=;
+        b=tDsqjzijAjOv9MciHw0K5XpzIfg5G1qjrmnUrv9LtKaj6Qls0iA21bujC35epilsnU
+         tLmwynp+69A2jq2AK/55HIme+SmBU4OpPavM+uAE3Rz26KPpky67FQxN4KknPShgVts3
+         3fc6pJm78d2B2GreIOphdQTW1KPyxkWzynjdr420BiGloxMMMmJiyAH7iLq1Gru4K/ZI
+         x6RBXAbXVqgLZi4VBCEj6ZehF7zAJ8YDECcnX0P+mfeOfO8/YM5pzO38ftAKzpoI9swA
+         dSAsAYbjR3Em6m9LqUcXO7fVyJJT0OSK9GlCbA6U3XoVzXc6PKycM2JHxgsD5XcIKvMw
+         tfAw==
+X-Gm-Message-State: APjAAAWY4+q4sKmbiSvRZz/3/3whaKpzsrXHHrZBl46JIVCI9T/MH6mv
+        8I2btbZ61cOPoQRn2amoGVA6WwzTuIZdywZm6L4=
+X-Google-Smtp-Source: APXvYqz8vigw8jNXF+Vo2OeIkFKa1/H/Li6ea8Fog2hmvDjvTSi8mWVFdfyK+nX4OmAQYExf2UVYRi7rvxcfIbM7pMc=
+X-Received: by 2002:a24:45e3:: with SMTP id c96mr6297486itd.89.1551998163941;
+ Thu, 07 Mar 2019 14:36:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155048.12868-3-nitesh@redhat.com>
+ <CAKgT0UdDohCXZY3q9qhQsHw-2vKp_CAgvf2dd2e6U6KLsAkVng@mail.gmail.com>
+ <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com> <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com>
+ <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com> <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com>
+In-Reply-To: <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 7 Mar 2019 14:35:53 -0800
+Message-ID: <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030722-0020-0000-0000-0000031FF55E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030722-0021-0000-0000-000021720BA8
-Message-Id: <1551998075.31706.455.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903070147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-07 at 14:27 -0800, Matthew Garrett wrote:
-> On Wed, Feb 13, 2019 at 4:18 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > -       if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot())
-> > +       if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot()) {
-> > +               if (IS_ENABLED(CONFIG_MODULE_SIG))
-> > +                       set_module_sig_enforced();
-> >                 return sb_arch_rules;
-> 
-> Linus previously pushed back on having the lockdown features
-> automatically enabled on secure boot systems. Why are we doing the
-> same in IMA?
+On Thu, Mar 7, 2019 at 1:40 PM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 07.03.19 22:32, Alexander Duyck wrote:
+> > On Thu, Mar 7, 2019 at 11:30 AM David Hildenbrand <david@redhat.com> wrote:
+> >>
+> >> On 07.03.19 20:23, Nitesh Narayan Lal wrote:
+> >>>
+> >>> On 3/7/19 1:30 PM, Alexander Duyck wrote:
+> >>>> On Wed, Mar 6, 2019 at 7:51 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>> This patch enables the kernel to scan the per cpu array
+> >>>>> which carries head pages from the buddy free list of order
+> >>>>> FREE_PAGE_HINTING_MIN_ORDER (MAX_ORDER - 1) by
+> >>>>> guest_free_page_hinting().
+> >>>>> guest_free_page_hinting() scans the entire per cpu array by
+> >>>>> acquiring a zone lock corresponding to the pages which are
+> >>>>> being scanned. If the page is still free and present in the
+> >>>>> buddy it tries to isolate the page and adds it to a
+> >>>>> dynamically allocated array.
+> >>>>>
+> >>>>> Once this scanning process is complete and if there are any
+> >>>>> isolated pages added to the dynamically allocated array
+> >>>>> guest_free_page_report() is invoked. However, before this the
+> >>>>> per-cpu array index is reset so that it can continue capturing
+> >>>>> the pages from buddy free list.
+> >>>>>
+> >>>>> In this patch guest_free_page_report() simply releases the pages back
+> >>>>> to the buddy by using __free_one_page()
+> >>>>>
+> >>>>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> >>>> I'm pretty sure this code is not thread safe and has a few various issues.
+> >>>>
+> >>>>> ---
+> >>>>>  include/linux/page_hinting.h |   5 ++
+> >>>>>  mm/page_alloc.c              |   2 +-
+> >>>>>  virt/kvm/page_hinting.c      | 154 +++++++++++++++++++++++++++++++++++
+> >>>>>  3 files changed, 160 insertions(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/include/linux/page_hinting.h b/include/linux/page_hinting.h
+> >>>>> index 90254c582789..d554a2581826 100644
+> >>>>> --- a/include/linux/page_hinting.h
+> >>>>> +++ b/include/linux/page_hinting.h
+> >>>>> @@ -13,3 +13,8 @@
+> >>>>>
+> >>>>>  void guest_free_page_enqueue(struct page *page, int order);
+> >>>>>  void guest_free_page_try_hinting(void);
+> >>>>> +extern int __isolate_free_page(struct page *page, unsigned int order);
+> >>>>> +extern void __free_one_page(struct page *page, unsigned long pfn,
+> >>>>> +                           struct zone *zone, unsigned int order,
+> >>>>> +                           int migratetype);
+> >>>>> +void release_buddy_pages(void *obj_to_free, int entries);
+> >>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> >>>>> index 684d047f33ee..d38b7eea207b 100644
+> >>>>> --- a/mm/page_alloc.c
+> >>>>> +++ b/mm/page_alloc.c
+> >>>>> @@ -814,7 +814,7 @@ static inline int page_is_buddy(struct page *page, struct page *buddy,
+> >>>>>   * -- nyc
+> >>>>>   */
+> >>>>>
+> >>>>> -static inline void __free_one_page(struct page *page,
+> >>>>> +inline void __free_one_page(struct page *page,
+> >>>>>                 unsigned long pfn,
+> >>>>>                 struct zone *zone, unsigned int order,
+> >>>>>                 int migratetype)
+> >>>>> diff --git a/virt/kvm/page_hinting.c b/virt/kvm/page_hinting.c
+> >>>>> index 48b4b5e796b0..9885b372b5a9 100644
+> >>>>> --- a/virt/kvm/page_hinting.c
+> >>>>> +++ b/virt/kvm/page_hinting.c
+> >>>>> @@ -1,5 +1,9 @@
+> >>>>>  #include <linux/mm.h>
+> >>>>>  #include <linux/page_hinting.h>
+> >>>>> +#include <linux/page_ref.h>
+> >>>>> +#include <linux/kvm_host.h>
+> >>>>> +#include <linux/kernel.h>
+> >>>>> +#include <linux/sort.h>
+> >>>>>
+> >>>>>  /*
+> >>>>>   * struct guest_free_pages- holds array of guest freed PFN's along with an
+> >>>>> @@ -16,6 +20,54 @@ struct guest_free_pages {
+> >>>>>
+> >>>>>  DEFINE_PER_CPU(struct guest_free_pages, free_pages_obj);
+> >>>>>
+> >>>>> +/*
+> >>>>> + * struct guest_isolated_pages- holds the buddy isolated pages which are
+> >>>>> + * supposed to be freed by the host.
+> >>>>> + * @pfn: page frame number for the isolated page.
+> >>>>> + * @order: order of the isolated page.
+> >>>>> + */
+> >>>>> +struct guest_isolated_pages {
+> >>>>> +       unsigned long pfn;
+> >>>>> +       unsigned int order;
+> >>>>> +};
+> >>>>> +
+> >>>>> +void release_buddy_pages(void *obj_to_free, int entries)
+> >>>>> +{
+> >>>>> +       int i = 0;
+> >>>>> +       int mt = 0;
+> >>>>> +       struct guest_isolated_pages *isolated_pages_obj = obj_to_free;
+> >>>>> +
+> >>>>> +       while (i < entries) {
+> >>>>> +               struct page *page = pfn_to_page(isolated_pages_obj[i].pfn);
+> >>>>> +
+> >>>>> +               mt = get_pageblock_migratetype(page);
+> >>>>> +               __free_one_page(page, page_to_pfn(page), page_zone(page),
+> >>>>> +                               isolated_pages_obj[i].order, mt);
+> >>>>> +               i++;
+> >>>>> +       }
+> >>>>> +       kfree(isolated_pages_obj);
+> >>>>> +}
+> >>>> You shouldn't be accessing __free_one_page without holding the zone
+> >>>> lock for the page. You might consider confining yourself to one zone
+> >>>> worth of hints at a time. Then you can acquire the lock once, and then
+> >>>> return the memory you have freed.
+> >>> That is correct.
+> >>>>
+> >>>> This is one of the reasons why I am thinking maybe a bit in the page
+> >>>> and then spinning on that bit in arch_alloc_page might be a nice way
+> >>>> to get around this. Then you only have to take the zone lock when you
+> >>>> are finding the pages you want to hint on and setting the bit
+> >>>> indicating they are mid hint. Otherwise you have to take the zone lock
+> >>>> to pull pages out, and to put them back in and the likelihood of a
+> >>>> lock collision is much higher.
+> >>> Do you think adding a new flag to the page structure will be acceptable?
+> >>
+> >> My lesson learned: forget it. If (at all) reuse some other one that
+> >> might be safe in that context. Hard to tell if that is even possible and
+> >> will be accepted upstream.
+> >
+> > I was thinking we could probably just resort to reuse. Essentially
+> > what we are looking at doing is idle page tracking so my thought is to
+> > see if we can just reuse those bits in the buddy allocator. Then we
+> > would essentially have 3 stages, young, "hinting", and idle.
+>
+> Haven't thought this through, but I wonder if 2 stages would even be
+> enough right now, But well, you have a point that idle *might* reduce
+> the amount of pages hinted multiple time (although that might still
+> happen when we want to hint with different page sizes / buddy merging).
 
-IMA-appraisal is extending the "secure boot" concept to the running
-system.
+Splitting wouldn't be so much an issue as merging. The problem is if
+you are merging pages you have to assume the page is no longer hinted,
+and need to hint for the new higher order page. The worst case
+scenerio would be a page that is hinted, merged, split, and then has
+to be hinted again because the information on hit being hinted is
+lost.
 
-Mimi
+> >
+> >> Spinning is not the solution. What you would want is the buddy to
+> >> actually skip over these pages and only try to use them (-> spin) when
+> >> OOM. Core mm changes (see my other reply).
+> >
+> > It is more of a workaround. Ideally we should almost never encounter
+> > this anyway as what we really want to be doing is performing hints on
+> > cold pages, so hopefully we will be on the other end of the LRU list
+> > from any active allocations.
+> >
+> >> This all sounds like future work which can be built on top of this work.
+> >
+> > Actually I was kind of thinking about this the other way. The simple
+> > spin approach is a good first step. If we have a bit or two in the
+> > page that tells us if the page is available or not we could then
+> > follow-up with optimizations to only allocate either a young or idle
+> > page and doesn't bother with pages being "hinted", at least in the
+> > first pass.
+> >
+> > As it currently stands we are only really performing hints on higher
+> > order pages anyway so if we happen to encounter a slight delay under
+> > memory pressure it probably wouldn't be that noticeable versus the
+>
+> Well, the issue is that with your approach one pending hinting request
+> might block all other VCPUs in the worst case until hitning is done.
+> Something that is not possible with Niteshs approach. It will never
+> block allocation paths (well apart from the zone lock and the OOM
+> thingy). And I think this is important.
+>
+> It is a fundamental design problem until we fix core mm. Your other
+> synchronous approach doesn't have this problem either.
 
+Even with the approach I had there are still possibilities for all
+VCPUs eventually becoming hung if the host is holding the write lock
+on the mmap semaphore.
+
+My initial thought was to try and reduce the amount of time we need to
+sit on the zone lock since we have to hold it to isolate the pages,
+and then to put them back in the buddy. However the idle bits approach
+will be just as difficult to deal with due to potential for splits and
+merges while performing the hint.
+
+> > memory system having to go through and try to compact things from some
+> > lower order pages. In my mind us introducing a delay in memory
+> > allocation in the case of a collision would be preferable versus us
+> > triggering allocation failures.
+> >
+>
+> Valid points, I think to see which approach would be the better starting
+> point is to have a version that does what you propose and compare it.
+> Essentially to find out how severe this "blocking other VCPUs" thingy
+> can be.
+
+I figure if nothing else the current solution probably is just in need
+of a few tweaks. In my mind the simplest solution is still to have a
+single bit somewhere for tracking what pages we have hinted on on
+which ones we haven't. However we could probably skip the second bit
+and just put the pages in isolation while we are performing the hint
+and that would get rid of the need for a second bit.
+
+With us hinting currently on MAX_ORDER - 1 pages only that actually
+takes care of the risk of a merge really wiping out any data about
+what has been hinted on and what hasn't.
+
+The only other thing I still want to try and see if I can do is to add
+a jiffies value to the page private data in the case of the buddy
+pages. With that we could track the age of the page so it becomes
+easier to only target pages that are truly going cold rather than
+trying to grab pages that were added to the freelist recently.
