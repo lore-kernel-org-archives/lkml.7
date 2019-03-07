@@ -2,104 +2,118 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DF5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506EDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD24B20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FA520840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbfCGTiA (ORCPT
+        id S1726799AbfCGTir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:38:00 -0500
-Received: from postout1.mail.lrz.de ([129.187.255.137]:50784 "EHLO
-        postout1.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfCGTiA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:38:00 -0500
-X-Greylist: delayed 418 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Mar 2019 14:37:57 EST
-Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
-        by postout1.mail.lrz.de (Postfix) with ESMTP id 44Fghw5SVGzycg;
-        Thu,  7 Mar 2019 20:30:56 +0100 (CET)
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
-Received: from postout1.mail.lrz.de ([127.0.0.1])
-        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-        with LMTP id nXS6D6YloggW; Thu,  7 Mar 2019 20:30:56 +0100 (CET)
-Received: from mission-control (unknown [207.180.219.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 7 Mar 2019 14:38:47 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:45266 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbfCGTiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 14:38:46 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by postout1.mail.lrz.de (Postfix) with ESMTPSA id 44Fghv1tzczycf;
-        Thu,  7 Mar 2019 20:30:55 +0100 (CET)
-Date:   Thu, 7 Mar 2019 20:30:45 +0100
-From:   ga58taw@mytum.de
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Julius Niedworok <julius.n@gmx.net>,
-        linux-wireless@vger.kernel.org, ga58taw@mytum.de, david@redhat.com,
-        nc@net.in.tum.de, Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
-Message-ID: <20190307193045.a7awwn6mycloccq5@mission-control>
-References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
- <20190306200206.60916-1-julius.n@gmx.net>
- <87k1hazo6r.fsf@purkki.adurom.net>
+        by mx1.redhat.com (Postfix) with ESMTPS id E6DBC821EF;
+        Thu,  7 Mar 2019 19:38:45 +0000 (UTC)
+Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77C8F5C545;
+        Thu,  7 Mar 2019 19:38:40 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 14:38:38 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, Jan Kara <jack@suse.cz>
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190307193838.GQ23850@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190306092837-mutt-send-email-mst@kernel.org>
+ <15105894-4ec1-1ed0-1976-7b68ed9eeeda@redhat.com>
+ <20190307101708-mutt-send-email-mst@kernel.org>
+ <20190307190910.GE3835@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k1hazo6r.fsf@purkki.adurom.net>
+In-Reply-To: <20190307190910.GE3835@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 07 Mar 2019 19:38:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 05:42:04PM +0200, Kalle Valo wrote:
-> > +   len = scnprintf(buf, sizeof(buf), "%d\n", (int)local->force_tx_status);
->
-> I wonder about the cast, is it guaranteed that a bool is always of the
-> same size as an int?
+On Thu, Mar 07, 2019 at 02:09:10PM -0500, Jerome Glisse wrote:
+> I thought this patch was only for anonymous memory ie not file back ?
 
-Why is this a problem? If a bool is smaller than an int, the compiler
-emits code that will prepend the value of force_tx_status with zeros. If
-it is larger than an int the compiler emits code that will truncate
-force_tx_status to sizeof(int) bytes. So it doesn't matter how large bool
-and/or int are, the code always prints '0' or '1' depending on the value
-of force_tx_status.
+Yes, the other common usages are on hugetlbfs/tmpfs that also don't
+need to implement writeback and are obviously safe too.
 
-> > --- a/net/mac80211/tx.c
-> > +++ b/net/mac80211/tx.c
-> > @@ -2463,6 +2463,11 @@ static struct sk_buff *ieee80211_build_hdr(struct ieee80211_sub_if_data *sdata,
-> >     if (IS_ERR(sta))
-> >             sta = NULL;
-> >
-> > +#ifdef CONFIG_MAC80211_DEBUGFS
-> > +           if (local->force_tx_status)
-> > +                   info_flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
-> > +#endif
-> > +
-> >     /* convert Ethernet header to proper 802.11 header (based on
-> >      * operation mode) */
-> >     ethertype = (skb->data[12] << 8) | skb->data[13];
-> > @@ -3468,6 +3473,11 @@ static bool ieee80211_xmit_fast(struct ieee80211_sub_if_data *sdata,
-> >                   (tid_tx ? IEEE80211_TX_CTL_AMPDU : 0);
-> >     info->control.flags = IEEE80211_TX_CTRL_FAST_XMIT;
-> >
-> > +#ifdef CONFIG_MAC80211_DEBUGFS
-> > +           if (local->force_tx_status)
-> > +                   info->flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
-> > +#endif
->
-> IMHO the ifdefs look pointless just to save four bytes. I would move
-> force_tx_status outside of ifdef in the struct so that the actual code
-> doesn't have ugly ifdefs.
+> If so then set dirty is mostly useless it would only be use for swap
+> but for this you can use an unlock version to set the page dirty.
 
-I don't think ifdefs are ugly in this case. They clearly indicate that the
-code belongs to the debugfs implementation of mac80211. In addition, when
-we remove the ifdefs, code that only belongs to the debugfs implementation
-of mac80211 is always included in the kernel (even when the config
-option is turned off!) which, I think, is much more ugly than the ifdefs.
+It's not a practical issue but a security issue perhaps: you can
+change the KVM userland to run on VM_SHARED ext4 as guest physical
+memory, you could do that with the qemu command line that is used to
+place it on tmpfs or hugetlbfs for example and some proprietary KVM
+userland may do for other reasons. In general it shouldn't be possible
+to crash the kernel with this, and it wouldn't be nice to fail if
+somebody decides to put VM_SHARED ext4 (we could easily allow vhost
+ring only backed by anon or tmpfs or hugetlbfs to solve this of
+course).
 
-Thanks for your comments and ideas.
+It sounds like we should at least optimize away the _lock from
+set_page_dirty if it's anon/hugetlbfs/tmpfs, would be nice if there
+was a clean way to do that.
 
-Charlie
+Now assuming we don't nak the use on ext4 VM_SHARED and we stick to
+set_page_dirty_lock for such case: could you recap how that
+__writepage ext4 crash was solved if try_to_free_buffers() run on a
+pinned GUP page (in our vhost case try_to_unmap would have gotten rid
+of the pins through the mmu notifier and the page would have been
+freed just fine).
+
+The first two things that come to mind is that we can easily forbid
+the try_to_free_buffers() if the page might be pinned by GUP, it has
+false positives with the speculative pagecache lookups but it cannot
+give false negatives. We use those checks to know when a page is
+pinned by GUP, for example, where we cannot merge KSM pages with gup
+pins etc... However what if the elevated refcount wasn't there when
+try_to_free_buffers run and is there when __remove_mapping runs?
+
+What I mean is that it sounds easy to forbid try_to_free_buffers for
+the long term pins, but that still won't prevent the same exact issue
+for a transient pin (except the window to trigger it will be much smaller).
+
+I basically don't see how long term GUP pins breaks stuff in ext4
+while transient short term GUP pins like O_DIRECT don't. The VM code
+isn't able to disambiguate if the pin is short or long term and it
+won't even be able to tell the difference between a GUP pin (long or
+short term) and a speculative get_page_unless_zero run by the
+pagecache speculative pagecache lookup. Even a random speculative
+pagecache lookup that runs just before __remove_mapping, can cause
+__remove_mapping to fail despite try_to_free_buffers() succeeded
+before it (like if there was a transient or long term GUP
+pin). speculative lookup that can happen across all page struct at all
+times and they will cause page_ref_freeze in __remove_mapping to
+fail.
+
+I'm sure I'm missing details on the ext4 __writepage problem and how
+set_page_dirty_lock broke stuff with long term GUP pins, so I'm
+asking...
+
+Thanks!
+Andrea
