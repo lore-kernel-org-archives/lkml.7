@@ -2,101 +2,75 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8238BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4DCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870A120835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B03220840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfCGJag (ORCPT
+        id S1726309AbfCGJb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:30:36 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:39459 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfCGJaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:30:35 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mq33i-1ggE2u0AMs-00n6Hn; Thu, 07 Mar 2019 10:30:22 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sasha Neftin <sasha.neftin@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        Thu, 7 Mar 2019 04:31:27 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42846 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbfCGJb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 04:31:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B33BEBD;
+        Thu,  7 Mar 2019 01:31:26 -0800 (PST)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 394E93F706;
+        Thu,  7 Mar 2019 01:31:24 -0800 (PST)
+Date:   Thu, 7 Mar 2019 09:31:19 +0000
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Juri Lelli <juri.lelli@gmail.com>
+Cc:     Lingutla Chandrasekhar <clingutla@codeaurora.org>,
+        sudeep.holla@arm.com, dietmar.eggemann@arm.com,
+        gregkh@linuxfoundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, morten.rasmussen@arm.com,
+        linux-arm-kernel@lists.infradead.org, jeremy.linton@arm.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] igc: remove unused igc_priv_flags_strings array
-Date:   Thu,  7 Mar 2019 10:29:57 +0100
-Message-Id: <20190307093014.3293229-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+Subject: Re: [PATCH v1] arch_topology: Make cpu_capacity sysfs node as
+ ready-only
+Message-ID: <20190307093116.slvugyeos46kl3et@queper01-lin>
+References: <20190306152254.GB19434@e105550-lin.cambridge.arm.com>
+ <1551886073-16217-1-git-send-email-clingutla@codeaurora.org>
+ <20190307072856.GC29753@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:N3mvzSfNDVeTkiwt0IdLZpwokV6/9jud1nD98nGRX1EUJEqVPGy
- D2FdE55gGo8FUMjX06Bg4VZA9E54mdlygtYJUcS7FI6C/ZB1B7u0MjZegnvMLTGa5WpGGMj
- nd/QizUeLx5QaBZmbTJIfXJevyB6Ro4KkAPCFyr4jFi7x7eNzOKB4sWax3vGxfiVt+AfnJI
- XvWa8gjtxBb8xjlcZfm7A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Lli521qOlkE=:PQHUQR4B0W6D5kxGg4KDai
- CaPaQ7rmfvijXUDElKJIpX6wIA3PMiPIyYHn6DIafsclM4zWtO6+MctLLywc11FiY+v11EXKq
- p4HYL3npnjPKIyYj4z6AIzgTyEy6YhjfoNtnu1FLfcgY7sGHn5OLff0gLXejiGbg/2mry0Mzh
- GrK8h3cn2iHBCqROZ2mPmPtsyA/g/NotVV/ZRci8zG+0r625RaxBdeyMa34TL3+vo8mikE8sB
- 7mDDi3rnV7QMyRDHWZmgPkvNzyx9788YsmmRJu4cUhFuLrwFEVzocaBudfWuB3VefxXNqwS3p
- /YoNsZas5TvgS8pllNKmEn61M3fZ+tka7qLEZCw5TIfV/Ysz0Gdtb9MwvRSh37bb6A7qlqDQp
- AHoCJv9foPLiiSZSehr2IVOi1wmoy6MV99YtVuV3QAwQIYQ8qqwIEdFqdY8wsS2/gHGss6lgO
- 5p3EQyOTIsVfpHv8aSzsN+zOtRAypuamLs7s5rDjvCQqUCUmfoYymt9SHFwGPFFyE68IAI7Qu
- KgQjY0hj3MyfmuGJMyvibNpR1o0MgUvVDj5Yvq4w0N+8WDQtu8ljqbvMx0ZwP6OWIipYhH320
- 86rBAdheiNp/nCgUpgUtxwgYUdsPqOmxFGlOO1kHYeSCKW4RiuaoMdoch7khTsVPjNsRLabN8
- XPNGA7j50MKYFHD7ksAoTqapOqNcNN5kSsZDABXU44esuKPEApCQmFaqR6aGVJQjUyqfEY50R
- 1oR/kQiOUYuEOTFefrgNCp5QovGoM0Iq0ORYLQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307072856.GC29753@localhost.localdomain>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang points out that the igc_priv_flags_strings[] array is never
-referenced, aside from being used for calculating its length:
+Hi Juri,
 
-drivers/net/ethernet/intel/igc/igc_ethtool.c:9:19: error: variable 'igc_priv_flags_strings' is not needed and will not
-      be emitted [-Werror,-Wunneeded-internal-declaration]
-static const char igc_priv_flags_strings[][ETH_GSTRING_LEN] = {
+On Thursday 07 Mar 2019 at 08:28:56 (+0100), Juri Lelli wrote:
+> There are cases in which this needs to be RW, as recently discussed
+> https://lore.kernel.org/lkml/20181123135807.GA14964@e107155-lin/
 
-A similar array is present in several other intel ethernet drivers,
-but all the others use it in their .get_strings() callback, which
-igc does not implement (yet).
+Yeah there's that problem when you can't fix your DT ... But I guess
+this is a problem for _all_ values in the DT, not just capacities right ?
+But these other values, I'd expected they just can't be fixed from
+userspace most of the time, you just have to live with sub-optimal
+values. So I don't find it unreasonable to do that for capacities too.
 
-Probably it should be implemented, but as I have no way of testing
-it, this does the simpler alternative of removing the array to
-get rid of the warning.
+> IMHO, if the core_sibling assumption doesn't work in all cases, one
+> should be looking into fixing it, rather than making this RO.
 
-Fixes: 8c5ad0dae93c ("igc: Add ethtool support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/intel/igc/igc_ethtool.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+It's just that this thing keeps causing more harm than it helps IMO.
+It's quite severely broken ATM, and it prevents us from assuming
+'stable' capacity values in places were we'd like to do so (e.g. EAS).
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-index eff37a6c0afa..9e352c2be644 100644
---- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-@@ -6,12 +6,9 @@
- 
- #include "igc.h"
- 
--static const char igc_priv_flags_strings[][ETH_GSTRING_LEN] = {
- #define IGC_PRIV_FLAGS_LEGACY_RX	BIT(0)
--	"legacy-rx",
--};
- 
--#define IGC_PRIV_FLAGS_STR_LEN ARRAY_SIZE(igc_priv_flags_strings)
-+#define IGC_PRIV_FLAGS_STR_LEN		1
- 
- static void igc_get_drvinfo(struct net_device *netdev,
- 			    struct ethtool_drvinfo *drvinfo)
--- 
-2.20.0
+And I'm not aware of a single platform where this is used. So, I'm
+personally all for removing the write capability if we can.
 
+Thanks,
+Quentin
