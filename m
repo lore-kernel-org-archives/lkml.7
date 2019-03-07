@@ -2,105 +2,105 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E83C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD95E20835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31592081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfCGMFs (ORCPT
+        id S1726388AbfCGMG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:05:48 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58069 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGMFs (ORCPT
+        Thu, 7 Mar 2019 07:06:56 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:54167 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGMG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:05:48 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1h1rmI-0007E8-Hy; Thu, 07 Mar 2019 13:05:34 +0100
-Message-ID: <1551960333.9298.37.camel@pengutronix.de>
-Subject: Re: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
- reference clock
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-Date:   Thu, 07 Mar 2019 13:05:33 +0100
-In-Reply-To: <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
-References: <1551929772-22633-1-git-send-email-Anson.Huang@nxp.com>
-         <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 7 Mar 2019 07:06:56 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1h1rnJ-0007Zn-8G; Thu, 07 Mar 2019 13:06:37 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+        <20190212143003.48446-9-john.ogness@linutronix.de>
+        <20190304073856.GA552@jagdpanzerIV>
+Date:   Thu, 07 Mar 2019 13:06:34 +0100
+Message-ID: <87va0uopmd.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 07.03.2019, 03:41 +0000 schrieb Anson Huang:
-> There is another 27MHz OSC inside i.MX8MQ's display block and
-> it can be one of reference clocks of all PLLs, add it into clock
-> tree and also add it as PLL's reference clock.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx8mq.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-> index a9b3888..bb1bf9b 100644
-> --- a/drivers/clk/imx/clk-imx8mq.c
-> +++ b/drivers/clk/imx/clk-imx8mq.c
-> @@ -26,7 +26,7 @@ static u32 share_count_nand;
->  
->  static struct clk *clks[IMX8MQ_CLK_END];
->  
-> -static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m", "dummy", "dummy", };
-> +static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m", "osc_hdmi_phy_27m", "dummy", };
->  static const char * const arm_pll_bypass_sels[] = {"arm_pll", "arm_pll_ref_sel", };
->  static const char * const gpu_pll_bypass_sels[] = {"gpu_pll", "gpu_pll_ref_sel", };
->  static const char * const vpu_pll_bypass_sels[] = {"vpu_pll", "vpu_pll_ref_sel", };
-> @@ -281,6 +281,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
->  	clks[IMX8MQ_CLK_32K] = of_clk_get_by_name(np, "ckil");
->  	clks[IMX8MQ_CLK_25M] = of_clk_get_by_name(np, "osc_25m");
->  	clks[IMX8MQ_CLK_27M] = of_clk_get_by_name(np, "osc_27m");
-> +	clks[IMX8MQ_CLK_HDMI_PHY_27M] = of_clk_get_by_name(np, "osc_hdmi_phy_27m");
+On 2019-03-04, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+>> +	/* the printk kthread never exits */
+>> +	for (;;) {
+>> +		ret = prb_iter_wait_next(&iter, buf,
+>> +					 PRINTK_RECORD_MAX, &master_seq);
+>> +		if (ret == -ERESTARTSYS) {
+>> +			continue;
+>> +		} else if (ret < 0) {
+>> +			/* iterator invalid, start over */
+>> +			prb_iter_init(&iter, &printk_rb, NULL);
+>> +			continue;
+>> +		}
+>> +
+>> +		msg = (struct printk_log *)buf;
+>> +		format_text(msg, master_seq, ext_text, &ext_len, text,
+>> +			    &len, printk_time);
+>> +
+>> +		console_lock();
+>> +		if (len > 0 || ext_len > 0) {
+>> +			call_console_drivers(ext_text, ext_len, text, len);
+>> +			boot_delay_msec(msg->level);
+>> +			printk_delay();
+>> +		}
+>> +		console_unlock();
+>> +	}
+>
+> This, theoretically, creates a whole new world of possibilities for
+> console drivers. Now they can do GFP_KERNEL allocations and stall
+> printk_kthread during OOM; or they can explicitly reschedule from
+> ->write() callback (via console_conditional_schedule()) because
+> console_lock() sets console_may_schedule.
 
-This is not acceptable. This adds a new required clock input, without
-bothering to add the corresponding binding information or thinking
-about backwards compatibility. At this point there are existing DTs out
-there, which don't provide this required clock, which will cause a full
-boot regression. This can only be an optional clock input at this
-point.
+This was the intention. Although, as I mentioned in a previous
+response[0], perhaps we should not loosen the requirements on write().
 
-Regards,
-Lucas
+> It's one thing to do cond_resched() (or to let preemption to take
+> over) after call_console_drivers() (when we are done printing a
+> message to all console drivers) and another thing to let preemption to
+> take over while we are printing a messages to the consoles. It
+> probably would make sense to disable preemption around
+> call_console_drivers().
 
->  	clks[IMX8MQ_CLK_EXT1] = of_clk_get_by_name(np, "clk_ext1");
->  	clks[IMX8MQ_CLK_EXT2] = of_clk_get_by_name(np, "clk_ext2");
->  	clks[IMX8MQ_CLK_EXT3] = of_clk_get_by_name(np, "clk_ext3");
+I could see disabling preemption and interrupts for emergency messages
+in the printk-kthread in order to synchronize against an irq_work
+secondary printer as suggested in my response[0]. But I don't see an
+advantage to disabling preemption in general for
+call_console_drivers(). It is exactly that disable_preempt() that is so
+harmful for realtime tasks.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/87lg1rggcz.fsf@linutronix.de
