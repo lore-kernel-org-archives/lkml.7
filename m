@@ -2,115 +2,96 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD796C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DF6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6CE20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39B220675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dOU/qw00"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="opYSe6cG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfCGWoO (ORCPT
+        id S1726313AbfCGWpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:44:14 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:44434 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCGWoO (ORCPT
+        Thu, 7 Mar 2019 17:45:07 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55518 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfCGWpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:44:14 -0500
-Received: by mail-ua1-f68.google.com with SMTP id r21so10763323uan.11
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:44:13 -0800 (PST)
+        Thu, 7 Mar 2019 17:45:07 -0500
+Received: by mail-it1-f196.google.com with SMTP id z131so18006953itf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:45:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BUHLbMAFh1XP9ezIoT7K3vy06uC2QjrYpdrVOkv4+Tk=;
-        b=dOU/qw00dOHqTt/ZIyTQVOasoCy+1kwcnt9kY8RUbOBGHRYmqPveS9P7w53DyA/Kbq
-         Aj6+TDDuU/hm8+wuX9H5b/YjAZEgJCLjF31DEn/WEJu6eLL1w4ZvUY79du6zp+VKbquy
-         5zric/gC+lZRC1Zz1NIfyZJm0TfzBCpALHFPs=
+        bh=WUkXYdmUF5bhjjVVeLEZ9T0FeGUBv2MITzRaC3GTEaA=;
+        b=opYSe6cGSKQ4z8YsHOpjV52mfsqJWJK2ydMZUCHqn9UPHf0hj2isAp1cp4LTxqun5/
+         jpkMv4YBHV+6H5l8sS5XYACzAHqfS9KUJAX5I/OBM9si0CicOXayPVKk5nsNr1+CQrCQ
+         HELGBIofdb6SfAlIfQbf2BtrwlNAHM1ErGY0Q/kJA4UdnkugYuBpA8mSstajXPma2pXn
+         AFhqT8C31p5chZwynlmofeKI1kzosOEsjUv44+CBI6FUnKi4SLVeIcgodVBt7UcYNd03
+         MdrdCLC/p4zx6yCMn6YqqO+W3L9KgqjPW9ktsHflkg92TnGTX6J74OEuGop8MJ92cWS8
+         GbBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BUHLbMAFh1XP9ezIoT7K3vy06uC2QjrYpdrVOkv4+Tk=;
-        b=sbXSe5XV8FkIktZoxVBNh5757kivZ1xvkaRXZuMO0MAeRCOrJ94tN3F4FEhNvxRkms
-         6lpc/v1HoCEVQGBJ9fwNBAILOWQrtTMbjphooLNEj3gwi5wkTfxw+uD6hqnNfCX71xgO
-         3MY4xglxeKGF5buQdNGpcdq4AsnFdAoJ/eTvlyRjdYk4qxkJva0DNXIDsynTkzAwFfoE
-         1ijqyFrNPaEvlMoRQVPoumdiFyWMNSN7sz38zxT/7sCt85G8JzhGINcD6/mNeH2WD1F4
-         0xTCFJoHvgQZkPZj/DGJabzsShumLUdIALe53qCqh/LLCyuXlDr38Y67LMxw38Y+dzk4
-         bZIQ==
-X-Gm-Message-State: APjAAAUpWfUMoPAEjKr1QfIM3m35rIftgq6o7J4FG4mtjQRXX0AsNhQo
-        Fpqq2UBWTa2zSvybZGFyFU2XgHSYP4U=
-X-Google-Smtp-Source: APXvYqywIEkeInfZWtHKWi8mEdtc3vLF2ZrStX1NScWpdrE6JcmGf3QHI2SylX7yt453Y1AolLEjGg==
-X-Received: by 2002:ab0:2498:: with SMTP id i24mr7996702uan.123.1551998652734;
-        Thu, 07 Mar 2019 14:44:12 -0800 (PST)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id v128sm1219542vke.16.2019.03.07.14.44.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 14:44:09 -0800 (PST)
-Received: by mail-vs1-f41.google.com with SMTP id y19so5553286vsc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:44:08 -0800 (PST)
-X-Received: by 2002:a67:6983:: with SMTP id e125mr8051619vsc.222.1551998648337;
- Thu, 07 Mar 2019 14:44:08 -0800 (PST)
+        bh=WUkXYdmUF5bhjjVVeLEZ9T0FeGUBv2MITzRaC3GTEaA=;
+        b=aC9Nm/gTeAY7WTXjbt5Lzh43H4/V2b0IgmRsywCiZYI80uXjI8zzWgk2aWuEPYI1AK
+         OKEdGjeZ+/IWAkFqRico97QRY4YaUFJ9msDCAeEf2SO7Ac8ti1NgBf/lEpCngBCKC0pC
+         EIjYML6r7Xn476K9AHb3L7YADyEAc+0zHUPBq6dIp0AILLExoqvt3e+P0oZAfYHIuN5o
+         Z4thIRL6GKfA+jK45P/b2H3YgRcvct3QOIiXfAXLr3D7Sa8K6Uc2Iaz3PSrgNa5QQWQ3
+         KQR5zzp5WKbn/Zf4UPPQvuxyT2HBkvfK3JujCAH+61FoYtWLC9VQ3bAsyDWt9XgDPC4o
+         RLxw==
+X-Gm-Message-State: APjAAAUSuoGWm1isPS9PIeHMvvMsOgQ7T3/TuPi8LaVG0PRc/vFikAiB
+        3r7qJ7lh6kBKWqwMaXXje10qKGgWETBXHxNVF1BRP771dVs=
+X-Google-Smtp-Source: APXvYqw9WjbE2NlS+DsNvDKiWloqHmsLUqlmjXucn//9YuWCIohDoKOIwdzrwvEyMJiZPw9mPhwmv54S351sum0DhJA=
+X-Received: by 2002:a24:43d1:: with SMTP id s200mr6679052itb.118.1551998706101;
+ Thu, 07 Mar 2019 14:45:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20190306214226.14598-1-tobin@kernel.org> <20190306214934.GA16461@eros.localdomain>
- <20190307211858.GA28495@eros.localdomain>
-In-Reply-To: <20190307211858.GA28495@eros.localdomain>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 7 Mar 2019 14:43:57 -0800
-X-Gmail-Original-Message-ID: <CAGXu5jLdCQ0QtCdbbfE+=JccZk01aSdV_5dWVj6g8X-dKpOr8Q@mail.gmail.com>
-Message-ID: <CAGXu5jLdCQ0QtCdbbfE+=JccZk01aSdV_5dWVj6g8X-dKpOr8Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] lib/string: Add strscpy_pad() function
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1542657371-7019-1-git-send-email-zohar@linux.ibm.com>
+ <1542657371-7019-4-git-send-email-zohar@linux.ibm.com> <CACdnJusqHZ1OLJD1baN=fXK9KE+bSqzB4OUbmLXH5-qZNrQXJg@mail.gmail.com>
+ <CAFbkSA39RwB+E4SaG_ueu-_B=y7JytEYKw1+eXNQ_eCuMfnv=g@mail.gmail.com>
+In-Reply-To: <CAFbkSA39RwB+E4SaG_ueu-_B=y7JytEYKw1+eXNQ_eCuMfnv=g@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Thu, 7 Mar 2019 14:44:55 -0800
+Message-ID: <CACdnJuuHmK0qKjMxxonRYDUCatxqs930QGNQmREhRjimpNKzYw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/ima: retry detecting secure boot mode
+To:     Justin Forbes <jforbes@redhat.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        kexec@lists.infradead.org, Nayna Jain <nayna@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 1:19 PM Tobin C. Harding <me@tobin.cc> wrote:
+On Thu, Mar 7, 2019 at 2:38 PM Justin Forbes <jforbes@redhat.com> wrote:
+> On Thu, Mar 7, 2019 at 4:29 PM Matthew Garrett <mjg59@google.com> wrote:
+>>
+>> On Mon, Nov 19, 2018 at 11:57 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>> >
+>> > The secure boot mode may not be detected on boot for some reason (eg.
+>> > buggy firmware).  This patch attempts one more time to detect the
+>> > secure boot mode.
+>>
+>> Do we have cases where this has actually been seen? I'm not sure what
+>> the circumstances are that would result in this behaviour.
 >
-> On Thu, Mar 07, 2019 at 08:49:34AM +1100, Tobin C. Harding wrote:
-> > On Thu, Mar 07, 2019 at 08:42:19AM +1100, Tobin C. Harding wrote:
-> > > Hi,
-> >
-> > Man, I didn't see the merge window was open, I thought rc8 only came out
-> > on Sunday.
-> >
-> > Sorry, please ignore this.  Will re-send again later in the cycle.
 >
-> Multiple people have suggested to me (offlist) that it is fine to go
-> right ahead and send patches whenever.
->
-> Shuah, do you take patches to kselftest at any stage of the dev cycle?
->
-> Kees, same question please?
+> We have never seen it in practice, though we only ever do anything with it with x86, so it is possible that some other platforms maybe?
 
-I don't official "close" my tree, but I'm certainly less likely to
-respond in a timeline manner near the merge window. ;) (And as a
-result, I haven't had a chance to look these over yet.)
-
--- 
-Kees Cook
+I'm not sure that it buys us anything to check this in both the boot
+stub and the running kernel. If a platform *is* giving us different
+results, anything else relying on the information from the boot stub
+is also going to be broken, so we should do this centrally rather than
+in the IMA code.
