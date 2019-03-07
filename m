@@ -2,101 +2,96 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D06C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3333C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8362E20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E12B20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rbRMnnk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfCGJCA (ORCPT
+        id S1726233AbfCGJCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:02:00 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:41079 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfCGJCA (ORCPT
+        Thu, 7 Mar 2019 04:02:54 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39234 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCGJCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:02:00 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MDhQt-1hCZjv0PiR-00Akoh; Thu, 07 Mar 2019 10:01:48 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fs/select: avoid clang stack usage warning
-Date:   Thu,  7 Mar 2019 10:01:36 +0100
-Message-Id: <20190307090146.1874906-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 7 Mar 2019 04:02:53 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z84so8429403wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 01:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O9ZT9ahjeyolr/Iany3CM/GPdDq7jZeHLFOqe4NtOr4=;
+        b=rbRMnnk9+2OOPMPcrNXa8kd7HWrvSYx9i8w9ZkPvmkqeKKKWxB9RJGUd1IusI4/cTg
+         qXw8f4Crm9UM8BxR5Yu4YBpB+3F9G2pNRBIgpbBMdjG2FegCqqiJyR40bafVy44LqLTC
+         G2RSNwa9i3ib/3C1clU2Tq095OUQJzIKwWC4siLLw20rT4cBEPL9I0Z170M18bdzsQgN
+         UJHfhiGD7WkDq5EBJXUuxnDeATmsI5ThEOmiIRfsLTUetFBgXR2wW760kR3WlB4oUxrt
+         RxK7ybd7gcj6MtJEpcNmFibkMGvqpteg1QUysqvda9fL93+WOugJTgNemSfW/6CvR7yI
+         0b1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O9ZT9ahjeyolr/Iany3CM/GPdDq7jZeHLFOqe4NtOr4=;
+        b=X7d7uWW+kbLoX0WFfogVRnHrd9vPElfPnHb7ln5TQxSMBmDFtr/nhCMoSeXna8zIao
+         lBj1SxIl/sK9r6aC6AT3AgKLo3RPi34WJWfBHj+sMKPzXU1DCqJQR190ikqroURCGZtN
+         51gc6Uch1TvWHYDh5LID/e8xIzBVUwurCCa0xT+2IFZvqHJqDxTYRTiRbiyK/zCO9AXN
+         iRDfrWFJXj/Yo6JwmEhabRg0X+cSFRLRzR2fBIc0B0VqK8H/UXbf1vZZmVpg048bvZZ/
+         iFq7b7SMsS/x/s33F3BDO4MSBhmKkUdN4/UQ7r5K+GjBxG1epcetXub0/FgW28HKnn7d
+         vh/Q==
+X-Gm-Message-State: APjAAAVWR7K9rQeChLRxkFkEUk5I0Lih64l5ixRfmHOpMroTCp2UlkOT
+        DUPHWmCQa6sYabbxXdzkTIZVm2ZhT44=
+X-Google-Smtp-Source: APXvYqy0ZwE6yY91Doux3I/MDuUkohh2AlQHw4EXEvlmosOGQuXmNbK+sUV0eH+mNqtFRz8zm/Hh2A==
+X-Received: by 2002:a1c:a74a:: with SMTP id q71mr5230733wme.45.1551949370784;
+        Thu, 07 Mar 2019 01:02:50 -0800 (PST)
+Received: from [192.168.0.44] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id q5sm5455976wrn.43.2019.03.07.01.02.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 01:02:50 -0800 (PST)
+Subject: Re: [PATCH] clocksource/drivers/npcm: select TIMER_OF
+To:     Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tomer Maimon <tmaimon77@gmail.com>, linux-kernel@vger.kernel.org
+References: <20190305132529.3835223-1-arnd@arndb.de>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <46cf05f5-8f52-12fb-fc29-c4e98b1340a6@linaro.org>
+Date:   Thu, 7 Mar 2019 10:02:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190305132529.3835223-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:fHbTah3fz7WH6MIb/uyJkiMRtUkJq94xINrPv3mqYq0WpEmPXA6
- 57c4lGYafQ6Z29pxGltyEkAkHd2lzkRWUUs5AxaCpVb16diE/ppftcd5Xlqi1G+YN72yUBz
- L4VQNr/dUcvOb04V4ZEHSVLcx4BCP9KVk2kHU+ayVn+nDvvjQ+zDXFjgV5uWbP2F1coNQD1
- lSP/D7BtDpsqxgIb+BqgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kzJk6NlwIrQ=:nIfv0Nj1msgRnH5vMlj8MG
- DPXm7o7HIAWLEQarTsssNudmTdjappWe6On0qJPjZuXN+4TSgPbzbmidbKKafvFCNaos0iICx
- naJCHKUkYmbeleSsZ6terzMciYiuOzWTFWGKQP8PDiAfnqDgQViV2DVlB/d2y3sT9F+VPWHix
- IbtvHTMzUvgnRJLeVnQPXJRpepxQQyQPaI8iZx+o0KjkRq/IFr2KbkqFN0yGIAfNBOh/owgW9
- 2vHt5afPNoPnkQRrQzaYBPS69bzrhHFZ8FNKgDyCndM4WvkAdDxziU6xKjR4VRbxrOdpV3qMc
- o8nFEep2cRlJeg5C+/+vXS1cPC6Ao5+/UKDkn+pTlfBmtVu8RkWi++SJC98wx9wvuzdXhDEVR
- PEqDtm9vUwtIc8BsW1biSpO8xBZ57hlQVQGw/T2tYj4VeGSoAbdBdpKx7qrFZKNz1VrJa6Qxm
- HdY4hCSEFd0OKW62FuPj3wJ6gXPzMIAz9VPvMVG9jSU7ZtboxS7t1LYWhFzl8K18fFSrk2+0u
- Lc1aFgLHeGM91orEo+w20Rkd4Iiii4cTDoD1wk+KWJjFHvwiVMFiss8uWBBcgLRgUC+HlN8Ji
- xZMTw+GkFo17Xhb1I/OJvQaIPk/iGqJNcMyrdMHXxwmHCIvTUQdF+WdHO0nd3iLfTCmZNIp9c
- IclhxM7+luawbQH+6SDPbwB+NJoynY0DJEaDk+CXexUYODqYA/MwMOHNuGEuFIOWhHYtgXjz2
- tqdwh1f1NgCemIysG1Ss5hH3oSAUpoF7WSf6uQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The select() implementation is carefully tuned to put a sensible amount
-of data on the stack for holding a copy of the user space fd_set,
-but not too large to risk overflowing the kernel stack.
+On 05/03/2019 14:24, Arnd Bergmann wrote:
+> When this is disabled, we get a link failure:
+> 
+> drivers/clocksource/timer-npcm7xx.o: In function `npcm7xx_timer_init':
+> timer-npcm7xx.c:(.init.text+0xf): undefined reference to `timer_of_init'
+> 
+> Fixes: 1c00289ecd12 ("clocksource/drivers/npcm: Add NPCM7xx timer driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-When building a 32-bit kernel with clang, we need a little more space
-than with gcc, which often triggers a warning:
+Applied thanks
 
-fs/select.c:619:5: error: stack frame size of 1048 bytes in function 'core_sys_select' [-Werror,-Wframe-larger-than=]
-int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
 
-I experimentally found that for 32-bit ARM, reducing the maximum
-stack usage by 64 bytes keeps us reliably under the warning limit
-again.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/poll.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/linux/poll.h b/include/linux/poll.h
-index 7e0fdcf905d2..1cdc32b1f1b0 100644
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -16,7 +16,11 @@
- extern struct ctl_table epoll_table[]; /* for sysctl */
- /* ~832 bytes of stack space used max in sys_select/sys_poll before allocating
-    additional memory. */
-+#ifdef __clang__
-+#define MAX_STACK_ALLOC 768
-+#else
- #define MAX_STACK_ALLOC 832
-+#endif
- #define FRONTEND_STACK_ALLOC	256
- #define SELECT_STACK_ALLOC	FRONTEND_STACK_ALLOC
- #define POLL_STACK_ALLOC	FRONTEND_STACK_ALLOC
 -- 
-2.20.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
