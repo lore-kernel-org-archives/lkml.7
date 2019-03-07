@@ -2,43 +2,72 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6FDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0CCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFBE20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2444120675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:14:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BDRkZ6hf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfCGSOu (ORCPT
+        id S1726542AbfCGSOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:14:50 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49796 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbfCGSOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:14:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52909EBD;
-        Thu,  7 Mar 2019 10:14:49 -0800 (PST)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 414CC3F71D;
-        Thu,  7 Mar 2019 10:14:48 -0800 (PST)
-Subject: Re: [PATCH] tty/sysrq: Convert show_lock to raw_spinlock_t
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, jslaby@suse.com,
-        gregkh@linuxfoundation.org, linux-rt-users@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190304172053.17340-1-julien.grall@arm.com>
- <20190307123823.fnzb7njqdib4xghk@flow>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <c86522b3-cc38-1559-5011-22de1d08db99@arm.com>
-Date:   Thu, 7 Mar 2019 18:14:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 13:14:55 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:65434 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbfCGSOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 13:14:54 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44Ff156TcVz9v0JP;
+        Thu,  7 Mar 2019 19:14:49 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=BDRkZ6hf; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id wTdFRGYppYtS; Thu,  7 Mar 2019 19:14:49 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Ff155FRFz9v0JM;
+        Thu,  7 Mar 2019 19:14:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1551982489; bh=Q5wddiC7ZY4cQ0vEFxppoDBXvYS1NYMd0ly3QzUTL5E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BDRkZ6hfbteBarh7wE9TOm3KiKZygNkuDlTfdnV3bYPqyivONnDSf0qpoqHcq495c
+         PkmHTkmB2j4Qk2MfAGc+O7Rqi+EVj2Q2caqDEp5lcpqu9sSUb9b8Ct9iBXZmJWZhVf
+         S55hNuYnaLKELl/Zzi/CABPXXCnSn83QwmHAobQk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 36D7C8BF27;
+        Thu,  7 Mar 2019 19:14:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id zVlMaDxUV_Cz; Thu,  7 Mar 2019 19:14:51 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B0D138BEE3;
+        Thu,  7 Mar 2019 19:14:50 +0100 (CET)
+Subject: Re: [PATCH v2 03/10] powerpc/6xx: Store PGDIR physical address in a
+ SPRG
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1550745320.git.christophe.leroy@c-s.fr>
+ <297f30d8ba75cb0e9ebe0a776d96c19750105570.1550745320.git.christophe.leroy@c-s.fr>
+ <20190307141143.GA26761@roeck-us.net>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <2acc1691-0f74-8843-ecdd-64ba8705de20@c-s.fr>
+Date:   Thu, 7 Mar 2019 18:14:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190307123823.fnzb7njqdib4xghk@flow>
+In-Reply-To: <20190307141143.GA26761@roeck-us.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -47,171 +76,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+Hi,
 
-On 07/03/2019 12:38, Sebastian Andrzej Siewior wrote:
-> On 2019-03-04 17:20:53 [+0000], Julien Grall wrote:
->> At the moment show_lock is implemented using spin_lock_t and called from
->> an interrupt context on Arm64. The following backtrace was triggered by:
+On 03/07/2019 02:11 PM, Guenter Roeck wrote:
+> Hi,
+> 
+> On Thu, Feb 21, 2019 at 10:37:55AM +0000, Christophe Leroy wrote:
+>> Use SPRN_SPRG2 to store the current thread PGDIR and
+>> avoid reading thread_struct.pgdir at every TLB miss.
 >>
->> 42sh# echo l > /proc/sysrq-trigger
->>
->> [ 4432.073756] sysrq: SysRq : Show backtrace of all active CPUs
->> [ 4432.403422] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:974
->> [ 4432.403424] sysrq: CPU6:
->> [ 4432.403426] in_atomic(): 1, irqs_disabled(): 128, pid: 2410, name: kworker/u16:2
->>
->> [...]
->>
->> [ 4432.403581] Call trace:
->> [ 4432.403584]  dump_backtrace+0x0/0x148
->> [ 4432.403586]  show_stack+0x14/0x20
->> [ 4432.403588]  dump_stack+0x9c/0xd4
->> [ 4432.403592]  ___might_sleep+0x1cc/0x298
->> [ 4432.403595]  rt_spin_lock+0x5c/0x70
->> [ 4432.403596]  showacpu+0x34/0x68
->> [ 4432.403599]  flush_smp_call_function_queue+0xd4/0x278
->> [ 4432.403602]  generic_smp_call_function_single_interrupt+0x10/0x18
->> [ 4432.403605]  handle_IPI+0x26c/0x668
->> [ 4432.403607]  gic_handle_irq+0x9c/0xa0
->> [ 4432.403609]  el1_irq+0xb4/0x13c
->>
->> With RT-patches, spin_lock can now sleep and therefore cannot be used from
->> interrupt context. Use a raw_spin_lock instead to prevent the lock to
->> sleep.
->>
->> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
-> Now that I had time to look at it, for the change itself:
-> 	Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> For the description please take into consideration to add something like
-> this:
-> 
->   Systems which don't provide arch_trigger_cpumask_backtrace() will
->   invoke showacpu() from a smp_call_function() function which is invoked
->   with disabled interrupts even on -RT systems.
->   The function acquires the show_lock lock which only purpose is to
->   ensure that the CPUs don't print simultaneously. Otherwise the output
->   would clash and it would be hard to tell the output from CPUx apart
->   from CPUy.
->   On -RT the spin_lock() can not be acquired from this context. A
->   raw_spin_lock() is required. It will introduce the system's latency
->   by performing the sysrq request and other CPUs will block on the lock
->   until the request is done. This is okay because the user asked for a
->   backtrace of all active CPUs and under "normal circumstances in
->   production" this path should not be triggered.
+> This patch causes a number of silent (no crash) qemu boot stalls
+> in -next. See
+> https://kerneltests.org/builders/qemu-ppc-next/builds/1080/steps/qemubuildcommand/logs/stdio
+> for an example.
 
-This description looks better. I will update the commit message. Do you mind if 
-I had your signed-off-by as you provided the commit message?
+Oops.
+Could you try the fix below ?
 
-> 
-> Which explains *why* you do the change and *why* it is okay to do the
-> change. If we start changing each spin_lock() to a raw_spin_lock()
-> because lockdep said so then soon the RT switch will make less change
-> than it should.
+diff --git a/arch/powerpc/kernel/cpu_setup_6xx.S 
+b/arch/powerpc/kernel/cpu_setup_6xx.S
+index 6f1c11e0691f..7534ecff5e92 100644
+--- a/arch/powerpc/kernel/cpu_setup_6xx.S
++++ b/arch/powerpc/kernel/cpu_setup_6xx.S
+@@ -24,9 +24,6 @@ BEGIN_MMU_FTR_SECTION
+  	li	r10,0
+  	mtspr	SPRN_SPRG_603_LRU,r10		/* init SW LRU tracking */
+  END_MMU_FTR_SECTION_IFSET(MMU_FTR_NEED_DTLB_SW_LRU)
+-	lis	r10, (swapper_pg_dir - PAGE_OFFSET)@h
+-	ori	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@l
+-	mtspr	SPRN_SPRG_PGDIR, r10
 
-I understand, I will take into account for the next RT patches I will post.
+  BEGIN_FTR_SECTION
+  	bl	__init_fpu_registers
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index ce6a972f2584..48051c8977c5 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -855,6 +855,9 @@ __secondary_start:
+  	li	r3,0
+  	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
+  #endif
++	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
++	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
++	mtspr	SPRN_SPRG_PGDIR, r4
 
-> 
->  From top of my head I think you won't see the output on -RT right away.
-> The output won't be printed from the non-preemptible context and will be
-> delayed until a printk occurs from a preemptible context.
+  	/* enable MMU and jump to start_secondary */
+  	li	r4,MSR_KERNEL
+@@ -942,6 +945,9 @@ start_here:
+  	li	r3,0
+  	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
+  #endif
++	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
++	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
++	mtspr	SPRN_SPRG_PGDIR, r4
 
-FWIW, this is the behavior I saw when testing this patch.
+  	/* stack */
+  	lis	r1,init_thread_union@ha
+diff --git a/arch/powerpc/mm/hash_low_32.S b/arch/powerpc/mm/hash_low_32.S
+index 1f13494efb2b..587e4550d83e 100644
+--- a/arch/powerpc/mm/hash_low_32.S
++++ b/arch/powerpc/mm/hash_low_32.S
+@@ -70,12 +70,12 @@ _GLOBAL(hash_page)
+  	lis	r0,KERNELBASE@h		/* check if kernel address */
+  	cmplw	0,r4,r0
+  	ori	r3,r3,_PAGE_USER|_PAGE_PRESENT /* test low addresses as user */
+-	mfspr	r5, SPRN_SPRG_PGDIR	/* virt page-table root */
++	mfspr	r5, SPRN_SPRG_PGDIR	/* phys page-table root */
+  	blt+	112f			/* assume user more likely */
+-	lis	r5,swapper_pg_dir@ha	/* if kernel address, use */
+-	addi	r5,r5,swapper_pg_dir@l	/* kernel page table */
++	lis	r5, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
++	addi	r5 ,r5 , (swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
+  	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
+-112:	tophys(r5, r5)
++112:
+  #ifndef CONFIG_PTE_64BIT
+  	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
+  	lwz	r8,0(r5)		/* get pmd entry */
 
-> There are
-> printk related patches which fix that and allow a printk from a
-> non-preemptible context for a configured log level.
-> 
-> Looking at the showacpu() construct: Do you get a proper stacktrace for a
-> busy CPU or does it always start at el1_irq()? Because if the interrupt
-> always starts with its own interrupt stack then the backtrace is
-> useless. All you would need is the information that the CPU is alive and
-> a oneline printk() saying so would be enough. Or, if it starts on its
-> own stack but is able to unwind to the previous context *then* you gain
-> additional information you are looking for.
 
- From my understanding, the stack frames across exceptions are chained. So the 
-stacktrace will be able to unwind to the previous context.
-
-Actually, in my previous e-mail, I have cut down the stacktrace to el1_irq() as 
-it was quite long. An example of the full stack trace:
-
-[  516.820845] sysrq: SysRq : Show backtrace of all active CPUs
-[  516.941513] sysrq: CPU0:
-[  516.941515] Call trace:
-[  516.941519]  dump_backtrace+0x0/0x148
-[  516.941521]  show_stack+0x14/0x20
-[  516.941524]  showacpu+0x58/0x70
-[  516.941527]  flush_smp_call_function_queue+0xd4/0x278
-[  516.941530]  generic_smp_call_function_single_interrupt+0x10/0x18
-[  516.941533]  handle_IPI+0x26c/0x668
-[  516.941535]  gic_handle_irq+0x9c/0xa0
-[  516.941537]  el1_irq+0xb4/0x13c
-[  516.941539]  generic_exec_single+0x174/0x218
-[  516.941541]  smp_call_function_single+0xc4/0x280
-[  516.941544]  task_function_call+0x54/0x90
-[  516.941547]  event_function_call+0xa0/0x158
-[  516.941549]  _perf_event_enable+0x54/0x80
-[  516.941552]  perf_event_enable+0x24/0x40
-[  516.941555]  kvm_pmu_enable_counter.part.0+0x64/0x90
-[  516.941557]  kvm_pmu_handle_pmcr+0xc0/0xd8
-[  516.941559]  access_pmcr+0x104/0x138
-[  516.941561]  perform_access+0x1c/0x78
-[  516.941564]  kvm_handle_sys_reg+0x144/0x4e0
-[  516.941566]  handle_exit+0x13c/0x1f8
-[  516.941568]  kvm_arch_vcpu_ioctl_run+0x68c/0xbe8
-[  516.941571]  kvm_vcpu_ioctl+0x398/0xad8
-[  516.941574]  do_vfs_ioctl+0xbc/0x910
-[  516.941576]  ksys_ioctl+0x78/0xa8
-[  516.941579]  __arm64_sys_ioctl+0x1c/0x28
-[  516.941582]  el0_svc_common+0x90/0x118
-[  516.941584]  el0_svc_handler+0x2c/0x80
-[  516.941586]  el0_svc+0x8/0xc
-
-Thank you for your acked-by and the explanation. I will resend the patch with 
-the updated comment.
-
-Best regards,
+Thanks
+Christophe
 
 > 
->> ---
->>   drivers/tty/sysrq.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
->> index 1f03078ec352..8473557c7ab2 100644
->> --- a/drivers/tty/sysrq.c
->> +++ b/drivers/tty/sysrq.c
->> @@ -208,7 +208,7 @@ static struct sysrq_key_op sysrq_showlocks_op = {
->>   #endif
->>   
->>   #ifdef CONFIG_SMP
->> -static DEFINE_SPINLOCK(show_lock);
->> +static DEFINE_RAW_SPINLOCK(show_lock);
->>   
->>   static void showacpu(void *dummy)
->>   {
->> @@ -218,10 +218,10 @@ static void showacpu(void *dummy)
->>   	if (idle_cpu(smp_processor_id()))
->>   		return;
->>   
->> -	spin_lock_irqsave(&show_lock, flags);
->> +	raw_spin_lock_irqsave(&show_lock, flags);
->>   	pr_info("CPU%d:\n", smp_processor_id());
->>   	show_stack(NULL, NULL);
->> -	spin_unlock_irqrestore(&show_lock, flags);
->> +	raw_spin_unlock_irqrestore(&show_lock, flags);
->>   }
->>   
->>   static void sysrq_showregs_othercpus(struct work_struct *dummy)
->> -- 
->> 2.11.0
->>
+> Unfortunately, it is not possible to revert the patch due to subsequent
+> patches, so I was unable to test a revert.
 > 
-> Sebastian
+> Bisect log is attached.
 > 
-
--- 
-Julien Grall
+> Guenter
+> 
+> ---
+> # bad: [cf08baa29613dd899954089e7cc7dba1d478b365] Add linux-next specific files for 20190306
+> # good: [1c163f4c7b3f621efff9b28a47abb36f7378d783] Linux 5.0
+> git bisect start 'HEAD' 'v5.0'
+> # bad: [6cc8f3499ec8d31904ab9083980a91736512cb37] Merge remote-tracking branch 'vfs/for-next'
+> git bisect bad 6cc8f3499ec8d31904ab9083980a91736512cb37
+> # good: [63bdf4284c38a48af21745ceb148a087b190cd21] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+> git bisect good 63bdf4284c38a48af21745ceb148a087b190cd21
+> # good: [520b5fc601ab760fee7ea0c403b42d04e8ebfd93] Merge remote-tracking branch 'arm-soc/for-next'
+> git bisect good 520b5fc601ab760fee7ea0c403b42d04e8ebfd93
+> # bad: [d7f54e4e0d4e90f5df78da8d6a830bafad3b535a] Merge remote-tracking branch 'xtensa/xtensa-for-next'
+> git bisect bad d7f54e4e0d4e90f5df78da8d6a830bafad3b535a
+> # good: [0c1a78523542fb3d2e6c5ac7955c8ca8f6482e6f] Merge remote-tracking branch 'clk/clk-next'
+> git bisect good 0c1a78523542fb3d2e6c5ac7955c8ca8f6482e6f
+> # bad: [fb0b0a73b223fc113e961b1d921322844e9c30d9] powerpc: Enable kcov
+> git bisect bad fb0b0a73b223fc113e961b1d921322844e9c30d9
+> # good: [d0055df0c9c1471c389197a69f43e300185a75aa] Merge branch 'topic/dma' into next
+> git bisect good d0055df0c9c1471c389197a69f43e300185a75aa
+> # good: [0df977eafc792a5365a7f81d8d5920132e03afad] powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS
+> git bisect good 0df977eafc792a5365a7f81d8d5920132e03afad
+> # bad: [665bed2386e5dc29844ad78c7ef1464664b103ec] powerpc/8xx: replace most #ifdef by IS_ENABLED() in 8xx_mmu.c
+> git bisect bad 665bed2386e5dc29844ad78c7ef1464664b103ec
+> # bad: [78ca1108b10927b3d068c8da91352b0f4cd01fc5] powerpc/book3s32: Reorder _PAGE_XXX flags to simplify TLB handling
+> git bisect bad 78ca1108b10927b3d068c8da91352b0f4cd01fc5
+> # bad: [a8a121995b2e4f227fddc534c6bd5f1c02cbe2ee] powerpc/603: Don't handle kernel page TLB misses when not need
+> git bisect bad a8a121995b2e4f227fddc534c6bd5f1c02cbe2ee
+> # bad: [2c12393f577396a51b7e0537bd3eb29dcc26dc1b] powerpc/603: use physical address directly in TLB miss handlers.
+> git bisect bad 2c12393f577396a51b7e0537bd3eb29dcc26dc1b
+> # bad: [93c4a162b014d238a287f8264adb25c009c79e61] powerpc/6xx: Store PGDIR physical address in a SPRG
+> git bisect bad 93c4a162b014d238a287f8264adb25c009c79e61
+> # first bad commit: [93c4a162b014d238a287f8264adb25c009c79e61] powerpc/6xx: Store PGDIR physical address in a SPRG
+> 
