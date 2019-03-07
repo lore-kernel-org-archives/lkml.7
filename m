@@ -6,83 +6,89 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166D5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D422F20854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD4520835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfCGKKf (ORCPT
+        id S1726344AbfCGKMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:10:35 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:59161 "EHLO
+        Thu, 7 Mar 2019 05:12:23 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:50521 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfCGKKd (ORCPT
+        with ESMTP id S1726131AbfCGKMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:10:33 -0500
+        Thu, 7 Mar 2019 05:12:23 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MpUQm-1giyJ345W8-00pt6A; Thu, 07 Mar 2019 11:10:26 +0100
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MqrsF-1gfxcn0tFp-00mp32; Thu, 07 Mar 2019 11:11:04 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>
 Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: davinci: remove extraneous __init annotation
-Date:   Thu,  7 Mar 2019 11:10:11 +0100
-Message-Id: <20190307101024.594587-1-arnd@arndb.de>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: ams-delta: remove duplicate 'const'
+Date:   Thu,  7 Mar 2019 11:10:49 +0100
+Message-Id: <20190307101101.613881-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5Z+c2+TXyo4rnMtsy185ZWjj08lop8Hyc9X4keISaszoTUMNbwZ
- yMoD8Z0yFnJB/4alQCxmN3ikNJep5jrRnGKkEU6r9+WR1E1X3ppsVtT54n7AyQGtRBnVJbv
- 6YjGgoMdIC/wvFzWQyb0zM9ZtnnEoTbbkqJC0H/CLnoe5YcwxKqOTdqeaWh7LN9NDccXqwr
- PAfBqX1xQ6uKX2fv7l4zQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rh1iC44JIzw=:fPhYNNPiCxmD2ARL6TnZsS
- jRPYHBDpd5uDSInQoZn+T0h+BIqltG3SE1BgSHsDyciF2VWOD3xtuVB19Oq2v5XrrG5JWTH+m
- n2cztbyy4sGNDtt+xCqQWoejW9UwdLHY4+5fDHhrI2XKMbgz0IIUcB3xbvYTLUhtDpIof9TkP
- dR0hDCV8UeFkAhLJMA+JTZaTYToV7ue4tfQNJMu/ccxPG922G8lUIPdfE3FKMoMJYg0xHeM3A
- 9vf1G0d+F8lLAgoL1h4GL4sjlgXqI7roceBLAit0gWNZZcIsl4fXE46rk2KcsCDIaU5zISPMJ
- 4Jc7sLkT8VJvU68ko4I6MAQExDxPAIIUENgUApa0wfCyYSilf9bUtxVO6xC45Dfw+6z5TW7kJ
- Uy5tYrPSmVR/tc1FG5m5lBA6GGKdsBAeMtcGybCtqbB/lCH+/0gxs3jr278qdxtU0/AoY2Tvl
- TJ3XrdvKKaTTGlaBXtzVlA9igNMQm8ZW76rp2v3i3TK9Uo3YruypHOWJUONi7IIb+LMQy0rUQ
- BtXkvqked+qnR1c9TRMzFmrzr6Oj668e+C/xEKBBcH4s+TyNc+jjD2iTfBkUJa/H2R1z1XXzd
- iKckNuI0VH80EgaxOvQZJVILbsF/l3vSCV6/SFuzQDjq3kVVKm2qmNh+W4RkGdKl78rIb6EL1
- 7l52d9zAQ59rYWZqiFbKGedTYzqVU1iycr2px0E4QShmf+75o5nLk/ESZ1G5EAK176P5j4gL2
- qzKUyCwWdxlYGqJKoSCyRCwhyRCEpWMLquWsyA==
+X-Provags-ID: V03:K1:k/2OR9k0QoyUUNIInBX08wqkIL3j6Yz0+PfESAJTH3/Iy1DhaZa
+ wplY2bTKqUACOsclQ1NkytMx2WxJULDHIjjshJp8ii7siShpsoRktl3oVOjISLlDHjXUl5H
+ Cr+FtXhx5wxNAv8W/jxnTHgXFovNPjviCmJ9/KyF+pdKukbTCFPEBxUDN5T4mlKEGI0MfMz
+ yqxy19ZAxtz/YZZ1Uicuw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CnygP1H9aSA=:5h6CzTF8RPe9XURDae0mf3
+ 8SE+KYRkEOlqAhzLim/ZQwvH86n+2b2y5lc7CK/D9ZFLjXgTP4Cx/t4JogcXeTglDCRNEqPQG
+ 2WSV0ALCDiPlOmVgsW1B+QQQhLbyMh+Mob0dx2qOHXziaVxyMXnX4DA3CZcg25n1u8EbgXYy5
+ ZUX3b+2boYKt2L7KYszmV6auDeEaDl+pvNJ8D+ptUqwuBpo1JHw9DuYc+b0X8CCNEXWqLJn/4
+ /4oYOzHonsJyOYVX8kLQJSdFsYZcueIFLadrGyQBH/ci1O2bFR8WYeq2StjkXTqZUtXyeAswL
+ RjqjDEdSddP40q/ZCFyO13O4Yh3mGPDYE8OwddSU2t+NgQ0v84H191g91Fdy3e2IgreG4Zt2y
+ u9hvCht2P1gfuNH6J7L0RrsuV1z19xw4KLEbFhHJUU3OVWcGVIpHiqdWp8eHsUa6ry/bfYI9s
+ puRV/aM1DwGRRpO5a7CrKBPCRCjq/VuhGi1Uft0+25T9jTbvZ/WMeI3xD4rurdjd9EuQZCXro
+ 3b1rp0k6cR/MvY+mDhmUlwZSwUw9/KQGU005ucSQXFUlcdOe2eY/UgEGIBajEIGGd9/ux82Fg
+ MUlmmNsnyf9BiH4iLG9XRRvFDBiO+lxnvnnThsBAJarYr4BmuJ1MPGnA8xHzyC47WL+8BKVhq
+ ux99vBbAqHuCDQJbu649SqQFKVI2oayhaEfl12nYDnFTZTztdBwdz02N+MI6Gwh0P+Dc+wybL
+ mRyrhzFjzBauQBV0Hqw4rsrdu6295LkmIaLSJg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with clang finds a mistaken __init tag:
+clang points out that SOC_ENUM_SINGLE_EXT_DECL() contains a 'const'
+modifier already, so adding another one does not make it more const:
 
-WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
-The function davinci_mmcsd_probe() references
-the function __init init_mmcsd_host().
-This is often because davinci_mmcsd_probe lacks a __init
-annotation or the annotation of init_mmcsd_host is wrong.
+sound/soc/ti/ams-delta.c:203:14: error: duplicate 'const' declaration specifier [-Werror,-Wduplicate-decl-specifier]
+static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+             ^
+include/sound/soc.h:351:2: note: expanded from macro 'SOC_ENUM_SINGLE_EXT_DECL'
+        const struct soc_enum name = SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(xtexts), xtexts)
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/mmc/host/davinci_mmc.c | 2 +-
+ sound/soc/ti/ams-delta.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-index 49e0daf2ef5e..f37003df1e01 100644
---- a/drivers/mmc/host/davinci_mmc.c
-+++ b/drivers/mmc/host/davinci_mmc.c
-@@ -1117,7 +1117,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
- {
+diff --git a/sound/soc/ti/ams-delta.c b/sound/soc/ti/ams-delta.c
+index 4dce494dfbd3..b9611db14c86 100644
+--- a/sound/soc/ti/ams-delta.c
++++ b/sound/soc/ti/ams-delta.c
+@@ -200,7 +200,7 @@ static int ams_delta_get_audio_mode(struct snd_kcontrol *kcontrol,
+ 	return 0;
  }
- #endif
--static void __init init_mmcsd_host(struct mmc_davinci_host *host)
-+static void init_mmcsd_host(struct mmc_davinci_host *host)
- {
  
- 	mmc_davinci_reset_ctrl(host, 1);
+-static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
++static SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+ 				      ams_delta_audio_mode);
+ 
+ static const struct snd_kcontrol_new ams_delta_audio_controls[] = {
 -- 
 2.20.0
 
