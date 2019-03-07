@@ -2,142 +2,94 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6637C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AB8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FFF2063F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5F82063F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ago94CZu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JGBOdgPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfCGRiT (ORCPT
+        id S1726431AbfCGRiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:38:19 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42553 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfCGRiT (ORCPT
+        Thu, 7 Mar 2019 12:38:25 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43826 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfCGRiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:38:19 -0500
-Received: by mail-ed1-f68.google.com with SMTP id j89so14175362edb.9;
-        Thu, 07 Mar 2019 09:38:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pYDdORtI49zbFv1HqxWCX32wqb6wh+6jCM2eUFdE2lM=;
-        b=ago94CZuJLIrJXpXcbli2DSvDbViS5xrLxDWs229kYca99FVeMEke7S/U1ZPGPlNg3
-         k4323GFsMLnOBQfMqQZOgvad/YFF5LqCzbwe8kDSN/GSGV7hpO2wpeXp3Ia7wRtz9/Uy
-         CQE2Ug1X6JEuXWA888zoEusStuOPs9wDZ3D7LTBqAUUBoxQ+wuPNGzbOLSjXfxcraJ+Z
-         3zxaLrPcaUSUYedeT51lsmIZBV3SVbTM1RkLG7bqjzThjyExZebSlbJ/nv/qk+GbeWJ1
-         T6WYM4Sb9hDOsl5WavHSQXtywIKGT6ij90BGj3jtMOd0PbJl+J51ccVh8tfOGiXMH4Qq
-         kQLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pYDdORtI49zbFv1HqxWCX32wqb6wh+6jCM2eUFdE2lM=;
-        b=YqmpvHquSpILRcViaFX7sLjlBpdkEu9KL6YP8WZPAbPWCPvd1SUY4AXXTpg0OgjwMu
-         4oelzVsbiuTx3Q7nTsX63ujHm1QeHIjV3OKkIk8tKU71HiDD1uEYdQsQkUYLGirQvKt0
-         jyGdNzlLyeE2mP7lkdv2g/el8jnJbaHJIBXSQ+HKKZS0jQyKV5suJ1HRDxNghnHcFq70
-         EOTWo9Cx4mZItAwO0gb/8Nh+TDEOEBmo9UnoMIbQ0hyXcMzPdI/ZmzmfGyFC8BMc9n1k
-         GD6B7Ofhz/jsTfOYMx8fjZT48u2vPgsNT6OfYrkfdk/8CZHyg2Z28W72okI1fIJvjmX7
-         Vxow==
-X-Gm-Message-State: APjAAAVQm/dvJg4DvlDOp32EqJyLygtwG8IKh/w6XT8p3q2752hNWVqB
-        zT0jdtwstmAtjTZM8eUGUt5ysM2Z4izmdg==
-X-Google-Smtp-Source: APXvYqwfQaJoZazjdCNEPGvA9lcW9B+570wcFvuwnsRkM0H4B9pgAjmIo7qKhcIciV5sR9bZcYk2pg==
-X-Received: by 2002:a50:a5f4:: with SMTP id b49mr28958736edc.23.1551980296785;
-        Thu, 07 Mar 2019 09:38:16 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id x36sm1505073eda.94.2019.03.07.09.38.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 09:38:16 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] ACPI / sysfs: Restructure get_status
-Date:   Thu,  7 Mar 2019 10:38:02 -0700
-Message-Id: <20190307173802.3448-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 7 Mar 2019 12:38:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2bjsc85l/P3sWJy9LA97uh1fbTulfsF6oCVTsZ2XWUw=; b=JGBOdgPlxhlu2hgQXSNXAWi9R
+        ylm3xDSH5MT9WEPRdMGYxOeWKnU9JS/1Dw/NH+u50mhaV3ZOBCKAv/JQGTFLHbio7o9vwqd2Lgm3s
+        T8dqqAztRI4pfKYwY3uw4YeQ3gYi0RsxlvuBiqQC1D7mqQQUMlP/ue5fVYeRaAL/0EZ72lWoEjKbu
+        6kkBbWzm53wnNc8fj94a+ZPF1XIifEYYdi4a0ntpLSS9xCRV0pBLkmk2MioI4r3Ewuzyf7UJTkkVS
+        LYqkTYVzbu/VCL6eE/IJxAaG2fw1uWhfv1hWFYiqmUmQ6q36IzxYaMlYwQ5mFvW0oej+SQB1AJ3BR
+        w6OfjSo6w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1wyC-0001VG-9U; Thu, 07 Mar 2019 17:38:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B0AA2029B186; Thu,  7 Mar 2019 18:38:10 +0100 (CET)
+Date:   Thu, 7 Mar 2019 18:38:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
+Message-ID: <20190307173810.GI32477@hirez.programming.kicks-ass.net>
+References: <20190307114511.870090179@infradead.org>
+ <20190307120317.GD32477@hirez.programming.kicks-ass.net>
+ <20190307125526.GB32534@hirez.programming.kicks-ass.net>
+ <20190307131312.GC32534@hirez.programming.kicks-ass.net>
+ <20190307164705.qbu4ytdfdmsighas@treble>
+ <CAHk-=wgfvwn1L7BduXA02rZdDnKGb8ebzm4C--QcfVF+gjHAvQ@mail.gmail.com>
+ <20190307171709.dap5hfeof4yo3nsc@treble>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307171709.dap5hfeof4yo3nsc@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
+On Thu, Mar 07, 2019 at 11:17:09AM -0600, Josh Poimboeuf wrote:
+> On Thu, Mar 07, 2019 at 09:00:49AM -0800, Linus Torvalds wrote:
+> > But that macro really is the macro from hell regardless.
+> > 
+> > Do people really use CONFIG_PROFILE_ALL_BRANCHES?
+> 
+> IIRC, Steven runs it once a year or so...
 
-drivers/acpi/sysfs.c:667:13: warning: variable 'result' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+That's TRACE_BRANCH_PROFILING; PROFILE_ALL_BRANCHES I don't know, that
+mostly just gets in the way I think.
 
-Clang can't determine that all cases are covered by the two separate if
-statements. We could combine then to look like this:
+Also; it seems to me that something PT, or maybe even simply:
 
-    int result;
+  perf -e branches -e branch-misses
 
-    if (...) {
-        ...
-    } else if {
-        ...
-    } else {
-        result -EINVAL;
-    }
-
-    return result;
-
-However, at that point, we can further simplify this function by only
-using result when absolutely needed and just direct returning the value
-of the function.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/388
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/acpi/sysfs.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-index 41324f0b1bee..6ed785cadad9 100644
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -651,23 +651,18 @@ static void acpi_global_event_handler(u32 event_type, acpi_handle device,
- static int get_status(u32 index, acpi_event_status *status,
- 		      acpi_handle *handle)
- {
--	int result;
--
--	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
--		return -EINVAL;
--
- 	if (index < num_gpes) {
--		result = acpi_get_gpe_device(index, handle);
-+		int result = acpi_get_gpe_device(index, handle);
- 		if (result) {
- 			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
- 					"Invalid GPE 0x%x", index));
- 			return result;
- 		}
--		result = acpi_get_gpe_status(*handle, index, status);
-+		return acpi_get_gpe_status(*handle, index, status);
- 	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
--		result = acpi_get_event_status(index - num_gpes, status);
-+		return acpi_get_event_status(index - num_gpes, status);
- 
--	return result;
-+	return -EINVAL;
- }
- 
- static ssize_t counter_show(struct kobject *kobj,
--- 
-2.21.0
-
+would get you similar or sufficient information.
