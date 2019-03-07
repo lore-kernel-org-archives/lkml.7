@@ -2,138 +2,198 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFCCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9934020643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:46:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Of+gRCLx"
+	by mail.kernel.org (Postfix) with ESMTP id D2B3E20643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfCGLq5 (ORCPT
+        id S1726498AbfCGLtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:46:57 -0500
-Received: from mail-it1-f195.google.com ([209.85.166.195]:37034 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCGLq5 (ORCPT
+        Thu, 7 Mar 2019 06:49:20 -0500
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:4314 "EHLO
+        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfCGLtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:46:57 -0500
-Received: by mail-it1-f195.google.com with SMTP id z124so15317962itc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 03:46:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BJFCmIBEkjX0SmedhiLrBylGwmmAasIGYFf4pgeMd5U=;
-        b=Of+gRCLx2RnIP0JKabQ9E4/TSFoRliLCGEbnMjNeyp0iC7Q8f6gKg1lGQNvxE8keug
-         fKxQPu07y0ZaCEoP+AgqVmqoZKEAJnsLdLkUQOKo4lA4S+1Fr3Fmz4+cWFf0NwOBdPhY
-         +aZQ4ZpJa5j+AXeyvUXLRjbQHJBQxG149Xirk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BJFCmIBEkjX0SmedhiLrBylGwmmAasIGYFf4pgeMd5U=;
-        b=b/PpYJhUESjVzZUeJ+A6muCPI4n+6M4VU0t3p0Efw9ASHYKRQ+6MQPW+YldjEdyCYN
-         ygyCLhT/0+xRGTn9GMv9IumIcvgdfvvo8aJs0d2ndeFxthzxodJ3rHL14pBHt2bGZevi
-         M5PJMgt2O+tGNNo7EeKRF89PURnrU/00S8azVXaBYOEDJ+YmzPETlJopLRTDcoEwKOiV
-         K2AfEV1fYhvDjFEGh3iB5k5EbjmfAQn4zN60K6AV+qe9NyKSp+DTkeD1rdYcgUngGZmK
-         4yFHLb7Ldwn5gYkrN5XEWIVxSXGPt72b4IB7LvAjZOC/2y7f0WiVrdgi5pwpFeeGRamZ
-         WrAg==
-X-Gm-Message-State: APjAAAWNJlBXiSFUV7c894xCmBktRFq1DtcX1a8g1haOmtC0fyv/+TQ6
-        eQqDAxm1pWiCFYQlux3Ael1okK8+EVSHVCz1kWtBrw==
-X-Google-Smtp-Source: APXvYqxFKCKG4CZ6yIwfDTfytYJuhqUEZu1ooas6vRHNiYP95URGNZt74y7RFAwCbsQDcyB5hOiZDqMXV1E5AyjS19c=
-X-Received: by 2002:a24:e4d:: with SMTP id 74mr4722223ite.32.1551959215516;
- Thu, 07 Mar 2019 03:46:55 -0800 (PST)
+        Thu, 7 Mar 2019 06:49:20 -0500
+X-IronPort-AV: E=Sophos;i="5.58,451,1544482800"; 
+   d="scan'208";a="298435532"
+Received: from nat-inria-bordeaux-52-gw-01-bso.bordeaux.inria.fr (HELO [10.204.4.73]) ([194.199.1.52])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES128-SHA; 07 Mar 2019 12:49:15 +0100
+Subject: Re: [PATCHv6 07/10] acpi/hmat: Register processor domain to its
+ memory
+To:     Keith Busch <keith.busch@intel.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190214171017.9362-1-keith.busch@intel.com>
+ <20190214171017.9362-8-keith.busch@intel.com>
+From:   Brice Goglin <Brice.Goglin@inria.fr>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Brice.Goglin@inria.fr; prefer-encrypt=mutual; keydata=
+ mQINBFNg91oBEADMfOyfz9iilNPe1Yy3pheXLf5O/Vpr+gFJoXcjA80bMeSWBf4on8Mt5Fg/
+ jpVuNBhii0Zyq4Lip1I2ve+WQjfL3ixYQqvNRLgfw/FL0gNHSOe9dVFo0ol0lT+vu3AXOVmh
+ AM4IrsOp2Tmt+w89Oyvu+xwHW54CJX3kXp4c7COz79A6OhbMEPQUreerTavSvYpH5pLY55WX
+ qOSdjmlXD45yobQbMg9rFBy1BECrj4DJSpym/zJMFVnyC5yAq2RdPFRyvYfS0c491adD/iw9
+ eFZY1XWj+WqLSW8zEejdl78npWOucfin7eAKvov5Bqa1MLGS/2ojVMHXJN0qpStpKcueV5Px
+ igX8i4O4pPT10xCXZ7R6KIGUe1FE0N7MLErLvBF6AjMyiFHix9rBG0pWADgCQUUFjc8YBKng
+ nwIKl39uSpk5W5rXbZ9nF3Gp/uigTBNVvaLO4PIDw9J3svHQwCB31COsUWS1QhoLMIQPdUkk
+ GarScanm8i37Ut9G+nB4nLeDRYpPIVBFXFD/DROIEfLqOXNbGwOjDd5RWuzA0TNzJSeOkH/0
+ qYr3gywjiE81zALO3UeDj8TaPAv3Dmu7SoI86Bl7qm6UOnSL7KQxZWuMTlU3BF3d+0Ly0qxv
+ k1XRPrL58IyoHIgAVom0uUnLkRKHczdhGDpNzsQDJaO71EPp8QARAQABtCRCcmljZSBHb2ds
+ aW4gPEJyaWNlLkdvZ2xpbkBpbnJpYS5mcj6JAjgEEwECACIFAlNg+aMCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAAAoJEESRkPMjWr076RoQAJhJ1q5+wlHIf+YvM0N1V1hQyf+aL35+
+ BPqxlyw4H65eMWIN/63yWhcxrLwNCdgY1WDWGoiW8KVCCHwJAmrXukFvXjsvShLQJavWRgKH
+ eea12T9XtLc6qY/DEi2/rZvjOCKsMjnc1CYW71jbofaQP6lJsmC+RPWrnL/kjZyVrVrg7/Jo
+ GemLmi/Ny7nLAOt6uL0MC/Mwld14Yud57Qz6VTDGSOvpNacbkJtcCwL3KZDBfSDnZtSbeclY
+ srXoMnFXEJJjKJ6kcJrZDYPrNPkgFpSId/WKJ5pZBoRsKH/w2OdxwtXKCYHksMCiI4+4fVFD
+ WlmVNYzW8ZKXjAstLh+xGABkLVXs+0WjvC67iTZBXTmbYJ5eodv8U0dCIR/dxjK9wxVKbIr2
+ D+UVbGlfqUuh1zzL68YsOg3L0Xc6TQglKVl6RxX87fCU8ycIs9pMbXeRDoJohflo8NUDpljm
+ zqGlZxBjvb40p37ReJ+VfjWqAvVh+6JLaMpeva/2K1Nvr9O/DOkSRNetrd86PslrIwz8yP4l
+ FaeG0dUwdRdnToNz6E8lbTVOwximW+nwEqOZUs1pQNKDejruN7Xnorr7wVBfp6zZmFCcmlw9
+ 8pSMV3p85wg6nqJnBkQNTzlljycBvZLVvqc6hPOSXpXf5tjkuUVWgtbCc8TDEQFx8Phkgda6
+ K1LNuQINBFNg91oBEADp3vwjw8tQBnNfYJNJMs6AXC8PXB5uApT1pJ0fioaXvifPNL6gzsGt
+ AF53aLeqB7UXuByHr8Bmsz7BvwA06XfXXdyLQP+8Oz3ZnUpw5inDIzLpRbUuAjI+IjUtguIK
+ AkU1rZNdCXMOqEwCaomRitwaiX9H7yiDTKCUaqx8yAuAQWactWDdyFii2FA7IwVlD/GBqMWV
+ weZsMfeWgPumKB3jyElm1RpkzULrtKbu7MToMH2fmWqBtTkRptABkY7VEd8qENKJBZKJGisk
+ Fk6ylp8VzZdwbAtEDDTGK00Vg4PZGiIGbQo8mBqbc63DY+MdyUEksTTu2gTcqZMm/unQUJA8
+ xB4JrTAyljo/peIt6lsQa4+/eVolfKL1t1C3DY8f4wMoqnZORagnWA2oHsLsYKvcnqzA0QtY
+ IIb1S1YatV+MNMFf3HuN7xr/jWlfdt59quXiOHU3qxIzXJo/OfC3mwNW4zQWJkG233UOf6YE
+ rmrSaTIBTIWF8CxGY9iXPaJGNYSUa6R/VJS09EWeZgRz9Gk3h5AyDrdo5RFN9HNwOj41o0cj
+ eLDF69092Lg5p5isuOqsrlPi5imHKcDtrXS7LacUI6H0c8onWoH9LuW99WznEtFgPJg++TAv
+ f9M2x57Gzl+/nYTB5/Kpl1qdPPC91zUipiKbnF5f8bQpol0WC+ovmQARAQABiQIfBBgBAgAJ
+ BQJTYPdaAhsMAAoJEESRkPMjWr074+0P/iEcN27dx3oBTzoeGEBhZUVQRZ7w4A61H/vW8oO8
+ IPkZv9kFr5pCfIonmHEbBlg6yfjeHXwF5SF2ywWRKkRsFHpaFWywxqk9HWXu8cGR1pFsrwC3
+ EdossuVbEFNmhjHvcAo11nJ7JFzPTEnlPjE6OY9tEDwl+kp1WvyXqNk9bosaX8ivikhmhB47
+ 7BA3Kv8uUE7UL6p7CBdqumaOFISi1we5PYE4P/6YcyhQ9Z2wH6ad2PpwAFNBwxSu+xCrVmaD
+ skAwknf6UVPN3bt67sFAaVgotepx6SPhBuH4OSOxVHMDDLMu7W7pJjnSKzMcAyXmdjON05Sz
+ SaILwfceByvHAnvcFh2pXK9U4E/SyWZDJEcGRRt79akzZxls52stJK/2Tsr0vKtZVAwogiaK
+ uSp+m6BRQcVVhTo/Kq3E0tSnsTHFeIO6QFHKJCJv4FRE3Dmtz15lueihUBowsq9Hk+u3UiLo
+ SmrMAZ6KgA4SQxB2p8/M53kNJl92HHc9nc//aCQDi1R71NyhtSx+6PyivoBkuaKYs+S4pHmt
+ sFE+5+pkUNROtm4ExLen4N4OL6Kq85mWGf2f6hd+OWtn8we1mADjDtdnDHuv+3E3cacFJPP/
+ wFV94ZhqvW4QcyBWcRNFA5roa7vcnu/MsCcBoheR0UdYsOnJoEpSZswvC/BGqJTkA2sf
+Message-ID: <8fb27d2c-2165-7029-6ea1-94fc379b3be7@inria.fr>
+Date:   Thu, 7 Mar 2019 12:49:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190303173527.31055-1-jagan@amarulasolutions.com>
- <20190303173527.31055-6-jagan@amarulasolutions.com> <20190304155014.2c7mx4uvzqwy7yde@flea>
-In-Reply-To: <20190304155014.2c7mx4uvzqwy7yde@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 7 Mar 2019 17:16:44 +0530
-Message-ID: <CAMty3ZCpr1rG_AB1hkFpSVyY2HVTkaUqyXf6czWEEn-J=LXE0w@mail.gmail.com>
-Subject: Re: [PATCH v9 5/5] drm/sun4i: sun6i_mipi_dsi: Simplify dsi setup
- timings code
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190214171017.9362-8-keith.busch@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 9:20 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+Le 14/02/2019 à 18:10, Keith Busch a écrit :
+> If the HMAT Subsystem Address Range provides a valid processor proximity
+> domain for a memory domain, or a processor domain matches the performance
+> access of the valid processor proximity domain, register the memory
+> target with that initiator so this relationship will be visible under
+> the node's sysfs directory.
 >
-> On Sun, Mar 03, 2019 at 11:05:27PM +0530, Jagan Teki wrote:
-> > DSI timings are varies between burst/non-burst devices and
-> > current driver is handling this support via if, else statements
-> > which would difficult to read.
-> >
-> > Simplify it by using goto to make code more readable.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-> > ---
-> > Note: This change is created based on previous version burst
-> > changes [1] by addressing comment from [2] by Maxime to make
-> > code readable.
-> >
-> > [1] https://patchwork.kernel.org/cover/10813623/
-> > [2] https://patchwork.kernel.org/patch/10666607/
-> >
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 79 ++++++++++++++------------
-> >  1 file changed, 42 insertions(+), 37 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 31ec4048804d..898f32319c2d 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -550,7 +550,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> >  {
-> >       struct mipi_dsi_device *device = dsi->device;
-> >       unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
-> > -     u16 hbp = 0, hfp = 0, hsa = 0, hblk = 0, vblk = 0;
-> > +     u16 hbp, hfp, hsa, hblk;
-> > +     u16 vblk = 0;
-> >       u32 basic_ctl = 0;
-> >       size_t bytes;
-> >       u8 *buffer;
-> > @@ -558,6 +559,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> >       /* Do all timing calculations up front to allocate buffer space */
-> >
-> >       if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> > +             hbp = hfp = hsa = 0;
+> By registering only the best performing relationships, this provides the
+> most useful information applications may want to know when considering
+> which CPU they should run on for a given memory node, or which memory
+> node they should allocate memory from for a given CPU.
 >
-> This raises a checkpatch warning and isn't necessary
+> Since HMAT requires valid address ranges have an equivalent SRAT entry,
+> verify each memory target satisfies this requirement.
 >
-> >               hblk = mode->hdisplay * Bpp;
-> >               basic_ctl = SUN6I_DSI_BASIC_CTL_VIDEO_BURST |
-> >                           SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS |
-> > @@ -566,48 +568,51 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> >               if (device->lanes == 4)
-> >                       basic_ctl |= SUN6I_DSI_BASIC_CTL_TRAIL_FILL |
-> >                                    SUN6I_DSI_BASIC_CTL_TRAIL_INV(0xc);
-> > -     } else {
-> > -             /*
-> > -              * A sync period is composed of a blanking packet (4
-> > -              * bytes + payload + 2 bytes) and a sync event packet
-> > -              * (4 bytes). Its minimal size is therefore 10 bytes
-> > -              */
-> > +
-> > +             goto alloc_buf;
->
-> And I'd rather not have a goto in the middle of the code for no
-> particular reason.
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
 
-OK, will try to think for better simplification otherwise will drop it
-in next version.
+[...]
+
+> +static __init struct memory_initiator *find_mem_initiator(unsigned int cpu_pxm)
+> +{
+> +	struct memory_initiator *intitator;
+> +
+> +	list_for_each_entry(intitator, &initiators, node)
+> +		if (intitator->processor_pxm == cpu_pxm)
+> +			return intitator;
+> +	return NULL;
+> +}
+
+Typo intitator -> initiator
+
+> +static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+> +{
+> +	struct memory_initiator *intitator;
+> +
+> +	if (pxm_to_node(cpu_pxm) == NUMA_NO_NODE)
+> +		return;
+> +
+> +	intitator = find_mem_initiator(cpu_pxm);
+> +	if (intitator)
+> +		return;
+> +
+> +	intitator = kzalloc(sizeof(*intitator), GFP_KERNEL);
+> +	if (!intitator)
+> +		return;
+> +
+> +	intitator->processor_pxm = cpu_pxm;
+> +	list_add_tail(&intitator->node, &initiators);
+> +}
+
+Same typo
+
+
+> +static __init void hmat_register_target_initiators(struct memory_target *target)
+> +{
+> +	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
+> +	struct memory_initiator *initiator;
+> +	unsigned int mem_nid, cpu_nid;
+> +	struct memory_locality *loc = NULL;
+> +	u32 best = 0;
+> +	int i;
+> +
+> +	if (target->processor_pxm == PXM_INVAL)
+> +		return;
+
+
+This test above looks wrong to me. First, it means that either you
+return from here, or from the next branch below, hence the loop that
+looks for best performance is dead code. Secondly, it means that memory
+targets without a PXM never get an initiator.
+
+I verified that removing this test makes things look better on my HMAT
+tests.
+
+
+> +	mem_nid = pxm_to_node(target->memory_pxm);
+> +
+> +	/*
+> +	 * If the Address Range Structure provides a local processor pxm, link
+> +	 * only that one. Otherwise, find the best performance attribtes and
+> +	 * register all initiators that match.
+> +	 */
+> +	if (target->processor_pxm != PXM_INVAL) {
+> +		cpu_nid = pxm_to_node(target->processor_pxm);
+> +		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> +		return;
+> +	}
+
+
+This seems to contradict your first paragraph in the header where you say
+
+"or a processor domain matches the performance access of the valid processor proximity domain".
+
+By returning here, you're only keeping the the local PXM and ignoring
+other initiators that may have the same performance.
+
+I am testing a HMAT where one memory target has same performance to two
+processor proxdomains. If no processor proxdomain is set in the HMAT for
+this target, I get two initiators as expected. If proxdomain is
+explicitly set in the HMAT, I get only that one as initiator.
+
+Brice
+
+
