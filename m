@@ -2,103 +2,79 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC0EC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED18DC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA872081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TnjgW8Ri"
+	by mail.kernel.org (Postfix) with ESMTP id C695A2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfCGOCD (ORCPT
+        id S1726266AbfCGOE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:02:03 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36589 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfCGOB4 (ORCPT
+        Thu, 7 Mar 2019 09:04:29 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:50435 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfCGOE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:01:56 -0500
-Received: by mail-wm1-f65.google.com with SMTP id j125so9388836wmj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 06:01:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l1TMWMcZ2gju9aWPi4sVcpM5P0Y4XnnG91Swh/yLEoM=;
-        b=TnjgW8RibsO5fE6FaPH/e1Q5cPheNQETFNEUQRgcrmVzxEHAXXNxUWdutFr3lOlg25
-         nO1/k5C9wMKvgqPcgenMK2XzM+uTlcbw79wPjNi2vkNB6Zzvfil2vRNFKkOyxhy9QWqT
-         K5zIzZ9r/WrLBGEPIZgr1TG+q+VvQF1CbnEaOpuvxcpSIPrqPVkoipY5hKQbLUXF5H7W
-         OHg9eFK0aDZuOJJErP6tZOH8YYS39ZSZW/PYKQ6IiW2wF06c0tvGi5Mr7vXBMLcO8494
-         h1rOe0zW095znRsASSJWgVLe+qpUbzRqPUksg+zT6JVK8oAkCEmItmOKgONUUylgbQPE
-         ZlyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l1TMWMcZ2gju9aWPi4sVcpM5P0Y4XnnG91Swh/yLEoM=;
-        b=IkSIIUA1FLf6OpchCaSJ+T+jqUn7hFK5OHiDV/swvJ3B8bLFfRlkc+8kiGLKejKdi7
-         TipkouxvoTVdCpSKA6u/jn587KXKd/YRqoqC2sDJPNFdJdzluGUTEYXBJ5Vh53xr48bB
-         DhQB8vnWIIMyHizM5tvqYmkbnailjXPfs679CDE13hNVpakOQS9ai7dzgcX7biOyZFNS
-         qe1vnvMiPxPEcdeOWm7NAg87+ddEZfOBhDbuZ+59YIARyIxnOpTJ83QmnJxOQ7xp6Pbz
-         87VeMHtdCCko5fGiPcq+qxci5QM+wnW+coJfq9tfJENBTYPk88wKnZ/3wDFhCxTrVtLT
-         4EGw==
-X-Gm-Message-State: APjAAAViH1LNdPLvV7zZ9bAD7mopr0vk6RG4BFsKPSH7b/aPNtBUnqoW
-        zzMBdtb5bfSkGIBXHggrV9SGkQ==
-X-Google-Smtp-Source: APXvYqx/9WiONgfX7WxSX0zmZGGa6JptIQyZwOtRi/y+0BqYrz58K0KS478PyRtq6KUlq4uM/Dj6kA==
-X-Received: by 2002:a1c:e715:: with SMTP id e21mr5775206wmh.122.1551967313763;
-        Thu, 07 Mar 2019 06:01:53 -0800 (PST)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h137sm9892098wmg.41.2019.03.07.06.01.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 07 Mar 2019 06:01:53 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: meson-g12a: Add AO Secure node
-Date:   Thu,  7 Mar 2019 15:01:47 +0100
-Message-Id: <20190307140147.22047-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190307140147.22047-1-narmstrong@baylibre.com>
-References: <20190307140147.22047-1-narmstrong@baylibre.com>
+        Thu, 7 Mar 2019 09:04:29 -0500
+Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MyNoa-1gsDwd0iXk-00yghV; Thu, 07 Mar 2019 15:04:27 +0100
+Subject: Re: [PATCH v2] fs: cifs: Kconfig: pedantic formatting
+To:     Steve French <smfrench@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
+References: <1551896652-26579-1-git-send-email-info@metux.net>
+ <1551910979-1026-1-git-send-email-info@metux.net>
+ <CAH2r5msizwcru6xHMBmrQP8MSci=gNcHo3T6ti+zS-Btj72hQA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <c165b745-d092-27c4-f238-59c2c65e4717@metux.net>
+Date:   Thu, 7 Mar 2019 15:04:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH2r5msizwcru6xHMBmrQP8MSci=gNcHo3T6ti+zS-Btj72hQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:XO/E+n+VZjYrGr7s95WZnAS8ky3vFjsxCL+5PPcr12FfaS/drB1
+ tW540EQK3APsoOdBLq98iUdqA/druzhRtPsiiPeqpXmO5jpG8xb5LeRLf4NwYJRp2IR9qW0
+ NYFl9FlsJckAiSbAYPsVGvwFytDg3idtw863MsE2tEWSGwy9ir+GDI2OKFwZdrBv/pCCMuh
+ Z0isqX9Dz3U6C6VqoZa3Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+vrOoByVJ8c=:rw028+AeFWMQKlrRTYU6iv
+ VraeC9N93Dt4AFshmfAit1cZeHEK2EtBXxkHxB3vEUZoVqzgmio84DcbBsOkldoQ5gaMBqtbk
+ PXexKuqS/cEZDQDFfWkCyw9N5o+GZmmIDF7oB8xEqDG9H/Z0Ljh2azWj7109CR4WiKCEGqKK0
+ YzKkGtRCDdWq4rt9swmMthcdWEWXIGtt/VT5D+QnpmaYP5W16CW3nYSDA1t3p+HeFMH3JMpm0
+ nAJFqkah/SgkQrJr5m7ZJKzQGN8UegdzB5cvOLtLPAqYdQsFB9LWtHOd6VOmXdiLTg+MUd1F0
+ Ij8j7p/MIgABybeR/1tf3qx6+xmdwWGLKD65RVuM0LwSxiWIQIBKz059Z1Iei23CB0Pf3+3VO
+ Ag7jpFkf3FfQzj2WuO7LyJsSfyBKU520T7V6Qk93Yxsrva8EZspNZGfekRA2+lWa95mFZHDgN
+ nroZunjdKSqKoPzXTDt/WKAnKXttLyVSrZaTaO7xw5muEpLVFnpjMeYEtK9DTVKTr3dHCmaO3
+ THoS5RPPfAM8x/Tyonsa0K+cNojTbYL7j+3RET6mXxGvURCPOJybZKGmbzFbIdwi4bmr1Dxwv
+ gxZB/rwiFBOzdf/u5y+Ny7wHYR1tZtbVZrrGCYf6om+W6m5LhHZwwxpPjZg+RPSwjuVYd9wA9
+ wrPZfzA6iBHXTCY/E5Rle8aJOqdieadnVB9IxDaNwP/DI2S4lRDOhqT6/CqoJwHBbFxfWd8oO
+ 650Re20EWIh4+8gENV8Uhe9GpOmwEpKxdXU3E9GozYQu8nIu26DaPsZ1u4A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the Always-On ao-secure system control registers node,
-which is used by the meson-gx-socinfo driver to detect the SoC IDs.
+On 07.03.19 05:00, Steve French wrote:
+> Is this just converting spaces to tabs?
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yes, it's just fixing the indentions to be consistent with the
+the rest of the Kconfig files. No semantic changes.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 191d31db9853..30aa618dce49 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -122,6 +122,12 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
- 
-+			sec_AO: ao-secure@140 {
-+				compatible = "amlogic,meson-gx-ao-secure", "syscon";
-+				reg = <0x0 0x140 0x0 0x140>;
-+				amlogic,has-chip-id;
-+			};
-+
- 			uart_AO: serial@3000 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
+In the longer run, we should patch up checkpatch.pl to check this,
+but that's another story.
+
+--mtx
+
 -- 
-2.20.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
