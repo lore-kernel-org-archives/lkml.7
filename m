@@ -2,88 +2,286 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55925C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281A6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3041720851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E331F2087C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RXaY+tOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfCGR7q (ORCPT
+        id S1726781AbfCGR7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:59:46 -0500
-Received: from eddie.linux-mips.org ([148.251.95.138]:58056 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfCGR7p (ORCPT
+        Thu, 7 Mar 2019 12:59:50 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37348 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726338AbfCGR7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:59:45 -0500
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23992362AbfCGR7mRY61K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Thu, 7 Mar 2019 18:59:42 +0100
-Date:   Thu, 7 Mar 2019 17:59:42 +0000 (GMT)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Alexandre Oliva <lxoliva@fsfla.org>
-cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, Tom Li <tomli@tomli.me>,
-        James Hogan <jhogan@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform
- Drivers
-In-Reply-To: <orlg1ryyo2.fsf@lxoliva.fsfla.org>
-Message-ID: <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
-References: <20190208083038.GA1433@localhost.localdomain>        <orbm3i5xrn.fsf@lxoliva.fsfla.org>        <20190211125506.GA21280@localhost.localdomain>        <orimxq3q9j.fsf@lxoliva.fsfla.org>        <20190211230614.GB22242@darkstar.musicnaut.iki.fi>   
-     <orva1jj9ht.fsf@lxoliva.fsfla.org>        <20190217235951.GA20700@darkstar.musicnaut.iki.fi>        <orpnrpj2rk.fsf@lxoliva.fsfla.org>        <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org> <orlg1ryyo2.fsf@lxoliva.fsfla.org>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 7 Mar 2019 12:59:46 -0500
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HxE9N027264
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:59:45 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=4IKsRN/gZOVbuQzBK82Y3gWDEt8CAkp3li56Usr5Ghw=;
+ b=RXaY+tOQwctUheRcsJUan9rjazzxtb2979Xbm+hWdWYL6vionPC0iO7qCqPHWMqop+zH
+ mkZTNJ+UaNPZSMgRCtH/2H8E162fqGn9w8p71dDlKbvQrFneJSizRKQv95qoUGoBmeoJ
+ bgy6Uikbg8cIpItuj7KjyRAjUi8771jXWAI= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r37m8r5we-17
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:59:45 -0800
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 7 Mar 2019 09:58:36 -0800
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 267AE62E1750; Thu,  7 Mar 2019 09:58:32 -0800 (PST)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v7 perf,bpf 07/15] perf, bpf: save bpf_prog_info information as headers to perf.data
+Date:   Thu, 7 Mar 2019 09:58:02 -0800
+Message-ID: <20190307175810.249857-8-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190307175810.249857-1-songliubraving@fb.com>
+References: <20190307175810.249857-1-songliubraving@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+This patch enables perf-record to save bpf_prog_info information as
+headers to perf.data. A new header type HEADER_BPF_PROG_INFO is
+introduced for this data.
 
- I'm away on holiday and also connectivity is so-so here, so just a quick 
-reply.
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ tools/perf/util/header.c | 145 ++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/header.h |   1 +
+ 2 files changed, 145 insertions(+), 1 deletion(-)
 
-> >  Is there an MMIO completion barrier missing there somewhere by any chance 
-> > causing an IRQ that has been handled already to be redelivered because an 
-> > MMIO write meant to clear the IRQ at its origin at handler's completion 
-> > has not reached its destination before interrupts have been reenabled in 
-> > the issuing CPU?  Just a thought.
-> 
-> I've finally got a chance to bisect the IRQ14 (nobody cared) regression
-> on my yeeloong.  It took me to MIPS: Enforce strong ordering for MMIO
-> accessors (commit 3d474dacae72ac0f28228b328cfa953b05484b7f).
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4b88de5e9192..f0708188211e 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -18,6 +18,7 @@
+ #include <sys/utsname.h>
+ #include <linux/time64.h>
+ #include <dirent.h>
++#include <bpf/libbpf.h>
+ 
+ #include "evlist.h"
+ #include "evsel.h"
+@@ -39,6 +40,7 @@
+ #include "tool.h"
+ #include "time-utils.h"
+ #include "units.h"
++#include "bpf-event.h"
+ 
+ #include "sane_ctype.h"
+ 
+@@ -1074,6 +1076,54 @@ static int write_clockid(struct feat_fd *ff,
+ 			sizeof(ff->ph->env.clockid_res_ns));
+ }
+ 
++static int write_bpf_prog_info(struct feat_fd *ff,
++			       struct perf_evlist *evlist __maybe_unused)
++{
++	struct perf_env *env = &ff->ph->env;
++	struct rb_root *root;
++	struct rb_node *next;
++	u32 count = 0;
++	int ret;
++
++	down_read(&env->bpf_progs.lock);
++
++	root = &env->bpf_progs.infos;
++	next = rb_first(root);
++	while (next) {
++		++count;
++		next = rb_next(next);
++	}
++
++	ret = do_write(ff, &count, sizeof(count));
++	if (ret < 0)
++		goto out;
++
++	next = rb_first(root);
++	while (next) {
++		struct bpf_prog_info_node *node;
++		size_t len;
++
++		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
++		next = rb_next(&node->rb_node);
++		len = sizeof(struct bpf_prog_info_linear) +
++			node->info_linear->data_len;
++
++		/* before writing to file, translate address to offset */
++		bpf_program__bpil_addr_to_offs(node->info_linear);
++		ret = do_write(ff, node->info_linear, len);
++		/*
++		 * translate back to address even when do_write() fails,
++		 * so that this function never changes the data.
++		 */
++		bpf_program__bpil_offs_to_addr(node->info_linear);
++		if (ret < 0)
++			goto out;
++	}
++out:
++	up_read(&env->bpf_progs.lock);
++	return ret;
++}
++
+ static int cpu_cache_level__sort(const void *a, const void *b)
+ {
+ 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
+@@ -1554,6 +1604,29 @@ static void print_clockid(struct feat_fd *ff, FILE *fp)
+ 		ff->ph->env.clockid_res_ns * 1000);
+ }
+ 
++static void print_bpf_prog_info(struct feat_fd *ff, FILE *fp)
++{
++	struct perf_env *env = &ff->ph->env;
++	struct rb_root *root;
++	struct rb_node *next;
++
++	down_read(&env->bpf_progs.lock);
++
++	root = &env->bpf_progs.infos;
++	next = rb_first(root);
++
++	while (next) {
++		struct bpf_prog_info_node *node;
++
++		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
++		next = rb_next(&node->rb_node);
++		fprintf(fp, "# bpf_prog_info of id %u\n",
++			node->info_linear->info.id);
++	}
++
++	up_read(&env->bpf_progs.lock);
++}
++
+ static void free_event_desc(struct perf_evsel *events)
+ {
+ 	struct perf_evsel *evsel;
+@@ -2586,6 +2659,75 @@ static int process_clockid(struct feat_fd *ff,
+ 	return 0;
+ }
+ 
++static int process_bpf_prog_info(struct feat_fd *ff,
++				 void *data __maybe_unused)
++{
++	struct bpf_prog_info_linear *info_linear;
++	struct bpf_prog_info_node *info_node;
++	struct perf_env *env = &ff->ph->env;
++	u32 count, i;
++	int err = -1;
++
++	if (ff->ph->needs_swap) {
++		pr_warning("interpreting bpf_prog_info from systems with endianity is not yet supported\n");
++		return 0;
++	}
++
++	if (do_read_u32(ff, &count))
++		return -1;
++
++	down_write(&env->bpf_progs.lock);
++
++	for (i = 0; i < count; ++i) {
++		u32 info_len, data_len;
++
++		info_linear = NULL;
++		info_node = NULL;
++		if (do_read_u32(ff, &info_len))
++			goto out;
++		if (do_read_u32(ff, &data_len))
++			goto out;
++
++		if (info_len > sizeof(struct bpf_prog_info)) {
++			pr_warning("detected invalid bpf_prog_info\n");
++			goto out;
++		}
++
++		info_linear = malloc(sizeof(struct bpf_prog_info_linear) +
++				     data_len);
++		if (!info_linear)
++			goto out;
++		info_linear->info_len = sizeof(struct bpf_prog_info);
++		info_linear->data_len = data_len;
++		if (do_read_u64(ff, (u64 *)(&info_linear->arrays)))
++			goto out;
++		if (__do_read(ff, &info_linear->info, info_len))
++			goto out;
++		if (info_len < sizeof(struct bpf_prog_info))
++			memset(((void *)(&info_linear->info)) + info_len, 0,
++			       sizeof(struct bpf_prog_info) - info_len);
++
++		if (__do_read(ff, info_linear->data, data_len))
++			goto out;
++
++		info_node = malloc(sizeof(struct bpf_prog_info_node));
++		if (!info_node)
++			goto out;
++
++		/* after reading from file, translate offset to address */
++		bpf_program__bpil_offs_to_addr(info_linear);
++		info_node->info_linear = info_linear;
++		perf_env__insert_bpf_prog_info(env, info_node);
++	}
++
++	return 0;
++out:
++	free(info_linear);
++	free(info_node);
++	up_write(&env->bpf_progs.lock);
++	return err;
++}
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2645,7 +2787,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPN(CACHE,		cache,		true),
+ 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
+-	FEAT_OPR(CLOCKID,       clockid,        false)
++	FEAT_OPR(CLOCKID,       clockid,        false),
++	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false)
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 0d553ddca0a3..0785c91b4c3a 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -39,6 +39,7 @@ enum {
+ 	HEADER_SAMPLE_TIME,
+ 	HEADER_MEM_TOPOLOGY,
+ 	HEADER_CLOCKID,
++	HEADER_BPF_PROG_INFO,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
+-- 
+2.17.1
 
- Thanks for looking into it.
-
-> I've only just started trying to figure out what exactly in the change
-> leads to problems.  So far, I've determined that changing both uses of
-> __BUILD_IOPORT_SINGLE so that barrier is passed as 0 rather than 1
-> removes the undesirable effects, both on top of that patch, and on top
-> of v5.0:
-> 
->  #define __BUILD_IOPORT_PFX(bus, bwlq, type)				\
-> - 	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0,)			\
-> - 	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0, _p)
-> +	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 0, 0,)			\
-> +	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 0, 0, _p)
-
- So this seems backwards to me, port I/O is supposed to be strongly 
-ordered, so if removing the ordering guarantee "fixes" your problem, then 
-there must be a second bottom here.  Offhand either there is a race 
-condition somewhere which the lack of ordering here covers somehow, or 
-there is a silicon erratum of some sort somewhere that the SYNC 
-instruction triggers.
-
- A further investigation is required I'm afraid.  Does your platform use 
-`war_io_reorder_wmb'?
-
-  Maciej
