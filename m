@@ -2,167 +2,151 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A33C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D59C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B46220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:36:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="V+TPEwDN"
+	by mail.kernel.org (Postfix) with ESMTP id F3B1620675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfCGUgz (ORCPT
+        id S1726328AbfCGUhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:36:55 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41647 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfCGUgz (ORCPT
+        Thu, 7 Mar 2019 15:37:34 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40856 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfCGUhe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:36:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id z25so15488481ljk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:36:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DMJb0dtqeDnGMlVFDbZN2oWca3L/fm7IdS3oe58tQFU=;
-        b=V+TPEwDN3VcW0OP1XBDMDslzIQzPO7Cs2EUaPQ/qpexNQ72qpjwpcxV/pdahXrnDdO
-         ZnIHQ4tfBeg0DZg4Tv2wme963Albemy05bASiW7wKBB82jMJfj6e3mfzCsBQnfHgDX/g
-         Q70YRjXfghO8jB8dDfVsaGHqZlgMHNNl97+elA0OTuNXkptZTdOez55L3WCJU75Y3Vb5
-         fAgGp2kfNO7CuOqje1PpNsG6QIRSWWmbgVT6/0/5iaD4J2jC0BH7mDhxAWAB+Y42jbwW
-         bnpbV1vDnN4ZoHhTBNbdNEMZwbvgvbPWh0jQes7vGXEl4iI3r9PflNJ4foTY//u5Kgze
-         g1gg==
+        Thu, 7 Mar 2019 15:37:34 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g20so10471130wmh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:37:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DMJb0dtqeDnGMlVFDbZN2oWca3L/fm7IdS3oe58tQFU=;
-        b=H7GnFDy+lOBYjN2197EzaIe1WWqImQSnHFYLW84dXlSQmdYc9mxcztDZgWVQZg2QfZ
-         Ev9jZ2rE/eSP7GsgV8Q5kQbd+T8yyanfCxWWsvTedrim19gZhzQtgsnYAVyEg+YTrKcX
-         BDlKlTNLAj1esrBdqCtFIDzSM2eS+qNUt90XVLA1K1ADgVGtJL6qKCJcv4okO/i+Ie06
-         tJcoY7Rn71R1xasG4IXaiphFjdyC5eW1xGHHAu/5w+D4TXhPWFm/ieP2/9W5Mfit6Ud8
-         O30pyetCfS9WSVgoeKsNUyMktyYyAXHWFWw1PVZGx88P4hVZAmluJhAZVGOgFxTt2hkv
-         wMiA==
-X-Gm-Message-State: APjAAAX9j4dotwdzPhh/NCBNHTXH8C4BVUGaXx5myuY0PuHVsEhYeTWb
-        YAvPRQZ33JezbGVjKfXvmTAHNPDZAOV65wtYK494ViE=
-X-Google-Smtp-Source: APXvYqzvFi3FdQVcwjeUxmlpGVb4Dk2w+W7KK/f3Fqgmwmr3aua5fb0A1NHP9eGwB631/JW4urNjXoDSdMYm7wyDT7I=
-X-Received: by 2002:a2e:88d1:: with SMTP id a17mr6924632ljk.169.1551991011806;
- Thu, 07 Mar 2019 12:36:51 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ciakIFypHhbfberMmeiRPKsknDYsjGvDxtVRFiP5ZW4=;
+        b=GXCi+J4rHxqgGRFm7TX8CgXMy7w+FFayNTlJbtYxvzGntZliHEOBvU2mnUGuJRw//o
+         QCmqYNS74KAENIWYLm818QD6LLb5ht7klqtb3er9YnTccFb4moNrL0pUiPHccSQmVudf
+         4f1k4IRj70rbVYaW9EsR+ZJOzveHb7dK8Zv+RwYWS4wnjTbN2xMpxwWd6m0zOch6+m9E
+         MUVWCbVLVr+8glZ5PpBFCf5WtH+tAH25Jmmkm94kUp94ANgtqjfWjci2Sb/ICLGAEHYl
+         wQSjTsI4OHM2tNMMPdUWeid66Iz7r81hC7VMs8trEGNjcKp1NQ/TexS8+cpl91i6vapz
+         1gdw==
+X-Gm-Message-State: APjAAAVUOJttge143mtE0gqKZqByv2uhUbpOlRuxhv/mMgOsRLHd/Vmr
+        6nccNof78/8ZKb9YNTqz7JbxYg==
+X-Google-Smtp-Source: APXvYqzgnTwX5NvTE3/K/pGt5QsbOQC6GU5OhxbGvIinRZIXL0Rsb5wf3MMD312IAqU0WrQiGnIiqA==
+X-Received: by 2002:a7b:cb8e:: with SMTP id m14mr6370274wmi.64.1551991052620;
+        Thu, 07 Mar 2019 12:37:32 -0800 (PST)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id a131sm7469946wmh.34.2019.03.07.12.37.31
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 12:37:31 -0800 (PST)
+Subject: Re: [PATCH 0/2] ata: libahci: devslp fixes
+To:     Gwendal Grignou <gwendal@chromium.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Tejun Heo <tj@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, alan.cox@intel.com,
+        IDE/ATA development list <linux-ide@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        rajatja@chromium.org
+References: <20180702190154.6864-1-srinivas.pandruvada@linux.intel.com>
+ <9712316ab62bef25953c523bce02e260a9ea40fe.camel@linux.intel.com>
+ <20180730152256.GF1206094@devbig004.ftw2.facebook.com>
+ <bf4b860c-6f82-4a3f-8b81-5f5c93f4389e@redhat.com>
+ <20180730173345.GI1206094@devbig004.ftw2.facebook.com>
+ <CAMHSBOVOK15nchZRFGTZUu8KSbBiK3SFzgW1amLjXb1iv_gJ5g@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <54d2b8e6-332b-117a-b982-77a535152246@redhat.com>
+Date:   Thu, 7 Mar 2019 21:37:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190307025731.49369-1-maowenan@huawei.com>
-In-Reply-To: <20190307025731.49369-1-maowenan@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 7 Mar 2019 15:36:40 -0500
-Message-ID: <CAHC9VhRBFwTbkE1YbQkRfxia5XZaWBK_D4WG4nNgMgF=wKf_fw@mail.gmail.com>
-Subject: Re: [PATCH net] net: selinux: fix memory leak in selinux_netlbl_socket_post_create()
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMHSBOVOK15nchZRFGTZUu8KSbBiK3SFzgW1amLjXb1iv_gJ5g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 9:44 PM Mao Wenan <maowenan@huawei.com> wrote:
->
-> If netlbl_sock_setattr() is failed, it directly returns rc and forgets
-> to free secattr.
->
-> BUG: memory leak
-> unreferenced object 0xffff8883c3ea4200 (size 2664):
->   comm "syz-executor.2", pid 8813, jiffies 4297264419 (age 156.090s)
->   hex dump (first 32 bytes):
->     7f 00 00 01 7f 00 00 01 eb 7f ed 71 4e 24 00 00  ...........qN$..
->     02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
->   backtrace:
->     [<000000004c0228da>] sk_alloc+0x3d/0xc00 net/core/sock.c:1523
->     [<00000000535a3da2>] inet_create+0x339/0xe10 net/ipv4/af_inet.c:321
->     [<000000009aec3cfe>] __sock_create+0x3fa/0x790 net/socket.c:1275
->     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
->     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
->     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
->     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
->     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
->     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->     [<00000000f737e62f>] 0xffffffffffffffff
->
-> BUG: memory leak
-> unreferenced object 0xffff8883de23d570 (size 32):
->   comm "syz-executor.2", pid 8813, jiffies 4297264419 (age 156.090s)
->   hex dump (first 32 bytes):
->     02 00 00 00 00 00 00 00 60 a9 40 ce 83 88 ff ff  ........`.@.....
->     01 00 00 00 03 00 00 00 10 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<0000000035ba8b75>] security_sk_alloc+0x5e/0xb0 security/security.c:1473
->     [<00000000302cc426>] sk_prot_alloc+0x8e/0x290 net/core/sock.c:1472
->     [<000000004c0228da>] sk_alloc+0x3d/0xc00 net/core/sock.c:1523
->     [<00000000535a3da2>] inet_create+0x339/0xe10 net/ipv4/af_inet.c:321
->     [<000000009aec3cfe>] __sock_create+0x3fa/0x790 net/socket.c:1275
->     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
->     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
->     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
->     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
->     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
->     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->     [<00000000f737e62f>] 0xffffffffffffffff
->
-> BUG: memory leak
-> unreferenced object 0xffff8883ce40a960 (size 64):
->   comm "syz-executor.2", pid 8813, jiffies 4297264420 (age 156.089s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<0000000029add401>] selinux_netlbl_socket_post_create+0x68/0x130 security/selinux/netlabel.c:416
->     [<000000005368a19c>] selinux_socket_post_create+0x31a/0x7f0 security/selinux/hooks.c:4597
->     [<00000000bd4730e2>] security_socket_post_create+0x70/0xc0 security/security.c:1385
->     [<00000000671052a4>] __sock_create+0x5a6/0x790 net/socket.c:1291
->     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
->     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
->     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
->     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
->     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
->     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->     [<00000000f737e62f>] 0xffffffffffffffff
->
-> Fixes: 389fb800ac8b("netlabel: Label incoming TCP connections correctly in SELinux")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  security/selinux/netlabel.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-> index 186e727b737b..f3da05338580 100644
-> --- a/security/selinux/netlabel.c
-> +++ b/security/selinux/netlabel.c
-> @@ -426,6 +426,9 @@ int selinux_netlbl_socket_post_create(struct sock *sk, u16 family)
->                 rc = 0;
->                 break;
->         }
-> +       if (rc != 0) {
-> +               netlbl_secattr_free(secattr);
-> +       }
+Hi,
 
-This is likely going to cause a problem as the
-sock->sk_security->nlbl_secattr still has a reference to the secattr
-pointer you are releasing here.  Assuming things are working correctly
-elsewhere, I believe freeing secattr here will result in a double free
-when the network stacks cleans up after the failed socket creation
-(via the sock_release() call in the error handling code).
+On 07-03-19 21:27, Gwendal Grignou wrote:
+> Srinivas,
+> 
+> I am looking at problem on a laptop machine that suspends to S01x, but
+> link_management is set to max_performance, because the machine is
+> connected to a charger.
 
-It looks like you may have found this via a test tool (syzbot?), do
-you have a reproducer you can share?
+What is setting it to max_performance when charging?  I assume chrome-os is
+running something in userspace to do this (like TLP, but I guess you are not
+using TLP) ?
 
--- 
-paul moore
-www.paul-moore.com
+Have you run benchmarks with max_performance vs the default?
+I seriously doubt there will be a significant difference, esp.
+with a chrome-os style workload.
+
+> Given DVLSP must be set before the laptop suspends ["""One of the
+> requirement for modern x86 system to enter lowest power mode  (SLP_S0)
+> is SATA IP block to be off."""], the machine never reaches S01x.
+> Does it make sense to change the target_lpm_policy at suspend
+> (ata_port_suspend()) to min_power and bring it back to the original
+> value on resume?
+
+If userspace messes with the setting, then userspace should also
+put it back before suspending...
+
+The upstream kernel's default behavior is to have the target level set
+to a fixed level independent of the charging state. Could it be this
+fixed level is actually max-performance ? If that is the default the
+kernel comes up with, that would indicate a kernel bug.
+
+Regards,
+
+Hans
+
+
+
+> 
+> Gwendal.
+> 
+> 
+> On Mon, Jul 30, 2018 at 10:33 AM Tejun Heo <tj@kernel.org> wrote:
+>>
+>> On Mon, Jul 30, 2018 at 05:26:45PM +0200, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 30-07-18 17:22, Tejun Heo wrote:
+>>>> On Mon, Jul 30, 2018 at 08:15:47AM -0700, Srinivas Pandruvada wrote:
+>>>>> Hi Tejan,
+>>>>>
+>>>>> On Mon, 2018-07-02 at 12:01 -0700, Srinivas Pandruvada wrote:
+>>>>>> Some minor fixes to be able to correctly set devslp register
+>>>>>> to optimize power.
+>>>>>>
+>>>>>> Srinivas Pandruvada (2):
+>>>>>>    ata: libahci: Correct setting of DEVSLP register
+>>>>>>    ata: libahci: Allow reconfigure of DEVSLP register
+>>>>>>
+>>>>> Are you applying this series?
+>>>>
+>>>> I was waiting for Hans's reviews.  Hans, what do you think?
+>>>
+>>> Ah I missed that this was another series. With the caveat that
+>>> I do not really know that much about devslp, both patches
+>>> seem sensible to me, so both are:
+>>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> Applied 1-2 to libata/for-4.19.
+>>
+>> Thanks.
+>>
+>> --
+>> tejun
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-ide" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
