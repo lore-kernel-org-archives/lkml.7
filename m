@@ -2,147 +2,137 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9949C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8C2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8327D20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C97820663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mc6VhPMp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kReBPNdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfCGCVS (ORCPT
+        id S1727380AbfCGCVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:21:18 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55027 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726514AbfCGCVR (ORCPT
+        Wed, 6 Mar 2019 21:21:35 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:45392 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfCGCVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:21:17 -0500
-X-UUID: 6cf8847903134698bbe26809740a1510-20190307
-X-UUID: 6cf8847903134698bbe26809740a1510-20190307
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 667841341; Thu, 07 Mar 2019 10:20:56 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 7 Mar 2019 10:20:55 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Mar 2019 10:20:55 +0800
-Message-ID: <1551925255.20144.13.camel@mtksdaap41>
-Subject: Re: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys
- property
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Date:   Thu, 7 Mar 2019 10:20:55 +0800
-In-Reply-To: <1551922796.20144.7.camel@mtksdaap41>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
-         <1551922796.20144.7.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 6 Mar 2019 21:21:35 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2B7D46028D; Thu,  7 Mar 2019 02:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551925294;
+        bh=J4Fu0YHFCf6KtFZ4WP5SYSfwHrB9s7r4l/gARSgE+LA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Mc6VhPMp2N9k1McWZQDHYMYNC8o8THGc7hDU7ltfV1DkbvAwMeflegjCmjNq0TGAi
+         0rX8vbT+CBDSmJYvvvTx/03ILtk8brwq4iuKYlPsSp7GcRUmPnEhqEUF0L9wU49Yyy
+         1KzV7yy1OOBcVKrmMoZUtVV0GR49juyWan7brpUQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 51C346028D;
+        Thu,  7 Mar 2019 02:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551925293;
+        bh=J4Fu0YHFCf6KtFZ4WP5SYSfwHrB9s7r4l/gARSgE+LA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kReBPNdyts+3MxVZtFBGuVyVywnLdFByBz4S9hUBjVpWB6CfioGOwUJHX0hoiIqi8
+         Gx8M5kaeBl8qg1jd2gBnReWaxxHvXuMHVufaycYEIYRKz9qSipkrxzehAa1xgR6l9Z
+         DMx3U3Jz70JE8T1/hIRydmBqwPxOfLjT3zxknP0Q=
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Date:   Thu, 07 Mar 2019 07:51:33 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hemantg <hemantg@codeaurora.org>
+Subject: Re: [PATCH 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to
+ QCA_<flags>
+In-Reply-To: <20190307004041.38059-2-mka@chromium.org>
+References: <20190307004041.38059-1-mka@chromium.org>
+ <20190307004041.38059-2-mka@chromium.org>
+Message-ID: <9500f5a6edd2ecb9b376e3ba1a5ac4bd@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
-
-On Thu, 2019-03-07 at 09:39 +0800, CK Hu wrote:
-> Hi, Bibby:
+On 2019-03-07 06:10, Matthias Kaehlcke wrote:
+> Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IN_BAND_SLEEP_ENABLED.
+> The constant represents a flag (multiple flags can be set at once),
+> not a unique state of the controller or driver. Also use the BIT()
+> macro to specify the position of the flag instead of an integer
+> literal.
 > 
-> On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> > cmdq driver provide a function that get the relationship
-> > of sub system number from device node for client.
-> > add specification for #subsys-cells, mediatek,gce-subsys.
-> > 
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > index 812698f..07b2adf 100644
-> > --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> > @@ -26,6 +26,13 @@ Required properties:
-> >  	phandle: Label name of a gce node.
-> >  	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
-> >  		      or 'dt-binding/gce/mt8183-gce.h'.
-> > +#subsys-cells: Should be 2.
-> > +	<&phandle register_base_address subsys_number>
-> > +	phandle: Label name of a gce node.
-> > +	register_base_address: the register base address that client
-> > +			       want to write or read.
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> This look like the same as 'reg' property. I would prefer use
-> already-defined property, for example:
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 237aea34b69f1..ab8e59419dbc4 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -54,8 +54,7 @@
+>  #define HCI_IBS_WAKE_ACK	0xFC
+>  #define HCI_MAX_IBS_SIZE	10
 > 
-> 		mmsys: clock-controller@14000000 {
-> 			compatible = "mediatek,mt8173-mmsys", "syscon";
-> 			reg = <0 0x14000000 0 0x1000>;
-> 			mediatek,gce-subsys = <&gce SUBSYS_1400XXXX>;
-> 		};
-
-My previous thinking may not be proper, GCE could write register but its
-behavior may be not the same as CPU, so it's better not to mix these two
-register_base_address.
-
-Regards,
-CK
-
+> -/* Controller states */
+> -#define STATE_IN_BAND_SLEEP_ENABLED	1
+> +#define QCA_IN_BAND_SLEEP_ENABLED	BIT(0)
 > 
-> Regards,
-> CK
+>  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
+>  #define IBS_TX_IDLE_TIMEOUT_MS		2000
+> @@ -775,7 +774,7 @@ static int qca_enqueue(struct hci_uart *hu, struct
+> sk_buff *skb)
+>  	/* Don't go to sleep in middle of patch download or
+>  	 * Out-Of-Band(GPIOs control) sleep is selected.
+>  	 */
+> -	if (!test_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
+> +	if (!test_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
+>  		skb_queue_tail(&qca->txq, skb);
+>  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+>  		return 0;
+> @@ -1192,7 +1191,7 @@ static int qca_setup(struct hci_uart *hu)
+>  		return ret;
 > 
-> > +	subsys_number: specify the sub-system id which is corresponding
-> > +		       to the register address.
-> >  
-> >  Required properties for a client device:
-> >  - mboxes: Client use mailbox to communicate with GCE, it should have this
-> > @@ -50,6 +57,7 @@ Example:
-> >  		thread-num = CMDQ_THR_MAX_COUNT;
-> >  		#mbox-cells = <3>;
-> >  		#event-cells = <1>;
-> > +		#subsys-cells = <2>;
-> >  	};
-> >  
-> >  Example for a client device:
-> > @@ -58,7 +66,8 @@ Example for a client device:
-> >  		compatible = "mediatek,mt8173-mmsys";
-> >  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
-> >  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
-> > -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-> > +		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
-> > +				      <&gce 0x14010000 SUBSYS_1401XXXX>;
-> >  		mediatek,gce-event-names = "rdma0_sof",
-> >  					   "rsz0_sof";
-> >  		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+>  	/* Patch downloading has to be done without IBS mode */
+> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
 > 
+>  	if (qcadev->btsoc_type == QCA_WCN3990) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+> @@ -1236,7 +1235,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	/* Setup patch / NVM configurations */
+>  	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, 
+> soc_ver);
+>  	if (!ret) {
+> -		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +		set_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>  		qca_debugfs_init(hdev);
+>  	} else if (ret == -ENOENT) {
+>  		/* No patch/nvm-config found, run with original fw/config */
+> @@ -1294,7 +1293,7 @@ static void qca_power_shutdown(struct hci_uart 
+> *hu)
+>  	 * data in skb's.
+>  	 */
+>  	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
+> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>  	qca_flush(hu);
+>  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
 
 
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+-- 
+Regards
+Balakrishna.
