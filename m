@@ -2,289 +2,402 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B06C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77025C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AA820851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328FF20854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3ci0+DXA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tvq7QCMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCGQy6 (ORCPT
+        id S1726293AbfCGQ4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:54:58 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40964 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfCGQy6 (ORCPT
+        Thu, 7 Mar 2019 11:56:42 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:52764 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbfCGQ4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:54:58 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x27GsMxY157085;
-        Thu, 7 Mar 2019 16:54:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=XJ8zo00+mA17ru72FYKdhrIzQtlHT11GTYy+ND5g5eE=;
- b=3ci0+DXAdUZeTmwNFd5cixsmckqVEcJebC6MF+z+q3/AIwD4Q54Io5Oj8RLN05rsBEQ+
- fOpXuElSQevxscsCNCXLXfbIDDnRJ+r1jcrWCInDoodtiXYxMZkvMEKjuqhLiu2OwpNp
- 5SsUne7KUoZzMh3wY7eOVpAmDeWIZjkDIeMCuEJar8JlwViX6XpNrzy2pXwA+7VZcoDn
- A5r0Iu5eKZB7Q26cKSyx6vJQl0/FjF99Q60eFmnkQW0uPypNfmDUlKZyBmZX4hj0W7/T
- xa/rJX2LND/iwEYCYCXSwH4lAW1i1YhKV6+53sLxySN4nj6BRBmkXfGXOx4bir4G464g bQ== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2qyjfrub0p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Mar 2019 16:54:49 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x27GshP8001731
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Mar 2019 16:54:43 GMT
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x27GsgsZ026907;
-        Thu, 7 Mar 2019 16:54:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Mar 2019 08:54:42 -0800
-Date:   Thu, 7 Mar 2019 08:54:41 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     torvalds@linux-foundation.org
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: new features for v5.1
-Message-ID: <20190307165441.GA20533@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9187 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903070115
+        Thu, 7 Mar 2019 11:56:42 -0500
+Received: by mail-pf1-f202.google.com with SMTP id a72so18436154pfj.19
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 08:56:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=gvD0D1bzLjFy9WCza61OCAcv7CRzmb0TlAuNri8hyFg=;
+        b=Tvq7QCMcHopEyEi2PDzbYWCRVlxtwwUMWfeV/6YNqLe90vi/UjTQKjXP7pQbQ3g9/0
+         /sSBLbihu06bYJ+nrgWQntDYWbx0VqUxw5HUi3AS7S1tyxFLmGXuDbxO1xeB6O8AX03a
+         uJn8e2MfLID+ej2AdSsA44pKPmeBsATW9KaJmL1er4RubBRTg19o87GuZONE5scGkMl1
+         3LkFbZWNm5vBOfYJkHS7Su4LbvP6+tMdL+vARNyxLdjaO7QFmuqkwaCOvw5OdJIc5Is0
+         KxqxNcpJ7O66wd6RJ3imp6131vlG4qz7mIWfg5RTrOkfGVIJUQhnknTM+1jzXnsECu5S
+         WMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=gvD0D1bzLjFy9WCza61OCAcv7CRzmb0TlAuNri8hyFg=;
+        b=pYcfdSIXAdI7YzsVKLX68nG0pZnTVOjP4PYA6t8Ifffva6WZIX4W8gFF0HWGt56Jhn
+         VPCWoSuVz0n8aSdkEHpoetc3qCTmq6QPlYUv/z9Ze5trhWOKloMMa+9R8yfzn+SI1A3t
+         C2asENToyRtI27c3q/wyuwHRzhAdbhDwAhD5mE8seMkS2hEOhTNTkreDWjFLPTG1burI
+         Ye0f6x4z/dkOV0rQ4apG/z0AL42PPNzBL+re2MN/NFxGxfNsiGkblsTqS4hd/08OEHD9
+         S6igK84n9q7hhf405pHok0k0kupW2mbUS3r5ZHKGu/zBsNKlmwrL280o2U0w1y26h+kj
+         JsQQ==
+X-Gm-Message-State: APjAAAUhRfPqjBUX+1sHHNJmD+mnuojyROIo/QxeGJS2ucsm6xcvvdt2
+        JNFeVTdUt5yNLFpQHqJsFhV13FaoKAbo
+X-Google-Smtp-Source: APXvYqxcyB4omg5XNPlHg7A099kbRkvgg6GjDUOuUWL7q91uXbuXRLcIxn5sHjwbEn2VdFBbx4BOO6Eg75zf
+X-Received: by 2002:a63:1d7:: with SMTP id 206mr5312675pgb.45.1551977801020;
+ Thu, 07 Mar 2019 08:56:41 -0800 (PST)
+Date:   Thu,  7 Mar 2019 08:56:32 -0800
+Message-Id: <20190307165632.35810-1-gthelen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
+Subject: [PATCH] writeback: sum memcg dirty counters as needed
+From:   Greg Thelen <gthelen@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Tejun Heo <tj@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Greg Thelen <gthelen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Since commit a983b5ebee57 ("mm: memcontrol: fix excessive complexity in
+memory.stat reporting") memcg dirty and writeback counters are managed
+as:
+1) per-memcg per-cpu values in range of [-32..32]
+2) per-memcg atomic counter
+When a per-cpu counter cannot fit in [-32..32] it's flushed to the
+atomic.  Stat readers only check the atomic.
+Thus readers such as balance_dirty_pages() may see a nontrivial error
+margin: 32 pages per cpu.
+Assuming 100 cpus:
+   4k x86 page_size:  13 MiB error per memcg
+  64k ppc page_size: 200 MiB error per memcg
+Considering that dirty+writeback are used together for some decisions
+the errors double.
 
-Here are a number of new features and bug fixes for 5.1.  They've
-undergone a week's worth of fstesting and merge cleanly with master as
-of this morning.  Most of the changes center on improving metadata
-validation and fixing problems with online fsck, though there's also a
-new cache to speed up unlinked inode handling and cleanup of the copy on
-write code in preparation for future features.  Let me know if you
-encounter any problems with this merge.
+This inaccuracy can lead to undeserved oom kills.  One nasty case is
+when all per-cpu counters hold positive values offsetting an atomic
+negative value (i.e. per_cpu[*]=32, atomic=n_cpu*-32).
+balance_dirty_pages() only consults the atomic and does not consider
+throttling the next n_cpu*32 dirty pages.  If the file_lru is in the
+13..200 MiB range then there's absolutely no dirty throttling, which
+burdens vmscan with only dirty+writeback pages thus resorting to oom
+kill.
 
---D
+It could be argued that tiny containers are not supported, but it's more
+subtle.  It's the amount the space available for file lru that matters.
+If a container has memory.max-200MiB of non reclaimable memory, then it
+will also suffer such oom kills on a 100 cpu machine.
 
-The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
+The following test reliably ooms without this patch.  This patch avoids
+oom kills.
 
-  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
+  $ cat test
+  mount -t cgroup2 none /dev/cgroup
+  cd /dev/cgroup
+  echo +io +memory > cgroup.subtree_control
+  mkdir test
+  cd test
+  echo 10M > memory.max
+  (echo $BASHPID > cgroup.procs && exec /memcg-writeback-stress /foo)
+  (echo $BASHPID > cgroup.procs && exec dd if=/dev/zero of=/foo bs=2M count=100)
 
-are available in the Git repository at:
+  $ cat memcg-writeback-stress.c
+  /*
+   * Dirty pages from all but one cpu.
+   * Clean pages from the non dirtying cpu.
+   * This is to stress per cpu counter imbalance.
+   * On a 100 cpu machine:
+   * - per memcg per cpu dirty count is 32 pages for each of 99 cpus
+   * - per memcg atomic is -99*32 pages
+   * - thus the complete dirty limit: sum of all counters 0
+   * - balance_dirty_pages() only sees atomic count -99*32 pages, which
+   *   it max()s to 0.
+   * - So a workload can dirty -99*32 pages before balance_dirty_pages()
+   *   cares.
+   */
+  #define _GNU_SOURCE
+  #include <err.h>
+  #include <fcntl.h>
+  #include <sched.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <sys/stat.h>
+  #include <sys/sysinfo.h>
+  #include <sys/types.h>
+  #include <unistd.h>
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.1-merge-4
+  static char *buf;
+  static int bufSize;
 
-for you to fetch changes up to 1b9598c8fb9965fff901c4caa21fed9644c34df3:
+  static void set_affinity(int cpu)
+  {
+  	cpu_set_t affinity;
 
-  xfs: fix reporting supported extra file attributes for statx() (2019-03-01 08:57:25 -0800)
+  	CPU_ZERO(&affinity);
+  	CPU_SET(cpu, &affinity);
+  	if (sched_setaffinity(0, sizeof(affinity), &affinity))
+  		err(1, "sched_setaffinity");
+  }
 
-----------------------------------------------------------------
-Changes for Linux 5.1:
-- Fix online fsck to handle inode btrees correctly on 64k block
-  filesystems.
-- Teach online fsck to check directory and attribute names for invalid
-  characters.
-- Miscellanous fixes for online fsck.
-- Introduce a new panic mask so that we can halt immediately on
-  metadata corruption (for debugging purposes)
-- Fix a block mapping race during writeback.
-- Cache unlinked inode list backrefs in memory to speed up list
-  processing.
-- Separate the bnobt/cntbt and inobt/finobt buffer verifiers so that we
-  can detect crosslinked btrees.
-- Refactor magic number verification so that we can standardize it.
-- Strengthen ondisk metadata structure offset build time verification.
-- Fix a memory corruption problem in the listxattr code.
-- Fix a shutdown problem during log recovery due to unreserved finobt
-  expansion.
-- Fix a referential integrity problem where O_TMPFILE inodes were put on
-  the unlinked list with nlink > 0 which would cause asserts during log
-  recovery if the system went down immediately.
-- Refactor the delayed allocation allocator to be more clever about the
-  possibility that its mapping might be stale.
-- Various fixes to the copy on write mechanism.
-- Make CoW preallocation suitable for use even with writes that wouldn't
-  otherwise require it.
-- Refactor an internal API.
-- Fix some statx implementation bugs.
-- Fix miscellaneous compiler and static checker complaints.
+  static void dirty_on(int output_fd, int cpu)
+  {
+  	int i, wrote;
 
-----------------------------------------------------------------
-Brian Foster (15):
-      xfs: update fork seq counter on data fork changes
-      xfs: validate writeback mapping using data fork seq counter
-      xfs: remove superfluous writeback mapping eof trimming
-      xfs: create delalloc bmapi wrapper for full extent allocation
-      xfs: use the latest extent at writeback delalloc conversion time
-      xfs: clarify documentation for the function to reverify buffers
-      xfs: always check magic values in on-disk byte order
-      xfs: create a separate finobt verifier
-      xfs: distinguish between inobt and finobt magic values
-      xfs: split up allocation btree verifier
-      xfs: distinguish between bnobt and cntbt magic values
-      xfs: use verifier magic field in dir2 leaf verifiers
-      xfs: miscellaneous verifier magic value fixups
-      xfs: factor xfs_da3_blkinfo verification into common helper
-      xfs: compile time offset checks for common v4/v5 metadata
+  	set_affinity(cpu);
+  	for (i = 0; i < 32; i++) {
+  		for (wrote = 0; wrote < bufSize; ) {
+  			int ret = write(output_fd, buf+wrote, bufSize-wrote);
+  			if (ret == -1)
+  				err(1, "write");
+  			wrote += ret;
+  		}
+  	}
+  }
 
-Christoph Hellwig (18):
-      xfs: remove the io_type field from the writeback context and ioend
-      xfs: remove the s_maxbytes checks in xfs_map_blocks
-      xfs: simplify the xfs_bmap_btree_to_extents calling conventions
-      xfs: factor out two helpers from xfs_bmapi_write
-      xfs: split XFS_BMAPI_DELALLOC handling from xfs_bmapi_write
-      xfs: move transaction handling to xfs_bmapi_convert_delalloc
-      xfs: move stat accounting to xfs_bmapi_convert_delalloc
-      xfs: move xfs_iomap_write_allocate to xfs_aops.c
-      xfs: remove the truncate short cut in xfs_map_blocks
-      xfs: retry COW fork delalloc conversion when no extent was found
-      xfs: make xfs_bmbt_to_iomap more useful
-      xfs: fix SEEK_DATA for speculative COW fork preallocation
-      xfs: don't use delalloc extents for COW on files with extsize hints
-      xfs: also truncate holes covered by COW blocks
-      xfs: merge COW handling into xfs_file_iomap_begin_delay
-      xfs: make COW fork unwritten extent conversions more robust
-      xfs: report IOMAP_F_SHARED from xfs_file_iomap_begin_delay
-      xfs: introduce an always_cow mode
+  int main(int argc, char **argv)
+  {
+  	int cpu, flush_cpu = 1, output_fd;
+  	const char *output;
 
-Colin Ian King (1):
-      xfs: fix uninitialized error variable
+  	if (argc != 2)
+  		errx(1, "usage: output_file");
 
-Darrick J. Wong (33):
-      xfs: never try to scrub more than 64 inodes per inobt record
-      xfs: check the ir_startino alignment directly
-      xfs: check inobt record alignment on big block filesystems
-      xfs: hoist inode cluster checks out of loop
-      xfs: clean up the inode cluster checking in the inobt scrub
-      xfs: scrub big block inode btrees correctly
-      xfs: consolidate scrub dinode mapping code into a single function
-      xfs: abort xattr scrub if fatal signals are pending
-      xfs: scrub should flag dir/attr offsets that aren't mappable with xfs_dablk_t
-      xfs: fix off-by-one error in rtbitmap cross-reference
-      xfs: check directory name validity
-      xfs: check attribute name validity
-      xfs: clean up iunlink functions
-      xfs: add xfs_verify_agino_or_null helper
-      xfs: refactor AGI unlinked bucket updates
-      xfs: strengthen AGI unlinked inode bucket pointer checks
-      xfs: refactor inode unlinked pointer update functions
-      xfs: refactor unlinked list search and mapping to a separate function
-      xfs: refactor inode update in iunlink_remove
-      xfs: add tracepoints for high level iunlink operations
-      xfs: cache unlinked pointers in an rhashtable
-      xfs: add inode magic to inode verifier
-      xfs: add magic numbers to dquot buffer ops
-      xfs: use buf ops magic to detect btree block type
-      xfs: don't overflow xattr listent buffer
-      xfs: rename m_inotbt_nores to m_finobt_nores
-      xfs: reserve blocks for ifree transaction during log recovery
-      xfs: don't ever put nlink > 0 inodes on the unlinked list
-      xfs: fix xfs_buf magic number endian checks
-      xfs: don't pass iomap flags to xfs_reflink_allocate_cow
-      xfs: rework breaking of shared extents in xfs_file_iomap_begin
-      xfs: fix uninitialized error variables
-      xfs: fix backwards endian conversion in scrub
+  	output = argv[1];
+  	bufSize = getpagesize();
+  	buf = malloc(getpagesize());
+  	if (buf == NULL)
+  		errx(1, "malloc failed");
 
-Luis R. Rodriguez (1):
-      xfs: fix reporting supported extra file attributes for statx()
+  	output_fd = open(output, O_CREAT|O_RDWR);
+  	if (output_fd == -1)
+  		err(1, "open(%s)", output);
 
-Marco Benatto (1):
-      xfs: Introduce XFS_PTAG_VERIFIER_ERROR panic mask
+  	for (cpu = 0; cpu < get_nprocs(); cpu++) {
+  		if (cpu != flush_cpu)
+  			dirty_on(output_fd, cpu);
+  	}
 
-YueHaibing (1):
-      xfs: remove duplicated xfs_defer.h
+  	set_affinity(flush_cpu);
+  	if (fsync(output_fd))
+  		err(1, "fsync(%s)", output);
+  	if (close(output_fd))
+  		err(1, "close(%s)", output);
+  	free(buf);
+  }
 
- Documentation/filesystems/xfs.txt  |   3 +-
- fs/xfs/libxfs/xfs_ag.c             |   6 +-
- fs/xfs/libxfs/xfs_ag_resv.c        |   2 +-
- fs/xfs/libxfs/xfs_alloc.c          |  12 +-
- fs/xfs/libxfs/xfs_alloc_btree.c    |  74 ++--
- fs/xfs/libxfs/xfs_attr.c           |  17 +
- fs/xfs/libxfs/xfs_attr.h           |   2 +-
- fs/xfs/libxfs/xfs_attr_leaf.c      |  21 +-
- fs/xfs/libxfs/xfs_attr_remote.c    |   8 +-
- fs/xfs/libxfs/xfs_bmap.c           | 302 +++++++++------
- fs/xfs/libxfs/xfs_bmap.h           |  16 +-
- fs/xfs/libxfs/xfs_bmap_btree.c     |  13 +-
- fs/xfs/libxfs/xfs_da_btree.c       |  49 ++-
- fs/xfs/libxfs/xfs_da_format.h      |   3 +
- fs/xfs/libxfs/xfs_dir2.c           |  17 +
- fs/xfs/libxfs/xfs_dir2.h           |   1 +
- fs/xfs/libxfs/xfs_dir2_block.c     |  10 +-
- fs/xfs/libxfs/xfs_dir2_data.c      |  12 +-
- fs/xfs/libxfs/xfs_dir2_leaf.c      | 100 +----
- fs/xfs/libxfs/xfs_dir2_node.c      |  10 +-
- fs/xfs/libxfs/xfs_dquot_buf.c      |   4 +
- fs/xfs/libxfs/xfs_errortag.h       |   4 +-
- fs/xfs/libxfs/xfs_ialloc.c         |   3 +-
- fs/xfs/libxfs/xfs_ialloc_btree.c   |  29 +-
- fs/xfs/libxfs/xfs_iext_tree.c      |  13 +-
- fs/xfs/libxfs/xfs_inode_buf.c      |  11 +-
- fs/xfs/libxfs/xfs_inode_fork.h     |   2 +-
- fs/xfs/libxfs/xfs_refcount_btree.c |   3 +-
- fs/xfs/libxfs/xfs_rmap_btree.c     |   3 +-
- fs/xfs/libxfs/xfs_sb.c             |   7 +-
- fs/xfs/libxfs/xfs_shared.h         |   4 +-
- fs/xfs/libxfs/xfs_symlink_remote.c |   3 +-
- fs/xfs/libxfs/xfs_types.c          |  24 ++
- fs/xfs/libxfs/xfs_types.h          |   3 +
- fs/xfs/scrub/agheader.c            |  10 +-
- fs/xfs/scrub/agheader_repair.c     |  12 +-
- fs/xfs/scrub/attr.c                |  11 +
- fs/xfs/scrub/bmap.c                |  27 ++
- fs/xfs/scrub/dir.c                 |   6 +
- fs/xfs/scrub/ialloc.c              | 330 +++++++++++-----
- fs/xfs/scrub/repair.c              |   3 +-
- fs/xfs/scrub/repair.h              |   3 -
- fs/xfs/scrub/rtbitmap.c            |   5 +-
- fs/xfs/scrub/trace.h               |  45 +++
- fs/xfs/xfs_aops.c                  | 266 +++++++------
- fs/xfs/xfs_aops.h                  |  24 +-
- fs/xfs/xfs_attr_list.c             |   1 +
- fs/xfs/xfs_bmap_util.c             |   9 +-
- fs/xfs/xfs_buf.c                   |  72 +++-
- fs/xfs/xfs_buf.h                   |   8 +-
- fs/xfs/xfs_error.c                 |   6 +-
- fs/xfs/xfs_error.h                 |   1 +
- fs/xfs/xfs_file.c                  |  31 +-
- fs/xfs/xfs_fsops.c                 |   1 +
- fs/xfs/xfs_globals.c               |   2 +-
- fs/xfs/xfs_inode.c                 | 769 +++++++++++++++++++++++++++----------
- fs/xfs/xfs_inode.h                 |   3 +
- fs/xfs/xfs_iomap.c                 | 518 ++++++++++++-------------
- fs/xfs/xfs_iomap.h                 |   7 +-
- fs/xfs/xfs_iops.c                  |  21 +-
- fs/xfs/xfs_log_recover.c           |  14 +-
- fs/xfs/xfs_mount.c                 |   5 +
- fs/xfs/xfs_mount.h                 |  10 +-
- fs/xfs/xfs_ondisk.h                |  21 +
- fs/xfs/xfs_pnfs.c                  |   2 +-
- fs/xfs/xfs_reflink.c               | 150 +++-----
- fs/xfs/xfs_reflink.h               |  18 +-
- fs/xfs/xfs_super.c                 |  22 +-
- fs/xfs/xfs_sysctl.h                |   1 +
- fs/xfs/xfs_sysfs.c                 |  24 ++
- fs/xfs/xfs_trace.h                 | 115 ++++--
- fs/xfs/xfs_trans_bmap.c            |   1 -
- fs/xfs/xfs_trans_buf.c             |   2 +-
- fs/xfs/xfs_trans_extfree.c         |   1 -
- fs/xfs/xfs_trans_refcount.c        |   1 -
- fs/xfs/xfs_trans_rmap.c            |   1 -
- fs/xfs/xfs_xattr.c                 |   3 +
- 77 files changed, 2134 insertions(+), 1239 deletions(-)
+Make balance_dirty_pages() and wb_over_bg_thresh() work harder to
+collect exact per memcg counters when a memcg is close to the
+throttling/writeback threshold.  This avoids the aforementioned oom
+kills.
+
+This does not affect the overhead of memory.stat, which still reads the
+single atomic counter.
+
+Why not use percpu_counter?  memcg already handles cpus going offline,
+so no need for that overhead from percpu_counter.  And the
+percpu_counter spinlocks are more heavyweight than is required.
+
+It probably also makes sense to include exact dirty and writeback
+counters in memcg oom reports.  But that is saved for later.
+
+Signed-off-by: Greg Thelen <gthelen@google.com>
+---
+ include/linux/memcontrol.h | 33 +++++++++++++++++++++++++--------
+ mm/memcontrol.c            | 26 ++++++++++++++++++++------
+ mm/page-writeback.c        | 27 +++++++++++++++++++++------
+ 3 files changed, 66 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 83ae11cbd12c..6a133c90138c 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -573,6 +573,22 @@ static inline unsigned long memcg_page_state(struct mem_cgroup *memcg,
+ 	return x;
+ }
+ 
++/* idx can be of type enum memcg_stat_item or node_stat_item */
++static inline unsigned long
++memcg_exact_page_state(struct mem_cgroup *memcg, int idx)
++{
++	long x = atomic_long_read(&memcg->stat[idx]);
++#ifdef CONFIG_SMP
++	int cpu;
++
++	for_each_online_cpu(cpu)
++		x += per_cpu_ptr(memcg->stat_cpu, cpu)->count[idx];
++	if (x < 0)
++		x = 0;
++#endif
++	return x;
++}
++
+ /* idx can be of type enum memcg_stat_item or node_stat_item */
+ static inline void __mod_memcg_state(struct mem_cgroup *memcg,
+ 				     int idx, int val)
+@@ -1222,9 +1238,10 @@ static inline void dec_lruvec_page_state(struct page *page,
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 
+ struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
+-void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
+-			 unsigned long *pheadroom, unsigned long *pdirty,
+-			 unsigned long *pwriteback);
++unsigned long
++mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
++		    unsigned long *pheadroom, unsigned long *pdirty,
++		    unsigned long *pwriteback, bool exact);
+ 
+ #else	/* CONFIG_CGROUP_WRITEBACK */
+ 
+@@ -1233,12 +1250,12 @@ static inline struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb)
+ 	return NULL;
+ }
+ 
+-static inline void mem_cgroup_wb_stats(struct bdi_writeback *wb,
+-				       unsigned long *pfilepages,
+-				       unsigned long *pheadroom,
+-				       unsigned long *pdirty,
+-				       unsigned long *pwriteback)
++static inline unsigned long
++mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
++		    unsigned long *pheadroom, unsigned long *pdirty,
++		    unsigned long *pwriteback, bool exact)
+ {
++	return 0;
+ }
+ 
+ #endif	/* CONFIG_CGROUP_WRITEBACK */
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index af7f18b32389..0a50f1c523bb 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3880,6 +3880,7 @@ struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb)
+  * @pheadroom: out parameter for number of allocatable pages according to memcg
+  * @pdirty: out parameter for number of dirty pages
+  * @pwriteback: out parameter for number of pages under writeback
++ * @exact: determines exact counters are required, indicates more work.
+  *
+  * Determine the numbers of file, headroom, dirty, and writeback pages in
+  * @wb's memcg.  File, dirty and writeback are self-explanatory.  Headroom
+@@ -3890,18 +3891,29 @@ struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb)
+  * ancestors.  Note that this doesn't consider the actual amount of
+  * available memory in the system.  The caller should further cap
+  * *@pheadroom accordingly.
++ *
++ * Return value is the error precision associated with *@pdirty
++ * and *@pwriteback.  When @exact is set this a minimal value.
+  */
+-void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
+-			 unsigned long *pheadroom, unsigned long *pdirty,
+-			 unsigned long *pwriteback)
++unsigned long
++mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
++		    unsigned long *pheadroom, unsigned long *pdirty,
++		    unsigned long *pwriteback, bool exact)
+ {
+ 	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
+ 	struct mem_cgroup *parent;
++	unsigned long precision;
+ 
+-	*pdirty = memcg_page_state(memcg, NR_FILE_DIRTY);
+-
++	if (exact) {
++		precision = 0;
++		*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
++		*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
++	} else {
++		precision = MEMCG_CHARGE_BATCH * num_online_cpus();
++		*pdirty = memcg_page_state(memcg, NR_FILE_DIRTY);
++		*pwriteback = memcg_page_state(memcg, NR_WRITEBACK);
++	}
+ 	/* this should eventually include NR_UNSTABLE_NFS */
+-	*pwriteback = memcg_page_state(memcg, NR_WRITEBACK);
+ 	*pfilepages = mem_cgroup_nr_lru_pages(memcg, (1 << LRU_INACTIVE_FILE) |
+ 						     (1 << LRU_ACTIVE_FILE));
+ 	*pheadroom = PAGE_COUNTER_MAX;
+@@ -3913,6 +3925,8 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
+ 		*pheadroom = min(*pheadroom, ceiling - min(ceiling, used));
+ 		memcg = parent;
+ 	}
++
++	return precision;
+ }
+ 
+ #else	/* CONFIG_CGROUP_WRITEBACK */
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 7d1010453fb9..2c1c855db4b7 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1612,14 +1612,17 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+ 		}
+ 
+ 		if (mdtc) {
+-			unsigned long filepages, headroom, writeback;
++			bool exact = false;
++			unsigned long precision, filepages, headroom, writeback;
+ 
+ 			/*
+ 			 * If @wb belongs to !root memcg, repeat the same
+ 			 * basic calculations for the memcg domain.
+ 			 */
+-			mem_cgroup_wb_stats(wb, &filepages, &headroom,
+-					    &mdtc->dirty, &writeback);
++memcg_stats:
++			precision = mem_cgroup_wb_stats(wb, &filepages,
++							&headroom, &mdtc->dirty,
++							&writeback, exact);
+ 			mdtc->dirty += writeback;
+ 			mdtc_calc_avail(mdtc, filepages, headroom);
+ 
+@@ -1634,6 +1637,10 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
+ 				m_dirty = mdtc->dirty;
+ 				m_thresh = mdtc->thresh;
+ 				m_bg_thresh = mdtc->bg_thresh;
++				if (abs(m_dirty - mdtc->thresh) < precision) {
++					exact = true;
++					goto memcg_stats;
++				}
+ 			}
+ 		}
+ 
+@@ -1945,10 +1952,13 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
+ 		return true;
+ 
+ 	if (mdtc) {
+-		unsigned long filepages, headroom, writeback;
++		bool exact = false;
++		unsigned long precision, filepages, headroom, writeback;
+ 
+-		mem_cgroup_wb_stats(wb, &filepages, &headroom, &mdtc->dirty,
+-				    &writeback);
++memcg_stats:
++		precision = mem_cgroup_wb_stats(wb, &filepages, &headroom,
++						&mdtc->dirty, &writeback,
++						exact);
+ 		mdtc_calc_avail(mdtc, filepages, headroom);
+ 		domain_dirty_limits(mdtc);	/* ditto, ignore writeback */
+ 
+@@ -1958,6 +1968,11 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
+ 		if (wb_stat(wb, WB_RECLAIMABLE) >
+ 		    wb_calc_thresh(mdtc->wb, mdtc->bg_thresh))
+ 			return true;
++
++		if (abs(mdtc->dirty - mdtc->bg_thresh) < precision) {
++			exact = true;
++			goto memcg_stats;
++		}
+ 	}
+ 
+ 	return false;
+-- 
+2.21.0.352.gf09ad66450-goog
+
