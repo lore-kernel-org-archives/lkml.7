@@ -2,115 +2,117 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6174C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCA6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744F0205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551988949;
-	bh=ByUaQCKcKzv0my0lmiYVV9zvCyXBm/O9YGbgtfnaDvo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AuVEVTeQlN6cs+9a6+DGpW9JblW/qVxJjUIFn9wHbrthUc8iDLwBuxx1Ygv4GmeQo
-	 9zQZl7KBK99wtGiv0R21GIvq1UeGy+i2XJGDH21tAtBQSuiqKWpln2AClQ8TFh18ue
-	 UxVr1Dhs65f34LFvQkhKnE0Yf5JEg8r5uDJZl53U=
+	by mail.kernel.org (Postfix) with ESMTP id 4C76420840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWMd6NRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfCGUC2 (ORCPT
+        id S1726297AbfCGUNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:02:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfCGUC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:02:27 -0500
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2D3321738
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2019 20:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551988947;
-        bh=ByUaQCKcKzv0my0lmiYVV9zvCyXBm/O9YGbgtfnaDvo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tTFLaAHECFfxDolaR23hDB2kmjcvn/kwdGL6DWJvgrOCCnng15NrIa4ETVGGiDpTl
-         92bC9dj1aPOcqBZSzqUnsoLwCLH9DXXvITw5oxI2jKQKokQ+ZkZX8Q0LUN9RTJwXyl
-         jkiDCh5RtqqFWgob3IG2xUg2yo+UhXACDTUS41kY=
-Received: by mail-wr1-f45.google.com with SMTP id i12so18910359wrw.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:02:26 -0800 (PST)
-X-Gm-Message-State: APjAAAWuXh7dMqmOa3lP+3rj5AsQVjs2ZGrfUv5NoTFk/E/OQ2cuoH0N
-        yl+nzLQa9duovJNglS51vOwD67gusZqXf6Wgk1JNnw==
-X-Google-Smtp-Source: APXvYqw3g/bjVvCO+9Bw1hS8eEdLNpbnvEVJFQDTTx8I2hr0gL3KUzv9tqSod6Zis4j0iPJYm08yWKgMMeSEtA7SRpA=
-X-Received: by 2002:adf:e58f:: with SMTP id l15mr7917047wrm.309.1551988945061;
- Thu, 07 Mar 2019 12:02:25 -0800 (PST)
+        Thu, 7 Mar 2019 15:13:42 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43758 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGUNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 15:13:42 -0500
+Received: by mail-io1-f66.google.com with SMTP id y6so14706082ioq.10;
+        Thu, 07 Mar 2019 12:13:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3CxfmkaTe+SLFchAVeUhtfdbkP2N5yDM0YsbCbvNGTU=;
+        b=dWMd6NRrstaNGu21WHTRqrsFdgeYfa7sJFHdmAUORtVW7V+OZM/o1DN4bZcXdKyXZq
+         6i6P8Fac3p5xfyuOgaTLKMVsQdCCH9nQw1fRZ4lHjHmB2lKvndplcdrz79PgvpIgg+1v
+         UGLTyALImWYXmivOGa+x/JIV1evpvJJ5vVrnVqWQwO+qJT/HJlxl17b7145FHLb5Kjkg
+         iJYC6jCmAlqrBeF9Y6ASVy+Lyq6HIa7pJgLXA5x2FRGUnZMgyLN0YlGiI68d/6J+t3mw
+         d33/ejQpbm4bsMni4Kc2Nf07n1mZy6RQQQnYh2Sqtgw+LkLPsia6xjCM4LHCLVg1XndF
+         Q27Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3CxfmkaTe+SLFchAVeUhtfdbkP2N5yDM0YsbCbvNGTU=;
+        b=bih37J6pe5I3DFMWGzc1C8QXsDH4qRInv5u+r0mpbMXCOIAv6aR+MkQaXWszi4o67z
+         d2zAM2JXXdxVb58adCJlXVltB2PHACtulC2m10qErXerYHKpub7BHHoiS1ql7LrC/mx5
+         OmgKmLP9pALNdV7rLZBXQXaE30c+PYTHG/9zMzfoJ7J4sBhRfn8d+nzPGIUycNdXxS2s
+         yv/2riqb2fbCjsxk/W8lEYi1A5kxDl4tMstQQMNCxLie6ml/8SVXtNvekqUgHsVNf7iC
+         jBvvAirMRjoVy5pv4Us41hW3qMmvtgZzDbQTd7XDGn41hEKtON63MXA8kjFNhXPBrseB
+         rnVQ==
+X-Gm-Message-State: APjAAAXg0ldHT+Z9CNQEJj5qGgIihCnhdNR/bu75ZJxpXqrDHwwZP8Gp
+        mAi2Eza2ds+Qi8jwsY1m0j9YlFhaIa6ADMPMHj8=
+X-Google-Smtp-Source: APXvYqw8BPO/C44mEMiguDrL1oklthAeMfMejkzweughPEBAuiHwDIYzov7HO3BQLZzlL7DV8WP+/bpMJ0rno9pv8U4=
+X-Received: by 2002:a5d:8701:: with SMTP id u1mr7813573iom.69.1551989620631;
+ Thu, 07 Mar 2019 12:13:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20190129003422.9328-11-rick.p.edgecombe@intel.com>
- <20190211182956.GN19618@zn.tnic> <1533F2BB-2284-499B-9912-6D74D0B87BC1@gmail.com>
- <20190211190108.GP19618@zn.tnic> <A671F14F-3E03-4A97-9F54-426533077E0C@gmail.com>
- <20190211191059.GR19618@zn.tnic> <3996E3F9-92D2-4561-84E9-68B43AC60F43@gmail.com>
- <20190211194251.GS19618@zn.tnic> <20190307072947.GA26566@zn.tnic>
- <EF5F87D9-EA7B-4F92-81C4-329A89EEADFA@zytor.com> <20190307170629.GG26566@zn.tnic>
-In-Reply-To: <20190307170629.GG26566@zn.tnic>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 7 Mar 2019 12:02:13 -0800
-X-Gmail-Original-Message-ID: <CALCETrUY6L_Fwd9CZzo2eZL8HT2sBSHFiD-Bp-HCPPFBxkzcdA@mail.gmail.com>
-Message-ID: <CALCETrUY6L_Fwd9CZzo2eZL8HT2sBSHFiD-Bp-HCPPFBxkzcdA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/20] x86: avoid W^X being broken during modules loading
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Damian Tometzki <linux_dti@icloud.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>, Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        "Dock, Deneen T" <deneen.t.dock@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+ <20180419140641.27926-11-wsa+renesas@sang-engineering.com>
+ <b0c1e303-ca95-8bc8-a5d4-65e75dc8398a@ti.com> <CACRpkday+d9iGeX+CRHTEyC=w+oNUK-8oTy0HqugO5PRhHn62w@mail.gmail.com>
+ <20180430092947.GC2270@ulmo>
+In-Reply-To: <20180430092947.GC2270@ulmo>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 7 Mar 2019 14:13:29 -0600
+Message-ID: <CAHCN7xLBa0JxcUs9i6Rr3hUNe5zymfb66icqNK0N3PMo51T-TA@mail.gmail.com>
+Subject: Re: [PATCH 10/61] gpio: simplify getting .drvdata
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Hoan Tran <hotran@apm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 9:06 AM Borislav Petkov <bp@alien8.de> wrote:
+On Mon, Apr 30, 2018 at 4:30 AM Thierry Reding <thierry.reding@gmail.com> wrote:
 >
-> On Thu, Mar 07, 2019 at 08:53:34AM -0800, hpa@zytor.com wrote:
-> > If we *do*, what is the issue here? Although boot_cpu_has() isn't
-> > slow (it should in general be possible to reduce to one testb
-> > instruction followed by a conditional jump) it seems that "avoiding an
-> > alternatives slot" *should* be a *very* weak reason, and seems to me
-> > to look like papering over some other problem.
+> On Mon, Apr 30, 2018 at 11:03:25AM +0200, Linus Walleij wrote:
+> > On Thu, Apr 19, 2018 at 5:14 PM, Grygorii Strashko
+> > <grygorii.strashko@ti.com> wrote:
+> > > On 04/19/2018 09:05 AM, Wolfram Sang wrote:
+> > >>
+> > >> We should get drvdata from struct device directly. Going via
+> > >> platform_device is an unneeded step back and forth.
+> > >>
+> > >> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > >> ---
+> > >>
+> > >> Build tested only. buildbot is happy. Please apply individually.
+> > >
+> > >
+> > > for gpio-omap.c:
+> > > Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> >
+> > Hm I only see the responses not the actual patch, I guess I will find it
+> > sooner or later.
+> >
+> > Wolfram: if I don't find it, poke me with something sharp so I get to apply it.
 >
-> Forget the current thread: this is simply trying to document when to use
-> static_cpu_has() and when to use boot_cpu_has(). I get asked about it at
-> least once a month.
->
-> And then it is replacing clear slow paths using static_cpu_has() with
-> boot_cpu_has() because there's purely no need to patch there. And having
-> a RIP-relative MOV and a JMP is good enough for slow paths.
->
+> I had the same problem, turned out this got classified as spam by Google
+> for some reason. Maybe try your spam folder?
 
-Should we maybe rename these functions?  static_cpu_has() is at least
-reasonably obvious.  But cpu_feature_enabled() is different for
-reasons I've never understood, and boot_cpu_has() is IMO terribly
-named.  It's not about the boot cpu -- it's about doing the same thing
-but with less bloat and less performance.
+It's been almost a year later, and several Linux revisions, and this
+still seems stuck somewhere/somehow.
 
-(And can we maybe collapse cpu_feature_enabled() and static_cpu_has()
-into the same function?)
-
---Andy
+adam
+>
+> Thierry
