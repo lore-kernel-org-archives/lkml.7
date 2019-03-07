@@ -5,107 +5,112 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD11C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38289C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EEB20835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C5720835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 06:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfCGGg3 (ORCPT
+        id S1726619AbfCGGhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 01:36:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:9040 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbfCGGg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 01:36:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 22:36:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,450,1544515200"; 
-   d="scan'208";a="121713678"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga006.jf.intel.com with ESMTP; 06 Mar 2019 22:36:26 -0800
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] iommu/vt-d: Remove lazy allocation of domains
-To:     James Sewart <jamessewart@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <2C75F46E-78FE-45E9-9E7D-280B3138EA13@arista.com>
- <F83456DB-81DD-4E9B-9204-12ED9972D2FA@arista.com>
- <7F6B5F6A-EC76-4A9F-8EB6-AEAB9994D91A@arista.com>
- <fdd74d83-acd4-23da-6c0c-b52573d999bb@linux.intel.com>
- <4B054B40-0B13-4F1E-87D6-8D2F072B5B9C@arista.com>
- <06aa306a-278a-a22f-7718-200f6f9e5e87@linux.intel.com>
- <A8A495EE-D3EA-4D84-AB92-9B4742E6E500@arista.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <4b3e29ce-1dff-eb7d-9b7e-1cde54a24dec@linux.intel.com>
-Date:   Thu, 7 Mar 2019 14:31:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 7 Mar 2019 01:37:01 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41554 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726342AbfCGGhA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 01:37:00 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1h1meF-00047c-B1; Thu, 07 Mar 2019 06:36:55 +0000
+Received: from ben by deadeye with local (Exim 4.92-RC6)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1h1meF-0006ml-5m; Thu, 07 Mar 2019 06:36:55 +0000
+Message-ID: <788870e550cb3cecafd9db14c081ddb0225edfde.camel@decadent.org.uk>
+Subject: Re: [PATCH] kbuild: add workaround for Debian make-kpkg
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Liz Zhang <lizzha@microsoft.com>,
+        Lili Deng <v-lide@microsoft.com>,
+        Riku Voipio <riku.voipio@linaro.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manoj Srivastava <manoj.srivastava.1962@gmail.com>
+Date:   Thu, 07 Mar 2019 06:36:40 +0000
+In-Reply-To: <CAK7LNAQFWWzki-MvmhDpAn46XkDAu4_EGCQotbi5qAk5oJrgUQ@mail.gmail.com>
+References: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
+         <5760e0a210c7c39b486aa932ccbe7f3f2c210d62.camel@decadent.org.uk>
+         <CAK7LNAQFWWzki-MvmhDpAn46XkDAu4_EGCQotbi5qAk5oJrgUQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-o6KqZAJ/ZnD7AtDiZPrq"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-In-Reply-To: <A8A495EE-D3EA-4D84-AB92-9B4742E6E500@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
 
-On 3/7/19 2:08 AM, James Sewart wrote:
->>>>> -	/*
->>>>> -	 * For each rmrr
->>>>> -	 *   for each dev attached to rmrr
->>>>> -	 *   do
->>>>> -	 *     locate drhd for dev, alloc domain for dev
->>>>> -	 *     allocate free domain
->>>>> -	 *     allocate page table entries for rmrr
->>>>> -	 *     if context not allocated for bus
->>>>> -	 *           allocate and init context
->>>>> -	 *           set present in root table for this bus
->>>>> -	 *     init context with domain, translation etc
->>>>> -	 *    endfor
->>>>> -	 * endfor
->>>>> -	 */
->>>>> -	pr_info("Setting RMRR:\n");
->>>>> -	for_each_rmrr_units(rmrr) {
->>>>> -		/* some BIOS lists non-exist devices in DMAR table. */
->>>>> -		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
->>>>> -					  i, dev) {
->>>>> -			ret = iommu_prepare_rmrr_dev(rmrr, dev);
->>>>> -			if (ret)
->>>>> -				pr_err("Mapping reserved region failed\n");
->>>>> -		}
->>>>> -	}
->>>>> -
->>>>> -	iommu_prepare_isa();
->>>> Why do you want to remove this segment of code?
->>> This will only work if the lazy allocation of domains exists, these
->>> mappings will disappear once a default domain is attached to a device and
->>> then remade by iommu_group_create_direct_mappings. This code is redundant
->>> and removing it allows us to remove all the lazy allocation logic.
->> No exactly.
->>
->> We need to setup the rmrr mapping before enabling dma remapping,
->> otherwise, there will be a window after dma remapping enabling and
->> rmrr getting mapped, during which people might see dma faults.
-> Do you think this patch instead should be a refactoring to simplify this initial domain setup before the default domain takes over? It seems like duplicated effort to have both lazy allocated domains and externally managed domains. We could allocate a domain here for any devices with RMRR and call get_resv_regions to avoid duplicating RMRR loop.
-> 
+--=-o6KqZAJ/ZnD7AtDiZPrq
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Agree. We should replace the lazy allocated domains with default domain
-in a clean way. Actually, your patches look great to me. But I do think
-we need further cleanups. The rmrr code is one example, and the identity
-domain (si_domain) is another.
+On Thu, 2019-03-07 at 13:03 +0900, Masahiro Yamada wrote:
+[...]
+> If make-kpkg will still be included in the future Debian releases,
+> I'd like to change make-kpkg to make it work more reliably.
+>=20
+>=20
+> The git URL in the control file
+> "https://anonscm.debian.org/git/users/srivasta/debian/kernel-package.git"
+> seems stale.
+>=20
+> Anyway, I found it in a new place:
+>=20
+> $ git clone  https://salsa.debian.org/srivasta/kernel-package
+>=20
+>=20
+> Hmm, the last commit was three years ago.
+>=20
+> So, it is almost unmaintained, I guess...
+[...]
 
-Do you mind if I work on top of your patches for further cleanups and
-sign off a v2 together with you?
+Yes, though there was a more recent bug fix by another Debian
+developer:
+https://tracker.debian.org/news/857223/accepted-kernel-package-13018nmu1-so=
+urce-into-unstable/
 
-Best regards,
-Lu Baolu
+Ben.
+
+--=20
+Ben Hutchings
+friends: People who know you well, but like you anyway.
+
+
+--=-o6KqZAJ/ZnD7AtDiZPrq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlyAu/gACgkQ57/I7JWG
+EQnr4hAAzSU6SAe/6oZ3zOTVMCX0u6aRfQ56X/3pC0UXsim3Zt5A7R6Ittl8BBOj
+QbgzW2idWiCNmxUW9nUyoYY9eJtG98uv0cH/DBvrnw3XPscVBdjgIHycoClVJw8p
+6T5DAZOLzYcrkCUPAFSaxSQQ4qF7VFKvpIG8Gkka+4YN3nPUSXKz0XT9e3VgMyB3
+ONXwUz6TAzEDfATHM+aWOERFAriVGVDmwqnEPQFxJCh3WPCe4e4w/d+bv8I7gf1W
+djem7TO+4Juh3DK+JQr+HbZrjC2Zm43LVadzblNmCXxp297QrhNRZWqhwjjM//hl
+niMDAQ+Modd7RpCg4Fb4CbfUYL3QGjlVTgxb3WombCD6EAZEcbAsuAc5WnvGuNX0
+lxGEA2O8rrJw49PKV/l9g67Uf8k3ZbifC/9Bt0DpD6gTPbBSz+NaMmtfAkTngeQb
+QsuuVSfy74QIyvODPRCZ2PM75ly4SK11Bos0cmvkkOYadjV6Q2X53llU1rYZt5Xg
+UTfctRneNL4a9vniAh4cO5RXq/gQNcqy1U2CRXQHGWTaB5pS4yMA1A4NXebtovB5
+btEmx1gE8Mcf+eLAcbd0fPTVs08b76moi4XgkfraZmKf/C9Ib2ognGU9d0RAf0Y+
+L18mA4lE+hAywak8AofdrTVM7QZze06MqMCtU7j1G3XnIBAIJFI=
+=F4f5
+-----END PGP SIGNATURE-----
+
+--=-o6KqZAJ/ZnD7AtDiZPrq--
