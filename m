@@ -2,184 +2,100 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700FDC10F10
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF43C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3534320835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D2220835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tpugztEe"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IxcChiCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfCGEzw (ORCPT
+        id S1726524AbfCGE5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 23:55:52 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:22334 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfCGEzw (ORCPT
+        Wed, 6 Mar 2019 23:57:38 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60596 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfCGE5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 23:55:52 -0500
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x274tSK2032053;
-        Thu, 7 Mar 2019 13:55:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x274tSK2032053
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551934529;
-        bh=PpW95JxYtdXbkqbQPk1bd6lORF0vm9jJx2XfKgLDnqo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tpugztEe1nq7dtPn1N1FCpeE92dIkmohpjUQAt8DhTVp5s4rUA2dER9qm9otL8DG8
-         QWvBnmSVzzy75+kbjN8zl3yDngu2ZUhinrdC1E6G87FqHcAQpPpmGPvNIASV+WgfIh
-         t6kAx0auiZre2pnSl+ER7tsYblLc4KqwSsZODIGX/rt92JG351KRVQ0tcDktBcp5zH
-         dLb5adi4SGacS1zyfXnrA32q5wgXx95tf71lHvb35zRD76tpLeDFBukG183in4liy7
-         fAIua0Lm1PgTFj1iqGgPTbxWtauSvPutZDg/K2cXnOmxHwpOD6iByeRlt2heBZVVZ5
-         cWs/bcI/NqcOg==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id d4so9786001uap.5;
-        Wed, 06 Mar 2019 20:55:29 -0800 (PST)
-X-Gm-Message-State: APjAAAWdz51iQ3DOOCM/ggSf00UN6Igne5FJS2LwHXwtu8gDvWig3V/n
-        4Aqxrf66YMS2ILx66H2bat/e5QfHVXBlhqu671Y=
-X-Google-Smtp-Source: APXvYqw9PPb0RIg2L2+ex+hnNFItuZuyY5MWfWnwi4RQJ60YtE7MiYjPQf1Wsv2u1NXK1saCKpRUdz7tLnMm79mNaTY=
-X-Received: by 2002:ab0:c07:: with SMTP id a7mr5861604uak.55.1551934528072;
- Wed, 06 Mar 2019 20:55:28 -0800 (PST)
+        Wed, 6 Mar 2019 23:57:37 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 594B58364E;
+        Thu,  7 Mar 2019 17:57:33 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1551934653;
+        bh=aT/iyaWbpw8kgdm9cLKA0xhryNej3v5jj3UD0yvK8Zs=;
+        h=From:To:Cc:Subject:Date;
+        b=IxcChiCaAy8guZDHhV421h/7f2ChucSWBPNS+HF0fP8QrWMWwhHRYufIwfcH3wVBP
+         yGs7KiiYOaNLzxbb9qvoQsVDGEF3D9N7tFZTz6s1t8H5nz/QQhuCcfNlZXdaPT5/kk
+         EfejXJy6AiErVijX8US7vtQW3x8CQW/YQMGBYElROolOSb+08JiTJu3gvjEw30kXrE
+         aR3+9eG0TX1sBIchG++/m1fV8iHhcpEYVPxzEUNhVB+t3GA/h+vnxCkgO38nexCyES
+         /AYVrCN2s+ABBgUGeWF+q2Pn28gziqLmobJlsYi8nG7UGJHMPC3etrToKBv7xpgPkg
+         tcn5pDv8lTEMg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5c80a4bc0000>; Thu, 07 Mar 2019 17:57:32 +1300
+Received: from brodieg-dl.ws.atlnz.lc (brodieg-dl.ws.atlnz.lc [10.33.22.16])
+        by smtp (Postfix) with ESMTP id 5949613EEC9;
+        Thu,  7 Mar 2019 17:57:33 +1300 (NZDT)
+Received: by brodieg-dl.ws.atlnz.lc (Postfix, from userid 1718)
+        id 196C6500584; Thu,  7 Mar 2019 17:57:33 +1300 (NZDT)
+From:   Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
+To:     davem@davemloft.net, stephen@networkplumber.org,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, chris.packham@alliedtelesis.co.nz,
+        luuk.paulussen@alliedtelesis.co.nz,
+        Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
+Subject: [PATCH 0/2] Make ipmr queue length configurable
+Date:   Thu,  7 Mar 2019 17:57:27 +1300
+Message-Id: <20190307045729.14972-1-brodie.greenfield@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <201903030526.3AuYFiuN%fengguang.wu@intel.com> <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
- <20190306181653.GB34256@google.com>
-In-Reply-To: <20190306181653.GB34256@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 7 Mar 2019 13:54:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARA0_C2a8sRCfAr3EV4xF-z5vEq4KkwUcyr7jCKhRpKFg@mail.gmail.com>
-Message-ID: <CAK7LNARA0_C2a8sRCfAr3EV4xF-z5vEq4KkwUcyr7jCKhRpKFg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 5:31 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
->
-> > On Sat, Mar 2, 2019 at 2:00 PM kbuild test robot <lkp@intel.com> wrote:
-> > >
-> > > Hi Joel,
-> > >
-> > > Thank you for the patch! Yet something to improve:
-> > >
-> > > [auto build test ERROR on linus/master]
-> > > [also build test ERROR on v5.0-rc8]
-> > > [cannot apply to next-20190301]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > >
-> > > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/Provide-in-kernel-headers-for-making-it-easy-to-extend-the-kernel/20190303-014850
-> > > config: sh-allmodconfig (attached as .config)
-> > > compiler: sh4-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
-> > > reproduce:
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # save the attached .config to linux build tree
-> > >         GCC_VERSION=8.2.0 make.cross ARCH=sh
-> > >
-> > > All errors (new ones prefixed by >>):
-> > >
-> > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
-> > > >> find: 'arch/sh/kernel/module.lds': No such file or directory
-> On Sun, Mar 03, 2019 at 08:11:59AM -0800, Joel Fernandes wrote:
-> > This report is for an older version of the patch so ignore it. The
-> > issue is already resolved.
-> >
->
-> Apologies, this issue is real. However it does not cause any failure. It is
-> only causing find command to be a bit noisy.
->
-> The below diff fixes it and I'll update the patch for v5:
+We want to have some more space in our queue for processing incoming
+multicast packets, so we can process more of them without dropping
+them prematurely. It is useful to be able to increase this limit on
+higher-spec platforms that can handle more items.
 
+For the particular use case here at Allied Telesis, we have linux
+running on our switches and routers, with support for the number of
+multicast groups being increased. Basically, this queue length affects
+the time taken to fully learn all of the multicast streams.=20
 
+Changes in v3:
+ - Corrected a v4 to v6 typo.
 
-Let's take a look a little bit closer.
+Changes in v2:
+ - Tidy up a few unnecessary bits of code.
+ - Put the sysctl inside ip multicast ifdef.
+ - Included the IPv6 version.
 
+Brodie Greenfield (2):
+  ipmr: Make cache queue length configurable
+  ip6mr: Make cache queue length configurable
 
-$ find  arch  -name module.lds
-arch/ia64/module.lds
-arch/powerpc/kernel/module.lds
-arch/riscv/kernel/module.lds
-arch/arm/kernel/module.lds
-arch/m68k/kernel/module.lds
-arch/arm64/kernel/module.lds
+ Documentation/networking/ip-sysctl.txt | 16 ++++++++++++++++
+ include/net/netns/ipv4.h               |  1 +
+ include/net/netns/ipv6.h               |  1 +
+ net/ipv4/af_inet.c                     |  1 +
+ net/ipv4/ipmr.c                        |  4 +++-
+ net/ipv4/sysctl_net_ipv4.c             |  7 +++++++
+ net/ipv6/af_inet6.c                    |  1 +
+ net/ipv6/ip6mr.c                       |  4 +++-
+ net/ipv6/sysctl_net_ipv6.c             |  7 +++++++
+ 9 files changed, 40 insertions(+), 2 deletions(-)
 
+--=20
+2.21.0
 
-
-(1) module.lds may not exist for some architectures
-(2) module.lds may be located in a different directory (ia64)
-
-Your fix-up missed (2).
-
-
-
-
-
-
-
-> diff --git a/scripts/gen_ikh_data.sh b/scripts/gen_ikh_data.sh
-> index 1fa5628fcc30..9a7ea856acbc 100755
-> --- a/scripts/gen_ikh_data.sh
-> +++ b/scripts/gen_ikh_data.sh
-> @@ -1,5 +1,6 @@
->  #!/bin/bash
->  # SPDX-License-Identifier: GPL-2.0
-> +set -e
->
->  spath="$(dirname "$(readlink -f "$0")")"
->  kroot="$spath/.."
-> @@ -11,12 +12,14 @@ file_list=${@:2}
->
->  src_file_list=""
->  for f in $file_list; do
-> +       if [ ! -f "$kroot/$f" ] && [ ! -d "$kroot/$f" ]; then continue; fi
->         src_file_list="$src_file_list $(echo $f | grep -v OBJDIR)"
->  done
->
->  obj_file_list=""
->  for f in $file_list; do
->         f=$(echo $f | grep OBJDIR | sed -e 's/OBJDIR\///g')
-> +       if [ ! -f $f ] && [ ! -d $f ]; then continue; fi
->         obj_file_list="$obj_file_list $f";
->  done
->
-> --
-> 2.21.0.352.gf09ad66450-goog
->
-
---
-Best Regards
-Masahiro Yamada
