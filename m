@@ -5,102 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D471C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B27C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7E820840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E0A220851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfCGWP7 (ORCPT
+        id S1726299AbfCGWQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:15:59 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:39767 "EHLO
+        Thu, 7 Mar 2019 17:16:44 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:41291 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGWP7 (ORCPT
+        with ESMTP id S1726166AbfCGWQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:15:59 -0500
+        Thu, 7 Mar 2019 17:16:44 -0500
 Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mhnnc-1gX4CG0lea-00dryB; Thu, 07 Mar 2019 23:11:28 +0100
-Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
- kernel
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Pavel Machek <pavel@ucw.cz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atish patra <atishp04@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jan Kara <jack@suse.cz>, Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        yhs@fb.com
-References: <20190119232503.GA149403@google.com>
- <78AACAF1-8EBF-4DF3-BE94-5B14E78BA791@zytor.com>
- <20190120155838.GA23827@google.com> <20190306230944.GB7915@amd>
- <CAKOZuetOePf89cXRkvmWeGnvG7zYN=SW1yyrZibuyOqZQFTGkg@mail.gmail.com>
- <754146f0-8b57-8644-81c1-528b5ca7dba1@zytor.com>
- <CAKOZuesjYZ2EH=BHBAJAFFaTOHjWU7BELJUV3QC9cjXVB2HhUw@mail.gmail.com>
- <0c46ab5f-8bd6-6916-fc4a-b6f00d456011@metux.net>
- <CAKOZuevksKGAPif_pUYVzFpbuBCxOZ5WzT6ukLCYm4TzyLUTMw@mail.gmail.com>
- <5ebec282-57b0-6ebe-0876-ce0dd7b0c11c@metux.net>
- <20190307205505.GB30028@kroah.com>
+ 1MWhxY-1hZ5ym2WKm-00X0Zr; Thu, 07 Mar 2019 23:16:28 +0100
+Subject: Re: [PATCH] arch: um: drivers: Kconfig: formatting cleanup
+To:     Richard Weinberger <richard@nod.at>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, jdike@addtoit.com,
+        anton.ivanov@cambridgegreys.com, linux-um@lists.infradead.org
+References: <1551897164-5689-1-git-send-email-info@metux.net>
+ <22846131.xdEJ5N2VYq@blindfold>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Organization: metux IT consult
-Message-ID: <5e558126-9038-1ca5-4519-7b5864ca9fa1@metux.net>
-Date:   Thu, 7 Mar 2019 23:11:22 +0100
+Message-ID: <480ebcef-c438-7272-8a78-35eee0680d2a@metux.net>
+Date:   Thu, 7 Mar 2019 23:16:26 +0100
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190307205505.GB30028@kroah.com>
+In-Reply-To: <22846131.xdEJ5N2VYq@blindfold>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:uNHDc1vwsilvfnytZZnjZFhbo4iFIljuaLhsiywyHRse+80WyM/
- GnHSLC3p+pyS0Y+KVzPihft8B0zjDsqIl4K8S2WQKujpbBBUejz/ZcWcCkdGs+Enrm7rGv8
- 1Nh92C0QcQDhiU2gtnl7lweLMH+jkRb5qGg0lo5NVtIqEncLBEfXBz11YYV9KFChfkFeGS6
- 2titgnjdKx5r3HAPOqQlw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kfCuygT8KeE=:roVvJS4UdsEyGwhMLrOlRd
- 2FamOXbZvtvugZFhyFsSBEhT00sh9MgzJNxhLZoKM+WGMYkc6VCGUetfafElfybAvWvFiwibj
- QHjaEvb3GGuabd7+hrsUJvP9XZC9HCwaJJ0Mn/gGOVVMeF4pzry0gTSJoTtUb02VLqqcf3vyA
- DckiN4rV3XNfOvHzXsxAAX+UAUJgRM+MAF6voqhgN2iH4agHil0DQ2IMojjViTN+Orw0CJGsO
- mvTKGkNauJ+AZPXvzZ+wNvU4l7gqbP5ufmUNePYZ2+jHWUrEyTfPGhLRN8/iipRXgQIuC6/Yg
- h/2TlY37C17y7a9JccaJvXhqznHJZudBPQvi3bHfUqVUIS9XSEIlPsfeoDr6iUvsPRQsiay4J
- gUPE+7x4f3LMHI7QJ3q5E0H39x1x8Fno1OwnJUSVb1Td0eF7J79QPQKk5aEyJDD+fFf2fXvEb
- qnXlZDNyEjK4WKMAdpZA7ztX0/T3yDLcw+MjhhEHnD0ccXXBmksJ9aSdRBmmcP80r+Z1p2IPV
- SNe5Iun6B+ZoYve1fHVacyOLJjO1ii+LnQ+On5DSfD6Zhz8jCrt6KU+JLihrwJAj+UzW3sbcn
- rqLD3RfXWdeV5BhL8H/E2qeEkoJ2N7JAfALKmZXNnsjb1o5qEjsn/pLhJmKKswnUadRKtGTqm
- C5Gqq9W6kwtlyfVwCKGvwJH6EI4xQzQsurRUgqArS5Nmo+qhQIGMKX0KhiX8Jfrpqr7U9pZck
- gsUtK3ehX066ALq85L0FGGXqj8ZAZG9pSuL4TrAC0HglFNSZizQpzEaBExEd/6pT6snuql4xd
- zHFlHwmv4TbwbPISDHSQ39C+YUywuMQ0T0218X5C2VmK3vyt8Yw7eKhJo3oYN8uz91FhkDd
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Dtukm2Chb/9Mxk4DM3p0g6Oq7DdFoVlb8fxtHtibLdmK2xD9XQu
+ M4nc0lNBGEIORFKcb09vPxgJ0oEhRaw2C4DIdsRk5KHYcqm6gBny6bIr8c4mSdcC2xEXyao
+ iz7qcbNNSarJePgX2dZny8ugutcohiHjzIPd1yPCA9Is2gdB3wkML/bWHtS21j+ZwdyXFXL
+ h/rH/nbWrmenPzDFIPShA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qdiiTqJPLDU=:x7JqFfT7l5n+zQxvDAZAD0
+ rDmTGd1be+BaQit6K8/m+OHQNXo0elj9EPWWe21jj5YH+Oa+jCcDjCj0cwpW6BsD9EXZm3dN2
+ t5T8wvhnDkjszbl+perpXHhppe4/uZbPXaYRGbc/jjde+AdPRd7gILgrXwXK0TvLIp1ph74OX
+ 6nI8Py1xe39uRwBecjfTpmj2Tkgk4PdXyodWNfQG7LprwZawloF0lMnC0aiGVmlW0YS41HKLg
+ kbTqZyg3xOBiSmTAiVMaBn7d32xOWBwRTfT1g/WY06GUw1JV4d9OfSQnrpM30PEjMWrgqPoBF
+ dFGyXeNoPEdgCX47OoBNmlEzBF2jlIGhzIu2aOApjXXt8lv4TM095pyZGjnsD3G1EcmdaZwzX
+ x04CE6th1J1twD3SZXxAgmEKzzONwSnGEmuy++7BYjqQLHAWcrne3Hggs5z9rlo49u00HO67a
+ tLZnlulGoaYu+2OOgf6dzI1S7KLFVxR67JhIyWwDKC8I5pDZj5qCNo7Y3tmwItXOYQaQSf5m1
+ +ZppXfLRr12z6JrOgu+Dx/IeFrLdg8yDkkJsSLWJ24DdZDA9xdUCuv+silEaL68D5ZmVeIw6E
+ oyjCiKFzKQqCMb0g10ug8870gMASmVdBeKTExh5tmcQvcstMxrd01jdB+WD6C9nLYjy4IHe0G
+ XQS39m/Q+09SeAC8tNy+xyyVQ5lK0Kq3gf3zmebCM7hf8ZEylNawWehkV2oW998ERTZsS2Xc8
+ r6MIvCddwsEofHRU7slZCmlWYXR667/JKU8hgFJKjn5YPpZvIktD5kbiI5E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.03.19 21:55, Greg KH wrote:
+On 06.03.19 22:43, Richard Weinberger wrote:
+> Am Mittwoch, 6. März 2019, 19:32:44 CET schrieb Enrico Weigelt, metux IT consult:
+> 
+> Here please also a changelog. :-)
 
-> Ick, no, no more squashfs please, let's just kill that mess once and for
-> all :)
+Sorry, forgotten that :o
 
-okay, then: s/squashfs/whatever_fs_image_or_archive_you_like/;
-
-> Again, putting this in a simple compressed tar image allows anyone to do
-> whatever they need to with this.  If they want a full filesystem,
-> uncompress it and use it there.  If they just want it in-memory where
-> they can uncompress it and then discard it, that works too.
-
-And let me stress the point: doesn't need any kernel changes at all,
-when it's just a file in the same place where the .ko's live.
+Those things happen if you're doing the same thing a hundred times
+(yes, I took the time to go through all Kconfig files, ending up w/ a
+huge queue of small patches - separated by subsystems / drivers) ...
 
 
 --mtx
