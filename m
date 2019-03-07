@@ -2,133 +2,194 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BC3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C83C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489E320840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C962720835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:44:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dt24YF4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfCGIoG (ORCPT
+        id S1726413AbfCGIoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:44:06 -0500
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:35428 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726138AbfCGIoF (ORCPT
+        Thu, 7 Mar 2019 03:44:44 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39515 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCGIoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:44:05 -0500
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:54492 helo=purcell.lan)
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h1oct-00083e-0q; Thu, 07 Mar 2019 09:43:39 +0100
-From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        shawn.lin@rock-chips.com, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com
-Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Randy Li <ayaka@soulik.info>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC controller.
-Date:   Thu,  7 Mar 2019 09:43:28 +0100
-Message-Id: <20190307084329.25416-3-christoph.muellner@theobroma-systems.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
+        Thu, 7 Mar 2019 03:44:44 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z84so8374735wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 00:44:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=B7f9yC2nBilh9QazUpPkdvFmlmnBG2olseACgV5S6uM=;
+        b=dt24YF4wSzfRuL19Z9DbyQsBphJD3FCepYs2gZMh9jBiVEaKUyVzL4xGtMiwkFFbV2
+         pkGmNKd4ObgeV81Tol62I8ZZNQiudCkUxEpJxrAGYR1NkUS0Gs425KPOQX8y3kmu5K81
+         VXRs+EngxqjqprpqkXFlaWa3QhR7aGQNsttUg8cHrhFa4vLCDLUVOMzZYgxfzYDMSmQg
+         szywE1m8EZf4X45JtAchBydI21ezcOZT0qwKVSexKloiuYneUN23U0JCxkbPcAlpsKiK
+         K081WtjCXf+lABcMpiKsO+iXwxJlVCGaa5O73rVbQmWcKzU9aduO6WNI8kMehWt8LrWg
+         +9QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=B7f9yC2nBilh9QazUpPkdvFmlmnBG2olseACgV5S6uM=;
+        b=Bdhe+InoZVsKd4mtd0ZPGNLJjs0FSgNTRxHwGG7Uhe4T1DhU4ANZRcOXfKaDYasICC
+         57cliGnenI1n53DRjsQ41qJWqhgozzGZMv1eYEsWfDjVY68XuOE0Xf1I0eZB3GYx9yjf
+         FHIEn+jPxke6FbQD7XvWllIYTmpxQnOSDJBK/Qh4+JcgFGNE7PPN5PEgXM0i294OUA+K
+         7+hhuU/gsejYWRDxRpbfB3BwxpU32k/WSvKLIrONiwoHCwT0xudgn3D+CXcSHvVHAPZf
+         U1WpF9g1yWHCF5bvqIlWjiaJY844r4YTUnrbEanryokH2ObYrhd7NzXb8RkGqf+D5Bli
+         7UMw==
+X-Gm-Message-State: APjAAAXPt8FanbtDVQS1AXrxYB4V+nw+1ousjMKYVIe1tnqzJYIhkPgT
+        im9q6EG5o82Z6MZpesVOeKdDAA==
+X-Google-Smtp-Source: APXvYqxzlYFDPqM2mlOLrgZauhmHRAXCZXIGTkiSNhD7z7qBQBk2yboSqfnm11ISkX2sQoBh6QIt0Q==
+X-Received: by 2002:a7b:cc18:: with SMTP id f24mr5256231wmh.42.1551948281979;
+        Thu, 07 Mar 2019 00:44:41 -0800 (PST)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 65sm6617313wrb.62.2019.03.07.00.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 00:44:41 -0800 (PST)
+Subject: Re: [PATCH v2 6/8] phy: amlogic: Add Amlogic G12A USB3 + PCIE Combo
+ PHY Driver
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-7-narmstrong@baylibre.com>
+ <CAFBinCBnDPcHpOQ1vW1gL6FxgLSxMv-f-qMm_TTCvXfDaFr3zA@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <6e8b1935-ba91-d06e-be63-cb2632a19654@baylibre.com>
+Date:   Thu, 7 Mar 2019 09:44:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <CAFBinCBnDPcHpOQ1vW1gL6FxgLSxMv-f-qMm_TTCvXfDaFr3zA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using direct commands (DCMDs) on an RK3399, we get spurious
-CQE completion interrupts for the DCMD transaction slot (#31):
+On 06/03/2019 22:04, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> [...]
+>> +static int phy_g12a_usb3_init(struct phy *phy)
+>> +{
+>> +       struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>> +       int data, ret;
+>> +
+>> +       /* Switch PHY to USB3 */
+>> +       regmap_update_bits(priv->regmap, PHY_R0,
+>> +                          PHY_R0_PCIE_USB3_SWITCH,
+>> +                          PHY_R0_PCIE_USB3_SWITCH);
+> does this automatically clear PHY_R0_PCIE_POWER_STATE (in case the
+> bootloader incorrectly set that)?
 
-[  931.196520] ------------[ cut here ]------------
-[  931.201702] mmc1: cqhci: spurious TCN for tag 31
-[  931.206906] WARNING: CPU: 0 PID: 1433 at
-/usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-[  931.206909] Modules linked in:
-[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted
-4.19.8-rt6-funkadelic #1
-[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  931.206927] pc : cqhci_irq+0x2e4/0x490
-[  931.206931] lr : cqhci_irq+0x2e4/0x490
-[  931.206933] sp : ffff00000e54bc80
-[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-[  931.206953] x21: 0000000000000002 x20: 000000000000001f
-[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-[  931.206961] x17: 0000000000000000 x16: 0000000000000000
-[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-[  931.206970] x13: 0720072007200720 x12: 0720072007200720
-[  931.206975] x11: 0720072007200720 x10: 0720072007200720
-[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-[  931.207001] Call trace:
-[  931.207005]  cqhci_irq+0x2e4/0x490
-[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-[  931.207013]  sdhci_irq+0x98/0x930
-[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-[  931.207023]  irq_thread+0x114/0x1c0
-[  931.207027]  kthread+0x128/0x130
-[  931.207032]  ret_from_fork+0x10/0x20
-[  931.207035] ---[ end trace 0000000000000002 ]---
+Don't forget it's a static configuration, on the board, only USB3 XOR PCIE
+will be available, if the bootloader sets this and the kernel uses USB3,
+or the reverse, one of them is wrong.
 
-The driver shows this message only for the first spurious interrupt
-by using WARN_ONCE(). Changing this to WARN() shows, that this is
-happening quite frequently (up to once a second).
+> 
+> [...]
+>> +static int phy_g12a_usb3_pcie_init(struct phy *phy)
+>> +{
+>> +       struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
+>> +       int ret;
+>> +
+>> +       ret = reset_control_reset(priv->reset);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       if (priv->mode == PHY_TYPE_USB3)
+>> +               return phy_g12a_usb3_init(phy);
+>> +
+>> +       /* Power UP PCIE */
+>> +       regmap_update_bits(priv->regmap, PHY_R0,
+>> +                          PHY_R0_PCIE_POWER_STATE,
+>> +                          FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
+> similar to my question above: does this automatically clear
+> PHY_R0_PCIE_USB3_SWITCH (in case the bootloader incorrectly set that)?
 
-Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-does not mention that spurious TCN interrupts for DCMDs can be simply
-ignored, we must assume that using this feature is not working reliably.
+Same answer, but I'll investigate to have more details on this register.
 
-The current implementation uses DCMD for REQ_OP_FLUSH only, and
-I could not see any performance/power impact when disabling
-this optional feature for RK3399.
+It's more an implementation issue, we can change it when PCIe is enabled
+on this platform.
 
-Therefore this patch disables DCMDs for RK3399.
+> 
+> Apart from these two questions this looks good to me!
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for the review !
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6cc1c9fa4ea6..1bbf0da4e01d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -333,6 +333,7 @@
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
- 		power-domains = <&power RK3399_PD_EMMC>;
-+		disable-cqe-dcmd;
- 		status = "disabled";
- 	};
- 
--- 
-2.11.0
+Neil
+
+> 
+> 
+> Regards
+> Martin
+> 
 
