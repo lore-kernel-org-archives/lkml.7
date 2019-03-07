@@ -2,111 +2,100 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B5BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D51C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4420920675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC93020840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aa7OqwoB"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="LCTOpdFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfCGWLJ (ORCPT
+        id S1726442AbfCGWLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:11:09 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39571 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfCGWLJ (ORCPT
+        Thu, 7 Mar 2019 17:11:30 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:44061 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfCGWL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:11:09 -0500
-Received: by mail-ed1-f67.google.com with SMTP id p27so14807028edc.6;
-        Thu, 07 Mar 2019 14:11:08 -0800 (PST)
+        Thu, 7 Mar 2019 17:11:29 -0500
+Received: by mail-yw1-f65.google.com with SMTP id x21so14687883ywx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:11:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TXb0s9/VA6uDrjEIjqzsVE7IYs9tLVulYfN8P5V0iLI=;
-        b=aa7OqwoBj2RHugmTvRqNIv+wYV+9IVcdAEtwY7MLBh7tlDRkHMbDVGFGJIHfLkbu6v
-         qptFYqmFtQgZ8Q6QDC59QlZ1a9S/WLHDx6nNWld3dI+gnIhN9rhQT+POlpFY2MDcQYc/
-         wMpmo7+ZSdDeEhPdUG/I5BAFnoLxMSIgIR7b/VpTE2NH2s+Z6Ki7KUYdVsf/1MK+MwUU
-         gLbJesovR4+RYFdm28MFrAEKLsZdXZUuSY8o9vnCAXCnIEGWROMpzg7Ycggz4bi+xu+m
-         vMprnhhjlxRJ2ItgkcBauwpoz9E06nQ+ue8AMkx2oKchI0JPFI8eg0I+GbwCNc+SpB++
-         7b3A==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FHC23kKOOD8L5WKDG46G396bmkMA7Azge/SSFHjSA8k=;
+        b=LCTOpdFAw92Re/ux6wXEumAMdp9TKQwpTrSs5Lh/Qfasc2H2gJ2JHORCOPqt1avoZp
+         1tmaIxawMjWKMK8d+zD5JXjklFfimS9r/BqlbkyxHnTZO3x7cQwNnqJ6es6GzRicctNr
+         EaB7LXmyAAXYzveD3svhTn+/IauwuK4QoRDoCm2/Sa1cRGHc3hk/h2+0fA/HPC4JljMg
+         eiBJ55Ma79JLsP+jPuXuNBQYRQXn0ouq7/HS6Awte0dQHoJnfCAUHQbnT3JVi8TC+/t2
+         IAmlCYL0po73tQ2RrijK8nFHuYWuO0Irn89uBprLX2gDt0zoB7NLVDWnzkdl4ndXwcmc
+         424Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TXb0s9/VA6uDrjEIjqzsVE7IYs9tLVulYfN8P5V0iLI=;
-        b=NFs1+N/L+vJ0i5145B8GdEsIo/e2DZ1R/xaRgTMi09lURDflenvXVBK80nefR9Heb5
-         O5E3Bgf8VaK9rrTNn3vY9ex7ODg6SInznvNaMMvenU1kumeG5/EN7m94sqonA6rj6TWw
-         sfBbdxMNuzFQZK8EBYJDEt9nJvLoRONXjHMr5dpEprlfFGrSyqZuSyVSynBc0hpVsJT9
-         jjKaBT9t/2J3ClDzzUd2dtSMh7QyBiWhvI4ixc3+XFRE515CJkf32avrqB7kogzsg0aE
-         FP1/Xe4/MWBMR6GYiRPD06lHD5q9EXNIWsRMVmdGezdcAzJZ6LPO5ohlOz7dmWqQOiC8
-         nNaQ==
-X-Gm-Message-State: APjAAAU6s4VMLzpm+wGdPg3204qNbKLp+4ByuypglfPMth32N7KtqbUK
-        HfJV7fTp2omKwRBTzvZ0zxE=
-X-Google-Smtp-Source: APXvYqxOpn0PnfAMILcNUSR3uo3DT56bbTsi/NHLv8lSPsmFWAFn/bIrOgIu5W4I8TjMMrCwN68mTg==
-X-Received: by 2002:a50:b3ad:: with SMTP id s42mr30244511edd.142.1551996667286;
-        Thu, 07 Mar 2019 14:11:07 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id c50sm1688585edc.81.2019.03.07.14.11.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FHC23kKOOD8L5WKDG46G396bmkMA7Azge/SSFHjSA8k=;
+        b=HwpXZ6KucRKeAYTNpcGig1CZ/LhJ+D2xp/qOOOAGwbHiOOX/5FvntARIU3ebjfCqfk
+         0rri6viCZRrK3G6K3//UIjrjRo4t6kt/OInJarBCSIO9lAIozJDteP0fy83njDpi9P46
+         TCKkxrDHVkKRah+Q08hhSSR1dWTIWKfBafFHQNTD6hWzZxfBknXIHLVpopCdMrQKl14U
+         CDUAWxyVLxkdUCv+nC27k1eOfuLWLY6hp/AlP/oJMMJ0arnbEt5aMquTlM6+JOcR/ICf
+         zUDTwPYWlQYgbLCxWQx8gQli5Sxmvz7a439qJqKt735D4plsa8nhWFFRDWjJ2jLxX/d3
+         4NKw==
+X-Gm-Message-State: APjAAAUNLmeg5UjVei2SrSFr/o3S1jM0/7SqqGlV/eszGRrd0N5xPkvp
+        jlbuhSJGqfILltuG28Q4CHAnXA==
+X-Google-Smtp-Source: APXvYqzJQV9pKn1T+xq8tEvgofda0YcYf0p7M5EupWuyPIKGF8VVn1dVryBLfJtwZGN7wSmKfJ91bQ==
+X-Received: by 2002:a81:5f86:: with SMTP id t128mr12396998ywb.467.1551996688797;
+        Thu, 07 Mar 2019 14:11:28 -0800 (PST)
+Received: from localhost ([2620:10d:c091:180::be7f])
+        by smtp.gmail.com with ESMTPSA id a194sm2078380ywh.103.2019.03.07.14.11.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 14:11:06 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] bcache: Zero initialize bucket in bch_allocator_thread
-Date:   Thu,  7 Mar 2019 15:10:54 -0700
-Message-Id: <20190307221054.13126-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 07 Mar 2019 14:11:28 -0800 (PST)
+Date:   Thu, 7 Mar 2019 17:11:27 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
+        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] blkcg: introduce io.sync_isolation
+Message-ID: <20190307221125.hy2j76m6tv7vnjpr@macbook-pro-91.dhcp.thefacebook.com>
+References: <20190307180834.22008-1-andrea.righi@canonical.com>
+ <20190307180834.22008-3-andrea.righi@canonical.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307180834.22008-3-andrea.righi@canonical.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
+On Thu, Mar 07, 2019 at 07:08:33PM +0100, Andrea Righi wrote:
+> Add a flag to the blkcg cgroups to make sync()'ers in a cgroup only be
+> allowed to write out pages that have been dirtied by the cgroup itself.
+> 
+> This flag is disabled by default (meaning that we are not changing the
+> previous behavior by default).
+> 
+> When this flag is enabled any cgroup can write out only dirty pages that
+> belong to the cgroup itself (except for the root cgroup that would still
+> be able to write out all pages globally).
+> 
+> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
 
-drivers/md/bcache/alloc.c:333:4: warning: variable 'bucket' is used
-uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-fifo_pop expands to a conditional depending on '!fifo_empty(...)', which
-is the same condition as the while loop. It seems Clang can't piece
-together that this condition will never been false as long as we are in
-the while loop because they are the same condition. It's easy enough to
-silence this warning by just explicitly zero initializing bucket.
+Thanks,
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/396
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/md/bcache/alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 5002838ea476..c72094901ac6 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -328,7 +328,7 @@ static int bch_allocator_thread(void *arg)
- 		 * the free list:
- 		 */
- 		while (!fifo_empty(&ca->free_inc)) {
--			long bucket;
-+			long bucket = 0;
- 
- 			fifo_pop(&ca->free_inc, bucket);
- 
--- 
-2.21.0
-
+Josef
