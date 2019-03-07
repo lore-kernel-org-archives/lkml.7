@@ -2,151 +2,103 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C45C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43973C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9FF20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dsy4bVlR";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e6YztNP8"
+	by mail.kernel.org (Postfix) with ESMTP id 0FE3A20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfCGPmO (ORCPT
+        id S1726691AbfCGPmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:42:14 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:44156 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCGPmN (ORCPT
+        Thu, 7 Mar 2019 10:42:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36728 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726512AbfCGPmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:42:13 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8A6D06016D; Thu,  7 Mar 2019 15:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551973332;
-        bh=8hnLI+4unoiRoQDzhLXSHv9McOthhblpMhzL68deYBw=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=dsy4bVlR0CrDHM+W9ekV5ronf2h55awQutlrLN3pyOboFpswsVYSVpkYhCW2LJd4i
-         BHSOxrU7jw7UQynq/PpDGyskOiwrQbz4IrVAKWx0VQX+N8cOgXi1gV/6Fu4NPgV/aH
-         QVL/lYBmv74BoOnQJ445lX7OGCS5gCRoY4lE3Kn4=
-Received: from purkki.adurom.net (purkki.adurom.net [80.68.90.206])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E73A56016D;
-        Thu,  7 Mar 2019 15:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551973329;
-        bh=8hnLI+4unoiRoQDzhLXSHv9McOthhblpMhzL68deYBw=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=e6YztNP8Rn2JFUd4gYPc9rTlREZ6gyw9vvLPpWimMrg2BiTmml2HnfNH8Do2egYRo
-         TcUa/LTVxng2z6h+Cfkih5gRtw+JZar5KwODtaORfdxM96gFfy5iaOQzO8jVUDz53z
-         irV0MyNwx/HsVEupKwyVx6HUSVFDcepPzctofGuM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E73A56016D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Julius Niedworok <julius.n@gmx.net>
-Cc:     linux-wireless@vger.kernel.org, ga58taw@mytum.de, david@redhat.com,
-        nc@net.in.tum.de, Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
-References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
-        <20190306200206.60916-1-julius.n@gmx.net>
-Date:   Thu, 07 Mar 2019 17:42:04 +0200
-In-Reply-To: <20190306200206.60916-1-julius.n@gmx.net> (Julius Niedworok's
-        message of "Wed, 6 Mar 2019 21:02:05 +0100")
-Message-ID: <87k1hazo6r.fsf@purkki.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Thu, 7 Mar 2019 10:42:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27FVDpJ022558;
+        Thu, 7 Mar 2019 16:42:29 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2r2ng25jcb-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 07 Mar 2019 16:42:29 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AEA8A34;
+        Thu,  7 Mar 2019 15:42:28 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 804B452B2;
+        Thu,  7 Mar 2019 15:42:28 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019
+ 16:42:28 +0100
+Received: from localhost (10.129.4.33) by webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019 16:42:28 +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] hwspinlock: stm32: implement the relax() ops
+Date:   Thu, 7 Mar 2019 16:42:16 +0100
+Message-ID: <1551973336-23048-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+X-Originating-IP: [10.129.4.33]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Julius Niedworok <julius.n@gmx.net> writes:
+Implement this optional ops, called by hwspinlock core while spinning on
+a lock, between two successive invocations of trylock().
 
-> At Technical University of Munich we use MAC 802.11 TX status frames to
-> perform several measurements in MAC 802.11 setups.
->
-> With ath based drivers this was possible until commit d94a461d7a7df6
-> ("ath9k: use ieee80211_tx_status_noskb where possible") as the driver
-> ignored the IEEE80211_TX_CTL_REQ_TX_STATUS flag and always delivered
-> tx_status frames. Since that commit, this behavior was changed and the
-> driver now adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
->
-> Due to performance reasons, IEEE80211_TX_CTL_REQ_TX_STATUS is not set for
-> data frames from interfaces in managed mode. Hence, frames that are sent
-> from a managed mode interface do never deliver tx_status frames. This
-> remains true even if a monitor mode interface (the measurement interface)
-> is added to the same ieee80211 physical device. Thus, there is no
-> possibility for receiving tx_status frames for frames sent on an interface
-> in managed mode, if the driver adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
->
-> In order to force delivery of tx_status frames for research and debugging
-> purposes, implement a debugfs option force_tx_status for ieee80211 physical
-> devices. When this option is set for a physical device,
-> IEEE80211_TX_CTL_REQ_TX_STATUS is enabled in all packets sent from that
-> device. This option can be set via
-> /sys/kernel/debug/ieee80211/<dev>/force_tx_status. The default is disabled.
->
-> Co-developed-by: Charlie Groh <ga58taw@mytum.de>
-> Signed-off-by: Charlie Groh <ga58taw@mytum.de>
-> Signed-off-by: Julius Niedworok <julius.n@gmx.net>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ drivers/hwspinlock/stm32_hwspinlock.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-[...]
-
-> +	len = scnprintf(buf, sizeof(buf), "%d\n", (int)local->force_tx_status);
-
-I wonder about the cast, is it guaranteed that a bool is always of the
-same size as an int?
-
-> --- a/net/mac80211/ieee80211_i.h
-> +++ b/net/mac80211/ieee80211_i.h
-> @@ -1367,6 +1367,7 @@ struct ieee80211_local {
->  		struct dentry *rcdir;
->  		struct dentry *keys;
->  	} debugfs;
-> +	bool force_tx_status;
-
-[...]
-
->  #endif
->  
->  	/*
-> diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-> index 928f13a..717fa71 100644
-> --- a/net/mac80211/tx.c
-> +++ b/net/mac80211/tx.c
-> @@ -2463,6 +2463,11 @@ static struct sk_buff *ieee80211_build_hdr(struct ieee80211_sub_if_data *sdata,
->  	if (IS_ERR(sta))
->  		sta = NULL;
->  
-> +#ifdef CONFIG_MAC80211_DEBUGFS
-> +		if (local->force_tx_status)
-> +			info_flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
-> +#endif
-> +
->  	/* convert Ethernet header to proper 802.11 header (based on
->  	 * operation mode) */
->  	ethertype = (skb->data[12] << 8) | skb->data[13];
-> @@ -3468,6 +3473,11 @@ static bool ieee80211_xmit_fast(struct ieee80211_sub_if_data *sdata,
->  		      (tid_tx ? IEEE80211_TX_CTL_AMPDU : 0);
->  	info->control.flags = IEEE80211_TX_CTRL_FAST_XMIT;
->  
-> +#ifdef CONFIG_MAC80211_DEBUGFS
-> +		if (local->force_tx_status)
-> +			info->flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
-> +#endif
-
-IMHO the ifdefs look pointless just to save four bytes. I would move
-force_tx_status outside of ifdef in the struct so that the actual code
-doesn't have ugly ifdefs.
-
+diff --git a/drivers/hwspinlock/stm32_hwspinlock.c b/drivers/hwspinlock/stm32_hwspinlock.c
+index 4418392..c8eacf4 100644
+--- a/drivers/hwspinlock/stm32_hwspinlock.c
++++ b/drivers/hwspinlock/stm32_hwspinlock.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/hwspinlock.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+@@ -42,9 +43,15 @@ static void stm32_hwspinlock_unlock(struct hwspinlock *lock)
+ 	writel(STM32_MUTEX_COREID, lock_addr);
+ }
+ 
++static void stm32_hwspinlock_relax(struct hwspinlock *lock)
++{
++	ndelay(50);
++}
++
+ static const struct hwspinlock_ops stm32_hwspinlock_ops = {
+ 	.trylock	= stm32_hwspinlock_trylock,
+ 	.unlock		= stm32_hwspinlock_unlock,
++	.relax		= stm32_hwspinlock_relax,
+ };
+ 
+ static int stm32_hwspinlock_probe(struct platform_device *pdev)
 -- 
-Kalle Valo
+2.7.4
+
