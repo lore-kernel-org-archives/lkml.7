@@ -6,64 +6,67 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C201C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E741A20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27DE20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbfCGKp6 convert rfc822-to-8bit (ORCPT
+        id S1726279AbfCGKs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:45:58 -0500
-Received: from prv1-mh.provo.novell.com ([137.65.248.33]:48912 "EHLO
-        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfCGKp6 (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:8:1>);
-        Thu, 7 Mar 2019 05:45:58 -0500
-Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
-        with Novell_GroupWise; Thu, 07 Mar 2019 03:45:57 -0700
-Message-Id: <5C80F662020000780021C674@prv1-mh.provo.novell.com>
-X-Mailer: Novell GroupWise Internet Agent 18.1.0 
-Date:   Thu, 07 Mar 2019 03:45:54 -0700
-From:   "Jan Beulich" <JBeulich@suse.com>
-To:     "Juergen Gross" <jgross@suse.com>
-Cc:     "Borislav Petkov" <bp@alien8.de>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>, <tglx@linutronix.de>,
-        "xen-devel" <xen-devel@lists.xenproject.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>
-Subject: Re: [Xen-devel] [PATCH] xen: fix dom0 boot on huge systems
-References: <20190307091119.6700-1-jgross@suse.com>
-In-Reply-To: <20190307091119.6700-1-jgross@suse.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+        Thu, 7 Mar 2019 05:48:27 -0500
+Received: from foss.arm.com ([217.140.101.70]:43714 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfCGKs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 05:48:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85ED3EBD;
+        Thu,  7 Mar 2019 02:48:26 -0800 (PST)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 518CA3F706;
+        Thu,  7 Mar 2019 02:48:25 -0800 (PST)
+Subject: Re: [PATCH] coresight: catu: fix clang build warning
+To:     arnd@arndb.de, mathieu.poirier@linaro.org,
+        alexander.shishkin@linux.intel.com
+Cc:     ndesaulniers@google.com, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190307103309.1574563-1-arnd@arndb.de>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <b32ab22a-2513-29b9-c000-d698f4efcb90@arm.com>
+Date:   Thu, 7 Mar 2019 10:48:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190307103309.1574563-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> On 07.03.19 at 10:11, <jgross@suse.com> wrote:
-> Commit f7c90c2aa40048 ("x86/xen: don't write ptes directly in 32-bit
-> PV guests") introduced a regression for booting dom0 on huge systems
-> with lots of RAM (in the TB range).
-> 
-> Reason is that on those hosts the p2m list needs to be moved early in
-> the boot process and this requires temporary page tables to be created.
-> Said commit modified xen_set_pte_init() to use a hypercall for writing
-> a PTE, but this requires the page table being in the direct mapped
-> area, which is not the case for the temporary page tables used in
-> xen_relocate_p2m().
-> 
-> As the page tables are completely written before being linked to the
-> actual address space instead of set_pte() a plain write to memory can
-> be used in xen_relocate_p2m().
-> 
-> Fixes: f7c90c2aa40048 ("x86/xen: don't write ptes directly in 32-bit PV guests")
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+Hi Arnd,
 
-Reviewed-by: Jan Beulich <jbeulich@suse.com>
+On 07/03/2019 10:32, Arnd Bergmann wrote:
+> Clang points out a syntax error, as the etr_catu_buf_ops structure is
+> declared 'static' before the type is known:
+> 
+> In file included from drivers/hwtracing/coresight/coresight-tmc-etr.c:12:
+> drivers/hwtracing/coresight/coresight-catu.h:116:40: warning: tentative definition of variable with internal linkage has incomplete non-array type 'const struct etr_buf_operations' [-Wtentative-definition-incomplete-type]
+> static const struct etr_buf_operations etr_catu_buf_ops;
+>                                         ^
+> drivers/hwtracing/coresight/coresight-catu.h:116:21: note: forward declaration of 'struct etr_buf_operations'
+> static const struct etr_buf_operations etr_catu_buf_ops;
+> 
+> This seems worth fixing in the code, so replace pointer to the empty
+> constant structure with a NULL pointer. We need an extra NULL pointer
+> check here, but the result should be better object code otherwise,
+> avoiding the silly empty structure.
+> 
+> Fixes: 434d611cddef ("coresight: catu: Plug in CATU as a backend for ETR buffer")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+Thanks for the fix.
 
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
