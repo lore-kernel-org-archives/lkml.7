@@ -2,153 +2,147 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DD2C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDED2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A67820840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33F720675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YpArZAGF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qPn53MN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCGSUM (ORCPT
+        id S1726552AbfCGSVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:20:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36962 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGSUM (ORCPT
+        Thu, 7 Mar 2019 13:21:08 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37138 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGSVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:20:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s22so12058092pfh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:20:11 -0800 (PST)
+        Thu, 7 Mar 2019 13:21:07 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m12so14293295edv.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:21:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=n8wSLJh3GXdY5a0oY98XTXZmgoXX8BLFR1DAUT44FVc=;
-        b=YpArZAGF2rkH+wl8ZqI3DxIhYtHR6yMZ7TB03z/egkTW+6e/WGDbHZtXl7oWJ+S4uQ
-         +ZpJFwKZxpA/czdyIbbqV8KTN5iJMozcuBteCoRYDnbE+WXT0pwii/Ndb8FwG50Xrenn
-         9+/e9i753OmYF45snSFF612oGQ66pDAftMR8g=
+        bh=Mv2sVwkvOpOsKziBy6PS3WwnrK94oVNASHk9Btsx/9s=;
+        b=qPn53MN/I08THXX9Z7mQttZAfKk+9dtH6bef4Vze3DTxMvoLXn/nHPtxsqGRbGfy7O
+         hk4aX40EX0xaxQjNOgGVoyPdR+Frl82BJE6MYzcKg7s8ewc2IExXpBg1N1EsQC2WiCEs
+         VRiS71968smrR/Elm8kp9zti8LrgmP4t2jCGEI5CqhvyTBkfskcLinLwzPvRmDdtF1xx
+         qa94PY3wTLC5T+0u8/z7kq+xIzlm+/PfpK9A8XeZCml/eOWuXm2g4AWWf8LpnWrkz5jo
+         coo81x+Xo+cq57+RU0zowBRrKfjHmTpYricQ1z81N1XQVIa0xmvrlwPuMqfnAIXfhl06
+         kACw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n8wSLJh3GXdY5a0oY98XTXZmgoXX8BLFR1DAUT44FVc=;
-        b=SYuRHsR1znszvjuK9frhe/tMseuq2WQPGVZbkHQIFZJCD9D4D+Tqy3NqqFIGVqSAXJ
-         JIpHakeaVw5BBFdJm5FARmvZ7UpTrYEr0BiFwhJo+UWvyOnlk7pIA9tP8Q7aT6Ox9mOY
-         5MMrafjwADNjaTcZ6qwes08Jh0x4auP1lo8Dxo4S9Ea/hUJuuE1PGRuB7tUmgtAT0isu
-         k9AFTo6PUFX83Mofi7YuPTJPVUEnWZkp/FrSaFqp7xFhHYxg/40WqG6qwQOkhyMUR+MB
-         xFLJb5+7EhNdl6r3ovLYPP+3e9mvqRlJO2UGy4RIaUXSwToAAvrKXtK2Ww/+oBKSfZpL
-         iJzg==
-X-Gm-Message-State: APjAAAU8Etgx5TlXoUaD6btlWeEugJUWJYv3aeAhy/VJ8plh/yUcnR3E
-        pqgzEBxDPjPChX6yZuOFFhNyfg==
-X-Google-Smtp-Source: APXvYqxIfc416OIg9O8zgIT6yHYstjjw7WgIBUqIaRMElyhlE2ApvirLqBvWcIyfBKXKgc2yqusqJw==
-X-Received: by 2002:a17:902:7682:: with SMTP id m2mr14431176pll.311.1551982810943;
-        Thu, 07 Mar 2019 10:20:10 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id s4sm7810922pfe.16.2019.03.07.10.20.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 10:20:10 -0800 (PST)
-Date:   Thu, 7 Mar 2019 10:20:09 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hemantg <hemantg@codeaurora.org>
-Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
- vendor event
-Message-ID: <20190307182009.GB138592@google.com>
-References: <20190307004041.38059-1-mka@chromium.org>
- <20190307004041.38059-3-mka@chromium.org>
- <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
+        bh=Mv2sVwkvOpOsKziBy6PS3WwnrK94oVNASHk9Btsx/9s=;
+        b=bilywUfjDbWKWstnF27wGNcQYxA1yR25hGNT4eG5lUrnGy2c4CmBUOTbkpFVKICI0D
+         DhvqDdmGTI09e/SZzmG2AKou4C9768/aCfEN31KKp8KNzyznKMUguDTU6N5sxedcq/Dj
+         nQ8krb9rtWXDoqtvUW9P8naKYm/1CxRff/MVGepvnhuoDK4oFjthCORasjXdYzOdEMi/
+         jyvF0OmHZZP+quBE+sHH+wuONXymYol4pdIxR3oAUS26P7/lb+zxEd+TAiob41wMoBsa
+         K3YwD3pLc4U6UAeXuYIBtJbluLomBvmateuBzkIDsJ/0TWhEV59QHeOTaS2zx5pkmgR3
+         9D/g==
+X-Gm-Message-State: APjAAAUeA8aHk0cZfxyE5qE1yfCu29g1Yy6lyVlXKhuPPRNHapoXdk/w
+        VghYDp6J02HinLUeH7wXtOA=
+X-Google-Smtp-Source: APXvYqyimD9kskLoL1Il9oURYocIrsogOw2QUltLa7NSMTdMcQlwK4Wo31BJK/5bnzT1x2S868vIwA==
+X-Received: by 2002:a50:b646:: with SMTP id c6mr29549509ede.149.1551982865969;
+        Thu, 07 Mar 2019 10:21:05 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id g24sm1540943edc.67.2019.03.07.10.21.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 10:21:04 -0800 (PST)
+Date:   Thu, 7 Mar 2019 11:21:02 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] futex: mark futex_detect_cmpxchg() as 'noinline'
+Message-ID: <20190307182102.GA12466@archlinux-ryzen>
+References: <20190307091514.2489338-1-arnd@arndb.de>
+ <CAKwvOdkr+a1F1VJ=Gc44WfrBnhnDNkvgQ=byz+N++xQ6VPdc2g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdkr+a1F1VJ=Gc44WfrBnhnDNkvgQ=byz+N++xQ6VPdc2g@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Balakrishna,
-
-On Thu, Mar 07, 2019 at 10:35:08AM +0530, Balakrishna Godavarthi wrote:
-> hi Matthias,
+On Thu, Mar 07, 2019 at 10:12:11AM -0800, Nick Desaulniers wrote:
+> On Thu, Mar 7, 2019 at 1:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On 32-bit ARM, I got a link failure in futex_init() when building
+> > with clang in some random configurations:
+> >
+> > kernel/futex.o:(.text.fixup+0x5c): relocation truncated to fit: R_ARM_JUMP24 against `.init.text'
 > 
-> On 2019-03-07 06:10, Matthias Kaehlcke wrote:
-> > Firmware download to the WCN3990 often fails with a 'TLV response size
-> > mismatch' error:
-> > 
-> > [  133.064659] Bluetooth: hci0: setting up wcn3990
-> > [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
-> > [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-> > [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
-> > [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
-> > 
-> > This is caused by a vendor event that corresponds to an earlier command
-> > to change the baudrate. The event is not processed in the context of the
-> > baudrate change and later interpreted as response to the firmware
-> > download command (which is also a vendor command), but the driver
-> > detects
-> > that the event doesn't have the expected amount of associated data.
-> > 
-> > More details:
-> > 
-> > For the WCN3990 the vendor command for a baudrate change isn't sent as
-> > synchronous HCI command, because the controller sends the corresponding
-> > vendor event with the new baudrate. The event is received and decoded
-> > after the baudrate change of the host port.
-> > 
-> > Identify the 'unused' event when it is received and don't add it to
-> > the queue of RX frames.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Do we know what function from the fixup text section is calling
+> futex_detect_cmpxchg?  I'm curious if this is maybe another case of
+> -Wsection where some function may be in the wrong section?
+> 
+
+Looks like this is the call stack:
+
+futex_init ->
+    futex_detect_cmpxchg ->
+        cmpxchg_futex_value_locked ->
+            futex_atomic_cmpxchg_inatomic
+
+This is the same issue I reported: https://github.com/ClangBuiltLinux/linux/issues/325
+
+Marking arm's futex_atomic_cmpxchg_inatomic as noinline also fixes this
+so maybe that's it?
+
+Cheers,
+Nathan
+
+> >
+> > As far as I can tell, the problem is that a branch is over 16MB
+> > apart in those configurations, but only if it branches back to
+> > the init text.
+> >
+> > Marking the futex_detect_cmpxchg() function as noinline and
+> > not __init avoids the problem for me.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > > ---
->
-> ...
->
-> Can you test by reverting this change "94d6671473924".
-
-The issue is still reproducible.
-
-> We need at least 15ms minimum delay for the soc to change its baud rate and
-> respond to the with command complete event.
-
-The baudrate change has clearly been successful when the problem is
-observed, since the host receives the vendor event with the new
-baudrate.
-
-We could increase the delay to 15ms just in case, though in my stress
-tests with 1000s of iterations I didn't observe any problem with the
-baudrate change itself. However if this patch gets landed the delay
-could be removed completely, since we are waiting until the vendor
-event is received with the new baudrate.
-
-> In my previous stress test we have not observed any issues.
-
-Which patches did you use for the stress test?
-
-Did your stack include '78e8fa2972e55 Bluetooth: hci_qca: Deassert RTS
-while baudrate change command' (or equivalent)? It is mainly this
-patch which *exposes* the problem, before it (and with the long delay)
-the controller response was received with the old baudrate and could
-not be decoded ("frame reassembly errors").
-
-Also make sure to test without 'Bluetooth: btqca: inject command
-complete event during fw download'
-(https://lore.kernel.org/patchwork/patch/1027955/), since it affects
-timing and injects extra events. It might seem that it fixes the
-problem, but it just papers over it.
-
-I have my suspicions that the mega-timeout of 300ms for ROME was
-introduced to 'fix' a related issue ...
-
-Cheers
-
-Matthias
+> >  kernel/futex.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/futex.c b/kernel/futex.c
+> > index c3b73b0311bc..dda77ed9f445 100644
+> > --- a/kernel/futex.c
+> > +++ b/kernel/futex.c
+> > @@ -3849,7 +3849,7 @@ SYSCALL_DEFINE6(futex_time32, u32 __user *, uaddr, int, op, u32, val,
+> >  }
+> >  #endif /* CONFIG_COMPAT_32BIT_TIME */
+> >
+> > -static void __init futex_detect_cmpxchg(void)
+> > +static noinline void futex_detect_cmpxchg(void)
+> >  {
+> >  #ifndef CONFIG_HAVE_FUTEX_CMPXCHG
+> >         u32 curval;
+> > --
+> > 2.20.0
+> >
+> 
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
