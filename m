@@ -2,152 +2,138 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BD8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFCCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6532081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9934020643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Of+gRCLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfCGLnY (ORCPT
+        id S1726469AbfCGLq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:43:24 -0500
-Received: from foss.arm.com ([217.140.101.70]:44196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfCGLnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:43:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CC521596;
-        Thu,  7 Mar 2019 03:43:23 -0800 (PST)
-Received: from [10.1.197.2] (ostrya.cambridge.arm.com [10.1.197.2])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB3E33F706;
-        Thu,  7 Mar 2019 03:43:20 -0800 (PST)
-Subject: Re: [PATCH v4 03/22] iommu: introduce device fault report API
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "yi.l.liu@linux.intel.com" <yi.l.liu@linux.intel.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        Christoffer Dall <Christoffer.Dall@arm.com>
-References: <20190218135504.25048-1-eric.auger@redhat.com>
- <20190218135504.25048-4-eric.auger@redhat.com>
- <fb5f84e6-812f-978d-3be1-673b3e9717ad@arm.com>
- <20190306154616.648e2523@jacob-builder>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <1500594f-d7ea-94f2-01aa-0dc0e08b391b@arm.com>
-Date:   Thu, 7 Mar 2019 11:42:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 7 Mar 2019 06:46:57 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37034 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfCGLq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 06:46:57 -0500
+Received: by mail-it1-f195.google.com with SMTP id z124so15317962itc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 03:46:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BJFCmIBEkjX0SmedhiLrBylGwmmAasIGYFf4pgeMd5U=;
+        b=Of+gRCLx2RnIP0JKabQ9E4/TSFoRliLCGEbnMjNeyp0iC7Q8f6gKg1lGQNvxE8keug
+         fKxQPu07y0ZaCEoP+AgqVmqoZKEAJnsLdLkUQOKo4lA4S+1Fr3Fmz4+cWFf0NwOBdPhY
+         +aZQ4ZpJa5j+AXeyvUXLRjbQHJBQxG149Xirk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BJFCmIBEkjX0SmedhiLrBylGwmmAasIGYFf4pgeMd5U=;
+        b=b/PpYJhUESjVzZUeJ+A6muCPI4n+6M4VU0t3p0Efw9ASHYKRQ+6MQPW+YldjEdyCYN
+         ygyCLhT/0+xRGTn9GMv9IumIcvgdfvvo8aJs0d2ndeFxthzxodJ3rHL14pBHt2bGZevi
+         M5PJMgt2O+tGNNo7EeKRF89PURnrU/00S8azVXaBYOEDJ+YmzPETlJopLRTDcoEwKOiV
+         K2AfEV1fYhvDjFEGh3iB5k5EbjmfAQn4zN60K6AV+qe9NyKSp+DTkeD1rdYcgUngGZmK
+         4yFHLb7Ldwn5gYkrN5XEWIVxSXGPt72b4IB7LvAjZOC/2y7f0WiVrdgi5pwpFeeGRamZ
+         WrAg==
+X-Gm-Message-State: APjAAAWNJlBXiSFUV7c894xCmBktRFq1DtcX1a8g1haOmtC0fyv/+TQ6
+        eQqDAxm1pWiCFYQlux3Ael1okK8+EVSHVCz1kWtBrw==
+X-Google-Smtp-Source: APXvYqxFKCKG4CZ6yIwfDTfytYJuhqUEZu1ooas6vRHNiYP95URGNZt74y7RFAwCbsQDcyB5hOiZDqMXV1E5AyjS19c=
+X-Received: by 2002:a24:e4d:: with SMTP id 74mr4722223ite.32.1551959215516;
+ Thu, 07 Mar 2019 03:46:55 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190306154616.648e2523@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190303173527.31055-1-jagan@amarulasolutions.com>
+ <20190303173527.31055-6-jagan@amarulasolutions.com> <20190304155014.2c7mx4uvzqwy7yde@flea>
+In-Reply-To: <20190304155014.2c7mx4uvzqwy7yde@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 7 Mar 2019 17:16:44 +0530
+Message-ID: <CAMty3ZCpr1rG_AB1hkFpSVyY2HVTkaUqyXf6czWEEn-J=LXE0w@mail.gmail.com>
+Subject: Re: [PATCH v9 5/5] drm/sun4i: sun6i_mipi_dsi: Simplify dsi setup
+ timings code
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2019 23:46, Jacob Pan wrote:
-> On Tue, 5 Mar 2019 15:03:41 +0000
-> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-> 
->> On 18/02/2019 13:54, Eric Auger wrote:
->> [...]> +/**
->> > + * iommu_register_device_fault_handler() - Register a device fault
->> > handler
->> > + * @dev: the device
->> > + * @handler: the fault handler
->> > + * @data: private data passed as argument to the handler
->> > + *
->> > + * When an IOMMU fault event is received, call this handler with
->> > the fault event
->> > + * and data as argument. The handler should return 0 on success.
->> > If the fault is
->> > + * recoverable (IOMMU_FAULT_PAGE_REQ), the handler can also
->> > complete
->> > + * the fault by calling iommu_page_response() with one of the
->> > following
->> > + * response code:
->> > + * - IOMMU_PAGE_RESP_SUCCESS: retry the translation
->> > + * - IOMMU_PAGE_RESP_INVALID: terminate the fault
->> > + * - IOMMU_PAGE_RESP_FAILURE: terminate the fault and stop
->> > reporting
->> > + *   page faults if possible.  
->> 
->> The comment refers to function and values that haven't been defined
->> yet. Either the page_response() patch should come before, or we need
->> to split this patch.
->> 
->> Something I missed before: if the handler fails (returns != 0) it
->> should complete the fault by calling iommu_page_response(), if we're
->> not doing it in iommu_report_device_fault(). It should be indicated
->> in this comment. It's safe for the handler to call page_response()
->> since we're not holding fault_param->lock when calling the handler.
->> 
-> If the page request fault is to be reported to a guest, the report
-> function cannot wait for the completion status. As long as the fault is
-> injected into the guest, the handler should complete with success. If
-> the PRQ report fails, IMHO, the caller of iommu_report_device_fault()
-> should send page_response, perhaps after clean up all partial response
-> of the group too.
+On Mon, Mar 4, 2019 at 9:20 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Sun, Mar 03, 2019 at 11:05:27PM +0530, Jagan Teki wrote:
+> > DSI timings are varies between burst/non-burst devices and
+> > current driver is handling this support via if, else statements
+> > which would difficult to read.
+> >
+> > Simplify it by using goto to make code more readable.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > ---
+> > Note: This change is created based on previous version burst
+> > changes [1] by addressing comment from [2] by Maxime to make
+> > code readable.
+> >
+> > [1] https://patchwork.kernel.org/cover/10813623/
+> > [2] https://patchwork.kernel.org/patch/10666607/
+> >
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 79 ++++++++++++++------------
+> >  1 file changed, 42 insertions(+), 37 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > index 31ec4048804d..898f32319c2d 100644
+> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > @@ -550,7 +550,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> >  {
+> >       struct mipi_dsi_device *device = dsi->device;
+> >       unsigned int Bpp = mipi_dsi_pixel_format_to_bpp(device->format) / 8;
+> > -     u16 hbp = 0, hfp = 0, hsa = 0, hblk = 0, vblk = 0;
+> > +     u16 hbp, hfp, hsa, hblk;
+> > +     u16 vblk = 0;
+> >       u32 basic_ctl = 0;
+> >       size_t bytes;
+> >       u8 *buffer;
+> > @@ -558,6 +559,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> >       /* Do all timing calculations up front to allocate buffer space */
+> >
+> >       if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> > +             hbp = hfp = hsa = 0;
+>
+> This raises a checkpatch warning and isn't necessary
+>
+> >               hblk = mode->hdisplay * Bpp;
+> >               basic_ctl = SUN6I_DSI_BASIC_CTL_VIDEO_BURST |
+> >                           SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS |
+> > @@ -566,48 +568,51 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+> >               if (device->lanes == 4)
+> >                       basic_ctl |= SUN6I_DSI_BASIC_CTL_TRAIL_FILL |
+> >                                    SUN6I_DSI_BASIC_CTL_TRAIL_INV(0xc);
+> > -     } else {
+> > -             /*
+> > -              * A sync period is composed of a blanking packet (4
+> > -              * bytes + payload + 2 bytes) and a sync event packet
+> > -              * (4 bytes). Its minimal size is therefore 10 bytes
+> > -              */
+> > +
+> > +             goto alloc_buf;
+>
+> And I'd rather not have a goto in the middle of the code for no
+> particular reason.
 
-Ok, the caller (IOMMU driver) sending the page_response if
-iommu_report_device_fault() fails does make more sense. Agreed on the
-partial cleanup as well, we don't keep track of them here, but I need to
-add that to the io-pgfault layer. However some cleanup should probably
-happen in here...
-
->> > +   /* we only report device fault if there is a handler
->> > registered */
->> > +   mutex_lock(&dev->iommu_param->lock);
->> > +   if (!dev->iommu_param->fault_param ||
->> > +           !dev->iommu_param->fault_param->handler) {
->> > +           ret = -EINVAL;
->> > +           goto done_unlock;
->> > +   }
->> > +   fparam = dev->iommu_param->fault_param;
->> > +   if (evt->fault.type == IOMMU_FAULT_PAGE_REQ &&
->> > +       evt->fault.prm.flags &
->> > IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE) {
->> > +           evt_pending = kmemdup(evt, sizeof(struct
->> > iommu_fault_event),
->> > +                           GFP_KERNEL);
->> > +           if (!evt_pending) {
->> > +                   ret = -ENOMEM;
->> > +                   goto done_unlock;
->> > +           }
->> > +           mutex_lock(&fparam->lock);
->> > +           list_add_tail(&evt_pending->list, &fparam->faults);
->> > +           mutex_unlock(&fparam->lock);
->> > +   }
->> > +   ret = fparam->handler(evt, fparam->data);
-
-... if ret != 0, removing and freeing the pending event seems more
-appropriate here than asking our caller to do it
-
-Thanks,
-Jean
-
->> > +done_unlock:
->> > +   mutex_unlock(&dev->iommu_param->lock);
->> > +   return ret;
->> > +}
->> > +EXPORT_SYMBOL_GPL(iommu_report_device_fault);  
->> [...]
-> 
-> [Jacob Pan]
-
+OK, will try to think for better simplification otherwise will drop it
+in next version.
