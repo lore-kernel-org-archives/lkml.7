@@ -2,112 +2,132 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD0BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA09EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673AF20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB4C20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXR7LlF+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vafn/w0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfCGSls (ORCPT
+        id S1726625AbfCGSmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:41:48 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44247 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfCGSls (ORCPT
+        Thu, 7 Mar 2019 13:42:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33079 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfCGSmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:41:48 -0500
-Received: by mail-ed1-f66.google.com with SMTP id b20so14320160edw.11;
-        Thu, 07 Mar 2019 10:41:46 -0800 (PST)
+        Thu, 7 Mar 2019 13:42:09 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i19so12113530pfd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:42:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3eGWZ91k0O89tXU3fGBURUnf8Nm4L6rvytseCpGbqT4=;
-        b=AXR7LlF+e2FMBRmIm8Vskckt6UiHHa35tDn5uWYi8v4AO5kIjGuAsB13URpSn54YA1
-         f2TXSPCx6hpdYQXTSWDALQUqo54xa4aad3xoEeyDB7rHtwusdPPmVZVaTa3BtIeVbFNm
-         K1wGOKqq6IpNgzMqthWywPqNLdEpK6tzS6R3AUvkrlWl94Kz1myHycWzUgMFEpn/p1uO
-         L2RxzJ+76ApJfKl9sUqqlGR/hVdMENsDTEeI0VZl5GfNslwrX+fICYVFluKdInH5Yile
-         WoOJEG5esd1+BiGueEuRcJXQWhVgbetD0fGU1MDvGnYhQyYzhngzapm/SwJyeLeT4k0A
-         bK0Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=syMuOUX+NyBjsexHT3nIQGZMwkRMNmkMzF/yisR8Uvk=;
+        b=Vafn/w0pLnlUrgV6tAQB6whf6NX1Xmde7Rnpz2+pxaJI1gv+ylQB+Wv60n3+S8rOZE
+         35dNLdybRHWAxCJvq8jQuq3d8f26wlG20cBTT+SCp4VOxeOzSwh8adyqhs904YeEBevG
+         9WzrSw421vVdwwYFaPB7eyNppr4up7qZS/bS7bxh7pYl9mgUcwUE8u++sEXZOL1z+tjJ
+         tv/w/oq8hTsVT51epqLa2qZjoumoUAAbiBAZ3d13fEKwMC3NlwQthSG7Q8myalQYESLC
+         M9+7ez9cwGszsc846TOAfujqX5tKg89eoN3cp3TJ5umrS3QmQqHZm5sMQ3vQOywFomso
+         Oxng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3eGWZ91k0O89tXU3fGBURUnf8Nm4L6rvytseCpGbqT4=;
-        b=t8wNpPogKC2n0fYeua3QsmFAdL/VDKjSarVQNydoU5dV5ajDNaPHWtlp7dPyTtuBlY
-         XouAIL2EcvtpH8buET+uC/AuY1jTurY7YKKOlTGl3RAAksgJaVwQvJjE8shJhkqiaoCF
-         oUMjwLFyjZLpsGw9klW9rCe+AzO+g4ueh/p0wJ2ld9JoS0xUDalpbKvQXLYjISjhIKq1
-         kdXwjb/ub9CsnKvidLkRsXOakw/rnysCtnSicVf/DXZ43XvkdoKsLJOJpF9VKfzdApv/
-         AIqZsaPVqOBSkRWcGlGkOGE/F2kSck33NV0aPTZ5SlQswlKK+oDHBcws3MXrodp4+roQ
-         /I8Q==
-X-Gm-Message-State: APjAAAVGQTxAQsr4Agnu8GAqC/x3LOMoLhnkU3oYbPh6kOqK7vfd2ibf
-        KUtKX23GibQyjjtY93oTH1I=
-X-Google-Smtp-Source: APXvYqzowx45WsXwJIYTPmJW1snIJjo9ZPNQZtk4FUSw6JuTgIkkwAGhXeS3920MSQHXdDZs9DhGuw==
-X-Received: by 2002:a50:978e:: with SMTP id e14mr27926732edb.234.1551984105890;
-        Thu, 07 Mar 2019 10:41:45 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id x34sm1555565edm.70.2019.03.07.10.41.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 10:41:45 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] scsi: qla4xxx: Don't call dma_free_coherent without dma_alloc_coherent
-Date:   Thu,  7 Mar 2019 11:41:25 -0700
-Message-Id: <20190307184125.21419-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=syMuOUX+NyBjsexHT3nIQGZMwkRMNmkMzF/yisR8Uvk=;
+        b=Hep7/LfCeVQbVlALmdytFhv3hfp//kZvvt1HVmgU8qRGPYi+wMG581NOkC7r/XRYPY
+         BSqtezGaTyXtbHTsQs91TxGN9qkcp5LKitCBTVaFp9Q4yXc6pDD5CpD+WG/7dS+um/8t
+         ZZwdMzuSrji/agDysQSJodUeHv5bpO7HFaX30kGtU8VHFfElynLHVROx1VQe/kef8wxC
+         HLmpE5TqIRy6kw2ToslTq6rtXa0k4HZWND9rvZcEwITNeMTex+nB0wF4BOHv0mSSE5l/
+         DTZLTm/y5Pgc401cFOJ7K4Wdh+K+iRQzpMZknusUorFulhVFLKtEebDeZuSyVOFSaq2o
+         wVxw==
+X-Gm-Message-State: APjAAAVmaZItffa7x2UKj5B8nenqXz81o3m0Zt3LddSEzgcTUquYecm1
+        iBK6HWlUurDwTKou9JroS7Q1XBFwODLnAQkPSdRiKg==
+X-Google-Smtp-Source: APXvYqxqzX2bt612izBVJoo3/WkPC8gH19MlydCt4yNsD6Jsnbsvm9vxqXika+H4eP8TTJY4O55zabvLHzxF+aIsev8=
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr14185528plf.320.1551984128301;
+ Thu, 07 Mar 2019 10:42:08 -0800 (PST)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190307091218.2343836-1-arnd@arndb.de> <20190307152805.GA25101@redhat.com>
+ <CAK8P3a2fuD-UBJET_OBKekCxrTDpnAxb0Bpu2LCCXaVT3pXTMQ@mail.gmail.com> <20190307164647.GC25101@redhat.com>
+In-Reply-To: <20190307164647.GC25101@redhat.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 7 Mar 2019 10:41:57 -0800
+Message-ID: <CAKwvOdkEuK04iqdrGR1CaHGc-3zCAS+tGnvfN8R0+j728TTPtQ@mail.gmail.com>
+Subject: Re: [PATCH] signal: fix building with clang
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
+On Thu, Mar 7, 2019 at 8:46 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 03/07, Arnd Bergmann wrote:
+> >
+> > We could use % everywhere,
+>
+> Yes.
+>
+> But again, why not simply use the "for (;;)" loops? Why we can't kill the
+> supid switch(_NSIG_WORDS) tricks altogether?
+>
+> Oleg.
+>
+> --- x/include/linux/signal.h
+> +++ x/include/linux/signal.h
+> @@ -121,26 +121,9 @@
+>  #define _SIG_SET_BINOP(name, op)                                       \
+>  static inline void name(sigset_t *r, const sigset_t *a, const sigset_t *b) \
+>  {                                                                      \
+> -       unsigned long a0, a1, a2, a3, b0, b1, b2, b3;                   \
+> -                                                                       \
+> -       switch (_NSIG_WORDS) {                                          \
+> -       case 4:                                                         \
+> -               a3 = a->sig[3]; a2 = a->sig[2];                         \
+> -               b3 = b->sig[3]; b2 = b->sig[2];                         \
+> -               r->sig[3] = op(a3, b3);                                 \
+> -               r->sig[2] = op(a2, b2);                                 \
+> -               /* fall through */                                      \
+> -       case 2:                                                         \
+> -               a1 = a->sig[1]; b1 = b->sig[1];                         \
+> -               r->sig[1] = op(a1, b1);                                 \
+> -               /* fall through */                                      \
+> -       case 1:                                                         \
+> -               a0 = a->sig[0]; b0 = b->sig[0];                         \
+> -               r->sig[0] = op(a0, b0);                                 \
+> -               break;                                                  \
+> -       default:                                                        \
+> -               BUILD_BUG();                                            \
+> -       }                                                               \
+> +       int i;                                                          \
+> +       for (i = 0; i < ARRAY_SIZE(r->sig); ++i)                        \
+> +               r->sig[i] = op(a->sig[i], b->sig[i]);                   \
+>  }
+>
+>  #define _sig_or(x,y)   ((x) | (y))
+>
 
-drivers/scsi/qla4xxx/ql4_os.c:5915:7: warning: variable 'buf_dma' is
-used uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
-
-buf_dma is initialized by dma_alloc_coherent, which is only called in
-the middle conditional statement. Use that same conditional to call
-dma_free_coherent so that buf_dma is always initialized when used.
-
-Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
-Link: https://github.com/ClangBuiltLinux/linux/issues/391
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/scsi/qla4xxx/ql4_os.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 16a18d5d856f..88bb52456efd 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -5982,7 +5982,8 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
- 			  ddb_index[1]));
- 
- exit_boot_info_free:
--	dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
-+	if (is_qla80XX(ha))
-+		dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
- exit_boot_info:
- 	ha->pri_ddb_idx = ddb_index[0];
- 	ha->sec_ddb_idx = ddb_index[1];
+That looks much cleaner IMO.
 -- 
-2.21.0
-
+Thanks,
+~Nick Desaulniers
