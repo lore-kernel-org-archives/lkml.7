@@ -2,171 +2,182 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F71C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9E3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F9620835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="n9KAPBva"
+	by mail.kernel.org (Postfix) with ESMTP id EA1C620835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 04:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfCGE5i (ORCPT
+        id S1726607AbfCGE6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 23:57:38 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60592 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfCGE5h (ORCPT
+        Wed, 6 Mar 2019 23:58:08 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:8522 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726127AbfCGE6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 23:57:37 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5CBD9891A8;
-        Thu,  7 Mar 2019 17:57:33 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1551934653;
-        bh=/ncGicRhpT0Jrx1YkKh+dSzX+9GKtXbzCjm1aNfcRSU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=n9KAPBvavYyD02eiecddhrAWviSIYoQ+xgP9zccYXyBjrpDSCxoP2/AyT+txAj1sV
-         wIrUlctugDnFhnaztIUVxo4u0WMfVDEtdL5wRx8AhtdD4I43lb3Sal6KJgjC9KvTLx
-         gsqoHozDtAUvmbmcac+PaKg6yI8RYj6sBPpB7dw5haIQZTAsjm43eWs2lDxEKSzAc2
-         2ZMrPzlUP7vXAdQYXrKzGDlDVVv/WKwIZvOAwx+bqmL3SFzsSB+JJwATM4EUxQt3Co
-         IlNf+GF3tq+vYS5/eGbGCWR0xhImh8stHMTnH8Pzsb7++b4SqQrCwR5jMbxAYJc6YT
-         FOV81yQBDi5zA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5c80a4bc0001>; Thu, 07 Mar 2019 17:57:32 +1300
-Received: from brodieg-dl.ws.atlnz.lc (brodieg-dl.ws.atlnz.lc [10.33.22.16])
-        by smtp (Postfix) with ESMTP id 5B5E213EED5;
-        Thu,  7 Mar 2019 17:57:33 +1300 (NZDT)
-Received: by brodieg-dl.ws.atlnz.lc (Postfix, from userid 1718)
-        id 1B47B500285; Thu,  7 Mar 2019 17:57:33 +1300 (NZDT)
-From:   Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
-To:     davem@davemloft.net, stephen@networkplumber.org,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, chris.packham@alliedtelesis.co.nz,
-        luuk.paulussen@alliedtelesis.co.nz,
-        Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
-Subject: [PATCH 1/2] ipmr: Make cache queue length configurable
-Date:   Thu,  7 Mar 2019 17:57:28 +1300
-Message-Id: <20190307045729.14972-2-brodie.greenfield@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190307045729.14972-1-brodie.greenfield@alliedtelesis.co.nz>
-References: <20190307045729.14972-1-brodie.greenfield@alliedtelesis.co.nz>
+        Wed, 6 Mar 2019 23:58:08 -0500
+X-UUID: 53ec318dcbf743ab9b199bfe5cd5c022-20190307
+X-UUID: 53ec318dcbf743ab9b199bfe5cd5c022-20190307
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 828892857; Thu, 07 Mar 2019 12:57:59 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
+ 2019 12:57:58 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 7 Mar 2019 12:57:57 +0800
+Message-ID: <1551934677.30363.55.camel@mhfsdcap03>
+Subject: Re: [PATCH v5 3/5] i2c: mediatek: Add arb clock in i2c driver
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        <xinping.qian@mediatek.com>, <liguo.zhang@mediatek.com>,
+        Rob Herring <robh@kernel.org>
+Date:   Thu, 7 Mar 2019 12:57:57 +0800
+In-Reply-To: <CANMq1KBt7LeR=Od2LmswUSZMV_XZE+zn2LbnqU+SzywKqmDP7w@mail.gmail.com>
+References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
+         <1551186660-16902-4-git-send-email-qii.wang@mediatek.com>
+         <CANMq1KArROL7F+KDWktg6vzZyXifZrKCO8khf_QGRoiLkfDegw@mail.gmail.com>
+         <CANMq1KBt7LeR=Od2LmswUSZMV_XZE+zn2LbnqU+SzywKqmDP7w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to be able to keep more spaces available in our queue for
-processing incoming multicast traffic (adding (S,G) entries) - this lets
-us learn more groups faster, rather than dropping them at this stage.
+On Wed, 2019-03-06 at 18:49 +0800, Nicolas Boichat wrote:
+> One thing I missed from Matthias' comment on v4:
+> https://patchwork.kernel.org/patch/10822083/
+> 
+> On Wed, Mar 6, 2019 at 6:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >
+> > On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
+> > >
+> > > When two i2c controllers are internally connected to the same
+> > > GPIO pins, the arb clock is needed to ensure that the waveforms
+> > > do not interfere with each other.
+> > >
+> > > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> >
+> > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > > ---
+> > >  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
+> > >  1 file changed, 22 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > > index 428ac99..14d6b38 100644
+> > > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> > > @@ -35,6 +35,7 @@
+> > >  #include <linux/slab.h>
+> > >
+> > >  #define I2C_RS_TRANSFER                        (1 << 4)
+> > > +#define I2C_ARB_LOST                   (1 << 3)
+> > >  #define I2C_HS_NACKERR                 (1 << 2)
+> > >  #define I2C_ACKERR                     (1 << 1)
+> > >  #define I2C_TRANSAC_COMP               (1 << 0)
+> > > @@ -181,6 +182,7 @@ struct mtk_i2c {
+> > >         struct clk *clk_main;           /* main clock for i2c bus */
+> > >         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
+> > >         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC */
+> > > +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
+> > >         bool have_pmic;                 /* can use i2c pins from PMIC */
+> > >         bool use_push_pull;             /* IO config push-pull mode */
+> > >
+> > > @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+> > >                 if (ret)
+> > >                         goto err_pmic;
+> > >         }
+> > > +
+> > > +       if (i2c->clk_arb) {
+> > > +               ret = clk_prepare_enable(i2c->clk_arb);
+> > > +               if (ret)
+> > > +                       goto err_arb;
+> > > +       }
+> > > +
+> > >         return 0;
+> > >
+> > > +err_arb:
+> > > +       if (i2c->have_pmic)
+> > > +               clk_disable_unprepare(i2c->clk_pmic);
+> > >  err_pmic:
+> > >         clk_disable_unprepare(i2c->clk_main);
+> > >  err_main:
+> > > @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+> > >
+> > >  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+> > >  {
+> > > +       if (i2c->clk_arb)
+> > > +               clk_disable_unprepare(i2c->clk_arb);
+> > > +
+> > >         if (i2c->have_pmic)
+> > >                 clk_disable_unprepare(i2c->clk_pmic);
+> > >
+> > > @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> > >
+> > >         /* Clear interrupt status */
+> > >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> > > -              I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+> > > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+> 
+> Is it ok to set I2C_ARB_LOST on _all_ SoC that this driver supports?
+> If so, please at least say so in the commit message.
+> 
 
-Signed-off-by: Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
----
- Documentation/networking/ip-sysctl.txt | 8 ++++++++
- include/net/netns/ipv4.h               | 1 +
- net/ipv4/af_inet.c                     | 1 +
- net/ipv4/ipmr.c                        | 4 +++-
- net/ipv4/sysctl_net_ipv4.c             | 7 +++++++
- 5 files changed, 20 insertions(+), 1 deletion(-)
+Yes, old and new SoC have the I2C_ARB_LOST bit, but there was no need
+for multi-master before, so we didn't set it up specifically, I have
+test the patch on the old SoCs. I will add a note in the commit message.
 
-diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/netwo=
-rking/ip-sysctl.txt
-index acdfb5d2bcaa..02f77e932adf 100644
---- a/Documentation/networking/ip-sysctl.txt
-+++ b/Documentation/networking/ip-sysctl.txt
-@@ -887,6 +887,14 @@ ip_local_reserved_ports - list of comma separated ra=
-nges
-=20
- 	Default: Empty
-=20
-+ip_mr_cache_queue_length - INTEGER
-+	Limit the number of multicast packets we can have in the queue to be
-+	resolved.
-+	Bear in mind that when an unresolved multicast packet is received,
-+	there is an O(n) traversal of the queue. This should be considered
-+	if increasing.
-+	Default: 10
-+
- ip_unprivileged_port_start - INTEGER
- 	This is a per-namespace sysctl.  It defines the first
- 	unprivileged port in the network namespace.  Privileged ports
-diff --git a/include/net/netns/ipv4.h b/include/net/netns/ipv4.h
-index 104a6669e344..3411d3f18d51 100644
---- a/include/net/netns/ipv4.h
-+++ b/include/net/netns/ipv4.h
-@@ -187,6 +187,7 @@ struct netns_ipv4 {
- 	int sysctl_igmp_max_msf;
- 	int sysctl_igmp_llm_reports;
- 	int sysctl_igmp_qrv;
-+	unsigned int sysctl_ip_mr_cache_queue_length;
-=20
- 	struct ping_group_range ping_group_range;
-=20
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 0dfb72c46671..8e25538bdb1e 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -1827,6 +1827,7 @@ static __net_init int inet_init_net(struct net *net=
-)
- 	net->ipv4.sysctl_igmp_llm_reports =3D 1;
- 	net->ipv4.sysctl_igmp_qrv =3D 2;
-=20
-+	net->ipv4.sysctl_ip_mr_cache_queue_length =3D 10;
- 	return 0;
- }
-=20
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index ddbf8c9a1abb..c6a6c3e453a9 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -1127,6 +1127,7 @@ static int ipmr_cache_unresolved(struct mr_table *m=
-rt, vifi_t vifi,
- 				 struct sk_buff *skb, struct net_device *dev)
- {
- 	const struct iphdr *iph =3D ip_hdr(skb);
-+	struct net *net =3D dev_net(dev);
- 	struct mfc_cache *c;
- 	bool found =3D false;
- 	int err;
-@@ -1142,7 +1143,8 @@ static int ipmr_cache_unresolved(struct mr_table *m=
-rt, vifi_t vifi,
-=20
- 	if (!found) {
- 		/* Create a new entry if allowable */
--		if (atomic_read(&mrt->cache_resolve_queue_len) >=3D 10 ||
-+		if (atomic_read(&mrt->cache_resolve_queue_len) >=3D
-+		    net->ipv4.sysctl_ip_mr_cache_queue_length ||
- 		    (c =3D ipmr_cache_alloc_unres()) =3D=3D NULL) {
- 			spin_unlock_bh(&mfc_unres_lock);
-=20
-diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index ba0fc4b18465..78ae86e8c6cb 100644
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -784,6 +784,13 @@ static struct ctl_table ipv4_net_table[] =3D {
- 		.proc_handler	=3D proc_dointvec
- 	},
- #ifdef CONFIG_IP_MULTICAST
-+	{
-+		.procname	=3D "ip_mr_cache_queue_length",
-+		.data		=3D &init_net.ipv4.sysctl_ip_mr_cache_queue_length,
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0644,
-+		.proc_handler	=3D proc_dointvec
-+	},
- 	{
- 		.procname	=3D "igmp_qrv",
- 		.data		=3D &init_net.ipv4.sysctl_igmp_qrv,
---=20
-2.21.0
+> > >
+> > >         mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
+> > >
+> > >         /* Enable interrupt */
+> > >         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> > > -              I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+> > > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
+> > >
+> > >         /* Set transfer and transaction len */
+> > >         if (i2c->op == I2C_MASTER_WRRD) {
+> > > @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> > >
+> > >         /* Clear interrupt mask */
+> > >         mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> > > -              I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+> > > +                           I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
+> > >
+> > >         if (i2c->op == I2C_MASTER_WR) {
+> > >                 dma_unmap_single(i2c->dev, wpaddr,
+> > > @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+> > >                 return PTR_ERR(i2c->clk_dma);
+> > >         }
+> > >
+> > > +       i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
+> > > +       if (IS_ERR(i2c->clk_arb))
+> > > +               i2c->clk_arb = NULL;
+> > > +
+> > >         clk = i2c->clk_main;
+> > >         if (i2c->have_pmic) {
+> > >                 i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
+> > > --
+> > > 1.7.9.5
+> > >
+
 
