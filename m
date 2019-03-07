@@ -2,142 +2,234 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15891C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AC7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34C92081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlw4rrkr"
+	by mail.kernel.org (Postfix) with ESMTP id DFD522081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfCGO6N (ORCPT
+        id S1726351AbfCGO6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:58:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41690 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfCGO6N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:58:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n2so17786625wrw.8;
-        Thu, 07 Mar 2019 06:58:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oJU+yhEF6uANH8LMyOSkhxC5rgf801ijG9i4cePKCok=;
-        b=mlw4rrkrEg7k/ZWbSZQtU966A1gdOsBqJeCt3tlqdKCHW7jnEgOFzEbVqxXA5lD6++
-         HdtiJostiaG60ZWcKjzvvVSyAxAmEcJ/F6WmZH8O9UOvQiPt7ZFtRfH51iNygiQr/9c3
-         3Y2GeBj0LCrEtfleDvwRp1OZ4X69J3gAUdmkcNpzZT1QN+whvpsXzbdPuxybo9uhCkA9
-         X8Cw/4dHIwkxfwOgIsIL0qy17IM6ESzQQcYRKfcVZKYrkda5eS1Ol2/USyZwqohPQ5u4
-         Gu7SGMkqvJ65uiL8zrFBsveciwnZeroVg7tj3BTkxH9RjmcrWzhMd7P3XhNB+JEtCa76
-         L+RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oJU+yhEF6uANH8LMyOSkhxC5rgf801ijG9i4cePKCok=;
-        b=VgQwE9wVZSgTglQWLIjVXkdVtYLPpx4vTgGNQzAC4P+YGTWf5BEO96Jll4ihN45+43
-         XBM3BBzpBJ/EhOHspd4Pd7/At/wVp7ywDYuhyzoiQXD83tT3igdmU/CtLpueTzeM50+k
-         SMkoF5Int/2GtEQBgLL+vRAgLKFQ1YJrVnOFxM6yJKPtNkAMTgJdk7msYyAkHDx8yBrA
-         i4Ki/+aw9SjMdijjSMS1uogAGKlCxBuT5a0FHATyjjncpf19ZCz2PawYGfufocoaIlJx
-         U9YL1nFRvOK1GTaIBDDNTljRYHJFJvDnDcQmrn7wApmPh93Pb50UUbPY1XYdOM+Kj9qN
-         AKAw==
-X-Gm-Message-State: APjAAAVmvTEpwK0Ml5jVRv7aqYTgKWWvPYGrFoPzEujyqwTbGzuvGnor
-        KP1/Ud1u83PfZpBemx+mZ1I=
-X-Google-Smtp-Source: APXvYqxnKhNnSVzIRxSFtKB7RPbTjK073xdGbO7VFozi6qqbLyoJsklO3HiiUcILgbK6/5TEw0DqNg==
-X-Received: by 2002:a5d:458b:: with SMTP id p11mr7417859wrq.22.1551970691263;
-        Thu, 07 Mar 2019 06:58:11 -0800 (PST)
-Received: from [192.168.1.201] (7.73.31.93.rev.sfr.net. [93.31.73.7])
-        by smtp.gmail.com with ESMTPSA id f68sm10650115wmg.5.2019.03.07.06.58.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 06:58:10 -0800 (PST)
-Subject: Re: [PATCH net-next 0/2] br_netfilter: enable in non-initial netns
-To:     Christian Brauner <christian@brauner.io>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org
-Cc:     tyhicks@canonical.com, pablo@netfilter.org,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com
-References: <20181107134859.19896-1-christian@brauner.io>
-From:   Florian LAUNAY <launayflorian@gmail.com>
-Message-ID: <aca5e0b4-7c2a-4bd5-41ba-9a6ac965b9c6@gmail.com>
-Date:   Thu, 7 Mar 2019 15:58:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 09:58:51 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39178 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726170AbfCGO6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 09:58:50 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B6D194D8C1793213A8CF;
+        Thu,  7 Mar 2019 22:58:47 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Thu, 7 Mar 2019
+ 22:58:42 +0800
+Subject: Re: [PATCH/RFC] driver core: Postpone DMA tear-down until after
+ devres release
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20190207193653.18221-1-geert+renesas@glider.be>
+ <20190208164019.GY32526@8bytes.org>
+ <fa781547-7fa8-cb1a-50bd-d18351c02afd@arm.com>
+ <CAMuHMdV6T8EsLZaiM-=M=fRPuDXt05aXg6egmMBr6Sc9V39iKA@mail.gmail.com>
+ <6e64e564-aa6c-4193-1f57-ebf88d6932d5@arm.com>
+ <1b24a2dc-e9a3-f293-8dd1-360896a554e6@huawei.com>
+ <ebc665cc-31c5-4ecd-6c48-6d14962b1f0c@arm.com>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <3915df7f-1028-6caf-c99c-6b787e0d1060@huawei.com>
+Date:   Thu, 7 Mar 2019 14:58:35 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <20181107134859.19896-1-christian@brauner.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <ebc665cc-31c5-4ecd-6c48-6d14962b1f0c@arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+On 07/03/2019 14:52, Robin Murphy wrote:
+> Hi John,
 
-Can someone help move this topic forward ?
-This issue simply prevents any advanced use of docker in LXC.
+Hi Robin,
 
-Thank you in advance!
-Florian LAUNAY
+ok, fine.
 
-On 07/11/2018 14:48, Christian Brauner wrote:
-> Hey everyone,
-> 
-> Over time I have seen multiple reports by users who want to run applications
-> (Kubernetes e.g. via [1]) that require the br_netfilter module in
-> non-initial network namespaces [2], [3], [4], [5] (There are more issues
-> where this requirement is reported.).
-> Currently, the /proc/sys/net/bridge folder is only created in the
-> initial network namespace. This patch series ensures that the
-> /proc/sys/net/bridge folder is available in each network namespace if
-> the module is loaded and disappears from all network namespaces when the
-> module is unloaded.
-> The patch series also makes the sysctls:
-> 
-> bridge-nf-call-arptables
-> bridge-nf-call-ip6tables
-> bridge-nf-call-iptables
-> bridge-nf-filter-pppoe-tagged
-> bridge-nf-filter-vlan-tagged
-> bridge-nf-pass-vlan-input-dev
-> 
-> apply per network namespace. This unblocks some use-cases where users
-> would like to e.g. not do bridge filtering for bridges in a specific
-> network namespace while doing so for bridges located in another network
-> namespace.
-> The netfilter rules are afaict already per network namespace so it
-> should be safe for users to specify whether a bridge device inside their
-> network namespace is supposed to go through iptables et al. or not.
-> Also, this can already be done by setting an option for each individual
-> bridge via Netlink. It should also be possible to do this for all
-> bridges in a network namespace via sysctls.
-> 
-> Thanks!
-> Christian
-> 
-> [1]: https://github.com/zimmertr/Bootstrap-Kubernetes-with-Ansible
-> [2]: https://github.com/lxc/lxd/issues/5193
-> [3]: https://discuss.linuxcontainers.org/t/bridge-nf-call-iptables-and-swap-error-on-lxd-with-kubeadm/2204
-> [4]: https://github.com/lxc/lxd/issues/3306
-> [5]: https://gitlab.com/gitlab-org/gitlab-runner/issues/3705
-> 
-> Christian Brauner (2):
->    br_netfilter: add struct netns_brnf
->    br_netfilter: namespace bridge netfilter sysctls
-> 
->   include/net/net_namespace.h          |   3 +
->   include/net/netfilter/br_netfilter.h |   3 +-
->   include/net/netns/netfilter.h        |  16 +++
->   net/bridge/br_netfilter_hooks.c      | 166 ++++++++++++++++++---------
->   net/bridge/br_netfilter_ipv6.c       |   2 +-
->   5 files changed, 134 insertions(+), 56 deletions(-)
-> 
+It's a pain bisecting another rmmod issue with it...
+
+Cheers,
+
+>
+> On 07/03/2019 14:45, John Garry wrote:
+> [...]
+>> Hi guys,
+>>
+>> Any idea what happened to this fix?
+>
+> It's been in -next for a while (commit 376991db4b64) - I assume it will
+> land shortly and hit stable thereafter, at which point somebody gets to
+> sort out the manual backport past 4.20.
+>
+> Robin.
+>
+>> I have this on 5.0:
+>>
+>> [    0.000000] Linux version 5.0.0 (john@htsatcamb-server) (gcc
+>> version 4.8.5 (Linaro GCC 4.8-2015.06)) #121 SMP PREEMPT Thu Mar 7
+>> 14:28:39 GMT 2019
+>> [    0.000000] Kernel command line: BOOT_IMAGE=/john/Image
+>> rdinit=/init crashkernel=256M@32M earlycon console=ttyAMA0,115200
+>> acpi=force pcie_aspm=off scsi_mod.use_blk_mq=y no_console_suspend
+>> pcie-hisi.disable=1
+>>
+>> ...
+>>
+>> [   26.806856] pci_bus 000c:20: 2-byte config write to 000c:20:00.0
+>> offset 0x44 may corrupt adjacent RW1C bits
+>> [   26.817521] pcieport 0002:f8:00.0: can't derive routing for PCI INT B
+>> [   26.837167] pci_bus 000c:20: 2-byte config write to 000c:20:00.0
+>> offset 0x44 may corrupt adjacent RW1C bits
+>> [   26.850091] serial 0002:f9:00.1: PCI INT B: no GSI
+>> [   26.879364] serial 0002:f9:00.1: enabling device (0000 -> 0003)
+>> [   26.913131] 0002:f9:00.1: ttyS3 at I/O 0x1008 (irq = 0, base_baud =
+>> 115200) is a ST16650V2
+>> [   26.992897] rtc-efi rtc-efi: setting system clock to
+>> 2019-03-07T14:41:48 UTC (1551969708)
+>> [   27.009380] ALSA device list:
+>> [   27.015326]   No soundcards found.
+>> [   27.022549] Freeing unused kernel memory: 1216K
+>> [   27.055567] Run /init as init process
+>> root@(none)$ cd /sys/devices/platform/HISI0162:01
+>> root@(none)$ echo HISI0162:01 > driver/unbind
+>> [   36.488040] hisi_sas_v2_hw HISI0162:01: dev[9:1] is gone
+>> [   36.561077] hisi_sas_v2_hw HISI0162:01: dev[8:1] is gone
+>> [   36.621061] hisi_sas_v2_hw HISI0162:01: dev[7:1] is gone
+>> [   36.693074] hisi_sas_v2_hw HISI0162:01: dev[6:1] is gone
+>> [   36.753066] hisi_sas_v2_hw HISI0162:01: dev[5:1] is gone
+>> [   36.764276] sd 0:0:3:0: [sdd] Synchronizing SCSI cache
+>> [   36.821106] hisi_sas_v2_hw HISI0162:01: dev[4:1] is gone
+>> [   36.889048] hisi_sas_v2_hw HISI0162:01: dev[3:1] is gone
+>> [   36.993002] hisi_sas_v2_hw HISI0162:01: dev[1:1] is gone
+>> [   37.004276] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+>> [   37.014768] sd 0:0:0:0: [sda] Stopping disk
+>> [   37.709094] hisi_sas_v2_hw HISI0162:01: dev[2:5] is gone
+>> [   37.721231] hisi_sas_v2_hw HISI0162:01: dev[0:2] is gone
+>> [   37.803774] BUG: Bad page state in process sh  pfn:11356
+>> [   37.814444] page:ffff7e000044d580 count:1 mapcount:0
+>> mapping:0000000000000000 index:0x0
+>> [   37.830525] flags: 0xfffc00000001000(reserved)
+>> [   37.839443] raw: 0fffc00000001000 ffff7e000044d588 ffff7e000044d588
+>> 0000000000000000
+>> [   37.854998] raw: 0000000000000000 0000000000000000 00000001ffffffff
+>> 0000000000000000
+>> [   37.870552] page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+>> [   37.883485] bad because of flags: 0x1000(reserved)
+>> [   37.893098] Modules linked in:
+>> [   37.899221] CPU: 5 PID: 2691 Comm: sh Not tainted 5.0.0 #121
+>> [   37.910578] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon
+>> D05 IT21 Nemo 2.0 RC0 04/18/2018
+>> [   37.928924] Call trace:
+>> [   37.933825]  dump_backtrace+0x0/0x150
+>> [   37.941166]  show_stack+0x14/0x1c
+>> [   37.947808]  dump_stack+0x8c/0xb0
+>> [   37.954451]  bad_page+0xe4/0x144
+>> [   37.960918]  free_pages_check_bad+0x7c/0x84
+>> [   37.969307]  __free_pages_ok+0x284/0x290
+>> [   37.977173]  __free_pages+0x30/0x44
+>> [   37.984163]  __dma_direct_free_pages+0x68/0x6c
+>> [   37.993076]  dma_direct_free+0x24/0x38
+>> [   38.000591]  dma_free_attrs+0x84/0xc0
+>> [   38.007930]  dmam_release+0x20/0x28
+>> [   38.014924]  release_nodes+0x128/0x1f8
+>> [   38.022439]  devres_release_all+0x34/0x4c
+>> [   38.030478]  device_release_driver_internal+0x190/0x208
+>> [   38.040963]  device_release_driver+0x14/0x1c
+>> [   38.049526]  unbind_store+0xbc/0xf4
+>> [   38.056517]  drv_attr_store+0x20/0x30
+>> [   38.063859]  sysfs_kf_write+0x44/0x4c
+>> [   38.071200]  kernfs_fop_write+0xd0/0x1c4
+>> [   38.079065]  __vfs_write+0x2c/0x158
+>> [   38.086055]  vfs_write+0xa8/0x19c
+>> [   38.092696]  ksys_write+0x44/0xa0
+>> [   38.099338]  __arm64_sys_write+0x1c/0x24
+>> [   38.107203]  el0_svc_common+0xb0/0x100
+>> [   38.114718]  el0_svc_handler+0x70/0x88
+>> [   38.122232]  el0_svc+0x8/0x7c0
+>> [   38.128356] Disabling lock debugging due to kernel taint
+>> [   38.139019] BUG: Bad page state in process sh  pfn:11355
+>> [   38.149682] page:ffff7e000044d540 count:0 mapcount:0
+>> mapping:0000000000000000 index:0x0
+>> [   38.165760] flags: 0xfffc00000001000(reserved)
+>> [   38.174676] raw: 0fffc00000001000 ffff7e000044d548 ffff7e000044d548
+>> 0000000000000000
+>> [   38.190230] raw: 0000000000000000 0000000000000000 00000000ffffffff
+>> 0000000000000000
+>> [   38.205783] page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+>> [   38.218716] bad because of flags: 0x1000(reserved)
+>> [   38.228329] Modules linked in:
+>> [   38.234451] CPU: 5 PID: 2691 Comm: sh Tainted: G    B 5.0.0 #121
+>> [   38.248604] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon
+>> D05 IT21 Nemo 2.0 RC0 04/18/2018
+>> [   38.266949] Call trace:
+>> [   38.271844]  dump_backtrace+0x0/0x150
+>> [   38.279185]  show_stack+0x14/0x1c
+>> [   38.285826]  dump_stack+0x8c/0xb0
+>> [   38.292468]  bad_page+0xe4/0x144
+>> [   38.298936]  free_pages_check_bad+0x7c/0x84
+>>
+>> ...
+>>
+>> Thanks,
+>> John
+>>
+>>> Thanks,
+>>> Robin.
+>>>
+>>>>> There aren't many drivers using dmam_alloc_*(), let alone which would
+>>>>> also find themselves behind an IOMMU on an Arm system, but it turns
+>>>>> out
+>>>>> I actually have another one which can reproduce the BUG() with 5.0-rc.
+>>>>
+>>>> SATA core uses dmam_alloc_*().
+>>>>
+>>>>> I've tried a 4.12 kernel with a bit of instrumentation[1] and sure
+>>>>> enough the devres-managed buffer is freed with the wrong ops[2] even
+>>>>> then. How it manages not to blow up more catastrophically I have no
+>>>>> idea... I guess at best it just leaks the buffers and IOMMU mappings,
+>>>>> and at worst quietly frees random other pages instead.
+>>>>
+>>>> May depend on the actual ops, and whether CMA is used or not.
+>>>>
+>>>> Gr{oetje,eeting}s,
+>>>>
+>>>>                          Geert
+>>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>>
+>>> .
+>>>
+>>
+>>
+>
+> .
+>
+
+
