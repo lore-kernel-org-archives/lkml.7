@@ -2,102 +2,125 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723BCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1045C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD7620840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:24:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GaWakx+5"
+	by mail.kernel.org (Postfix) with ESMTP id 8EE6920840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfCGRYm (ORCPT
+        id S1726614AbfCGRYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:24:42 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43576 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfCGRYl (ORCPT
+        Thu, 7 Mar 2019 12:24:55 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35184 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbfCGRYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:24:41 -0500
-Received: by mail-io1-f66.google.com with SMTP id y6so14197483ioq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:24:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qJj9iPUsqYorzV5NCT/lexYuC8UswEhuTyAshA4URC8=;
-        b=GaWakx+5mE9kb/COTV8mMyp6BHT+LY/KE3/qlMxtJgRqBhuTYY4c1K9q+MngWckD0h
-         ptd/xKSJmNQVOqS0DD9SQa7GzloK1n95/h6OfXadB59+fZG/joRAi9usXgcrSjHKhN1o
-         k6ULBUJ1TYfDsslqPUcydLJnF0fmTSiUHNQyks5qwwUw7xTylJB4oPsK/M45Ryzd5H/v
-         kTwDEXXixuJRymEqd/+pH2ABLvRi+LhhEd7k60WXcPPaNblEWHAQJg7jT1ao47peFOks
-         8o/4doHgfoIdAssX1gR01YBW+l1/5uP3qRCIf+J16FlFqnAT0m8c8v9QyCN1SBTIChXo
-         d66A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qJj9iPUsqYorzV5NCT/lexYuC8UswEhuTyAshA4URC8=;
-        b=OEmLVfj0EzjMyvQ2j6J4Cg5ul/oeQHw8QlISvzsx6mrUXesmEt9VMCgIrh0a0qqFKU
-         oPBfyGvJCOD3vh2Q7kEWg7L6uW8FxyGV/4+qZ7L8Er/I2Dk2raJXItm5biQGQLDloDDi
-         ZkuVHXDP+C6vbXsqe/s5UHm4iLURQslgt9Gh9GleyykoDR3EB6zBXwE8tEBSzvx3sBjV
-         WfZud/JV48nOIAtk8zIIcL/Noj03B0dAIkb1rIXirvCD0Lp/5XNEomM0epRi+SeMPSxR
-         E7s+GbzJTDP4t2tGnmD58LSgurtN4J/dHosLAb/nAx/6vfhS0Hg7RbHA0VMRv6tnodKN
-         My1Q==
-X-Gm-Message-State: APjAAAUbMpkb+nG7frD1hLNM8MznHe7Yz7gdKrBmPu3wDKxRpwGkhMO0
-        1FV4GkyB2JY8RWc5rBAOz58qS3MT5HUSbh8aTjHOfg==
-X-Google-Smtp-Source: APXvYqzLW5icEUCPPN0KnmLrzkY6hEUZOFIWH7bkQopLyqzz9wrsf5BM4eCnF4ckbFJSimFQoNYEbg1tIxkE0qtRxjE=
-X-Received: by 2002:a6b:c8cc:: with SMTP id y195mr3812718iof.86.1551979480672;
- Thu, 07 Mar 2019 09:24:40 -0800 (PST)
+        Thu, 7 Mar 2019 12:24:54 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HMDJL031729;
+        Thu, 7 Mar 2019 18:24:37 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2r315ute4n-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 07 Mar 2019 18:24:37 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 70FC14D;
+        Thu,  7 Mar 2019 17:24:36 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 46D6F562D;
+        Thu,  7 Mar 2019 17:24:36 +0000 (GMT)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 7 Mar
+ 2019 18:24:35 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1347.000; Thu, 7 Mar 2019 18:24:35 +0100
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: RE: [PATCH] irqchip: stm32: don't set rising configuration registers
+ at init
+Thread-Topic: [PATCH] irqchip: stm32: don't set rising configuration registers
+ at init
+Thread-Index: AQHU1QD7RMigUJWrgUiPC0+O3u7LzKYATfOAgAAbASA=
+Date:   Thu, 7 Mar 2019 17:24:35 +0000
+Message-ID: <6817f02f47b4436cb9911371f91523ba@SFHDAG5NODE3.st.com>
+References: <1551975317-5171-1-git-send-email-fabien.dessenne@st.com>
+ <6ee8e9dc-f331-7bc9-64e2-8978ab17aed1@arm.com>
+In-Reply-To: <6ee8e9dc-f331-7bc9-64e2-8978ab17aed1@arm.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190307103309.1574563-1-arnd@arndb.de> <b32ab22a-2513-29b9-c000-d698f4efcb90@arm.com>
-In-Reply-To: <b32ab22a-2513-29b9-c000-d698f4efcb90@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 7 Mar 2019 10:24:29 -0700
-Message-ID: <CANLsYkxQJA8ttw3sMv9aC3fg9PSh+5qAxtZL+UpqmKxDsMdHCQ@mail.gmail.com>
-Subject: Re: [PATCH] coresight: catu: fix clang build warning
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        ndesaulniers@google.com, Greg KH <gregkh@linuxfoundation.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019 at 03:48, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> Hi Arnd,
->
-> On 07/03/2019 10:32, Arnd Bergmann wrote:
-> > Clang points out a syntax error, as the etr_catu_buf_ops structure is
-> > declared 'static' before the type is known:
-> >
-> > In file included from drivers/hwtracing/coresight/coresight-tmc-etr.c:12:
-> > drivers/hwtracing/coresight/coresight-catu.h:116:40: warning: tentative definition of variable with internal linkage has incomplete non-array type 'const struct etr_buf_operations' [-Wtentative-definition-incomplete-type]
-> > static const struct etr_buf_operations etr_catu_buf_ops;
-> >                                         ^
-> > drivers/hwtracing/coresight/coresight-catu.h:116:21: note: forward declaration of 'struct etr_buf_operations'
-> > static const struct etr_buf_operations etr_catu_buf_ops;
-> >
-> > This seems worth fixing in the code, so replace pointer to the empty
-> > constant structure with a NULL pointer. We need an extra NULL pointer
-> > check here, but the result should be better object code otherwise,
-> > avoiding the silly empty structure.
-> >
-> > Fixes: 434d611cddef ("coresight: catu: Plug in CATU as a backend for ETR buffer")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Thanks for the fix.
->
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-Applied after fixing line over 80 characters.
-
-Thanks,
-Mathieu
+SGkNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgWnluZ2ll
+ciA8bWFyYy56eW5naWVyQGFybS5jb20+DQo+IFNlbnQ6IGpldWRpIDcgbWFycyAyMDE5IDE3OjQw
+DQo+IFRvOiBGYWJpZW4gREVTU0VOTkUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+OyBUaG9tYXMg
+R2xlaXhuZXINCj4gPHRnbHhAbGludXRyb25peC5kZT47IEphc29uIENvb3BlciA8amFzb25AbGFr
+ZWRhZW1vbi5uZXQ+OyBNYXhpbWUgQ29xdWVsaW4NCj4gPG1jb3F1ZWxpbi5zdG0zMkBnbWFpbC5j
+b20+OyBBbGV4YW5kcmUgVE9SR1VFDQo+IDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNvbT47IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXN0bTMyQHN0LW1kLQ0KPiBtYWlsbWFuLnN0
+b3JtcmVwbHkuY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6
+IEJlbmphbWluIEdBSUdOQVJEIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0hdIGlycWNoaXA6IHN0bTMyOiBkb24ndCBzZXQgcmlzaW5nIGNvbmZpZ3VyYXRp
+b24gcmVnaXN0ZXJzIGF0IGluaXQNCj4gDQo+IE9uIDA3LzAzLzIwMTkgMTY6MTUsIEZhYmllbiBE
+ZXNzZW5uZSB3cm90ZToNCj4gPiBUaGUgcmlzaW5nIGNvbmZpZ3VyYXRpb24gc3RhdHVzIHJlZ2lz
+dGVyIChydHNyKSBpcyBub3QgYmFua2VkLg0KPiA+IEFzIGl0IGlzIHNoYXJlZCB3aXRoIHRoZSBj
+by1wcm9jZXNzb3IsIGl0IHNob3VsZCBub3QgYmUgd3JpdHRlbiBhdA0KPiA+IHByb2JlIHRpbWUs
+IGVsc2UgdGhlIGNvLXByb2Nlc3NvciBjb25maWd1cmF0aW9uIHdpbGwgYmUgbG9zdC4NCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IEZhYmllbiBEZXNzZW5uZSA8ZmFiaWVuLmRlc3Nlbm5lQHN0LmNv
+bT4NCj4gDQo+IEZpeGVzOj8NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaXJxY2hpcC9pcnEt
+c3RtMzItZXh0aS5jIHwgNSAtLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBkZWxldGlvbnMo
+LSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLXN0bTMyLWV4dGku
+Yw0KPiA+IGIvZHJpdmVycy9pcnFjaGlwL2lycS1zdG0zMi1leHRpLmMNCj4gPiBpbmRleCA2ZWRm
+ZDRiLi5mZjhhODRmIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtc3RtMzIt
+ZXh0aS5jDQo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1zdG0zMi1leHRpLmMNCj4gPiBA
+QCAtNzE2LDcgKzcxNiw2IEBAIHN0bTMyX2V4dGlfY2hpcF9kYXRhICpzdG0zMl9leHRpX2NoaXBf
+aW5pdChzdHJ1Y3QNCj4gc3RtMzJfZXh0aV9ob3N0X2RhdGEgKmhfZGF0YSwNCj4gPiAgCWNvbnN0
+IHN0cnVjdCBzdG0zMl9leHRpX2JhbmsgKnN0bTMyX2Jhbms7DQo+ID4gIAlzdHJ1Y3Qgc3RtMzJf
+ZXh0aV9jaGlwX2RhdGEgKmNoaXBfZGF0YTsNCj4gPiAgCXZvaWQgX19pb21lbSAqYmFzZSA9IGhf
+ZGF0YS0+YmFzZTsNCj4gPiAtCXUzMiBpcnFzX21hc2s7DQo+ID4NCj4gPiAgCXN0bTMyX2Jhbmsg
+PSBoX2RhdGEtPmRydl9kYXRhLT5leHRpX2JhbmtzW2JhbmtfaWR4XTsNCj4gPiAgCWNoaXBfZGF0
+YSA9ICZoX2RhdGEtPmNoaXBzX2RhdGFbYmFua19pZHhdOyBAQCAtNzI1LDEwICs3MjQsNiBAQA0K
+PiA+IHN0bTMyX2V4dGlfY2hpcF9kYXRhICpzdG0zMl9leHRpX2NoaXBfaW5pdChzdHJ1Y3Qgc3Rt
+MzJfZXh0aV9ob3N0X2RhdGENCj4gPiAqaF9kYXRhLA0KPiA+DQo+ID4gIAlyYXdfc3Bpbl9sb2Nr
+X2luaXQoJmNoaXBfZGF0YS0+cmxvY2spOw0KPiA+DQo+ID4gLQkvKiBEZXRlcm1pbmUgbnVtYmVy
+IG9mIGlycXMgc3VwcG9ydGVkICovDQo+ID4gLQl3cml0ZWxfcmVsYXhlZCh+MFVMLCBiYXNlICsg
+c3RtMzJfYmFuay0+cnRzcl9vZnN0KTsNCj4gPiAtCWlycXNfbWFzayA9IHJlYWRsX3JlbGF4ZWQo
+YmFzZSArIHN0bTMyX2JhbmstPnJ0c3Jfb2ZzdCk7DQo+ID4gLQ0KPiANCj4gQW5kIEkgZ3Vlc3Mg
+eW91IGRvbid0IG5lZWQgdG8gZmluZCBvdXQgdGhlIG51bWJlciBvZiBzdXBwb3J0ZWQgSVJRcz8N
+Cg0KVGhhdCdzIGNvcnJlY3QsIHRoaXMgaW5mb3JtZWQgaXMgdXNlbGVzcyA6IGlycXNfbWFzayBp
+cyBuZXZlciB1c2VkIChpdCB1c2VkIHRvIGJlIG91dHB1dCBpbiBhIGxvZyBmb3IgZGVidWcgcHVy
+cG9zZS5hbmQgdGhlIGxvZyBoYXMgYmVlbiByZW1vdmVkKQ0KDQoNCj4gDQo+IEFsc28sIGEgaGFu
+ZGZ1bCBvZiBsaW5lcyBkb3duLCB5b3UncmUgd3JpdGluZyBhZ2FpbiB0byB0aGUgc2FtZSByZWdp
+c3Rlci4gV2h5IGlzbid0DQo+IHRoYXQgYSBwcm9ibGVtPw0KDQpJdCdzIG9idmlvdXNseSBhIHBy
+b2JsZW0gOiBhbm90aGVyIHBhdGNoIGlzIG1pc3NpbmcsIEkgYW0gZ29pbmcgdG8gYWRkIGl0IGlu
+IHYyLg0KVGhhbmtzIGZvciBwb2ludGluZyB0aGlzIG91dCENCg0KDQo+IA0KPiA+ICAJLyoNCj4g
+PiAgCSAqIFRoaXMgSVAgaGFzIG5vIHJlc2V0LCBzbyBhZnRlciBob3QgcmVib290IHdlIHNob3Vs
+ZA0KPiA+ICAJICogY2xlYXIgcmVnaXN0ZXJzIHRvIGF2b2lkIHJlc2lkdWUNCj4gPg0KPiANCj4g
+VGhhbmtzLA0KPiANCj4gCU0uDQo+IC0tDQo+IEphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21l
+bGxzIGZ1bm55Li4uDQo=
