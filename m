@@ -2,125 +2,229 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1045C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBC1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE6920840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E8A2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r8q+1AVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfCGRYz (ORCPT
+        id S1726639AbfCGRZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:24:55 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35184 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbfCGRYy (ORCPT
+        Thu, 7 Mar 2019 12:25:10 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40240 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfCGRZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:24:54 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HMDJL031729;
-        Thu, 7 Mar 2019 18:24:37 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r315ute4n-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 07 Mar 2019 18:24:37 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 70FC14D;
-        Thu,  7 Mar 2019 17:24:36 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 46D6F562D;
-        Thu,  7 Mar 2019 17:24:36 +0000 (GMT)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 7 Mar
- 2019 18:24:35 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1347.000; Thu, 7 Mar 2019 18:24:35 +0100
-From:   Fabien DESSENNE <fabien.dessenne@st.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: RE: [PATCH] irqchip: stm32: don't set rising configuration registers
- at init
-Thread-Topic: [PATCH] irqchip: stm32: don't set rising configuration registers
- at init
-Thread-Index: AQHU1QD7RMigUJWrgUiPC0+O3u7LzKYATfOAgAAbASA=
-Date:   Thu, 7 Mar 2019 17:24:35 +0000
-Message-ID: <6817f02f47b4436cb9911371f91523ba@SFHDAG5NODE3.st.com>
-References: <1551975317-5171-1-git-send-email-fabien.dessenne@st.com>
- <6ee8e9dc-f331-7bc9-64e2-8978ab17aed1@arm.com>
-In-Reply-To: <6ee8e9dc-f331-7bc9-64e2-8978ab17aed1@arm.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 7 Mar 2019 12:25:10 -0500
+Received: by mail-pf1-f196.google.com with SMTP id h1so11944037pfo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:25:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1uA6Wnc1JXO6Z/KXP18r76DXk74dLIbMETnvZuX2eQo=;
+        b=r8q+1AVtcLlSCG/omYgZqF8a93jYl60llXuHFROd7Q7mKoI6gJoc7vydhlJjLUbrra
+         HbjXWJ5Xvldqdqd2JMSLTCxVopXfNgeov4DZMl3jnR/6S4LOQlOUCqHXfzcxu75gV+mT
+         mTgOi+M/Pj7XILsv4MAg5FQAxpflcBpdSG4xdtAx5Yje4W1mkamSf36RwMQ3fjKfhUDi
+         vt+TFi8RQEiTKrxTtORluBXZsPtQSuwUx7bwg0tntz96U5l1QKATYB5H+yW30j6nOWtN
+         Aij0hqLowb82E7vjZbdelB+S35TZ+v4AzHRabQlrNPZ0LdzPzYx1pbHcPYIdDx7Kiiw5
+         UNHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1uA6Wnc1JXO6Z/KXP18r76DXk74dLIbMETnvZuX2eQo=;
+        b=BwJ+ARj0rbYuhLXwW6vv9FLdZQyK2hS9Im40lpw94ya2iOaQYDKBLsIfw/DYVQSmvX
+         Oy+mID62KFTMKxr+6lPGreDKtcBfEc3DZ8HAQY/bHDoPNiQTz7B4DtcdMzeBnxZKNgjp
+         nx4hXP/VKnn+zvvWPsN5SVdIUwLjDOrcSBpG3+HpTAIyiR0h55gbew9GJliW6nd1xFLW
+         KX982l6FVOHBVDdfOTg2T+UAAU4iKfs3Zf2ZxWx8k+jrIz8Spo6m5YLcBD/XuLJYH985
+         1KWfJjXhlXLqocq9g+9WR0k7K8CVBg0Irf22yCXc8ZUzjt8Fcw2ex2hPAdjVQr8htd6T
+         60DA==
+X-Gm-Message-State: APjAAAXtHAniCahLjzgKK02YAl2NrIC3vNCLif8a6DoeCF09GvWsMevE
+        LvsFieSg5uEUtAuFZTjaedDv
+X-Google-Smtp-Source: APXvYqy/EVBjgFmSxedN5fV/SRT9nKOanUhI6AchQDwARZBhUzCGXswXZzYo6NfEpqapfGE3MLLOEQ==
+X-Received: by 2002:a65:468f:: with SMTP id h15mr12513524pgr.391.1551979508978;
+        Thu, 07 Mar 2019 09:25:08 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2405:204:740f:d61c:f9e8:217e:aed4:aa31])
+        by smtp.gmail.com with ESMTPSA id z67sm16870723pfi.152.2019.03.07.09.25.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 09:25:08 -0800 (PST)
+Date:   Thu, 7 Mar 2019 22:55:01 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        amit.kucheria@linaro.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: bitmain: Add GPIO Line names for Sophon
+ Edge board
+Message-ID: <20190307172501.GB9268@Mani-XPS-13-9360>
+References: <20190226115022.19022-1-manivannan.sadhasivam@linaro.org>
+ <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_09:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190226115022.19022-2-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgWnluZ2ll
-ciA8bWFyYy56eW5naWVyQGFybS5jb20+DQo+IFNlbnQ6IGpldWRpIDcgbWFycyAyMDE5IDE3OjQw
-DQo+IFRvOiBGYWJpZW4gREVTU0VOTkUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+OyBUaG9tYXMg
-R2xlaXhuZXINCj4gPHRnbHhAbGludXRyb25peC5kZT47IEphc29uIENvb3BlciA8amFzb25AbGFr
-ZWRhZW1vbi5uZXQ+OyBNYXhpbWUgQ29xdWVsaW4NCj4gPG1jb3F1ZWxpbi5zdG0zMkBnbWFpbC5j
-b20+OyBBbGV4YW5kcmUgVE9SR1VFDQo+IDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNvbT47IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXN0bTMyQHN0LW1kLQ0KPiBtYWlsbWFuLnN0
-b3JtcmVwbHkuY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6
-IEJlbmphbWluIEdBSUdOQVJEIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0hdIGlycWNoaXA6IHN0bTMyOiBkb24ndCBzZXQgcmlzaW5nIGNvbmZpZ3VyYXRp
-b24gcmVnaXN0ZXJzIGF0IGluaXQNCj4gDQo+IE9uIDA3LzAzLzIwMTkgMTY6MTUsIEZhYmllbiBE
-ZXNzZW5uZSB3cm90ZToNCj4gPiBUaGUgcmlzaW5nIGNvbmZpZ3VyYXRpb24gc3RhdHVzIHJlZ2lz
-dGVyIChydHNyKSBpcyBub3QgYmFua2VkLg0KPiA+IEFzIGl0IGlzIHNoYXJlZCB3aXRoIHRoZSBj
-by1wcm9jZXNzb3IsIGl0IHNob3VsZCBub3QgYmUgd3JpdHRlbiBhdA0KPiA+IHByb2JlIHRpbWUs
-IGVsc2UgdGhlIGNvLXByb2Nlc3NvciBjb25maWd1cmF0aW9uIHdpbGwgYmUgbG9zdC4NCj4gPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEZhYmllbiBEZXNzZW5uZSA8ZmFiaWVuLmRlc3Nlbm5lQHN0LmNv
-bT4NCj4gDQo+IEZpeGVzOj8NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaXJxY2hpcC9pcnEt
-c3RtMzItZXh0aS5jIHwgNSAtLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBkZWxldGlvbnMo
-LSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLXN0bTMyLWV4dGku
-Yw0KPiA+IGIvZHJpdmVycy9pcnFjaGlwL2lycS1zdG0zMi1leHRpLmMNCj4gPiBpbmRleCA2ZWRm
-ZDRiLi5mZjhhODRmIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtc3RtMzIt
-ZXh0aS5jDQo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1zdG0zMi1leHRpLmMNCj4gPiBA
-QCAtNzE2LDcgKzcxNiw2IEBAIHN0bTMyX2V4dGlfY2hpcF9kYXRhICpzdG0zMl9leHRpX2NoaXBf
-aW5pdChzdHJ1Y3QNCj4gc3RtMzJfZXh0aV9ob3N0X2RhdGEgKmhfZGF0YSwNCj4gPiAgCWNvbnN0
-IHN0cnVjdCBzdG0zMl9leHRpX2JhbmsgKnN0bTMyX2Jhbms7DQo+ID4gIAlzdHJ1Y3Qgc3RtMzJf
-ZXh0aV9jaGlwX2RhdGEgKmNoaXBfZGF0YTsNCj4gPiAgCXZvaWQgX19pb21lbSAqYmFzZSA9IGhf
-ZGF0YS0+YmFzZTsNCj4gPiAtCXUzMiBpcnFzX21hc2s7DQo+ID4NCj4gPiAgCXN0bTMyX2Jhbmsg
-PSBoX2RhdGEtPmRydl9kYXRhLT5leHRpX2JhbmtzW2JhbmtfaWR4XTsNCj4gPiAgCWNoaXBfZGF0
-YSA9ICZoX2RhdGEtPmNoaXBzX2RhdGFbYmFua19pZHhdOyBAQCAtNzI1LDEwICs3MjQsNiBAQA0K
-PiA+IHN0bTMyX2V4dGlfY2hpcF9kYXRhICpzdG0zMl9leHRpX2NoaXBfaW5pdChzdHJ1Y3Qgc3Rt
-MzJfZXh0aV9ob3N0X2RhdGENCj4gPiAqaF9kYXRhLA0KPiA+DQo+ID4gIAlyYXdfc3Bpbl9sb2Nr
-X2luaXQoJmNoaXBfZGF0YS0+cmxvY2spOw0KPiA+DQo+ID4gLQkvKiBEZXRlcm1pbmUgbnVtYmVy
-IG9mIGlycXMgc3VwcG9ydGVkICovDQo+ID4gLQl3cml0ZWxfcmVsYXhlZCh+MFVMLCBiYXNlICsg
-c3RtMzJfYmFuay0+cnRzcl9vZnN0KTsNCj4gPiAtCWlycXNfbWFzayA9IHJlYWRsX3JlbGF4ZWQo
-YmFzZSArIHN0bTMyX2JhbmstPnJ0c3Jfb2ZzdCk7DQo+ID4gLQ0KPiANCj4gQW5kIEkgZ3Vlc3Mg
-eW91IGRvbid0IG5lZWQgdG8gZmluZCBvdXQgdGhlIG51bWJlciBvZiBzdXBwb3J0ZWQgSVJRcz8N
-Cg0KVGhhdCdzIGNvcnJlY3QsIHRoaXMgaW5mb3JtZWQgaXMgdXNlbGVzcyA6IGlycXNfbWFzayBp
-cyBuZXZlciB1c2VkIChpdCB1c2VkIHRvIGJlIG91dHB1dCBpbiBhIGxvZyBmb3IgZGVidWcgcHVy
-cG9zZS5hbmQgdGhlIGxvZyBoYXMgYmVlbiByZW1vdmVkKQ0KDQoNCj4gDQo+IEFsc28sIGEgaGFu
-ZGZ1bCBvZiBsaW5lcyBkb3duLCB5b3UncmUgd3JpdGluZyBhZ2FpbiB0byB0aGUgc2FtZSByZWdp
-c3Rlci4gV2h5IGlzbid0DQo+IHRoYXQgYSBwcm9ibGVtPw0KDQpJdCdzIG9idmlvdXNseSBhIHBy
-b2JsZW0gOiBhbm90aGVyIHBhdGNoIGlzIG1pc3NpbmcsIEkgYW0gZ29pbmcgdG8gYWRkIGl0IGlu
-IHYyLg0KVGhhbmtzIGZvciBwb2ludGluZyB0aGlzIG91dCENCg0KDQo+IA0KPiA+ICAJLyoNCj4g
-PiAgCSAqIFRoaXMgSVAgaGFzIG5vIHJlc2V0LCBzbyBhZnRlciBob3QgcmVib290IHdlIHNob3Vs
-ZA0KPiA+ICAJICogY2xlYXIgcmVnaXN0ZXJzIHRvIGF2b2lkIHJlc2lkdWUNCj4gPg0KPiANCj4g
-VGhhbmtzLA0KPiANCj4gCU0uDQo+IC0tDQo+IEphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21l
-bGxzIGZ1bm55Li4uDQo=
+On Tue, Feb 26, 2019 at 05:20:22PM +0530, Manivannan Sadhasivam wrote:
+> Add GPIO line names for Sophon Edge board based on BM1880 SoC from
+> Bitmain. Line names are based on the board schematics as well as the
+> 96Boards Consumer Edition specification v1.0.
+> 
+
+Applied for v5.2 with Linus's Reviewed-by tag.
+
+Thanks,
+Mani
+
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../boot/dts/bitmain/bm1880-sophon-edge.dts   | 114 ++++++++++++++++++
+>  1 file changed, 114 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+> index 6a3255597138..6bdf4c101c61 100644
+> --- a/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+> +++ b/arch/arm64/boot/dts/bitmain/bm1880-sophon-edge.dts
+> @@ -8,6 +8,28 @@
+>  
+>  #include "bm1880.dtsi"
+>  
+> +/*
+> + * GPIO name legend: proper name = the GPIO line is used as GPIO
+> + *         NC = not connected (pin out but not routed from the chip to
+> + *              anything the board)
+> + *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
+> + *         LSEC = Low Speed External Connector
+> + *         HSEC = High Speed External Connector
+> + *
+> + * Line names are taken from the schematic "sophon-edge-schematics"
+> + * version, 1.0210.
+> + *
+> + * For the lines routed to the external connectors the
+> + * lines are named after the 96Boards CE Specification 1.0,
+> + * Appendix "Expansion Connector Signal Description".
+> + *
+> + * When the 96Board naming of a line and the schematic name of
+> + * the same line are in conflict, the 96Board specification
+> + * takes precedence. This is only for the informational
+> + * lines i.e. "[FOO]", the GPIO named lines "GPIO-A" thru "GPIO-L"
+> + * are the only ones actually used for GPIO.
+> + */
+> +
+>  / {
+>  	compatible = "bitmain,sophon-edge", "bitmain,bm1880";
+>  	model = "Sophon Edge";
+> @@ -32,6 +54,98 @@
+>  		clock-frequency = <500000000>;
+>  		#clock-cells = <0>;
+>  	};
+> +
+> +	soc {
+> +		gpio0: gpio@50027000 {
+> +			porta: gpio-controller@0 {
+> +				gpio-line-names =
+> +					"GPIO-A", /* GPIO0, LSEC pin 23 */
+> +					"GPIO-C", /* GPIO1, LSEC pin 25 */
+> +					"[GPIO2_PHY0_RST]", /* GPIO2 */
+> +					"GPIO-E", /* GPIO3, LSEC pin 27 */
+> +					"[USB_DET]", /* GPIO4 */
+> +					"[EN_P5V]", /* GPIO5 */
+> +					"[VDDIO_MS1_SEL]", /* GPIO6 */
+> +					"GPIO-G", /* GPIO7, LSEC pin 29 */
+> +					"[BM_TUSB_RST_L]", /* GPIO8 */
+> +					"[EN_P5V_USBHUB]", /* GPIO9 */
+> +					"NC",
+> +					"LED_WIFI", /* GPIO11 */
+> +					"LED_BT", /* GPIO12 */
+> +					"[BM_BLM8221_EN_L]", /* GPIO13 */
+> +					"NC", /* GPIO14 */
+> +					"NC", /* GPIO15 */
+> +					"NC", /* GPIO16 */
+> +					"NC", /* GPIO17 */
+> +					"NC", /* GPIO18 */
+> +					"NC", /* GPIO19 */
+> +					"NC", /* GPIO20 */
+> +					"NC", /* GPIO21 */
+> +					"NC", /* GPIO22 */
+> +					"NC", /* GPIO23 */
+> +					"NC", /* GPIO24 */
+> +					"NC", /* GPIO25 */
+> +					"NC", /* GPIO26 */
+> +					"NC", /* GPIO27 */
+> +					"NC", /* GPIO28 */
+> +					"NC", /* GPIO29 */
+> +					"NC", /* GPIO30 */
+> +					"NC"; /* GPIO31 */
+> +			};
+> +		};
+> +
+> +		gpio1: gpio@50027400 {
+> +			portb: gpio-controller@0 {
+> +				gpio-line-names =
+> +					"NC", /* GPIO32 */
+> +					"NC", /* GPIO33 */
+> +					"[I2C0_SDA]", /* GPIO34, LSEC pin 17 */
+> +					"[I2C0_SCL]", /* GPIO35, LSEC pin 15 */
+> +					"[JTAG0_TDO]", /* GPIO36 */
+> +					"[JTAG0_TCK]", /* GPIO37 */
+> +					"[JTAG0_TDI]", /* GPIO38 */
+> +					"[JTAG0_TMS]", /* GPIO39 */
+> +					"[JTAG0_TRST_X]", /* GPIO40 */
+> +					"[JTAG1_TDO]", /* GPIO41 */
+> +					"[JTAG1_TCK]", /* GPIO42 */
+> +					"[JTAG1_TDI]", /* GPIO43 */
+> +					"[CPU_TX]", /* GPIO44 */
+> +					"[CPU_RX]", /* GPIO45 */
+> +					"[UART1_TXD]", /* GPIO46 */
+> +					"[UART1_RXD]", /* GPIO47 */
+> +					"[UART0_TXD]", /* GPIO48 */
+> +					"[UART0_RXD]", /* GPIO49 */
+> +					"GPIO-I", /* GPIO50, LSEC pin 31 */
+> +					"GPIO-K", /* GPIO51, LSEC pin 33 */
+> +					"USER_LED2", /* GPIO52 */
+> +					"USER_LED1", /* GPIO53 */
+> +					"[UART0_RTS]", /* GPIO54 */
+> +					"[UART0_CTS]", /* GPIO55 */
+> +					"USER_LED4", /* GPIO56, JTAG1_TRST_X */
+> +					"USER_LED3", /* GPIO57, JTAG1_TMS */
+> +					"[I2S0_SCLK]", /* GPIO58 */
+> +					"[I2S0_FS]", /* GPIO59 */
+> +					"[I2S0_SDI]", /* GPIO60 */
+> +					"[I2S0_SDO]", /* GPIO61 */
+> +					"GPIO-B", /* GPIO62, LSEC pin 24 */
+> +					"GPIO-F"; /* GPIO63, I2S1_SCLK, LSEC pin 28 */
+> +			};
+> +		};
+> +
+> +		gpio2: gpio@50027800 {
+> +			portc: gpio-controller@0 {
+> +				gpio-line-names =
+> +					"GPIO-D", /* GPIO64, I2S1_FS, LSEC pin 26 */
+> +					"GPIO-J", /* GPIO65, I2S1_SDI, LSEC pin 32 */
+> +					"GPIO-H", /* GPIO66, I2S1_SDO, LSEC pin 30 */
+> +					"GPIO-L", /* GPIO67, LSEC pin 34 */
+> +					"[SPI0_CS]", /* GPIO68, SPI1_CS, LSEC pin 12 */
+> +					"[SPI0_DIN]", /* GPIO69, SPI1_SDI, LSEC pin 10 */
+> +					"[SPI0_DOUT]", /* GPIO70, SPI1_SDO, LSEC pin 14 */
+> +					"[SPI0_SCLK]"; /* GPIO71, SPI1_SCK, LSEC pin 8 */
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &uart0 {
+> -- 
+> 2.17.1
+> 
