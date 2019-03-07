@@ -2,449 +2,88 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998D6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55925C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E4520851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="e7YeIEOP"
+	by mail.kernel.org (Postfix) with ESMTP id 3041720851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfCGR7W (ORCPT
+        id S1726762AbfCGR7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:59:22 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48808 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726693AbfCGR7T (ORCPT
+        Thu, 7 Mar 2019 12:59:46 -0500
+Received: from eddie.linux-mips.org ([148.251.95.138]:58056 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfCGR7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:59:19 -0500
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HoOpR005354
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:59:18 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=6wJmJyke8j6ixD+nsOMkDgyb5heFyjac4iqefKfuvIU=;
- b=e7YeIEOPjxBsPTLDCXvL5WAI9aB8AWGCQD9Xo8thGM7AqK5MSPSzR6/H7pzFz/5q73Pn
- TowRfvXrzb+DsvKExkaFZkVzVoH3qFVw2/3BWd1LnznbDRkJ3fvxW3EnafyozWdRP1iw
- K5pVeYPt1juUimUmuRBw4g5HbjmOklYJxEc= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r37hhr77h-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:59:18 -0800
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 7 Mar 2019 09:58:27 -0800
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 1C15D62E1750; Thu,  7 Mar 2019 09:58:26 -0800 (PST)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v7 perf,bpf 02/15] bpf: libbpf: introduce bpf_program__get_prog_info_linear()
-Date:   Thu, 7 Mar 2019 09:57:57 -0800
-Message-ID: <20190307175810.249857-3-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190307175810.249857-1-songliubraving@fb.com>
-References: <20190307175810.249857-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Thu, 7 Mar 2019 12:59:45 -0500
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23992362AbfCGR7mRY61K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
+        Thu, 7 Mar 2019 18:59:42 +0100
+Date:   Thu, 7 Mar 2019 17:59:42 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     Alexandre Oliva <lxoliva@fsfla.org>
+cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, Tom Li <tomli@tomli.me>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform
+ Drivers
+In-Reply-To: <orlg1ryyo2.fsf@lxoliva.fsfla.org>
+Message-ID: <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
+References: <20190208083038.GA1433@localhost.localdomain>        <orbm3i5xrn.fsf@lxoliva.fsfla.org>        <20190211125506.GA21280@localhost.localdomain>        <orimxq3q9j.fsf@lxoliva.fsfla.org>        <20190211230614.GB22242@darkstar.musicnaut.iki.fi>   
+     <orva1jj9ht.fsf@lxoliva.fsfla.org>        <20190217235951.GA20700@darkstar.musicnaut.iki.fi>        <orpnrpj2rk.fsf@lxoliva.fsfla.org>        <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org> <orlg1ryyo2.fsf@lxoliva.fsfla.org>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_09:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, bpf_prog_info includes 9 arrays. The user has the option to
-fetch any combination of these arrays. However, this requires a lot of
-handling of these arrays. This work becomes more tricky when we need to
-store bpf_prog_info to a file, because these arrays are allocated
-independently.
+Hi Alexandre,
 
-This patch introduces struct bpf_prog_info_linear, which stores arrays
-of bpf_prog_info in continues memory. Helper functions are introduced
-to unify the work to get different information of bpf_prog_info.
-Specifically, bpf_program__get_prog_info_linear() allows the user to
-select which arrays to fetch, and handles details for the user.
+ I'm away on holiday and also connectivity is so-so here, so just a quick 
+reply.
 
-Plesae see the comments before enum bpf_prog_info_array for more details
-and examples.
+> >  Is there an MMIO completion barrier missing there somewhere by any chance 
+> > causing an IRQ that has been handled already to be redelivered because an 
+> > MMIO write meant to clear the IRQ at its origin at handler's completion 
+> > has not reached its destination before interrupts have been reenabled in 
+> > the issuing CPU?  Just a thought.
+> 
+> I've finally got a chance to bisect the IRQ14 (nobody cared) regression
+> on my yeeloong.  It took me to MIPS: Enforce strong ordering for MMIO
+> accessors (commit 3d474dacae72ac0f28228b328cfa953b05484b7f).
 
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- tools/lib/bpf/libbpf.c   | 251 +++++++++++++++++++++++++++++++++++++++
- tools/lib/bpf/libbpf.h   |  63 ++++++++++
- tools/lib/bpf/libbpf.map |   3 +
- 3 files changed, 317 insertions(+)
+ Thanks for looking into it.
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index f5eb60379c8d..ca00ce5cbae0 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -112,6 +112,11 @@ void libbpf_print(enum libbpf_print_level level, const char *format, ...)
- # define LIBBPF_ELF_C_READ_MMAP ELF_C_READ
- #endif
- 
-+static inline __u64 ptr_to_u64(const void *ptr)
-+{
-+	return (__u64) (unsigned long) ptr;
-+}
-+
- struct bpf_capabilities {
- 	/* v4.14: kernel support for program & map names. */
- 	__u32 name:1;
-@@ -2997,3 +3002,249 @@ bpf_perf_event_read_simple(void *mmap_mem, size_t mmap_size, size_t page_size,
- 	ring_buffer_write_tail(header, data_tail);
- 	return ret;
- }
-+
-+struct bpf_prog_info_array_desc {
-+	int	array_offset;	/* e.g. offset of jited_prog_insns */
-+	int	count_offset;	/* e.g. offset of jited_prog_len */
-+	int	size_offset;	/* > 0: offset of rec size,
-+				 * < 0: fix size of -size_offset
-+				 */
-+};
-+
-+static struct bpf_prog_info_array_desc bpf_prog_info_array_desc[] = {
-+	[BPF_PROG_INFO_JITED_INSNS] = {
-+		offsetof(struct bpf_prog_info, jited_prog_insns),
-+		offsetof(struct bpf_prog_info, jited_prog_len),
-+		-1,
-+	},
-+	[BPF_PROG_INFO_XLATED_INSNS] = {
-+		offsetof(struct bpf_prog_info, xlated_prog_insns),
-+		offsetof(struct bpf_prog_info, xlated_prog_len),
-+		-1,
-+	},
-+	[BPF_PROG_INFO_MAP_IDS] = {
-+		offsetof(struct bpf_prog_info, map_ids),
-+		offsetof(struct bpf_prog_info, nr_map_ids),
-+		-(int)sizeof(__u32),
-+	},
-+	[BPF_PROG_INFO_JITED_KSYMS] = {
-+		offsetof(struct bpf_prog_info, jited_ksyms),
-+		offsetof(struct bpf_prog_info, nr_jited_ksyms),
-+		-(int)sizeof(__u64),
-+	},
-+	[BPF_PROG_INFO_JITED_FUNC_LENS] = {
-+		offsetof(struct bpf_prog_info, jited_func_lens),
-+		offsetof(struct bpf_prog_info, nr_jited_func_lens),
-+		-(int)sizeof(__u32),
-+	},
-+	[BPF_PROG_INFO_FUNC_INFO] = {
-+		offsetof(struct bpf_prog_info, func_info),
-+		offsetof(struct bpf_prog_info, nr_func_info),
-+		offsetof(struct bpf_prog_info, func_info_rec_size),
-+	},
-+	[BPF_PROG_INFO_LINE_INFO] = {
-+		offsetof(struct bpf_prog_info, line_info),
-+		offsetof(struct bpf_prog_info, nr_line_info),
-+		offsetof(struct bpf_prog_info, line_info_rec_size),
-+	},
-+	[BPF_PROG_INFO_JITED_LINE_INFO] = {
-+		offsetof(struct bpf_prog_info, jited_line_info),
-+		offsetof(struct bpf_prog_info, nr_jited_line_info),
-+		offsetof(struct bpf_prog_info, jited_line_info_rec_size),
-+	},
-+	[BPF_PROG_INFO_PROG_TAGS] = {
-+		offsetof(struct bpf_prog_info, prog_tags),
-+		offsetof(struct bpf_prog_info, nr_prog_tags),
-+		-(int)sizeof(__u8) * BPF_TAG_SIZE,
-+	},
-+
-+};
-+
-+static __u32 bpf_prog_info_read_offset_u32(struct bpf_prog_info *info, int offset)
-+{
-+	__u32 *array = (__u32 *)info;
-+
-+	if (offset >= 0)
-+		return array[offset / sizeof(__u32)];
-+	return -(int)offset;
-+}
-+
-+static __u64 bpf_prog_info_read_offset_u64(struct bpf_prog_info *info, int offset)
-+{
-+	__u64 *array = (__u64 *)info;
-+
-+	if (offset >= 0)
-+		return array[offset / sizeof(__u64)];
-+	return -(int)offset;
-+}
-+
-+static void bpf_prog_info_set_offset_u32(struct bpf_prog_info *info, int offset,
-+					 __u32 val)
-+{
-+	__u32 *array = (__u32 *)info;
-+
-+	if (offset >= 0)
-+		array[offset / sizeof(__u32)] = val;
-+}
-+
-+static void bpf_prog_info_set_offset_u64(struct bpf_prog_info *info, int offset,
-+					 __u64 val)
-+{
-+	__u64 *array = (__u64 *)info;
-+
-+	if (offset >= 0)
-+		array[offset / sizeof(__u64)] = val;
-+}
-+
-+struct bpf_prog_info_linear *
-+bpf_program__get_prog_info_linear(int fd, __u64 arrays)
-+{
-+	struct bpf_prog_info_linear *info_linear;
-+	struct bpf_prog_info info = {};
-+	__u32 info_len = sizeof(info);
-+	__u32 data_len = 0;
-+	int i, err;
-+	void *ptr;
-+
-+	if (arrays >> BPF_PROG_INFO_LAST_ARRAY)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* step 1: get array dimensions */
-+	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
-+	if (err) {
-+		pr_debug("can't get prog info: %s", strerror(errno));
-+		return ERR_PTR(-EFAULT);
-+	}
-+
-+	/* step 2: calculate total size of all arrays */
-+	for (i = BPF_PROG_INFO_FIRST_ARRAY; i < BPF_PROG_INFO_LAST_ARRAY; ++i) {
-+		bool include_array = (arrays & (1UL << i)) > 0;
-+		struct bpf_prog_info_array_desc *desc;
-+		__u32 count, size;
-+
-+		desc = bpf_prog_info_array_desc + i;
-+
-+		/* kernel is too old to support this field */
-+		if (info_len < desc->array_offset + sizeof(__u32) ||
-+		    info_len < desc->count_offset + sizeof(__u32) ||
-+		    (desc->size_offset > 0 && info_len < desc->size_offset))
-+			include_array = false;
-+
-+		if (!include_array) {
-+			arrays &= ~(1UL << i);	/* clear the bit */
-+			continue;
-+		}
-+
-+		count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
-+		size = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
-+
-+		data_len += count * size;
-+	}
-+
-+	/* step 3: allocate continuous memory */
-+	data_len = roundup(data_len, sizeof(__u64));
-+	info_linear = malloc(sizeof(struct bpf_prog_info_linear) + data_len);
-+	if (!info_linear)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* step 4: fill data to info_linear->info */
-+	info_linear->arrays = arrays;
-+	memset(&info_linear->info, 0, sizeof(info));
-+	ptr = info_linear->data;
-+
-+	for (i = BPF_PROG_INFO_FIRST_ARRAY; i < BPF_PROG_INFO_LAST_ARRAY; ++i) {
-+		struct bpf_prog_info_array_desc *desc;
-+		__u32 count, size;
-+
-+		if ((arrays & (1UL << i)) == 0)
-+			continue;
-+
-+		desc = bpf_prog_info_array_desc + i;
-+		count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
-+		size = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
-+		bpf_prog_info_set_offset_u32(&info_linear->info,
-+					     desc->count_offset, count);
-+		bpf_prog_info_set_offset_u32(&info_linear->info,
-+					     desc->size_offset, size);
-+		bpf_prog_info_set_offset_u64(&info_linear->info,
-+					     desc->array_offset,
-+					     ptr_to_u64(ptr));
-+		ptr += count * size;
-+	}
-+
-+	/* step 5: call syscall again to get required arrays */
-+	err = bpf_obj_get_info_by_fd(fd, &info_linear->info, &info_len);
-+	if (err) {
-+		pr_debug("can't get prog info: %s", strerror(errno));
-+		free(info_linear);
-+		return ERR_PTR(-EFAULT);
-+	}
-+
-+	/* step 6: verify the data */
-+	for (i = BPF_PROG_INFO_FIRST_ARRAY; i < BPF_PROG_INFO_LAST_ARRAY; ++i) {
-+		struct bpf_prog_info_array_desc *desc;
-+		__u32 v1, v2;
-+
-+		if ((arrays & (1UL << i)) == 0)
-+			continue;
-+
-+		desc = bpf_prog_info_array_desc + i;
-+		v1 = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
-+		v2 = bpf_prog_info_read_offset_u32(&info_linear->info,
-+						   desc->count_offset);
-+		if (v1 != v2)
-+			pr_warning("%s: mismatch in element count\n", __func__);
-+
-+		v1 = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
-+		v2 = bpf_prog_info_read_offset_u32(&info_linear->info,
-+						   desc->size_offset);
-+		if (v1 != v2)
-+			pr_warning("%s: mismatch in rec size\n", __func__);
-+	}
-+
-+	/* step 7: update info_len and data_len */
-+	info_linear->info_len = sizeof(struct bpf_prog_info);
-+	info_linear->data_len = data_len;
-+
-+	return info_linear;
-+}
-+
-+void bpf_program__bpil_addr_to_offs(struct bpf_prog_info_linear *info_linear)
-+{
-+	int i;
-+
-+	for (i = BPF_PROG_INFO_FIRST_ARRAY; i < BPF_PROG_INFO_LAST_ARRAY; ++i) {
-+		struct bpf_prog_info_array_desc *desc;
-+		__u64 addr, offs;
-+
-+		if ((info_linear->arrays & (1UL << i)) == 0)
-+			continue;
-+
-+		desc = bpf_prog_info_array_desc + i;
-+		addr = bpf_prog_info_read_offset_u64(&info_linear->info,
-+						     desc->array_offset);
-+		offs = addr - ptr_to_u64(info_linear->data);
-+		bpf_prog_info_set_offset_u64(&info_linear->info,
-+					     desc->array_offset, offs);
-+	}
-+}
-+
-+void bpf_program__bpil_offs_to_addr(struct bpf_prog_info_linear *info_linear)
-+{
-+	int i;
-+
-+	for (i = BPF_PROG_INFO_FIRST_ARRAY; i < BPF_PROG_INFO_LAST_ARRAY; ++i) {
-+		struct bpf_prog_info_array_desc *desc;
-+		__u64 addr, offs;
-+
-+		if ((info_linear->arrays & (1UL << i)) == 0)
-+			continue;
-+
-+		desc = bpf_prog_info_array_desc + i;
-+		offs = bpf_prog_info_read_offset_u64(&info_linear->info,
-+						     desc->array_offset);
-+		addr = offs + ptr_to_u64(info_linear->data);
-+		bpf_prog_info_set_offset_u64(&info_linear->info,
-+					     desc->array_offset, addr);
-+	}
-+}
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index b4652aa1a58a..c7645a5e1ac0 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -377,6 +377,69 @@ LIBBPF_API bool bpf_probe_map_type(enum bpf_map_type map_type, __u32 ifindex);
- LIBBPF_API bool bpf_probe_helper(enum bpf_func_id id,
- 				 enum bpf_prog_type prog_type, __u32 ifindex);
- 
-+/*
-+ * Get bpf_prog_info in continuous memory
-+ *
-+ * struct bpf_prog_info has multiple arrays. The user has option to choose
-+ * arrays to fetch from kernel. The following APIs provide uniform way to
-+ * fetch these data. All arrays in bpf_prog_info are stored in singile
-+ * continuous memory region. This makes it easy to store the info in a
-+ * file.
-+ *
-+ * Before writing bpf_prog_info_linear to files, it is necessary to
-+ * translate pointers bpf_prog_info to offsets. Helper functions
-+ * bpf_program__bpil_addr_to_offs() and bpf_program__bpil_offs_to_addr()
-+ * are introduced to switch between pointers and offsets.
-+ *
-+ * Examples:
-+ *   # To fetch map_ids and prog_tags:
-+ *   __u64 arrays = (1UL << BPF_PROG_INFO_MAP_IDS) |
-+ *           (1UL << BPF_PROG_INFO_PROG_TAGS);
-+ *   struct bpf_prog_info_linear *info_linear =
-+ *           bpf_program__get_prog_info_linear(fd, arrays);
-+ *
-+ *   # To save data in file
-+ *   bpf_program__bpil_addr_to_offs(info_linear);
-+ *   write(f, info_linear, sizeof(*info_linear) + info_linear->data_len);
-+ *
-+ *   # To read data from file
-+ *   read(f, info_linear, <proper_size>);
-+ *   bpf_program__bpil_offs_to_addr(info_linear);
-+ */
-+enum bpf_prog_info_array {
-+	BPF_PROG_INFO_FIRST_ARRAY = 0,
-+	BPF_PROG_INFO_JITED_INSNS = 0,
-+	BPF_PROG_INFO_XLATED_INSNS,
-+	BPF_PROG_INFO_MAP_IDS,
-+	BPF_PROG_INFO_JITED_KSYMS,
-+	BPF_PROG_INFO_JITED_FUNC_LENS,
-+	BPF_PROG_INFO_FUNC_INFO,
-+	BPF_PROG_INFO_LINE_INFO,
-+	BPF_PROG_INFO_JITED_LINE_INFO,
-+	BPF_PROG_INFO_PROG_TAGS,
-+	BPF_PROG_INFO_LAST_ARRAY,
-+};
-+
-+struct bpf_prog_info_linear {
-+	/* size of struct bpf_prog_info, when the tool is compiled */
-+	__u32			info_len;
-+	/* total bytes allocated for data, round up to 8 bytes */
-+	__u32			data_len;
-+	/* which arrays are included in data */
-+	__u64			arrays;
-+	struct bpf_prog_info	info;
-+	__u8			data[];
-+};
-+
-+LIBBPF_API struct bpf_prog_info_linear *
-+bpf_program__get_prog_info_linear(int fd, __u64 arrays);
-+
-+LIBBPF_API void
-+bpf_program__bpil_addr_to_offs(struct bpf_prog_info_linear *info_linear);
-+
-+LIBBPF_API void
-+bpf_program__bpil_offs_to_addr(struct bpf_prog_info_linear *info_linear);
-+
- #ifdef __cplusplus
- } /* extern "C" */
- #endif
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index 778a26702a70..f3ce50500cf2 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -153,4 +153,7 @@ LIBBPF_0.0.2 {
- 		xsk_socket__delete;
- 		xsk_umem__fd;
- 		xsk_socket__fd;
-+		bpf_program__get_prog_info_linear;
-+		bpf_program__bpil_addr_to_offs;
-+		bpf_program__bpil_offs_to_addr;
- } LIBBPF_0.0.1;
--- 
-2.17.1
+> I've only just started trying to figure out what exactly in the change
+> leads to problems.  So far, I've determined that changing both uses of
+> __BUILD_IOPORT_SINGLE so that barrier is passed as 0 rather than 1
+> removes the undesirable effects, both on top of that patch, and on top
+> of v5.0:
+> 
+>  #define __BUILD_IOPORT_PFX(bus, bwlq, type)				\
+> - 	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0,)			\
+> - 	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0, _p)
+> +	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 0, 0,)			\
+> +	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 0, 0, _p)
 
+ So this seems backwards to me, port I/O is supposed to be strongly 
+ordered, so if removing the ordering guarantee "fixes" your problem, then 
+there must be a second bottom here.  Offhand either there is a race 
+condition somewhere which the lack of ordering here covers somehow, or 
+there is a silicon erratum of some sort somewhere that the SYNC 
+instruction triggers.
+
+ A further investigation is required I'm afraid.  Does your platform use 
+`war_io_reorder_wmb'?
+
+  Maciej
