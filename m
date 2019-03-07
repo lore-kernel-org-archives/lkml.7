@@ -2,105 +2,123 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077E1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D33C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31592081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E38920675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfCGMG4 (ORCPT
+        id S1726332AbfCGMJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:06:56 -0500
-Received: from Galois.linutronix.de ([146.0.238.70]:54167 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGMG4 (ORCPT
+        Thu, 7 Mar 2019 07:09:41 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54849 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCGMJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:06:56 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1h1rnJ-0007Zn-8G; Thu, 07 Mar 2019 13:06:37 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
-        <20190212143003.48446-9-john.ogness@linutronix.de>
-        <20190304073856.GA552@jagdpanzerIV>
-Date:   Thu, 07 Mar 2019 13:06:34 +0100
-Message-ID: <87va0uopmd.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Thu, 7 Mar 2019 07:09:39 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f3so9090546wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 04:09:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fmxRHEhfqe4KOpOLNzkfUAlcDzf0ZKEImK2Tad1sR2Q=;
+        b=gb9Z4eswqakLhxCZv1kHxSn7VnZMENI/NIMNA0mSGU/OjQ2d05m6Oo4fq0Am9EvSHe
+         L9KbJDZB6RvVXX9YkBIIMT8p4aHvK4reAJCZ+DH5sHoPr7hiE7xbDuL/jonrIwAampgF
+         4ohxlHCoTbrsAxVfte6mySLk5wkG/fln8wQWtB3JUsEeb9DjVvdknvoMqx/f6dLaB6bU
+         X/TnBmvyAc50Nr42Pn5fADK4OqfQ4Dl0UJFo1GqaVHEh3EOv6Ox5Psy2shhx79ebKmiv
+         yd4P40CKP3XKX+/4Lecp7aR667ZXENq5yolieZ/p2HsDK50tWXScDcnKrZ4b/eF9rmfT
+         sXnA==
+X-Gm-Message-State: APjAAAVr/6fDoQfSdFj1MD+UFGUJdd0l0I3Z9lzDGEMTyOAi2tQPRzwX
+        hlXigvFL+t1nrrDfs+KSEpzPjA==
+X-Google-Smtp-Source: APXvYqyzLzFVbS+eWoxcDeXtGiB33RKmdt3rzfdxHYtRr5mgB5jr3vkg/WwhnVCg5GRHUMaDYl4syg==
+X-Received: by 2002:a1c:b40b:: with SMTP id d11mr5902285wmf.80.1551960577218;
+        Thu, 07 Mar 2019 04:09:37 -0800 (PST)
+Received: from localhost.localdomain.com ([151.15.252.68])
+        by smtp.gmail.com with ESMTPSA id u17sm10967703wrg.71.2019.03.07.04.09.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 04:09:36 -0800 (PST)
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     tglx@linutronix.de, bigeasy@linutronix.de
+Cc:     linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        williams@redhat.com, Juri Lelli <juri.lelli@redhat.com>
+Subject: [RFC PATCH RT] x86/tsc: Add option to disable tsc clocksource watchdog
+Date:   Thu,  7 Mar 2019 13:09:13 +0100
+Message-Id: <20190307120913.13168-1-juri.lelli@redhat.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-04, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->> +	/* the printk kthread never exits */
->> +	for (;;) {
->> +		ret = prb_iter_wait_next(&iter, buf,
->> +					 PRINTK_RECORD_MAX, &master_seq);
->> +		if (ret == -ERESTARTSYS) {
->> +			continue;
->> +		} else if (ret < 0) {
->> +			/* iterator invalid, start over */
->> +			prb_iter_init(&iter, &printk_rb, NULL);
->> +			continue;
->> +		}
->> +
->> +		msg = (struct printk_log *)buf;
->> +		format_text(msg, master_seq, ext_text, &ext_len, text,
->> +			    &len, printk_time);
->> +
->> +		console_lock();
->> +		if (len > 0 || ext_len > 0) {
->> +			call_console_drivers(ext_text, ext_len, text, len);
->> +			boot_delay_msec(msg->level);
->> +			printk_delay();
->> +		}
->> +		console_unlock();
->> +	}
->
-> This, theoretically, creates a whole new world of possibilities for
-> console drivers. Now they can do GFP_KERNEL allocations and stall
-> printk_kthread during OOM; or they can explicitly reschedule from
-> ->write() callback (via console_conditional_schedule()) because
-> console_lock() sets console_may_schedule.
+Clocksource watchdog has been found responsible for generating latency
+spikes (in the 10-20 us range) when woken up to check for TSC stability.
 
-This was the intention. Although, as I mentioned in a previous
-response[0], perhaps we should not loosen the requirements on write().
+Add an option to disable it at boot.
 
-> It's one thing to do cond_resched() (or to let preemption to take
-> over) after call_console_drivers() (when we are done printing a
-> message to all console drivers) and another thing to let preemption to
-> take over while we are printing a messages to the consoles. It
-> probably would make sense to disable preemption around
-> call_console_drivers().
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+---
+Sending this out as an RFC after yesterday discussion with Thomas on IRC.
 
-I could see disabling preemption and interrupts for emergency messages
-in the printk-kthread in order to synchronize against an irq_work
-secondary printer as suggested in my response[0]. But I don't see an
-advantage to disabling preemption in general for
-call_console_drivers(). It is exactly that disable_preempt() that is so
-harmful for realtime tasks.
+AFAICT, CLOCK_SOURCE_MUST_VERIFY only controls enqueue\dequeue of the
+watchdog. TSC sync checks are still done if tsc_clocksource_reliable is
+set (booting w/o tsc=reliable).
 
-John Ogness
+Thomas, is this anywhere close to what you had in mind?
+---
+ Documentation/admin-guide/kernel-parameters.txt | 4 ++++
+ arch/x86/kernel/tsc.c                           | 5 ++++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-[0] https://lkml.kernel.org/r/87lg1rggcz.fsf@linutronix.de
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index f5acf35c712f..ea7c4967aa80 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4619,6 +4619,10 @@
+ 			[x86] unstable: mark the TSC clocksource as unstable, this
+ 			marks the TSC unconditionally unstable at bootup and
+ 			avoids any further wobbles once the TSC watchdog notices.
++			[x86] nowatchdog: disable clocksource watchdog. Used
++			in situations with strict latency requirements (where
++			interruptions from clocksource watchdog are not
++			acceptable).
+ 
+ 	turbografx.map[2|3]=	[HW,JOY]
+ 			TurboGraFX parallel port interface
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 6d5dc5dabfd7..4b753d057aee 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -283,6 +283,7 @@ int __init notsc_setup(char *str)
+ __setup("notsc", notsc_setup);
+ 
+ static int no_sched_irq_time;
++static int no_tsc_watchdog;
+ 
+ static int __init tsc_setup(char *str)
+ {
+@@ -292,6 +293,8 @@ static int __init tsc_setup(char *str)
+ 		no_sched_irq_time = 1;
+ 	if (!strcmp(str, "unstable"))
+ 		mark_tsc_unstable("boot parameter");
++	if (!strcmp(str, "nowatchdog"))
++		no_tsc_watchdog = 1;
+ 	return 1;
+ }
+ 
+@@ -1347,7 +1350,7 @@ static int __init init_tsc_clocksource(void)
+ 	if (tsc_unstable)
+ 		goto unreg;
+ 
+-	if (tsc_clocksource_reliable)
++	if (tsc_clocksource_reliable || no_tsc_watchdog)
+ 		clocksource_tsc.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
+ 
+ 	if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC_S3))
+-- 
+2.17.2
+
