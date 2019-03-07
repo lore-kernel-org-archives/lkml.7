@@ -2,117 +2,148 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DE8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4679AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731A420840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7OgvY7L"
+	by mail.kernel.org (Postfix) with ESMTP id 1414720851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551972189;
+	bh=lCO3T/XpRXUd0bBBzJFZCQZ2nBBRK9+DkfsiRbJa12c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sUk3npetd59suJjNN4om1NT9tR650RD9De71pWMIni5mzXQJtHOPL2T6MWXbSkGjY
+	 ppZuBqUNjLxLcFtfBIQr0ZFEAVuP8ekyH2IfMZwPNQHgNuRgdeLTOyQpKQvUSjdgux
+	 HpcYO8oTCu0fU9gJCvhcnKHfMU0fXkJ/1SR+A1zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfCGPWL (ORCPT
+        id S1726535AbfCGPXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:22:11 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41181 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGPWK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:22:10 -0500
-Received: by mail-ed1-f67.google.com with SMTP id x7so13775058eds.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:22:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OH1+4LcBj06RcAtfzMYBSlC6+Qd57B9iZTps1DUx5dk=;
-        b=h7OgvY7LGEGkdi1fIqi/P4NXg1BEcWBfJUqKdsk2bE0M3I1O8IA0HEGc/Y9r76hqwe
-         yvec4osySaNU45RxKBoC4Wc3aMwGbs3p4jAVaSKN9K0y0nJ93tMgANltCalA95jVEbHg
-         VnQkA9rAiyAxAlVn8zJ/eorhhFF3nJn25TlPJ3Tnb1EZEjUb9uvsL5UkEwHsoXivGaov
-         F8+Y+1fGbatEajATiHT3regHkad/tbD1H/0g5yRKKDoWipdoBWZ2uNM1987EeOgvomRi
-         mxWHsq9gtBId74z6x+OehNuA79LbusKHeMBosIbLwq1lgvDlmQHq0vDjkxftGsAn+AMi
-         Dmww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OH1+4LcBj06RcAtfzMYBSlC6+Qd57B9iZTps1DUx5dk=;
-        b=nQo+iflTrrwrTCVlulHJUxgrSzSv88lebcXte52/fhpMu7w3zEfQsdFzLRTjv/FVAt
-         VManjInnSp11MPZb8sSNSOmu5b0/OezGcnNt1nH0pW/ho+5EfBX2mSVsCcC+WYL/s8BW
-         9424cVmIWQsvl8biegXr+XWpE/LGH/MbKYwYI/GUQ/RSkDjECahIVk0eQNpo6COCcxG7
-         9Vh++p3MDxSsTJA/rI6qo07r70qOiCX343cp8JCqp4rDdI36LJGq2uHkuj7Uza5mnbX8
-         D7j3Uj3U3yT0lq19YGu7D9sI28ejCRyaoVaTQakdDR+FQB8MrPHhsH3FkTaclEl14xI+
-         zgig==
-X-Gm-Message-State: APjAAAX8ATWYETXnjVar0q7SfQrSEJfCUiA13sYTkUP5Zb2viGtlLpkX
-        z6WgatTO5IZl2Fd2MFOxO+Y=
-X-Google-Smtp-Source: APXvYqxVyKM56NQU41LGrKs5wKe2GXv8jmoo58rV+ezEwFmSNGo/tYiyLfGoYHptXEkp1RSnbQoLHw==
-X-Received: by 2002:a50:82c7:: with SMTP id 65mr28946906edg.7.1551972128585;
-        Thu, 07 Mar 2019 07:22:08 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id p44sm1403031edc.1.2019.03.07.07.22.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:22:08 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:22:06 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: ams-delta: remove duplicate 'const'
-Message-ID: <20190307152206.GF20201@archlinux-ryzen>
-References: <20190307101101.613881-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 10:23:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726166AbfCGPXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 10:23:07 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE1A20840;
+        Thu,  7 Mar 2019 15:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551972185;
+        bh=lCO3T/XpRXUd0bBBzJFZCQZ2nBBRK9+DkfsiRbJa12c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T8cROAQMU7pzNz0iJSmrs9g07QSB0UTZJB0ZtrY7ra7fexbvXRJbYCW8G1h/8jKjF
+         CmX5g1gM9KLgorDDRSvvLft3pqx9ESdoMt05DBS+Vl2Vn+o9MSqOROaTTgrBCt/j5r
+         WTHEiZQXaaOBwh/La/WHteiU06L01I8fs23noqmM=
+Date:   Thu, 7 Mar 2019 16:23:03 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>, atishp04@gmail.com,
+        dancol@google.com, Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, qais.yousef@arm.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, yhs@fb.com
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190307152303.GA9819@kroah.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+ <20190307150343.GB258852@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307101101.613881-1-arnd@arndb.de>
+In-Reply-To: <20190307150343.GB258852@google.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:10:49AM +0100, Arnd Bergmann wrote:
-> clang points out that SOC_ENUM_SINGLE_EXT_DECL() contains a 'const'
-> modifier already, so adding another one does not make it more const:
+On Thu, Mar 07, 2019 at 10:03:43AM -0500, Joel Fernandes wrote:
+> On Thu, Mar 07, 2019 at 09:58:24AM +0100, Geert Uytterhoeven wrote:
+> > Hi Joel,
+> > 
+> > On Fri, Mar 1, 2019 at 5:10 PM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > > Introduce in-kernel headers and other artifacts which are made available
+> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > > it possible to build kernel modules, run eBPF programs, and other
+> > > tracing programs that need to extend the kernel for tracing purposes
+> > > without any dependency on the file system having headers and build
+> > > artifacts.
+> > >
+> > > On Android and embedded systems, it is common to switch kernels but not
+> > > have kernel headers available on the file system. Raw kernel headers
+> > > also cannot be copied into the filesystem like they can be on other
+> > > distros, due to licensing and other issues. There's no linux-headers
+> > > package on Android. Further once a different kernel is booted, any
+> > > headers stored on the file system will no longer be useful. By storing
+> > > the headers as a compressed archive within the kernel, we can avoid these
+> > > issues that have been a hindrance for a long time.
+> > >
+> > > The feature is also buildable as a module just in case the user desires
+> > > it not being part of the kernel image. This makes it possible to load
+> > > and unload the headers on demand. A tracing program, or a kernel module
+> > > builder can load the module, do its operations, and then unload the
+> > > module to save kernel memory. The total memory needed is 3.8MB.
+> > >
+> > > The code to read the headers is based on /proc/config.gz code and uses
+> > > the same technique to embed the headers.
+> > >
+> > > To build a module, the below steps have been tested on an x86 machine:
+> > > modprobe kheaders
+> > > rm -rf $HOME/headers
+> > > mkdir -p $HOME/headers
+> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > > cd my-kernel-module
+> > > make -C $HOME/headers M=$(pwd) modules
+> > > rmmod kheaders
+> > 
+> > As the usage pattern will be accessing the individual files, what about
+> > implementing a file system that provides read-only access to the internal
+> > kheaders archive?
+> > 
+> >     mount kheaders $HOME/headers -t kheaders
 > 
-> sound/soc/ti/ams-delta.c:203:14: error: duplicate 'const' declaration specifier [-Werror,-Wduplicate-decl-specifier]
-> static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
->              ^
-> include/sound/soc.h:351:2: note: expanded from macro 'SOC_ENUM_SINGLE_EXT_DECL'
->         const struct soc_enum name = SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(xtexts), xtexts)
+> I thought about it already. This is easier said than done though. The archive
+> is compressed from 40MB to 3.6MB. If we leave it uncompressed in RAM, then it
+> will take up the entire 40MB of RAM and in Android we don't even use
+> disk-based swap.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> So we will need some kind of intra file compressed memory representation that
+> a filesystem can use for the backing store. I thought of RAM-backed squashfs
+> but it requires squashfs-tools to be installed at build time (which my host
+> distro itself didn't have).
+> 
+> It is just so much easier to use tar + xz at build time, and leave the
+> decompression task to the user. After decompression, the files will live on
+> the disk and the page-cache mechanism will free memory when/if the files fall
+> off the LRUs.
+> 
+> WDYT?
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+I think the compressed tarball is much simpler/easier overall.  If
+someone really wants the filesystem, they just uncompress it into a
+tmpfs mount.  It's much less moving kernel code to worry about.
 
-> ---
->  sound/soc/ti/ams-delta.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/ti/ams-delta.c b/sound/soc/ti/ams-delta.c
-> index 4dce494dfbd3..b9611db14c86 100644
-> --- a/sound/soc/ti/ams-delta.c
-> +++ b/sound/soc/ti/ams-delta.c
-> @@ -200,7 +200,7 @@ static int ams_delta_get_audio_mode(struct snd_kcontrol *kcontrol,
->  	return 0;
->  }
->  
-> -static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
-> +static SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
->  				      ams_delta_audio_mode);
->  
->  static const struct snd_kcontrol_new ams_delta_audio_controls[] = {
-> -- 
-> 2.20.0
-> 
+thanks,
+
+greg k-h
