@@ -2,71 +2,108 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C201C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134C5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27DE20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB07520684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfCGKs1 (ORCPT
+        id S1726351AbfCGKtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:48:27 -0500
-Received: from foss.arm.com ([217.140.101.70]:43714 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfCGKs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:48:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85ED3EBD;
-        Thu,  7 Mar 2019 02:48:26 -0800 (PST)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 518CA3F706;
-        Thu,  7 Mar 2019 02:48:25 -0800 (PST)
-Subject: Re: [PATCH] coresight: catu: fix clang build warning
-To:     arnd@arndb.de, mathieu.poirier@linaro.org,
-        alexander.shishkin@linux.intel.com
-Cc:     ndesaulniers@google.com, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190307103309.1574563-1-arnd@arndb.de>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <b32ab22a-2513-29b9-c000-d698f4efcb90@arm.com>
-Date:   Thu, 7 Mar 2019 10:48:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 05:49:24 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:45513 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfCGKtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 05:49:24 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MQ5jC-1hNlBo2eyu-00M4YD; Thu, 07 Mar 2019 11:49:04 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paul.burton@mips.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v3] dma-mapping: work around clang bug
+Date:   Thu,  7 Mar 2019 11:48:41 +0100
+Message-Id: <20190307104900.2506657-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190307103309.1574563-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:SzMYzs5WTwwfpI3IgrpvZg3w8SruVDTlenEysSiOwZsB642hMs3
+ 1Q8mb5BaswhiPxtn3DvOU9dv9TrsI/Qtw1FKvyVV1z+5I7K4pULqclcZPjyt2LHgRtlslGO
+ i0aAZG+1N3RKOblrHF4QEqd4AeoTNX1lfWUbudH/+nV5THGMsrGElx3rTF5L43V7JhyjeRB
+ rvokGZl+nlcvsaWKF0U6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0LqwgvOLYpM=:psrSLhepFK/TX/fa5B7zsI
+ +mm474dCa4yiYd2mx8wiCjcxsgDpqfCMFA8eVXJ7qyaihJltnMiDP5A0wp9TV06j7hv8I6TIE
+ URb8Uhf5bu9TBzQilP7cMZnU/GazFdtLf+WZx8UrTeb7SKnSShLpda+Y9Wdbyg0CQ02sRiSmu
+ 9/RB2IV5xjqDymnv02KkJ84IqoN9EPrecHyGF7xvHMfJoo9BOW0kOWtQxgmiY/sR+kMfOcA9f
+ 3E1ofvaKSbRLMT8sIx7wRxrfjE3boG//26IzaknFQI03Q1NqGlvFpeD3lCPF4IOykYoz1aHUg
+ JW7wEBrCjaqb2d8ku2i1RcikXinshSXKs+HDruNd1ieMSvC5AeAVAEySOlUj2FMjJRowXGbmw
+ 3J2Vwm0BVYQupoCt+fARnhHpCM4dq5vrgExAttVhcaGOjb226dJW2UVhRPCecFNM0ZPC3D/BT
+ KY1E3UTWCGSklLsTarsGPl5BcDWR2PLr5PQWGPaCOvdnMwZ4hpkvd5cErWX9qYOMCb5xM+Brv
+ nagn7qakxYKc57Ia90WjVFxnJIQNvwhlOhtSJjp0Kvy32sJYoSRjZEUJfHIRVTu7nkTFnwBXI
+ ypQscp7GJ2qg2OF7GrxW5d7x817iFi7j+9yEhY02fmJM9JdiQIAPy3gtCniJX/NV5X26LegFI
+ Xx2bsqQS5+p+oAG7OkM0/LcYeUlmHx/aWAU4brmyMxBxOVTvbAVr88j0uafz77IZ/mJF2w5Iw
+ 7BFvbiosfCpZyb6eBbBA0puf1/gf9yZZjL9E1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Clang has a rather annoying behavior of checking for integer
+arithmetic problems in code paths that are discarded by gcc
+before that perfoms the same checks.
 
-On 07/03/2019 10:32, Arnd Bergmann wrote:
-> Clang points out a syntax error, as the etr_catu_buf_ops structure is
-> declared 'static' before the type is known:
-> 
-> In file included from drivers/hwtracing/coresight/coresight-tmc-etr.c:12:
-> drivers/hwtracing/coresight/coresight-catu.h:116:40: warning: tentative definition of variable with internal linkage has incomplete non-array type 'const struct etr_buf_operations' [-Wtentative-definition-incomplete-type]
-> static const struct etr_buf_operations etr_catu_buf_ops;
->                                         ^
-> drivers/hwtracing/coresight/coresight-catu.h:116:21: note: forward declaration of 'struct etr_buf_operations'
-> static const struct etr_buf_operations etr_catu_buf_ops;
-> 
-> This seems worth fixing in the code, so replace pointer to the empty
-> constant structure with a NULL pointer. We need an extra NULL pointer
-> check here, but the result should be better object code otherwise,
-> avoiding the silly empty structure.
-> 
-> Fixes: 434d611cddef ("coresight: catu: Plug in CATU as a backend for ETR buffer")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+For DMA_BIT_MASK(64), this leads to a warning despite the
+result of the macro being completely sensible:
 
-Thanks for the fix.
+arch/arm/plat-iop/adma.c:146:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+                .coherent_dma_mask = DMA_BIT_MASK(64),
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+The best workaround I could come up with is to shift the
+value twice, which makes the macro way less readable but
+always has the same result.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v3: use (2ull << n-1) instead of ((1ull << n-1) << 1)
+    special-case 0 instead of 64
+v2: fix off-by-one error
+---
+ include/linux/dma-mapping.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 75e60be91e5f..5788d60c2223 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -138,7 +138,11 @@ struct dma_map_ops {
+ extern const struct dma_map_ops dma_virt_ops;
+ extern const struct dma_map_ops dma_dummy_ops;
+ 
+-#define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
++/*
++ * Shifting '2' instead of '1' because of
++ * https://bugs.llvm.org/show_bug.cgi?id=38789
++ */
++#define DMA_BIT_MASK(n)	(((n) == 0) ? 0ULL : (2ULL<<((n)-1))-1)
+ 
+ #define DMA_MASK_NONE	0x0ULL
+ 
+-- 
+2.20.0
+
