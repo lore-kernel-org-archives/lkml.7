@@ -2,115 +2,149 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC6BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A443C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7CF20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DC220684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbfCGMgd (ORCPT
+        id S1726254AbfCGMia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:36:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50608 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726127AbfCGMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:36:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8E924BE5F;
-        Thu,  7 Mar 2019 12:36:30 +0000 (UTC)
-Subject: Re: [PATCH 05/20] x86/uaccess/xen: Suppress SMAP warnings
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
-        luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com,
-        linux-kernel@vger.kernel.org, dvyukov@google.com,
-        rostedt@goodmis.org, andrew.cooper3@citrix.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20190307114511.870090179@infradead.org>
- <20190307115159.530608243@infradead.org>
- <689d6dc2-77d6-018e-b156-979b2724be7b@suse.com>
- <20190307123200.GE32477@hirez.programming.kicks-ass.net>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNHkp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmRlPsLAeQQTAQIAIwUCU4xw6wIbAwcL
- CQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJELDendYovxMvi4UH/Ri+OXlObzqMANruTd4N
- zmVBAZgx1VW6jLc8JZjQuJPSsd/a+bNr3BZeLV6lu4Pf1Yl2Log129EX1KWYiFFvPbIiq5M5
- kOXTO8Eas4CaScCvAZ9jCMQCgK3pFqYgirwTgfwnPtxFxO/F3ZcS8jovza5khkSKL9JGq8Nk
- czDTruQ/oy0WUHdUr9uwEfiD9yPFOGqp4S6cISuzBMvaAiC5YGdUGXuPZKXLpnGSjkZswUzY
- d9BVSitRL5ldsQCg6GhDoEAeIhUC4SQnT9SOWkoDOSFRXZ+7+WIBGLiWMd+yKDdRG5RyP/8f
- 3tgGiB6cyuYfPDRGsELGjUaTUq3H2xZgIPfOwE0EU4xwFgEIAMsx+gDjgzAY4H1hPVXgoLK8
- B93sTQFN9oC6tsb46VpxyLPfJ3T1A6Z6MVkLoCejKTJ3K9MUsBZhxIJ0hIyvzwI6aYJsnOew
- cCiCN7FeKJ/oA1RSUemPGUcIJwQuZlTOiY0OcQ5PFkV5YxMUX1F/aTYXROXgTmSaw0aC1Jpo
- w7Ss1mg4SIP/tR88/d1+HwkJDVW1RSxC1PWzGizwRv8eauImGdpNnseneO2BNWRXTJumAWDD
- pYxpGSsGHXuZXTPZqOOZpsHtInFyi5KRHSFyk2Xigzvh3b9WqhbgHHHE4PUVw0I5sIQt8hJq
- 5nH5dPqz4ITtCL9zjiJsExHuHKN3NZsAEQEAAcLAXwQYAQIACQUCU4xwFgIbDAAKCRCw3p3W
- KL8TL0P4B/9YWver5uD/y/m0KScK2f3Z3mXJhME23vGBbMNlfwbr+meDMrJZ950CuWWnQ+d+
- Ahe0w1X7e3wuLVODzjcReQ/v7b4JD3wwHxe+88tgB9byc0NXzlPJWBaWV01yB2/uefVKryAf
- AHYEd0gCRhx7eESgNBe3+YqWAQawunMlycsqKa09dBDL1PFRosF708ic9346GLHRc6Vj5SRA
- UTHnQqLetIOXZm3a2eQ1gpQK9MmruO86Vo93p39bS1mqnLLspVrL4rhoyhsOyh0Hd28QCzpJ
- wKeHTd0MAWAirmewHXWPco8p1Wg+V+5xfZzuQY0f4tQxvOpXpt4gQ1817GQ5/Ed/wsDtBBgB
- CAAgFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAlrd8NACGwIAgQkQsN6d1ii/Ey92IAQZFggA
- HRYhBFMtsHpB9jjzHji4HoBcYbtP2GO+BQJa3fDQAAoJEIBcYbtP2GO+TYsA/30H/0V6cr/W
- V+J/FCayg6uNtm3MJLo4rE+o4sdpjjsGAQCooqffpgA+luTT13YZNV62hAnCLKXH9n3+ZAgJ
- RtAyDWk1B/0SMDVs1wxufMkKC3Q/1D3BYIvBlrTVKdBYXPxngcRoqV2J77lscEvkLNUGsu/z
- W2pf7+P3mWWlrPMJdlbax00vevyBeqtqNKjHstHatgMZ2W0CFC4hJ3YEetuRBURYPiGzuJXU
- pAd7a7BdsqWC4o+GTm5tnGrCyD+4gfDSpkOT53S/GNO07YkPkm/8J4OBoFfgSaCnQ1izwgJQ
- jIpcG2fPCI2/hxf2oqXPYbKr1v4Z1wthmoyUgGN0LPTIm+B5vdY82wI5qe9uN6UOGyTH2B3p
- hRQUWqCwu2sqkI3LLbTdrnyDZaixT2T0f4tyF5Lfs+Ha8xVMhIyzNb1byDI5FKCb
-Message-ID: <b1e10fc1-e3cd-b3ad-0a87-3e486d0bce21@suse.com>
-Date:   Thu, 7 Mar 2019 13:36:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 7 Mar 2019 07:38:30 -0500
+Received: from Chamillionaire.breakpoint.cc ([146.0.238.67]:57150 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbfCGMi3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 07:38:29 -0500
+Received: from bigeasy by Chamillionaire.breakpoint.cc with local (Exim 4.89)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h1sI4-0005vw-EB; Thu, 07 Mar 2019 13:38:24 +0100
+Date:   Thu, 7 Mar 2019 13:38:24 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     linux-kernel@vger.kernel.org, jslaby@suse.com,
+        gregkh@linuxfoundation.org, linux-rt-users@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] tty/sysrq: Convert show_lock to raw_spinlock_t
+Message-ID: <20190307123823.fnzb7njqdib4xghk@flow>
+References: <20190304172053.17340-1-julien.grall@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190307123200.GE32477@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190304172053.17340-1-julien.grall@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2019 13:32, Peter Zijlstra wrote:
-> On Thu, Mar 07, 2019 at 01:22:52PM +0100, Juergen Gross wrote:
->> On 07/03/2019 12:45, Peter Zijlstra wrote:
->>> drivers/xen/privcmd.o: warning: objtool: privcmd_ioctl()+0x1414: call to hypercall_page() with UACCESS enabled
->>>
->>> Xen needs to do HV calls with AC=1 for hysterical raisins. Make the
->>> warning go away.
->>
->> No, this is a hypercall with parameters passed through from user land
->> (Xen tools). So setting AC=1 is not related to hysterical reasons, but
->> to indicate that unprivileged buffers are okay here. So please change
->> the commit message to something like:
->>
->> Some Xen hypercalls allow parameter buffers in user land, so they need
->> to set AC=1. Avoid the warning for those cases.
+On 2019-03-04 17:20:53 [+0000], Julien Grall wrote:
+> At the moment show_lock is implemented using spin_lock_t and called from
+> an interrupt context on Arm64. The following backtrace was triggered by:
 > 
-> *yuck* that's gross...
+> 42sh# echo l > /proc/sysrq-trigger
 > 
-> And I understood from Andrew yesterday (but perhaps I misunderstood)
-> that the whole privcmd thing was a bit of a hack.
+> [ 4432.073756] sysrq: SysRq : Show backtrace of all active CPUs
+> [ 4432.403422] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:974
+> [ 4432.403424] sysrq: CPU6:
+> [ 4432.403426] in_atomic(): 1, irqs_disabled(): 128, pid: 2410, name: kworker/u16:2
+> 
+> [...]
+> 
+> [ 4432.403581] Call trace:
+> [ 4432.403584]  dump_backtrace+0x0/0x148
+> [ 4432.403586]  show_stack+0x14/0x20
+> [ 4432.403588]  dump_stack+0x9c/0xd4
+> [ 4432.403592]  ___might_sleep+0x1cc/0x298
+> [ 4432.403595]  rt_spin_lock+0x5c/0x70
+> [ 4432.403596]  showacpu+0x34/0x68
+> [ 4432.403599]  flush_smp_call_function_queue+0xd4/0x278
+> [ 4432.403602]  generic_smp_call_function_single_interrupt+0x10/0x18
+> [ 4432.403605]  handle_IPI+0x26c/0x668
+> [ 4432.403607]  gic_handle_irq+0x9c/0xa0
+> [ 4432.403609]  el1_irq+0xb4/0x13c
+> 
+> With RT-patches, spin_lock can now sleep and therefore cannot be used from
+> interrupt context. Use a raw_spin_lock instead to prevent the lock to
+> sleep.
+> 
+> Signed-off-by: Julien Grall <julien.grall@arm.com>
 
-That was an unwise design decision in the past, yes. Changing it will
-require a lot of effort.
+Now that I had time to look at it, for the change itself:
+	Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-> But sure, I'll change the message.
+For the description please take into consideration to add something like
+this:
 
-Thanks. :-)
+ Systems which don't provide arch_trigger_cpumask_backtrace() will
+ invoke showacpu() from a smp_call_function() function which is invoked
+ with disabled interrupts even on -RT systems.
+ The function acquires the show_lock lock which only purpose is to
+ ensure that the CPUs don't print simultaneously. Otherwise the output
+ would clash and it would be hard to tell the output from CPUx apart
+ from CPUy.
+ On -RT the spin_lock() can not be acquired from this context. A
+ raw_spin_lock() is required. It will introduce the system's latency
+ by performing the sysrq request and other CPUs will block on the lock
+ until the request is done. This is okay because the user asked for a
+ backtrace of all active CPUs and under "normal circumstances in
+ production" this path should not be triggered.
 
+Which explains *why* you do the change and *why* it is okay to do the
+change. If we start changing each spin_lock() to a raw_spin_lock()
+because lockdep said so then soon the RT switch will make less change
+than it should.
 
-Juergen
+From top of my head I think you won't see the output on -RT right away.
+The output won't be printed from the non-preemptible context and will be
+delayed until a printk occurs from a preemptible context. There are
+printk related patches which fix that and allow a printk from a
+non-preemptible context for a configured log level.
+
+Looking at the showacpu() construct: Do you get a proper stacktrace for a
+busy CPU or does it always start at el1_irq()? Because if the interrupt
+always starts with its own interrupt stack then the backtrace is
+useless. All you would need is the information that the CPU is alive and
+a oneline printk() saying so would be enough. Or, if it starts on its
+own stack but is able to unwind to the previous context *then* you gain
+additional information you are looking for.
+
+> ---
+>  drivers/tty/sysrq.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index 1f03078ec352..8473557c7ab2 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -208,7 +208,7 @@ static struct sysrq_key_op sysrq_showlocks_op = {
+>  #endif
+>  
+>  #ifdef CONFIG_SMP
+> -static DEFINE_SPINLOCK(show_lock);
+> +static DEFINE_RAW_SPINLOCK(show_lock);
+>  
+>  static void showacpu(void *dummy)
+>  {
+> @@ -218,10 +218,10 @@ static void showacpu(void *dummy)
+>  	if (idle_cpu(smp_processor_id()))
+>  		return;
+>  
+> -	spin_lock_irqsave(&show_lock, flags);
+> +	raw_spin_lock_irqsave(&show_lock, flags);
+>  	pr_info("CPU%d:\n", smp_processor_id());
+>  	show_stack(NULL, NULL);
+> -	spin_unlock_irqrestore(&show_lock, flags);
+> +	raw_spin_unlock_irqrestore(&show_lock, flags);
+>  }
+>  
+>  static void sysrq_showregs_othercpus(struct work_struct *dummy)
+> -- 
+> 2.11.0
+> 
+
+Sebastian
