@@ -2,126 +2,127 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE55BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B754E20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551978079;
-	bh=Vxsye+JkmXQfcvarfpWknV0wQ+S0huawQuXfDeFp87s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=taAYBvrNMzvGQZRHZYLUikss3lnpdaXDnE5WxW2tE4H9Q8OOwzbVT14GJ24xijSGc
-	 DUuz61H6NF/k/EsbWsyOOsRM23TwpawKm5Jd62ZeRVOPIlWK6HiosVVw6F/yJv36ID
-	 wOALVqPnaciyRLNdlCGNQrdjzdh7DMKdUZCblDfY=
+	by mail.kernel.org (Postfix) with ESMTP id BF69B20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MMTf+qM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfCGRBS (ORCPT
+        id S1726384AbfCGRCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:01:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 12:02:54 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:53568 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfCGRBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:01:17 -0500
-Received: from localhost (unknown [77.138.135.184])
+        id S1726185AbfCGRCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:02:54 -0500
+Received: from zn.tnic (unknown [IPv6:2003:ec:2f08:1c00:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395DC20851;
-        Thu,  7 Mar 2019 17:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551978076;
-        bh=Vxsye+JkmXQfcvarfpWknV0wQ+S0huawQuXfDeFp87s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jcyvsi6/LFcVLoCqQTHJLNuHe8zb8B6CvwSp8/YD0OoA/3oEE/u/7n/Zlt4IalCKb
-         4uXGCGkXNokpy4xZoK9cwxuh2TI+9GgS8rrmpqd4JwEPQQ20tPyAfjqLtWNhN/ha6d
-         vVfl6DoyG1j55J3YQwTbiMgqn4mpouO9dQYusRJs=
-Date:   Thu, 7 Mar 2019 19:01:08 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Faisal Latif <faisal.latif@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] RDMA/nes: remove redundant check on udata
-Message-ID: <20190307170108.GQ1789@mtr-leonro.mtl.com>
-References: <20190302230637.8624-1-colin.king@canonical.com>
- <20190304063623.GA15253@mtr-leonro.mtl.com>
- <815dea03-ef9a-39c0-3ec5-cdd58a545911@canonical.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 71BE81EC066F;
+        Thu,  7 Mar 2019 18:02:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1551978171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=y3qq1FJAtgMcBrhxJOuu6fPyW4x/qy6rfTwk7P7bdN4=;
+        b=MMTf+qM5o5XuoSWwaEXahf1r1N0Uzibm438tZBQJCyJa28wh0t3NHqV9+LCJc/KAUVt0F4
+        /cYa61X4/5ES4JmSh89MXAEWV0xafzdCuIDLPjbWxu4Gu8NVU7b7/xRFzc2AGidX/jTp7x
+        sA46QeeJG2aL3u03dxDA5CCVDdKx6F0=
+Date:   Thu, 7 Mar 2019 18:02:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     hpa@zytor.com
+Cc:     Nadav Amit <nadav.amit@gmail.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Damian Tometzki <linux_dti@icloud.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        "Dock, Deneen T" <deneen.t.dock@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/cpufeature: Remove __pure attribute to
+ _static_cpu_has()
+Message-ID: <20190307170254.GF26566@zn.tnic>
+References: <20190211182956.GN19618@zn.tnic>
+ <1533F2BB-2284-499B-9912-6D74D0B87BC1@gmail.com>
+ <20190211190108.GP19618@zn.tnic>
+ <A671F14F-3E03-4A97-9F54-426533077E0C@gmail.com>
+ <20190211191059.GR19618@zn.tnic>
+ <3996E3F9-92D2-4561-84E9-68B43AC60F43@gmail.com>
+ <20190211194251.GS19618@zn.tnic>
+ <A55214F3-CDC0-44C4-AFB6-7E8E23CC6F85@gmail.com>
+ <20190307151036.GD26566@zn.tnic>
+ <D683E00D-845E-4970-80DE-AD1DED3AE609@zytor.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Ah40dssYA/cDqAW1"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <815dea03-ef9a-39c0-3ec5-cdd58a545911@canonical.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <D683E00D-845E-4970-80DE-AD1DED3AE609@zytor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Lemme preface this by saying that I've talked to gcc guys before doing
+this.
 
---Ah40dssYA/cDqAW1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Mar 07, 2019 at 08:43:50AM -0800, hpa@zytor.com wrote:
+> Uhm... (a) it is correct, even if the compiler doesn't use it now, it
+> allows the compiler to CSE it in the future;
 
-On Thu, Mar 07, 2019 at 10:23:28AM +0000, Colin Ian King wrote:
-> On 04/03/2019 06:36, Leon Romanovsky wrote:
-> > On Sat, Mar 02, 2019 at 11:06:36PM +0000, Colin King wrote:
-> >> From: Colin Ian King <colin.king@canonical.com>
-> >>
-> >> The non-null check on udata is redundant as this check was performed
-> >> just a few statements earlier and the check is always true as udata
-> >> must be non-null at this point. Remove redundant the check on udata
-> >> and the redundant else part that can never be executed.
-> >>
-> >> Detected by CoverityScan, CID#1477317 ("Logically dead code")
-> >>
-> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >> ---
-> >>  drivers/infiniband/hw/nes/nes_verbs.c | 73 +++++++++++++--------------
-> >>  1 file changed, 34 insertions(+), 39 deletions(-)
-> >>
-> >> diff --git a/drivers/infiniband/hw/nes/nes_verbs.c b/drivers/infiniband/hw/nes/nes_verbs.c
-> >> index 828e4af3f951..526092d435df 100644
-> >> --- a/drivers/infiniband/hw/nes/nes_verbs.c
-> >> +++ b/drivers/infiniband/hw/nes/nes_verbs.c
-> >> @@ -1039,53 +1039,48 @@ static struct ib_qp *nes_create_qp(struct ib_pd *ibpd,
-> >>  				}
-> >>  				if (req.user_qp_buffer)
-> >>  					nesqp->nesuqp_addr = req.user_qp_buffer;
-> >> -				if (udata) {
-> >> -					nesqp->user_mode = 1;
-> >
-> > It was single place where user_mode was set, you should continue and
-> > remove all code which depends on "if (nesqp->user_mode)".
+Well, the compiler won't CSE asm blocks due to the difference in the
+labels, for example, so the heuristic won't detect them as equivalent
+blocks.
+
+Also, compiler guys said that they might consider inlining pure
+functions later, in the IPA stage but that's future stuff.
+
+This is how I understood it, at least.
+
+> (b) it is documentation;
+
+That could be a comment instead. Otherwise we will wonder again why this
+is marked pure.
+
+> (c) there is an actual bug here: the "volatile" implies a side effect,
+> which in reality is not present, inhibiting CSE.
 >
-> This is not the only place where user_mode is being set; we currently have:
+> So the correct fix is to remove "volatile", not remove "__pure".
 
-ok, It doesn't matter, I'll clean it later with my memory allocation
-conversion patches.
+There's not really a volatile there:
 
-Thanks
+/*
+ * GCC 'asm goto' miscompiles certain code sequences:
+ *
+ *   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58670
+ *
+ * Work it around via a compiler barrier quirk suggested by Jakub Jelinek.
+ *
+ * (asm goto is automatically volatile - the naming reflects this.)
+ */
+#define asm_volatile_goto(x...) do { asm goto(x); asm (""); } while (0)
 
---Ah40dssYA/cDqAW1
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Regards/Gruss,
+    Boris.
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcgU5UAAoJEORje4g2clinhMYQAMVjNOhrTtcq5zyPak5Slih1
-fO1U0u7DXwIR4nyPd1Dim4+6/DsgX3Tzx7H7sjB+7kmBjQU/F0gppDuYvhH/+GA7
-zgcLhkHT9G52/fvH2CZPZNb2c9y1S3CweV2e4s4wr0bHSEjJ9UnfEdJQ6jRRS4/V
-gJlNWGM5Mv3f2GFmjpPeGGdmW7Z870y8aKS3TTTKt+YzcO7ArdJMfYS8LPSY2pds
-tbJdFnrrG4YE7wlpmfCkyOThaulnT12eKjR/Bmwrwv5vWPl+DrCrn0mZ/ZgGDIyV
-q/bNm5eRfIAt38pOFnC5vyAge8Pr3s05SW+rhqKGtVl4m0mbGumOEAKs5FZfT0iG
-ULAjcHyiZfb6aQrg5B9Mv5eWOok2q4OGzlG0R4QWrP8dnj4I6Gl1ZFwaL8T6qL+8
-ACfmtqZdR2PpHMf8YL7e/oNCRzGpZj9+w71r+cuBj6P44+PZbuDJ/PQ4mIoMUOII
-sIWMocbFOb6wPT+Hx5qFhrZncJpYlKYWTm5gy7zd9Mv4u3V8PYJjlzzXwSJSjupL
-XDdnwnBhpi7c2/28FrW6afd6qh+J2rYdQ2kP0DUL1Vvo6Ylxis3qy+Ce1CNLiQxN
-eS+F7d8MJHeQr+eU5nta3XAVHLLKWQy5VuIXCw36iuvBzXC/xCJIS/d7QUkNRX6c
-QMXOKHG/EXsJHpAn9S0m
-=aqqe
------END PGP SIGNATURE-----
-
---Ah40dssYA/cDqAW1--
+Good mailing practices for 400: avoid top-posting and trim the reply.
