@@ -2,192 +2,107 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0364C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2CDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A447D20854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObxM7CY8"
+	by mail.kernel.org (Postfix) with ESMTP id DB62820854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfCGScL (ORCPT
+        id S1726716AbfCGSc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:32:11 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:54047 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbfCGScI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:32:08 -0500
-Received: by mail-wm1-f47.google.com with SMTP id e74so10256774wmg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:32:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=jvy+OOS4kVV1FObMMotQGR6YBIJ1JmI7LOHdrPjzg1I=;
-        b=ObxM7CY8qZeXS8gUA1YtcWKJHYRKFty4ykbt/osQ1+B6+dGiXa+TcC1YqzgjB9RQU8
-         yVdwrSdhqfgpMBZrFw4D0xJZa45hCNLJHPf0D+kYq4HTmbAmFpL5iarGO1JHUZPn1udV
-         Q6Uq1MV6/2aQ//r/kb4gDhUtCnRiDPE65DMqMm3+/kB3pnQ6n7HaXkhF6koBveR+MlIH
-         dpdsE1iNLxiLtaOFfu9rCnz+M6bwNplOFeIqu+mldStaFj8hC1ofSNaAu6IkfsdNqjTA
-         2K/GJacUBliDCaMatjsXRLjn4U2CHTrD7g8GfZP3LKjyk98T3uSdwRKVfhfr7pq+2Vtc
-         ZWmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=jvy+OOS4kVV1FObMMotQGR6YBIJ1JmI7LOHdrPjzg1I=;
-        b=jXQRbrguWuTwKvkjZrbJbc+q47dk87oFDyGTAZhvNTT3zmiY37+LNcDzjR+fUqheNI
-         gYwIgRJpIpETyfGzAfqSgL8EfMbXOE5Eazes+xXuiHq/sw+fyCB1QBr5Se2J14g88+f0
-         Q7E2WMVi842qMYkudQaMoGjPisFq3sBfbezVzBK62r+oMcXsI4nCpYZzz6hwg9gT3I0c
-         +uG1B0JHufMOZ/KqpetDYtZG9V5OC+OpsiBi60y0e4YAosYs8X0wgWTMy8aSFsRUQ26c
-         kE3cZTCC5UjCsUs4IyTZ3E4mt5tDpj+Sg20Aq7gm5texlhgsCCqs+ij15IhfMVhguga4
-         1hiw==
-X-Gm-Message-State: APjAAAWeqd/dn2u7Mkkpy+veiJZGBgT8LLKs7RQcp7f9QAtWCLCdyqkH
-        X7oSxgkzfeDlLpEy8LNaFg==
-X-Google-Smtp-Source: APXvYqwng+B3U2epudmRS5OTITvBGHchZAtuTO/9tBsy7mV+rxSacD7v/s/kIxppQeh2ss0dJxZkYA==
-X-Received: by 2002:a1c:9c04:: with SMTP id f4mr6592866wme.149.1551983526869;
-        Thu, 07 Mar 2019 10:32:06 -0800 (PST)
-Received: from avx2 ([46.53.242.20])
-        by smtp.gmail.com with ESMTPSA id i62sm7050950wmg.17.2019.03.07.10.32.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 10:32:06 -0800 (PST)
-Date:   Thu, 7 Mar 2019 21:32:04 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rong.a.chen@intel.com
-Subject: [PATCH] proc: test with vsyscall in mind
-Message-ID: <20190307183204.GA11405@avx2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 7 Mar 2019 13:32:29 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:54906 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbfCGSc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 13:32:29 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E7FC305B238;
+        Thu,  7 Mar 2019 18:32:28 +0000 (UTC)
+Received: from ovpn-200-17.brq.redhat.com (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CB541001DF1;
+        Thu,  7 Mar 2019 18:32:15 +0000 (UTC)
+Message-ID: <1551983533.5436.8.camel@redhat.com>
+Subject: Re: [PATCH] hyper-v: Check for ring buffer in
+ hv_get_bytes_to_read/write
+From:   Mohammed Gamal <mgamal@redhat.com>
+Reply-To: mgamal@redhat.com
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        kimbrownkd <kimbrownkd@gmail.com>
+Cc:     Sasha Levin <Alexander.Levin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 07 Mar 2019 20:32:13 +0200
+In-Reply-To: <DM5PR2101MB09182EAC78F8EEA57E27C26AD74C0@DM5PR2101MB0918.namprd21.prod.outlook.com>
+References: <20190307163606.25212-1-mgamal@redhat.com>
+         <DM5PR2101MB09182EAC78F8EEA57E27C26AD74C0@DM5PR2101MB0918.namprd21.prod.outlook.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 07 Mar 2019 18:32:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read from vsyscall page to tell if vsyscall is being used.
+On Thu, 2019-03-07 at 17:33 +0000, Michael Kelley wrote:
+> From: Mohammed Gamal <mgamal@redhat.com> Sent: Thursday, March 7,
+> 2019 8:36 AM
+> > 
+> > This patch adds a check for the presence of the ring buffer in
+> > hv_get_bytes_to_read/write() to avoid possible NULL pointer
+> > dereferences.
+> > If the ring buffer is not yet allocated, return 0 bytes to be
+> > read/written.
+> > 
+> > The root cause is that code that accesses the ring buffer including
+> > hv_get_bytes_to_read/write() could be vulnerable to the race
+> > condition
+> > discussed in https://lkml.org/lkml/2018/10/18/779>;
+> > 
+> > This race is being addressed by the patch series by Kimberly Brown
+> > in
+> > https://lkml.org/lkml/2019/2/21/1236 which is not final yet
+> > 
+> > Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+> 
+> Could you elaborate on the code paths where
+> hv_get_bytes_to_read/write() could be called when the ring buffer
+> isn't yet allocated?  My sense is that Kim Brown's patch will address
+> all of the code paths that involved sysfs access from outside the
+> driver.  And within a driver, the ring buffer should never be
+> accessed
+> unless it is already allocated.  Is there another code path we're not
+> aware of?  I'm wondering if these changes are really needed once
+> Kim Brown's patch is finished.
+> 
+> Michael
 
-Reported-by: kernel test robot
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+I've seen one instance of the race in the netvsc driver when running
+traffic through it with iperf3 while continuously changing the channel
+settings.
 
- tools/testing/selftests/proc/proc-pid-vm.c |   49 +++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 3 deletions(-)
+The following code path deallocates the ring buffer:
+netvsc_set_channels() -> netvsc_detach() ->
+rndis_filter_device_remove() -> netvsc_device_remove() -> vmbus_close()
+-> vmbus_free_ring() -> hv_ringbuffer_cleanup().
 
---- a/tools/testing/selftests/proc/proc-pid-vm.c
-+++ b/tools/testing/selftests/proc/proc-pid-vm.c
-@@ -29,6 +29,7 @@
- #include <errno.h>
- #include <sched.h>
- #include <signal.h>
-+#include <stdbool.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <string.h>
-@@ -36,11 +37,14 @@
- #include <sys/mount.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#include <sys/wait.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <sys/syscall.h>
- #include <sys/uio.h>
- #include <linux/kdev_t.h>
-+#include <sys/time.h>
-+#include <sys/resource.h>
- 
- static inline long sys_execveat(int dirfd, const char *pathname, char **argv, char **envp, int flags)
- {
-@@ -205,12 +209,44 @@ static int make_exe(const uint8_t *payload, size_t len)
- }
- #endif
- 
-+static bool g_vsyscall = false;
-+
-+static const char str_vsyscall[] =
-+"ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]\n";
-+
- #ifdef __x86_64__
-+/*
-+ * vsyscall page can't be unmapped, probe it with memory load.
-+ */
-+static void vsyscall(void)
-+{
-+	pid_t pid;
-+	int wstatus;
-+
-+	pid = fork();
-+	if (pid < 0) {
-+		fprintf(stderr, "fork, errno %d\n", errno);
-+		exit(1);
-+	}
-+	if (pid == 0) {
-+		struct rlimit rlim = {0, 0};
-+		(void)setrlimit(RLIMIT_CORE, &rlim);
-+		*(volatile int *)0xffffffffff600000UL;
-+		exit(0);
-+	}
-+	wait(&wstatus);
-+	if (WIFEXITED(wstatus)) {
-+		g_vsyscall = true;
-+	}
-+}
-+
- int main(void)
- {
- 	int pipefd[2];
- 	int exec_fd;
- 
-+	vsyscall();
-+
- 	atexit(ate);
- 
- 	make_private_tmp();
-@@ -261,9 +297,9 @@ int main(void)
- 	snprintf(buf0 + MAPS_OFFSET, sizeof(buf0) - MAPS_OFFSET,
- 		 "/tmp/#%llu (deleted)\n", (unsigned long long)st.st_ino);
- 
--
- 	/* Test /proc/$PID/maps */
- 	{
-+		const size_t len = strlen(buf0) + (g_vsyscall ? strlen(str_vsyscall) : 0);
- 		char buf[256];
- 		ssize_t rv;
- 		int fd;
-@@ -274,13 +310,16 @@ int main(void)
- 			return 1;
- 		}
- 		rv = read(fd, buf, sizeof(buf));
--		assert(rv == strlen(buf0));
-+		assert(rv == len);
- 		assert(memcmp(buf, buf0, strlen(buf0)) == 0);
-+		if (g_vsyscall) {
-+			assert(memcmp(buf + strlen(buf0), str_vsyscall, strlen(str_vsyscall)) == 0);
-+		}
- 	}
- 
- 	/* Test /proc/$PID/smaps */
- 	{
--		char buf[1024];
-+		char buf[4096];
- 		ssize_t rv;
- 		int fd;
- 
-@@ -319,6 +358,10 @@ int main(void)
- 		for (i = 0; i < sizeof(S)/sizeof(S[0]); i++) {
- 			assert(memmem(buf, rv, S[i], strlen(S[i])));
- 		}
-+
-+		if (g_vsyscall) {
-+			assert(memmem(buf, rv, str_vsyscall, strlen(str_vsyscall)));
-+		}
- 	}
- 
- 	/* Test /proc/$PID/smaps_rollup */
+netvsc_send_pkt() -> hv_get_bytes_to_write() might get called
+concurrently after vmbus_close() and before vmbus_open() returns and
+sets up the new ring buffer. 
+
+The race is fairly hard to reproduce on recent upstream kernels, but I
+still managed to reproduce it.
