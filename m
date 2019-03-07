@@ -2,110 +2,177 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2345C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB8DC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3F320684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caYHqgSG"
+	by mail.kernel.org (Postfix) with ESMTP id 89C1F20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfCGV2T (ORCPT
+        id S1726452AbfCGV21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 16:28:19 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35865 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGV2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 16:28:18 -0500
-Received: by mail-ed1-f65.google.com with SMTP id g9so14731278eds.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 13:28:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KLsZ2PTpOID17VWfknh/BsdEBNNxq4yzb/dwENnabik=;
-        b=caYHqgSG60kUfebf8AV0B+VCGTkvsx3jliKsl79dbbk0p7vQXOILtpneFvc6599CcR
-         hYUnRoTbm7TzDsczW59FihyAorgHCw8RoGpAup52QZupHLc2I6uxkXX7y848qbAo0+h2
-         fGQ5XBKRvIPle5HE/xiCpDJhz3coY0CrBl/0FULxg4ahOcWdBGyU6/DXnRWpW0mtGaPA
-         4OIbY1yvzxL/ZVQN51ymtiGz2VOamUXNI1tCuQlNRZqSmsAHzABBSbtarnqoROOF5p+t
-         KifoQ/ap2cr6G9diMZo3eCe8+jX3Wah5+I5bjAcCf05DGl310PEW5rXk9wSecI4UE4xl
-         Spvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KLsZ2PTpOID17VWfknh/BsdEBNNxq4yzb/dwENnabik=;
-        b=XTgVv/5wnTmy+vNv8vND5cbfzq/+DKCRlFfH39+D556mC0IwDpQbcEeBtEch91KerR
-         7mYQ9bp10Qu8syswDLhP7ecCCjRzbskg3kT1BtY3JJG2ioBC8ZaswHi8MRvZNg+9R+b6
-         oBxdK8xS7whIw7d7pC31vzRxurtsgUiZkF30jBxrGnSu+WFdplyWkfaen5p0peu39a6e
-         8lpZzBoMwz4xRTAMA5WFdw4ncmwAHbWwjppRlzHAl98B8SMSPivG/JVBFwY8OZe9kBaB
-         P8s/9BDRYlf9r9t/X6fVTqTgDanQoZJJUkBzDl78AJJjLN3IizxiTqAerfHuUa5UyDkB
-         QO8g==
-X-Gm-Message-State: APjAAAXyp0X3Fsu6zYtDLVgBXjyu4booyDfSM+SU0bgoK6vgMME0FxPC
-        88hHNy8YdVcjPifQuecHzhA=
-X-Google-Smtp-Source: APXvYqzMpAKo4Ksv3cmQLX3fakTVs22wCT6n3eX6OlelUd+rP39qSAGmdJfRcrNMnwTbZhueH+VUZg==
-X-Received: by 2002:aa7:d987:: with SMTP id u7mr29145246eds.194.1551994096740;
-        Thu, 07 Mar 2019 13:28:16 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id a51sm1654713edd.57.2019.03.07.13.28.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 13:28:15 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] x86/hw_breakpoints: Return -EINVAL in default case in hw_breakpoint_arch_parse
-Date:   Thu,  7 Mar 2019 14:27:56 -0700
-Message-Id: <20190307212756.4648-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 7 Mar 2019 16:28:27 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:52282 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbfCGV21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 16:28:27 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2FAFAC05090A;
+        Thu,  7 Mar 2019 21:28:26 +0000 (UTC)
+Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DFFE75D786;
+        Thu,  7 Mar 2019 21:28:14 +0000 (UTC)
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <20190306155048.12868-1-nitesh@redhat.com>
+ <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
+ <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
+ <CAKgT0UdNPADF+8NMxnWuiB_+_M6_0jTt5NfoOvFN9qbPjGWNtw@mail.gmail.com>
+ <2269c59c-968c-bbff-34c4-1041a2b1898a@redhat.com>
+ <CAKgT0UdHkDB1vFMp7T9_pdoiuDW4qvgxhqsNztPQXrRCAmYNng@mail.gmail.com>
+ <20190307134744-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ue=Y-6-mzqzZ+tJYvfOd4ZeK59okeZKjfJ7LHwhbdpY_w@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <f15ccc0d-7c92-bab5-cc24-f49a4fea576f@redhat.com>
+Date:   Thu, 7 Mar 2019 22:28:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0Ue=Y-6-mzqzZ+tJYvfOd4ZeK59okeZKjfJ7LHwhbdpY_w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 07 Mar 2019 21:28:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
+On 07.03.19 22:14, Alexander Duyck wrote:
+> On Thu, Mar 7, 2019 at 10:53 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>>
+>> On Thu, Mar 07, 2019 at 10:45:58AM -0800, Alexander Duyck wrote:
+>>> To that end what I think w may want to do is instead just walk the LRU
+>>> list for a given zone/order in reverse order so that we can try to
+>>> identify the pages that are most likely to be cold and unused and
+>>> those are the first ones we want to be hinting on rather than the ones
+>>> that were just freed. If we can look at doing something like adding a
+>>> jiffies value to the page indicating when it was last freed we could
+>>> even have a good point for determining when we should stop processing
+>>> pages in a given zone/order list.
+>>>
+>>> In reality the approach wouldn't be too different from what you are
+>>> doing now, the only real difference would be that we would just want
+>>> to walk the LRU list for the given zone/order rather then pulling
+>>> hints on what to free from the calls to free_one_page. In addition we
+>>> would need to add a couple bits to indicate if the page has been
+>>> hinted on, is in the middle of getting hinted on, and something such
+>>> as the jiffies value I mentioned which we could use to determine how
+>>> old the page is.
+>>
+>> Do we really need bits in the page?
+>> Would it be bad to just have a separate hint list?
+> 
+> The issue is lists are expensive to search. If we have a single bit in
+> the page we can check it as soon as we have the page.
+> 
+>> If you run out of free memory you can check the hint
+>> list, if you find stuff there you can spin
+>> or kick the hypervisor to hurry up.
+> 
+> This implies you are keeping a separate list of pages for what has
+> been hinted on. If we are pulling pages out of the LRU list for that
+> it will require the zone lock to move the pages back and forth and for
+> higher core counts that isn't going to scale very well, and if you are
+> trying to pull out a page that is currently being hinted on you will
+> run into the same issue of having to wait for the hint to be completed
+> before proceeding.
+> 
+>> Core mm/ changes, so nothing's easy, I know.
+> 
+> We might be able to reuse some existing page flags. For example, there
+> is the PG_young and PG_idle flags that would actually be a pretty good
+> fit in terms of what we are looking for in behavior. We could set
+> PG_young when the page is initially freed, then clear it when we start
+> to perform the hint, and set PG_idle once the hint has been completed.
 
-arch/x86/kernel/hw_breakpoint.c:355:2: warning: variable 'align' is used
-uninitialized whenever switch default is taken
-[-Wsometimes-uninitialized]
+Just noting that when hinting, we have to set all affected sub-page bits
+as far as I see.
 
-It's not wrong but we can see that arch_build_bp_info will only ever
-initialize hw->len to one of the specified switch cases. We can easily
-silence Clang by just returning -EINVAL in the default case so that we
-can never use align without initializing it first.
+> 
+> The check for if we could use a page would be pretty fast as a result
+> as well since if PG_young or PG_idle are set it means the page is free
+> to use so the check in arch_alloc_page would be pretty cheap since we
+> could probably test for both bits in one read.
+> 
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/392
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/x86/kernel/hw_breakpoint.c | 1 +
- 1 file changed, 1 insertion(+)
+I still dislike spinning on ordinary allocation paths. If we want to go
+that way, core mm has to consider these bits and try other pages first.
 
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index ff9bfd40429e..d73083021002 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -354,6 +354,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- #endif
- 	default:
- 		WARN_ON_ONCE(1);
-+		return -EINVAL;
- 	}
- 
- 	/*
 -- 
-2.21.0
 
+Thanks,
+
+David / dhildenb
