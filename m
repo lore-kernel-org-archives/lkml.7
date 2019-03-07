@@ -2,80 +2,155 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773AEC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B62C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450322064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9F32064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfCGQT5 (ORCPT
+        id S1726297AbfCGQUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:19:57 -0500
-Received: from mga12.intel.com ([192.55.52.136]:22766 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbfCGQT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:19:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 08:19:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
-   d="scan'208";a="120467065"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga007.jf.intel.com with ESMTP; 07 Mar 2019 08:19:55 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id DFE713013CC; Thu,  7 Mar 2019 08:19:55 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:19:55 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/select: avoid clang stack usage warning
-Message-ID: <20190307161955.GD7535@tassilo.jf.intel.com>
-References: <20190307090146.1874906-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 11:20:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59734 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726127AbfCGQUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 11:20:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3B6D2AC86;
+        Thu,  7 Mar 2019 16:20:37 +0000 (UTC)
+Message-ID: <d473feac52a9411a7ffb585aa61e2614df890972.camel@suse.de>
+Subject: Re: [RFC/RFT] HID: primax: Fix wireless keyboards descriptor
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "Junge, Terry" <Terry.Junge@plantronics.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        "oneukum@suse.de" <oneukum@suse.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 07 Mar 2019 17:20:35 +0100
+In-Reply-To: <CAO-hwJ+9ft070W-shhEwxfTq9B5XyVB2v6Qx0b4nC4LdTiTEDg@mail.gmail.com>
+References: <20190228135556.14713-1-nsaenzjulienne@suse.de>
+         <BYAPR02MB56078ADD429292DF89F8C694ED750@BYAPR02MB5607.namprd02.prod.outlook.com>
+         <a6ecd59f99aa64355ac7c176aa4310d32ce8969e.camel@suse.de>
+         <CAO-hwJ+9ft070W-shhEwxfTq9B5XyVB2v6Qx0b4nC4LdTiTEDg@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-A1MyYkJzgvepcTVgytdG"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307090146.1874906-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 10:01:36AM +0100, Arnd Bergmann wrote:
-> The select() implementation is carefully tuned to put a sensible amount
-> of data on the stack for holding a copy of the user space fd_set,
-> but not too large to risk overflowing the kernel stack.
-> 
-> When building a 32-bit kernel with clang, we need a little more space
-> than with gcc, which often triggers a warning:
-> 
-> fs/select.c:619:5: error: stack frame size of 1048 bytes in function 'core_sys_select' [-Werror,-Wframe-larger-than=]
-> int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
-> 
-> I experimentally found that for 32-bit ARM, reducing the maximum
-> stack usage by 64 bytes keeps us reliably under the warning limit
-> again.
 
-Could just use 768 bytes unconditionally. I doubt a few bytes more or less
-will make too much difference.
+--=-A1MyYkJzgvepcTVgytdG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Other than that
+On Fri, 2019-03-01 at 10:48 +0100, Benjamin Tissoires wrote:
+> On Thu, Feb 28, 2019 at 7:01 PM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > On Thu, 2019-02-28 at 17:02 +0000, Junge, Terry wrote:
+> > > This could also be a parser error. In the HID specification section
+> > > 6.2.2.8 it
+> > > states that the last declared Usage Page is applied to Usages when th=
+e
+> > > Main
+> > > item is encountered.
+> > >=20
+> > > "If the bSize field =3D 1 or 2 then the Usage is interpreted as an un=
+signed
+> > > value
+> > > that selects a Usage ID on the currently defined Usage Page. When the
+> > > parser
+> > > encounters a main item it concatenates the last declared Usage Page w=
+ith a
+> > > Usage to form a complete usage value. Extended usages can be used to
+> > > override the currently defined Usage Page for individual usages."
+> > >=20
+> >=20
+> > Hi Terry, thanks for the comment.
+> > Just for the record the paragraph I cited on my patch is the following:
+> >=20
+> >         6.2.2.7 Global Items
+> >=20
+> >         [...]
+> >=20
+> >         Usage Page: Unsigned integer specifying the current Usage Page.
+> > Since a
+> >         usage are 32 bit values, Usage Page items can be used to conser=
+ve
+> > space
+> >         in a report descriptor by setting the high order 16 bits of a
+> >         subsequent usages. Any usage that follows which is defines* 16 =
+bits
+> > or
+> >         less is interpreted as a Usage ID and concatenated with the Usa=
+ge
+> > Page
+> >         to form a 32 bit Usage.
+> >=20
+> >         * This is a spec errata, I belive it should say "defined"
+> >=20
+> > As you can see they use the word "follows" which in my opinion contradi=
+cts
+> > the
+> > paragraph you pointed out. That said I may be wrong, I'm not too good a=
+t
+> > reading specs :).
+>=20
+> I think you are both right (that is some decision making skills :-P).
+>=20
+> I never saw a case where the Usage Page was after the Usage. And I
+> would lean towards Nicolas interpretation.
+> However, Terry's point is valid too, and by re-reading the two
+> paragraphs, one could argue that the "follows" of 6.2.2.7 could be
+> applied when the Main item is processed as in 6.2.2.8.
+>=20
+> So I am going to base my decision on the "reference" driver. How well
+> behaves Windows with this particular keyboard?
+>=20
+> If it behaves properly, then we better use the 6.2.2.8 version where
+> the Usage Page is only appended when there is a Main item. This means
+> we need to remember what size was the last Usage (and Min/Max), to
+> know if we should concatenate the 2.
+>=20
+> Note that for every change that involves the generic parser, I'd like
+> a few tests added to `tests/test_keyboard.py in
+> https://gitlab.freedesktop.org/libevdev/hid-tools
+> Also note that the HID parser implementation in hid-tools follows the
+> kernel, so we might need to adjust it there too if we want to add high
+> level events. If you directly call `.call_input_event()` with raw
+> events, it should be fine.
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Thanks for the reply. I might get my hands on one of the faulty keyboards s=
+oon
+so I'll be able to check windows' behaviour and test the patches.
 
--Andi
+Regards,
+Nicolas
+
+
+--=-A1MyYkJzgvepcTVgytdG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlyBRNMACgkQlfZmHno8
+x/6SlAf/YZwwiqqBsPw7FViHUQGH1jBUpw29GTSN9eUy2fZDnrWFvGvkhKprL6Pw
+8xM6js1Y/BQQwSfA32gltRK2dp854TANTCwscNoHrr7RIh+muwGIV9nV11GbzKsD
++dVjlFCT3wz4nO0nUmBu5WvYCkZz7Iv/WdKLwkvgcMDOgdvmsr6u1gCD9iXMRvlm
+yXetjgH1P0Y6CV41AmX21Fv6cIUDSQXp8wr3MnrWfjdaFuFAVXOH3OUXPkozKf8a
+yiSgapCiH7+r8Z1qfmVNNAQSQWgNAs5n+kIpSMS3bcvo8YfIPrPDHR5qJO4JTxbg
+3Zb7qMaXyLA8S0OLliQ4tCyq2AvGbQ==
+=hUGm
+-----END PGP SIGNATURE-----
+
+--=-A1MyYkJzgvepcTVgytdG--
+
