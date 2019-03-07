@@ -2,92 +2,99 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E79CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75885C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04E020851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4813F20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfCGQLr (ORCPT
+        id S1726250AbfCGQPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:11:47 -0500
-Received: from muru.com ([72.249.23.125]:41458 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfCGQLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:11:47 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CE5DB80C5;
-        Thu,  7 Mar 2019 16:11:55 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 08:11:40 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-kernel@vger.kernel.org, Alessandro Rubini <rubini@gnudd.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Cory Maccarrone <darkstar6262@gmail.com>,
-        Davide Ciminaghi <ciminaghi@gnudd.com>,
-        Dong Aisheng <dong.aisheng@linaro.org>,
-        Graeme Gregory <gg@slimlogic.co.uk>,
-        Guennadi Liakhovetski <g.liakhovetski@gmx.de>,
-        Haojian Zhuang <haojian.zhuang@marvell.com>,
-        Jin Park <jinyoungp@nvidia.com>,
-        Jorge Eduardo Candelaria <jedu@slimlogic.co.uk>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@opensource.wolfsonmicro.com>,
-        Mattias Nilsson <mattias.i.nilsson@stericsson.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Venu Byravarasu <vbyravarasu@nvidia.com>,
-        linux-omap@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH v5 00/18] mfd: demodularization of non-modular drivers
-Message-ID: <20190307161140.GJ39872@atomide.com>
-References: <1547404609-14161-1-git-send-email-paul.gortmaker@windriver.com>
- <20190116132431.GE23399@dell>
- <20190306231003.GD7915@amd>
- <20190307041808.GK26690@windriver.com>
- <20190307082524.GB4634@dell>
- <20190307083518.GA8052@amd>
+        Thu, 7 Mar 2019 11:15:47 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60278 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726166AbfCGQPq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 11:15:46 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27GBgY2032459;
+        Thu, 7 Mar 2019 17:15:30 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2qyhknfxcy-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 07 Mar 2019 17:15:30 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D188A31;
+        Thu,  7 Mar 2019 16:15:29 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7361053C6;
+        Thu,  7 Mar 2019 16:15:29 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019
+ 17:15:29 +0100
+Received: from localhost (10.129.4.33) by webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 7 Mar 2019 17:15:28 +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] irqchip: stm32: don't set rising configuration registers at init
+Date:   Thu, 7 Mar 2019 17:15:17 +0100
+Message-ID: <1551975317-5171-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307083518.GA8052@amd>
-User-Agent: Mutt/1.11.2 (2019-01-07)
+Content-Type: text/plain
+X-Originating-IP: [10.129.4.33]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [190307 08:35]:
-> 
-> > > Pavel, I hope this more extended explanation makes sense to you, and
-> > > that you simply have not seen me write these same details in the past.
-> > 
-> > Blimey.  That's a really long winded way of saying:
-> > 
-> >   "Modular-ness is actually broken in these drivers; [Paul]'s patches
-> >    make that point clear for all to see.  If people (authors/distros)
-> >    wish them to be modular, they need to fix them properly."
-> 
-> Has that been checked?
-> 
-> I mean... when I saw the patch I thought "perhaps it should be doing
-> bool->tristate instead"?
+The rising configuration status register (rtsr) is not banked.
+As it is shared with the co-processor, it should not be written at probe
+time, else the co-processor configuration will be lost.
 
-Thinking distors and loadable modules,  for PMICs, only regulators need
-to be built-in in most cases. That's at least the case for example with
-drivers/mfd/motorola-cpcap.c.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ drivers/irqchip/irq-stm32-exti.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-I'd say applying these patches makes sense unless we have people
-step up and fix their drivers.
-
-Regards,
-
-Tony
-
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index 6edfd4b..ff8a84f 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -716,7 +716,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
+ 	const struct stm32_exti_bank *stm32_bank;
+ 	struct stm32_exti_chip_data *chip_data;
+ 	void __iomem *base = h_data->base;
+-	u32 irqs_mask;
+ 
+ 	stm32_bank = h_data->drv_data->exti_banks[bank_idx];
+ 	chip_data = &h_data->chips_data[bank_idx];
+@@ -725,10 +724,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
+ 
+ 	raw_spin_lock_init(&chip_data->rlock);
+ 
+-	/* Determine number of irqs supported */
+-	writel_relaxed(~0UL, base + stm32_bank->rtsr_ofst);
+-	irqs_mask = readl_relaxed(base + stm32_bank->rtsr_ofst);
+-
+ 	/*
+ 	 * This IP has no reset, so after hot reboot we should
+ 	 * clear registers to avoid residue
+-- 
+2.7.4
 
