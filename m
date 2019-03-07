@@ -2,126 +2,115 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46982C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6174C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA61205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:59:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=wiesinger.com header.i=@wiesinger.com header.b="C41/XX6I"
+	by mail.kernel.org (Postfix) with ESMTP id 744F0205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551988949;
+	bh=ByUaQCKcKzv0my0lmiYVV9zvCyXBm/O9YGbgtfnaDvo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AuVEVTeQlN6cs+9a6+DGpW9JblW/qVxJjUIFn9wHbrthUc8iDLwBuxx1Ygv4GmeQo
+	 9zQZl7KBK99wtGiv0R21GIvq1UeGy+i2XJGDH21tAtBQSuiqKWpln2AClQ8TFh18ue
+	 UxVr1Dhs65f34LFvQkhKnE0Yf5JEg8r5uDJZl53U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfCGT7z (ORCPT
+        id S1726268AbfCGUC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:59:55 -0500
-Received: from vps01.wiesinger.com ([46.36.37.179]:55716 "EHLO
-        vps01.wiesinger.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGT7z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:59:55 -0500
-Received: from wiesinger.com (wiesinger.com [84.113.44.87])
-        by vps01.wiesinger.com (Postfix) with ESMTPS id 55EA69F2C4;
-        Thu,  7 Mar 2019 20:59:51 +0100 (CET)
-Received: from [192.168.0.14] ([192.168.0.14])
-        (authenticated bits=0)
-        by wiesinger.com (8.15.2/8.15.2) with ESMTPSA id x27JxZQT027889
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 7 Mar 2019 20:59:43 +0100
-DKIM-Filter: OpenDKIM Filter v2.11.0 wiesinger.com x27JxZQT027889
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiesinger.com;
-        s=default; t=1551988786;
-        bh=NmInnfckcqZjrCeA7F6dosegv2xqiz+HUoc7V+WYmFU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=C41/XX6I7BKtYRPe4BxuKQVQC9ew0sSjt0V7DjU8bZuFopAr1IUwvxbZ+N62XMdor
-         YhrtqhKjc5LuZhC7MWt17xezuCyhRo9X4sb0xwSejchbvTf0dKYAPvRTAZwpVeV6eT
-         aCIgGEcSbVGUyxZUj3xk0LnJ42NazH4CVOS8VT8ii4c1uF8qG/wulEay7LOLLoyJGK
-         GUjq476024r9Jjxx1+cg3oVRmeA3CgiWcH/7dez/ob4Mct41oXrP4xcicYlKboVefO
-         9FKH1Ia1IO3/iPYyjrDnxkYvdTSJ0JYaeVaHP14IXIZ7VRJJwT/KiGFPlgBz5e786L
-         pYWorlRZ2MC/4KgPS5VMzeqR3s7bnEvSr9or+WBG8+kytA3ZVh7oBJ45bndpsOx9Bf
-         j8iifuyoE80BUH9amtdHm/a1xdkveJGH3Ljve8yDcMldyWjWPOwLQLHghN4gFvqeA6
-         R0J5q7+jujcql37qI2hNbypWMj4MJ0uYNN0lyWA6JtkfUCHZ61Ip5/D9rIzGdZ0uLb
-         GCETnkO4oiGE78wGQZwULrAMb7QxRQ3ivX1cHTv+pgLnZZKvD7qJr3lVnpJYgUVrN2
-         1GBmL6zU8c+EQyQcQGptzrbMfLb8OF2Y6awmTeFkHl6u2+F4gYgnYyZTm1lC4m5kEi
-         zRXG5a0akRAyLw7sHm4tnbio=
-Subject: Re: Banana Pi-R1 stabil
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
-References: <20190227092023.nvr34byfjranujfm@flea>
- <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
- <20190228093516.abual3564dkvx6un@flea>
- <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
- <20190301093038.oz56z22ivpntdcfw@flea>
- <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
- <20190305092830.ef45kxzhdnxlh63g@flea>
- <9f189569-bf76-22d2-3bf7-db710f616998@wiesinger.com>
- <20190306073605.modlx4yhdzbg7sfz@flea>
- <34300c49-fe89-77cb-444a-f6de02d41a62@wiesinger.com>
- <20190307153103.hsckxwzg2ypckicy@flea>
-From:   Gerhard Wiesinger <lists@wiesinger.com>
-Message-ID: <08655ad4-a144-a3f4-9163-c4268be0aba3@wiesinger.com>
-Date:   Thu, 7 Mar 2019 20:59:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Thu, 7 Mar 2019 15:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfCGUC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 15:02:27 -0500
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2D3321738
+        for <linux-kernel@vger.kernel.org>; Thu,  7 Mar 2019 20:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551988947;
+        bh=ByUaQCKcKzv0my0lmiYVV9zvCyXBm/O9YGbgtfnaDvo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tTFLaAHECFfxDolaR23hDB2kmjcvn/kwdGL6DWJvgrOCCnng15NrIa4ETVGGiDpTl
+         92bC9dj1aPOcqBZSzqUnsoLwCLH9DXXvITw5oxI2jKQKokQ+ZkZX8Q0LUN9RTJwXyl
+         jkiDCh5RtqqFWgob3IG2xUg2yo+UhXACDTUS41kY=
+Received: by mail-wr1-f45.google.com with SMTP id i12so18910359wrw.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:02:26 -0800 (PST)
+X-Gm-Message-State: APjAAAWuXh7dMqmOa3lP+3rj5AsQVjs2ZGrfUv5NoTFk/E/OQ2cuoH0N
+        yl+nzLQa9duovJNglS51vOwD67gusZqXf6Wgk1JNnw==
+X-Google-Smtp-Source: APXvYqw3g/bjVvCO+9Bw1hS8eEdLNpbnvEVJFQDTTx8I2hr0gL3KUzv9tqSod6Zis4j0iPJYm08yWKgMMeSEtA7SRpA=
+X-Received: by 2002:adf:e58f:: with SMTP id l15mr7917047wrm.309.1551988945061;
+ Thu, 07 Mar 2019 12:02:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190307153103.hsckxwzg2ypckicy@flea>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190129003422.9328-11-rick.p.edgecombe@intel.com>
+ <20190211182956.GN19618@zn.tnic> <1533F2BB-2284-499B-9912-6D74D0B87BC1@gmail.com>
+ <20190211190108.GP19618@zn.tnic> <A671F14F-3E03-4A97-9F54-426533077E0C@gmail.com>
+ <20190211191059.GR19618@zn.tnic> <3996E3F9-92D2-4561-84E9-68B43AC60F43@gmail.com>
+ <20190211194251.GS19618@zn.tnic> <20190307072947.GA26566@zn.tnic>
+ <EF5F87D9-EA7B-4F92-81C4-329A89EEADFA@zytor.com> <20190307170629.GG26566@zn.tnic>
+In-Reply-To: <20190307170629.GG26566@zn.tnic>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 7 Mar 2019 12:02:13 -0800
+X-Gmail-Original-Message-ID: <CALCETrUY6L_Fwd9CZzo2eZL8HT2sBSHFiD-Bp-HCPPFBxkzcdA@mail.gmail.com>
+Message-ID: <CALCETrUY6L_Fwd9CZzo2eZL8HT2sBSHFiD-Bp-HCPPFBxkzcdA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/20] x86: avoid W^X being broken during modules loading
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Damian Tometzki <linux_dti@icloud.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        "Dock, Deneen T" <deneen.t.dock@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.03.2019 16:31, Maxime Ripard wrote:
-> On Wed, Mar 06, 2019 at 09:03:00PM +0100, Gerhard Wiesinger wrote:
->> while true; do echo "========================================"; echo -n
->> "CPU_FREQ0: "; cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq;
->> echo -n "CPU_FREQ1: "; cat
->> /sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done&
->> ./stress/cpuburn-a7
-> Run cpufreq-ljt-stress-test
+On Thu, Mar 7, 2019 at 9:06 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Thu, Mar 07, 2019 at 08:53:34AM -0800, hpa@zytor.com wrote:
+> > If we *do*, what is the issue here? Although boot_cpu_has() isn't
+> > slow (it should in general be possible to reduce to one testb
+> > instruction followed by a conditional jump) it seems that "avoiding an
+> > alternatives slot" *should* be a *very* weak reason, and seems to me
+> > to look like papering over some other problem.
+>
+> Forget the current thread: this is simply trying to document when to use
+> static_cpu_has() and when to use boot_cpu_has(). I get asked about it at
+> least once a month.
+>
+> And then it is replacing clear slow paths using static_cpu_has() with
+> boot_cpu_has() because there's purely no need to patch there. And having
+> a RIP-relative MOV and a JMP is good enough for slow paths.
 >
 
-On ALL Banana Pi R1 I have and Banana Pro OK, see below
+Should we maybe rename these functions?  static_cpu_has() is at least
+reasonably obvious.  But cpu_feature_enabled() is different for
+reasons I've never understood, and boot_cpu_has() is IMO terribly
+named.  It's not about the boot cpu -- it's about doing the same thing
+but with less bloat and less performance.
 
+(And can we maybe collapse cpu_feature_enabled() and static_cpu_has()
+into the same function?)
 
-Ciao,
-
-Gerhard
-
-
-./cpufreq-ljt-stress-test
-The cjpeg and djpeg tools from libjpeg-turbo are not found.
-Trying to download and compile them.
-Downloading libjpeg-turbo-1.3.1.tar.gz ... done
-Extracting libjpeg-turbo-1.3.1.tar.gz ... done
-Compiling libjpeg-turbo, please be patient ... done
-Creating './whitenoise-1920x1080.jpg' ... done
-CPU stress test, which is doing JPEG decoding by libjpeg-turbo
-at different cpufreq operating points.
-
-Testing CPU 0
-   960 MHz ............................................................ OK
-   912 MHz ............................................................ OK
-   864 MHz ............................................................ OK
-   720 MHz ............................................................ OK
-   528 MHz ............................................................ OK
-   312 MHz ............................................................ OK
-   144 MHz ............................................................ OK
-
-Testing CPU 1
-   960 MHz ............................................................ OK
-   912 MHz ............................................................ OK
-   864 MHz ............................................................ OK
-   720 MHz ............................................................ OK
-   528 MHz ............................................................ OK
-   312 MHz ............................................................ OK
-   144 MHz ............................................................ OK
-
-Overall result : PASSED
-
+--Andy
