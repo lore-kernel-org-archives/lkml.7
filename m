@@ -6,100 +6,107 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C86DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395EAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D43320661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C72220851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980702;
-	bh=tds8xC+L5u0GBiNW0rykCfMIt3vcpZzIKRVuPx7DtRw=;
+	s=default; t=1551980707;
+	bh=FFHhtE/QOj4jLD0+pxtFygkemoB2wCWfQxac3K+/t/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z4T3PJFDCxKpWZJFDzgUGn/0PxMN60rWSZD6BWr0NQVQbADeU0vWneoTVB/UkO+Ck
-	 u4gBUjb0P0UF95xYpWUpfWcfqrUwQiiPzI6Nz9F/5/TCYviggs7t6JcAws9/HnJlB6
-	 kUypaINAYL6ARgjVv8IoV2gY6b7lGsmrJ6smIum4=
+	b=aqpe7yESUhfUKa361Ru/7PhmlS0vhGFGYgWakMMvULPCdk+CLSalWF6ZWKSMIEo76
+	 ZMeT/fPulIpNCvgWDa041oOJaz1pxfYBdtDJlgsWgLGm8LjFa8K8oyrLmc5Huk3LDi
+	 1F1SRNAWe253Xh9rndMJ4OU4FNJOJPEnleIx7Vw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfCGRpB (ORCPT
+        id S1726542AbfCGRpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:45:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 12:45:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbfCGRo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:44:59 -0500
+        id S1726305AbfCGRpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:45:04 -0500
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641BE2085A;
-        Thu,  7 Mar 2019 17:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D99C2087C;
+        Thu,  7 Mar 2019 17:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551980698;
-        bh=tds8xC+L5u0GBiNW0rykCfMIt3vcpZzIKRVuPx7DtRw=;
+        s=default; t=1551980703;
+        bh=FFHhtE/QOj4jLD0+pxtFygkemoB2wCWfQxac3K+/t/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cSSMLEq3k09RRm3b2KOtJiUEPtWsVk9P4IO3IuXT5oUPIIU9/hCLv38LSNGE2Aak9
-         3ccpgdqHHR2CTqAC1hsKrUK6AIMoXDEJJm7rMm/sXigq+r0Dy8BABomBOzl2XKgKEQ
-         3PyOOHyDyggxJtSSpQjL+PD2SBK2WL+8q9yDv9HY=
+        b=jDgOls/aQQvQo7DkHWn5tGhYpIwrLJ4Bw1ytFv/DyP95GnOx9mrVfNoet89+9SeSp
+         OQDNDrByN9p7svDjvmcOBqGeCcW5W8KuACVUqYhTv1pTIbfkDyZ1EagNCYPeqRkwOP
+         tRb8f4zmbKwokRl6ZpqMuulaCIbiTJjAK+oJrKk4=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Tony Jones <tonyj@suse.de>,
-        Michael Sartain <mikesart@fastmail.com>,
-        Mathias Krause <minipli@googlemail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kees Kook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/35] tools lib traceevent: Fix buffer overflow in arg_eval
-Date:   Thu,  7 Mar 2019 14:44:01 -0300
-Message-Id: <20190307174433.28819-4-acme@kernel.org>
+Subject: [PATCH 04/35] perf: Mark expected switch fall-through
+Date:   Thu,  7 Mar 2019 14:44:02 -0300
+Message-Id: <20190307174433.28819-5-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-Fix buffer overflow observed when running perf test.
+In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+where we are expecting to fall through.
 
-The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
-resulting in -9223372036854775808 which overflows the 20 character
-buffer.
+This patch fixes the following warning:
 
-If is possible this bug has been reported before but I still don't see
-any fix checked in:
+  kernel/events/core.c: In function ‘perf_event_parse_addr_filter’:
+  kernel/events/core.c:9154:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+      kernel = 1;
+      ~~~~~~~^~~
+  kernel/events/core.c:9156:3: note: here
+     case IF_SRC_FILEADDR:
+     ^~~~
 
-See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
-Reported-by: Michael Sartain <mikesart@fastmail.com>
-Reported-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
+This patch is part of the ongoing efforts to enable -Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kees Kook <keescook@chromium.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190212205430.GA8446@embeddedor
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index abd4fa5d3088..87494c7c619d 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2457,7 +2457,7 @@ static int arg_num_eval(struct tep_print_arg *arg, long long *val)
- static char *arg_eval (struct tep_print_arg *arg)
- {
- 	long long val;
--	static char buf[20];
-+	static char buf[24];
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index dd9698ad3d66..6fb27b564730 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9175,6 +9175,7 @@ perf_event_parse_addr_filter(struct perf_event *event, char *fstr,
+ 		case IF_SRC_KERNELADDR:
+ 		case IF_SRC_KERNEL:
+ 			kernel = 1;
++			/* fall through */
  
- 	switch (arg->type) {
- 	case TEP_PRINT_ATOM:
+ 		case IF_SRC_FILEADDR:
+ 		case IF_SRC_FILE:
 -- 
 2.20.1
 
