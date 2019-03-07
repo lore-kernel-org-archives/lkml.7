@@ -2,69 +2,73 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEAAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C99BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1525E2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A03320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551993146;
-	bh=WkrzSdGEHhzydBz8SLNammOMrmiXJpBlgacOOUWj+Ns=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aGojehXtLo8iKHWWvtB1tdEmYApGfYOIaqqE4pKcahtlUM2anZAge/sH/kGSBblL2
-	 3YoPimRbArSs+yTWKjtIhFbC/Is914stv0YsoMi9Jyqt0w6raM6H7KXApOx5+z1QHH
-	 JkNC/WzFYkc9ZlWy8lbRXtCUOTey8NPgsGlj1oMU=
+	s=default; t=1551993150;
+	bh=k/vWDJbwWnpw8g73N/D4DMhtBGmr56jj12apHg5q1/Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XwElYFMoGQpaYwQvkAftbgW/MVjYh9Hre+1fTKhYoqmUOz1S9kVCChyS7q33/sixw
+	 JMJVA1OmTCE6TGq5W8Cav8+kwHwCfP+oTh+Cnr6Jb+hIEiSVhTIuwzuKnhpTtR/VuG
+	 0ejsAORNimF011V0WIUkRJAqvW8woGiI8EFxJLig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbfCGVMY (ORCPT
+        id S1726313AbfCGVM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 16:12:24 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41611 "EHLO
+        Thu, 7 Mar 2019 16:12:29 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:36267 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726186AbfCGVMY (ORCPT
+        by vger.kernel.org with ESMTP id S1726186AbfCGVM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 16:12:24 -0500
+        Thu, 7 Mar 2019 16:12:26 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 15DF43026;
-        Thu,  7 Mar 2019 16:12:23 -0500 (EST)
+        by mailout.west.internal (Postfix) with ESMTP id 9A3883026;
+        Thu,  7 Mar 2019 16:12:24 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:23 -0500
+  by compute3.internal (MEProxy); Thu, 07 Mar 2019 16:12:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/tHVp1gtEeRLSAoer
-        mLBJfxzsdFUrHewWYgWmWrrgbI=; b=1cvKLABHN1eTIWzvMQBdkQXYiib6cn0rQ
-        EAtoXXctgUhikAa4HbwBvRr+o9rZl1O4HyZjy26SBIe+N844bAEBdmBLOf2q9QC+
-        N8ktX12wJxTzfKt0902ZiL0Zc8+dTcyFLatKZjxEkp65RNWyTbmf2RhlBIRAT1GG
-        pw/7Tu1bMUeOppENXxHFbNbCmZ2/vMGfpJUpH/fYmiVMm8mM+zcv7mfcyMcBtuPY
-        W8BCNr768gDCwLHHy1QRtNqN60tjFtwUqjW51CO73aiXJ92GuYAw0jrJtzcBf2A5
-        mUza4JM5jnyz38CNjx9jIQjBMkIMpa9umeKn5eujkzoQJCnibNvJg==
-X-ME-Sender: <xms:NYmBXEW8Wf4vdNqqcXvlGRBypP6ThUxWxBQShUqbl_omOwaKBmJ2Iw>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=fvDUUrSZWfNWQF1kal+TwFBvkWfhzWW906Ay9fl3GSE=; b=Z4tbxDkG
+        N/t0m1Q14yaXumHhw9m1HldI/T/IS/IQZPtOhkhH/3lDF9aQhCg4xFPLCHzJHCEg
+        R6m3cSKUpInuDNwiCegHjwPemO2RAPl8oUN4ZOw+hfmm5/RQNIE1vs3i9SN7NK+/
+        jOpsfoVcHyA5WVBl0nTzK9TWCF91ptHdQEMCp21G3u833NNSKz8Ewp4Y1TaTou71
+        8u/YzRKN5CRqmeU1B+0XnqsjbYV5adShz8p0tzKlwULO1X4yFsqwNP6k0ZEmCd+Z
+        jFy0jufMSnFE0g94vYHoTsy0BcB4tRHpp+m932/EHcJJaxp/cQH2gFNAPdWhuMAO
+        SfQwvwWkb92EyQ==
+X-ME-Sender: <xms:OImBXNLNiVxg0qxILpXS4e430EGJdy0eD886HSpwpTThMdxhzQlpwg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeekgdduhedtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghinhcu
-    vedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecukfhppe
-    duvdegrdduieelrdehrdduheeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
-    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:NYmBXOOQln3BGQuKl91Ls9IaX1Y7DBb0IBT-36GJRZq_mxQeY1nXog>
-    <xmx:NYmBXAdYY2D2f2MWwknKmQLSnAXn2UBlH3zyUePNOjOrS7hhIbk2Aw>
-    <xmx:NYmBXMCfJtIq3TWCgRIhrp2yLFtAkKOieeKyify5e7rv7qLVAa1BUw>
-    <xmx:NomBXOSz827_33fUKdgTwrA9aqXS-wNLiRFGLMouP74V1Datl22Z5w>
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghi
+    nhcuvedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecuff
+    homhgrihhnpehsphgugidrohhrghenucfkphepuddvgedrudeiledrhedrudehkeenucfr
+    rghrrghmpehmrghilhhfrhhomhepthhosghinheskhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:OImBXFc72tADfUGXb_VCleRNk_qKFRYgkovMZr_qL0OpxFDJeaTBmA>
+    <xmx:OImBXId3bjPRfYXMvT2_xN0M4jiWyaaXSlgjZQHeVB51as3iFbGCHw>
+    <xmx:OImBXAPOc0Bd7fq-6Act60mH3Ed4xAWXz50LT2_kbsXZGUV2fl6pxw>
+    <xmx:OImBXGph-gxdgsLfJcwsAiDVbFY5uWgKrlESoCHcBnBhhaLhTFlvNQ>
 Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CFE6510341;
-        Thu,  7 Mar 2019 16:12:19 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3856F1033F;
+        Thu,  7 Mar 2019 16:12:21 -0500 (EST)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/9] docs: Fix various build warnings/errors
-Date:   Fri,  8 Mar 2019 08:11:44 +1100
-Message-Id: <20190307211153.28400-1-tobin@kernel.org>
+Subject: [PATCH 1/9] docs: Fix spelling mistake
+Date:   Fri,  8 Mar 2019 08:11:45 +1100
+Message-Id: <20190307211153.28400-2-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190307211153.28400-1-tobin@kernel.org>
+References: <20190307211153.28400-1-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,68 +76,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Documentation contains a spelling mistake / typo.
 
-I had a few hours to spare so I thought I'd clear some Sphinx build
-warnings/errors.  There isn't anything too controversial here.  The only
-interesting thing I hit was in patch 7 (docs: Remove unknown 'hint'
-directive), I couldn't work out if this was a serious directive, a joke,
-or a typo.  Please review that patch more carefully than the others.
+s/descibed/described/
 
-Patch 4 adds :ref: and raises an issue I've come across a few times now,
-could I have your opinion on it please (if you have the time/inclination
-to share it)
+Fix spelling mistake.
 
-:ref:`/Documentation/path/to/file.rst <label>`
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+---
+ Documentation/process/howto.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-vs
-
-:ref:`label`
-
-Undeniably the second is better in HTML.  The first is, on one hand,
-arguable better to parse when reading the textual file (since you can
-see which file it refers to) but on the other hand kinda looks ugly
-since it often line wraps poorly and is a bit cluttered if all you want to
-see is the path.  Having only the label doesn't _really_ make it worse
-in text because often you already know (or don't care) what the path is
-(e.g. when there are multiple refs to the same label) and if you do care
-you can just grep the docs for the label.
-
-Do you have an opinion on this?
-
-Oh also, do you have a script by any chance that does a clean build of
-the docs, saves stderr output, applies a patch, cleanly re-builds the
-docs and then diffs the two outputs?  Then rinse-and-repeat for a whole
-patch series. Thought I'd ask before I write one.
-
-thanks,
-Tobin.
-
-Tobin C. Harding (9):
-  docs: Fix spelling mistake
-  docs: Add colon clearing sphinx warning
-  docs: Remove unnecessary reference link title
-  docs: Use reference to link to rst file
-  docs: Replace backtick with apostrophe.
-  docs: Use correct list markup character
-  docs: Remove unknown 'hint' directive
-  docs: Fix Title underline too short warning
-  docs: Add blank line after SPDX licence identifier
-
- .../admin-guide/mm/numa_memory_policy.rst     |  9 ++-
- .../driver-api/dmaengine/dmatest.rst          |  4 +-
- Documentation/driver-api/gpio/board.rst       |  5 +-
- Documentation/filesystems/path-lookup.rst     | 24 ++++----
- Documentation/laptops/lg-laptop.rst           | 13 +++--
- Documentation/misc-devices/ibmvmc.rst         |  1 +
- Documentation/networking/snmp_counter.rst     | 58 +++++++++----------
- Documentation/process/howto.rst               |  2 +-
- Documentation/vm/numa.rst                     |  4 +-
- Documentation/vm/slub.rst                     |  2 +-
- include/linux/kernel.h                        |  2 +-
- include/linux/wait.h                          |  2 +-
- 12 files changed, 64 insertions(+), 62 deletions(-)
-
+diff --git a/Documentation/process/howto.rst b/Documentation/process/howto.rst
+index 58b2f46c4f98..5cac67f8fb17 100644
+--- a/Documentation/process/howto.rst
++++ b/Documentation/process/howto.rst
+@@ -62,7 +62,7 @@ Legal Issues
+ The Linux kernel source code is released under the GPL.  Please see the file
+ COPYING in the main directory of the source tree. The Linux kernel licensing
+ rules and how to use `SPDX <https://spdx.org/>`_ identifiers in source code are
+-descibed in :ref:`Documentation/process/license-rules.rst <kernel_licensing>`.
++described in :ref:`Documentation/process/license-rules.rst <kernel_licensing>`.
+ If you have further questions about the license, please contact a lawyer, and do
+ not ask on the Linux kernel mailing list.  The people on the mailing lists are
+ not lawyers, and you should not rely on their statements on legal matters.
 -- 
 2.21.0
 
