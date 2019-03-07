@@ -2,115 +2,126 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21720C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF5A20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B754E20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551978072;
-	bh=deT2N7Ov/A4SE4ht2D39cgVT2fk83tsBvxgaNw9nycg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YWGv4itPk0chuv65k7SDfzlivxoQUUzexRmNPigrYfeONvmX/l9ZLAT7JxwBkC9WY
-	 NmuFHiNmxXFYtU3hzr1u/UzhviWuwI9ecrnE+pTIuKw02ACWpUZMyvCOJWAIfO8SFO
-	 XTHYePsf5N3+7RlG8dg6d/VFWp+pNnH8mcAwHxC8=
+	s=default; t=1551978079;
+	bh=Vxsye+JkmXQfcvarfpWknV0wQ+S0huawQuXfDeFp87s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=taAYBvrNMzvGQZRHZYLUikss3lnpdaXDnE5WxW2tE4H9Q8OOwzbVT14GJ24xijSGc
+	 DUuz61H6NF/k/EsbWsyOOsRM23TwpawKm5Jd62ZeRVOPIlWK6HiosVVw6F/yJv36ID
+	 wOALVqPnaciyRLNdlCGNQrdjzdh7DMKdUZCblDfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfCGRBK (ORCPT
+        id S1726508AbfCGRBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:01:10 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34489 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGRBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:01:10 -0500
-Received: by mail-lf1-f67.google.com with SMTP id d26so12225417lfa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:01:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s1zsB/737Tin5CwcqhmNyyqJfdWx3oMpEszPfXu6l9U=;
-        b=IKSxgclQkCN0UpoO8GTTI61KcDoTPid2lOS/fmRFez62Fh/bmnGQsVXHwovTOBJAey
-         s1xiOqztJAcc/abRipT5Osb48j1XzMpHhaR89qjt6OjJihYQ5sAVtp71lv9EcGSXHnSX
-         fM0yH7MDuByffboSXDThJlxPU/Af4pUQFD2Xs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s1zsB/737Tin5CwcqhmNyyqJfdWx3oMpEszPfXu6l9U=;
-        b=ugzcqkAk6MmFt3iWbiIVtPIQYfWU5H1EY1gTjZCudsGxQn7iQC9xbJ2H8GLIU5AYMw
-         qeQ4k+AfofH/wxPQ0lCZ5UHdoCvqVYFR/GK3T9dnK5MBpuZVhSXKsBhO00VyPRgJ0nH7
-         HaOjkmQVqy9qwoIn9Y9wGdHgtrYcZ2MOlsSHXZDC2QUbKjsaRHXIimBjUlxBpE9tMkNE
-         AmfkZy6KwUE++h/abxoEFyd8cZGOYakBgMqQeFE76WLvDDd1Rg1OkGhg96bkPovf0YRV
-         nRHT9AEn+Bbo0siiZYXQ2HBlTZIUfDeIJh+qr4WM0/wYEA15GvGVOaTicSXXlWw84Bf5
-         mC/w==
-X-Gm-Message-State: APjAAAUBTd2FnXkWPyQCu9Q5PzMkmTTDNMslrKezANBLedmGQAWtvGPn
-        O6OV3Skd3szybVvJku6/Ch7B32GK/HI=
-X-Google-Smtp-Source: APXvYqyqtIOnj6x6jsF0SDe3S9OwRBNaGWanx8ndqtkK4HIfKdsAnFjAKV74iHxo8BokqAuV2mFbxw==
-X-Received: by 2002:ac2:5497:: with SMTP id t23mr7643541lfk.69.1551978067012;
-        Thu, 07 Mar 2019 09:01:07 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id s7sm923839ljs.8.2019.03.07.09.01.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 09:01:06 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id l5so14886698lje.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:01:05 -0800 (PST)
-X-Received: by 2002:a2e:9786:: with SMTP id y6mr5777048lji.79.1551978065237;
- Thu, 07 Mar 2019 09:01:05 -0800 (PST)
+        Thu, 7 Mar 2019 12:01:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbfCGRBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:01:17 -0500
+Received: from localhost (unknown [77.138.135.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 395DC20851;
+        Thu,  7 Mar 2019 17:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551978076;
+        bh=Vxsye+JkmXQfcvarfpWknV0wQ+S0huawQuXfDeFp87s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jcyvsi6/LFcVLoCqQTHJLNuHe8zb8B6CvwSp8/YD0OoA/3oEE/u/7n/Zlt4IalCKb
+         4uXGCGkXNokpy4xZoK9cwxuh2TI+9GgS8rrmpqd4JwEPQQ20tPyAfjqLtWNhN/ha6d
+         vVfl6DoyG1j55J3YQwTbiMgqn4mpouO9dQYusRJs=
+Date:   Thu, 7 Mar 2019 19:01:08 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Faisal Latif <faisal.latif@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] RDMA/nes: remove redundant check on udata
+Message-ID: <20190307170108.GQ1789@mtr-leonro.mtl.com>
+References: <20190302230637.8624-1-colin.king@canonical.com>
+ <20190304063623.GA15253@mtr-leonro.mtl.com>
+ <815dea03-ef9a-39c0-3ec5-cdd58a545911@canonical.com>
 MIME-Version: 1.0
-References: <20190307114511.870090179@infradead.org> <20190307120317.GD32477@hirez.programming.kicks-ass.net>
- <20190307125526.GB32534@hirez.programming.kicks-ass.net> <20190307131312.GC32534@hirez.programming.kicks-ass.net>
- <20190307164705.qbu4ytdfdmsighas@treble>
-In-Reply-To: <20190307164705.qbu4ytdfdmsighas@treble>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 7 Mar 2019 09:00:49 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgfvwn1L7BduXA02rZdDnKGb8ebzm4C--QcfVF+gjHAvQ@mail.gmail.com>
-Message-ID: <CAHk-=wgfvwn1L7BduXA02rZdDnKGb8ebzm4C--QcfVF+gjHAvQ@mail.gmail.com>
-Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Ah40dssYA/cDqAW1"
+Content-Disposition: inline
+In-Reply-To: <815dea03-ef9a-39c0-3ec5-cdd58a545911@canonical.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 8:47 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+
+--Ah40dssYA/cDqAW1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Mar 07, 2019 at 10:23:28AM +0000, Colin Ian King wrote:
+> On 04/03/2019 06:36, Leon Romanovsky wrote:
+> > On Sat, Mar 02, 2019 at 11:06:36PM +0000, Colin King wrote:
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> The non-null check on udata is redundant as this check was performed
+> >> just a few statements earlier and the check is always true as udata
+> >> must be non-null at this point. Remove redundant the check on udata
+> >> and the redundant else part that can never be executed.
+> >>
+> >> Detected by CoverityScan, CID#1477317 ("Logically dead code")
+> >>
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>  drivers/infiniband/hw/nes/nes_verbs.c | 73 +++++++++++++--------------
+> >>  1 file changed, 34 insertions(+), 39 deletions(-)
+> >>
+> >> diff --git a/drivers/infiniband/hw/nes/nes_verbs.c b/drivers/infiniband/hw/nes/nes_verbs.c
+> >> index 828e4af3f951..526092d435df 100644
+> >> --- a/drivers/infiniband/hw/nes/nes_verbs.c
+> >> +++ b/drivers/infiniband/hw/nes/nes_verbs.c
+> >> @@ -1039,53 +1039,48 @@ static struct ib_qp *nes_create_qp(struct ib_pd *ibpd,
+> >>  				}
+> >>  				if (req.user_qp_buffer)
+> >>  					nesqp->nesuqp_addr = req.user_qp_buffer;
+> >> -				if (udata) {
+> >> -					nesqp->user_mode = 1;
+> >
+> > It was single place where user_mode was set, you should continue and
+> > remove all code which depends on "if (nesqp->user_mode)".
 >
-> This "fixes" it, and also seems to help -Os make much code:
+> This is not the only place where user_mode is being set; we currently have:
 
-Yeah, considering that this __trace_if() macro from hell is doing an
-'if()' on the result of that inner thing, it makes sense to *not*  use
-that "looks simpler and shorter" array sequence, but depend on the
-compiler then noticing that the conditionals are the same and joining
-the two branches together.
+ok, It doesn't matter, I'll clean it later with my memory allocation
+conversion patches.
 
-The compiler has to do much more work to either generate the actual
-dynamic array thing, or notice that the _index_ of the array matches
-the _conditional_ on the branch, and undo that thing.
+Thanks
 
-But that macro really is the macro from hell regardless.
+--Ah40dssYA/cDqAW1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Do people really use CONFIG_PROFILE_ALL_BRANCHES?
+-----BEGIN PGP SIGNATURE-----
 
-                Linus
+iQIcBAEBAgAGBQJcgU5UAAoJEORje4g2clinhMYQAMVjNOhrTtcq5zyPak5Slih1
+fO1U0u7DXwIR4nyPd1Dim4+6/DsgX3Tzx7H7sjB+7kmBjQU/F0gppDuYvhH/+GA7
+zgcLhkHT9G52/fvH2CZPZNb2c9y1S3CweV2e4s4wr0bHSEjJ9UnfEdJQ6jRRS4/V
+gJlNWGM5Mv3f2GFmjpPeGGdmW7Z870y8aKS3TTTKt+YzcO7ArdJMfYS8LPSY2pds
+tbJdFnrrG4YE7wlpmfCkyOThaulnT12eKjR/Bmwrwv5vWPl+DrCrn0mZ/ZgGDIyV
+q/bNm5eRfIAt38pOFnC5vyAge8Pr3s05SW+rhqKGtVl4m0mbGumOEAKs5FZfT0iG
+ULAjcHyiZfb6aQrg5B9Mv5eWOok2q4OGzlG0R4QWrP8dnj4I6Gl1ZFwaL8T6qL+8
+ACfmtqZdR2PpHMf8YL7e/oNCRzGpZj9+w71r+cuBj6P44+PZbuDJ/PQ4mIoMUOII
+sIWMocbFOb6wPT+Hx5qFhrZncJpYlKYWTm5gy7zd9Mv4u3V8PYJjlzzXwSJSjupL
+XDdnwnBhpi7c2/28FrW6afd6qh+J2rYdQ2kP0DUL1Vvo6Ylxis3qy+Ce1CNLiQxN
+eS+F7d8MJHeQr+eU5nta3XAVHLLKWQy5VuIXCw36iuvBzXC/xCJIS/d7QUkNRX6c
+QMXOKHG/EXsJHpAn9S0m
+=aqqe
+-----END PGP SIGNATURE-----
+
+--Ah40dssYA/cDqAW1--
