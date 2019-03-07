@@ -2,137 +2,101 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633D2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7DDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296942081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA12B2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gT01dcZx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AWlB/O/J";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KihBECrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfCGRMz (ORCPT
+        id S1726449AbfCGRP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:12:55 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:36766 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfCGRMz (ORCPT
+        Thu, 7 Mar 2019 12:15:26 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:49850 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726172AbfCGRP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:12:55 -0500
-Received: by mail-ua1-f67.google.com with SMTP id e15so10443020uam.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:12:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GJttKmZ86M1cNsEb4ZAgihVD13fIgqGm+JiJZjTDdp0=;
-        b=gT01dcZxggRLrOaGDUfYG/Fwp6L1NkWCwPd41T6+lc7JIugh7ItGZFNTAS8cZZ8YwW
-         pTffBpCgT3HIgEtwAu2/B1e3/hOvpy0Y7h1d/uzdi7MCzvu3lTNjGXfyKenkxaedWDEW
-         Xd35m09J/sj53jTi8C5TkknKLiOaCf+ppXQjg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GJttKmZ86M1cNsEb4ZAgihVD13fIgqGm+JiJZjTDdp0=;
-        b=nU0vlFDfTZLYf6laadpbuqAqGQYDCYlJkU07HN0xtXy949YS5MjQCq9EZgTQDd/cxv
-         gImGW9Yu/NoMO5EIxNtSNT1zrxiLpG35bnie9QqEI2hsEerIusESZ3TCGlBbrGoTiAjr
-         5M6tmuFY9BJSirOiy8t3pgjeV5DtY7lybPz9Kd6YRW0BAZYyP4cCXGnpoPTb0250d2nL
-         RdXshcJjHVVqtZZbdMNB6jMOtsYEVEI4wglgO0ZS8qQl+IfQnB71D3aSwSp/vP7JO19S
-         nSxbRQwRIZceZ5tUNKfQAFMw0L+RA8ARd4cEqpcDK1xf26JqZhgAkstCOC7RKuGN+Hwo
-         O/Gw==
-X-Gm-Message-State: APjAAAVGnqCO3XiReb5doWCrPSDCqCLaNN81kbu1H801ejt3KMJmhVzF
-        deZjOeSRBkHa2bSeohLRnNR6nKOYTf4=
-X-Google-Smtp-Source: APXvYqyc7CXYoYDO0w76qLppSSE2BfXw2LZgF0VxL9U55t//3ytctRCGJ03jD7Vu1Tk6G8ERSmGkhg==
-X-Received: by 2002:ab0:6299:: with SMTP id z25mr7511283uao.69.1551978772893;
-        Thu, 07 Mar 2019 09:12:52 -0800 (PST)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id a9sm1495023vka.51.2019.03.07.09.12.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 09:12:52 -0800 (PST)
-Received: by mail-ua1-f50.google.com with SMTP id f88so10441057uaf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:12:51 -0800 (PST)
-X-Received: by 2002:ab0:6556:: with SMTP id x22mr7380981uap.10.1551978771436;
- Thu, 07 Mar 2019 09:12:51 -0800 (PST)
+        Thu, 7 Mar 2019 12:15:26 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 148F7602FC; Thu,  7 Mar 2019 17:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551978925;
+        bh=KgLbJfHLfOeBhieTyB7XgxHqqK36UAb7NIUFaiv5ie0=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=AWlB/O/JcDOUkCt4UDXUFeRSrLU9bosoAGG1zgzRi+hnCknbOg4+UEocKthqwK7xQ
+         9awk+hDpInQAD2FMcDCqImQDthfupel07Mir5mbilxpTJQpWQDfUVpfE90rLEYC7i0
+         0ghpcwlQmBpyG0z2FeU2g0XV9J3WYVkMswhleIEg=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6BF596029B;
+        Thu,  7 Mar 2019 17:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551978924;
+        bh=KgLbJfHLfOeBhieTyB7XgxHqqK36UAb7NIUFaiv5ie0=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=KihBECrN/nbCPkB3bPmFuH1I3mFBfzyZKUaJ6ijhO+tvc2kU/94fg4XFO93GIoii4
+         7AjIVFP0eGknKQ6yME7YMUaRtk2YZGnRhsYOZs1gmXkyv++byeRumB7rq/FyHLCS9u
+         6Y5ORZ1IjxAVfPfZ/N2AwTwQStp1dQEwxy1bMmiM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6BF596029B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190307010153.81157-1-bvanassche@acm.org> <20190307012417.GU1758@mellanox.com>
- <8a5bd9ae-ebfe-687c-2868-d0f2a610d1e0@acm.org> <20190307072428.GJ1789@mtr-leonro.mtl.com>
- <4d90c392-5b6a-fea0-e6cf-c49ac19fdf30@acm.org> <20190307154020.GN1789@mtr-leonro.mtl.com>
- <CAGXu5jLBPpKOT-NV1P0nuFeSQYfoNY_8B0V4gcQg18xHPUVbhQ@mail.gmail.com> <20190307170230.GR1789@mtr-leonro.mtl.com>
-In-Reply-To: <20190307170230.GR1789@mtr-leonro.mtl.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 7 Mar 2019 09:12:40 -0800
-X-Gmail-Original-Message-ID: <CAGXu5jJDmEFA7=WuDnr0U6t9BTDFtd_WsB5HeryNKoZSaBW8oA@mail.gmail.com>
-Message-ID: <CAGXu5jJDmEFA7=WuDnr0U6t9BTDFtd_WsB5HeryNKoZSaBW8oA@mail.gmail.com>
-Subject: Re: [PATCH] Avoid that check_shl_overflow() triggers a compiler
- warning when building with W=1
-To:     Leon Romanovsky <leonro@mellanox.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlwifi: fix 64-bit division
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190304203924.2111146-1-arnd@arndb.de>
+References: <20190304203924.2111146-1-arnd@arndb.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Avraham Stern <avraham.stern@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190307171525.148F7602FC@smtp.codeaurora.org>
+Date:   Thu,  7 Mar 2019 17:15:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 9:02 AM Leon Romanovsky <leonro@mellanox.com> wrote:
->
-> On Thu, Mar 07, 2019 at 08:52:51AM -0800, Kees Cook wrote:
-> > On Thu, Mar 7, 2019 at 7:40 AM Leon Romanovsky <leonro@mellanox.com> wrote:
-> > >
-> > > On Thu, Mar 07, 2019 at 06:53:54AM -0800, Bart Van Assche wrote:
-> > > > On 3/6/19 11:24 PM, Leon Romanovsky wrote:
-> > > > > My simple patch passes too :).
-> > > >
-> > > > Can you repost your patch?
-> > >
-> > > https://patchwork.kernel.org/patch/10841079/
-> > >
-> > > As Rasmus wrote, the thing is to avoid a < 0 check. In my patch,
-> > > I converted a <= 0 to !(a > 0 || a == 0) expression.
-> >
-> > I'd be happy either way. Is there a larger benefit to having a safe
-> > "is_non_negative()" helper, or should we go with the minimal change to
-> > the shl macro?
->
-> I personally prefer simplest possible solution.
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-Acked-by: Kees Cook <keescook@chromium.org>
+> do_div() expects unsigned operands and otherwise triggers a warning like:
+> 
+> drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c:465:2: error: comparison of distinct pointer types ('typeof ((rtt_avg)) *' (aka 'long long *') and 'uint64_t *' (aka 'unsigned long long *')) [-Werror,-Wcompare-distinct-pointer-types]
+>         do_div(rtt_avg, 6666);
+>         ^~~~~~~~~~~~~~~~~~~~~
+> include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
+>         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+>                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
+> 1 error generated.
+> 
+> Change the do_div() to the simpler div_s64() that can handle
+> negative inputs correctly.
+> 
+> Fixes: 937b10c0de68 ("iwlwifi: mvm: add debug prints for FTM")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Can this go via the rdma tree?
+Patch applied to wireless-drivers.git, thanks.
 
--Kees
-
->
-> >
-> > -Kees
-> >
-> > --
-> > Kees Cook
-> -----BEGIN PGP SIGNATURE-----
->
-> iQIcBAEBAgAGBQJcgU6mAAoJEORje4g2clinE94P/0pHFmUgwzRrVLxjqmnynNPC
-> e+azQISKrZ4EBI5Is7VwFJuxtiZvsTveCxX0NpRxk3TLfHbA4V9jz4meJ6smp4UQ
-> Z1uRnPbj2z5iucFN/8SelQvNTmqfvbuRSKpZ08XLxBB4XIAjFaNBbmD+REe7iSGD
-> xiYNp96oHvKnzGZq/eViqz0rogewsTLHoEBwDkfgyDIqwO0/3qVElNhW7Z6g/v/7
-> 2D4yZiB82wIBf+00taEQNnpI/3naVvqdfl34iYGuq51Fd2S36lfmMZ1DUffd/Eq+
-> jRq8PiNisFK+0A/96hwi2npVN0LS4tA5at6PHhqOfVxMOt/XAmeKu3cCaxHhjbfb
-> Oi2+X9/EBDdgVmylssQFwjNaLuXB00109IVDcQGgzTsN8xoTNiwla8gt3fVhDWt+
-> X0jQuSnqtANt75/0mucirBoUppCB59aZ9ygolWe4UwBpVV0ZGH/0MFwcOhlpglGB
-> PbrKaTxP3qQeil8wGXQsJyPGOCLBGh1Qj0C6NG1wsJSX/Zq8awEoz+JlYCXezaq6
-> 4R0jSHu50BGp7gt5iePRGeUhjPFVGHucJZ2b6fuDZ3ARN8MtQYmrYDyRqnFJZsCE
-> UZFd4SZ8UzfIETd17IowOmOs62HwXyIi1WzoWjiHsNjH2dxwiB6Lh1JBvAFQgzJ1
-> 0wRa0DMnyLzmIoOdyvQm
-> =NFtk
-> -----END PGP SIGNATURE-----
-
-
+688cd8bd2c0f iwlwifi: fix 64-bit division
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/patch/10838587/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
