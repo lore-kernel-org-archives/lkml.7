@@ -2,119 +2,204 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15801C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00A620652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DD720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfCGJQB (ORCPT
+        id S1726348AbfCGJQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:16:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:58063 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfCGJQA (ORCPT
+        Thu, 7 Mar 2019 04:16:26 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34424 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfCGJQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:16:00 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MavF5-1gVWVq1TCt-00cUMs; Thu, 07 Mar 2019 10:15:33 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mikael Pettersson <mikpe@it.uu.se>,
-        Mikael Pettersson <mikpelinux@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
-Date:   Thu,  7 Mar 2019 10:14:49 +0100
-Message-Id: <20190307091514.2489338-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190307091514.2489338-1-arnd@arndb.de>
-References: <20190307091514.2489338-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 04:16:26 -0500
+Received: from [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281] (unknown [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B6FCC27F136;
+        Thu,  7 Mar 2019 09:16:23 +0000 (GMT)
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+References: <20190215185151.GG7897@sirena.org.uk>
+ <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+ <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+ <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com>
+ <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
+ <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com>
+ <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
+ <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com>
+ <20190306140529.GG3549@rapoport-lnx>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com>
+Date:   Thu, 7 Mar 2019 09:16:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:d8KGsnS5I5jJ69letBdYqJMsef6CKlINAH4fRowUoENhI3Wj5Oz
- XQzXp+l7Zv0gYInCjyd3uARXmT6Dz0ERe80AM40RF0ipFK4jBAF+/1bOH+W/X9myqZpdQ3t
- ovCX5yOkGgDRJJXGWQPdIFbRGyzhBmeHqo4vm0J8gnT8G9QvNHxUlwgrQOtlqkJBtVijf+G
- nQisNIXf/OnQwkH/rnp4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zcJO1LULneg=:37AzrR9WoMpjoMCrxyWa08
- zJKL7raTOs/Vaht+hOTaY87qL5QvUbW9tib1GjK8WfUAo76qh5rrvvS6/yDoqF8JBNIeXUUgv
- MBmIyq2oNNJN8oBI7iy7ExGk+PLZy+NDs7BQFMbkKMJp/lTulMXKMfhOhuzkjiuiRCI6kAFHF
- SGUZQyeAkzf/Ql2sif15cIsEBSRDo9rX1CiS3G9fsPLgpymnBkMrNkrBeT45OTH8eD04sVLmT
- LNFfYhveQ+9mSpptIn+knDxhK7MDzdmBX7bOV4mOzazZOoOZthl3YWz2MU/SodJdLxpkl716I
- Fo/fPIFQWWYRu8Qn/NJfi7qHG8c7ecavvyqtiErHv5bz/y5Mkmy/WILVFlf2y4ljFwXCD2cFV
- 2QX3ZZlG8MZLcnGzahakZildLgjRlfWpRTj6V00nN7p7f6dxZEd0NHffpZ8DUAkUHncuUblWT
- 92YtibFG6rX3hiDUpiNln0cllH9z3Q4ydka5d3jSPSgfNyJZyAnEHXzT/jNWhTmxaU4gtxt19
- wOj5NWEnb0/q5NdVpA7LYh7M67v9bZdGrbAqli8bEvoqhSIeuVyzd6DOmRp9U7QHn+Url8jIL
- 47asrP6AHLijJor9S59D/l+5nRlmMa7ngCCtb0flx4p8SSjzj6hj7QPRkvH3WjqM62efDNkzY
- 5bspvKYd3rE7Z0Q6ZyyzHoEs37bXqZbQ2bdSzIr74RwwYwO7PuCyUQXspmqwFxv3tnVko9Cfn
- dqFQgE0nNcLniH3o3yaRXtVqcwz9Ehlsk84RpA==
+In-Reply-To: <20190306140529.GG3549@rapoport-lnx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Passing registers containing zero as both the address (NULL pointer)
-and data into cmpxchg_futex_value_locked() leads clang to assign
-the same register for both inputs on ARM, which triggers a warning
-explaining that this instruction has unpredictable behavior on ARMv5.
+On 06/03/2019 14:05, Mike Rapoport wrote:
+> On Wed, Mar 06, 2019 at 10:14:47AM +0000, Guillaume Tucker wrote:
+>> On 01/03/2019 23:23, Dan Williams wrote:
+>>> On Fri, Mar 1, 2019 at 1:05 PM Guillaume Tucker
+>>> <guillaume.tucker@collabora.com> wrote:
+>>>
+>>> Is there an early-printk facility that can be turned on to see how far
+>>> we get in the boot?
+>>
+>> Yes, I've done that now by enabling CONFIG_DEBUG_AM33XXUART1 and
+>> earlyprintk in the command line.  Here's the result, with the
+>> commit cherry picked on top of next-20190304:
+>>
+>>   https://lava.collabora.co.uk/scheduler/job/1526326
+>>
+>> [    1.379522] ti-sysc 4804a000.target-module: sysc_flags 00000222 != 00000022
+>> [    1.396718] Unable to handle kernel paging request at virtual address 77bb4003
+>> [    1.404203] pgd = (ptrval)
+>> [    1.406971] [77bb4003] *pgd=00000000
+>> [    1.410650] Internal error: Oops: 5 [#1] ARM
+>> [...]
+>> [    1.672310] [<c07051a0>] (clk_hw_create_clk.part.21) from [<c06fea34>] (devm_clk_get+0x4c/0x80)
+>> [    1.681232] [<c06fea34>] (devm_clk_get) from [<c064253c>] (sysc_probe+0x28c/0xde4)
+>>
+>> It's always failing at that point in the code.  Also when
+>> enabling "debug" on the kernel command line, the issue goes
+>> away (exact same binaries etc..):
+>>
+>>   https://lava.collabora.co.uk/scheduler/job/1526327
+>>
+>> For the record, here's the branch I've been using:
+>>
+>>   https://gitlab.collabora.com/gtucker/linux/tree/beaglebone-black-next-20190304-debug
+>>
+>> The board otherwise boots fine with next-20190304 (SMP=n), and
+>> also with the patch applied but the shuffle configs set to n.
+>>
+>>> Were there any boot *successes* on ARM with shuffling enabled? I.e.
+>>> clues about what's different about the specific memory setup for
+>>> beagle-bone-black.
+>>
+>> Looking at the KernelCI results from next-20190215, it looks like
+>> only the BeagleBone Black with SMP=n failed to boot:
+>>
+>>   https://kernelci.org/boot/all/job/next/branch/master/kernel/next-20190215/
+>>
+>> Of course that's not all the ARM boards that exist out there, but
+>> it's a fairly large coverage already.
+>>
+>> As the kernel panic always seems to originate in ti-sysc.c,
+>> there's a chance it's only visible on that platform...  I'm doing
+>> a KernelCI run now with my test branch to double check that,
+>> it'll take a few hours so I'll send an update later if I get
+>> anything useful out of it.
 
-/tmp/futex-7e740e.s: Assembler messages:
-/tmp/futex-7e740e.s:12713: Warning: source register same as write-back base
+Here's the result, there were a couple of failures but some were
+due to infrastructure errors (nyan-big) and I'm not sure about
+what was the problem with the meson boards:
 
-This patch was suggested by Mikael Pettersson back in 2011 (!) with gcc-4.4,
-as Mikael wrote:
- "One way of fixing this is to make uaddr an input/output register, since
- "that prevents it from overlapping any other input or output."
+  https://staging.kernelci.org/boot/all/job/gtucker/branch/kernelci-local/kernel/next-20190304-1-g4f0b547b03da/
 
-but then withdrawn as the warning was determined to be harmless, and it
-apparently never showed up again with later gcc versions.
+So there's no clear indicator that the shuffle config is causing
+any issue on any other platform than the BeagleBone Black.
 
-Now the same problem is back when compiling with clang, and we are trying
-to get clang to build the kernel without warnings, as gcc normally does.
+>> In the meantime, I'm happy to try out other things with more
+>> debug configs turned on or any potential fixes someone might
+>> have.
+> 
+> ARM is the only arch that sets ARCH_HAS_HOLES_MEMORYMODEL to 'y'. Maybe the
+> failure has something to do with it...
+> 
+> Guillaume, can you try this patch:
 
-Cc: Mikael Pettersson <mikpe@it.uu.se>
-Cc: Mikael Pettersson <mikpelinux@gmail.com>
-Cc: Dave Martin <Dave.Martin@arm.com>
-Link: https://lore.kernel.org/linux-arm-kernel/20009.45690.158286.161591@pilspetsen.it.uu.se/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/include/asm/futex.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Sure, it doesn't seem to be fixing the problem though:
 
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index 0a46676b4245..79790912974e 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -110,13 +110,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 	preempt_disable();
- 	__ua_flags = uaccess_save_and_enable();
- 	__asm__ __volatile__("@futex_atomic_cmpxchg_inatomic\n"
--	"1:	" TUSER(ldr) "	%1, [%4]\n"
--	"	teq	%1, %2\n"
-+	"1:	" TUSER(ldr) "	%1, [%2]\n"
-+	"	teq	%1, %3\n"
- 	"	it	eq	@ explicit IT needed for the 2b label\n"
--	"2:	" TUSER(streq) "	%3, [%4]\n"
-+	"2:	" TUSER(streq) "	%4, [%2]\n"
- 	__futex_atomic_ex_table("%5")
--	: "+r" (ret), "=&r" (val)
--	: "r" (oldval), "r" (newval), "r" (uaddr), "Ir" (-EFAULT)
-+	: "+&r" (ret), "=&r" (val), "+&r" (uaddr)
-+	: "r" (oldval), "r" (newval), "Ir" (-EFAULT)
- 	: "cc", "memory");
- 	uaccess_restore(__ua_flags);
- 
--- 
-2.20.0
+  https://lava.collabora.co.uk/scheduler/job/1527471
+
+I've added the patch to the same branch based on next-20190304.
+
+I guess this needs to be debugged a little further to see what
+the panic really is about.  I'll see if I can spend a bit more
+time on it this week, unless there's any BeagleBone expert
+available to help or if someone has another fix to try out.
+
+Guillaume
+
+> diff --git a/mm/shuffle.c b/mm/shuffle.c
+> index 3ce1248..4a04aac 100644
+> --- a/mm/shuffle.c
+> +++ b/mm/shuffle.c
+> @@ -58,7 +58,8 @@ module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
+>   * For two pages to be swapped in the shuffle, they must be free (on a
+>   * 'free_area' lru), have the same order, and have the same migratetype.
+>   */
+> -static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
+> +static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order,
+> +						  struct zone *z)
+>  {
+>  	struct page *page;
+>  
+> @@ -80,6 +81,9 @@ static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
+>  	if (!PageBuddy(page))
+>  		return NULL;
+>  
+> +	if (!memmap_valid_within(pfn, page, z))
+> +		return NULL;
+> +
+>  	/*
+>  	 * ...is the page on the same list as the page we will
+>  	 * shuffle it with?
+> @@ -123,7 +127,7 @@ void __meminit __shuffle_zone(struct zone *z)
+>  		 * page_j randomly selected in the span @zone_start_pfn to
+>  		 * @spanned_pages.
+>  		 */
+> -		page_i = shuffle_valid_page(i, order);
+> +		page_i = shuffle_valid_page(i, order, z);
+>  		if (!page_i)
+>  			continue;
+>  
+> @@ -137,7 +141,7 @@ void __meminit __shuffle_zone(struct zone *z)
+>  			j = z->zone_start_pfn +
+>  				ALIGN_DOWN(get_random_long() % z->spanned_pages,
+>  						order_pages);
+> -			page_j = shuffle_valid_page(j, order);
+> +			page_j = shuffle_valid_page(j, order, z);
+>  			if (page_j && page_j != page_i)
+>  				break;
+>  		}
+>  
+> 
 
