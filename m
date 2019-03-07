@@ -5,91 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC15FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FFBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58BD20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E5020652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfCGPr1 (ORCPT
+        id S1726378AbfCGPus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:47:27 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39148 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfCGPr0 (ORCPT
+        Thu, 7 Mar 2019 10:50:48 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39852 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfCGPus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:47:26 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x6so9285350qki.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:47:26 -0800 (PST)
+        Thu, 7 Mar 2019 10:50:48 -0500
+Received: by mail-qt1-f193.google.com with SMTP id o6so17583464qtk.6;
+        Thu, 07 Mar 2019 07:50:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BhTxD3ySC1uQNcQaurRgNi8lE2OWakmfxk2tvcIPUn4=;
-        b=th6erMheCIAZzyC/spHeuzkgRa7ceHNK9SK61G8jGdtATsuY0yuPRvC0UevFw+NpD1
-         Oexr8I4g9kWu7f6jLytOZ2ii+gM8Tt1i3MQ/0h87YKOR6r58DhKHLhmI5/qnFJJxKoSp
-         oBjbTEFNRub2SAshJUWL7BBz7ROKHhS2SCHipPkHHf9coHe7fayXXNkJNrRTizEnakm1
-         yMNcYgijpfR8njdNXVQc14NUZI5JV6cWJ0oGqr5MWy8J7sPQP8OUIZe7R9F1t3IjEr86
-         sOgpu/5aNfl6/7OE1m1vmT1m+JwYnAq/TxKHu5A6mxRLxYnEHqurYY/4aOimi6UHDAVe
-         P+zg==
-X-Gm-Message-State: APjAAAVMch4Fsa0SebKX1G3BzBXlD0zT8S5xD8dBPW9Nk39qmJUOA572
-        zMvrQR9xPbrBWfw++9dsmXiWMw==
-X-Google-Smtp-Source: APXvYqwmzGcW5lj5Q8CC2/neDVhy2nmaELi4a1GVCRW653iKSH/SbNxUxxC4uElvkGE3ZhcVB5QJ0g==
-X-Received: by 2002:a05:620a:148a:: with SMTP id w10mr10023352qkj.172.1551973646133;
-        Thu, 07 Mar 2019 07:47:26 -0800 (PST)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id s49sm3115748qtk.7.2019.03.07.07.47.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 07:47:25 -0800 (PST)
-Date:   Thu, 7 Mar 2019 10:47:22 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com
-Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
- virtual address
-Message-ID: <20190307103503-mutt-send-email-mst@kernel.org>
-References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
- <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jjresbL271MtvsCuFuXYFr/fyGJfd81Ak8kg2xEYgsE=;
+        b=e3qHtQC8SMea0lAYsOIbZYDiD91exQOTxmRUB92kdUFVm+DufhrgYJuERPeAIxKNBZ
+         8q88aUMseY3Up8uzomlqpAOSN150wGMZpTaZOImk2oxnp0/GXBEP10dL+A1E5oItcyag
+         TR/RVQH3v7nJAmqrzqdJl9fEjwVq+F7WmfuLy6PQrRWmu/gBjypy15vzoCrRSl1ObaNM
+         XFrMRIgk81m7kV6KLn6rqyuMog9UoBqUxrD5nI7FySJV3mtpHkT3j8c82ugsNFVQi5mg
+         A7nRSOhqsC1JQCkz1XcnO5SOrC/TBbjOurQ1wflxKRJcyh9mLsW/Zqu7ZWSF+nlIh4EY
+         vfAw==
+X-Gm-Message-State: APjAAAWsO8yDabMk8nhsSznHMOWciQ2vklkgIPb3eyMtQl6XUpaAzDo1
+        2eIf7kt0aAsyghw16nvNz6bZ2k0lC4rmrsDU1Lk=
+X-Google-Smtp-Source: APXvYqxBfY1W0pOIwQnyVMlvIRMTFJ2sVqReuYy9ZyPBPSxOnXNfe5kynGBk6ZaTE+lLWjNWLDvUM3CUKGOiIV9nDSw=
+X-Received: by 2002:ac8:2bcf:: with SMTP id n15mr10334095qtn.96.1551973847152;
+ Thu, 07 Mar 2019 07:50:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+References: <20190307093311.3406888-1-arnd@arndb.de> <20190307151437.GA20201@archlinux-ryzen>
+In-Reply-To: <20190307151437.GA20201@archlinux-ryzen>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 7 Mar 2019 16:50:29 +0100
+Message-ID: <CAK8P3a2cLEU=wjbV2RvbNSoZSQDkzR0sGWZ0OOGQKQnEYVz13Q@mail.gmail.com>
+Subject: Re: [PATCH] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 02:18:12AM -0500, Jason Wang wrote:
-> +static const struct mmu_notifier_ops vhost_mmu_notifier_ops = {
-> +	.invalidate_range = vhost_invalidate_range,
-> +};
-> +
->  void vhost_dev_init(struct vhost_dev *dev,
->  		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
->  {
+On Thu, Mar 7, 2019 at 4:14 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> A slightly less intrusive change would be using cpumask_available, which
+> was specifically introduced for this purpose in commit f7e30f01a9e2
+> ("cpumask: Add helper cpumask_available()").
 
-I also wonder here: when page is write protected then
-it does not look like .invalidate_range is invoked.
+Ah nice, I wasn't aware of that function. I'll send a v2.
 
-E.g. mm/ksm.c calls
-
-mmu_notifier_invalidate_range_start and
-mmu_notifier_invalidate_range_end but not mmu_notifier_invalidate_range.
-
-Similarly, rmap in page_mkclean_one will not call
-mmu_notifier_invalidate_range.
-
-If I'm right vhost won't get notified when page is write-protected since you
-didn't install start/end notifiers. Note that end notifier can be called
-with page locked, so it's not as straight-forward as just adding a call.
-Writing into a write-protected page isn't a good idea.
-
-Note that documentation says:
-	it is fine to delay the mmu_notifier_invalidate_range
-	call to mmu_notifier_invalidate_range_end() outside the page table lock.
-implying it's called just later.
-
--- 
-MST
+     Arnd
