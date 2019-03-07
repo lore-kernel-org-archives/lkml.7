@@ -2,176 +2,384 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D50BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98228C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72EA206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C6820661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfCGBy5 (ORCPT
+        id S1726648AbfCGCDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 20:54:57 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:61621 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726139AbfCGBy4 (ORCPT
+        Wed, 6 Mar 2019 21:03:06 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:9425 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726387AbfCGCDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 20:54:56 -0500
-X-IronPort-AV: E=Sophos;i="5.58,450,1544457600"; 
-   d="scan'208";a="56109091"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 07 Mar 2019 09:54:54 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id 9F37F4C80229;
-        Thu,  7 Mar 2019 09:54:36 +0800 (CST)
-Received: from ubuntu.g08.fujitsu.local (10.167.226.33) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 7 Mar 2019 09:54:58 +0800
-From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
-To:     <steffen.klassert@secunet.com>, <davem@davemloft.net>,
-        <fw@strlen.de>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <suyj.fnst@cn.fujitsu.com>
-Subject: [PATCH v3] net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
-Date:   Wed, 6 Mar 2019 20:54:08 -0500
-Message-ID: <1551923648-17656-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 6 Mar 2019 21:03:06 -0500
+X-UUID: 7a844161cced4d65b600355225dfcc5f-20190307
+X-UUID: 7a844161cced4d65b600355225dfcc5f-20190307
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1841580134; Thu, 07 Mar 2019 10:02:58 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
+ 2019 10:02:57 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 7 Mar 2019 10:02:56 +0800
+Message-ID: <1551924176.2210.104.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 8/8] usb: dwc3: Add Amlogic G12A DWC3 glue
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+CC:     <gregkh@linuxfoundation.org>, <hminas@synopsys.com>,
+        <balbi@kernel.org>, <kishon@ti.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 7 Mar 2019 10:02:56 +0800
+In-Reply-To: <20190304103846.2060-9-narmstrong@baylibre.com>
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+         <20190304103846.2060-9-narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.167.226.33]
-X-yoursite-MailScanner-ID: 9F37F4C80229.AEF04
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For rcu protected pointers, we'd better add '__rcu' for them.
-
-Once added '__rcu' tag for rcu protected pointer, the sparse tool reports
-warnings.
-
-net/xfrm/xfrm_user.c:1198:39: sparse:    expected struct sock *sk
-net/xfrm/xfrm_user.c:1198:39: sparse:    got struct sock [noderef] <asn:4> *nlsk
+Hi,
+On Mon, 2019-03-04 at 11:38 +0100, Neil Armstrong wrote:
+> Adds support for Amlogic G12A USB Control Glue HW.
+> 
+> The Amlogic G12A SoC Family embeds 2 USB Controllers :
+> - a DWC3 IP configured as Host for USB2 and USB3
+> - a DWC2 IP configured as Peripheral USB2 Only
+> 
+> A glue connects these both controllers to 2 USB2 PHYs, and optionnally
+> to an USB3+PCIE Combo PHY shared with the PCIE controller.
+> 
+> The Glue configures the UTMI 8bit interfaces for the USB2 PHYs, including
+> routing of the OTG PHY between the DWC3 and DWC2 controllers, and
+> setups the on-chip OTG mode selection for this PHY.
+> 
+> This drivers supports the on-probe setup of the OTG mode, and manually
+> via a debugfs interface. The IRQ mode change detect is yet to be added
+> in a future patchset, mainly due to lack of hardware to validate on.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/usb/dwc3/Kconfig           |  10 +
+>  drivers/usb/dwc3/Makefile          |   1 +
+>  drivers/usb/dwc3/dwc3-meson-g12a.c | 601 +++++++++++++++++++++++++++++
+>  3 files changed, 612 insertions(+)
+>  create mode 100644 drivers/usb/dwc3/dwc3-meson-g12a.c
+> 
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 1a0404fda596..21ce7368d325 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -93,6 +93,16 @@ config USB_DWC3_KEYSTONE
+>  	  Support of USB2/3 functionality in TI Keystone2 platforms.
+>  	  Say 'Y' or 'M' here if you have one such device
+>  
+> +config USB_DWC3_MESON_G12A
+> +       tristate "Amlogic Meson G12A Platforms"
+> +       depends on OF && COMMON_CLK
+> +       depends on ARCH_MESON || COMPILE_TEST
+> +       default USB_DWC3
+> +       select USB_ROLE_SWITCH
+> +       help
+> +         Support USB2/3 functionality in Amlogic G12A platforms.
+> +	 Say 'Y' or 'M' if you have one such device.
+> +
+>  config USB_DWC3_OF_SIMPLE
+>         tristate "Generic OF Simple Glue Layer"
+>         depends on OF && COMMON_CLK
+> diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+> index 6e3ef6144e5d..ae86da0dc5bd 100644
+> --- a/drivers/usb/dwc3/Makefile
+> +++ b/drivers/usb/dwc3/Makefile
+> @@ -47,6 +47,7 @@ obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
+>  obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
+>  obj-$(CONFIG_USB_DWC3_HAPS)		+= dwc3-haps.o
+>  obj-$(CONFIG_USB_DWC3_KEYSTONE)		+= dwc3-keystone.o
+> +obj-$(CONFIG_USB_DWC3_MESON_G12A)	+= dwc3-meson-g12a.o
+>  obj-$(CONFIG_USB_DWC3_OF_SIMPLE)	+= dwc3-of-simple.o
+>  obj-$(CONFIG_USB_DWC3_ST)		+= dwc3-st.o
+>  obj-$(CONFIG_USB_DWC3_QCOM)		+= dwc3-qcom.o
+> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> new file mode 100644
+> index 000000000000..75942614a034
+> --- /dev/null
+> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> @@ -0,0 +1,601 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * USB Glue for Amlogic G12A SoCs
+> + *
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +/*
+> + * The USB is organized with a glue around the DWC3 Controller IP as :
+> + * - Control registers for each USB2 Ports
+> + * - Control registers for the USB PHY layer
+> + * - SuperSpeed PHY can be enabled only if port is used
+> + *
+> + * TOFIX:
+> + * - Add dynamic OTG switching with ID change interrupt
+> + */
+> +
 [...]
+> +
+> +static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+> +{
+> +	struct dwc3_meson_g12a	*priv;
+> +	struct device		*dev = &pdev->dev;
+> +	struct device_node	*np = dev->of_node;
+> +	void __iomem *base;
+> +	struct resource *res;
+> +	enum phy_mode otg_id;
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	priv->regmap = devm_regmap_init_mmio(dev, base,
+> +					     &phy_meson_g12a_usb3_regmap_conf);
+> +	if (IS_ERR(priv->regmap))
+> +		return PTR_ERR(priv->regmap);
+> +
+> +	priv->vbus = devm_regulator_get_optional(dev, "vbus");
+> +	if (IS_ERR(priv->vbus)) {
+> +		if (PTR_ERR(priv->vbus) == -EPROBE_DEFER)
+> +			return PTR_ERR(priv->vbus);
+> +		priv->vbus = NULL;
+> +	}
+> +
+> +	priv->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +	priv->dev = dev;
+> +
+> +	priv->reset = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(priv->reset)) {
+> +		ret = PTR_ERR(priv->reset);
+> +		dev_err(dev, "failed to get device reset, err=%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = reset_control_reset(priv->reset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = dwc3_meson_g12a_get_phys(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regulator_enable(priv->vbus);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Get dr_mode */
+> +	priv->otg_mode = usb_get_dr_mode(dev);
+> +
+> +	dwc3_meson_g12a_usb_init(priv);
+> +
+> +	/* Set PHY Power */
+> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> +		ret = phy_power_on(priv->phys[i]);
+> +		if (ret)
+> +			goto err_phys_put;
+> +	}
+> +
+> +	/* Init PHYs */
+> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> +		ret = phy_init(priv->phys[i]);
+> +		if (ret)
+> +			goto err_phys_power;
+> +	}
+usually phy_init() first
 
-So introduce a new wrapper function of nlmsg_unicast  to handle type
-conversions.
+> +
+> +	ret = of_platform_populate(np, NULL, NULL, dev);
+> +	if (ret) {
+> +		clk_disable_unprepare(priv->clk);
+> +		clk_put(priv->clk);
+> +
+> +		goto err_phys_exit;
+> +	}
+> +
+> +	/* Setup OTG mode corresponding to the ID pin */
+> +	if (priv->otg_mode == USB_DR_MODE_OTG) {
+> +		/* TOFIX Handle ID mode toggling via IRQ */
+> +		otg_id = dwc3_meson_g12a_get_id(priv);
+> +		if (otg_id != priv->otg_phy_mode) {
+> +			if (dwc3_meson_g12a_otg_mode_set(priv, otg_id))
+> +				dev_warn(dev, "Failed to switch OTG mode\n");
+> +		}
+> +	}
+> +
+> +	/* Setup role switcher */
+> +	priv->switch_desc.usb2_port = dwc3_meson_g12_find_child(dev,
+> +								"snps,dwc3");
+> +	priv->switch_desc.udc = dwc3_meson_g12_find_child(dev, "snps,dwc2");
+> +	priv->switch_desc.allow_userspace_control = true;
+> +	priv->switch_desc.set = dwc3_meson_g12a_role_set;
+> +	priv->switch_desc.get = dwc3_meson_g12a_role_get;
+to me, use a local variable for switch_desc
 
-This patch also fixes a direct access of a rcu protected socket.
-
-Fixes: be33690d8fcf("[XFRM]: Fix aevent related crash")
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
----
-Changes from v2:
-- add 'Fixes' tag and some description
-
- include/net/netns/xfrm.h |  2 +-
- net/xfrm/xfrm_user.c     | 30 +++++++++++++++++++++++-------
- 2 files changed, 24 insertions(+), 8 deletions(-)
-
-diff --git a/include/net/netns/xfrm.h b/include/net/netns/xfrm.h
-index 59f45b1..d2a36fb 100644
---- a/include/net/netns/xfrm.h
-+++ b/include/net/netns/xfrm.h
-@@ -57,7 +57,7 @@ struct netns_xfrm {
- 	struct list_head	inexact_bins;
- 
- 
--	struct sock		*nlsk;
-+	struct sock		__rcu *nlsk;
- 	struct sock		*nlsk_stash;
- 
- 	u32			sysctl_aevent_etime;
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index d832783..e8f23e4 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1071,6 +1071,22 @@ static inline int xfrm_nlmsg_multicast(struct net *net, struct sk_buff *skb,
- 	return nlmsg_multicast(nlsk, skb, pid, group, GFP_ATOMIC);
- }
- 
-+/* A similar wrapper like xfrm_nlmsg_multicast checking that nlsk is still
-+ * available.
-+ */
-+static inline int xfrm_nlmsg_unicast(struct net *net, struct sk_buff *skb,
-+				     u32 pid)
-+{
-+	struct sock *nlsk = rcu_dereference(net->xfrm.nlsk);
-+
-+	if (!nlsk) {
-+		kfree_skb(skb);
-+		return -EPIPE;
-+	}
-+
-+	return nlmsg_unicast(nlsk, skb, pid);
-+}
-+
- static inline unsigned int xfrm_spdinfo_msgsize(void)
- {
- 	return NLMSG_ALIGN(4)
-@@ -1195,7 +1211,7 @@ static int xfrm_get_spdinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	err = build_spdinfo(r_skb, net, sportid, seq, *flags);
- 	BUG_ON(err < 0);
- 
--	return nlmsg_unicast(net->xfrm.nlsk, r_skb, sportid);
-+	return xfrm_nlmsg_unicast(net, r_skb, sportid);
- }
- 
- static inline unsigned int xfrm_sadinfo_msgsize(void)
-@@ -1254,7 +1270,7 @@ static int xfrm_get_sadinfo(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	err = build_sadinfo(r_skb, net, sportid, seq, *flags);
- 	BUG_ON(err < 0);
- 
--	return nlmsg_unicast(net->xfrm.nlsk, r_skb, sportid);
-+	return xfrm_nlmsg_unicast(net, r_skb, sportid);
- }
- 
- static int xfrm_get_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
-@@ -1274,7 +1290,7 @@ static int xfrm_get_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	if (IS_ERR(resp_skb)) {
- 		err = PTR_ERR(resp_skb);
- 	} else {
--		err = nlmsg_unicast(net->xfrm.nlsk, resp_skb, NETLINK_CB(skb).portid);
-+		err = xfrm_nlmsg_unicast(net, resp_skb, NETLINK_CB(skb).portid);
- 	}
- 	xfrm_state_put(x);
- out_noput:
-@@ -1337,7 +1353,7 @@ static int xfrm_alloc_userspi(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		goto out;
- 	}
- 
--	err = nlmsg_unicast(net->xfrm.nlsk, resp_skb, NETLINK_CB(skb).portid);
-+	err = xfrm_nlmsg_unicast(net, resp_skb, NETLINK_CB(skb).portid);
- 
- out:
- 	xfrm_state_put(x);
-@@ -1903,8 +1919,8 @@ static int xfrm_get_policy(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		if (IS_ERR(resp_skb)) {
- 			err = PTR_ERR(resp_skb);
- 		} else {
--			err = nlmsg_unicast(net->xfrm.nlsk, resp_skb,
--					    NETLINK_CB(skb).portid);
-+			err = xfrm_nlmsg_unicast(net, resp_skb,
-+						 NETLINK_CB(skb).portid);
- 		}
- 	} else {
- 		xfrm_audit_policy_delete(xp, err ? 0 : 1, true);
-@@ -2062,7 +2078,7 @@ static int xfrm_get_ae(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	err = build_aevent(r_skb, x, &c);
- 	BUG_ON(err < 0);
- 
--	err = nlmsg_unicast(net->xfrm.nlsk, r_skb, NETLINK_CB(skb).portid);
-+	err = xfrm_nlmsg_unicast(net, r_skb, NETLINK_CB(skb).portid);
- 	spin_unlock_bh(&x->lock);
- 	xfrm_state_put(x);
- 	return err;
--- 
-2.7.4
-
+> +
+> +	priv->role_switch = usb_role_switch_register(dev, &priv->switch_desc);
+> +	if (IS_ERR(priv->role_switch))
+> +		dev_warn(dev, "Unable to register Role Switch\n");
+> +
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	pm_runtime_get_sync(dev);
+> +
+> +	return 0;
+> +
+> +err_phys_exit:
+> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+> +		phy_exit(priv->phys[i]);
+> +
+> +err_phys_power:
+> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+> +		phy_power_off(priv->phys[i]);
+> +
+> +err_phys_put:
+> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+> +		phy_put(priv->phys[i]);
+> +
+The phys are got by devm_phy_optional_get(), no need call phy_put()
+> +	return ret;
+> +}
+> +
+> +static int dwc3_meson_g12a_remove(struct platform_device *pdev)
+> +{
+> +	struct dwc3_meson_g12a *priv = platform_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +	int i;
+> +
+> +	usb_role_switch_unregister(priv->role_switch);
+> +
+> +	of_platform_depopulate(dev);
+> +
+> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> +		phy_power_off(priv->phys[i]);
+> +		phy_exit(priv->phys[i]);
+> +		phy_put(priv->phys[i]);
+ditto
+> +	}
+> +
+> +	clk_disable_unprepare(priv->clk);
+> +	clk_put(priv->clk);
+> +
+> +	pm_runtime_disable(dev);
+> +	pm_runtime_put_noidle(dev);
+> +	pm_runtime_set_suspended(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused dwc3_meson_g12a_runtime_suspend(struct device *dev)
+> +{
+> +	struct dwc3_meson_g12a	*priv = dev_get_drvdata(dev);
+> +
+> +	clk_disable(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused dwc3_meson_g12a_runtime_resume(struct device *dev)
+> +{
+> +	struct dwc3_meson_g12a	*priv = dev_get_drvdata(dev);
+> +
+> +	return clk_enable(priv->clk);
+> +}
+> +
+> +static int __maybe_unused dwc3_meson_g12a_suspend(struct device *dev)
+> +{
+> +	struct dwc3_meson_g12a *priv = dev_get_drvdata(dev);
+> +	int i;
+> +
+> +	for (i = 0 ; i < PHY_COUNT ; ++i)
+> +		if (priv->phys[i])
+> +			phy_exit(priv->phys[i]);
+> +
+> +	reset_control_assert(priv->reset);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused dwc3_meson_g12a_resume(struct device *dev)
+> +{
+> +	struct dwc3_meson_g12a *priv = dev_get_drvdata(dev);
+> +	int i, ret;
+> +
+> +	reset_control_deassert(priv->reset);
+> +
+> +	dwc3_meson_g12a_usb_init(priv);
+> +
+> +	/* Init PHYs */
+> +	for (i = 0 ; i < PHY_COUNT ; ++i) {
+> +		if (priv->phys[i]) {
+> +			ret = phy_init(priv->phys[i]);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops dwc3_meson_g12a_dev_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(dwc3_meson_g12a_suspend, dwc3_meson_g12a_resume)
+> +	SET_RUNTIME_PM_OPS(dwc3_meson_g12a_runtime_suspend,
+> +			dwc3_meson_g12a_runtime_resume, NULL)
+> +};
+> +
+> +static const struct of_device_id dwc3_meson_g12a_match[] = {
+> +	{ .compatible = "amlogic,meson-g12a-usb-ctrl" },
+> +	{ /* Sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, dwc3_meson_g12a_match);
+> +
+> +static struct platform_driver dwc3_meson_g12a_driver = {
+> +	.probe		= dwc3_meson_g12a_probe,
+> +	.remove		= dwc3_meson_g12a_remove,
+> +	.driver		= {
+> +		.name	= "dwc3-meson-g12a",
+> +		.of_match_table = dwc3_meson_g12a_match,
+> +		.pm	= &dwc3_meson_g12a_dev_pm_ops,
+> +	},
+> +};
+> +
+> +module_platform_driver(dwc3_meson_g12a_driver);
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Amlogic Meson G12A USB Glue Layer");
+> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
 
 
