@@ -2,76 +2,88 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F68C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92809C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2933C20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6755C20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfCGI0D (ORCPT
+        id S1726296AbfCGI0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:26:03 -0500
-Received: from orcrist.hmeau.com ([104.223.48.154]:55276 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfCGI0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:26:02 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h1oLh-00048Y-Vp; Thu, 07 Mar 2019 16:25:54 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h1oLe-0006AM-Er; Thu, 07 Mar 2019 16:25:50 +0800
-Date:   Thu, 7 Mar 2019 16:25:50 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: s5p-sss - fix AES support for Exynos5433
-Message-ID: <20190307082550.4ijrmlrupyvwdyl5@gondor.apana.org.au>
-References: <CGME20190301140321eucas1p2bf17a6e35d29e8d5f582a2d99fbf4c83@eucas1p2.samsung.com>
- <20190301140254.19341-1-k.konieczny@partner.samsung.com>
+        Thu, 7 Mar 2019 03:26:12 -0500
+Received: from mga04.intel.com ([192.55.52.120]:25416 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbfCGI0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 03:26:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 00:26:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="280524593"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 07 Mar 2019 00:26:11 -0800
+Received: from [10.125.252.109] (abudanko-mobl.ccr.corp.intel.com [10.125.252.109])
+        by linux.intel.com (Postfix) with ESMTP id ECBFC580489;
+        Thu,  7 Mar 2019 00:26:08 -0800 (PST)
+Subject: Re: [PATCH v5 07/10] perf record: implement -z,--compression_level=n
+ option and compression
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+ <87fa1906-2d6a-a00a-7ba5-b570d0cbf9cc@linux.intel.com>
+ <20190305122552.GE16615@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <ffeec8ab-eac9-360f-55b5-92082d28e232@linux.intel.com>
+Date:   Thu, 7 Mar 2019 11:26:06 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301140254.19341-1-k.konieczny@partner.samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190305122552.GE16615@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 03:02:54PM +0100, Kamil Konieczny wrote:
-> Commit 0918f18c7179 ("crypto: s5p - add AES support for Exynos5433")
-> introduced bug in dereferencing clk_names[1] on platforms different from
-> Exynos5433. On Exynos board XU3 call trace is:
-> 
-> "Unable to handle kernel paging request at virtual address 00004000"
-> (strcmp) from [<c0774014>] (of_property_match_string+0x58/0xd0)
-> ...
-> (devm_clk_get) from [<c075c248>] (s5p_aes_probe+0xd4/0x4a0)
-> (s5p_aes_probe) from [<c059dbc4>] (platform_drv_probe+0x6c/0xa4)
-> 
-> Fix this by setting array clk_names size to 2.
-> 
-> Fixes: 0918f18c7179 ("crypto: s5p - add AES support for Exynos5433")
-> Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  drivers/crypto/s5p-sss.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On 05.03.2019 15:25, Jiri Olsa wrote:
+> On Fri, Mar 01, 2019 at 06:58:32PM +0300, Alexey Budankov wrote:
+> 
+> SNIP
+> 
+>> +static size_t record__zstd_compress(void *data, void *dst, size_t dst_size,
+>> +		void *src, size_t src_size)
+>> +{
+>> +	size_t compressed;
+>> +	struct perf_session *session = data;
+>> +	/* maximum size of record data size (2^16 - 1 - header) */
+>> +	const size_t max_record_size = (1 << 8 * sizeof(u16)) -
+> 
+> I dont follow this calculation, could you just use PERF_SAMPLE_MAX_SIZE?
+
+in v7.
+
+~Alexey
+
+> 
+> jirka
+> 
+>> +					1 - sizeof(struct compressed_event);
+>> +
+> 
+> SNIP
+> 
