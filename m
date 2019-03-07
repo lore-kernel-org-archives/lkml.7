@@ -2,101 +2,85 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C520CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C15C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9329520675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551943843;
-	bh=bGuraxaXqIjN5gO7GwTh92jdQgB7IlTY5UNJt+0/ACE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LSlrCh4QesRC+TI8DtQi8zLe+PDEV6itNAY+TtCJ6Tc4ClK7tdtXi0HGKuAvNNi7W
-	 gvnDm+qlctea5NQ9Ggm7YSJsbjAYBgpFMgc5C8mOAxQEmG2SyngQ/NgNzPypU4t9+C
-	 UT+zw/xuEH0N+gQoibtLR8iUUi7AzaJ39meik55Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3510F20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfCGHam (ORCPT
+        id S1726182AbfCGHfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 02:30:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfCGHal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 02:30:41 -0500
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA782146E;
-        Thu,  7 Mar 2019 07:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551943840;
-        bh=bGuraxaXqIjN5gO7GwTh92jdQgB7IlTY5UNJt+0/ACE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZKHrw+iOUzCkdBWCg3R86SJDVA+niU6CvqwU3LPRMjwDW+OCHMINPwNHbGrTBMs+R
-         Ii2CQo7CjCLwp6yxiOsdMrAvUfdoFreQ4zD4RqXaIFtDESrFGgwBu1+3O/ma2Er0Bm
-         xaX+/DS5m4W2L6mdhE8bPpNRRbhh4ijtUYeK8ZbA=
-Received: by mail-lj1-f176.google.com with SMTP id z20so13292986ljj.10;
-        Wed, 06 Mar 2019 23:30:40 -0800 (PST)
-X-Gm-Message-State: APjAAAUlrn7smI19kbC/n7AKS1bkReyQzm5Zpbwy5HaPwSi2mxn3yb6D
-        de5wRgpl0GnkHnQvRzVMftZttY59/x65cDDl9t4=
-X-Google-Smtp-Source: APXvYqxpCSv0w8s10dF/gH4zRA/AqrBf1J/vOoPeb3jIiDlQ1h/wL35XN6tiS9Vyuljhsn/6b0C826ZIob44dbjW6mU=
-X-Received: by 2002:a2e:780a:: with SMTP id t10mr4231952ljc.19.1551943838262;
- Wed, 06 Mar 2019 23:30:38 -0800 (PST)
+        Thu, 7 Mar 2019 02:35:47 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46230 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfCGHfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 02:35:46 -0500
+Received: by mail-qt1-f195.google.com with SMTP id z25so15991248qti.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 23:35:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wVrhcwzUdrfMBOFICEODr2VSujOs0QbaY7FySkYqXhs=;
+        b=Sh9qwhB8PNLDWRH9bDPvxnrxeTmeF+3P6HsjeF5+ftjDgV8S3QAwWCUWl7H4s7PVU/
+         RI7dNM7RkmHf+2aKGvH4T/uSwwNgADqCd5spVRTJrFcyfO11s8gSzm7YAi3tIEZqgA1Y
+         lKxlJNGPcLyHlfyHb+Nj8sTt9+PWm9ROFjxqUB8e6LuSdmbq6KkZbmfOqBigf+qX75vY
+         KpctP0rlRSJhQRmZ+daLirVqxiQ7JHSzpVr+gaGpe8HEL/6hHwH4TvG6nEKTW9C4dkYJ
+         HEtmki6QiGSDUMoReWVQYpPd+jAFDYAoTO/q7aUvCC38ENEM37z/YniOQMPJaqm9F2Sr
+         s6OA==
+X-Gm-Message-State: APjAAAWAJa5Iq7OiTEM5upfWtKCBu4yW43prDbInD2l+XWMvJ6iskpn7
+        4wVgvgXTOjWLhSfKuC7LIkkeHSGogG5HI7BASMI=
+X-Google-Smtp-Source: APXvYqxabejyCFacXaWKNGP/96qmZ/1c2TsU1VdXYdAZ4hfzESXpNpWFbkZ5LgDKnGoXMtt8LFHxzlXC49Ayfym7Agg=
+X-Received: by 2002:ac8:445a:: with SMTP id m26mr9003381qtn.212.1551944145834;
+ Wed, 06 Mar 2019 23:35:45 -0800 (PST)
 MIME-Version: 1.0
-References: <5c80c49b.1c69fb81.605bf.26ea@mx.google.com>
-In-Reply-To: <5c80c49b.1c69fb81.605bf.26ea@mx.google.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 7 Mar 2019 08:30:27 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPfVxb+aQnqCePgF4EedH5vPtA3BWhqbTTNAa7pAOOYB_Q@mail.gmail.com>
-Message-ID: <CAJKOXPfVxb+aQnqCePgF4EedH5vPtA3BWhqbTTNAa7pAOOYB_Q@mail.gmail.com>
-Subject: Re: mainline/master boot bisection: v5.0-4854-g8dcd175bc3d5 on odroid-xu3
-To:     "kernelci.org bot" <bot@kernelci.org>
-Cc:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org,
-        Herbert Xu <herbert@gondor.apana.org.au>, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        linux-crypto@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
+References: <20190306103350.GA10570@kroah.com> <CAHk-=wjT+pPxi8favCu9V5ZtGZuTZybLuwnwtNLspFPmKgr42g@mail.gmail.com>
+In-Reply-To: <CAHk-=wjT+pPxi8favCu9V5ZtGZuTZybLuwnwtNLspFPmKgr42g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 7 Mar 2019 08:35:29 +0100
+Message-ID: <CAK8P3a3cQ1MCyWvh6Ei5_zKhcDrkV7P5ZZdUAn23ooAqNnipww@mail.gmail.com>
+Subject: Re: [GIT PULL] Driver core patches for 5.1-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019 at 08:13, kernelci.org bot <bot@kernelci.org> wrote:
+On Thu, Mar 7, 2019 at 12:48 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Wed, Mar 6, 2019 at 2:33 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->
-> mainline/master boot bisection: v5.0-4854-g8dcd175bc3d5 on odroid-xu3
->
-> Summary:
->   Start:      8dcd175bc3d5 Merge branch 'akpm' (patches from Andrew)
->   Details:    https://kernelci.org/boot/id/5c8052c159b5146b7bfe6018
->   Plain log:  https://storage.kernelci.org//mainline/master/v5.0-4854-g8dcd175bc3d5/arm/exynos_defconfig/gcc-7/lab-collabora/boot-exynos5422-odroidxu3.txt
->   HTML log:   https://storage.kernelci.org//mainline/master/v5.0-4854-g8dcd175bc3d5/arm/exynos_defconfig/gcc-7/lab-collabora/boot-exynos5422-odroidxu3.html
->   Result:     0918f18c7179 crypto: s5p - add AES support for Exynos5433
->
-> Checks:
->   revert:     PASS
->   verify:     PASS
+> I wonder why this wasn't seen in linux-next? Yes, the connection is
+> odd, and maybe it's very compiler version dependent, but I do hope
+> people react to new warnings. The kernel is entirely warning-free for
+> me for an x86-64 allmodconfig build, and I want to keep it that way.
 
-Thanks bot!
-It is already known and patch is waiting to be applied:
-https://patchwork.kernel.org/patch/10835389/
+I saw it in linux-next and sent a patch the other day, similar to yours,
+but with a less verbose changelog:
+https://patchwork.kernel.org/patch/10838499/
 
-Best regards,
-Krzysztof
+Overall, I had not done regular randconfig testing since the start of
+the year, and found 62 regressions that had crept in during that
+period. There was no significant uptick in -Wmaybe-uninitialized
+warnings, this is the only one I saw, so I'd classify this as random
+change in behavior due to inlining differences rather than a systematic
+issue.
+(there was a noticeable change in other warnings, particularly a stack
+size increase from the new structleak plugin changes, fix is coming).
+
+     Arnd
