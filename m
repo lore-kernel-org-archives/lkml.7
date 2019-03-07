@@ -2,96 +2,135 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5750CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A5DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D0C20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54B720835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2Lf2s0Wd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nOzc0ZgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfCGOPM (ORCPT
+        id S1726400AbfCGOQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:15:12 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37099 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfCGOPB (ORCPT
+        Thu, 7 Mar 2019 09:16:03 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35812 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfCGOQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:15:01 -0500
-Received: by mail-wm1-f65.google.com with SMTP id x10so9334011wmg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 06:15:00 -0800 (PST)
+        Thu, 7 Mar 2019 09:16:03 -0500
+Received: by mail-pf1-f194.google.com with SMTP id j5so11533310pfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 06:16:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H/H1m/oJJRpi+iUidODU0Wo3KnSYRlpFqEdDR4058GA=;
-        b=2Lf2s0WdH4Vcf3P+AGKP/GoFJaNPDBMQ6sxEyFlx63ctQnfrHnpCNy2R89iKtOMIJW
-         q3y2QxTgeauw40XweFaxUeTGAUyjonx4KEVB2Z5TP2LUWoaUKH7IcYGjS7EDSrb+GIVG
-         ejVKMef+wDDTKTuBHJXnHCCGt+69X18+YIDN+joa7jV0A7AtMDb+RJsqJ/hpW6FsSwgs
-         pL9fmwNx89cF0fyMnY5Nu1GtxxUF4VJ28j6ZnxD/ZauRmDQsChtfUD5/sQiiV0f51djC
-         uXugehi9UZ5I59CWLYtPRM0X4qACR7SmcjibNkO467npR5GHEVY8KlWSzaTACufTq/EH
-         oUmA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i3YjevPKe5ryG7PMnJzvSuvrHQ1PFxESlOhxwKo3nhU=;
+        b=nOzc0ZgH5uBvLhDiaQpMFbb/5GWPBuo71xtt4Bt1Q6e/NTXq2bifX2/B8e76Pc09FF
+         vnCCNg+5x5cegGV2n3ASoANsCHcjsS/Wx4k3IVg6PV1Png88HX2afdBJSVTaDjpnfIbr
+         Sp0OiyXIy8mN2vHPZM4lAabasxlbEOVk3mzPIImZQ62SBedija96gCyAMJYAGULpPRla
+         +FBAzTxnVa03jndOInQ5jRZEsT2fWM/MQLRXM3j1BEyMAShatYombYd75IfkjuhUyLLx
+         KIc7C3buq3ZKqoGbXOCqC0+zdffbKMsQKy5Z/QzkM7k+3RcObCv2ZrbynEEACj/teBLQ
+         O61Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H/H1m/oJJRpi+iUidODU0Wo3KnSYRlpFqEdDR4058GA=;
-        b=lxxqAggMNW9DKHLGK59myRwC3QWc6fStuQi55PSbq2S0T7rO1iTeWgh7r2nGxYnOA7
-         SyLQxZpSidRdxOlYHrCB8JvYPOzQUQYVfcG2T4MrM9QQyj6PG0DJ0B80HPJrR9snnhIK
-         apWb2Jr34PMoB0u71j5sI8BJ1d2N1rs9dGV0Z7GpxK4OSD2rG6tQ/VO3cvJLNMzAmQ8w
-         HyBaRYnv7LuMbiH7ouB+pENecDPP0gB8nah0FUVXJSSFO6FR5/jfQaKIshkT8eIjXPRt
-         J/7V8StXsLKy7gH7gMfi9i3xI5rYSzjEizSPRgJbMmYvGT7tQiX1OPzKAJAOG7Kgu++y
-         w9uQ==
-X-Gm-Message-State: APjAAAV9zUEUyyCen4GLwPxm0Ng+gz+ri45/q8fU2ickewwKk+g7l/83
-        OI9Mc4kwtf9ojaoxBOMxTUh1gQ==
-X-Google-Smtp-Source: APXvYqxs79hnv1rLJa4FV8yq2ms2ggAnLXAuSTztruFO50CAdMSNGTNjR2F3Lgoq5rTRbrY7+MpaGA==
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr5880513wmf.65.1551968099501;
-        Thu, 07 Mar 2019 06:14:59 -0800 (PST)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h9sm9679304wrv.11.2019.03.07.06.14.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 07 Mar 2019 06:14:59 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     jbrunet@baylibre.com, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] dt-bindings: clk: g12a-clkc: add PCIE PLL clock ID
-Date:   Thu,  7 Mar 2019 15:14:54 +0100
-Message-Id: <20190307141455.23879-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190307141455.23879-1-narmstrong@baylibre.com>
-References: <20190307141455.23879-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i3YjevPKe5ryG7PMnJzvSuvrHQ1PFxESlOhxwKo3nhU=;
+        b=uh9AeFtIuyKPVl3l51/sWHSX8rDbddkujv09gz1KyXY60p+ZuMjrcZXMt7pOhMBP+Z
+         cWkNRmTyPfM101jduU8WNoVRIQoDQpTbOckF6/m0zwkVUBlh7BJXXOiprOsnXw8ITOgh
+         tXdiAwHgimR0k9Y/3lG/hQWEEIeBkxG9gnwVI8IMjMttkLIDGqbi9G7O2XyfJpwPNp9G
+         aUkgc3oakQ4aPxQDl8HOc3/pbqRUmqi+bN6RD612RBsMTtH7G+DcLdcJLCD9yKcgkWbB
+         c+vGWv2IzEBF5RlsNwIj6/rPrKulF3DSDyEN69vpICuRgobddRv1IAoVEjZRCGTscDl4
+         /rYw==
+X-Gm-Message-State: APjAAAVEZvJr25RaeEwhu7FBUNnKnSCodUAI92WblsdPg0fuRCFFZTus
+        RQA8SEEp2nIhOMJQk0SBe0XaMNz5REx7aA5yEKMqQ6+sKaU=
+X-Google-Smtp-Source: APXvYqwPFLUEovt7Ku8gsXn9f+OFSQuf4QYU0WTFTFWbzXz/Gzjw8CmzBUbXZsS5Pk5oCo1qq7772OyvE43vnbl9TBQ=
+X-Received: by 2002:a17:902:8303:: with SMTP id bd3mr13313098plb.10.1551968161942;
+ Thu, 07 Mar 2019 06:16:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190307075124.3424302-1-arnd@arndb.de>
+In-Reply-To: <20190307075124.3424302-1-arnd@arndb.de>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 7 Mar 2019 15:15:50 +0100
+Message-ID: <CAAeHK+zf8PWWURcrKe-G6HrpL=1w96fF+5zHkDr5AEJUOXAv=Q@mail.gmail.com>
+Subject: Re: [PATCH] page flags: prioritize kasan bits over last-cpuid
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a clock ID for the reference clock feeding the USB3+PCIe Combo PHY.
+On Thu, Mar 7, 2019 at 8:51 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> ARM64 randdconfig builds regularly run into a build error, especially
+> when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
+>
+>  #error "KASAN: not enough bits in page flags for tag"
+>
+> The last-cpuid bits are already contitional on the available space,
+> so the result of the calculation is a bit random on whether they
+> were already left out or not.
+>
+> Adding the kasan tag bits before last-cpuid makes it much more likely
+> to end up with a successful build here, and should be reliable for
+> randconfig at least, as long as that does not randomize NR_CPUS
+> or NODES_SHIFT but uses the defaults.
+>
+> Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/page-flags-layout.h | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
+> index 1dda31825ec4..9bc0751e68b2 100644
+> --- a/include/linux/page-flags-layout.h
+> +++ b/include/linux/page-flags-layout.h
+> @@ -76,21 +76,23 @@
+>  #define LAST_CPUPID_SHIFT 0
+>  #endif
+>
+> -#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT <= BITS_PER_LONG - NR_PAGEFLAGS
+> +#ifdef CONFIG_KASAN_SW_TAGS
+> +#define KASAN_TAG_WIDTH 8
+> +#else
+> +#define KASAN_TAG_WIDTH 0
+> +#endif
+> +
+> +#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT+KASAN_TAG_WIDTH \
+> +       <= BITS_PER_LONG - NR_PAGEFLAGS
+>  #define LAST_CPUPID_WIDTH LAST_CPUPID_SHIFT
+>  #else
+>  #define LAST_CPUPID_WIDTH 0
+>  #endif
+>
+> -#ifdef CONFIG_KASAN_SW_TAGS
+> -#define KASAN_TAG_WIDTH 8
+>  #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
+>         > BITS_PER_LONG - NR_PAGEFLAGS
+>  #error "KASAN: not enough bits in page flags for tag"
+>  #endif
+> -#else
+> -#define KASAN_TAG_WIDTH 0
+> -#endif
+>
+>  /*
+>   * We are going to use the flags for the page to node mapping if its in
+> --
+> 2.20.0
+>
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- include/dt-bindings/clock/g12a-clkc.h | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index d7bf0830c87d..30303728fe09 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -132,5 +132,6 @@
- #define CLKID_MALI				175
- #define CLKID_MPLL_5OM				177
- #define CLKID_CPU_CLK				187
-+#define CLKID_PCIE_PLL				201
- 
- #endif /* __G12A_CLKC_H */
--- 
-2.20.1
-
+Thanks!
