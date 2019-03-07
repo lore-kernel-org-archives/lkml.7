@@ -2,91 +2,124 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B57C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B98C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17DC20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D89420684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfR+74cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfCGKgP (ORCPT
+        id S1726352AbfCGKim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:36:15 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:54813 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfCGKgO (ORCPT
+        Thu, 7 Mar 2019 05:38:42 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39787 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfCGKil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:36:14 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1My3In-1gsYQg1Oxz-00zTVM; Thu, 07 Mar 2019 11:36:01 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: omap2: remove incorrect __init annotation
-Date:   Thu,  7 Mar 2019 11:35:50 +0100
-Message-Id: <20190307103557.1688556-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 7 Mar 2019 05:38:41 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i20so11109140pfo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 02:38:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GvVX5xtAALRyUNVls6AsSTHRSenEjxpBMBmhnGntEko=;
+        b=dfR+74cvAo+bhw2VHMG+RddYr5cDhucibdnijRR4WoK2d29iPt4xn1nz3C7K1x6Bia
+         H64U93p0rv8voRomVvAsoGb7b797BIfpBO8BzHcWpS4wdlUikFMEz0tj5/mVk1sJN5MT
+         OuixPJKkxPDONJXXs8xFPjQqZxIZKpdkqvlD61/zDzn5Xq0AHp4xJgNuC2zUE2TitovZ
+         fFsGNeYvPjInVJvdKn0p9DJoNntDnepOMjcu4b628jQ9K7MFkRMBVF2nJQdcHpzXJE+h
+         bM6TdEG8uSiGr78QX0mTxjHA7eZ+KuJ0dDGeldbhD1Sly10l0HONDX0A/AwH9N+wh7oS
+         BU4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GvVX5xtAALRyUNVls6AsSTHRSenEjxpBMBmhnGntEko=;
+        b=ot8gBAHnWKVzRS2qcRxQYqCuGdem+8bTxVkmKIGnqKM6vr6uBv5ZK2QhQRM52BoF3p
+         B1aCnXc5nobGZ/EhaMjL0Egl+EyDG/fXcF9V+1hiFyhzWV5ox8gM1YlKTB9SUBRW1UF0
+         NBr+etki2fudTiS+f5PUfe+HJHB2l3aykdU0c35rBRWCk4SX/+o0do+Jn/9sghc+Y368
+         HyC/Ta1md6tmA9VfyOeKcDNBFjoVpyZ2CkhrXxe+3u+W8r+CXbTsqsefJQKoEQi6wocv
+         V+/oVb+TPjH3W7Q/3bX7AZQa65fCIwHZySgAV/1pR1OEiYI/W4YoucdT3uJkg3Gte12s
+         Enyw==
+X-Gm-Message-State: APjAAAVSo+zbykxlk+04VT4TPKw/GhzmtrUtCYfoYO1Hl/C/fTwvMiP+
+        EkZc9qQghLqUlxT882AlnBQV6Q==
+X-Google-Smtp-Source: APXvYqwvJOc3Al1pwt8oJGwU75+G5TXc9t233fHlKDWBALIDckZzvNQhaLwpySiTf4X7flktA7kkKw==
+X-Received: by 2002:a63:112:: with SMTP id 18mr10321075pgb.139.1551955120439;
+        Thu, 07 Mar 2019 02:38:40 -0800 (PST)
+Received: from localhost ([122.171.71.18])
+        by smtp.gmail.com with ESMTPSA id m20sm14814239pfj.142.2019.03.07.02.38.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 02:38:39 -0800 (PST)
+Date:   Thu, 7 Mar 2019 16:08:37 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: pxa2xx: remove incorrect __init annotation
+Message-ID: <20190307103837.zuva5f6y2gexxjk6@vireshk-i7>
+References: <20190307102250.1140038-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LCeZ8nJDgheXtzbal88ne6DVF2b1EjKAznFCO0b7vu1q4X+VgKO
- DsTTgM5j0Jik5I+eQblHhjfjC208TgdYt0orWo7fY6QVf8v+/YMdV6n0+HjMLjSJW4nya8Y
- Xpe59qL1tAY0m8tzUUiXyMND50PpLAhYk7mvvQexydQrrLr1QBpbz8JKSzjhAd9tiPVMCI+
- iD71CHv/o0b7YsTczQYcQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D06kPh9TurA=:fafGtZQkGBhTcoJXDoeBQd
- DuKhaNiFM1I2T7f6EjmoKBxPqEvk+WONoQiTuYJMN8Gzdq8tq0ToIR9RZDaUi4UTP1fih21eJ
- OZI6et8DLsI/gAgsyl4nypuqFbdYG05ppZhc58RhnODeGMgxA6I7CS1lnMTBxYKefBgpICmQ4
- GgzzoQ4h5pekUQtsfo/rj/mTcSwwM6VvKQFDYM4lQTEEjOV5qzXJGi33gXCOX3iXapQL3Hwwb
- 094uo/J7cnjTFodDM/mYQ4jWVYLDVBdZDXzJzNafgTpSMRdDevk/pbwAyzlUgzIYbRhP8ewwm
- /5oArmAWjFY/C4AWmS8FkgSexwbTCn/Jx1u0/JiX4Ivd5Vd/6cF7XhBgR56itxZyx4DzJjHr7
- maM0txBcwXDgHGjnTjAmyVpX0uDSK5PqMnA+khj+3bYfHK5REPZEf7tpsrzZTP6+idc2MpLbN
- +aUlcCGZnGqK/MlcYaoyKvyOCMxUtZOdls5pxI82VOVxyKlRDAeTYAYhrNWX/qHc/fbArFsMM
- sQAPeRdNpBHr5LapO1gV9CqurMovr8IuTEtE7Unh4fRKVlBW7AYkRjxqH8guTu9C+xeRHu4mu
- gR8kJ0uJ4aUlJm2p5/vlC881pfuKBVXFaVBbghuowdvxZLSB9ZP4zl35ArIrVB1tftRqy5mu/
- emMoPAi0r6sKayhXHtyhEN1hAW4FP7+/aX2XFvGLo2xUaGl0gCd75fAb+IbF4OpvXfhJpFdt9
- bMaEZiECVIMDnYXvEPNOX7DGoOb9l+iluyTvpg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307102250.1140038-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-we get a warning with clang-8:
+On 07-03-19, 11:22, Arnd Bergmann wrote:
+> pxa_cpufreq_init_voltages() is marked __init but usually inlined into
+> the non-__init pxa_cpufreq_init() function. When building with clang,
+> it can stay as a standalone function in a discarded section, and produce
+> this warning:
+> 
+> WARNING: vmlinux.o(.text+0x616a00): Section mismatch in reference from the function pxa_cpufreq_init() to the function .init.text:pxa_cpufreq_init_voltages()
+> The function pxa_cpufreq_init() references
+> the function __init pxa_cpufreq_init_voltages().
+> This is often because pxa_cpufreq_init lacks a __init
+> annotation or the annotation of pxa_cpufreq_init_voltages is wrong.
+> 
+> Fixes: 50e77fcd790e ("ARM: pxa: remove __init from cpufreq_driver->init()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/cpufreq/pxa2xx-cpufreq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/pxa2xx-cpufreq.c b/drivers/cpufreq/pxa2xx-cpufreq.c
+> index 46254e583982..74e0e0c20c46 100644
+> --- a/drivers/cpufreq/pxa2xx-cpufreq.c
+> +++ b/drivers/cpufreq/pxa2xx-cpufreq.c
+> @@ -143,7 +143,7 @@ static int pxa_cpufreq_change_voltage(const struct pxa_freqs *pxa_freq)
+>  	return ret;
+>  }
+>  
+> -static void __init pxa_cpufreq_init_voltages(void)
+> +static void pxa_cpufreq_init_voltages(void)
+>  {
+>  	vcc_core = regulator_get(NULL, "vcc_core");
+>  	if (IS_ERR(vcc_core)) {
+> @@ -159,7 +159,7 @@ static int pxa_cpufreq_change_voltage(const struct pxa_freqs *pxa_freq)
+>  	return 0;
+>  }
+>  
+> -static void __init pxa_cpufreq_init_voltages(void) { }
+> +static void pxa_cpufreq_init_voltages(void) { }
+>  #endif
+>  
+>  static void find_freq_tables(struct cpufreq_frequency_table **freq_table,
 
-WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-The function omap3xxx_prm_late_init() references
-the function __init omap3xxx_prm_enable_io_wakeup().
-This is often because omap3xxx_prm_late_init lacks a __init
-annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-inlined, so we never noticed in the past.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-omap2/prm3xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index 05858f966f7d..dfa65fc2c82b 100644
---- a/arch/arm/mach-omap2/prm3xxx.c
-+++ b/arch/arm/mach-omap2/prm3xxx.c
-@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
-  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
-  * No return value.
-  */
--static void __init omap3xxx_prm_enable_io_wakeup(void)
-+static void omap3xxx_prm_enable_io_wakeup(void)
- {
- 	if (prm_features & PRM_HAS_IO_WAKEUP)
- 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
 -- 
-2.20.0
-
+viresh
