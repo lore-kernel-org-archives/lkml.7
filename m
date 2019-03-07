@@ -2,156 +2,80 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490C9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAC0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164FD20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:03:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eBLRAH52"
+	by mail.kernel.org (Postfix) with ESMTP id 1372620449
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfCGPDq (ORCPT
+        id S1726327AbfCGPEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:03:46 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39881 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfCGPDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:03:46 -0500
-Received: by mail-qt1-f196.google.com with SMTP id o6so17382920qtk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:03:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LF3ZaGkaDkYBPIzCy3ko65W4LrXvmffQ2n5IWDXJrEk=;
-        b=eBLRAH52F59yMTShnGgcH2g+hhK3F63/5ufdl21vExODLxlgWzSjZBlVEsshaNrkmw
-         vcsIqmb1XtEfpvHyskolW9dFdVqQ1qEAHcCMsNtv3ZYOE4j3Xib2Q15LAdHligXFOa52
-         wsXwyUJlOZWvxwJLGMrxr3vDxnLS0L+vfXW2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LF3ZaGkaDkYBPIzCy3ko65W4LrXvmffQ2n5IWDXJrEk=;
-        b=fGlzbBWtRrimzufRQOzt9Oh/cLXdJo8CXLN4S0nWJdl33kfM/momjQM64mcTiRezT1
-         afw0ooqdYoqZc3Yzn2MOdLJcxcgPNGck2bPkiIRrWvZA588GzP/jZLYadAhcI4TQtNEF
-         la635hCidXR0XdXbagcFwTWadzlhefwOEfIqY+F8N4zLFeqDY7shfy/XtL4+iLs4358B
-         eaDxQm2JXL8xwyakGdv0fgNkF8yWAKhuwbiQ0wvFe1DzWUv/zqXJM8Slx5RV6rHiQmqb
-         Q8YPEfKax3P+d+RGpWaU5Wa8WOART8p6nzhgWuMtpHIDcL7dYna6unc2R/2mU8+iH5pz
-         ASSw==
-X-Gm-Message-State: APjAAAWvU+la3T2MW7+Z9uCny5sMlyyRK90FMWZGU0pPkz6OrYQBZrrk
-        sDITGeswjIv38PGkr98un5FgXw==
-X-Google-Smtp-Source: APXvYqw3/1cSkf0VeAiarh6ht2okqPmKPajl5XY2uMHRvMWvqHpNWQWKwtvAi90ICnXwEeuS46fSvg==
-X-Received: by 2002:a0c:d994:: with SMTP id y20mr11084931qvj.100.1551971024981;
-        Thu, 07 Mar 2019 07:03:44 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id s16sm3501487qks.90.2019.03.07.07.03.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 07:03:43 -0800 (PST)
-Date:   Thu, 7 Mar 2019 10:03:43 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>, atishp04@gmail.com,
-        dancol@google.com, Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>, qais.yousef@arm.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, yhs@fb.com
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190307150343.GB258852@google.com>
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+        Thu, 7 Mar 2019 10:04:15 -0500
+Received: from foss.arm.com ([217.140.101.70]:46674 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726159AbfCGPEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 10:04:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C26FEBD;
+        Thu,  7 Mar 2019 07:04:14 -0800 (PST)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C6783F71D;
+        Thu,  7 Mar 2019 07:04:12 -0800 (PST)
+Date:   Thu, 7 Mar 2019 15:04:07 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     Juri Lelli <juri.lelli@gmail.com>,
+        Lingutla Chandrasekhar <clingutla@codeaurora.org>,
+        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org,
+        jeremy.linton@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arch_topology: Make cpu_capacity sysfs node as
+ ready-only
+Message-ID: <20190307150151.GA5778@e107155-lin>
+References: <20190306152254.GB19434@e105550-lin.cambridge.arm.com>
+ <1551886073-16217-1-git-send-email-clingutla@codeaurora.org>
+ <20190307072856.GC29753@localhost.localdomain>
+ <20190307093116.slvugyeos46kl3et@queper01-lin>
+ <20190307095750.GD29753@localhost.localdomain>
+ <20190307121400.cmgymfbphguvlaoo@queper01-lin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190307121400.cmgymfbphguvlaoo@queper01-lin>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 09:58:24AM +0100, Geert Uytterhoeven wrote:
-> Hi Joel,
-> 
-> On Fri, Mar 1, 2019 at 5:10 PM Joel Fernandes (Google)
-> <joel@joelfernandes.org> wrote:
-> > Introduce in-kernel headers and other artifacts which are made available
-> > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > it possible to build kernel modules, run eBPF programs, and other
-> > tracing programs that need to extend the kernel for tracing purposes
-> > without any dependency on the file system having headers and build
-> > artifacts.
-> >
-> > On Android and embedded systems, it is common to switch kernels but not
-> > have kernel headers available on the file system. Raw kernel headers
-> > also cannot be copied into the filesystem like they can be on other
-> > distros, due to licensing and other issues. There's no linux-headers
-> > package on Android. Further once a different kernel is booted, any
-> > headers stored on the file system will no longer be useful. By storing
-> > the headers as a compressed archive within the kernel, we can avoid these
-> > issues that have been a hindrance for a long time.
-> >
-> > The feature is also buildable as a module just in case the user desires
-> > it not being part of the kernel image. This makes it possible to load
-> > and unload the headers on demand. A tracing program, or a kernel module
-> > builder can load the module, do its operations, and then unload the
-> > module to save kernel memory. The total memory needed is 3.8MB.
-> >
-> > The code to read the headers is based on /proc/config.gz code and uses
-> > the same technique to embed the headers.
-> >
-> > To build a module, the below steps have been tested on an x86 machine:
-> > modprobe kheaders
-> > rm -rf $HOME/headers
-> > mkdir -p $HOME/headers
-> > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > cd my-kernel-module
-> > make -C $HOME/headers M=$(pwd) modules
-> > rmmod kheaders
-> 
-> As the usage pattern will be accessing the individual files, what about
-> implementing a file system that provides read-only access to the internal
-> kheaders archive?
-> 
->     mount kheaders $HOME/headers -t kheaders
+On Thu, Mar 07, 2019 at 12:14:03PM +0000, Quentin Perret wrote:
+> On Thursday 07 Mar 2019 at 10:57:50 (+0100), Juri Lelli wrote:
+> > If people think it's best to simply make this RO, I won't be against it.
+> > Just pointed out a conversation we recently had. Guess we could also
+> > make it RW again (properly) in the future if somebody complains.
+>
+> Right, now is probably the time to give it a go before folks start
+> depending on it. And if I am wrong (and that happens more often than I'd
+> like unfortunately :-)) and there are users of that thing, then the
+> revert should be trivial.
+>
 
-I thought about it already. This is easier said than done though. The archive
-is compressed from 40MB to 3.6MB. If we leave it uncompressed in RAM, then it
-will take up the entire 40MB of RAM and in Android we don't even use
-disk-based swap.
++1 on all the points above ;)(I may also be getting things wrong here
+but I am not convinced that we can resolve the issue for all the ARM
+vendor possible combinations we may have to address)
 
-So we will need some kind of intra file compressed memory representation that
-a filesystem can use for the backing store. I thought of RAM-backed squashfs
-but it requires squashfs-tools to be installed at build time (which my host
-distro itself didn't have).
+We should come up with some *magical* cpumask that we can use if we
+want to retain this write capability. And only way I see we can do that
+is using DT which in turn eliminates the need to have write capability
+for this sysfs.
 
-It is just so much easier to use tar + xz at build time, and leave the
-decompression task to the user. After decompression, the files will live on
-the disk and the page-cache mechanism will free memory when/if the files fall
-off the LRUs.
+So I am going to ack the $subject patch for now.
 
-WDYT?
-
-thanks,
-
-  - Joel
+--
+Regards,
+Sudeep
