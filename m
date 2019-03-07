@@ -6,118 +6,98 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B60DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33902C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4143920840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B512064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfCGI3m (ORCPT
+        id S1726361AbfCGIaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:29:42 -0500
-Received: from mga17.intel.com ([192.55.52.151]:34762 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfCGI3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:29:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 00:29:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
-   d="scan'208";a="152828213"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2019 00:29:41 -0800
-Received: from [10.125.252.109] (abudanko-mobl.ccr.corp.intel.com [10.125.252.109])
-        by linux.intel.com (Postfix) with ESMTP id 568C0580489;
-        Thu,  7 Mar 2019 00:29:39 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v5 10/10] perf tests: implement Zstd comp/decomp
- integration test
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
- <6f882af2-686b-7e94-cfb2-60f50e8d0136@linux.intel.com>
- <20190305122546.GD16615@krava>
-Organization: Intel Corp.
-Message-ID: <6ea5cf06-ca9f-dee7-2d4d-3b83b6ca88d4@linux.intel.com>
-Date:   Thu, 7 Mar 2019 11:29:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thu, 7 Mar 2019 03:30:17 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2064 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbfCGIaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 03:30:17 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x278PlLq021905;
+        Thu, 7 Mar 2019 09:30:01 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2r2ng234gy-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 07 Mar 2019 09:30:01 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DFAD331;
+        Thu,  7 Mar 2019 08:29:58 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AC8E82452;
+        Thu,  7 Mar 2019 08:29:58 +0000 (GMT)
+Received: from [10.48.0.160] (10.75.127.48) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 7 Mar
+ 2019 09:29:57 +0100
+Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+To:     Bich HEMON <bich.hemon@st.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <3a2ceff7-5634-6305-5d54-356af524de7a@st.com>
+Date:   Thu, 7 Mar 2019 09:29:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190305122546.GD16615@krava>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
-On 05.03.2019 15:25, Jiri Olsa wrote:
-> On Fri, Mar 01, 2019 at 07:09:26PM +0300, Alexey Budankov wrote:
->>
->> Implemented basic integration test for Zstd based trace
->> compression/decompression in record and report modes.
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> ---
->>  .../tests/shell/record+zstd_comp_decomp.sh    | 28 +++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
->>
->> diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
->> new file mode 100755
->> index 000000000000..5cb2ab8e2112
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
->> @@ -0,0 +1,28 @@
->> +#!/bin/sh
->> +# record trace Zstd compression/decompression
->> +
->> +trace_file=$(mktemp /tmp/perf.data.XXX)
->> +perf_tool=perf
->> +output=/dev/null
->> +
->> +skip_if_no_z_record() {
->> +	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level <n>'
->> +}
->> +
->> +collect_z_record() {
->> +	echo "Collecting compressed record trace file:"
->> +	$perf_tool record -o $trace_file -a -z 1 -F 25000 -e cycles -- \
->> +		dd count=2000 if=/dev/random of=/dev/null > $output 2>&1
->> +}
->> +
->> +check_compressed_stats() {
->> +	echo "Checking compressed events stats:"
->> +	$perf_tool report -i $trace_file --header --stats | \
->> +		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
->> +}
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+
+Thanks
+
+On 3/6/19 4:12 PM, Bich HEMON wrote:
+> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
 > 
-> so perf inject can decompress the perf.data and store
-> uncompressed one, right? would be great to 'uncompress'
-
-Right.
-
-> the perf data and compare 'perf report --stdio > out.X'
-> outputs
+> It conforms with Reference Manual I2C timing section.
 > 
-> thanks a lot for adding tests!
-
-You are welcome.
-Implemented test performs some level of sanity testing for the feature 
-and it is all that I can provide in this patch set.
-
-~Alexey
-
+> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> jirka
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 13e1213..4284fc9 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -432,7 +432,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+>  		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
+>  	dnf_delay = setup->dnf * i2cclk;
+>  
+> -	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
+> +	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
+>  		af_delay_min - (setup->dnf + 3) * i2cclk;
+>  
+>  	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
 > 
