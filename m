@@ -2,146 +2,112 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF663C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ABDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CDD2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5066F2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 14:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfCGOuy (ORCPT
+        id S1726319AbfCGOvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 09:50:54 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:60110 "EHLO mx1.redhat.com"
+        Thu, 7 Mar 2019 09:51:52 -0500
+Received: from mga12.intel.com ([192.55.52.136]:16803 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbfCGOuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 09:50:54 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BDA1A81DFC;
-        Thu,  7 Mar 2019 14:50:53 +0000 (UTC)
-Received: from thinkpad.redhat.com (ovpn-204-24.brq.redhat.com [10.40.204.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C5A0165E7;
-        Thu,  7 Mar 2019 14:50:50 +0000 (UTC)
-From:   Laurent Vivier <lvivier@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH] powerpc/mm: move warning from resize_hpt_for_hotplug()
-Date:   Thu,  7 Mar 2019 15:50:50 +0100
-Message-Id: <20190307145050.17886-1-lvivier@redhat.com>
+        id S1726186AbfCGOvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 09:51:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 06:51:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="120444350"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 07 Mar 2019 06:51:51 -0800
+Received: from [10.251.89.100] (abudanko-mobl.ccr.corp.intel.com [10.251.89.100])
+        by linux.intel.com (Postfix) with ESMTP id EEEDD5802BB;
+        Thu,  7 Mar 2019 06:51:48 -0800 (PST)
+Subject: Re: [PATCH v5 07/10] perf record: implement -z,--compression_level=n
+ option and compression
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+ <87fa1906-2d6a-a00a-7ba5-b570d0cbf9cc@linux.intel.com>
+ <20190305122622.GJ16615@krava>
+ <6c964c70-86d7-32ab-c497-5ea65a9fd034@linux.intel.com>
+ <20190307115955.GA29474@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <31be9415-80d0-3862-a2b8-d31eeb61ad73@linux.intel.com>
+Date:   Thu, 7 Mar 2019 17:51:46 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 07 Mar 2019 14:50:53 +0000 (UTC)
+In-Reply-To: <20190307115955.GA29474@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-resize_hpt_for_hotplug() reports a warning when it cannot
-resize the hash page table ("Unable to resize hash page
-table to target order") but in some cases it's not a problem
-and can make user thinks something has not worked properly.
 
-This patch moves the warning to arch_remove_memory() to
-only report the problem when it is needed.
+On 07.03.2019 14:59, Jiri Olsa wrote:
+> On Thu, Mar 07, 2019 at 11:26:16AM +0300, Alexey Budankov wrote:
+>>
+>> On 05.03.2019 15:26, Jiri Olsa wrote:
+>>> On Fri, Mar 01, 2019 at 06:58:32PM +0300, Alexey Budankov wrote:
+>>>
+>>> SNIP
+>>>
+>>>> +static size_t record__process_comp_header(void *record, size_t increment)
+>>>> +{
+>>>> +	struct compressed_event *event = record;
+>>>> +	size_t size = sizeof(struct compressed_event);
+>>>> +
+>>>> +	if (increment) {
+>>>> +		event->header.size += increment;
+>>>> +		return increment;
+>>>> +	} else {
+>>>> +		event->header.type = PERF_RECORD_COMPRESSED;
+>>>> +		event->header.size = size;
+>>>> +		return size;
+>>>> +	}
+>>>
+>>> so zstd_compress_stream_to_records calls this in the loop:
+>>>
+>>>           while (input.pos < input.size) {
+>>> 	  	...
+>>>                 size = process_header(record, 0);
+>>> 		...
+>>>                 size = process_header(record, size);
+>>> 	}
+>>>
+>>> the header.size will get overwritten with every new iteration, no?
+>>
+>> Every new record is headed by PERF_RECORD_COMPRESSED header an updated with 
+>> resulted compressed frame size after compression. 
+>>
+>> process_header(, 0) puts header, then 
+>> compression puts compressed frame, then 
+>> process_header(, N) updates header.size value (+=).
+> 
+> and then process_header(, 0) is called again no?
 
-Signed-off-by: Laurent Vivier <lvivier@redhat.com>
----
- arch/powerpc/include/asm/sparsemem.h  |  4 ++--
- arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
- arch/powerpc/mm/mem.c                 |  3 ++-
- arch/powerpc/platforms/pseries/lpar.c |  1 -
- 4 files changed, 10 insertions(+), 15 deletions(-)
+Yes, in the next iteration these three steps repeat for the next record.
 
-diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
-index 68da49320592..3192d454a733 100644
---- a/arch/powerpc/include/asm/sparsemem.h
-+++ b/arch/powerpc/include/asm/sparsemem.h
-@@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, unsigned long end, int ni
- extern int remove_section_mapping(unsigned long start, unsigned long end);
- 
- #ifdef CONFIG_PPC_BOOK3S_64
--extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
-+extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
- #else
--static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
-+static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { return 0; }
- #endif
- 
- #ifdef CONFIG_NUMA
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index 0cc7fbc3bd1c..40bb2a8326bb 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(void)
- }
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
--void resize_hpt_for_hotplug(unsigned long new_mem_size)
-+int resize_hpt_for_hotplug(unsigned long new_mem_size)
- {
- 	unsigned target_hpt_shift;
- 
- 	if (!mmu_hash_ops.resize_hpt)
--		return;
-+		return 0;
- 
- 	target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
- 
-@@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_size)
- 	 * current shift
- 	 */
- 	if ((target_hpt_shift > ppc64_pft_size)
--	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
--		int rc;
--
--		rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
--		if (rc && (rc != -ENODEV))
--			printk(KERN_WARNING
--			       "Unable to resize hash page table to target order %d: %d\n",
--			       target_hpt_shift, rc);
--	}
-+	    || (target_hpt_shift < (ppc64_pft_size - 1)))
-+		return mmu_hash_ops.resize_hpt(target_hpt_shift);
-+
-+	return 0;
- }
- 
- int hash__create_section_mapping(unsigned long start, unsigned long end, int nid)
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 33cc6f676fa6..0d40d970cf4a 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, u64 size,
- 	 */
- 	vm_unmap_aliases();
- 
--	resize_hpt_for_hotplug(memblock_phys_mem_size());
-+	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) == -ENOSPC)
-+		pr_warn("Hash collision while resizing HPT\n");
- 
- 	return ret;
- }
-diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-index f2a9f0adc2d3..b407034a80ba 100644
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -918,7 +918,6 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
- 	if (rc != 0) {
- 		switch (state.commit_rc) {
- 		case H_PTEG_FULL:
--			pr_warn("Hash collision while resizing HPT\n");
- 			return -ENOSPC;
- 
- 		default:
--- 
-2.20.1
+~Alexey
 
+> 
+> jirka
+> 
