@@ -6,95 +6,82 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEB9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CC8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4C020835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E2120835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfCGJbu (ORCPT
+        id S1726393AbfCGJct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:31:50 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726359AbfCGJbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:31:47 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 187B66FA6488964AC747;
-        Thu,  7 Mar 2019 17:31:45 +0800 (CST)
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 7 Mar 2019 17:31:37 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: don't trigger read IO for beyond EOF page
-Date:   Thu, 7 Mar 2019 17:31:30 +0800
-Message-ID: <20190307093130.28556-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 7 Mar 2019 04:32:49 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:43133 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGJct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 04:32:49 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mdva2-1gU8nl1vuQ-00b3n2; Thu, 07 Mar 2019 10:32:43 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Karsten Keil <isdn@linux-pingi.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] isdn: isdnloop: fix pointer dereference bug
+Date:   Thu,  7 Mar 2019 10:32:07 +0100
+Message-Id: <20190307093241.3380715-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:SgTeDUmCb4KFlphK0yPBLuw2NW6S032Tn10HjVm7TU0Czb6EpYa
+ eRYVPB0/X6ZkfbzCWEXtFHhAGF4ttjsX54MPpkY0asX0xZBt1PLHacdMoVns5haU0tnQMe/
+ qjQCVtT/gaJ6u5ZSh7eEa8hPpZ3jcvF+24HzToq9iSx0Vd4sv9FQ4U2fJ+oeDkBiYPr9bWl
+ ATQ8CRZIe0gfrue85Dl/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xHhHN6Ai/kw=:xI/ns8pM133uhDonbRMncj
+ Hk7sn8MB6WzkS5LlNHX72iouVZxeXHpQBCKlI5mqe+Yh5Eru/2hkGY7TZw+e1jMQ6GMp3zCuT
+ TonvZdVPfYJ0dw9tLbeVqmUosaqY7J8znfww5hxsQ3L6iQqKzYJ8m6T25JylcUe158OlT29Dg
+ 1NNN9I6o3HQGQdYoq4v0iMtzo80EjkoJsnvDISpRyRQpXmS6GgCbITmx6xXTSMbK+/MdQkYra
+ 9LxwV/1W/36T/UEzPmGuvHGEspMl9P/lFwO/E7RqSDG+bOj2CHj/M791OfcdZ8whXsXYzEtFu
+ EftV3QrasQO1fPsmqt3dav6CJ3SqlltXRQUuYJAH658KH6+8UROWLCR7RFUIqsHuGIoBjjyLe
+ 2dIS5Gr059KPQQsTaDZGcCHU2uEg1+w6kgjk/JeuUDpCS6OH9UVXw0/St6h6m0vMASvj9BCC+
+ pCDjJ0sEF+z8sOW4B0T6EoCdUAy8cryXA0dtt0gH6ItNe03+UPvC4zqbRcifRqQg0UgWvvuue
+ BeyqAMobRpWw7J8A9sus3U9PtJSCcEouI0aIE0vqvz68kxYNU65cu5h+a+oed32OJBOWgIiM4
+ 0YYdS2Ad9UGWcOEkmptvMlvlAtAWmnV/NDQRCZN13hdnutyQ3Qh/rwGOX8zOVDn4RG8lJO7MK
+ wvWD4DpspeKTHgiOIYOz50mKP1hPBE7YWgWJ81vb9sYpW1bdaGpIE18ZyOTKKH6M5JrfHjNPo
+ 80PQXI8qU41f92QjwMrM74Xv5LkQGP2RSICypw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In f2fs_mpage_readpages(), if page is beyond EOF, we should just
-zero out it, but previously, before checking previous mapping
-info, we missed to check filesize boundary, fix it.
+clang has spotted an ancient code bug and warns about it with:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+drivers/isdn/isdnloop/isdnloop.c:573:12: error: address of array 'card->rcard' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+
+This is an array of pointers, so we should check if a specific
+pointer exists in the array before using it, not whether the
+array itself exists.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/f2fs/data.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/isdn/isdnloop/isdnloop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index fa6318549af5..912fdcc2dbb8 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1551,6 +1551,9 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
- 		if (last_block > last_block_in_file)
- 			last_block = last_block_in_file;
+diff --git a/drivers/isdn/isdnloop/isdnloop.c b/drivers/isdn/isdnloop/isdnloop.c
+index f4253d468ae1..755c6bbc9553 100644
+--- a/drivers/isdn/isdnloop/isdnloop.c
++++ b/drivers/isdn/isdnloop/isdnloop.c
+@@ -570,7 +570,7 @@ isdnloop_atimeout(isdnloop_card *card, int ch)
+ 	char buf[60];
  
-+		/* just zeroing out page which is beyond EOF */
-+		if (block_in_file >= last_block)
-+			goto zero_out;
- 		/*
- 		 * Map blocks using the previous result first.
- 		 */
-@@ -1563,16 +1566,11 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
- 		 * Then do more f2fs_map_blocks() calls until we are
- 		 * done with this page.
- 		 */
--		map.m_flags = 0;
-+		map.m_lblk = block_in_file;
-+		map.m_len = last_block - block_in_file;
- 
--		if (block_in_file < last_block) {
--			map.m_lblk = block_in_file;
--			map.m_len = last_block - block_in_file;
--
--			if (f2fs_map_blocks(inode, &map, 0,
--						F2FS_GET_BLOCK_DEFAULT))
--				goto set_error_page;
--		}
-+		if (f2fs_map_blocks(inode, &map, 0, F2FS_GET_BLOCK_DEFAULT))
-+			goto set_error_page;
- got_it:
- 		if ((map.m_flags & F2FS_MAP_MAPPED)) {
- 			block_nr = map.m_pblk + block_in_file - map.m_lblk;
-@@ -1587,6 +1585,7 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
- 								DATA_GENERIC))
- 				goto set_error_page;
- 		} else {
-+zero_out:
- 			zero_user_segment(page, 0, PAGE_SIZE);
- 			if (!PageUptodate(page))
- 				SetPageUptodate(page);
+ 	spin_lock_irqsave(&card->isdnloop_lock, flags);
+-	if (card->rcard) {
++	if (card->rcard[ch]) {
+ 		isdnloop_fake(card->rcard[ch], "DDIS_I", card->rch[ch] + 1);
+ 		card->rcard[ch]->rcard[card->rch[ch]] = NULL;
+ 		card->rcard[ch] = NULL;
 -- 
-2.18.0.rc1
+2.20.0
 
