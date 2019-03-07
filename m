@@ -2,159 +2,165 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F74BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3035C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94DE20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmwJJRfa"
+	by mail.kernel.org (Postfix) with ESMTP id 3E86C20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551921517;
+	bh=4ut95DT4/jG2G/pwd7oxbOmEnM1ONTeamaxjnfz69cQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HisRORDSwmJ+JPfgcfOSpCtL9HhsykPXSZspW55wuam2HDCd0emjw+3n3zq9sVskY
+	 MsV+pG4rmflwmXlHBCvMVXuvt8rRBGPR3WyqvN8CO7UgaRtrOvullkc/3YjnfqG4Km
+	 d0OjPNaAqTfmMGHlUCLP1zeBzZym3hz23BsI1V8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfCGBQP (ORCPT
+        id S1726337AbfCGBSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 20:16:15 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:47098 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfCGBQO (ORCPT
+        Wed, 6 Mar 2019 20:18:35 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35690 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfCGBSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 20:16:14 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 196so9856582pgf.13;
-        Wed, 06 Mar 2019 17:16:14 -0800 (PST)
+        Wed, 6 Mar 2019 20:18:35 -0500
+Received: by mail-lf1-f65.google.com with SMTP id h6so6151550lfc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 17:18:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FL6kiwAgz96pQ98JZedchR3GSCd9oFl3sbdzbQ/tH+M=;
-        b=dmwJJRfa/RNWMBv2p7CmuVAM7VOK6Ys6jbwY1uqHtdTkOAjB7JfSK93hKljxhfxxOX
-         ubdsGcKS2Gb5khy+aXGUNpRRg6SCBOoSBU5u2P4uQVaKiey5HA8e3GL2F/lGDu8qJKoQ
-         02vU2htzWmYlIra0MsveZ1VsKuJnLOo8FtuSVd658gUfDZ+P2FVi+8xz1FGp00DxzafM
-         X+aZV164HAPHiE5BAtokrNFLOM/Yf3n+UJnaVr+AefkBM8mh6w4PAMG4Pp0mxM+Mz8rn
-         yJ36vWhNAE/51IFr1FYtgij5wsj3n3/h0ddUOTWgNunV6ASR5J16MZdtCtYWmXYl+e6t
-         UMXg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W4qVrYWV/n1ivRdL2qH25FlWqe7J/irdbUsfkEjqc+4=;
+        b=iJ3dPGAfLy1mnGFufMPIpe8VYD9AVvbwLNzRcA6TEwUqiGRYLSBsZ5GPmaKj5hOoZh
+         b654YSnZ6l38rLIIW/ChyiHqMXMWgI9MBKQ/Q9vYTMzJWOdw9CxNcUSTFTub7y/Ru5M6
+         mgzu658aTLg4cCp//xEYeoAYz3cEQsKx6M3Cw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FL6kiwAgz96pQ98JZedchR3GSCd9oFl3sbdzbQ/tH+M=;
-        b=MmSlvfsbs+P9aOuaoGMhIZG2hs17fnAIypBmEe4r9wVir602ZF332ylC4iVL6kjT2j
-         /Yb95sr/YH8xrGSpjQT4Af56FfcPRiWzVkmnosFLHSzKGXH1ObvE/eIFfnfTlwCl8hoA
-         SJYy0Iio0zz45qirV4xEL5qtFVlVyKu4/4Af4KSvLXuDiUO2OWyJDFWsMK6qJ7/X3XVA
-         ZOXfRXMSxPZkjNQPR3bIjhWdMq1PKaoDExTN7vjN7s4WFIibKLyzX4XZuxbE5mx/XYMd
-         gk+tRLVjfRbpwLx2Euj8HgRkMtLk/cE1V82WDZJl8874Vwm/Ymr2TZgx1utfL8ZWyFKA
-         h4eg==
-X-Gm-Message-State: APjAAAVigiU+zX+3d8+i0tpRtan1tK1ojWO0UOQ+rD7tujljS+xvuhpZ
-        mFPcGoS/n9vpUX0FHqUGgpE=
-X-Google-Smtp-Source: APXvYqwSXomYh6rizHhr7LvUV/A28SNrbUBWVhvF77fm2VRFth9Z0ZF/jvhNzw9f5EWNPW16qks4yg==
-X-Received: by 2002:a65:568b:: with SMTP id v11mr9230756pgs.23.1551921373906;
-        Wed, 06 Mar 2019 17:16:13 -0800 (PST)
-Received: from myunghoj-Precision-5530 ([118.220.181.225])
-        by smtp.gmail.com with ESMTPSA id r131sm4145744pgr.65.2019.03.06.17.16.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Mar 2019 17:16:13 -0800 (PST)
-Date:   Thu, 7 Mar 2019 10:16:07 +0900
-From:   Myungho Jung <mhjungk@gmail.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfrm: Reset secpath in xfrm failure
-Message-ID: <20190307011606.GA2002@myunghoj-Precision-5530>
-References: <20190306215556.GA6104@myunghoj-Precision-5530>
- <1b3fc434-a5d2-286f-e7ef-027d165a5413@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W4qVrYWV/n1ivRdL2qH25FlWqe7J/irdbUsfkEjqc+4=;
+        b=el3t5yrU6TJdNJ5U9BRjM9vSTMXf9qpXLS4mP7ZVNvauepcXNlD3ACX/Xu9IUkcO87
+         MTfb63U+VEwuApTQPy49cnXngXg89kP3E7OJKu6GjHMV9UWjygwzJL1R5O/mt9B87UEI
+         namGv9PErYbCdBvkXYivdGdwbZVqZwllG1x8H4xu5HJyYyVYlWIvrRZAcrV3PsPmDBoV
+         BVY6SSUJzsvo8DREXBBla8AsJllWBt5nITRrym1cw2ebxpEcy93S7OX77smmMD1m1lPo
+         6NR8Ppa21prPFJ8tFcU5SyA3XfoGbvRaS3mAOU+/70AxvnHBny6QdwWT52PZXEr8c6L9
+         J0Cg==
+X-Gm-Message-State: APjAAAV4hYPIWQlJ+qXFKUOomdsSH9pFkdfT3+Bkh/Qqti5E90b8d1jE
+        7mqRIKT4JaCUjezKBxoLgqQCTMxqvGg=
+X-Google-Smtp-Source: APXvYqwZ55zEU4pkm0GskKGPUMUZXSBBdJ4foHsUB2IsGFufn0ZZeNqEsvc+iKmazBLOnHzflx2syA==
+X-Received: by 2002:ac2:51b2:: with SMTP id f18mr5430011lfk.21.1551921512667;
+        Wed, 06 Mar 2019 17:18:32 -0800 (PST)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id f141sm580386lff.71.2019.03.06.17.18.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 17:18:32 -0800 (PST)
+Received: by mail-lj1-f182.google.com with SMTP id g80so12673479ljg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 17:18:32 -0800 (PST)
+X-Received: by 2002:a2e:9786:: with SMTP id y6mr3687996lji.79.1551921209404;
+ Wed, 06 Mar 2019 17:13:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b3fc434-a5d2-286f-e7ef-027d165a5413@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190301140348.25175-1-will.deacon@arm.com> <20190301140348.25175-2-will.deacon@arm.com>
+ <1551575210.6lwpiqtg5k.astroid@bobo.none> <87ef7n7x9v.fsf@concordia.ellerman.id.au>
+ <CAHk-=wgbnn7x+i72NqnvXotbxjsk2Ag56Q5YP0OSvhY9sUk7QA@mail.gmail.com> <87k1hbv7ba.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87k1hbv7ba.fsf@concordia.ellerman.id.au>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 6 Mar 2019 17:13:13 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi_tsKOxpJVEWnfh4Zkx58oYtGfKCx_-hPNJx4Yu0-_-w@mail.gmail.com>
+Message-ID: <CAHk-=wi_tsKOxpJVEWnfh4Zkx58oYtGfKCx_-hPNJx4Yu0-_-w@mail.gmail.com>
+Subject: Re: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of
+ mmiowb() tracking
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Rich Felker <dalias@libc.org>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 02:31:25PM -0800, Eric Dumazet wrote:
-> 
-> 
-> On 03/06/2019 01:55 PM, Myungho Jung wrote:
-> > In esp4_gro_receive() and esp6_gro_receive(), secpath can be allocated
-> > without adding xfrm state to xvec. Then, sp->xvec[sp->len - 1] would
-> > fail and result in dereferencing invalid pointer in esp4_gso_segment()
-> > and esp6_gso_segment(). Reset secpath if xfrm function returns error.
-> > 
-> > Fixes: 7785bba299a8 ("esp: Add a software GRO codepath")
-> > Reported-by: syzbot+b69368fd933c6c592f4c@syzkaller.appspotmail.com
-> > Signed-off-by: Myungho Jung <mhjungk@gmail.com>
-> > ---
-> > Changes in v2:
-> >   - Add fixes tag.
-> > 
-> >  net/ipv4/esp4_offload.c | 9 +++++++--
-> >  net/ipv6/esp6_offload.c | 9 +++++++--
-> >  2 files changed, 14 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/net/ipv4/esp4_offload.c b/net/ipv4/esp4_offload.c
-> > index 8756e0e790d2..7329e40c73f6 100644
-> > --- a/net/ipv4/esp4_offload.c
-> > +++ b/net/ipv4/esp4_offload.c
-> > @@ -51,14 +51,18 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
-> >  		if (!sp)
-> >  			goto out;
-> >  
-> > -		if (sp->len == XFRM_MAX_DEPTH)
-> > +		if (sp->len == XFRM_MAX_DEPTH) {
-> > +			secpath_reset(skb);
-> >  			goto out;
-> > +		}
-> >  
-> >  		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
-> >  				      (xfrm_address_t *)&ip_hdr(skb)->daddr,
-> >  				      spi, IPPROTO_ESP, AF_INET);
-> > -		if (!x)
-> > +		if (!x) {
-> > +			secpath_reset(skb);
-> >  			goto out;
-> > +		}
-> >  
-> 
-> I suggest another exit label, so that you replace "goto out" by "goto out_reset";
-> 
-> diff --git a/net/ipv4/esp4_offload.c b/net/ipv4/esp4_offload.c
-> index 8756e0e790d2a94a5b4a587c3bc3de0673baf2c4..76f754f6692696ba2aa8c9eb03b68b92d1e39ee1 100644
-> --- a/net/ipv4/esp4_offload.c
-> +++ b/net/ipv4/esp4_offload.c
-> @@ -82,6 +82,8 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
->         xfrm_input(skb, IPPROTO_ESP, spi, -2);
->  
->         return ERR_PTR(-EINPROGRESS);
-> +out_reset:
-> +       secpath_reset(skb);
->  out:
->         skb_push(skb, offset);
->         NAPI_GRO_CB(skb)->same_flow = 0;
-> 
-> 
-> 
-> 
-> >  		sp->xvec[sp->len++] = x;
-> >  		sp->olen++;
-> > @@ -66,6 +70,7 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
-> >  		xo = xfrm_offload(skb);
-> >  		if (!xo) {
-> >  			xfrm_state_put(x);
-> > +			secpath_reset(skb);
-> >  			goto out;
-> >  		}
-> >  	}
-> 
-> 
+On Wed, Mar 6, 2019 at 4:48 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> It's a bit hard to grep for, but I did find one case:
+>
+> static void netxen_nic_io_write_128M(struct netxen_adapter *adapter,
+>                 void __iomem *addr, u32 data)
+> {
+>         read_lock(&adapter->ahw.crb_lock);
+>         writel(data, addr);
+>         read_unlock(&adapter->ahw.crb_lock);
+> }
+>
+> It looks like that driver is using the rwlock to exclude cases that can
+> just do a readl()/writel() (readers) vs another case that has to reconfigure a
+> window or something, before doing readl()/writel() and then configuring
+> the window back. So that seems like a valid use for a rwlock.
 
-Hi Eric,
+Oh, it's actually fairly sane: the IO itself is apparently windowed on
+that hardware, and the *common* case is that you'd access "window 1".
 
-Thanks for the suggestion. It looks better and clean. Let me update the fix to
-v3.
+So if everybody accesses window 1, they can all work in parallel - the
+read case.
 
-Thanks,
-Myungho
+But if somebody needs to access any of the other special IO windows,
+they need to take the write lock, then change the window pointer to
+the window they want to access, do the access, and then set it back to
+the default "window 1".
+
+So yes. That driver very much relies on exclusion of the IO through an rwlock.
+
+I'm guessing nobody uses that hardware on Power? Or maybe the "window
+1 is common" is *so* common that the other cases basically never
+happen and don't really end up ever causing problems?
+
+[ Time passes, I look at it ]
+
+Actually, the driver probably works on Power, because *setting* the
+window isn't just a write to the window register, it's always
+serialized by a read _from_ the window register to verify that the
+write "took". Apparently the hardware itself really needs that "don't
+do accesses to the window before I've settled".
+
+And that would basically serialize the only operation that really
+needs serialization, so in the case of _that_ driver, it all looks
+safe. Even if it's partly by luck.
+
+> > Perhaps more importantly, what about sleeping locks? When they
+> > actually *block*, they get the barrier thanks to the scheduler, but
+> > you can have a nice non-contended sequence that never does that.
+>
+> Yeah.
+>
+> The mutex unlock fast path is just:
+
+Yup. Both lock/unlock have fast paths that should be just trivial
+atomic sequences.
+
+But the good news is that *usually* device IO is protected by a
+spinlock, since you almost always have interrupt serialization needs
+too whenever you have any sequence of MMIO that isn't just some "write
+single word to start the engine".
+
+So the "use mutex to serialize IO" may be fairly unusual.
+
+                  Linus
