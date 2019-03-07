@@ -6,82 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F636C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49972C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B68120851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182FB20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 21:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551994821;
-	bh=aEF3dHxfSC+O8uFI32t0KQ8wXiO/kmMvW6eKVZyNwrU=;
+	s=default; t=1551994823;
+	bh=f25qrloMA+9/PpBZBE0/WtuNy/3vTNc6Qou4Bp44Gto=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=aS5Wz4ZeMlRr4UUpx8UqLM/+huYnfOdhXA46jqlz/ERHV7En0LegISfaMnJcPfBNd
-	 8A0qDNZFaGQcZEVikh6IVFCmrsftiwKyZNhK/Mf7zk+helUacHl4ifXvYSQYzOVetA
-	 gSTCuIuJcyNqz8rKi3dJ1PzfM1ACxfG9ulL1s6Os=
+	b=iu1btRMoAKqAuJLwkFttTMc437TsUO6SNebZWCNOe29DrYl3kylYOQIqtLW3B4pmU
+	 Ydv0OgKzTAW6kmaEZW11hVDc9ZyNMo/wAEXj5p/kSHA/AQo7aZwTSkgggpwBv1dYPf
+	 EWW5iXK2toe1foxohjuGq92uHzTbDLW7cY0ZXUMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfCGVkT (ORCPT
+        id S1726729AbfCGVkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 16:40:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 16:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfCGVkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726337AbfCGVkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Mar 2019 16:40:16 -0500
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.1-1 tag
+Subject: Re: [PULL 0/8] xtensa updates for v5.1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551994815;
-        bh=aEF3dHxfSC+O8uFI32t0KQ8wXiO/kmMvW6eKVZyNwrU=;
+        s=default; t=1551994816;
+        bh=f25qrloMA+9/PpBZBE0/WtuNy/3vTNc6Qou4Bp44Gto=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=XL61FXCOUQZO4h2aOX2Vfp8VSsAbM/vfKQVqZFJsW4446KSjKU6kdUxoG0gCeo3C5
-         ROEKVGQGMUUsDhQ7iDQTIJn3XX0qoVD6+I8WU1BpT1mD2SiBZwc/X8dsRN1Sn2QvUr
-         QGHbjPjBot+yUSZJIijGMLAhN7vZe54rpQ4jHiH8=
+        b=Reik8CWvJg31EhFLDYNqnyDwrWhP2TXmjPV0FvtvqfNzgMiyBPiiXDcplSR1hqeDk
+         GbvIhGIp+ctyq35rQy6rppXc30eVJ1+/7RpRcV8N9U//5l0VeiI4LJkS73dd6cpiXx
+         +0VYg7z9Yy/N2jc7GJng3LVubHTSWx8Gn54bzUi4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <87a7i6x1yk.fsf@concordia.ellerman.id.au>
-References: <87a7i6x1yk.fsf@concordia.ellerman.id.au>
+In-Reply-To: <20190307155218.26272-1-jcmvbkbc@gmail.com>
+References: <20190307155218.26272-1-jcmvbkbc@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87a7i6x1yk.fsf@concordia.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
- tags/powerpc-5.1-1
-X-PR-Tracked-Commit-Id: 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff
+X-PR-Tracked-Message-Id: <20190307155218.26272-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-Remote: git://github.com/jcmvbkbc/linux-xtensa.git
+ tags/xtensa-20190307
+X-PR-Tracked-Commit-Id: 60deebe6149a3f02fa6a9fa988dda500effda43f
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6c3ac1134371b51c9601171af2c32153ccb11100
-Message-Id: <155199481542.1630.7251693793029046147.pr-tracker-bot@kernel.org>
-Date:   Thu, 07 Mar 2019 21:40:15 +0000
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, aik@ozlabs.ru,
-        andrew.donnellan@au1.ibm.com, aneesh.kumar@linux.ibm.com,
-        arbab@linux.ibm.com, benh@kernel.crashing.org,
-        brajeswar.linux@gmail.com, cai@lca.pw, christophe.leroy@c-s.fr,
-        chunkeey@gmail.com, clabbe@baylibre.com,
-        clombard@linux.vnet.ibm.com, dvyukov@google.com,
-        fbarrat@linux.ibm.com, firoz.khan@linaro.org, geoff@infradead.org,
-        gustavo@embeddedor.com, hch@lst.de, igor.stoppa@gmail.com,
-        j.neuschaefer@gmx.net, jniethe5@gmail.com, joe.lawrence@redhat.com,
-        joel@jms.id.au, jrdr.linux@gmail.com, leitao@debian.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, malat@debian.org,
-        mark.cave-ayland@ilande.co.uk, mark.rutland@arm.com,
-        mcroce@redhat.com, natechancellor@gmail.com,
-        nfont@linux.vnet.ibm.com, npiggin@gmail.com, nstange@suse.de,
-        oohall@gmail.com, paulus@ozlabs.org, peterx@redhat.com,
-        prasannatsmkumar@gmail.com, rashmica.g@gmail.com,
-        rpjday@crashcourse.ca, rppt@linux.ibm.com,
-        sabyasachi.linux@gmail.com, sandipan@linux.ibm.com,
-        sbobroff@linux.ibm.com, sergey.senozhatsky.work@gmail.com,
-        tglx@linutronix.de, tyreld@linux.vnet.ibm.com,
-        vaibhav@linux.ibm.com, yamada.masahiro@socionext.com,
-        yuehaibing@huawei.com
+X-PR-Merge-Commit-Id: dd1c3ed76f26504621b5ce08b894666aafa38e47
+Message-Id: <155199481627.1630.10833946468877525092.pr-tracker-bot@kernel.org>
+Date:   Thu, 07 Mar 2019 21:40:16 +0000
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 08 Mar 2019 00:12:51 +1100:
+The pull request you sent on Thu,  7 Mar 2019 07:52:18 -0800:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.1-1
+> git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190307
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6c3ac1134371b51c9601171af2c32153ccb11100
+https://git.kernel.org/torvalds/c/dd1c3ed76f26504621b5ce08b894666aafa38e47
 
 Thank you!
 
