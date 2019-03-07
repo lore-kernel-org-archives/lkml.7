@@ -2,111 +2,141 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E14BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D617C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B50220840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E31920840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrNMAfbw"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="tdL9DOC6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="6P1ihIWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfCGPVX (ORCPT
+        id S1726556AbfCGPVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:21:23 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46342 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGPVX (ORCPT
+        Thu, 7 Mar 2019 10:21:53 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:48985 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726166AbfCGPVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:21:23 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f2so13765091edy.13;
-        Thu, 07 Mar 2019 07:21:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TlCc/OfCp8Rh0Vzj5bUYp8P/YmDfx1Q9BDUZQbX5Ugw=;
-        b=DrNMAfbwc8dvTtXiWRqOqbc024BFGDZUgDOpka2J+EcDRQHPFJ5pDfxYDgejpDU0f+
-         9A8q/mL9Gnxoo/SNt3R5vLZn0CiekcyMuoU5iJyqX2tGvBK8rK8aPCrzIWNRZ2bC/WdB
-         tYXoxpLGm6rS40xWwqCsPfAwm+QxQkJuJCzXPIJqrEcsOrcLAMkp7+M9gisGy9wy4VR3
-         AmMXclfT1dLheuELHeWGu/YegdDLtHDn4Hj352Lgq6MErZ2UZ97ZQPGTWnzZcCCCJDYB
-         WbnTQPWWGk5s0LCpabEkKdzohF1gDLVa5V/FvKawWb+LDoq4LB6c06H1kRCsJmsc8bVC
-         l+Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TlCc/OfCp8Rh0Vzj5bUYp8P/YmDfx1Q9BDUZQbX5Ugw=;
-        b=Hph84eXblwN0ysIRSBPWKW9vtz5Z6ZjE9L01/s0XlZULPs6v0DKvaUgDVWMQoqxRt4
-         goyAShSeVzvI44r98t/ABLmWhyJGG1ZGYopZTWV8HW0dt5HOWceAieIh9JiXFb+TD/pq
-         6gN4byCZT57MoGpwImaLi37+0zuCFvWZjH4GR7LV/8SxdZNYy1KMoSzvw0kCqhHh79y/
-         51Hh48hCazPLvxYOxSyINqeLgKUflhU6tqcSQFHeTHCSEPbBJFhAQSDwvbQethGBjTeJ
-         Pf8a4uY3cDaPyufTglebbDfAWPIpnGU8bOI8//yJuKsb+nHZOnwzVBUJ3ZIvQSRNwePv
-         Xsfg==
-X-Gm-Message-State: APjAAAXAkABRoAramvoSkP7a2cYe0UmvkbiYLqyB5C/L97AsnP3cq/jQ
-        HsfkhCkftnt3k8kdYtiKH/c=
-X-Google-Smtp-Source: APXvYqzdgiDaS1oF+sR23RWCf4dHnIOZ9H0PdU2JUVIEyZ6bEyLaJTB29teqGw9HgsUFtOO2SK37Aw==
-X-Received: by 2002:a50:8bf9:: with SMTP id n54mr28025875edn.197.1551972081101;
-        Thu, 07 Mar 2019 07:21:21 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id b24sm1415294ede.93.2019.03.07.07.21.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 07:21:20 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:21:18 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: davinci: remove extraneous __init annotation
-Message-ID: <20190307152118.GE20201@archlinux-ryzen>
-References: <20190307101024.594587-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 10:21:52 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 2B56236C0;
+        Thu,  7 Mar 2019 10:21:51 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 07 Mar 2019 10:21:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=ZWOjpVoFygjKpj3QCFIE67u4a+B
+        gT9KskygU8uLvIpc=; b=tdL9DOC60Xq66uJCV7IU+QBkWsfemp43Wb6IVfmsBzG
+        9QDfFk0q1rB+H6zHNmuJEz+fzIeVk0RpqdHj2FoGXwS8lxV+DixzoMKVP3RoPow5
+        ObPc0XT1Xb4JKshvfjxUVIkq94hWVjX1sLL4SSHKo8wW8/wP7E9WlO2z9KjX73+u
+        0RgeEqEuOehyeO0QXeciKzY79FQRrPvZVhTFO77qNpZM1i4Gn97GtqNiZVOFCP3Q
+        bRDrehYHrFpIeIomOOLMu5neOVYs7FczOclcrO172Hubibv+iHCsEaKylWJE/ygV
+        mHYHeOZ53DbnTFJ+y5hgl4w3jxUo7hL1qUw2gR9OuUg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZWOjpV
+        oFygjKpj3QCFIE67u4a+BgT9KskygU8uLvIpc=; b=6P1ihIWDEH2f7JITupxm3S
+        +v7mm6RTpmKEHXUs6x8ILvvdCU6R3N0x8Njt9qCIGJu7wHJaEwVVObbmRWtrblzf
+        En5Snv1yx8xHAcfyMqQs0dCpCwIEG33UvsOcg/QECQ6jso/wxDqLyYoYOFFBjaKC
+        WGa8cSBEKGuZ7aXAKybaIFcy8PBC916Xw3GbucXv5iSrYypSMWUNgcq39rRLNTIL
+        WwCYTnX1QJjxU4Q/38LaL8lK/ZZYVItTas8oKx2o5aSSmFiuuydnC/Iy/KYlAbvI
+        bNa8f78oWReaB8V1iKZJfHijKfC1oBHhrWv6ldxhLqmP266pwcECL8BO1r6JjW9w
+        ==
+X-ME-Sender: <xms:DjeBXIQQv0yao2CIrE75CKxqxq-aH-aeKgUS2JNE-SzzKp_waUkYEw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeekgdejjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:DjeBXAuUjlEiS5zs2L6mDriK6KjBG2U4fZgT5xtgsng6iiqyIZmMyw>
+    <xmx:DjeBXEy7oLhNt31BqqJ3gHs6jZnkPbt7tyPDADhFbE4mNtqY84U4vw>
+    <xmx:DjeBXAfEdXEjBVrkkwdsTYyaZg2N3lXTsxVGGWcESlZXsGIGtPsblw>
+    <xmx:DjeBXKzpeKkD5uQ87SX8jEkGO4OeKBsik-E_mQq0DooY74qKhO3upQ>
+Received: from localhost (5356596b.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A06E810336;
+        Thu,  7 Mar 2019 10:21:49 -0500 (EST)
+Date:   Thu, 7 Mar 2019 16:21:47 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Sasha Levin <sashal@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, stable@vger.kernel.org
+Subject: Re: [PATCH for-4.19] staging: erofs: fix mis-acted TAIL merging
+ behavior
+Message-ID: <20190307152147.GA24453@kroah.com>
+References: <20190301212203.5FE0C2084F@mail.kernel.org>
+ <20190307053404.29108-1-gaoxiang25@huawei.com>
+ <20190307122539.GD21325@kroah.com>
+ <5b7e1914-f8e5-da3d-4492-17d6afc00fb1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307101024.594587-1-arnd@arndb.de>
+In-Reply-To: <5b7e1914-f8e5-da3d-4492-17d6afc00fb1@huawei.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:10:11AM +0100, Arnd Bergmann wrote:
-> Building with clang finds a mistaken __init tag:
+On Thu, Mar 07, 2019 at 09:04:06PM +0800, Gao Xiang wrote:
+> Hi Greg,
 > 
-> WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
-> The function davinci_mmcsd_probe() references
-> the function __init init_mmcsd_host().
-> This is often because davinci_mmcsd_probe lacks a __init
-> annotation or the annotation of init_mmcsd_host is wrong.
+> On 2019/3/7 20:25, Greg KH wrote:
+> > On Thu, Mar 07, 2019 at 01:34:04PM +0800, Gao Xiang wrote:
+> >> commit a112152f6f3a2a88caa6f414d540bd49e406af60 upstream.
+> >>
+> >> EROFS has an optimized path called TAIL merging, which is designed
+> >> to merge multiple reads and the corresponding decompressions into
+> >> one if these requests read continuous pages almost at the same time.
+> >>
+> >> In general, it behaves as follows:
+> >>  ________________________________________________________________
+> >>   ... |  TAIL  .  HEAD  |  PAGE  |  PAGE  |  TAIL    . HEAD | ...
+> >>  _____|_combined page A_|________|________|_combined page B_|____
+> >>         1  ]  ->  [  2                          ]  ->  [ 3
+> >> If the above three reads are requested in the order 1-2-3, it will
+> >> generate a large work chain rather than 3 individual work chains
+> >> to reduce scheduling overhead and boost up sequential read.
+> >>
+> >> However, if Read 2 is processed slightly earlier than Read 1,
+> >> currently it still generates 2 individual work chains (chain 1, 2)
+> >> but it does in-place decompression for combined page A, moreover,
+> >> if chain 2 decompresses ahead of chain 1, it will be a race and
+> >> lead to corrupted decompressed page. This patch fixes it.
+> >>
+> >> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+> >> Cc: <stable@vger.kernel.org> # 4.19+
+> >> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> >> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> >> ---
+> >>  drivers/staging/erofs/unzip_vle.c | 69 +++++++++++++++++++++++++--------------
+> >>  1 file changed, 44 insertions(+), 25 deletions(-)
+> >>
+> > 
+> > thanks for the backport, now applied.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Yes, it seems that Sasha's bot cannot cherry-pick it directly,
+> therefore I made this patch for 4.19 by hand...
+> 
+> BTW, there is another patch called "staging: erofs: compressed_pages should not be accessed again after freed"
+> in the same condition... And I also send 4.19 and 4.20 version to stable mailing list,
+> could you also kindly check them out?
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Yes, please give me a chance to catch up on stable pending patches to
+process:
 
-> ---
->  drivers/mmc/host/davinci_mmc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-> index 49e0daf2ef5e..f37003df1e01 100644
-> --- a/drivers/mmc/host/davinci_mmc.c
-> +++ b/drivers/mmc/host/davinci_mmc.c
-> @@ -1117,7 +1117,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
->  {
->  }
->  #endif
-> -static void __init init_mmcsd_host(struct mmc_davinci_host *host)
-> +static void init_mmcsd_host(struct mmc_davinci_host *host)
->  {
->  
->  	mmc_davinci_reset_ctrl(host, 1);
-> -- 
-> 2.20.0
-> 
+	$ mdfrm -c ~/mail/stable/
+	585 messages in /home/gregkh/mail/stable/
+
+You are in good company :)
+
+greg k-h
