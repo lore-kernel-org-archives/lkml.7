@@ -2,81 +2,101 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19373C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D06C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AE420675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8362E20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbfCGI64 (ORCPT
+        id S1726203AbfCGJCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:58:56 -0500
-Received: from mga14.intel.com ([192.55.52.115]:16908 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfCGI64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:58:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 00:58:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
-   d="scan'208";a="152833159"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.172])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Mar 2019 00:58:53 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Tom Li <tomli@tomli.me>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Yifeng Li <tomli@tomli.me>,
-        Teddy Wang <teddy.wang@siliconmotion.com>
-Subject: Re: Is it possible to reset graphics controller on reboot in a framebuffer driver?
-In-Reply-To: <20190307051641.GA7012@localhost.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190307051641.GA7012@localhost.localdomain>
-Date:   Thu, 07 Mar 2019 11:00:49 +0200
-Message-ID: <871s3jm532.fsf@intel.com>
+        Thu, 7 Mar 2019 04:02:00 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:41079 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfCGJCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 04:02:00 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MDhQt-1hCZjv0PiR-00Akoh; Thu, 07 Mar 2019 10:01:48 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Eric Dumazet <edumazet@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/select: avoid clang stack usage warning
+Date:   Thu,  7 Mar 2019 10:01:36 +0100
+Message-Id: <20190307090146.1874906-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:fHbTah3fz7WH6MIb/uyJkiMRtUkJq94xINrPv3mqYq0WpEmPXA6
+ 57c4lGYafQ6Z29pxGltyEkAkHd2lzkRWUUs5AxaCpVb16diE/ppftcd5Xlqi1G+YN72yUBz
+ L4VQNr/dUcvOb04V4ZEHSVLcx4BCP9KVk2kHU+ayVn+nDvvjQ+zDXFjgV5uWbP2F1coNQD1
+ lSP/D7BtDpsqxgIb+BqgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kzJk6NlwIrQ=:nIfv0Nj1msgRnH5vMlj8MG
+ DPXm7o7HIAWLEQarTsssNudmTdjappWe6On0qJPjZuXN+4TSgPbzbmidbKKafvFCNaos0iICx
+ naJCHKUkYmbeleSsZ6terzMciYiuOzWTFWGKQP8PDiAfnqDgQViV2DVlB/d2y3sT9F+VPWHix
+ IbtvHTMzUvgnRJLeVnQPXJRpepxQQyQPaI8iZx+o0KjkRq/IFr2KbkqFN0yGIAfNBOh/owgW9
+ 2vHt5afPNoPnkQRrQzaYBPS69bzrhHFZ8FNKgDyCndM4WvkAdDxziU6xKjR4VRbxrOdpV3qMc
+ o8nFEep2cRlJeg5C+/+vXS1cPC6Ao5+/UKDkn+pTlfBmtVu8RkWi++SJC98wx9wvuzdXhDEVR
+ PEqDtm9vUwtIc8BsW1biSpO8xBZ57hlQVQGw/T2tYj4VeGSoAbdBdpKx7qrFZKNz1VrJa6Qxm
+ HdY4hCSEFd0OKW62FuPj3wJ6gXPzMIAz9VPvMVG9jSU7ZtboxS7t1LYWhFzl8K18fFSrk2+0u
+ Lc1aFgLHeGM91orEo+w20Rkd4Iiii4cTDoD1wk+KWJjFHvwiVMFiss8uWBBcgLRgUC+HlN8Ji
+ xZMTw+GkFo17Xhb1I/OJvQaIPk/iGqJNcMyrdMHXxwmHCIvTUQdF+WdHO0nd3iLfTCmZNIp9c
+ IclhxM7+luawbQH+6SDPbwB+NJoynY0DJEaDk+CXexUYODqYA/MwMOHNuGEuFIOWhHYtgXjz2
+ tqdwh1f1NgCemIysG1Ss5hH3oSAUpoF7WSf6uQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Mar 2019, Tom Li <tomli@tomli.me> wrote:
-> Hi all.
->
-> As you may have noticed, recently I've been working on a reworked version
-> of sm712fb, and planned to convert it to a DRM/KMS driver. Besides using
-> it on embedded/non-x86 systems, I thought it would be a good idea to support
-> histrocial x86 laptops with this VGA chipset as well, so I've acquired a
-> machine for testing.
->
-> However, soon I found a nasty problem. The BIOS does not reset the chip
-> on boot! Like most graphics controller of that era, sm712 chipset has a
-> VGA compatible mode and a 2D framebuffer mode. The power-on default is
-> VGA. The BIOS writer just assumed this, and does nothing to reinitialize
-> it. If one uses the framebuffer driver under Linux, once the machine reboots,
-> the entire LCD panel becomes a piece of garbage.
->
-> AFAIK, the framebuffer driver would be running throughout the kernel's life-
-> cycle, is it really possible to workaround this issue by restoring on VGA
-> state upon reboot?
+The select() implementation is carefully tuned to put a sensible amount
+of data on the stack for holding a copy of the user space fd_set,
+but not too large to risk overflowing the kernel stack.
 
-It's possible to do this using a reboot notifier. I am not sure if there
-are better ways to achieve the same, but there's at least one example of
-using reboot notifiers to achieve the exact same goal.
+When building a 32-bit kernel with clang, we need a little more space
+than with gcc, which often triggers a warning:
 
-See drivers/video/fbdev/aty/atyfb_base.c, look for
-register_reboot_notifier().
+fs/select.c:619:5: error: stack frame size of 1048 bytes in function 'core_sys_select' [-Werror,-Wframe-larger-than=]
+int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
 
+I experimentally found that for 32-bit ARM, reducing the maximum
+stack usage by 64 bytes keeps us reliably under the warning limit
+again.
 
-HTH,
-Jani.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/poll.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/include/linux/poll.h b/include/linux/poll.h
+index 7e0fdcf905d2..1cdc32b1f1b0 100644
+--- a/include/linux/poll.h
++++ b/include/linux/poll.h
+@@ -16,7 +16,11 @@
+ extern struct ctl_table epoll_table[]; /* for sysctl */
+ /* ~832 bytes of stack space used max in sys_select/sys_poll before allocating
+    additional memory. */
++#ifdef __clang__
++#define MAX_STACK_ALLOC 768
++#else
+ #define MAX_STACK_ALLOC 832
++#endif
+ #define FRONTEND_STACK_ALLOC	256
+ #define SELECT_STACK_ALLOC	FRONTEND_STACK_ALLOC
+ #define POLL_STACK_ALLOC	FRONTEND_STACK_ALLOC
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.20.0
+
