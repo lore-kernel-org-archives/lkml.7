@@ -2,164 +2,271 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB53C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91866C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC25F20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E7C20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="hg7NUf0V"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WjsHycdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfCGWHF (ORCPT
+        id S1726266AbfCGWKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:07:05 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:38178 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGWHE (ORCPT
+        Thu, 7 Mar 2019 17:10:15 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46120 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGWKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:07:04 -0500
-Received: by mail-yw1-f65.google.com with SMTP id x20so394760ywd.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:07:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5XqGPOhHxWelDgT11+htERfFUnfLr39ckjM2oBzWcuM=;
-        b=hg7NUf0VaR7rWE9ExshFRFdJUBKdlHgyhBWn7fpjNak6rkxf3itb5EAT/yLjZIgs5I
-         PqLKwWBjIsOsCasCwpoEFwHh16ddfXVwzx9FvJOt76zVAt4KwA9lhQLTSvqp5aVi9nfp
-         OLc7ZTSc9ofuBPPFhBVgn/JjmxwiAw9grGfKYve8t2h6dJP3YdzsJykQ137aLgGZcVQQ
-         VrQpJ1IQzv2koxKRIhT5auG+a8z/d8jXn2c446S8wZ18mlVD4GQIa840ydnLLmZDEn/g
-         lEWpO6x46h8n6/oPsjC6Pv+gSDsVjdOI2iSkuv6c3RhQmZsXH5qCpEjvo+HCT7qI+dgu
-         iS0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5XqGPOhHxWelDgT11+htERfFUnfLr39ckjM2oBzWcuM=;
-        b=K9CIVCJ6aC9bbt/Zlil9sOhI/7S5QXShplEdSKfqopIeJnbiCZ38kYtnrnFsQdqNG/
-         j8fGyORi+n4ipTUi68vAJAXXeEajAlAsy6ARwhPTjQhjXqHL322AINHYlL2/CY2o2UCk
-         NbXs7yrupj8RQlyhHLyZIxF/lXJIPqgHGmBR0nZ/oPfZ7SJBoDhyXoAuYppM91VZMEHi
-         GP6qygsHMlJajDLFNWJVk7b9PzsdExwSNd+Yx2KduMr6aJZEqJ9phdBJ9tV2bDu7rLdO
-         /fGKV+39UessSjrRxfNDZtHpcYU4QlLUNIA9o5T+5uv98efZlWJDdprimpBVA3VVBXTw
-         ZfdA==
-X-Gm-Message-State: APjAAAVx7CCbsf1yAL8gy9xp9vf9YcYuZ93beHI7/JjWB020wULxbChf
-        MBdjFeSLTRp5CFApo7pCE+IHxA==
-X-Google-Smtp-Source: APXvYqxHCw18zCev+Plm9gMVQweneGhgqaylB5ml13zkDQOASfRadHyY4JnucJb5+loFSggeJzfBaQ==
-X-Received: by 2002:a81:b8d:: with SMTP id 135mr12004691ywl.152.1551996422797;
-        Thu, 07 Mar 2019 14:07:02 -0800 (PST)
-Received: from localhost ([2620:10d:c091:180::be7f])
-        by smtp.gmail.com with ESMTPSA id k187sm1953929ywc.47.2019.03.07.14.07.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 14:07:02 -0800 (PST)
-Date:   Thu, 7 Mar 2019 17:07:01 -0500
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] blkcg: implement sync() isolation
-Message-ID: <20190307220659.5qmye2pxmto7nlei@macbook-pro-91.dhcp.thefacebook.com>
-References: <20190307180834.22008-1-andrea.righi@canonical.com>
- <20190307180834.22008-4-andrea.righi@canonical.com>
+        Thu, 7 Mar 2019 17:10:14 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x27MA5dI008327;
+        Thu, 7 Mar 2019 16:10:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551996605;
+        bh=ripZWeGwZ0X67FhfuYWClwnPXGZ0ekP+V1NnsK5vqlY=;
+        h=From:To:CC:Subject:Date;
+        b=WjsHycdhBm6IJO0WkIz4Oi/aTurZGnQThuBvDT+ZJaWmOUkXhODEnI+trWZSYdKiG
+         FPGpaw30kn2o/1ajR1OOYKFpCPahPJInj5AQwFXzuLQ+FvRCThUfOPav2Kmt5JGWsH
+         9nP5leIgjUpN3qXnRWUxXsINWMnIHq/zeQRol4SM=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x27MA5F0117560
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 Mar 2019 16:10:05 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 7
+ Mar 2019 16:10:05 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Thu, 7 Mar 2019 16:10:04 -0600
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x27MA48L016648;
+        Thu, 7 Mar 2019 16:10:04 -0600
+Received: from localhost (a0272616local-lt.dhcp.ti.com [172.22.83.167])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x27MA4U21543;
+        Thu, 7 Mar 2019 16:10:04 -0600 (CST)
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <tony@atomide.com>, <lee.jones@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 1/4] dt: lm3532: Add lm3532 dt doc and update ti_lmu doc
+Date:   Thu, 7 Mar 2019 16:09:44 -0600
+Message-ID: <20190307220947.20057-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.12.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307180834.22008-4-andrea.righi@canonical.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:08:34PM +0100, Andrea Righi wrote:
-> Keep track of the inodes that have been dirtied by each blkcg cgroup and
-> make sure that a blkcg issuing a sync() can trigger the writeback + wait
-> of only those pages that belong to the cgroup itself.
-> 
-> This behavior is applied only when io.sync_isolation is enabled in the
-> cgroup, otherwise the old behavior is applied: sync() triggers the
-> writeback of any dirty page.
-> 
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> ---
->  block/blk-cgroup.c         | 47 ++++++++++++++++++++++++++++++++++
->  fs/fs-writeback.c          | 52 +++++++++++++++++++++++++++++++++++---
->  fs/inode.c                 |  1 +
->  include/linux/blk-cgroup.h | 22 ++++++++++++++++
->  include/linux/fs.h         |  4 +++
->  mm/page-writeback.c        |  1 +
->  6 files changed, 124 insertions(+), 3 deletions(-)
-> 
-> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> index 4305e78d1bb2..7d3b26ba4575 100644
-> --- a/block/blk-cgroup.c
-> +++ b/block/blk-cgroup.c
-> @@ -1480,6 +1480,53 @@ void blkcg_stop_wb_wait_on_bdi(struct backing_dev_info *bdi)
->  	spin_unlock(&blkcg_wb_sleeper_lock);
->  	rcu_read_unlock();
->  }
-> +
-> +/**
-> + * blkcg_set_mapping_dirty - set owner of a dirty mapping
-> + * @mapping: target address space
-> + *
-> + * Set the current blkcg as the owner of the address space @mapping (the first
-> + * blkcg that dirties @mapping becomes the owner).
-> + */
-> +void blkcg_set_mapping_dirty(struct address_space *mapping)
-> +{
-> +	struct blkcg *curr_blkcg, *blkcg;
-> +
-> +	if (mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK) ||
-> +	    mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
-> +		return;
-> +
-> +	rcu_read_lock();
-> +	curr_blkcg = blkcg_from_current();
-> +	blkcg = blkcg_from_mapping(mapping);
-> +	if (curr_blkcg != blkcg) {
-> +		if (blkcg)
-> +			css_put(&blkcg->css);
-> +		css_get(&curr_blkcg->css);
-> +		rcu_assign_pointer(mapping->i_blkcg, curr_blkcg);
-> +	}
-> +	rcu_read_unlock();
-> +}
-> +
-> +/**
-> + * blkcg_set_mapping_clean - clear the owner of a dirty mapping
-> + * @mapping: target address space
-> + *
-> + * Unset the owner of @mapping when it becomes clean.
-> + */
-> +
-> +void blkcg_set_mapping_clean(struct address_space *mapping)
-> +{
-> +	struct blkcg *blkcg;
-> +
-> +	rcu_read_lock();
-> +	blkcg = rcu_dereference(mapping->i_blkcg);
-> +	if (blkcg) {
-> +		css_put(&blkcg->css);
-> +		RCU_INIT_POINTER(mapping->i_blkcg, NULL);
-> +	}
-> +	rcu_read_unlock();
-> +}
->  #endif
->  
+Add the lm3532 device tree documentation.
+Remove lm3532 device tree reference from the ti_lmu devicetree
+documentation.
 
-Why do we need this?  We already have the inode_attach_wb(), which has the
-blkcg_css embedded in it for whoever dirtied the inode first.  Can we not just
-use that?  Thanks,
+With the addition of the dedicated lm3532 documentation the device
+can be removed from the ti_lmu.txt.
 
-Josef
+The reason for this is that the lm3532 dt documentation now defines
+the ability to control LED output strings against different control
+banks or groups multiple strings to be controlled by a single control
+bank.
+
+Another addition was for ALS lighting control and configuration.  The
+LM3532 has a feature that can take in the ALS reading from 2 separate
+ALS devices and adjust the brightness on the strings that are configured
+to support this feature.
+
+Finally the device specific properties were moved to the parent node as these
+properties are not control bank configurable.  These include the runtime ramp
+and the ALS configuration.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../devicetree/bindings/leds/leds-lm3532.txt  | 113 ++++++++++++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  20 ----
+ 2 files changed, 113 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3532.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+new file mode 100644
+index 000000000000..7cf6739eafe0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+@@ -0,0 +1,113 @@
++* Texas Instruments - lm3532 White LED driver with ambient light sensing
++capability.
++
++The LM3532 provides the 3 high-voltage, low-side current sinks. The device is
++programmable over an I2C-compatible interface and has independent
++current control for all three channels. The adaptive current regulation
++method allows for different LED currents in each current sink thus allowing
++for a wide variety of backlight and keypad applications.
++
++The main features of the LM3532 include dual ambient light sensor inputs
++each with 32 internal voltage setting resistors, 8-bit logarithmic and linear
++brightness control, dual external PWM brightness control inputs, and up to
++1000:1 dimming ratio with programmable fade in and fade out settings.
++
++Required properties:
++	- compatible : "ti,lm3532"
++	- reg : I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Required child properties:
++	- reg : Indicates control bank the LED string is controlled by
++	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
++	- ti,led-mode : Defines if the LED strings are manually controlled or
++			if the LED strings are controlled by the ALS
++
++Optional child properties if ALS mode is used:
++	- als-vmin - Minimum ALS voltage defined in Volts
++	- als-vmax - Maximum ALS voltage defined in Volts
++
++The values for each of the following can be found in the
++include/dt-bindings/leds/leds-lm3532.h
++
++	- als1-imp-sel - ALS1 impedance resistor selection
++	- als2-imp-sel - ALS2 impedance resistor selection
++	- als-avrg-time - Determines the length of time the device needs to
++			  average the two ALS inputs.  This is only used if
++			  the input mode is LM3532_ALS_INPUT_AVRG.
++	- als-input-mode - Determines how the device uses the attached ALS
++			   devices.
++
++Optional LED child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++#include <dt-bindings/leds/leds-lm3532.h>
++
++led-controller@38 {
++	compatible = "ti,lm3532";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x38>;
++
++	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	ramp-up-ms = <LM3532_RAMP_1024us>;
++	ramp-down-ms = <LM3532_RAMP_65536us>;
++
++	lcd_backlight: led@0 {
++		reg = <0>;
++		led-sources = <2>;
++		ti,led-mode = <LM3532_BL_MODE_MANUAL>;
++		label = "backlight";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <1>;
++		ti,led-mode = <LM3532_BL_MODE_MANUAL>;
++		label = "keypad";
++	};
++};
++
++Example with ALS
++#include <dt-bindings/leds/leds-lm3532.h>
++
++led-controller@38 {
++	compatible = "ti,lm3532";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x38>;
++
++	enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	ramp-up-ms = <LM3532_RAMP_1024us>;
++	ramp-down-ms = <LM3532_RAMP_65536us>;
++
++	als-vmin = <0>;
++	als-vmax = <2000>;
++	als1-imp-sel = <LM3532_IMP_4_11K>;
++	als2-imp-sel = <LM3532_IMP_2_18K>;
++	als-avrg-time = <LM3532_ALS_AVRG_TIME_17_92ms>;
++	als-input-mode = <LM3532_ALS_INPUT_AVRG>;
++
++	lcd_backlight: led@0 {
++		reg = <0>;
++		led-sources = <2>;
++		ti,led-mode = <LM3532_BL_MODE_ALS>;
++		label = "backlight";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <1>;
++		ti,led-mode = <LM3532_BL_MODE_MANUAL>;
++		label = "keypad";
++	};
++};
++
++For more product information please see the links below:
++http://www.ti.com/product/LM3532
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index c885cf89b8ce..980394d701a7 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -4,7 +4,6 @@ TI LMU driver supports lighting devices below.
+ 
+    Name                  Child nodes
+   ------      ---------------------------------
+-  LM3532       Backlight
+   LM3631       Backlight and regulator
+   LM3632       Backlight and regulator
+   LM3633       Backlight, LED and fault monitor
+@@ -13,7 +12,6 @@ TI LMU driver supports lighting devices below.
+ 
+ Required properties:
+   - compatible: Should be one of:
+-                "ti,lm3532"
+                 "ti,lm3631"
+                 "ti,lm3632"
+                 "ti,lm3633"
+@@ -23,7 +21,6 @@ Required properties:
+          0x11 for LM3632
+          0x29 for LM3631
+          0x36 for LM3633, LM3697
+-         0x38 for LM3532
+          0x63 for LM3695
+ 
+ Optional property:
+@@ -47,23 +44,6 @@ Optional nodes:
+ [2] ../leds/leds-lm3633.txt
+ [3] ../regulator/lm363x-regulator.txt
+ 
+-lm3532@38 {
+-	compatible = "ti,lm3532";
+-	reg = <0x38>;
+-
+-	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
+-
+-	backlight {
+-		compatible = "ti,lm3532-backlight";
+-
+-		lcd {
+-			led-sources = <0 1 2>;
+-			ramp-up-msec = <30>;
+-			ramp-down-msec = <0>;
+-		};
+-	};
+-};
+-
+ lm3631@29 {
+ 	compatible = "ti,lm3631";
+ 	reg = <0x29>;
+-- 
+2.20.1.390.gb5101f9297
+
