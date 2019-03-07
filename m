@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CACC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2193C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E16206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973C02087C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfCGCe6 (ORCPT
+        id S1727430AbfCGCe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:34:58 -0500
-Received: from relay1.mentorg.com ([192.94.38.131]:63685 "EHLO
+        Wed, 6 Mar 2019 21:34:57 -0500
+Received: from relay1.mentorg.com ([192.94.38.131]:63674 "EHLO
         relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfCGCe4 (ORCPT
+        with ESMTP id S1726680AbfCGCe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Mar 2019 21:34:56 -0500
 Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
         by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1h1is2-0004Eg-7W from Jiada_Wang@mentor.com ; Wed, 06 Mar 2019 18:34:54 -0800
+        id 1h1irz-0004EP-97 from Jiada_Wang@mentor.com ; Wed, 06 Mar 2019 18:34:51 -0800
 Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Wed, 6 Mar 2019 18:34:51 -0800
+ (TLS) id 15.0.1320.4; Wed, 6 Mar 2019 18:34:48 -0800
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>, <kuninori.morimoto.gx@renesas.com>
 CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH linux-next v1 2/2] ASoC: rsnd: src: fix compiler warnings
-Date:   Thu, 7 Mar 2019 11:34:53 +0900
-Message-ID: <20190307023453.25017-3-jiada_wang@mentor.com>
+Subject: [PATCH linux-next v1 1/2] ASoC: rsnd: src: Avoid a potential deadlock
+Date:   Thu, 7 Mar 2019 11:34:52 +0900
+Message-ID: <20190307023453.25017-2-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190307023453.25017-1-jiada_wang@mentor.com>
 References: <20190307023453.25017-1-jiada_wang@mentor.com>
@@ -46,94 +46,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-compiler complains about following declarations
+lockdep warns us that priv->lock and k->k_lock can cause a
+deadlock when after acquire of k->k_lock, process is interrupted
+by src, while in another routine of src .init, k->k_lock is
+acquired with priv->lock held.
 
-sound/soc/sh/rcar/src.c:174:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
- const static u32 bsdsr_table_pattern1[] = {
- ^~~~~
-sound/soc/sh/rcar/src.c:183:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
- const static u32 bsdsr_table_pattern2[] = {
- ^~~~~
-sound/soc/sh/rcar/src.c:192:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
- const static u32 bsisr_table[] = {
- ^~~~~
-sound/soc/sh/rcar/src.c:201:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
- const static u32 chan288888[] = {
- ^~~~~
-sound/soc/sh/rcar/src.c:210:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
- const static u32 chan244888[] = {
- ^~~~~
-sound/soc/sh/rcar/src.c:219:1: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
- const static u32 chan222222[] = {
- ^~~~~
-
-This patch moves the 'static' keyword to the front of the
-declaration to fix the compiler warnings
+This patch avoids a potential deadlock by not calling soc_device_match()
+in SRC .init callback, instead it adds new soc fields in priv->flags to
+differentiate SoCs.
 
 Fixes: linux-next commit 7674bec4fc09 ("ASoC: rsnd: update BSDSR/BSDISR handling")
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- sound/soc/sh/rcar/src.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/soc/sh/rcar/core.c | 3 +++
+ sound/soc/sh/rcar/rsnd.h | 5 +++++
+ sound/soc/sh/rcar/src.c  | 9 +--------
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
+diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
+index 022996d2db13..c2d466fe191f 100644
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -1680,6 +1680,7 @@ static int rsnd_rdai_continuance_probe(struct rsnd_priv *priv,
+ static int rsnd_probe(struct platform_device *pdev)
+ {
+ 	struct rsnd_priv *priv;
++	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+ 	struct rsnd_dai *rdai;
+ 	int (*probe_func[])(struct rsnd_priv *priv) = {
+@@ -1706,6 +1707,8 @@ static int rsnd_probe(struct platform_device *pdev)
+ 
+ 	priv->pdev	= pdev;
+ 	priv->flags	= (unsigned long)of_device_get_match_data(dev);
++	if (of_device_is_compatible(np, "renesas,rcar_sound-r8a77990"))
++		priv->flags |= RSND_SOC_E;
+ 	spin_lock_init(&priv->lock);
+ 
+ 	/*
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index 90625c57847b..0e6ef4e18400 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -607,6 +607,8 @@ struct rsnd_priv {
+ #define RSND_GEN1	(1 << 0)
+ #define RSND_GEN2	(2 << 0)
+ #define RSND_GEN3	(3 << 0)
++#define RSND_SOC_MASK	(0xFF << 4)
++#define RSND_SOC_E	(1 << 4) /* E1/E2/E3 */
+ 
+ 	/*
+ 	 * below value will be filled on rsnd_gen_probe()
+@@ -679,6 +681,9 @@ struct rsnd_priv {
+ #define rsnd_is_gen1(priv)	(((priv)->flags & RSND_GEN_MASK) == RSND_GEN1)
+ #define rsnd_is_gen2(priv)	(((priv)->flags & RSND_GEN_MASK) == RSND_GEN2)
+ #define rsnd_is_gen3(priv)	(((priv)->flags & RSND_GEN_MASK) == RSND_GEN3)
++#define rsnd_is_e3(priv)	(((priv)->flags & \
++					(RSND_GEN_MASK | RSND_SOC_MASK)) == \
++					(RSND_GEN3 | RSND_SOC_E))
+ 
+ #define rsnd_flags_has(p, f) ((p)->flags & (f))
+ #define rsnd_flags_set(p, f) ((p)->flags |= (f))
 diff --git a/sound/soc/sh/rcar/src.c b/sound/soc/sh/rcar/src.c
-index 45096a66c074..585ffba0244b 100644
+index db81e066b92e..45096a66c074 100644
 --- a/sound/soc/sh/rcar/src.c
 +++ b/sound/soc/sh/rcar/src.c
-@@ -134,7 +134,7 @@ unsigned int rsnd_src_get_rate(struct rsnd_priv *priv,
- 	return rate;
- }
+@@ -14,7 +14,6 @@
+  */
  
--const static u32 bsdsr_table_pattern1[] = {
-+static const u32 bsdsr_table_pattern1[] = {
- 	0x01800000, /* 6 - 1/6 */
- 	0x01000000, /* 6 - 1/4 */
- 	0x00c00000, /* 6 - 1/3 */
-@@ -143,7 +143,7 @@ const static u32 bsdsr_table_pattern1[] = {
- 	0x00400000, /* 6 - 1   */
+ #include "rsnd.h"
+-#include <linux/sys_soc.h>
+ 
+ #define SRC_NAME "src"
+ 
+@@ -189,18 +188,12 @@ const static u32 chan222222[] = {
+ 	0x00000006, /* 1 to 2 */
  };
  
--const static u32 bsdsr_table_pattern2[] = {
-+static const u32 bsdsr_table_pattern2[] = {
- 	0x02400000, /* 6 - 1/6 */
- 	0x01800000, /* 6 - 1/4 */
- 	0x01200000, /* 6 - 1/3 */
-@@ -152,7 +152,7 @@ const static u32 bsdsr_table_pattern2[] = {
- 	0x00600000, /* 6 - 1   */
- };
- 
--const static u32 bsisr_table[] = {
-+static const u32 bsisr_table[] = {
- 	0x00100060, /* 6 - 1/6 */
- 	0x00100040, /* 6 - 1/4 */
- 	0x00100030, /* 6 - 1/3 */
-@@ -161,7 +161,7 @@ const static u32 bsisr_table[] = {
- 	0x00100020, /* 6 - 1   */
- };
- 
--const static u32 chan288888[] = {
-+static const u32 chan288888[] = {
- 	0x00000006, /* 1 to 2 */
- 	0x000001fe, /* 1 to 8 */
- 	0x000001fe, /* 1 to 8 */
-@@ -170,7 +170,7 @@ const static u32 chan288888[] = {
- 	0x000001fe, /* 1 to 8 */
- };
- 
--const static u32 chan244888[] = {
-+static const u32 chan244888[] = {
- 	0x00000006, /* 1 to 2 */
- 	0x0000001e, /* 1 to 4 */
- 	0x0000001e, /* 1 to 4 */
-@@ -179,7 +179,7 @@ const static u32 chan244888[] = {
- 	0x000001fe, /* 1 to 8 */
- };
- 
--const static u32 chan222222[] = {
-+static const u32 chan222222[] = {
- 	0x00000006, /* 1 to 2 */
- 	0x00000006, /* 1 to 2 */
- 	0x00000006, /* 1 to 2 */
+-static const struct soc_device_attribute ov_soc[] = {
+-	{ .soc_id = "r8a77990" }, /* E3 */
+-	{ /* sentinel */ }
+-};
+-
+ static void rsnd_src_set_convert_rate(struct rsnd_dai_stream *io,
+ 				      struct rsnd_mod *mod)
+ {
+ 	struct rsnd_priv *priv = rsnd_mod_to_priv(mod);
+ 	struct device *dev = rsnd_priv_to_dev(priv);
+ 	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
+-	const struct soc_device_attribute *soc = soc_device_match(ov_soc);
+ 	int is_play = rsnd_io_is_play(io);
+ 	int use_src = 0;
+ 	u32 fin, fout;
+@@ -307,7 +300,7 @@ static void rsnd_src_set_convert_rate(struct rsnd_dai_stream *io,
+ 	/*
+ 	 * E3 need to overwrite
+ 	 */
+-	if (soc)
++	if (rsnd_is_e3(priv))
+ 		switch (rsnd_mod_id(mod)) {
+ 		case 0:
+ 		case 4:
 -- 
 2.19.2
 
