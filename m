@@ -2,132 +2,111 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE15AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E14BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9850920840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B50220840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrNMAfbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfCGPUo (ORCPT
+        id S1726550AbfCGPVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:20:44 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38150 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfCGPUn (ORCPT
+        Thu, 7 Mar 2019 10:21:23 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46342 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGPVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:20:43 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 32851280667
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-arm-kernel@lists.infradead.org, arm@kernel.org
-Cc:     kernel@collabora.com, heiko@sntech.de,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Olof Johansson <olof@lixom.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2] ARM: multi_v7_defconfig: Enable missing drivers for supported Chromebooks
-Date:   Thu,  7 Mar 2019 16:20:31 +0100
-Message-Id: <20190307152031.13417-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 Mar 2019 10:21:23 -0500
+Received: by mail-ed1-f65.google.com with SMTP id f2so13765091edy.13;
+        Thu, 07 Mar 2019 07:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TlCc/OfCp8Rh0Vzj5bUYp8P/YmDfx1Q9BDUZQbX5Ugw=;
+        b=DrNMAfbwc8dvTtXiWRqOqbc024BFGDZUgDOpka2J+EcDRQHPFJ5pDfxYDgejpDU0f+
+         9A8q/mL9Gnxoo/SNt3R5vLZn0CiekcyMuoU5iJyqX2tGvBK8rK8aPCrzIWNRZ2bC/WdB
+         tYXoxpLGm6rS40xWwqCsPfAwm+QxQkJuJCzXPIJqrEcsOrcLAMkp7+M9gisGy9wy4VR3
+         AmMXclfT1dLheuELHeWGu/YegdDLtHDn4Hj352Lgq6MErZ2UZ97ZQPGTWnzZcCCCJDYB
+         WbnTQPWWGk5s0LCpabEkKdzohF1gDLVa5V/FvKawWb+LDoq4LB6c06H1kRCsJmsc8bVC
+         l+Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TlCc/OfCp8Rh0Vzj5bUYp8P/YmDfx1Q9BDUZQbX5Ugw=;
+        b=Hph84eXblwN0ysIRSBPWKW9vtz5Z6ZjE9L01/s0XlZULPs6v0DKvaUgDVWMQoqxRt4
+         goyAShSeVzvI44r98t/ABLmWhyJGG1ZGYopZTWV8HW0dt5HOWceAieIh9JiXFb+TD/pq
+         6gN4byCZT57MoGpwImaLi37+0zuCFvWZjH4GR7LV/8SxdZNYy1KMoSzvw0kCqhHh79y/
+         51Hh48hCazPLvxYOxSyINqeLgKUflhU6tqcSQFHeTHCSEPbBJFhAQSDwvbQethGBjTeJ
+         Pf8a4uY3cDaPyufTglebbDfAWPIpnGU8bOI8//yJuKsb+nHZOnwzVBUJ3ZIvQSRNwePv
+         Xsfg==
+X-Gm-Message-State: APjAAAXAkABRoAramvoSkP7a2cYe0UmvkbiYLqyB5C/L97AsnP3cq/jQ
+        HsfkhCkftnt3k8kdYtiKH/c=
+X-Google-Smtp-Source: APXvYqzdgiDaS1oF+sR23RWCf4dHnIOZ9H0PdU2JUVIEyZ6bEyLaJTB29teqGw9HgsUFtOO2SK37Aw==
+X-Received: by 2002:a50:8bf9:: with SMTP id n54mr28025875edn.197.1551972081101;
+        Thu, 07 Mar 2019 07:21:21 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id b24sm1415294ede.93.2019.03.07.07.21.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 07:21:20 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:21:18 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: davinci: remove extraneous __init annotation
+Message-ID: <20190307152118.GE20201@archlinux-ryzen>
+References: <20190307101024.594587-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307101024.594587-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable following drivers for merged devices:
-- Batteries with BQ27XXX chips for Minnie boards.
-- Elan eKTH I2C touchscreen for Minnie boards.
-- GPIO charger for all Veyron boards.
-- Rockchip SARADC driver for all rk3288 boards.
-- Rockchip eFUSE driver for all rk3288 boards.
-- TPM security chip for all Veyron boards.
-- ChromeOS EC userspace interface for all chromebooks boards.
-- ChromeOS EC light and proximity sensors for some chromebooks.
+On Thu, Mar 07, 2019 at 11:10:11AM +0100, Arnd Bergmann wrote:
+> Building with clang finds a mistaken __init tag:
+> 
+> WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
+> The function davinci_mmcsd_probe() references
+> the function __init init_mmcsd_host().
+> This is often because davinci_mmcsd_probe lacks a __init
+> annotation or the annotation of init_mmcsd_host is wrong.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Changes in v2:
-- Rebased on top of mainline.
-
- arch/arm/configs/multi_v7_defconfig | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index c75051b9392c..d160ac4bad21 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -288,6 +288,7 @@ CONFIG_MOUSE_ELAN_I2C=y
- CONFIG_INPUT_TOUCHSCREEN=y
- CONFIG_TOUCHSCREEN_ADC=m
- CONFIG_TOUCHSCREEN_ATMEL_MXT=m
-+CONFIG_TOUCHSCREEN_ELAN=m
- CONFIG_TOUCHSCREEN_MMS114=m
- CONFIG_TOUCHSCREEN_WM97XX=m
- CONFIG_TOUCHSCREEN_ST1232=m
-@@ -349,6 +350,8 @@ CONFIG_SERIAL_DEV_BUS=y
- CONFIG_VIRTIO_CONSOLE=y
- CONFIG_HW_RANDOM=y
- CONFIG_HW_RANDOM_ST=y
-+CONFIG_TCG_TPM=m
-+CONFIG_TCG_TIS_I2C_INFINEON=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_ARB_GPIO_CHALLENGE=m
- CONFIG_I2C_MUX_PCA954x=y
-@@ -444,9 +447,11 @@ CONFIG_POWER_RESET_RMOBILE=y
- CONFIG_BATTERY_ACT8945A=y
- CONFIG_BATTERY_CPCAP=m
- CONFIG_BATTERY_SBS=y
-+CONFIG_BATTERY_BQ27XXX=m
- CONFIG_AXP20X_POWER=m
- CONFIG_BATTERY_MAX17040=m
- CONFIG_BATTERY_MAX17042=m
-+CONFIG_CHARGER_GPIO=m
- CONFIG_CHARGER_CPCAP=m
- CONFIG_CHARGER_MAX14577=m
- CONFIG_CHARGER_MAX77693=m
-@@ -505,6 +510,7 @@ CONFIG_MFD_AXP20X_RSB=y
- CONFIG_MFD_CROS_EC=m
- CONFIG_CROS_EC_I2C=m
- CONFIG_CROS_EC_SPI=m
-+CONFIG_MFD_CROS_EC_CHARDEV=m
- CONFIG_MFD_DA9063=m
- CONFIG_MFD_MAX14577=y
- CONFIG_MFD_MAX77686=y
-@@ -932,8 +938,12 @@ CONFIG_VF610_ADC=m
- CONFIG_XILINX_XADC=y
- CONFIG_STM32_LPTIMER_CNT=m
- CONFIG_STM32_DAC=m
-+CONFIG_ROCKCHIP_SARADC=m
-+CONFIG_IIO_CROS_EC_SENSORS_CORE=m
-+CONFIG_IIO_CROS_EC_SENSORS=m
- CONFIG_MPU3050_I2C=y
- CONFIG_CM36651=m
-+CONFIG_IIO_CROS_EC_LIGHT_PROX=m
- CONFIG_SENSORS_ISL29018=y
- CONFIG_SENSORS_ISL29028=y
- CONFIG_AK8975=y
-@@ -979,6 +989,7 @@ CONFIG_PHY_UNIPHIER_USB2=y
- CONFIG_OMAP_USB2=y
- CONFIG_TI_PIPE3=y
- CONFIG_TWL4030_USB=m
-+CONFIG_ROCKCHIP_EFUSE=m
- CONFIG_NVMEM_IMX_OCOTP=y
- CONFIG_NVMEM_SUNXI_SID=y
- CONFIG_NVMEM_VF610_OCOTP=y
--- 
-2.20.1
-
+> ---
+>  drivers/mmc/host/davinci_mmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
+> index 49e0daf2ef5e..f37003df1e01 100644
+> --- a/drivers/mmc/host/davinci_mmc.c
+> +++ b/drivers/mmc/host/davinci_mmc.c
+> @@ -1117,7 +1117,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
+>  {
+>  }
+>  #endif
+> -static void __init init_mmcsd_host(struct mmc_davinci_host *host)
+> +static void init_mmcsd_host(struct mmc_davinci_host *host)
+>  {
+>  
+>  	mmc_davinci_reset_ctrl(host, 1);
+> -- 
+> 2.20.0
+> 
