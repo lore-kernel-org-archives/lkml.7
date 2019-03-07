@@ -2,75 +2,106 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4DCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7227FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B03220840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B55720835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 09:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfCGJb1 (ORCPT
+        id S1726357AbfCGJbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 04:31:27 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42846 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfCGJb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 04:31:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B33BEBD;
-        Thu,  7 Mar 2019 01:31:26 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 394E93F706;
-        Thu,  7 Mar 2019 01:31:24 -0800 (PST)
-Date:   Thu, 7 Mar 2019 09:31:19 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Juri Lelli <juri.lelli@gmail.com>
-Cc:     Lingutla Chandrasekhar <clingutla@codeaurora.org>,
-        sudeep.holla@arm.com, dietmar.eggemann@arm.com,
-        gregkh@linuxfoundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com, morten.rasmussen@arm.com,
-        linux-arm-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        Thu, 7 Mar 2019 04:31:46 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:60347 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfCGJbq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 04:31:46 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N0G9p-1gqMWs36Fr-00xKPP; Thu, 07 Mar 2019 10:31:37 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] arch_topology: Make cpu_capacity sysfs node as
- ready-only
-Message-ID: <20190307093116.slvugyeos46kl3et@queper01-lin>
-References: <20190306152254.GB19434@e105550-lin.cambridge.arm.com>
- <1551886073-16217-1-git-send-email-clingutla@codeaurora.org>
- <20190307072856.GC29753@localhost.localdomain>
+Subject: [PATCH] davinci_emac: always build in CONFIG_OF code
+Date:   Thu,  7 Mar 2019 10:31:20 +0100
+Message-Id: <20190307093135.3354493-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307072856.GC29753@localhost.localdomain>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:etRUGx8QeL6QeLXRQ60BTAuLTz0VVTEPwYa3rS1B1VWaaHj2I9L
+ q0dgHKJAkEy6zQqDz2C9SUobsICWNfq04buS7Jfo40LaSsd+x+aQls6GkAmkt0C5YBrezMz
+ 9oN1InRt7oIa9BrTloJVRnfqac8Py00hKjoflvL2ddagHnZjvBBRMw6Lna+/KDufTH17Z+c
+ 6Cck4/xQ3ZkjsXCKhmDdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8OJzxD7Lm/8=:e001oIdIAnmkHtROl44u37
+ o6t/ebU8MAjDeD7lMuDJVMTmkJafR4Qmi8ISXrrQMlnzmTdJ9lLeNA04XX4A988WxVvNW0+f6
+ dOLC4oaGDHt94XFbJmD9zkq+KYWqTIrg31bVayp5cNJrNJOUNL8dwlfW0UQvcNvXW3H7MDP7T
+ zl2z+U2m6kQjNcapkMgcC67VMGQU4NA80L+7OrivRukvRqoknF6gr7YF7SqC/ROBRVRGXI4m4
+ dKMLZUtoeDrTs3XIrcT0NKyxI3phAPyB2AlXFMu7uSwgUJkSjkSPXU8R1wgXm8arozaUVtXwp
+ TQc9s5QExvyb6BWlk1FqeYmPGUeqTpWQvsBZEV0xMt3HByFaqY7Gb8Kf7gKFPCdld4W5SIgqh
+ jziqCRrkyZAD5qAkh/1VxddY97S1kahJtRV+pd1ZTD1rHF979sMfpxWOtuipf8cUp+xq7Lup4
+ SzzvBrvRQMMV3sORpL8aRuZ68lVWIwFtueM/Z0lanvEo3pwu25eoPYiIJTWmEtKl+Jqw/K1Hw
+ qk+3VuhxLIH9dhQGPnEByt3DS2Uv0CUn7+AG6gSPb7udO4tVki4/jUQeDIu/fHt3XCwQoKbXU
+ 1pw3ckLMI2c2xdOT8yvlAIqKahzilG/opUknnlOgxPOqFw8uKFPN4fbal2bKuXUr/mRjxmrei
+ 9H3YPEzeBuHOnNKLCh24A9zdrwbhY5D4RAH6RipNCeOYvtyqTyE05ihFlLrLnQ6MJSP/vz8Wz
+ g5ReyOwxTKovqmHMSaTRENblIcjLyZyqLVkKAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Juri,
+clang warns about what seems to be an unintended use of an obscure C
+language feature where a forward declaration of an array remains usable
+when the final definition is never seen:
 
-On Thursday 07 Mar 2019 at 08:28:56 (+0100), Juri Lelli wrote:
-> There are cases in which this needs to be RW, as recently discussed
-> https://lore.kernel.org/lkml/20181123135807.GA14964@e107155-lin/
+drivers/net/ethernet/ti/davinci_emac.c:1694:34: error: tentative array definition assumed to have one element [-Werror]
+static const struct of_device_id davinci_emac_of_match[];
 
-Yeah there's that problem when you can't fix your DT ... But I guess
-this is a problem for _all_ values in the DT, not just capacities right ?
-But these other values, I'd expected they just can't be fixed from
-userspace most of the time, you just have to live with sub-optimal
-values. So I don't find it unreasonable to do that for capacities too.
+There is no harm in always enabling the device tree matching code here,
+and it makes the code behave in a more conventional way aside from
+avoiding the warning.
 
-> IMHO, if the core_sibling assumption doesn't work in all cases, one
-> should be looking into fixing it, rather than making this RO.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/ti/davinci_emac.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-It's just that this thing keeps causing more harm than it helps IMO.
-It's quite severely broken ATM, and it prevents us from assuming
-'stable' capacity values in places were we'd like to do so (e.g. EAS).
+diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
+index 840820402cd0..57450b174fc4 100644
+--- a/drivers/net/ethernet/ti/davinci_emac.c
++++ b/drivers/net/ethernet/ti/davinci_emac.c
+@@ -2029,7 +2029,6 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
+ 	.resume		= davinci_emac_resume,
+ };
+ 
+-#if IS_ENABLED(CONFIG_OF)
+ static const struct emac_platform_data am3517_emac_data = {
+ 	.version		= EMAC_VERSION_2,
+ 	.hw_ram_addr		= 0x01e20000,
+@@ -2046,14 +2045,13 @@ static const struct of_device_id davinci_emac_of_match[] = {
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
+-#endif
+ 
+ /* davinci_emac_driver: EMAC platform driver structure */
+ static struct platform_driver davinci_emac_driver = {
+ 	.driver = {
+ 		.name	 = "davinci_emac",
+ 		.pm	 = &davinci_emac_pm_ops,
+-		.of_match_table = of_match_ptr(davinci_emac_of_match),
++		.of_match_table = davinci_emac_of_match,
+ 	},
+ 	.probe = davinci_emac_probe,
+ 	.remove = davinci_emac_remove,
+-- 
+2.20.0
 
-And I'm not aware of a single platform where this is used. So, I'm
-personally all for removing the write capability if we can.
-
-Thanks,
-Quentin
