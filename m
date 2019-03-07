@@ -2,105 +2,84 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3EDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A42DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367A120840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551937569;
-	bh=woS8eJdF9WhN4ajNoBXAip9dtR/2dJRhAAKFISudxNA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RL7jq0/eXYDXUCb44e1wYMpdLtehUXeuShxCpkvLQi7915O5KNCvl1lEKYYNEo/Sa
-	 QnVdiDl9/qLIMEMDplS+yLvzTAfjr/Dm/FDrafbQEcpq6Z1qnGjt8x058BD7B2p+/L
-	 ZLT3EUwnBxV+NzY9c6b0/vRpkykoxHrhCmWByhpQ=
+	by mail.kernel.org (Postfix) with ESMTP id E784C20835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VAVPL+i6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfCGFqH (ORCPT
+        id S1726309AbfCGFuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 00:46:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfCGFqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 00:46:07 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47BE920835;
-        Thu,  7 Mar 2019 05:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551937566;
-        bh=woS8eJdF9WhN4ajNoBXAip9dtR/2dJRhAAKFISudxNA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=JnpI9P7JZvwsGbKHOcx2/JGhPR4vyJd/ZcnCjfwjYyMtNLhlCRy9CwMVhuNuQC9jZ
-         k+M7DQS2Z6GhDz7L7A7ychx/sNNQ7Uj8dW/doLFzVkZazEc8s7GKodp1OXF6z717H+
-         lA8f3sfTnF8sP3Dj2+wfATWll6jNd1aOxje5dJiQ=
-Date:   Thu, 7 Mar 2019 06:46:00 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Chinner <david@fromorbit.com>,
-        Kevin Easton <kevin@guarana.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Daniel Gruss <daniel@gruss.cc>
-Subject: Re: [PATCH 1/3] mm/mincore: make mincore() more conservative
-In-Reply-To: <20190307004036.GA16785@nautica>
-Message-ID: <nycvar.YFH.7.76.1903070643560.19912@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1901051817390.16954@cbobk.fhfr.pm> <20190130124420.1834-1-vbabka@suse.cz> <20190130124420.1834-2-vbabka@suse.cz> <20190306151351.f8ae1acae51ccad1a3537284@linux-foundation.org> <nycvar.YFH.7.76.1903070047360.19912@cbobk.fhfr.pm>
- <20190307004036.GA16785@nautica>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 7 Mar 2019 00:50:35 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52020 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfCGFue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 00:50:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aGkE1fu3sKSUZS0ZnuQWktHBiK/btOhjcOFlOeuAnWQ=; b=VAVPL+i6ZmV4QJtJtlMcnaSCxh
+        +Oalp1cAEfzRk5Ns8zJLZyZfnMkGZWm3XAxKDynNkigqyEvHJUVGYvsexL2zRl9bQzIY6p58ayzK9
+        zF6lJwe5jpqIc3xyCVR3wGDghD0A8+76mRBzYCFg8pMfj57X+SClqmFmuwRQsKJ1Qq9fl5N52gLNI
+        sWpoeYTE4Yc4Kml7wimQqMP3RWtPNdOL00kthHqPjmaqv5fV3JwkyRXdwidsUiNvQtwyaPqvfSHct
+        aPn5a6kzWDpnDxtPLQS+ufFOK3OAFXLLnctJ9f91djvNEEz7u68Mgr2Zk/5dHNvAhui21+ZmgCG3N
+        7WDGgNIA==;
+Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1lvN-000728-IV; Thu, 07 Mar 2019 05:50:33 +0000
+Date:   Wed, 6 Mar 2019 21:50:32 -0800
+From:   "Darren Hart (VMware)" <dvhart@infradead.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vadim Pasternak <vadimp@mellanox.com>, andy@infradead.org
+Subject: [PATCH] MAINTAINERS: Include mlxreg.h in Mellanox Platform Driver
+ files
+Message-ID: <b0b6ac4eee58fbda83574f020d89651a12a8e40f.1551937716.git.dvhart@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019, Dominique Martinet wrote:
+Avoid conflicts from other subsystems by including the header with the
+rest of the driver files.
 
-> > > 
-> > > 	addr = 4095
-> > > 	vma->vm_end = 4096
-> > > 	pages = 1000
-> > > 
-> > > then `end' is 4096 and `(end - addr) << PAGE_SHIFT' is zero, but it
-> > > should have been 1.
-> > 
-> > Good catch! It should rather be something like
-> > 
-> > 	unsigned long pages = (end >> PAGE_SHIFT) - (addr >> PAGE_SHIFT);
-> 
-> That would be 0 for addr = 0 and vma->vm_end = 1; I assume we would
-> still want to count that as one page.
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yeah, that was bogus as well, ETOOTIRED yesterday, sorry for the noise. 
-Both the variants are off.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 51029a425dbe..eb0b9aba4802 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9711,6 +9711,7 @@ M:	Vadim Pasternak <vadimp@mellanox.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Supported
+ F:	drivers/platform/mellanox/
++F:	include/linux/platform_data/mlxreg.h
+ 
+ MELLANOX MLX4 core VPI driver
+ M:	Tariq Toukan <tariqt@mellanox.com>
+-- 
+2.17.2
 
-> I'm not too familiar with this area of the code, but I think there's a
-> handy macro we can use for this, perhaps
->   DIV_ROUND_UP(end - addr, PAGE_SIZE) ?
-> 
-> kernel/kexec_core.c has defined PAGE_COUNT() which seems more
-> appropriate but I do not see a global equivalent
-> #define PAGE_COUNT(x) (((x) + PAGE_SIZE - 1) >> PAGE_SHIFT)
-
-I'll fix that up when doing the other changes requested by Andrew.
-
-Thanks,
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+Darren Hart
+VMware Open Source Technology Center
