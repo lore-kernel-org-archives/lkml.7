@@ -2,195 +2,101 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FE7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFC7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E6920835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:45:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SB7gFcf4"
+	by mail.kernel.org (Postfix) with ESMTP id 1E24B20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfCGIo6 (ORCPT
+        id S1726159AbfCGIur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:44:58 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3703 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfCGIo5 (ORCPT
+        Thu, 7 Mar 2019 03:50:47 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43659 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfCGIur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:44:57 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c80da070000>; Thu, 07 Mar 2019 00:44:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 07 Mar 2019 00:44:55 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 07 Mar 2019 00:44:55 -0800
-Received: from nvidia.com (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 Mar
- 2019 08:44:55 +0000
-Date:   Thu, 7 Mar 2019 00:44:54 -0800
-From:   Neo Jia <cjia@nvidia.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>, <ashok.raj@intel.com>,
-        <sanjay.k.kumar@intel.com>, <jacob.jun.pan@intel.com>,
-        <kevin.tian@intel.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        <yi.l.liu@intel.com>, <yi.y.sun@intel.com>, <peterx@redhat.com>,
-        <tiwei.bie@intel.com>, <xin.zeng@intel.com>,
-        <iommu@lists.linux-foundation.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v7 9/9] vfio/type1: Handle different mdev isolation type
-Message-ID: <20190307084453.GA9288@nvidia.com>
-References: <20190222021927.13132-1-baolu.lu@linux.intel.com>
- <20190222021927.13132-10-baolu.lu@linux.intel.com>
+        Thu, 7 Mar 2019 03:50:47 -0500
+Received: by mail-qk1-f193.google.com with SMTP id s26so434942qkm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 00:50:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=urcJFk8ZuCSmkhZrzOPjOQGMsa2POIYMVOC3WFVE1S0=;
+        b=U+fsGA2uXlbCeC3hvAxIRd+TH1S7daEMIJmw8U6XsTHTaFMtTLUqd+GE1ALzdjLYp6
+         Y4ECTzWoph3pHsIkH06zXe9gc9G6+L858gAC6NuZ/iwWxWmT6JhHUki+BnFA1SLaPTER
+         MKNZ1Ig0Hkesc4sk+KSe+0vRFfb9obnVRI0qNFu4xsIMx0TMXT+KvKLsZiAoonoGFe8U
+         s6kKhiRA1LB3WR21EM+TpU0TO4hd45ENQ3m+jbDIowS1XOdM5ZVH5C4ujpF2YJi3t3MA
+         BtrHuMMn6x09COZTaMf8DLp8UoxMLpbj78bMIPYEPvtcx3T7KT39GKRL1mQjPTvxY1y7
+         kPSQ==
+X-Gm-Message-State: APjAAAUej2rFWqZKYc5eyTeO9gvEqXnd0YpdLkxy8MbYlJvrMyIPLo4Y
+        dxMDr4OADS1CtsfzxX84Cf+S7NzaMHoKEXJqPGj0+Q==
+X-Google-Smtp-Source: APXvYqxk7w1iLDQSm7dCJpitMpfZ+SxpmyJu+kfEYy3NpO7Z+wQwt+ZsB9+WOVe5hLyPaiPa14tyQjO0+Wkp2e6MsOA=
+X-Received: by 2002:a37:8dc5:: with SMTP id p188mr8833527qkd.330.1551948646215;
+ Thu, 07 Mar 2019 00:50:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190222021927.13132-10-baolu.lu@linux.intel.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.6.2 (2016-07-01)
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551948295; bh=BDA6Ko/d05MsugX1KCmdhakB/UEuWEqecuuA/CKUBo8=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=SB7gFcf48r457Z/cn9qMSWRqc7D6n6z2ytMSePgUKvdBE8XbN91M4b5TSKT4FzzHn
-         Yo7mBalPWNkd4oio7PZYgyurudkQvi7dYMV/jDFkI05v4TrqhnjSIcnFeu9vXA5tkW
-         OynRvEsxqNG1X6w5HRJ99Sams9o1Ly4ZtdbPUjTZi9VrOdrDCj7bzttEiWmHt4h/Vq
-         Fr0/g2PNvX05THEFs9YK4UR0DS8stIuDcgY710nzDOuQsM3BeyIO7J64aNO2f9Tt2U
-         +mjCNoqn6ow5I45K4mU4gvk6rzFzNH9aUsYhrnVfdaxeVmKcTpinA10ZC8mxpHeYXo
-         zDgZVZanBHvIQ==
+References: <20190307080038.3727426-1-arnd@arndb.de> <CAMuHMdVBBaV8UPqUZUZXy3c9E3zUmVUEZyEEbDs4LaJ9OHncDA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVBBaV8UPqUZUZXy3c9E3zUmVUEZyEEbDs4LaJ9OHncDA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 7 Mar 2019 09:50:27 +0100
+Message-ID: <CAK8P3a3=GcE1bN1HNwoMVG5heKfAipFP7+a4pRgnF=QbfiBBGA@mail.gmail.com>
+Subject: Re: [PATCH] dma-mapping: work around clang bug
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 22, 2019 at 10:19:27AM +0800, Lu Baolu wrote:
-> This adds the support to determine the isolation type
-> of a mediated device group by checking whether it has
-> an iommu device. If an iommu device exists, an iommu
-> domain will be allocated and then attached to the iommu
-> device. Otherwise, keep the same behavior as it is.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 48 ++++++++++++++++++++++++++++-----
->  1 file changed, 41 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index ccc4165474aa..f1392c582a3c 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -1368,13 +1368,40 @@ static void vfio_iommu_detach_group(struct vfio_domain *domain,
->  		iommu_detach_group(domain->domain, group->iommu_group);
->  }
->  
+On Thu, Mar 7, 2019 at 9:28 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Mar 7, 2019 at 9:01 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > Clang has a rather annoying behavior of checking for integer
+> > arithmetic problems in code paths that are discarded by gcc
+> > before that perfoms the same checks.
+> >
+> > For DMA_BIT_MASK(64), this leads to a warning despite the
+> > result of the macro being completely sensible:
+> >
+> > arch/arm/plat-iop/adma.c:146:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+> >                 .coherent_dma_mask = DMA_BIT_MASK(64),
+> >
+> > The best workaround I could come up with is to shift the
+> > value twice, which makes the macro way less readable but
+> > always has the same result.
+> >
+> > Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  include/linux/dma-mapping.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> > index 75e60be91e5f..380d3a95d02e 100644
+> > --- a/include/linux/dma-mapping.h
+> > +++ b/include/linux/dma-mapping.h
+> > @@ -138,7 +138,8 @@ struct dma_map_ops {
+> >  extern const struct dma_map_ops dma_virt_ops;
+> >  extern const struct dma_map_ops dma_dummy_ops;
+> >
+> > -#define DMA_BIT_MASK(n)        (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+> > +/* double shift to work around https://bugs.llvm.org/show_bug.cgi?id=38789 */
+> > +#define DMA_BIT_MASK(n)        (((n) == 64) ? ~0ULL : (((1ULL<<((n)-1))-1) << 1))
+>
+> The second "-1" should be done on the final result, not on the
+> intermediate value.
 
-Hi Baolu,
+Ah, of course. I'll send an update patch in a bit, sorry about this.
 
-To allow IOMMU-awared mdev, I think you need to modify the
-vfio_iommu_type1_pin_pages and vfio_iommu_type1_unpin_pages to remove the
-iommu->external_domain check.
-
-Could you please include that in your patch? If not, I can send out a separate
-patch to address that issue.
-
-Thanks,
-Neo
-
-> +static bool vfio_bus_is_mdev(struct bus_type *bus)
-> +{
-> +	struct bus_type *mdev_bus;
-> +	bool ret = false;
-> +
-> +	mdev_bus = symbol_get(mdev_bus_type);
-> +	if (mdev_bus) {
-> +		ret = (bus == mdev_bus);
-> +		symbol_put(mdev_bus_type);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int vfio_mdev_iommu_device(struct device *dev, void *data)
-> +{
-> +	struct device **old = data, *new;
-> +
-> +	new = vfio_mdev_get_iommu_device(dev);
-> +	if (!new || (*old && *old != new))
-> +		return -EINVAL;
-> +
-> +	*old = new;
-> +
-> +	return 0;
-> +}
-> +
->  static int vfio_iommu_type1_attach_group(void *iommu_data,
->  					 struct iommu_group *iommu_group)
->  {
->  	struct vfio_iommu *iommu = iommu_data;
->  	struct vfio_group *group;
->  	struct vfio_domain *domain, *d;
-> -	struct bus_type *bus = NULL, *mdev_bus;
-> +	struct bus_type *bus = NULL;
->  	int ret;
->  	bool resv_msi, msi_remap;
->  	phys_addr_t resv_msi_base;
-> @@ -1409,23 +1436,30 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	if (ret)
->  		goto out_free;
->  
-> -	mdev_bus = symbol_get(mdev_bus_type);
-> +	if (vfio_bus_is_mdev(bus)) {
-> +		struct device *iommu_device = NULL;
->  
-> -	if (mdev_bus) {
-> -		if ((bus == mdev_bus) && !iommu_present(bus)) {
-> -			symbol_put(mdev_bus_type);
-> +		group->mdev_group = true;
-> +
-> +		/* Determine the isolation type */
-> +		ret = iommu_group_for_each_dev(iommu_group, &iommu_device,
-> +					       vfio_mdev_iommu_device);
-> +		if (ret || !iommu_device) {
->  			if (!iommu->external_domain) {
->  				INIT_LIST_HEAD(&domain->group_list);
->  				iommu->external_domain = domain;
-> -			} else
-> +			} else {
->  				kfree(domain);
-> +			}
->  
->  			list_add(&group->next,
->  				 &iommu->external_domain->group_list);
->  			mutex_unlock(&iommu->lock);
-> +
->  			return 0;
->  		}
-> -		symbol_put(mdev_bus_type);
-> +
-> +		bus = iommu_device->bus;
->  	}
->  
->  	domain->domain = iommu_domain_alloc(bus);
-> -- 
-> 2.17.1
-> 
+      Arnd
