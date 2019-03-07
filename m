@@ -2,139 +2,70 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A448C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8A5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F405520840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCFA20840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551971951;
+	bh=+AHp0RucQjCfAIAYJGoA6OeFHqTVPnwS4ZyRJVethww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yh+fWqwleueEVkYAZ10ir0rAigqUn0UQndesNe7xwUd0GKp2ejqfTor4887XXwLSx
+	 eeL2/fz2lsvmeOXtdI9BSUZPX+06vQALkAN1Ddz+G6woF8T1espUG2wAXI63/0p0he
+	 kes3Mzn+Xc49k9+Km5DaAMAJkC+MJUIXUFZUKv2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfCGPSV (ORCPT
+        id S1726528AbfCGPTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:18:21 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:37207 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCGPSV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:18:21 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MHVWT-1hEmwK0EGP-00DXlI; Thu, 07 Mar 2019 16:18:09 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dmaengine: edma: make edma_filter_fn private
-Date:   Thu,  7 Mar 2019 16:16:10 +0100
-Message-Id: <20190307151646.1016966-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190307151646.1016966-1-arnd@arndb.de>
-References: <20190307151646.1016966-1-arnd@arndb.de>
+        Thu, 7 Mar 2019 10:19:09 -0500
+Received: from mga14.intel.com ([192.55.52.115]:38733 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbfCGPTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 10:19:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 07:19:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
+   d="scan'208";a="150180347"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Mar 2019 07:19:08 -0800
+Date:   Thu, 7 Mar 2019 08:19:38 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Brice Goglin <Brice.Goglin@inria.fr>
+Cc:     "Busch, Keith" <keith.busch@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+Subject: Re: [PATCHv6 07/10] acpi/hmat: Register processor domain to its
+ memory
+Message-ID: <20190307151938.GC1844@localhost.localdomain>
+References: <20190214171017.9362-1-keith.busch@intel.com>
+ <20190214171017.9362-8-keith.busch@intel.com>
+ <8fb27d2c-2165-7029-6ea1-94fc379b3be7@inria.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:hu6jPXZ5aq6eAOti9DqkxbzZf58m3D7/bSUI/OESUJyxDYdXcC1
- 1PyZfLdpIZ++HXYUuK2hzEpggwEfovdn1roh5unXNA86Y8FYVaZ4+X6uxB8fGNHdDAgMzvx
- 6eQeVxIFItZfL/pVK5ablekSSj6MYg/5vkCiB/1q5J25EeL3LmrWsP6HVVkgi1maIi1XIAI
- Ipl0iz7Cd6c8G073UwdRg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oviKULBfuMc=:IZPP5yT4s6FPvDomebYYU7
- tJMiL92a4EYtCer+0La2UBUHUA/JDDFFluhUG5SFFWiCf0eI2shYxDCtUpPJ8hmMHQiUg6epP
- 4Geol+KhIof0wa9qhk7QINUU+F2hqIrj/7HME46tbTKdtyKK6/V+531Yhkgr9KMYYDyy8Mdmu
- 9LtWuGNrNIG3HF6tNRbm7ugwy+CdegbCyEstaqnIRD4CAXcXnWPIsOEZaPY0+fVKqVEBRf65P
- QxmBo6AlRDIRfbt+2uHw6yYLq6dPeyGHVdGnlr23pA2D6ByJ9RgI+FYfAAtHRXz/jwrUotGrD
- qVDxqKxjG35K44hxxLJ5FH2ozAIY4jxSbh2JjrpWE5Jf8qvTyewNMr3WH0swaYT5UGsuOD54E
- /9aWFg0wnDDuJifOQUTlx9A1P9SZKslreiXuKfS+nu3Dq97dI0mst8NO0E7nVxJUTmLqBW60q
- BVma00uSs4aJce8rxIM0zhu4EwT3xTjM0clbjiI3u1TBsA30wxoHmaX8ajI5cnifQmNY07soN
- C8KWhDfIiSt1GI+by9pYZX63BTU+9MNU9uWCLlPpRRVlZW0CRy9qypnnL2N4FwpAZUj2KIFmW
- wyWLuol+A+QM9mZdhAjGUaxQE4jI3Brq//pxNCTnk62tH3lcc8Nts3jfhFH6NTVLSyrdtXijt
- QIQcFDRIC/Owb7FGaXGesfyNmGIA8jAByg5Mh69YzY8P2OpUvFSHd5j/iz2Ao7VK5cP+MVbkV
- RmMIKqWPHl0rpA7y3EHvgZadifoOL4OzjtZg5w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8fb27d2c-2165-7029-6ea1-94fc379b3be7@inria.fr>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the audio driver no longer referring to this function, it
-can be made private to the dmaengine driver itself, and the
-header file removed.
+Hi Brice,
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/ti/edma.c |  5 +++--
- include/linux/edma.h  | 29 -----------------------------
- 2 files changed, 3 insertions(+), 31 deletions(-)
- delete mode 100644 include/linux/edma.h
+Please see v7 of this series from last week instead for reviews:
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index ceabdea40ae0..f2549ee3fb49 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -15,7 +15,6 @@
- 
- #include <linux/dmaengine.h>
- #include <linux/dma-mapping.h>
--#include <linux/edma.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-@@ -2185,6 +2184,8 @@ static struct dma_chan *of_edma_xlate(struct of_phandle_args *dma_spec,
- }
- #endif
- 
-+static bool edma_filter_fn(struct dma_chan *chan, void *param);
-+
- static int edma_probe(struct platform_device *pdev)
- {
- 	struct edma_soc_info	*info = pdev->dev.platform_data;
-@@ -2524,7 +2525,7 @@ static struct platform_driver edma_tptc_driver = {
- 	},
- };
- 
--bool edma_filter_fn(struct dma_chan *chan, void *param)
-+static bool edma_filter_fn(struct dma_chan *chan, void *param)
- {
- 	bool match = false;
- 
-diff --git a/include/linux/edma.h b/include/linux/edma.h
-deleted file mode 100644
-index a1307e7827e8..000000000000
---- a/include/linux/edma.h
-+++ /dev/null
-@@ -1,29 +0,0 @@
--/*
-- * TI EDMA DMA engine driver
-- *
-- * Copyright 2012 Texas Instruments
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
--#ifndef __LINUX_EDMA_H
--#define __LINUX_EDMA_H
--
--struct dma_chan;
--
--#if defined(CONFIG_TI_EDMA) || defined(CONFIG_TI_EDMA_MODULE)
--bool edma_filter_fn(struct dma_chan *, void *);
--#else
--static inline bool edma_filter_fn(struct dma_chan *chan, void *param)
--{
--	return false;
--}
--#endif
--
--#endif
--- 
-2.20.0
-
+ https://patchwork.kernel.org/cover/10832365/
