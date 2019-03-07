@@ -2,239 +2,98 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A317EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BFCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F13220835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 07:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0836320835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfCGH7F (ORCPT
+        id S1726194AbfCGIBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 02:59:05 -0500
-Received: from mga02.intel.com ([134.134.136.20]:42863 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbfCGH7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 02:59:05 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2019 23:59:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,451,1544515200"; 
-   d="scan'208";a="326217055"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.107])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Mar 2019 23:59:03 -0800
-Date:   Thu, 7 Mar 2019 15:59:16 +0800
-From:   kernel test robot <rong.a.chen@intel.com>
-To:     Tony Chuang <yhchuang@realtek.com>
-Cc:     "lkp@01.org" <lkp@01.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [LKP] [mac80211] c752cac9db:
- hwsim.ap_vlan_iface_cleanup_multibss_per_sta_vif.fail
-Message-ID: <20190307075916.GQ25100@shao2-debian>
-References: <20190307070450.GO25100@shao2-debian>
- <F7CD281DE3E379468C6D07993EA72F84D17B4425@RTITMBSVM04.realtek.com.tw>
+        Thu, 7 Mar 2019 03:01:19 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:54495 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfCGIBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 03:01:18 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MsZeX-1gn0pF0d0l-00txjM; Thu, 07 Mar 2019 09:00:42 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dma-mapping: work around clang bug
+Date:   Thu,  7 Mar 2019 09:00:25 +0100
+Message-Id: <20190307080038.3727426-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D17B4425@RTITMBSVM04.realtek.com.tw>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:SnRTwP7mB1YqM4Ju0tIDBNxdpmKOjjsaltQRQqdqOs6SJgdPNEG
+ qML6XcUhF83mtJcarIloWoyYtOlTZRao8xWFZctzxcOcvIvMuMEC3T0WBd2LMr2C+hwp1Sh
+ x7KZlWkdTHteysVNHEyw89nSiSqz5aOMWlbXYCdUA5npGURM0KWRJKTeoYYwyh2H7oaui9m
+ qtpISyDN3FdrO/Th/ZuZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mvI6dVuhiUU=:/R7VamLGMWNcYf311jvRHq
+ qg0QfAvZnVzoUfZKJaapNdto//AYugPjk5TYwiMvo3NpB7Zb/tZJ3fZm/F3scEAv24S463rgW
+ YqiqJVnNprt4WuyRaDZ67D2SxgSGMNu8EuY9g0GsZB2pruo35JYQedX36NQptfcdLu6jokkRK
+ FOUQ/nPAmKNhRCRzE9/6dRjgI6y0FQZfd3VmFShAbAZSz9I9tGWQ+VC9t/ux4KMo4HGEK9m+s
+ 5uKDeBp+OTqmWSVc4ys6isJImPoCspCrO0FxtwuIbDSZJ5GRwdtptYmDy2lfnDoWO1i/dBrX5
+ b4m7XHuxEGWzy3QOZvfVnrmPftbolGx7NKPbA+znCw40zy89WXHeAuqt+hTNrfZ6dn4MzsBiZ
+ EX9NNoBL88W6nD1ICcaQFWdihFdWCvfxFcTwPKiOIbFG18W2CSuk2oKJOW1kfowyzPOiav+8c
+ /1BLIwPSaRdRKPslVqQb5yHOBF4pkDstbxm14tN5FNkeYIdJpqjmysPhhQ5r0dU6zEr2EmPqL
+ ZvnQypB+1kOleJhFxwWc1VcDJYO7XzUDg+Ja9dfQttxlSQVMmGfb60W5zUA/kuR+/9jbW8dK9
+ wjzPe+CewWmcZu84AlZLkqj0ts7BOaLG4CustNA7jiheu3V90/CDJKIfgEll6KHOsRmix4mqv
+ oU8JYMjr2tLLCVE0TsUuZeIVdpquitA5p2Fi8cPlQa/fnmtm1o2ttJk/Y9zHpm4kccZz4qqla
+ H83h4kxVORszuMisF5pRZHqg5sHXCCo8ZqcKjA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:49:11AM +0000, Tony Chuang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: kernel test robot [mailto:rong.a.chen@intel.com]
-> > Sent: Thursday, March 07, 2019 3:05 PM
-> > To: Tony Chuang
-> > Cc: Johannes Berg; Larry Finger; LKML; Linus Torvalds; lkp@01.org
-> > Subject: [LKP] [mac80211] c752cac9db:
-> > hwsim.ap_vlan_iface_cleanup_multibss_per_sta_vif.fail
-> > 
-> > FYI, we noticed the following commit (built with gcc-8):
-> > 
-> > commit: c752cac9db1b0c469db7ba9d17af4ba708984db5 ("mac80211: fix
-> > GFP_KERNEL under tasklet context")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > 
-> > in testcase: hwsim
-> > with following parameters:
-> > 
-> > 	group: hwsim-02
-> > 
-> > 
-> > 
-> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2
-> > -m 4G
-> > 
-> > caused below changes (please refer to attached dmesg/kmsg for entire
-> > log/backtrace):
-> > 
-> 
-> <...>
-> 
-> > 
-> > 2019-03-06 14:51:15 	./run-tests.py ap_vlan_iface_cleanup_multibss
-> > DEV: wlan0: 02:00:00:00:00:00
-> > DEV: wlan1: 02:00:00:00:01:00
-> > DEV: wlan2: 02:00:00:00:02:00
-> > APDEV: wlan3
-> > APDEV: wlan4
-> > START ap_vlan_iface_cleanup_multibss 1/1
-> > Test: AP VLAN operation in multi-BSS multi-VLAN case
-> > RTNETLINK answers: File exists
-> > Starting AP wlan4
-> > Starting interface wlan3
-> > Connect STA wlan0 to AP
-> > Connect STA wlan1 to AP
-> > wlan0 -> VLAN 2
-> > test wlan1 == VLAN 1
-> > wlan1 -> VLAN 2
-> > test wlan0 == VLAN 2
-> > PASS ap_vlan_iface_cleanup_multibss 3.037115 2019-03-06 14:51:19.362536
-> > passed all 1 test case(s)
-> > 2019-03-06 14:51:19 	./run-tests.py
-> > ap_vlan_iface_cleanup_multibss_per_sta_vif
-> > DEV: wlan0: 02:00:00:00:00:00
-> > DEV: wlan1: 02:00:00:00:01:00
-> > DEV: wlan2: 02:00:00:00:02:00
-> > APDEV: wlan3
-> > APDEV: wlan4
-> > START ap_vlan_iface_cleanup_multibss_per_sta_vif 1/1
-> > Test: AP VLAN operation in multi-BSS multi-VLAN case with per-sta-vif set
-> > Starting AP wlan4
-> > Starting interface wlan3
-> > Connect STA wlan0 to AP
-> > Connect STA wlan1 to AP
-> > dev1->dev2 unicast data delivery failed
-> > Traceback (most recent call last):
-> >   File "./run-tests.py", line 466, in main
-> >     t(dev, apdev)
-> >   File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 505, in
-> > test_ap_vlan_iface_cleanup_multibss_per_sta_vif
-> >     'multi-bss-iface-per_sta_vif.conf')
-> >   File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 413, in
-> > ap_vlan_iface_cleanup_multibss
-> >     hwsim_utils.test_connectivity_iface(dev[1], hapd1, "brvlan1")
-> >   File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 176, in
-> > test_connectivity_iface
-> >     max_tries=max_tries, timeout=timeout)
-> >   File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 169, in
-> > test_connectivity
-> >     raise Exception(last_err)
-> > Exception: dev1->dev2 unicast data delivery failed
-> > FAIL ap_vlan_iface_cleanup_multibss_per_sta_vif 6.917146 2019-03-06
-> > 14:51:26.784664
-> > passed 0 test case(s)
-> > skipped 0 test case(s)
-> > failed tests: ap_vlan_iface_cleanup_multibss_per_sta_vif
-> 
-> <...>
-> 
-> > 
-> > 
-> > To reproduce:
-> > 
-> >         # build kernel
-> > 	cd linux
-> > 	cp config-4.19.0-12453-gc752cac .config
-> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 olddefconfig
-> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 prepare
-> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 modules_prepare
-> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 SHELL=/bin/bash
-> > 	make HOSTCC=gcc-8 CC=gcc-8 ARCH=x86_64 bzImage
-> > 
-> > 
-> >         git clone https://github.com/intel/lkp-tests.git
-> >         cd lkp-tests
-> >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this
-> > email
-> > 
-> > 
-> > 
-> > Thanks,
-> > Rong Chen
-> 
-> 
-> It looks really strange that this patch failed the test.
-> And I checked the dmesg, the log shows me that
-> 
-> PASS ap_vlan_iface_cleanup_multibss_per_sta_vif
-> 
-> At line 24000.
+Clang has a rather annoying behavior of checking for integer
+arithmetic problems in code paths that are discarded by gcc
+before that perfoms the same checks.
 
-Hi,
+For DMA_BIT_MASK(64), this leads to a warning despite the
+result of the macro being completely sensible:
 
-This doesn't happen every time. Here is a bad result:
+arch/arm/plat-iop/adma.c:146:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+                .coherent_dma_mask = DMA_BIT_MASK(64),
 
-2019-03-06 14:51:19     ./run-tests.py ap_vlan_iface_cleanup_multibss_per_sta_vif 
-DEV: wlan0: 02:00:00:00:00:00
-DEV: wlan1: 02:00:00:00:01:00
-DEV: wlan2: 02:00:00:00:02:00
-APDEV: wlan3
-APDEV: wlan4
-START ap_vlan_iface_cleanup_multibss_per_sta_vif 1/1
-Test: AP VLAN operation in multi-BSS multi-VLAN case with per-sta-vif set
-Starting AP wlan4
-Starting interface wlan3
-Connect STA wlan0 to AP
-Connect STA wlan1 to AP
-dev1->dev2 unicast data delivery failed
-Traceback (most recent call last):
-  File "./run-tests.py", line 466, in main
-    t(dev, apdev)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 505, in test_ap_vlan_iface_cleanup_multibss_per_sta_vif
-    'multi-bss-iface-per_sta_vif.conf')
-  File "/lkp/benchmarks/hwsim/tests/hwsim/test_ap_vlan.py", line 413, in ap_vlan_iface_cleanup_multibss
-    hwsim_utils.test_connectivity_iface(dev[1], hapd1, "brvlan1")
-  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 176, in test_connectivity_iface
-    max_tries=max_tries, timeout=timeout)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 169, in test_connectivity
-    raise Exception(last_err)
-Exception: dev1->dev2 unicast data delivery failed
-FAIL ap_vlan_iface_cleanup_multibss_per_sta_vif 6.917146 2019-03-06 14:51:26.784664
-passed 0 test case(s)
-skipped 0 test case(s)
-failed tests: ap_vlan_iface_cleanup_multibss_per_sta_vif
+The best workaround I could come up with is to shift the
+value twice, which makes the macro way less readable but
+always has the same result.
 
-81c5dce2cd0bb0ec c752cac9db1b0c469db7ba9d17a
----------------- ---------------------------
-       fail:runs  %reproduction    fail:runs
-           |             |             |
-           :90          11%          10:91    hwsim.ap_wpa2_eap_aka_sql.fail
-           :90           9%           8:91    stderr.Failed_to_connect_to_hostapd-wpa_ctrl_open:No_such_file_or_directory
-         90:90        -100%            :91    dmesg.BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
-           :90           6%           5:91    dmesg.RIP:__ieee80211_beacon_get[mac80211]
-           :90           1%           1:91    dmesg.RIP:console_unlock
-           :90           6%           5:91    dmesg.WARNING:at_net/mac80211/tx.c:#__ieee80211_beacon_get/0x
-         90:90         -94%           5:91    dmesg.boot_failures
-      21732:90      -24148%            :91    dmesg.timestamp:BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
-           :90       14125%       12712:91    dmesg.timestamp:RIP:__ieee80211_beacon_get[mac80211]
-           :90        3137%        2822:91    dmesg.timestamp:RIP:console_unlock
-           :90       14125%       12712:91    dmesg.timestamp:WARNING:at_net/mac80211/tx.c:#__ieee80211_beacon_get/0x
-      22439:90       70264%       85676:91    dmesg.timestamp:last
+Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/dma-mapping.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Best Regards,
-Rong Chen
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 75e60be91e5f..380d3a95d02e 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -138,7 +138,8 @@ struct dma_map_ops {
+ extern const struct dma_map_ops dma_virt_ops;
+ extern const struct dma_map_ops dma_dummy_ops;
+ 
+-#define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
++/* double shift to work around https://bugs.llvm.org/show_bug.cgi?id=38789 */
++#define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : (((1ULL<<((n)-1))-1) << 1))
+ 
+ #define DMA_MASK_NONE	0x0ULL
+ 
+-- 
+2.20.0
 
-> 
-> So I think I need to reproduce this to confirm it.
-> Or anyone has any idea please let me know.
-> Thanks
-> 
-> Yan-Hsuan
-> _______________________________________________
-> LKP mailing list
-> LKP@lists.01.org
-> https://lists.01.org/mailman/listinfo/lkp
