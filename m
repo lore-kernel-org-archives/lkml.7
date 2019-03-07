@@ -2,73 +2,147 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB9FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9949C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6DC20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8327D20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 02:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfCGCSz (ORCPT
+        id S1726974AbfCGCVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 21:18:55 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:41644 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfCGCSy (ORCPT
+        Wed, 6 Mar 2019 21:21:18 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55027 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726514AbfCGCVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 21:18:54 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h1icO-00030k-PC; Thu, 07 Mar 2019 02:18:44 +0000
-Date:   Thu, 7 Mar 2019 02:18:44 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
-        ktkhai@virtuozzo.com, kyeongdon.kim@lge.com,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        houtao1@huawei.com, yi.zhang@huawei.com
-Subject: Re: [PATCH 2/8] aio_poll_wake(): don't set ->woken if we ignore the
- wakeup
-Message-ID: <20190307021844.GC2217@ZenIV.linux.org.uk>
-References: <CAHk-=wghRmdYKRAwakeHmjcpbLt9fJAHyU2x8s_NZONhz6RTOw@mail.gmail.com>
- <20190307000316.31133-1-viro@ZenIV.linux.org.uk>
- <20190307000316.31133-2-viro@ZenIV.linux.org.uk>
+        Wed, 6 Mar 2019 21:21:17 -0500
+X-UUID: 6cf8847903134698bbe26809740a1510-20190307
+X-UUID: 6cf8847903134698bbe26809740a1510-20190307
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 667841341; Thu, 07 Mar 2019 10:20:56 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 7 Mar 2019 10:20:55 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 7 Mar 2019 10:20:55 +0800
+Message-ID: <1551925255.20144.13.camel@mtksdaap41>
+Subject: Re: [PATCH v2 03/10] dt-binding: gce: add binding for gce subsys
+ property
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Thu, 7 Mar 2019 10:20:55 +0800
+In-Reply-To: <1551922796.20144.7.camel@mtksdaap41>
+References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1551865835-50974-4-git-send-email-bibby.hsieh@mediatek.com>
+         <1551922796.20144.7.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307000316.31133-2-viro@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 12:03:10AM +0000, Al Viro wrote:
-> From: Al Viro <viro@zeniv.linux.org.uk>
-> 
-> In case of early wakeups, aio_poll() assumes that aio_poll_complete()
-> has either already happened or is imminent.  In that case we do not
-> want to put iocb on the list of cancellables.  However, ignored
-> wakeups need to be treated as if wakeup has not happened at all.
-> Trivially fixed by having aio_poll_wake() set ->woken only after
-> it's committed to taking iocb out of the waitqueue.
-> 
-> Spotted-by: zhengbin <zhengbin13@huawei.com>
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Hi, Bibby:
 
-... and unfortunately it's worse than just that - what both of us
-have missed is that one could have non-specific wakep + schedule_work +
-aio_poll_complete_work() rechecking ->poll(), seeing nothing of
-interest and reinserting into queue.  All before vfs_poll() manages
-to return into aio_poll().  The window is harder to hit, but it's
-still there, with exact same "failed to add to cancel list" kind of bug
-if we do hit it ;-/
+On Thu, 2019-03-07 at 09:39 +0800, CK Hu wrote:
+> Hi, Bibby:
+> 
+> On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
+> > cmdq driver provide a function that get the relationship
+> > of sub system number from device node for client.
+> > add specification for #subsys-cells, mediatek,gce-subsys.
+> > 
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > index 812698f..07b2adf 100644
+> > --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > @@ -26,6 +26,13 @@ Required properties:
+> >  	phandle: Label name of a gce node.
+> >  	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+> >  		      or 'dt-binding/gce/mt8183-gce.h'.
+> > +#subsys-cells: Should be 2.
+> > +	<&phandle register_base_address subsys_number>
+> > +	phandle: Label name of a gce node.
+> > +	register_base_address: the register base address that client
+> > +			       want to write or read.
+> 
+> This look like the same as 'reg' property. I would prefer use
+> already-defined property, for example:
+> 
+> 		mmsys: clock-controller@14000000 {
+> 			compatible = "mediatek,mt8173-mmsys", "syscon";
+> 			reg = <0 0x14000000 0 0x1000>;
+> 			mediatek,gce-subsys = <&gce SUBSYS_1400XXXX>;
+> 		};
+
+My previous thinking may not be proper, GCE could write register but its
+behavior may be not the same as CPU, so it's better not to mix these two
+register_base_address.
+
+Regards,
+CK
+
+> 
+> Regards,
+> CK
+> 
+> > +	subsys_number: specify the sub-system id which is corresponding
+> > +		       to the register address.
+> >  
+> >  Required properties for a client device:
+> >  - mboxes: Client use mailbox to communicate with GCE, it should have this
+> > @@ -50,6 +57,7 @@ Example:
+> >  		thread-num = CMDQ_THR_MAX_COUNT;
+> >  		#mbox-cells = <3>;
+> >  		#event-cells = <1>;
+> > +		#subsys-cells = <2>;
+> >  	};
+> >  
+> >  Example for a client device:
+> > @@ -58,7 +66,8 @@ Example for a client device:
+> >  		compatible = "mediatek,mt8173-mmsys";
+> >  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+> >  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> > -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> > +		mediatek,gce-subsys = <&gce 0x14000000 SUBSYS_1400XXXX>,
+> > +				      <&gce 0x14010000 SUBSYS_1401XXXX>;
+> >  		mediatek,gce-event-names = "rdma0_sof",
+> >  					   "rsz0_sof";
+> >  		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+> 
+
+
