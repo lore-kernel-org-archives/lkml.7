@@ -2,134 +2,191 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0030C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACBBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7C920652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF4B20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 08:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IfVearek"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UyjAnbyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfCGIlN (ORCPT
+        id S1726268AbfCGIlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 03:41:13 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:52561 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfCGIlM (ORCPT
+        Thu, 7 Mar 2019 03:41:17 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50272 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfCGIlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 03:41:12 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190307084108epoutp0284944b6bb1039ecd94a1c5acab708018~JoIuk0S4M0553805538epoutp02l;
-        Thu,  7 Mar 2019 08:41:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190307084108epoutp0284944b6bb1039ecd94a1c5acab708018~JoIuk0S4M0553805538epoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551948068;
-        bh=tNCPZ/U2qH3g/U1ivb0DsWR77u64LmUQw7nx0kFq41E=;
-        h=Subject:To:Cc:From:Date:In-reply-to:References:From;
-        b=IfVearekEr8Vo8O36kotgAckXEsm7xfe8wn6RO2dcBhdptVXlsk5ITJ/gx0SQ0IZE
-         WLdhR2eh5KZDn4IIqqkEAo001/UO5RUUPtssj0Pfy2gpoy5YnvW40/Hk+6qKd/FWtd
-         nm6YRaTYymkpuVjq57o6Qc31rPVRtmx7VAq6SU+k=
-Received: from epsmges1p3.samsung.com (unknown [182.195.42.55]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190307084107epcas1p4408e05a224f906528286548b6d21f9cf~JoItfkVWF1986719867epcas1p4z;
-        Thu,  7 Mar 2019 08:41:07 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1F.28.04069.229D08C5; Thu,  7 Mar 2019 17:41:07 +0900 (KST)
-Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190307084106epcas1p355e4c9b3150f395f0a58f4f1ab052513~JoItG9PMA0113001130epcas1p3s;
-        Thu,  7 Mar 2019 08:41:06 +0000 (GMT)
-X-AuditID: b6c32a37-971ff70000000fe5-94-5c80d922c0b6
-Received: from epmmp1.local.host ( [203.254.227.16]) by
-        epsmgms2p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.5D.04015.229D08C5; Thu,  7 Mar 2019 17:41:06 +0900 (KST)
-Received: from [106.116.147.40] by mmp1.samsung.com (Oracle Communications
-        Messaging Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
-        <0PNZ00AECMSDW070@mmp1.samsung.com>; Thu, 07 Mar 2019 17:41:06 +0900 (KST)
-Subject: Re: [PATCH v4 4/8] drivers: devfreq: add DMC driver for Exynos5422
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     cwchoi00@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-id: <84c06add-8375-55a6-01d6-ebbc6af011a9@samsung.com>
-Date:   Thu, 07 Mar 2019 09:41:00 +0100
+        Thu, 7 Mar 2019 03:41:15 -0500
+Received: by mail-wm1-f66.google.com with SMTP id x7so8410513wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 00:41:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yvOswUT6zD4BkIIRqIDT6GtYo/jjGWk60/6hE68mdDw=;
+        b=UyjAnbyQVzYDkCuebXj6w2xltcRnVTA0j3WxDgGrU9A9gXrCzacra62s0wbXNNjLYZ
+         XktSZzoCQCE+Rb9mDmv+ACgX/Ho4XIBsF4bf5Kv1yKZvA0OJ+ns1WcSBQG0ScEyVmi8Y
+         rkMGey6CK3jPABLM2SY+09sLpGwk/Rv3z+8SjJPbkDz3oDq3yoEcN+NRUEO/RSMTxaxL
+         Qb/8/iwLu6fJF0lg2wPlixr3ua9ZEeAfScZtC8UZjYegMnea/muDqv9Ed8pSbg7jtXF2
+         fDNyUI9fm6uMD0lPTMzJLj6nmkmOoGof9a+Z7lpHyp1UcGX0aKDvusoA4x/oLyLkQ6Hy
+         jugw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yvOswUT6zD4BkIIRqIDT6GtYo/jjGWk60/6hE68mdDw=;
+        b=qq0MMHmfo4CCW5GwfKKXoQkZxKb7lFkhtxy21HPVBMasxKRKMuZ0bmBqVyOM3PsMNg
+         f/pGrwdybNA/j5v1uHN6MK6lBJbIY/Knvz/sbfWZSiWKSz9i502R6HP71bwNAiuyRn9O
+         KMnFx+PKIaeSI+g/Wg1rAwKP2wi0QzibUykcVGVVRCHybS03fmsOO2fCT6NdDAPm7avD
+         X6SMcnwBnZM6clqFQ3vxHU2SkBpaEASQMD10r2YWFDY//xHPG6O6SqzRliIbr9Seq5jd
+         otif3FUEhGTVBG9wbes0VwRzckH/ZP8CyZue7qm78AAQUdo0n6KATphixWjR8sYqbQca
+         z7AA==
+X-Gm-Message-State: APjAAAX280utKIcbubvzaAdcAUR1hTKqrFW+fsxH2qCV28I/jwTY+oqn
+        2Db5LruO4ezL7iyfiskQjdIlhLQ5vUygKw==
+X-Google-Smtp-Source: APXvYqyEGZ1uQ8H347vo+jPmN1nYk5jXfpxnyJDQZ6RSJIcvvVFBCv9FpuTKCQIqHrb9qAvGMsQ/wA==
+X-Received: by 2002:a1c:7903:: with SMTP id l3mr5226704wme.22.1551948073202;
+        Thu, 07 Mar 2019 00:41:13 -0800 (PST)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y140sm12810668wmd.18.2019.03.07.00.41.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 00:41:12 -0800 (PST)
+Subject: Re: [PATCH v2 5/8] phy: amlogic: add Amlogic G12A USB2 PHY Driver
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-6-narmstrong@baylibre.com>
+ <CAFBinCAacdsjwtg_RK=e=Lnep7oLF+eTBmkb1FB4nFR129z1jA@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <bd9d1b4b-4dd7-864e-b197-c5993d3dd24f@baylibre.com>
+Date:   Thu, 7 Mar 2019 09:41:12 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.5.1
-MIME-version: 1.0
-In-reply-to: <4bbc0f61-952e-bcdb-4645-2644a122ac99@samsung.com>
-Content-type: text/plain; charset="utf-8"
-Content-language: en-GB
-Content-transfer-encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsWy7bCmga7yzYYYg41HmCw2zljPanH9y3NW
-        i2dHtS3mHznHatH/+DWzxfnzG9gtzja9Ybe41SBjsenxNVaLy7vmsFl87j3CaDHj/D4mi7VH
-        7rJb3G5cwebA57Fz1l12j02rOtk8Ni+p9zj4bg+TR9+WVYwenzfJBbBFcdmkpOZklqUW6dsl
-        cGVsXf6ZsaCDreJ07y/2BsYPLF2MnBwSAiYSnw/vALK5OIQEdjBKPJ3/hhXC+c4o8bXrKlzV
-        j6WLoKp2M0qsXv6aGcK5zyhxctJmNpAqYQFvibUdy5lBbBEBDYmZf68wghQxC+xlkTg4aR9Y
-        EZuAoUTv0T5GEJtXwE5i2aybrCA2i4CqxOVbPWDNogIREu+f7maBqBGU+DH5HpjNKWAv8WnT
-        O7B6ZgFNiRdfJrFA2OISx+7fZISw5SU2r3kLdp2EQDu7xP2/a9khfnCReLBtN5DNAWRLS1w6
-        agsRrpbYtb0bqr6DUaLlwnZmiIS1xOHjF6GW8Um8+9rDCtHLK9HRJgRhekic2psCCYgJzBIf
-        5/9imcAoMwvJ2bOQnDoLyamzkJy6gJFlFaNYakFxbnpqsWGBsV5xYm5xaV66XnJ+7iZGcMLR
-        Mt/BuOGczyFGAQ5GJR7eiNP1MUKsiWXFlbmHGCU4mJVEeHcea4gR4k1JrKxKLcqPLyrNSS0+
-        xCjNwaIkzrvewTlGSCA9sSQ1OzW1ILUIJsvEwSnVwKjlpXL5xPNJO+0e2ctGbHrQJ1LI6tFs
-        ef2H060tepsnca7w7ShW4EjuY429d9HxKF/k98yYVXYMhwoLpG8ufP1A97xe5hFe/8JlVn8Y
-        Xzob+329cnNu6RTPcylpCvP37X+SuY3b695+Zmbm91tMFY8ceOp48t3rJ2JxcxN/5UdoXJna
-        J3uTp1uJpTgj0VCLuag4EQAKdUrbNAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsVy+t9jAV2lmw0xBr/XKFpsnLGe1eL6l+es
-        Fs+OalvMP3KO1aL/8Wtmi/PnN7BbnG16w25xq0HGYtPja6wWl3fNYbP43HuE0WLG+X1MFmuP
-        3GW3uN24gs2Bz2PnrLvsHptWdbJ5bF5S73Hw3R4mj74tqxg9Pm+SC2CL4rJJSc3JLEst0rdL
-        4MrYuvwzY0EHW8Xp3l/sDYwfWLoYOTkkBEwkfixdBGRzcQgJ7GSUmHl/BRuE85BRYvmfi6wg
-        VcIC3hJrO5Yzg9giAhoSM/9eYQQpYhY4yCJxe+Y8ZoiOScwSLUtfg81lEzCU6D3axwhi8wrY
-        SSybdRNsEouAqsTlWz1gk0QFIiTuXnzBAlEjKPFj8j0wm1PAXuLTpndA9RxAG9QlpkzJBQkz
-        C4hLHLt/kxHClpfYvOYt8wRGgVlIumchdMxC0jELSccCRpZVjJKpBcW56bnFRgWGeanlesWJ
-        ucWleel6yfm5mxiBEbXtsFbfDsb7S+IPMQpwMCrx8CZcqo8RYk0sK67MPcQowcGsJMK781hD
-        jBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHe23nHIoUE0hNLUrNTUwtSi2CyTBycUg2MSuEv5QOn
-        f1G9Pj+5cP0mnd/tq7LsmvZf5V4b/HuFceyXsytWsDY2zOKwPcrBcDH2ZLJr5/SD3ZeeaD6Y
-        9eeWiMH28MTD/Oe6JNMDpvDWZqa9zfynMPWn2ZW4io0HFi222ba5vtYopeTtnhlCTpwt/nbG
-        z9q3qJhJ/DZoW36N9e6Piq8FVmxMSizFGYmGWsxFxYkAXHb2PKQCAAA=
-X-CMS-MailID: 20190307084106epcas1p355e4c9b3150f395f0a58f4f1ab052513
-CMS-TYPE: 101P
-X-CMS-RootMailID: 20190201164720eucas1p13aac6550399d240b261a2cbe489d3dfc
-References: <CGME20190201164720eucas1p13aac6550399d240b261a2cbe489d3dfc@eucas1p1.samsung.com>
-        <1549039612-28905-1-git-send-email-l.luba@partner.samsung.com>
-        <1549039612-28905-5-git-send-email-l.luba@partner.samsung.com>
-        <CAGTfZH0o6dHQj00vHwZBn05AT-Z_oAWHfBX0eATQ12NPmfw4fg@mail.gmail.com>
-        <94e169cf-4dc2-82ec-1385-852bc7853931@samsung.com>
-        <4bbc0f61-952e-bcdb-4645-2644a122ac99@samsung.com>
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <CAFBinCAacdsjwtg_RK=e=Lnep7oLF+eTBmkb1FB4nFR129z1jA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+On 06/03/2019 22:00, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, Mar 4, 2019 at 11:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> [...]
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+> there's a "regmap" include right above. this driver doesn't use syscon
+> so this include can be dropped
 
-On 3/7/19 02:10, Chanwoo Choi wrote:
-> This patch has the another quetion about the clocks in
-> exynos5_dmc_init_clks(). This functions used 'clk_set_parent'
-> to make the hierarchy between clocks. I think it is possible to make
-> the relation of clocks in DT by using the 'assigned-clocks'.
+Forgot this one...
 
-I'm fine either way, AFAICS it is a matter of setting parent of just
-one clock - "mout_mx_mspll_ccore".  The driver needs to get that clock
-anyway to enable/disable it as required.  So we will not gain much from
-using assigned-clocks I'd say. I don't really have a strong opinion here
-as I don't know detailed requirements of the DMC clock configuration
-sequence. I'm inclined to keep it in driver as it would be more flexible.
+> 
+> [...]
+>> +static int phy_meson_g12a_usb2_exit(struct phy *phy)
+>> +{
+>> +       struct phy_meson_g12a_usb2_priv *priv = phy_get_drvdata(phy);
+>> +
+>> +       return reset_control_reset(priv->reset);
+> do you know whether we should reset_control_assert here instead of
+> reset_control_reset?
+> the probe function below already uses reset_control_deassert, so the
+> current implementation is inconsistent. in v1 you replied with "Maybe
+> it would be better, indeed." - if there's a reason why
+> reset_control_assert doesn't work here then I would like to have a
+> comment stating why
 
--- 
-Regards,
-Sylwester
+It's not clear yet, I implemented it safe here since in my tests, when
+I left the USB2 PHYs resetted, it was kept resetted on a soft system reset
+and the ROM was not able to setup the PHY correctly.
+
+So maybe it's wrong for power management, it's safer to simply to keep the
+PHYs unresetted when unused.
+
+> 
+> Apart from these two this is looking good!
+> Human readable BIT/GENMASK #defines for the register bits would be
+> nice, but I'm not sure if you have the details to add these.
+
+I have the registers set in the doc, but it's much longer than copying
+the registers structs from the vendor kernel, so I postponed it.
+
+I'll try adding these, but for now it's low priority unless the PHY maintainer
+asks for them.
+
+Neil
+
+> 
+> 
+> Regards
+> Martin
+> 
+
