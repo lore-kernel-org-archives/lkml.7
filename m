@@ -2,159 +2,110 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047C0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EE2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E6520840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5460620840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:17:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeOazCmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726172AbfCGPRN (ORCPT
+        id S1726477AbfCGPRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:17:13 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:48435 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfCGPRM (ORCPT
+        Thu, 7 Mar 2019 10:17:48 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33323 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfCGPRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:17:12 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MWz4j-1hYf5t0yZF-00XHZY; Thu, 07 Mar 2019 16:16:56 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>, alsa-devel@alsa-project.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH 1/3] ASoC: ti: remove compat dma probing
-Date:   Thu,  7 Mar 2019 16:16:08 +0100
-Message-Id: <20190307151646.1016966-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 7 Mar 2019 10:17:47 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c55so13787168edb.0;
+        Thu, 07 Mar 2019 07:17:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FDxJlGvA6UoZM0AuNbRuKofOJ7eEzo0HhNxl/qpIeKk=;
+        b=SeOazCmA3rZqhfv5brNRFtmjRP4KmMIODX76vYHtmLEteIPUidnMRoRvowAnqWFcwk
+         OTmZUC8uTF543OrPLzYWd2tXxF3d3QhUTfCH0DnleksJV9ekH/gTuYLwoRJUW8nSoHF9
+         MzgB54hBZLtF6F+QuR3Smc9VC5WT95FDcyhVzD6VPOCDN27+/Lq9BqzUzjXP2ta8M5TT
+         sCLj2Sv8hilXhR1OPQWNuh+5YxBUTgsJWtt/uLX23ULYQj4gsQN/vGR3tsodB8AFIshy
+         2gWbtZiAaLEqBXJ4dIJJOpjRsnOpOn9Vn532u4aJ+Ut+vQQyLYOEpcb0EXPBv+lo98we
+         UKqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FDxJlGvA6UoZM0AuNbRuKofOJ7eEzo0HhNxl/qpIeKk=;
+        b=ar3YiPNCaiUAxgQpiAw51+/kXbHANnbK6PckczcaEWpJJwEQa1y5yqoeEWC8Jwl5wf
+         UMTpGWAETgta+aOtZIqaNmQrU8Uayf1kvJBLKYAZo103b7RNJPLSDrWU/Ih+anPsr/tQ
+         vcIBXLUOTWAaT4VIYKQbQuedvOjEJtmdEUYB8U8GRdd1WubsCA0mF0OkVMQFh7BSps4V
+         Or/QOMeU7B3xALK1YG/AWs2Z6gR/TavtlyVudtfbzURRORitDDGRTziF12CChVo2Xgv4
+         0OzTZni15LnDdEc00r2qo4OyvOjHrSN/T6dDRH0rY03XfMBRORqZxD3rVfcQS/igbvs/
+         O+pw==
+X-Gm-Message-State: APjAAAUwSXrARyP1byuLdKQGGYKwQDpmVHcWfK3sChkmiAT/0p9NgA+F
+        TamRWRZ6HOUbrsz6161RRFE=
+X-Google-Smtp-Source: APXvYqwxf3jp62rjUnJUVlwIRdw8i4+j6lfw+rcZNHFOPzKFqyo1vraeT3ew6+XWtBByJnUEAP5U6g==
+X-Received: by 2002:a50:b56c:: with SMTP id z41mr29033183edd.160.1551971865471;
+        Thu, 07 Mar 2019 07:17:45 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id r1sm1374890eds.39.2019.03.07.07.17.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 07 Mar 2019 07:17:44 -0800 (PST)
+Date:   Thu, 7 Mar 2019 08:17:42 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Karsten Keil <isdn@linux-pingi.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] isdn: isdnloop: fix pointer dereference bug
+Message-ID: <20190307151742.GC20201@archlinux-ryzen>
+References: <20190307093241.3380715-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IDAzRVFsZyLsEwWH6SxwekAejlCMqtnGRLZja5hBLGl3fy91UZa
- Ku1wtdkzNmOj25OsZ8M/wQN/zRq0wthhXe0g9UMSDa4g33G3UWXsBzIlq0IBc91aLOFOKNZ
- 8w1Py5tly5egyXEWbxD8e+FsXmgD4PIlTDlliZ+CP8Z11bllYWGCFYEO0l0e267Vkh0Iula
- pxDdYoP2fqc2xt7rXmEsg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M6MD7ZxYHGE=:bFMuDkQiJcwoYAAjJf9rlq
- LEcGnWy5knLhAvmsgWQiNVCRg2P/EXmHVtOW++5MhJEbz+RETAgrKuVhI9zrIy1c5H8JXuNYq
- jsDtUCByH6pGE+6D4FGuXuI8+z8LZ9J83fG7I99CTLTbqjD25O5u28hDK0WhVshzjfMM4ls3A
- FBRW6by33cCfNh67/mT+pn92rsJEC7nuHd4P/Yc7YnE01B+yvaqpogc4dw5v6qgl87mAI3/mt
- KTRgZ/81bUVb2xgEBlRfmG3eiqp+oJzEkjnML9WQgrt6CanIBLIBOMvNPYQJuOkgp8fZoTyj/
- InbFGuYuoXSzYn318WngfaDDUeBAtTJOqWQtynotg8ROQfleDOxKf25E7ds6DU4wT2l4+SM3c
- sNCjEM+G49yq1IdRSHhAGK7qt48Ch/milKzFWu/h7XrsMYQBELR7WpQDIaC+gfAJ5lOBzFj5p
- UwS00++2v+BOFXQJLnZY8MeatlSe41AK4H9jZjZ0g95OpPEC9lTecBAo5fxV+LBYDDSbnGvfH
- rao68/PzhZF4WVaztUU+qje2QLwK5HwJH5631XDqO9nZTkxhoKwukC/HZfEUpMMUqXX1pljgK
- 0GAopM2XXTWbRQpgjv2/XCYCmlM5wI12VVYD9hsIGEqMd/RoA+901vmdIpJyK5ondAyaRFtmq
- Dcee8EvDTxDIPF/e8eoRsPY5LaMO9E/hTpvu9B1rrhsPuoc3ipZkQJ09WCn0p+TYwpLB6pviE
- vlkXD1bkP3TIcaJK7vos7jJOWedAJxLvJv3Hsg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307093241.3380715-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After running into a link error:
+On Thu, Mar 07, 2019 at 10:32:07AM +0100, Arnd Bergmann wrote:
+> clang has spotted an ancient code bug and warns about it with:
+> 
+> drivers/isdn/isdnloop/isdnloop.c:573:12: error: address of array 'card->rcard' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+> 
+> This is an array of pointers, so we should check if a specific
+> pointer exists in the array before using it, not whether the
+> array itself exists.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-sound/soc/ti/edma-pcm.o:(.rodata+0x18): undefined reference to `edma_filter_fn'
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-I checked all users of this, and they have new-style 'dma_slave_map' tables,
-so none of them should still need it. Removing the associated lines
-simplifies the code and avoids the build-time dependency on the
-respective dmaengine drivers.
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: remove header inclusions as well
-
-I added the two dmaengine patches to the series this time, but
-we probably want to have those merged separately through the
-dmaengine tree, while this one should get merged as a bugfix
-through ASoC.
----
- sound/soc/ti/edma-pcm.c | 5 +----
- sound/soc/ti/sdma-pcm.c | 9 +++------
- 2 files changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/sound/soc/ti/edma-pcm.c b/sound/soc/ti/edma-pcm.c
-index 59e588abe54b..fdffb801b185 100644
---- a/sound/soc/ti/edma-pcm.c
-+++ b/sound/soc/ti/edma-pcm.c
-@@ -23,7 +23,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
--#include <linux/edma.h>
- 
- #include "edma-pcm.h"
- 
-@@ -43,14 +42,12 @@ static const struct snd_pcm_hardware edma_pcm_hardware = {
- static const struct snd_dmaengine_pcm_config edma_dmaengine_pcm_config = {
- 	.pcm_hardware = &edma_pcm_hardware,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = edma_filter_fn,
- 	.prealloc_buffer_size = 128 * 1024,
- };
- 
- int edma_pcm_platform_register(struct device *dev)
- {
--	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config,
--					SND_DMAENGINE_PCM_FLAG_COMPAT);
-+	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config, 0);
- }
- EXPORT_SYMBOL_GPL(edma_pcm_platform_register);
- 
-diff --git a/sound/soc/ti/sdma-pcm.c b/sound/soc/ti/sdma-pcm.c
-index 21a9c2499d48..a236350beb10 100644
---- a/sound/soc/ti/sdma-pcm.c
-+++ b/sound/soc/ti/sdma-pcm.c
-@@ -11,7 +11,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
--#include <linux/omap-dmaengine.h>
- 
- #include "sdma-pcm.h"
- 
-@@ -31,7 +30,6 @@ static const struct snd_pcm_hardware sdma_pcm_hardware = {
- static const struct snd_dmaengine_pcm_config sdma_dmaengine_pcm_config = {
- 	.pcm_hardware = &sdma_pcm_hardware,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = omap_dma_filter_fn,
- 	.prealloc_buffer_size = 128 * 1024,
- };
- 
-@@ -39,13 +37,12 @@ int sdma_pcm_platform_register(struct device *dev,
- 			       char *txdmachan, char *rxdmachan)
- {
- 	struct snd_dmaengine_pcm_config *config;
--	unsigned int flags = SND_DMAENGINE_PCM_FLAG_COMPAT;
-+	unsigned int flags = 0;
- 
- 	/* Standard names for the directions: 'tx' and 'rx' */
- 	if (!txdmachan && !rxdmachan)
- 		return devm_snd_dmaengine_pcm_register(dev,
--						&sdma_dmaengine_pcm_config,
--						flags);
-+						&sdma_dmaengine_pcm_config, 0);
- 
- 	config = devm_kzalloc(dev, sizeof(*config), GFP_KERNEL);
- 	if (!config)
-@@ -65,7 +62,7 @@ int sdma_pcm_platform_register(struct device *dev,
- 	config->chan_names[0] = txdmachan;
- 	config->chan_names[1] = rxdmachan;
- 
--	return devm_snd_dmaengine_pcm_register(dev, config, flags);
-+	return devm_snd_dmaengine_pcm_register(dev, config, 0);
- }
- EXPORT_SYMBOL_GPL(sdma_pcm_platform_register);
- 
--- 
-2.20.0
-
+> ---
+>  drivers/isdn/isdnloop/isdnloop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/isdn/isdnloop/isdnloop.c b/drivers/isdn/isdnloop/isdnloop.c
+> index f4253d468ae1..755c6bbc9553 100644
+> --- a/drivers/isdn/isdnloop/isdnloop.c
+> +++ b/drivers/isdn/isdnloop/isdnloop.c
+> @@ -570,7 +570,7 @@ isdnloop_atimeout(isdnloop_card *card, int ch)
+>  	char buf[60];
+>  
+>  	spin_lock_irqsave(&card->isdnloop_lock, flags);
+> -	if (card->rcard) {
+> +	if (card->rcard[ch]) {
+>  		isdnloop_fake(card->rcard[ch], "DDIS_I", card->rch[ch] + 1);
+>  		card->rcard[ch]->rcard[card->rch[ch]] = NULL;
+>  		card->rcard[ch] = NULL;
+> -- 
+> 2.20.0
+> 
