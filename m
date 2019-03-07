@@ -2,51 +2,51 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF1EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F8AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5F420661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCA920854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfCGSZG (ORCPT
+        id S1726693AbfCGSZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:25:06 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38107 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfCGSZG (ORCPT
+        Thu, 7 Mar 2019 13:25:16 -0500
+Received: from mail-it1-f200.google.com ([209.85.166.200]:55482 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfCGSZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Mar 2019 13:25:06 -0500
-Received: by mail-io1-f69.google.com with SMTP id z22so13442765iog.5
+Received: by mail-it1-f200.google.com with SMTP id y70so9485729itc.5
         for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 10:25:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=P7jkAY/IaiunUTM+5aI/eZef90H1kJjE88SMFc7v0Ok=;
-        b=fKPG9JkqiliCXWOh8K72D9pvxWOnlc62XM33BiXoQMNEOCNlSk0DImvvS1jFanW38T
-         SUh2DKFrrJ+uRn9VwiLqvvNS8GQESQ7HevSqoJ9KfEHVdscD0ZfObXbvdSbEEOHcBjmX
-         2AtfPyvZy1EZp3SKKzmVNfnXmTciQmIb/DIxIuwgRgovjaMEpLoTuQqqDCI24kI+6EcQ
-         FvVwuzYnevHEJMlHTm5Mem+zZDY/J+Onsho1zlGBtz5moCKshQFWKkFGnlT7cHs5GaQw
-         luBAGRGdWQjYt7L6PflrecYY3u08115jQULZBvbAGBXGh/e7L0kDT7BQ9HjaZCUgHqlm
-         YIsg==
-X-Gm-Message-State: APjAAAVX9YdQhpa8VMphUL1shBrAOErkPFh5IpUt4YuaotKOAsKZ6/0i
-        r1a91r/gv8e7AlxesdTCe221x6juH+X7RJTDqbwPRTdv6ApC
-X-Google-Smtp-Source: APXvYqycw4rJvdH5k9rygmQkD9rAsaj2YALbTypGP8yyOyqiV7dcb+mYCQFQg0W54LYlfvtehW3KLXyEOll4d6sNyXozqxZ3mDRs
+        bh=fz8m/Sp9U72B4fniCJ25kQPn3alE3RGAi+6oCqyDdzk=;
+        b=AfCol3oNtOaE74GqLHQzAFucZbt4m25Ty4nbwl6MaFRmE7eVz3RM89nPl9YSkuNRyq
+         hjw0a5ICQqADTuNqu90MFwV7lW4p7KO2irKdbNSYbQ/K7SljOjrpBqbke9V+dfh3AL65
+         yzFp++nLDkGncjSWZibBgD323d48J3hdUwXuE82VPNlusCjEyRRO6023BSPQrUJ7jHwM
+         eZSLYCg46wYrdXm1VkcV6J3yeWJACnpUGkCx9awShw2gjbOV7I1hbPWUZp6bSfa/L+yt
+         tvvKXjhcsuiFw4d24rnaF+2kezRCQTh/hwJ1J0rZcFlgVT8WoKMGUG+fhTpCLnUjVs9T
+         Aepw==
+X-Gm-Message-State: APjAAAXFQEwj1X8ER+WEWD8hNzaKRsHqJ8yJG/GMkgaLWMHHej6sUv8/
+        dABBi7KGssvZQBDxZAYLBuzQ6mP0ZzQr9gXvxPH2GpyZUHhB
+X-Google-Smtp-Source: APXvYqyZcxp7ikwDBbznQ2nBrj/t/swKKWJEKu+KKXEcMLd1jID7oOE5iu4p5dwygAIh0JSdJaR7YY2S2HHJ8H48rNNcwxOtjYXX
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b608:: with SMTP id g8mr8183327iof.37.1551983105194;
+X-Received: by 2002:a02:86:: with SMTP id 128mr8591883jaa.21.1551983105414;
  Thu, 07 Mar 2019 10:25:05 -0800 (PST)
 Date:   Thu, 07 Mar 2019 10:25:05 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aec29a0583853924@google.com>
-Subject: general protection fault in __queue_work
-From:   syzbot <syzbot+b26e643d0aa2822e9c87@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+Message-ID: <000000000000b24b32058385399b@google.com>
+Subject: KASAN: use-after-free Read in dst_dev_put
+From:   syzbot <syzbot+dc85a3260b30f5c9a531@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dsahern@gmail.com,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,107 +57,116 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    3717f613f48d Merge branch 'core-rcu-for-linus' of git://gi..
+HEAD commit:    7d762d69145a afs: Fix manually set volume location server ..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=156e100b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=73d88a42238825ad
-dashboard link: https://syzkaller.appspot.com/bug?extid=b26e643d0aa2822e9c87
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ebb8ecc00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b76ec970784287c
+dashboard link: https://syzkaller.appspot.com/bug?extid=dc85a3260b30f5c9a531
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b26e643d0aa2822e9c87@syzkaller.appspotmail.com
+Reported-by: syzbot+dc85a3260b30f5c9a531@syzkaller.appspotmail.com
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 23765 Comm: syz-executor.2 Not tainted 5.0.0+ #8
+==================================================================
+BUG: KASAN: use-after-free in dst_dev_put+0x219/0x290 net/core/dst.c:168
+Read of size 8 at addr ffff88808d1f42c0 by task ksoftirqd/1/16
+
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.0.0-rc8+ #88
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:strlen+0x1f/0xa0 lib/string.c:483
-Code: 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 55 48  
-89 fa 48 89 e5 48 c1 ea 03 41 54 49 89 fc 53 48 83 ec 08 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 04 84 c0 75 4d 41 80 3c 24
-RSP: 0018:ffff88801b96f080 EFLAGS: 00010082
-RAX: dffffc0000000000 RBX: ffff88809fe08428 RCX: 0000000000000000
-kobject: 'loop0' (00000000c40c285a): kobject_uevent_env
-RDX: 1d00000000200062 RSI: ffff8880ae82c831 RDI: e800000001000313
-RBP: ffff88801b96f098 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffed1015d05bcf R11: 0000000000000001 R12: e800000001000313
-R13: 0000000000000000 R14: ffff8880ae82c831 R15: ffff88801b96f168
-FS:  00007f08e786c700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-kobject: 'loop0' (00000000c40c285a): fill_kobj_path: path  
-= '/devices/virtual/block/loop0'
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000004f616000 CR4: 00000000001426f0
 Call Trace:
-  trace_event_get_offsets_lock_acquire include/trace/events/lock.h:13  
-[inline]
-  perf_trace_lock_acquire+0xb9/0x580 include/trace/events/lock.h:13
-  trace_lock_acquire include/trace/events/lock.h:13 [inline]
-  lock_acquire+0x29c/0x3f0 kernel/locking/lockdep.c:3840
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:144
-  spin_lock include/linux/spinlock.h:329 [inline]
-  __queue_work+0x23d/0x1180 kernel/workqueue.c:1437
-  __queue_delayed_work+0x1d6/0x270 kernel/workqueue.c:1542
-  mod_delayed_work_on+0xd8/0x200 kernel/workqueue.c:1616
-  mod_delayed_work include/linux/workqueue.h:542 [inline]
-  addrconf_mod_dad_work+0x3f/0xa0 net/ipv6/addrconf.c:328
-  addrconf_dad_start+0x76/0xb0 net/ipv6/addrconf.c:4012
-  addrconf_add_linklocal+0x28c/0x3c0 net/ipv6/addrconf.c:3191
-  addrconf_addr_gen+0x34d/0x3a0 net/ipv6/addrconf.c:3314
-  addrconf_dev_config+0x1ea/0x2c0 net/ipv6/addrconf.c:3357
-  addrconf_notify+0x3c5/0x2280 net/ipv6/addrconf.c:3592
-  notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
-  __raw_notifier_call_chain kernel/notifier.c:394 [inline]
-  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
-  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
-  call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
-  call_netdevice_notifiers net/core/dev.c:1765 [inline]
-  __dev_notify_flags+0x121/0x2c0 net/core/dev.c:7605
-  dev_change_flags+0x10d/0x170 net/core/dev.c:7643
-  devinet_ioctl+0x1396/0x1c60 net/ipv4/devinet.c:1104
-  inet_ioctl+0x1fc/0x370 net/ipv4/af_inet.c:954
-  packet_ioctl+0xcb/0x2b0 net/packet/af_packet.c:4099
-  sock_do_ioctl+0xde/0x300 net/socket.c:972
-  sock_ioctl+0x32b/0x610 net/socket.c:1096
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+  dst_dev_put+0x219/0x290 net/core/dst.c:168
+  rt_fibinfo_free_cpus net/ipv4/fib_semantics.c:200 [inline]
+  free_fib_info_rcu+0x2f4/0x4a0 net/ipv4/fib_semantics.c:217
+  __rcu_reclaim kernel/rcu/rcu.h:240 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2452 [inline]
+  invoke_rcu_callbacks kernel/rcu/tree.c:2773 [inline]
+  rcu_process_callbacks+0x928/0x1390 kernel/rcu/tree.c:2754
+  __do_softirq+0x266/0x95a kernel/softirq.c:292
+  run_ksoftirqd kernel/softirq.c:654 [inline]
+  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:646
+  smpboot_thread_fn+0x6ab/0xa10 kernel/smpboot.c:164
+  kthread+0x357/0x430 kernel/kthread.c:246
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Allocated by task 19257:
+  save_stack+0x45/0xd0 mm/kasan/common.c:73
+  set_track mm/kasan/common.c:85 [inline]
+  __kasan_kmalloc mm/kasan/common.c:495 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:468
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:503
+  slab_post_alloc_hook mm/slab.h:440 [inline]
+  slab_alloc mm/slab.c:3388 [inline]
+  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3548
+  anon_vma_chain_alloc mm/rmap.c:129 [inline]
+  anon_vma_clone+0xde/0x480 mm/rmap.c:269
+  anon_vma_fork+0x8f/0x4a0 mm/rmap.c:332
+  dup_mmap kernel/fork.c:541 [inline]
+  dup_mm kernel/fork.c:1320 [inline]
+  copy_mm kernel/fork.c:1375 [inline]
+  copy_process.part.0+0x350f/0x79a0 kernel/fork.c:1917
+  copy_process kernel/fork.c:1710 [inline]
+  _do_fork+0x257/0xfe0 kernel/fork.c:2227
+  __do_sys_clone kernel/fork.c:2334 [inline]
+  __se_sys_clone kernel/fork.c:2328 [inline]
+  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2328
   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457f29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f08e786bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000457f29
-RDX: 0000000020000240 RSI: 0000000000008914 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f08e786c6d4
-R13: 00000000004c35d0 R14: 00000000004d6408 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 2c7811a1cf58c24e ]---
-RIP: 0010:strlen+0x1f/0xa0 lib/string.c:483
-Code: 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 55 48  
-89 fa 48 89 e5 48 c1 ea 03 41 54 49 89 fc 53 48 83 ec 08 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 04 84 c0 75 4d 41 80 3c 24
-RSP: 0018:ffff88801b96f080 EFLAGS: 00010082
-RAX: dffffc0000000000 RBX: ffff88809fe08428 RCX: 0000000000000000
-RDX: 1d00000000200062 RSI: ffff8880ae82c831 RDI: e800000001000313
-RBP: ffff88801b96f098 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffed1015d05bcf R11: 0000000000000001 R12: e800000001000313
-kobject: 'kvm' (000000007d76adfd): kobject_uevent_env
-R13: 0000000000000000 R14: ffff8880ae82c831 R15: ffff88801b96f168
-FS:  00007f08e786c700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000004f616000 CR4: 00000000001426f0
+
+Freed by task 29904:
+  save_stack+0x45/0xd0 mm/kasan/common.c:73
+  set_track mm/kasan/common.c:85 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:457
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:465
+  __cache_free mm/slab.c:3494 [inline]
+  kmem_cache_free+0x86/0x260 mm/slab.c:3754
+  anon_vma_chain_free mm/rmap.c:134 [inline]
+  unlink_anon_vmas+0x2ba/0x870 mm/rmap.c:401
+  free_pgtables+0x1af/0x2f0 mm/memory.c:393
+  exit_mmap+0x2d1/0x530 mm/mmap.c:3141
+  __mmput kernel/fork.c:1047 [inline]
+  mmput+0x15f/0x4c0 kernel/fork.c:1068
+  exec_mmap fs/exec.c:1046 [inline]
+  flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
+  load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:869
+  search_binary_handler fs/exec.c:1656 [inline]
+  search_binary_handler+0x17f/0x570 fs/exec.c:1634
+  exec_binprm fs/exec.c:1698 [inline]
+  __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
+  do_execveat_common fs/exec.c:1865 [inline]
+  do_execve fs/exec.c:1882 [inline]
+  __do_sys_execve fs/exec.c:1963 [inline]
+  __se_sys_execve fs/exec.c:1958 [inline]
+  __x64_sys_execve+0x8f/0xc0 fs/exec.c:1958
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88808d1f42a0
+  which belongs to the cache anon_vma_chain of size 80
+The buggy address is located 32 bytes inside of
+  80-byte region [ffff88808d1f42a0, ffff88808d1f42f0)
+The buggy address belongs to the page:
+page:ffffea0002347d00 count:1 mapcount:0 mapping:ffff88821bc40640 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00026112c8 ffffea0002439488 ffff88821bc40640
+raw: 0000000000000000 ffff88808d1f4000 0000000100000024 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808d1f4180: fb fb fb fb fc fc fc fc fb fb fb fb fb fb fb fb
+  ffff88808d1f4200: fb fb fc fc fc fc fb fb fb fb fb fb fb fb fb fb
+> ffff88808d1f4280: fc fc fc fc fb fb fb fb fb fb fb fb fb fb fc fc
+                                            ^
+  ffff88808d1f4300: fc fc fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+  ffff88808d1f4380: fb fb fb fb fb fb fb fb fb fb fc fc fc fc fb fb
+==================================================================
 
 
 ---
