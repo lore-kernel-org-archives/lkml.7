@@ -2,94 +2,96 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D63EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3838EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E83420840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F420520851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EoYi74SU"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="k6SPk5ib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfCGR60 (ORCPT
+        id S1726358AbfCGR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:58:26 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37214 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfCGR60 (ORCPT
+        Thu, 7 Mar 2019 12:58:31 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:33596 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726172AbfCGR61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:58:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q206so11854542pgq.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:58:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=8VsHJfo8YdLm1sjO4eMpCNwfZOE+M1UOmaF2z5vJeTU=;
-        b=EoYi74SUw9dJ9NWfgJcKveZOlAIfxdfUCPyS9Lq+Co04l/ck/Ua6tiaWiE5n5r8621
-         tAiZJm5z4uaYkkeAmsGWLpVXHeGJ3pDcXc0SdUvu6eko1wgPHV0l5NVzsszAi4BWR51C
-         G+B3Hu3nQIDpdbo9E50t3E27yXw+1ccvPHeMEIKs+3aStXfVscF/bTbmy+lLwtCnXJ1B
-         zY9v0Nx+HBFa6fBMqG+IA072WYTMMBVjnf3lTkw2kjVGRFdyPJGYZFehPS4jAGQ9A0ah
-         nVdzz5+U6jJ1PuPY5kHUX0zjENUlsM/2GDLpXvQ6xnU/0/ZyeOP+RtwOd2kIQGX0qlrg
-         pBRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=8VsHJfo8YdLm1sjO4eMpCNwfZOE+M1UOmaF2z5vJeTU=;
-        b=JWCeC6Y1jxbNT0TmOJEhiTf2G5uozPXubHKC55fMXa4M2A3t4jajZRPiGFQjhTOnLR
-         Ih3laIB/pqXBkC0XhZdNUH4lPpU+X8fq3/h6AiRJNVArwOPtbAQPgKa9Zv4ia5JsXAYZ
-         9qWq9r/fk0cwDMxMjGmIps2qiJ/O69GvOH+vLuLiTZzXE/XRZN0Pc6EekjD1JGRTJmFT
-         eLsDsdib7izPjHpxAMzDtdZuiPxDJmyCOqGIb3eoBgLrC62emfOxPuli+MfG8x0laQ5u
-         5ULBREkzcrx8Xts8KcBqp997WZ2UDbZo9aM2Qb6oAceMkqiDamWpZp6uuNpaPzFXjXrm
-         PpWQ==
-X-Gm-Message-State: APjAAAX9tYyfsJYUJF4VDeA1wiEjugVUo4UEQoeCwJEDqtdt+n8xOFy8
-        +bRr+Z6XS5uzmK2MUJvC0dEfokwdEmIEjRiJgJ+hJg==
-X-Google-Smtp-Source: APXvYqzhv3AuMyTkWnLFl4VFxzOfI/H3TxwX8+aD+FLiJM3ERLnoOGCBXxiLuX3Wa90peo3iO2A6ETSPJDCO3rSxj7E=
-X-Received: by 2002:a62:f20d:: with SMTP id m13mr13818724pfh.174.1551981505308;
- Thu, 07 Mar 2019 09:58:25 -0800 (PST)
+        Thu, 7 Mar 2019 12:58:27 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27Ho4XN031443
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:58:26 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=ZrZDcczo4vpZnSIhb1+K0nkCR0Uk73l7sK2TRzsEYmg=;
+ b=k6SPk5iben7PA5kFZ6Dfl8QBX9SLQpFYP363ECoCeq2xwAEe3PVkmmhVKUDreQMPKchb
+ Qk3Ok4fomV63BsXTqw27iN4oeDx6vyYGreBU02dpQ5D84pYDX+JL3ZPXap+TQYPObVv6
+ t2tz5VgfAs+uMhIzdRPWliGIV/Q6pHnj5UQ= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r37b7ratg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:58:26 -0800
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 7 Mar 2019 09:58:25 -0800
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id F28BB62E1750; Thu,  7 Mar 2019 09:58:24 -0800 (PST)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v7 perf,bpf 01/15] perf, bpf: consider events with attr.bpf_event as side-band events
+Date:   Thu, 7 Mar 2019 09:57:56 -0800
+Message-ID: <20190307175810.249857-2-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190307175810.249857-1-songliubraving@fb.com>
+References: <20190307175810.249857-1-songliubraving@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <20190307163515.2168-1-natechancellor@gmail.com> <20190307175550.GO31119@twin.jikos.cz>
-In-Reply-To: <20190307175550.GO31119@twin.jikos.cz>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 7 Mar 2019 09:58:14 -0800
-Message-ID: <CAKwvOd=SY7wOD0UTXcqcY7ugprOMgbbb8y0Z-rTGQpBqRJ8YaQ@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: Turn an 'else if' into an 'else' in btrfs_uuid_tree_add
-To:     dsterba@suse.cz, Nathan Chancellor <natechancellor@gmail.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-07_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 9:54 AM David Sterba <dsterba@suse.cz> wrote:
->
-> On Thu, Mar 07, 2019 at 09:35:15AM -0700, Nathan Chancellor wrote:
-> > When building with -Wsometimes-uninitialized, Clang warns:
-> >
-> > fs/btrfs/uuid-tree.c:129:13: warning: variable 'eb' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-> > fs/btrfs/uuid-tree.c:129:13: warning: variable 'offset' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-> >
-> > Clang can't tell that all cases are covered with this final else if.
->
-> The chain of conditions is
->
-> if (ret >= 0)
-> else if (ret == -EEXIST)
-> else if (ret < 0)
+Events with bpf_event should be considered as side-band event, as they
+carry information about BPF programs.
 
-In the few cases we looked at, it seemed that the compiler's heuristic
-for coverage doesn't try very hard.  I assume once you start having
-more complicated expressions is gets quite difficult to prove.
+Fixes: 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks for the patch Nathan!
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f1a26c8f15b3..4a59cb9b29ee 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4238,7 +4238,8 @@ static bool is_sb_event(struct perf_event *event)
+ 	if (attr->mmap || attr->mmap_data || attr->mmap2 ||
+ 	    attr->comm || attr->comm_exec ||
+ 	    attr->task || attr->ksymbol ||
+-	    attr->context_switch)
++	    attr->context_switch ||
++	    attr->bpf_event)
+ 		return true;
+ 	return false;
+ }
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.1
+
