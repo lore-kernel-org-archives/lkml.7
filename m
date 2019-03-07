@@ -2,156 +2,85 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12EBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F43AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9911120675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3861C20835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:17:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X8jAVk52";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mvjviy2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfCGMOc (ORCPT
+        id S1726283AbfCGMRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:14:32 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:40652 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbfCGMOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:14:32 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 7 Mar 2019 07:17:12 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:58900 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCGMRL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 07:17:11 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 33ABC6028D; Thu,  7 Mar 2019 12:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551961031;
+        bh=I0OYafYW2t5EUHcmHWJ/LQyiRzfz1b14JHSHEOR7xzo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X8jAVk52HB4RDNnOfBEOT4hoYwyd+fc3CasyQxLxht0jaq0aec640e8EeHOd6rXYz
+         /199p1BgazVkm2DM9XdJJ+KoG7jsBAGbQvO84CWKEaEQcnOhonqJKEGgu1gzoadzxr
+         YtxZdJw2RtApEJKtLCew43bre0OrUSUFLdomxcn4=
+Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 42C143084299;
-        Thu,  7 Mar 2019 12:14:32 +0000 (UTC)
-Received: from krava (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 91B204142;
-        Thu,  7 Mar 2019 12:14:30 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 13:14:29 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 07/10] perf record: implement -z,--compression_level=n
- option and compression
-Message-ID: <20190307121429.GB29474@krava>
-References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
- <87fa1906-2d6a-a00a-7ba5-b570d0cbf9cc@linux.intel.com>
- <20190305122534.GB16615@krava>
- <ee765c0e-6e5c-e879-aaa6-40f314f85a5e@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee765c0e-6e5c-e879-aaa6-40f314f85a5e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 07 Mar 2019 12:14:32 +0000 (UTC)
+        (Authenticated sender: c-hbandi@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 709E060264;
+        Thu,  7 Mar 2019 12:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551961030;
+        bh=I0OYafYW2t5EUHcmHWJ/LQyiRzfz1b14JHSHEOR7xzo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Mvjviy2qcWREW/89zH3CG1QcwxNIfbkosantWISfLbOwd+ogmzg1wlBBIxBdnvaQG
+         nCLgt37sh1GvY0wPKl9ofI2vRUu1X7t9YLq00cEwGO0kedIM5kojwdTTwyb0Xi7Mua
+         wHeYHOSGaww6K5TBggXJrZGEbrHyGXmo0ocWXVXE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 709E060264
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
+From:   Harish Bandi <c-hbandi@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
+Subject: [PATCH v1 0/2] Enable Bluetooth functionality for wcn3998. 
+Date:   Thu,  7 Mar 2019 17:46:50 +0530
+Message-Id: <1551961012-23898-1-git-send-email-c-hbandi@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:39:46AM +0300, Alexey Budankov wrote:
-> 
-> On 05.03.2019 15:25, Jiri Olsa wrote:
-> > On Fri, Mar 01, 2019 at 06:58:32PM +0300, Alexey Budankov wrote:
-> > 
-> > SNIP
-> > 
-> >>  
-> >>  	/*
-> >>  	 * Increment md->refcount to guard md->data[idx] buffer
-> >> @@ -350,7 +357,7 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
-> >>  	md->prev = head;
-> >>  	perf_mmap__consume(md);
-> >>  
-> >> -	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
-> >> +	rc = push(to, md->aio.data[idx], size0 + size, *off, &md->aio.cblocks[idx]);
-> >>  	if (!rc) {
-> >>  		*off += size0 + size;
-> >>  	} else {
-> >> @@ -556,13 +563,15 @@ int perf_mmap__read_init(struct perf_mmap *map)
-> >>  }
-> >>  
-> >>  int perf_mmap__push(struct perf_mmap *md, void *to,
-> >> -		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
-> >> +		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
-> >> +		    perf_mmap__compress_fn_t compress, void *comp_data)
-> >>  {
-> >>  	u64 head = perf_mmap__read_head(md);
-> >>  	unsigned char *data = md->base + page_size;
-> >>  	unsigned long size;
-> >>  	void *buf;
-> >>  	int rc = 0;
-> >> +	size_t mmap_len = perf_mmap__mmap_len(md);
-> >>  
-> >>  	rc = perf_mmap__read_init(md);
-> >>  	if (rc < 0)
-> >> @@ -574,7 +583,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
-> >>  		buf = &data[md->start & md->mask];
-> >>  		size = md->mask + 1 - (md->start & md->mask);
-> >>  		md->start += size;
-> >> -
-> >> +		if (compress) {
-> >> +			size = compress(comp_data, md->data, mmap_len, buf, size);
-> >> +			buf = md->data;
-> >> +		}
-> >>  		if (push(md, to, buf, size) < 0) {
-> >>  			rc = -1;
-> >>  			goto out;
-> > 
-> > when we discussed the compress callback should be another layer
-> > in perf_mmap__push I was thinking more of the layered/fifo design,
-> > like:
-> > 
-> > normaly we call:
-> > 
-> > 	perf_mmap__push(... push = record__pushfn ...)
-> > 		-> reads mmap data and calls push(data), which translates as:
-> > 
-> > 		record__pushfn(data);
-> > 			- which stores the data
-> > 
-> > 
-> > for compressed it'd be:
-> > 
-> > 	perf_mmap__push(... push = compressed_push ...)
-> > 
-> > 		-> reads mmap data and calls push(data), which translates as:
-> > 
-> > 		compressed_push(data)
-> > 			-> reads data, compresses them and calls, next push callback in line:
-> > 
-> > 			record__pushfn(data)
-> > 				- which stores the data
-> > 
-> > 
-> > there'd need to be the logic for compressed_push to
-> > remember the 'next push' function
-> 
-> That is suboptimal for AIO. Also compression is an independent operation that 
-> could be applied on any of push stages you mean.
+This patch series we add support for wcn3998 BT chip set. This new chipset
+is based from the wcn3990 with minimal power numbers. So here in this patch
+The major difference between wcn3990 and wcn3998 is only power numbers. where
+as init process and fw download is same with wcn3990.So we are leveraging the 
+existing code of wcn3990 along with readiing the voltages from the dts file. 
 
-not sure what you mean by suboptimal, but I think
-that it can still happen in subsequent push callback
 
-> 
-> > 
-> > but I think this was the original idea behind the
-> > perf_mmap__push -> it gets the data and pushes them for
-> > the next processing.. it should stay as simple as that
-> 
-> Agree on keeping simplicity and, at the moment, there is no any push to the next 
-> processing in the code so provided implementation fits as for serial as for AIO
-> at the same time sticking to simplicity as much as possibly. If you see something 
-> that would fit better please speak up and share.
+Harish Bandi (2):
+  Bluetooth: hci_qca: Added support to read the regulator values from
+    DTS
+  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
+    wcn3990
 
-I have to insist that perf_mmap__push stays untouched
-and we do other processing in the push callbacks
+ .../devicetree/bindings/net/qualcomm-bluetooth.txt | 12 ++++
+ drivers/bluetooth/hci_qca.c                        | 76 +++++++++++++++++++---
+ 2 files changed, 80 insertions(+), 8 deletions(-)
 
-jirka
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
