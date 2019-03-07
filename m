@@ -2,72 +2,83 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AF2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20DDC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574872085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23B520851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 18:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfCGSeL convert rfc822-to-8bit (ORCPT
+        id S1726334AbfCGSiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 13:34:11 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:50492 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbfCGSeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 13:34:11 -0500
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h1xq9-0003jG-Ce; Thu, 07 Mar 2019 19:33:57 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, arm@kernel.org,
-        kernel@collabora.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Yannick =?ISO-8859-1?Q?Fertr=E9?= <yannick.fertre@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Olof Johansson <olof@lixom.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: Re: [PATCH v2] ARM: multi_v7_defconfig: Enable missing drivers for supported Chromebooks
-Date:   Thu, 07 Mar 2019 19:33:56 +0100
-Message-ID: <4389876.Ov8Zuus1em@diego>
-In-Reply-To: <20190307152031.13417-1-enric.balletbo@collabora.com>
-References: <20190307152031.13417-1-enric.balletbo@collabora.com>
+        Thu, 7 Mar 2019 13:38:03 -0500
+Received: from mail02.iobjects.de ([188.40.134.68]:53672 "EHLO
+        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbfCGSiD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 13:38:03 -0500
+X-Greylist: delayed 524 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Mar 2019 13:38:02 EST
+Received: from tux.wizards.de (pD9EBF050.dip0.t-ipconnect.de [217.235.240.80])
+        by mail02.iobjects.de (Postfix) with ESMTPSA id 2B4074160E37;
+        Thu,  7 Mar 2019 19:29:17 +0100 (CET)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.wizards.de (Postfix) with ESMTP id 934BAF01611;
+        Thu,  7 Mar 2019 19:29:16 +0100 (CET)
+Subject: Re: [PATCH BUGFIX IMPROVEMENT 0/8] block, bfq: fix bugs, reduce exec
+ time and boost performance
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        broonie@kernel.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name, fra.fra.800@gmail.com
+References: <20190307162554.77205-1-paolo.valente@linaro.org>
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <469708ba-e483-b98c-118d-abc26ab8871a@applied-asynchrony.com>
+Date:   Thu, 7 Mar 2019 19:29:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20190307162554.77205-1-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 7. März 2019, 16:20:31 CET schrieb Enric Balletbo i Serra:
-> Enable following drivers for merged devices:
-> - Batteries with BQ27XXX chips for Minnie boards.
-> - Elan eKTH I2C touchscreen for Minnie boards.
-> - GPIO charger for all Veyron boards.
-> - Rockchip SARADC driver for all rk3288 boards.
-> - Rockchip eFUSE driver for all rk3288 boards.
-> - TPM security chip for all Veyron boards.
-> - ChromeOS EC userspace interface for all chromebooks boards.
-> - ChromeOS EC light and proximity sensors for some chromebooks.
+On 3/7/19 5:25 PM, Paolo Valente wrote:
+> Hi,
+> since I didn't make it to submit these ones for 5.1, let me be
+> early for 5.2 :)
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> These patches fix some bug affecting performance, reduce execution
+> time a little bit, and boost throughput and responsiveness.
+> 
+> They are meant to be applied on top of the last series I submitted:
+> https://lkml.org/lkml/2019/1/29/368
 
-@arm-soc people, do you want to apply this directly, if so here is a
+I have the earlier series applied & working well. This one applies cleanly
+on top, but something's wrong with the bfq_log_bfqq() macro:
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+   CC [M]  block/bfq-iosched.o
+In file included from block/bfq-iosched.c:140:
+block/bfq-iosched.c: In function 'bfq_check_fifo':
+block/bfq-iosched.h:1058:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   char pid_str[MAX_PID_STR_LENGTH]; \
+   ^~~~
+block/bfq-iosched.c:890:2: note: in expansion of macro 'bfq_log_bfqq'
+   bfq_log_bfqq(bfqq->bfqd, bfqq, "check_fifo: returned %p", rq);
+   ^~~~~~~~~~~~
+block/bfq-iosched.c: In function 'bfq_updated_next_req':
+block/bfq-iosched.h:1058:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
 
+This is with gcc 8.3.0 on top of 5.0++.
 
-Heiko
-
-
+thanks,
+Holger
