@@ -2,111 +2,220 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A851C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23584C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B41420835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jJubGaVl"
+	by mail.kernel.org (Postfix) with ESMTP id DF03220835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 05:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfCGFBF (ORCPT
+        id S1726456AbfCGFBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 00:01:05 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49136 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfCGFBF (ORCPT
+        Thu, 7 Mar 2019 00:01:40 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:63887 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725294AbfCGFBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 00:01:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tU/hlJU8VvRBjnpc0IVqG3D04FZPbB5MBMU/9Tb3auw=; b=jJubGaVlkVh9e7FLikY6BAXps
-        Pt1kan2T+GwidNMz6qYcjsaRDudN/MZsaDrOABueGGNDCDSqBkG9oH36Ty8drl4AGBKRb96krhzKU
-        +ZjkjUR5Mr4/9vpSq2aMLHEMZek/fbfGUeg6sTJXpcV01tRUt9ZqCOCcO+TRzTalkdexCWS++2w73
-        yKZzAVyII9ju7tfsiq/OxuoZl8DltxuPYYxiXi3oXQVmbq3m8n6tkkRVjrzoYMpXtSpmC5j9J+opc
-        OVICPnTtguX7pJhhtyaEzo6r2KUfAV21jU1JGyIFw9hV2WL/7JZ4/xZRGzTit74hUiWEBcARrZPhI
-        CivthLnIg==;
-Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1l9R-0008SL-Me; Thu, 07 Mar 2019 05:01:01 +0000
-Date:   Wed, 6 Mar 2019 21:01:00 -0800
-From:   Darren Hart <dvhart@infradead.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 2/7] x86, olpc: Use a correct version when making up a
- battery node
-Message-ID: <20190307050100.GA44339@wrath>
-References: <20190110174005.1202564-1-lkundrak@v3.sk>
- <20190110174005.1202564-3-lkundrak@v3.sk>
+        Thu, 7 Mar 2019 00:01:39 -0500
+X-UUID: 60ad65441ace4759afd1f50797dda3b2-20190307
+X-UUID: 60ad65441ace4759afd1f50797dda3b2-20190307
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 314070692; Thu, 07 Mar 2019 13:01:33 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
+ 2019 13:01:32 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 7 Mar 2019 13:01:31 +0800
+Message-ID: <1551934891.30363.58.camel@mhfsdcap03>
+Subject: Re: [PATCH v5 5/5] i2c: mediatek: Add i2c support for MediaTek
+ MT8183
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        <xinping.qian@mediatek.com>, <liguo.zhang@mediatek.com>,
+        Rob Herring <robh@kernel.org>
+Date:   Thu, 7 Mar 2019 13:01:31 +0800
+In-Reply-To: <CANMq1KBMwWEegui9439q2wVVLRyp6XT8=Om8H7EYGCR6bJw=eg@mail.gmail.com>
+References: <1551186660-16902-1-git-send-email-qii.wang@mediatek.com>
+         <1551186660-16902-6-git-send-email-qii.wang@mediatek.com>
+         <CANMq1KBMwWEegui9439q2wVVLRyp6XT8=Om8H7EYGCR6bJw=eg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190110174005.1202564-3-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 06:40:00PM +0100, Lubomir Rintel wrote:
-> The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> ambient temperature. Add a different compatible string to the 1.5
-> battery.
+On Wed, 2019-03-06 at 18:52 +0800, Nicolas Boichat wrote:
+> On Tue, Feb 26, 2019 at 9:11 PM Qii Wang <qii.wang@mediatek.com> wrote:
+> >
+> > Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
+> > MT8183 has different register offsets. Ltiming_reg is added to
+> > adjust low width of SCL. Arb clock and dma_sync are needed.
+> >
+> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > ---
+> >  drivers/i2c/busses/i2c-mt65xx.c |   53 +++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 51 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > index 75d88e1..82eedbd 100644
+> > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> > @@ -133,6 +133,8 @@ enum I2C_REGS_OFFSET {
+> >         OFFSET_DEBUGCTRL,
+> >         OFFSET_TRANSFER_LEN_AUX,
+> >         OFFSET_CLOCK_DIV,
+> > +       /* MT8183 only regs */
+> > +       OFFSET_LTIMING,
+> >  };
+> >
+> >  static const u16 mt_i2c_regs_v1[] = {
+> > @@ -162,6 +164,32 @@ enum I2C_REGS_OFFSET {
+> >         [OFFSET_CLOCK_DIV] = 0x70,
+> >  };
+> >
+> > +static const u16 mt_i2c_regs_v2[] = {
+> > +       [OFFSET_DATA_PORT] = 0x0,
+> > +       [OFFSET_SLAVE_ADDR] = 0x4,
+> > +       [OFFSET_INTR_MASK] = 0x8,
+> > +       [OFFSET_INTR_STAT] = 0xc,
+> > +       [OFFSET_CONTROL] = 0x10,
+> > +       [OFFSET_TRANSFER_LEN] = 0x14,
+> > +       [OFFSET_TRANSAC_LEN] = 0x18,
+> > +       [OFFSET_DELAY_LEN] = 0x1c,
+> > +       [OFFSET_TIMING] = 0x20,
+> > +       [OFFSET_START] = 0x24,
+> > +       [OFFSET_EXT_CONF] = 0x28,
+> > +       [OFFSET_LTIMING] = 0x2c,
+> > +       [OFFSET_HS] = 0x30,
+> > +       [OFFSET_IO_CONFIG] = 0x34,
+> > +       [OFFSET_FIFO_ADDR_CLR] = 0x38,
+> > +       [OFFSET_TRANSFER_LEN_AUX] = 0x44,
+> > +       [OFFSET_CLOCK_DIV] = 0x48,
+> > +       [OFFSET_SOFTRESET] = 0x50,
+> > +       [OFFSET_DEBUGSTAT] = 0xe0,
+> > +       [OFFSET_DEBUGCTRL] = 0xe8,
+> > +       [OFFSET_FIFO_STAT] = 0xf4,
+> > +       [OFFSET_FIFO_THRESH] = 0xf8,
+> > +       [OFFSET_DCM_EN] = 0xf88,
+> > +};
+> > +
+> >  struct mtk_i2c_compatible {
+> >         const struct i2c_adapter_quirks *quirks;
+> >         const u16 *regs;
+> > @@ -195,6 +223,7 @@ struct mtk_i2c {
+> >         enum mtk_trans_op op;
+> >         u16 timing_reg;
+> >         u16 high_speed_reg;
+> > +       u16 ltiming_reg;
+> >         unsigned char auto_restart;
+> >         bool ignore_restart_irq;
+> >         const struct mtk_i2c_compatible *dev_comp;
+> > @@ -271,12 +300,24 @@ struct mtk_i2c {
+> >         .dma_sync = 0,
+> >  };
+> >
+> > +static const struct mtk_i2c_compatible mt8183_compat = {
+> > +       .regs = mt_i2c_regs_v2,
+> > +       .pmic_i2c = 0,
+> > +       .dcm = 0,
+> > +       .auto_restart = 1,
+> > +       .aux_len_reg = 1,
+> > +       .support_33bits = 1,
+> > +       .timing_adjust = 1,
+> > +       .dma_sync = 1,
+> > +};
+> > +
+> >  static const struct of_device_id mtk_i2c_of_match[] = {
+> >         { .compatible = "mediatek,mt2712-i2c", .data = &mt2712_compat },
+> >         { .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
+> >         { .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
+> >         { .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+> >         { .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
+> > +       { .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
+> > @@ -361,6 +402,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
+> >
+> >         mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
+> >         mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
+> > +       if (i2c->dev_comp->regs == mt_i2c_regs_v2)
+> > +               mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
+> 
+> Matthias wasn't super happy with this. One way is to add another field
+> in the compatible string. Another may be to have
+> mt_i2c_regs_v1[OFFSET_LTIMING] point at, say 0xffff (#define this as
+> I2C_REG_INVALID or something), and test for that?
+> 
+> Either way would scale better if we end up with more than 2 versions
+> of the register set in the future.
+> 
 
-Hi Lubomir,
+ok, I will add a flag(ltiming_adjust) in mtk_i2c_compatible.
 
-Thanks for the recent Cc and pointer to here. In general, I have no
-problem with the net changes. I do have some concerns from a
-reviewability and change documentation perspective.
+> >         /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
+> >         if (i2c->have_pmic)
+> > @@ -460,6 +503,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >         unsigned int clk_src;
+> >         unsigned int step_cnt;
+> >         unsigned int sample_cnt;
+> > +       unsigned int l_step_cnt;
+> > +       unsigned int l_sample_cnt;
+> >         unsigned int target_speed;
+> >         int ret;
+> >
+> > @@ -469,11 +514,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >         if (target_speed > MAX_FS_MODE_SPEED) {
+> >                 /* Set master code speed register */
+> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
+> > -                                             &step_cnt, &sample_cnt);
+> > +                                             &l_step_cnt, &l_sample_cnt);
+> >                 if (ret < 0)
+> >                         return ret;
+> >
+> > -               i2c->timing_reg = (sample_cnt << 8) | step_cnt;
+> > +               i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
+> >
+> >                 /* Set the high speed mode register */
+> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
+> > @@ -483,6 +528,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >
+> >                 i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
+> >                         (sample_cnt << 12) | (step_cnt << 8);
+> > +               i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
+> > +                                  (sample_cnt << 12) | (step_cnt << 9);
+> >         } else {
+> >                 ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
+> >                                               &step_cnt, &sample_cnt);
+> > @@ -493,6 +540,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+> >
+> >                 /* Disable the high speed transaction */
+> >                 i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
+> > +
+> > +               i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
+> >         }
+> >
+> >         return 0;
+> > --
+> > 1.7.9.5
+> >
 
-You document your intent above, but you also made several other changes
-to get there which aren't documented, so when reviewing they stand out
-as "why is this here?".
 
-From what I can tell, this change contains:
-
-1) Cleanup of olpc_dt_interpret() calls to avoid splitting string
-literals (noted in the patch history, but not called out as an
-intentional change)
-
-2) Refactoring of logic and breaking out the check for the compatible
-property into olpc_dt_compatible_match
-
-3) Addition of "we're running very old firmware if this is missing"
-checks - I'm not sure how this relates to the stated problem and
-the intended fix.
-
-4) The addition of the xo1.5 compatible property.
-
-All the other things makes it very difficult to determine if this patch
-does what you describe - and only what you describe.
-
-In general please:
-a) Cleanup code
-b) Refactor code
-c) Change functionality
-
-In that order - that way the new functionality is what show up when
-someone does a git blame on the file (rather than a cleanup patch, which
-isn't as useful in defect analysis).
-
-And always document in your commit messages the approach you take to fix
-the reported issue.
-
-Thanks,
-
-
--- 
-Darren Hart
-VMware Open Source Technology Center
