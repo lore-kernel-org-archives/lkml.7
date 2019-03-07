@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EECC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68515C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD4520835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF4920835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfCGKMX (ORCPT
+        id S1726388AbfCGKMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:12:23 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:50521 "EHLO
+        Thu, 7 Mar 2019 05:12:37 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:50225 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfCGKMX (ORCPT
+        with ESMTP id S1726131AbfCGKMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:12:23 -0500
+        Thu, 7 Mar 2019 05:12:37 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MqrsF-1gfxcn0tFp-00mp32; Thu, 07 Mar 2019 11:11:04 +0100
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MpDRv-1gjnOl0S9X-00qi2m; Thu, 07 Mar 2019 11:11:48 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Mark Brown <broonie@kernel.org>
@@ -32,63 +32,71 @@ Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         Tony Lindgren <tony@atomide.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Vishal Thanki <vishalthanki@gmail.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: ams-delta: remove duplicate 'const'
-Date:   Thu,  7 Mar 2019 11:10:49 +0100
-Message-Id: <20190307101101.613881-1-arnd@arndb.de>
+Subject: [PATCH] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+Date:   Thu,  7 Mar 2019 11:11:30 +0100
+Message-Id: <20190307101145.636705-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:k/2OR9k0QoyUUNIInBX08wqkIL3j6Yz0+PfESAJTH3/Iy1DhaZa
- wplY2bTKqUACOsclQ1NkytMx2WxJULDHIjjshJp8ii7siShpsoRktl3oVOjISLlDHjXUl5H
- Cr+FtXhx5wxNAv8W/jxnTHgXFovNPjviCmJ9/KyF+pdKukbTCFPEBxUDN5T4mlKEGI0MfMz
- yqxy19ZAxtz/YZZ1Uicuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CnygP1H9aSA=:5h6CzTF8RPe9XURDae0mf3
- 8SE+KYRkEOlqAhzLim/ZQwvH86n+2b2y5lc7CK/D9ZFLjXgTP4Cx/t4JogcXeTglDCRNEqPQG
- 2WSV0ALCDiPlOmVgsW1B+QQQhLbyMh+Mob0dx2qOHXziaVxyMXnX4DA3CZcg25n1u8EbgXYy5
- ZUX3b+2boYKt2L7KYszmV6auDeEaDl+pvNJ8D+ptUqwuBpo1JHw9DuYc+b0X8CCNEXWqLJn/4
- /4oYOzHonsJyOYVX8kLQJSdFsYZcueIFLadrGyQBH/ci1O2bFR8WYeq2StjkXTqZUtXyeAswL
- RjqjDEdSddP40q/ZCFyO13O4Yh3mGPDYE8OwddSU2t+NgQ0v84H191g91Fdy3e2IgreG4Zt2y
- u9hvCht2P1gfuNH6J7L0RrsuV1z19xw4KLEbFhHJUU3OVWcGVIpHiqdWp8eHsUa6ry/bfYI9s
- puRV/aM1DwGRRpO5a7CrKBPCRCjq/VuhGi1Uft0+25T9jTbvZ/WMeI3xD4rurdjd9EuQZCXro
- 3b1rp0k6cR/MvY+mDhmUlwZSwUw9/KQGU005ucSQXFUlcdOe2eY/UgEGIBajEIGGd9/ux82Fg
- MUlmmNsnyf9BiH4iLG9XRRvFDBiO+lxnvnnThsBAJarYr4BmuJ1MPGnA8xHzyC47WL+8BKVhq
- ux99vBbAqHuCDQJbu649SqQFKVI2oayhaEfl12nYDnFTZTztdBwdz02N+MI6Gwh0P+Dc+wybL
- mRyrhzFjzBauQBV0Hqw4rsrdu6295LkmIaLSJg==
+X-Provags-ID: V03:K1:k4DDxjibd8u11zOsPD7lZAVg/Zeo4oJO0PYetGd3gbXntL9v0Hc
+ AYtFbBGvYEPhSGEF457096RqdOSZCEXJSDK9RIET+JNa1sOOrp1M/Ai9XyzwTqSEhx0mhKR
+ 7Qpt40zFtoHG0j1rIpitct4VODtmyMd2xy5FChig9UsOOf0e62GXl7TsyuFHDtIWDBTST6A
+ 7Ym+9KSwolmfdC7krcf0w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aUhG0xnewKU=:uMK/tCaRRGiBWJ22FZMROg
+ mUaoGPAR2iN9yXx0MVBRtC7A3d8qiEgyCY4chbEok1tZrhqgt38+94ydS1uRsTmfM9TKR3a+8
+ CE90Pr42BbHOzx3RngXMighOOetzJcA+l3oHqnFP0O6sKQwyn3kVUFmE48OlapO59DOYEEfA+
+ IFn2cNK/UbrrE/iltMMfzpszLUlJRgXCFPIBrtGKgybzhScpwQ+SWDtvWAJXSY+x0SXPJgksk
+ d6u9L6QrWdH0vL9GujyHbM5HCpeEP/4mfE6zvmb4KF3JmSM1jYjNC3RWmdeOHwir7xuWPhZNR
+ 0azzbsFMJg+QSlzF9JPkRxy6YZc/6cP8BimW+PMAmkBuh37s9R4OVw9XvqeLMnIcOXCbGLJ8g
+ rpsEMOMxxkzIn46wJt+2v7xYAPuYZ8EVl4PzNLOnE3RUGFEieIN2CLI0CTv+7R2Fp26P9uxaI
+ 5DoXMe1pTkxPYeDr3nDANmfNDnIc3ea27i1KhVpYLAyCDoUx2GiYwlPt+UscNvFs5ybCFFqCW
+ mpg9y9j1GZeybeygtK+N1tq69JSpkH8o+ff6dDJPOaXrKb1DrHoUAdtvy4V5F4RaEYwrd0cvL
+ EU1tIDpwyXKC1bHyGnaxB6WC2z7sdkDwgRUQy5pjp126kXaNqP/I9BwjNr5WCvgVLTeSYo3i0
+ M+CPXekxc5aBbB/uPZed50KW0UhcJjdZl9pKngxqJ3Q2+qDRUZAO1QM/E9DmQwS590S7DV9wL
+ A9aVHX9iVYOKXodCV6+lJudSK8cI66xkTWkn7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang points out that SOC_ENUM_SINGLE_EXT_DECL() contains a 'const'
-modifier already, so adding another one does not make it more const:
+Building with clang shows a variable that is only used by the
+suspend/resume functions but defined outside of their #ifdef block:
 
-sound/soc/ti/ams-delta.c:203:14: error: duplicate 'const' declaration specifier [-Werror,-Wduplicate-decl-specifier]
-static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
-             ^
-include/sound/soc.h:351:2: note: expanded from macro 'SOC_ENUM_SINGLE_EXT_DECL'
-        const struct soc_enum name = SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(xtexts), xtexts)
+sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
 
+We commonly fix these by marking the PM functions as __maybe_unused,
+but here that would grow the davinci_mcasp structure, so instead
+add another #ifdef here.
+
+Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/ti/ams-delta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/ti/davinci-mcasp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/ti/ams-delta.c b/sound/soc/ti/ams-delta.c
-index 4dce494dfbd3..b9611db14c86 100644
---- a/sound/soc/ti/ams-delta.c
-+++ b/sound/soc/ti/ams-delta.c
-@@ -200,7 +200,7 @@ static int ams_delta_get_audio_mode(struct snd_kcontrol *kcontrol,
- 	return 0;
- }
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index a3a67a8f0f54..9fbc759fdefe 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -45,6 +45,7 @@
  
--static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
-+static SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
- 				      ams_delta_audio_mode);
+ #define MCASP_MAX_AFIFO_DEPTH	64
  
- static const struct snd_kcontrol_new ams_delta_audio_controls[] = {
++#ifdef CONFIG_PM
+ static u32 context_regs[] = {
+ 	DAVINCI_MCASP_TXFMCTL_REG,
+ 	DAVINCI_MCASP_RXFMCTL_REG,
+@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
+ 	u32	*xrsr_regs; /* for serializer configuration */
+ 	bool	pm_state;
+ };
++#endif
+ 
+ struct davinci_mcasp_ruledata {
+ 	struct davinci_mcasp *mcasp;
 -- 
 2.20.0
 
