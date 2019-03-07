@@ -2,90 +2,115 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACD7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAFBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68EDD20851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B852064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:42:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RBA5L+Tn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OoTThACC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfCGUkd (ORCPT
+        id S1726283AbfCGUm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:40:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37916 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbfCGUkd (ORCPT
+        Thu, 7 Mar 2019 15:42:26 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38934 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfCGUm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:40:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RLGSlF/tlCrksvMvOF1ni/HlSijSJRoMSXyBiUGR9Nk=; b=RBA5L+Tngrpqg8OqCfrLOLsUD
-        jcHOUvHusPk+A4ytgp1P7dSEkBnXfu7HoEF48yVvTbejYEFqxi21o0b/uNjULF2atX5bahDJ82AvR
-        7J37MqYRgxe4eUzTjnvteDcFD0wltnenzKm77YwCTw1AhAdMbX3LJCrLE//kvU86E3jv7clmOn0MA
-        HH1h3r5ezzvqUxpoub/SNfo//bQJJkzKRa6X8olB2REgk69zQuB+u7qyAzb8hDUfxzcWKVEy24R7S
-        YKzNIQBy9GMf5hNtbmsA/EqgXOCcIiwVZkyffAA9hlcK+l78WJulxNi+dWAY8SPPGkoo6tw+sEVO7
-        Oofr3bmbA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1zoU-0002N2-Md; Thu, 07 Mar 2019 20:40:22 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2AC442029B186; Thu,  7 Mar 2019 21:40:21 +0100 (CET)
-Date:   Thu, 7 Mar 2019 21:40:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
-Message-ID: <20190307204021.GE32534@hirez.programming.kicks-ass.net>
-References: <20190307114511.870090179@infradead.org>
- <20190307115200.697533978@infradead.org>
- <CAHk-=wgKDSSoV5WvO018hoPPSHO=TQ3wwnfOtCpaENceBe0Z6Q@mail.gmail.com>
- <20190307174135.GJ32477@hirez.programming.kicks-ass.net>
- <CAHk-=wgGZWXQj-J2xo0DY7150VrXOSqoD5Dj1_LGYaotqA6Z-Q@mail.gmail.com>
- <20190307184813.GL32477@hirez.programming.kicks-ass.net>
- <20190307202319.GD32534@hirez.programming.kicks-ass.net>
+        Thu, 7 Mar 2019 15:42:26 -0500
+Received: by mail-pg1-f194.google.com with SMTP id h8so12187684pgp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:42:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GDG8Xott1X36zkyKyY0ls+WD8rtU8WOAEx5fvkvCMBw=;
+        b=OoTThACCx97IcoTSG9sIWtVn5OIYaB+o0w4Fg/A9E+V0mjlt8FnFmhFDyT3kLtA0Ju
+         pMY0mataz+LHQnXuAUUAPFyyBRJJtvo99IWaCt+wCHJ1kUR2BV3liXk6Dv4+GF/fpqRk
+         dIJJuLkFcO2wsK2GqPnfEXFSXr6s055xLz7q8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GDG8Xott1X36zkyKyY0ls+WD8rtU8WOAEx5fvkvCMBw=;
+        b=Iu/NK0Ng0W2ADFez7DpSQdurnMbaeTBegDRqNE/o7GoO6RuNkXxHQuzHfUlChcnpfT
+         CjN5um9P6S6c+t2S3XNGziQquHtRLFs2BMqPo2BZRnjbhR+NFXXAfFh2J+qMVpX/la6r
+         sFBolMJZjwV4xAmeHuP7GTROe0xJMi0PYgKPaeGtssIbsd2fyGZOAqmuOVsG6BXB0d/y
+         YaVJmOv6NkLCqxXX0tfWo501mGmowPQap4XMdeg21LC/BA6LYogoqoP2cja4TpsdYckv
+         qSTYgL0HRTukjN0xjUSiMTB9b3zmEfzreOyN1IOdpv+lWj7c34ncA6FmnqNm89Z3orcF
+         CcOA==
+X-Gm-Message-State: APjAAAWic7dlnJBejMzFiYxDDVMxp7Ie4uMsyrvcIJqj21ICFWh6h+O0
+        tuQ+tuB7tccnvG7sySWmq1T0hvM59Yg=
+X-Google-Smtp-Source: APXvYqwp0lCoNw+CvRCphDYMNsIg9Yx60F85NEsB76jEWxkEYYeUzPi1h5RY2nZ6aqrmK/kbIM/jOA==
+X-Received: by 2002:a62:4414:: with SMTP id r20mr14736383pfa.37.1551991345300;
+        Thu, 07 Mar 2019 12:42:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id n4sm14675702pfh.8.2019.03.07.12.42.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 12:42:24 -0800 (PST)
+Date:   Thu, 7 Mar 2019 12:42:24 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        rjliao@codeaurora.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable the ldisc for ROME for x86
+ platforms.
+Message-ID: <20190307204224.GD138592@google.com>
+References: <20190307101722.25871-1-bgodavar@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190307202319.GD32534@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190307101722.25871-1-bgodavar@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 09:23:19PM +0100, Peter Zijlstra wrote:
-> On Thu, Mar 07, 2019 at 07:48:13PM +0100, Peter Zijlstra wrote:
-> > Another thing I need to look at is why objtool only found memset_orig
-> > (from __memset) but not memset_erms, which if I read the code right, is
-> > a possible alternative there.
-> 
-> Turns out we only look for sibling calls in the original instruction
-> stream, not in any alternatives; which in general seems like a fair
-> enough assumption.
+Hi Balakrishna,
 
-And while I'm looking at memset_64.S, why are memset_erms and
-memset_orig global functions? At the very least they should be local,
-and ideally not even functions.
+On Thu, Mar 07, 2019 at 03:47:22PM +0530, Balakrishna Godavarthi wrote:
+> When using btattach to setup Rome over ldisc we observed a crash
+> in qca_setup as it will try to access the serdev which is not
+> available in the ldisc proto. This patch will fix the crash by
+> support both the ldisc and serdev way in the qca hci_uart driver.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+
+Oh, I wasn't aware of the instantiation through ldisc and was actually
+considering to *remove* some of the seemingly unnecessary serdev
+checks.
+
+> ---
+>  drivers/bluetooth/hci_qca.c | 47 ++++++++++++++++++++++---------------
+>  1 file changed, 28 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 237aea34b69f..0a5c98d46864 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -963,7 +963,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+>  {
+>  	struct hci_uart *hu = hci_get_drvdata(hdev);
+>  	struct qca_data *qca = hu->priv;
+> -	struct qca_serdev *qcadev;
+> +	struct qca_serdev *qcadev = NULL;
+
+In many cases the only field that is accessed is qcadev->btsoc_type. I
+think something like 'qca_get_soc_type(struct hci_dev *hdev / struct
+hci_uart *hu)' would make things more readable.
+
+IMO the whole 'qcadev' vs 'qca(_data)' is confusing anyway, in this
+sense even better if we can make most of the 'qcadev' references
+disappear.
+
+Thanks
+
+Matthias
