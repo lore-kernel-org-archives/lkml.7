@@ -2,401 +2,424 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52860C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79593C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3772087C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366A32085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980776;
-	bh=mJ6txY1Ch3/D4+EiSUn8ju3dKrBWyf2ks/Bs+BThj7w=;
+	s=default; t=1551980780;
+	bh=WENxIgQQ0DzgcSLehG8r7BXTk4ghOWX31oAOgnAbYyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JDPi+sQ64JJFltvUQgmRoFzkW3XI1DwurPPzsPzCu3PbahZrQCtdqTsu1U7otSr19
-	 Xcj4vhmAxnVfVmepytoP3r8kQFXtNov2wKw0sPqPRYYHkAWaRY88ULBDbTNDZiXFwE
-	 QcWhNYGjYmCn4th+9XbK6c2JlcDpOjpyuZkNNf7U=
+	b=hsrHw1Qd5J0HbxwmpGPzP5XJFVLwJPkbDSmAgxCjRvFbU59VSroARvvARjYolDMRk
+	 824rrTxWIQjI2lar8qCicBILAg6/EzwxMgWcuzlo0wfjoIRo2/vETozO+04E0/DRTV
+	 pq0ZlFOyHTr3s6wwNGSiHvxhBRu30aPcD/09BTfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfCGRqO (ORCPT
+        id S1726856AbfCGRqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:46:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38450 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 12:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbfCGRqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:46:08 -0500
+        id S1726766AbfCGRqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:46:17 -0500
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBEBE2085A;
-        Thu,  7 Mar 2019 17:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFEE320851;
+        Thu,  7 Mar 2019 17:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551980767;
-        bh=mJ6txY1Ch3/D4+EiSUn8ju3dKrBWyf2ks/Bs+BThj7w=;
+        s=default; t=1551980775;
+        bh=WENxIgQQ0DzgcSLehG8r7BXTk4ghOWX31oAOgnAbYyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZiMG2f65HQSgrKgtPNZn0jD8YiGjvknlD6pPRq5YLkzqSs2TxGlzXoHaZ4U1Z4GJ
-         EkZ92L0L5W6ol8F976wcT0tWbKcCqQi7BALSW5bcTjzKFUTcNOND7Ll/nkRFdTyK9G
-         ZK39GVs186ujYmKyfanyIbP7jhzM352bUx53WdIM=
+        b=Kqi6S+WCNJ7jZfFQPH2TjvSKppVly5HZ0/AszKRcacLI7esCtCH710K4O0VX1SkiQ
+         z/Uhy3O77BnCq8uIbOrBH+71eLc7sFScEuReyKI0cEjVwVrOo/pji269TKVkXTYRE9
+         4qJwlQiJ8/1iiXaeuQ3ZDkD1Fk+SBX+TSNK5f5EQ=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Travis Downs <travis.downs@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 19/35] perf annotate: Calculate the max instruction name, align column to that
-Date:   Thu,  7 Mar 2019 14:44:17 -0300
-Message-Id: <20190307174433.28819-20-acme@kernel.org>
+        Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 21/35] perf diff: Support --time filter option
+Date:   Thu,  7 Mar 2019 14:44:19 -0300
+Message-Id: <20190307174433.28819-22-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-We were hardcoding '6' as the max instruction name, and we have lots
-that are longer than that, see the diff from two 'P' printed TUI
-annotations for a libc function that uses instructions with long names,
-such as 'vpmovmskb' with its 9 chars:
+To improve 'perf diff', implement a --time filter option to diff the
+samples within given time window.
 
-  --- __strcmp_avx2.annotation.before	2019-03-06 16:31:39.368020425 -0300
-  +++ __strcmp_avx2.annotation	2019-03-06 16:32:12.079450508 -0300
-  @@ -2,284 +2,284 @@
-   Event: cycles:ppp
+It supports time percent with multiple time ranges. The time string
+format is 'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
 
-   Percent        endbr64
-  -  0.10         mov    %edi,%eax
-  +  0.10         mov        %edi,%eax
-  -               xor    %edx,%edx
-  +               xor        %edx,%edx
-  -  3.54         vpxor  %ymm7,%ymm7,%ymm7
-  +  3.54         vpxor      %ymm7,%ymm7,%ymm7
-  -               or     %esi,%eax
-  +               or         %esi,%eax
-  -               and    $0xfff,%eax
-  +               and        $0xfff,%eax
-  -               cmp    $0xf80,%eax
-  +               cmp        $0xf80,%eax
-  -             ↓ jg     370
-  +             ↓ jg         370
-  - 27.07         vmovdqu (%rdi),%ymm1
-  + 27.07         vmovdqu    (%rdi),%ymm1
-  -  7.97         vpcmpeqb (%rsi),%ymm1,%ymm0
-  +  7.97         vpcmpeqb   (%rsi),%ymm1,%ymm0
-  -  2.15         vpminub %ymm1,%ymm0,%ymm0
-  +  2.15         vpminub    %ymm1,%ymm0,%ymm0
-  -  4.09         vpcmpeqb %ymm7,%ymm0,%ymm0
-  +  4.09         vpcmpeqb   %ymm7,%ymm0,%ymm0
-  -  0.43         vpmovmskb %ymm0,%ecx
-  +  0.43         vpmovmskb  %ymm0,%ecx
-  -  1.53         test   %ecx,%ecx
-  +  1.53         test       %ecx,%ecx
-  -             ↓ je     b0
-  +             ↓ je         b0
-  -  5.26         tzcnt  %ecx,%edx
-  +  5.26         tzcnt      %ecx,%edx
-  - 18.40         movzbl (%rdi,%rdx,1),%eax
-  + 18.40         movzbl     (%rdi,%rdx,1),%eax
-  -  7.09         movzbl (%rsi,%rdx,1),%edx
-  +  7.09         movzbl     (%rsi,%rdx,1),%edx
-  -  3.34         sub    %edx,%eax
-  +  3.34         sub        %edx,%eax
-     2.37         vzeroupper
-                ← retq
-                  nop
-  -         50:   tzcnt  %ecx,%edx
-  +         50:   tzcnt      %ecx,%edx
-  -               movzbl 0x20(%rdi,%rdx,1),%eax
-  +               movzbl     0x20(%rdi,%rdx,1),%eax
-  -               movzbl 0x20(%rsi,%rdx,1),%edx
-  +               movzbl     0x20(%rsi,%rdx,1),%edx
-  -               sub    %edx,%eax
-  +               sub        %edx,%eax
-                  vzeroupper
-                ← retq
-  -               data16 nopw %cs:0x0(%rax,%rax,1)
-  +               data16     nopw %cs:0x0(%rax,%rax,1)
+For example:
 
-Reported-by: Travis Downs <travis.downs@gmail.com>
-LPU-Reference: CAOBGo4z1KfmWeOm6Et0cnX5Z6DWsG2PQbAvRn1MhVPJmXHrc5g@mail.gmail.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-89wsdd9h9g6bvq52sgp6d0u4@git.kernel.org
+Select the second 10% time slice to diff:
+
+  perf diff --time 10%/2
+
+Select from 0% to 10% time slice to diff:
+
+  perf diff --time 0%-10%
+
+Select the first and the second 10% time slices to diff:
+
+  perf diff --time 10%/1,10%/2
+
+Select from 0% to 10% and 30% to 40% slices to diff:
+
+  perf diff --time 0%-10%,30%-40%
+
+It also supports analysing samples within a given time window
+<start>,<stop>.
+
+Times have the format seconds.microseconds.
+
+If 'start' is not given (i.e., time string is ',x.y') then analysis starts at
+the beginning of the file.
+
+If the stop time is not given (i.e, time string is 'x.y,') then analysis
+goes to end of file.
+
+Time string is 'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for
+different perf.data files.
+
+For example, we get the timestamp information from perf script.
+
+  perf script -i perf.data.old
+
+    mgen 13940 [000]  3946.361400: ...
+
+  perf script -i perf.data
+
+    mgen 13940 [000]  3971.150589 ...
+
+  perf diff --time 3946.361400,:3971.150589,
+
+It analyzes the perf.data.old from the timestamp 3946.361400 to the end of
+perf.data.old and analyzes the perf.data from the timestamp 3971.150589 to the
+end of perf.data.
+
+ v4:
+ ---
+ Update abstime_str_dup(), let it return error if strdup
+ is failed, and update __cmd_diff() accordingly.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1551791143-10334-2-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/annotate/instructions.c |  2 +-
- tools/perf/arch/s390/annotate/instructions.c  |  2 +-
- tools/perf/util/annotate.c                    | 74 ++++++++++++-------
- tools/perf/util/annotate.h                    |  7 +-
- 4 files changed, 52 insertions(+), 33 deletions(-)
+ tools/perf/Documentation/perf-diff.txt |  45 ++++++++
+ tools/perf/builtin-diff.c              | 148 ++++++++++++++++++++++---
+ 2 files changed, 179 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-index 76c6345a57d5..8f70a1b282df 100644
---- a/tools/perf/arch/arm64/annotate/instructions.c
-+++ b/tools/perf/arch/arm64/annotate/instructions.c
-@@ -58,7 +58,7 @@ static int arm64_mov__parse(struct arch *arch __maybe_unused,
- }
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index a79c84ae61aa..036d65bded51 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -118,6 +118,51 @@ OPTIONS
+ 	sum of shown entries will be always 100%.  "absolute" means it retains
+ 	the original value before and after the filter is applied.
  
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
--			  struct ins_operands *ops);
-+			  struct ins_operands *ops, int max_ins_name);
- 
- static struct ins_ops arm64_mov_ops = {
- 	.parse	   = arm64_mov__parse,
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index de0dd66dbb48..89bb8f2c54ce 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -46,7 +46,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- }
- 
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops);
-+			   struct ins_operands *ops, int max_ins_name);
- 
- static struct ins_ops s390_call_ops = {
- 	.parse	   = s390_call__parse,
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 11a8a447a3af..5f6dbbf5d749 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -198,18 +198,18 @@ static void ins__delete(struct ins_operands *ops)
- }
- 
- static int ins__raw_scnprintf(struct ins *ins, char *bf, size_t size,
--			      struct ins_operands *ops)
-+			      struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s", ins->name, ops->raw);
-+	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->raw);
- }
- 
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
--		  struct ins_operands *ops)
-+		   struct ins_operands *ops, int max_ins_name)
- {
- 	if (ins->ops->scnprintf)
--		return ins->ops->scnprintf(ins, bf, size, ops);
-+		return ins->ops->scnprintf(ins, bf, size, ops, max_ins_name);
- 
--	return ins__raw_scnprintf(ins, bf, size, ops);
-+	return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- }
- 
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
-@@ -273,18 +273,18 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	if (ops->target.sym)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.sym->name);
- 
- 	if (ops->target.addr == 0)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
- 	if (ops->target.name)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.name);
- 
--	return scnprintf(bf, size, "%-6s *%" PRIx64, ins->name, ops->target.addr);
-+	return scnprintf(bf, size, "%-*s *%" PRIx64, max_ins_name, ins->name, ops->target.addr);
- }
- 
- static struct ins_ops call_ops = {
-@@ -388,15 +388,15 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	const char *c;
- 
- 	if (!ops->target.addr || ops->target.offset < 0)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
- 	if (ops->target.outside && ops->target.sym != NULL)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.sym->name);
- 
- 	c = strchr(ops->raw, ',');
- 	c = validate_comma(c, ops);
-@@ -415,7 +415,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			c++;
- 	}
- 
--	return scnprintf(bf, size, "%-6s %.*s%" PRIx64,
-+	return scnprintf(bf, size, "%-*s %.*s%" PRIx64, max_ins_name,
- 			 ins->name, c ? c - ops->raw : 0, ops->raw,
- 			 ops->target.offset);
- }
-@@ -483,16 +483,16 @@ static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int lock__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	int printed;
- 
- 	if (ops->locked.ins.ops == NULL)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
--	printed = scnprintf(bf, size, "%-6s ", ins->name);
-+	printed = scnprintf(bf, size, "%-*s ", max_ins_name, ins->name);
- 	return printed + ins__scnprintf(&ops->locked.ins, bf + printed,
--					size - printed, ops->locked.ops);
-+					size - printed, ops->locked.ops, max_ins_name);
- }
- 
- static void lock__delete(struct ins_operands *ops)
-@@ -564,9 +564,9 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
- }
- 
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s,%s", ins->name,
-+	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
- 			 ops->source.name ?: ops->source.raw,
- 			 ops->target.name ?: ops->target.raw);
- }
-@@ -604,9 +604,9 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
- }
- 
- static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s", ins->name,
-+	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name,
- 			 ops->target.name ?: ops->target.raw);
- }
- 
-@@ -616,9 +616,9 @@ static struct ins_ops dec_ops = {
- };
- 
- static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
--			  struct ins_operands *ops __maybe_unused)
-+			  struct ins_operands *ops __maybe_unused, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s", "nop");
-+	return scnprintf(bf, size, "%-*s", max_ins_name, "nop");
- }
- 
- static struct ins_ops nop_ops = {
-@@ -1232,12 +1232,12 @@ void disasm_line__free(struct disasm_line *dl)
- 	annotation_line__delete(&dl->al);
- }
- 
--int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw)
-+int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name)
- {
- 	if (raw || !dl->ins.ops)
--		return scnprintf(bf, size, "%-6s %s", dl->ins.name, dl->ops.raw);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, dl->ins.name, dl->ops.raw);
- 
--	return ins__scnprintf(&dl->ins, bf, size, &dl->ops);
-+	return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
- }
- 
- static void annotation_line__add(struct annotation_line *al, struct list_head *head)
-@@ -2414,12 +2414,30 @@ static inline int width_jumps(int n)
- 	return 1;
- }
- 
-+static int annotation__max_ins_name(struct annotation *notes)
-+{
-+	int max_name = 0, len;
-+	struct annotation_line *al;
++--time::
++	Analyze samples within given time window. It supports time
++	percent with multiple time ranges. Time string is 'a%/n,b%/m,...'
++	or 'a%-b%,c%-%d,...'.
 +
-+        list_for_each_entry(al, &notes->src->source, node) {
-+		if (al->offset == -1)
-+			continue;
++	For example:
 +
-+		len = strlen(disasm_line(al)->ins.name);
-+		if (max_name < len)
-+			max_name = len;
++	Select the second 10% time slice to diff:
++
++	  perf diff --time 10%/2
++
++	Select from 0% to 10% time slice to diff:
++
++	  perf diff --time 0%-10%
++
++	Select the first and the second 10% time slices to diff:
++
++	  perf diff --time 10%/1,10%/2
++
++	Select from 0% to 10% and 30% to 40% slices to diff:
++
++	  perf diff --time 0%-10%,30%-40%
++
++	It also supports analyzing samples within a given time window
++	<start>,<stop>. Times have the format seconds.microseconds. If 'start'
++	is not given (i.e., time string is ',x.y') then analysis starts at
++	the beginning of the file. If stop time is not given (i.e, time
++	string is 'x.y,') then analysis goes to the end of the file. Time string is
++	'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
++	perf.data files.
++
++	For example, we get the timestamp information from 'perf script'.
++
++	  perf script -i perf.data.old
++	    mgen 13940 [000]  3946.361400: ...
++
++	  perf script -i perf.data
++	    mgen 13940 [000]  3971.150589 ...
++
++	  perf diff --time 3946.361400,:3971.150589,
++
++	It analyzes the perf.data.old from the timestamp 3946.361400 to
++	the end of perf.data.old and analyzes the perf.data from the
++	timestamp 3971.150589 to the end of perf.data.
++
+ COMPARISON
+ ----------
+ The comparison is governed by the baseline file. The baseline perf.data
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 58fe0e88215c..17cd898074c8 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -19,12 +19,21 @@
+ #include "util/util.h"
+ #include "util/data.h"
+ #include "util/config.h"
++#include "util/time-utils.h"
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <stdlib.h>
+ #include <math.h>
+ 
++struct perf_diff {
++	struct perf_tool		 tool;
++	const char			*time_str;
++	struct perf_time_interval	*ptime_range;
++	int				 range_size;
++	int				 range_num;
++};
++
+ /* Diff command specific HPP columns. */
+ enum {
+ 	PERF_HPP_DIFF__BASELINE,
+@@ -323,16 +332,22 @@ static int formula_fprintf(struct hist_entry *he, struct hist_entry *pair,
+ 	return -1;
+ }
+ 
+-static int diff__process_sample_event(struct perf_tool *tool __maybe_unused,
++static int diff__process_sample_event(struct perf_tool *tool,
+ 				      union perf_event *event,
+ 				      struct perf_sample *sample,
+ 				      struct perf_evsel *evsel,
+ 				      struct machine *machine)
+ {
++	struct perf_diff *pdiff = container_of(tool, struct perf_diff, tool);
+ 	struct addr_location al;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	int ret = -1;
+ 
++	if (perf_time__ranges_skip_sample(pdiff->ptime_range, pdiff->range_num,
++					  sample->time)) {
++		return 0;
 +	}
 +
-+	return max_name;
-+}
-+
- void annotation__init_column_widths(struct annotation *notes, struct symbol *sym)
- {
- 	notes->widths.addr = notes->widths.target =
- 		notes->widths.min_addr = hex_width(symbol__size(sym));
- 	notes->widths.max_addr = hex_width(sym->end);
- 	notes->widths.jumps = width_jumps(notes->max_jump_sources);
-+	notes->widths.max_ins_name = annotation__max_ins_name(notes);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_warning("problem processing %d event, skipping it.\n",
+ 			   event->header.type);
+@@ -359,17 +374,19 @@ static int diff__process_sample_event(struct perf_tool *tool __maybe_unused,
+ 	return ret;
  }
  
- void annotation__update_column_widths(struct annotation *notes)
-@@ -2583,7 +2601,7 @@ static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
- 		obj__printf(obj, "  ");
- 	}
- 
--	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset);
-+	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset, notes->widths.max_ins_name);
- }
- 
- static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 95053cab41fe..df34fe483164 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -59,14 +59,14 @@ struct ins_ops {
- 	void (*free)(struct ins_operands *ops);
- 	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms);
- 	int (*scnprintf)(struct ins *ins, char *bf, size_t size,
--			 struct ins_operands *ops);
-+			 struct ins_operands *ops, int max_ins_name);
+-static struct perf_tool tool = {
+-	.sample	= diff__process_sample_event,
+-	.mmap	= perf_event__process_mmap,
+-	.mmap2	= perf_event__process_mmap2,
+-	.comm	= perf_event__process_comm,
+-	.exit	= perf_event__process_exit,
+-	.fork	= perf_event__process_fork,
+-	.lost	= perf_event__process_lost,
+-	.namespaces = perf_event__process_namespaces,
+-	.ordered_events = true,
+-	.ordering_requires_timestamps = true,
++static struct perf_diff pdiff = {
++	.tool = {
++		.sample	= diff__process_sample_event,
++		.mmap	= perf_event__process_mmap,
++		.mmap2	= perf_event__process_mmap2,
++		.comm	= perf_event__process_comm,
++		.exit	= perf_event__process_exit,
++		.fork	= perf_event__process_fork,
++		.lost	= perf_event__process_lost,
++		.namespaces = perf_event__process_namespaces,
++		.ordered_events = true,
++		.ordering_requires_timestamps = true,
++	},
  };
  
- bool ins__is_jump(const struct ins *ins);
- bool ins__is_call(const struct ins *ins);
- bool ins__is_ret(const struct ins *ins);
- bool ins__is_lock(const struct ins *ins);
--int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops);
-+int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops, int max_ins_name);
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
+ static struct perf_evsel *evsel_match(struct perf_evsel *evsel,
+@@ -771,19 +788,110 @@ static void data__free(struct data__file *d)
+ 	}
+ }
  
- #define ANNOTATION__IPC_WIDTH 6
-@@ -219,7 +219,7 @@ int __annotation__scnprintf_samples_period(struct annotation *notes,
- 					   struct perf_evsel *evsel,
- 					   bool show_freq);
++static int abstime_str_dup(char **pstr)
++{
++	char *str = NULL;
++
++	if (pdiff.time_str && strchr(pdiff.time_str, ':')) {
++		str = strdup(pdiff.time_str);
++		if (!str)
++			return -ENOMEM;
++	}
++
++	*pstr = str;
++	return 0;
++}
++
++static int parse_absolute_time(struct data__file *d, char **pstr)
++{
++	char *p = *pstr;
++	int ret;
++
++	/*
++	 * Absolute timestamp for one file has the format: a.b,c.d
++	 * For multiple files, the format is: a.b,c.d:a.b,c.d
++	 */
++	p = strchr(*pstr, ':');
++	if (p) {
++		if (p == *pstr) {
++			pr_err("Invalid time string\n");
++			return -EINVAL;
++		}
++
++		*p = 0;
++		p++;
++		if (*p == 0) {
++			pr_err("Invalid time string\n");
++			return -EINVAL;
++		}
++	}
++
++	ret = perf_time__parse_for_ranges(*pstr, d->session,
++					  &pdiff.ptime_range,
++					  &pdiff.range_size,
++					  &pdiff.range_num);
++	if (ret < 0)
++		return ret;
++
++	if (!p || *p == 0)
++		*pstr = NULL;
++	else
++		*pstr = p;
++
++	return ret;
++}
++
++static int parse_percent_time(struct data__file *d)
++{
++	int ret;
++
++	ret = perf_time__parse_for_ranges(pdiff.time_str, d->session,
++					  &pdiff.ptime_range,
++					  &pdiff.range_size,
++					  &pdiff.range_num);
++	return ret;
++}
++
++static int parse_time_str(struct data__file *d, char *abstime_ostr,
++			   char **pabstime_tmp)
++{
++	int ret = 0;
++
++	if (abstime_ostr)
++		ret = parse_absolute_time(d, pabstime_tmp);
++	else if (pdiff.time_str)
++		ret = parse_percent_time(d);
++
++	return ret;
++}
++
+ static int __cmd_diff(void)
+ {
+ 	struct data__file *d;
+-	int ret = -EINVAL, i;
++	int ret, i;
++	char *abstime_ostr, *abstime_tmp;
++
++	ret = abstime_str_dup(&abstime_ostr);
++	if (ret)
++		return ret;
++
++	abstime_tmp = abstime_ostr;
++	ret = -EINVAL;
  
--int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw);
-+int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name);
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
- void symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel);
+ 	data__for_each_file(i, d) {
+-		d->session = perf_session__new(&d->data, false, &tool);
++		d->session = perf_session__new(&d->data, false, &pdiff.tool);
+ 		if (!d->session) {
+ 			pr_err("Failed to open %s\n", d->data.path);
+ 			ret = -1;
+ 			goto out_delete;
+ 		}
  
-@@ -289,6 +289,7 @@ struct annotation {
- 		u8		target;
- 		u8		min_addr;
- 		u8		max_addr;
-+		u8		max_ins_name;
- 	} widths;
- 	bool			have_cycles;
- 	struct annotated_source *src;
++		if (pdiff.time_str) {
++			ret = parse_time_str(d, abstime_ostr, &abstime_tmp);
++			if (ret < 0)
++				goto out_delete;
++		}
++
+ 		ret = perf_session__process_events(d->session);
+ 		if (ret) {
+ 			pr_err("Failed to process %s\n", d->data.path);
+@@ -791,6 +899,9 @@ static int __cmd_diff(void)
+ 		}
+ 
+ 		perf_evlist__collapse_resort(d->session->evlist);
++
++		if (pdiff.ptime_range)
++			zfree(&pdiff.ptime_range);
+ 	}
+ 
+ 	data_process();
+@@ -802,6 +913,13 @@ static int __cmd_diff(void)
+ 	}
+ 
+ 	free(data__files);
++
++	if (pdiff.ptime_range)
++		zfree(&pdiff.ptime_range);
++
++	if (abstime_ostr)
++		free(abstime_ostr);
++
+ 	return ret;
+ }
+ 
+@@ -849,6 +967,8 @@ static const struct option options[] = {
+ 	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
+ 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+ 		     "How to display percentage of filtered entries", parse_filter_percentage),
++	OPT_STRING(0, "time", &pdiff.time_str, "str",
++		   "Time span (time percent or absolute timestamp)"),
+ 	OPT_END()
+ };
+ 
 -- 
 2.20.1
 
