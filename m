@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE4CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EDDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047CF20835
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF20220835
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 10:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fItgmMtQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wO3FSUKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfCGKNk (ORCPT
+        id S1726586AbfCGKNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 05:13:40 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37555 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbfCGKNX (ORCPT
+        Thu, 7 Mar 2019 05:13:50 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37029 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfCGKNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 05:13:23 -0500
-Received: by mail-wm1-f68.google.com with SMTP id x10so8584766wmg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 02:13:22 -0800 (PST)
+        Thu, 7 Mar 2019 05:13:21 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w6so16710732wrs.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 02:13:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lY5fme3k/AIN047HEtN16Hcq0nFOQyFwzBciIshWG10=;
-        b=fItgmMtQYoRoAlSj4omNm/jYeERMEeY/EFrHZg53IaUQgWUPuRb/xap32+6XrbjKjA
-         u6fzu3Awl8PIV6fVudBjS+plRt97qIuliwV9VUoceLyUATA3OkNcJHV/oZbYnUdJJKKr
-         mBNtRboVw39EU5LKh/LnlOTBCpFqVzvva1byMElwWnt97vPM/1R6O1ZRGTuN0+NpnReQ
-         j/HQJ/0oQAI/jbSe2e60XAydql/bpYIB2FgcIYKiEwMj2Ap6oNnI5v4X7lq+XqVFUBuX
-         zKJ0QJwAVKuc7aIKjix4R8NG6PpHF6KcGECCZ9nHj69ZYJyltQ0MXX/f5IJK+TM7Ospg
-         /u1g==
+        bh=kcTfOS4Sv44YjvbK1N2vMmkz/JIfFV0zpTQndWw2C2o=;
+        b=wO3FSUKZJKQmqaRn4bNgRRQBbS/urgDEedce1emHnQPNxHN6bwAxu+FxLng93k74x6
+         tm+gtcaPAh/X9TGu+We7nzdtQp+m+vlnVaFev0bg4sDarrgJG94EumxJ/0zTfAsmGNRi
+         2L+qGoAGLzPKi+ClzCASGnJmHhFkrwu5DU/CsG60PYUmX8l/50R97lhQqvkNbf51kVkE
+         VNqqvwrJWwkhCGnpnX2JUbNx3uP0FWZ7zL2roK8yq7I64utV1PnOx2HRYdiBh0Xfd2Ti
+         XsKmH+Bl1fDE9NTzKfLkcoZHJlMKdTY7CBGHfmyuCiHjI0GAtklN0t4Kzb+o+WqEnAxt
+         s4WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lY5fme3k/AIN047HEtN16Hcq0nFOQyFwzBciIshWG10=;
-        b=E+4qbDaZmONgyHAYj0iXO2PqBmBKYNV7NruU64D7o8tz+SyF8F+TB3vanppxO02hiS
-         fd/3uX+Lvihr+u35XKZsnmw9jJNTUf5tgy+NMm4VYbc+kg1qxAqdnNogLmQgdVuBj4Q+
-         rdfv2M4YYc2ApeAw1n7iXnHSMehGYfflCbYbxWBvhvIXW9OMl1Wwci3R2gsICpErJaYa
-         olGjPtqStiLOay4pGHwSTDKwQuFhn1NLN6dc5qvDaYvYC5ZAg5R7oh+2zhfmnDSzoy3u
-         VJCFTHBOHX4bnhIe1WSMPeavbZ2xNduHYp0hzvhRIQdBppNaFItJKpCXnIzDMMvOQpR2
-         L9Hg==
-X-Gm-Message-State: APjAAAXjmePwUBC0JBYys+CZJmSQ7gWeCyjbdehcCLyb/to3c2qgMyMl
-        fCZh4LwiVU7qmu3+Nswdotph2g==
-X-Google-Smtp-Source: APXvYqxRoejhENWyuJzvrTe0w3e1gs5qp0+Co+BnpaPnNhE7CLd8pqebJCnjyhPaTnlGEpyf5kOfcg==
-X-Received: by 2002:a1c:f70c:: with SMTP id v12mr5035977wmh.19.1551953601216;
-        Thu, 07 Mar 2019 02:13:21 -0800 (PST)
+        bh=kcTfOS4Sv44YjvbK1N2vMmkz/JIfFV0zpTQndWw2C2o=;
+        b=E+Bx2r6KlrcCytrodgKjES1bsMTpNBZZ0PEJtZDOsT2UetuNscoO4OHahNRhfQ5hj5
+         27FjPX1eeANdqgUz9RCteoeoKbGvYI0nbBuV/qpZLBvOn87d9u229xM3OTr3mkB7ut6Z
+         aCjMJN81VePS1l2N7zHeqmKmnQiH76v/7x7pBeHFKGqqX+8oFFsGbsxrFtpMqvhDDsIA
+         Tlj+kbCTZq4oQBhdxNYg4U16MNLmgoUliaIZpo7owBK5f7XxP8kKFgObMG3MiZzohrZs
+         hUvhDeus9JSEFdNyr8qtMIEwnaQ8birRQk+vriUiWcpw1hgPt9E8sLkwkHKB0Cpyp/hZ
+         j7Xg==
+X-Gm-Message-State: APjAAAU93FhAvMD1eIPlFz8ak5L9kJUIbeXuvuJWW3zTrAVZfdZkRvOY
+        9AFA8io1NwEc52Lt8kwKAQIdHA==
+X-Google-Smtp-Source: APXvYqyCrzTzwXUjJibcn/v1ll2EMmv9yLlXtUipbPAtNSp63n26pkMkIGFvjTgFmoASes6QSvIgQg==
+X-Received: by 2002:adf:afe3:: with SMTP id y35mr6136409wrd.318.1551953599096;
+        Thu, 07 Mar 2019 02:13:19 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id n9sm3529767wmi.33.2019.03.07.02.13.20
+        by smtp.gmail.com with ESMTPSA id n9sm3529767wmi.33.2019.03.07.02.13.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 07 Mar 2019 02:13:20 -0800 (PST)
+        Thu, 07 Mar 2019 02:13:18 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org, arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
         bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org,
         ktadakam@qti.qualcomm.com,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 6/8] misc: fastrpc: take into account of overlapping buffers
-Date:   Thu,  7 Mar 2019 10:12:27 +0000
-Message-Id: <20190307101229.7856-7-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 4/8] misc: fastrpc: use correct spinlock variant
+Date:   Thu,  7 Mar 2019 10:12:25 +0000
+Message-Id: <20190307101229.7856-5-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190307101229.7856-1-srinivas.kandagatla@linaro.org>
 References: <20190307101229.7856-1-srinivas.kandagatla@linaro.org>
@@ -75,221 +75,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Argument buffers that are passed could be derived from a big buffer,
-and some of the arguments buffers could overlap each other.
-Take care of such instanaces.
-
-This is optimization that DSP expects while sending buffers
-which overlap. So make the DSP happy doing it.
-
-Without which DSP seems to crash.
+context spin lock can be interrupted from callback path so use correct spinlock
+so that we do not hit spinlock recursion.
 
 Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context Invoke method")
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/misc/fastrpc.c | 112 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 98 insertions(+), 14 deletions(-)
+ drivers/misc/fastrpc.c | 48 +++++++++++++++++++++++++-----------------
+ 1 file changed, 29 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 209f3e63f660..17bbb017bb08 100644
+index 753d62ceb1fb..f71b5faae1dd 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of.h>
-+#include <linux/sort.h>
- #include <linux/of_platform.h>
- #include <linux/rpmsg.h>
- #include <linux/scatterlist.h>
-@@ -104,6 +105,15 @@ struct fastrpc_invoke_rsp {
- 	int retval;		/* invoke return value */
- };
- 
-+struct fastrpc_buf_overlap {
-+	u64 start;
-+	u64 end;
-+	int raix;
-+	u64 mstart;
-+	u64 mend;
-+	u64 offset;
-+};
-+
- struct fastrpc_buf {
- 	struct fastrpc_user *fl;
- 	struct dma_buf *dmabuf;
-@@ -156,6 +166,7 @@ struct fastrpc_invoke_ctx {
- 	struct fastrpc_map **maps;
- 	struct fastrpc_buf *buf;
- 	struct fastrpc_invoke_args *args;
-+	struct fastrpc_buf_overlap *olaps;
+@@ -283,6 +283,7 @@ static void fastrpc_context_free(struct kref *ref)
+ {
+ 	struct fastrpc_invoke_ctx *ctx;
  	struct fastrpc_channel_ctx *cctx;
- };
++	unsigned long flags;
+ 	int i;
  
-@@ -300,6 +311,7 @@ static void fastrpc_context_free(struct kref *ref)
- 	spin_unlock_irqrestore(&cctx->lock, flags);
+ 	ctx = container_of(ref, struct fastrpc_invoke_ctx, refcount);
+@@ -294,9 +295,9 @@ static void fastrpc_context_free(struct kref *ref)
+ 	if (ctx->buf)
+ 		fastrpc_buf_free(ctx->buf);
+ 
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	idr_remove(&cctx->ctx_idr, ctx->ctxid >> 4);
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
  
  	kfree(ctx->maps);
-+	kfree(ctx->olaps);
  	kfree(ctx);
- }
+@@ -326,6 +327,7 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
+ {
+ 	struct fastrpc_channel_ctx *cctx = user->cctx;
+ 	struct fastrpc_invoke_ctx *ctx = NULL;
++	unsigned long flags;
+ 	int ret;
  
-@@ -321,6 +333,55 @@ static void fastrpc_context_put_wq(struct work_struct *work)
- 	fastrpc_context_put(ctx);
- }
- 
-+#define CMP(aa, bb) ((aa) == (bb) ? 0 : (aa) < (bb) ? -1 : 1)
-+static int olaps_cmp(const void *a, const void *b)
-+{
-+	struct fastrpc_buf_overlap *pa = (struct fastrpc_buf_overlap *)a;
-+	struct fastrpc_buf_overlap *pb = (struct fastrpc_buf_overlap *)b;
-+	/* sort with lowest starting buffer first */
-+	int st = CMP(pa->start, pb->start);
-+	/* sort with highest ending buffer first */
-+	int ed = CMP(pb->end, pa->end);
-+
-+	return st == 0 ? ed : st;
-+}
-+
-+static void fastrpc_get_buff_overlaps(struct fastrpc_invoke_ctx *ctx)
-+{
-+	u64 max_end = 0;
-+	int i;
-+
-+	for (i = 0; i < ctx->nbufs; ++i) {
-+		ctx->olaps[i].start = ctx->args[i].ptr;
-+		ctx->olaps[i].end = ctx->olaps[i].start + ctx->args[i].length;
-+		ctx->olaps[i].raix = i;
-+	}
-+
-+	sort(ctx->olaps, ctx->nbufs, sizeof(*ctx->olaps), olaps_cmp, NULL);
-+
-+	for (i = 0; i < ctx->nbufs; ++i) {
-+		/* Falling inside previous range */
-+		if (ctx->olaps[i].start < max_end) {
-+			ctx->olaps[i].mstart = max_end;
-+			ctx->olaps[i].mend = ctx->olaps[i].end;
-+			ctx->olaps[i].offset = max_end - ctx->olaps[i].start;
-+
-+			if (ctx->olaps[i].end > max_end) {
-+				max_end = ctx->olaps[i].end;
-+			} else {
-+				ctx->olaps[i].mend = 0;
-+				ctx->olaps[i].mstart = 0;
-+			}
-+
-+		} else  {
-+			ctx->olaps[i].mend = ctx->olaps[i].end;
-+			ctx->olaps[i].mstart = ctx->olaps[i].start;
-+			ctx->olaps[i].offset = 0;
-+			max_end = ctx->olaps[i].end;
-+		}
-+	}
-+}
-+
- static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
- 			struct fastrpc_user *user, u32 kernel, u32 sc,
- 			struct fastrpc_invoke_args *args)
-@@ -347,7 +408,15 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
- 			kfree(ctx);
- 			return ERR_PTR(-ENOMEM);
- 		}
-+		ctx->olaps = kcalloc(ctx->nscalars,
-+				    sizeof(*ctx->olaps), GFP_KERNEL);
-+		if (!ctx->olaps) {
-+			kfree(ctx->maps);
-+			kfree(ctx);
-+			return ERR_PTR(-ENOMEM);
-+		}
- 		ctx->args = args;
-+		fastrpc_get_buff_overlaps(ctx);
- 	}
- 
- 	ctx->sc = sc;
-@@ -380,6 +449,7 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
- 	list_del(&ctx->node);
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+@@ -360,15 +362,15 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
+ 	list_add_tail(&ctx->node, &user->pending);
  	spin_unlock(&user->lock);
- 	kfree(ctx->maps);
-+	kfree(ctx->olaps);
- 	kfree(ctx);
  
- 	return ERR_PTR(ret);
-@@ -598,8 +668,11 @@ static u64 fastrpc_get_payload_size(struct fastrpc_invoke_ctx *ctx, int metalen)
- 	size = ALIGN(metalen, FASTRPC_ALIGN);
- 	for (i = 0; i < ctx->nscalars; i++) {
- 		if (ctx->args[i].fd == 0 || ctx->args[i].fd == -1) {
--			size = ALIGN(size, FASTRPC_ALIGN);
--			size += ctx->args[i].length;
-+
-+			if (ctx->olaps[i].offset == 0)
-+				size = ALIGN(size, FASTRPC_ALIGN);
-+
-+			size += (ctx->olaps[i].mend - ctx->olaps[i].mstart);
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	ret = idr_alloc_cyclic(&cctx->ctx_idr, ctx, 1,
+ 			       FASTRPC_CTX_MAX, GFP_ATOMIC);
+ 	if (ret < 0) {
+-		spin_unlock(&cctx->lock);
++		spin_unlock_irqrestore(&cctx->lock, flags);
+ 		goto err_idr;
+ 	}
+ 	ctx->ctxid = ret << 4;
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ 
+ 	kref_init(&ctx->refcount);
+ 
+@@ -948,9 +950,10 @@ static struct fastrpc_session_ctx *fastrpc_session_alloc(
+ 					struct fastrpc_channel_ctx *cctx)
+ {
+ 	struct fastrpc_session_ctx *session = NULL;
++	unsigned long flags;
+ 	int i;
+ 
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	for (i = 0; i < cctx->sesscount; i++) {
+ 		if (!cctx->session[i].used && cctx->session[i].valid) {
+ 			cctx->session[i].used = true;
+@@ -958,7 +961,7 @@ static struct fastrpc_session_ctx *fastrpc_session_alloc(
+ 			break;
  		}
  	}
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
  
-@@ -637,12 +710,11 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
- 	struct fastrpc_remote_arg *rpra;
- 	struct fastrpc_invoke_buf *list;
- 	struct fastrpc_phy_page *pages;
--	int inbufs, i, err = 0;
--	u64 rlen, pkt_size;
-+	int inbufs, i, oix, err = 0;
-+	u64 len, rlen, pkt_size;
- 	uintptr_t args;
- 	int metalen;
- 
--
- 	inbufs = REMOTE_SCALARS_INBUFS(ctx->sc);
- 	metalen = fastrpc_get_meta_size(ctx);
- 	pkt_size = fastrpc_get_payload_size(ctx, metalen);
-@@ -665,8 +737,11 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
- 	rlen = pkt_size - metalen;
- 	ctx->rpra = rpra;
- 
--	for (i = 0; i < ctx->nbufs; ++i) {
--		u64 len = ctx->args[i].length;
-+	for (oix = 0; oix < ctx->nbufs; ++oix) {
-+		int mlen;
+ 	return session;
+ }
+@@ -966,9 +969,11 @@ static struct fastrpc_session_ctx *fastrpc_session_alloc(
+ static void fastrpc_session_free(struct fastrpc_channel_ctx *cctx,
+ 				 struct fastrpc_session_ctx *session)
+ {
+-	spin_lock(&cctx->lock);
++	unsigned long flags;
 +
-+		i = ctx->olaps[oix].raix;
-+		len = ctx->args[i].length;
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	session->used = false;
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ }
  
- 		rpra[i].pv = 0;
- 		rpra[i].len = len;
-@@ -690,16 +765,25 @@ static int fastrpc_get_args(u32 kernel, struct fastrpc_invoke_ctx *ctx)
- 						 vma->vm_start;
+ static int fastrpc_release_current_dsp_process(struct fastrpc_user *fl)
+@@ -994,12 +999,13 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
+ 	struct fastrpc_channel_ctx *cctx = fl->cctx;
+ 	struct fastrpc_invoke_ctx *ctx, *n;
+ 	struct fastrpc_map *map, *m;
++	unsigned long flags;
  
- 		} else {
--			rlen -= ALIGN(args, FASTRPC_ALIGN) - args;
--			args = ALIGN(args, FASTRPC_ALIGN);
--			if (rlen < len)
-+
-+			if (ctx->olaps[oix].offset == 0) {
-+				rlen -= ALIGN(args, FASTRPC_ALIGN) - args;
-+				args = ALIGN(args, FASTRPC_ALIGN);
-+			}
-+
-+			mlen = ctx->olaps[oix].mend - ctx->olaps[oix].mstart;
-+
-+			if (rlen < mlen)
- 				goto bail;
+ 	fastrpc_release_current_dsp_process(fl);
  
--			rpra[i].pv = args;
--			pages[i].addr = ctx->buf->phys + (pkt_size - rlen);
-+			rpra[i].pv = args - ctx->olaps[oix].offset;
-+			pages[i].addr = ctx->buf->phys -
-+					ctx->olaps[oix].offset +
-+					(pkt_size - rlen);
- 			pages[i].addr = pages[i].addr &	PAGE_MASK;
--			args = args + len;
--			rlen -= len;
-+
-+			args = args + mlen;
-+			rlen -= mlen;
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	list_del(&fl->user);
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ 
+ 	if (fl->init_mem)
+ 		fastrpc_buf_free(fl->init_mem);
+@@ -1027,6 +1033,7 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
+ {
+ 	struct fastrpc_channel_ctx *cctx = miscdev_to_cctx(filp->private_data);
+ 	struct fastrpc_user *fl = NULL;
++	unsigned long flags;
+ 
+ 	fl = kzalloc(sizeof(*fl), GFP_KERNEL);
+ 	if (!fl)
+@@ -1050,9 +1057,9 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
+ 		return -EBUSY;
+ 	}
+ 
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	list_add_tail(&fl->user, &cctx->users);
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -1208,6 +1215,7 @@ static int fastrpc_cb_probe(struct platform_device *pdev)
+ 	struct fastrpc_session_ctx *sess;
+ 	struct device *dev = &pdev->dev;
+ 	int i, sessions = 0;
++	unsigned long flags;
+ 
+ 	cctx = dev_get_drvdata(dev->parent);
+ 	if (!cctx)
+@@ -1215,7 +1223,7 @@ static int fastrpc_cb_probe(struct platform_device *pdev)
+ 
+ 	of_property_read_u32(dev->of_node, "qcom,nsessions", &sessions);
+ 
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	sess = &cctx->session[cctx->sesscount];
+ 	sess->used = false;
+ 	sess->valid = true;
+@@ -1236,7 +1244,7 @@ static int fastrpc_cb_probe(struct platform_device *pdev)
  		}
+ 	}
+ 	cctx->sesscount++;
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ 	dma_set_mask(dev, DMA_BIT_MASK(32));
  
- 		if (i < inbufs && !ctx->maps[i]) {
+ 	return 0;
+@@ -1246,16 +1254,17 @@ static int fastrpc_cb_remove(struct platform_device *pdev)
+ {
+ 	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(pdev->dev.parent);
+ 	struct fastrpc_session_ctx *sess = dev_get_drvdata(&pdev->dev);
++	unsigned long flags;
+ 	int i;
+ 
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	for (i = 1; i < FASTRPC_MAX_SESSIONS; i++) {
+ 		if (cctx->session[i].sid == sess->sid) {
+ 			cctx->session[i].valid = false;
+ 			cctx->sesscount--;
+ 		}
+ 	}
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -1337,11 +1346,12 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+ {
+ 	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
+ 	struct fastrpc_user *user;
++	unsigned long flags;
+ 
+-	spin_lock(&cctx->lock);
++	spin_lock_irqsave(&cctx->lock, flags);
+ 	list_for_each_entry(user, &cctx->users, user)
+ 		fastrpc_notify_users(user);
+-	spin_unlock(&cctx->lock);
++	spin_unlock_irqrestore(&cctx->lock, flags);
+ 
+ 	misc_deregister(&cctx->miscdev);
+ 	of_platform_depopulate(&rpdev->dev);
 -- 
 2.21.0
 
