@@ -2,28 +2,28 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79891C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F27EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B9720842
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61B421019
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfCGBgv (ORCPT
+        id S1726545AbfCGBg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 20:36:51 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:36093 "EHLO
+        Wed, 6 Mar 2019 20:36:56 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:43408 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfCGBgv (ORCPT
+        by vger.kernel.org with ESMTP id S1726010AbfCGBg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 20:36:51 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0705787-0.074662-0.854759;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.E5-WHUR_1551922601;
+        Wed, 6 Mar 2019 20:36:56 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.213033-0.175736-0.611232;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.E5-WHUR_1551922601;
 Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.E5-WHUR_1551922601)
           by smtp.aliyun-inc.com(10.147.44.118);
-          Thu, 07 Mar 2019 09:36:46 +0800
+          Thu, 07 Mar 2019 09:36:50 +0800
 From:   liaoweixiong <liaoweixiong@allwinnertech.com>
 To:     Kees Cook <keescook@chromium.org>,
         Anton Vorontsov <anton@enomsg.org>,
@@ -38,169 +38,406 @@ To:     Kees Cook <keescook@chromium.org>,
         Randy Dunlap <rdunlap@infradead.org>
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v13 0/4] pstore/block: new support logger for block devices
-Date:   Thu,  7 Mar 2019 09:37:06 +0800
-Message-Id: <1551922630-27548-1-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: [PATCH v13 2/4] pstore/blk: add blkoops for pstore_blk
+Date:   Thu,  7 Mar 2019 09:37:08 +0800
+Message-Id: <1551922630-27548-3-git-send-email-liaoweixiong@allwinnertech.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1551922630-27548-1-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1551922630-27548-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why should we need pstore_block?
-1. Most embedded intelligent equipment have no persistent ram, which
-increases costs. We perfer to cheaper solutions, like block devices.
-In fast, there is already a sample for block device logger in driver
-MTD (drivers/mtd/mtdoops.c).
-2. Do not any equipment have battery, which means that it lost all data
-on general ram if power failure. Pstore has little to do for these
-equipments.
+blkoops is a sample for pstore/blk. It can only record oops, excluding
+panics as no read/write apis for panic registered. It support settings
+on Kconfg/module parameters. It can record oops log even power failure
+if "PSTORE_BLKOOPS_BLKDEV" on Kconfig or "blkdev" on module parameter
+is valid. Otherwise, it can only record data to ram buffer, which will
+be dropped when reboot.
 
-[PATCH v13]
-On patch 1:
-1. no need to check zone->buffer in blkz_zone_write() since it never be null
-2. blkz_free_zones should return directly if zones is null
-3. In blkz_init_zones(), it will causes memory leak if
-blkz_init_zone() return failure because it forget to free zone->buffer.
-4. In blkz_zone_write(), we copy new data to ram buffer only when buf and
-wlen are valid.
-On pathc 2:
-1. Fix spelling error on Kconfig
-On patch 3:
-1. In blkz_pstore_erase(), if there are new but dirty data in pmsg
-zone buffer, we should try to flush them to block device.
-2. Fix spelling error on Kconfig
-
-[PATCH v12]
-On patch 4:
-1. Modify the document according to Randy Dunlap's suggestion.
-
-[PATCH v11]
-Change patchset label from RFC to PATCH
-
-[PATCH v10]
-Cancel DT support for blkoops temporarily.
-On patch 1:
-1. pstore/blk should unlink PSTORE_BLKDEV when unregister.
-On patch 2:
-1. cancel DT support temporarily. I will submit other patches to support DT
-   when DT maintainers acked.
-2. add spin lock to protect blkz_info when modify panic operations.
-3. change default value of total size on Kconfig from 1024 to 0.
-
-[PATCH v9]
-On patch 1:
-1. rename part_path/part_size, members of blkz_info, to blkdev/total_size
-2. if total_size is zero, get size from @blkdev
-3. support multiple variants for @blkdev, such as partuuid, major with
-   minor, and /dev/xxxx. See details on Documentation.
-4. get size from block device
-5. add depends on CONFIG_BLOCK
-On patch 2:
-1. update document
-On patch 3:
-1. update codes for new blkzone. Blkoops support insmod without total_size.
-   for example: "insmod ./blkoops.ko blkdev=93:6" (major:minor).
-2. use late_initcalls rather than module_init, to avoid block device not
-ready.
-3. support for block driver to add panic apis to blkoops. By this, block
-   driver can do the least work that just provides panic operations.
-On patch 5:
-1. update document
-
-[PATCH v8]
-On patch 2:
-1. move DT to /bindings/pstore
-2. Delete details for kernel.
-
-[PATCH v7]
-On patch 1:
-1. Fix line over 80 characters.
-On patch 2:
-1. Insert a separate patch for DT bindings.
-
-[PATCH v6]
-On patch 1:
-1. Fix according to email from Kees Cook, including spelling mistakes,
-   explicit overflow test, none of the zeroing etc.
-2. Do not recover data but metadata of dmesg when panic.
-3. No need to take recovery when do erase.
-4. Do not use "blkoops" for blkzone any more because "blkoops" is used for
-   other module now. (rename blkbuf to blkoops)
-On patch 2:
-1. Rename blkbuf to blkoops.
-2. Add Kconfig/device tree/module parameters settings for blkoops.
-3. Add document for device tree.
-On patch 3:
-1. Blkoops support pmsg.
-2. Fix description for new version patch.
-On patch 4:
-1. Fix description for new version patch.
-
-[PATCH v5]
-On patch 1:
-1. rename pstore/rom to pstore/blk
-2. Do not allocate any memory in the write path of panic. So, use local
-array instead in function romz_recover_dmesg_meta.
-3. Add C header file "linux/fs.h" to fix implicit declaration of function
-   'filp_open','kernel_read'...
-On patch 3:
-1. If panic, do not recover pmsg but flush if it is dirty.
-2. Fix erase pmsg failed.
-On patch 4:
-1. Create a document for pstore/blk
-
-[PATCH v4]
-On patch 1:
-1. Fix always true condition '(--i >= 0) => (0-u32max >= 0)' in function
-   romz_init_zones by defining variable i to 'int' rahter than
-   'unsigned int'.
-2. To make codes more easily to read, we use macro READ_NEXT_ZONE for
-   return value of romz_dmesg_read if it need to read next zone.
-   Moveover, we assign READ_NEXT_ZONE -1024 rather than 0.
-3. Add 'FLUSH_META' to 'enum romz_flush_mode' and rename 'NOT_FLUSH' to
-   'FLUSH_NONE'
-4. Function romz_zone_write work badly with FLUSH_PART mode as badly
-   address and offset to write.
-On patch 3:
-NEW SUPPORT psmg for pstore_rom.
-
-[PATCH v3]
-On patch 1:
-Fix build as module error for undefined 'vfs_read' and 'vfs_write'
-Both of 'vfs_read' and 'vfs_write' haven't be exproted yet, so we use
-'kernel_read' and 'kernel_write' instead.
-
-[PATCH v2]
-On patch 1:
-Fix build as module error for redefinition of 'romz_unregister' and
-'romz_register'
-
-[PATCH v1]
-On patch 1:
-Core codes of pstore_rom, which works well on allwinner(sunxi) platform.
-On patch 2:
-A sample for pstore_rom, using general ram rather than block device.
-
-liaoweixiong (4):
-  pstore/blk: new support logger for block devices
-  pstore/blk: add blkoops for pstore_blk
-  pstore/blk: support pmsg for pstore block
-  Documentation: pstore/blk: create document for pstore_blk
-
- Documentation/admin-guide/pstore-block.rst |  233 ++++++
- MAINTAINERS                                |    3 +-
- fs/pstore/Kconfig                          |  132 +++
- fs/pstore/Makefile                         |    5 +
- fs/pstore/blkoops.c                        |  208 +++++
- fs/pstore/blkzone.c                        | 1251 ++++++++++++++++++++++++++++
- include/linux/pstore_blk.h                 |   87 ++
- 7 files changed, 1918 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/admin-guide/pstore-block.rst
+Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+---
+ MAINTAINERS                |   2 +-
+ fs/pstore/Kconfig          | 102 +++++++++++++++++++++++
+ fs/pstore/Makefile         |   2 +
+ fs/pstore/blkoops.c        | 198 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pstore_blk.h |  14 +++-
+ 5 files changed, 313 insertions(+), 5 deletions(-)
  create mode 100644 fs/pstore/blkoops.c
- create mode 100644 fs/pstore/blkzone.c
- create mode 100644 include/linux/pstore_blk.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 51029a4..4e9242a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12318,7 +12318,7 @@ F:	drivers/firmware/efi/efi-pstore.c
+ F:	drivers/acpi/apei/erst.c
+ F:	Documentation/admin-guide/ramoops.rst
+ F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+-K:	\b(pstore|ramoops)
++K:	\b(pstore|ramoops|blkoops)
+ 
+ PTP HARDWARE CLOCK SUPPORT
+ M:	Richard Cochran <richardcochran@gmail.com>
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index defcb75..2fba1c5 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -160,3 +160,105 @@ config PSTORE_BLK
+ 	help
+ 	  This enables panic and oops message to be logged to a block dev
+ 	  where it can be read back at some later point.
++
++config PSTORE_BLKOOPS
++	tristate "pstore block with oops logger"
++	depends on PSTORE_BLK
++	help
++	  This is a sample for pstore block with oops logger.
++
++	  It CANNOT record panic log as no read/write APIs for panic registered.
++
++	  It CAN record oops log even power failure if
++	  "PSTORE_BLKOOPS_BLKDEV" on Kconfig or "block-device" on dts or
++	  "blkdev" on module parameter is valid.
++
++	  Otherwise, it can only record data to ram buffer, which will be
++	  dropped on reboot.
++
++	  NOTE that, there are two ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_DMESG_SIZE
++	int "dmesg size in kbytes for blkoops"
++	depends on PSTORE_BLKOOPS
++	default 64
++	help
++	  This just sets size of dmesg (dmesg_size) for pstore/blk. The value
++	  must be a multiple of 4096.
++
++	  NOTE that, there are two ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_TOTAL_SIZE
++	int "total size in kbytes for blkoops"
++	depends on PSTORE_BLKOOPS
++	default 0
++	help
++	  The total size in kbytes pstore/blk can use. It must be less than or
++	  equal to size of block device if @blkdev valid. If @total_size is zero
++	  with @blkdev, @total_size will be set equal to size of @blkdev.
++	  The value must be a multiple of 4096.
++
++	  NOTE that, there are two ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_BLKDEV
++	string "block device for blkoops"
++	depends on PSTORE_BLKOOPS
++	default ""
++	help
++	  This just sets block device (blkdev) for pstore/blk. Pstore/blk
++	  will record data to this block device to avoid losing data due to
++	  power failure. So, if it is not set, pstore/blk will drop all data
++	  when on reboot.
++
++	  It accept the following variants:
++	  1) <hex_major><hex_minor> device number in hexadecimal represents
++	     itself no leading 0x, for example b302.
++	  2) /dev/<disk_name> represents the device number of disk
++	  3) /dev/<disk_name><decimal> represents the device number
++	     of partition - device number of disk plus the partition number
++	  4) /dev/<disk_name>p<decimal> - same as the above, this form is
++	     used when disk name of partitioned disk ends with a digit.
++	  5) PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF representing the
++	     unique id of a partition if the partition table provides it.
++	     The UUID may be either an EFI/GPT UUID, or refer to an MSDOS
++	     partition using the format SSSSSSSS-PP, where SSSSSSSS is a zero-
++	     filled hex representation of the 32-bit "NT disk signature", and PP
++	     is a zero-filled hex representation of the 1-based partition number.
++	  6) PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation
++	     to a partition with a known unique id.
++	  7) <major>:<minor> major and minor number of the device separated by
++	     a colon.
++
++	  NOTE that, there are two ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
+diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
+index 0ee2fc8..24b3d48 100644
+--- a/fs/pstore/Makefile
++++ b/fs/pstore/Makefile
+@@ -15,3 +15,5 @@ obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
+ 
+ obj-$(CONFIG_PSTORE_BLK) += pstore_blk.o
+ pstore_blk-y += blkzone.o
++
++obj-$(CONFIG_PSTORE_BLKOOPS) += blkoops.o
+diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
+new file mode 100644
+index 0000000..22c0c84
+--- /dev/null
++++ b/fs/pstore/blkoops.c
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *
++ * blkoops.c: Block device Oops logger
++ *
++ * Copyright (C) 2019 liaoweixiong <liaoweixiong@gallwinnertech.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ */
++#define MODNAME "blkoops"
++#define pr_fmt(fmt) MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/string.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pstore_blk.h>
++
++static long dmesg_size = -1;
++module_param(dmesg_size, long, 0400);
++MODULE_PARM_DESC(dmesg_size, "demsg size in kbytes");
++
++static long total_size = -1;
++module_param(total_size, long, 0400);
++MODULE_PARM_DESC(total_size, "total size in kbytes");
++
++#define BLKDEV_INVALID "INVALID"
++static char blkdev[80] = {BLKDEV_INVALID};
++module_param_string(blkdev, blkdev, 80, 0400);
++MODULE_PARM_DESC(blkdev, "the block device for general read/write");
++
++struct blkz_info blkz_info = {
++	.owner = THIS_MODULE,
++	.name = "blkoops",
++	.dump_oops = true,
++};
++
++struct blkoops_info {
++	unsigned long dmesg_size;
++	unsigned long total_size;
++	const char *blkdev;
++};
++struct blkoops_info blkoops_info = {
++	.dmesg_size = CONFIG_PSTORE_BLKOOPS_DMESG_SIZE * 1024,
++	.total_size = CONFIG_PSTORE_BLKOOPS_TOTAL_SIZE * 1024,
++	.blkdev = CONFIG_PSTORE_BLKOOPS_BLKDEV,
++};
++
++static struct platform_device *dummy;
++DEFINE_SPINLOCK(modify_blkzinfo);
++
++/**
++ * Block driver use this function to add panic read/write apis to blkoops.
++ * By this, block driver can do the least work that just provides panic ops.
++ */
++int blkoops_add_panic_ops(blkz_read_op panic_read, blkz_write_op panic_write)
++{
++	struct blkz_info *info = &blkz_info;
++
++	spin_lock(&modify_blkzinfo);
++	if (info->panic_read || info->panic_write) {
++		spin_unlock(&modify_blkzinfo);
++		return -EBUSY;
++	}
++
++	info->panic_read = panic_read;
++	info->panic_write = panic_write;
++
++	spin_unlock(&modify_blkzinfo);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(blkoops_add_panic_ops);
++
++static int blkoops_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct blkoops_info *info = dev->platform_data;
++
++	if (info->blkdev[0] == '\0' || !strcmp(info->blkdev, BLKDEV_INVALID)) {
++		pr_info("no block device, use ram buffer only\n");
++	} else {
++		pr_debug("block device: %s\n", info->blkdev);
++		blkz_info.blkdev = info->blkdev;
++	}
++
++#define check_size(name, size) {					\
++		if (info->name & (size - 1)) {				\
++			pr_err(#name " must be a multiple of %d\n",	\
++					(size));			\
++			return -EINVAL;					\
++		}							\
++		blkz_info.name = info->name;				\
++	}
++
++	check_size(total_size, 4096);
++	check_size(dmesg_size, 4096);
++
++#undef check_size
++
++	/*
++	 * Update the module parameter variables as well so they are visible
++	 * through /sys/module/blkoops/parameters/
++	 */
++	dmesg_size = blkz_info.dmesg_size;
++	total_size = blkz_info.total_size;
++	if (blkz_info.blkdev)
++		strncpy(blkdev, blkz_info.blkdev, 80 - 1);
++	else
++		blkdev[0] = '\0';
++	return blkz_register(&blkz_info);
++}
++
++static int blkoops_remove(struct platform_device *pdev)
++{
++	blkz_unregister(&blkz_info);
++	return 0;
++}
++
++static const struct of_device_id dt_match[] = {
++	{ .compatible = MODNAME},
++	{}
++};
++
++static struct platform_driver blkoops_driver = {
++	.probe		= blkoops_probe,
++	.remove		= blkoops_remove,
++	.driver		= {
++		.name		= MODNAME,
++		.of_match_table	= dt_match,
++	},
++};
++
++void blkoops_register_dummy(void)
++{
++	struct blkoops_info *info = &blkoops_info;
++
++	/*
++	 * Prepare a dummy platform data structure to carry the module
++	 * parameters or kconfig value.
++	 */
++	if (total_size > 0 || strcmp(blkdev, BLKDEV_INVALID)) {
++		pr_info("using module parameters\n");
++		if (total_size >= 0)
++			info->total_size = (unsigned long)total_size * 1024;
++		if (strcmp(blkdev, BLKDEV_INVALID))
++			info->blkdev = (const char *)blkdev;
++		if (dmesg_size >= 0)
++			info->dmesg_size = (unsigned long)dmesg_size * 1024;
++	} else if (info->total_size > 0 || strlen(info->blkdev)) {
++		pr_info("using kconfig value\n");
++	} else {
++		return;
++	}
++
++	dummy = platform_device_register_data(NULL, MODNAME, -1, info,
++			sizeof(*info));
++	if (IS_ERR(dummy)) {
++		pr_err("could not create platform device: %ld\n",
++			PTR_ERR(dummy));
++		dummy = NULL;
++	}
++}
++
++static int __init blkoops_init(void)
++{
++	int ret;
++
++	blkoops_register_dummy();
++	ret = platform_driver_register(&blkoops_driver);
++	if (ret != 0) {
++		platform_device_unregister(dummy);
++		dummy = NULL;
++	}
++	return ret;
++}
++late_initcall(blkoops_init);
++
++static void __exit blkoops_exit(void)
++{
++	platform_driver_unregister(&blkoops_driver);
++	platform_device_unregister(dummy);
++	dummy = NULL;
++}
++module_exit(blkoops_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("liaoweixiong <liaoweixiong@allwinnertech.com>");
++MODULE_DESCRIPTION("Sample for Pstore BLK with Oops logger");
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+index 4f239f0..2d2ff97 100644
+--- a/include/linux/pstore_blk.h
++++ b/include/linux/pstore_blk.h
+@@ -60,6 +60,8 @@
+  * @panic_write:
+  *	the write operation only used for panic.
+  */
++typedef ssize_t (*blkz_read_op)(char *, size_t, loff_t);
++typedef ssize_t (*blkz_write_op)(const char *, size_t, loff_t);
+ struct blkz_info {
+ 	struct module *owner;
+ 	const char *name;
+@@ -68,13 +70,17 @@ struct blkz_info {
+ 	unsigned long total_size;
+ 	unsigned long dmesg_size;
+ 	int dump_oops;
+-	ssize_t (*read)(char *buf, size_t bytes, loff_t pos);
+-	ssize_t (*write)(const char *buf, size_t bytes, loff_t pos);
+-	ssize_t (*panic_read)(char *buf, size_t bytes, loff_t pos);
+-	ssize_t (*panic_write)(const char *buf, size_t bytes, loff_t pos);
++	blkz_read_op read;
++	blkz_write_op write;
++	blkz_read_op panic_read;
++	blkz_write_op panic_write;
+ };
+ 
+ extern int blkz_register(struct blkz_info *info);
+ extern void blkz_unregister(struct blkz_info *info);
+ 
++#if IS_ENABLED(CONFIG_PSTORE_BLKOOPS)
++extern int blkoops_add_panic_ops(blkz_read_op, blkz_write_op);
++#endif
++
+ #endif
 -- 
 1.9.1
 
