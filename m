@@ -2,103 +2,119 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB9C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97BE206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nf5PyV7J"
+	by mail.kernel.org (Postfix) with ESMTP id 57DBF20854
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551916880;
+	bh=HgFOMLICi1QJiVbm5oWtZL/K+Q/vZOFKt42rHTdGeK4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WFlL3BWpFpHzFTAI76s1nllGvefLT7lauc0I8ESUUeXaBOWc9fcRywRIuSu1Fj7AB
+	 p/GRDKI2XR1YyDHF6YcVFZbb8lDqPIePyNkJ5bWUl1e/uhZcLrTd4bQHYL30nZmuY7
+	 h/E6qq3TK/3p5tVS81xUkc5sII4vbfMhxd4b3iVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfCGABP (ORCPT
+        id S1726415AbfCGABT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:01:15 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:53034 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGAAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:00:05 -0500
-Received: by mail-pg1-f202.google.com with SMTP id w4so889101pgl.19
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:00:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=UFGeS7+xruZP4sn4Tn07AerSriOPiGRkhy6cYT13zbQ=;
-        b=nf5PyV7J5TjGLSrz1snkW5lN8yaR5isc/9tBuhM/tahXRhF2gThjaVYqfeVruaHQFt
-         qW2UjDI7At2H/XB0rystIOSTqsowEIFewHXGRkGJFDqOA4quy6fmdJ6jQ7R/OPLBZ7vr
-         DSFGpDml+Z24jD2zVecZEVOYDF7uu5ghdhlqYY7rNnKB09Eq+OE+pC6I+0bh7kobCWae
-         caVhYDOn2j82QZ4tdjD4+2zg+ciNvfq9HHni+bbj67pSHQTr5lS9kSrmT/Xi9BIxZU3B
-         t5tbNCqRUBF5R77M+twcWSg8IXhZXAmXAlATd8+4aiHncxDJIq1XwR0N4gNFFQI8kjdI
-         m4Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=UFGeS7+xruZP4sn4Tn07AerSriOPiGRkhy6cYT13zbQ=;
-        b=fUE3/DWyZFuOsLIFGqDp+wxW5dWQePv5o2yC76mOtduNGL9KWo2ep6qQBAzf85MB+e
-         O5pNWS4LococAgM+rwDFAiOVZjBCpFvp1FYuJ+P3YCiWkOSbn/3TSl3GQBNQdXbxKLio
-         4SjLAxHvZv1n6o/lMWlzXseG+MdcIyWuaKrINrdCnTEiOikIC5F2AoeX67dtP/C1X9YB
-         7zhlrP4UJk83M70njm/PnhWdWfkVleGAwsB7CptSaZx8kRGYTTFwg2r/jd4Ia4sNSHic
-         /ydsMFtNshxVbCzff4xA3TzaASBpkp+PjLawivC9xszFpmRVaaQykKbHLUbYDaFcAuc0
-         7FsA==
-X-Gm-Message-State: APjAAAXCvoMFhuG03qGm9s/h1lQY5V6WykSARSYJuxZeLWCYHKcF4yCW
-        MDoRvm3gk84I7nqzS27tMI+sNVEQCir4jbNkHYHGfA==
-X-Google-Smtp-Source: APXvYqwJBsGUaIGqFR3CJSWo/i0FpDRirNWONamjbWrJaTKAzfV5w3fQjS/fE5bbN9GDU1+wkgSr0HNKitEjh64tjjEshQ==
-X-Received: by 2002:a62:e706:: with SMTP id s6mr3820429pfh.87.1551916805075;
- Wed, 06 Mar 2019 16:00:05 -0800 (PST)
-Date:   Wed,  6 Mar 2019 15:59:01 -0800
-In-Reply-To: <20190306235913.6631-1-matthewgarrett@google.com>
-Message-Id: <20190306235913.6631-16-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20190306235913.6631-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 15/27] acpi: Ignore acpi_rsdp kernel param when the kernel has
- been locked down
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dhowells@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 Mar 2019 19:01:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbfCGABR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 19:01:17 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA77F20663;
+        Thu,  7 Mar 2019 00:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551916877;
+        bh=HgFOMLICi1QJiVbm5oWtZL/K+Q/vZOFKt42rHTdGeK4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=OTMXPM78hTmYuQgl1sjZB0quC4zqJCCgtl4Cv35/WOtanjStfH1Mn020uhu2C9pCv
+         tPaoozOqW8KvPTcm8IU7jr/1nSQtel/PR22JIhqglbwLcVWLy9BrwCCj9S+Ft712hQ
+         Nk9MLH289O4h65C1ValoAO08JCbKndlBg+BAgmuo=
+Date:   Thu, 7 Mar 2019 01:01:10 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-api@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Chinner <david@fromorbit.com>,
+        Kevin Easton <kevin@guarana.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Daniel Gruss <daniel@gruss.cc>
+Subject: Re: [PATCH 1/3] mm/mincore: make mincore() more conservative
+In-Reply-To: <20190306151351.f8ae1acae51ccad1a3537284@linux-foundation.org>
+Message-ID: <nycvar.YFH.7.76.1903070047360.19912@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1901051817390.16954@cbobk.fhfr.pm> <20190130124420.1834-1-vbabka@suse.cz> <20190130124420.1834-2-vbabka@suse.cz> <20190306151351.f8ae1acae51ccad1a3537284@linux-foundation.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Boyer <jwboyer@redhat.com>
+On Wed, 6 Mar 2019, Andrew Morton wrote:
 
-This option allows userspace to pass the RSDP address to the kernel, which
-makes it possible for a user to modify the workings of hardware .  Reject
-the option when the kernel is locked down.
+> > The semantics of what mincore() considers to be resident is not completely
+> > clear, but Linux has always (since 2.3.52, which is when mincore() was
+> > initially done) treated it as "page is available in page cache".
+> > 
+> > That's potentially a problem, as that [in]directly exposes meta-information
+> > about pagecache / memory mapping state even about memory not strictly belonging
+> > to the process executing the syscall, opening possibilities for sidechannel
+> > attacks.
+> > 
+> > Change the semantics of mincore() so that it only reveals pagecache information
+> > for non-anonymous mappings that belog to files that the calling process could
+> > (if it tried to) successfully open for writing.
+> 
+> "for writing" comes as a bit of a surprise.  Why not for reading?
 
-Signed-off-by: Josh Boyer <jwboyer@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
-cc: Dave Young <dyoung@redhat.com>
-cc: linux-acpi@vger.kernel.org
-Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
----
- drivers/acpi/osl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess this is a rhetorical question from you :) but fair enough, good 
+point, I'll explain this a bit more in the changelog and in the code 
+comments.
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index f29e427d0d1d..3e44cef7a0cd 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -194,7 +194,7 @@ acpi_physical_address __init acpi_os_get_root_pointer(void)
- 	acpi_physical_address pa;
- 
- #ifdef CONFIG_KEXEC
--	if (acpi_rsdp)
-+	if (acpi_rsdp && !kernel_is_locked_down("ACPI RSDP specification"))
- 		return acpi_rsdp;
- #endif
- 	pa = acpi_arch_get_root_pointer();
+> > @@ -189,8 +197,13 @@ static long do_mincore(unsigned long addr, unsigned long pages, unsigned char *v
+> >  	vma = find_vma(current->mm, addr);
+> >  	if (!vma || addr < vma->vm_start)
+> >  		return -ENOMEM;
+> > -	mincore_walk.mm = vma->vm_mm;
+> >  	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
+> > +	if (!can_do_mincore(vma)) {
+> > +		unsigned long pages = (end - addr) >> PAGE_SHIFT;
+> 
+> I'm not sure this is correct in all cases.   If
+> 
+> 	addr = 4095
+> 	vma->vm_end = 4096
+> 	pages = 1000
+> 
+> then `end' is 4096 and `(end - addr) << PAGE_SHIFT' is zero, but it
+> should have been 1.
+
+Good catch! It should rather be something like
+
+	unsigned long pages = (end >> PAGE_SHIFT) - (addr >> PAGE_SHIFT);
+
+I'll fix that up and resend tomorrow.
+
+Thanks,
+
 -- 
-2.21.0.352.gf09ad66450-goog
+Jiri Kosina
+SUSE Labs
 
