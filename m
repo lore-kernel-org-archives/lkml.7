@@ -2,145 +2,108 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E32C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D64C2081B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C924820840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:35:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MT7ZnhxR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuTtW7Ky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfCGQfi (ORCPT
+        id S1726337AbfCGQfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:35:38 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41993 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGQfh (ORCPT
+        Thu, 7 Mar 2019 11:35:47 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43729 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGQfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:35:37 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n74so11830815pfi.9
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 08:35:36 -0800 (PST)
+        Thu, 7 Mar 2019 11:35:47 -0500
+Received: by mail-ed1-f68.google.com with SMTP id m35so13987016ede.10;
+        Thu, 07 Mar 2019 08:35:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9kBUhpBcqYBB4rTIv68teSw5/fyCaCZqoMFAFKzXrQ8=;
-        b=MT7ZnhxRWSJfpEwK5vDdOv2tKwTZ7tTT51aNVcYa9yJBGaGlGaqLJpeaCtS64OMRWW
-         6+A/fEtyNUKctQeyT2OHns+MLNqm8zU52cvwOVdx0cHOZBv0w+CRcL92jkGRUVZHaUtB
-         bjNeCPUHFqnSH/SPolhENwY0/1dSXMK3wmgN4=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GdUy4oVpdiBp3EhX/Iu+EhgW75mPomojv0VK4+bVFxo=;
+        b=HuTtW7Ky5MQBuSpT+Xa1749TcW5sE/ffXNNa86pxrhNnQ41EYDvQxONtGjaVlYJ9hU
+         5vSQiwx987JL6JHz86vPU82FhCxN9ZUYCEzUqN8XiB1oYcoPNuBoqZGxoZFaiSOeE/iM
+         6s5cU3OrlgqQYACGjs/xq/GxmvQENGQkSiCKvtOKWoqRGTJ0u8t9ZeEN9bGs5blAfVIW
+         ut6Qn+Zd28n956zWYA3jrR97+ZBSI0CUqCUatGhJ0iRAqnmjzxfO8MYMKhnYHY679mNg
+         FNJHV1r8rXVvfVpDYboxVfSwFhRqv92YVPcy1A2dwNoxjFilVriQahbLzKI6cCKKpIao
+         uMVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9kBUhpBcqYBB4rTIv68teSw5/fyCaCZqoMFAFKzXrQ8=;
-        b=KePKIuI5NgF4KmIH+ItB0LIU/ApnVd5gNFzi8lMrFaDG20mPD1dCNkLyUCGEILrB8w
-         IIR1GCdNkCsdRKGpmfKaufg3eSeKZy+CyHG31IfHTTRnMrAh7097G/ByEIj1xbKx/NYT
-         zVSACSX0hkU3Hw/gQJ//D+k7iGQCUUtpQfpTS2rgQHyNACgdPqqdf7ASMJ8CRXCVVOp2
-         vmbTVKOAPJi0SJY7dxCbvM5YqXp9KgYFIhJGe5CCb8eC069nb3o3g2ddS64YXbYAattH
-         nr1dAGXZe/hHA21QWrfYbfuIytDbT21CznpHNn108/iPe44g9FOLIA0Xc4ngrK2m6ZZ8
-         jliw==
-X-Gm-Message-State: APjAAAXgnQPggFFc7SZNZlBp+E+l/Ul1g4SuwoKZvFluL6C6sGEvd8Ve
-        rgL11M1dZSgD/P/pPoLC6HnWLA==
-X-Google-Smtp-Source: APXvYqx3R1aNmWTZCccyUy75ExBV6RbWl9XTWlZ0Ur++xKR0xmFx6/SHeq9umY18JlPShUT7gxtQkQ==
-X-Received: by 2002:a62:48c1:: with SMTP id q62mr13653902pfi.113.1551976536604;
-        Thu, 07 Mar 2019 08:35:36 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id k74sm8692732pfb.172.2019.03.07.08.35.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 08:35:35 -0800 (PST)
-Date:   Thu, 7 Mar 2019 08:35:35 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Hemantg <hemantg@codeaurora.org>
-Subject: Re: [PATCH 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to
- QCA_<flags>
-Message-ID: <20190307163535.GA138592@google.com>
-References: <20190307004041.38059-1-mka@chromium.org>
- <20190307004041.38059-2-mka@chromium.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GdUy4oVpdiBp3EhX/Iu+EhgW75mPomojv0VK4+bVFxo=;
+        b=MqQCKEsnnYsrWcABE1EPHv/UQDpj3kHIoMRnNfD4d0Hhv4HP37LmmvoH+g3ZVa3+dJ
+         MYjBAGWLu1jwDdIu1gTTTQUCSzvnok1UYRhUbuHcPifh2W7xI4GRwHqH3ahBYw0pCGjp
+         6ixW/Vjsoas2xr0gvuGAdCBUaEiEcTHoOJGAVgHqrkRLliDjHoowBZZMPifSdqC0IqT4
+         CVBwzIC5llbTC3yV/YJ2x7pepGQ23YPdVsGzgWoHkATmr14fCRflz94TetbaFz3sX6He
+         voiqZLbJxfmWvrlYQXQgADTG/FrkGIoO+T9UqyCaqR7aOb311LpnzHxhnqqFlGw6o+W4
+         pIqg==
+X-Gm-Message-State: APjAAAUwHCm9rN5Ja4qyjWrbNzOGP1c8p0k+0pjd7GS0icrFNz69Mahz
+        /MZJ7OUx/thW/0NQmSykPbE=
+X-Google-Smtp-Source: APXvYqyJ/5qr6xRUR2+rbnrylfOODM7V6l12KoSH8eVpBmApmGtb9AsG6D0R6SF11FJG1YEC2Ynpsg==
+X-Received: by 2002:a50:b6e6:: with SMTP id f35mr29034003ede.94.1551976544824;
+        Thu, 07 Mar 2019 08:35:44 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id d10sm986947ejr.64.2019.03.07.08.35.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 08:35:44 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH] btrfs: Turn an 'else if' into an 'else' in btrfs_uuid_tree_add
+Date:   Thu,  7 Mar 2019 09:35:15 -0700
+Message-Id: <20190307163515.2168-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190307004041.38059-2-mka@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 04:40:40PM -0800, Matthias Kaehlcke wrote:
-> Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IN_BAND_SLEEP_ENABLED.
-> The constant represents a flag (multiple flags can be set at once),
-> not a unique state of the controller or driver. Also use the BIT()
-> macro to specify the position of the flag instead of an integer
-> literal.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 237aea34b69f1..ab8e59419dbc4 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -54,8 +54,7 @@
->  #define HCI_IBS_WAKE_ACK	0xFC
->  #define HCI_MAX_IBS_SIZE	10
->  
-> -/* Controller states */
-> -#define STATE_IN_BAND_SLEEP_ENABLED	1
-> +#define QCA_IN_BAND_SLEEP_ENABLED	BIT(0)
+When building with -Wsometimes-uninitialized, Clang warns:
 
-I realized that the use of BIT() isn't correct here, since the value
-is used with set_bit(), ..., which expect a bit *number*. It should
-probably be an emum starting with 0.
+fs/btrfs/uuid-tree.c:129:13: warning: variable 'eb' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+fs/btrfs/uuid-tree.c:129:13: warning: variable 'offset' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
 
-I'll update it in the next revision.
+Clang can't tell that all cases are covered with this final else if.
+Just turn it into an else so that it is clear.
 
->  
->  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
->  #define IBS_TX_IDLE_TIMEOUT_MS		2000
-> @@ -775,7 +774,7 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
->  	/* Don't go to sleep in middle of patch download or
->  	 * Out-Of-Band(GPIOs control) sleep is selected.
->  	 */
-> -	if (!test_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
-> +	if (!test_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
->  		skb_queue_tail(&qca->txq, skb);
->  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
->  		return 0;
-> @@ -1192,7 +1191,7 @@ static int qca_setup(struct hci_uart *hu)
->  		return ret;
->  
->  	/* Patch downloading has to be done without IBS mode */
-> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> +	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
->  
->  	if (qcadev->btsoc_type == QCA_WCN3990) {
->  		bt_dev_info(hdev, "setting up wcn3990");
-> @@ -1236,7 +1235,7 @@ static int qca_setup(struct hci_uart *hu)
->  	/* Setup patch / NVM configurations */
->  	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, soc_ver);
->  	if (!ret) {
-> -		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> +		set_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
->  		qca_debugfs_init(hdev);
->  	} else if (ret == -ENOENT) {
->  		/* No patch/nvm-config found, run with original fw/config */
-> @@ -1294,7 +1293,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
->  	 * data in skb's.
->  	 */
->  	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
-> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
-> +	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
->  	qca_flush(hu);
->  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
->  
+Link: https://github.com/ClangBuiltLinux/linux/issues/385
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ fs/btrfs/uuid-tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/uuid-tree.c b/fs/btrfs/uuid-tree.c
+index 3b2ae342e649..c1cc9a5c0024 100644
+--- a/fs/btrfs/uuid-tree.c
++++ b/fs/btrfs/uuid-tree.c
+@@ -126,7 +126,7 @@ int btrfs_uuid_tree_add(struct btrfs_trans_handle *trans, u8 *uuid, u8 type,
+ 		slot = path->slots[0];
+ 		offset = btrfs_item_ptr_offset(eb, slot);
+ 		offset += btrfs_item_size_nr(eb, slot) - sizeof(subid_le);
+-	} else if (ret < 0) {
++	} else {
+ 		btrfs_warn(fs_info,
+ 			   "insert uuid item failed %d (0x%016llx, 0x%016llx) type %u!",
+ 			   ret, (unsigned long long)key.objectid,
+-- 
+2.21.0
+
