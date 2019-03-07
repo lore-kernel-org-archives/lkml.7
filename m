@@ -2,105 +2,112 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF97C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E0DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20B320840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5032C20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 22:26:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hD64EKNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfCGWYo (ORCPT
+        id S1726277AbfCGW0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 17:24:44 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38651 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfCGWYn (ORCPT
+        Thu, 7 Mar 2019 17:26:23 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35956 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfCGW0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 17:24:43 -0500
-Received: by mail-qt1-f194.google.com with SMTP id s1so19118268qte.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:24:43 -0800 (PST)
+        Thu, 7 Mar 2019 17:26:23 -0500
+Received: by mail-ed1-f66.google.com with SMTP id g9so14839849eds.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 14:26:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tUJgMnuKuf55+FYpU2WmLf4w+CdzngJ4XWM3G1QEr5A=;
+        b=hD64EKNJsp1TMp3aDJlV0VDJEqllqIfA7l3sJHLpru8SNfVDdPYhC4UO+H+kIsR4E1
+         tNmd8YPT30rKASkzFKiHnif5eO25ffu84s1vZQd6lkIlt7jRzVQvOdjiSI/r6V/Yj8DE
+         h5ZYSbExYmw53cC42jnRk13l/m9pj8LEUqQO3/j9jqZV2PZ40zcj5hBamiIuFG3zwhAT
+         38mp+N8WyhOZHV4OE0Unwk++HtdCtoAIIauDOYYED7jPRdmgcmhbsQSLR1fN1QHeHA35
+         Z6lRDW7PscL9dY9Gcij9X0JvxQaM33Bx5qRphQIX2dJoShZPv9MipjZlmJRaVkGBTEca
+         fUOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MVSDyuojxDr8yKM2hUZArTW3td5unUmPpSnGlPnhrLA=;
-        b=Z3BirsmqKDZtstrgnAnuGYb6p9K+3MdnF1jSli5vondQicCQRapn0TLQovbM+IDZg/
-         uIEpOiytmwwCEpypLqAfcCol3fSiTqGz+Ul39Za3mMH54lgRckbj79VJSoUQctOOr0CP
-         QuT/oBB+lNDcEYkBoqSF8TSmStmCH8olFYnkqHt3fLLl/vC3YcdvzOOi4SjRt0hK29M6
-         2di1WzUnQdqZbCkIBOq30xPkYn9NFfLaL+qnc09NQVlG/AIjSkglOho4w1Asq0kYD3Jd
-         oOd52skhw8x3w+cgy5hYGa9Km4sNvYB4p/Le/B3Y56f3EzAgeKcxfA/C3a9adJKjxIYH
-         xtIQ==
-X-Gm-Message-State: APjAAAXezpYVUTgPMv1MbFuuZDu3jVW1j2fFOBWBIrzvu+UXbtpCt4+U
-        w565MBpINWDFn/148XnTZpL6Ng5h7mxh72KISOA=
-X-Google-Smtp-Source: APXvYqzNriK/KMlNRmmAEqfBV/zdy5PYR6cREKCd0ieKPnVJm1CixoY1ZAsRXjYkdhIwrW1TugnA9Tv4UOXAxKMmk68=
-X-Received: by 2002:a0c:b501:: with SMTP id d1mr12833709qve.115.1551997482641;
- Thu, 07 Mar 2019 14:24:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tUJgMnuKuf55+FYpU2WmLf4w+CdzngJ4XWM3G1QEr5A=;
+        b=Mop6H16G9gayyE12Ihk/hjqHr2/zRUsyXvaQyazQEG1ahxXmkApBd2oN5jro7j8dZo
+         D4uSM2PkXxndSuHCig5c19KKFS0AiqesWZRD+swkaggFySaI1BlkQ7dLx1Enruwi7uda
+         alTgIwFvBp7Lzi9VVlOfrg8MHu1P6Sfekj5njT/oYCSEFDb7SHysEGBK9+ZZcFl+qXmR
+         9fVWLcACbzsmUmglkOXbgYkiPOVf+ZKpAk364fn4qQQSlx5Khu8kTJvPuhuvcqCCROSN
+         tDDAvb2V+C/3yuTrrPd0RsdBIRIZqLfLv2UlFqkgBshiPqVoMOaSW3Wg84owE6LYKwBY
+         oL0g==
+X-Gm-Message-State: APjAAAWhSf48lgRebtZV2OfqIwmKvCC8sxatkLhSdB++UWecmeX1DKqJ
+        kv1wfI/hr1zigZiMtHCH0dg=
+X-Google-Smtp-Source: APXvYqzclbHsjnrsA0Fl6OVwMXJ949Y/jZbNuErHaWod9+HLYsk+/O1dajKPW7s48h2fl9q7XO+FPA==
+X-Received: by 2002:a17:906:4bc8:: with SMTP id x8mr9294133ejv.114.1551997580995;
+        Thu, 07 Mar 2019 14:26:20 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id n25sm1668242edd.83.2019.03.07.14.26.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 14:26:20 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] drm/vmwgfx: Zero initialize handle in vmw_execbuf_process
+Date:   Thu,  7 Mar 2019 15:26:11 -0700
+Message-Id: <20190307222611.18100-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190307091514.2489338-1-arnd@arndb.de> <CAKwvOdkr+a1F1VJ=Gc44WfrBnhnDNkvgQ=byz+N++xQ6VPdc2g@mail.gmail.com>
- <20190307182102.GA12466@archlinux-ryzen>
-In-Reply-To: <20190307182102.GA12466@archlinux-ryzen>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 7 Mar 2019 23:24:26 +0100
-Message-ID: <CAK8P3a1sPvO=V07oSUQ2Sdf4S5voVLfWeK=1Fu10_BNAJYWF8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] futex: mark futex_detect_cmpxchg() as 'noinline'
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 7:21 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Thu, Mar 07, 2019 at 10:12:11AM -0800, Nick Desaulniers wrote:
-> > On Thu, Mar 7, 2019 at 1:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On 32-bit ARM, I got a link failure in futex_init() when building
-> > > with clang in some random configurations:
-> > >
-> > > kernel/futex.o:(.text.fixup+0x5c): relocation truncated to fit: R_ARM_JUMP24 against `.init.text'
-> >
-> > Do we know what function from the fixup text section is calling
-> > futex_detect_cmpxchg?  I'm curious if this is maybe another case of
-> > -Wsection where some function may be in the wrong section?
-> >
->
-> Looks like this is the call stack:
->
-> futex_init ->
->     futex_detect_cmpxchg ->
->         cmpxchg_futex_value_locked ->
->             futex_atomic_cmpxchg_inatomic
->
-> This is the same issue I reported: https://github.com/ClangBuiltLinux/linux/issues/325
->
-> Marking arm's futex_atomic_cmpxchg_inatomic as noinline also fixes this
-> so maybe that's it?
+When building with -Wsometimes-uninitialized, Clang warns:
 
-I think part of the problem is the linker sometimes failing to generate
-veneers for long calls. I've seen this in the past with relocations in
-non-executable sections, but it's possible that the problem here is
-having a relocation to a section that doesn't start with ".text".
+drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c:3964:7: warning: variable
+'handle' is used uninitialized whenever '?:' condition is false
+[-Wsometimes-uninitialized]
 
-I have not analyzed the linker behavior in more detail, but have
-experimentally shown that the problem doesn't happen if the relocation
-is from the .text.fixup segment to .text rather than .init.text. It's
-also possible that this is simply a result of the relative distance of
-the locations in memory as Russell said, so it could come back
-if the kernel grows further.
+It's not wrong; however, in practice, this is never an issue because
+the value of handle isn't used when user_fence_rep is NULL because
+vmw_execbuf_copy_fence_user returns immediately when that is the case.
+Just zero initialize this variable so that Clang no longer warns.
 
-        Arnd
+Link: https://github.com/ClangBuiltLinux/linux/issues/397
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+index 88b8178d4687..4ba06c2828a1 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -3829,7 +3829,7 @@ int vmw_execbuf_process(struct drm_file *file_priv,
+ 	struct vmw_sw_context *sw_context = &dev_priv->ctx;
+ 	struct vmw_fence_obj *fence = NULL;
+ 	struct vmw_cmdbuf_header *header;
+-	uint32_t handle;
++	uint32_t handle = 0;
+ 	int ret;
+ 	int32_t out_fence_fd = -1;
+ 	struct sync_file *sync_file = NULL;
+-- 
+2.21.0
+
