@@ -2,46 +2,46 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704B6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482EDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A7C20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F37520851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MweqcvRv"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DJwzwZJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfCGR6u (ORCPT
+        id S1726620AbfCGR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:58:50 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48608 "EHLO
+        Thu, 7 Mar 2019 12:58:58 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48494 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbfCGR6r (ORCPT
+        by vger.kernel.org with ESMTP id S1726393AbfCGR6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:58:47 -0500
+        Thu, 7 Mar 2019 12:58:34 -0500
 Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HoVEN005555
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:58:46 -0800
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x27HoOpE005354
+        for <linux-kernel@vger.kernel.org>; Thu, 7 Mar 2019 09:58:32 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=ll+pylOW0HphaDg25E1QDrufB4Uul1+CtFZFpEv9+d8=;
- b=MweqcvRvfjVL3/Ss/JYKkM8l9K96GsmoHBDkJZCHimTSTDIs/lv11Yow3ZRo5QbeAOje
- nWlF1TQ34R3TZ/y27I6SkQnzRfXaT3hQ4Vb4dudrENiltyfNgrTv6p7p22yUwWWYLbmW
- 4Lx7zq9wQjzTp0tnZsP/7bizHlQONCv3/z0= 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=YD+fcm/fusDClh4H7LLxV82JlUR6M6cXHEgXwK9hXPY=;
+ b=DJwzwZJPYxYB9xdLZdKEUnU/FErUWcDax8eKj9BGdwxkwJ+cSMdiukkb8NlP61ARbHUB
+ J4jsXv3NsP0RoV9f580xp1Q0FlpuF3UA/MhVuDqNrgflj+Wq+YI4ikhMAFu1cIGoP8K/
+ 0TgfXLAWxHtiGAKCgE4eYsRKVxIaErm994Q= 
 Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r37hhr74d-8
+        by mx0a-00082601.pphosted.com with ESMTP id 2r37hhr73j-11
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:58:46 -0800
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 09:58:32 -0800
 Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 7 Mar 2019 09:58:26 -0800
+ Thu, 7 Mar 2019 09:58:30 -0800
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id D5AB962E1750; Thu,  7 Mar 2019 09:58:23 -0800 (PST)
+        id CA24762E1750; Thu,  7 Mar 2019 09:58:29 -0800 (PST)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -51,10 +51,12 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
         <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v7 perf,bpf 00/15] perf annotation of BPF programs
-Date:   Thu, 7 Mar 2019 09:57:55 -0800
-Message-ID: <20190307175810.249857-1-songliubraving@fb.com>
+Subject: [PATCH v7 perf,bpf 05/15] perf: change prototype of perf_event__synthesize_bpf_events()
+Date:   Thu, 7 Mar 2019 09:58:00 -0800
+Message-ID: <20190307175810.249857-6-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190307175810.249857-1-songliubraving@fb.com>
+References: <20190307175810.249857-1-songliubraving@fb.com>
 X-FB-Internal: Safe
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -67,130 +69,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes v6 to v7:
-1. Fix minor issues suggested by Jiri.
+This patch changes the arguments of perf_event__synthesize_bpf_events()
+to include perf_session* instead of perf_tool*. perf_session will be used
+in the next patch.
 
-Changes v5 to v6:
-1. Improve side band evlist interface;
-2. Minor style fixes.
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ tools/perf/builtin-record.c | 2 +-
+ tools/perf/builtin-top.c    | 2 +-
+ tools/perf/util/bpf-event.c | 8 +++++---
+ tools/perf/util/bpf-event.h | 4 ++--
+ 4 files changed, 9 insertions(+), 7 deletions(-)
 
-Changes v4 to v5:
-1. Rebase to latest bpf-next;
-2. Add dependency of 94816add0005 from Arnaldo's tree;
-3. More details in change logs;
-4. Add perf_env__init() to init bpf related lock and rbtrees;
-5. Small clean ups.
-
-Changes v3 to v4:
-1. Incorporate feedbacks from Jiri and Namhyung;
-2. Fixed compilation error with different feature-disassembler-four-args;
-3. Split some patches to smaller patches;
-4. Improved error handleing in symbol__disassemble_bpf();
-5. Made side band thread more generic;
-6. Added comments as suggested.
-
-Changes v2 to v3:
-1. Remove unnecessary include in header files;
-2. Improved error handling;
-3. Better naming of functions, variables, etc.;
-4. Enable bpf events by default for perf-top.
-
-Changes v1 to v2:
-1. Fix compilation error with different feature-disassembler-four-args;
-2. Fix a segfault in perf-record;
-3. Split patches 5/9 and 6/9 so that perf_env changes and perf.data changes
-   are in separate patches.
-
-This series enables annotation of BPF programs in perf.
-
-perf tool gathers information via sys_bpf and (optionally) stores them in
-perf.data as headers.
-
-Patch 1/15 fixes a minor issue in kernel;
-Patch 2/15 to 4/15 introduce new helper functions and use them in perf and
-     bpftool;
-Patch 5/15 to 9/15 saves information of bpf program in perf_env;
-Patch 10/15 adds --bpf-event options to perf-top;
-Patch 11/15 to 13/15 enables annotation of bpf progs based on information
-     gathered in 5/15 to 9/15;
-Patch 14/15 introduces side band polling thread that gathers information
-     for special kernel events during perf-record or perf-top.
-Patch 15/15 handles information of short living BPF program using the new
-     side band polling thread.
-
-Commands tested during developments are perf-top, perf-record, perf-report,
-and perf-annotate.
-
-===================== Note on patch dependency  ========================
-This set has dependency in both bpf-next tree and tip/perf/core. Current
-version is developed on bpf-next tree with the following commits
-cherry-picked from tip/perf/core (or acme/perf/core):
-
-(from 1/11 to 11/11)
-commit 76193a94522f ("perf, bpf: Introduce PERF_RECORD_KSYMBOL")
-commit d764ac646491 ("tools headers uapi: Sync tools/include/uapi/linux/perf_event.h")
-commit 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
-commit df063c83aa2c ("tools headers uapi: Sync tools/include/uapi/linux/perf_event.h")
-commit 9aa0bfa370b2 ("perf tools: Handle PERF_RECORD_KSYMBOL")
-commit 45178a928a4b ("perf tools: Handle PERF_RECORD_BPF_EVENT")
-commit 7b612e291a5a ("perf tools: Synthesize PERF_RECORD_* for loaded BPF programs")
-commit a40b95bcd30c ("perf top: Synthesize BPF events for pre-existing loaded BPF programs")
-commit 6934058d9fb6 ("bpf: Add module name [bpf] to ksymbols for bpf programs")
-commit 811184fb6977 ("perf bpf: Fix synthesized PERF_RECORD_KSYMBOL/BPF_EVENT")
-comimt 94816add0005 ("perf tools: Add perf_exe() helper to find perf binary")
-========================================================================
-
-This set is also available at:
-
-https://github.com/liu-song-6/linux/tree/bpf-annotation
-
-Thanks!!
-
-Song Liu (15):
-  perf, bpf: consider events with attr.bpf_event as side-band events
-  bpf: libbpf: introduce bpf_program__get_prog_info_linear()
-  bpf: bpftool: use bpf_program__get_prog_info_linear() in
-    prog.c:do_dump()
-  perf, bpf: synthesize bpf events with
-    bpf_program__get_prog_info_linear()
-  perf: change prototype of perf_event__synthesize_bpf_events()
-  perf, bpf: save bpf_prog_info in a rbtree in perf_env
-  perf, bpf: save bpf_prog_info information as headers to perf.data
-  perf, bpf: save btf in a rbtree in perf_env
-  perf, bpf: save btf information as headers to perf.data
-  perf-top: add option --no-bpf-event
-  perf: add -lopcodes to feature-libbfd
-  perf, bpf: enable annotation of bpf program
-  perf, bpf: process PERF_BPF_EVENT_PROG_LOAD for annotation
-  perf: introduce side band thread
-  perf, bpf: save bpf_prog_info and btf of short living bpf programs
-
- kernel/events/core.c         |   3 +-
- tools/bpf/bpftool/prog.c     | 266 +++++++---------------------
- tools/build/Makefile.feature |   6 +-
- tools/lib/bpf/libbpf.c       | 251 +++++++++++++++++++++++++++
- tools/lib/bpf/libbpf.h       |  63 +++++++
- tools/lib/bpf/libbpf.map     |   3 +
- tools/perf/Makefile.config   |   6 +-
- tools/perf/builtin-record.c  |   9 +-
- tools/perf/builtin-top.c     |  12 +-
- tools/perf/perf.c            |   1 +
- tools/perf/util/annotate.c   | 150 +++++++++++++++-
- tools/perf/util/bpf-event.c  | 327 ++++++++++++++++++++++++++---------
- tools/perf/util/bpf-event.h  |  33 +++-
- tools/perf/util/dso.c        |   1 +
- tools/perf/util/dso.h        |  33 ++--
- tools/perf/util/env.c        | 149 ++++++++++++++++
- tools/perf/util/env.h        |  22 +++
- tools/perf/util/evlist.c     | 113 ++++++++++++
- tools/perf/util/evlist.h     |  12 ++
- tools/perf/util/evsel.h      |   6 +
- tools/perf/util/header.c     | 250 +++++++++++++++++++++++++-
- tools/perf/util/header.h     |   2 +
- tools/perf/util/session.c    |   1 +
- tools/perf/util/symbol.c     |   1 +
- tools/perf/util/top.h        |   1 +
- 25 files changed, 1410 insertions(+), 311 deletions(-)
-
---
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 88ea11d57c6f..2355e0a9eda0 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1083,7 +1083,7 @@ static int record__synthesize(struct record *rec, bool tail)
+ 		return err;
+ 	}
+ 
+-	err = perf_event__synthesize_bpf_events(tool, process_synthesized_event,
++	err = perf_event__synthesize_bpf_events(session, process_synthesized_event,
+ 						machine, opts);
+ 	if (err < 0)
+ 		pr_warning("Couldn't synthesize bpf events.\n");
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 5a486d4de56e..27d8d42e0a4d 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1216,7 +1216,7 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 	init_process_thread(top);
+ 
+-	ret = perf_event__synthesize_bpf_events(&top->tool, perf_event__process,
++	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+ 						&top->session->machines.host,
+ 						&top->record_opts);
+ 	if (ret < 0)
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index e6dfb95029e5..ff7ee149ec46 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -10,6 +10,7 @@
+ #include "debug.h"
+ #include "symbol.h"
+ #include "machine.h"
++#include "session.h"
+ 
+ #define ptr_to_u64(ptr)    ((__u64)(unsigned long)(ptr))
+ 
+@@ -42,7 +43,7 @@ int machine__process_bpf_event(struct machine *machine __maybe_unused,
+  *   -1 for failures;
+  *   -2 for lack of kernel support.
+  */
+-static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
++static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 					       perf_event__handler_t process,
+ 					       struct machine *machine,
+ 					       int fd,
+@@ -52,6 +53,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 	struct ksymbol_event *ksymbol_event = &event->ksymbol_event;
+ 	struct bpf_event *bpf_event = &event->bpf_event;
+ 	struct bpf_prog_info_linear *info_linear;
++	struct perf_tool *tool = session->tool;
+ 	struct bpf_prog_info *info;
+ 	struct btf *btf = NULL;
+ 	bool has_btf = false;
+@@ -175,7 +177,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 	return err ? -1 : 0;
+ }
+ 
+-int perf_event__synthesize_bpf_events(struct perf_tool *tool,
++int perf_event__synthesize_bpf_events(struct perf_session *session,
+ 				      perf_event__handler_t process,
+ 				      struct machine *machine,
+ 				      struct record_opts *opts)
+@@ -209,7 +211,7 @@ int perf_event__synthesize_bpf_events(struct perf_tool *tool,
+ 			continue;
+ 		}
+ 
+-		err = perf_event__synthesize_one_bpf_prog(tool, process,
++		err = perf_event__synthesize_one_bpf_prog(session, process,
+ 							  machine, fd,
+ 							  event, opts);
+ 		close(fd);
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 7890067e1a37..6698683612a7 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -15,7 +15,7 @@ struct record_opts;
+ int machine__process_bpf_event(struct machine *machine, union perf_event *event,
+ 			       struct perf_sample *sample);
+ 
+-int perf_event__synthesize_bpf_events(struct perf_tool *tool,
++int perf_event__synthesize_bpf_events(struct perf_session *session,
+ 				      perf_event__handler_t process,
+ 				      struct machine *machine,
+ 				      struct record_opts *opts);
+@@ -27,7 +27,7 @@ static inline int machine__process_bpf_event(struct machine *machine __maybe_unu
+ 	return 0;
+ }
+ 
+-static inline int perf_event__synthesize_bpf_events(struct perf_tool *tool __maybe_unused,
++static inline int perf_event__synthesize_bpf_events(struct perf_session *session __maybe_unused,
+ 						    perf_event__handler_t process __maybe_unused,
+ 						    struct machine *machine __maybe_unused,
+ 						    struct record_opts *opts __maybe_unused)
+-- 
 2.17.1
+
