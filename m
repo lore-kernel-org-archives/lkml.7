@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E3CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27A9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8866320661
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7531020661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551980741;
-	bh=p4UsUUNk+k3Pd0FmAEBdZQfub55g6inChRVqyM75qTY=;
+	s=default; t=1551980746;
+	bh=BE+h+0fMQNSj3jSlS6oTxyVB8VEoA28cmDbU4H8cl+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2agTW9JyzPhJxvrSP/kNL78lVBAP+wvGHWM7RUFAuSU8PTiM6oQAKsgsg2L5BSVH
-	 G7ku2uf+qeVkQ4q4TIwoEyV5yYUMiXStFN0Yap5pZO3SCCdBvyZ3Yvf/Q8r2LZiHtv
-	 rJNvVCXUhjlNDGoOC6lgRNkRBFuxg6EunH6lVr+w=
+	b=Yy4+QPa7EoPytu6ZqDxnxBwCcKDCT41we7E55j5lAexMHSmhVTWur9JLJr2Y/Dl52
+	 BcZ8frk68ozt8WuZH7zPU2SCwLhaTcf50F2uujXfl089znEtCrbcS4hNPLkJArm+ST
+	 q9ejGvqeSwDNpuBHuRJWsp8t8oOeGlgpueFdnNz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfCGRpk (ORCPT
+        id S1726711AbfCGRpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:45:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37744 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 12:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfCGRpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:45:39 -0500
+        id S1726308AbfCGRpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:45:42 -0500
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABB302087C;
-        Thu,  7 Mar 2019 17:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF5C20854;
+        Thu,  7 Mar 2019 17:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551980738;
-        bh=p4UsUUNk+k3Pd0FmAEBdZQfub55g6inChRVqyM75qTY=;
+        s=default; t=1551980741;
+        bh=BE+h+0fMQNSj3jSlS6oTxyVB8VEoA28cmDbU4H8cl+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3uAq/4X0AcpDUyuFkfAA4Egz/qgX7JzasSyFWgl9O1b/7PTD6KGIRRblbgNdZKti
-         W+530USuEwfmYERauH59oPJ+Qo9vNJVvgOljyM3jCxlxGICz8z8ygHQ1MCh3J/oogV
-         FhpShO8/ZRS1Uj6AjiXyR/ebMhtxXWsnVt3zMhsI=
+        b=IarQuWVtq1mCX3BjoMiswx9uIB2LqfrIMbCM/eJ0EZQf8Yx2xyzjvhGcY46jbToEe
+         oSfAPlnLFUGMryCjCTeJA7uOJD4muvt8t0ID8C0MSw3Cv4WmOPWO3e95PVi3bgnz84
+         lNLqniB6zIX1DAekrq+TK4G2EIEVhrrVntKQ1FvU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 12/35] perf scripts python: exported-sql-viewer.py: Factor out TreeWindowBase
-Date:   Thu,  7 Mar 2019 14:44:10 -0300
-Message-Id: <20190307174433.28819-13-acme@kernel.org>
+Subject: [PATCH 13/35] perf scripts python: exported-sql-viewer.py: Improve TreeModel abstraction
+Date:   Thu,  7 Mar 2019 14:44:11 -0300
+Message-Id: <20190307174433.28819-14-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
@@ -62,88 +62,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Factor out a base class TreeWindowBase from CallGraphWindow, so that
-TreeWindowBase can be reused.
+Instead of passing the tree root, get it from a method that can be
+implemented in any derived class.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: https://lkml.kernel.org/n/tip-ifirw0c0mhkwxg6l12lk6k4p@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ovcv28bg4mt9swk36ypdyz14@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 50 ++++++++++++-------
- 1 file changed, 31 insertions(+), 19 deletions(-)
+ .../perf/scripts/python/exported-sql-viewer.py  | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 09ce73b07d35..df854f0a69f0 100755
+index df854f0a69f0..b2a22525549d 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -693,28 +693,16 @@ class VBox():
- 	def Widget(self):
- 		return self.vbox
+@@ -167,9 +167,10 @@ class Thread(QThread):
  
--# Context-sensitive call graph window
--
--class CallGraphWindow(QMdiSubWindow):
--
--	def __init__(self, glb, parent=None):
--		super(CallGraphWindow, self).__init__(parent)
-+# Tree window base
+ class TreeModel(QAbstractItemModel):
  
--		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
-+class TreeWindowBase(QMdiSubWindow):
- 
--		self.view = QTreeView()
--		self.view.setModel(self.model)
--
--		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
--			self.view.setColumnWidth(c, w)
--
--		self.find_bar = FindBar(self, self)
--
--		self.vbox = VBox(self.view, self.find_bar.Widget())
--
--		self.setWidget(self.vbox.Widget())
-+	def __init__(self, parent=None):
-+		super(TreeWindowBase, self).__init__(parent)
- 
--		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
-+		self.model = None
-+		self.view = None
-+		self.find_bar = None
- 
- 	def DisplayFound(self, ids):
- 		if not len(ids):
-@@ -747,6 +735,30 @@ class CallGraphWindow(QMdiSubWindow):
- 		if not found:
- 			self.find_bar.NotFound()
- 
-+
-+# Context-sensitive call graph window
-+
-+class CallGraphWindow(TreeWindowBase):
-+
+-	def __init__(self, root, parent=None):
 +	def __init__(self, glb, parent=None):
-+		super(CallGraphWindow, self).__init__(parent)
-+
-+		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
-+
-+		self.view = QTreeView()
-+		self.view.setModel(self.model)
-+
-+		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
-+			self.view.setColumnWidth(c, w)
-+
-+		self.find_bar = FindBar(self, self)
-+
-+		self.vbox = VBox(self.view, self.find_bar.Widget())
-+
-+		self.setWidget(self.vbox.Widget())
-+
-+		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
-+
- # Child data item  finder
+ 		super(TreeModel, self).__init__(parent)
+-		self.root = root
++		self.glb = glb
++		self.root = self.GetRoot()
+ 		self.last_row_read = 0
  
- class ChildDataItemFinder():
+ 	def Item(self, parent):
+@@ -562,8 +563,10 @@ class CallGraphRootItem(CallGraphLevelItemBase):
+ class CallGraphModel(TreeModel):
+ 
+ 	def __init__(self, glb, parent=None):
+-		super(CallGraphModel, self).__init__(CallGraphRootItem(glb), parent)
+-		self.glb = glb
++		super(CallGraphModel, self).__init__(glb, parent)
++
++	def GetRoot(self):
++		return CallGraphRootItem(self.glb)
+ 
+ 	def columnCount(self, parent=None):
+ 		return 7
+@@ -1339,8 +1342,7 @@ class BranchModel(TreeModel):
+ 	progress = Signal(object)
+ 
+ 	def __init__(self, glb, event_id, where_clause, parent=None):
+-		super(BranchModel, self).__init__(BranchRootItem(), parent)
+-		self.glb = glb
++		super(BranchModel, self).__init__(glb, parent)
+ 		self.event_id = event_id
+ 		self.more = True
+ 		self.populated = 0
+@@ -1364,6 +1366,9 @@ class BranchModel(TreeModel):
+ 		self.fetcher.done.connect(self.Update)
+ 		self.fetcher.Fetch(glb_chunk_sz)
+ 
++	def GetRoot(self):
++		return BranchRootItem()
++
+ 	def columnCount(self, parent=None):
+ 		return 8
+ 
 -- 
 2.20.1
 
