@@ -2,94 +2,151 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AB8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D48C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5F82063F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JGBOdgPl"
+	by mail.kernel.org (Postfix) with ESMTP id C639420840
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCGRiZ (ORCPT
+        id S1726442AbfCGRir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:38:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43826 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfCGRiZ (ORCPT
+        Thu, 7 Mar 2019 12:38:47 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:44935 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfCGRiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:38:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2bjsc85l/P3sWJy9LA97uh1fbTulfsF6oCVTsZ2XWUw=; b=JGBOdgPlxhlu2hgQXSNXAWi9R
-        ylm3xDSH5MT9WEPRdMGYxOeWKnU9JS/1Dw/NH+u50mhaV3ZOBCKAv/JQGTFLHbio7o9vwqd2Lgm3s
-        T8dqqAztRI4pfKYwY3uw4YeQ3gYi0RsxlvuBiqQC1D7mqQQUMlP/ue5fVYeRaAL/0EZ72lWoEjKbu
-        6kkBbWzm53wnNc8fj94a+ZPF1XIifEYYdi4a0ntpLSS9xCRV0pBLkmk2MioI4r3Ewuzyf7UJTkkVS
-        LYqkTYVzbu/VCL6eE/IJxAaG2fw1uWhfv1hWFYiqmUmQ6q36IzxYaMlYwQ5mFvW0oej+SQB1AJ3BR
-        w6OfjSo6w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1wyC-0001VG-9U; Thu, 07 Mar 2019 17:38:12 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B0AA2029B186; Thu,  7 Mar 2019 18:38:10 +0100 (CET)
-Date:   Thu, 7 Mar 2019 18:38:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 7 Mar 2019 12:38:46 -0500
+Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MKKER-1hN3e82Z7X-00Ljum; Thu, 07 Mar 2019 18:37:23 +0100
+Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
+ kernel
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, hpa@zytor.com,
+        Daniel Colascione <dancol@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 00/20] objtool: UACCESS validation v3
-Message-ID: <20190307173810.GI32477@hirez.programming.kicks-ass.net>
-References: <20190307114511.870090179@infradead.org>
- <20190307120317.GD32477@hirez.programming.kicks-ass.net>
- <20190307125526.GB32534@hirez.programming.kicks-ass.net>
- <20190307131312.GC32534@hirez.programming.kicks-ass.net>
- <20190307164705.qbu4ytdfdmsighas@treble>
- <CAHk-=wgfvwn1L7BduXA02rZdDnKGb8ebzm4C--QcfVF+gjHAvQ@mail.gmail.com>
- <20190307171709.dap5hfeof4yo3nsc@treble>
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        yhs@fb.com
+References: <20190118225543.86996-1-joel@joelfernandes.org>
+ <20190119082532.GA9004@kroah.com> <20190119162754.GC231277@google.com>
+ <CAKOZuet+7a4jdox6rebMN=kJtDn5RUYzvNjFh+Pzn2UkuP0Y8Q@mail.gmail.com>
+ <20190119232503.GA149403@google.com>
+ <78AACAF1-8EBF-4DF3-BE94-5B14E78BA791@zytor.com>
+ <20190120155838.GA23827@google.com> <20190306230944.GB7915@amd>
+ <742b4797-9954-fb54-cce8-47fcad750c69@metux.net>
+ <20190307014802.GA193359@google.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <226424d3-d29f-2a83-2d04-81ad4aab1be2@metux.net>
+Date:   Thu, 7 Mar 2019 18:37:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307171709.dap5hfeof4yo3nsc@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190307014802.GA193359@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:4ETAHTk3UP4TuYHqVVKcSHFKei7GUTdggkrl0NzVL7qOpavZ6zj
+ R3QqVB+x2OnaykgLH+gyOVJtlB0pWy0HX3VekSafxXlbbd9OJ23pyV3o+wgInFddTEZnnVe
+ fkYjRd5zWQAjtYjGoRAwt4YVK/8fqsSqKoNjKYanm6K9i0/0dYrtWMVTrCb8Jh/suWwqUcA
+ jK0d/L5phzF4mN2Q6VLsA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ahvefg0OvLo=:XEIDzNC39yIDS9QcsqrY+G
+ d+NUU8gEUunHGQssYR7TJ5K/kw3WncyCcPOgx2P1z+MBllZejKOUHIMY04rv8Fa3gx24Qwr45
+ z/kcfDd70UJbxPxpkyhsgK9ojBNdYR/lhwxh2+/gHeQzXwgNyY3T+52Hofj3hnseblCyy47Aj
+ uBr1GxoPqXZux4cuJE50N8bQrJygcZRJsT0QssJO0JrZu3uYj89PX+GLw+EG7GBf8NyI2PuaE
+ FZNLotSwfExnPWcUu0IU+WThVqIN5po43jRzPLavNA9X8NQ5FE5vMXr1k4MRkJS/3lGp9xJJ1
+ R6mHEe0eKV4rJC0m1IujXQbzpj1DJ58b4dOMHdWSKtGPQ1SmurBLIVIXWtB9jXG4WQcOQAc7B
+ Zf+6H8CNOZ+7WLBDRZspFAa1BZCO/qhI/AHSE/zCv9ealuOsYgGIVVvv54SDfQs3ZktKA1geJ
+ xPJ5m84q5EKXsB6KuqgfuzqMIfvaY//XnPCOkIALejbLIUCbhWvZpwUYcuEsrPHs3x+03wJe+
+ Oy1kKOiQx+Dn3n9sIhc+Z6oGNynopEFslEIEwFU1hjWuRO0lVurZX+gGimEIVMWP++xoGxduz
+ y5BDX06ykwejsMSENzptbhjaICMevs4t/ZU3nZwheNg6XizWcWJoNrPSZQNQYPp7UNkHeJ2/F
+ XKVGqn0xW8SXKdGHHN6pu41iTrjh80g4r40VzcYQJ9GzsARZ1JzSuWEGxFwTccSEG/DsrnBgg
+ EqUwEo5VquPGdcBkaA+EknfOxnK2VidUMOjnzkJvnJpHPCxkfvKAU1eoMqw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 11:17:09AM -0600, Josh Poimboeuf wrote:
-> On Thu, Mar 07, 2019 at 09:00:49AM -0800, Linus Torvalds wrote:
-> > But that macro really is the macro from hell regardless.
-> > 
-> > Do people really use CONFIG_PROFILE_ALL_BRANCHES?
+On 07.03.19 02:48, Joel Fernandes wrote:
+>> I'm confused.
 > 
-> IIRC, Steven runs it once a year or so...
+> Take a look at this thread: https://lkml.org/lkml/2019/2/28/634
 
-That's TRACE_BRANCH_PROFILING; PROFILE_ALL_BRANCHES I don't know, that
-mostly just gets in the way I think.
+Okay, replying to that mail:
 
-Also; it seems to me that something PT, or maybe even simply:
+> > > There's no linux-headers
 
-  perf -e branches -e branch-misses
+That's the first fundamental problem. Actually, there's not even any
+decent package management at all (no, apk seriously doesn't count as
+that, not if you're used to apt+frieds for over 20 years)
 
-would get you similar or sufficient information.
+> I have already been down that road. In the Android ecosystem, the
+> Android teams only provide a "userspace system image" which goes on
+> the system partition of the flash (and a couple other images are also
+> provided but system is the main one).
+
+These Android teams should learn how GNU/Linux distros and package
+management works for over 20 years. Really, this is pretty trivial.
+
+For such kind of general purpose devices, where users can install
+arbitrary applications, I'd never come to the strange idea of deploying
+whole operating system and applications in one image. (most likely not
+even initially in the factory)
+
+> The system image cannot contain GPL source code.
+
+Why exactly ? Beacuse Big Manitu said so ?
+
+Don't these folks that GPL doesn't prohibit shipping binaries on
+disk/flash images ?
+
+> It is also not possible to put kernel headers for every kernel version
+> on the system images that ship and is not practical.
+
+Of course not. They should only be deployed when needed, for the
+versions needed.
+
+> Android boots on 1000s of forked kernels.
+
+Next big fundamental problem. Why all these forks in the first place ?
+
+I'm not talking about the small patch queue ontop of mainline (or maybe
+Andoid kernel baseline) - that's something we do all the day in embedded
+world (of course we try to mainline as much as we can).
+
+But what I usually see from the Andoid vendors are pretty much full
+forks (full of horrible hacks) that quickly aren't maintained anymore.
+
+If I'd be the responsible manager @google, that'd be one of the very
+first things I'd care for: mainline first. (and, of course, ban all
+proprietary binary-only kernel modules).
+
+> Now for kernel modules, there's another image called the "vendor
+> image" which is flashed onto the vendor parition, this is where kernel
+> modules go.
+
+Okay, then why not just putting a tarball there ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
