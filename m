@@ -4,121 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D33C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3712CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E38920675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101DE20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 12:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfCGMJl (ORCPT
+        id S1726407AbfCGMKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 07:09:41 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54849 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfCGMJj (ORCPT
+        Thu, 7 Mar 2019 07:10:15 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:54663 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCGMKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 07:09:39 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f3so9090546wmj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 04:09:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fmxRHEhfqe4KOpOLNzkfUAlcDzf0ZKEImK2Tad1sR2Q=;
-        b=gb9Z4eswqakLhxCZv1kHxSn7VnZMENI/NIMNA0mSGU/OjQ2d05m6Oo4fq0Am9EvSHe
-         L9KbJDZB6RvVXX9YkBIIMT8p4aHvK4reAJCZ+DH5sHoPr7hiE7xbDuL/jonrIwAampgF
-         4ohxlHCoTbrsAxVfte6mySLk5wkG/fln8wQWtB3JUsEeb9DjVvdknvoMqx/f6dLaB6bU
-         X/TnBmvyAc50Nr42Pn5fADK4OqfQ4Dl0UJFo1GqaVHEh3EOv6Ox5Psy2shhx79ebKmiv
-         yd4P40CKP3XKX+/4Lecp7aR667ZXENq5yolieZ/p2HsDK50tWXScDcnKrZ4b/eF9rmfT
-         sXnA==
-X-Gm-Message-State: APjAAAVr/6fDoQfSdFj1MD+UFGUJdd0l0I3Z9lzDGEMTyOAi2tQPRzwX
-        hlXigvFL+t1nrrDfs+KSEpzPjA==
-X-Google-Smtp-Source: APXvYqyzLzFVbS+eWoxcDeXtGiB33RKmdt3rzfdxHYtRr5mgB5jr3vkg/WwhnVCg5GRHUMaDYl4syg==
-X-Received: by 2002:a1c:b40b:: with SMTP id d11mr5902285wmf.80.1551960577218;
-        Thu, 07 Mar 2019 04:09:37 -0800 (PST)
-Received: from localhost.localdomain.com ([151.15.252.68])
-        by smtp.gmail.com with ESMTPSA id u17sm10967703wrg.71.2019.03.07.04.09.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 04:09:36 -0800 (PST)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     tglx@linutronix.de, bigeasy@linutronix.de
-Cc:     linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, bristot@redhat.com,
-        williams@redhat.com, Juri Lelli <juri.lelli@redhat.com>
-Subject: [RFC PATCH RT] x86/tsc: Add option to disable tsc clocksource watchdog
-Date:   Thu,  7 Mar 2019 13:09:13 +0100
-Message-Id: <20190307120913.13168-1-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
+        Thu, 7 Mar 2019 07:10:14 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M1YpJ-1h4Kgg2Y2N-0033Ye; Thu, 07 Mar 2019 13:10:05 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] spi: work around clang bug in SPI_BPW_RANGE_MASK()
+Date:   Thu,  7 Mar 2019 13:09:46 +0100
+Message-Id: <20190307121004.1068172-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:C+Y06PKXuxT+51gK/T75WIVIzS/YmSjK3h6DTpL2Ufat49CCNTU
+ QBhknMDjavxmXvdSismG2+YwTZpvqIogux6Yg15PGcR5vcO+ki8S/lau+4lx8hQJL8en4cw
+ znTl0N6w2YxEAUoFt4dZ854GbpXGlREkebBQk0ik9bDzwpt5CPZlG7V+0+NykJWW33IN/3j
+ nsAx5xZJ9kyy8758JPWHg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QwT8fHCGlMo=:ZfG71IUUYpKua44RdT6BJB
+ Bqe8W6Ov2O+jI3PTiYTmaaAFaoENZxSNnRI5EAENTveokD4BhlIKiD9vPzM30lVx3pbY1U7r1
+ Wisbk1+CgNPaGxSXgDYg4cUJvo5c8b5bqPGnC4UlJnB8YcLMcRsrOrG3+qKGgzVTeZLuCvNjA
+ qOvGUBUw8nL6RxNRxq9AkN1TgYLvbKbz/wtApsUES7BW5GGgo0L5V4U/WLeVNZgJdvsFPxJqc
+ 3HhqZpxJwlVFj68tdy3gm7/VFeHQ0TeAFOgS6PtgtYq7o6315I+tLtSTxYshBTmwl+M7EMPaw
+ VvTcqGgTIuXb6C7QFqpKkZsHz7mLehkxGPRIGqw8rM36Kf7WprCtyuMFTBrsxH3cozL9udOcC
+ ypuXD3ZBtHht79yCOw5HmpQlSTh59WWtZNdU9djI1PXDtnjHhC4gTl4c2Fzvw8EhG+n54RTJ8
+ 91eoQsg27a7Pp9344kO9vzvsm3XgcQSn7/EQlOigK73g7BpEdzt+BR5SV8fAn3Eog0eXGFBSW
+ 0bOrCBQn5skp4yaWsgyvoNnpBBcnbGD8TSaF7LorzjALe+SSVUGh2opb9KLiM+6oTv7Cw0gUi
+ 01kNLd0HAibVVP1dyBmAzlH6JxpqYnfQ/FBedgufasU3uVNKhNPIIUotdHhRcJqORGgjFq4HL
+ Z3AUQ3OZORc9j+KPySGYIGj2C+uhoDl0bW0sr9VgtN7ibZK+G2fHzcXF6aOlvpLcFCrHv5Is+
+ 4Z23O4vcTxA545byLjdKuplGqSkrJvNSRYBcRQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clocksource watchdog has been found responsible for generating latency
-spikes (in the 10-20 us range) when woken up to check for TSC stability.
+Clang-8 evaluates both sides of a ?: expression to check for
+valid arithmetic even in the side that is never taken. This
+results in a build warning:
 
-Add an option to disable it at boot.
+drivers/spi/spi-sh-msiof.c:1052:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+        .bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32),
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Change it to shift one less than we want, and then shift one
+more bit afterwards. This should give the correct result for
+all valid input, since it has to be in the range 1..32 anyway.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Sending this out as an RFC after yesterday discussion with Thomas on IRC.
-
-AFAICT, CLOCK_SOURCE_MUST_VERIFY only controls enqueue\dequeue of the
-watchdog. TSC sync checks are still done if tsc_clocksource_reliable is
-set (booting w/o tsc=reliable).
-
-Thomas, is this anywhere close to what you had in mind?
+v2: add a code comment
 ---
- Documentation/admin-guide/kernel-parameters.txt | 4 ++++
- arch/x86/kernel/tsc.c                           | 5 ++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ include/linux/spi/spi.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f5acf35c712f..ea7c4967aa80 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4619,6 +4619,10 @@
- 			[x86] unstable: mark the TSC clocksource as unstable, this
- 			marks the TSC unconditionally unstable at bootup and
- 			avoids any further wobbles once the TSC watchdog notices.
-+			[x86] nowatchdog: disable clocksource watchdog. Used
-+			in situations with strict latency requirements (where
-+			interruptions from clocksource watchdog are not
-+			acceptable).
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 662b336aa2e4..1500745a9835 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -444,8 +444,12 @@ struct spi_controller {
+ 	/* bitmask of supported bits_per_word for transfers */
+ 	u32			bits_per_word_mask;
+ #define SPI_BPW_MASK(bits) BIT((bits) - 1)
+-#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
+-#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
++/*
++ * double shift to avoid shifting beyond BITS_PER_LONG, see also
++ * https://bugs.llvm.org/show_bug.cgi?id=38789
++ */
++#define SPI_BIT_MASK(bits) ((BIT((bits) - 1) << 1) - 1)
++#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - (BIT((min) - 1) - 1))
  
- 	turbografx.map[2|3]=	[HW,JOY]
- 			TurboGraFX parallel port interface
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 6d5dc5dabfd7..4b753d057aee 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -283,6 +283,7 @@ int __init notsc_setup(char *str)
- __setup("notsc", notsc_setup);
- 
- static int no_sched_irq_time;
-+static int no_tsc_watchdog;
- 
- static int __init tsc_setup(char *str)
- {
-@@ -292,6 +293,8 @@ static int __init tsc_setup(char *str)
- 		no_sched_irq_time = 1;
- 	if (!strcmp(str, "unstable"))
- 		mark_tsc_unstable("boot parameter");
-+	if (!strcmp(str, "nowatchdog"))
-+		no_tsc_watchdog = 1;
- 	return 1;
- }
- 
-@@ -1347,7 +1350,7 @@ static int __init init_tsc_clocksource(void)
- 	if (tsc_unstable)
- 		goto unreg;
- 
--	if (tsc_clocksource_reliable)
-+	if (tsc_clocksource_reliable || no_tsc_watchdog)
- 		clocksource_tsc.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
- 
- 	if (boot_cpu_has(X86_FEATURE_NONSTOP_TSC_S3))
+ 	/* limits on transfer speed */
+ 	u32			min_speed_hz;
 -- 
-2.17.2
+2.20.0
 
