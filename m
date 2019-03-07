@@ -2,130 +2,74 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627EBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7049EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2207920840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E222081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BiU1VLV7"
+	dkim=pass (2048-bit key) header.d=iris.mystia.org header.i=@iris.mystia.org header.b="M7b5EZya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfCGQ0u (ORCPT
+        id S1726659AbfCGQ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 11:26:50 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:39018 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCGQ0U (ORCPT
+        Thu, 7 Mar 2019 11:27:21 -0500
+Received: from lyra.margatroid.com ([118.27.33.189]:46138 "EHLO
+        lyra.margatroid.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCGQ1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 11:26:20 -0500
-Received: by mail-wr1-f51.google.com with SMTP id l12so1695146wrp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 08:26:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QUHw4uD/6PdjAyafvFS/vFaSGIdhMTKmdDdLyjrgLw8=;
-        b=BiU1VLV7jOAsQD02bezreQzwIST1pRkoNjFNXNMIbkymkn6y1h3pGaiPA1uO5bH2tc
-         cONVastuhjLUsr9yYGpMMEWqjG04/YeI0pJx2g9w5UdpvPEV9TEIFRNCqFwCRkGoU7SM
-         5EIN1eo1fuCtsw1vF1jDOJvTvgzWRq3xSJqvy3zwSarw+l3WmHSpxHKJlCsUqpIdDweM
-         NUAETypSqhLe60fcKAgBcNIM+d3Yc0HGgMh8spHwJovuYjTV8wS7ygNDRX7m1D25lBDw
-         HOQnCf2m2NqIidufGcDSNtuGKRqDTLQ7alooDns/2LyDYQvekS8HhSPCkWDybqkIzDQh
-         DzBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QUHw4uD/6PdjAyafvFS/vFaSGIdhMTKmdDdLyjrgLw8=;
-        b=R7mHnRiyKjExXTHnVHGaD9uej/3EtiWtFXNizlTNuiWAIcgpNFdwy9hmFZ0vMpWEEr
-         pkuGFJRDKlkDef/3U0xFjq+7ftdp9fOU7DZNI6kXjeZBBrjVD9+OUh5DFU8eXJG47sSX
-         ikCrqffZ/wusBNs4XqNrQQ+4aUhzW0rK3qMai18aWeteKpgaSvD3lKxRF47zKAF3Sx0b
-         3cgsfGZhxo4+6ZVcz5UYREn80FpTFhiz2uN3NIDvS2v6Y1g4xusyxTpOqt0IpNj6gVWS
-         u+1nJxr5LluNEt8I+w4FvseziW+9Y3bUgv7iOd+WWhnY4Leww8bMidYsX5B8XJum0vCd
-         ZuZw==
-X-Gm-Message-State: APjAAAVWYomzTp3NqZ/7+IU5fnbmw6zou4OcfktzeDdciAl1FufaTusx
-        MMOmkM1SRaZDTLcyJEe6NS1na7viTVo=
-X-Google-Smtp-Source: APXvYqxH/k9Ocfv1Rbijdvaa9erPU0H6oubxWJA9pAEYHe/zCBKpzWf2Tu/dyMBY1YGxg4nOwKlAjw==
-X-Received: by 2002:adf:a4c9:: with SMTP id h9mr7363248wrb.254.1551975978016;
-        Thu, 07 Mar 2019 08:26:18 -0800 (PST)
-Received: from localhost.localdomain (146-241-117-61.dyn.eolo.it. [146.241.117.61])
-        by smtp.gmail.com with ESMTPSA id o127sm5801797wmo.20.2019.03.07.08.26.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 08:26:17 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        broonie@kernel.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, fra.fra.800@gmail.com,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT 5/8] block, bfq: do not tag totally seeky queues as soft rt
-Date:   Thu,  7 Mar 2019 17:25:51 +0100
-Message-Id: <20190307162554.77205-6-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190307162554.77205-1-paolo.valente@linaro.org>
-References: <20190307162554.77205-1-paolo.valente@linaro.org>
+        Thu, 7 Mar 2019 11:27:20 -0500
+X-Greylist: delayed 523 seconds by postgrey-1.27 at vger.kernel.org; Thu, 07 Mar 2019 11:27:19 EST
+From:   Tomohiro Mayama <parly-gh@iris.mystia.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iris.mystia.org;
+        s=lyra-20180701; t=1551975511;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:
+         content-transfer-encoding; bh=8IXl5Zk+sg1YxsIfV7dpJEnm/gJGF4AT0ouhK3bdB1E=;
+        b=M7b5EZyagrSDKgJfBBRIG1mm3Cd7AgAOpo2US2mIy6TIYPdHrxcziA4k6p0DWo2s4y2kH+
+        +5ZQvt4dxDhEM09oNhlkx20FVLaNvmN6ovW60cooDLro+FngRMetw31DSKbqq4dpHXI3Yq
+        muayiFEdmRfl8bYpaSNgrFpfAe/BcgTqERb7wrw8xftmk3/Ax3WhiyYM1tQKyJteMrtCUf
+        sKeyDLJAXqiAw9VhfUXDHVJMnLWoS0hyfkj7nX2+Iql0unqw5EymRoxxCGEWvic1goU8J3
+        huFHSDZWDeGFRwgNNXo2zwQxTqRQ2X0SNecTU5FOLNvekCoC1zio2z5zatFKUQ==
+Subject: [PATCH] arm64: dts: rockchip: Fix vcc_host1_5v GPIO polarity on
+ rk3328-rock64
+To:     heiko@sntech.de
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <4e9800cd-ac6d-9eb8-60d4-8e4b1aa761b9@iris.mystia.org>
+Date:   Fri, 8 Mar 2019 01:18:33 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sync random I/O is likely to be confused with soft real-time I/O,
-because it is characterized by limited throughput and apparently
-isochronous arrival pattern. To avoid false positives, this commits
-prevents bfq_queues containing only random (seeky) I/O from being
-tagged as soft real-time.
+This patch makes USB ports functioning again.
 
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Tomohiro Mayama <parly-gh@iris.mystia.org>
 ---
- block/bfq-iosched.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index b96be3764b8a..d34b80e5c47d 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -242,6 +242,14 @@ static struct kmem_cache *bfq_pool;
- 	  blk_rq_sectors(rq) < BFQQ_SECT_THR_NONROT))
- #define BFQQ_CLOSE_THR		(sector_t)(8 * 1024)
- #define BFQQ_SEEKY(bfqq)	(hweight32(bfqq->seek_history) > 19)
-+/*
-+ * Sync random I/O is likely to be confused with soft real-time I/O,
-+ * because it is characterized by limited throughput and apparently
-+ * isochronous arrival pattern. To avoid false positives, queues
-+ * containing only random (seeky) I/O are prevented from being tagged
-+ * as soft real-time.
-+ */
-+#define BFQQ_TOTALLY_SEEKY(bfqq)	(bfqq->seek_history & -1)
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 21107d0f4378..7f365e448867 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -45,8 +45,7 @@
  
- /* Min number of samples required to perform peak-rate update */
- #define BFQ_RATE_MIN_SAMPLES	32
-@@ -1622,6 +1630,7 @@ static void bfq_bfqq_handle_idle_busy_switch(struct bfq_data *bfqd,
- 	 */
- 	in_burst = bfq_bfqq_in_large_burst(bfqq);
- 	soft_rt = bfqd->bfq_wr_max_softrt_rate > 0 &&
-+		!BFQQ_TOTALLY_SEEKY(bfqq) &&
- 		!in_burst &&
- 		time_is_before_jiffies(bfqq->soft_rt_next_start) &&
- 		bfqq->dispatched == 0;
-@@ -4816,6 +4825,11 @@ bfq_update_io_seektime(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- {
- 	bfqq->seek_history <<= 1;
- 	bfqq->seek_history |= BFQ_RQ_SEEKY(bfqd, bfqq->last_request_pos, rq);
-+
-+	if (bfqq->wr_coeff > 1 &&
-+	    bfqq->wr_cur_max_time == bfqd->bfq_wr_rt_max_time &&
-+	    BFQQ_TOTALLY_SEEKY(bfqq))
-+		bfq_bfqq_end_wr(bfqq);
- }
- 
- static void bfq_update_has_short_ttime(struct bfq_data *bfqd,
+ 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+ 		compatible = "regulator-fixed";
+-		enable-active-high;
+-		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
 -- 
-2.20.1
+2.21.0
 
