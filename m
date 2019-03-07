@@ -2,157 +2,132 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB301C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5F8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818C420854
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0s1x8+f"
+	by mail.kernel.org (Postfix) with ESMTP id B11A9206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfCGAfR (ORCPT
+        id S1726359AbfCGAgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:35:17 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35755 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfCGAfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:35:17 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z19so12559107otm.2;
-        Wed, 06 Mar 2019 16:35:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=YGf5z/1I8Cu2i8LbrxNhN+soNX9B52Mijub6rlc4WZU=;
-        b=I0s1x8+fBh9mmhBiUpJfTfq43dSaCCTQNPHBIPvz4UGKBiB1dMI4p+gtQskK8g6UWt
-         NvmhiVZVlFOgURFvkGNS5dkA/jbY/aASwhilTiD6oMspkajZL7bH8XtMv4GLUw3xu8Z+
-         7I2eXkyb8rZfbc2XXVQyXAOjLyRNQf0FC5mS0Ng1MOsobToLEL8Oa4PBD+KVV4poZdUg
-         MW0CrsN+5tVEIIdjLGJvF+eWihDK18nLSJUQrmg07zhvKSRS+lZnXdnwj0qoHBYZEq3G
-         LEZic+GWvonEyM3kRws9QqGCpW/mOyaDJJy9o4OGwTOrJV+dUyxigAJLuvcf7LpQ6pFg
-         dldg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=YGf5z/1I8Cu2i8LbrxNhN+soNX9B52Mijub6rlc4WZU=;
-        b=FLhTZr0HgdU5MqVtenOV4HQRnR7V/+IcfHexeaBdrBaTPMJY3gMbZFLRwpmh3zr6ee
-         pOulry4FDo0B1GZkLkAtc8cPmKXnpz4M52KKi695nOP9GOtwixL2vwY/cDXCSEo5B82N
-         XwQRxlDP+JqbvoD+sE25Inu7/9PT/yA9w/FmQcQwC/wghsONY3TsTC0wmTHB9i7XCTga
-         xWnd6t80QYZjOgL9cfoXQyn4TKzmI4MMh1WJmfVDoi4bhe6cXNzjllCbXyzU+SB7QnO7
-         9zDY1TaMqmyJPv2DTUz8SFH25TJ1X1aYKVfLbxpJ4k9RBu+qZxDNpmdWg8TXZL+FFU6U
-         mEQg==
-X-Gm-Message-State: APjAAAWrAZf68IGKqh2IfJO9zrdyN8PzTGrWagrZEjDf7IGeJQXA0yRK
-        d/8tcSuhiXsyhn5otdBN6UQ=
-X-Google-Smtp-Source: APXvYqxa+KLNBt+1ZOSJVAWjFOCQyK+jvCyFdDoS+Brw+FLkOhiejAsTBNA41dPAcvSqIg7fqZ0E5w==
-X-Received: by 2002:a9d:77c7:: with SMTP id w7mr6530870otl.207.1551918916044;
-        Wed, 06 Mar 2019 16:35:16 -0800 (PST)
-Received: from localhost.localdomain (50-126-100-225.drr01.csby.or.frontiernet.net. [50.126.100.225])
-        by smtp.gmail.com with ESMTPSA id g80sm1192115otg.38.2019.03.06.16.35.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Mar 2019 16:35:15 -0800 (PST)
-Subject: Re: [RFC][QEMU Patch] KVM: Enable QEMU to free the pages hinted by
- the guest
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, kvm@vger.kernel.org,
-        riel@surriel.com, david@redhat.com, linux-kernel@vger.kernel.org,
-        lcapitulino@redhat.com, linux-mm@kvack.org, wei.w.wang@intel.com,
-        aarcange@redhat.com, mst@redhat.com, dhildenb@redhat.com,
-        pbonzini@redhat.com, dodgen@google.com, konrad.wilk@oracle.com
-Date:   Wed, 06 Mar 2019 16:35:13 -0800
-Message-ID: <20190307003207.25058.4638.stgit@localhost.localdomain>
-In-Reply-To: <CAKgT0Ue=kGB4D2oV1WUmWHiYhrXa64KWBP2ZhLgHNgvWyOng5A@mail.gmail.com>
-References: <CAKgT0Ue=kGB4D2oV1WUmWHiYhrXa64KWBP2ZhLgHNgvWyOng5A@mail.gmail.com>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 6 Mar 2019 19:36:10 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33628 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbfCGAgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Mar 2019 19:36:10 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F4543082E53;
+        Thu,  7 Mar 2019 00:36:09 +0000 (UTC)
+Received: from redhat.com (ovpn-125-142.rdu2.redhat.com [10.10.125.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 65C6B5D9CA;
+        Thu,  7 Mar 2019 00:36:08 +0000 (UTC)
+Date:   Wed, 6 Mar 2019 19:36:06 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-ID: <20190307003605.GB5528@redhat.com>
+References: <CAPcyv4hZMcJ6r0Pw5aJsx37+YKx4qAY0rV4Ascc9LX6eFY8GJg@mail.gmail.com>
+ <20190130030317.GC10462@redhat.com>
+ <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
+ <20190130183616.GB5061@redhat.com>
+ <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+ <20190131041641.GK5061@redhat.com>
+ <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <20190306154903.GA3230@redhat.com>
+ <20190306141820.d60e47d6e173d6ec171f52cf@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190306141820.d60e47d6e173d6ec171f52cf@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 07 Mar 2019 00:36:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here are some changes I made to your patch in order to address the sizing
-issue I called out. You may want to try testing with this patch applied to
-your QEMU as I am finding it is making a signficant difference. It has cut
-the test time for the 32G memhog test I called out earlier in half.
+On Wed, Mar 06, 2019 at 02:18:20PM -0800, Andrew Morton wrote:
+> On Wed, 6 Mar 2019 10:49:04 -0500 Jerome Glisse <jglisse@redhat.com> wrote:
+> 
+> > On Tue, Mar 05, 2019 at 02:16:35PM -0800, Andrew Morton wrote:
+> > > On Wed, 30 Jan 2019 21:44:46 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+> > > 
+> > > > >
+> > > > > > Another way to help allay these worries is commit to no new exports
+> > > > > > without in-tree users. In general, that should go without saying for
+> > > > > > any core changes for new or future hardware.
+> > > > >
+> > > > > I always intend to have an upstream user the issue is that the device
+> > > > > driver tree and the mm tree move a different pace and there is always
+> > > > > a chicken and egg problem. I do not think Andrew wants to have to
+> > > > > merge driver patches through its tree, nor Linus want to have to merge
+> > > > > drivers and mm trees in specific order. So it is easier to introduce
+> > > > > mm change in one release and driver change in the next. This is what
+> > > > > i am doing with ODP. Adding things necessary in 5.1 and working with
+> > > > > Mellanox to have the ODP HMM patch fully tested and ready to go in
+> > > > > 5.2 (the patch is available today and Mellanox have begin testing it
+> > > > > AFAIK). So this is the guideline i will be following. Post mm bits
+> > > > > with driver patches, push to merge mm bits one release and have the
+> > > > > driver bits in the next. I do hope this sound fine to everyone.
+> > > > 
+> > > > The track record to date has not been "merge HMM patch in one release
+> > > > and merge the driver updates the next". If that is the plan going
+> > > > forward that's great, and I do appreciate that this set came with
+> > > > driver changes, and maintain hope the existing exports don't go
+> > > > user-less for too much longer.
+> > > 
+> > > Decision time.  Jerome, how are things looking for getting these driver
+> > > changes merged in the next cycle?
+> > 
+> > nouveau is merge already.
+> 
+> Confused.  Nouveau in mainline is dependent upon "mm/hmm: allow to
+> mirror vma of a file on a DAX backed filesystem"?  That can't be the
+> case?
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- hw/virtio/virtio-balloon.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+Not really, HMM mirror is about mirroring address space onto the device
+so if mirroring does not work for file that are on a filesystem that use
+DAX it fails in un-expected way from user point of view. But as nouveau
+is just getting upstrean you can argue that no one previously depended
+on that working for file backed page on DAX filesystem.
 
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index d2cf66ada3c0..3ca6b1c6d511 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -285,7 +285,7 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-     balloon_stats_change_timer(s, 0);
- }
- 
--static void *gpa2hva(MemoryRegion **p_mr, hwaddr addr, Error **errp)
-+static void *gpa2hva(MemoryRegion **p_mr, unsigned long *size, hwaddr addr, Error **errp)
- {
-     MemoryRegionSection mrs = memory_region_find(get_system_memory(),
-                                                  addr, 1);
-@@ -302,6 +302,7 @@ static void *gpa2hva(MemoryRegion **p_mr, hwaddr addr, Error **errp)
-     }
- 
-     *p_mr = mrs.mr;
-+    *size = mrs.mr->size - mrs.offset_within_region;
-     return qemu_map_ram_ptr(mrs.mr->ram_block, mrs.offset_within_region);
- }
- 
-@@ -313,30 +314,35 @@ void page_hinting_request(uint64_t addr, uint32_t len)
-     struct guest_pages *guest_obj;
-     int i = 0;
-     void *hvaddr_to_free;
--    unsigned long pfn, pfn_end;
-     uint64_t gpaddr_to_free;
--    void * temp_addr = gpa2hva(&mr, addr, &local_err);
-+    unsigned long madv_size, size;
-+    void * temp_addr = gpa2hva(&mr, &madv_size, addr, &local_err);
- 
-     if (local_err) {
-         error_report_err(local_err);
-         return;
-     }
-+    if (madv_size < sizeof(*guest_obj)) {
-+	printf("\nBad guest object ptr\n");
-+	return;
-+    }
-     guest_obj = temp_addr;
-     while (i < len) {
--        pfn = guest_obj[i].pfn;
--	pfn_end = guest_obj[i].pfn + (1 << guest_obj[i].order) - 1;
--	trace_virtio_balloon_hinting_request(pfn,(1 << guest_obj[i].order));
--	while (pfn <= pfn_end) {
--	        gpaddr_to_free = pfn << VIRTIO_BALLOON_PFN_SHIFT;
--	        hvaddr_to_free = gpa2hva(&mr, gpaddr_to_free, &local_err);
-+        gpaddr_to_free = guest_obj[i].pfn << VIRTIO_BALLOON_PFN_SHIFT;
-+	size = (1 << VIRTIO_BALLOON_PFN_SHIFT) << guest_obj[i].order;
-+	while (size) {
-+	        hvaddr_to_free = gpa2hva(&mr, &madv_size, gpaddr_to_free, &local_err);
- 	        if (local_err) {
- 			error_report_err(local_err);
- 		        return;
- 		}
--		ret = qemu_madvise((void *)hvaddr_to_free, 4096, QEMU_MADV_DONTNEED);
-+		if (size < madv_size)
-+			madv_size = size;
-+		ret = qemu_madvise((void *)hvaddr_to_free, madv_size, QEMU_MADV_DONTNEED);
- 		if (ret == -1)
- 		    printf("\n%d:%s Error: Madvise failed with error:%d\n", __LINE__, __func__, ret);
--		pfn++;
-+		gpaddr_to_free += madv_size;
-+		size -= madv_size;
- 	}
- 	i++;
-     }
+Now the ODP RDMA case is different, what is upstream today works on DAX
+so if that patch is not upstream in 5.1 then i can not merge HMM ODP in
+5.2 as it would regress and the ODP people would not take the risk of
+regression ie ODP folks want the DAX support to be upstream first.
 
+> 
+> > > 
+> > > Dan, what's your overall take on this series for a 5.1-rc1 merge?
+> > > 
+> > > Jerome, what would be the risks in skipping just this [09/10] patch?
+> > 
+> > As nouveau is a new user it does not regress anything but for RDMA
+> > mlx5 (which i expect to merge new window) it would regress that
+> > driver.
+> 
+> Also confused.  How can omitting "mm/hmm: allow to mirror vma of a file
+> on a DAX backed filesystem" from 5.1-rc1 cause an mlx5 regression?
+
+Not in 5.1 but i can not merge HMM ODP in 5.2 if that is not in 5.1.
+I know this circular dependency between sub-system is painful but i
+do not see any simpler way.
+
+Cheers,
+Jérôme
