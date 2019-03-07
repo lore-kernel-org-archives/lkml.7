@@ -2,102 +2,99 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27F8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37613C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A283F20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:03:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YLnKy32p"
+	by mail.kernel.org (Postfix) with ESMTP id 0CFB920675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 19:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfCGTD0 (ORCPT
+        id S1726711AbfCGTDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 14:03:26 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55664 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfCGTD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 14:03:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZfrfQvfHDXYd3CUHVVspVqjLPuUt9M5N9AH11BPHM8g=; b=YLnKy32poWN/dRGO02MhpChAb
-        nR8jFWadgAYChKIXCrolGuBrLqiANl/4XmucMqb841HTSh9JvEtrRmZsCKVIOLIYK5IoG8u9EL6lU
-        7mtpEmKTIyoA+GhMmTo935STlgOh6osHmaaGaxAjvlh8cJHB+xvUhWd2AwTqJc22Xy24i30/E721e
-        J35Z8cjLXPOcazcccBLSfpalsr3wWEaUsYiKnoYqid3pqp3xIwJyNLH8yJkOjySCHRXHVtUdCIvJq
-        w1muLR0v0abdGChhbt78zlg3YSjU000HkhUVD3vUvpPi7zw/5H6qXnU0jy/aNOwQOuS28vclrYRdG
-        1EOW1fjFQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h1yIV-0000i7-42; Thu, 07 Mar 2019 19:03:15 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3C5939837F2; Thu,  7 Mar 2019 20:03:13 +0100 (CET)
-Date:   Thu, 7 Mar 2019 20:03:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
-Message-ID: <20190307190313.GA4572@worktop.programming.kicks-ass.net>
-References: <20190307114511.870090179@infradead.org>
- <20190307115200.697533978@infradead.org>
- <CAHk-=wgKDSSoV5WvO018hoPPSHO=TQ3wwnfOtCpaENceBe0Z6Q@mail.gmail.com>
- <20190307174135.GJ32477@hirez.programming.kicks-ass.net>
- <CAHk-=wgGZWXQj-J2xo0DY7150VrXOSqoD5Dj1_LGYaotqA6Z-Q@mail.gmail.com>
- <20190307184813.GL32477@hirez.programming.kicks-ass.net>
+        Thu, 7 Mar 2019 14:03:35 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:48014 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbfCGTDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 14:03:35 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0B8AF81DFC;
+        Thu,  7 Mar 2019 19:03:35 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-41.phx2.redhat.com [10.3.112.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9503A29684;
+        Thu,  7 Mar 2019 19:03:34 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 718464BF3; Thu,  7 Mar 2019 16:03:30 -0300 (BRT)
+Date:   Thu, 7 Mar 2019 16:03:30 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, peterz@infradead.org, mingo@elte.hu,
+        jolsa@redhat.com, acme@kernel.org
+Subject: Re: [PATCH] perf/core: restore mmap record type correctly
+Message-ID: <20190307190330.GA2443@redhat.com>
+References: <20190307185233.225521-1-eranian@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307184813.GL32477@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190307185233.225521-1-eranian@google.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 07 Mar 2019 19:03:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:48:13PM +0100, Peter Zijlstra wrote:
-> On Thu, Mar 07, 2019 at 09:54:14AM -0800, Linus Torvalds wrote:
-> > On Thu, Mar 7, 2019 at 9:41 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > What's the call site that made you go "just add __memset() to the list"?
-> > >
-> > > __asan_{,un}poinson_stack_memory()
-> > >   kasan_{,un}poison_shadow()
-> > >     __memset()
-> > 
-> > Ugh. I think I almost just agree with your decision to just let that
-> > memset go unchecked.
-> > 
-> > I'm not saying it's right, but it doesn't seem to be a fight worth fighting.
+Em Thu, Mar 07, 2019 at 10:52:33AM -0800, Stephane Eranian escreveu:
+> On mmap(), perf_events generates a RECORD_MMAP record and then checks
+> which events are interested in this record. There are currently 2 versions
+> of mmap records: RECORD_MMAP and RECORD_MMAP2. MMAP2 is larger. The event
+> configuration controls which version the user level tool accepts. If the
+> event->attr.mmap2=1 field then MMAP2 record is returned. The
+> perf_event_mmap_output() takes care of this. It checks attr->mmap2 and corrects
+> the record fields before putting it in the sampling buffer of the event.
+> At the end the function restores the modified MMAP record fields.
 > 
-> One think I could do; is add a filter to each function and only allow
-> __memset from the kasan code, and not from anywhere else.
+> The problem is that the function restores the size but not the
+> type. Thus, if a subsequent event only accepts MMAP type, then it would
+> instead receive an MMAP2 record with a size of MMAP record.
+> 
+> This patch fixes the problem by restoring the record type on exit.
 
-Ah.. how about I feed objtool a text file with all these symbol names;
-and I have Makefile compose file that from fragments.
+Right, simple enough, bug fixed, Peter, I'm taking this one, ok?
 
-Then only KASAN builds will have memset whitelisted, and any other build
-will still flag memset abuse.
-
-Now I only have to figure out how to make Makefile do something like
-that :-)
+- Arnaldo
+ 
+> Signed-off-by: Stephane Eranian <eranian@google.com>
+> ---
+>  kernel/events/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 5f59d848171e..f170cd12beed 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7188,6 +7188,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+>  	struct perf_output_handle handle;
+>  	struct perf_sample_data sample;
+>  	int size = mmap_event->event_id.header.size;
+> +	u32 type = mmap_event->event_id.header.type;
+>  	int ret;
+>  
+>  	if (!perf_event_mmap_match(event, data))
+> @@ -7231,6 +7232,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+>  	perf_output_end(&handle);
+>  out:
+>  	mmap_event->event_id.header.size = size;
+> +	mmap_event->event_id.header.type = type;
+>  }
+>  
+>  static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
+> -- 
+> 2.21.0.360.g471c308f928-goog
