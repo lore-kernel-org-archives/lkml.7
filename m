@@ -2,198 +2,68 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BD1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B3E20643
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6235A20643
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 11:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfCGLtU (ORCPT
+        id S1726531AbfCGLt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 06:49:20 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:4314 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfCGLtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 06:49:20 -0500
-X-IronPort-AV: E=Sophos;i="5.58,451,1544482800"; 
-   d="scan'208";a="298435532"
-Received: from nat-inria-bordeaux-52-gw-01-bso.bordeaux.inria.fr (HELO [10.204.4.73]) ([194.199.1.52])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES128-SHA; 07 Mar 2019 12:49:15 +0100
-Subject: Re: [PATCHv6 07/10] acpi/hmat: Register processor domain to its
- memory
-To:     Keith Busch <keith.busch@intel.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20190214171017.9362-1-keith.busch@intel.com>
- <20190214171017.9362-8-keith.busch@intel.com>
-From:   Brice Goglin <Brice.Goglin@inria.fr>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Brice.Goglin@inria.fr; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8fb27d2c-2165-7029-6ea1-94fc379b3be7@inria.fr>
-Date:   Thu, 7 Mar 2019 12:49:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 06:49:59 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44292 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfCGLt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 06:49:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4399380D;
+        Thu,  7 Mar 2019 03:49:58 -0800 (PST)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 997F93F706;
+        Thu,  7 Mar 2019 03:49:56 -0800 (PST)
+Date:   Thu, 7 Mar 2019 11:49:55 +0000
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
+ frequency on global turbo changes
+Message-ID: <20190307114952.u6lb5jtyombsnl7z@queper01-lin>
+References: <20190305104256.7kvedlttuovmptpc@queper01-lin>
+ <2336151.IZk3Z8DVvP@aspire.rjw.lan>
+ <6357319.Iupbu3ldGQ@aspire.rjw.lan>
+ <20190305114406.GV32494@hirez.programming.kicks-ass.net>
+ <20190305120040.y2vmnxrch6kgya3e@queper01-lin>
+ <CAJZ5v0hYU763Jx0Ku0HsNMd261z7E0PhZ88_PH6MT=OLYYUAaQ@mail.gmail.com>
+ <20190305173746.p32xolcpueudlzwn@queper01-lin>
+ <CAJZ5v0jJxMw6_6Ep=fee8VGEbqpFKQtA2kX5t1scNwX3GhaTTg@mail.gmail.com>
+ <20190307110256.padefvq4e52ly3nm@queper01-lin>
+ <20190307112344.GC32477@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190214171017.9362-8-keith.busch@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307112344.GC32477@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 14/02/2019 à 18:10, Keith Busch a écrit :
-> If the HMAT Subsystem Address Range provides a valid processor proximity
-> domain for a memory domain, or a processor domain matches the performance
-> access of the valid processor proximity domain, register the memory
-> target with that initiator so this relationship will be visible under
-> the node's sysfs directory.
->
-> By registering only the best performing relationships, this provides the
-> most useful information applications may want to know when considering
-> which CPU they should run on for a given memory node, or which memory
-> node they should allocate memory from for a given CPU.
->
-> Since HMAT requires valid address ranges have an equivalent SRAT entry,
-> verify each memory target satisfies this requirement.
->
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
+On Thursday 07 Mar 2019 at 12:23:44 (+0100), Peter Zijlstra wrote:
+> Ah, but remember; with the latest patch the iowait_boost is scaled on
+> max. So in order to hit that 300, you first have to hit 1024.
 
-[...]
+Argh ! Right ... So yeah, my whole point about big.little platforms was
+totally wrong :(
 
-> +static __init struct memory_initiator *find_mem_initiator(unsigned int cpu_pxm)
-> +{
-> +	struct memory_initiator *intitator;
-> +
-> +	list_for_each_entry(intitator, &initiators, node)
-> +		if (intitator->processor_pxm == cpu_pxm)
-> +			return intitator;
-> +	return NULL;
-> +}
-
-Typo intitator -> initiator
-
-> +static __init void alloc_memory_initiator(unsigned int cpu_pxm)
-> +{
-> +	struct memory_initiator *intitator;
-> +
-> +	if (pxm_to_node(cpu_pxm) == NUMA_NO_NODE)
-> +		return;
-> +
-> +	intitator = find_mem_initiator(cpu_pxm);
-> +	if (intitator)
-> +		return;
-> +
-> +	intitator = kzalloc(sizeof(*intitator), GFP_KERNEL);
-> +	if (!intitator)
-> +		return;
-> +
-> +	intitator->processor_pxm = cpu_pxm;
-> +	list_add_tail(&intitator->node, &initiators);
-> +}
-
-Same typo
-
-
-> +static __init void hmat_register_target_initiators(struct memory_target *target)
-> +{
-> +	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
-> +	struct memory_initiator *initiator;
-> +	unsigned int mem_nid, cpu_nid;
-> +	struct memory_locality *loc = NULL;
-> +	u32 best = 0;
-> +	int i;
-> +
-> +	if (target->processor_pxm == PXM_INVAL)
-> +		return;
-
-
-This test above looks wrong to me. First, it means that either you
-return from here, or from the next branch below, hence the loop that
-looks for best performance is dead code. Secondly, it means that memory
-targets without a PXM never get an initiator.
-
-I verified that removing this test makes things look better on my HMAT
-tests.
-
-
-> +	mem_nid = pxm_to_node(target->memory_pxm);
-> +
-> +	/*
-> +	 * If the Address Range Structure provides a local processor pxm, link
-> +	 * only that one. Otherwise, find the best performance attribtes and
-> +	 * register all initiators that match.
-> +	 */
-> +	if (target->processor_pxm != PXM_INVAL) {
-> +		cpu_nid = pxm_to_node(target->processor_pxm);
-> +		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-> +		return;
-> +	}
-
-
-This seems to contradict your first paragraph in the header where you say
-
-"or a processor domain matches the performance access of the valid processor proximity domain".
-
-By returning here, you're only keeping the the local PXM and ignoring
-other initiators that may have the same performance.
-
-I am testing a HMAT where one memory target has same performance to two
-processor proxdomains. If no processor proxdomain is set in the HMAT for
-this target, I get two initiators as expected. If proxdomain is
-explicitly set in the HMAT, I get only that one as initiator.
-
-Brice
-
-
+/me goes back to sleep
