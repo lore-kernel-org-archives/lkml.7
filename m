@@ -2,379 +2,395 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28317C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1382C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E001220663
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DBB2081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 03:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfCGDJ1 (ORCPT
+        id S1727524AbfCGDTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 22:09:27 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:55392 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726873AbfCGDJ0 (ORCPT
+        Wed, 6 Mar 2019 22:19:55 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:45277 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfCGDTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 22:09:26 -0500
-X-UUID: ec56263983e340628cf7d48f5a8c1155-20190307
-X-UUID: ec56263983e340628cf7d48f5a8c1155-20190307
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1602340617; Thu, 07 Mar 2019 11:09:16 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
- 2019 11:09:15 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Mar 2019 11:09:14 +0800
-Message-ID: <1551928154.30363.48.camel@mhfsdcap03>
-Subject: Re: [PATCH v4 3/3] i2c: mediatek: Add i2c support for MediaTek
- MT8183
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <wsa@the-dreams.de>, <devicetree@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <robh@kernel.org>,
-        <leilk.liu@mediatek.com>, <xinping.qian@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <liguo.zhang@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 7 Mar 2019 11:09:14 +0800
-In-Reply-To: <40bf7264-1fc7-320a-1122-1782b57c5b53@gmail.com>
-References: <1550666030-30211-1-git-send-email-qii.wang@mediatek.com>
-         <1550666030-30211-4-git-send-email-qii.wang@mediatek.com>
-         <40bf7264-1fc7-320a-1122-1782b57c5b53@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Mar 2019 22:19:54 -0500
+Received: from [192.168.1.110] ([77.9.35.131]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MowOm-1gjUK71CEo-00qQfF; Thu, 07 Mar 2019 04:19:45 +0100
+Subject: Re: [PATCH 4/5] Add driver for SUNIX Multi-I/O board
+To:     Morris Ku <saumah@gmail.com>, gregkh@linuxfoundation.org
+Cc:     morris_ku@sunix.com, linux-kernel@vger.kernel.org
+References: <20190227071842.4253-1-saumah@gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <a3578ee0-9c00-2460-e441-e8d56f472bca@metux.net>
+Date:   Thu, 7 Mar 2019 04:19:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190227071842.4253-1-saumah@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:/Hp4JqXNh6eAFeZuo6tfYj+M14hHDd+DUeUbjlwDZr18XJqwYoF
+ ynwyT+pOvGTsPtr0VcbwZLL+QF04CYcQjP5Ec7e/9npxOLh+EvCBo37XdpMijOCcxyFo2Jy
+ bI48qHIflKoT8W5CGf63Yy7rndyQuSCfkrG8RRBQc2xKFCFH8hygW1G+nESuIkPvckqGZVs
+ bJjqI/b9nncf8ALih6j0Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eC3QWj5ST9I=:5LSJemD9UPANqg/rqvxuvg
+ 6U1e40hPR0jhdGefIdE2LX4mcTqYSL45yGx9H6K6aKodJC8DnMXgFWo7wSbIO2WF/BxYUVp4T
+ /rwhmB+1tZWaqOo6l+Dxq5mJSY5j/zAsmMZ4OGJnoW3zREaPXps9ZmJ2HwYuTiwJgtfbEHLVX
+ FORXPOYqDrHVQXBG6dUVRfop1TIUtfQ8eqKEDENHsz0eB/d7uavn1TnKXVDOASisUxi7R+CCB
+ +FDKgmMQ8wNmsbpuGeFzebUBc835FnhyfyxBetQZCd3if3Bt/uBBALNpnZPoPjxHY5AME7ZL2
+ woTTPi6p/PvBehP2DWnD+MWsn71275RmQPO9qoMxPm0V+fZnIR3+1Z/c0Ky1kXHK3UkxLv2qs
+ 61ZX11D2qBrRFjs3o7gaMtleahJkfIaJVgeNxmCT0Bzewu9bO6mvccHToaaocN2B6+oi4asDg
+ ubaMMnk+udxnlUOrgDoTOUGO9kvp5PlEcAQy5e8aBq/AfX+PP7YWjq7IdE8RZBPDQvqGobsWM
+ oEa00yjx8K/m9ynpija0LCe263Lj0jl8cZjG0xulZk17rCFr/j3d8zOl8dTnbrDO6vX/apYEm
+ XmqmUbqYeEv86th9VpM/XDWbAXpXuFdL+0wY00sEBXVkNhm0wgmARJ+y/hwfumCAx6k16GN1G
+ 8/wgoDtMeTnCxPcSPZEQu6mkv+vgFrYjy/ynDDjk9XVGxaZa/CkPLzPgAHxLr76MjtCZtUdlV
+ Vi9zb28E6pCXMiSu1vtCZC6iD+LipLUtl+jVPfy6GcGp8Zaz+DkI+xkqRiU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am sorry to have missed some comment, and reply the mail again.
+On 27.02.19 08:18, Morris Ku wrote:
 
-On Wed, 2019-02-20 at 15:41 +0100, Matthias Brugger wrote:
+Hi,
+
+
+first of all: the code is pretty unreadable. I doubt that anybody here
+seriously likes to review that (nor take it into mainline).
+
+Formatting should be consistent - see other drivers.
+
+./scripts/checkpatch.pl is your friend. You really shut run it and fix
+everything it complaints before posting patches. (some maintainers can
+get angry if you don't ;-)
+
+> Support SUNIX serial board.
 > 
-> On 20/02/2019 13:33, Qii Wang wrote:
-> > Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
-> > MT8183 has different registers, offsets and clock.
-> > 
-> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>  char/snx/snx_serial.c | 4771 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 4771 insertions(+)
+>  create mode 100644 char/snx/snx_serial.c
 > 
-> So you introduce arb clock, ltiming (what is this exactly) and the new SoC in
-> one commit. I'd prefer to split that up and explain shortly in the commit
-> message why they are needed. More comments inline.
-> 
+> diff --git a/char/snx/snx_serial.c b/char/snx/snx_serial.c
+> new file mode 100644
+> index 00000000..94caac1a
+> --- /dev/null
+> +++ b/char/snx/snx_serial.c
+> @@ -0,0 +1,4771 @@
+> +#include "snx_common.h"
+> +#include "driver_extd.h"
+> +
+> +#define SNX_ioctl_DBG	0
+> +#define	EEPROM_ACCESS_DELAY_COUNT			100000
 
-I have split this patch into three in V5.
+is this eeprom stuff really specific to the serial ports ?
+if not, it probably should go to a separate file, which is called by all
+the others, IMHO.
 
-> > ---
-> >  drivers/i2c/busses/i2c-mt65xx.c |   89 ++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 84 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > index 428ac99..82eedbd 100644
-> > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > @@ -35,6 +35,7 @@
-> >  #include <linux/slab.h>
-> >  
-> >  #define I2C_RS_TRANSFER			(1 << 4)
-> > +#define I2C_ARB_LOST			(1 << 3)
-> >  #define I2C_HS_NACKERR			(1 << 2)
-> >  #define I2C_ACKERR			(1 << 1)
-> >  #define I2C_TRANSAC_COMP		(1 << 0)
-> > @@ -76,6 +77,8 @@
-> >  #define I2C_CONTROL_DIR_CHANGE          (0x1 << 4)
-> >  #define I2C_CONTROL_ACKERR_DET_EN       (0x1 << 5)
-> >  #define I2C_CONTROL_TRANSFER_LEN_CHANGE (0x1 << 6)
-> > +#define I2C_CONTROL_DMAACK_EN           (0x1 << 8)
-> > +#define I2C_CONTROL_ASYNC_MODE          (0x1 << 9)
-> >  #define I2C_CONTROL_WRAPPER             (0x1 << 0)
-> >  
-> >  #define I2C_DRV_NAME		"i2c-mt65xx"
-> > @@ -130,6 +133,8 @@ enum I2C_REGS_OFFSET {
-> >  	OFFSET_DEBUGCTRL,
-> >  	OFFSET_TRANSFER_LEN_AUX,
-> >  	OFFSET_CLOCK_DIV,
-> > +	/* MT8183 only regs */
-> > +	OFFSET_LTIMING,
-> >  };
-> >  
-> >  static const u16 mt_i2c_regs_v1[] = {
-> > @@ -159,6 +164,32 @@ enum I2C_REGS_OFFSET {
-> >  	[OFFSET_CLOCK_DIV] = 0x70,
-> >  };
-> >  
-> > +static const u16 mt_i2c_regs_v2[] = {
-> > +	[OFFSET_DATA_PORT] = 0x0,
-> > +	[OFFSET_SLAVE_ADDR] = 0x4,
-> > +	[OFFSET_INTR_MASK] = 0x8,
-> > +	[OFFSET_INTR_STAT] = 0xc,
-> > +	[OFFSET_CONTROL] = 0x10,
-> > +	[OFFSET_TRANSFER_LEN] = 0x14,
-> > +	[OFFSET_TRANSAC_LEN] = 0x18,
-> > +	[OFFSET_DELAY_LEN] = 0x1c,
-> > +	[OFFSET_TIMING] = 0x20,
-> > +	[OFFSET_START] = 0x24,
-> > +	[OFFSET_EXT_CONF] = 0x28,
-> > +	[OFFSET_LTIMING] = 0x2c,
-> > +	[OFFSET_HS] = 0x30,
-> > +	[OFFSET_IO_CONFIG] = 0x34,
-> > +	[OFFSET_FIFO_ADDR_CLR] = 0x38,
-> > +	[OFFSET_TRANSFER_LEN_AUX] = 0x44,
-> > +	[OFFSET_CLOCK_DIV] = 0x48,
-> > +	[OFFSET_SOFTRESET] = 0x50,
-> > +	[OFFSET_DEBUGSTAT] = 0xe0,
-> > +	[OFFSET_DEBUGCTRL] = 0xe8,
-> > +	[OFFSET_FIFO_STAT] = 0xf4,
-> > +	[OFFSET_FIFO_THRESH] = 0xf8,
-> > +	[OFFSET_DCM_EN] = 0xf88,
-> > +};
-> > +
-> >  struct mtk_i2c_compatible {
-> >  	const struct i2c_adapter_quirks *quirks;
-> >  	const u16 *regs;
-> > @@ -168,6 +199,7 @@ struct mtk_i2c_compatible {
-> >  	unsigned char aux_len_reg: 1;
-> >  	unsigned char support_33bits: 1;
-> >  	unsigned char timing_adjust: 1;
-> > +	unsigned char dma_sync: 1;
-> >  };
-> >  
-> >  struct mtk_i2c {
-> > @@ -181,6 +213,7 @@ struct mtk_i2c {
-> >  	struct clk *clk_main;		/* main clock for i2c bus */
-> >  	struct clk *clk_dma;		/* DMA clock for i2c via DMA */
-> >  	struct clk *clk_pmic;		/* PMIC clock for i2c from PMIC */
-> > +	struct clk *clk_arb;		/* Arbitrator clock for i2c */
-> >  	bool have_pmic;			/* can use i2c pins from PMIC */
-> >  	bool use_push_pull;		/* IO config push-pull mode */
-> >  
-> > @@ -190,6 +223,7 @@ struct mtk_i2c {
-> >  	enum mtk_trans_op op;
-> >  	u16 timing_reg;
-> >  	u16 high_speed_reg;
-> > +	u16 ltiming_reg;
-> >  	unsigned char auto_restart;
-> >  	bool ignore_restart_irq;
-> >  	const struct mtk_i2c_compatible *dev_comp;
-> > @@ -216,6 +250,7 @@ struct mtk_i2c {
-> >  	.aux_len_reg = 1,
-> >  	.support_33bits = 1,
-> >  	.timing_adjust = 1,
-> > +	.dma_sync = 0,
-> >  };
-> >  
-> >  static const struct mtk_i2c_compatible mt6577_compat = {
-> > @@ -227,6 +262,7 @@ struct mtk_i2c {
-> >  	.aux_len_reg = 0,
-> >  	.support_33bits = 0,
-> >  	.timing_adjust = 0,
-> > +	.dma_sync = 0,
-> >  };
-> >  
-> >  static const struct mtk_i2c_compatible mt6589_compat = {
-> > @@ -238,6 +274,7 @@ struct mtk_i2c {
-> >  	.aux_len_reg = 0,
-> >  	.support_33bits = 0,
-> >  	.timing_adjust = 0,
-> > +	.dma_sync = 0,
-> >  };
-> >  
-> >  static const struct mtk_i2c_compatible mt7622_compat = {
-> > @@ -249,6 +286,7 @@ struct mtk_i2c {
-> >  	.aux_len_reg = 1,
-> >  	.support_33bits = 0,
-> >  	.timing_adjust = 0,
-> > +	.dma_sync = 0,
-> >  };
-> >  
-> >  static const struct mtk_i2c_compatible mt8173_compat = {
-> > @@ -259,6 +297,18 @@ struct mtk_i2c {
-> >  	.aux_len_reg = 1,
-> >  	.support_33bits = 1,
-> >  	.timing_adjust = 0,
-> > +	.dma_sync = 0,
-> > +};
-> > +
-> > +static const struct mtk_i2c_compatible mt8183_compat = {
-> > +	.regs = mt_i2c_regs_v2,
-> > +	.pmic_i2c = 0,
-> > +	.dcm = 0,
-> > +	.auto_restart = 1,
-> > +	.aux_len_reg = 1,
-> > +	.support_33bits = 1,
-> > +	.timing_adjust = 1,
-> > +	.dma_sync = 1,
-> >  };
-> >  
-> >  static const struct of_device_id mtk_i2c_of_match[] = {
-> > @@ -267,6 +317,7 @@ struct mtk_i2c {
-> >  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
-> >  	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
-> >  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
-> > +	{ .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
-> > @@ -299,8 +350,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
-> >  		if (ret)
-> >  			goto err_pmic;
-> >  	}
-> > +
-> > +	if (i2c->clk_arb) {
-> > +		ret = clk_prepare_enable(i2c->clk_arb);
-> > +		if (ret)
-> > +			goto err_arb;
-> > +	}
-> > +
-> >  	return 0;
-> >  
-> > +err_arb:
-> > +	if (i2c->have_pmic)
-> > +		clk_disable_unprepare(i2c->clk_pmic);
-> >  err_pmic:
-> >  	clk_disable_unprepare(i2c->clk_main);
-> >  err_main:
-> > @@ -311,6 +372,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
-> >  
-> >  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
-> >  {
-> > +	if (i2c->clk_arb)
-> > +		clk_disable_unprepare(i2c->clk_arb);
-> > +
-> >  	if (i2c->have_pmic)
-> >  		clk_disable_unprepare(i2c->clk_pmic);
-> >  
-> > @@ -338,6 +402,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
-> >  
-> >  	mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
-> >  	mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
-> > +	if (i2c->dev_comp->regs == mt_i2c_regs_v2)
-> 
-> I'm not really happy with this check. I personally would prefer a flag or
-> something which shows that we need ltiming.
-> 
+> +
+> +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37))
+> +		static DEFINE_SEMAPHORE(ser_port_sem);
+> +#else
+> +		static DECLARE_MUTEX(ser_port_sem);
+> +#endif
 
-ok, I will add a flag(ltiming_adjust) in mtk_i2c_compatible.
+Drop that. We have only one kernel version here, the current one.
 
-> > +		mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
-> >  
-> >  	/* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
-> >  	if (i2c->have_pmic)
-> > @@ -345,6 +411,9 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
-> >  
-> >  	control_reg = I2C_CONTROL_ACKERR_DET_EN |
-> >  		      I2C_CONTROL_CLK_EXT_EN | I2C_CONTROL_DMA_EN;
-> > +	if (i2c->dev_comp->dma_sync)
-> > +		control_reg |= I2C_CONTROL_DMAACK_EN | I2C_CONTROL_ASYNC_MODE;
-> > +
-> >  	mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
-> >  	mtk_i2c_writew(i2c, I2C_DELAY_LEN, OFFSET_DELAY_LEN);
-> >  
-> > @@ -434,6 +503,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >  	unsigned int clk_src;
-> >  	unsigned int step_cnt;
-> >  	unsigned int sample_cnt;
-> > +	unsigned int l_step_cnt;
-> > +	unsigned int l_sample_cnt;
-> >  	unsigned int target_speed;
-> >  	int ret;
-> >  
-> > @@ -443,11 +514,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >  	if (target_speed > MAX_FS_MODE_SPEED) {
-> >  		/* Set master code speed register */
-> >  		ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
-> > -					      &step_cnt, &sample_cnt);
-> > +					      &l_step_cnt, &l_sample_cnt);
-> >  		if (ret < 0)
-> >  			return ret;
-> >  
-> > -		i2c->timing_reg = (sample_cnt << 8) | step_cnt;
-> > +		i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
-> >  
-> >  		/* Set the high speed mode register */
-> >  		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-> > @@ -457,6 +528,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >  
-> >  		i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
-> >  			(sample_cnt << 12) | (step_cnt << 8);
-> > +		i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
-> > +				   (sample_cnt << 12) | (step_cnt << 9);
-> 
-> IMHO setting these for all SoCs but then only using it for one makes things more
-> complicated. Value should only be set for SoCs that need this features.
-> 
+> +
+> +
+> +#define SNX_HIGH_BITS_OFFSET	((sizeof(long)-sizeof(int))*8)
+> +#define sunix_ser_users(state)	((state)->count + ((state)->info ? (state)->info->blocked_open : 0))
+> +
+> +
+> +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0))
+> +static struct tty_port snx_service_port;
+> +#endif
 
-ok, I will set it dependent on ltiming_adjust.
+are you really sure this has to be a global field, instead of allocated
+per-device ?
 
-> >  	} else {
-> >  		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-> >  					      &step_cnt, &sample_cnt);
-> > @@ -467,6 +540,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-> >  
-> >  		/* Disable the high speed transaction */
-> >  		i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
-> > +
-> > +		i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
-> >  	}
-> >  
-> >  	return 0;
-> > @@ -519,13 +594,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >  
-> >  	/* Clear interrupt status */
-> >  	mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > -	       I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-> > +			    I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-> 
-> Did you test that this works with all the old SoCs that are already supported by
-> this driver?
-> 
-> Regards,
-> Matthias
-> 
+> +
+> +
+> +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0))
+> +
+> +struct serial_uart_config {
+> +	char	*name;
+> +	int		dfl_xmit_fifo_size;
+> +	int		flags;
+> +};
+> +#endif
+> +
+> +static const struct serial_uart_config snx_uart_config[PORT_SER_MAX_UART + 1] = {
 
-Yes, old SoCs also have the bit(I2C_ARB_LOST), but there was no need for
-multi-master before, so we didn't set it up specifically.
+why +1 ?
 
-> >  
-> >  	mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
-> >  
-> >  	/* Enable interrupt */
-> >  	mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > -	       I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> > +			    I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> >  
-> >  	/* Set transfer and transaction len */
-> >  	if (i2c->op == I2C_MASTER_WRRD) {
-> > @@ -659,7 +734,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >  
-> >  	/* Clear interrupt mask */
-> >  	mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> > -	       I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> > +			    I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> >  
-> >  	if (i2c->op == I2C_MASTER_WR) {
-> >  		dma_unmap_single(i2c->dev, wpaddr,
-> > @@ -884,6 +959,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
-> >  		return PTR_ERR(i2c->clk_dma);
-> >  	}
-> >  
-> > +	i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
-> > +	if (IS_ERR(i2c->clk_arb))
-> > +		i2c->clk_arb = NULL;
-> > +
-> >  	clk = i2c->clk_main;
-> >  	if (i2c->have_pmic) {
-> >  		i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
-> > 
+maybe PORT_SER_MAX_UART and use ARRAY_SIZE() macro instead.
+
+> +	{ "unknown",    1,      0 },
+> +	{ "8250",       1,      0 },
+> +	{ "16450",      1,      0 },
+> +	{ "16550",      1,      0 },
+> +	{ "16550A",     16,     UART_CLEAR_FIFO | UART_USE_FIFO },
+> +	{ "Cirrus",     1,    	0 },
+> +	{ "ST16650",    1,    	0 },
+> +	{ "ST16650V2",  32,    	UART_CLEAR_FIFO | UART_USE_FIFO },
+> +	{ "TI16750",    64,    	UART_CLEAR_FIFO | UART_USE_FIFO },
+> +};
+>
+> +
+> +
+> +#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 0))
+> +static int		sunix_ser_refcount;
+> +static struct tty_struct			*sunix_ser_tty[SNX_SER_TOTAL_MAX + 1];
+> +static struct termios				*sunix_ser_termios[SNX_SER_TOTAL_MAX + 1];
+> +static struct termios				*sunix_ser_termios_locked[SNX_SER_TOTAL_MAX + 1];
+> +#endif
+
+obsolete. drop that.
+
+> +
+> +
+> +static _INLINE_ void snx_ser_handle_cts_change(struct snx_ser_port *, unsigned int);
+
+what exactly does _INLINE_ suppose to mean ?
+
+<snip>
+
+> +extern int 		sunix_ser_interrupt(struct sunix_board *, struct sunix_ser_port *);
+
+why "extern" here ? where is that function coming from ?
+
+<snip>
+
+> +static unsigned char READ_INTERRUPT_VECTOR_BYTE(struct sunix_ser_port *);
+
+I doubt that upper case function names fit in the kernel coding style.
+
+<snip>
+
+> +		case SNX_SER_DUMP_PORT_INFO:
+> +		{
+> +			int i;
+> +			struct snx_ser_port_info snx_port_info[SNX_SER_TOTAL_MAX];
+> +			struct snx_ser_port *sdn = NULL;
+> +
+> +			memset(snx_port_info, 0, (sizeof(struct snx_ser_port_info) * SNX_SER_TOTAL_MAX));
+> +
+> +			if (line == 0) {
+> +				for (i = 0; i < SNX_SER_TOTAL_MAX; i++) {
+> +					sdn = (struct snx_ser_port *) &sunix_ser_table[i];
+> +
+> +					memcpy(&snx_port_info[i].board_name_info[0], &sdn->pb_info.board_name[0], SNX_BOARDNAME_LENGTH);
+> +
+> +					snx_port_info[i].bus_number_info = sdn->bus_number;
+> +					snx_port_info[i].dev_number_info = sdn->dev_number;
+> +					snx_port_info[i].port_info       = sdn->line;
+> +					snx_port_info[i].base_info       = sdn->iobase;
+> +					snx_port_info[i].irq_info        = sdn->irq;
+> +				}
+> +
+> +				if (copy_to_user((void *)arg, snx_port_info, SNX_SER_TOTAL_MAX * sizeof(struct snx_ser_port_info))) {
+> +					ret = -EFAULT;
+> +				} else {
+> +					ret = 0;
+> +				}
+> +			} else {
+> +				ret = 0;
+> +		}
+> +
+> +			ret = 0;
+> +			break;
+> +		}
+> +
+> +		case SNX_SER_DUMP_DRIVER_VER:
+> +		{
+> +			char driver_ver[SNX_DRIVERVERSION_LENGTH];
+> +			memset(driver_ver, 0, (sizeof(char) * SNX_DRIVERVERSION_LENGTH));
+> +
+> +			if (line == 0) {
+> +
+> +				memcpy(&driver_ver[0], SNX_DRIVER_VERSION, sizeof(SNX_DRIVER_VERSION));
+> +
+> +				if (copy_to_user((void *)arg, &driver_ver, (sizeof(char) * SNX_DRIVERVERSION_LENGTH))) {
+> +					ret = -EFAULT;
+> +				} else {
+> +					ret = 0;
+> +				}
+> +			} else {
+> +				ret = 0;
+> +			}
+> +
+> +			break;
+> +		}
+> +
+> +
+> +		case SNX_COMM_GET_BOARD_CNT:
+> +		{
+> +			SNX_DRVR_BOARD_CNT gb;
+> +
+> +			memset(&gb, 0, (sizeof(SNX_DRVR_BOARD_CNT)));
+> +
+> +			gb.cnt = snx_board_count;
+> +
+> +			if (copy_to_user((void *)arg, &gb, (sizeof(SNX_DRVR_BOARD_CNT)))) {
+> +				ret = -EFAULT;
+> +			} else {
+> +			ret = 0;
+> +			}
+> +
+> +			break;
+> +		}
+> +
+> +		case SNX_COMM_GET_BOARD_INFO:
+> +		{
+> +			struct sunix_board *sb = NULL;
+> +			SNX_DRVR_BOARD_INFO		board_info;
+> +
+> +			memset(&board_info, 0, (sizeof(SNX_DRVR_BOARD_INFO)));
+> +
+> +			if (copy_from_user(&board_info, (void *)arg, (sizeof(SNX_DRVR_BOARD_INFO)))) {
+> +				ret = -EFAULT;
+> +			} else {
+> +				ret = 0;
+> +			}
+> +
+> +			sb = &sunix_board_table[board_info.board_id - 1];
+> +
+> +			board_info.subvender_id = sb->pb_info.sub_vendor_id;
+> +			board_info.subsystem_id = sb->pb_info.sub_device_id;
+> +			board_info.oem_id = sb->oem_id;
+> +			board_info.uart_cnt = sb->uart_cnt;
+> +			board_info.gpio_chl_cnt = sb->gpio_chl_cnt;
+> +			board_info.board_uart_type = sb->board_uart_type;
+> +			board_info.board_gpio_type = sb->board_gpio_type;
+> +
+> +			if (copy_to_user((void *)arg, &board_info, (sizeof(SNX_DRVR_BOARD_INFO)))) {
+> +				ret = -EFAULT;
+> +			} else {
+> +				ret = 0;
+> +			}
+> +			break;
+> +		}
+> +
+
+what exactly is that for ?
+
+> +		case SNX_GPIO_GET:
+
+gpio stuff doesn't belong into a serial / tty.
+for that we have the gpio subsystem. (see drivers/gpio/*)
+
+> +		case SNX_UART_GET_TYPE:
+> +		{
+> +			struct sunix_board 	*sb = NULL;
+> +			SNX_DRVR_UART_GET_TYPE gb;
+> +
+> +			int bar3_base_Address;
+> +			int bar1_base_Address;
+> +
+> +			int bar3_byte5;
+> +			int uart_type;
+> +			int	RS422state;
+> +			int	AHDCstate;
+> +
+> +			memset(&gb, 0, (sizeof(SNX_DRVR_UART_GET_TYPE)));
+> +
+> +			if (copy_from_user(&gb, (void *)arg, (sizeof(SNX_DRVR_UART_GET_TYPE)))) {
+> +				ret = -EFAULT;
+> +			} else {
+> +				ret = 0;
+> +			}
+> +
+> +			sb = &sunix_board_table[gb.board_id - 1];
+> +
+> +			bar3_base_Address = pci_resource_start(sb->pdev, 3);
+> +			bar1_base_Address = pci_resource_start(sb->pdev, 1);
+> +
+> +			bar3_byte5 = inb(bar3_base_Address + 5);
+> +			uart_type = (bar3_byte5 & 0xC0) >> 6;
+> +
+> +			if (gb.uart_num <= 4) {
+> +				AHDCstate = inb(bar3_base_Address + 2) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
+> +				RS422state = inb(bar3_base_Address + 3) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
+> +			} else if (gb.uart_num <= 8) {
+> +				AHDCstate = inb(bar1_base_Address + 0x32) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
+> +				RS422state = inb(bar1_base_Address + 0x33) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
+> +			} else if (gb.uart_num <= 12) {
+> +				AHDCstate = inb(bar1_base_Address + 0x32 + 0x40) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
+> +				RS422state = inb(bar1_base_Address + 0x33 + 0x40) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
+> +			} else if (gb.uart_num <= 16) {
+> +				AHDCstate = inb(bar1_base_Address + 0x32 + 0x80) & 0x0F & (0x01 << ((gb.uart_num - 1) % 4));
+> +				RS422state = inb(bar1_base_Address + 0x33 + 0x80) & 0xF0 & (0x10 << ((gb.uart_num - 1) % 4));
+> +			} else {
+> +				//cmn_err(CE_NOTE, "WARNING : we get an incorrect port number (port = %d)!",gb.uart_num);
+> +				break;
+> +			}
+> +
+> +				switch (uart_type) {
+> +				case 0: // RS-232
+> +				{
+> +					gb.uart_type = 0;
+> +					break;
+> +				}
+> +				case 1: // RS-422/485
+> +				{
+> +					if (AHDCstate && RS422state) {
+> +						gb.uart_type = 3;
+> +					} else if (AHDCstate && !RS422state) {
+> +						gb.uart_type = 2;
+> +					} else if (!AHDCstate && RS422state) {
+> +						gb.uart_type = 1;
+> +					} else {
+> +						gb.uart_type = -1;
+> +					}
+> +					break;
+> +				}
+> +				case 2:
+> +				{
+> +					if (AHDCstate && RS422state) {
+> +						gb.uart_type = 3;
+> +					} else if (AHDCstate && !RS422state) {
+> +						gb.uart_type = 2;
+> +					} else if (!AHDCstate && RS422state) {
+> +						gb.uart_type = 1;
+> +					} else if (!AHDCstate && !RS422state) {
+> +						gb.uart_type = 0;
+> +					} else {
+> +						gb.uart_type = -1;
+> +					}
+> +					break;
+> +				}
+> +			}
+> +
+> +			if (copy_to_user((void *)arg, &gb, (sizeof(SNX_DRVR_UART_GET_TYPE)))) {
+> +				ret = -EFAULT;
+> +			} else {
+> +			ret = 0;
+> +			}
+> +
+
+what is that for ?
+
+> +		case SNX_UART_GET_ACS:
+> +		{
+
+what is an "ACS" ?
+
+In general: don't arbitrarily introduce new ioctl()s, especially not
+device specific ones - unless there is a damn good reason.
 
 
+--mtx
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
