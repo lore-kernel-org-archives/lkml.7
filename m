@@ -2,147 +2,122 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAD2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA72C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B544320675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8732020675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 01:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EXIOMxrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfCGBrt (ORCPT
+        id S1726691AbfCGBsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 20:47:49 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:36571 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726197AbfCGBrs (ORCPT
+        Wed, 6 Mar 2019 20:48:05 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33121 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfCGBsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 20:47:48 -0500
-X-UUID: 0e46c200a40245bd9b0b98cd4cb5f06f-20190307
-X-UUID: 0e46c200a40245bd9b0b98cd4cb5f06f-20190307
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <houlong.wei@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 215947327; Thu, 07 Mar 2019 09:47:41 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 7 Mar
- 2019 09:47:40 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 7 Mar 2019 09:47:39 +0800
-Message-ID: <1551923259.32207.10.camel@mhfsdcap03>
-Subject: Re: [PATCH] arm64: dts: add gce node for mt8183
-From:   houlong wei <houlong.wei@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>, <bibby.hsieh@mediatek.com>
-CC:     Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= 
-        <Bibby.Hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Daniel Kurtz" <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= 
-        <Yt.Shen@mediatek.com>,
-        Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= 
-        <Daoyuan.Huang@mediatek.com>,
-        Jiaguang Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=8A=A0=E5=B9=BF=29?= 
-        <Jiaguang.Zhang@mediatek.com>,
-        Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= 
-        <Dennis-YC.Hsieh@mediatek.com>,
-        Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= 
-        <ginny.chen@mediatek.com>,
-        Kendrick Hsu =?UTF-8?Q?=28=E5=BE=90=E5=AD=90=E5=87=A1=29?= 
-        <Kendrick.Hsu@mediatek.com>,
-        Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= 
-        <Frederic.Chen@mediatek.com>, <houlong.wei@mediatek.com>
-Date:   Thu, 7 Mar 2019 09:47:39 +0800
-In-Reply-To: <1551921866.20144.1.camel@mtksdaap41>
-References: <1551867024-52951-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1551921866.20144.1.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Mar 2019 20:48:05 -0500
+Received: by mail-qt1-f196.google.com with SMTP id z39so15362315qtz.0
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 17:48:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B/Apnqz7DLqTUitNTAxiKQCKqDbPIHIPtddeTjcAk2Y=;
+        b=EXIOMxrLnBTcRm6axwswa4vB8+zW7ASLRuK4Xh5wO9FJNbbgE47TC79HQ9EEETuRJI
+         cF72aC/1MIeLatIinOFG2PfQkC3Ee/nJeAzRLB3HxEl/I5L4pYF9KMPnFSoNC2NYhqEc
+         OSdij1FdP6zShXD1EdLboNVObVtBp2JtU1Nvg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B/Apnqz7DLqTUitNTAxiKQCKqDbPIHIPtddeTjcAk2Y=;
+        b=FjlWDduhygtMwD6pCvwJU+9stT28wCW3RFY+BoOvadAr5hOFNAMnCUq1UjIlbFqYNz
+         C0M7OyJwvTTQE1mCqhC+2bzjflKUOiNmqbWLeF2tRTuJfevn5mI8D2XV0jNn9xupjf+3
+         lXBBtTeRgRt2SSeyNCR74ZSsvEiZJe0bRhdcU+8GGxm80eEeuVJtla4e5TB52KWv3+wu
+         UvHVBGbywcKOiXwwjxqZOF33tSIgRNZJwQh97THFpkz+mYOQEkpHhhj8+/z9I8Txf7HZ
+         qyWGcHvBxxxs3P7SK6uL+JZdcIeH11aluJ9ER4loTpb4aG5oFF70r3nbU5udxqoMyZTl
+         cHqA==
+X-Gm-Message-State: APjAAAVcMz+uHIUlb4BUBYFH2/cNrtIo6IcfA+wQwwJx/YRRpjiKqODc
+        SbJyeSfjYuH/HCmC4wu3bqnjlA==
+X-Google-Smtp-Source: APXvYqzvU2u/YgDyb+PbNK+eWVkI1Z6Q2JvwleK5BmuubLvxO06sQF5GnXJB2pujITLvliUCzGqFMw==
+X-Received: by 2002:a0c:d90b:: with SMTP id p11mr8697755qvj.140.1551923283886;
+        Wed, 06 Mar 2019 17:48:03 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id h58sm2008673qtb.89.2019.03.06.17.48.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Mar 2019 17:48:03 -0800 (PST)
+Date:   Wed, 6 Mar 2019 20:48:02 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Pavel Machek <pavel@ucw.cz>, hpa@zytor.com,
+        Daniel Colascione <dancol@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>, rostedt@goodmis.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        yhs@fb.com
+Subject: Re: [RFC] Provide in-kernel headers for making it easy to extend the
+ kernel
+Message-ID: <20190307014802.GA193359@google.com>
+References: <20190118225543.86996-1-joel@joelfernandes.org>
+ <20190119082532.GA9004@kroah.com>
+ <20190119162754.GC231277@google.com>
+ <CAKOZuet+7a4jdox6rebMN=kJtDn5RUYzvNjFh+Pzn2UkuP0Y8Q@mail.gmail.com>
+ <20190119232503.GA149403@google.com>
+ <78AACAF1-8EBF-4DF3-BE94-5B14E78BA791@zytor.com>
+ <20190120155838.GA23827@google.com>
+ <20190306230944.GB7915@amd>
+ <742b4797-9954-fb54-cce8-47fcad750c69@metux.net>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <742b4797-9954-fb54-cce8-47fcad750c69@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-07 at 09:24 +0800, CK Hu wrote:
-> Hi, Bibby:
+On Thu, Mar 07, 2019 at 01:42:45AM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 07.03.19 00:09, Pavel Machek wrote:
 > 
-> On Wed, 2019-03-06 at 18:10 +0800, Bibby Hsieh wrote: 
-> > This patch need based on v5.0-rc1 and these series
-> > http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
-> > http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
-> > http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017196.html
-> > http://lists.infradead.org/pipermail/linux-mediatek/2019-March/018005.html
-> > 
-> > add gce device node for mt8183
-> > 
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > index 165b859..5006368 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > @@ -8,6 +8,7 @@
-> >  #include <dt-bindings/clock/mt8183-clk.h>
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/gce/mt8183-gce.h>
-> >  #include "mt8183-pinfunc.h"
-> >  
-> >  / {
-> > @@ -238,6 +239,18 @@
-> >  			clock-names = "spi", "wrap";
-> >  		};
-> >  
-> > +		gce: gce@10238000 {
-> > +			compatible = "mediatek,mt8183-gce";
-> > +			reg = <0 0x10238000 0 0x4000>;
-> > +			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
-> > +			thread-num = <CMDQ_THR_MAX_COUNT>;
+> > So your licensing requirements prevent you from having headers in the
+> > filesystem, but allow module with the headers hidden inside on the
+> > filesystem?
 > 
-> I does not find 'thread-num' in binding document [1].
+> Maybe it's just because I've missed most of the thread, but which
+> license requirements exactly could that be ?
 > 
-> [1]
-> https://www.kernel.org/doc/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> The kernel still is GPL, isn't it ? So, any device vendor needs to hand
+> out the exact kernel source he hat built the image from, anyways.
+> (by the way: we should start a flash mob action of demanding sources
+> from the pocket-computers-with-3g vendors, but that's another story ;-))
 > 
-> Regards,
-> CK
+> So, what kind of license issue could it be, which prevents putting the
+> files (that you'd have to hand out anyways) directly into filesystem,
+> while allowing them in a .ko in the same filesystem ?
+> 
+> I'm confused.
 
-The property "thread-num" is not used and and it was removed from the
-properties description, but I forgot to remove it from the example. That
-is misleading and I'm sorry for that. @Bibby, could you please help
-remove it from the example in mtk-gce.txt if you would upload a new
-version?
-> 
-> > +			#mbox-cells = <3>;
-> > +			#gce-event-cells = <1>;
-> > +			#gce-subsys-cells = <2>;
-> > +			clocks = <&infracfg CLK_INFRA_GCE>;
-> > +			clock-names = "gce";
-> > +		};
-> > +
-> >  		uart0: serial@11002000 {
-> >  			compatible = "mediatek,mt8183-uart",
-> >  				     "mediatek,mt6577-uart";
-> 
+Take a look at this thread: https://lkml.org/lkml/2019/2/28/634
 
+thanks,
 
+ - Joel
