@@ -2,133 +2,110 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5809FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6590FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C9E20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:18:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jHiVPwWd"
+	by mail.kernel.org (Postfix) with ESMTP id 31BFD20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 00:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551917975;
+	bh=GUrJ1pfAsToeH0u/tyVzs5bndWZkd/rKnAjtnADH8vo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CZCH1RuHjbkzz75phH5lOcvn19sSnltSrzN3fMp/p66cT2T6hAJxJn/KiXadm+0lH
+	 CJKZn0Kayu3QhNGEUL9dQ2Wskt90ieUsHKAd0W9gqhouz7eA5KAU3HFWtbHEb+2m9A
+	 8T/R0NWyntlxOtyepki5L220ggsdRJHrh4dzswhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfCGASB (ORCPT
+        id S1726305AbfCGATd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Mar 2019 19:18:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:48794 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfCGASA (ORCPT
+        Wed, 6 Mar 2019 19:19:33 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36076 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfCGATd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Mar 2019 19:18:00 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2704Z8n124182;
-        Thu, 7 Mar 2019 00:17:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=1SSZKMewF3WkzE1mzuK0CNh8oEr66tJRi9S895bMdCU=;
- b=jHiVPwWd3BlJYp8fneR7mB+nGICQf8Gt+VHVCBAsjGYPW2f8giLaYJgCve0Iai3Id0On
- EUGrVJOcF0WvOaSF2KkAC7hqwLlE67FcXBxR3ysYCzQTHI/jfBmH7xy5xiG1VaQaiBWr
- raSoliwOmnDSfjEZpIA7/OXYjT3yxjYg9uHCgEuS6RZo6vO/bk0B2wKGARi0foHZ8oCC
- eMygVw3J2JG0tNPZX+egVEWdDHnVxdPkFOTRR5VDhPvGm/abbMkvGOlbP5RA/9y09xWn
- Bbm7GqYw63XxPpQbi6iKFK5uqgzSNjSJKPwuhSKj4lG1PdS10ZGQ0tmy78D2I3Z4q04D Vg== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2qyh8uf375-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Mar 2019 00:17:40 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x270HdpG019570
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Mar 2019 00:17:39 GMT
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x270HaEn008410;
-        Thu, 7 Mar 2019 00:17:37 GMT
-Received: from [192.168.1.164] (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Mar 2019 16:17:36 -0800
-Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
- __nr_hugepages_store_common()
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "hughd@google.com" <hughd@google.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>
-References: <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
- <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
- <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
- <5C74A2DA.1030304@huawei.com>
- <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
- <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
- <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
- <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
- <20190305000402.GA4698@hori.linux.bs1.fc.nec.co.jp>
- <8f3aede3-c07e-ac15-1577-7667e5b70d2f@oracle.com>
- <20190306094130.q5v7qfgbekatnmyk@d104.suse.de>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <acfbbd1d-2889-1737-d84c-03bbf0f03657@oracle.com>
-Date:   Wed, 6 Mar 2019 16:17:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Mar 2019 19:19:33 -0500
+Received: by mail-lj1-f195.google.com with SMTP id v10so12583023lji.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:19:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cdv0Boad9qU3U+fOBS5IjHR0PUiEM4VoNG4DTYna6Ro=;
+        b=Z7XVPximOLLEWG/Qclf0gTsZQRstxo37yxUJstX5FCRGpgGB1i+sM7Kuw+MGxBq1EA
+         bwcGDJhXO++XuzdL+SWIgw5Ckr09J/g890cBhaKAVs89h+DOm24kw6U+bgN8kjcF49Wq
+         Meop65eosN83YmeYEC8Z1KQb/vq7CXKdCp8vU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cdv0Boad9qU3U+fOBS5IjHR0PUiEM4VoNG4DTYna6Ro=;
+        b=N6r4mwGkxcluPhW6Xolmz053qoqEvhdJFw9w4VOjXok5D+05WjFkhm21S1c3TRAOpe
+         qFQCEzc0zsjwCbIDvD+IAnBAdV32YnhFAzg0iaOZ/03hoUH/lPE1SU0hijwH7r8Sz589
+         Y3cZQ5R4m3CfOsI5sWzUn2klHVOhw0Bb0IopL7ODbsSuu8s4EfldTuUgpcUx/WQy91yy
+         uo+04jKOjG+MZPJl9EAEdm4l7yDgn9C2F5vBt+6f+xKgiEVtEzG+4jhsRUK2AyRtWcg1
+         /n36ZX+vM3V/JlIIhgTynhvMOK81Mr5narR2jSvtIkWHmw41p3ZspEPyNSgzyjbaXEIa
+         yhSQ==
+X-Gm-Message-State: APjAAAXqVdBcbNdoS+FiEDEP8h+11kTh6JrtAD9FbPBLIYIWGhdL2XMl
+        H5GvJsWTIyvbr1qdkKhsKG1VhJmMZG8=
+X-Google-Smtp-Source: APXvYqwGzpO0G7Be0IVPJ1fvDEnGPekHHimaj9F9/VtAHCvB+geUzh70g95Dt7n0UiuystlGCTMMew==
+X-Received: by 2002:a2e:3a04:: with SMTP id h4mr4175097lja.50.1551917970592;
+        Wed, 06 Mar 2019 16:19:30 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id w6sm557104lfl.14.2019.03.06.16.19.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Mar 2019 16:19:29 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id r123so10301649lff.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Mar 2019 16:19:29 -0800 (PST)
+X-Received: by 2002:a19:6a0a:: with SMTP id u10mr4638170lfu.148.1551917969047;
+ Wed, 06 Mar 2019 16:19:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190306094130.q5v7qfgbekatnmyk@d104.suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9187 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903060164
+References: <20190306103350.GA10570@kroah.com> <CAHk-=wjT+pPxi8favCu9V5ZtGZuTZybLuwnwtNLspFPmKgr42g@mail.gmail.com>
+ <d596d6db449d4747b3eebf4cb42f6657ad42f989.camel@perches.com>
+In-Reply-To: <d596d6db449d4747b3eebf4cb42f6657ad42f989.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 6 Mar 2019 16:19:13 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi5D-fZBjiqo30XgmXJPpmLxTJvJKEDqHCAFiZo9QWC_w@mail.gmail.com>
+Message-ID: <CAHk-=wi5D-fZBjiqo30XgmXJPpmLxTJvJKEDqHCAFiZo9QWC_w@mail.gmail.com>
+Subject: Re: [GIT PULL] Driver core patches for 5.1-rc1
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/19 1:41 AM, Oscar Salvador wrote:
-> On Mon, Mar 04, 2019 at 08:15:40PM -0800, Mike Kravetz wrote:
->> In addition, the code in __nr_hugepages_store_common() which tries to
->> handle the case of not being able to allocate a node mask would likely
->> result in incorrect behavior.  Luckily, it is very unlikely we will
->> ever take this path.  If we do, simply return ENOMEM.
-> 
-> Hi Mike,
-> 
-> I still thnk that we could just get rid of the NODEMASK_ALLOC machinery
-> here, it adds a needlessly complexity IMHO.
-> Note that before "(5df66d306ec9: mm: fix comment for NODEMASK_ALLOC)",
-> the comment about the size was wrong, showing a much bigger size that it
-> actually was, and I would not be surprised if people started to add
-> NODEMASK_ALLOC here and there because of that.
-> 
-> Actually, there was a little talk about removing NODEMASK_ALLOC altogether,
-> but some further checks must be done before.
+On Wed, Mar 6, 2019 at 4:09 PM Joe Perches <joe@perches.com> wrote:
+> >
+> > This is very funky, but that commit generates a new warning in a
+> > totally unrelated area:
+>
+> Very very funky.
+>
+> Are you sure it's the __cold marking of an
+> entirely unrelated function that isn't
+> even used in the code with the new warning?
 
-Thanks for the information.  I too saw or remembered a large byte value. :(
-A quick grep doesn't reveal any configurable way to get NODE_SHIFT larger
-than 10.  Of course, that could change.  So, it does seem a bit funny that
-NODEMASK_ALLOC() kicks into dynamic allocation mode with NODE_SHIFT > 8.
-Although, my desktop distro has NODE_SHIFT set to 10.
+Yup, I bisected it, because it made no sense at all. There were no
+changes to the driver itself in that pull request, but there was a new
+warning.
 
->> Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> 
-> But the overall change looks good to me:
-> 
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> btw; what compiler version?
 
-Thanks.
-I'm going to leave as is for now and put off removal of the dynamic allocation
-for a later time.  Unless, you get around to removing NODEMASK_ALLOC
-altogether. :)
--- 
-Mike Kravetz
+  gcc version 8.2.1 20181215 (Red Hat 8.2.1-6) (GCC)
+
+FWIW,
+
+               Linus
