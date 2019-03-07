@@ -2,93 +2,151 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7ECC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C45C43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDF520851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9FF20851
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="a/y7lS55"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dsy4bVlR";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e6YztNP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfCGPkf (ORCPT
+        id S1726643AbfCGPmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:40:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46633 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfCGPke (ORCPT
+        Thu, 7 Mar 2019 10:42:14 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:44156 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfCGPmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:40:34 -0500
-Received: by mail-pf1-f195.google.com with SMTP id g6so11701921pfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:40:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8qnglpDXP6LMI8XwQg2EEpR4hqD6rquMvzppPijm7Fk=;
-        b=a/y7lS55fuDHwUA8MekGZGHhgDL/PB3T12RZaNiZwCoy1iGI3dQmVyMcmdGv2PznFS
-         SBuI/djzFwzyTlx73N/cyAPsrWB2tSFdsf3ycDltNTqERX37CJZY9EU5JgRTK1LMafX1
-         GGqsr2+Tvu/YFf1O/roJxdbGePGeCsHmyzy/KqahJBZKkGm8TvZMzCPsh61mwAxt7eZu
-         Hoi4V9AeTbOmsGzqy7yy4Ye2T+HXysL5+woS9wP2LLRPul3XG+y+/81bQhm2xqEqm3yS
-         tUMI4H4+yxETo2nCi7QOeFQBO4xumvAcG5uYQA0IogPYB+rGruuDT3vB5xqJ8YVUL7EB
-         n/UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8qnglpDXP6LMI8XwQg2EEpR4hqD6rquMvzppPijm7Fk=;
-        b=qqvuj5J24K2QflQfTxUjIxfR4zCUNw/G3Hz/ecrsOWCXnKuIlrlMqypndyES2o9Ena
-         BGYt78cSf7eLq+yJWHjaQYDzsnKE8m/aL9hO5u2Ous6xa48I3RcTKNQKG7tGEuL2BdW7
-         QulI5gZ/g5N3s/3ekej4BAGLOk9Ff3icc0q1sPZkZo7hmgdu5rRVVC2859qSaF+BKrfh
-         uUO1WoCfAW3YiQH2rAs+IFGX4Znt/CCM9R/bTbqATPafKNV1RUD76GqfESFatQHOBHmG
-         Zl2jcIS61EiHVETuY1xDGFFp21+9PJZKJYs082ceG+RDgCsY2P6XMK9o1c0i8yNpRoNy
-         ZUqA==
-X-Gm-Message-State: APjAAAW3+dSDMCec+qWMaHmWPW8AR0BbNlj2PEOzWrPk1a7ocEMckEbY
-        oE562fgDyn2jSsguzvrYWsR5iw==
-X-Google-Smtp-Source: APXvYqx7qAS/CjVObUKOP0BvztCNQ201sB4rDR1H2CEdEMye/3slTIgcRp+PDGAk7JM1w3rtj6dhfQ==
-X-Received: by 2002:a62:ab04:: with SMTP id p4mr13341557pff.142.1551973233549;
-        Thu, 07 Mar 2019 07:40:33 -0800 (PST)
-Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id g28sm9548763pgb.45.2019.03.07.07.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 07:40:33 -0800 (PST)
-Date:   Thu, 7 Mar 2019 07:40:29 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chris.packham@alliedtelesis.co.nz,
-        luuk.paulussen@alliedtelesis.co.nz
-Subject: Re: [PATCH 1/2] ipmr: Make cache queue length configurable
-Message-ID: <20190307074029.3f1f0c28@shemminger-XPS-13-9360>
-In-Reply-To: <20190306201956.30248-2-brodie.greenfield@alliedtelesis.co.nz>
-References: <20190306201956.30248-1-brodie.greenfield@alliedtelesis.co.nz>
-        <20190306201956.30248-2-brodie.greenfield@alliedtelesis.co.nz>
+        Thu, 7 Mar 2019 10:42:13 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8A6D06016D; Thu,  7 Mar 2019 15:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551973332;
+        bh=8hnLI+4unoiRoQDzhLXSHv9McOthhblpMhzL68deYBw=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=dsy4bVlR0CrDHM+W9ekV5ronf2h55awQutlrLN3pyOboFpswsVYSVpkYhCW2LJd4i
+         BHSOxrU7jw7UQynq/PpDGyskOiwrQbz4IrVAKWx0VQX+N8cOgXi1gV/6Fu4NPgV/aH
+         QVL/lYBmv74BoOnQJ445lX7OGCS5gCRoY4lE3Kn4=
+Received: from purkki.adurom.net (purkki.adurom.net [80.68.90.206])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E73A56016D;
+        Thu,  7 Mar 2019 15:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551973329;
+        bh=8hnLI+4unoiRoQDzhLXSHv9McOthhblpMhzL68deYBw=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=e6YztNP8Rn2JFUd4gYPc9rTlREZ6gyw9vvLPpWimMrg2BiTmml2HnfNH8Do2egYRo
+         TcUa/LTVxng2z6h+Cfkih5gRtw+JZar5KwODtaORfdxM96gFfy5iaOQzO8jVUDz53z
+         irV0MyNwx/HsVEupKwyVx6HUSVFDcepPzctofGuM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E73A56016D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Julius Niedworok <julius.n@gmx.net>
+Cc:     linux-wireless@vger.kernel.org, ga58taw@mytum.de, david@redhat.com,
+        nc@net.in.tum.de, Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
+References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
+        <20190306200206.60916-1-julius.n@gmx.net>
+Date:   Thu, 07 Mar 2019 17:42:04 +0200
+In-Reply-To: <20190306200206.60916-1-julius.n@gmx.net> (Julius Niedworok's
+        message of "Wed, 6 Mar 2019 21:02:05 +0100")
+Message-ID: <87k1hazo6r.fsf@purkki.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  7 Mar 2019 09:19:55 +1300
-Brodie Greenfield <brodie.greenfield@alliedtelesis.co.nz> wrote:
+Julius Niedworok <julius.n@gmx.net> writes:
 
-> +ip_mr_cache_queue_length - INTEGER
-> +	Limit the number of multicast packets we can have in the queue to be
-> +	resolved.
-> +	Bear in mind that when an unresolved multicast packet is received,
-> +	there is an O(n) traversal of the queue. This should be considered
-> +	if increasing.
+> At Technical University of Munich we use MAC 802.11 TX status frames to
+> perform several measurements in MAC 802.11 setups.
+>
+> With ath based drivers this was possible until commit d94a461d7a7df6
+> ("ath9k: use ieee80211_tx_status_noskb where possible") as the driver
+> ignored the IEEE80211_TX_CTL_REQ_TX_STATUS flag and always delivered
+> tx_status frames. Since that commit, this behavior was changed and the
+> driver now adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
+>
+> Due to performance reasons, IEEE80211_TX_CTL_REQ_TX_STATUS is not set for
+> data frames from interfaces in managed mode. Hence, frames that are sent
+> from a managed mode interface do never deliver tx_status frames. This
+> remains true even if a monitor mode interface (the measurement interface)
+> is added to the same ieee80211 physical device. Thus, there is no
+> possibility for receiving tx_status frames for frames sent on an interface
+> in managed mode, if the driver adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
+>
+> In order to force delivery of tx_status frames for research and debugging
+> purposes, implement a debugfs option force_tx_status for ieee80211 physical
+> devices. When this option is set for a physical device,
+> IEEE80211_TX_CTL_REQ_TX_STATUS is enabled in all packets sent from that
+> device. This option can be set via
+> /sys/kernel/debug/ieee80211/<dev>/force_tx_status. The default is disabled.
+>
+> Co-developed-by: Charlie Groh <ga58taw@mytum.de>
+> Signed-off-by: Charlie Groh <ga58taw@mytum.de>
+> Signed-off-by: Julius Niedworok <julius.n@gmx.net>
+
+[...]
+
+> +	len = scnprintf(buf, sizeof(buf), "%d\n", (int)local->force_tx_status);
+
+I wonder about the cast, is it guaranteed that a bool is always of the
+same size as an int?
+
+> --- a/net/mac80211/ieee80211_i.h
+> +++ b/net/mac80211/ieee80211_i.h
+> @@ -1367,6 +1367,7 @@ struct ieee80211_local {
+>  		struct dentry *rcdir;
+>  		struct dentry *keys;
+>  	} debugfs;
+> +	bool force_tx_status;
+
+[...]
+
+>  #endif
+>  
+>  	/*
+> diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+> index 928f13a..717fa71 100644
+> --- a/net/mac80211/tx.c
+> +++ b/net/mac80211/tx.c
+> @@ -2463,6 +2463,11 @@ static struct sk_buff *ieee80211_build_hdr(struct ieee80211_sub_if_data *sdata,
+>  	if (IS_ERR(sta))
+>  		sta = NULL;
+>  
+> +#ifdef CONFIG_MAC80211_DEBUGFS
+> +		if (local->force_tx_status)
+> +			info_flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
+> +#endif
 > +
+>  	/* convert Ethernet header to proper 802.11 header (based on
+>  	 * operation mode) */
+>  	ethertype = (skb->data[12] << 8) | skb->data[13];
+> @@ -3468,6 +3473,11 @@ static bool ieee80211_xmit_fast(struct ieee80211_sub_if_data *sdata,
+>  		      (tid_tx ? IEEE80211_TX_CTL_AMPDU : 0);
+>  	info->control.flags = IEEE80211_TX_CTRL_FAST_XMIT;
+>  
+> +#ifdef CONFIG_MAC80211_DEBUGFS
+> +		if (local->force_tx_status)
+> +			info->flags |= IEEE80211_TX_CTL_REQ_TX_STATUS;
+> +#endif
 
-Why not make it to a unsigned value? A negative value doesn't make
-much sense here.
+IMHO the ifdefs look pointless just to save four bytes. I would move
+force_tx_status outside of ifdef in the struct so that the actual code
+doesn't have ugly ifdefs.
 
-Although other sysctl values date back to a time when Linux was
-sloppy about allowing negative values, it would be good to use unsigned
-now.
+-- 
+Kalle Valo
