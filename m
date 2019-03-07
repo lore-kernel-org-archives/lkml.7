@@ -2,71 +2,116 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C79C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B4AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5FD20840
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE882081B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 23:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFq06R3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfCGX4i (ORCPT
+        id S1726355AbfCGX5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 18:56:38 -0500
-Received: from smtprelay0043.hostedemail.com ([216.40.44.43]:46279 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726279AbfCGX4i (ORCPT
+        Thu, 7 Mar 2019 18:57:50 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41181 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfCGX5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 18:56:38 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 5521A181D341C;
-        Thu,  7 Mar 2019 23:56:37 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: women44_9105590a9ce0c
-X-Filterd-Recvd-Size: 1457
-Received: from XPS-9350 (unknown [149.142.244.224])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  7 Mar 2019 23:56:36 +0000 (UTC)
-Message-ID: <66af3908ab0a63a6768f3d75a87abf4056a9f8cf.camel@perches.com>
-Subject: [PATCH] RISC-V: Use IS_ENABLED(CONFIG_CMODEL_MEDLOW)
-From:   Joe Perches <joe@perches.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Cc:     linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 07 Mar 2019 15:56:34 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Mar 2019 18:57:49 -0500
+Received: by mail-ed1-f67.google.com with SMTP id x7so14973248eds.8;
+        Thu, 07 Mar 2019 15:57:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N0ITOVoBW8yrlydVGEyQDwAmxvx+WvHkFp1+HzwOxiE=;
+        b=VFq06R3P2KP4io+KrC42ZTXtQzjfR4l8EcikCu4fUVhl8bExVT5Fq7KvDjG1h62mGX
+         CFcWeKa0JM/KfwW6HEXuVYZd22D+on3JlfM2eh5xc/dRLul3pxOdAwEhhWOPJWfhkSMm
+         Zb0/EArjeoV3hdGGouQf7XoAmrEFfF7B+lAIfxzMFcCBsI1ZgJfV6b9xNCQfaltJfazc
+         cCM5hiYAnJ9HjWW37Kffq71luaIaBynxStrQVe6ySND1UVCk//XmwkqmijzI9QgaBMGm
+         /llJPNSgB0aMVeJJAkjyxey79mU6GAHzZnkrJ+JezdCwYmsLYzWF0+96RXVZ0SCXC6h4
+         Dg4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N0ITOVoBW8yrlydVGEyQDwAmxvx+WvHkFp1+HzwOxiE=;
+        b=CxrdfvWBpjR7yfzk10b8zRGnYZpIlifnpbcU3MhBvqQcAegeN0JZFQ1eqE4Ofs6WqW
+         XKdgqX037iDYGyeWWQlgjPRAJ908MSjVV7SXjHEtFmAkDHdbYUnmLwQ13uaGAFPhDAuH
+         ZOGUo2xhlniMI47o8DfWzg4XooPfYcIZfjaGfylYr0hZzCl/WY38wo3pzuoOFUP3gM5B
+         TvlnWRPG6TBuESPR3kMSBDDmA44RB/R9emj5tnZe3j9wrxiTDejket8I5BxqP2IbivqF
+         Rvq6HSbMJiRGsTXanMHeEGp1JgoDe+tlBPDAxrkdXFlpSkC/c9fBwPuaO8//qzObDYUq
+         96Kg==
+X-Gm-Message-State: APjAAAXk3bdSAPcrMvhYoNkTiMYq7PZ7ArrWfTSCga+YK7irtEJrbdzZ
+        lJiLWMfnr1n3C1eU0GIoHodoTZZRApvOgw==
+X-Google-Smtp-Source: APXvYqyvS/tp3wg+FrWOdlDw1LimnCqWHzwGaE1VKQbK7KuELBMSlxEikOVm7nQ83hGRzI+GZPOnOw==
+X-Received: by 2002:a17:906:561a:: with SMTP id f26mr9700580ejq.167.1552003067276;
+        Thu, 07 Mar 2019 15:57:47 -0800 (PST)
+Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id x34sm1749692edm.70.2019.03.07.15.57.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 15:57:46 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-wireless@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] cfg80211: Change an 'else if' into an 'else' in cfg80211_calculate_bitrate_he
+Date:   Thu,  7 Mar 2019 16:57:35 -0700
+Message-Id: <20190307235735.31487-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IS_ENABLED should generally use CONFIG_ prefaced symbols and
-it doesn't appear as if there is a CMODEL_MEDLOW define.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Signed-off-by: Joe Perches <joe@perches.com>
+net/wireless/util.c:1223:11: warning: variable 'result' is used
+uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
+
+Clang can't evaluate at this point that WARN(1, ...) always returns true
+because __ret_warn_on is defined as !!(condition), which isn't
+immediately evaluated as 1. Change this branch to else so that it's
+clear to Clang that we intend to bail out here.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/382
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- arch/riscv/kernel/module.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/util.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-index 7dd308129b40..2872edce894d 100644
---- a/arch/riscv/kernel/module.c
-+++ b/arch/riscv/kernel/module.c
-@@ -141,7 +141,7 @@ static int apply_r_riscv_hi20_rela(struct module *me, u32 *location,
- {
- 	s32 hi20;
+diff --git a/net/wireless/util.c b/net/wireless/util.c
+index e4b8db5e81ec..75899b62bdc9 100644
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -1220,9 +1220,11 @@ static u32 cfg80211_calculate_bitrate_he(struct rate_info *rate)
+ 	else if (rate->bw == RATE_INFO_BW_HE_RU &&
+ 		 rate->he_ru_alloc == NL80211_RATE_INFO_HE_RU_ALLOC_26)
+ 		result = rates_26[rate->he_gi];
+-	else if (WARN(1, "invalid HE MCS: bw:%d, ru:%d\n",
+-		      rate->bw, rate->he_ru_alloc))
++	else {
++		WARN(1, "invalid HE MCS: bw:%d, ru:%d\n",
++		     rate->bw, rate->he_ru_alloc);
+ 		return 0;
++	}
  
--	if (IS_ENABLED(CMODEL_MEDLOW)) {
-+	if (IS_ENABLED(CONFIG_CMODEL_MEDLOW)) {
- 		pr_err(
- 		  "%s: target %016llx can not be addressed by the 32-bit offset from PC = %p\n",
- 		  me->name, (long long)v, location);
-
+ 	/* now scale to the appropriate MCS */
+ 	tmp = result;
+-- 
+2.21.0
 
