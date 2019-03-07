@@ -2,134 +2,118 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D8EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC1CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395DA20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 15:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="P5/EiTyU"
+	by mail.kernel.org (Postfix) with ESMTP id 2B49320652
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 16:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfCGP7v (ORCPT
+        id S1726618AbfCGQAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 10:59:51 -0500
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36606 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfCGP7t (ORCPT
+        Thu, 7 Mar 2019 11:00:41 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:35995 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfCGQAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 10:59:49 -0500
-Received: by mail-it1-f193.google.com with SMTP id v83so16558639itf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 07:59:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YR2PiZD6BHr8hgVqVgUGtVxLkfx0p0sFvLP49y5X5EI=;
-        b=P5/EiTyU4KfgnW2+IBT7ZH5KGDuij6zl65bbE5KcMtmJWTWMR2Ui7E7uFQ2ss9mDTw
-         ryFFeSc5FcaIb59hlJgyi1cXKO/QH8ZQLbfUOH2FX9xPrZr3q0fmgPfxPenrJUL5UXg4
-         uqZdAML7UD/m2bahGJDnkKQfA73U94svTUhYwHSgiy9VQwxLRbs3rq7Zfk9GYelDsR3I
-         QtZq3G9g9qD1UNBpzhgn76A6P5bdZMPkPc4kyGRhA5aaGgzUk/vr+1gzuvsKUn/WHbla
-         mpHeKlBTEQSmOyQ5TM0Nuq2//uCb/i3MuqkYztI3K6cXTH2P3ZXa6A5YaacLVYNikIu0
-         2ShQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YR2PiZD6BHr8hgVqVgUGtVxLkfx0p0sFvLP49y5X5EI=;
-        b=GeWZk7qc2erOjbFPMxwa94WNe+ZDXWQ1by043rE4mKkhIHbcbLNetGQj1pM6nt2K1U
-         bEKDmSQCK7P1ntAw8uGV8kMA9ZuPC8RAobgWvtt5aqw1TGL4xeMzDWxkcQ9LuJ8rreqW
-         z3uTFxYkc17DZDoPPKPo6tFXDfxt+xd3Y74AwX4tnpIadvLxAuRPMonEBEhYFlsMFfp8
-         IF/4l7ShiXUgcae/3lFHnngyER6GBkWMrQD0WvtIjNgqc9yqftxRSDyxF7kTJHIuPq5X
-         q0I/hK/6BEOCgeX/fGGbRgVSYMpIRsf35DaxDs9HvMV4XdfUO7/jE6GkUe70whAsk6AY
-         /Dtw==
-X-Gm-Message-State: APjAAAWrMrwpZfNiRhN8R8c2YlYEtKeLImwKpNi6Fzh2fLQEEVNuQJzk
-        1BnpO6qAFE+YzpXraXrzIDoc9LM92NE4bw==
-X-Google-Smtp-Source: APXvYqxmvbSmWH8FSqy1YOBptTvP1Jy52VMXPnwHGvYyYDU/NCxcwDU+qN3Zu9EUcEonMK20GUp5zw==
-X-Received: by 2002:a24:1c4d:: with SMTP id c74mr5540098itc.36.1551974387250;
-        Thu, 07 Mar 2019 07:59:47 -0800 (PST)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id x25sm259164ion.78.2019.03.07.07.59.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 07:59:46 -0800 (PST)
-Subject: Re: [PATCH] pblk: fix max_io calculation
-To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier@javigon.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190307121853.14503-1-javier@javigon.com>
- <8b13dcf3-4486-0e14-b718-417c7fc42a7b@lightnvm.io>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a2f98eea-2407-49ad-4ff6-c1e92762d2f8@kernel.dk>
-Date:   Thu, 7 Mar 2019 08:59:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 11:00:40 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MfL5v-1gZlkv3lSl-00gs6s; Thu, 07 Mar 2019 17:00:26 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>, Wenwen Wang <wang6495@umn.edu>,
+        Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] ethtool: reduce stack usage with clang
+Date:   Thu,  7 Mar 2019 16:58:35 +0100
+Message-Id: <20190307160017.3120362-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <8b13dcf3-4486-0e14-b718-417c7fc42a7b@lightnvm.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:T2IDOyorbgsgPpj+Bqgq7HPPcnC7R+qzlnvnoj1X7TcTxjdySDI
+ zUZqAMZ2WK3VCIVGfBHlgrFIEUlgcDCSazoE08hDgh6ahBC6cP8CCFRId4uFTDA0yyz5GVV
+ fhjgtjkGgIz0T2t1cUSq9vZQVBM3jQD7T7FRyvoHOeglKsVoGWI2uLgWrmtK4k4hzJLCynU
+ 7O6UE/gzzy14hkOMjclzw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M8mJxqWzkoo=:dx+1+v6weoaqHui1MVb2w9
+ XKlalBcOz+yGzVOqhaVoAr8gvjnwDPXzMMWpkPsP4rsckKA1q+tBqBZilIBWISce754bCwx0P
+ fTL9Qqj2ODSlLE1kyXJdFSzgLJCwsXLU99QwJAh5OL7eeP4HnVzY3Jzj55xtZYkXuXkikcn3j
+ g2N/XMp9vaIllMmzHZD3i+SXkMCXOw4gnWsB6qyHOQhbA/IUjlaHgexPo8TDnlevYhdU44WFO
+ E2EcBXwlPaheZ+C89iXmwkdMgS0Wz1nzSdzpH1H9bsnh578wFkhvoTSSwidj8y5qbjdIxyGsL
+ qhvRTx+KRNyhC1WFbArMmbL0MkQWRFwLtn4GGc0e159wKxBp7ef/iGUpu5tufI2Kkm11Z5R7s
+ JTUIdGm6S9Su8nYJQ+pRacQ3okDSU+qdUyU3XFYmoutl87tchUpIvTVrM5bEglnhnkbpSuYKr
+ sadmFUq+6KZB1SmYRZD1PfFYTjhxIsZ6fDPY53lev4AUrHkd77CW4Y5cpTCzZXgbZ6Gjt38YL
+ HVis3cZUOl6yPZuAVkr6esdi5n9GHzrScHzOxBmIamMltA0d7TKDYkr5y0/wOpb4u1YlHHL04
+ Dlm5vepNoZfCCwofvpOU5M2QvAwIi0KKSpWw2xD0WpEpBj2gBQlDnomIKykA2Lf51tZoGhClJ
+ H9yl/35o6EsWcFQf2IYgDZBmyeF2PurPiSsth3+UD5M7L/Q/Nr7/tYAoMpocH8dWX1SVVZuVp
+ P5LljWTwfEnRDprZv9eeMIMl6d8JRJLk4/4F9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/7/19 8:57 AM, Matias Bjørling wrote:
-> On 3/7/19 1:18 PM, Javier González wrote:
->> When calculating the maximun I/O size allowed into the buffer, consider
->> the write size (ws_opt) used by the write thread in order to cover the
->> case in which, due to flushes, the mem and subm pointers are disaligned
->> by (ws_opt - 1). This case currently translates into a stall when
->> an I/O of the largest possible size is submitted.
->>
->> Fixes: f9f9d1ae2c66 ("lightnvm: pblk: prevent stall due to wb threshold")
->>
->> Signed-off-by: Javier González <javier@javigon.com>
->> ---
->>
->> Matias: Can you apply this as a fix to 5.1. This is a case I missed when fixing
->> the wb threshold, which is also scheduled for 5.1
->>
->> Thanks,
->> Javier
->>
->>   drivers/lightnvm/pblk-rl.c | 7 ++++++-
->>   1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/lightnvm/pblk-rl.c b/drivers/lightnvm/pblk-rl.c
->> index b014957dde0b..a5f8bc2defbc 100644
->> --- a/drivers/lightnvm/pblk-rl.c
->> +++ b/drivers/lightnvm/pblk-rl.c
->> @@ -233,10 +233,15 @@ void pblk_rl_init(struct pblk_rl *rl, int budget, int threshold)
->>   	/* To start with, all buffer is available to user I/O writers */
->>   	rl->rb_budget = budget;
->>   	rl->rb_user_max = budget;
->> -	rl->rb_max_io = threshold ? (budget - threshold) : (budget - 1);
->>   	rl->rb_gc_max = 0;
->>   	rl->rb_state = PBLK_RL_HIGH;
->>   
->> +	/* Maximize I/O size and ansure that back threshold is respected */
->> +	if (threshold)
->> +		rl->rb_max_io = budget - pblk->min_write_pgs_data - threshold;
->> +	else
->> +		rl->rb_max_io = budget - pblk->min_write_pgs_data - 1;
->> +
->>   	atomic_set(&rl->rb_user_cnt, 0);
->>   	atomic_set(&rl->rb_gc_cnt, 0);
->>   	atomic_set(&rl->rb_space, -1);
->>
-> 
-> Hi Jens,
-> 
-> If possible, could you please pick this one up for 5.1? It fixes a 
-> previous patch that was introduced in 5.1 that should fix a stall, but 
-> didn't quite catch it.
+clang inlines the dev_ethtool() more aggressively than gcc does, leading
+to a larger amount of used stack space:
 
-Applied
+net/core/ethtool.c:2536:24: error: stack frame size of 1216 bytes in function 'dev_ethtool' [-Werror,-Wframe-larger-than=]
 
+Marking the sub-functions that require the most stack space as
+noinline_for_stack gives us reasonable behavior on all compilers.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: don't annotate dev_ethtool itself, as pointed out by Michal Kubecek
+---
+ net/core/ethtool.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index d4918ffddda8..b1eb32419732 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -2319,9 +2319,10 @@ static int ethtool_set_tunable(struct net_device *dev, void __user *useraddr)
+ 	return ret;
+ }
+ 
+-static int ethtool_get_per_queue_coalesce(struct net_device *dev,
+-					  void __user *useraddr,
+-					  struct ethtool_per_queue_op *per_queue_opt)
++static noinline_for_stack int
++ethtool_get_per_queue_coalesce(struct net_device *dev,
++			       void __user *useraddr,
++			       struct ethtool_per_queue_op *per_queue_opt)
+ {
+ 	u32 bit;
+ 	int ret;
+@@ -2349,9 +2350,10 @@ static int ethtool_get_per_queue_coalesce(struct net_device *dev,
+ 	return 0;
+ }
+ 
+-static int ethtool_set_per_queue_coalesce(struct net_device *dev,
+-					  void __user *useraddr,
+-					  struct ethtool_per_queue_op *per_queue_opt)
++static noinline_for_stack int
++ethtool_set_per_queue_coalesce(struct net_device *dev,
++			       void __user *useraddr,
++			       struct ethtool_per_queue_op *per_queue_opt)
+ {
+ 	u32 bit;
+ 	int i, ret = 0;
+@@ -2405,7 +2407,7 @@ static int ethtool_set_per_queue_coalesce(struct net_device *dev,
+ 	return ret;
+ }
+ 
+-static int ethtool_set_per_queue(struct net_device *dev,
++static int noinline_for_stack ethtool_set_per_queue(struct net_device *dev,
+ 				 void __user *useraddr, u32 sub_cmd)
+ {
+ 	struct ethtool_per_queue_op per_queue_opt;
 -- 
-Jens Axboe
+2.20.0
 
