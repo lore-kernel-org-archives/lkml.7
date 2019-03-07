@@ -2,124 +2,125 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A8EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292DBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E233920675
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27AF20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 20:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LWMljVSp"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="dizeQpbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfCGU1s (ORCPT
+        id S1726357AbfCGU2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 15:27:48 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:41262 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfCGU1s (ORCPT
+        Thu, 7 Mar 2019 15:28:50 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34593 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfCGU2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 15:27:48 -0500
-Received: by mail-yw1-f65.google.com with SMTP id q128so14444555ywg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:27:47 -0800 (PST)
+        Thu, 7 Mar 2019 15:28:49 -0500
+Received: by mail-ed1-f67.google.com with SMTP id a16so14620610edn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 12:28:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wBlNSo7HAYuMJs+aJMR6Uu2EgbzXOL50Q/wOaOFZ/hE=;
-        b=LWMljVSp3x/sn+xiSUMQbv2Yrd0xIM3aRcyEgRhsi0BUnRCjybbySQeZRtZ3fan8Pg
-         uy7KXVN7ZNT6AB9rwzbRLsACMZoFhJLvI+8VDGTTAeF6uBx63NV3Sxtznm+doY/uDFbd
-         SAF16pVcuWpCLEUWHcycErmsH1fWjH8B+nL/8=
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1LPdf3y43zhQ0TvL2EL2y29iS9cjigfcplA9kzrqzsA=;
+        b=dizeQpbxh2WrRAo5c9fi8kqq/UV8oTVr0EOF3EMjzfaTadRRqzC8j/FuUdYidLbLRd
+         rDA7lvHNPt/XmJHi1wVx1EF4eR9pe+Vt1jvcxYmdAQtBeXgGRYVByoc/vAsOm/g+4jwD
+         QCuLLF+SDhz9YujP3N1tTeQuANUmKKi6qTiR0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wBlNSo7HAYuMJs+aJMR6Uu2EgbzXOL50Q/wOaOFZ/hE=;
-        b=WX0FIQWTT8YfKCcALSf9x9sTq7fKqLhXOsLdYEd0ArUTZ1mHJBZdUKWAEwiWoSif6+
-         83owq9v5HK5DyIiV5jAc3D8dYHZ/bZY4XpXE1cq3DKn33utNjLQ1URWgQ9DfNF05yfoz
-         LJVaNeAU+MYiQXyapkfoiOD39pIiiURGn1BPKxm2aeqo9N9WugUVXrUq6YAcGHmmtxk+
-         1YbOZvd15kc2VjRou4jU2on0I23Lqa4bhH7aXG/VJFk7xINMyhrnu2yIHwOFMdxRj5ZS
-         uNaun+LVnb0UrVVkDQ83tU2/gz27UhM0mX4tJKgyosqUOdGk9+1RX2EOvp85KmsZ2XDW
-         ARbQ==
-X-Gm-Message-State: APjAAAVg8SG+lqpN3JdyNErKY1yrkTFj+CZVNaIXPxOYwcwCN/H5cVbB
-        UIEyEB966xmB6/JYksL0TsX8rJ8i4AJdyRCTYnSM3Q==
-X-Google-Smtp-Source: APXvYqx8b1nup2SRjQJqro5PE0fKjmaOsZHNqPngWmsjb1l1nGOL7XQQQb40SEfTqKxxETgOm8z6qPkdp505nkodpgQ=
-X-Received: by 2002:a0d:e607:: with SMTP id p7mr11306266ywe.329.1551990466813;
- Thu, 07 Mar 2019 12:27:46 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1LPdf3y43zhQ0TvL2EL2y29iS9cjigfcplA9kzrqzsA=;
+        b=YdxRfD6rC5s26oOJQ0en0BuJJc6lBpN2YyDit+eAAsapZhqyR5Pykl8AgmU1do850j
+         ChySxOi1HUbAt3Z+DC0gN8REDnYTmZ5h2h1wkUbyE9zqXQGxR0lGxVSXtBBPjeZHMFIt
+         jXKSTuFKX+6tCioNs4Y/UOExcbrjBJyuIUdPQsys7PsvZCIlORN8u/djhPqPkDDOEntr
+         Iz5uKFMI2n5OAVp5upE4G079Ow3CO/afFCcSEJzXCGRIMv4KituCnO0x8/jCkNuyT2Sg
+         OroIRIgnxvib4P8HcBqzvUVFQT0kZ1tpgGoCG2JpLyrq9La6zfyAsKpErfZVP/kh/Lvo
+         PGfw==
+X-Gm-Message-State: APjAAAWnaXzACTM5AEVLf/nbkKT8CLDFD2yMwR90dgfVzi8mtutkf6Vj
+        PLLOO1Grqh2jpa0qXEn2BwZZuQ==
+X-Google-Smtp-Source: APXvYqwSsZM384DjGyOiGddgXelpP+I1myG7fYhZl80TW0twsdKiPFXxteocKFLcjBtDqxFEiGh38A==
+X-Received: by 2002:a50:c984:: with SMTP id w4mr29625804edh.272.1551990527576;
+        Thu, 07 Mar 2019 12:28:47 -0800 (PST)
+Received: from [192.168.1.149] (ip-5-186-117-145.cgn.fibianet.dk. [5.186.117.145])
+        by smtp.gmail.com with ESMTPSA id d47sm1634718eda.77.2019.03.07.12.28.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 12:28:46 -0800 (PST)
+Subject: Re: [PATCH] Avoid that check_shl_overflow() triggers a compiler
+ warning when building with W=1
+To:     Kees Cook <keescook@chromium.org>,
+        Leon Romanovsky <leonro@mellanox.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+References: <20190307010153.81157-1-bvanassche@acm.org>
+ <20190307012417.GU1758@mellanox.com>
+ <8a5bd9ae-ebfe-687c-2868-d0f2a610d1e0@acm.org>
+ <20190307072428.GJ1789@mtr-leonro.mtl.com>
+ <4d90c392-5b6a-fea0-e6cf-c49ac19fdf30@acm.org>
+ <20190307154020.GN1789@mtr-leonro.mtl.com>
+ <CAGXu5jLBPpKOT-NV1P0nuFeSQYfoNY_8B0V4gcQg18xHPUVbhQ@mail.gmail.com>
+ <20190307170230.GR1789@mtr-leonro.mtl.com>
+ <CAGXu5jJDmEFA7=WuDnr0U6t9BTDFtd_WsB5HeryNKoZSaBW8oA@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <926da814-b21d-d01d-d0bb-6304bf545218@rasmusvillemoes.dk>
+Date:   Thu, 7 Mar 2019 21:28:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20180702190154.6864-1-srinivas.pandruvada@linux.intel.com>
- <9712316ab62bef25953c523bce02e260a9ea40fe.camel@linux.intel.com>
- <20180730152256.GF1206094@devbig004.ftw2.facebook.com> <bf4b860c-6f82-4a3f-8b81-5f5c93f4389e@redhat.com>
- <20180730173345.GI1206094@devbig004.ftw2.facebook.com>
-In-Reply-To: <20180730173345.GI1206094@devbig004.ftw2.facebook.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Thu, 7 Mar 2019 12:27:35 -0800
-Message-ID: <CAMHSBOVOK15nchZRFGTZUu8KSbBiK3SFzgW1amLjXb1iv_gJ5g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] ata: libahci: devslp fixes
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Tejun Heo <tj@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, alan.cox@intel.com,
-        "IDE/ATA development list" <linux-ide@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        rajatja@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAGXu5jJDmEFA7=WuDnr0U6t9BTDFtd_WsB5HeryNKoZSaBW8oA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Srinivas,
+On 07/03/2019 18.12, Kees Cook wrote:
+> On Thu, Mar 7, 2019 at 9:02 AM Leon Romanovsky <leonro@mellanox.com> wrote:
+>>
+>> On Thu, Mar 07, 2019 at 08:52:51AM -0800, Kees Cook wrote:
+>>> On Thu, Mar 7, 2019 at 7:40 AM Leon Romanovsky <leonro@mellanox.com> wrote:
+>>>>
+>>>> On Thu, Mar 07, 2019 at 06:53:54AM -0800, Bart Van Assche wrote:
+>>>>> On 3/6/19 11:24 PM, Leon Romanovsky wrote:
+>>>>>> My simple patch passes too :).
+>>>>>
+>>>>> Can you repost your patch?
+>>>>
+>>>> https://patchwork.kernel.org/patch/10841079/
+>>>>
+>>>> As Rasmus wrote, the thing is to avoid a < 0 check. In my patch,
+>>>> I converted a <= 0 to !(a > 0 || a == 0) expression.
+>>>
+>>> I'd be happy either way. Is there a larger benefit to having a safe
+>>> "is_non_negative()" helper, or should we go with the minimal change to
+>>> the shl macro?
+>>
+>> I personally prefer simplest possible solution.
 
-I am looking at problem on a laptop machine that suspends to S01x, but
-link_management is set to max_performance, because the machine is
-connected to a charger.
-Given DVLSP must be set before the laptop suspends ["""One of the
-requirement for modern x86 system to enter lowest power mode  (SLP_S0)
-is SATA IP block to be off."""], the machine never reaches S01x.
-Does it make sense to change the target_lpm_policy at suspend
-(ata_port_suspend()) to min_power and bring it back to the original
-value on resume?
+So, I played around with a few variants on godbolt.org, and it seems
+that gcc is smart enough to combine (a > 0 || a == 0) into (a >= 0) - in
+all the cases I tried Leon's patch resulted in the exact same generated
+code as the current version. Conversely, and rather surprising to me,
+Bart's patch seemed to cause worse code generation. So now I've changed
+my mind and also support Leon's version - however, I would _strongly_
+prefer if it introduced
 
-Gwendal.
+#define is_non_negative(a) (a > 0 || a == 0)
+#define is_negative(a) (!(is_non_negative(a))
 
+with appropriate comments and used that. check_shl_overflow is hard
+enough to read already.
 
-On Mon, Jul 30, 2018 at 10:33 AM Tejun Heo <tj@kernel.org> wrote:
->
-> On Mon, Jul 30, 2018 at 05:26:45PM +0200, Hans de Goede wrote:
-> > Hi,
-> >
-> > On 30-07-18 17:22, Tejun Heo wrote:
-> > >On Mon, Jul 30, 2018 at 08:15:47AM -0700, Srinivas Pandruvada wrote:
-> > >>Hi Tejan,
-> > >>
-> > >>On Mon, 2018-07-02 at 12:01 -0700, Srinivas Pandruvada wrote:
-> > >>>Some minor fixes to be able to correctly set devslp register
-> > >>>to optimize power.
-> > >>>
-> > >>>Srinivas Pandruvada (2):
-> > >>>   ata: libahci: Correct setting of DEVSLP register
-> > >>>   ata: libahci: Allow reconfigure of DEVSLP register
-> > >>>
-> > >>Are you applying this series?
-> > >
-> > >I was waiting for Hans's reviews.  Hans, what do you think?
-> >
-> > Ah I missed that this was another series. With the caveat that
-> > I do not really know that much about devslp, both patches
-> > seem sensible to me, so both are:
-> >
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
-> Applied 1-2 to libata/for-4.19.
->
-> Thanks.
->
-> --
-> tejun
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-ide" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rasmus
