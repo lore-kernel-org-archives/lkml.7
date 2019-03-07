@@ -2,175 +2,186 @@ Return-Path: <SRS0=uyI7=RK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AC8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFADC43381
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C3420851
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA1520661
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Mar 2019 17:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551980873;
+	bh=1LdIkuhKiOEs05eq+8MqY1sS/alaPXSH0UZlfhFR7eg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D4oZjSQsmXOy61KaxiJYlEOHZb83ftzQHi6kTCavbzNboAvLlOLc3BcUlW4xxUaHH
+	 JxQAeyNdG9z1LNfAGq9hklG1Flc8ZhBHPrXkDlgJzLcHr46IHnvJi1W9Xz3KeiZE5j
+	 uASI73WSoIYneGlhFIb20FfMssaznTBQ29ezXaXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfCGRqN (ORCPT
+        id S1726812AbfCGRqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 12:46:13 -0500
-Received: from foss.arm.com ([217.140.101.70]:49282 "EHLO foss.arm.com"
+        Thu, 7 Mar 2019 12:46:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfCGRqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 12:46:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 783B6EBD;
-        Thu,  7 Mar 2019 09:46:10 -0800 (PST)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED6533F575;
-        Thu,  7 Mar 2019 09:46:08 -0800 (PST)
-Subject: Re: [PATCH] irqchip: stm32: don't set rising configuration registers
- at init
-To:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-References: <1551975317-5171-1-git-send-email-fabien.dessenne@st.com>
- <6ee8e9dc-f331-7bc9-64e2-8978ab17aed1@arm.com>
- <6817f02f47b4436cb9911371f91523ba@SFHDAG5NODE3.st.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <bd9a176c-42cc-1238-0578-4c994c864151@arm.com>
-Date:   Thu, 7 Mar 2019 17:46:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726443AbfCGRqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 12:46:10 -0500
+Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 942882087C;
+        Thu,  7 Mar 2019 17:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551980770;
+        bh=1LdIkuhKiOEs05eq+8MqY1sS/alaPXSH0UZlfhFR7eg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gTxI0Ki28uLND+qZm94oJkpjFvxc669OmJwokWTlQjzy31Ly5qYzKuPK0p1o6j0F3
+         Qch9I4igKVG0x2VqjMWFIdcqLua4mHien7wsnJu+PW6OD4d+BrMhdlB9h1ckMwg8y2
+         w0bMb1qubDspuF+1jSFcRur4vbgDFM70RxaJ3wZQ=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 20/35] perf thread: Generalize function to copy from thread addr space from intel-bts code
+Date:   Thu,  7 Mar 2019 14:44:18 -0300
+Message-Id: <20190307174433.28819-21-acme@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
+References: <20190307174433.28819-1-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6817f02f47b4436cb9911371f91523ba@SFHDAG5NODE3.st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2019 17:24, Fabien DESSENNE wrote:
-> Hi
-> 
-> 
->> -----Original Message-----
->> From: Marc Zyngier <marc.zyngier@arm.com>
->> Sent: jeudi 7 mars 2019 17:40
->> To: Fabien DESSENNE <fabien.dessenne@st.com>; Thomas Gleixner
->> <tglx@linutronix.de>; Jason Cooper <jason@lakedaemon.net>; Maxime Coquelin
->> <mcoquelin.stm32@gmail.com>; Alexandre TORGUE
->> <alexandre.torgue@st.com>; linux-kernel@vger.kernel.org; linux-stm32@st-md-
->> mailman.stormreply.com; linux-arm-kernel@lists.infradead.org
->> Cc: Benjamin GAIGNARD <benjamin.gaignard@st.com>
->> Subject: Re: [PATCH] irqchip: stm32: don't set rising configuration registers at init
->>
->> On 07/03/2019 16:15, Fabien Dessenne wrote:
->>> The rising configuration status register (rtsr) is not banked.
->>> As it is shared with the co-processor, it should not be written at
->>> probe time, else the co-processor configuration will be lost.
->>>
->>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
->>
->> Fixes:?
->>
->>> ---
->>>  drivers/irqchip/irq-stm32-exti.c | 5 -----
->>>  1 file changed, 5 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-stm32-exti.c
->>> b/drivers/irqchip/irq-stm32-exti.c
->>> index 6edfd4b..ff8a84f 100644
->>> --- a/drivers/irqchip/irq-stm32-exti.c
->>> +++ b/drivers/irqchip/irq-stm32-exti.c
->>> @@ -716,7 +716,6 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct
->> stm32_exti_host_data *h_data,
->>>  	const struct stm32_exti_bank *stm32_bank;
->>>  	struct stm32_exti_chip_data *chip_data;
->>>  	void __iomem *base = h_data->base;
->>> -	u32 irqs_mask;
->>>
->>>  	stm32_bank = h_data->drv_data->exti_banks[bank_idx];
->>>  	chip_data = &h_data->chips_data[bank_idx]; @@ -725,10 +724,6 @@
->>> stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data
->>> *h_data,
->>>
->>>  	raw_spin_lock_init(&chip_data->rlock);
->>>
->>> -	/* Determine number of irqs supported */
->>> -	writel_relaxed(~0UL, base + stm32_bank->rtsr_ofst);
->>> -	irqs_mask = readl_relaxed(base + stm32_bank->rtsr_ofst);
->>> -
->>
->> And I guess you don't need to find out the number of supported IRQs?
-> 
-> That's correct, this informed is useless : irqs_mask is never used (it used to be output in a log for debug purpose.and the log has been removed)
-> 
-> 
->>
->> Also, a handful of lines down, you're writing again to the same register. Why isn't
->> that a problem?
-> 
-> It's obviously a problem : another patch is missing, I am going to add it in v2.
-> Thanks for pointing this out!
+From: Andi Kleen <ak@linux.intel.com>
 
-You are also happily writing to that register in other places via
-stm32_exti_set_bit and co. All that is done without any cooperation with
-the coprocessor (whatever that is...), so I really wonder if it all
-works by magic or luck...
+Add a utility function to fetch executable code. Convert one
+user over to it. There are more places doing that, but they
+do significantly different actions, so they are not
+easy to fit into a single library function.
 
-Thanks,
+Committer changes:
 
-	M.
+. No need to cast around, make 'buf' be a void pointer.
+
+. Rename it to thread__memcpy() to reflect the fact it is about copying
+  a chunk of memory from a thread, i.e. from its address space.
+
+. No need to have it in a separate object file, move it to thread.[ch]
+
+. Check the return of map__load(), the original code didn't do it, but
+  since we're moving this around, check that as well.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/r/20190305144758.12397-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/intel-bts.c | 20 ++------------------
+ tools/perf/util/thread.c    | 23 +++++++++++++++++++++++
+ tools/perf/util/thread.h    |  3 +++
+ 3 files changed, 28 insertions(+), 18 deletions(-)
+
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 0c0180c67574..47025bc727e1 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -328,35 +328,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
+ {
+ 	struct machine *machine = btsq->bts->machine;
+ 	struct thread *thread;
+-	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
+-	uint8_t cpumode;
++	bool x86_64;
+ 	int err = -1;
+ 
+-	if (machine__kernel_ip(machine, ip))
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
+-
+ 	thread = machine__find_thread(machine, -1, btsq->tid);
+ 	if (!thread)
+ 		return -1;
+ 
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
+-		goto out_put;
+-
+-	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
+-				  INTEL_PT_INSN_BUF_SZ);
++	len = thread__memcpy(thread, machine, buf, ip, INTEL_PT_INSN_BUF_SZ, &x86_64);
+ 	if (len <= 0)
+ 		goto out_put;
+ 
+-	/* Load maps to ensure dso->is_64_bit has been updated */
+-	map__load(al.map);
+-
+-	x86_64 = al.map->dso->is_64_bit;
+-
+ 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
+ 		goto out_put;
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 4c179fef442d..50678d318185 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -12,6 +12,7 @@
+ #include "debug.h"
+ #include "namespaces.h"
+ #include "comm.h"
++#include "map.h"
+ #include "symbol.h"
+ #include "unwind.h"
+ 
+@@ -393,3 +394,25 @@ struct thread *thread__main_thread(struct machine *machine, struct thread *threa
+ 
+ 	return machine__find_thread(machine, thread->pid_, thread->pid_);
+ }
++
++int thread__memcpy(struct thread *thread, struct machine *machine,
++		   void *buf, u64 ip, int len, bool *is64bit)
++{
++       u8 cpumode = PERF_RECORD_MISC_USER;
++       struct addr_location al;
++       long offset;
++
++       if (machine__kernel_ip(machine, ip))
++               cpumode = PERF_RECORD_MISC_KERNEL;
++
++       if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso ||
++	   al.map->dso->data.status == DSO_DATA_STATUS_ERROR ||
++	   map__load(al.map) < 0)
++               return -1;
++
++       offset = al.map->map_ip(al.map, ip);
++       if (is64bit)
++               *is64bit = al.map->dso->is_64_bit;
++
++       return dso__data_read_offset(al.map->dso, machine, offset, buf, len);
++}
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 8276ffeec556..cf8375c017a0 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -113,6 +113,9 @@ struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
+ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+ 					struct addr_location *al);
+ 
++int thread__memcpy(struct thread *thread, struct machine *machine,
++		   void *buf, u64 ip, int len, bool *is64bit);
++
+ static inline void *thread__priv(struct thread *thread)
+ {
+ 	return thread->priv;
 -- 
-Jazz is not dead. It just smells funny...
+2.20.1
+
