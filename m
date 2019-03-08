@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA3AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ABCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D6D20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA842085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049544;
-	bh=wL1lv6rd90Q6YJOcJdIhH0Q5p8dL4wVoDLgeGPtUXTY=;
+	s=default; t=1552049547;
+	bh=cRM6BpeSTI7ag/qBZlxF9Z79Q7SdsuB7woTEJnrxLg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFEPkW+0v85HeJXM353s/ywrjxxBrYZ/t5PuiGdv6kIqJIz082UzrA26YqcmzB9y4
-	 /Q/DkTMqMZM2cIAG9uj0vABDQjA3Of6utKfKhY0g7zsEm/tX/J/ta19loS/fJ3jCDO
-	 kcbQrbv5UuxEGykD4jLTg+4Hh3L4KTSazfpqSH+k=
+	b=iHQ8IKfxR5Iv093zwspl20/1R2kCmtPQxKvW1gqpV4nDUlOmKKfy10v0Kh+1Yh3d2
+	 jay7je9CkShhib2K8HGKOFmLZScC3zPCUSDMcCGTxmN72HIcoMboe4P0+L7YFVbQf7
+	 8By2VunAX2IEyXAXAjYkMyJABMGvrZUvdStk60qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfCHMwX (ORCPT
+        id S1726969AbfCHMw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:52:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55874 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:52:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbfCHMwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:19 -0500
+        id S1726947AbfCHMwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:52:22 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 366992085A;
-        Fri,  8 Mar 2019 12:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E94C12085A;
+        Fri,  8 Mar 2019 12:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049538;
-        bh=wL1lv6rd90Q6YJOcJdIhH0Q5p8dL4wVoDLgeGPtUXTY=;
+        s=default; t=1552049541;
+        bh=cRM6BpeSTI7ag/qBZlxF9Z79Q7SdsuB7woTEJnrxLg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0SJQtIzno7EwElC+HYkQHS5emrmQIlYoSRoV4mXlvvfccULEJUt0pioBPvErJwR0
-         S0raB2h9zX8YvxfEatbrn9cTIRc+Wn4ucVAcb3uvAIjQFhWjrmgiMzld4oaAl/0FaO
-         2A0mWaXrfLeKv8F1ptHDR/F3XucTFREpGiW0+L7M=
+        b=FvKZeO8vFW5Rt6lpGJkaZjGeKjXufzLYGfFCu/821xPC2LD7b4LGpenh8kfLuX71J
+         PFRLuisvpSXRnZWdpF94Jp5As7Np/I5O1kxRK+q/DevMzDyaiyIK+YWMUYoiP8ZTsB
+         o9xtHiWsulC403G5yN0cd2eYDlWYRxCDge/g2qds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
+        stable@vger.kernel.org, Balaji Manoharan <m.balaji@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.0 32/46] xhci: tegra: Prevent error pointer dereference
-Date:   Fri,  8 Mar 2019 13:50:05 +0100
-Message-Id: <20190308124904.348733379@linuxfoundation.org>
+Subject: [PATCH 5.0 33/46] usb: xhci: Fix for Enabling USB ROLE SWITCH QUIRK on INTEL_SUNRISEPOINT_LP_XHCI
+Date:   Fri,  8 Mar 2019 13:50:06 +0100
+Message-Id: <20190308124904.405344948@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -66,38 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thierry Reding <treding@nvidia.com>
+From: Balaji Manoharan <m.balaji@intel.com>
 
-commit 0326ccb5feac6eac35ba6254260e2774277cd976 upstream.
+commit 8fde481ef3674ae5ad0dbfef4df18ff507c5675a upstream.
 
-During initialization, the host and super-speed power domains will
-contain an ERR_PTR() encoded error code rather than being NULL. To
-avoid a crash, use a !IS_ERR_OR_NULL() condition during cleanup.
+This fix enables USB role feature on intel commercial nuc
+platform which is based on Kabylake chipset.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Fixes: 6494a9ad86de ("usb: xhci: tegra: Add genpd support")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Balaji Manoharan <m.balaji@intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-tegra.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-pci.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/host/xhci-tegra.c
-+++ b/drivers/usb/host/xhci-tegra.c
-@@ -941,9 +941,9 @@ static void tegra_xusb_powerdomain_remov
- 		device_link_del(tegra->genpd_dl_ss);
- 	if (tegra->genpd_dl_host)
- 		device_link_del(tegra->genpd_dl_host);
--	if (tegra->genpd_dev_ss)
-+	if (!IS_ERR_OR_NULL(tegra->genpd_dev_ss))
- 		dev_pm_domain_detach(tegra->genpd_dev_ss, true);
--	if (tegra->genpd_dev_host)
-+	if (!IS_ERR_OR_NULL(tegra->genpd_dev_host))
- 		dev_pm_domain_detach(tegra->genpd_dev_host, true);
- }
- 
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -194,6 +194,7 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
++	     pdev->device == PCI_DEVICE_ID_INTEL_SUNRISEPOINT_LP_XHCI ||
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_APL_XHCI))
+ 		xhci->quirks |= XHCI_INTEL_USB_ROLE_SW;
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
 
 
