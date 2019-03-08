@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BD4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E5EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AEE20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3749420661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050395;
-	bh=/DRdxrrOqLWWZNPQADYmdFs3nuoRP9EtlEqLq+XoIYI=;
+	s=default; t=1552050404;
+	bh=576Qzan06tzVNPFCvSX6ACXXNcQ4MgTd33Biy1CoJzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xls/cPVNYbXYFYlANtll9u5eHIgAzj6F+p82mjkFsBx+/edSIUJNzQ4UFtWNRczpC
-	 R54Andqo8J5UX2HL8lrdySC5sQ8Zy8g7X+h0PayumehcgYGfbEDgDuL5/qsR4rA/zy
-	 OE6ydNOaCqvFPJh+KF358q+tIBK89GSPCbiSku84=
+	b=Jo34vwy7N/yt9teW4cujyNrvCWaBbIu2/ebn5SsaBhAxvBL7ywyQjiBYZ31R5XaTc
+	 Kqjsx320VzBbX6arIMUzxWVO/Hcn9UANDeq+JqS93rzDy4mVAz43ELFu95z8NWn/O4
+	 T3zKM9gl6JEEJappEKQHNWlnHZXi61T88MAEM2Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfCHNGd (ORCPT
+        id S1727469AbfCHMzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:06:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:55:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfCHMzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:55:25 -0500
+        id S1727081AbfCHMzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:55:07 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08E8E2087C;
-        Fri,  8 Mar 2019 12:55:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AADCE21019;
+        Fri,  8 Mar 2019 12:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049724;
-        bh=/DRdxrrOqLWWZNPQADYmdFs3nuoRP9EtlEqLq+XoIYI=;
+        s=default; t=1552049707;
+        bh=576Qzan06tzVNPFCvSX6ACXXNcQ4MgTd33Biy1CoJzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W3UmzDKOyRhQr1WIFuvfS4Xi24KXoWASWPP3EN4OcDjbUpqDftgKWEk9/jbameJyN
-         8XFUrIZgVVC958Ki3VDUUyNT+sdvfK6KSvqhzzuTOS6OcXky0cI8V32Rns2kCi9Tq/
-         w10XEQzvbnj1xCk2ulC4cXFvaY5i2Aep3oC13gwU=
+        b=AvVjaOya6at1ezF8nHXj68Uz16Ngv6q+DKa5VT2qgRKXjdwHhKik/eJKe+UWeUwlM
+         FBc/0PH4/0oL9jGwDQL9nhNSDkyxAXsI58cecpw7drwxJTGua0CAhaPWzn1Hs7Uthl
+         /pllbpWY094Ch5xuSXGKRRp+6nOgNe5/+KopPxLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Timur Celik <mail@timurcelik.de>,
+        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 45/76] tun: fix blocking read
-Date:   Fri,  8 Mar 2019 13:49:57 +0100
-Message-Id: <20190308124916.411730174@linuxfoundation.org>
+Subject: [PATCH 4.20 31/76] geneve: correctly handle ipv6.disable module parameter
+Date:   Fri,  8 Mar 2019 13:49:43 +0100
+Message-Id: <20190308124915.917719017@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -64,42 +64,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Timur Celik <mail@timurcelik.de>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit 71828b2240692cec0e68b8d867bc00e1745e7fae ]
+[ Upstream commit cf1c9ccba7308e48a68fa77f476287d9d614e4c7 ]
 
-This patch moves setting of the current state into the loop. Otherwise
-the task may end up in a busy wait loop if none of the break conditions
-are met.
+When IPv6 is compiled but disabled at runtime, geneve_sock_add returns
+-EAFNOSUPPORT. For metadata based tunnels, this causes failure of the whole
+operation of bringing up the tunnel.
 
-Signed-off-by: Timur Celik <mail@timurcelik.de>
+Ignore failure of IPv6 socket creation for metadata based tunnels caused by
+IPv6 not being available.
+
+This is the same fix as what commit d074bf960044 ("vxlan: correctly handle
+ipv6.disable module parameter") is doing for vxlan.
+
+Note there's also commit c0a47e44c098 ("geneve: should not call rt6_lookup()
+when ipv6 was disabled") which fixes a similar issue but for regular
+tunnels, while this patch is needed for metadata based tunnels.
+
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/geneve.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -2147,9 +2147,9 @@ static void *tun_ring_recv(struct tun_fi
- 	}
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -637,15 +637,20 @@ out:
+ static int geneve_open(struct net_device *dev)
+ {
+ 	struct geneve_dev *geneve = netdev_priv(dev);
+-	bool ipv6 = !!(geneve->info.mode & IP_TUNNEL_INFO_IPV6);
+ 	bool metadata = geneve->collect_md;
++	bool ipv4, ipv6;
+ 	int ret = 0;
  
- 	add_wait_queue(&tfile->wq.wait, &wait);
--	current->state = TASK_INTERRUPTIBLE;
- 
- 	while (1) {
-+		set_current_state(TASK_INTERRUPTIBLE);
- 		ptr = ptr_ring_consume(&tfile->tx_ring);
- 		if (ptr)
- 			break;
-@@ -2165,7 +2165,7 @@ static void *tun_ring_recv(struct tun_fi
- 		schedule();
- 	}
- 
--	current->state = TASK_RUNNING;
-+	set_current_state(TASK_RUNNING);
- 	remove_wait_queue(&tfile->wq.wait, &wait);
- 
- out:
++	ipv6 = geneve->info.mode & IP_TUNNEL_INFO_IPV6 || metadata;
++	ipv4 = !ipv6 || metadata;
+ #if IS_ENABLED(CONFIG_IPV6)
+-	if (ipv6 || metadata)
++	if (ipv6) {
+ 		ret = geneve_sock_add(geneve, true);
++		if (ret < 0 && ret != -EAFNOSUPPORT)
++			ipv4 = false;
++	}
+ #endif
+-	if (!ret && (!ipv6 || metadata))
++	if (ipv4)
+ 		ret = geneve_sock_add(geneve, false);
+ 	if (ret < 0)
+ 		geneve_sock_release(geneve);
 
 
