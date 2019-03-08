@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAF4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D85CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A2D20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E832085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049853;
-	bh=oUxcCuBzt1EzjRyfck6bSWUOnqwbWETFT11/x3XfGlM=;
+	s=default; t=1552049858;
+	bh=4zExt0FtGFVFpvoLOrks5FrmI9clKEbz0lm5hmL2sz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZWccnn0d9iwwytdlQYFTHPR0+rrvxAo5wHmg5fLAlT+cNB9Wykiap8a+fx5txWfy5
-	 uDZ9t4Nmme89CeW3ewFKlZf13OXIMVnXZ/YllSrmNR0dgA6rR7MH3BG0A+M/15k502
-	 WdkQgrtZtWdu2Ilo5VDs3thdA24Ov7zDKJfUaHK8=
+	b=QqgRvg5bphTswVqlEuLbQw5YiCmT9fLTC+pfOyjoTyOgYWm/0wL3Mx876HFeoC7Yy
+	 7u/BCDZ7wlsiIYLxUG5ufdi1zmaa0/yh/LDfvNU0fKUfa1y8KPI8f1VIXC+To9Rw7P
+	 nRFkeZhOvY7cwTjuCNx+ZVmPlsGtQVVHXfgpRF84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfCHM5c (ORCPT
+        id S1727882AbfCHM5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727291AbfCHM53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:29 -0500
+        id S1727862AbfCHM5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:32 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C9A20811;
-        Fri,  8 Mar 2019 12:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9AAE20449;
+        Fri,  8 Mar 2019 12:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049847;
-        bh=oUxcCuBzt1EzjRyfck6bSWUOnqwbWETFT11/x3XfGlM=;
+        s=default; t=1552049851;
+        bh=4zExt0FtGFVFpvoLOrks5FrmI9clKEbz0lm5hmL2sz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1N75YMJ1eSy4EMAQCu8C4wibMeSyYaTsdSoEoy15S6P1XqE5HzFP44ZuhThMqZIPu
-         RUzmMwDGVAZsUrpiBVO+FoSBt63XSIshgu8T5EbWaGjJtZgRegl1lktUBvyDfKkV4f
-         h0cv+n8DpgYnyAkKhQv0kluOdQAbNjAcwl01zudE=
+        b=DXpiiZXpkO2rjgmcGMKD6/wV5yFlltHmtAyCm7ZRRBfWYxaiGuXhYG1Tk4Ry4Os/U
+         EFjeUdqW/F88N64aar7JQlpiVTUO0tD/S/LJCIAVioCfPxPuYoKiaf0teQTLn+AyXM
+         7YK2FovZCJ7AN2NbWy1t+ASaGQtxW5uOeUu9/+SA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 39/76] net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
-Date:   Fri,  8 Mar 2019 13:49:51 +0100
-Message-Id: <20190308124916.203440642@linuxfoundation.org>
+Subject: [PATCH 4.20 30/76] bnxt_en: Drop oversize TX packets to prevent errors.
+Date:   Fri,  8 Mar 2019 13:49:42 +0100
+Message-Id: <20190308124915.881118015@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -66,156 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 ]
+[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
 
-KASAN report this:
+There have been reports of oversize UDP packets being sent to the
+driver to be transmitted, causing error conditions.  The issue is
+likely caused by the dst of the SKB switching between 'lo' with
+64K MTU and the hardware device with a smaller MTU.  Patches are
+being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
+issue.
 
-BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
-Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
+In the meantime, add a quick length check in the driver to prevent
+the error.  The driver uses the TX packet size as index to look up an
+array to setup the TX BD.  The array is large enough to support all MTU
+sizes supported by the driver.  The oversize TX packet causes the
+driver to index beyond the array and put garbage values into the
+TX BD.  Add a simple check to prevent this.
 
-CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- kasan_report+0x171/0x18d mm/kasan/report.c:321
- memcpy+0x1f/0x50 mm/kasan/common.c:130
- nfc_llcp_build_gb+0x37f/0x540 [nfc]
- nfc_llcp_register_device+0x6eb/0xb50 [nfc]
- nfc_register_device+0x50/0x1d0 [nfc]
- nfcsim_device_new+0x394/0x67d [nfcsim]
- ? 0xffffffffc1080000
- nfcsim_init+0x6b/0x1000 [nfcsim]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
-
-nfc_llcp_build_tlv will return NULL on fails, caller should check it,
-otherwise will trigger a NULL dereference.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
-Fixes: d646960f7986 ("NFC: Initial LLCP support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/llcp_commands.c |   20 ++++++++++++++++++++
- net/nfc/llcp_core.c     |   24 ++++++++++++++++++++----
- 2 files changed, 40 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/nfc/llcp_commands.c
-+++ b/net/nfc/llcp_commands.c
-@@ -419,6 +419,10 @@ int nfc_llcp_send_connect(struct nfc_llc
- 						      sock->service_name,
- 						      sock->service_name_len,
- 						      &service_name_tlv_length);
-+		if (!service_name_tlv) {
-+			err = -ENOMEM;
-+			goto error_tlv;
-+		}
- 		size += service_name_tlv_length;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -497,6 +497,12 @@ normal_tx:
  	}
  
-@@ -429,9 +433,17 @@ int nfc_llcp_send_connect(struct nfc_llc
- 
- 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
- 				      &miux_tlv_length);
-+	if (!miux_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
+ 	length >>= 9;
++	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
++		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
++				     skb->len);
++		i = 0;
++		goto tx_dma_error;
 +	}
- 	size += miux_tlv_length;
+ 	flags |= bnxt_lhint_arr[length];
+ 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
  
- 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
-+	if (!rw_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += rw_tlv_length;
- 
- 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
-@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
- 
- 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
- 				      &miux_tlv_length);
-+	if (!miux_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += miux_tlv_length;
- 
- 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
-+	if (!rw_tlv) {
-+		err = -ENOMEM;
-+		goto error_tlv;
-+	}
- 	size += rw_tlv_length;
- 
- 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
---- a/net/nfc/llcp_core.c
-+++ b/net/nfc/llcp_core.c
-@@ -532,10 +532,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
- 
- static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
- {
--	u8 *gb_cur, *version_tlv, version, version_length;
--	u8 *lto_tlv, lto_length;
--	u8 *wks_tlv, wks_length;
--	u8 *miux_tlv, miux_length;
-+	u8 *gb_cur, version, version_length;
-+	u8 lto_length, wks_length, miux_length;
-+	u8 *version_tlv = NULL, *lto_tlv = NULL,
-+	   *wks_tlv = NULL, *miux_tlv = NULL;
- 	__be16 wks = cpu_to_be16(local->local_wks);
- 	u8 gb_len = 0;
- 	int ret = 0;
-@@ -543,17 +543,33 @@ static int nfc_llcp_build_gb(struct nfc_
- 	version = LLCP_VERSION_11;
- 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
- 					 1, &version_length);
-+	if (!version_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += version_length;
- 
- 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
-+	if (!lto_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += lto_length;
- 
- 	pr_debug("Local wks 0x%lx\n", local->local_wks);
- 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
-+	if (!wks_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += wks_length;
- 
- 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
- 				      &miux_length);
-+	if (!miux_tlv) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 	gb_len += miux_length;
- 
- 	gb_len += ARRAY_SIZE(llcp_magic);
 
 
