@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD41C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDBDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ED92081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4142081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ccZam//5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MiEPa9ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfCHVVM (ORCPT
+        id S1726718AbfCHVVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:21:12 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36710 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfCHVVK (ORCPT
+        Fri, 8 Mar 2019 16:21:19 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:42771 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfCHVVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:21:10 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j125so13624908wmj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:21:08 -0800 (PST)
+        Fri, 8 Mar 2019 16:21:09 -0500
+Received: by mail-wr1-f51.google.com with SMTP id r5so22802104wrg.9
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:21:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EEyzRstIdCADM4UwDA7Tr71E6kOlhMYB3Q5LdWH90L0=;
-        b=ccZam//5Ujjc4iHjRbtfWX7hOfxSWxx08p7z1vDm6LTtsRMbo7ylkfLdayL/c698eG
-         R5NjMOui3XPJlGyGyPq0H4IbpmK6hB/l8UhTy8bw0/ole05Vpi4jiBZm8ARCmTpKXsU1
-         v8G16xCNPwbN9YlhN1JuMhegUUWm/aIbl47diEBnGXcqQwtv3C1DbL7Jx3m/x/+BzkSN
-         7uwTyZiF5DlLhwyaf0o2KPKhgSsvrO8OddLd8kut6+OYLigRlitPaR+I/Zla3ETVk/Nz
-         H8uMG3VRNseIrls5UTwRPd/V+luyH5eF9PmvKZXNj8l6nxgim+8nrFuliEEm1NH8V8Mn
-         Leyw==
+        bh=gFJMY0WOgzgIBhILE7R53AVVhKFuuRS1lwFXIQdyPQ0=;
+        b=MiEPa9ly9rhL7wEcaJWsqBCN70885jx0dRT6i1Ii+/yyKY+1/CxRZueWogFrqZH0tj
+         R8yU9ISl+4xsdP+DO3ABr3JSt9MlhdDzRKg6rzw3azl/uCxXGa9EWCB5Su9DLBSBTXBT
+         4t0WcS7h3pmT8QWvJAoLea7FRLohnN9gKYlY68jxFTqvLu/MysR+yPKaxkDYW5D2KpZf
+         AzY08xX1RUiPXgcp8KwOk+me7Wm/YArSh2MtsbETnUGM1seNyIsnWLjzN59x80N4SAPv
+         5EX2P0b1B+uGKK4VFbGs1sr89x9kgrSzTRAzsSv55f8dscFOiDxiduCxqOtFqy0YdleG
+         rQ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EEyzRstIdCADM4UwDA7Tr71E6kOlhMYB3Q5LdWH90L0=;
-        b=i6M4sSyeXN+DhAV8P00ibTp1MenE9oF0AusCiMDe0PlKkIvZMnSwLVBbOA0tVZTAF7
-         BJBXPGbRPPmB/xM08kwlwVNvDLeFSphBP+J/rIANHfxCezHyLdTG+GuKPLENSPZvAqFE
-         fnFRbg10N0JEuTjfH2aV31V9ube/znuE5x9KCJHzzTCnrNn2yvoRURX1WCNQgiXFciMa
-         Tso2p7t/chqyoJdjm/R/cUeJDOwiHAb8hFJrYukMZtYJ6p5HamXJ+/b64zWkdpu6Z8b7
-         O3S3hucm4WdQIxrKfMQsxXYeTZxYyjQCOz3sBgulil70oXGxNFvYESngbFYC9r38dWJ0
-         1PsA==
-X-Gm-Message-State: APjAAAWaAHjOYH4L0ELAyoFpWEwCCzHrVL9LPkTLvp8vXJ+T1SALO4Bs
-        gD6vjOxt9Ga6ve9x8aCytzfeiF8z+o0=
-X-Google-Smtp-Source: APXvYqx93aBavAJ29Xh70JY4EMZmZVSz2r5/jcPRR9tA0zxJofTrvVDREM4jBmrNypGgObJf3sucQg==
-X-Received: by 2002:a1c:5546:: with SMTP id j67mr9915695wmb.95.1552080067580;
-        Fri, 08 Mar 2019 13:21:07 -0800 (PST)
-Received: from clegane.local (246.127.130.77.rev.sfr.net. [77.130.127.246])
-        by smtp.gmail.com with ESMTPSA id d2sm13568507wrq.94.2019.03.08.13.21.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=gFJMY0WOgzgIBhILE7R53AVVhKFuuRS1lwFXIQdyPQ0=;
+        b=oDBv8D+0ljPdLqjURwvhonPlqPuHiNhsYgs+iZjfX8tvaO6MykkfVfkKUDoibpJimI
+         MKYP0nqwHCtBzU9yABmfB0tcQBYhiT2WRu++vbEz4r8VzoJ2kgXJUaQHatnimONvLg8z
+         u1g53JdOvujtGh9WyAnZz9/gi4kfHy9t5On79Fbo4S9/5W7URwshw5f+rr2m2i7Z3iLV
+         iYIt1rvK/fL6C/xyDEIniaEcm8b+J76ehoI8sthZxvPwAw2vXkp8Z7978Kje+Iroigqb
+         5W1QkWM4phhsiTP32xepoJMfvfd3o0HFDPYOEx2oVY4bn32+Pf/l2Y3oc6G/ZFzfNo6A
+         oNfg==
+X-Gm-Message-State: APjAAAWLThdR/jPX0j8dzs+jj8MOqGyKOOi9r5PBEhKJkL5UEy66nn5G
+        yX2HGXw3kv83uTOVxy71ptxs+A==
+X-Google-Smtp-Source: APXvYqwljAxyM9X75eaE1vlF4Rf7n8ikonPyoAwIT5ePZ6643NUA//wxfG/xfeqG2YRj5EVPQ0J1iA==
+X-Received: by 2002:adf:e548:: with SMTP id z8mr12774066wrm.52.1552080066096;
         Fri, 08 Mar 2019 13:21:06 -0800 (PST)
+Received: from clegane.local (246.127.130.77.rev.sfr.net. [77.130.127.246])
+        by smtp.gmail.com with ESMTPSA id d2sm13568507wrq.94.2019.03.08.13.21.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 13:21:05 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     rjw@rjwysocki.net, tglx@linutronix.de
 Cc:     ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] cpuidle/drivers/mbed: Add new governor for embedded systems
-Date:   Fri,  8 Mar 2019 22:20:47 +0100
-Message-Id: <20190308212047.28767-4-daniel.lezcano@linaro.org>
+Subject: [PATCH 2/3] genirq/timings: Add array suffix computation code
+Date:   Fri,  8 Mar 2019 22:20:46 +0100
+Message-Id: <20190308212047.28767-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190308212047.28767-1-daniel.lezcano@linaro.org>
 References: <20190308212047.28767-1-daniel.lezcano@linaro.org>
@@ -70,129 +70,303 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The objective is the same for all the governors: save energy, but at
-the end the governors menu, ladder and teo aim to improve the
-performances with an acceptable energy drop for some workloads which
-are identified for servers and desktops (with the help of a firmware).
+The previous variance was discarding values from the timings when they
+were considered as anomalies as stated by the normal law statistical
+model.
 
-It is very difficult to do changes in these governors for embedded
-systems without impacting performances on servers/desktops or ruin the
-optimizations for the workloads on these platforms.
+However in the interrupt life, we can have multiple anomalies due to
+the nature of the device generating the interrupts, and most of the
+time we can observe a repeating pattern, that is particulary true for
+network, console, MMC or SSD devices.
 
-The mbed governor is a new governor targeting embedded systems
-running on battery where the energy saving has a higher priority than
-servers or desktops. This governor aims to save energy as much as
-possible but accepting a performance degradation.
+With the variance approach, we miss the patterns and we can only deal with the
+interrupt coming in regular intervals.
 
-In this way, we can optimize the governor for specific mobile workload
-and more generally embedded systems without impacting other platforms.
-
-The governor is based on the irq timings where we predict the next
-interrupt occurrences on the current CPU and the next timer. It is
-well suited for mobile and more generally embedded systems where the
-interrupts are usually pinned on one CPU and where the power is more
-important than the performances.
-
-The multimedia applications on the embedded system spawns several
-threads which are migrated across the different CPUs and waking
-between them up. In order to catch this situation we have also to
-track the idle task rescheduling duration with a relative degree of
-confidence as the scheduler is involved in the task migrations. The
-resched information is in the scope of the governor via the reflect
-callback.
-
-The governor begins with a clean foundation basing the prediction on
-the irq behavior returned by the irq timings, the timers and the idle
-task rescheduling. The advantage of the approach is we have a full
-view of the wakeup sources as we identify them separately and then we
-can control the situation without relying on biased heuristics.
-
-Despite the naive idle state selection for this first iteration, the
-governor provides a performance improvement of 30% for Jankbench
-throughout for the same amount of energy than the menu governor and a
-similar energy saving for other workloads. There are areas of
-improvement for the different workloads which will be optimized
-iteratively with non-regression testing for previous identified
-workloads on an Android reference platform.
+After a long investigation, this patch provides the array suffixes
+derived algorithm where we can detect regular and repeating patterns
+interrupt events.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/cpuidle/Kconfig            |  11 ++-
- drivers/cpuidle/governors/Makefile |   1 +
- drivers/cpuidle/governors/mbed.c   | 143 +++++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+), 1 deletion(-)
- create mode 100644 drivers/cpuidle/governors/mbed.c
+ kernel/irq/timings.c | 432 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 427 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index 8caccbbd7353..6fef94c9bde0 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -4,7 +4,7 @@ config CPU_IDLE
- 	bool "CPU idle PM support"
- 	default y if ACPI || PPC_PSERIES
- 	select CPU_IDLE_GOV_LADDER if (!NO_HZ && !NO_HZ_IDLE)
--	select CPU_IDLE_GOV_MENU if (NO_HZ || NO_HZ_IDLE) && !CPU_IDLE_GOV_TEO
-+	select CPU_IDLE_GOV_MENU if (NO_HZ || NO_HZ_IDLE) && !CPU_IDLE_GOV_TEO && !CPU_IDLE_GOV_MBED
- 	help
- 	  CPU idle is a generic framework for supporting software-controlled
- 	  idle processor power management.  It includes modular cross-platform
-@@ -32,6 +32,15 @@ config CPU_IDLE_GOV_TEO
- 	  Some workloads benefit from using it and it generally should be safe
- 	  to use.  Say Y here if you are not happy with the alternatives.
+diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
+index 3cde046a2bc8..f88465563bd8 100644
+--- a/kernel/irq/timings.c
++++ b/kernel/irq/timings.c
+@@ -8,6 +8,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/idr.h>
+ #include <linux/irq.h>
++#include <linux/math64.h>
++#include <linux/log2.h>
  
-+config CPU_IDLE_GOV_MBED
-+	bool "Embedded governor"
-+	select IRQ_TIMINGS
-+	help
-+	  The embedded governor is based on irq timings measurements and
-+	  pattern research combined with the next timer. This governor
-+	  suits very well on embedded systems where the interrupts are
-+	  grouped on a single core and the power is the priority.
-+
- config DT_IDLE_STATES
- 	bool
+ #include <trace/events/irq.h>
  
-diff --git a/drivers/cpuidle/governors/Makefile b/drivers/cpuidle/governors/Makefile
-index 4d8aff5248a8..d4571935575c 100644
---- a/drivers/cpuidle/governors/Makefile
-+++ b/drivers/cpuidle/governors/Makefile
-@@ -5,3 +5,4 @@
- obj-$(CONFIG_CPU_IDLE_GOV_LADDER) += ladder.o
- obj-$(CONFIG_CPU_IDLE_GOV_MENU) += menu.o
- obj-$(CONFIG_CPU_IDLE_GOV_TEO) += teo.o
-+obj-$(CONFIG_CPU_IDLE_GOV_MBED) += mbed.o
-diff --git a/drivers/cpuidle/governors/mbed.c b/drivers/cpuidle/governors/mbed.c
-new file mode 100644
-index 000000000000..8d8c8ba92533
---- /dev/null
-+++ b/drivers/cpuidle/governors/mbed.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -17,10 +19,6 @@ DEFINE_STATIC_KEY_FALSE(irq_timing_enabled);
+ 
+ DEFINE_PER_CPU(struct irq_timings, irq_timings);
+ 
+-struct irqt_stat {
+-	u64     next_evt;
+-};
+-
+ static DEFINE_IDR(irqt_stats);
+ 
+ void irq_timings_enable(void)
+@@ -33,6 +31,381 @@ void irq_timings_disable(void)
+ 	static_branch_disable(&irq_timing_enabled);
+ }
+ 
 +/*
-+ * Copyright (C) 2019, Linaro Ltd
-+ * Author: Daniel Lezcano <daniel.lezcano@linaro.org>
++ * The main goal of this algorithm is to predict the next interrupt
++ * occurrence on the current CPU.
++ *
++ * Currently, the interrupt timings are stored in a circular array
++ * buffer every time there is an interrupt, as a tuple: the interrupt
++ * number and the associated timestamp when the event occurred <irq,
++ * timestamp>.
++ *
++ * For every interrupt occurring in a short period of time, we can
++ * measure the elapsed time between the occurrences for the same
++ * interrupt and we end up with a suite of intervals. The experience
++ * showed the interrupts are often coming following a periodic
++ * pattern.
++ *
++ * The objective of the algorithm is to find out this periodic pattern
++ * in a fastest way and use its period to predict the next irq event.
++ *
++ * When the next interrupt event is requested, we are in the situation
++ * where the interrupts are disabled and the circular buffer
++ * containing the timings is filled with the events which happened
++ * after the previous next-interrupt-event request.
++ *
++ * At this point, we read the circular buffer and we fill the irq
++ * related statistics structure. After this step, the circular array
++ * containing the timings is empty because all the values are
++ * dispatched in their corresponding buffers.
++ *
++ * Now for each interrupt, we can predict the next event by using the
++ * suffix array, log interval and exponential moving average
++ *
++ * 1. Suffix array
++ *
++ * Suffix array is an array of all the suffixes of a string. It is
++ * widely used as a data structure for compression, text search, ...
++ * For instance for the word 'banana', the suffixes will be: 'banana'
++ * 'anana' 'nana' 'ana' 'na' 'a'
++ *
++ * Usually, the suffix array is sorted but for our purpose it is
++ * not necessary and won't provide any improvement in the context of
++ * the solved problem where we clearly define the boundaries of the
++ * search by a max period and min period.
++ *
++ * The suffix array will build a suite of intervals of different
++ * length and will look for the repetition of each suite. If the suite
++ * is repeating then we have the period because it is the length of
++ * the suite whatever its position in the buffer.
++ *
++ * 2. Log interval
++ *
++ * We saw the irq timings allow to compute the interval of the
++ * occurrences for a specific interrupt. We can reasonibly assume the
++ * longer is the interval, the higher is the error for the next event
++ * and we can consider storing those interval values into an array
++ * where each slot in the array correspond to an interval at the power
++ * of 2 of the index. For example, index 12 will contain values
++ * between 2^11 and 2^12.
++ *
++ * At the end we have an array of values where at each index defines a
++ * [2^index - 1, 2 ^ index] interval values allowing to store a large
++ * number of values inside a small array.
++ *
++ * For example, if we have the value 1123, then we store it at
++ * ilog2(1123) = 10 index value.
++ *
++ * Storing those value at the specific index is done by computing an
++ * exponential moving average for this specific slot. For instance,
++ * for values 1800, 1123, 1453, ... fall under the same slot (10) and
++ * the exponential moving average is computed every time a new value
++ * is stored at this slot.
++ *
++ * 3. Exponential Moving Average
++ *
++ * The EMA is largely used to track a signal for stocks or as a low
++ * pass filter. The magic of the formula, is it is very simple and the
++ * reactivity of the average can be tuned with the factors called
++ * alpha.
++ *
++ * The higher the alphas are, the faster the average respond to the
++ * signal change. In our case, if a slot in the array is a big
++ * interval, we can have numbers with a big difference between
++ * them. The impact of those differences in the average computation
++ * can be tuned by changing the alpha value.
++ *
++ *
++ *  -- The algorithm --
++ *
++ * We saw the different processing above, now let's see how they are
++ * used together.
++ *
++ * For each interrupt:
++ *	For each interval:
++ *		Compute the index = ilog2(interval)
++ *		Compute a new_ema(buffer[index], interval)
++ *		Store the index in a circular buffer
++ *
++ *	Compute the suffix array of the indexes
++ *
++ *	For each suffix:
++ *		If the suffix is reverse-found 3 times
++ *			Return suffix
++ *
++ *	Return Not found
++ *
++ * However we can not have endless suffix array to be build, it won't
++ * make sense and it will add an extra overhead, so we can restrict
++ * this to a maximum suffix length of 5 and a minimum suffix length of
++ * 2. The experience showed 5 is the majority of the maximum pattern
++ * period found for different devices.
++ *
++ * The result is a pattern finding less than 1us for an interrupt.
++ *
++ * Example based on real values:
++ *
++ * Example 1 : MMC write/read interrupt interval:
++ *
++ *	223947, 1240, 1384, 1386, 1386,
++ *	217416, 1236, 1384, 1386, 1387,
++ *	214719, 1241, 1386, 1387, 1384,
++ *	213696, 1234, 1384, 1386, 1388,
++ *	219904, 1240, 1385, 1389, 1385,
++ *	212240, 1240, 1386, 1386, 1386,
++ *	214415, 1236, 1384, 1386, 1387,
++ *	214276, 1234, 1384, 1388, ?
++ *
++ * For each element, apply ilog2(value)
++ *
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, ?
++ *
++ * Max period of 5, we take the last (max_period * 3) 15 elements as
++ * we can be confident if the pattern repeats itself three times it is
++ * a repeating pattern.
++ *
++ *	             8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, ?
++ *
++ * Suffixes are:
++ *
++ *  1) 8, 15, 8, 8, 8  <- max period
++ *  2) 8, 15, 8, 8
++ *  3) 8, 15, 8
++ *  4) 8, 15
++ *
++ * From there we search the repeating pattern for each suffix.
++ *
++ * buffer: 8, 15, 8, 8, 8, 8, 15, 8, 8, 8, 8, 15, 8, 8, 8
++ *         |   |  |  |  |  |   |  |  |  |  |   |  |  |  |
++ *         8, 15, 8, 8, 8  |   |  |  |  |  |   |  |  |  |
++ *                         8, 15, 8, 8, 8  |   |  |  |  |
++ *                                         8, 15, 8, 8, 8
++ *
++ * When moving the suffix, we found exactly 3 matches.
++ *
++ * The first suffix with period 5 is repeating.
++ *
++ * The next event is (3 * max_period) % suffix_period
++ *
++ * In this example, the result 0, so the next event is suffix[0] => 8
++ *
++ * However, 8 is the index in the array of exponential moving average
++ * which was calculated on the fly when storing the values, so the
++ * interval is ema[8] = 1366
++ *
++ *
++ * Example 2:
++ *
++ *	4, 3, 5, 100,
++ *	3, 3, 5, 117,
++ *	4, 4, 5, 112,
++ *	4, 3, 4, 110,
++ *	3, 5, 3, 117,
++ *	4, 4, 5, 112,
++ *	4, 3, 4, 110,
++ *	3, 4, 5, 112,
++ *	4, 3, 4, 110
++ *
++ * ilog2
++ *
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4
++ *
++ * Max period 5:
++ *	   0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4
++ *
++ * Suffixes:
++ *
++ *  1) 0, 0, 4, 0, 0
++ *  2) 0, 0, 4, 0
++ *  3) 0, 0, 4
++ *  4) 0, 0
++ *
++ * buffer: 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4
++ *         |  |  |  |  |  |  X
++ *         0, 0, 4, 0, 0, |  X
++ *                        0, 0
++ *
++ * buffer: 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4
++ *         |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
++ *         0, 0, 4, 0, |  |  |  |  |  |  |  |  |  |  |
++ *                     0, 0, 4, 0, |  |  |  |  |  |  |
++ *                                 0, 0, 4, 0, |  |  |
++ *                                             0  0  4
++ *
++ * Pattern is found 3 times, the remaining is 1 which results from
++ * (max_period * 3) % suffix_period. This value is the index in the
++ * suffix arrays. The suffix array for a period 4 has the value 4
++ * at index 1.
 + */
-+#include <linux/cpuidle.h>
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/slab.h>
-+#include <linux/tick.h>
-+#include <linux/interrupt.h>
-+#include <linux/sched/clock.h>
-+
-+struct mbed_device {
-+	u64 idle_ema_avg;
-+	u64 idle_total;
-+	unsigned long last_jiffies;
-+};
-+
 +#define EMA_ALPHA_VAL		64
 +#define EMA_ALPHA_SHIFT		7
-+#define MAX_RESCHED_INTERVAL_MS	100
 +
-+static DEFINE_PER_CPU(struct mbed_device, mbed_devices);
++#define PREDICTION_PERIOD_MIN	2
++#define PREDICTION_PERIOD_MAX	5
++#define PREDICTION_FACTOR	4
++#define PREDICTION_MAX		10 /* 2 ^ PREDICTION_MAX useconds */
++#define PREDICTION_BUFFER_SIZE	16 /* slots for EMAs, hardly more than 16 */
 +
-+static int mbed_ema_new(s64 value, s64 ema_old)
++struct irqt_stat {
++	u64	last_ts;
++	int	ema_time[PREDICTION_BUFFER_SIZE];
++	int	timings[IRQ_TIMINGS_SIZE];
++	int	circ_timings[IRQ_TIMINGS_SIZE];
++	int	count;
++};
++
++/*
++ * Exponential moving average computation
++ */
++static int irq_timings_ema_new(s64 value, s64 ema_old)
 +{
 +	if (likely(ema_old))
 +		return ema_old + (((value - ema_old) * EMA_ALPHA_VAL) >>
@@ -200,116 +374,194 @@ index 000000000000..8d8c8ba92533
 +	return value;
 +}
 +
-+static void mbed_reflect(struct cpuidle_device *dev, int index)
++static int irq_timings_next_event_index(int *buffer, size_t len, int period_max)
 +{
-+        struct mbed_device *mbed_dev = this_cpu_ptr(&mbed_devices);
++	int i;
 +
-+	/*
-+	 * The idle task was not rescheduled since
-+	 * MAX_RESCHED_INTERVAL_MS, let's consider the duration is
-+	 * long enough to clear our stats.
-+	 */
-+	if (time_after(jiffies, mbed_dev->last_jiffies +
-+		       msecs_to_jiffies(MAX_RESCHED_INTERVAL_MS)))
-+		mbed_dev->idle_ema_avg = 0;
++	for (i = period_max; i >= PREDICTION_PERIOD_MIN ; i--) {
 +
-+	/*
-+	 * Sum all the residencies in order to compute the total
-+	 * duration of the idle task.
-+	 */
-+	mbed_dev->idle_total += dev->last_residency;
++		int *begin = &buffer[len - (i * 3)];
++		int *ptr = begin;
 +
-+	/*
-+	 * We exited the idle state with the need_resched() flag, the
-+	 * idle task will be rescheduled, so store the duration the
-+	 * idle task was scheduled in an exponential moving average and
-+	 * reset the total of the idle duration.
-+	 */
-+	if (need_resched()) {
-+		mbed_dev->idle_ema_avg = mbed_ema_new(mbed_dev->idle_total,
-+						      mbed_dev->idle_ema_avg);
-+		mbed_dev->idle_total = 0;
-+		mbed_dev->last_jiffies = jiffies;
-+	}
-+}
-+
-+static int mbed_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
-+		       bool *stop_tick)
-+{
-+        struct mbed_device *mbed_dev = this_cpu_ptr(&mbed_devices);
-+	int latency_req = cpuidle_governor_latency_req(dev->cpu);
-+	int i, index = 0;
-+	ktime_t delta_next;
-+	u64 now, irq_length, timer_length;
-+	u64 idle_duration_us;
-+
-+	/*
-+	 * Get the present time as reference for the next steps
-+	 */
-+	now = local_clock();
-+
-+	/*
-+	 * Get the next interrupt event giving the 'now' as a
-+	 * reference, if the next event appears to have already
-+	 * expired then we get the 'now' returned which ends up with a
-+	 * zero duration.
-+	 */
-+	irq_length = irq_timings_next_event(now) - now;
-+
-+	/*
-+	 * Get the timer duration before expiration.
-+	 */
-+	timer_length = ktime_to_ns(tick_nohz_get_sleep_length(&delta_next));
-+
-+	/*
-+	 * Get the smallest duration between the timer and the irq next event.
-+	 */
-+	idle_duration_us = min_t(u64, irq_length, timer_length) / NSEC_PER_USEC;
-+
-+	/*
-+	 * Get the idle task duration average if the information is
-+	 * available.
-+	 */
-+	if (mbed_dev->idle_ema_avg)
-+		idle_duration_us = min_t(u64, idle_duration_us,
-+					 mbed_dev->idle_ema_avg);
-+
-+	for (i = 0; i < drv->state_count; i++) {
-+		struct cpuidle_state *s = &drv->states[i];
-+		struct cpuidle_state_usage *su = &dev->states_usage[i];
-+
-+		if (s->disabled || su->disable)
-+			continue;
-+
-+		if (s->exit_latency > latency_req)
-+			break;
-+
-+		if (s->target_residency > idle_duration_us)
-+			break;
-+
-+		index = i;
++		while (!memcmp(ptr, begin, i * sizeof(*ptr))) {
++			ptr += i;
++			if (ptr >= &buffer[len])
++				return begin[((i * 3) % i)];
++		}
 +	}
 +
-+	if (!index)
-+		*stop_tick = false;
-+
-+	return index;
++	return -1;
 +}
 +
-+static struct cpuidle_governor mbed_governor = {
-+	.name =		"mbed",
-+	.rating =	20,
-+	.select =	mbed_select,
-+	.reflect =	mbed_reflect,
-+};
-+
-+static int __init init_governor(void)
++static u64 __irq_timings_next_event(struct irqt_stat *irqs, int irq, u64 now)
 +{
-+	irq_timings_enable();
-+	return cpuidle_register_governor(&mbed_governor);
++	int index, i;
++	int period_max;
++	int count, start;
++	int min = INT_MAX;
++
++	if ((now - irqs->last_ts) >= NSEC_PER_SEC) {
++		irqs->count = irqs->last_ts = 0;
++		return U64_MAX;
++	}
++
++	period_max = irqs->count > (3 * PREDICTION_PERIOD_MAX) ?
++		PREDICTION_PERIOD_MAX : irqs->count / 3;
++
++	if (period_max <= PREDICTION_PERIOD_MIN)
++		return U64_MAX;
++
++	/*
++	 * 'count' will depends if the circular buffer wrapped or not
++	 */
++	count = irqs->count < IRQ_TIMINGS_SIZE ?
++		irqs->count : IRQ_TIMINGS_SIZE;
++
++	start = irqs->count < IRQ_TIMINGS_SIZE ?
++		0 : (irqs->count & IRQ_TIMINGS_MASK);
++
++	/*
++	 * Copy the content of the circular buffer into another buffer
++	 * in order to linearize the buffer instead of dealing with
++	 * wrapping indexes and shifted array which will be prone to
++	 * error and extremelly difficult to debug.
++	 */
++	for (i = 0; i < count; i++) {
++		irqs->timings[i] = irqs->circ_timings[(start + i) &
++						      IRQ_TIMINGS_MASK];
++		min = min_t(int, irqs->timings[i], min);
++	}
++
++	index = irq_timings_next_event_index(irqs->timings, count, period_max);
++	if (index < 0)
++		return irqs->last_ts + min;
++
++	return irqs->last_ts + irqs->ema_time[index];
 +}
 +
-+postcore_initcall(init_governor);
++static inline void irq_timings_store(int irq, struct irqt_stat *irqs, u64 ts)
++{
++	u64 old_ts = irqs->last_ts;
++	u64 interval;
++	int index;
++
++	/*
++	 * The timestamps are absolute time values, we need to compute
++	 * the timing interval between two interrupts.
++	 */
++	irqs->last_ts = ts;
++
++	/*
++	 * The interval type is u64 in order to deal with the same
++	 * type in our computation, that prevent mindfuck issues with
++	 * overflow, sign and division.
++	 */
++	interval = ts - old_ts;
++
++	/*
++	 * The interrupt triggered more than one second apart, that
++	 * ends the sequence as predictible for our purpose. In this
++	 * case, assume we have the beginning of a sequence and the
++	 * timestamp is the first value. As it is impossible to
++	 * predict anything at this point, return.
++	 *
++	 * Note the first timestamp of the sequence will always fall
++	 * in this test because the old_ts is zero. That is what we
++	 * want as we need another timestamp to compute an interval.
++	 */
++	if (interval >= NSEC_PER_SEC) {
++		irqs->count = 0;
++		return;
++	}
++
++	/*
++	 * Get the index in the ema table for this interrupt. The
++	 * PREDICTION_FACTOR increase the interval size for the array
++	 * of exponential average.
++	 */
++	index = likely(interval) ?
++		ilog2((interval >> 10) / PREDICTION_FACTOR) : 0;
++
++	/*
++	 * Store the index as an element of the pattern in another
++	 * circular array.
++	 */
++	irqs->circ_timings[irqs->count & IRQ_TIMINGS_MASK] = index;
++
++	irqs->ema_time[index] = irq_timings_ema_new(interval,
++						    irqs->ema_time[index]);
++
++	irqs->count++;
++}
++
+ /**
+  * irq_timings_next_event - Return when the next event is supposed to arrive
+  *
+@@ -61,6 +434,12 @@ void irq_timings_disable(void)
+  */
+ u64 irq_timings_next_event(u64 now)
+ {
++	struct irq_timings *irqts = this_cpu_ptr(&irq_timings);
++	struct irqt_stat *irqs;
++	struct irqt_stat __percpu *s;
++	u64 ts, next_evt = U64_MAX;
++	int i, irq = 0;
++
+ 	/*
+ 	 * This function must be called with the local irq disabled in
+ 	 * order to prevent the timings circular buffer to be updated
+@@ -68,7 +447,50 @@ u64 irq_timings_next_event(u64 now)
+ 	 */
+ 	lockdep_assert_irqs_disabled();
+ 
+-	return 0;
++	if (!irqts->count)
++		return next_evt;
++
++	/*
++	 * Number of elements in the circular buffer: If it happens it
++	 * was flushed before, then the number of elements could be
++	 * smaller than IRQ_TIMINGS_SIZE, so the count is used,
++	 * otherwise the array size is used as we wrapped. The index
++	 * begins from zero when we did not wrap. That could be done
++	 * in a nicer way with the proper circular array structure
++	 * type but with the cost of extra computation in the
++	 * interrupt handler hot path. We choose efficiency.
++	 *
++	 * Inject measured irq/timestamp to the pattern prediction
++	 * model while decrementing the counter because we consume the
++	 * data from our circular buffer.
++	 */
++	for (i = (irqts->count & IRQ_TIMINGS_MASK) - 1,
++		     irqts->count = min(IRQ_TIMINGS_SIZE, irqts->count);
++	     irqts->count > 0; irqts->count--, i = (i + 1) & IRQ_TIMINGS_MASK) {
++
++		irq = irq_timing_decode(irqts->values[i], &ts);
++		s = idr_find(&irqt_stats, irq);
++		if (s)
++			irq_timings_store(irq, this_cpu_ptr(s), ts);
++	}
++
++	/*
++	 * Look in the list of interrupts' statistics, the earliest
++	 * next event.
++	 */
++	idr_for_each_entry(&irqt_stats, s, i) {
++
++		irqs = this_cpu_ptr(s);
++
++		ts = __irq_timings_next_event(irqs, i, now);
++		if (ts <= now)
++			return now;
++
++		if (ts < next_evt)
++			next_evt = ts;
++	}
++
++	return next_evt;
+ }
+ 
+ void irq_timings_free(int irq)
 -- 
 2.17.1
 
