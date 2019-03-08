@@ -2,124 +2,115 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A0C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C28C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A9220854
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:02:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qc6yfexM"
+	by mail.kernel.org (Postfix) with ESMTP id E17722081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfCHECw (ORCPT
+        id S1726348AbfCHEFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 23:02:52 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40147 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfCHECv (ORCPT
+        Thu, 7 Mar 2019 23:05:30 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:59512 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCHEF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 23:02:51 -0500
-Received: by mail-ed1-f68.google.com with SMTP id 10so15305764eds.7;
-        Thu, 07 Mar 2019 20:02:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mSUWPDkLCMVP3WJ97ekDdUYsu5f2Sgo2jFY9E7ZYMaQ=;
-        b=qc6yfexMtIIcmudMi7dXFk9Rbj7ISAqmEW2FTPhIWF9g2kMK13JK+VyYUsVoc7PsxL
-         fTItgYtUv1YVo4uEyA/07pDfzVlghrms703ZMGU3ee7sgTugUmEN9Jk5Q3vcNw1Otwlc
-         G0z9akZYVxgJ6y2sFrQETUImGtLE6CflvhIuS2EIffZaszGr11rviEXEXog6+uz89dzZ
-         NOVJf0SQnMdsIeNhENPtzFnfSendWhLIElgiLJQCtVQ6UrMHUo3xO6gE/znw4y8tUnwK
-         5M2WJK5M8rzOIZYezSespJjDTw1O7YT6xAB4TdFbyLM82IbHbscxyqsT6TP31dkF0dfV
-         BxTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mSUWPDkLCMVP3WJ97ekDdUYsu5f2Sgo2jFY9E7ZYMaQ=;
-        b=tAEwAwL68p/dtXwfTkcv7Vw9ofAmVu3QCTx4eOnDxRZRC33pJ+sncFjayjXtN0rTcL
-         k5mBvZYx+62Zspfzo6SrDfYWQECQwBQ5ZY7+rj4kqBjoomQSItuR9RT3kglg0SCBJPuK
-         RphgdFEjCdmGfhEo5GORQDT6X0Soostxjnah5TGuC5WjqSUYyp0YndFmeLiiyb9dTrPT
-         ca+kcShZc2Xs59OvxfdpObnzbHEv4qEl5hNoXbpnX6c6PAf9lzd0VysblbMCUN/rt/L2
-         mpasHH1AECxTmLYzgrsMej29/30F4DlnYva/vicJnzsvcyg+FR6LhuW+znm6v9BX5iuN
-         TQ8Q==
-X-Gm-Message-State: APjAAAVEHo5Loy3qJvhPMICsJYfgDNvNsOkZlHTQwlS3go6f/peihq55
-        XhLp/dqWVeT3arqfBLYVuTo=
-X-Google-Smtp-Source: APXvYqxirboss2GDcOk2fMGEMYjCv52n6JtNGRIrevzS0YeyOY9kIPA7Ftebb5nhGik6XLjBamrLKw==
-X-Received: by 2002:aa7:d444:: with SMTP id q4mr31591342edr.278.1552017769430;
-        Thu, 07 Mar 2019 20:02:49 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id x18sm1895395edd.4.2019.03.07.20.02.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 20:02:48 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH] net: stmmac: Avoid one more sometimes uninitialized Clang warning
-Date:   Thu,  7 Mar 2019 21:02:39 -0700
-Message-Id: <20190308040239.9400-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190307162101.29204-1-natechancellor@gmail.com>
-References: <20190307162101.29204-1-natechancellor@gmail.com>
+        Thu, 7 Mar 2019 23:05:29 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1h26l0-0000gS-F1; Fri, 08 Mar 2019 05:05:14 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 20/25] serial: 8250: implement write_atomic
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+        <20190212143003.48446-21-john.ogness@linutronix.de>
+        <20190227094655.ecdwhsc2bf5spkqx@pathway.suse.cz>
+        <87zhqhed3u.fsf@linutronix.de>
+        <20190227135504.gqtcsdwpy4rd7xvs@pathway.suse.cz>
+Date:   Fri, 08 Mar 2019 05:05:12 +0100
+In-Reply-To: <20190227135504.gqtcsdwpy4rd7xvs@pathway.suse.cz> (Petr Mladek's
+        message of "Wed, 27 Feb 2019 14:55:04 +0100")
+Message-ID: <87a7i6ovt3.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
+On 2019-02-27, Petr Mladek <pmladek@suse.com> wrote:
+>>>> Implement a non-sleeping NMI-safe write_atomic console function in
+>>>> order to support emergency printk messages.
+>>>
+>>> OK, it would be safe when prb_lock() is the only lock taken
+>>> in the NMI handler.
+>> 
+>> Which is the case. As I wrote to you already [0], NMI contexts are
+>> _never_ allowed to do things that rely on waiting forever for other
+>> CPUs.
+>
+> Who says _never_? I agree that it is not reasonable. But the
+> history shows that it happens.
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
-'ns' is used uninitialized whenever 'if' condition is false
-[-Werror,-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
-'ns' is used uninitialized whenever '&&' condition is false
-[-Werror,-Wsometimes-uninitialized]
+Right, which is why it would need to become policy.
 
-Clang is concerned with the use of stmmac_do_void_callback (which
-stmmac_get_systime wraps), as it may fail to initialize these values if
-the if condition was ever false (meaning the callback doesn't exist).
-It's not wrong because the callback is what initializes ns. While it's
-unlikely that the callback is going to disappear at some point and make
-that condition false, we can easily avoid this warning by zero
-initializing the variable.
+The emergency messages (aka write_atomic) introduce a new requirement to
+the kernel because this callback must be callable from any context. The
+console drivers must have some way of synchronizing. The CPU-reentrant
+spin lock is the only solution I am aware of.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/384
-Fixes: df103170854e ("net: stmmac: Avoid sometimes uninitialized Clang warnings")
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> In principle, there is nothing wrong in using spinlock in NMI
+> when it is used only in NMI.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index 2293e21f789f..cc60b3fb0892 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -105,7 +105,7 @@ static int stmmac_get_time(struct ptp_clock_info *ptp, struct timespec64 *ts)
- 	struct stmmac_priv *priv =
- 	    container_of(ptp, struct stmmac_priv, ptp_clock_ops);
- 	unsigned long flags;
--	u64 ns;
-+	u64 ns = 0;
- 
- 	spin_lock_irqsave(&priv->ptp_lock, flags);
- 	stmmac_get_systime(priv, priv->ptpaddr, &ns);
--- 
-2.21.0
+The CPU-reentrant spin lock _will_ be used in NMI context and
+potentially could be used from any line of NMI code (if, for example, a
+panic is triggered). The problem is when you have 2 different spin locks
+in NMI context and their ordering cannot be guaranteed. And since I am
+introducing an implicit spin lock that potentially could be locked from
+any line of code, any explicit use of a spin lock in NMI could would
+really be adding a 2nd spin lock and thus deadlock potential.
 
+If the ringbuffer was fully lockless, we should be able to have
+per-console CPU-reentrant spin locks as long as the ordering is
+preserved, which I expect shouldn't be a problem. If any NMI context
+needed a spin lock for its own purposes, it would need to use the
+CPU-reentrant spin lock of the first console so as to preserve the
+ordering in case of a panic.
+
+>>>    2. I am afraid that we need to add some locking between CPUs
+>>>       to avoid mixing characters from directly printed messages.
+>> 
+>> That is exactly what console_atomic_lock() (actually prb_lock) is!
+>
+> Sure. But it should not be a common lock for the ring buffer and
+> all consoles.
+
+As long as the ring buffer requires a CPU-reentrant spin lock, I expect
+that it _must_ be a common lock for all. Consider the situation that the
+ring buffer writer code causes a panic. I think it is beneficial if at
+least 1 level of printk recursion is supported so that even these
+backtraces make it out on the emergency consoles.
+
+If the ring buffer becomes fully lockless, then we could move to
+per-console CPU-reentrant spin locks.
+
+John Ogness
