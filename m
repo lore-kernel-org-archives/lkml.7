@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8796C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471042087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 690A22085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049816;
-	bh=LfpCe6Wmlq2iUtRMSgfXQtNncMXIOn45/568VDgfkAo=;
+	s=default; t=1552049823;
+	bh=W1IyTDWmOnMHqV/x1mAzVg+orWwcs+azvQO7xl1TqAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FuaRCPLeIgJeSrrch8NgJQzZqiH4w6FNyCZZVkmWsfayJKp83uzb62oRhOShj5O8t
-	 QDTVibX8nkbeyHO+zU3p6ZlqeKGMTw+G7/7BwSNMpStDF+gLgUJdMqYVLtY7GkJeNr
-	 zhkFnaAuq6rj/K40+KBToFH+MEpbD+GLdv0JbO94=
+	b=YZEv7Sf4thbUSoASPzUSKVm0LojRZU0ttbHkpwbQkZcrn8SRojZ2yDUYT/Yh1pZ3M
+	 eu4+D/ZsdNS8nzoIq7XTXbwIJNOkxcRcXNrPZ1mqnKP5n4EK4MU3pGIyhNBRcRgqeU
+	 5ta3NbpXSyjo6XDgaTSWTl+yFYEuYgusua++0PD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfCHM4z (ORCPT
+        id S1727780AbfCHM5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:56:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727657AbfCHM4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:56:52 -0500
+        id S1727694AbfCHM46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:56:58 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9FCC20449;
-        Fri,  8 Mar 2019 12:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6673C2087C;
+        Fri,  8 Mar 2019 12:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049811;
-        bh=LfpCe6Wmlq2iUtRMSgfXQtNncMXIOn45/568VDgfkAo=;
+        s=default; t=1552049817;
+        bh=W1IyTDWmOnMHqV/x1mAzVg+orWwcs+azvQO7xl1TqAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xJ1NOsHj94i70cPCXd3P0KIWpqQbWKF6ZWQ6k3Hg/cAdVdir7Cct3k57HVCfiBsq5
-         bH/+v9tbGuxVOV/zEmY3lr8cvcVfpa7CnlG06tDvmWBnY5sldqiX5R67lnqw5KWXMy
-         HKLZk9cvMeD2xKoFds5bBJmRUshCY3wCkB6FeAZI=
+        b=0Y6Q2PqbrzX/UWvZ4urWDUEzG0bqnrqA1ISSSqvwwqHlOtHYLvE0vE2HeVDinxpIz
+         30SwMjR8NGMHRdnPnAJOCxH+aWYXgAWOHP+hZjf/r1R9PW616gNwK0JdO7uN/bAmmN
+         kq5Bu3xIEzfbSBC+qvryJA586/kZx+wS88pHUnUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 34/76] lan743x: Fix TX Stall Issue
-Date:   Fri,  8 Mar 2019 13:49:46 +0100
-Message-Id: <20190308124916.027484092@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 4.20 71/76] selftests: firmware: fix verify_reqs() return value
+Date:   Fri,  8 Mar 2019 13:50:23 +0100
+Message-Id: <20190308124917.302557423@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -66,73 +63,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 90490ef7269906423a1c1b917fc24be8b1602658 ]
+commit 344c0152d878922365464b7140c74c2a5e073d99 upstream.
 
-It has been observed that tx queue stalls while downloading
-from certain web sites (example www.speedtest.net)
+commit a6a9be9270c87 ("selftests: firmware: return Kselftest Skip code
+for skipped tests") by Shuah modified failures to return the special
+error code of $ksft_skip (4). We have a corner case issue where we
+*do* want to verify_reqs().
 
-The cause has been tracked down to a corner case where
-dma descriptors where not setup properly. And there for a tx
-completion interrupt was not signaled.
-
-This fix corrects the problem by properly marking the end of
-a multi descriptor transmission.
-
-Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org> # >= 4.18
+Fixes: a6a9be9270c87 ("selftests: firmware: return Kselftest Skip code for for skipped tests")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/microchip/lan743x_main.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -1400,7 +1400,8 @@ static int lan743x_tx_frame_start(struct
+---
+ tools/testing/selftests/firmware/fw_lib.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/tools/testing/selftests/firmware/fw_lib.sh
++++ b/tools/testing/selftests/firmware/fw_lib.sh
+@@ -91,7 +91,7 @@ verify_reqs()
+ 	if [ "$TEST_REQS_FW_SYSFS_FALLBACK" = "yes" ]; then
+ 		if [ ! "$HAS_FW_LOADER_USER_HELPER" = "yes" ]; then
+ 			echo "usermode helper disabled so ignoring test"
+-			exit $ksft_skip
++			exit 0
+ 		fi
+ 	fi
  }
- 
- static void lan743x_tx_frame_add_lso(struct lan743x_tx *tx,
--				     unsigned int frame_length)
-+				     unsigned int frame_length,
-+				     int nr_frags)
- {
- 	/* called only from within lan743x_tx_xmit_frame.
- 	 * assuming tx->ring_lock has already been acquired.
-@@ -1410,6 +1411,10 @@ static void lan743x_tx_frame_add_lso(str
- 
- 	/* wrap up previous descriptor */
- 	tx->frame_data0 |= TX_DESC_DATA0_EXT_;
-+	if (nr_frags <= 0) {
-+		tx->frame_data0 |= TX_DESC_DATA0_LS_;
-+		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+	}
- 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
- 	tx_descriptor->data0 = tx->frame_data0;
- 
-@@ -1514,8 +1519,11 @@ static void lan743x_tx_frame_end(struct
- 	u32 tx_tail_flags = 0;
- 
- 	/* wrap up previous descriptor */
--	tx->frame_data0 |= TX_DESC_DATA0_LS_;
--	tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+	if ((tx->frame_data0 & TX_DESC_DATA0_DTYPE_MASK_) ==
-+	    TX_DESC_DATA0_DTYPE_DATA_) {
-+		tx->frame_data0 |= TX_DESC_DATA0_LS_;
-+		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+	}
- 
- 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
- 	buffer_info = &tx->buffer_info[tx->frame_tail];
-@@ -1600,7 +1608,7 @@ static netdev_tx_t lan743x_tx_xmit_frame
- 	}
- 
- 	if (gso)
--		lan743x_tx_frame_add_lso(tx, frame_length);
-+		lan743x_tx_frame_add_lso(tx, frame_length, nr_frags);
- 
- 	if (nr_frags <= 0)
- 		goto finish;
 
 
