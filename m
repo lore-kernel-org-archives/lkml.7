@@ -2,133 +2,388 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D5CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A9EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0895208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741C3208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:37:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKLUNnPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbfCHNhk (ORCPT
+        id S1726805AbfCHNhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:37:40 -0500
-Received: from mga02.intel.com ([134.134.136.20]:37498 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfCHNhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:37:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 05:37:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,456,1544515200"; 
-   d="scan'208";a="129932536"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Mar 2019 05:37:33 -0800
-Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        kishon@ti.com, zhang.chunyan@linaro.org
-References: <20190215192033.24203-1-faiz_abbas@ti.com>
- <20190215192033.24203-2-faiz_abbas@ti.com>
- <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
- <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com>
-Date:   Fri, 8 Mar 2019 15:36:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 8 Mar 2019 08:37:52 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41296 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfCHNhw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:37:52 -0500
+Received: by mail-qt1-f193.google.com with SMTP id v10so21157453qtp.8;
+        Fri, 08 Mar 2019 05:37:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=a1rByFYv4+X1mG6QH9j6kaPK6kXBYHfgLqTu8M3VlKE=;
+        b=cKLUNnPrTdDTBiWSqZU8N8WwBFPKGBPKP3rvCIWiVsxH7SxGwLMbkRzkf9TAT0UCsk
+         bi5YA3e1lOWA+SAfIGfKH3Q/TqggfZVGpS3im7PYgN5xJKSM9RhRkERBOASfB5yzN+1E
+         ocjZ+h2QhKPALey0jAepsV3c5w46KA5QS8lIi6ceAo2m6mMkaKcVGmvKK0DzE4hzk8Yt
+         7O220NwkjlOX0DFLeD9rBmvjwbNHn23j+Q8NytN3f5AW4QRLj6Ml1H4IgjRXMpqwAtg9
+         RB75h4UMkuSdqify9+swWsuGtmrmYdbiTI8cIoneTdhfecCh1tKgUzSdaCmKMsqIPbP6
+         dqxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=a1rByFYv4+X1mG6QH9j6kaPK6kXBYHfgLqTu8M3VlKE=;
+        b=s5Mev4Rm8YvP0wBrUNaDAl9DEh266KArqVU5Wxh1BtOt3WagnwDOv3uIq/VmLsFf6L
+         uVyJf6PyB4fGCksiunn4RTDDAjcHg9BXyb5fqKbcAyQuPPd10k1501tgKKG9jGwWWGgb
+         RIZujmlRycgJrcnoM9YE3scxLRdp5UM81kUSC66ZWTu7XvRnmsgU1xgHI6ZvgroZajBt
+         16JMoTbpt9PuEBI7mUqez9v0xZSSzgbhVyL5QReSgvJj8L2fAstv7vc7vzoQ42SqCgyC
+         05EKb62sUIBp95D2umqZIdnUth/FVVM9ZuSRUCYguIZCOUk6+BP/6yFSzLazKU/JamPK
+         ttwA==
+X-Gm-Message-State: APjAAAVuq/LP64A76+jmZbGvpBfVZZ/NERVPemktuNLy+neYwZTc1X1d
+        wM8mHlO/LmGZwFMPJCJRX7bqTjH22FA=
+X-Google-Smtp-Source: APXvYqytNSVYv46XePhYeKqK63ihhfGPQcRhiEMtwDX0mdNqRVmLoBTNWL9ElvtZKrGWS/OOoyY63A==
+X-Received: by 2002:ac8:3361:: with SMTP id u30mr14790049qta.5.1552052270331;
+        Fri, 08 Mar 2019 05:37:50 -0800 (PST)
+Received: from quaco.ghostprotocols.net (177-59-154-188.3g.claro.net.br. [177.59.154.188])
+        by smtp.gmail.com with ESMTPSA id f58sm4927100qtc.14.2019.03.08.05.37.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Mar 2019 05:37:49 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 42F7C4039C; Fri,  8 Mar 2019 10:37:43 -0300 (-03)
+Date:   Fri, 8 Mar 2019 10:37:43 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v4 02/15] perf tools script: Support insn output for
+ normal samples
+Message-ID: <20190308133743.GA26260@kernel.org>
+References: <20190305144758.12397-1-andi@firstfloor.org>
+ <20190305144758.12397-3-andi@firstfloor.org>
 MIME-Version: 1.0
-In-Reply-To: <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190305144758.12397-3-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/03/19 12:00 PM, Faiz Abbas wrote:
-> Adrian,
+Em Tue, Mar 05, 2019 at 06:47:45AM -0800, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> On 25/02/19 1:47 PM, Adrian Hunter wrote:
->> On 15/02/19 9:20 PM, Faiz Abbas wrote:
->>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
->>> card insert/remove operations and a tasklet for finishing mmc requests.
->>> With the addition of external dma support, dmaengine APIs need to
->>> terminate in non-atomic context before unmapping the dma buffers.
->>>
->>> To facilitate this, remove the finish_tasklet and move the call of
->>> sdhci_request_done() to the threaded_irq() callback.
->>
->> The irq thread has a higher latency than the tasklet.  The performance drop
->> is measurable on the system I tried:
->>
->> Before:
->>
->> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
->> 1+0 records in
->> 1+0 records out
->> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
->>
->> After:
->>
->> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
->> 1+0 records in
->> 1+0 records out
->> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
->>
->> So we only want to resort to the thread for the error case.
->>
+> perf script -F +insn was only working for PT traces because
+> the PT instruction decoder was filling in the insn/insn_len
+> sample attributes. Support it for non PT samples too on x86
+> using the existing x86 instruction decoder.
 > 
-> Sorry for the late response here, but this is about 1.6% decrease. I
-> tried out the same commands on a dra7xx board here (with about 5
-> consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
-> will also find a lesser percentage change if you average over multiple
-> dd commands.
+> This adds some extra checking to ensure that we don't try
+> to decode instructions when using perf.data from a different
+> architecture.
 > 
-> Is this really so significant that we have to maintain two different
-> bottom halves and keep having difficulty with adding APIs that can sleep?
-
-It is a performance drop that can be avoided, so it might as well be.
-Splitting the success path from the failure path is common for I/O drivers
-for similar reasons as here: the success path can be optimized whereas the
-failure path potentially needs to sleep.
-
+> % perf record -a sleep 1
+> % perf script -F ip,sym,insn --xed
+>  ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+>  ffffffff8100bb50 intel_bts_enable_local                retq
+>  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+>  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+>  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+>  ffffffff810f1f79 generic_exec_single           xor %eax, %eax
+>  ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+>  ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
+>  ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
+> ...
 > 
-> Also I am not sure how to implement only the error handling part in the
-> threaded_irq. We need to enter sdhci_request_done() and get the current
-> mrq before we can check for error conditions like I've done in patch 2:
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > 
-> /* Terminate and synchronize dma in case of an error */
-> if (data && (mrq->cmd->error || data->error) &&
->     host->use_external_dma) {
-> 	struct dma_chan *chan = sdhci_external_dma_channel(host, data);
-> 	dmaengine_terminate_sync(chan);
-> }
-> 
-> On a related note, do we really need to protect everything in
-> sdhci_request_done() with spinlocks?
->                                      In patch 2 I have only removed lock
-> for the terminate_sync() parts that I added but the whole
-> dma_unmap/dma_sync parts should be left unprotected IMO.
+> ---
+> v2:
+> Avoid printing instruction when empty
+> Only decode when perf.data file was collected on same architecture
 
-As it is written, synchronization is needed to stop the same mrq being
-finished twice.
+Thanks, applied and added some testing notes comparing the output with
+the one from 'perf annotate --stdio2':
 
-I suggest doing the dmaengine_terminate_sync() before calling
-sdhci_request_done().  Perhaps you could record the channel that needs to be
-sync'd and then do:
+commit 2109d7fa73200bc6ff7abe909b5fe821224f98b3
+Author: Andi Kleen <ak@linux.intel.com>
+Date:   Tue Mar 5 06:47:45 2019 -0800
 
-	struct dma_chan *chan = READ_ONCE(host->sync_chan);
+    perf script: Support insn output for normal samples
+    
+    perf script -F +insn was only working for PT traces because the PT
+    instruction decoder was filling in the insn/insn_len sample attributes.
+    Support it for non PT samples too on x86 using the existing x86
+    instruction decoder.
+    
+    This adds some extra checking to ensure that we don't try to decode
+    instructions when using perf.data from a different architecture.
+    
+      % perf record -a sleep 1
+      % perf script -F ip,sym,insn --xed
+       ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+       ffffffff8100bb50 intel_bts_enable_local                retq
+       ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+       ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+       ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+       ffffffff810f1f79 generic_exec_single           xor %eax, %eax
+       ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+       ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
+       ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
+      ...
+    
+    Committer testing:
+    
+    Before:
+    
+      # perf script -F ip,sym,insn --xed | head -5
+       ffffffffa4068804 native_write_msr            addb  %al, (%rax)
+       ffffffffa4068804 native_write_msr            addb  %al, (%rax)
+       ffffffffa4068804 native_write_msr            addb  %al, (%rax)
+       ffffffffa4068806 native_write_msr            addb  %al, (%rax)
+       ffffffffa4068806 native_write_msr            addb  %al, (%rax)
+      # perf script -F ip,sym,insn --xed | grep -v "addb  %al, (%rax)"
+      #
+    
+    After:
+    
+      # perf script -F ip,sym,insn --xed | head -5
+       ffffffffa4068804 native_write_msr            wrmsr
+       ffffffffa4068804 native_write_msr            wrmsr
+       ffffffffa4068804 native_write_msr            wrmsr
+       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
+       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
+      # perf script -F ip,sym,insn --xed | grep -v "addb  %al, (%rax)" | head -5
+       ffffffffa4068804 native_write_msr            wrmsr
+       ffffffffa4068804 native_write_msr            wrmsr
+       ffffffffa4068804 native_write_msr            wrmsr
+       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
+       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
+      #
+    
+    More examples:
+    
+      # perf script -F ip,sym,insn --xed | grep -v native_write_msr | head
+       ffffffffa416b90e tick_check_broadcast_expired                btq  %rax, 0x1a5f42a(%rip)
+       ffffffffa4956bd0 nmi_cpu_backtrace           pushq  %r13
+       ffffffffa415b95e __hrtimer_next_event_base           movq  0x18(%rax), %rdx
+       ffffffffa4956bf3 nmi_cpu_backtrace           popq  %r12
+       ffffffffa4171d5c smp_call_function_single            pause
+       ffffffffa4956bdd nmi_cpu_backtrace           mov %ebp, %r12d
+       ffffffffa4797e4d menu_select                 cmp $0x190, %rax
+       ffffffffa4171d5c smp_call_function_single            pause
+       ffffffffa405a7d8 nmi_cpu_backtrace_handler           callq  0xffffffffa4956bd0
+       ffffffffa4797f7a menu_select                 shr $0x3, %rax
+      #
+    
+    Which matches the annotate output modulo resolving callqs:
+    
+      # perf annotate --stdio2 nmi_cpu_backtrace_handler
+      Samples: 4  of event 'cycles:ppp', 4000 Hz, Event count (approx.): 35908, [percent: local period]
+      nmi_cpu_backtrace_handler() /lib/modules/5.0.0+/build/vmlinux
+      Percent
+                  Disassembly of section .text:
+    
+                  ffffffff8105a7d0 <nmi_cpu_backtrace_handler>:
+                  nmi_cpu_backtrace_handler():
+                          nmi_trigger_cpumask_backtrace(mask, exclude_self,
+                                                        nmi_raise_cpu_backtrace);
+                  }
+    
+                  static int nmi_cpu_backtrace_handler(unsigned int cmd, struct pt_regs *regs)
+                  {
+       24.45      → callq  __fentry__
+                          if (nmi_cpu_backtrace(regs))
+                    mov    %rsi,%rdi
+       75.55      → callq  nmi_cpu_backtrace
+                                  return NMI_HANDLED;
+                    movzbl %al,%eax
+    
+                          return NMI_DONE;
+                  }
+                  ← retq
+        #
+    
+      # perf annotate --stdio2 __hrtimer_next_event_base
+      Samples: 4  of event 'cycles:ppp', 4000 Hz, Event count (approx.): 767977, [percent: local period]
+      __hrtimer_next_event_base() /lib/modules/5.0.0+/build/vmlinux
+      Percent
+                  Disassembly of section .text:
+    
+                  ffffffff8115b910 <__hrtimer_next_event_base>:
+                  __hrtimer_next_event_base():
+    
+                  static ktime_t __hrtimer_next_event_base(struct hrtimer_cpu_base *cpu_base,
+                                                           const struct hrtimer *exclude,
+                                                           unsigned int active,
+                                                           ktime_t expires_next)
+                  {
+                  → callq  __fentry__
+    <SNIP>
+              4a:   add    $0x1,%r14
+       77.31        mov    0x18(%rax),%rdx
+                    shl    $0x6,%r14
+                    sub    0x38(%rbx,%r14,1),%rdx
+                                  if (expires < expires_next) {
+                    cmp    %r12,%rdx
+                  ↓ jge    68
+    <SNIP>
+    
+    Signed-off-by: Andi Kleen <ak@linux.intel.com>
+    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Link: http://lkml.kernel.org/r/20190305144758.12397-3-andi@firstfloor.org
+    [ Converted fetch_exe() to use the name it ended up having when merged: thread__memcpy() ]
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	if (chan) {
-		dmaengine_terminate_sync(chan);
-		host->sync_chan = NULL;
-	}
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 7aab0be5fc5f..7b8e69bbbdfe 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -6,6 +6,7 @@ perf-y += perf_regs.o
+ perf-y += group.o
+ perf-y += machine.o
+ perf-y += event.o
++perf-y += archinsn.o
+ 
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
+diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
+new file mode 100644
+index 000000000000..4237bb2e7fa2
+--- /dev/null
++++ b/tools/perf/arch/x86/util/archinsn.c
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "perf.h"
++#include "archinsn.h"
++#include "util/intel-pt-decoder/insn.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
++
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine)
++{
++	struct insn insn;
++	int len;
++	bool is64bit = false;
++
++	if (!sample->ip)
++		return;
++	len = thread__memcpy(thread, machine, sample->insn, sample->ip, sizeof(sample->insn), &is64bit);
++	if (len <= 0)
++		return;
++	insn_init(&insn, sample->insn, len, is64bit);
++	insn_get_length(&insn);
++	if (insn_complete(&insn) && insn.length <= len)
++		sample->insn_len = insn.length;
++}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 53f78cf3113f..a5080afd361d 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -29,10 +29,12 @@
+ #include "util/time-utils.h"
+ #include "util/path.h"
+ #include "print_binary.h"
++#include "archinsn.h"
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/stringify.h>
+ #include <linux/time64.h>
++#include <sys/utsname.h>
+ #include "asm/bug.h"
+ #include "util/mem-events.h"
+ #include "util/dump-insn.h"
+@@ -63,6 +65,7 @@ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+ static struct perf_stat_config	stat_config;
+ static int			max_blocks;
++static bool			native_arch;
+ 
+ unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
+ 
+@@ -1227,6 +1230,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
+ 	return len + dlen;
+ }
+ 
++__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
++			    struct thread *thread __maybe_unused,
++			    struct machine *machine __maybe_unused)
++{
++}
++
+ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 				     struct perf_event_attr *attr,
+ 				     struct thread *thread,
+@@ -1234,9 +1243,12 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ {
+ 	int printed = 0;
+ 
++	if (sample->insn_len == 0 && native_arch)
++		arch_fetch_insn(sample, thread, machine);
++
+ 	if (PRINT_FIELD(INSNLEN))
+ 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+-	if (PRINT_FIELD(INSN)) {
++	if (PRINT_FIELD(INSN) && sample->insn_len) {
+ 		int i;
+ 
+ 		printed += fprintf(fp, " insn:");
+@@ -3277,6 +3289,7 @@ int cmd_script(int argc, const char **argv)
+ 		.set = false,
+ 		.default_no_sample = true,
+ 	};
++	struct utsname uts;
+ 	char *script_path = NULL;
+ 	const char **__argv;
+ 	int i, j, err = 0;
+@@ -3615,6 +3628,12 @@ int cmd_script(int argc, const char **argv)
+ 	if (symbol__init(&session->header.env) < 0)
+ 		goto out_delete;
+ 
++	uname(&uts);
++	if (!strcmp(uts.machine, session->header.env.arch) ||
++	    (!strcmp(uts.machine, "x86_64") &&
++	     !strcmp(session->header.env.arch, "i386")))
++		native_arch = true;
++
+ 	script.session = session;
+ 	script__setup_sample_type(&script);
+ 
+diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
+new file mode 100644
+index 000000000000..448cbb6b8d7e
+--- /dev/null
++++ b/tools/perf/util/archinsn.h
+@@ -0,0 +1,12 @@
++#ifndef INSN_H
++#define INSN_H 1
++
++struct perf_sample;
++struct machine;
++struct thread;
++
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine);
++
++#endif
