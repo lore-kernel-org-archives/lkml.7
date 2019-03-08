@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0778CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8070C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C419B2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B37F20811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049864;
-	bh=ChbYjywpes0TFleCp1R27iJQVBPKA258ag5Ay7QKOGc=;
+	s=default; t=1552049872;
+	bh=65eL7LjSPHqObtQXc3xFm/NqJ+rMAglano3YBhcfnqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOWCkK1FIrJ+2UL/9uf+5j7wwVNQCvCSR+6E5i7SUHmSRgFkmBBk03F6wrHCY0Xw4
-	 GwvdGQswzvDDScVOf/FLAwONg6f20CJ8Twkrzq3/fXbjnYFw6zrJhUsY2D0aR1s25+
-	 OEGo7RxaOGoJVewwjrwc7A6qgU7m2nfhdh2BWWA0=
+	b=1VIGwT37j8o0AF8JRdZhhAa4wbgbotb3vqF7pT//dUoBDfA5TiZx10SvU4kmea+3v
+	 E4flwHZbutcmmKEgGbumo1jLqndwaUMxuLNlv85X4NeZhF24YK6pt1oHuN2NXFVTXs
+	 +plpEUk71LAB1iReDr2PallDBgtYwEvD9YmwvTmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfCHM5n (ORCPT
+        id S1727907AbfCHM5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34006 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbfCHM5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:39 -0500
+        id S1726973AbfCHM5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:41 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6359F20449;
-        Fri,  8 Mar 2019 12:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D962085A;
+        Fri,  8 Mar 2019 12:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049857;
-        bh=ChbYjywpes0TFleCp1R27iJQVBPKA258ag5Ay7QKOGc=;
+        s=default; t=1552049860;
+        bh=65eL7LjSPHqObtQXc3xFm/NqJ+rMAglano3YBhcfnqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+o0Aij0PDi0pU2CpT8W+/Zfo+20pdOCsv8HSmkTQYe4KWaVxdaVeG3BVpoLtjqlM
-         eu4hEBdyXl/bBrWt/E6ASsxJPRsGE9XPcFH2N6e+5GMQzAQiAtHsik72jIDDATvCJL
-         Y9aULzQXBnKAsf62l2M0R1bz7Cpsi+YMdeHr0tkg=
+        b=EHshxJcMVvRa3h7YVZRoozCRWVUG1MB5BgztiZ8R7RHHyZ2+g09fUYzzy+XctaqV0
+         FBxDmkzSdPyzYIijY7T7RZnfv99At1QpfI+J5I+m+2JjH3BaeX46rOlJazpRoNErwN
+         jzbxi7FDGK+T90W4X1TeRV3BBRmRbUwB/5xPuCbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Donghee Han <dh.han@samsung.com>,
-        Sangkyu Kim <skwith.kim@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 01/68] cpufreq: Use struct kobj_attribute instead of struct global_attr
-Date:   Fri,  8 Mar 2019 13:49:31 +0100
-Message-Id: <20190308124910.792843234@linuxfoundation.org>
+        stable@vger.kernel.org, Qing Xia <saberlily.xia@hisilicon.com>,
+        Jing Xia <jing.xia@unisoc.com>,
+        Yuming Han <yuming.han@unisoc.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH 4.19 10/68] staging: android: ion: fix sys heap pools gfp_flags
+Date:   Fri,  8 Mar 2019 13:49:40 +0100
+Message-Id: <20190308124911.293733093@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -67,184 +68,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Qing Xia <saberlily.xia@hisilicon.com>
 
-commit 625c85a62cb7d3c79f6e16de3cfa972033658250 upstream.
+commit 9bcf065e28122588a6cbee08cf847826dacbb438 upstream.
 
-The cpufreq_global_kobject is created using kobject_create_and_add()
-helper, which assigns the kobj_type as dynamic_kobj_ktype and show/store
-routines are set to kobj_attr_show() and kobj_attr_store().
+In the first loop, gfp_flags will be modified to high_order_gfp_flags,
+and there will be no chance to change back to low_order_gfp_flags.
 
-These routines pass struct kobj_attribute as an argument to the
-show/store callbacks. But all the cpufreq files created using the
-cpufreq_global_kobject expect the argument to be of type struct
-attribute. Things work fine currently as no one accesses the "attr"
-argument. We may not see issues even if the argument is used, as struct
-kobj_attribute has struct attribute as its first element and so they
-will both get same address.
-
-But this is logically incorrect and we should rather use struct
-kobj_attribute instead of struct global_attr in the cpufreq core and
-drivers and the show/store callbacks should take struct kobj_attribute
-as argument instead.
-
-This bug is caught using CFI CLANG builds in android kernel which
-catches mismatch in function prototypes for such callbacks.
-
-Reported-by: Donghee Han <dh.han@samsung.com>
-Reported-by: Sangkyu Kim <skwith.kim@samsung.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: e7f63771b60e ("ION: Sys_heap: Add cached pool to spead up cached buffer alloc")
+Signed-off-by: Qing Xia <saberlily.xia@hisilicon.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jing Xia <jing.xia@unisoc.com>
+Reviewed-by: Yuming Han <yuming.han@unisoc.com>
+Reviewed-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Reviewed-by: Orson Zhai <orson.zhai@unisoc.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c      |    6 +++---
- drivers/cpufreq/intel_pstate.c |   23 ++++++++++++-----------
- include/linux/cpufreq.h        |   12 ++----------
- 3 files changed, 17 insertions(+), 24 deletions(-)
+ drivers/staging/android/ion/ion_system_heap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -545,13 +545,13 @@ EXPORT_SYMBOL_GPL(cpufreq_policy_transit
-  *                          SYSFS INTERFACE                          *
-  *********************************************************************/
- static ssize_t show_boost(struct kobject *kobj,
--				 struct attribute *attr, char *buf)
-+			  struct kobj_attribute *attr, char *buf)
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -247,10 +247,10 @@ static void ion_system_heap_destroy_pool
+ static int ion_system_heap_create_pools(struct ion_page_pool **pools)
  {
- 	return sprintf(buf, "%d\n", cpufreq_driver->boost_enabled);
- }
+ 	int i;
+-	gfp_t gfp_flags = low_order_gfp_flags;
  
--static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
--				  const char *buf, size_t count)
-+static ssize_t store_boost(struct kobject *kobj, struct kobj_attribute *attr,
-+			   const char *buf, size_t count)
- {
- 	int ret, enable;
+ 	for (i = 0; i < NUM_ORDERS; i++) {
+ 		struct ion_page_pool *pool;
++		gfp_t gfp_flags = low_order_gfp_flags;
  
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -833,7 +833,7 @@ static void intel_pstate_update_policies
- /************************** sysfs begin ************************/
- #define show_one(file_name, object)					\
- 	static ssize_t show_##file_name					\
--	(struct kobject *kobj, struct attribute *attr, char *buf)	\
-+	(struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
- 	{								\
- 		return sprintf(buf, "%u\n", global.object);		\
- 	}
-@@ -842,7 +842,7 @@ static ssize_t intel_pstate_show_status(
- static int intel_pstate_update_status(const char *buf, size_t size);
- 
- static ssize_t show_status(struct kobject *kobj,
--			   struct attribute *attr, char *buf)
-+			   struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -853,7 +853,7 @@ static ssize_t show_status(struct kobjec
- 	return ret;
- }
- 
--static ssize_t store_status(struct kobject *a, struct attribute *b,
-+static ssize_t store_status(struct kobject *a, struct kobj_attribute *b,
- 			    const char *buf, size_t count)
- {
- 	char *p = memchr(buf, '\n', count);
-@@ -867,7 +867,7 @@ static ssize_t store_status(struct kobje
- }
- 
- static ssize_t show_turbo_pct(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total, no_turbo, turbo_pct;
-@@ -893,7 +893,7 @@ static ssize_t show_turbo_pct(struct kob
- }
- 
- static ssize_t show_num_pstates(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total;
-@@ -914,7 +914,7 @@ static ssize_t show_num_pstates(struct k
- }
- 
- static ssize_t show_no_turbo(struct kobject *kobj,
--			     struct attribute *attr, char *buf)
-+			     struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -936,7 +936,7 @@ static ssize_t show_no_turbo(struct kobj
- 	return ret;
- }
- 
--static ssize_t store_no_turbo(struct kobject *a, struct attribute *b,
-+static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
- 			      const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -983,7 +983,7 @@ static ssize_t store_no_turbo(struct kob
- 	return count;
- }
- 
--static ssize_t store_max_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1013,7 +1013,7 @@ static ssize_t store_max_perf_pct(struct
- 	return count;
- }
- 
--static ssize_t store_min_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1045,12 +1045,13 @@ static ssize_t store_min_perf_pct(struct
- }
- 
- static ssize_t show_hwp_dynamic_boost(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%u\n", hwp_boost);
- }
- 
--static ssize_t store_hwp_dynamic_boost(struct kobject *a, struct attribute *b,
-+static ssize_t store_hwp_dynamic_boost(struct kobject *a,
-+				       struct kobj_attribute *b,
- 				       const char *buf, size_t count)
- {
- 	unsigned int input;
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -254,20 +254,12 @@ __ATTR(_name, 0644, show_##_name, store_
- static struct freq_attr _name =			\
- __ATTR(_name, 0200, NULL, store_##_name)
- 
--struct global_attr {
--	struct attribute attr;
--	ssize_t (*show)(struct kobject *kobj,
--			struct attribute *attr, char *buf);
--	ssize_t (*store)(struct kobject *a, struct attribute *b,
--			 const char *c, size_t count);
--};
--
- #define define_one_global_ro(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0444, show_##_name, NULL)
- 
- #define define_one_global_rw(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0644, show_##_name, store_##_name)
- 
- 
+ 		if (orders[i] > 4)
+ 			gfp_flags = high_order_gfp_flags;
 
 
