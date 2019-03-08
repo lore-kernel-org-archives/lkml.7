@@ -2,64 +2,139 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AE7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261D0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4A62085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D422133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfCHPMf (ORCPT
+        id S1726729AbfCHPO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:12:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40783 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfCHPMe (ORCPT
+        Fri, 8 Mar 2019 10:14:26 -0500
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48414 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfCHPOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:12:34 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1h2HAj-0008HB-IS; Fri, 08 Mar 2019 16:12:29 +0100
-Message-ID: <1552057948.4009.16.camel@pengutronix.de>
-Subject: Re: [PATCH] media: imx: vdic: Fix wrong CSI group ID
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Steve Longerbeam <slongerbeam@gmail.com>,
-        linux-media@vger.kernel.org
-Cc:     Tim Harvey <tharvey@gateworks.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 08 Mar 2019 16:12:28 +0100
-In-Reply-To: <20190301232717.4125-1-slongerbeam@gmail.com>
-References: <20190301232717.4125-1-slongerbeam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 8 Mar 2019 10:14:25 -0500
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 7A4F280589; Fri,  8 Mar 2019 16:14:15 +0100 (CET)
+Date:   Fri, 8 Mar 2019 16:14:22 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com, tony@atomide.com,
+        lee.jones@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
+ properties
+Message-ID: <20190308151422.GA10378@amd>
+References: <20190307220947.20057-1-dmurphy@ti.com>
+ <20190307220947.20057-2-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Disposition: inline
+In-Reply-To: <20190307220947.20057-2-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-01 at 15:27 -0800, Steve Longerbeam wrote:
-> The i.MX7 capture support forgot to change the group ID for the CSI
-> to the IPU CSI in VDIC sub-device, it was left at the i.MX7 CSI
-> group ID.
-> 
-> Fixes: 67673ed55084 ("media: staging/imx: rearrange group id to take in account IPU")
-> 
-> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-regards
-Philipp
+Hi!
+
+> Update the properties for the lm3532 device node for droid4.
+> With this change the backlight LED string and the keypad
+> LED strings will be controlled separately.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  arch/arm/boot/dts/omap4-droid4-xt894.dts | 27 +++++++++++++++++-------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts=
+/omap4-droid4-xt894.dts
+> index e21ec929f096..94e3d53dbcf3 100644
+> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> @@ -6,6 +6,7 @@
+>  /dts-v1/;
+> =20
+>  #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/leds-lm3532.h>
+>  #include "omap443x.dtsi"
+>  #include "motorola-cpcap-mapphone.dtsi"
+> =20
+> @@ -383,20 +384,30 @@
+>  };
+> =20
+>  &i2c1 {
+> -	lm3532@38 {
+> +	led-controller@38 {
+>  		compatible =3D "ti,lm3532";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+>  		reg =3D <0x38>;
+> =20
+>  		enable-gpios =3D <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> =20
+> -		lcd_backlight: backlight {
+> -			compatible =3D "ti,lm3532-backlight";
+> +		ramp-up-ms =3D <LM3532_RAMP_1024us>;
+> +		ramp-down-ms =3D <LM3532_RAMP_65536us>;
+
+I guess dt people will have some comments here. I'd expect
+
+ramp-up-us =3D <1024> would be more natural.
+
+> +		lcd_backlight: led@0 {
+> +			reg =3D <0>;
+> +			led-sources =3D <2>;
+> +			ti,led-mode =3D <LM3532_BL_MODE_MANUAL>;
+> +			label =3D "backlight";
+
+Ok, so we'll have lm3532::backlight. That is not too useful, as it
+does not tell userland what kaclight it is.
+
+main_display::backlight ?
+
+OTOH this one is not too important as backlight subsystem should
+handle this.
+
+> +		led@1 {
+> +			reg =3D <1>;
+> +			led-sources =3D <1>;
+> +			ti,led-mode =3D <LM3532_BL_MODE_MANUAL>;
+> +			label =3D "keypad";
+
+I guess best variant would be inputX::backlight here, but that might
+be tricky to implement.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyChs4ACgkQMOfwapXb+vIv/ACgr+bHsUANQodAGVuN1nwjp+Hk
+EsQAn3mJlgxw10AjQts0YNXx0d/CPN7q
+=E/DJ
+-----END PGP SIGNATURE-----
+
+--rwEMma7ioTxnRzrJ--
