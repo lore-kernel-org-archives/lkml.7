@@ -2,128 +2,162 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1BBC10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF80C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03B820684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ga2Oxs4y"
+	by mail.kernel.org (Postfix) with ESMTP id 7989120684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfCHGa3 (ORCPT
+        id S1726419AbfCHGbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:30:29 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34482 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfCHGa3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:30:29 -0500
-Received: by mail-io1-f68.google.com with SMTP id e1so15903818iok.1;
-        Thu, 07 Mar 2019 22:30:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+I6X8lV42nEy0XlSbCb8AiyODVlQAAox042t7liW4s4=;
-        b=ga2Oxs4yrQTvpsqktT8rOgc8T3sxv+Wcd8M2NwjFe0Y9WyZ4mlW+C70TMsh6UsxNL5
-         +otaTzTkY6GPHtAl+lgtgx0Tc8sO+Zo2NMyLtU6G8j3Sh+DrUFNCeQLjs/FlsEg1ybnu
-         gQC+mAO8pQHMqEze12EdSGC/FmGeb8EGEjWwiofCtJQWwdj6PBnPpj8wFhUjtRTB8QtY
-         gUDONlFpN8DFlA6gFMXAS5/7hMBP7ynYIK+YD7h+5yDxY8I8TBNNY2m9PzLVu40GRmBc
-         wwRhwhBgHFx4eznOaznjfaMoKHzNWnjJpZvTSZ6khf+OoYV/9tvR1fH2wBXat02gJovD
-         3fiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+I6X8lV42nEy0XlSbCb8AiyODVlQAAox042t7liW4s4=;
-        b=uPbOwHTUo+Ova/HVwEtH0rkcsmn64HipYwPooLJim2o5nmnjomd4ds4rY+sqh9bzuT
-         Yh5mXCY8GQehf3FB78BSp71McT2RxZjAuXUQE43GLQnFrs1zU1zS3zIzW8Xm8AmIqi+G
-         UiMmfmXuO6lj0JMxUTmlrkZJviZ1aw+uwzoaCpIODbfOS8aWW1f5YRt8jOKAbW0JmyyW
-         aFwywztZAEKhLho8X6KrvAppHEmTmHfmIRpkdvnjgsbvS07dHyWls2U0+l8Q2G/p3Pf7
-         idy4hsFW8npg0opbM47oSW+aaBa5oh5Fsvy7U1JG0uCICAriwnbT95SOsovtPVkyDLJF
-         93Cg==
-X-Gm-Message-State: APjAAAUZdaRjW4WqPHymNe/w+EwSH3BdGlt4hmGt1fzJz8L58NhvOQCt
-        wDEsQJdQfydxF2POTKfDt2hBjceRTd8YOG0zN38=
-X-Google-Smtp-Source: APXvYqy9XzyOz+gAEgcQng8TVsUOMz2yoKB+zw1icPQc9sHT1ZMXyGHZBqm+cObmOrRKqtWj7uffw8FZ+SUQ7UgI5vo=
-X-Received: by 2002:a5e:9412:: with SMTP id q18mr8260509ioj.233.1552026627695;
- Thu, 07 Mar 2019 22:30:27 -0800 (PST)
+        Fri, 8 Mar 2019 01:31:10 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:50746 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfCHGbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 01:31:09 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5862FE6A75;
+        Fri,  8 Mar 2019 06:31:09 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E9705D719;
+        Fri,  8 Mar 2019 06:31:09 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id F026B3FB10;
+        Fri,  8 Mar 2019 06:31:08 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 01:31:08 -0500 (EST)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Yongxin Liu <yongxin.liu@windriver.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
+        dan j williams <dan.j.williams@intel.com>,
+        paul gortmaker <paul.gortmaker@windriver.com>,
+        linux-nvdimm@lists.01.org
+Message-ID: <1859347572.10599669.1552026668860.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190306095709.23138-1-yongxin.liu@windriver.com>
+References: <20190306095709.23138-1-yongxin.liu@windriver.com>
+Subject: Re: [PATCH RT] nvdimm: make lane acquirement RT aware
 MIME-Version: 1.0
-References: <20190308060938.17305-1-tsu.yubo@gmail.com>
-In-Reply-To: <20190308060938.17305-1-tsu.yubo@gmail.com>
-From:   Y Song <ys114321@gmail.com>
-Date:   Thu, 7 Mar 2019 22:29:51 -0800
-Message-ID: <CAH3MdRWKvif5Q-bP7nU26g8WTzL5Ox2R43hZbRS+ZRRwzaYyOg@mail.gmail.com>
-Subject: Re: [PATCH V2] bpf: fix warning about using plain integer as NULL
-To:     Bo YU <tsu.yubo@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, ongliubraving@fb.com,
-        Yonghong Song <yhs@fb.com>, David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, yuzibode@126.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.134, 10.4.195.22]
+Thread-Topic: nvdimm: make lane acquirement RT aware
+Thread-Index: 4ghs9+nDfy/dsrzSA79Oy7bSbkhtAA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 08 Mar 2019 06:31:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 10:12 PM Bo YU <tsu.yubo@gmail.com> wrote:
->
-> Sparse warning below:
->
-> sudo make C=2 CF=-D__CHECK_ENDIAN__ M=net/bpf/
-> CHECK   net/bpf//test_run.c
-> net/bpf//test_run.c:19:77: warning: Using plain integer as NULL pointer
-> ./include/linux/bpf-cgroup.h:295:77: warning: Using plain integer as NULL pointer
->
-> Fixes: 8bad74f9840f ("bpf: extend cgroup bpf core to allow multiple
-> cgroup storage types")
->
-> Acked-by: Yonghong Song <yhs@fb.com>
-> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
 
-There should be no empty line between tags ("Fixes" and "Acked-by").
-"Fixes" tag should be all in one line. My previous reply may be
-wrapped by the email client, which is not my intention.
+> Currently, nvdimm driver isn't RT compatible.
+> nd_region_acquire_lane() disables preemption with get_cpu() which
+> causes "scheduling while atomic" spews on RT, when using fio to test
+> pmem as block device.
+> 
+> In this change, we replace get_cpu/put_cpu with local_lock_cpu/
+> local_unlock_cpu, and introduce per CPU variable "ndl_local_lock".
+> Due to preemption on RT, this lock can avoid race condition for the
+> same lane on the same CPU. When CPU number is greater than the lane
+> number, lane can be shared among CPUs. "ndl_lock->lock" is used to
+> protect the lane in this situation.
+> 
+> This patch is derived from Dan Williams and Pankaj Gupta's proposal from
+> https://www.mail-archive.com/linux-nvdimm@lists.01.org/msg13359.html
+> and https://www.spinics.net/lists/linux-rt-users/msg20280.html.
+> Many thanks to them.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pankaj Gupta <pagupta@redhat.com>
+> Cc: linux-rt-users <linux-rt-users@vger.kernel.org>
+> Cc: linux-nvdimm <linux-nvdimm@lists.01.org>
+> Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+
+This patch looks good to me.
+
+Acked-by: Pankaj Gupta <pagupta@redhat.com>
 
 > ---
-> V2: Add fix-up tag from Yonghong
-> ---
->  include/linux/bpf-cgroup.h | 2 +-
->  net/bpf/test_run.c         | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-> index 695b2a880d9a..a4c644c1c091 100644
-> --- a/include/linux/bpf-cgroup.h
-> +++ b/include/linux/bpf-cgroup.h
-> @@ -292,7 +292,7 @@ static inline int bpf_cgroup_storage_assign(struct bpf_prog *prog,
->  static inline void bpf_cgroup_storage_release(struct bpf_prog *prog,
->                                               struct bpf_map *map) {}
->  static inline struct bpf_cgroup_storage *bpf_cgroup_storage_alloc(
-> -       struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return 0; }
-> +       struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return NULL; }
->  static inline void bpf_cgroup_storage_free(
->         struct bpf_cgroup_storage *storage) {}
->  static inline int bpf_percpu_cgroup_storage_copy(struct bpf_map *map, void *key,
-> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-> index da7051d62727..fab142b796ef 100644
-> --- a/net/bpf/test_run.c
-> +++ b/net/bpf/test_run.c
-> @@ -16,7 +16,7 @@
->  static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
->                         u32 *retval, u32 *time)
+>  drivers/nvdimm/region_devs.c | 40 +++++++++++++++++++---------------------
+>  1 file changed, 19 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> index fa37afcd43ff..6c5388cf2477 100644
+> --- a/drivers/nvdimm/region_devs.c
+> +++ b/drivers/nvdimm/region_devs.c
+> @@ -18,9 +18,13 @@
+>  #include <linux/sort.h>
+>  #include <linux/io.h>
+>  #include <linux/nd.h>
+> +#include <linux/locallock.h>
+>  #include "nd-core.h"
+>  #include "nd.h"
+>  
+> +/* lock for tasks on the same CPU to sequence the access to the lane */
+> +static DEFINE_LOCAL_IRQ_LOCK(ndl_local_lock);
+> +
+>  /*
+>   * For readq() and writeq() on 32-bit builds, the hi-lo, lo-hi order is
+>   * irrelevant.
+> @@ -935,18 +939,15 @@ int nd_blk_region_init(struct nd_region *nd_region)
+>  unsigned int nd_region_acquire_lane(struct nd_region *nd_region)
 >  {
-> -       struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { 0 };
-> +       struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { NULL };
->         enum bpf_cgroup_storage_type stype;
->         u64 time_start, time_spent = 0;
->         int ret = 0;
+>  	unsigned int cpu, lane;
+> +	struct nd_percpu_lane *ndl_lock, *ndl_count;
+>  
+> -	cpu = get_cpu();
+> -	if (nd_region->num_lanes < nr_cpu_ids) {
+> -		struct nd_percpu_lane *ndl_lock, *ndl_count;
+> +	cpu = local_lock_cpu(ndl_local_lock);
+>  
+> -		lane = cpu % nd_region->num_lanes;
+> -		ndl_count = per_cpu_ptr(nd_region->lane, cpu);
+> -		ndl_lock = per_cpu_ptr(nd_region->lane, lane);
+> -		if (ndl_count->count++ == 0)
+> -			spin_lock(&ndl_lock->lock);
+> -	} else
+> -		lane = cpu;
+> +	lane = cpu % nd_region->num_lanes;
+> +	ndl_count = per_cpu_ptr(nd_region->lane, cpu);
+> +	ndl_lock = per_cpu_ptr(nd_region->lane, lane);
+> +	if (ndl_count->count++ == 0)
+> +		spin_lock(&ndl_lock->lock);
+>  
+>  	return lane;
+>  }
+> @@ -954,17 +955,14 @@ EXPORT_SYMBOL(nd_region_acquire_lane);
+>  
+>  void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane)
+>  {
+> -	if (nd_region->num_lanes < nr_cpu_ids) {
+> -		unsigned int cpu = get_cpu();
+> -		struct nd_percpu_lane *ndl_lock, *ndl_count;
+> -
+> -		ndl_count = per_cpu_ptr(nd_region->lane, cpu);
+> -		ndl_lock = per_cpu_ptr(nd_region->lane, lane);
+> -		if (--ndl_count->count == 0)
+> -			spin_unlock(&ndl_lock->lock);
+> -		put_cpu();
+> -	}
+> -	put_cpu();
+> +	struct nd_percpu_lane *ndl_lock, *ndl_count;
+> +	unsigned int cpu = smp_processor_id();
+> +
+> +	ndl_count = per_cpu_ptr(nd_region->lane, cpu);
+> +	ndl_lock = per_cpu_ptr(nd_region->lane, lane);
+> +	if (--ndl_count->count == 0)
+> +		spin_unlock(&ndl_lock->lock);
+> +	local_unlock_cpu(ndl_local_lock);
+>  }
+>  EXPORT_SYMBOL(nd_region_release_lane);
+>  
 > --
-> 2.11.0
->
+> 2.14.4
+> 
+> 
