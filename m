@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA74C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681C1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C51E2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E62C2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049477;
-	bh=UBe65DMEFErbnmhCj8b77tZCKuMKP6DSFR34N2t2YOc=;
+	s=default; t=1552049481;
+	bh=EajP7hnwT8NrpLbvTWAqoajVyncHNr5H2t7+FGEmPs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yA21zgUtKvtKPBCNb3oFWVvoLxcipNr5ZHLMGk/PAtjFLXba5esW6qmMg7SglPs9n
-	 TUUTYldzKj/YvqCKsd7brqmVULTMk8N3GNNKTMuzVhG+UuOdjyA4ONlO8xQ8YqxS2W
-	 papYDNQWB3XRIvn8F14qV0Wcfqi8U0F3JK+ynw0s=
+	b=Z25NqCy3XjWQkcs+1K/8dxr7/OTz7yVKOrjYVOqiB2PVZowohv4DFTq+hgoSmntZj
+	 t+dj4G3UeB+rmKj1iaiDcRqcQDTd4ocqzgt5v5lDfjMnlJQoUs9l7wTZmUA0drhfda
+	 uQYfy4BYP7m2DdR0E/11zvRKigoW5x4u4jYONoPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfCHMvQ (ORCPT
+        id S1726699AbfCHMvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbfCHMvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:14 -0500
+        id S1726669AbfCHMvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:18 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D206B2085A;
-        Fri,  8 Mar 2019 12:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 968B4208E4;
+        Fri,  8 Mar 2019 12:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049474;
-        bh=UBe65DMEFErbnmhCj8b77tZCKuMKP6DSFR34N2t2YOc=;
+        s=default; t=1552049477;
+        bh=EajP7hnwT8NrpLbvTWAqoajVyncHNr5H2t7+FGEmPs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBqnXvB79IXubjLVmwvPDOfYn2azdZb/b5aYr8lowIUZb2Am9JGXalk0NuVTZTbml
-         JA37b3Z4SUwEWg1JNiZ+PEg3sxjDeA/ZJjESgY6wi8/poCyM4bvZyIZ9wahDTtnmtw
-         eyuTwIITXsIqtGBxqVbJDeQTuq/8JtL+HJjreFJQ=
+        b=MErRorPPIfEyt+IQphQGOXmuR9ntd1ouf0vZJWvZhDWEGUUcLN/FgoGk51uDrHNWr
+         +t8JCJr8TsC06H6/hfbgqXOZpk2/KbYjM8veYJW/nwb5mjh2zxswTuR5R9tylnWxGa
+         W7Cr0YnngAmPZRiJghj+1T8QkF1ZGf8GMnVt4LGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qing Xia <saberlily.xia@hisilicon.com>,
-        Jing Xia <jing.xia@unisoc.com>,
-        Yuming Han <yuming.han@unisoc.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH 5.0 14/46] staging: android: ion: fix sys heap pools gfp_flags
-Date:   Fri,  8 Mar 2019 13:49:47 +0100
-Message-Id: <20190308124903.168231186@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+a76129f18c89f3e2ddd4@syzkaller.appspotmail.com>,
+        syzbot <syzbot+148c2885d71194f18d28@syzkaller.appspotmail.com>,
+        syzbot <syzbot+4b8b031b89e6b96c4b2e@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 5.0 15/46] staging: android: ashmem: Dont call fallocate() with ashmem_mutex held.
+Date:   Fri,  8 Mar 2019 13:49:48 +0100
+Message-Id: <20190308124903.232950934@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -68,39 +69,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qing Xia <saberlily.xia@hisilicon.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 9bcf065e28122588a6cbee08cf847826dacbb438 upstream.
+commit fb4415a12632f0b9078a0aa80c16745d48fcfc74 upstream.
 
-In the first loop, gfp_flags will be modified to high_order_gfp_flags,
-and there will be no chance to change back to low_order_gfp_flags.
+syzbot is hitting lockdep warnings [1][2][3]. This patch tries to fix
+the warning by eliminating ashmem_shrink_scan() => {shmem|vfs}_fallocate()
+sequence.
 
-Fixes: e7f63771b60e ("ION: Sys_heap: Add cached pool to spead up cached buffer alloc")
-Signed-off-by: Qing Xia <saberlily.xia@hisilicon.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Jing Xia <jing.xia@unisoc.com>
-Reviewed-by: Yuming Han <yuming.han@unisoc.com>
-Reviewed-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Reviewed-by: Orson Zhai <orson.zhai@unisoc.com>
+[1] https://syzkaller.appspot.com/bug?id=87c399f6fa6955006080b24142e2ce7680295ad4
+[2] https://syzkaller.appspot.com/bug?id=7ebea492de7521048355fc84210220e1038a7908
+[3] https://syzkaller.appspot.com/bug?id=e02419c12131c24e2a957ea050c2ab6dcbbc3270
+
+Reported-by: syzbot <syzbot+a76129f18c89f3e2ddd4@syzkaller.appspotmail.com>
+Reported-by: syzbot <syzbot+148c2885d71194f18d28@syzkaller.appspotmail.com>
+Reported-by: syzbot <syzbot+4b8b031b89e6b96c4b2e@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable@vger.kernel.org
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ion/ion_system_heap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/android/ashmem.c |   25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/android/ion/ion_system_heap.c
-+++ b/drivers/staging/android/ion/ion_system_heap.c
-@@ -223,10 +223,10 @@ static void ion_system_heap_destroy_pool
- static int ion_system_heap_create_pools(struct ion_page_pool **pools)
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -75,6 +75,9 @@ struct ashmem_range {
+ /* LRU list of unpinned pages, protected by ashmem_mutex */
+ static LIST_HEAD(ashmem_lru_list);
+ 
++static atomic_t ashmem_shrink_inflight = ATOMIC_INIT(0);
++static DECLARE_WAIT_QUEUE_HEAD(ashmem_shrink_wait);
++
+ /*
+  * long lru_count - The count of pages on our LRU list.
+  *
+@@ -438,7 +441,6 @@ out:
+ static unsigned long
+ ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
  {
- 	int i;
--	gfp_t gfp_flags = low_order_gfp_flags;
+-	struct ashmem_range *range, *next;
+ 	unsigned long freed = 0;
  
- 	for (i = 0; i < NUM_ORDERS; i++) {
- 		struct ion_page_pool *pool;
-+		gfp_t gfp_flags = low_order_gfp_flags;
+ 	/* We might recurse into filesystem code, so bail out if necessary */
+@@ -448,21 +450,33 @@ ashmem_shrink_scan(struct shrinker *shri
+ 	if (!mutex_trylock(&ashmem_mutex))
+ 		return -1;
  
- 		if (orders[i] > 4)
- 			gfp_flags = high_order_gfp_flags;
+-	list_for_each_entry_safe(range, next, &ashmem_lru_list, lru) {
++	while (!list_empty(&ashmem_lru_list)) {
++		struct ashmem_range *range =
++			list_first_entry(&ashmem_lru_list, typeof(*range), lru);
+ 		loff_t start = range->pgstart * PAGE_SIZE;
+ 		loff_t end = (range->pgend + 1) * PAGE_SIZE;
++		struct file *f = range->asma->file;
+ 
+-		range->asma->file->f_op->fallocate(range->asma->file,
+-				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+-				start, end - start);
++		get_file(f);
++		atomic_inc(&ashmem_shrink_inflight);
+ 		range->purged = ASHMEM_WAS_PURGED;
+ 		lru_del(range);
+ 
+ 		freed += range_size(range);
++		mutex_unlock(&ashmem_mutex);
++		f->f_op->fallocate(f,
++				   FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
++				   start, end - start);
++		fput(f);
++		if (atomic_dec_and_test(&ashmem_shrink_inflight))
++			wake_up_all(&ashmem_shrink_wait);
++		if (!mutex_trylock(&ashmem_mutex))
++			goto out;
+ 		if (--sc->nr_to_scan <= 0)
+ 			break;
+ 	}
+ 	mutex_unlock(&ashmem_mutex);
++out:
+ 	return freed;
+ }
+ 
+@@ -713,6 +727,7 @@ static int ashmem_pin_unpin(struct ashme
+ 		return -EFAULT;
+ 
+ 	mutex_lock(&ashmem_mutex);
++	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
+ 
+ 	if (!asma->file)
+ 		goto out_unlock;
 
 
