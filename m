@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEE1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130BFC10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EB02087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D568E217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049518;
-	bh=WitzpoTFEyuYHqOqS20+Z6MobKZaTZ8J+7s0WBeA/RI=;
+	s=default; t=1552049523;
+	bh=CY01hAO4XxiRZKIb9m0PYvRKhpY1o2ATfuMV7fZ9pMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mmZh2hg6qTr5nk/CNLGmVoFUuxbumkas96dqDhv4o2cxkumRGiIJz1MYursm1LmQZ
-	 CPlSJH89pVGNXsQGt6AaEWycJR1N0QIB45f7yN7Oba+B9ceajF/Ts9t3p/odigGg1T
-	 B2sR9i0VkWYal0hyzyKjeCf+8VTSDS29KhiksCSQ=
+	b=XrMb9OApoeO7dqakW6fKyKAfxqOCm23sqP2nG2d7Nurc9uBnlhFTF4LdwOox7X+vt
+	 2gxh1KAI7xe++hZxsRk9kO0EWsVqrq8HzXaAK+qmXvKNXbgthRkbMtxQ2sN3tVO2rN
+	 iLCmoh3fMbiytR7YXTwKOgWUOndExag6O6+ClL+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfCHMv5 (ORCPT
+        id S1726874AbfCHMwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:52:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726850AbfCHMvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:53 -0500
+        id S1726858AbfCHMv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:56 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C97121019;
-        Fri,  8 Mar 2019 12:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BEB22133F;
+        Fri,  8 Mar 2019 12:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049513;
-        bh=WitzpoTFEyuYHqOqS20+Z6MobKZaTZ8J+7s0WBeA/RI=;
+        s=default; t=1552049515;
+        bh=CY01hAO4XxiRZKIb9m0PYvRKhpY1o2ATfuMV7fZ9pMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=shzNAgln8n0wKvAp0yaDQym15xo/JlgDPMvRg9fYjqvAZIHa78LN2p7KUtrQnUFYX
-         F8oP0KU8MJpd55qknux1h6fZfQB0aZpfGbnpUy6rbpbbmLXQAU4wDeXxBzTwlikYux
-         4usxTnUGWyuYeUhP7NcgQp8PZwv/sd7hmgbdx/3Q=
+        b=ennWZ9tgU+CCy3T5vONB3aq+kkrV84ttYrqiaMYf2XXyQ0p56LsXrKHlr1rtYW9hj
+         YLTeo5fcZq9WoADst4Hmp9gqI3wbqXDlEadWtDXa4P8tWNwPRf58vrnx9bVLpGZxJ1
+         +oYmhXv6qh+O6itvlYBmB69m9SJ2uVL9L+U5lCyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 25/46] sctp: call iov_iter_revert() after sending ABORT
-Date:   Fri,  8 Mar 2019 13:49:58 +0100
-Message-Id: <20190308124903.891387187@linuxfoundation.org>
+Subject: [PATCH 5.0 26/46] sky2: Disable MSI on Dell Inspiron 1545 and Gateway P-79
+Date:   Fri,  8 Mar 2019 13:49:59 +0100
+Message-Id: <20190308124903.959627456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -67,35 +66,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 901efe12318b1ea8d3e2c88a7b75ed6e6d5d7245 ]
+[ Upstream commit b33b7cd6fd86478dd2890a9abeb6f036aa01fdf7 ]
 
-The user msg is also copied to the abort packet when doing SCTP_ABORT in
-sctp_sendmsg_check_sflags(). When SCTP_SENDALL is set, iov_iter_revert()
-should have been called for sending abort on the next asoc with copying
-this msg. Otherwise, memcpy_from_msg() in sctp_make_abort_user() will
-fail and return error.
+Some sky2 chips fire IRQ after S3, before the driver is fully resumed:
+[ 686.804877] do_IRQ: 1.37 No irq handler for vector
 
-Fixes: 4910280503f3 ("sctp: add support for snd flag SCTP_SENDALL process in sendmsg")
-Reported-by: Ying Xu <yinxu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+This is likely a platform bug that device isn't fully quiesced during
+S3. Use MSI-X, maskable MSI or INTx can prevent this issue from
+happening.
+
+Since MSI-X and maskable MSI are not supported by this device, fallback
+to use INTx on affected platforms.
+
+BugLink: https://bugs.launchpad.net/bugs/1807259
+BugLink: https://bugs.launchpad.net/bugs/1809843
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/socket.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/marvell/sky2.c |   24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -1866,6 +1866,7 @@ static int sctp_sendmsg_check_sflags(str
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -46,6 +46,7 @@
+ #include <linux/mii.h>
+ #include <linux/of_device.h>
+ #include <linux/of_net.h>
++#include <linux/dmi.h>
  
- 		pr_debug("%s: aborting association:%p\n", __func__, asoc);
- 		sctp_primitive_ABORT(net, asoc, chunk);
-+		iov_iter_revert(&msg->msg_iter, msg_len);
+ #include <asm/irq.h>
  
- 		return 0;
+@@ -93,7 +94,7 @@ static int copybreak __read_mostly = 128
+ module_param(copybreak, int, 0);
+ MODULE_PARM_DESC(copybreak, "Receive copy threshold");
+ 
+-static int disable_msi = 0;
++static int disable_msi = -1;
+ module_param(disable_msi, int, 0);
+ MODULE_PARM_DESC(disable_msi, "Disable Message Signaled Interrupt (MSI)");
+ 
+@@ -4917,6 +4918,24 @@ static const char *sky2_name(u8 chipid,
+ 	return buf;
+ }
+ 
++static const struct dmi_system_id msi_blacklist[] = {
++	{
++		.ident = "Dell Inspiron 1545",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1545"),
++		},
++	},
++	{
++		.ident = "Gateway P-79",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
++		},
++	},
++	{}
++};
++
+ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	struct net_device *dev, *dev1;
+@@ -5028,6 +5047,9 @@ static int sky2_probe(struct pci_dev *pd
+ 		goto err_out_free_pci;
  	}
+ 
++	if (disable_msi == -1)
++		disable_msi = !!dmi_check_system(msi_blacklist);
++
+ 	if (!disable_msi && pci_enable_msi(pdev) == 0) {
+ 		err = sky2_test_msi(hw);
+ 		if (err) {
 
 
