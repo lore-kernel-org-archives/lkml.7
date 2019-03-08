@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DFBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95C6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E5C20811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A69520449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049993;
-	bh=3+P1x8LmfuRHSOJWfnaz3HuG/sWPkyWO058Qpum2HsM=;
+	s=default; t=1552049995;
+	bh=Zhprm00b5tNqSg1wwSRELQsutXpxJHZoMgrVLaDesCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uth4GgzAEMp4vPVRk0XlzUa77L2hNRHKp7uV1Tddy24U8J+9MDB7AuEaINW/wdzX/
-	 Pjr0Asa8eR/+qZYnqs2GHXW3SaH4mvaQYTI0fj/wVkWu0gve3WO5WnVhjvKQ3E8Rxn
-	 j/ZNS+k7syINByzHPnC1up8BjrOAlD7fMR+rmRaw=
+	b=2F07Ltj392BMlgobgY9nxL6gjGFA0tMuLmigcw/qZV94VCcoGV86HGWuYmi9RHJsN
+	 UHqxXOr2FB8SUPAK5RfEFq/wFEStcxqI89s8VjJ17Njz/pZXFdy26TZdl+RN7FFi7i
+	 e9HDizJJKa6ntXePVbxp7umHeTd34pkopTpq2Q1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfCHM7u (ORCPT
+        id S1728218AbfCHM7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:59:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36538 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:59:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbfCHM7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:49 -0500
+        id S1727622AbfCHM7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:59:51 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B7EE2087C;
-        Fri,  8 Mar 2019 12:59:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2929F20449;
+        Fri,  8 Mar 2019 12:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049987;
-        bh=3+P1x8LmfuRHSOJWfnaz3HuG/sWPkyWO058Qpum2HsM=;
+        s=default; t=1552049990;
+        bh=Zhprm00b5tNqSg1wwSRELQsutXpxJHZoMgrVLaDesCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CTKbPImeB+wLUS6cEN2M5uLixKHvj9ip1mz3eLuqE2a2fyswnGsJ5AFQ0zlhMVnTn
-         tYHV6MMDdXN38MOTzuoiB6T9WEfmu497tl7+pbArao4JdzuWe3pSIt3DqkbEd1RuXd
-         HnKt5xQh+6ApGi4brzSmljvKrVZIe6sxOU/TUAnU=
+        b=CT2HeSpeq5qd/uuyUMB7558e1jB8U16Qt2o9WiWM/aXGtkXIM2/nBRU0bf6bx76Te
+         8rLFaFDl1AqoBljkakgDLF2sDt8gyKJSdfVBKGHcO4+Y/oz94js+ho8il28o8pg7jW
+         x0Up/nrKsh/JhVWZwjPQz+hR/L91Y9D3MPDoZoBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 49/68] net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode
-Date:   Fri,  8 Mar 2019 13:50:19 +0100
-Message-Id: <20190308124913.073792238@linuxfoundation.org>
+Subject: [PATCH 4.19 50/68] net/sched: act_ipt: fix refcount leak when replace fails
+Date:   Fri,  8 Mar 2019 13:50:20 +0100
+Message-Id: <20190308124913.121064401@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -65,86 +65,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit ed8fe20205ac054bf585156709de3913d1890f30 ]
+[ Upstream commit 8f67c90ee9148eab3d2b4393c3cf76489b27f87c ]
 
-When debugging another issue I faced an interrupt storm in this
-driver (88E6390, port 9 in SGMII mode), consisting of alternating
-link-up / link-down interrupts. Analysis showed that the driver
-wanted to set a cmode that was set already. But so far
-mv88e6390x_port_set_cmode() doesn't check this and powers down
-SERDES, what causes the link to break, and eventually results in
-the described interrupt storm.
+After commit 4e8ddd7f1758 ("net: sched: don't release reference on action
+overwrite"), the error path of all actions was converted to drop refcount
+also when the action was being overwritten. But we forgot act_ipt_init(),
+in case allocation of 'tname' was not successful:
 
-Fix this by checking whether the cmode actually changes. We want
-that the very first call to mv88e6390x_port_set_cmode() always
-configures the registers, therefore initialize port.cmode with
-a value that is different from any supported cmode value.
-We have to take care that we only init the ports cmode once
-chip->info->num_ports is set.
+ # tc action add action xt -j LOG --log-prefix hello index 100
+ tablename: mangle hook: NF_IP_POST_ROUTING
+         target:  LOG level warning prefix "hello" index 100
+ # tc action show action xt
+ total acts 1
 
-v2:
-- add small helper and init the number of actual ports only
+         action order 0: tablename: mangle  hook: NF_IP_POST_ROUTING
+         target  LOG level warning prefix "hello"
+         index 100 ref 1 bind 0
+ # tc action replace action xt -j LOG --log-prefix world index 100
+ tablename: mangle hook: NF_IP_POST_ROUTING
+         target:  LOG level warning prefix "world" index 100
+ RTNETLINK answers: Cannot allocate memory
+ We have an error talking to the kernel
+ # tc action show action xt
+ total acts 1
 
-Fixes: 364e9d7776a3 ("net: dsa: mv88e6xxx: Power on/off SERDES on cmode change")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+         action order 0: tablename: mangle  hook: NF_IP_POST_ROUTING
+         target  LOG level warning prefix "hello"
+         index 100 ref 2 bind 0
+
+Ensure we call tcf_idr_release(), in case 'tname' allocation failed, also
+when the action is being replaced.
+
+Fixes: 4e8ddd7f1758 ("net: sched: don't release reference on action overwrite")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |   10 ++++++++++
- drivers/net/dsa/mv88e6xxx/port.c |    4 ++++
- drivers/net/dsa/mv88e6xxx/port.h |    1 +
- 3 files changed, 15 insertions(+)
+ net/sched/act_ipt.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -4561,6 +4561,14 @@ static int mv88e6xxx_smi_init(struct mv8
- 	return 0;
+--- a/net/sched/act_ipt.c
++++ b/net/sched/act_ipt.c
+@@ -199,8 +199,7 @@ err3:
+ err2:
+ 	kfree(tname);
+ err1:
+-	if (ret == ACT_P_CREATED)
+-		tcf_idr_release(*a, bind);
++	tcf_idr_release(*a, bind);
+ 	return err;
  }
  
-+static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
-+{
-+	int i;
-+
-+	for (i = 0; i < mv88e6xxx_num_ports(chip); i++)
-+		chip->ports[i].cmode = MV88E6XXX_PORT_STS_CMODE_INVALID;
-+}
-+
- static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
- 							int port)
- {
-@@ -4597,6 +4605,8 @@ static const char *mv88e6xxx_drv_probe(s
- 	if (err)
- 		goto free;
- 
-+	mv88e6xxx_ports_cmode_init(chip);
-+
- 	mutex_lock(&chip->reg_lock);
- 	err = mv88e6xxx_switch_reset(chip);
- 	mutex_unlock(&chip->reg_lock);
---- a/drivers/net/dsa/mv88e6xxx/port.c
-+++ b/drivers/net/dsa/mv88e6xxx/port.c
-@@ -374,6 +374,10 @@ int mv88e6390x_port_set_cmode(struct mv8
- 		cmode = 0;
- 	}
- 
-+	/* cmode doesn't change, nothing to do for us */
-+	if (cmode == chip->ports[port].cmode)
-+		return 0;
-+
- 	lane = mv88e6390x_serdes_get_lane(chip, port);
- 	if (lane < 0)
- 		return lane;
---- a/drivers/net/dsa/mv88e6xxx/port.h
-+++ b/drivers/net/dsa/mv88e6xxx/port.h
-@@ -52,6 +52,7 @@
- #define MV88E6185_PORT_STS_CMODE_1000BASE_X	0x0005
- #define MV88E6185_PORT_STS_CMODE_PHY		0x0006
- #define MV88E6185_PORT_STS_CMODE_DISABLED	0x0007
-+#define MV88E6XXX_PORT_STS_CMODE_INVALID	0xff
- 
- /* Offset 0x01: MAC (or PCS or Physical) Control Register */
- #define MV88E6XXX_PORT_MAC_CTL				0x01
 
 
