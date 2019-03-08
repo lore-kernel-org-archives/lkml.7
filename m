@@ -2,138 +2,111 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C3EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4827DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 01:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE8720661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124D82085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 01:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b/gI5hPD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbwFRKdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfCHA7i (ORCPT
+        id S1726298AbfCHBB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:59:38 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45942 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfCHA7h (ORCPT
+        Thu, 7 Mar 2019 20:01:56 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42701 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfCHBB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:59:37 -0500
-Received: by mail-pf1-f195.google.com with SMTP id v21so12794816pfm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:59:37 -0800 (PST)
+        Thu, 7 Mar 2019 20:01:56 -0500
+Received: by mail-yw1-f68.google.com with SMTP id v201so15008405ywa.9;
+        Thu, 07 Mar 2019 17:01:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=EXlBlsg6QHN0F9pOJ3q3ORW/InRBYEI8MN3sEPcgq+A=;
-        b=b/gI5hPDVQJaY34qrLutwpIH+t73J8aBxiDQt+0rUH8wwIfU5Is6FcziStlk9QGcXD
-         yOPJQB3/tyx9D2QbWXfz/A8O9vLTICDaxQgGB47o0AHtcE+C3XhhutbESf9pnHGIytCf
-         Zp5TqV3coTc7708tcHBx15p3lPKQK9C+w8mnk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=roTGUc/iUtoD/bRzohE1XMQPLiQpUuAxtKFRFE3P4sU=;
+        b=rbwFRKdTTXwIKp+ZSdSphtLhRNfPQDyEayw9qlp1GAtpBTScZAd6e99OrcRpmHe86M
+         bwjjyfwZFbkTyXXyRLBG7RQ5FOIzt5nZZMHm2XGFWCjcLuctfCeDGUyY+/uA48t/c4P9
+         XQeqDd9kpDATf3Rf5fl3XB5KQqAjoDHed/9CL4mx9j+X9/8llywEeHQd7g9gE92H8gqb
+         0e+x1+yCrUT/b/aWpnGCeHvAcMsK9r+G5dwrnmTQp/1GtWIarUpkAZt+7C42zcmZsz3g
+         FT5z4AQacqzxYJtEq9LRP0EDQkbshiyS5Cb3iJ8D29hegg+XuOZ3YNV9L5gdz/Gi+Y9/
+         wMBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=EXlBlsg6QHN0F9pOJ3q3ORW/InRBYEI8MN3sEPcgq+A=;
-        b=k0iVLo+9Emp/JRvKczt7uUVw5d7bP3O5HdL/KWP9kipFCpGEdvV5aTej7aR5gAc56G
-         Q+31iVgZ2fVcq8iQ9woCLNpWiImpTYckQhuWFhnu9jbhBu0hI+5RjRLXkCjOgjpxzqkT
-         JakPgC314PEEByWkiEIGfDiHJoTuKyXHMvpdZtRsN+LEKtEUcO06alhINCnJQ5L81++0
-         Ds3jCxGMzb0Nd+j9IweoXwZdfheyscr3xFJs+7/fc3WtTQI9oUpofko4zwqc5vKoX/9e
-         YKkzfObBShnyKy2ZmsNvm8Xy8yBnbCwY/UA8mX1AI0M/7HWurg0Nu4EoC1VbkAJumAgH
-         +Rqw==
-X-Gm-Message-State: APjAAAU+wIm01AAsUGV2b1ToJlM+rn9uIP3U1jKukQJ+KqXITr+3cYC1
-        //od4JcNIYlnD214bbJEdCpt/5Y1HeqSnw==
-X-Google-Smtp-Source: APXvYqydyPfi68OnurlL6tiYkoUMevggrif5nKF40LdGrY9k7KBIpegbp/iNuiKBbzOQpQlEiWCTyw==
-X-Received: by 2002:a17:902:f096:: with SMTP id go22mr15314708plb.172.1552006776331;
-        Thu, 07 Mar 2019 16:59:36 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s79sm11782921pfa.61.2019.03.07.16.59.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 16:59:35 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190222221850.26939-7-ilina@codeaurora.org>
-References: <20190222221850.26939-1-ilina@codeaurora.org> <20190222221850.26939-7-ilina@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 6/9] drivers: pinctrl: msm: setup GPIO irqchip hierarchy
-Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>
-To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
-        marc.zyngier@arm.com
-Message-ID: <155200677430.20095.14337964669558394653@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 07 Mar 2019 16:59:34 -0800
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=roTGUc/iUtoD/bRzohE1XMQPLiQpUuAxtKFRFE3P4sU=;
+        b=taOfEXKEqbBjFIHGNLwkTjbSWKz+xelaPFHnpYKqpCJEHbLRF7zxdh6HPT7yte+Q4P
+         iW5itPNOlQa2nn1LwT1QpaoI4rdWqF/L9guPfPh0KmtT+98K+XS+dJ8Ppbu3QPQiKHsA
+         vkzhaCFo7NjAjwnlusRbK2eJToE4/6qsH/VidtvfoGe9YnAUCEyKg7X08/eHB69q7jx1
+         CQDtJ8KIKLKo7XqR4sNmau4InVS9IxwuUBVDqFRM5SIDGko5gz1+1YHFxVd1gXf6k5Cr
+         zVRz1AUdgrnQFd6RQlwSzCw9mOYbSAC8DNcS+zphMdYhvRDGkjg4iwlQ3NsEil7peC8P
+         VcRA==
+X-Gm-Message-State: APjAAAVfYVG3cYBunC65urKFBy/IkGhEySLAZTAmoYH6u9DylfSnfTZM
+        aRCZT01NKIKvWRrC3uoXqBY=
+X-Google-Smtp-Source: APXvYqyK6SQypWiySbcgzkfJtP3nG2bdYnaBrZYnqmsOSqA+m1YZ2hs8XYRi0afBEfIx7LRaouU2Xw==
+X-Received: by 2002:a5b:60f:: with SMTP id d15mr13944910ybq.183.1552006915140;
+        Thu, 07 Mar 2019 17:01:55 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id v124sm2237176ywc.49.2019.03.07.17.01.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 17:01:54 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx6qdl: Enable fsl,sec-v4.0-pwrkey
+Date:   Thu,  7 Mar 2019 19:01:48 -0600
+Message-Id: <20190308010148.9000-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-02-22 14:18:47)
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pi=
-nctrl-msm.c
-> index ee8119879c4c..83053b45982e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -890,6 +918,9 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, =
-unsigned int on)
-> =20
->         raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+The imx6q Technical reference manual shows the interrupt is
+available to wake from sleep using the power button. The driver
+has been available for quite some time, and other variants of the
+i.MX6 have it enabled, so this implements it much like the others.
 
-Can we remove the above hunk of code in this function? From what I can
-tell we're trying to set wake on the GIC SPI line and that won't ever
-work because it doesn't support wakeup support. Furthermore, I get a
-lockdep splat when I try to set wake on a GPIO irq with this patchset
-applied. It's probably a false positive though because it's warning
-about an AA deadlock with the irq descriptor lock, which is aliased
-between the two controllers.
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-> =20
-> +       if (d->parent_data)
-> +               irq_chip_set_wake_parent(d, on);
-> +
->         return 0;
->  }
-> =20
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index fe17a3405edc..6b3e48d2e5ec 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -4,6 +4,7 @@
+ // Copyright 2011 Linaro Ltd.
+ 
+ #include <dt-bindings/clock/imx6qdl-clock.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+@@ -833,6 +834,14 @@
+ 					status = "disabled";
+ 				};
+ 
++				snvs_pwrkey: snvs-powerkey {
++					compatible = "fsl,sec-v4.0-pwrkey";
++					regmap = <&snvs>;
++					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++					linux,keycode = <KEY_POWER>;
++					wakeup-source;
++				};
++
+ 				snvs_lpgpr: snvs-lpgpr {
+ 					compatible = "fsl,imx6q-snvs-lpgpr";
+ 				};
+-- 
+2.17.1
 
-Here's a patch on top. If you need my signed-off-by please feel free to
-add it:
-
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-
------8<-------
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinc=
-trl-msm.c
-index cdbc06ec5e96..4e81dad80a4d 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -852,20 +852,10 @@ static int msm_gpio_irq_set_type(struct irq_data *d, =
-unsigned int type)
-=20
- static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- {
--	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
--	struct msm_pinctrl *pctrl =3D gpiochip_get_data(gc);
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&pctrl->lock, flags);
--
--	irq_set_irq_wake(pctrl->irq, on);
--
--	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
--
- 	if (d->parent_data)
--		irq_chip_set_wake_parent(d, on);
-+		return irq_chip_set_wake_parent(d, on);
-=20
--	return 0;
-+	return -ENOSYS;
- }
-=20
- static int msm_gpio_irq_reqres(struct irq_data *d)
