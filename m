@@ -2,196 +2,213 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD1DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDD5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A298420851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E948E20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CcqiGDCs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AjNNFgfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfCHTab (ORCPT
+        id S1726776AbfCHTcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:30:31 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40417 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfCHTaa (ORCPT
+        Fri, 8 Mar 2019 14:32:20 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35933 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfCHTcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:30:30 -0500
-Received: by mail-lf1-f66.google.com with SMTP id a8so15068764lfi.7
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 11:30:28 -0800 (PST)
+        Fri, 8 Mar 2019 14:32:20 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r124so14903548pgr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 11:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wmzsITCMPK4um1+ibn4CgaT5J8qoiXor28fB4dXe1gs=;
-        b=CcqiGDCs2V6fYi+ttKMH5LEYZbFuj7r3EoK9tX6WDIiONd0BzrJqd1lqxc+Vs+dIzy
-         IuPr6dYVpzWamMCHHyPPpKBD3v8ttHSICS1rVilvhYA5wOunnTXxcH9G8rA5IlPd+9fD
-         lkiXdvcIBVA6VjOXcrLspYUFc8Jcorq7fjN7WXZO0LwGEiIdBRWGT4UXmD6VhSDmBScY
-         +VVR9dl5eHH1aEI3Plczi0w+gkTR4dM3GJO6DH4NPVyESxrDmSU8B5XBk9DPFvAI0d/P
-         x94siWE8p26nqT1vxRFq0p8yxZDIhTeF1594fqOA+c5WBS/bWVAsalxgr3XDB6Ldg5Gp
-         e1Qg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NayMJ0Rb+Jll5QCyAjFsYetr7VuNE9LRVNLrmhontas=;
+        b=AjNNFgfjz9/BfZwSDF9isAwzr60R0MnsYCDEGoYW2zAJ1W03zN4sDQnGPpvTWkiPWX
+         QDmY9AVgUlpmdZ6HmM5mCP5HjgZFCxP+KmhZOLLCqPRODVQ7ox56PfBhk4lZ0Zp9z9sB
+         5no8rRRLP3X/Jhk8uZd7judLVNLn1izRUBIao=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wmzsITCMPK4um1+ibn4CgaT5J8qoiXor28fB4dXe1gs=;
-        b=gVbr8Av+9M+dlr+qn7u45LO7NgwhXszY8B7fbZrcn/8N4KiCHsEyaRYbb2j5NOmCI0
-         mR++2aMkqedH6MZOBX6rKhFCb3MiXB3JZr5iJ0BT7s6WUWzlItuE4vgjRqPBv/FzamaS
-         uff7zaEMwLI7xkFwZ6gJKCPIJDgXk35e9FFOu/KTYO4mDs8p4XwXE2ToI8rWmJXJB9G/
-         7Io8CIcRRvlJqx0AWbMjPYZ55Gdo+NUUealyXfkIOlRbubetpKe+ekAqnfJob8lmnNu0
-         3M9nvve9eeLtcHVIBCkwhPEa8Z3jd34VzLGL0hbUpVxnCY6e3zJfEwvNEida7R9Aa+2q
-         jMEA==
-X-Gm-Message-State: APjAAAVjUoHWcLsVDFld61Cf5Ug/nglmdhOXj1xVTnzrNLbHlW9FPYr5
-        pxhMZSGuOVsnZzMBIWC9p+2K7EoR9VwYXkYOUaQCiQ==
-X-Google-Smtp-Source: APXvYqzbq5wykZ883iQq8qN/95y5bHgJsnoQciG0ROPvx3TSDtlFpZsmloEadrpx1Rfbuwb07B66A6KBKPuaKPUKqQE=
-X-Received: by 2002:a19:28c7:: with SMTP id o190mr4615109lfo.43.1552073427360;
- Fri, 08 Mar 2019 11:30:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NayMJ0Rb+Jll5QCyAjFsYetr7VuNE9LRVNLrmhontas=;
+        b=MjuYcnpk20yw6hv/kHDTa9iJaWgK6zOEXGIs+IOdBtY9viQnfg+yGXV87dTu77nHND
+         lkHLZr45fWFkKc533GY6NnXwtMPgzF7aeT4PYQ0VuKu2l4RJ3xr0aYK7rZBMqUSOllrO
+         gUqGB0VQM4HWLzRRaCyvIHuaj6oF8ZusHY1N5fSsTmVHIeB4FTt7j33JaxQBUnH+h0YV
+         tetRnDrFFtEZOEBKBvQhPaJp380I7m8q0TmoaBPqsAuh3aGQJexh2gTKaZKv/uZsJiE9
+         M4VqCimM/X1EtAd8VKCEpv6Mvuf5Ucm3WKA2+QPqGjIOHGlT8rwgUH5gHr/mNzvHh3yD
+         fHcw==
+X-Gm-Message-State: APjAAAWuyId1V/93H4BSW42Ly6ypUWdG5Ucp7/1lnYyznWcAvC90m20E
+        U4JE/tYK9SX7FS1D8TA8athBfQ==
+X-Google-Smtp-Source: APXvYqyv4zkBo1AiJMGxRPf1O48YxOTNeksygGq5gGMFRZ9+qfplrsZuneqC0i+BViLrECc+AXbODQ==
+X-Received: by 2002:a17:902:7682:: with SMTP id m2mr20803085pll.311.1552073538695;
+        Fri, 08 Mar 2019 11:32:18 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id s18sm10845724pfh.71.2019.03.08.11.32.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 11:32:18 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vasyl Gomonovych <gomonovych@gmail.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Baohong Liu <baohong.liu@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v2 1/2] tracing: kdb: Fix ftdump to not sleep
+Date:   Fri,  8 Mar 2019 11:32:04 -0800
+Message-Id: <20190308193205.213659-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
 MIME-Version: 1.0
-References: <20180702190154.6864-1-srinivas.pandruvada@linux.intel.com>
- <9712316ab62bef25953c523bce02e260a9ea40fe.camel@linux.intel.com>
- <20180730152256.GF1206094@devbig004.ftw2.facebook.com> <bf4b860c-6f82-4a3f-8b81-5f5c93f4389e@redhat.com>
- <20180730173345.GI1206094@devbig004.ftw2.facebook.com> <CAMHSBOVOK15nchZRFGTZUu8KSbBiK3SFzgW1amLjXb1iv_gJ5g@mail.gmail.com>
- <54d2b8e6-332b-117a-b982-77a535152246@redhat.com> <CACK8Z6GzOHJbh-M=0AxNbBoi3TqVehrs5xYsi2cUhW_dxz6vxg@mail.gmail.com>
- <3914af3f82d8aad8c22d814a20af4be654f8ad43.camel@linux.intel.com> <917a32a4-c806-af99-a9a3-246b28a5196a@redhat.com>
-In-Reply-To: <917a32a4-c806-af99-a9a3-246b28a5196a@redhat.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 8 Mar 2019 11:29:50 -0800
-Message-ID: <CACK8Z6GhBKKs7KVOZ50XrFQ2H3ps76uR8cpoohOHBSRkCOPsqA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] ata: libahci: devslp fixes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, alan.cox@intel.com,
-        "IDE/ATA development list" <linux-ide@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 12:57 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 08-03-19 01:04, Srinivas Pandruvada wrote:
-> > On Thu, 2019-03-07 at 15:07 -0800, Rajat Jain wrote:
-> >> Hello,
-> >>
-> >> On Thu, Mar 7, 2019 at 12:37 PM Hans de Goede <hdegoede@redhat.com>
-> >> wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> On 07-03-19 21:27, Gwendal Grignou wrote:
-> >>>> Srinivas,
-> >>>>
-> >>>> I am looking at problem on a laptop machine that suspends to
-> >>>> S01x, but
-> >>>> link_management is set to max_performance, because the machine is
-> >>>> connected to a charger.
-> >>>
-> >>> What is setting it to max_performance when charging?  I assume
-> >>> chrome-os is
-> >>> running something in userspace to do this (like TLP, but I guess
-> >>> you are not
-> >>> using TLP) ?
-> >>
-> >> Yes, we have a udev script that does this.
-> >>
-> >>>
-> >>> Have you run benchmarks with max_performance vs the default?
-> >>> I seriously doubt there will be a significant difference, esp.
-> >>> with a chrome-os style workload.
-> >>>
-> >>>> Given DVLSP must be set before the laptop suspends ["""One of the
-> >>>> requirement for modern x86 system to enter lowest power
-> >>>> mode  (SLP_S0)
-> >>>> is SATA IP block to be off."""], the machine never reaches S01x.
-> >>>> Does it make sense to change the target_lpm_policy at suspend
-> >>>> (ata_port_suspend()) to min_power and bring it back to the
-> >>>> original
-> >>>> value on resume?
-> >>>
-> >>> If userspace messes with the setting, then userspace should also
-> >>> put it back before suspending...
-> >>>
-> >>> The upstream kernel's default behavior is to have the target level
-> >>> set
-> >>> to a fixed level independent of the charging state. Could it be
-> >>> this
-> >>> fixed level is actually max-performance ? If that is the default
-> >>> the
-> >>> kernel comes up with, that would indicate a kernel bug.
-> >>
-> >> Side note: max-performance indeed can be the default forced by the
-> >> kernel for some (broken) SATA devices:
-> >>
-> >>          if (dev->horkage & ATA_HORKAGE_NOLPM) {
-> >>                  ata_dev_warn(dev, "LPM support broken, forcing
-> >> max_power\n");
-> >>                  dev->link->ap->target_lpm_policy = ATA_LPM_MAX_POWER;
-> >>          }
-> >>
-> >> So definitely these systems won't be able to go into S0ix today.
-> >>
-> >> But I think the main idea that we are asking is:
-> >>
-> >> 1) Yes, we acknowledge that the userspace has set it max-performance.
-> >>
-> >> 2) However, given that the kernel already knows that:
-> >>         - while in suspend, there is no real value in retaining the
-> >> max-performance.
-> >>         - On the contrary, we know system will fail to go into lower
-> >> power mode because of max-suspend.
-> >>
-> >> 3) Does it not make sense to use this knowledge and switch to
-> >> min_power when we are actually going to suspend (even if user
-> >> specified max-performance), and restore max-performance on resume?
-> >
-> > It is all about regressions. Hence we added multiple conditions for
-> > setting default to min power.
-> > It may cause issues for some SATAs, which may not recover once enters
-> > slumber or DEVSLP. There is also case where user having issues with
-> > default LPM policy hence he changed policy to max performance. We can't
-> > detect that.
-> > So it will be much safer if user space change policy to default before
-> > calling suspend.
+As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
+BUG for "sleeping function called from invalid context".
 
-Now I understand, and agree.
+kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
+atomic context.  A very simple solution for this is to add allocation
+flags to ring_buffer_read_prepare() so kdb can call it without
+triggering the allocation error.  This patch does that.
 
->
-> Right, or simply do not mess with the setting in the first place!
->
-> I noticed you did not answer this part of my original reply:
->
-> "Have you run benchmarks with max_performance vs the default?
-> I seriously doubt there will be a significant difference, esp.
-> with a chrome-os style workload."
->
-> I seriously doubt the max-performance setting has a user
-> noticeable impact on performance. So I repeat has someone
-> actually measured this with real-world chrome-os workloads ?
+Note that in the original email thread about this, it was suggested
+that perhaps the solution for kdb was to either preallocate the buffer
+ahead of time or create our own iterator.  I'm hoping that this
+alternative of adding allocation flags to ring_buffer_read_prepare()
+can be considered since it means I don't need to duplicate more of the
+core trace code into "trace_kdb.c" (for either creating my own
+iterator or re-preparing a ring allocator whose memory was already
+allocated).
 
-The reason we're setting it to max-performance is not really
-performance - but as a work around to a broken SATA device (Transcend
-SSD) that can't handle DEVSLP in active state (similar to what
-Srinivas said). Putting it to min_power while suspended was OK because
-it'd be in reset anyway at that time. Thanks for your explanations and
-help.
+NOTE: another option for kdb is to actually figure out how to make it
+reuse the existing ftrace_dump() function and totally eliminate the
+duplication.  This sounds very appealing and actually works (the "sr
+z" command can be seen to properly dump the ftrace buffer).  The
+downside here is that ftrace_dump() fully consumes the trace buffer.
+Unless that is changed I'd rather not use it because it means "ftdump
+| grep xyz" won't be very useful to search the ftrace buffer since it
+will throw away the whole trace on the first grep.  A future patch to
+dump only the last few lines of the buffer will also be hard to
+implement.
 
-Rajat
+[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
 
+Reported-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
->
-> Regards,
->
-> Hans
->
+Changes in v2:
+- Don't introduce _ring_buffer_read_prepare(), just change args
+
+ include/linux/ring_buffer.h | 2 +-
+ kernel/trace/ring_buffer.c  | 5 +++--
+ kernel/trace/trace.c        | 6 ++++--
+ kernel/trace/trace_kdb.c    | 6 ++++--
+ 4 files changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 5b9ae62272bb..503778920448 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -128,7 +128,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
+ 
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_prepare_sync(void);
+ void ring_buffer_read_start(struct ring_buffer_iter *iter);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 06e864a334bb..b49affb4666b 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4205,6 +4205,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
++ * @flags: gfp flags to use for memory allocation
+  *
+  * This performs the initial preparations necessary to iterate
+  * through the buffer.  Memory is allocated, buffer recording
+@@ -4222,7 +4223,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * This overall must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -4230,7 +4231,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return NULL;
+ 
+-	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
++	iter = kmalloc(sizeof(*iter), flags);
+ 	if (!iter)
+ 		return NULL;
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index c4238b441624..8867a93246d6 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3904,7 +3904,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++				ring_buffer_read_prepare(iter->trace_buffer->buffer,
++							 cpu, GFP_KERNEL);
+ 		}
+ 		ring_buffer_read_prepare_sync();
+ 		for_each_tracing_cpu(cpu) {
+@@ -3914,7 +3915,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter->trace_buffer->buffer,
++						 cpu, GFP_KERNEL);
+ 		ring_buffer_read_prepare_sync();
+ 		ring_buffer_read_start(iter->buffer_iter[cpu]);
+ 		tracing_iter_reset(iter, cpu);
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index d953c163a079..810d78a8d14c 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -51,14 +51,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu, GFP_ATOMIC);
+ 			ring_buffer_read_start(iter.buffer_iter[cpu]);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu_file, GFP_ATOMIC);
+ 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
+-- 
+2.21.0.360.g471c308f928-goog
+
