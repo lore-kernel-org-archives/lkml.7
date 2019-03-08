@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76418C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B502085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFCE20449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049847;
-	bh=YOuIvdNooku/v9BOs+eNwSKg3mUY4rvraURQrILCA1U=;
+	s=default; t=1552049850;
+	bh=FZ5No3eQ/rPZ3Vjg1ZghoB8yQIhaoZw3bZkb15CMhm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kq4e4s1NSvJVh5xyR5De5AVYhyjtpJt5Kl67IJpGYIYeYxs576KPlgh4PBncC8SkP
-	 VD+t6mDa8Ux5MbvipKoKEuRjMgyblvUJvLmrdlwYd2FKOL9AFlgaj1B+zKdatmmStc
-	 Ofa0Y95uKl3br4xJdDBIlLAXPTVY6E2czyzsssbI=
+	b=DgKBhxgWdwssXn6TRItvZOLlfIyNKRQ7WbQa/vq9tErMEC3KlKZmgJA04y8woPOkp
+	 wBCj2GJaMK8OT2bnqoNt5ZteGq/vmrBQxWfYnfHDgmp1ke+lgifO9U+w+atWh1nLkk
+	 YM0y0/FufjsCZi2lvGVvZVlsvk2VwXKYyjB0kJrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfCHM50 (ORCPT
+        id S1727857AbfCHM53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfCHM5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:21 -0500
+        id S1727848AbfCHM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:26 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E2320449;
-        Fri,  8 Mar 2019 12:57:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76F6820449;
+        Fri,  8 Mar 2019 12:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049841;
-        bh=YOuIvdNooku/v9BOs+eNwSKg3mUY4rvraURQrILCA1U=;
+        s=default; t=1552049845;
+        bh=FZ5No3eQ/rPZ3Vjg1ZghoB8yQIhaoZw3bZkb15CMhm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=og/FXlqZSJN81+YVa7xSOoSEf4UT3/dUGpnMfsmVW/x/uCh5XHm7BWmpBcUXpc9uk
-         EZKx5iDuX4YSEPuTqW1hUaws5h/YluVUu3kfWQcx2gnX/4gWG41dBFp3JWcj2cdFmX
-         J9iHOF5kRLgvF7IsYTEzE9Q6sFK59zJRAXL7cKJg=
+        b=xFsJmEp8HofNvnYFB+RnqhiBYqwruhiniDCsQP0dFGAlzJvWTWrF39e7MzT9n3/C2
+         7pGMyk7scr/1Zr47sl8L5dmrYulAbRmAFXXvBI6cJFoG/nl1lyBntMMzSyucaowSJn
+         gyPPTnz3Jo09Sry+uQe+42b3Gol8/DtJpnr2qm1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Sheng Lan <lansheng@huawei.com>,
+        Qin Ji <jiqin.ji@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 37/76] netlabel: fix out-of-bounds memory accesses
-Date:   Fri,  8 Mar 2019 13:49:49 +0100
-Message-Id: <20190308124916.133340758@linuxfoundation.org>
+Subject: [PATCH 4.20 38/76] net: netem: fix skb length BUG_ON in __skb_to_sgvec
+Date:   Fri,  8 Mar 2019 13:49:50 +0100
+Message-Id: <20190308124916.168317453@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -66,53 +68,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Moore <paul@paul-moore.com>
+From: Sheng Lan <lansheng@huawei.com>
 
-[ Upstream commit 5578de4834fe0f2a34fedc7374be691443396d1f ]
+[ Upstream commit 5845f706388a4cde0f6b80f9e5d33527e942b7d9 ]
 
-There are two array out-of-bounds memory accesses, one in
-cipso_v4_map_lvl_valid(), the other in netlbl_bitmap_walk().  Both
-errors are embarassingly simple, and the fixes are straightforward.
+It can be reproduced by following steps:
+1. virtio_net NIC is configured with gso/tso on
+2. configure nginx as http server with an index file bigger than 1M bytes
+3. use tc netem to produce duplicate packets and delay:
+   tc qdisc add dev eth0 root netem delay 100ms 10ms 30% duplicate 90%
+4. continually curl the nginx http server to get index file on client
+5. BUG_ON is seen quickly
 
-As a FYI for anyone backporting this patch to kernels prior to v4.8,
-you'll want to apply the netlbl_bitmap_walk() patch to
-cipso_v4_bitmap_walk() as netlbl_bitmap_walk() doesn't exist before
-Linux v4.8.
+[10258690.371129] kernel BUG at net/core/skbuff.c:4028!
+[10258690.371748] invalid opcode: 0000 [#1] SMP PTI
+[10258690.372094] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G        W         5.0.0-rc6 #2
+[10258690.372094] RSP: 0018:ffffa05797b43da0 EFLAGS: 00010202
+[10258690.372094] RBP: 00000000000005ea R08: 0000000000000000 R09: 00000000000005ea
+[10258690.372094] R10: ffffa0579334d800 R11: 00000000000002c0 R12: 0000000000000002
+[10258690.372094] R13: 0000000000000000 R14: ffffa05793122900 R15: ffffa0578f7cb028
+[10258690.372094] FS:  0000000000000000(0000) GS:ffffa05797b40000(0000) knlGS:0000000000000000
+[10258690.372094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[10258690.372094] CR2: 00007f1a6dc00868 CR3: 000000001000e000 CR4: 00000000000006e0
+[10258690.372094] Call Trace:
+[10258690.372094]  <IRQ>
+[10258690.372094]  skb_to_sgvec+0x11/0x40
+[10258690.372094]  start_xmit+0x38c/0x520 [virtio_net]
+[10258690.372094]  dev_hard_start_xmit+0x9b/0x200
+[10258690.372094]  sch_direct_xmit+0xff/0x260
+[10258690.372094]  __qdisc_run+0x15e/0x4e0
+[10258690.372094]  net_tx_action+0x137/0x210
+[10258690.372094]  __do_softirq+0xd6/0x2a9
+[10258690.372094]  irq_exit+0xde/0xf0
+[10258690.372094]  smp_apic_timer_interrupt+0x74/0x140
+[10258690.372094]  apic_timer_interrupt+0xf/0x20
+[10258690.372094]  </IRQ>
 
-Reported-by: Jann Horn <jannh@google.com>
-Fixes: 446fda4f2682 ("[NetLabel]: CIPSOv4 engine")
-Fixes: 3faa8f982f95 ("netlabel: Move bitmap manipulation functions to the NetLabel core.")
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+In __skb_to_sgvec(), the skb->len is not equal to the sum of the skb's
+linear data size and nonlinear data size, thus BUG_ON triggered.
+Because the skb is cloned and a part of nonlinear data is split off.
+
+Duplicate packet is cloned in netem_enqueue() and may be delayed
+some time in qdisc. When qdisc len reached the limit and returns
+NET_XMIT_DROP, the skb will be retransmit later in write queue.
+the skb will be fragmented by tso_fragment(), the limit size
+that depends on cwnd and mss decrease, the skb's nonlinear
+data will be split off. The length of the skb cloned by netem
+will not be updated. When we use virtio_net NIC and invoke skb_to_sgvec(),
+the BUG_ON trigger.
+
+To fix it, netem returns NET_XMIT_SUCCESS to upper stack
+when it clones a duplicate packet.
+
+Fixes: 35d889d1 ("sch_netem: fix skb leak in netem_enqueue()")
+Signed-off-by: Sheng Lan <lansheng@huawei.com>
+Reported-by: Qin Ji <jiqin.ji@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/cipso_ipv4.c        |    3 ++-
- net/netlabel/netlabel_kapi.c |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ net/sched/sch_netem.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -667,7 +667,8 @@ static int cipso_v4_map_lvl_valid(const
- 	case CIPSO_V4_MAP_PASS:
- 		return 0;
- 	case CIPSO_V4_MAP_TRANS:
--		if (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL)
-+		if ((level < doi_def->map.std->lvl.cipso_size) &&
-+		    (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL))
- 			return 0;
- 		break;
- 	}
---- a/net/netlabel/netlabel_kapi.c
-+++ b/net/netlabel/netlabel_kapi.c
-@@ -903,7 +903,8 @@ int netlbl_bitmap_walk(const unsigned ch
- 		    (state == 0 && (byte & bitmask) == 0))
- 			return bit_spot;
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -430,6 +430,7 @@ static int netem_enqueue(struct sk_buff
+ 	int nb = 0;
+ 	int count = 1;
+ 	int rc = NET_XMIT_SUCCESS;
++	int rc_drop = NET_XMIT_DROP;
  
--		bit_spot++;
-+		if (++bit_spot >= bitmap_len)
-+			return -1;
- 		bitmask >>= 1;
- 		if (bitmask == 0) {
- 			byte = bitmap[++byte_offset];
+ 	/* Do not fool qdisc_drop_all() */
+ 	skb->prev = NULL;
+@@ -469,6 +470,7 @@ static int netem_enqueue(struct sk_buff
+ 		q->duplicate = 0;
+ 		rootq->enqueue(skb2, rootq, to_free);
+ 		q->duplicate = dupsave;
++		rc_drop = NET_XMIT_SUCCESS;
+ 	}
+ 
+ 	/*
+@@ -481,7 +483,7 @@ static int netem_enqueue(struct sk_buff
+ 		if (skb_is_gso(skb)) {
+ 			segs = netem_segment(skb, sch, to_free);
+ 			if (!segs)
+-				return NET_XMIT_DROP;
++				return rc_drop;
+ 		} else {
+ 			segs = skb;
+ 		}
+@@ -504,8 +506,10 @@ static int netem_enqueue(struct sk_buff
+ 			1<<(prandom_u32() % 8);
+ 	}
+ 
+-	if (unlikely(sch->q.qlen >= sch->limit))
+-		return qdisc_drop_all(skb, sch, to_free);
++	if (unlikely(sch->q.qlen >= sch->limit)) {
++		qdisc_drop_all(skb, sch, to_free);
++		return rc_drop;
++	}
+ 
+ 	qdisc_qstats_backlog_inc(sch, skb);
+ 
 
 
