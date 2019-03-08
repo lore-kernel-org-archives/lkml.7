@@ -6,61 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7064BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B612085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C552085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552070199;
-	bh=AWXZLvOvZnyiTri+mwqkysPE/3Pdn4XNg5sMsXCKTPg=;
+	s=default; t=1552070211;
+	bh=QU8QNv+dJ3unZs5te2gBhT27SXH1ctSWV//VIcCfAis=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Ms0XC2NC3ucgEZY0X0XDP2u9XuorCScPQbRvSljHfij7qRIoO93U+N0O1yakvQB8O
-	 jOnvdSArA1Bgr2175Muw7tL/PRXRb8iqkSnYB5MNjpZqlCTeXQ69BZ3Y11cd1TEvpx
-	 S65Yz0/qFyq6zsRrhl0zUp7DwcobhMg9rsgWvhjU=
+	b=KQvAvJUH9xqRsmtRm7hZgdAKi47L1iioJOtDy1Ly1+4iRtshHyDsAJlOEh4IVFtCx
+	 JEVZ6TmDl7u7th1wXrBIoWYdsAP5j7n7w6MUKY+W8Bw5lQTDRJZWgt7WBWFHzb6fEa
+	 MK2uqx/2YApt4Dn3iESYVB7Mm9ZAjuV6p1eLQX9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfCHSgh (ORCPT
+        id S1727027AbfCHSfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:36:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41114 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 13:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfCHSfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:35:23 -0500
-Subject: Re: [GIT PULL] hsi changes for hsi-5.1
+        id S1726828AbfCHSfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 13:35:18 -0500
+Subject: Re: [GIT PULL] Bulk GPIO changes for the v5.1 kernel cycle
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552070122;
-        bh=AWXZLvOvZnyiTri+mwqkysPE/3Pdn4XNg5sMsXCKTPg=;
+        s=default; t=1552070118;
+        bh=QU8QNv+dJ3unZs5te2gBhT27SXH1ctSWV//VIcCfAis=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=XGB2RVfIu3PfdvCfoQDNhpw+DN3jt3yYMTL2MdJ/nt4TLQns12TigmeOraAP7wHIW
-         LvUxwBcTI/C2VDYUYujCUkd3NwmG8HJqtRUyw2mFe32gC9NvKzZ23zweIsHHr/K+T6
-         URQ0absUaIX5P8dFian+5+MVL23U3JEA2fsCZ9N4=
+        b=zsnmAM14A0F3BQJLbf5miqn+J6wO2/r1N/Rsrfc6XgaXl7y17Ss1caO/fvlPxlyYm
+         OoH6yk9aFZimPu41esEQtQqirVOUWEKOQz4NToIqYID/9HdkPu2QVAtJuEw3Kwcrlv
+         g61GpYOYafl9mAgfht0ryZGNCSulDADs6s7tobXo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190305220123.vxjgvbow2gcejxlw@earth.universe>
-References: <20190305220123.vxjgvbow2gcejxlw@earth.universe>
+In-Reply-To: <CACRpkdYcT3zkSUo74i=WXS4AhHtKEDF2K8o1wttsZeGMK9cvCQ@mail.gmail.com>
+References: <CACRpkdYcT3zkSUo74i=WXS4AhHtKEDF2K8o1wttsZeGMK9cvCQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190305220123.vxjgvbow2gcejxlw@earth.universe>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git
- tags/hsi-for-5.1
-X-PR-Tracked-Commit-Id: 1ff85bfa1614df6cacec780cd5922dc0b1c340c7
+X-PR-Tracked-Message-Id: <CACRpkdYcT3zkSUo74i=WXS4AhHtKEDF2K8o1wttsZeGMK9cvCQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ tags/gpio-v5.1-1
+X-PR-Tracked-Commit-Id: c378b3aa015931a46c91d6ccc2fe04d97801d060
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7427e28688ed48b0a9484c4035f86e836d9787a2
-Message-Id: <155207012264.7904.10410740145885460660.pr-tracker-bot@kernel.org>
-Date:   Fri, 08 Mar 2019 18:35:22 +0000
-To:     Sebastian Reichel <sre@kernel.org>
+X-PR-Merge-Commit-Id: a422bf11bdb4b95fc78e175339e8eed501e9c13c
+Message-Id: <155207011820.7904.6803497707115628424.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 Mar 2019 18:35:18 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Brian Masney <masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 5 Mar 2019 23:01:23 +0100:
+The pull request you sent on Tue, 5 Mar 2019 10:35:57 +0100:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git tags/hsi-for-5.1
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.1-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7427e28688ed48b0a9484c4035f86e836d9787a2
+https://git.kernel.org/torvalds/c/a422bf11bdb4b95fc78e175339e8eed501e9c13c
 
 Thank you!
 
