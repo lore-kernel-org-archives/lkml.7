@@ -2,95 +2,116 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07A6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B62C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9472D20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552065294;
-	bh=C1g7iI9AJ1G7ZXDznNnEvdzQVIxmPQ1LPSAvLYf2qOY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O20q4ZrbLQ2ODMy4JDJNKBA0Uud0ZwFmMoczmHEot+uFJDb67tVsFi+EjzEKejC+i
-	 aAeWo+KFLlBG4KOK1A5FEkhtUPoOQWwiS4GKTzw7hzRGRkP/H8rlTEnkim9jJfuD3q
-	 x8YXfZXZ6hENvc1NJXQHM7oPnieHVtFhOFGR0wtI=
+	by mail.kernel.org (Postfix) with ESMTP id 124692146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="BupmmeZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfCHROx (ORCPT
+        id S1726954AbfCHRWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:14:53 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:32801 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbfCHROw (ORCPT
+        Fri, 8 Mar 2019 12:22:23 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37767 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfCHRWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:14:52 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z23so14804933lfe.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:14:51 -0800 (PST)
+        Fri, 8 Mar 2019 12:22:23 -0500
+Received: by mail-qt1-f196.google.com with SMTP id a48so22042421qtb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:22:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wKdq4NhhNanoF1azIJovbOYf6T8dVd50RHDblR3XyrA=;
-        b=iEQMXqrL4xqr/uuglNC/x/bZZpvoYc7iLw1lyaL4Y/G8q9fCO14odGJHgXFVxw4K0U
-         eujg8MQ9YEN2KhaJa24aTz6Dz4IO8Osw8PGL3RKiAEdGvTt3lI8uiR/6JUuoRum0Q9Gh
-         I6yQJQPz25u8suXbTBw/SuH3BCxC5HoduKaH0=
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JbH57hj38dbuvh9sgqbNRJMeCQlSikG1kcp1+esyKsE=;
+        b=BupmmeZkBGvKHTBw9Ba0knKotbsh2ucjHI0nGoWNbNfY/Vz5l98p4lh36/ATOGGIy/
+         9kATlqWal45/OVi5k69K+pOW61YgOyiLvZ6r0VrpTgcM+sOfWv88hoQebSU3FIik95m/
+         nqd7OdcTF0ygteH8C37NMIK2loiV2y+1untflcF5ccuY+lM7Ifx55dznXKhzRlE6DpzN
+         0oexkJ8SnQGCq+yKpGzbO4uUslVcAW+V7oupFlO+Lnf8/ZjjXcXnppBSPK4iRRUext12
+         wqA3iL83EOzC7Qf31kwEaU5WWO5d7OKXziWjufIToX8G26BQJNNAxiq2D1WEyceZLyho
+         bvsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wKdq4NhhNanoF1azIJovbOYf6T8dVd50RHDblR3XyrA=;
-        b=WkM/WAIDVVnbKz+GuP1Ikd9RzVOzQ9mnF/ydOOPDxdMl98CaBPzUoN4QWzN6QUdxRZ
-         EW5hyn855oAalbEFf0+/SiExcLPagspypce8ZFLrKHdFsj4fR8qX/VhuqHxB8bgVc3qV
-         1XVINcgJcVFrvYDFznmHtKq4QsHDExwP8BSBCl2fY0MmkPNKRlyMl6RbB9EqB4H1Gs29
-         PremVArNffI/72iYOWffz82UqBu85nMSfOKGZWoDgygn/qDRQwYKdAvfbCuaisEjLG/d
-         /1goYsOevjTaiCH8763B6lbSp14VV1td6b4y3JgfAuJbe+S1Hq+/NuxknpSZFRxIOhQQ
-         pjsA==
-X-Gm-Message-State: APjAAAVRDZRxspuAKvIY/6O8DWvP28a0HdOoQrS3TogLl7b7OZYG/Irj
-        QwPp022Gal2y2s4Q0U7xiKXu7ANC2CI=
-X-Google-Smtp-Source: APXvYqwZBDos5kVQmqHedgkvd+hzzCRbEWq+rLyLAkF0+2f2RwH8SC/opYS3/O1GRgcnrWUm6I9TGQ==
-X-Received: by 2002:ac2:518d:: with SMTP id u13mr9847829lfi.133.1552065289935;
-        Fri, 08 Mar 2019 09:14:49 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id v13sm1515785ljd.31.2019.03.08.09.14.48
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JbH57hj38dbuvh9sgqbNRJMeCQlSikG1kcp1+esyKsE=;
+        b=gdgsrgTZ/jowWFNn6sSiy1TgbARO9ihV2/oFzLhiHK8V5HQODKQQoPn0PT1IL/RBEM
+         yzU+QCyYei4zOQMqeHOiaGio6TjNQfWf55HU3JAXFcTKgc8sqj51HdlBcD9d2k/Dtl1n
+         /oiH+QMa/olvlc5gNfboDiTO30sI2TvQA3aF3kzoWcFpv1qoKVONeSBvEvgIFAGIJ4KV
+         GEPn3Y/wbO5/0AJR+hcWGAYuZvtDcIkcK6hD/wPmIA7hPkTw1H+u1E6tlNl9Yv/bZHo8
+         9MaUAv6gp+1yaiImHc0ybgFuGRXC8iCZ5swhpcLNgbPjNxEbC6SbCq7vOpBH0+szIwGo
+         /OlQ==
+X-Gm-Message-State: APjAAAX+QsjRxH8SXPSZZPwlSFKN+xF1lzaJfgGOBSSsiICcB1wt0NyU
+        OfHVP42FGfHXx4st49hw/ZdC1g==
+X-Google-Smtp-Source: APXvYqxFeMvdRVtcxpV/iBEVratRFw6cxDJJ6VFy3yGqZG2kucewCRZA1txSERTsvGbbrU+ybjftdQ==
+X-Received: by 2002:a0c:b785:: with SMTP id l5mr15957092qve.225.1552065742151;
+        Fri, 08 Mar 2019 09:22:22 -0800 (PST)
+Received: from localhost ([107.15.81.208])
+        by smtp.gmail.com with ESMTPSA id n27sm2064404qtf.11.2019.03.08.09.22.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 09:14:49 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id v16so17983195ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:14:48 -0800 (PST)
-X-Received: by 2002:a2e:9786:: with SMTP id y6mr8734315lji.79.1552065288638;
- Fri, 08 Mar 2019 09:14:48 -0800 (PST)
+        Fri, 08 Mar 2019 09:22:21 -0800 (PST)
+Date:   Fri, 8 Mar 2019 12:22:20 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
+        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] blkcg: sync() isolation
+Message-ID: <20190308172219.clcu6ehjav6y2hxi@MacBook-Pro-91.local>
+References: <20190307180834.22008-1-andrea.righi@canonical.com>
 MIME-Version: 1.0
-References: <20190305141645.GF9073@zn.tnic>
-In-Reply-To: <20190305141645.GF9073@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 8 Mar 2019 09:14:32 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjESdzE5YRYny25yhMvKP24omiRAJ2PMbqOdh7HwjKJAg@mail.gmail.com>
-Message-ID: <CAHk-=wjESdzE5YRYny25yhMvKP24omiRAJ2PMbqOdh7HwjKJAg@mail.gmail.com>
-Subject: Re: [GIT PULL] RAS updates for 5.1
-To:     Borislav Petkov <bp@suse.de>
-Cc:     x86-ml <x86@kernel.org>, linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307180834.22008-1-andrea.righi@canonical.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 6:16 AM Borislav Petkov <bp@suse.de> wrote:
->
-> please pull the latest ras-core-for-linus tree from:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
+On Thu, Mar 07, 2019 at 07:08:31PM +0100, Andrea Righi wrote:
+> = Problem =
+> 
+> When sync() is executed from a high-priority cgroup, the process is forced to
+> wait the completion of the entire outstanding writeback I/O, even the I/O that
+> was originally generated by low-priority cgroups potentially.
+> 
+> This may cause massive latencies to random processes (even those running in the
+> root cgroup) that shouldn't be I/O-throttled at all, similarly to a classic
+> priority inversion problem.
+> 
+> This topic has been previously discussed here:
+> https://patchwork.kernel.org/patch/10804489/
+> 
 
-Hmm. You use signed tags for the EDAC tree, but not the RAS one. Is
-there a reason for that oddity?
+Sorry to move the goal posts on you again Andrea, but Tejun and I talked about
+this some more offline.
 
-Not a big deal for a kernel.org tree, but I do prefer them signed even there.
+We don't want cgroup to become the arbiter of correctness/behavior here.  We
+just want it to be isolating things.
 
-Regardless - pulled, just wondering,
+For you that means you can drop the per-cgroup flag stuff, and only do the
+priority boosting for multiple sync(2) waiters.  That is a real priority
+inversion that needs to be fixed.  io.latency and io.max are capable of noticing
+that a low priority group is going above their configured limits and putting
+pressure elsewhere accordingly.
 
-               Linus
+Tejun said he'd rather see the sync(2) isolation be done at the namespace level.
+That way if you have fs namespacing you are already isolated to your namespace.
+If you feel like tackling that then hooray, but that's a separate dragon to slay
+so don't feel like you have to right now.
+
+This way we keep cgroup doing its job, controlling resources.  Then we allow
+namespacing to do its thing, isolating resources.  Thanks,
+
+Josef
