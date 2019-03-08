@@ -2,104 +2,105 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80DAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F82DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA9620851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0823520840
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbfCHDka (ORCPT
+        id S1726411AbfCHDlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:40:30 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:17530 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726261AbfCHDk3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:40:29 -0500
-X-UUID: 4c6231ebe90642c2a865fb82062a1056-20190308
-X-UUID: 4c6231ebe90642c2a865fb82062a1056-20190308
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1602752847; Fri, 08 Mar 2019 11:40:22 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 8 Mar 2019 11:40:21 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 8 Mar 2019 11:40:21 +0800
-Message-ID: <1552016421.2863.16.camel@mtksdaap41>
-Subject: Re: [PATCH v2 04/10] soc: mediatek: cmdq: add mt8183 compatible name
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Date:   Fri, 8 Mar 2019 11:40:21 +0800
-In-Reply-To: <1551865835-50974-5-git-send-email-bibby.hsieh@mediatek.com>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1551865835-50974-5-git-send-email-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 7 Mar 2019 22:41:01 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:53572 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfCHDlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 22:41:01 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E21753C2CF7;
+        Fri,  8 Mar 2019 03:41:00 +0000 (UTC)
+Received: from redhat.com (ovpn-125-54.rdu2.redhat.com [10.10.125.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C72AB1001DC1;
+        Fri,  8 Mar 2019 03:40:55 +0000 (UTC)
+Date:   Thu, 7 Mar 2019 22:40:53 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, aarcange@redhat.com
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190308034053.GB5562@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191720.GF3835@redhat.com>
+ <20190307211506-mutt-send-email-mst@kernel.org>
+ <20190308025539.GA5562@redhat.com>
+ <20190307221549-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190307221549-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 08 Mar 2019 03:41:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
-
-On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> add mt8183 compatible name
-
-This patch doest not just add compatible name, it let this driver
-support mt8183 gce function.
-
-And I think this patch should be moved after the patch 'soc: mediatek:
-cmdq: move the CMDQ_IRQ_MASK into cmdq driver data'.
-
-Regards,
-CK
-
+On Thu, Mar 07, 2019 at 10:16:00PM -0500, Michael S. Tsirkin wrote:
+> On Thu, Mar 07, 2019 at 09:55:39PM -0500, Jerome Glisse wrote:
+> > On Thu, Mar 07, 2019 at 09:21:03PM -0500, Michael S. Tsirkin wrote:
+> > > On Thu, Mar 07, 2019 at 02:17:20PM -0500, Jerome Glisse wrote:
+> > > > > It's because of all these issues that I preferred just accessing
+> > > > > userspace memory and handling faults. Unfortunately there does not
+> > > > > appear to exist an API that whitelists a specific driver along the lines
+> > > > > of "I checked this code for speculative info leaks, don't add barriers
+> > > > > on data path please".
+> > > > 
+> > > > Maybe it would be better to explore adding such helper then remapping
+> > > > page into kernel address space ?
+> > > 
+> > > I explored it a bit (see e.g. thread around: "__get_user slower than
+> > > get_user") and I can tell you it's not trivial given the issue is around
+> > > security.  So in practice it does not seem fair to keep a significant
+> > > optimization out of kernel because *maybe* we can do it differently even
+> > > better :)
+> > 
+> > Maybe a slightly different approach between this patchset and other
+> > copy user API would work here. What you want really is something like
+> > a temporary mlock on a range of memory so that it is safe for the
+> > kernel to access range of userspace virtual address ie page are
+> > present and with proper permission hence there can be no page fault
+> > while you are accessing thing from kernel context.
+> > 
+> > So you can have like a range structure and mmu notifier. When you
+> > lock the range you block mmu notifier to allow your code to work on
+> > the userspace VA safely. Once you are done you unlock and let the
+> > mmu notifier go on. It is pretty much exactly this patchset except
+> > that you remove all the kernel vmap code. A nice thing about that
+> > is that you do not need to worry about calling set page dirty it
+> > will already be handle by the userspace VA pte. It also use less
+> > memory than when you have kernel vmap.
+> > 
+> > This idea might be defeated by security feature where the kernel is
+> > running in its own address space without the userspace address
+> > space present.
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 2281178..909eb23 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -536,6 +536,7 @@ static int cmdq_probe(struct platform_device *pdev)
->  
->  static const struct of_device_id cmdq_of_ids[] = {
->  	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
-> +	{.compatible = "mediatek,mt8183-gce", .data = (void *)24},
->  	{}
->  };
->  
+> Like smap?
 
+Yes like smap but also other newer changes, with similar effect, since
+the spectre drama.
 
+Cheers,
+Jérôme
