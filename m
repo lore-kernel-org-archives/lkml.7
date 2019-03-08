@@ -2,99 +2,139 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9F5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6B7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4379920851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8C22085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkxMAgis"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q3KVYEkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCHMds (ORCPT
+        id S1726510AbfCHMeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:33:48 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34158 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHMds (ORCPT
+        Fri, 8 Mar 2019 07:34:17 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49282 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfCHMeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:33:48 -0500
-Received: by mail-pg1-f193.google.com with SMTP id i130so14083995pgd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 04:33:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Df5cRbrwJq3leZC5CjI//bKXTRG4DObW5gdAgTes3Xw=;
-        b=JkxMAgisiLW+M2Bm03CSomouHBn5jXNhKbRNdeTASOZvC3wQvsaqJXIvxj2gyuBPFc
-         j22MGl4tGF/Xs3brz5hCXi5sefVpKYdirdcO6sykqGFIayLFQiOrbuI7DzF9KYDI4xsX
-         5dxfQsGz9qJOj/OcLglQpry22EsBKdFWU9O61+HFlheMO0YumFqAa8/Uh+w3WoUv0W7m
-         8PUJuk4oiEsGU4TrL3kCB5s9y1HQ7PQbJ4tU6IvMUkcMH8a8D8YXh4JVWA+Wkqcqyf6X
-         qQEKKtg87F50J57u4gPANeWD/oCnTC9G7Qw3Vh5qY+5Qfqiq13/3mSA9gXcFv0HWR6BD
-         GvWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Df5cRbrwJq3leZC5CjI//bKXTRG4DObW5gdAgTes3Xw=;
-        b=LBwvU8ToVvCUGiBWh2GvhAb2fcZCoIvB8qh5eXi997NRDwWmjFvirc8wCOxUvpV876
-         wIyPFqAI46U7oZjVzf/i6jO4LLryVXWRq2TYW0KtFoSLYkT6dMjAE8wZD5OBtveCKfy3
-         IIywSyDiAIjUT9epb+fm9/77gOI1v9nU1cAs92HziTmV1rwy3xTy+Yjehu9jw8ZhY6QH
-         h5UOshMBorBJ8j7xeh01ECKvqHJJolVJi0p6+GbSP0CDrWvOm3AacrTE6B1loXhUqL0v
-         4YL5ujsARVn14uUaW26fcRvwj3KitsK/4jXwoOOjOF61Ox1yuZRIj8r400YgbNSbeyRQ
-         VBVQ==
-X-Gm-Message-State: APjAAAWdV0USb+yFzPYLt0Dx+sLPi2QKhj5mM3vD9cJhk5boWPjwuGRp
-        VP3MSC0KRdZaOnPDxnmiRI0=
-X-Google-Smtp-Source: APXvYqz4jSLRAUAEyzGJEZowgIu/k+w9SRxcqxZCHuq2Gc3ujzhwrZbQP64N7Fot3zdu3XwgvG0GoA==
-X-Received: by 2002:a65:63c2:: with SMTP id n2mr16430822pgv.439.1552048427299;
-        Fri, 08 Mar 2019 04:33:47 -0800 (PST)
-Received: from test-System-Product-Name.sunix.com.tw (114-36-243-101.dynamic-ip.hinet.net. [114.36.243.101])
-        by smtp.gmail.com with ESMTPSA id e14sm25960483pga.61.2019.03.08.04.33.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 04:33:46 -0800 (PST)
-From:   Morris Ku <saumah@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     morris_ku@sunix.com, linux-kernel@vger.kernel.org, arnd@arndb.de,
-        Morris Ku <saumah@gmail.com>
-Subject: [PATCH 1/4] Add support for SUNIX Multi-I/O card
-Date:   Fri,  8 Mar 2019 20:33:22 +0800
-Message-Id: <20190308123322.20467-1-saumah@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 8 Mar 2019 07:34:17 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28CY4kE007858;
+        Fri, 8 Mar 2019 06:34:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552048444;
+        bh=sH008Bby5gtys/xfcSMMwv3+pSUdBZH396zi6gqpQ/o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=q3KVYEkjo80RKjBzj2uyX3OecjKM0ex/ou34UrqdSbmIldiGykr5P5a0S6qVCcMH1
+         gMG5u2CPvB8Vfbzc0FCYVYlGkzUG5uQwGFMmVj2ceekc7R8RZ1B5L3nQfrcX8XSejR
+         r1Tfn/eW7KGUKDR/lZgNqzthGV1qqVxQu1WOgUws=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28CY4K5106498
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Mar 2019 06:34:04 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
+ Mar 2019 06:34:03 -0600
+Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 8 Mar 2019 06:34:04 -0600
+Received: from [172.22.83.167] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28CY3Bu025292;
+        Fri, 8 Mar 2019 06:34:03 -0600
+Subject: Re: [PATCH v7 2/4] can: m_can: Rename m_can_priv to m_can_classdev
+To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
+        <davem@davemloft.net>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190305155220.14037-1-dmurphy@ti.com>
+ <20190305155220.14037-2-dmurphy@ti.com>
+ <1138f22c-028c-184a-19c0-5b8f64bd977f@grandegger.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e85a4d42-2c96-a95c-e3bb-31a3c928a1f2@ti.com>
+Date:   Fri, 8 Mar 2019 06:33:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <1138f22c-028c-184a-19c0-5b8f64bd977f@grandegger.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Kconfig and Makefile entry.
+Wolfgang
 
-Signed-off-by: Morris Ku <saumah@gmail.com>
----
- Kconfig  | 2 ++
- Makefile | 1 +
- 2 files changed, 3 insertions(+)
+On 3/8/19 4:25 AM, Wolfgang Grandegger wrote:
+> 
+> 
+> Am 05.03.19 um 16:52 schrieb Dan Murphy:
+>> Rename the common m_can_priv class structure to
+>> m_can_classdev as this is more descriptive.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v7 - Fixed remaining checkpatch issues, renamed priv to cdev - https://lore.kernel.org/patchwork/patch/1047219/
+>>
+>> v6 - No changes only rebase changes possibly can squash into the first patch - 
+>> https://lore.kernel.org/patchwork/patch/1042444/
+>>
+>>  drivers/net/can/m_can/m_can.c          | 524 ++++++++++++-------------
+>>  drivers/net/can/m_can/m_can.h          |  28 +-
+>>  drivers/net/can/m_can/m_can_platform.c |  16 +-
+>>  3 files changed, 284 insertions(+), 284 deletions(-)
+> 
+> ...snip...
+> 
+>> diff --git a/drivers/net/can/m_can/m_can.h b/drivers/net/can/m_can/m_can.h
+>> index b60f27dd9f33..1299cc747194 100644
+>> --- a/drivers/net/can/m_can/m_can.h
+>> +++ b/drivers/net/can/m_can/m_can.h
+>> @@ -57,19 +57,19 @@ struct mram_cfg {
+>>  	u8  num;
+>>  };
+>>  
+>> -struct m_can_priv;
+>> +struct m_can_classdev;
+>>  struct m_can_ops {
+>>  	/* Device specific call backs */
+>> -	int (*clear_interrupts)(struct m_can_priv *m_can_class);
+>> -	u32 (*read_reg)(struct m_can_priv *m_can_class, int reg);
+>> -	int (*write_reg)(struct m_can_priv *m_can_class, int reg, int val);
+>> -	u32 (*read_fifo)(struct m_can_priv *m_can_class, int addr_offset);
+>> -	int (*write_fifo)(struct m_can_priv *m_can_class, int addr_offset,
+>> +	int (*clear_interrupts)(struct m_can_classdev *m_can_class);
+>> +	u32 (*read_reg)(struct m_can_classdev *m_can_class, int reg);
+>> +	int (*write_reg)(struct m_can_classdev *m_can_class, int reg, int val);
+>> +	u32 (*read_fifo)(struct m_can_classdev *m_can_class, int addr_offset);
+>> +	int (*write_fifo)(struct m_can_classdev *m_can_class, int addr_offset,
+> 
+> Could you please replace the variable name "m_can_class" with "cdev"
+> here and below and in "c_can_platform.c " and "tcan4x5x.c" as well.
+> 
 
-diff --git a/Kconfig b/Kconfig
-index 4f9f9905..645dcc85 100644
---- a/Kconfig
-+++ b/Kconfig
-@@ -228,4 +228,6 @@ source "drivers/siox/Kconfig"
- 
- source "drivers/slimbus/Kconfig"
- 
-+source "drivers/char/snx/Kconfig"
-+
- endmenu
-diff --git a/Makefile b/Makefile
-index e1ce029d..c9393c75 100644
---- a/Makefile
-+++ b/Makefile
-@@ -186,3 +186,4 @@ obj-$(CONFIG_MULTIPLEXER)	+= mux/
- obj-$(CONFIG_UNISYS_VISORBUS)	+= visorbus/
- obj-$(CONFIG_SIOX)		+= siox/
- obj-$(CONFIG_GNSS)		+= gnss/
-+obj-$(CONFIG_SNX)		+= snx/
---
-2.17.1
+OK I will update the header
 
+The tcan and m_can_platform source files are converted to cdev as opposed to m_can_class variable.
+
+Dan
+
+> Thanks,
+> 
+> Wolfgang.
+> 
+
+
+-- 
+------------------
+Dan Murphy
