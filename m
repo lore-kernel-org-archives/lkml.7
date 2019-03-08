@@ -6,54 +6,45 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF08C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD2EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2413520868
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72054208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfCHPYB (ORCPT
+        id S1726446AbfCHP1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:24:01 -0500
-Received: from verein.lst.de ([213.95.11.211]:54542 "EHLO newverein.lst.de"
+        Fri, 8 Mar 2019 10:27:39 -0500
+Received: from verein.lst.de ([213.95.11.211]:54570 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfCHPYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:24:01 -0500
+        id S1725789AbfCHP1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 10:27:38 -0500
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 4F0B368C4E; Fri,  8 Mar 2019 16:23:55 +0100 (CET)
-Date:   Fri, 8 Mar 2019 16:23:55 +0100
+        id 1ED7C68C4E; Fri,  8 Mar 2019 16:27:33 +0100 (CET)
+Date:   Fri, 8 Mar 2019 16:27:32 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [Xen-devel] [PATCH] Revert "swiotlb: remove SWIOTLB_MAP_ERROR"
-Message-ID: <20190308152355.GA20230@lst.de>
-References: <20190304195951.1118807-1-arnd@arndb.de> <b0b995a1-3211-870f-01af-ce837c18e8f9@arm.com> <CAK8P3a2KQKTDQCQcFR7ZTFJ+_XhfKpy9W27r+YV=iD6hLVu2xg@mail.gmail.com> <957e168a-2589-89c7-3a72-5071a7b6c65a@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paul.burton@mips.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v3] dma-mapping: work around clang bug
+Message-ID: <20190308152732.GA20294@lst.de>
+References: <20190307104900.2506657-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <957e168a-2589-89c7-3a72-5071a7b6c65a@arm.com>
+In-Reply-To: <20190307104900.2506657-1-arnd@arndb.de>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 09:41:46AM +0000, Julien Grall wrote:
-> On Xen, dma_addr_t will always be 64-bit while the phys_addr_t will depend 
-> on the MMU type. So we may have phys_addr_t smaller than dma_addr_t from 
-> the kernel point of view.
-
-How can dma_addr_t on arm have value > 32-bit when physical
-addresses are 32-bit only?
+NAK on this whole patch.  Please fix the compiler instead of making
+a complete mess of a common macro.
