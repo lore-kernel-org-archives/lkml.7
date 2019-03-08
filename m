@@ -2,132 +2,106 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF27C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A774C20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE8320851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P6TjMG7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfCHVIp (ORCPT
+        id S1726556AbfCHVKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:08:45 -0500
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50459 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfCHVIp (ORCPT
+        Fri, 8 Mar 2019 16:10:00 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39335 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfCHVKA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:08:45 -0500
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 79618801E9; Fri,  8 Mar 2019 22:08:36 +0100 (CET)
-Date:   Fri, 8 Mar 2019 22:08:43 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
-        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        derat@google.com, groeck@google.com, dtor@google.com
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
- support
-Message-ID: <20190308210843.GA16125@amd>
-References: <20190308203801.57920-1-ncrews@chromium.org>
+        Fri, 8 Mar 2019 16:10:00 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i20so15008528pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S1cde1jQsu/UmZpXHCI4YVyEziLBMknSj83sr+RMBZs=;
+        b=P6TjMG7fGRK7XyKsHWb0VTW6Q9whc9pDX0eApYKLPbELPHCHHvNO1r7DQOut67QdQf
+         FuTtzYitbpr7AHdi+ap23htEvIVldeQFt0CZig1xUByIAmLIDI2O4k4YHsBwJ64kaQWd
+         tv9j1KHx2JH1J2tmZPJhMNVFB8etwLial5vzaeR/9qwAV2c1yBvLA3TTyt4/i+HmPcTL
+         T/oBwnARgQbuOoODRHRkgsClw63M47siEORCvHIoDAARpKe6irP/WtLHcw7Dj8eT5JuA
+         Ilbxwx/EPXlacKb9cRMv1rJi0/JemVW4Hm0J0lIdqHk5YR9babjNToAKh+r2oIKnNfY4
+         f0Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S1cde1jQsu/UmZpXHCI4YVyEziLBMknSj83sr+RMBZs=;
+        b=esS1ZmAmeQi+Z9B9SdklzBWANOW/f3aqe3Wh5jkmGE+DI4dBz09fyyMzf9cHFikJMU
+         RBuq2IEu4q5qRX3P2ZuFEgTp+TbYqBiMmDCIDi5ZhfFq9kd4W8VS6f+3w4tlJxdrcHyB
+         0EcXqwOaBBRz7y/f9CsdEI5kTMzM4Qb9PVjgUxjGmcU1e98E56Z6NT9AsRXhCdLmCQNq
+         5fEk70/Q9Jiiks3g/4p+UdUKMNzZmzI0CaGqp2GmioF+2hr2MNolJuJAEqc9czk0FPKz
+         ylHivoz6zSEVM1Bvh4pvCTYpQvDkMl07gbJfc58bBPTaBjfqSoGF8fmZtc7hZN+0zvw7
+         3jnw==
+X-Gm-Message-State: APjAAAVEWN8UlXeC1eZuwItIyE2OzQ4pTWpYxiVCC+YLdobB2Q1uj8/J
+        8BN78yxR+c7DxIMgUUuhSa1T4Rsz50SuoZK4Dw65PQ==
+X-Google-Smtp-Source: APXvYqxaUQ5jhATdW1RKgLqB4lqdILD9dACC3jIaYW5eDACGP9qzaugQ2z2LCqttDQxBnJJNnWoLEVD25z3YeGBTuYs=
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr20702494plf.320.1552079398761;
+ Fri, 08 Mar 2019 13:09:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Content-Disposition: inline
-In-Reply-To: <20190308203801.57920-1-ncrews@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190307091218.2343836-1-arnd@arndb.de> <20190307152805.GA25101@redhat.com>
+ <CAK8P3a2fuD-UBJET_OBKekCxrTDpnAxb0Bpu2LCCXaVT3pXTMQ@mail.gmail.com>
+ <20190307164647.GC25101@redhat.com> <CAK8P3a2FU55-7wQnLXDAmRCgiZ-W+2rY6p7CrTiKNe0wda-Hsg@mail.gmail.com>
+ <CAKwvOd=nyhM72CxdO-YYSsXr7rh3LUALn_ezVNzyiBaOD7KZkA@mail.gmail.com> <31b6d5bdfda9cbadffa6d8cb3ad0991e237a364c.camel@perches.com>
+In-Reply-To: <31b6d5bdfda9cbadffa6d8cb3ad0991e237a364c.camel@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 8 Mar 2019 13:09:47 -0800
+Message-ID: <CAKwvOd=+_FjWmo2McyLOAL3r6JOuu1wZEzQknY-GToDnCwzhsQ@mail.gmail.com>
+Subject: Re: [PATCH] signal: fix building with clang
+To:     Joe Perches <joe@perches.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 7, 2019 at 4:27 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-03-07 at 16:22 -0800, Nick Desaulniers wrote:
+> > On Thu, Mar 7, 2019 at 1:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > I'd have to try, but I think you are right. It was probably an
+> > > overoptimization back in 1997 when the code got added to
+> > > linux-2.1.68pre1, and compilers have become smarter in the
+> > > meantime ;-)
+> >
+> > How do you track history pre-git (2.6.XX)?
+>
+> https://landley.net/kdocs/fullhist/
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah neat! Thanks for the link.  Now to wire that up to fugitive:
+http://vimcasts.org/episodes/fugitive-vim-exploring-the-history-of-a-git-repository/
 
-On Fri 2019-03-08 13:38:02, Nick Crews wrote:
-> This patch is meant to be applied on top of the for-next
-> branch of the platform/chrome repository, as it uses some of
-> the code staged there.
->=20
-> The EC is in charge of controlling the keyboard backlight on
-> the Wilco platform. We expose a standard LED class device at
-> /sys/class/leds/wilco::kbd_backlight. This driver is modeled
-> after the standard Chrome OS keyboard backlight driver at
-> drivers/platform/chrome/cros_kbd_led_backlight.c
-
-Can you make it "platform::kbd_backlight"? We want some consistency
-there.
-
-> Some Wilco devices do not support a keyboard backlight. This
-> is checked in probe(), and in this case the sysfs entry will
-> not appear, and everything will behave normally.
-
-Good.
-
-> When the EC is reset (loses all AC and battery power), it will
-> restart in some unpredictable state. The brightness on the
-> keyboard could be anything, and reading the brightness
-> from the EC is undefined behavior. Therefore, at startup the
-> brightness should be set, and then everything will work.
-
-Really? Undefined behavior?=20
-
-> index e09e4cebe9b4..15b56f5ce090 100644
-> --- a/drivers/platform/chrome/wilco_ec/Kconfig
-> +++ b/drivers/platform/chrome/wilco_ec/Kconfig
-> @@ -18,3 +18,12 @@ config WILCO_EC_DEBUGFS
->  	  manipulation and allow for testing arbitrary commands.  This
->  	  interface is intended for debug only and will not be present
->  	  on production devices.
-> +
-> +config WILCO_EC_KBD_BACKLIGHT
-> +	tristate "Enable keyboard led backlight control"
-
-Delete "led" or make it "LED".
-
-> +	depends on WILCO_EC
-> +	help
-> +	  If you say Y here, you get support to set the keyboard backlight led
-
-Same here.
-
-> +#define DRV_NAME		"wilco-kbd-backlight"
-> +
-> +#define EC_COMMAND_KB_BKLIGHT	0x75
-> +#define KBBL_MSG_SIZE		16
-> +/* The EC can set the backlight brightness in several different modes.
-> +The mode we care about is PWM mode, where we separately supply a
-> +literal percentage to set the brightness to. We need to set the proper
-> +KBBL_PWM_MODE flag in the KBBL_MODE_INDEX-th byte in the message, and
-> +then supply the percentage within the KBBL_BRIGHTNESS_INDEX-th byte
-> +within the message. When we read the brightness, the percentage is
-> +returned in this same byte location. */
-
-Please use comment style specified in CodingStyle.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyC2dsACgkQMOfwapXb+vLqDwCfWEk3QW//F3XG6WrdOqGyEUt3
-uvAAoIittL7JdDnqPtKLU43LUVzDGBsh
-=2nf1
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
+The LLVM project recently switched to git from svn.  For quite some
+time the move was delayed in order to preserve history (including for
+parked release branches and all kinds of edge cases and things that
+don't quite translate from svn to git).  Now I better appreciate the
+history preservation.
+-- 
+Thanks,
+~Nick Desaulniers
