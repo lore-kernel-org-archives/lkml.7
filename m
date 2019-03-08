@@ -2,153 +2,160 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E58FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBE5208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4CC20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="YjjsLPA9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqMNhRtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfCHRch (ORCPT
+        id S1726861AbfCHRdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:32:37 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45715 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfCHRcg (ORCPT
+        Fri, 8 Mar 2019 12:33:13 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39299 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCHRdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:32:36 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d24so18053436ljc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:32:34 -0800 (PST)
+        Fri, 8 Mar 2019 12:33:13 -0500
+Received: by mail-qt1-f193.google.com with SMTP id o6so22076202qtk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:33:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=04OEvy0xZ5LcQH0OJqrzsCA8osIPKjgjUbd8tX0Kghs=;
-        b=YjjsLPA93wIGoIgNkb103Q3G/j/k+9I4c0VFFdo7mBpadNUKe5yEOkVQ6nj1Yl8Ay3
-         lfaa4VZSJfPwFqSLx1mJbb6dNFk4ceMky3BiD+wY8IWhBM9NvMJ2ayQ1A7TQcLpPnoFY
-         19khDqCwUNMogpSp0hwoIQuF0B6nKREpydIbrPmB9yOHPbHZC0NgNrNNP9YSXHVnHY/1
-         d2fCAxvFbu9PRpzqwr4IX/dtwwTCkoQA53nxRGKb+JtdMLCiBsv38dPmYovbptdOS7r+
-         3XNj1PaaTuvfuWfMHDup9yXPN+GXys0SII2767fmaRGyAZe25A7SoujJqkosAvlwYoNp
-         b9Yw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pa3zynBilQ2pYo/NBQ9cRSVT4c4yJIGrC1V57I3Z8Cw=;
+        b=cqMNhRtcQc5j0o9Jxp/yYYPz+0ZXMna0eW96+T/FOMyAbYztmVAygSnofiMq+Y8d7k
+         /5gbIH0r4XMMhM+jDgJeOuRlechNA0HCJJnPS70Hevvr0OHB/PAVIkaX3tH0TwCr+h9Q
+         FN1dPtxepnGCvW4ImMNhmlU6nnFA7/XNiH4c5gE6179cdqkiGPXXWscyXbNrwlFJsFIZ
+         TNC4DQ5raDRCyhvengrwlJl9DYKsULatzi9FbHtSpm7gfFpEiG1tuDmVc8cBul54Reb0
+         8nYMk7v+nfFoyzblf1JMU4d94l+1wpuw/rK+X8VlwNH9OzJRqhLHrEVDwBtnfjIFPohj
+         IhKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=04OEvy0xZ5LcQH0OJqrzsCA8osIPKjgjUbd8tX0Kghs=;
-        b=rexPM2FrkxQRTITjr1CaosFBDNfplE/IkGzvttWjL0FxkUZon080NYs1MkEN5HiEfa
-         4wZ/VS01CVKrgEHXGwWQfJpPdqWI6sFD9UEMQb+DdT83QNJYPoscO+9kuG/tDCP++OEa
-         QLJwFmicohGrb4J7n8lpvBIQ2rlrCr5/P2ndUtAJnQiBKXa4KqejQO6VJW+xz45sqZok
-         b9M6sqDMySrJs7OzTmmEfBAcOokwWgNSiI6vhLRGFtDOUgIouecPJTNLFkpV2hDO+OGX
-         bj1bOfl3TOOr9N2+epcbc1PBSLaLhxedVdV2SIfXCpHZ8J6pGhPV8+jQ4wCAYmRjpTus
-         ojqw==
-X-Gm-Message-State: APjAAAXEW+f1++obvt/aU5l20W4ROfNvP6RN2yYbnY96dTWOQYZiboqc
-        crvFdeGA8GWhjC3R9Sv4PRxdug==
-X-Google-Smtp-Source: APXvYqz3wB91MUVB0uy0sHCimDL1sOS3O9t9ZU9NABwG1mdmpIrntTeW9qgW+Lk34VO4teylF/snSA==
-X-Received: by 2002:a2e:2e05:: with SMTP id u5mr9801643lju.85.1552066354148;
-        Fri, 08 Mar 2019 09:32:34 -0800 (PST)
-Received: from wasted.cogentembedded.com ([31.173.80.248])
-        by smtp.gmail.com with ESMTPSA id b64sm1527386ljf.82.2019.03.08.09.32.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 09:32:32 -0800 (PST)
-Subject: Re: [PATCH v8 1/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mason Yang <masonccyang@mxic.com.tw>,
-        Mark Brown <broonie@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
-        zhengxunli@mxic.com.tw
-References: <1548658158-5460-1-git-send-email-masonccyang@mxic.com.tw>
- <1548658158-5460-2-git-send-email-masonccyang@mxic.com.tw>
- <0c54ee2c-016a-bc8e-33ae-fbd04191cc49@cogentembedded.com>
- <CAMuHMdVjgWNw4fnzJV=Qxs6zyNiBPubJUL-4WDOy26N4TkQ4gQ@mail.gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <b469bffe-b5b2-0b03-b6fb-49bfc8ba74ab@cogentembedded.com>
-Date:   Fri, 8 Mar 2019 20:32:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pa3zynBilQ2pYo/NBQ9cRSVT4c4yJIGrC1V57I3Z8Cw=;
+        b=lNxz60Zk4EJfz3TVZgz+m2RskONFY9yRjCbJnn4DJLjPdsTSOPDowyWUt/lTuMHrTh
+         2leGF1T528JVCESAtnlXPZXArpdb16T2qZ17WYRdANx1gEMy6Y9/0T6/s5niQNEidY37
+         LX5G5sjmPzi/4vfOPacgR24ob0TDRJy0ePhZGPh5jXG8XGzlCaSqmvdpRd5KB+1nujcf
+         f09ExObW2HJoRpSKLjyxx3jp9GgklosM5yYmn89wcb582p4L6MfgoYiwrxlX8qEyh2iN
+         BTkSCOcb1lxi5Owr+71gywsTzDQA44z8dVDjzhjBevgmBn9OQQkyLqXhkXH1ms+uASzq
+         fP/A==
+X-Gm-Message-State: APjAAAX1Zo8xtDB4R+G2eMWBDS96I/ywhlgtIop9DxIr9Pd8tC2Brv3f
+        AirmrUYZemcMQA5pc4cghIQ=
+X-Google-Smtp-Source: APXvYqwkzRKlrP6jtKprTraVl4hZnVzhHbTtwxqZxXWBAyX77xoBDHVS/vEnfgNA7HS6sJ/qQhqjGw==
+X-Received: by 2002:ac8:1851:: with SMTP id n17mr15291052qtk.42.1552066392399;
+        Fri, 08 Mar 2019 09:33:12 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id s41sm4899254qtc.38.2019.03.08.09.33.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Mar 2019 09:33:11 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 75D8D4039C; Fri,  8 Mar 2019 14:33:05 -0300 (-03)
+Date:   Fri, 8 Mar 2019 14:33:05 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH 04/11] perf data: Make perf_data__size to work over
+ directory
+Message-ID: <20190308173305.GE10690@kernel.org>
+References: <20190308134745.5057-1-jolsa@kernel.org>
+ <20190308134745.5057-5-jolsa@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVjgWNw4fnzJV=Qxs6zyNiBPubJUL-4WDOy26N4TkQ4gQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190308134745.5057-5-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 03/08/2019 12:14 PM, Geert Uytterhoeven wrote:
-
->>> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
->>>
->>> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> [...]
->>> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-renesas-rpc.c
->>> new file mode 100644
->>> index 0000000..ea12017
->>> --- /dev/null
->>> +++ b/drivers/spi/spi-renesas-rpc.c
->>> @@ -0,0 +1,804 @@
->> [...]
->>> +static void rpc_spi_hw_init(struct rpc_spi *rpc)
->>> +{
->>> +     //
->>> +     // NOTE: The 0x260 are undocumented bits, but they must be set.
->>> +     //      RPC_PHYCNT_STRTIM is strobe timing adjustment bit,
->>> +     //      0x0 : the delay is biggest,
->>> +     //      0x1 : the delay is 2nd biggest,
->>> +     //      On H3 ES1.x, the value should be 0, while on others,
->>> +     //      the value should be 6.
->>> +     //
->>> +     regmap_write(rpc->regmap, RPC_PHYCNT, RPC_PHYCNT_CAL |
->>> +                               RPC_PHYCNT_STRTIM(6) | 0x260);
->>> +
->>> +     //
->>> +     // NOTE: The 0x1511144 are undocumented bits, but they must be set
->>> +     //       for RPC_PHYOFFSET1.
->>> +     //       The 0x31 are undocumented bits, but they must be set
->>> +     //       for RPC_PHYOFFSET2.
->>> +     //
->>> +     regmap_write(rpc->regmap, RPC_PHYOFFSET1, RPC_PHYOFFSET1_DDRTMG(3) |
->>> +                  0x1511144);
->>> +     regmap_write(rpc->regmap, RPC_PHYOFFSET2, 0x31 |
->>> +                  RPC_PHYOFFSET2_OCTTMG(4));
->>> +     regmap_write(rpc->regmap, RPC_SSLDR, RPC_SSLDR_SPNDL(7) |
->>> +                  RPC_SSLDR_SLNDL(7) | RPC_SSLDR_SCKDL(7));
->>> +     regmap_write(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD | RPC_CMNCR_SFDE |
->>> +                  RPC_CMNCR_MOIIO_HIZ | RPC_CMNCR_IOFV_HIZ |
->>> +                  RPC_CMNCR_BSZ(0));
->>> +}
->>
->>    We clearly need runtime PM get/put() calls around this code. Otherwise,
->> we're dependant on U-Boot leaving the clocks enabled...
+Em Fri, Mar 08, 2019 at 02:47:38PM +0100, Jiri Olsa escreveu:
+> Making perf_data__size to return proper size
+> for directory data.
 > 
-> Even that would be futile, as the common clock framework disables all
-> unused clocks at late boot time.
-
-   This code is executed during the probing time and it indeed works. The clocks seem
-to be disabled somewhat later...
-
-> Gr{oetje,eeting}s,
+> Link: http://lkml.kernel.org/n/tip-t4dm8cctat2ginmy2bb08xe8@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/data.c | 17 +++++++++++++++++
+>  tools/perf/util/data.h |  6 +-----
+>  2 files changed, 18 insertions(+), 5 deletions(-)
 > 
->                         Geert
+> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> index d568975c5ee3..498c531e2cb9 100644
+> --- a/tools/perf/util/data.c
+> +++ b/tools/perf/util/data.c
+> @@ -393,3 +393,20 @@ int perf_data__switch(struct perf_data *data,
+>  	free(new_filepath);
+>  	return ret;
+>  }
+> +
+> +unsigned long perf_data__size(struct perf_data *data)
+> +{
+> +	u64 size = data->file.size;
+> +	int i;
+> +
+> +	if (!data->is_dir)
+> +		return size;
 
-MBR, Sergei
+So you do the sum over dir.files[i] _plus_ what is in data->file.size,
+what is in data->file.size? Zero for the dir case? Or some non-per-cpu
+metadata?
 
+- Arnaldo
+
+> +
+> +	for (i = 0; i < data->dir.nr; i++) {
+> +		struct perf_data_file *file = &data->dir.files[i];
+> +
+> +		size += file->size;
+> +	}
+> +
+> +	return size;
+> +}
+> diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+> index 0deeb1af9f54..d342469bdfda 100644
+> --- a/tools/perf/util/data.h
+> +++ b/tools/perf/util/data.h
+> @@ -54,11 +54,6 @@ static inline int perf_data__fd(struct perf_data *data)
+>  	return data->file.fd;
+>  }
+>  
+> -static inline unsigned long perf_data__size(struct perf_data *data)
+> -{
+> -	return data->file.size;
+> -}
+> -
+>  int perf_data__open(struct perf_data *data);
+>  void perf_data__close(struct perf_data *data);
+>  ssize_t perf_data__write(struct perf_data *data,
+> @@ -80,4 +75,5 @@ int perf_data__create_dir(struct perf_data *data, int nr);
+>  int perf_data__open_dir(struct perf_data *data);
+>  void perf_data__close_dir(struct perf_data *data);
+>  int perf_data__update_dir(struct perf_data *data);
+> +unsigned long perf_data__size(struct perf_data *data);
+>  #endif /* __PERF_DATA_H */
+> -- 
+> 2.17.2
+
+-- 
+
+- Arnaldo
