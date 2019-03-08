@@ -2,152 +2,160 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FDFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC73CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D375C20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA862085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IooW1a0a"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lBlcJmfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfCHSiY (ORCPT
+        id S1728647AbfCHSin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:38:24 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46501 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfCHSiX (ORCPT
+        Fri, 8 Mar 2019 13:38:43 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59866 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbfCHSin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:38:23 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a22so2178156pgg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:38:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5sGr/qK2Hp8UxIrFRvCqGsTl0l4fq50X0Fbr8W1d/pw=;
-        b=IooW1a0aPJAaHHRMXaFSMiPHweBgn0JSopfudbxsr7nawzmGnfWg3QlsRd5H0OTsA1
-         8nJCN/xce9xNRFaslTdtkCNMHJXMrHBsDW7bRRhvRo4VEBsrBQQKwCfMA0jQ/xXj9suV
-         2rmZu6+t0jhyWPEJLMov4HLosqBPT5JHIy+njrDvGI8X7NMe3r2KGuxoOz9X9cOTmH1r
-         79xQq4Q3ALUEdiqK2F/6aGcNE1kxxBTRE8NoJ02yyLIYgi2QHzeH7e206eeQKBA6KdDW
-         9ATxquvk2Kwj2bVf2xzLcmCZqMZveJD0i05oZNPjNoTCHc/bgNQ5GjxVOGG3nJYaQ0g8
-         uJrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5sGr/qK2Hp8UxIrFRvCqGsTl0l4fq50X0Fbr8W1d/pw=;
-        b=HW8b2eska3/igYlUT9QZZFC8DXjhq6wCbNnm9xuhCDzfQ5yd/62myxVJua0beJ5Mc1
-         jnmoQY7yqnB4y2iBNPu+VixeOF7lvY1js44azNLQjMKEHIqX1aC8MG/cBYmKIPsbtZm2
-         kR6U0ugIuTOmcaRKOcUgnIxOUvtz14C8RBJERPwY/7uM4cN1ql862cbA08PF+rQqObA5
-         n9F2yqpj/O692ptqUiylb5RsmgrVMesnB/pYx3wUvwxkW722hbTMuI+OHCTF4UcmvfhC
-         7PbWRBlThp9oqBBrGaNXNNpAP8Drxf3tgLv1LIXkeCcqlvI4M+Y7VKTxlq5t1k0q+AZI
-         OZag==
-X-Gm-Message-State: APjAAAUvkZ6vticCheL6EzoFCxUEHqsbrL6XBA0xuCw3qSQ/PHB+ZKmo
-        S1n08xUv7s4gsbzNLIaZ3q+FSPtt3DerBwWvS0Bskg==
-X-Google-Smtp-Source: APXvYqzByu7GiJYp+I6KpYQ4/OnQ3mjdSiHMUlkaTP5IHhdGm7/YKuatUoIJbIk+CCmHSVSL+cEea5kN+nyFjtOgPeg=
-X-Received: by 2002:a62:2b88:: with SMTP id r130mr19820710pfr.93.1552070302290;
- Fri, 08 Mar 2019 10:38:22 -0800 (PST)
+        Fri, 8 Mar 2019 13:38:43 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x28IO8AZ015603;
+        Fri, 8 Mar 2019 18:38:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=piNfCy0NjVdE8H8N2yNjFGmLgZLXxCNFuuKqFj63970=;
+ b=lBlcJmfeeZmyCYHRBnuVSR51TlS/iF9LrtuhzNaOtHt8l7bGGkpLBmYMnK2EV7paad5v
+ tCx+awrdMhWs32VtnYGaTpfjWjEi8qXsXIVWdM+B9aShLn/ofLSchCbaOSj9ZzcfPQdN
+ Vo27x3BwfV7pvUVvFmSavgUrAJ5g+rC25KndM8lrezdtOtHXSaRL6usX4W+izvLgV8SW
+ efLRgv6uhbeasJN2Mpm8eZe/g8VIPhM2LbIeJtBbI/buVXG3sC954c9BcWYn8DfqBAo/
+ yOG15S7j9OEJdd7JRQuHA7o9sndELI0O+VAKSpyfO20sVKyu3Sx9TltoHzzSGIAXgMTY tA== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2130.oracle.com with ESMTP id 2qyh8usvf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Mar 2019 18:38:37 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x28IcaLq020035
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Mar 2019 18:38:36 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x28Icadt020213;
+        Fri, 8 Mar 2019 18:38:36 GMT
+Received: from localhost (/10.159.130.184)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Mar 2019 10:38:35 -0800
+Date:   Fri, 8 Mar 2019 10:38:30 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     linux-xfs@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] xfs: clean up xfs_dir2_leafn_add
+Message-ID: <20190308183830.GC20533@magnolia>
+References: <20190308161308.GC4676@magnolia>
+ <CAKwvOdn0=1svhDUBEP+391NvUXhm8bkzBzNMgNphML8kRzrRJQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190307223628.21270-1-natechancellor@gmail.com> <20190308085316.7eaynrb746o6xsz7@pengutronix.de>
-In-Reply-To: <20190308085316.7eaynrb746o6xsz7@pengutronix.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 8 Mar 2019 10:38:11 -0800
-Message-ID: <CAKwvOdmA6=_-_uC8PAC8i+-mLA8FN6GOeY544139N2AsA8RbsQ@mail.gmail.com>
-Subject: Re: [PATCH] pwm: img: Turn final 'else if' into 'else' in img_pwm_config
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdn0=1svhDUBEP+391NvUXhm8bkzBzNMgNphML8kRzrRJQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9189 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903080129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 12:53 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Thu, Mar 07, 2019 at 03:36:28PM -0700, Nathan Chancellor wrote:
-> > When building with -Wsometimes-uninitialized, Clang warns:
+On Fri, Mar 08, 2019 at 10:12:33AM -0800, Nick Desaulniers wrote:
+> On Fri, Mar 8, 2019 at 8:13 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
 > >
-> > drivers/pwm/pwm-img.c:126:13: error: variable 'timebase' is used
-> > uninitialized whenever 'if' condition is false
-> > [-Werror,-Wsometimes-uninitialized]
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
 > >
-> > The final else if functions as an else; make that explicit so that Clan=
-g
-> > understands that timebase cannot be used uninitialized.
+> > Remove typedefs and consolidate local variable initialization.
 > >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/400
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> >  drivers/pwm/pwm-img.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  fs/xfs/libxfs/xfs_dir2_node.c |   20 ++++++++------------
+> >  1 file changed, 8 insertions(+), 12 deletions(-)
 > >
-> > diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-> > index 815f5333bb8f..1cc5fbe1e1d3 100644
-> > --- a/drivers/pwm/pwm-img.c
-> > +++ b/drivers/pwm/pwm-img.c
-> > @@ -123,7 +123,7 @@ static int img_pwm_config(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
-> >       } else if (mul <=3D max_timebase * 512) {
-> >               div =3D PWM_CTRL_CFG_SUB_DIV0_DIV1;
-> >               timebase =3D DIV_ROUND_UP(mul, 512);
-> > -     } else if (mul > max_timebase * 512) {
-> > +     } else {
-> >               dev_err(chip->dev,
-> >                       "failed to configure timebase steps/divider value=
-\n");
-> >               return -EINVAL;
->
-> This can even be simplified further.
->
-> From the probe function we have:
->
->         pwm_chip->max_period_ns =3D NSEC_PER_SEC * 512 * max_timebase / i=
-nput_clk_hz
+> > diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
+> > index de46f26c5292..16731d2d684b 100644
+> > --- a/fs/xfs/libxfs/xfs_dir2_node.c
+> > +++ b/fs/xfs/libxfs/xfs_dir2_node.c
+> > @@ -426,26 +426,22 @@ xfs_dir2_leaf_to_node(
+> >  static int                                     /* error */
+> >  xfs_dir2_leafn_add(
+> >         struct xfs_buf          *bp,            /* leaf buffer */
+> > -       xfs_da_args_t           *args,          /* operation arguments */
+> > +       struct xfs_da_args      *args,          /* operation arguments */
+> >         int                     index)          /* insertion pt for new entry */
+> >  {
+> > +       struct xfs_dir3_icleaf_hdr leafhdr;
+> > +       struct xfs_inode        *dp = args->dp;
+> > +       struct xfs_dir2_leaf    *leaf = bp->b_addr;
+> > +       struct xfs_dir2_leaf_entry *lep;
+> > +       struct xfs_dir2_leaf_entry *ents;
+> >         int                     compact;        /* compacting stale leaves */
+> > -       xfs_inode_t             *dp;            /* incore directory inode */
+> > -       int                     highstale;      /* next stale entry */
+> > -       xfs_dir2_leaf_t         *leaf;          /* leaf structure */
+> > -       xfs_dir2_leaf_entry_t   *lep;           /* leaf entry */
+> > +       int                     highstale = 0;  /* next stale entry */
+> >         int                     lfloghigh;      /* high leaf entry logging */
+> >         int                     lfloglow;       /* low leaf entry logging */
+> > -       int                     lowstale;       /* previous stale entry */
+> > -       struct xfs_dir3_icleaf_hdr leafhdr;
+> > -       struct xfs_dir2_leaf_entry *ents;
+> > +       int                     lowstale = 0;   /* previous stale entry */
+> >
+> >         trace_xfs_dir2_leafn_add(args, index);
+> >
+> > -       dp = args->dp;
+> > -       leaf = bp->b_addr;
+> > -       highstale = 0;
+> > -       lowstale = 0;
+> >         dp->d_ops->leaf_hdr_from_disk(&leafhdr, leaf);
+> >         ents = dp->d_ops->leaf_ents_p(leaf);
+> 
+> What about moving the initialization of `ents` above? (Or would that
+> be over the line limit?)
 
-I had trouble verifying `input_clk_hz` in the above.  The divisor is
-`clk_get_rate(pwm->pwm_clk)`, but is it guaranteed to always be
-`input_clk_hz`? If so, where?
+It might be over the line limit, but more importantly I prefer to have
+the tracepoint fire before we start interpreting the on-disk metadata.
+That way, ftrace data will show exactly where we were in the kernel
+if any corruption warnings are emitted during that interpretation.
 
->
-> Then in img_pwm_config there is:
->
->         mul =3D =E2=8E=A1 input_clk_hz / =E2=8E=A1 NSEC_PER_SEC / period_=
-ns=E2=8E=A4=E2=8E=A4
->
-> (Not sure this term is the best we can come up with. The rounding
-> strategy looks strange because the first DIV_ROUND_UP makes mul smaller
-> while the second makes it bigger. This is similar to
->
->         =E2=8E=A1 input_clk_hz * period_ns / NSEC_PER_SEC =E2=8E=A4
->
-> which is probably more exact and cheaper to calculate.)
->
-> If we now had
->
->         mul > max_timebase * 512
->
-> this results in (apart from rounding errors):
->
->         input_clk_hz * period_ns / NSEC_PER_SEC > max_timebase * 512
->  <=3D>    period_ns > max_timebase * 512 * NSEC_PER_SEC / input_clk_hz
->  <=3D>    period_ns > pwm_chip->max_period_ns
->
-> This however is already ruled out by the first check in
-> img_pwm_config().
->
-> So if the rounding would be fixed, the else is a dead branch and could
-> be dropped completely.
+I don't think either of those two functions do that today, but I don't
+want to leave a logic bomb in case they ever start doing that.
 
---=20
-Thanks,
-~Nick Desaulniers
+> In general, I like this change (I considered asking Nathan to do the
+> consolidation of declaration and initialization as you've done).  The
+> additional part of converting from _t to struct * is less interesting
+> (but still ok).  It's better to be consistent within the function
+> scope, but this translation unit is still a mismatch of styles.  If
+> the goal is to avoid typedefs, consider removing them from existence
+> and the required work to consistently not use them throughout this
+> code.
+
+Yeah, we're slowly converting away from the _t typedefs (and other
+IRIXisms) as parts of code get reworked, though of course there's
+nothing obvious to suggest that this (slow transition) is in progress
+nor that we're ok with the inconsistent formatting in the meantime,
+which is why I accepted the original patch and added this one to do the
+style conversions.
+
+--D
+
+> -- 
+> Thanks,
+> ~Nick Desaulniers
