@@ -2,121 +2,76 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2439C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D06C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8433D208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C6D20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bv/Pbeuk"
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Bdlh199t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfCHQNY (ORCPT
+        id S1726446AbfCHQPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:13:24 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33948 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfCHQNX (ORCPT
+        Fri, 8 Mar 2019 11:15:48 -0500
+Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:51490 "EHLO
+        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbfCHQPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:13:23 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x28G9Qj4092684;
-        Fri, 8 Mar 2019 16:13:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=hPCfQBMX170CXcGX6JASR8q0UVC740Re3OWUrvJyUpA=;
- b=Bv/PbeukB4gUyhKFX6gyHj3788yhwO5u5X00LSS2AVAiIz8aCGkIDD4pIOIXY8/jmB3Y
- AODSM2CJeTQ+ilrz0ricsc2V0pOX0fdPDc+jDoB7arllF3y1fLJ1vjqndyTqEGY++fRr
- vDYBPziWzEl+b/BeKv7LlFwWUgIPKDE1j3F0+npaKijfLfdh/YwuCqVFcscaxkJeuXq+
- 8fRsUR5xYjD5d1lvgA/rSFyTlD/Ily5hCfFMkMYTgJZzV6MjKEGW5NRaF6NUmliqTsq8
- c+hNxJJkCo099N1TXn3ERebWh4fsXJhetKqLkLSrLaP7AWQaEC4Rwd5IDz8ElVixUn8k Tw== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2qyjfs10js-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Mar 2019 16:13:18 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x28GDDF0013320
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Mar 2019 16:13:13 GMT
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x28GDDor003528;
-        Fri, 8 Mar 2019 16:13:13 GMT
-Received: from localhost (/10.159.130.184)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Mar 2019 08:13:12 -0800
-Date:   Fri, 8 Mar 2019 08:13:08 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] xfs: clean up xfs_dir2_leafn_add
-Message-ID: <20190308161308.GC4676@magnolia>
+        Fri, 8 Mar 2019 11:15:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1552061746;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=/YhXAXDRJDXOsTejfexgfUA00S53mbAhO1iS5RDasTE=;
+        b=Bdlh199ty9IN8Ej4gyzpqKaM1H1Wjn9NMIGUmZMBcAvYi7Mhl69vXni2vKVGXj25
+        kqt5tnz6THVec9DymhKofVJ2KNbxRnU9nyvmBLQdw33vYJn3Y3SXYdAUgVPebRtsLSi
+        eQ0kotJgYuAtoPRNARfzZuCA9l78ofUeTGLCqLtQ=
+Date:   Fri, 8 Mar 2019 16:15:46 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Tycho Andersen <tycho@tycho.ws>
+cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 02/15] slub: Add isolate() and migrate() methods
+In-Reply-To: <20190308152820.GB373@cisco>
+Message-ID: <010001695e16cdef-9831bf56-3075-4f0e-8c25-5d60103cb95f-000000@email.amazonses.com>
+References: <20190308041426.16654-1-tobin@kernel.org> <20190308041426.16654-3-tobin@kernel.org> <20190308152820.GB373@cisco>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9189 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=766 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903080112
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.03.08-54.240.9.30
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, 8 Mar 2019, Tycho Andersen wrote:
 
-Remove typedefs and consolidate local variable initialization.
+> On Fri, Mar 08, 2019 at 03:14:13PM +1100, Tobin C. Harding wrote:
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index f9d89c1b5977..754acdb292e4 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -298,6 +298,10 @@ int slab_unmergeable(struct kmem_cache *s)
+> >  	if (!is_root_cache(s))
+> >  		return 1;
+> >
+> > +	/*
+> > +	 * s->isolate and s->migrate imply s->ctor so no need to
+> > +	 * check them explicitly.
+> > +	 */
+>
+> Shouldn't this implication go the other way, i.e.
+>     s->ctor => s->isolate & s->migrate
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_dir2_node.c |   20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+A cache can have a constructor but the object may not be movable (I.e.
+currently dentries and inodes).
 
-diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
-index de46f26c5292..16731d2d684b 100644
---- a/fs/xfs/libxfs/xfs_dir2_node.c
-+++ b/fs/xfs/libxfs/xfs_dir2_node.c
-@@ -426,26 +426,22 @@ xfs_dir2_leaf_to_node(
- static int					/* error */
- xfs_dir2_leafn_add(
- 	struct xfs_buf		*bp,		/* leaf buffer */
--	xfs_da_args_t		*args,		/* operation arguments */
-+	struct xfs_da_args	*args,		/* operation arguments */
- 	int			index)		/* insertion pt for new entry */
- {
-+	struct xfs_dir3_icleaf_hdr leafhdr;
-+	struct xfs_inode	*dp = args->dp;
-+	struct xfs_dir2_leaf	*leaf = bp->b_addr;
-+	struct xfs_dir2_leaf_entry *lep;
-+	struct xfs_dir2_leaf_entry *ents;
- 	int			compact;	/* compacting stale leaves */
--	xfs_inode_t		*dp;		/* incore directory inode */
--	int			highstale;	/* next stale entry */
--	xfs_dir2_leaf_t		*leaf;		/* leaf structure */
--	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry */
-+	int			highstale = 0;	/* next stale entry */
- 	int			lfloghigh;	/* high leaf entry logging */
- 	int			lfloglow;	/* low leaf entry logging */
--	int			lowstale;	/* previous stale entry */
--	struct xfs_dir3_icleaf_hdr leafhdr;
--	struct xfs_dir2_leaf_entry *ents;
-+	int			lowstale = 0;	/* previous stale entry */
- 
- 	trace_xfs_dir2_leafn_add(args, index);
- 
--	dp = args->dp;
--	leaf = bp->b_addr;
--	highstale = 0;
--	lowstale = 0;
- 	dp->d_ops->leaf_hdr_from_disk(&leafhdr, leaf);
- 	ents = dp->d_ops->leaf_ents_p(leaf);
- 
+
