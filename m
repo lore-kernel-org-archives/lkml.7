@@ -2,226 +2,171 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD80C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523F8C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656B120675
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2426720675
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="cSYLQtG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfCHDGX (ORCPT
+        id S1726382AbfCHDIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:06:23 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:33368 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfCHDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:06:23 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B65F11E317;
-        Fri,  8 Mar 2019 03:06:22 +0000 (UTC)
-Received: from kasong-laptop-rh.nay.redhat.com (unknown [10.66.128.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C2D21001E66;
-        Fri,  8 Mar 2019 03:06:16 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Omar Sandoval <osandov@fb.com>, Jiri Bohac <jbohac@suse.cz>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: [PATCH v5] x86/gart/kcore: Exclude GART aperture from kcore
-Date:   Fri,  8 Mar 2019 11:05:08 +0800
-Message-Id: <20190308030508.13548-1-kasong@redhat.com>
+        Thu, 7 Mar 2019 22:08:43 -0500
+Received: from a9-32.smtp-out.amazonses.com ([54.240.9.32]:41754 "EHLO
+        a9-32.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbfCHDIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 22:08:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1552014520;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=Qsyil3aA8gB2bCI9HRfEXGR5NVCprjsvM1XdMK95rKI=;
+        b=cSYLQtG/NGkELqStS9fYnd9XGtShvawWekbQcHxUgiRa5T6ixwFOhU5nD7/h7oHL
+        A2jHz+Ze6sUjCTS+pO+u1Uf6RyWBCp8BpLs/BfcPr54oLkXiDVO7P5am8S3zp9aHZ5f
+        HO1EhnpUaH4gwXrGIlmtajbNx4EeV+TqJLxqegXw=
+Date:   Fri, 8 Mar 2019 03:08:40 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     john.hubbard@gmail.com
+cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
+ versions
+In-Reply-To: <20190306235455.26348-1-jhubbard@nvidia.com>
+Message-ID: <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
+References: <20190306235455.26348-1-jhubbard@nvidia.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 08 Mar 2019 03:06:22 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.03.08-54.240.9.32
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On machines where the GART aperture is mapped over physical RAM,
-/proc/kcore contains the GART aperture range and reading it may lead
-to kernel panic.
+On Wed, 6 Mar 2019, john.hubbard@gmail.com wrote:
 
-Vmcore used to have the same issue, until we fixed it in
-commit 2a3e83c6f96c ("x86/gart: Exclude GART aperture from vmcore")',
-leveraging existing hook infrastructure in vmcore to let /proc/vmcore
-return zeroes when attempting to read the aperture region, and so it
-won't read from the actual memory.
 
-We apply the same workaround for kcore. First implement the same hook
-infrastructure for kcore, then reuse the hook functions introduced in
-previous vmcore fix. Just with some minor adjustment, rename some
-functions for more general usage, and simplify the hook infrastructure
-a bit as there is no module usage yet.
+> GUP was first introduced for Direct IO (O_DIRECT), allowing filesystem code
+> to get the struct page behind a virtual address and to let storage hardware
+> perform a direct copy to or from that page. This is a short-lived access
+> pattern, and as such, the window for a concurrent writeback of GUP'd page
+> was small enough that there were not (we think) any reported problems.
+> Also, userspace was expected to understand and accept that Direct IO was
+> not synchronized with memory-mapped access to that data, nor with any
+> process address space changes such as munmap(), mremap(), etc.
 
-Suggested-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
+It would good if that understanding would be enforced somehow given the problems
+that we see.
 
----
+> Interactions with file systems
+> ==============================
+>
+> File systems expect to be able to write back data, both to reclaim pages,
 
-Update from V4:
-- Remove the unregistering funtion and move functions never used after
-  init to .init
+Regular filesystems do that. But usually those are not used with GUP
+pinning AFAICT.
 
-Update from V3:
-- Reuse the approach in V2, as Jiri noticed V3 approach may fail
-  some use case. It introduce overlapped region in kcore, and can't
-  garenteen the read request will fall into the region we wanted.
-- Improve some function naming suggested by Baoquan in V2.
-- Simplify the hook registering and checking, we are not exporting the
-  hook register function for now, no need to make it that complex.
+> and for data integrity. Allowing other hardware (NICs, GPUs, etc) to gain
+> write access to the file memory pages means that such hardware can dirty
+> the pages, without the filesystem being aware. This can, in some cases
+> (depending on filesystem, filesystem options, block device, block device
+> options, and other variables), lead to data corruption, and also to kernel
+> bugs of the form:
 
-Update from V2:
-Instead of repeating the same hook infrastructure for kcore, introduce
-a new kcore area type to avoid reading from, and let kcore always bypass
-this kind of area.
+> Long term GUP
+> =============
+>
+> Long term GUP is an issue when FOLL_WRITE is specified to GUP (so, a
+> writeable mapping is created), and the pages are file-backed. That can lead
+> to filesystem corruption. What happens is that when a file-backed page is
+> being written back, it is first mapped read-only in all of the CPU page
+> tables; the file system then assumes that nobody can write to the page, and
+> that the page content is therefore stable. Unfortunately, the GUP callers
+> generally do not monitor changes to the CPU pages tables; they instead
+> assume that the following pattern is safe (it's not):
+>
+>     get_user_pages()
+>
+>     Hardware can keep a reference to those pages for a very long time,
+>     and write to it at any time. Because "hardware" here means "devices
+>     that are not a CPU", this activity occurs without any interaction
+>     with the kernel's file system code.
+>
+>     for each page
+>         set_page_dirty
+>         put_page()
+>
+> In fact, the GUP documentation even recommends that pattern.
 
-Update from V1:
-Fix a complie error when CONFIG_PROC_KCORE is not set
+Isnt that pattern safe for anonymous memory and memory filesystems like
+hugetlbfs etc? Which is the common use case.
 
- arch/x86/kernel/aperture_64.c | 20 +++++++++++++-------
- fs/proc/kcore.c               | 27 +++++++++++++++++++++++++++
- include/linux/kcore.h         |  2 ++
- 3 files changed, 42 insertions(+), 7 deletions(-)
+> Anyway, the file system assumes that the page is stable (nothing is writing
+> to the page), and that is a problem: stable page content is necessary for
+> many filesystem actions during writeback, such as checksum, encryption,
+> RAID striping, etc. Furthermore, filesystem features like COW (copy on
+> write) or snapshot also rely on being able to use a new page for as memory
+> for that memory range inside the file.
+>
+> Corruption during write back is clearly possible here. To solve that, one
+> idea is to identify pages that have active GUP, so that we can use a bounce
+> page to write stable data to the filesystem. The filesystem would work
+> on the bounce page, while any of the active GUP might write to the
+> original page. This would avoid the stable page violation problem, but note
+> that it is only part of the overall solution, because other problems
+> remain.
 
-diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
-index 58176b56354e..294ed4392a0e 100644
---- a/arch/x86/kernel/aperture_64.c
-+++ b/arch/x86/kernel/aperture_64.c
-@@ -14,6 +14,7 @@
- #define pr_fmt(fmt) "AGP: " fmt
- 
- #include <linux/kernel.h>
-+#include <linux/kcore.h>
- #include <linux/types.h>
- #include <linux/init.h>
- #include <linux/memblock.h>
-@@ -57,7 +58,7 @@ int fallback_aper_force __initdata;
- 
- int fix_aperture __initdata = 1;
- 
--#ifdef CONFIG_PROC_VMCORE
-+#if defined(CONFIG_PROC_VMCORE) || defined(CONFIG_PROC_KCORE)
- /*
-  * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
-  * use the same range because it will remain configured in the northbridge.
-@@ -66,20 +67,25 @@ int fix_aperture __initdata = 1;
-  */
- static unsigned long aperture_pfn_start, aperture_page_count;
- 
--static int gart_oldmem_pfn_is_ram(unsigned long pfn)
-+static int gart_mem_pfn_is_ram(unsigned long pfn)
- {
- 	return likely((pfn < aperture_pfn_start) ||
- 		      (pfn >= aperture_pfn_start + aperture_page_count));
- }
- 
--static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
-+static void __init exclude_from_core(u64 aper_base, u32 aper_order)
- {
- 	aperture_pfn_start = aper_base >> PAGE_SHIFT;
- 	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
--	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
-+#ifdef CONFIG_PROC_VMCORE
-+	WARN_ON(register_oldmem_pfn_is_ram(&gart_mem_pfn_is_ram));
-+#endif
-+#ifdef CONFIG_PROC_KCORE
-+	WARN_ON(register_mem_pfn_is_ram(&gart_mem_pfn_is_ram));
-+#endif
- }
- #else
--static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
-+static void exclude_from_core(u64 aper_base, u32 aper_order)
- {
- }
- #endif
-@@ -474,7 +480,7 @@ int __init gart_iommu_hole_init(void)
- 			 * may have allocated the range over its e820 RAM
- 			 * and fixed up the northbridge
- 			 */
--			exclude_from_vmcore(last_aper_base, last_aper_order);
-+			exclude_from_core(last_aper_base, last_aper_order);
- 
- 			return 1;
- 		}
-@@ -520,7 +526,7 @@ int __init gart_iommu_hole_init(void)
- 	 * overlap with the first kernel's memory. We can't access the
- 	 * range through vmcore even though it should be part of the dump.
- 	 */
--	exclude_from_vmcore(aper_alloc, aper_order);
-+	exclude_from_core(aper_alloc, aper_order);
- 
- 	/* Fix up the north bridges */
- 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index bbcc185062bb..d29d869abec1 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -54,6 +54,28 @@ static LIST_HEAD(kclist_head);
- static DECLARE_RWSEM(kclist_lock);
- static int kcore_need_update = 1;
- 
-+/*
-+ * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
-+ * Same as oldmem_pfn_is_ram in vmcore
-+ */
-+static int (*mem_pfn_is_ram)(unsigned long pfn);
-+
-+int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn))
-+{
-+	if (mem_pfn_is_ram)
-+		return -EBUSY;
-+	mem_pfn_is_ram = fn;
-+	return 0;
-+}
-+
-+static int pfn_is_ram(unsigned long pfn)
-+{
-+	if (mem_pfn_is_ram)
-+		return mem_pfn_is_ram(pfn);
-+	else
-+		return 1;
-+}
-+
- /* This doesn't grab kclist_lock, so it should only be used at init time. */
- void __init kclist_add(struct kcore_list *new, void *addr, size_t size,
- 		       int type)
-@@ -465,6 +487,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 				goto out;
- 			}
- 			m = NULL;	/* skip the list anchor */
-+		} else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
-+			if (clear_user(buffer, tsz)) {
-+				ret = -EFAULT;
-+				goto out;
-+			}
- 		} else if (m->type == KCORE_VMALLOC) {
- 			vread(buf, (char *)start, tsz);
- 			/* we have to zero-fill user buffer even if no read */
-diff --git a/include/linux/kcore.h b/include/linux/kcore.h
-index 8c3f8c14eeaa..c843f4a9c512 100644
---- a/include/linux/kcore.h
-+++ b/include/linux/kcore.h
-@@ -44,6 +44,8 @@ void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
- 	m->vaddr = (unsigned long)vaddr;
- 	kclist_add(m, addr, sz, KCORE_REMAP);
- }
-+
-+extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
- #else
- static inline
- void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
--- 
-2.20.1
+Yes you now have the filesystem as well as the GUP pinner claiming
+authority over the contents of a single memory segment. Maybe better not
+allow that?
+
+> Direct IO
+> =========
+>
+> Direct IO can cause corruption, if userspace does Direct-IO that writes to
+> a range of virtual addresses that are mmap'd to a file.  The pages written
+> to are file-backed pages that can be under write back, while the Direct IO
+> is taking place.  Here, Direct IO races with a write back: it calls
+> GUP before page_mkclean() has replaced the CPU pte with a read-only entry.
+> The race window is pretty small, which is probably why years have gone by
+> before we noticed this problem: Direct IO is generally very quick, and
+> tends to finish up before the filesystem gets around to do anything with
+> the page contents.  However, it's still a real problem.  The solution is
+> to never let GUP return pages that are under write back, but instead,
+> force GUP to take a write fault on those pages.  That way, GUP will
+> properly synchronize with the active write back.  This does not change the
+> required GUP behavior, it just avoids that race.
+
+Direct IO on a mmapped file backed page doesnt make any sense. The direct
+I/O write syscall already specifies one file handle of a filesystem that
+the data is to be written onto.  Plus mmap already established another
+second filehandle and another filesystem that is also in charge of that
+memory segment.
+
+Two filesystem trying to sync one memory segment both believing to have
+exclusive access and we want to sort this out. Why? Dont allow this.
 
