@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5BAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC77C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AFF20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB60320449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050178;
-	bh=z5CXdq3z/pNbugnS8V4SOrF0Q+dACsVHXqIKjc/43tY=;
+	s=default; t=1552050188;
+	bh=F4DfMR1uOFRDveasK8dNKhLDwHp2wAOiEZdFmocBcAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmKkQie5ANB+MVL9cWSeC8S8QAqmaeKoI/nLkZS7u19l7Aaes3Gggn46TI/HPR9mt
-	 tedBTd7BxYnEK294ISLqKDOPrTZoqB+2gUntzEiQTfjsfXQ003nDnM8KkWrbylVWJI
-	 ZeYrwLBmJS5A72LcD9dBEEX6jn6NmK9e0ldKsdyo=
+	b=OKagiZ27SI8rI+cIZFL7ccoIXFTyaQfNV4rGn7Rr2Ld0+aOhaU0Sz8eABa9hu24MS
+	 7uVHKmVtpWUeatmb/n+NaPwAKCNs2vh1naRR7pk9Nd42coA3GfPCW3NOvDHwcYrLHl
+	 CyeRSLE6up4vAC5PVphU85yx8DUN2ffFU5F+A7fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbfCHNC4 (ORCPT
+        id S1727821AbfCHM7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:02:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:59:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfCHM7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:31 -0500
+        id S1728120AbfCHM7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:59:12 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0B0E20661;
-        Fri,  8 Mar 2019 12:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 355A820661;
+        Fri,  8 Mar 2019 12:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049971;
-        bh=z5CXdq3z/pNbugnS8V4SOrF0Q+dACsVHXqIKjc/43tY=;
+        s=default; t=1552049951;
+        bh=F4DfMR1uOFRDveasK8dNKhLDwHp2wAOiEZdFmocBcAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HN4M3lml9PcTMMnZERvwIS7UllE2dJ7QzL77QFi2j7rJKKZaxwWgSI3Hfy2tXP/t
-         4g+q7fyN/0FFYquOjaw/kH5j+LzOkZhfVVuhLFj9gfJTfRh/CEqnBZ98GkUodKz6ut
-         vq82BAIZ5fKuDSZTLGLe8UbThzIQV+Cas7hF+mno=
+        b=wU41NiB3ek5fo4jVMS2DpC3DURmL+rGZOxxJN1i+f8ASCLIicn2CGlAMxYXXkYwwx
+         OvTQEYRZvHa59kJYb+xaMVpMbU8upiAsPvv3xX5iSyiDuZC0TtsGuWK/s9UvcCqmFs
+         npTp37x86gjJX/UsoFoEasYk0dyY042lLsJdsXtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.19 09/68] staging: wilc1000: fix to set correct value for vif_num
-Date:   Fri,  8 Mar 2019 13:49:39 +0100
-Message-Id: <20190308124911.241180731@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 36/68] net: socket: set sock->sk to NULL after calling proto_ops::release()
+Date:   Fri,  8 Mar 2019 13:50:06 +0100
+Message-Id: <20190308124912.518179387@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -64,37 +65,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit dda037057a572f5c82ac2499eb4e6fb17600ba3e upstream.
+[ Upstream commit ff7b11aa481f682e0e9711abfeb7d03f5cd612bf ]
 
-Set correct value in '->vif_num' for the total number of interfaces and
-set '->idx' value using 'i'.
+Commit 9060cb719e61 ("net: crypto set sk to NULL when af_alg_release.")
+fixed a use-after-free in sockfs_setattr() when an AF_ALG socket is
+closed concurrently with fchownat().  However, it ignored that many
+other proto_ops::release() methods don't set sock->sk to NULL and
+therefore allow the same use-after-free:
 
-Fixes: 735bb39ca3be ("staging: wilc1000: simplify vif[i]->ndev accesses")
-Fixes: 0e490657c721 ("staging: wilc1000: Fix problem with wrong vif index")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+    - base_sock_release
+    - bnep_sock_release
+    - cmtp_sock_release
+    - data_sock_release
+    - dn_release
+    - hci_sock_release
+    - hidp_sock_release
+    - iucv_sock_release
+    - l2cap_sock_release
+    - llcp_sock_release
+    - llc_ui_release
+    - rawsock_release
+    - rfcomm_sock_release
+    - sco_sock_release
+    - svc_release
+    - vcc_release
+    - x25_release
+
+Rather than fixing all these and relying on every socket type to get
+this right forever, just make __sock_release() set sock->sk to NULL
+itself after calling proto_ops::release().
+
+Reproducer that produces the KASAN splat when any of these socket types
+are configured into the kernel:
+
+    #include <pthread.h>
+    #include <stdlib.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+
+    pthread_t t;
+    volatile int fd;
+
+    void *close_thread(void *arg)
+    {
+        for (;;) {
+            usleep(rand() % 100);
+            close(fd);
+        }
+    }
+
+    int main()
+    {
+        pthread_create(&t, NULL, close_thread, NULL);
+        for (;;) {
+            fd = socket(rand() % 50, rand() % 11, 0);
+            fchownat(fd, "", 1000, 1000, 0x1000);
+            close(fd);
+        }
+    }
+
+Fixes: 86741ec25462 ("net: core: Add a UID field to struct sock.")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/wilc1000/linux_wlan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/socket.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/wilc1000/linux_wlan.c
-+++ b/drivers/staging/wilc1000/linux_wlan.c
-@@ -1090,8 +1090,8 @@ int wilc_netdev_init(struct wilc **wilc,
- 		vif->wilc = *wilc;
- 		vif->ndev = ndev;
- 		wl->vif[i] = vif;
--		wl->vif_num = i;
--		vif->idx = wl->vif_num;
-+		wl->vif_num = i + 1;
-+		vif->idx = i;
- 
- 		ndev->netdev_ops = &wilc_netdev_ops;
- 
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -577,6 +577,7 @@ static void __sock_release(struct socket
+ 		if (inode)
+ 			inode_lock(inode);
+ 		sock->ops->release(sock);
++		sock->sk = NULL;
+ 		if (inode)
+ 			inode_unlock(inode);
+ 		sock->ops = NULL;
 
 
