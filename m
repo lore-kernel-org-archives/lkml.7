@@ -2,126 +2,101 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E89CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61704C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F78720854
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5602081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdUL7EUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfCHGvP convert rfc822-to-8bit (ORCPT
+        id S1726473AbfCHGwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:51:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36732 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfCHGvP (ORCPT
+        Fri, 8 Mar 2019 01:52:19 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34614 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfCHGwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:51:15 -0500
-Received: from c-67-160-6-8.hsd1.wa.comcast.net ([67.160.6.8] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1h29LY-0008I7-Pr; Fri, 08 Mar 2019 06:51:09 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id C231760868; Thu,  7 Mar 2019 22:51:06 -0800 (PST)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id BA7AF9F839;
-        Thu,  7 Mar 2019 22:51:06 -0800 (PST)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     Bo YU <tsu.yubo@gmail.com>
-cc:     vfalico@gmail.com, andy@greyhouse.net, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuzibode@126.com
-Subject: Re: [PATCH 2/2] net: bonding: fix incorrect type in assignment
-In-reply-to: <2fefb2a6962f668f76db79d2f9a2b866b077e42f.1552023000.git.tsu.yubo@gmail.com>
-References: <cover.1552023000.git.tsu.yubo@gmail.com> <2fefb2a6962f668f76db79d2f9a2b866b077e42f.1552023000.git.tsu.yubo@gmail.com>
-Comments: In-reply-to Bo YU <tsu.yubo@gmail.com>
-   message dated "Fri, 08 Mar 2019 00:34:05 -0500."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        Fri, 8 Mar 2019 01:52:19 -0500
+Received: by mail-pf1-f195.google.com with SMTP id u9so13434346pfn.1;
+        Thu, 07 Mar 2019 22:52:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ya/F34Jwz73llNEQ0TVl8VHqoCJ5jTaRTvAMz69fhs=;
+        b=NdUL7EUcIn9e/ZXt3NjSa4be61aOadg/xmtVPdQYxkav1BSvgbMqX6xr3113v3LHvi
+         ggSWsfh+VQgeU400JuwTRGM6mmrOT5mj40OLsgzjsGA3HdeNULBTiSo6C514aTaTveIn
+         ZA54ABLrurJBQwidADg1ksdtBs0RJRfLGucuMn0AfPq6bGI+gTROEPu9kW2qj3JolwuV
+         VD5jET7yqNwY2SF9oWZ2vIOSOWLjChgVq3HWvwr+82yuMJ9D1cz/BgZMwLdSg75llAYH
+         1zrLsupgFM1oZOSr6Sf6zIvz4OeB0CuB7jDaEqzBuuWPr0tGXNzvk/jAEry9jq79uqGK
+         HGiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ya/F34Jwz73llNEQ0TVl8VHqoCJ5jTaRTvAMz69fhs=;
+        b=sIPyreHtkzh1GzRJRep7EsfTDd7WpleMTB4cmXhyQLQcAQLvCcXXX0cU3TrTPEqGxi
+         LOQisK33ngBThhMyjQr5Lqo7eKY+B3HQvk5nhw2Rwgu8QUBm8ITrbWtgnN2fGcTfeNqE
+         q2VY72pM7Um3tdihv/MSFToGZQAxTkO+JecXdp/rmmZo0/oPudA86mtszUQmkYCh16Xs
+         +z1ioSSLwYC1U5lKXrUqYzw3DtiudbWtN5DkPg8M3/DOyYeBOywFMj5MtD9X0LPGtzXy
+         dk/P3OZjufoN/cYaDhdqKF93g4928n4ZV7yBEbYUsazmOxAsmuh5TufFAnF6W8X4sPwP
+         F9+g==
+X-Gm-Message-State: APjAAAXN4fucV7sV+AbGl2rFiwqNpUCqJpJVtBC0RiOLp7OZHvZhGzgU
+        UWPLFKmHfgtJ8wwhKjZpRB64XVWUgsCoqQnd0kI=
+X-Google-Smtp-Source: APXvYqy5TEwWjlj6kPQqsLhELdiheOknvMOhJTv91tJMlgb2GDVMx+WNc3c8S2Br+tiWbs/jJD0DYqvnnjH/mW6Qrnw=
+X-Received: by 2002:a63:1c42:: with SMTP id c2mr15176208pgm.265.1552027938295;
+ Thu, 07 Mar 2019 22:52:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6017.1552027866.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 07 Mar 2019 22:51:06 -0800
-Message-ID: <6018.1552027866@famine>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com> <1552025622-15582-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1552025622-15582-4-git-send-email-chunfeng.yun@mediatek.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 8 Mar 2019 08:52:06 +0200
+Message-ID: <CAHp75VeW+NoaGQCnfMcZSz67V68ykRMO=BG9_U6NFODJ5g=1FA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] usb: roles: add API to get usb_role_switch by node
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Min Guo <min.guo@mediatek.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bo YU <tsu.yubo@gmail.com> wrote:
-
->There are some warning when:
+On Fri, Mar 8, 2019 at 8:14 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
 >
->sudo make C=1 CF=-D__CHECK_ENDIAN__ drivers/net/bonding/
->
->drivers/net/bonding/bond_main.c:2438:40: warning: incorrect type in assignment (different base types)
->drivers/net/bonding/bond_main.c:2438:40:    expected restricted __be16 [usertype] vlan_proto
->drivers/net/bonding/bond_main.c:2438:40:
->...
->rivers/net/bonding/bond_options.c:1089:24: warning: incorrect type in assignment (different base types)
->drivers/net/bonding/bond_options.c:1089:24:    expected restricted __be32 [addressable] [usertype] target
->drivers/net/bonding/bond_options.c:1089:24:    got unsigned long long const [usertype] value
->
->So fix it
->
->Signed-off-by: Bo YU <tsu.yubo@gmail.com>
->---
-> drivers/net/bonding/bond_main.c    | 2 +-
-> drivers/net/bonding/bond_options.c | 2 +-
-> 2 files changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
->index 135fec28daa9..07e52d863e91 100644
->--- a/drivers/net/bonding/bond_main.c
->+++ b/drivers/net/bonding/bond_main.c
->@@ -2435,7 +2435,7 @@ struct bond_vlan_tag *bond_verify_device_path(struct net_device *start_dev,
-> 		tags = kcalloc(level + 1, sizeof(*tags), GFP_ATOMIC);
-> 		if (!tags)
-> 			return ERR_PTR(-ENOMEM);
->-		tags[level].vlan_proto = VLAN_N_VID;
->+		tags[level].vlan_proto = cpu_to_be16(VLAN_N_VID);
-> 		return tags;
-> 	}
-> 
->diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
->index da1fc17295d9..3a196999bd1b 100644
->--- a/drivers/net/bonding/bond_options.c
->+++ b/drivers/net/bonding/bond_options.c
->@@ -1086,7 +1086,7 @@ static int bond_option_arp_ip_targets_set(struct bonding *bond,
-> 		else
-> 			netdev_err(bond->dev, "no command found in arp_ip_targets file - use +<addr> or -<addr>\n");
-> 	} else {
->-		target = newval->value;
->+		target = cpu_to_be32(newval->value);
-> 		ret = bond_option_arp_ip_target_add(bond, target);
+> Add usb_role_switch_get_by_node() to make easier to get
+> usb_role_switch by node which register it.
+> It's useful when there is not device_connection registered
+> between two drivers and only knows the node which register
+> usb_role_switch.
 
-	I'm not sure this is correct; if I'm reading the call path
-correctly, bond_changelink will
+> +static int __switch_match_node(struct device *dev, const void *node)
+> +{
+> +       return dev->parent->of_node == (const struct device_node *)node;
+> +}
 
-        if (data[IFLA_BOND_ARP_IP_TARGET]) {
-[...]
-                        __be32 target;
-[...]
-                        target = nla_get_be32(attr);
+Hmm... Shouldn't be slightly better to compare fwnode instead?
 
-                        bond_opt_initval(&newval, (__force u64)target);
-                        err = __bond_opt_set(bond, BOND_OPT_ARP_TARGETS,
-                                             &newval);
-
-	thus, newval.value is initially be32, but stored in a u64.
-__bond_opt_set will call bond_opt_parse, which in turn will call
-bond_option_arp_ip_targets_set (via .set), and the change above would
-swap the newval.value back to host order (on little endian architectures
-for which cpu_to_be32 is not a no-op).
-
-	Am I misunderstanding?  Did you test this change on an x86 or
-other little endian system?
-
-	-J
-
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+-- 
+With Best Regards,
+Andy Shevchenko
