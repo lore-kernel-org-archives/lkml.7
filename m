@@ -2,311 +2,302 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70912C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A611DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2447A2081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6D82081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KwVWGnML"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ocDRLVzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfCHUd3 (ORCPT
+        id S1727072AbfCHUgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 15:33:29 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34100 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfCHUd3 (ORCPT
+        Fri, 8 Mar 2019 15:36:25 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52442 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfCHUgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 15:33:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lEZe74g5fDUGmIxZz6wjPQPPpjENW5ua1e86Z7HlcpI=; b=KwVWGnML9V15ZL0zEip5C9OX1
-        ltAgPWyu+6P11NIbU28Sa84/mo+fi2aC3S2D+jPZDYwgJUU+O7DBCOKYC7IKtiBpYebcbHX7tJS0q
-        PQ2Qcc0f8bBlLlNeY2+25zXWFqypJrzGsuT5FuzUS8eXhKDL9i5AOCm1F/sP5jafCYV/vi1E71x3w
-        BLN/REei0Z24EmVjgZiYownDwSGxj3/gRmiMeXC0puy0KCH2XJqwhNSEVHhcJTMJiYeVZVhLe+e9U
-        65k+F4r3Gwbor/sHZB884CrPoSWsremIijFRXlCOR3tvM45cIZ55oCTlAByjqWtzZALxK0FLY0y/z
-        bT5WXgLfA==;
-Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2MBL-0000Dx-HQ; Fri, 08 Mar 2019 20:33:27 +0000
-Date:   Fri, 8 Mar 2019 12:33:26 -0800
-From:   Darren Hart <dvhart@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Subject: [GIT PULL] platform-drivers-x86 for 5.1-1
-Message-ID: <20190308203326.GA48374@wrath>
+        Fri, 8 Mar 2019 15:36:25 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28KaH8x115924;
+        Fri, 8 Mar 2019 14:36:17 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552077377;
+        bh=X3Dn2+Ow1KvwNh/2VWvy3Ub2uUnOs2/0AnziCBuI4fk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ocDRLVzHn37/8Je9r7tQ0sQmzOUprvv/hsG/UznDgznRBz02hoshX7X0gt7OGUSko
+         WGBs4byEanlFZbG5TVc1j+01eBqqaorzQvdL56z3yUjo0JsI8fFZF8N4+NwU8ZX5Jd
+         9Cvmg1FbYd9jh0PxDfM42dwinA3dmAl8HmNkJFc4=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28KaHTU018976
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Mar 2019 14:36:17 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
+ Mar 2019 14:36:16 -0600
+Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 8 Mar 2019 14:36:16 -0600
+Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28KaGjl011823;
+        Fri, 8 Mar 2019 14:36:16 -0600
+Subject: Re: [PATCH v7 1/4] can: m_can: Create a m_can platform framework
+To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
+        <davem@davemloft.net>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190305155220.14037-1-dmurphy@ti.com>
+ <5065d6ba-f195-a695-77b1-b837cac1a199@grandegger.com>
+ <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
+ <bf2613ae-67f6-661d-0faa-786308c249a0@grandegger.com>
+ <cea76d80-d85c-2963-2745-4509450e2ea9@grandegger.com>
+ <6016c8aa-01b6-38d5-0e1f-3a999aae6a13@ti.com>
+ <1f6f77c6-dcf2-6212-5d4e-1eb699e603f1@grandegger.com>
+ <1e9acd4e-97ad-1d9c-44b6-1b2d1bbe8c0e@ti.com>
+ <2026f4ff-31de-3040-0872-5e9d01cc5aa5@grandegger.com>
+ <a2538a05-a03f-06f8-99e3-c7c72287613c@ti.com>
+ <e8782172-5156-6704-8ddb-b7d4d670e3c9@grandegger.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <56edf2e9-1229-5b8d-f477-13efab207cd8@ti.com>
+Date:   Fri, 8 Mar 2019 14:36:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e8782172-5156-6704-8ddb-b7d4d670e3c9@grandegger.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 3/8/19 12:06 PM, Wolfgang Grandegger wrote:
+> 
+> 
+> Am 08.03.19 um 18:52 schrieb Dan Murphy:
+>> On 3/8/19 11:40 AM, Wolfgang Grandegger wrote:
+>>> Hello Dan,
+>>>
+>>> Am 08.03.19 um 18:25 schrieb Dan Murphy:
+>>>> On 3/8/19 11:08 AM, Wolfgang Grandegger wrote:
+>>>>> Hello,
+>>>>>
+>>>>> Am 08.03.19 um 16:48 schrieb Dan Murphy:
+>>>>>> Wolfgang
+>>>>>>
+>>>>>> On 3/8/19 8:41 AM, Wolfgang Grandegger wrote:
+>>>>>>> Hello Dan,
+>>>>>>>
+>>>>>>> thinking more about it...
+>>>>>>>
+>>>>>>> Am 08.03.19 um 14:29 schrieb Wolfgang Grandegger:
+>>>>>>>> Hello Dan,
+>>>>>>>>
+>>>>>>>> Am 08.03.19 um 13:44 schrieb Dan Murphy:
+>>>>>>>>> Wolfgang
+>>>>>>>>>
+>>>>>>>>> On 3/8/19 4:10 AM, Wolfgang Grandegger wrote:
+>>>>>>>>>> Hallo Dan,
+>>>>>>>>>>
+>>>>>>>>>> Am 05.03.19 um 16:52 schrieb Dan Murphy:
+>>>>>>>>>>> Create a m_can platform framework that peripherial
+>>>>>>>>>>> devices can register to and use common code and register sets.
+>>>>>>>>>>> The peripherial devices may provide read/write and configuration
+>>>>>>>>>>> support of the IP.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
+>>>>>>>>>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
+>>>>>>>>>>>
+>>>>>>>>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+>>>>>>>>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+>>>>>>>>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+>>>>>>>>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+>>>>>>>>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+>>>>>>>>>>>
+>>>>>>>>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
+>>>>>>>>>>>  drivers/net/can/m_can/Makefile         |   1 +
+>>>>>>>>>>>  drivers/net/can/m_can/m_can.c          | 700 +++++++++++++------------
+>>>>>>>>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>>>>>>>>>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
+>>>>>>>>>>>  5 files changed, 682 insertions(+), 344 deletions(-)
+>>>>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
+>>>>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>>>>>>>>>> index 04f20dd39007..f7119fd72df4 100644
+>>>>>>>>>>> --- a/drivers/net/can/m_can/Kconfig
+>>>>>>>>>>> +++ b/drivers/net/can/m_can/Kconfig
+>>>>>>>>>>> @@ -1,5 +1,14 @@
+>>>>>>>>>>>  config CAN_M_CAN
+>>>>>>>>>>> +	tristate "Bosch M_CAN support"
+>>>>>>>>>>> +	---help---
+>>>>>>>>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+>>>>>>>>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
+>>>>>>>>>>> +
+>>>>>>>>>>> +config CAN_M_CAN_PLATFORM
+>>>>>>>>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
+>>>>>>>>>>>  	depends on HAS_IOMEM
+>>>>>>>>>>> -	tristate "Bosch M_CAN devices"
+>>>>>>>>>>> +	depends on CAN_M_CAN
+>>>>>>>>>>>  	---help---
+>>>>>>>>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
+>>>>>>>>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>>>>>>>>>>> +	  This support is for devices that have the Bosch M_CAN controller
+>>>>>>>>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+>>>>>>>>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>>>>>>>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
+>>>>>>>>>>> --- a/drivers/net/can/m_can/Makefile
+>>>>>>>>>>> +++ b/drivers/net/can/m_can/Makefile
+>>>>>>>>>>> @@ -3,3 +3,4 @@
+>>>>>>>>>>>  #
+>>>>>>>>>>>  
+>>>>>>>>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>>>>>>>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>>>>>>>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+>>>>>>>>>>> index 9b449400376b..a60278d94126 100644
+>>>>>>>>>>> --- a/drivers/net/can/m_can/m_can.c
+>>>>>>>>>>> +++ b/drivers/net/can/m_can/m_can.c
+>>>>>>>>>>
+>>>>>>>>>> ... snip...
+>>>>>>>>>>
+>>>>>>>>>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
+>>>>>>>>>>> +				    struct net_device *dev)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +	struct m_can_priv *priv = netdev_priv(dev);
+>>>>>>>>>>> +
+>>>>>>>>>>> +	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>>>>>> +		return NETDEV_TX_OK;
+>>>>>>>>>>> +
+>>>>>>>>>>> +	if (priv->is_peripherial) {
+>>>>>>>>>>> +		if (priv->tx_skb) {
+>>>>>>>>>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
+>>>>>>>>>>> +			return NETDEV_TX_BUSY;
+>>>>>>>>>>> +		}
+>>>>>>>>>>
+>>>>>>>>>> The problem with that approach is, that the upper layer will try to
+>>>>>>>>>> resubmit the current "skb" but not the previous "tx_skb". And the
+>>>>>>>>>> previous "tx_skb" has not been freed yet. I would just drop and free the
+>>>>>>>>>> skb and return NETDEV_TX_OK in m_can_tx_handler() for peripheral devices
+>>>>>>>>>> (like can_dropped_invalid_skb() does).
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> OK.
+>>>>>>>>>
+>>>>>>>>> So would this also be a bug in the hi3110 and mcp251x drivers (line 521) as well because besides checking tx_length
+>>>>>>>>> this is how these drivers are written.
+>>>>>>>>
+>>>>>>>> This is different. When entering the "start_xmit" routine, the previous
+>>>>>>>> TX is still in progress. It will (hopefully) complete soon. Therefore
+>>>>>>>> returning NETDEV_TX_BUSY is OK. The "start_xmit" routine will be
+>>>>>>>> recalled soon with the same "skb". That scenario should/could also not
+>>>>>>>> happen.
+>>>>>>>
+>>>>>>> In principle, this also applies to the m_can peripheral devices. If
+>>>>>>> tx_skb is not NULL, the TX is still in progress and returning
+>>>>>>> NETDEV_TX_BUSY is just fine.
+>>>>>>>
+>>>>>>>>
+>>>>>>>> In contrast, in "m_can_tx_handler()", the skb could not be handled
+>>>>>>>> because the FIFO is full. The "start_xmit" routine for peripheral
+>>>>>>>> devices for that skb already returned NETDEV_TX_OK. Therefore the only
+>>>>>>>> meaningful action is to drop the skb. Also this error should not happen
+>>>>>>>> and if, something is going really wrong. Therefore I think, a
+>>>>>>>> WARN_ONCE() would be even more appropriate. But that should be a
+>>>>>>>> separate patch.
+>>>>>>>
+>>>>>>> But that's a different issue/error. The tx_skb cannot be processed in
+>>>>>>> "m_can_tx_handler()". Either we drop it or we re-queue it (retry later).
+>>>>>>>
+>>>>>>
+>>>>>> OK I am a bit confused on this.  Are you saying this is not an issue?
+>>>>>> Or are you saying I need to check for tx_len like the other code?
+>>>>>
+>>>>> If you check for tx_skb in the "start_xmit" routine like the hi3110 and
+>>>>> mcp251x, it will work the same way. But only, if the "tx_handler()" has
+>>>>> fully processed the message. It simple means, the TX is still in
+>>>>> progress and will complete soon. But in "m_can_tx_handler()" we return
+>>>>> without handling the message! It will never be sent and freed. Or will
+>>>>> the "m_can_tx_handler()" retry?
+>>>>>
+>>>>
+>>>> I am not seeing where we are not handling the message in the m_can_tx_handler()
+>>>
+>>> static void m_can_tx_handler(struct m_can_classdev *priv)
+>>> {
+>>> 		...
+>>> 		/* Check if FIFO full */
+>>> 		if (m_can_tx_fifo_full(priv)) {
+>>> 			/* This shouldn't happen */
+>>> 			netif_stop_queue(dev);
+>>> 			netdev_warn(dev,
+>>> 				    "TX queue active although FIFO is full.");
+>>> 			return;
+>>> 		}
+>>>
+>>> We simply return here. When is the message (tx_skb) processed (sent or freed)?
+>>> What happens with tx_skb?
+>>>
+>>
+>> Are you sure you are looking at the right code?
+>>
+>> For patch version v7 I have the following
+>>
+>> 		/* Check if FIFO full */
+>> 		if (m_can_tx_fifo_full(cdev)) {
+>> 			/* This shouldn't happen */
+>> 			netif_stop_queue(dev);
+>> 			netdev_warn(dev,
+>> 				    "TX queue active although FIFO is full.");
+>> 			return NETDEV_TX_BUSY;
+>> 		}
+>>
+>> Which is no change from the original source code.
+> 
+> I know,  but for the peripheral devices you have:
+> 
+>   static void m_can_tx_work_queue(struct work_struct *ws)
+>   {
+> 	struct m_can_priv *priv = container_of(ws, struct m_can_priv,
+> 						tx_work);
+> 	netdev_tx_t ret;
+> 
+> 	ret = m_can_tx_handler(priv);
+> 	if (ret == NETDEV_TX_OK)
+> 		priv->tx_skb = NULL;
+>   }
+> 
+> What will happen with tx_skb if NETDEV_TX_BUSY? It has not been
+> dropped/freed yet?
+> 
 
-The wmi mod alias changes collide with a similar series for TEE based devices. I
-have provided my merge resolution here:
+OK I think I see the issue there.
 
-  git://git.infradead.org/linux-platform-drivers-x86.git pdx86-5.1-1-merge
+I should probably add can_put_echo_skb if NETDEV_TX_BUSY and always NULL out the SKB.
 
-This series includes two previously merged patches from the RC cycle:
-- 522e4ee6e5 Documentation/ABI: Correct mlxreg-io KernelVersion for 5.0
-- ff7c634b4f x86/CPU: Add Icelake model number
+This appears to be the way the other perp drivers do it as they just put and null the skb
+regardless of the return of the handlers.
 
-Thanks,
+And clean is called when the BUS is off or coming out of suspend.
 
-Darren Hart
-VMware Open Source Technology Center
+Dan
 
-The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
+> Wolfgang.
+> 
 
-  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.1-1
-
-for you to fetch changes up to 9c22cc020db637850ba47a14a598d09f706f19ad:
-
-  MAINTAINERS: Include mlxreg.h in Mellanox Platform Driver files (2019-03-07 08:46:29 -0800)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.1-1
-
-Use MODULE_DEVICE_TABLE across several wmi drivers, keeping
-wmi_device_id and MODULE_ALIAS() declarations in sync. Add several
-Ideapad models to the no_hw_rfkill list. Add support for new Mellanox
-platforms, including new fan and LED functionality. Address Dell
-keyboard backlight change event and power button release issues. Update
-dell_rbu to use appropriate memory allocation mechanisms. Several small
-fixes and Ice Lake support for intel_pmc_core. Fix a suspend regression
-for Cherry Trail based devices in intel_int0002_vgpio. A few other
-routine fixes.
-
-The following is an automated git shortlog grouped by driver:
-
-ACPI / scan:
- -  Create platform device for BSG2150 ACPI nodes
-
-Documentation/ABI:
- -  Add new attribute for mlxreg-io sysfs interfaces
- -  Correct mlxreg-io KernelVersion for 5.0
-
-MAINTAINERS:
- -  Include mlxreg.h in Mellanox Platform Driver files
-
-asus-wmi:
- -  Allow loading on systems without the Asus Management GUID
-
-dell-smbios-wmi:
- -  use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
-dell-wmi:
- -  use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
- -  Ignore new keyboard backlight change event
-
-dell-wmi-descriptor:
- -  use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
-dell_rbu:
- -  fix lock imbalance in img_update_realloc
- -  stop abusing the DMA API
-
-huawei-wmi:
- -  use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
-ideapad-laptop:
- -  Add ideapad 330-15ICH to no_hw_rfkill
- -  Add S130-14IGM to no_hw_rfkill list
- -  Add Ideapad 530S-14ARR to no_hw_rfkill list
- -  Add Yoga C930 to no_hw_rfkill_list
- -  Add Y530-I5ICH-1060 to no_hw_rfkill list
- -  Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
-
-intel-hid:
- -  Missing power button release on some Dell models
-
-intel-wmi-thunderbolt:
- -  use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
-intel_int0002_vgpio:
- -  Only implement irq_set_wake on Bay Trail
-
-intel_pmc_core:
- -  Quirk to ignore XTAL shutdown
- -  Add Package cstates residency info
- -  Add ICL platform support
- -  Convert to INTEL_CPU_FAM6 macro
- -  Avoid a u32 overflow
- -  Include Reserved IP for LTR
- -  Fix file permissions for ltr_show
- -  Fix PCH IP name
- -  Fix PCH IP sts reading
- -  Handle CFL regmap properly
-
-leds:
- -  mlxreg: Add support for capability register
-
-mlx-platform:
- -  Fix access mode for fan_dir attribute
- -  Add UID LED for the next generation systems
- -  Add extra CPLD for next generation systems
- -  Add support for new VMOD0007 board name
- -  Add support for fan capability registers
- -  Add support for fan direction register
-
-modpost:
- -  file2alias: define size of alias
-
-platform/mellanox:
- -  mlxreg-hotplug: Fix KASAN warning
-
-platform_data/mlxreg:
- -  Add capability field to core platform data
- -  Document fixes for core platform data
-
-touchscreen_dmi:
- -  Add info for the CHUWI Hi10 Air tablet
- -  Add info for the Chuwi Hi8 Air tablet
- -  Add info for the PoV Wintab P1006w (v1.0) tablet
-
-wmi:
- -  add WMI support to MODULE_DEVICE_TABLE()
- -  move struct wmi_device_id to mod_devicetable.h
- -  fix potential null pointer dereference
-
-wmi-bmof:
- -  use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
-x86/CPU:
- -  Add Icelake model number
-
-----------------------------------------------------------------
-Anthony Wong (1):
-      platform/x86: ideapad: Add ideapad 330-15ICH to no_hw_rfkill
-
-Christian Oder (1):
-      platform/x86: touchscreen_dmi: Add info for the CHUWI Hi10 Air tablet
-
-Christoph Hellwig (2):
-      platform/x86: dell_rbu: stop abusing the DMA API
-      platform/x86: dell_rbu: fix lock imbalance in img_update_realloc
-
-Darren Hart (VMware) (2):
-      Documentation/ABI: Correct mlxreg-io KernelVersion for 5.0
-      MAINTAINERS: Include mlxreg.h in Mellanox Platform Driver files
-
-Felix Eckhofer (1):
-      platform/x86: ideapad-laptop: Add S130-14IGM to no_hw_rfkill list
-
-Hans de Goede (4):
-      ACPI / scan: Create platform device for BSG2150 ACPI nodes
-      platform/x86: touchscreen_dmi: Add info for the PoV Wintab P1006w (v1.0) tablet
-      platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail
-      platform/x86: asus-wmi: Allow loading on systems without the Asus Management GUID
-
-Hugo Trovao (1):
-      platform/x86: ideapad-laptop: Add Yoga C930 to no_hw_rfkill_list
-
-Jérôme de Bretagne (1):
-      platform/x86: intel-hid: Missing power button release on some Dell models
-
-Kai Renzig (1):
-      platform/x86: touchscreen_dmi: Add info for the Chuwi Hi8 Air tablet
-
-Kai-Heng Feng (2):
-      platform/x86: dell-wmi: Ignore new keyboard backlight change event
-      platform/x86: ideapad-laptop: Add Ideapad 530S-14ARR to no_hw_rfkill list
-
-Mark Levedahl (1):
-      platform/x86: ideapad-laptop: Add Y530-I5ICH-1060 to no_hw_rfkill list
-
-Mattias Jacobsson (10):
-      platform/x86: wmi: fix potential null pointer dereference
-      modpost: file2alias: define size of alias
-      platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
-      platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
-      platform/x86: dell-smbios-wmi: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-      platform/x86: dell-wmi-descriptor: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-      platform/x86: dell-wmi: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-      platform/x86: huawei-wmi: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-      platform/x86: intel-wmi-thunderbolt: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-      platform/x86: wmi-bmof: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
-Rajat Jain (1):
-      platform/x86: intel_pmc_core: Avoid a u32 overflow
-
-Rajneesh Bhardwaj (10):
-      platform/x86: intel_pmc_core: Handle CFL regmap properly
-      platform/x86: intel_pmc_core: Fix PCH IP sts reading
-      platform/x86: intel_pmc_core: Fix PCH IP name
-      platform/x86: intel_pmc_core: Fix file permissions for ltr_show
-      platform/x86: intel_pmc_core: Include Reserved IP for LTR
-      x86/CPU: Add Icelake model number
-      platform/x86: intel_pmc_core: Convert to INTEL_CPU_FAM6 macro
-      platform/x86: intel_pmc_core: Add ICL platform support
-      platform/x86: intel_pmc_core: Add Package cstates residency info
-      platform/x86: intel_pmc_core: Quirk to ignore XTAL shutdown
-
-Vadim Pasternak (11):
-      platform/x86: mlx-platform: Add support for fan direction register
-      Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
-      platform_data/mlxreg: Document fixes for core platform data
-      platform_data/mlxreg: Add capability field to core platform data
-      platform/x86: mlx-platform: Add support for fan capability registers
-      platform/x86: mlx-platform: Add support for new VMOD0007 board name
-      platform/mellanox: mlxreg-hotplug: Fix KASAN warning
-      leds: mlxreg: Add support for capability register
-      platform/x86: mlx-platform: Add extra CPLD for next generation systems
-      platform/x86: mlx-platform: Add UID LED for the next generation systems
-      platform/x86: mlx-platform: Fix access mode for fan_dir attribute
-
-Yang Fan (1):
-      platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
-
- Documentation/ABI/stable/sysfs-driver-mlxreg-io |  20 ++-
- MAINTAINERS                                     |   1 +
- arch/x86/include/asm/intel-family.h             |   2 +
- drivers/acpi/scan.c                             |   1 +
- drivers/leds/leds-mlxreg.c                      |  19 +++
- drivers/platform/mellanox/mlxreg-hotplug.c      |  28 ++++-
- drivers/platform/x86/asus-wmi.c                 |   9 +-
- drivers/platform/x86/dell-smbios-wmi.c          |   2 +-
- drivers/platform/x86/dell-wmi-descriptor.c      |   2 +-
- drivers/platform/x86/dell-wmi.c                 |   7 +-
- drivers/platform/x86/dell_rbu.c                 |  50 +++-----
- drivers/platform/x86/huawei-wmi.c               |   3 +-
- drivers/platform/x86/i2c-multi-instantiate.c    |   9 ++
- drivers/platform/x86/ideapad-laptop.c           |  37 +++++-
- drivers/platform/x86/intel-hid.c                |   7 +-
- drivers/platform/x86/intel-wmi-thunderbolt.c    |   2 +-
- drivers/platform/x86/intel_int0002_vgpio.c      |  32 ++++-
- drivers/platform/x86/intel_pmc_core.c           | 159 ++++++++++++++++++++----
- drivers/platform/x86/intel_pmc_core.h           |  14 ++-
- drivers/platform/x86/mlx-platform.c             | 105 ++++++++++++++++
- drivers/platform/x86/touchscreen_dmi.c          |  79 ++++++++++++
- drivers/platform/x86/wmi-bmof.c                 |   2 +-
- drivers/platform/x86/wmi.c                      |   5 +-
- include/linux/mod_devicetable.h                 |  12 ++
- include/linux/platform_data/mlxreg.h            |   6 +-
- include/linux/wmi.h                             |   5 +-
- scripts/mod/devicetable-offsets.c               |   3 +
- scripts/mod/file2alias.c                        |  28 ++++-
- 28 files changed, 546 insertions(+), 103 deletions(-)
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+------------------
+Dan Murphy
