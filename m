@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB13C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF78C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F3820661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CF7214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552052890;
-	bh=We3LhRZYculZGs8BV0MSOU2Ntdq8kYRfDs48QsiPEo8=;
+	s=default; t=1552052894;
+	bh=7v8eEYOvoW+ftjkG+9fhOQpRRcYHlZLrQ1WAcqL97OI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnEl9JxjwVo/EVYs5WKElJb3d3vCyehG8tw/TWbYqC2eXwCyxeQcvcCRiEQSN6uPA
-	 gglefXoXez60KQs7F0GSMUUPi5O6HAF/tUj01dE+F8GI5yad/qMsXfID5ArXeqxWWG
-	 Q86jfHHII6dCW6c5cva2Wq7HOix1R4PUoxA/ztBo=
+	b=NBlF91L2m10eJzVxL0XUwo4/SY/hNfLWBQ84Ucyt34iHAOrNCFVyVA/LLhlCef+5e
+	 DPrL7E3kPjjjrP5D8vTYh6/WpEOdcBNmf07pvUazqZufE1AezxbEtmtY8+0wYQ72ZH
+	 1axmOKuLpZgdDgMz74GVq9NDeBKNUJsK9q7nNsVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfCHNsJ (ORCPT
+        id S1726893AbfCHNsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:48:09 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:47650 "EHLO mx1.redhat.com"
+        Fri, 8 Mar 2019 08:48:12 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:49366 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbfCHNsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:48:03 -0500
+        id S1726807AbfCHNsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:48:10 -0500
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B87B030D78C1;
-        Fri,  8 Mar 2019 13:48:02 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F5AD2CD819;
+        Fri,  8 Mar 2019 13:48:10 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8856B5C1B4;
-        Fri,  8 Mar 2019 13:48:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D11E5C1B4;
+        Fri,  8 Mar 2019 13:48:08 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,201 +46,86 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH 05/11] perf header: Add DIR_FORMAT feature to describe directory data
-Date:   Fri,  8 Mar 2019 14:47:39 +0100
-Message-Id: <20190308134745.5057-6-jolsa@kernel.org>
+Subject: [PATCH 08/11] perf session: Add path to reader object
+Date:   Fri,  8 Mar 2019 14:47:42 +0100
+Message-Id: <20190308134745.5057-9-jolsa@kernel.org>
 In-Reply-To: <20190308134745.5057-1-jolsa@kernel.org>
 References: <20190308134745.5057-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 08 Mar 2019 13:48:02 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 08 Mar 2019 13:48:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The data files layout is described by HEADER_DIR_FORMAT
-feature.  Currently it holds only version number (1):
+Adding path to reader object, so we can display file
+the processing fails for (string in [] brackets).
 
-     uint64_t version;
+  $ perf report --stdio
+  0x5e0 [perf.data/data.3] [0xa200]: failed to process type: -1577027574
 
-The current version holds only version value (1) means
-that data files:
-  - follow the 'data.*' name format
-  - contain raw events data in standard perf format as
-    read from kernel (and need to be sorted)
-
-Future versions are expected to describe different data
-files layout according to special needs.
-
-Link: http://lkml.kernel.org/n/tip-6l53s3oabwr1r4n6wke21d8g@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-4bjnoy4sln7adqtd3505q29q@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/builtin-record.c |  2 ++
- tools/perf/util/data.c      | 10 +++++++--
- tools/perf/util/data.h      |  1 +
- tools/perf/util/header.c    | 44 ++++++++++++++++++++++++++++++++++++-
- tools/perf/util/header.h    |  5 +++++
- 5 files changed, 59 insertions(+), 3 deletions(-)
+ tools/perf/util/session.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e983c8d71a79..a468d882e74f 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -837,6 +837,8 @@ static void record__init_features(struct record *rec)
- 	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
- 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
- 
-+	perf_header__clear_feat(&session->header, HEADER_DIR_FORMAT);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
- }
- 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 498c531e2cb9..41a9f478f0f0 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -14,6 +14,7 @@
- #include "data.h"
- #include "util.h"
- #include "debug.h"
-+#include "header.h"
- 
- static void close_dir(struct perf_data_file *files, int nr)
- {
-@@ -41,8 +42,9 @@ int perf_data__create_dir(struct perf_data *data, int nr)
- 	if (!files)
- 		return -ENOMEM;
- 
--	data->dir.files = files;
--	data->dir.nr    = nr;
-+	data->dir.version = PERF_DIR_VERSION;
-+	data->dir.files   = files;
-+	data->dir.nr      = nr;
- 
- 	for (i = 0; i < nr; i++) {
- 		struct perf_data_file *file = &files[i];
-@@ -75,6 +77,10 @@ int perf_data__open_dir(struct perf_data *data)
- 	if (WARN_ON(!data->is_dir))
- 		return -EINVAL;
- 
-+	/* The version is provided by DIR_FORMAT feature. */
-+	if (WARN_ON(data->dir.version != PERF_DIR_VERSION))
-+		return -1;
-+
- 	dir = opendir(data->path);
- 	if (!dir)
- 		return -EINVAL;
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index d342469bdfda..6aef8746469f 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -24,6 +24,7 @@ struct perf_data {
- 	enum perf_data_mode	 mode;
- 
- 	struct {
-+		u64			 version;
- 		struct perf_data_file	*files;
- 		int			 nr;
- 	} dir;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 01b324c275b9..b0683bf4d9f3 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -861,6 +861,21 @@ static int write_clockid(struct feat_fd *ff,
- 			sizeof(ff->ph->env.clockid_res_ns));
- }
- 
-+static int write_dir_format(struct feat_fd *ff,
-+			    struct perf_evlist *evlist __maybe_unused)
-+{
-+	struct perf_session *session;
-+	struct perf_data *data;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+	data = session->data;
-+
-+	if (WARN_ON(!perf_data__is_dir(data)))
-+		return -1;
-+
-+	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
-+}
-+
- static int cpu_cache_level__sort(const void *a, const void *b)
- {
- 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
-@@ -1341,6 +1356,17 @@ static void print_clockid(struct feat_fd *ff, FILE *fp)
- 		ff->ph->env.clockid_res_ns * 1000);
- }
- 
-+static void print_dir_format(struct feat_fd *ff, FILE *fp)
-+{
-+	struct perf_session *session;
-+	struct perf_data *data;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+	data = session->data;
-+
-+	fprintf(fp, "# directory data version : %"PRIu64"\n", data->dir.version);
-+}
-+
- static void free_event_desc(struct perf_evsel *events)
- {
- 	struct perf_evsel *evsel;
-@@ -2373,6 +2399,21 @@ static int process_clockid(struct feat_fd *ff,
- 	return 0;
- }
- 
-+static int process_dir_format(struct feat_fd *ff,
-+			      void *_data __maybe_unused)
-+{
-+	struct perf_session *session;
-+	struct perf_data *data;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+	data = session->data;
-+
-+	if (WARN_ON(!perf_data__is_dir(data)))
-+		return -1;
-+
-+	return do_read_u64(ff, &data->dir.version);
-+}
-+
- struct feature_ops {
- 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
- 	void (*print)(struct feat_fd *ff, FILE *fp);
-@@ -2432,7 +2473,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPN(CACHE,		cache,		true),
- 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
- 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
--	FEAT_OPR(CLOCKID,       clockid,        false)
-+	FEAT_OPR(CLOCKID,	clockid,	false),
-+	FEAT_OPN(DIR_FORMAT,	dir_format,	false)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b55f4281b1da..33f363caaa7c 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1858,6 +1858,7 @@ struct reader {
+ 	u64		 data_size;
+ 	u64		 data_offset;
+ 	reader_cb_t	 process;
++	char		*path;
  };
  
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 0d553ddca0a3..6a231340238d 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -39,6 +39,7 @@ enum {
- 	HEADER_SAMPLE_TIME,
- 	HEADER_MEM_TOPOLOGY,
- 	HEADER_CLOCKID,
-+	HEADER_DIR_FORMAT,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
-@@ -48,6 +49,10 @@ enum perf_header_version {
- 	PERF_HEADER_VERSION_2,
- };
+ static int
+@@ -1872,6 +1873,8 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 	union perf_event *event;
+ 	s64 skip;
  
-+enum perf_dir_version {
-+	PERF_DIR_VERSION	= 1,
-+};
++	pr_debug("reader processing %s\n", rd->path);
 +
- struct perf_file_section {
- 	u64 offset;
- 	u64 size;
+ 	page_offset = page_size * (rd->data_offset / page_size);
+ 	file_offset = page_offset;
+ 	head = rd->data_offset - page_offset;
+@@ -1927,8 +1930,8 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 
+ 	if (size < sizeof(struct perf_event_header) ||
+ 	    (skip = rd->process(session, event, file_pos)) < 0) {
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+-		       file_offset + head, event->header.size,
++		pr_err("%#" PRIx64 " [%s] [%#x]: failed to process type: %d\n",
++		       file_offset + head, rd->path, event->header.size,
+ 		       event->header.type);
+ 		err = -EINVAL;
+ 		goto out;
+@@ -1966,6 +1969,7 @@ static int __perf_session__process_events(struct perf_session *session)
+ 		.data_size	= session->header.data_size,
+ 		.data_offset	= session->header.data_offset,
+ 		.process	= process_simple,
++		.path		= session->data->file.path,
+ 	};
+ 	struct ordered_events *oe = &session->ordered_events;
+ 	struct perf_tool *tool = session->tool;
+@@ -2040,6 +2044,7 @@ static int __perf_session__process_dir_events(struct perf_session *session)
+ 		.data_size	= session->header.data_size,
+ 		.data_offset	= session->header.data_offset,
+ 		.process	= process_simple,
++		.path		= session->data->file.path,
+ 	};
+ 	int i, ret = 0;
+ 	struct ui_progress prog;
+@@ -2066,6 +2071,7 @@ static int __perf_session__process_dir_events(struct perf_session *session)
+ 			.data_size	= file->size,
+ 			.data_offset	= 0,
+ 			.process	= process_index,
++			.path		= file->path,
+ 		};
+ 
+ 		ret = reader__process_events(&rd, session, &prog);
 -- 
 2.17.2
 
