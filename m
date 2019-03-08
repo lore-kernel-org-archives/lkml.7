@@ -2,100 +2,148 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15097C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D7920684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E452B20684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfCHIpG (ORCPT
+        id S1726334AbfCHIrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 03:45:06 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54394 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725789AbfCHIpG (ORCPT
+        Fri, 8 Mar 2019 03:47:52 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:1969 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726238AbfCHIrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 03:45:06 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x288a82D016023;
-        Fri, 8 Mar 2019 09:44:43 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhknmfsx-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 08 Mar 2019 09:44:43 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 475A731;
-        Fri,  8 Mar 2019 08:44:42 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E81582B22;
-        Fri,  8 Mar 2019 08:44:41 +0000 (GMT)
-Received: from [10.48.0.237] (10.75.127.47) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 8 Mar
- 2019 09:44:41 +0100
-Subject: Re: [PATCH V2 6/6] mmc: mmci: replace blksz_datactrlXX by
- get_datactrl_cfg callback
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1551976742-4358-1-git-send-email-ludovic.Barre@st.com>
- <1551976742-4358-7-git-send-email-ludovic.Barre@st.com>
- <20190307164649.ywhgdikxf4nhb2sd@shell.armlinux.org.uk>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <eb213e3e-a574-b11e-ad4f-dd270d964707@st.com>
-Date:   Fri, 8 Mar 2019 09:44:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 8 Mar 2019 03:47:52 -0500
+X-UUID: c6a993b043be42d7bad82109c0eb2468-20190308
+X-UUID: c6a993b043be42d7bad82109c0eb2468-20190308
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 110564800; Fri, 08 Mar 2019 16:47:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 8 Mar 2019 16:47:39 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 8 Mar 2019 16:47:39 +0800
+Message-ID: <1552034858.2863.25.camel@mtksdaap41>
+Subject: Re: [PATCH v2 02/10] dt-binding: gce: add binding for gce event
+ property
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Fri, 8 Mar 2019 16:47:38 +0800
+In-Reply-To: <1551865835-50974-3-git-send-email-bibby.hsieh@mediatek.com>
+References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1551865835-50974-3-git-send-email-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190307164649.ywhgdikxf4nhb2sd@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_07:,,
- signatures=0
+X-TM-SNTS-SMTP: 53E949AEC08988B78A0AC1647D487C3228351745EA3C37EF067C1A23601FEB272000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Russell, Ulf
+Hi, Bibby:
 
-On 3/7/19 5:46 PM, Russell King - ARM Linux admin wrote:
-> On Thu, Mar 07, 2019 at 05:39:02PM +0100, Ludovic Barre wrote:
->> -	if (data->flags & MMC_DATA_READ)
->> -		datactrl |= MCI_DPSM_DIRECTION;
-> 
-> Given that this is currently an invariant between all, it doesn't make
-> sense to have a separate public function and combine it into the
-> get_datactrl_cfg() implementations.  You may as well leave it in place
-> here, after you call get_datactrl_cfg().
-> 
->> +	datactrl = host->ops->get_datactrl_cfg(host);
-> 
-> Otherwise, I don't see a problem with this, although it would be nice to
-> avoid the overhead of so many public functions, which could be done by
-> adding them as inline functions in mmci.h
-> 
+On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
+> cmdq driver provide a function that get event number
+> from device node for client.
 
-To combine your comments (above and https://lkml.org/lkml/2019/3/6/318).
-I could regroup mmci_dctrl_dir & mmci_dctrl_ddr & mmci_dctrl_sdio in a
-common function mmci_dctrl_common and call by:
--Each get_datactrl_cfg variant
--Or in mmci_start_data
+I think device tree is based on the view of hardware design, so you need
+not to mention how the driver design. 
 
-What do you prefer ?
+Client hardware would send event to GCE hardware, so this property
+present this event.
+
+
+> add specification for #event-cells,
+> mediatek,gce-event-names, mediatek,gce-events.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index 9c0d982..812698f 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -21,12 +21,20 @@ Required properties:
+>  	priority: Priority of GCE thread.
+>  	atomic_exec: GCE processing continuous packets of commands in atomic
+>  		way.
+> +- #event-cells: Should be 1.
+> +	<&phandle event_number>
+> +	phandle: Label name of a gce node.
+> +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+> +		      or 'dt-binding/gce/mt8183-gce.h'.
+>  
+>  Required properties for a client device:
+>  - mboxes: Client use mailbox to communicate with GCE, it should have this
+>    property and list of phandle, mailbox specifiers.
+>  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+>    to the register address.
+> +- mediatek,gce-event-names: the event name can be defined by user.
+> +- mediatek,gce-events: u32, the event number defined in
+> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+
+I think both gce-subsys and gce-event are optional and depend on the
+hardware design.
 
 Regards,
-Ludo
+CK
+
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+>  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> @@ -41,6 +49,7 @@ Example:
+>  		clock-names = "gce";
+>  		thread-num = CMDQ_THR_MAX_COUNT;
+>  		#mbox-cells = <3>;
+> +		#event-cells = <1>;
+>  	};
+>  
+>  Example for a client device:
+> @@ -50,8 +59,9 @@ Example for a client device:
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+>  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> -
+> +		mediatek,gce-event-names = "rdma0_sof",
+> +					   "rsz0_sof";
+> +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+> +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
+>  		...
+>  	};
+
+
