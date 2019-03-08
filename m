@@ -2,148 +2,92 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015D9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E4AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25E92081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727952081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:38:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mjzKw/LH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mBpQM0Vi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfCHCeI (ORCPT
+        id S1726428AbfCHCiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 21:34:08 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41851 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfCHCeH (ORCPT
+        Thu, 7 Mar 2019 21:38:17 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57910 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfCHCiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 21:34:07 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k11so11877814pgb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 18:34:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UTZumptBdSe2N4uc+wXtQ84GftVlF9+XICQPEoUB5wU=;
-        b=mjzKw/LHi0Ml4H3WhRnf6j6SUuzlEYtG27psMclgewkCimKdqb3mjbglXi54lo6lqm
-         Tt4tCr6KVefbc/jW4i0oXBxSESp7CvVdGF8YBfiKX3KTUW6rB1LAZWZZheCOalUxaVjm
-         Rad1WqNbeoKegWMX3hY8LVUQi60fA8J/KHvMA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UTZumptBdSe2N4uc+wXtQ84GftVlF9+XICQPEoUB5wU=;
-        b=fHiVkfEZfL6u1l6tQx3aWT7OLP6AVz1MHl0/t3E//WWrQSjDIx9eF/VKVb7nASP3ah
-         b9aIEz+r+QxsirZaTS4yktldPTgfashTYDzVTGJJhp+wpBD8X5vcVCTfQKPlo5d0wBCr
-         20cZv7pcpRtByzPQX3hyHpADB5PJ9lGZNwMRvRDwuTR48oEsV68KTiwjSBnVaSgyUADf
-         NnKoZiIEdUk4FcuSselddHUT2aZ+D6RfXxjf4tdDiJqSbAfWojDn/GsQV2pXMnjL3gRD
-         rc30G2ujXVIlbPC+jPr6Gw7sOl8g0j7fh/vT+li+ztu0FwQ7ItkD7S6tsATX4/xLv19h
-         VKaw==
-X-Gm-Message-State: APjAAAW6DEe4R5WEHjcB9UnpMgO/10rz3qrtAhfDacMLR0wDPofuUofW
-        g8V922S7j7XMQndSVeb6KyN7YQ==
-X-Google-Smtp-Source: APXvYqzBENnfkUI9dx+EcdiVybb2yGOekoIWT2Yb1FAZimDak7QIQVqvh1E3fPP3UfYU3HyKPjvmWQ==
-X-Received: by 2002:a17:902:e711:: with SMTP id co17mr15987990plb.171.1552012446853;
-        Thu, 07 Mar 2019 18:34:06 -0800 (PST)
-Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id p2sm14653048pfi.95.2019.03.07.18.34.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 07 Mar 2019 18:34:05 -0800 (PST)
-Date:   Thu, 7 Mar 2019 18:34:03 -0800
-From:   Brian Norris <briannorris@chromium.org>
-To:     Ganapathi Bhat <gbhat@marvell.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        linux-wireless@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [4.20 PATCH] Revert "mwifiex: restructure rx_reorder_tbl_lock
- usage"
-Message-ID: <20190308023401.GA121759@google.com>
-References: <20181130175957.167031-1-briannorris@chromium.org>
+        Thu, 7 Mar 2019 21:38:17 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x282YKJQ038776;
+        Fri, 8 Mar 2019 02:38:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=yjJeNulqjQnicY53u3NHSMKhyR0CtoETc41K/OaFVjI=;
+ b=mBpQM0Vi5MJMhPWDp1JtVnHCinVSQmjgVJjFgxgVVpi2xPRxdE3F8i4sI5Qk+4xhVUzG
+ 36cz1Bd/GUKUCVc8LnXcQpj7kRq8R2+sFWTYZXpZM12lZjT/bXphi8OryD0LOebPUhkR
+ seUbkRdOA0EJJwBJ6W92pzsIfHL4n7Vxf7u7hD3RKZbWEQholQDUZcYkyeLz8oMQ/zOO
+ a/yiUloSOo7ylsdpJVKpikTX+BdUhijK027nYeI0X4b5AJRzV1HnEynppbysgnXk6wFo
+ UKHgxeVR4PtNQVC2Kz+RzYO99U7MDOClAD/QlwLcWVtNrNQRw4oXUyq9Pv3NuICFxy8x 6Q== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2120.oracle.com with ESMTP id 2qyjfrwtvd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Mar 2019 02:38:08 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x282c7NG024056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Mar 2019 02:38:08 GMT
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x282c7Ok030171;
+        Fri, 8 Mar 2019 02:38:07 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 Mar 2019 18:38:07 -0800
+To:     Lee Duncan <leeman.duncan@gmail.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cleech@redhat.com, hare@suse.de, Lee Duncan <lduncan@suse.com>
+Subject: Re: [PATCH v2] scsi:libiscsi: Hold back_lock when calling iscsi_complete_task
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190225174130.29496-1-leeman.duncan@gmail.com>
+Date:   Thu, 07 Mar 2019 21:38:04 -0500
+In-Reply-To: <20190225174130.29496-1-leeman.duncan@gmail.com> (Lee Duncan's
+        message of "Mon, 25 Feb 2019 09:41:30 -0800")
+Message-ID: <yq14l8et7jn.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181130175957.167031-1-briannorris@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9188 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903080016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again Ganapathi,
 
-By the way, I was a little curious about what went wrong here, so I dug
-in a little further:
+Lee,
 
-On Fri, Nov 30, 2018 at 09:59:57AM -0800, Brian Norris wrote:
-> This reverts commit 5188d5453bc9380ccd4ae1086138dd485d13aef2, because it
-> introduced lock recursion:
-> 
->   BUG: spinlock recursion on CPU#2, kworker/u13:1/395
->    lock: 0xffffffc0e28a47f0, .magic: dead4ead, .owner: kworker/u13:1/395, .owner_cpu: 2
->   CPU: 2 PID: 395 Comm: kworker/u13:1 Not tainted 4.20.0-rc4+ #2
->   Hardware name: Google Kevin (DT)
->   Workqueue: MWIFIEX_RX_WORK_QUEUE mwifiex_rx_work_queue [mwifiex]
->   Call trace:
->    dump_backtrace+0x0/0x140
->    show_stack+0x20/0x28
->    dump_stack+0x84/0xa4
->    spin_bug+0x98/0xa4
->    do_raw_spin_lock+0x5c/0xdc
->    _raw_spin_lock_irqsave+0x38/0x48
->    mwifiex_flush_data+0x2c/0xa4 [mwifiex]
->    call_timer_fn+0xcc/0x1c4
->    run_timer_softirq+0x264/0x4f0
->    __do_softirq+0x1a8/0x35c
->    do_softirq+0x54/0x64
->    netif_rx_ni+0xe8/0x120
->    mwifiex_recv_packet+0xfc/0x10c [mwifiex]
->    mwifiex_process_rx_packet+0x1d4/0x238 [mwifiex]
->    mwifiex_11n_dispatch_pkt+0x190/0x1ac [mwifiex]
->    mwifiex_11n_rx_reorder_pkt+0x28c/0x354 [mwifiex]
+> If there is an error queueing an iscsi command in
+> iscsi_queuecommand(), for example if the transport fails to take the
+> command in sessuin->tt->xmit_task(), then the error path can call
+> iscsi_complete_task() without first aquiring the back_lock as
+> required. This can lead to things like ITT pool can get corrupt,
+> resulting in duplicate ITTs being sent out.
+>
+> The solution is to hold the back_lock around iscsi_complete_task()
+> calls, and to add a little commenting to help others understand when
+> back_lock must be held.
 
-TL;DR: the problem was right here ^^^
-where you started running mwifiex_11n_dispatch_pkt() (via
-mwifiex_11n_scan_and_dispatch()) while holding a spinlock.
+Applied to 5.1/scsi-queue, thanks!
 
-When you do that, you eventually call netif_rx_ni(), which specifically
-defers to softirq contexts. Then, if you happen to have your flush timer
-expiring just before that, you end up in mwifiex_flush_data(), which
-also needs that spinlock.
-
-There are a few possible ways to handle this:
-(a) prevent processing softirqs in that context; e.g., with
-    local_bh_disable(). This seems somewhat of a hack.
-    (Side note: I think most of the locks in this driver really could be
-    spin_lock_bh(), not spin_lock_irqsave() -- we don't really care
-    about hardirq context for 99% of these locks.)
-(b) restructure so that packet processing (e.g., netif_rx_ni()) is done
-    outside of the spinlock.
-
-It's actually not that hard to do (b). You can just queue your skb's up
-in a temporary sk_buff_head list and process them all at once after
-you've finished processing the reorder table. I have a local patch to do
-this, and I might send it your way if I can give it a bit more testing.
-
-Brian
-
->    mwifiex_process_sta_rx_packet+0x204/0x26c [mwifiex]
->    mwifiex_handle_rx_packet+0x15c/0x16c [mwifiex]
->    mwifiex_rx_work_queue+0x104/0x134 [mwifiex]
->    worker_thread+0x4cc/0x72c
->    kthread+0x134/0x13c
->    ret_from_fork+0x10/0x18
-> 
-> This was clearly not tested well at all. I simply performed 'wget' in a
-> loop and it fell over within a few seconds.
-> 
-> Fixes: 5188d5453bc9 ("mwifiex: restructure rx_reorder_tbl_lock usage")
-> Cc: <stable@vger.kernel.org>
-> Cc: Ganapathi Bhat <gbhat@marvell.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+-- 
+Martin K. Petersen	Oracle Linux Engineering
