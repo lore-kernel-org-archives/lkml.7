@@ -2,134 +2,151 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45C9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9394420851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="PGGluBav"
+	by mail.kernel.org (Postfix) with ESMTP id DE4A020851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfCHR7D (ORCPT
+        id S1727065AbfCHR7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:59:03 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34101 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfCHR7C (ORCPT
+        Fri, 8 Mar 2019 12:59:07 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:35717 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfCHR7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:59:02 -0500
-Received: by mail-qk1-f194.google.com with SMTP id n6so101705qkf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:59:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W1f5Wda2J5uNjk6aESlDfe8IAn1m1fVzVi5fETvAmjo=;
-        b=PGGluBavue/FAI7gDizroJBHQxP2yBnK2z4wjABJrLUhGG+lKAcIgE/dHw260BRckE
-         LUUh60Jmy/fgTOVDMDxthpTxwlmPRrVk8lwop0ekHWI6savbJLDZZHCyFja7GoEYYfnR
-         O9thZOeAIs7VI3jjClE40IXZ/fVXQYvpdkw84=
+        Fri, 8 Mar 2019 12:59:06 -0500
+Received: by mail-io1-f70.google.com with SMTP id s9so16078592ioj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:59:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W1f5Wda2J5uNjk6aESlDfe8IAn1m1fVzVi5fETvAmjo=;
-        b=s696sDhDJuY0ndsH1+eSDJf5JVuEB/baxwkLiHQ2JEovwdd7J12s4r/47U4pLWozpE
-         OzeAQhaodcB2s1FrgPORRAKjlxSPSorPezYnge95yqvjNXnQe2zsTIlOh8S193SqXNbj
-         lArRMDg1iVnSyH9MIA4AQnJE4lJYo+3oi+k9pf7TDDnGwR9Am7aKyn4CLkrr+bG5ijaX
-         t4suTmW8V2UpmtJCl8b9G5K86g2dBzIf7N7GuZBCLbQ+Vo6vIChsIfObGFqybdU7kzii
-         VN1dpPlVxcPAH7rmN9EawYjjN+YIy1EmD3ObfH0B+x4tYiDD/zzZov/tdy9fikPfSyz2
-         5aWw==
-X-Gm-Message-State: APjAAAUwQMlgpggIJcJ7A/eWCtKZQh6eMECosTcOkaRD4eUU6tFSnoI5
-        01zJ4hpd/65m0WpFV+z8QpKkzg==
-X-Google-Smtp-Source: APXvYqyxAp+nrfAmh3cy9iq/s8pjc1oQSBMr9XJPCFUq9bjr267Tb8UFa4wFNjMihP1nP0zDc9VRMw==
-X-Received: by 2002:a37:7cf:: with SMTP id 198mr15094454qkh.173.1552067941484;
-        Fri, 08 Mar 2019 09:59:01 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id j17sm2061239qtj.61.2019.03.08.09.59.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 09:59:00 -0800 (PST)
-Date:   Fri, 8 Mar 2019 12:58:59 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190308175859.GA61742@google.com>
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
- <20190307150343.GB258852@google.com>
- <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
- <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
- <20190308140251.GC25768@kroah.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=akIbWxugt/bxGxCb+VSxkCYQ054e8TlMOmMbTTBccgY=;
+        b=e3F+2LTWvNFpibh18wA2GYw4RxmucLRpxst/Gquh7LV7hNpyIZsh0E5y1hcj0M80f/
+         e2YeysatF1DZo1efUVTa0oBtyVxiRhoMyWVIPGk9++osEdC+Y8dJ+6icWa6uLCdbGVmq
+         C2xmb16GcI6bff01HpGy7YLl0JRQirAhaw7j2ZlGVd1OPduUYKWqAtIUf+KapAK2Bk7h
+         GJh7GJSB45Na4cdv65TAA3TaIfO2Df3F3LxBRXjApYjj5tv5PPPYFVVC8cgIEoYXpq/e
+         i4W4LiAtpSermrEWRcxy8DqucGpeBbH0Zwmxh9LVzH52Ss1I19EFgTamRoU+ePjydLWI
+         sqYg==
+X-Gm-Message-State: APjAAAUVvrC7suk66WLo8+aJrrq8H/eB64lRvTFzQktHcTKKG2WbUnZu
+        sQpohJvTekQyU9gXj7mDUEBF2/hf9Qi49Q9SlfHCF2y9CYPb
+X-Google-Smtp-Source: APXvYqz9BLEWYQ07xEGez/Nf8YUyvv+FV+M2KBZqXzsxCnBPJIbxCinRs0rFJv3jzSAH9ajAMnGWt2SOGw4BkBjTdBJPRbKQU+gJ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190308140251.GC25768@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a24:4d8e:: with SMTP id l136mr13173466itb.5.1552067945222;
+ Fri, 08 Mar 2019 09:59:05 -0800 (PST)
+Date:   Fri, 08 Mar 2019 09:59:05 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008adf52058398fa93@google.com>
+Subject: kernel BUG at arch/x86/kvm/x86.c:LINE! (3)
+From:   syzbot <syzbot+83a3e122f8c1b25b3111@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 03:02:51PM +0100, Greg KH wrote:
-> On Fri, Mar 08, 2019 at 05:42:32AM -0800, Joel Fernandes wrote:
-> > HI Geert,
-> > 
-> > On Fri, Mar 8, 2019, 3:53 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > It is just so much easier to use tar + xz at build time, and leave the
-> > > > decompression task to the user. After decompression, the files will live on
-> > > > the disk and the page-cache mechanism will free memory when/if the files fall
-> > > > off the LRUs.
-> > >
-> > > I'm also considering how generic and extensible the solution is.
-> > > What if people need other build artifacts in the future (e.g. signing key to
-> > > load signed modules)?
-> > 
-> > That sounds like it could be useful. I don't see any reason off the
-> > top why that would not be possible to add to the list of archived
-> > files in the future. The patch allows populating the list of files
-> > from Kbuild using ikh_file_list variable.
-> 
-> Um, no, you don't want the signing key in the kernel itself, as that
-> totally defeats the purpose of the signing key :)
+Hello,
 
-*Bangs self to desk*. You are right, didn't think that one through ;)
+syzbot found the following crash on:
 
-By the way, my v5 is ready to send. But I am avoiding sending it due to the
-merge window going on. I posted it yesterday in this thread as well:
-https://lore.kernel.org/patchwork/comment/1241077/
+HEAD commit:    cf08baa2 Add linux-next specific files for 20190306
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f3819d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c8b6073d992e8217
+dashboard link: https://syzkaller.appspot.com/bug?extid=83a3e122f8c1b25b3111
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: amd64
 
-This is likely to be the final version or so, unless Masahiro or you or other
-reviewers have any more comments.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+83a3e122f8c1b25b3111@syzkaller.appspotmail.com
 
- - Joel
+------------[ cut here ]------------
+kernel BUG at arch/x86/kvm/x86.c:357!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 2530 Comm: kworker/u4:4 Not tainted 5.0.0-next-20190306 #4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:kvm_spurious_fault+0x9/0x10 arch/x86/kvm/x86.c:357
+Code: e8 bc 7d 66 00 41 bd 03 00 00 00 5b 44 89 e8 41 5c 41 5d 5d c3 66 90  
+66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 e8 97 7d 66 00 <0f> 0b 0f 1f 44  
+00 00 55 48 89 e5 41 57 41 56 49 89 d6 41 55 41 54
+RSP: 0018:ffff8880ae907e80 EFLAGS: 00010006
+RAX: ffff8880a1650200 RBX: ffff888053363f68 RCX: ffffffff8132bc7a
+RDX: 0000000000010000 RSI: ffffffff810a1699 RDI: 0000000000000007
+RBP: ffff8880ae907e80 R08: ffff8880a1650200 R09: ffffed1015d25be9
+R10: ffffed1015d25be8 R11: ffff8880ae92df47 R12: 1ffff11015d20fd3
+R13: ffff888098456000 R14: ffff8880ae907ef8 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff8880ae907eb8 CR3: 000000005bdae000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  <IRQ>
+  vmcs_clear arch/x86/kvm/vmx/ops.h:185 [inline]
+  loaded_vmcs_init+0x95/0x250 arch/x86/kvm/vmx/vmx.c:570
+  __loaded_vmcs_clear+0x229/0x360 arch/x86/kvm/vmx/vmx.c:637
+  flush_smp_call_function_queue+0x14a/0x500 kernel/smp.c:243
+  generic_smp_call_function_single_interrupt+0x13/0x2b kernel/smp.c:192
+  smp_call_function_single_interrupt+0xa3/0x460 arch/x86/kernel/smp.c:296
+  call_function_single_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+  </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:767  
+[inline]
+RIP: 0010:lock_acquire+0x1ea/0x3f0 kernel/locking/lockdep.c:4205
+Code: 7c 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 c7 01 00 00 48  
+83 3d d2 fa 3a 07 00 0f 84 3b 01 00 00 48 8b 7d c8 57 9d <0f> 1f 44 00 00  
+48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 8b
+RSP: 0018:ffff8880a165fc80 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff04
+RAX: 1ffffffff11252b6 RBX: ffff8880a1650200 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000001 RDI: 0000000000000286
+RBP: ffff8880a165fcc8 R08: 0000000069c38c2d R09: ffffffff895e57b4
+R10: ffff8880a1650ad0 R11: ffff8880a1650200 R12: ffffffff889a5b00
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000002
+  rcu_lock_acquire include/linux/rcupdate.h:210 [inline]
+  rcu_read_lock include/linux/rcupdate.h:595 [inline]
+  batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:419 [inline]
+  batadv_nc_worker+0x117/0x760 net/batman-adv/network-coding.c:730
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 909e627acbdd0177 ]---
+RIP: 0010:kvm_spurious_fault+0x9/0x10 arch/x86/kvm/x86.c:357
+Code: e8 bc 7d 66 00 41 bd 03 00 00 00 5b 44 89 e8 41 5c 41 5d 5d c3 66 90  
+66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 e8 97 7d 66 00 <0f> 0b 0f 1f 44  
+00 00 55 48 89 e5 41 57 41 56 49 89 d6 41 55 41 54
+RSP: 0018:ffff8880ae907e80 EFLAGS: 00010006
+RAX: ffff8880a1650200 RBX: ffff888053363f68 RCX: ffffffff8132bc7a
+RDX: 0000000000010000 RSI: ffffffff810a1699 RDI: 0000000000000007
+RBP: ffff8880ae907e80 R08: ffff8880a1650200 R09: ffffed1015d25be9
+R10: ffffed1015d25be8 R11: ffff8880ae92df47 R12: 1ffff11015d20fd3
+R13: ffff888098456000 R14: ffff8880ae907ef8 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff8880ae907eb8 CR3: 000000005bdae000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
+syzbot.
