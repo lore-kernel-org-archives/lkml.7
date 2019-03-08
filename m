@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71382C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5BAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4660F20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AFF20449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050165;
-	bh=reziMT9gYL8ccEKfI3IahToj8tuiHTpnooaoSExJ2AQ=;
+	s=default; t=1552050178;
+	bh=z5CXdq3z/pNbugnS8V4SOrF0Q+dACsVHXqIKjc/43tY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFogX/q6yOh80njoZQ6N6CgJiE9lDIn1CgLKLp/sYr8Td4a7WnhqQALI/ZdEzTj2G
-	 WSlnXABrblx+FQXtwMUoGst0HXYKs9728wV2EwiQ+WRxzDAfxt1Od97c1skezSr98q
-	 PIk7xUeRV2e5+8MM9f16e4By6P5B5JL2FL9qsbec=
+	b=wmKkQie5ANB+MVL9cWSeC8S8QAqmaeKoI/nLkZS7u19l7Aaes3Gggn46TI/HPR9mt
+	 tedBTd7BxYnEK294ISLqKDOPrTZoqB+2gUntzEiQTfjsfXQ003nDnM8KkWrbylVWJI
+	 ZeYrwLBmJS5A72LcD9dBEEX6jn6NmK9e0ldKsdyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbfCHNCo (ORCPT
+        id S1728101AbfCHNC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:02:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbfCHM7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:41 -0500
+        id S1727850AbfCHM7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:59:31 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC34D20449;
-        Fri,  8 Mar 2019 12:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0B0E20661;
+        Fri,  8 Mar 2019 12:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049981;
-        bh=reziMT9gYL8ccEKfI3IahToj8tuiHTpnooaoSExJ2AQ=;
+        s=default; t=1552049971;
+        bh=z5CXdq3z/pNbugnS8V4SOrF0Q+dACsVHXqIKjc/43tY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OppcwdT8jqivjBPeQ6oZWdNUUAUIAbiOzn57kyhejY5nsj9z5VnUqs4wL601Kd44B
-         DSMbK9mm7FMVhVCY49LDHnSXXMLPCsidSJ8nKcrEhVfqB8j+Kk+k5LzHMWKpmQET6K
-         2iENm+gZV1kiwPv+wOxypQopA0r0bvOK9ecDyp8w=
+        b=1HN4M3lml9PcTMMnZERvwIS7UllE2dJ7QzL77QFi2j7rJKKZaxwWgSI3Hfy2tXP/t
+         4g+q7fyN/0FFYquOjaw/kH5j+LzOkZhfVVuhLFj9gfJTfRh/CEqnBZ98GkUodKz6ut
+         vq82BAIZ5fKuDSZTLGLe8UbThzIQV+Cas7hF+mno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 47/68] ipv4: Pass original device to ip_rcv_finish_core
-Date:   Fri,  8 Mar 2019 13:50:17 +0100
-Message-Id: <20190308124912.984347779@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4.19 09/68] staging: wilc1000: fix to set correct value for vif_num
+Date:   Fri,  8 Mar 2019 13:49:39 +0100
+Message-Id: <20190308124911.241180731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,72 +64,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: David Ahern <dsahern@gmail.com>
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-[ Upstream commit a1fd1ad2552fad9e649eeb85fd79301e2880a886 ]
+commit dda037057a572f5c82ac2499eb4e6fb17600ba3e upstream.
 
-ip_route_input_rcu expects the original ingress device (e.g., for
-proper multicast handling). The skb->dev can be changed by l3mdev_ip_rcv,
-so dev needs to be saved prior to calling it. This was the behavior prior
-to the listify changes.
+Set correct value in '->vif_num' for the total number of interfaces and
+set '->idx' value using 'i'.
 
-Fixes: 5fa12739a53d0 ("net: ipv4: listify ip_rcv_finish")
-Cc: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 735bb39ca3be ("staging: wilc1000: simplify vif[i]->ndev accesses")
+Fixes: 0e490657c721 ("staging: wilc1000: Fix problem with wrong vif index")
+Cc: <stable@vger.kernel.org>
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/ip_input.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---- a/net/ipv4/ip_input.c
-+++ b/net/ipv4/ip_input.c
-@@ -308,11 +308,10 @@ drop:
- }
+---
+ drivers/staging/wilc1000/linux_wlan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/staging/wilc1000/linux_wlan.c
++++ b/drivers/staging/wilc1000/linux_wlan.c
+@@ -1090,8 +1090,8 @@ int wilc_netdev_init(struct wilc **wilc,
+ 		vif->wilc = *wilc;
+ 		vif->ndev = ndev;
+ 		wl->vif[i] = vif;
+-		wl->vif_num = i;
+-		vif->idx = wl->vif_num;
++		wl->vif_num = i + 1;
++		vif->idx = i;
  
- static int ip_rcv_finish_core(struct net *net, struct sock *sk,
--			      struct sk_buff *skb)
-+			      struct sk_buff *skb, struct net_device *dev)
- {
- 	const struct iphdr *iph = ip_hdr(skb);
- 	int (*edemux)(struct sk_buff *skb);
--	struct net_device *dev = skb->dev;
- 	struct rtable *rt;
- 	int err;
+ 		ndev->netdev_ops = &wilc_netdev_ops;
  
-@@ -401,6 +400,7 @@ drop_error:
- 
- static int ip_rcv_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
- {
-+	struct net_device *dev = skb->dev;
- 	int ret;
- 
- 	/* if ingress device is enslaved to an L3 master device pass the
-@@ -410,7 +410,7 @@ static int ip_rcv_finish(struct net *net
- 	if (!skb)
- 		return NET_RX_SUCCESS;
- 
--	ret = ip_rcv_finish_core(net, sk, skb);
-+	ret = ip_rcv_finish_core(net, sk, skb, dev);
- 	if (ret != NET_RX_DROP)
- 		ret = dst_input(skb);
- 	return ret;
-@@ -550,6 +550,7 @@ static void ip_list_rcv_finish(struct ne
- 
- 	INIT_LIST_HEAD(&sublist);
- 	list_for_each_entry_safe(skb, next, head, list) {
-+		struct net_device *dev = skb->dev;
- 		struct dst_entry *dst;
- 
- 		skb_list_del_init(skb);
-@@ -559,7 +560,7 @@ static void ip_list_rcv_finish(struct ne
- 		skb = l3mdev_ip_rcv(skb);
- 		if (!skb)
- 			continue;
--		if (ip_rcv_finish_core(net, sk, skb) == NET_RX_DROP)
-+		if (ip_rcv_finish_core(net, sk, skb, dev) == NET_RX_DROP)
- 			continue;
- 
- 		dst = skb_dst(skb);
 
 
