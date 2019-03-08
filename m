@@ -6,46 +6,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D42C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBF8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ADD21019
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049779;
-	bh=Aw0x/dqp4x2dzVBBeOySZYMQK/GTyGi3Gooxbw8FPAg=;
+	s=default; t=1552049783;
+	bh=H0TK5MhkIzAJm0p4VtN/rK7NaXHCX4QwQJur2Mgi+jY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQ1ksHAy4XBEapvcY2YVuttXkwXlE4A0d2+iuMjcjIwp1KOfRvseh33aYXCKUcNlK
-	 rJQO6nJH0qBKHQ7L8dsztx60HgMedvpUL8N9xx6QlmSGD9+KPhaWBBIyGj+Gixi2lU
-	 X954cHYvCVbkMU8Sz5/Jdbu6twrmh2y5GcvBvaVo=
+	b=ni65YdUlKTFtXGbXNZgv3LD/2wxyAHLQrfhLjsB7QB1z2Fys2cvRg9x3SaEj9CGQG
+	 1EY6kqsDF95gw9/qLmaOmg+ccPxMAoqlTY8+Mg54R6JWqqtGgwkpntpN0v40ckU1OP
+	 iuxD1WGtAywK70gSAEHokqJNfPSsVc17g3kKQ65o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfCHM4S (ORCPT
+        id S1727665AbfCHM4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:56:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:56:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727622AbfCHM4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:56:07 -0500
+        id S1726665AbfCHM4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:56:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAF7E20449;
-        Fri,  8 Mar 2019 12:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A56FE20449;
+        Fri,  8 Mar 2019 12:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049766;
-        bh=Aw0x/dqp4x2dzVBBeOySZYMQK/GTyGi3Gooxbw8FPAg=;
+        s=default; t=1552049779;
+        bh=H0TK5MhkIzAJm0p4VtN/rK7NaXHCX4QwQJur2Mgi+jY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWU/2Pma+RuN7yEgcFzCOBG43Zx7OL48KS77kNcNpxYXT402Q//D7mpABPX0grYKj
-         Dyi5RPuX1KL7bfOkQ46DFS2sbPts9enGQv1g9zlmIoVCMB8NQfeq6zcV97DOoJbHgX
-         7Qkv2iMTEtxeODWIbX+koEubWbWjMQv1oDKuA6EY=
+        b=cjPT6EPFJF89O9oBurtO+0uSSx6NSnKh4Y1BHe7syPRaeP2SSCmGIiptMJV5L1leJ
+         bM6tr2zv/qKDrPnMoMSSM7OhxpQrokTUpoyOftXjYHWh1FX2OrO1l44+gVsnUSJCCf
+         Ta/wviXjiFkrDZCeGj4BaR2mxxgFUZsocXF+CxIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 57/76] net/sched: act_ipt: fix refcount leak when replace fails
-Date:   Fri,  8 Mar 2019 13:50:09 +0100
-Message-Id: <20190308124916.820145495@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Sherry Hurwitz <sherry.hurwitz@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.20 60/76] x86/CPU/AMD: Set the CPB bit unconditionally on F17h
+Date:   Fri,  8 Mar 2019 13:50:12 +0100
+Message-Id: <20190308124916.922138845@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -64,57 +69,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 8f67c90ee9148eab3d2b4393c3cf76489b27f87c ]
+commit 0237199186e7a4aa5310741f0a6498a20c820fd7 upstream.
 
-After commit 4e8ddd7f1758 ("net: sched: don't release reference on action
-overwrite"), the error path of all actions was converted to drop refcount
-also when the action was being overwritten. But we forgot act_ipt_init(),
-in case allocation of 'tname' was not successful:
+Some F17h models do not have CPB set in CPUID even though the CPU
+supports it. Set the feature bit unconditionally on all F17h.
 
- # tc action add action xt -j LOG --log-prefix hello index 100
- tablename: mangle hook: NF_IP_POST_ROUTING
-         target:  LOG level warning prefix "hello" index 100
- # tc action show action xt
- total acts 1
+ [ bp: Rewrite commit message and patch. ]
 
-         action order 0: tablename: mangle  hook: NF_IP_POST_ROUTING
-         target  LOG level warning prefix "hello"
-         index 100 ref 1 bind 0
- # tc action replace action xt -j LOG --log-prefix world index 100
- tablename: mangle hook: NF_IP_POST_ROUTING
-         target:  LOG level warning prefix "world" index 100
- RTNETLINK answers: Cannot allocate memory
- We have an error talking to the kernel
- # tc action show action xt
- total acts 1
-
-         action order 0: tablename: mangle  hook: NF_IP_POST_ROUTING
-         target  LOG level warning prefix "hello"
-         index 100 ref 2 bind 0
-
-Ensure we call tcf_idr_release(), in case 'tname' allocation failed, also
-when the action is being replaced.
-
-Fixes: 4e8ddd7f1758 ("net: sched: don't release reference on action overwrite")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181120030018.5185-1-jiaxun.yang@flygoat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/act_ipt.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/sched/act_ipt.c
-+++ b/net/sched/act_ipt.c
-@@ -199,8 +199,7 @@ err3:
- err2:
- 	kfree(tname);
- err1:
--	if (ret == ACT_P_CREATED)
--		tcf_idr_release(*a, bind);
-+	tcf_idr_release(*a, bind);
- 	return err;
+---
+ arch/x86/kernel/cpu/amd.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -818,11 +818,9 @@ static void init_amd_bd(struct cpuinfo_x
+ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
+-	/*
+-	 * Fix erratum 1076: CPB feature bit not being set in CPUID. It affects
+-	 * all up to and including B1.
+-	 */
+-	if (c->x86_model <= 1 && c->x86_stepping <= 1)
++
++	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
++	if (!cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
  }
  
 
