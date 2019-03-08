@@ -2,107 +2,132 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF27C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9390E20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l7C+TBoh"
+	by mail.kernel.org (Postfix) with ESMTP id A774C20855
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfCHVIi (ORCPT
+        id S1726673AbfCHVIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:08:38 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55754 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfCHVIi (ORCPT
+        Fri, 8 Mar 2019 16:08:45 -0500
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50459 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfCHVIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:08:38 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28L8VO1122932;
-        Fri, 8 Mar 2019 15:08:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552079311;
-        bh=ZWTTGyTvHvJr20kzN0lMY7xk4FIsBDGym+RyyL3K204=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=l7C+TBohd10Mx/VnIvMCKNKK67l+hjJDCLHOdMI9YpnYueb+iyUQ6VthEBViKBZWx
-         U2HKVRWQ39x5CJ4GnZlJcmf/c4FrvklnmdAda1gF23oxptbfLHBfnT0rBzMnDEZbui
-         lq1i8CLyCsWhVp+3ZsQJbDc0dd7NjsJDNEQuNQGs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28L8Vis052784
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 Mar 2019 15:08:31 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
- Mar 2019 15:08:31 -0600
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Fri, 8 Mar 2019 15:08:31 -0600
-Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28L8U5N012651;
-        Fri, 8 Mar 2019 15:08:30 -0600
-Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
- properties
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>,
-        <tony@atomide.com>, <lee.jones@linaro.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-2-dmurphy@ti.com> <20190308151422.GA10378@amd>
- <6d9a5821-a634-8ea2-4fe3-0603af757668@ti.com> <20190308210649.GC17626@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <9e0a5485-d338-e4e8-5333-cac873158a93@ti.com>
-Date:   Fri, 8 Mar 2019 15:08:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Fri, 8 Mar 2019 16:08:45 -0500
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 79618801E9; Fri,  8 Mar 2019 22:08:36 +0100 (CET)
+Date:   Fri, 8 Mar 2019 22:08:43 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
+        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
+        linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        derat@google.com, groeck@google.com, dtor@google.com
+Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
+ support
+Message-ID: <20190308210843.GA16125@amd>
+References: <20190308203801.57920-1-ncrews@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190308210649.GC17626@amd>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
+In-Reply-To: <20190308203801.57920-1-ncrews@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
 
-On 3/8/19 3:06 PM, Pavel Machek wrote:
-> 
->>>> +		led@1 {
->>>> +			reg = <1>;
->>>> +			led-sources = <1>;
->>>> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
->>>> +			label = "keypad";
->>>
->>> I guess best variant would be inputX::backlight here, but that might
->>> be tricky to implement.
->>>
->>
->> Yeah because we don't know what input the keyboard would be on.
->> Unless there are APIs to retrieve that info.  I have not looked at the input
->> framework in a while.
-> 
-> Lets just make it "platform::kbd_backlight". *:kbd_backlight is
-> already used by quite a few drivers.
-> 
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sounds fine to me.  I will update in v3 as I posted v2 with a lot of deltas
+On Fri 2019-03-08 13:38:02, Nick Crews wrote:
+> This patch is meant to be applied on top of the for-next
+> branch of the platform/chrome repository, as it uses some of
+> the code staged there.
+>=20
+> The EC is in charge of controlling the keyboard backlight on
+> the Wilco platform. We expose a standard LED class device at
+> /sys/class/leds/wilco::kbd_backlight. This driver is modeled
+> after the standard Chrome OS keyboard backlight driver at
+> drivers/platform/chrome/cros_kbd_led_backlight.c
 
-Dan
+Can you make it "platform::kbd_backlight"? We want some consistency
+there.
 
-> 									Pavel
-> 
+> Some Wilco devices do not support a keyboard backlight. This
+> is checked in probe(), and in this case the sysfs entry will
+> not appear, and everything will behave normally.
 
+Good.
 
--- 
-------------------
-Dan Murphy
+> When the EC is reset (loses all AC and battery power), it will
+> restart in some unpredictable state. The brightness on the
+> keyboard could be anything, and reading the brightness
+> from the EC is undefined behavior. Therefore, at startup the
+> brightness should be set, and then everything will work.
+
+Really? Undefined behavior?=20
+
+> index e09e4cebe9b4..15b56f5ce090 100644
+> --- a/drivers/platform/chrome/wilco_ec/Kconfig
+> +++ b/drivers/platform/chrome/wilco_ec/Kconfig
+> @@ -18,3 +18,12 @@ config WILCO_EC_DEBUGFS
+>  	  manipulation and allow for testing arbitrary commands.  This
+>  	  interface is intended for debug only and will not be present
+>  	  on production devices.
+> +
+> +config WILCO_EC_KBD_BACKLIGHT
+> +	tristate "Enable keyboard led backlight control"
+
+Delete "led" or make it "LED".
+
+> +	depends on WILCO_EC
+> +	help
+> +	  If you say Y here, you get support to set the keyboard backlight led
+
+Same here.
+
+> +#define DRV_NAME		"wilco-kbd-backlight"
+> +
+> +#define EC_COMMAND_KB_BKLIGHT	0x75
+> +#define KBBL_MSG_SIZE		16
+> +/* The EC can set the backlight brightness in several different modes.
+> +The mode we care about is PWM mode, where we separately supply a
+> +literal percentage to set the brightness to. We need to set the proper
+> +KBBL_PWM_MODE flag in the KBBL_MODE_INDEX-th byte in the message, and
+> +then supply the percentage within the KBBL_BRIGHTNESS_INDEX-th byte
+> +within the message. When we read the brightness, the percentage is
+> +returned in this same byte location. */
+
+Please use comment style specified in CodingStyle.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyC2dsACgkQMOfwapXb+vLqDwCfWEk3QW//F3XG6WrdOqGyEUt3
+uvAAoIittL7JdDnqPtKLU43LUVzDGBsh
+=2nf1
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
