@@ -2,67 +2,72 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF2CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95572C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC2620857
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71504206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfCHTsb (ORCPT
+        id S1727134AbfCHTsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:48:31 -0500
-Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:54549 "EHLO
-        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726348AbfCHTsa (ORCPT
+        Fri, 8 Mar 2019 14:48:36 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:39236 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfCHTsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:48:30 -0500
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id 20A261C2A49
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 19:48:29 +0000 (GMT)
-Received: (qmail 25667 invoked from network); 8 Mar 2019 19:48:28 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Mar 2019 19:48:28 -0000
-Date:   Fri, 8 Mar 2019 19:48:27 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tools/perf-bench: Add basic syscall benchmark
-Message-ID: <20190308194827.GK9565@techsingularity.net>
-References: <20190307185253.28432-1-dave@stgolabs.net>
- <20190307191157.GB32240@kernel.org>
- <20190308181747.l36zqz2avtivrr3c@linux-r8p5>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20190308181747.l36zqz2avtivrr3c@linux-r8p5>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 8 Mar 2019 14:48:35 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 58D7714B48EAF;
+        Fri,  8 Mar 2019 11:48:34 -0800 (PST)
+Date:   Fri, 08 Mar 2019 11:48:33 -0800 (PST)
+Message-Id: <20190308.114833.2009759493574418516.davem@davemloft.net>
+To:     christophe.roullier@st.com
+Cc:     robh@kernel.org, joabreu@synopsys.com, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        peppe.cavallaro@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        andrew@lunn.ch
+Subject: Re: [PATCH V3 0/6] stmmac: add some fixes for stm32
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+References: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 08 Mar 2019 11:48:34 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 10:17:47AM -0800, Davidlohr Bueso wrote:
-> On Thu, 07 Mar 2019, Arnaldo Carvalho de Melo wrote:
-> > You forgot to update tools/perf/Documentation/perf-bench.txt, and please
-> > take a look at tools/perf/util/pmu.c convert_scale() to see how to save
-> > the current locale, set the one you want, then restore the previous one,
-> > so that at the end of this benchmark the environment is back to where it
-> > was.
-> 
-> Here's an updated version with the corresponding docs, but I removed the
-> setlocale() - doesn't seem worth it; I hope Mel has no strong objection.
-> 
+From: Christophe Roullier <christophe.roullier@st.com>
+Date: Tue, 5 Mar 2019 09:29:22 +0100
 
-No objection, thanks!
+> For common stmmac:
+> 	- Add support to set CSR Clock range selection in DT
+> For stm32mpu:
+> 	- Glue codes to support magic packet
+> 	- Glue codes to support all PHY config :
+> 		PHY_MODE (MII,GMII, RMII, RGMII) and in normal,
+> 		PHY wo crystal (25Mhz),
+> 		PHY wo crystal (50Mhz), No 125Mhz from PHY config
+> For stm32mcu:
+> 	- Add Ethernet support for stm32h7
+> 
+> Changes in V3:
+> 	- Reverse for syscfg management because it is manage by these patches
+> 	  https://lkml.org/lkml/2018/12/12/133
+> 	  https://lkml.org/lkml/2018/12/12/134
+> 	  https://lkml.org/lkml/2018/12/12/131
+> 	  https://lkml.org/lkml/2018/12/12/132
 
--- 
-Mel Gorman
-SUSE Labs
+Series applied, thanks.
