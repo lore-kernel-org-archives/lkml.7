@@ -2,37 +2,48 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7F9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BEDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77235208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17294208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:35:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tu-dortmund.de header.i=@tu-dortmund.de header.b="N1quzFS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfCHPfJ (ORCPT
+        id S1726676AbfCHPfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:35:09 -0500
+        Fri, 8 Mar 2019 10:35:13 -0500
 Received: from mx1.hrz.uni-dortmund.de ([129.217.128.51]:49908 "EHLO
         unimail.uni-dortmund.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfCHPfI (ORCPT
+        with ESMTP id S1726560AbfCHPfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:35:08 -0500
+        Fri, 8 Mar 2019 10:35:10 -0500
+X-Greylist: delayed 1704 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Mar 2019 10:35:09 EST
 Received: from ios.cs.uni-dortmund.de (ios.cs.uni-dortmund.de [129.217.43.100])
         (authenticated bits=0)
-        by unimail.uni-dortmund.de (8.16.0.29/8.16.0.41) with ESMTPSA id x28F4lga021937
+        by unimail.uni-dortmund.de (8.16.0.29/8.16.0.41) with ESMTPSA id x28F653Q023425
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 8 Mar 2019 16:05:03 +0100 (CET)
+        Fri, 8 Mar 2019 16:06:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-dortmund.de;
+        s=unimail; t=1552057573;
+        bh=PWNiNjlc9N/RtIFVtL/iGsr1nM93mWZMXl8l7RoKb68=;
+        h=From:To:Cc:Subject:Date;
+        b=N1quzFS1wZrASeq3RfeaTp4E4bTMoc63P944IsyNjnq1IQT8MmwCNluDym4Z7pOVv
+         j+/S69NST0ts9+KbA++Xr03Jc5FClTMpQ5984SRTlYFk6kkXljIcTatK01rTbSrVnA
+         LwYqe/1ZKbq0g1RKW4oLKqG0vlGA7J5OBRDLk2y0=
 From:   Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
         Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
-Subject: [PATCH 1/1] Updated locking documentation for struct inode
-Date:   Fri,  8 Mar 2019 16:04:47 +0100
-Message-Id: <20190308150447.96311-1-alexander.lochmann@tu-dortmund.de>
+Subject: [PATCH 1/1] Updated locking documentation for struct journal_t
+Date:   Fri,  8 Mar 2019 16:06:05 +0100
+Message-Id: <20190308150605.98405-1-alexander.lochmann@tu-dortmund.de>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -43,92 +54,84 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 We used LockDoc to derive locking rules for each member
-of struct inode.
-Based on those results, we extended the existing documentation
-by more members of struct inode, and updated the existing
-documentation.
+of struct journal_t. Based on those results, we extended
+the existing documentation by more members
+of struct inode, and updated the existing documentation.
 
 Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
 Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
 ---
- fs/inode.c         | 49 ++++++++++++++++++++++++++++++++++++----------
- include/linux/fs.h |  2 +-
- 2 files changed, 40 insertions(+), 11 deletions(-)
+ include/linux/jbd2.h | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 0cd47fe0dbe5..ade9d3aa1ada 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -24,17 +24,46 @@
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index 0f919d5fe84f..c1ba44ca515a 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -585,7 +585,8 @@ struct transaction_s
+ 	}			t_state;
  
- /*
-  * Inode locking rules:
-+ * (Documentation improved by LockDoc)
-  *
-- * inode->i_lock protects:
-- *   inode->i_state, inode->i_hash, __iget()
-- * Inode LRU list locks protect:
-- *   inode->i_sb->s_inode_lru, inode->i_lru
-- * inode->i_sb->s_inode_list_lock protects:
-- *   inode->i_sb->s_inodes, inode->i_sb_list
-- * bdi->wb.list_lock protects:
-- *   bdi->wb.b_{dirty,io,more_io,dirty_time}, inode->i_io_list
-- * inode_hash_lock protects:
-- *   inode_hashtable, inode->i_hash
-+ * No locks needed for:
-+ *   i_data.a_ops, i_data.nrexceptional, i_rdev, i_data.gfp_mask,
-+ *   i_generation, i_security, i_nlink, __i_nlink, i_flctx,
-+ *   i_size, i_atime, i_mtime, i_data.host, i_sb
-+ *
-+ * backing_dev_info.wb.list_lock protects:
-+ *   dirtied_when, i_io_list
-+ *
-+ * inode.i_rwsem protects:
-+ *   i_flags, i_uid, i_gid, i_version, i_ctime, i_size_seqcount
-+ *
-+ * inode.i_rwsem -> rcu protects:
-+ *   i_default_acl
-+ *
-+ * block_device.bd_mutex protects:
-+ *   i_blkbits
-+ *
-+ * cdev_lock protects:
-+ *   i_cdev, i_devices
-+ *
-+ * inode.i_data.i_mmap_rwsem protects:
-+ *   i_data.i_mmap, i_data.i_mmap
-+ *
-+ * hardirq -> inode.i_data.tree_lock protects:
-+ *   i_data.page_tree, i_wb_list, i_data.nrpages
-+ *
-+ * hardirq -> super_block.s_inode_wblist_lock protects:
-+ *   i_wb_list
-+ *
-+ * inode.i_lock protects:
-+ *   i_pipe, i_fsnotify_mask, i_fsnotify_marks, i_blocks, i_opflags,
-+ *   i_state, i_bytes
-+ *
-+ * super_block.s_inode_list_lock protects:
-+ *   i_sb_list
-+ *
-+ * inode_hash_lock -> inode.i_lock protects:
-+ *   i_hash
-  *
-  * Lock ordering:
-  *
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 92966678539d..744e2a817ad3 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -639,7 +639,7 @@ struct inode {
- 	struct timespec64	i_atime;
- 	struct timespec64	i_mtime;
- 	struct timespec64	i_ctime;
--	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
-+	spinlock_t		i_lock;
- 	unsigned short          i_bytes;
- 	u8			i_blkbits;
- 	u8			i_write_hint;
+ 	/*
+-	 * Where in the log does this transaction's commit start? [no locking]
++	 * Where in the log does this transaction's commit start?
++	 * [journal_t->j_state_lock]
+ 	 */
+ 	unsigned long		t_log_start;
+ 
+@@ -647,17 +648,17 @@ struct transaction_s
+ 	unsigned long		t_max_wait;
+ 
+ 	/*
+-	 * When transaction started
++	 * When transaction started [j_state_lock]
+ 	 */
+ 	unsigned long		t_start;
+ 
+ 	/*
+-	 * When commit was requested
++	 * When commit was requested [j_state_lock]
+ 	 */
+ 	unsigned long		t_requested;
+ 
+ 	/*
+-	 * Checkpointing stats [j_checkpoint_sem]
++	 * Checkpointing stats [j_list_lock]
+ 	 */
+ 	struct transaction_chp_stats_s t_chp_stats;
+ 
+@@ -744,6 +745,7 @@ jbd2_time_diff(unsigned long start, unsigned long end)
+ /**
+  * struct journal_s - The journal_s type is the concrete type associated with
+  *     journal_t.
++ * (Locking Documentation improved by LockDoc)
+  */
+ struct journal_s
+ {
+@@ -762,6 +764,7 @@ struct journal_s
+ 
+ 	/**
+ 	 * @j_sb_buffer: The first part of the superblock buffer.
++	 * [j_checkpoint_mutex]
+ 	 */
+ 	struct buffer_head	*j_sb_buffer;
+ 
+@@ -1015,6 +1018,7 @@ struct journal_s
+ 	 * @j_commit_interval:
+ 	 *
+ 	 * What is the maximum transaction lifetime before we begin a commit?
++	 * [super_block->s_umount]
+ 	 */
+ 	unsigned long		j_commit_interval;
+ 
+@@ -1032,7 +1036,7 @@ struct journal_s
+ 	 * @j_revoke:
+ 	 *
+ 	 * The revoke table - maintains the list of revoked blocks in the
+-	 * current transaction.
++	 * current transaction. [j_state_lock]
+ 	 */
+ 	struct jbd2_revoke_table_s *j_revoke;
+ 
 -- 
 2.20.1
 
