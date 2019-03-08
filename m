@@ -2,99 +2,120 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A18C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C709C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACC620811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:16:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PWcICmXO"
+	by mail.kernel.org (Postfix) with ESMTP id DD60120811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbfCHJQE (ORCPT
+        id S1726535AbfCHJQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 04:16:04 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33337 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHJQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 04:16:03 -0500
-Received: by mail-lj1-f195.google.com with SMTP id z7so16792217lji.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 01:16:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7/bOC9s2XquguMVvphTUm05f0wnk35pCiCklj7PQVkM=;
-        b=PWcICmXO8/MWkzH7Hkqaqle5vUCYNMH/MxF4T9+s/N3U1DhqOqqjLJI9o543UqELwF
-         Ueuwi8/NlCylKGgj2CVAFtUADxSXenWQ8CHy+JvoAtlK/r+kfYHxymu0hBdvAgxiK6L7
-         Q5esut0zBLsjo2eWwz23frvrNnsZaSC+VAZrZPBicj5GuqFFgdGXlWZaKSSeaWNYSaXL
-         kEJgPep5ZD7UidwXRsI2pkwC79lVWzUxMRbQjNV1NH3322nW4fMVqCK24zJ5ZtZDkFO9
-         e6UXixX2ZSLeVB3+JauNJdyvtFSx4WZ2aTjFU2yjepA7v/SmZ4VOm60HzB+hxhOC1zvx
-         Tf8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7/bOC9s2XquguMVvphTUm05f0wnk35pCiCklj7PQVkM=;
-        b=RhIkeB9WZ1Cw1neuVaDqqp/SgOAZmgf/1Q9Ma69kTPRaLZF8qwtCQRqRsGpi5MYEz4
-         BnkmbTm85WhIejSmhXuBy4p+JLAIV/C6yW4y3iHisBNn8FaZsvAQEPsBPvM//2sZrdpa
-         uPMDVkO+jMQOGrk620dyj9CrbZhL334Ya7+0YOtJoCUxAym1UMGRx9ypkBP6KyjQgfFf
-         EXAMyO5hyJfsNsCy+rY7Ko6lc9BZ4IYYwCwWj84RXXULyQjw4bGc3nQieWOz9uBw57hx
-         OMWKXXhs+O3+StbG9QGhtdKlHTUdyg2Ydc2Su4IO5DJiRef4nOqQkXLYT7QaKEjGdku2
-         Ezyg==
-X-Gm-Message-State: APjAAAXuPfMfCXWKJpUvupzm5AOs9Pr35I22a9lARkuqX8VCIfu9I6Cz
-        9vuLXNxx5NqDVAhxjZvBJXvMgmKJAXeyiL6yygsKEg==
-X-Google-Smtp-Source: APXvYqygvJm+WpiJBg8UVgFmbWHC/NYT/nOqz3ToivjsRfQa3kq5GifUkZHP4fvP3si5i0TifOo1Y8cY/kc+DpWZ7I8=
-X-Received: by 2002:a2e:208a:: with SMTP id g10mr8490800lji.135.1552036561755;
- Fri, 08 Mar 2019 01:16:01 -0800 (PST)
+        Fri, 8 Mar 2019 04:16:10 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:53508 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbfCHJQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 04:16:09 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C0C281E19;
+        Fri,  8 Mar 2019 09:16:09 +0000 (UTC)
+Received: from [10.72.12.27] (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AC92F5D9D4;
+        Fri,  8 Mar 2019 09:16:01 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+To:     Jerome Glisse <jglisse@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191720.GF3835@redhat.com>
+ <20190307211506-mutt-send-email-mst@kernel.org>
+ <20190308025539.GA5562@redhat.com>
+ <20190307221549-mutt-send-email-mst@kernel.org>
+ <20190308034053.GB5562@redhat.com>
+ <20190307224143-mutt-send-email-mst@kernel.org>
+ <20190308034540.GC5562@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <91263ee5-cc81-d2ee-b68d-828987ca86f7@redhat.com>
+Date:   Fri, 8 Mar 2019 17:15:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190111162516.28197-1-poeschel@lemonage.de> <CACRpkdZFFu=wgHw0BqXUHiC5euGwWuYbr5bH60zDvFr+q394=w@mail.gmail.com>
- <7ce47f34-ed9f-44ac-b966-68e3bbf3b052@cesnet.cz>
-In-Reply-To: <7ce47f34-ed9f-44ac-b966-68e3bbf3b052@cesnet.cz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 8 Mar 2019 10:15:50 +0100
-Message-ID: <CACRpkdYJHyj+TMOde=veQsj8m+xFf0XGEnT0DS0qgMXCSA5iOA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mcp23s08: Allocate irq_chip dynamic
-To:     =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
-Cc:     Lars Poeschel <poeschel@lemonage.de>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190308034540.GC5562@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 08 Mar 2019 09:16:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 4:19 PM Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz> wro=
-te:
 
-> This commit should probably go to 5.0-stable and 4.20-stable as well
-
-I doubt that this commit is fixing a regression, but who knows...
-> If I cherry-pick the following two commits to my 5.0, my board boots once
-> again:
+On 2019/3/8 上午11:45, Jerome Glisse wrote:
+> On Thu, Mar 07, 2019 at 10:43:12PM -0500, Michael S. Tsirkin wrote:
+>> On Thu, Mar 07, 2019 at 10:40:53PM -0500, Jerome Glisse wrote:
+>>> On Thu, Mar 07, 2019 at 10:16:00PM -0500, Michael S. Tsirkin wrote:
+>>>> On Thu, Mar 07, 2019 at 09:55:39PM -0500, Jerome Glisse wrote:
+>>>>> On Thu, Mar 07, 2019 at 09:21:03PM -0500, Michael S. Tsirkin wrote:
+>>>>>> On Thu, Mar 07, 2019 at 02:17:20PM -0500, Jerome Glisse wrote:
+>>>>>>>> It's because of all these issues that I preferred just accessing
+>>>>>>>> userspace memory and handling faults. Unfortunately there does not
+>>>>>>>> appear to exist an API that whitelists a specific driver along the lines
+>>>>>>>> of "I checked this code for speculative info leaks, don't add barriers
+>>>>>>>> on data path please".
+>>>>>>> Maybe it would be better to explore adding such helper then remapping
+>>>>>>> page into kernel address space ?
+>>>>>> I explored it a bit (see e.g. thread around: "__get_user slower than
+>>>>>> get_user") and I can tell you it's not trivial given the issue is around
+>>>>>> security.  So in practice it does not seem fair to keep a significant
+>>>>>> optimization out of kernel because *maybe* we can do it differently even
+>>>>>> better :)
+>>>>> Maybe a slightly different approach between this patchset and other
+>>>>> copy user API would work here. What you want really is something like
+>>>>> a temporary mlock on a range of memory so that it is safe for the
+>>>>> kernel to access range of userspace virtual address ie page are
+>>>>> present and with proper permission hence there can be no page fault
+>>>>> while you are accessing thing from kernel context.
+>>>>>
+>>>>> So you can have like a range structure and mmu notifier. When you
+>>>>> lock the range you block mmu notifier to allow your code to work on
+>>>>> the userspace VA safely. Once you are done you unlock and let the
+>>>>> mmu notifier go on. It is pretty much exactly this patchset except
+>>>>> that you remove all the kernel vmap code. A nice thing about that
+>>>>> is that you do not need to worry about calling set page dirty it
+>>>>> will already be handle by the userspace VA pte. It also use less
+>>>>> memory than when you have kernel vmap.
+>>>>>
+>>>>> This idea might be defeated by security feature where the kernel is
+>>>>> running in its own address space without the userspace address
+>>>>> space present.
+>>>> Like smap?
+>>> Yes like smap but also other newer changes, with similar effect, since
+>>> the spectre drama.
+>>>
+>>> Cheers,
+>>> Jérôme
+>> Sorry do you mean meltdown and kpti?
+> Yes all that and similar thing. I do not have the full list in my head.
 >
-> 16f4372fd7a5 pinctrl: mcp23s08: use struct_size() in devm_kzalloc()
-> 19ab5ca9b77d pinctrl: mcp23s08: Allocate irq_chip dynamic
+> Cheers,
+> Jérôme
 
-Hm weird.
 
-> As on "why am I hitting this while nobody else did", my board has a share=
-d
-> IRQ line which is active during bootup, perhaps that might have something
-> to do with this -- I don't know.
+Yes, address space of kernel its own is the main motivation of using 
+vmap here.
 
-Sounds like the code in mcp23s08 .probe() should write to all
-registers clearing and disabling interrupts before proceeding to
-request interrupts or register the irqchip, else it will fire immediately
-and cause oopses.
+Thanks
 
-Yours,
-Linus Walleij
