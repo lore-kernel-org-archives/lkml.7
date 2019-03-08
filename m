@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC91C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1943C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD5B20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A8720449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050227;
-	bh=MUsjROpha4a5IieCGGkY6SYex2+gnrfKbuowhPxHLEA=;
+	s=default; t=1552050232;
+	bh=wEb/+RPUnL59VPW0YqOpsh7w2Abx5Yny1r2yDHna8hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4nbW3OYqIEvs+7PFNV+U4Q+1zEryLUV9RiidxcHnjAMNgFxAMckfzwkXKSqfkMKl
-	 5FwKEpo2UN0tFaUdOFH8w8n9ZwRQVPBvEpsWUCPOV8X2hwdVhfYp9YXkuV+ZlbOsUd
-	 aNVeql0TeZsDEaYVOS/4RAdsBREerA2++KF92/wM=
+	b=amu6z6zMmzhQg7iP+bGgBrB+7dmnamx+9dTLcWkB54I3ymibUFVXEJ0cj+eHl113Z
+	 v8QRJhrjXVp90vYhgxKoHMXhcpHM9of7HSJDwldPA1N+zDxqklB7Ip/lYF/y5orTY7
+	 9OWwXMHnYxdQF1uGZoYYK2jqB6RIx6uKJTc59SIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfCHNDq (ORCPT
+        id S1728039AbfCHM6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfCHM6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:39 -0500
+        id S1728031AbfCHM6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:30 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A08BB20449;
-        Fri,  8 Mar 2019 12:58:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 600D220449;
+        Fri,  8 Mar 2019 12:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049919;
-        bh=MUsjROpha4a5IieCGGkY6SYex2+gnrfKbuowhPxHLEA=;
+        s=default; t=1552049909;
+        bh=wEb/+RPUnL59VPW0YqOpsh7w2Abx5Yny1r2yDHna8hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0cypEOSBUxskg52xdir/Be2p2j7AS07eziRKcTxvlFjnY8aLkM5XplOHTK9m++YZ
-         KOZDLRdzXCFjwBrg+cdiY5qudHplOiJAeaDzQdVdfsgWqIifeRTNMd0DQR1JEmVVcn
-         QcRqOK2CroOkfClKUoVR16sv+OzY8piW/c/0ZGrI=
+        b=KgA48w5JRAIzjE6Mswj33qNNNig8JXUIA12qbcwsilIoIcMCD5y8SFZjuLK7a6+Jd
+         eA4mb5SLc6O0XOXe1W8GAsvG5otDo1NJ7WE8df4j5tyOAXfMv7Mi9kKdeC9A4cDF24
+         ijfi22tKfZ9FuFjKHFUNFVkSlQaAsG5Tv4mWL33w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
+        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 27/68] lan743x: Fix TX Stall Issue
-Date:   Fri,  8 Mar 2019 13:49:57 +0100
-Message-Id: <20190308124912.134848400@linuxfoundation.org>
+Subject: [PATCH 4.19 24/68] geneve: correctly handle ipv6.disable module parameter
+Date:   Fri,  8 Mar 2019 13:49:54 +0100
+Message-Id: <20190308124912.004670027@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,73 +65,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit 90490ef7269906423a1c1b917fc24be8b1602658 ]
+[ Upstream commit cf1c9ccba7308e48a68fa77f476287d9d614e4c7 ]
 
-It has been observed that tx queue stalls while downloading
-from certain web sites (example www.speedtest.net)
+When IPv6 is compiled but disabled at runtime, geneve_sock_add returns
+-EAFNOSUPPORT. For metadata based tunnels, this causes failure of the whole
+operation of bringing up the tunnel.
 
-The cause has been tracked down to a corner case where
-dma descriptors where not setup properly. And there for a tx
-completion interrupt was not signaled.
+Ignore failure of IPv6 socket creation for metadata based tunnels caused by
+IPv6 not being available.
 
-This fix corrects the problem by properly marking the end of
-a multi descriptor transmission.
+This is the same fix as what commit d074bf960044 ("vxlan: correctly handle
+ipv6.disable module parameter") is doing for vxlan.
 
-Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+Note there's also commit c0a47e44c098 ("geneve: should not call rt6_lookup()
+when ipv6 was disabled") which fixes a similar issue but for regular
+tunnels, while this patch is needed for metadata based tunnels.
+
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/microchip/lan743x_main.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/geneve.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -1403,7 +1403,8 @@ static int lan743x_tx_frame_start(struct
- }
- 
- static void lan743x_tx_frame_add_lso(struct lan743x_tx *tx,
--				     unsigned int frame_length)
-+				     unsigned int frame_length,
-+				     int nr_frags)
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -636,15 +636,20 @@ out:
+ static int geneve_open(struct net_device *dev)
  {
- 	/* called only from within lan743x_tx_xmit_frame.
- 	 * assuming tx->ring_lock has already been acquired.
-@@ -1413,6 +1414,10 @@ static void lan743x_tx_frame_add_lso(str
+ 	struct geneve_dev *geneve = netdev_priv(dev);
+-	bool ipv6 = !!(geneve->info.mode & IP_TUNNEL_INFO_IPV6);
+ 	bool metadata = geneve->collect_md;
++	bool ipv4, ipv6;
+ 	int ret = 0;
  
- 	/* wrap up previous descriptor */
- 	tx->frame_data0 |= TX_DESC_DATA0_EXT_;
-+	if (nr_frags <= 0) {
-+		tx->frame_data0 |= TX_DESC_DATA0_LS_;
-+		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
++	ipv6 = geneve->info.mode & IP_TUNNEL_INFO_IPV6 || metadata;
++	ipv4 = !ipv6 || metadata;
+ #if IS_ENABLED(CONFIG_IPV6)
+-	if (ipv6 || metadata)
++	if (ipv6) {
+ 		ret = geneve_sock_add(geneve, true);
++		if (ret < 0 && ret != -EAFNOSUPPORT)
++			ipv4 = false;
 +	}
- 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
- 	tx_descriptor->data0 = tx->frame_data0;
- 
-@@ -1517,8 +1522,11 @@ static void lan743x_tx_frame_end(struct
- 	u32 tx_tail_flags = 0;
- 
- 	/* wrap up previous descriptor */
--	tx->frame_data0 |= TX_DESC_DATA0_LS_;
--	tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+	if ((tx->frame_data0 & TX_DESC_DATA0_DTYPE_MASK_) ==
-+	    TX_DESC_DATA0_DTYPE_DATA_) {
-+		tx->frame_data0 |= TX_DESC_DATA0_LS_;
-+		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+	}
- 
- 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
- 	buffer_info = &tx->buffer_info[tx->frame_tail];
-@@ -1603,7 +1611,7 @@ static netdev_tx_t lan743x_tx_xmit_frame
- 	}
- 
- 	if (gso)
--		lan743x_tx_frame_add_lso(tx, frame_length);
-+		lan743x_tx_frame_add_lso(tx, frame_length, nr_frags);
- 
- 	if (nr_frags <= 0)
- 		goto finish;
+ #endif
+-	if (!ret && (!ipv6 || metadata))
++	if (ipv4)
+ 		ret = geneve_sock_add(geneve, false);
+ 	if (ret < 0)
+ 		geneve_sock_release(geneve);
 
 
