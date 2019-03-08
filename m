@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A4FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25860C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D058420684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCABF2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049491;
-	bh=uGLHbqDdS5vmkFgx+pVMMtPb1ABAQVH0ZHP0Sm3mqPs=;
+	s=default; t=1552049496;
+	bh=RwmG+HV2hsT2pyDG3B7LZrnl7gx5LK2thaGg8EPGeWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ty37vrD0Oh9ix9jd3qbn2ONkXplaroV20xpf84eqJAYoVqG2id22h4ZVw/w1QcSlU
-	 BRuspX1Cr6ZMJVd0ibGGC404DoYS8ec2/7YV3PWtGOg14sQf3xyTU1VaQsRx3lxu5T
-	 d4XAKjNr2gLKHDVMr48RtQ3FIkHH/hQDDz47o1eA=
+	b=zuKLjd9vtZe4FB9RSuLIZayfMINH5iY6CfBxAFB9BAacrWd5vCV1BOjd5nAW6R6YX
+	 yRdyyiDARS1ajX0OzfLkeN+0gV3tHKiyTbYVWcNQGuAqJpu1ZEeD87N1MIPkbZvVoJ
+	 zIawTo71IkAWpIUK3vZNte/p45b91gjxWK7xXm2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfCHMva (ORCPT
+        id S1726712AbfCHMve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726471AbfCHMv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:27 -0500
+        id S1726731AbfCHMva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:30 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B963320684;
-        Fri,  8 Mar 2019 12:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ADA62087C;
+        Fri,  8 Mar 2019 12:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049487;
-        bh=uGLHbqDdS5vmkFgx+pVMMtPb1ABAQVH0ZHP0Sm3mqPs=;
+        s=default; t=1552049490;
+        bh=RwmG+HV2hsT2pyDG3B7LZrnl7gx5LK2thaGg8EPGeWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPd1de3agfqek9iOxghqzf3HM9o5GWkOJ8HwzPxb5NVBMUBkOWudiRlbnu52oSMy2
-         b28xxUAmm1zZgmAtXOHvBAVoMZLS2bf3eAtIyovtwPVjnfQVRUNDan9i8TDffr0lKx
-         RqVCvKrzEOORYWRi/R/6AFDBjgjnbLhdGNP0X9WI=
+        b=RreGmJn01pb2HXfitjMy58Ld7bBgyZxa7zleKrzP6o3QNgeYyNo5Kjf+KLdvT1LnX
+         cvo2ZfkY1LevoM7fmNV87NwcCXzQ8o0xSKxCZrHjrATtEbB0eDgkLtukSmomSKOE+n
+         0I0ILmuW/+I32aXCmXkyCLunxGoNtQpIK0+PJaUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 18/46] net: dsa: mv88e6xxx: add call to mv88e6xxx_ports_cmode_init to probe for new DSA framework
-Date:   Fri,  8 Mar 2019 13:49:51 +0100
-Message-Id: <20190308124903.425698601@linuxfoundation.org>
+Subject: [PATCH 5.0 19/46] net: dsa: mv88e6xxx: handle unknown duplex modes gracefully in mv88e6xxx_port_set_duplex
+Date:   Fri,  8 Mar 2019 13:49:52 +0100
+Message-Id: <20190308124903.487564073@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -69,31 +68,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 3acca1dd17060332cfab15693733cdaf9fba1c90 ]
+[ Upstream commit c6195a8bdfc62a7cecf7df685e64847a4b700275 ]
 
-In the original patch I missed to add mv88e6xxx_ports_cmode_init()
-to the second probe function, the one for the new DSA framework.
+When testing another issue I faced the problem that
+mv88e6xxx_port_setup_mac() failed due to DUPLEX_UNKNOWN being passed
+as argument to mv88e6xxx_port_set_duplex(). We should handle this case
+gracefully and return -EOPNOTSUPP, like e.g. mv88e6xxx_port_set_speed()
+is doing it.
 
-Fixes: ed8fe20205ac ("net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode")
-Reported-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 7f1ae07b51e8 ("net: dsa: mv88e6xxx: add port duplex setter")
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/mv88e6xxx/port.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -4847,6 +4847,7 @@ static int mv88e6xxx_probe(struct mdio_d
- 	if (err)
- 		goto out;
+--- a/drivers/net/dsa/mv88e6xxx/port.c
++++ b/drivers/net/dsa/mv88e6xxx/port.c
+@@ -190,7 +190,7 @@ int mv88e6xxx_port_set_duplex(struct mv8
+ 		/* normal duplex detection */
+ 		break;
+ 	default:
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
  
-+	mv88e6xxx_ports_cmode_init(chip);
- 	mv88e6xxx_phy_init(chip);
- 
- 	if (chip->info->ops->get_eeprom) {
+ 	err = mv88e6xxx_port_write(chip, port, MV88E6XXX_PORT_MAC_CTL, reg);
 
 
