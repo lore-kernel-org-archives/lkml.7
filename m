@@ -2,120 +2,117 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE32C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B355C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E893D2081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091AE2081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HEAcg07G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oium6+NZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfCHGni (ORCPT
+        id S1726446AbfCHGp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:43:38 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:34865 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbfCHGni (ORCPT
+        Fri, 8 Mar 2019 01:45:59 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39449 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfCHGp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:43:38 -0500
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x286hQ53014575;
-        Fri, 8 Mar 2019 15:43:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x286hQ53014575
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552027407;
-        bh=9w8/4CZThu55TWkHF/fXOlAZSSKyh3Iu1gpYCiWtUIU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HEAcg07GZwLYnrEcarljRZiSLkwTQER99oio/V3B7LjJH2b/C4qVfcaiWlCqvwzqf
-         IMw/z3SDlL6ZvXJjMyDZRZGdpFFEP0F69CEU4Hl6hYFqZqfLnL6feuJzvacG8f/ytV
-         o2hA/iXJtszm0UT2DrXHa6+9prAeKONYDO0egpo541IVcarDZraj8gvBe5hwtM6eBn
-         yGlUXAuh2fKKuB0s41Le5gSEUKcvX/6hB3IsrYhfpvuQXLIMNfC/ePM8UoYeE3p26W
-         /7CGRTGzQRexXGHNmvqFEYDCa2e1ydBZBsK/mXEh9uBipw8HO7sf/I+O15qwoB9Pfl
-         MofKmzffU6FkQ==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id e81so6061443vsd.2;
-        Thu, 07 Mar 2019 22:43:26 -0800 (PST)
-X-Gm-Message-State: APjAAAWz9dpssjK/1QkEdvmbbp0mGwVDx5weEi6kj1BI3ttnabm/QOk8
-        d6jp2a9cFVhJS6n2bJl1NNnnfslQE0Np87RA5DU=
-X-Google-Smtp-Source: APXvYqzAQqvbcPMmPJ1SVIRdn8oVIxWJ1kaT1Eu7IzJtEr3XI+PysZE7H3svTnmEw0oz5PWvYCCCxodvW8AWLRmwU1g=
-X-Received: by 2002:a67:7c04:: with SMTP id x4mr9085999vsc.155.1552027405759;
- Thu, 07 Mar 2019 22:43:25 -0800 (PST)
-MIME-Version: 1.0
-References: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
- <5760e0a210c7c39b486aa932ccbe7f3f2c210d62.camel@decadent.org.uk>
- <CAK7LNAQFWWzki-MvmhDpAn46XkDAu4_EGCQotbi5qAk5oJrgUQ@mail.gmail.com>
- <788870e550cb3cecafd9db14c081ddb0225edfde.camel@decadent.org.uk>
- <CABkpOEUqJWn62VZoTA5UEnbDieiYR9y3diRQhZuOVe6hOoBNhA@mail.gmail.com> <c93a7273c89c649373761f2ba26a6ef05787d08d.camel@decadent.org.uk>
-In-Reply-To: <c93a7273c89c649373761f2ba26a6ef05787d08d.camel@decadent.org.uk>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 8 Mar 2019 15:42:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQzfiZejYKKtFSineEwB5M_GcUktBmLgAGs2iC7i4Cbfw@mail.gmail.com>
-Message-ID: <CAK7LNAQzfiZejYKKtFSineEwB5M_GcUktBmLgAGs2iC7i4Cbfw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add workaround for Debian make-kpkg
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     Manoj Srivastava <manoj.srivastava.1962@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Liz Zhang <lizzha@microsoft.com>,
-        Lili Deng <v-lide@microsoft.com>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 Mar 2019 01:45:59 -0500
+Received: by mail-yw1-f68.google.com with SMTP id z191so15502998ywa.6;
+        Thu, 07 Mar 2019 22:45:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=N/qtDf5fnqM9VoWDcwIOX2JbfjPFNVEEncbZjpulgtI=;
+        b=Oium6+NZkouHu57X10Chbvt6YdngPWL0x8Non/LDqmpvO699UxmHknIpfkvVUCr0H7
+         fMVEAmWGrTxB9tE23eiLXH0bPoWHEYnJolSI8V6g4hOLKo2JC3nXmnN/TiP46ah6pF8Z
+         /kjz7SRy0YopGqK3+5T5Z++gHnIglpPmkssBNlBssZi2+DSvkLcP+MzVyni51wdlnOYg
+         MoBf4vO5c/ttkfSRmyvIdewMP0OBnfJwE9T5hp2bsJnen4/1zl39JcLppeT57sTYOAJc
+         HrfhM/CPhGU84oq/6Ro6OnQnWlzDt7KRGQ+3J5fWp4wzUaRfGZw+/305/pUi4FhJL9n6
+         VuLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N/qtDf5fnqM9VoWDcwIOX2JbfjPFNVEEncbZjpulgtI=;
+        b=dqAQqG98zge6mG9guPDof1L0PWmkGsZujtOjtSGEB0nDp3mYJhdGQcTMDwNTGPINL9
+         tPx58u4NwDMHfkuXUpJ8j4py0cgTI+yyu4FR56YkJ+2dPmPjKsNH8BDs9Z9gWoooq0GG
+         Y+gY0qZWod8wJZw+h67T2qSrbxIrdvxLm4PRsxYtJFFo6KIOy0PLogX9E/oCR2MgAYVx
+         0VpvG2v/KyQb4htU8GsJ1cVk0Ggl4AYUdlaV7xwoAzVJAsaI5t0N/SJzetjWY4y235U9
+         S7HRb0daLFNhFy071gu14JF78wyGCUsrWYIq+iASQnvg3oTLi53uwVXzPv1pDOcOMK3U
+         JH5w==
+X-Gm-Message-State: APjAAAXYhf6WGMbFOCTWbvn91Y8rZXkzbCknsgeJdaY+d91bBNfEufo7
+        Qb57cdp4xrN2mEK5ab8GQ2Q=
+X-Google-Smtp-Source: APXvYqyqOikmrYlfDVaQmwSdBbpLljoHYEu4OR6dibvJ7d05mmOJCDS6q9hD/Xg9KmnAOwICPotAVg==
+X-Received: by 2002:a5b:42:: with SMTP id e2mr9964922ybp.141.1552027557907;
+        Thu, 07 Mar 2019 22:45:57 -0800 (PST)
+Received: from localhost.localdomain ([191.101.9.198])
+        by smtp.gmail.com with ESMTPSA id 186sm2408540ywi.104.2019.03.07.22.45.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 22:45:57 -0800 (PST)
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        ongliubraving@fb.com, yhs@fb.com, davem@davemloft.net
+Cc:     Bo YU <tsu.yubo@gmail.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, yuzibode@126.com
+Subject: [PATCH V3] bpf: fix warning about using plain integer as NULL
+Date:   Fri,  8 Mar 2019 01:45:51 -0500
+Message-Id: <20190308064551.17437-1-tsu.yubo@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 6:56 AM Ben Hutchings <ben@decadent.org.uk> wrote:
->
-> On Wed, 2019-03-06 at 22:48 -0800, Manoj Srivastava wrote:
-> > Hi,
-> >
-> >   Does this have any users?
+Sparse warning below:
 
-Recently, I received a regression report.
-So, yes. There are users.
+sudo make C=2 CF=-D__CHECK_ENDIAN__ M=net/bpf/
+CHECK   net/bpf//test_run.c
+net/bpf//test_run.c:19:77: warning: Using plain integer as NULL pointer
+./include/linux/bpf-cgroup.h:295:77: warning: Using plain integer as NULL pointer
 
+Fixes: 8bad74f9840f ("bpf: extend cgroup bpf core to allow multiple cgroup storage types")
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+V3: put fix tag all in a line
+V2: Add fix-up tag from Yonghong
+---
+ include/linux/bpf-cgroup.h | 2 +-
+ net/bpf/test_run.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> > I can take a stand at making it work, but I am
-> > unsure of there are enough people interested in make-kpkg anymore to make
-> > it worthwhile.
-> >
-> >   There is a man pager that might be of minor interest, but that can be
-> > taken over by the kernel team if they want
-
-I do not want to maintain the dying package.
-
-
-
-> [...]
->
-> I assume you're referring to kernel-img.conf.  I would be happy to add
-> that to linux-base, with some clarification of which settings are
-> understood by which packages.
->
-> I take it that you don't want kernel-package to be included in buster,
-> so can you open an RC bug to say so?
-
-Also, could you make sure it won't come back to bullseye or later ?
-
-How about Ubuntu? Is it out of your control?
-
-
-
-> Ben.
->
-> --
-> Ben Hutchings
-> friends: People who know you well, but like you anyway.
->
->
-
-
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index 695b2a880d9a..a4c644c1c091 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -292,7 +292,7 @@ static inline int bpf_cgroup_storage_assign(struct bpf_prog *prog,
+ static inline void bpf_cgroup_storage_release(struct bpf_prog *prog,
+ 					      struct bpf_map *map) {}
+ static inline struct bpf_cgroup_storage *bpf_cgroup_storage_alloc(
+-	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return 0; }
++	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return NULL; }
+ static inline void bpf_cgroup_storage_free(
+ 	struct bpf_cgroup_storage *storage) {}
+ static inline int bpf_percpu_cgroup_storage_copy(struct bpf_map *map, void *key,
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index da7051d62727..fab142b796ef 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -16,7 +16,7 @@
+ static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
+ 			u32 *retval, u32 *time)
+ {
+-	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { 0 };
++	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { NULL };
+ 	enum bpf_cgroup_storage_type stype;
+ 	u64 time_start, time_spent = 0;
+ 	int ret = 0;
 -- 
-Best Regards
-Masahiro Yamada
+2.11.0
+
