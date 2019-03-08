@@ -2,131 +2,80 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C835FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1127EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE102087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7A02087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfCHPHp (ORCPT
+        id S1726971AbfCHPI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:07:45 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5223 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726750AbfCHPHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:07:44 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1E1785792FD8121307E2;
-        Fri,  8 Mar 2019 23:07:41 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 8 Mar 2019
- 23:07:39 +0800
-Date:   Fri, 8 Mar 2019 15:07:28 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Stefan Popa <stefan.popa@analog.com>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <Michael.Hennerich@analog.com>, <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: imu: adis16480: Document external
- clock
-Message-ID: <20190308150728.00002ec1@huawei.com>
-In-Reply-To: <1551972559-15148-1-git-send-email-stefan.popa@analog.com>
-References: <1551972559-15148-1-git-send-email-stefan.popa@analog.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 8 Mar 2019 10:08:28 -0500
+Received: from mga02.intel.com ([134.134.136.20]:47205 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbfCHPI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 10:08:28 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 07:08:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,456,1544515200"; 
+   d="scan'208";a="120809744"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga007.jf.intel.com with ESMTP; 08 Mar 2019 07:08:27 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 6FE093015F7; Fri,  8 Mar 2019 07:08:27 -0800 (PST)
+Date:   Fri, 8 Mar 2019 07:08:27 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events
+ by CPU
+Message-ID: <20190308150827.GH7535@tassilo.jf.intel.com>
+References: <20190305144758.12397-1-andi@firstfloor.org>
+ <20190305144758.12397-4-andi@firstfloor.org>
+ <6d837d6b-da67-9878-dcc5-a2b0f2dc6826@intel.com>
+ <20190307110231.GB8979@krava>
+ <20190308133901.GB26260@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190308133901.GB26260@kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Mar 2019 17:29:19 +0200
-Stefan Popa <stefan.popa@analog.com> wrote:
-
-> Add documentation for optional use of external clock. All devices
-> supported by this driver can work with an external clock in sync mode.
-> Another mode, called Pulse Per Second (PPS) is supported only by adis1649x
-> devices. The mode is selected by using the "clock-names" property.
+On Fri, Mar 08, 2019 at 10:39:01AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 07, 2019 at 12:02:31PM +0100, Jiri Olsa escreveu:
+> > On Wed, Mar 06, 2019 at 04:23:40PM +0200, Adrian Hunter wrote:
+> > > On 5/03/19 4:47 PM, Andi Kleen wrote:
+> > > > From: Andi Kleen <ak@linux.intel.com>
+> > > > 
+> > > > The --cpu option only filtered samples. Filter other perf events,
+> > > > such as COMM, FORK, SWITCH by the CPU too.
+> > > 
+> > > Because tasks can migrate from cpu to cpu, we probably need to process most
+> > > of the events anyway, even if they are not printed.
+> > 
+> > agreed, I wonder we could just make the perf_event__fprintf conditional
 > 
-> The pin which is used as external clock input is selected by using a
-> custom optional property called "adi,ext-clk-pin". If this field is left
-> empty, DIO2 is assigned as default external clock input pin.
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Trivial comments inline...
+> Humm, probably just do the filtering on PERF_RECORD_SAMPLE is enough?
+> I.e. having the other PERF_RECORD_{COMM,MMAP,} etc is required in face
+> of migration.
 
-Thanks,
+The goal was to only show the output for the correct CPU in the perf
+sample context browser. Otherwise the output on larger systems
+is very confusing because most of it is for irrelevant CPUs.
 
-Jonathan
-
-> ---
->  .../devicetree/bindings/iio/imu/adi,adis16480.txt  | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> index 39ab016..9e2fcd4 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> @@ -34,6 +34,37 @@ Optional properties:
->  	signal.
->  - reset-gpios: must be the device tree identifier of the RESET pin. As the line
->  	is active low, it should be marked GPIO_ACTIVE_LOW.
-> +- clocks: phandle to the external clock. Should be set according to
-> +	"clock-names".
-> +	If this field is left empty, the internal clock is used.
-> +- clock-names: The name of the external clock to be used. Valid values are:
-> +	* sync: In sync mode, the internal clock is disabled and the frequency
-> +		of the external clock signal establishes therate of data
-the rate
-> +		collection and processing. See Fig 14 and 15 in the datasheet.
-> +		The clock-frequency must be:
-> +		* 3000 to 4500 Hz for adis1649x devices.
-> +		* 700 to 2400 Hz for adis1648x devices.
-> +	* pps: In Pulse Per Second (PPS) Mode, the rate of data collection and
-> +	       production is equal to the product of the external clock
-> +	       frequency and the scale factor in the SYNC_SCALE register, see
-> +	       Table 154 in the datasheet.
-> +	       The clock-frequency must be:
-> +	       * 1 to 128 Hz for adis1649x devices.
-> +	       * This mode is not supported by adis1648x devices.
-> +	If this field is left empty, the internal clock is used.
-
-Should we say that both clocks and clock-names should be empty if that is
-the intent?
-
-> +- adi,ext-clk-pin: The DIOx line to be used as an external clock input.
-> +	Valid values are:
-> +	* DIO1
-> +	* DIO2
-> +	* DIO3
-> +	* DIO4
-> +	Each DIOx pin supports only one function at a time (data ready line
-> +	selection or external clock input). When a single pin has two
-> +	two assignments, the enable bit for the lower priority function
-> +	automatically resets to zero (disabling the lower priority function).
-> +	Data ready has highest priority.
-> +	If this field is left empty, DIO2 is assigned as default external clock
-> +	input pin.
->  
->  Example:
->  
-> @@ -46,4 +77,7 @@ Example:
->  		interrupts = <25 IRQF_TRIGGER_FALLING>;
->  		interrupt-parent = <&gpio>;
->  		interrupt-names = "DIO2";
-> +		clocks = <&adis16495_sync>;
-> +		clock-names = "sync";
-> +		adi,ext-clk-pin = "DIO1";
->  	};
-
-
+-andi
