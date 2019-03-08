@@ -2,112 +2,142 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B684DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E366BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D292147A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552059029;
-	bh=LoUNdu8zcrAquYzmh6OQn3jcRuVJq7eYnHHWxd3DBrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rkJ+nPXvA1jVPAVmRcbjyI3TC1v8oJfVUXjLzVKc25FAEsxVqbKeAOmEqxEU0oceU
-	 4iA2uzoie4lbOHGYLv6GWz9vbbBsx6tmUnfJouei1RVG7BX3X1Y+B8GY9zP9jJvZXj
-	 I+IOMh4sT5f487YukmAY+cyRVOrDoxt+9RMxVh5U=
+	by mail.kernel.org (Postfix) with ESMTP id BD41E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbfCHPa2 (ORCPT
+        id S1726648AbfCHPbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:30:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfCHPa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:30:27 -0500
-Received: from localhost (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1908A208E4;
-        Fri,  8 Mar 2019 15:30:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552059026;
-        bh=LoUNdu8zcrAquYzmh6OQn3jcRuVJq7eYnHHWxd3DBrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QJ1JRlBd19WsmnJo6Bj2/bsgSH/3rIQUrHSi+/mR2z9v07+B2Dq+kF+tiyus2JfX+
-         kA7/MX1WgY6BxYNvGHrJRxpRLU/Huf560AnmqFv0ftSCQrp9ga+09GTZytDqmCYQLn
-         ZbuTgRLhC6M1ljCLXDAhUa9/pDbdysjyRP1Va71c=
-Date:   Fri, 8 Mar 2019 16:30:23 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 00/37] softirq: Per vector masking v3
-Message-ID: <20190308153022.GA23080@lenoir>
-References: <20190228171242.32144-1-frederic@kernel.org>
- <CAHk-=wh5MQiXNUBCN6VKNGRR2gDekhXpaTc914D3y4=dHpmh4Q@mail.gmail.com>
- <20190301034536.GA19200@lenoir>
- <CAHk-=wgOZuGZaVOOiC=drG6ykVkOGk8RRXZ_CrPBMXHKjTg0dg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgOZuGZaVOOiC=drG6ykVkOGk8RRXZ_CrPBMXHKjTg0dg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 8 Mar 2019 10:31:00 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60446 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbfCHPa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 10:30:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA574A78;
+        Fri,  8 Mar 2019 07:30:58 -0800 (PST)
+Received: from big-swifty.misterjones.org (big-swifty.cambridge.arm.com [10.1.30.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 808E63F703;
+        Fri,  8 Mar 2019 07:30:56 -0800 (PST)
+Date:   Fri, 08 Mar 2019 15:30:53 +0000
+Message-ID: <864l8d1iz6.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Fabien DESSENNE <fabien.dessenne@st.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: Re: [PATCH] irqchip: stm32: add a second level init to request hwspinlock
+In-Reply-To: <faef4957-0261-bcdf-32fb-4b0763298236@st.com>
+References: <1551975829-16350-1-git-send-email-fabien.dessenne@st.com>
+        <97040a1e-7a24-3d41-c3b7-43b551a70825@arm.com>
+        <faef4957-0261-bcdf-32fb-4b0763298236@st.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 08:51:38AM -0800, Linus Torvalds wrote:
-> On Thu, Feb 28, 2019 at 7:45 PM Frederic Weisbecker <frederic@kernel.org> wrote:
-> >
-> > Numbers are indeed missing. In fact this patchset mostly just brings an
-> > infrastructure. We have yet to pinpoint the most latency-inducing
-> > softirq disabled sites and make them disable only the vectors that
-> > are involved in a given lock.
-> 
-> Note that I think we pretty much know that already: the people who
-> have had issues have never actually really had issues with the actual
-> "disable softirq" paths, they've all been about actually *running* the
-> softirq's (and that in turn being a latency issue for running _other_
-> softirqs, and in particular for delaying them into softirqd).
-> 
-> Now, it may well be that yes, we'll have "block softirqs" code that
-> has issues too, but it's absolutely been swamped by the latencies for
-> actually running them so far.
-> 
-> Note that this is all really fairly independent of the whole masking
-> logic. Yes, the masking logic comes into play too (allowing you to run
-> a subset of softirq's at a time), but on the whole the complaints I've
-> seen have not been "the networking softirq takes so long that it
-> delays USB tasklet handling", but they have been along the lines of
-> "the networking softirq gets invoked so often that it then floods the
-> system and triggers softirqd, and _that_ then makes tasklet handling
-> latency go up insanely".
-> 
-> See the difference? Not the latency of softirq's disabled, but the
-> latency of one group of softirqs causing problems for another when
-> they all get batched together (and soft-scheduled to another context
-> together).
+On Fri, 08 Mar 2019 14:03:55 +0000,
+Fabien DESSENNE <fabien.dessenne@st.com> wrote:
 
-I see, so that's an entirely different problem that vector
-soft-interruptibility can't fix, at least not alone.
+Fabien,
 
-The only solution I can imagine is to have a seperate pending mask
-for normal softirq processing and ksoftirqd, so that only vectors
-that have been enqueued for threaded processing are delayed.
+> 
+> Hi Marc,
+> 
+> Thank you for your feedback. Let me try to explain this patch, and the 
+> reason of its unusual implementation choices.
+> 
+> 
+> Regarding the driver init mode:
+> As an important requirement, I want to keep this irq driver declared 
+> with IRQCHIP_DECLARE(), so it is initialized early from 
+> start_kernel()/init_IRQ().
+> Most of the other irq drivers are implemented this way and I imagine 
+> that this ensures the availability of the irq drivers, before the other 
+> platform drivers get probed.
 
-I can work on that first, but I really need to be able to reproduce
-an example of the issue. The USB capture thing seems to be one the best.
-Let's browse some history to see if I can find some details on the
-relevant scenario.
+Let me get this straight:
+
+- Either you don't have dependencies on anything, and you need to
+  enable your irqchip early -> you use IRQCHIP_DECLARE.
+
+- Or you have dependencies on other subsystems -> You *do not* use
+  IRQCHIP_DECLARE, and use the expected dependency system (deferred
+  probing)
+
+There is no intermediate state. The other irqchip controllers that use
+IRQCHIP_DECLARE *do NOT* have dependencies on external subsystems.
+
+> Regarding the second init:
+> With the usage of the hwspinlock framework (used to protect against 
+> coprocessor concurrent access to registers) we have a problem as the 
+> hwspinlock driver is not available when the irq driver is being initialized.
+> In order to solve this, I added a second initialization where we get a 
+> reference to hwspinlock.
+> You pointed that we are not supposed to use of_node_clear_flag (which 
+> allows to get a second init call) :
+> I spent some time to find any information about it, but could not find 
+> any reason to not use it.
+> Please, let me know if I missed something here.
+
+Yes, you missed the fact that each time someone tries to add some
+driver probing via an initcall, we push back. This is an internal
+kernel mechanism that is not to be used by random, non architectural
+drivers such as this interrupt controller.
+
+Furthermore, you're playing with stuff that is outside of the exported
+API of the DT framework. Clearing node flags is not something I really
+want to see, as you're messing with a state machine that isn't under
+your control.
+
+> Regarding the inits sequence and dependencies:
+> - The second init is guaranteed to be called after the first one, since 
+> start_kernel()->init_IRQ() is called before platform drivers init.
+
+There is no such requirements that holds for secondary interrupt
+controllers.
+
+> - During the second init, the dependency with the hwspinlock driver is 
+> implemented correctly : it makes use of defered probe when needed.
+
+Then do the right thing all the way: move your favourite toy irqchip
+to being a proper device driver, use the right abstraction, and stop
+piling ugly hacks on top of each other. Other irqchip drivers do that
+just fine (all GPIO irqchips, for example), and most drivers are
+already able to defer their probe routine.
+
+> I understand that this patch is 'surprising' but I hope that my
+> explanations justify its implementation.
+
+Surprising is not the word I'd have used. The explanations do not
+justify anything, as all you're saying is "it is the way it is because
+it is the way it is". So please fix your irqchip driver properly, in a
+way that is maintainable in the long term, using the abstractions that
+are available. If such abstractions are not good enough, please
+explain what you need and we'll work something out.
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smell funny.
