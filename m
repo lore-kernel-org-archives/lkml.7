@@ -2,90 +2,89 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEFFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B8EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6292146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IdUcNIkG"
+	by mail.kernel.org (Postfix) with ESMTP id C5A10214AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfCHQwY (ORCPT
+        id S1727202AbfCHQyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:52:24 -0500
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:37781 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbfCHQwY (ORCPT
+        Fri, 8 Mar 2019 11:54:04 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63212 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727186AbfCHQyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:52:24 -0500
-Received: by mail-wm1-f41.google.com with SMTP id x10so12887373wmg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:52:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qCKygBQCUpNS5P/JDpkW2DXSP6Bm4cP0NVIOldUyTZ8=;
-        b=IdUcNIkGDmbmsvflun+maEjCASyVnQ25dAQq47phcFwSed1kJYKnVeSz7mkkAiseRR
-         jQkAJUbyXm7cFTNz4zNMIohjLiZZ98334a8oF6pW4xKmEHS6d7MzqbqisudOYzn7O5I1
-         WVTrLJ5YiMRGWeGkFwqeU/wHGih3+MGasyicy1wGmyux/NSZa1FX+BYT2fj/165VYTHD
-         EzHRn9QWKL+X0FyMifWxCxnrsEHqnCVLNGZngbleHWce9/WlhFmweBQTLEWVtC3wAvO4
-         y5posIkPqTh5Lvy7ioJrZAkx3GocpxyNvIzgBbUOeaL6SWTzH/I3HtLx9GohO7xN4Ssb
-         4lqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qCKygBQCUpNS5P/JDpkW2DXSP6Bm4cP0NVIOldUyTZ8=;
-        b=i7knE+RDjsMaR6MKgmCBiezp70s6/RayzFadrHYG5gl6qz/o+iZfjdUfgq/fXWRzFp
-         mpZIvpoBwIDNEfmj2CR7n/cgs73A5SqIyYAzWqwHAABJag3ChNU2RN9jnA1tM3HUkW0h
-         Qaawai9qSOvW1l+w+aoA4yIn8mhxcIfwQqVabDbpcs2gyMSFep25j+PFe7cLr5taKZEV
-         D+gOBfRYnDcdUlptXgpu8D54nkZ9JtWCWJOcqeYfIyp1L0CGUewb9Ju5A7ysfUTvvDgF
-         71cr2mUPvFIQ1zrD9/bjH84i5jDn5+5WaD4ibYkfS6aSR+99qeK1hWOOUQ92emTZUr6n
-         S+Ig==
-X-Gm-Message-State: APjAAAX/3G+lWZiqENgcUUONKrRtGjDGstqX9u4F09dZWFrbypywc6Nj
-        KlOL+B5VFhkKno1TFya7wgJ0l/zA/LaS/Dxd+ZOU4w==
-X-Google-Smtp-Source: APXvYqzttkrEVJjjqDyxa/zfOqclVkyYUolMG2iZXFVPTcinuPAf+JQ9kcgfKFSQwj0ZURE/j01V0MJCRnkixtiCfh4=
-X-Received: by 2002:a1c:80c4:: with SMTP id b187mr9273234wmd.23.1552063942102;
- Fri, 08 Mar 2019 08:52:22 -0800 (PST)
+        Fri, 8 Mar 2019 11:54:04 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28Gq5d7026298;
+        Fri, 8 Mar 2019 17:54:02 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2r2ng2cqky-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 08 Mar 2019 17:54:02 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B7CE631;
+        Fri,  8 Mar 2019 16:54:01 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 98185A5A9;
+        Fri,  8 Mar 2019 16:54:01 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 8 Mar 2019
+ 17:54:01 +0100
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 8 Mar 2019 17:54:01
+ +0100
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] hwspinlock: ignore disabled device
+Date:   Fri, 8 Mar 2019 17:53:46 +0100
+Message-ID: <1552064026-11415-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1551330806-12502-1-git-send-email-lirongqing@baidu.com> <20190308155543.si2nqqm6j2otq27r@salvia>
-In-Reply-To: <20190308155543.si2nqqm6j2otq27r@salvia>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 8 Mar 2019 08:52:10 -0800
-Message-ID: <CALAqxLVZUOM=KXRADi8kQ6XB+AgsdVfYVg_LfzxAcgmAP6hjgg@mail.gmail.com>
-Subject: Re: [PATCH][v2] time: Introduce jiffies64_to_msecs()
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Li RongQing <lirongqing@baidu.com>,
-        netfilter-devel@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_14:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 7:55 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->
-> On Thu, Feb 28, 2019 at 01:13:26PM +0800, Li RongQing wrote:
-> > there is a similar helper in net/netfilter/nf_tables_api.c,
-> > this maybe become a common request someday, so move it to
-> > time.c
-> >
-> > Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
->
-> Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
->
-> This is touching kernel/time.c bits, which is far from my realm.
->
-> What should I do with this? I can just place it in nf-next.git if I
-> get an ACK to do so. Otherwise, please just take this if this looks
-> good to you.
+Do not wait for hwspinlock device registration if it is not available
+for use.
 
-Acked-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+V2: use 'goto out' instead of 'return'
+
+ drivers/hwspinlock/hwspinlock_core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
+index 2bad40d..d806307 100644
+--- a/drivers/hwspinlock/hwspinlock_core.c
++++ b/drivers/hwspinlock/hwspinlock_core.c
+@@ -333,6 +333,11 @@ int of_hwspin_lock_get_id(struct device_node *np, int index)
+ 	if (ret)
+ 		return ret;
+ 
++	if (!of_device_is_available(args.np)) {
++		ret = -ENOENT;
++		goto out;
++	}
++
+ 	/* Find the hwspinlock device: we need its base_id */
+ 	ret = -EPROBE_DEFER;
+ 	rcu_read_lock();
+-- 
+2.7.4
+
