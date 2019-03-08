@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B70C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1551EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD3C20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D966E20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050439;
-	bh=rr1bfHPL3VAmb4R49VUZVCA4wxKy2Ff0BhG/A1RhPKc=;
+	s=default; t=1552050445;
+	bh=sBjtU5TT1V1Gzcn9lLKsjz8nlrnXqRcMXeXUwu45toQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WI0GDtWLVh8HGA4eP1CvqvhgUfHUgJDTWVzWiW0mEh6VPu2WVuyRYwCjmkfLoWWDj
-	 0lcYasuduvV/ORzaTVUjJKdsyLDa5iVQvPRdyZ1mhBke10xKtHlAtEZVSS/jvx+uJu
-	 /lf7arVKtI7UlRhPwbSNNhI2fDpdMKpu7/0jiiLo=
+	b=rXipoY4ILnTTIRxKBr2xY52+HRLg45IX0mj3Z8UNYhh0LgSPBsT7OOSRGSAenNpLZ
+	 QuJNJt+2iZpsazLZbtV/v6fLu+hafzGgZ5b08sZe3iKg3dFP5UukE1nq5LYQpEpPp3
+	 XyzK2x/11EWKiyHhUiRTHcy6aOnWn6xtZwNq9tNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfCHNHS (ORCPT
+        id S1726719AbfCHMyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:07:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:54:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfCHMy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:54:28 -0500
+        id S1726908AbfCHMyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:54:16 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1BE220449;
-        Fri,  8 Mar 2019 12:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76BA20449;
+        Fri,  8 Mar 2019 12:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049668;
-        bh=rr1bfHPL3VAmb4R49VUZVCA4wxKy2Ff0BhG/A1RhPKc=;
+        s=default; t=1552049655;
+        bh=sBjtU5TT1V1Gzcn9lLKsjz8nlrnXqRcMXeXUwu45toQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SN2SlttIYyNvU8XgyVTcqwCK1jtyebyVq6WQ3bBgSq+uj/wDo6mZgk1iDFY7xAGOB
-         PIb8IpLBvwSQYLISxmXsREYGthKr4J9Gtzrk15qvzXyiSCYCAkFFCKeD+fG+VspPoT
-         05FlfosON/jxiJ9SrGaYrfEfPu1j1do+6Br3MO6I=
+        b=tWOUWAYrf9t6wgLZDNxJmk9lRYlpfmiGamfal5VV4bimeh/V3iwl3PRxr3hdYxOf/
+         7G00VUN8Qv+pmCUDNXlgtdZJmivms14WJ/1+85i9J69L8yj9r0Rc6apSRdrE9PmCre
+         VqHKK5qZ+lWL3I9essmyGzT7P9xMPHWTYoWtiXM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
+        stable@vger.kernel.org,
+        Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 26/76] sctp: call iov_iter_revert() after sending ABORT
-Date:   Fri,  8 Mar 2019 13:49:38 +0100
-Message-Id: <20190308124915.714711484@linuxfoundation.org>
+Subject: [PATCH 4.20 22/76] net: mscc: Enable all ports in QSGMII
+Date:   Fri,  8 Mar 2019 13:49:34 +0100
+Message-Id: <20190308124915.561260801@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -67,35 +67,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
 
-[ Upstream commit 901efe12318b1ea8d3e2c88a7b75ed6e6d5d7245 ]
+[ Upstream commit 084e5bb16bd7dc2b551bbd9fb358bf73e03ee8d8 ]
 
-The user msg is also copied to the abort packet when doing SCTP_ABORT in
-sctp_sendmsg_check_sflags(). When SCTP_SENDALL is set, iov_iter_revert()
-should have been called for sending abort on the next asoc with copying
-this msg. Otherwise, memcpy_from_msg() in sctp_make_abort_user() will
-fail and return error.
+When Ocelot phy-mode is QSGMII, all 4 ports involved in
+QSGMII shall be kept out of reset and
+Tx lanes shall be enabled to pass the data.
 
-Fixes: 4910280503f3 ("sctp: add support for snd flag SCTP_SENDALL process in sendmsg")
-Reported-by: Ying Xu <yinxu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+Signed-off-by: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+Signed-off-by: Steen Hegelund <Steen.Hegelund@microchip.com>
+Co-developed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/socket.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mscc/ocelot_board.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -1866,6 +1866,7 @@ static int sctp_sendmsg_check_sflags(str
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -266,6 +266,7 @@ static int mscc_ocelot_probe(struct plat
+ 		struct phy *serdes;
+ 		void __iomem *regs;
+ 		char res_name[8];
++		int phy_mode;
+ 		u32 port;
  
- 		pr_debug("%s: aborting association:%p\n", __func__, asoc);
- 		sctp_primitive_ABORT(net, asoc, chunk);
-+		iov_iter_revert(&msg->msg_iter, msg_len);
+ 		if (of_property_read_u32(portnp, "reg", &port))
+@@ -291,11 +292,11 @@ static int mscc_ocelot_probe(struct plat
+ 		if (err)
+ 			return err;
  
- 		return 0;
- 	}
+-		err = of_get_phy_mode(portnp);
+-		if (err < 0)
++		phy_mode = of_get_phy_mode(portnp);
++		if (phy_mode < 0)
+ 			ocelot->ports[port]->phy_mode = PHY_INTERFACE_MODE_NA;
+ 		else
+-			ocelot->ports[port]->phy_mode = err;
++			ocelot->ports[port]->phy_mode = phy_mode;
+ 
+ 		switch (ocelot->ports[port]->phy_mode) {
+ 		case PHY_INTERFACE_MODE_NA:
+@@ -303,6 +304,13 @@ static int mscc_ocelot_probe(struct plat
+ 		case PHY_INTERFACE_MODE_SGMII:
+ 			break;
+ 		case PHY_INTERFACE_MODE_QSGMII:
++			/* Ensure clock signals and speed is set on all
++			 * QSGMII links
++			 */
++			ocelot_port_writel(ocelot->ports[port],
++					   DEV_CLOCK_CFG_LINK_SPEED
++					   (OCELOT_SPEED_1000),
++					   DEV_CLOCK_CFG);
+ 			break;
+ 		default:
+ 			dev_err(ocelot->dev,
 
 
