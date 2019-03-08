@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4D9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6A7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3FF2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB30320684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049594;
-	bh=FxxWapgLUQtXl+pB2Ar99ZUqYbeMhHmeHkLdjinbglE=;
+	s=default; t=1552049598;
+	bh=l4kl51fW0wqPbESlv5YFx+pKqucRF7wvQAArae5jMCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3p909reVINAjFuzmuRN6tf1998mryKBrzNGXb869uxcuLT5V8lxoLP/JfsiIOLt+
-	 vO1QDz7RlntTkGL9qUTujtVZz+6Kia/rlzZwiDAPxhMA1dYS0WJSxZOP3z34HqEASo
-	 mSjrUQCPjO31OzAybHNf3ZAFwYiRWh2L460ADqfA=
+	b=azBg4Y26iX0QkE1Q7IaHj671sdAAZjo6Vr3FXmFopuyBN+jawmh54s+yQSnQSQNgk
+	 Y88sw3oRSVGHF6jCYf899+8pH5d/FXSc1/4oiByLzGsPtxtWF9br3DzNnfDWd61qUI
+	 knQdOpNAW8MHRWK7yv5C/k+QI+gxPemp0cZ01Ix4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfCHMxN (ORCPT
+        id S1727115AbfCHMxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:53:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56902 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbfCHMxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:53:11 -0500
+        id S1726683AbfCHMxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:14 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 447752085A;
-        Fri,  8 Mar 2019 12:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022E620684;
+        Fri,  8 Mar 2019 12:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049590;
-        bh=FxxWapgLUQtXl+pB2Ar99ZUqYbeMhHmeHkLdjinbglE=;
+        s=default; t=1552049593;
+        bh=l4kl51fW0wqPbESlv5YFx+pKqucRF7wvQAArae5jMCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pJ2f9lvBc97+wMtPXDDUG9rQlelglQGRO72CTaSBDgUfn5uNAo+Bbv+yOSH0sEhZQ
-         6DDdbsAwR9l4aIkZNexOL8XEVfxsV7SaqejBUGj3+wEans1ccLfFnWt53XWNkIz3Cs
-         DZ/g6RPfKBP2h7bKQO2M2NCvPdSjNzcgGyMEty6M=
+        b=1+q7vdM4u1ikvJqCaR60YGx18B4Kq/5w8cZiEPa9F/eseTnxXtJHa2DZPWMShevS1
+         UkhMZLUkKkib/a5XChe6tuqzWvO8AlnCRTwfstOXe/w6p8B8Kk2evNr43HF2+o20P9
+         rAS4ZQ+qCN2dADLPcEbJg6oFoc+yRklWvQ85QUDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.0 39/46] gnss: sirf: fix premature wakeup interrupt enable
-Date:   Fri,  8 Mar 2019 13:50:12 +0100
-Message-Id: <20190308124904.766766120@linuxfoundation.org>
+        stable@vger.kernel.org, Karoly Pados <pados@pados.hu>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.0 40/46] USB: serial: cp210x: fix GPIO in autosuspend
+Date:   Fri,  8 Mar 2019 13:50:13 +0100
+Message-Id: <20190308124904.831852796@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -64,96 +65,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Karoly Pados <pados@pados.hu>
 
-commit 82f844c22588bf47132c82faeda50b6db473162c upstream.
+commit 7b0b644b9aa2de5032db0f468fddca091d0b7b90 upstream.
 
-Make sure the receiver is powered (and booted) before enabling the
-wakeup interrupt to avoid spurious interrupts due to a floating input.
+Current GPIO code in cp210x fails to take USB autosuspend into account,
+making it practically impossible to use GPIOs with autosuspend enabled
+without user configuration. Fix this like for ftdi_sio in a previous patch.
+Tested on a CP2102N.
 
-Similarly, disable the interrupt before powering off on probe errors and
-on unbind.
-
-Fixes: d2efbbd18b1e ("gnss: add driver for sirfstar-based receivers")
-Cc: stable <stable@vger.kernel.org>	# 4.19
+Signed-off-by: Karoly Pados <pados@pados.hu>
+Fixes: cf5276ce7867 ("USB: serial: cp210x: Adding GPIO support for CP2105")
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gnss/sirf.c |   32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ drivers/usb/serial/cp210x.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/gnss/sirf.c
-+++ b/drivers/gnss/sirf.c
-@@ -310,30 +310,26 @@ static int sirf_probe(struct serdev_devi
- 			ret = -ENODEV;
- 			goto err_put_device;
- 		}
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -1354,8 +1354,13 @@ static int cp210x_gpio_get(struct gpio_c
+ 	if (priv->partnum == CP210X_PARTNUM_CP2105)
+ 		req_type = REQTYPE_INTERFACE_TO_HOST;
+ 
++	result = usb_autopm_get_interface(serial->interface);
++	if (result)
++		return result;
 +
-+		ret = regulator_enable(data->vcc);
-+		if (ret)
-+			goto err_put_device;
+ 	result = cp210x_read_vendor_block(serial, req_type,
+ 					  CP210X_READ_LATCH, &buf, sizeof(buf));
++	usb_autopm_put_interface(serial->interface);
+ 	if (result < 0)
+ 		return result;
+ 
+@@ -1376,6 +1381,10 @@ static void cp210x_gpio_set(struct gpio_
+ 
+ 	buf.mask = BIT(gpio);
+ 
++	result = usb_autopm_get_interface(serial->interface);
++	if (result)
++		goto out;
 +
-+		/* Wait for chip to boot into hibernate mode. */
-+		msleep(SIRF_BOOT_DELAY);
+ 	if (priv->partnum == CP210X_PARTNUM_CP2105) {
+ 		result = cp210x_write_vendor_block(serial,
+ 						   REQTYPE_HOST_TO_INTERFACE,
+@@ -1393,6 +1402,8 @@ static void cp210x_gpio_set(struct gpio_
+ 					 NULL, 0, USB_CTRL_SET_TIMEOUT);
  	}
  
- 	if (data->wakeup) {
- 		ret = gpiod_to_irq(data->wakeup);
- 		if (ret < 0)
--			goto err_put_device;
--
-+			goto err_disable_vcc;
- 		data->irq = ret;
- 
--		ret = devm_request_threaded_irq(dev, data->irq, NULL,
--				sirf_wakeup_handler,
-+		ret = request_threaded_irq(data->irq, NULL, sirf_wakeup_handler,
- 				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
- 				"wakeup", data);
- 		if (ret)
--			goto err_put_device;
--	}
--
--	if (data->on_off) {
--		ret = regulator_enable(data->vcc);
--		if (ret)
--			goto err_put_device;
--
--		/* Wait for chip to boot into hibernate mode */
--		msleep(SIRF_BOOT_DELAY);
-+			goto err_disable_vcc;
- 	}
- 
- 	if (IS_ENABLED(CONFIG_PM)) {
-@@ -342,7 +338,7 @@ static int sirf_probe(struct serdev_devi
- 	} else {
- 		ret = sirf_runtime_resume(dev);
- 		if (ret < 0)
--			goto err_disable_vcc;
-+			goto err_free_irq;
- 	}
- 
- 	ret = gnss_register_device(gdev);
-@@ -356,6 +352,9 @@ err_disable_rpm:
- 		pm_runtime_disable(dev);
- 	else
- 		sirf_runtime_suspend(dev);
-+err_free_irq:
-+	if (data->wakeup)
-+		free_irq(data->irq, data);
- err_disable_vcc:
- 	if (data->on_off)
- 		regulator_disable(data->vcc);
-@@ -376,6 +375,9 @@ static void sirf_remove(struct serdev_de
- 	else
- 		sirf_runtime_suspend(&serdev->dev);
- 
-+	if (data->wakeup)
-+		free_irq(data->irq, data);
-+
- 	if (data->on_off)
- 		regulator_disable(data->vcc);
- 
++	usb_autopm_put_interface(serial->interface);
++out:
+ 	if (result < 0) {
+ 		dev_err(&serial->interface->dev, "failed to set GPIO value: %d\n",
+ 				result);
 
 
