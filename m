@@ -2,1564 +2,353 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAED6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2548CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572082085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB042087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KLV6Zhqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfCHOly (ORCPT
+        id S1726770AbfCHOom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 09:41:54 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:35677 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726581AbfCHOlx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 09:41:53 -0500
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from lsun@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 8 Mar 2019 16:41:46 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x28Effxc030797;
-        Fri, 8 Mar 2019 09:41:41 -0500
-Received: (from lsun@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x28EfYLs012206;
-        Fri, 8 Mar 2019 09:41:34 -0500
+        Fri, 8 Mar 2019 09:44:42 -0500
+Received: from mail-eopbgr00076.outbound.protection.outlook.com ([40.107.0.76]:36356
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726171AbfCHOol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 09:44:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iwGqGA5kytTmmGf6HRysEXGI4pjqHnBV7opJre2V+4g=;
+ b=KLV6ZhqtSlq3lR6z28Z3yRoczCsh7oOGHIqhXGuElDEopT2pgiVH666zadNgGp/RP3GdtGcclildDq3qKbVrmjsgcVhr6/bv8Ri03h/HGgPRAiyiahofGwdG80jWQJsA4GLHAdQrodrNUg89vIvrL6g2WaQs5146phUf+/IBxsA=
+Received: from AM4PR05MB3220.eurprd05.prod.outlook.com (10.171.188.142) by
+ AM4PR05MB3186.eurprd05.prod.outlook.com (10.171.191.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Fri, 8 Mar 2019 14:44:31 +0000
+Received: from AM4PR05MB3220.eurprd05.prod.outlook.com
+ ([fe80::7073:c417:4dc0:b7b3]) by AM4PR05MB3220.eurprd05.prod.outlook.com
+ ([fe80::7073:c417:4dc0:b7b3%4]) with mapi id 15.20.1686.016; Fri, 8 Mar 2019
+ 14:44:31 +0000
 From:   Liming Sun <lsun@mellanox.com>
-To:     David Woods <dwoods@mellanox.com>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     David Woods <dwoods@mellanox.com>,
         Andy Shevchenko <andy@infradead.org>,
         Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>
-Cc:     Liming Sun <lsun@mellanox.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v11] platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc
-Date:   Fri,  8 Mar 2019 09:41:24 -0500
-Message-Id: <1552056084-12137-1-git-send-email-lsun@mellanox.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH v10] platform/mellanox: Add TmFifo driver for Mellanox
+ BlueField Soc
+Thread-Topic: [PATCH v10] platform/mellanox: Add TmFifo driver for Mellanox
+ BlueField Soc
+Thread-Index: AQHUz32MYsaubm4NZ0Cxf1vyWTPgKKX9Ms0AgAAg1KCABIgAAA==
+Date:   Fri, 8 Mar 2019 14:44:31 +0000
+Message-ID: <AM4PR05MB3220C952CB03BA3B09FFD60CA14D0@AM4PR05MB3220.eurprd05.prod.outlook.com>
 References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1551369083-31122-1-git-send-email-lsun@mellanox.com>
+ <CAHp75VdnAaL0ygbW=8omO4HT2-diV7Dp4twsPsc8GzxtSktpgA@mail.gmail.com>
+ <DB6PR05MB3223AEA3302CB35190916BDBA1730@DB6PR05MB3223.eurprd05.prod.outlook.com>
+In-Reply-To: <DB6PR05MB3223AEA3302CB35190916BDBA1730@DB6PR05MB3223.eurprd05.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [216.156.69.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d0349c9a-3e8f-41f0-4bb4-08d6a3d492d8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM4PR05MB3186;
+x-ms-traffictypediagnostic: AM4PR05MB3186:
+x-microsoft-exchange-diagnostics: =?utf-8?B?MTtBTTRQUjA1TUIzMTg2OzIzOkc1TkRtRDRFTWthL3NvRXF2Wm1sK2VZSXVk?=
+ =?utf-8?B?SEsvY2hQMzBSeTEyWnZ0TFhDd1VLQlYxSlEvc1NDaDBpTkR1bm5UWDM1OFdy?=
+ =?utf-8?B?dytOdHRWdXg1VEFBU0xXcEkwaW9oNWpBNTdDUTFpbG1TcGdwdlNzMEFYQVNE?=
+ =?utf-8?B?VVpxY3ZxN2hvOTdGWnFzMWdXM1lUOURkbUY4RE9MbkpPSERlOVc5N01YS0xS?=
+ =?utf-8?B?cHJGSFRVMmU1WkIra2J3SXF4MDZMZkJXY2ZYWE93d2EySWhzQllObldDWXA0?=
+ =?utf-8?B?TmlNLzRqM0JsVTFFVjdjUk5qVU1mdWFBTXlZUFZmM2dReU9Yc3RWUlJyKzAv?=
+ =?utf-8?B?YW9rM1QzYVZid0dSRDV2N0l1YWszb01UVng3clNnOG5ZQnZ4R1I3VWJwSEdq?=
+ =?utf-8?B?TFg4eU5mZ3RjWUlNNFFZdzJyYkJHRllKa3dyRExNbTBXbmxmWWxQa2xHSnRy?=
+ =?utf-8?B?K084c1NlTHhFdnpoQzFjcFZYQ1gwOWZOck0xcUNSa1crc1g4YVREU2NyVkZI?=
+ =?utf-8?B?WlRtTFFkV2pGVVBhS0lIYnFVRVdMNW5lRmh5N211ZWJjdVF0S05DTnF0SElQ?=
+ =?utf-8?B?YkZsMHJ5eG1OVXNGNGQwTWVRNFdxWUVnRDBrS3hzYVNSemc1SFo1em1MYmNt?=
+ =?utf-8?B?WU1UWEJGbVBwNUNTT2tDbi9zRUZtemJoeSt6cmwrR3JScURRcWQ3Sm1MUVVS?=
+ =?utf-8?B?VmNQczRrSkVUWWJGRFFZWVVHRGxUK3Zjc05za1I4MUZTbVJCOVRkSDBxd1FC?=
+ =?utf-8?B?czNoUDJrV0VFd0RJYWsxblltU1BHYy9qRVRLNm9lbmZiVi8zOTdHdWNtcEtG?=
+ =?utf-8?B?WlIwVG9WMlZJUVo5cVFTY3ZGYjM3M1pmUWlxTjF6cHJTL1ZuRU85cTcwdE5w?=
+ =?utf-8?B?VERhVS9pM3FqSnZFM1hTTlczR3duV0M0QVNNMFpPblUzMTdmU2FOZkViRkF2?=
+ =?utf-8?B?Qm5DZjYwUnhJUWx5YzFtNVVDbTRJYUtDeVh2VkpHak5FYXpCY0JIZFBQL0ph?=
+ =?utf-8?B?c25xYTk2ZC9INDFIZzRXcmpyVWJPZnYyTGJXZUdnRFF3V3h5U1V6VUpCZ045?=
+ =?utf-8?B?NzlyZno1RDZ0RzRPa05qR291NWZpRERYakJxeVB6VlE3UGI0L0pVeWJBZ0Nw?=
+ =?utf-8?B?dzVHZ2FPVlUrUGpvZTlIaXpyY01Md2VPSGVpdlRocUxleUVqcWNtRWpPaVFa?=
+ =?utf-8?B?MzlxcVBmL1R6UmpWMnIzYjg1SGVuV1pOdXpHZHladFNaTld6eWNNNk1TdzFa?=
+ =?utf-8?B?SjBxS29zRU1uMjN6NmhNK0VYL25rQkJlYjhXQ3cxMTJmVkFHOWR5RmVaazZl?=
+ =?utf-8?B?U0pqVzZhQTU1R2lCWEFvWVhSQi9nNFZOTUZxdGxOdGxJbTFUeGdyRVFrWVZ1?=
+ =?utf-8?B?azlyb3g2Wm91dlNNOW9LTHAwV1Y2ZjZMSnA3Z2kzSUlsRlN4WG02M0g1RGt0?=
+ =?utf-8?B?QnQ3YUtlRllYbnpIeTNZS29ONWpFWkV0WUcrQmlTTVFwdE80UHBnaFByVUlZ?=
+ =?utf-8?B?c2FWUzVuRDdhcUpiYk9RYnd5Rkgrc3E3L3BjL3kyRHJSS3hySzdvK0VNTFFq?=
+ =?utf-8?B?QWNub3l5UUZ2M3dHQ3h5SWNwRURQQitYcWY5M0FZUTVCMHVDYm9tdnM1TU9k?=
+ =?utf-8?B?aEU1SzQzZVh4bExOeTN4c01kV2FDekpYZ2pPUzVZdlNqdWxJaEx1ZHpBaDFp?=
+ =?utf-8?B?eHBvQmJRM1ZITFA5ME9pNmNFZzVOdUZnOGdwK2duT3NaTzEwRWREVnFCVU4w?=
+ =?utf-8?B?N1NKNlRLZnBoNDRoR2l3THJ3bklEbXQrcGVKRUNrUjBUTmlkUU1CTlhpZmEy?=
+ =?utf-8?B?RlR4QWNib3lKeFQ5MGo3SFBiNmtLMzFMbEJBeU4xYVNpNFJ4MzZDaEpJOW5I?=
+ =?utf-8?B?RFBCQ1ZvTFFWa25TMndSbnZTUXk0YUI1VzgzWDEzc05TdkdXL1cxSDZpL2pz?=
+ =?utf-8?B?bEdzOG9Ub01Wb0trSXE5YitJeVgrSUNjbUZmalVoQXZNR3phL3JCWUg3U29i?=
+ =?utf-8?Q?Rxiw8G?=
+x-microsoft-antispam-prvs: <AM4PR05MB3186D2236520046F402F3437A14D0@AM4PR05MB3186.eurprd05.prod.outlook.com>
+x-forefront-prvs: 0970508454
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(6029001)(39860400002)(376002)(136003)(366004)(346002)(396003)(51914003)(13464003)(189003)(199004)(4326008)(2906002)(6246003)(86362001)(186003)(102836004)(6506007)(3846002)(6116002)(76176011)(7696005)(14454004)(26005)(478600001)(486006)(52536013)(316002)(6346003)(105586002)(106356001)(446003)(11346002)(14444005)(256004)(476003)(93886005)(25786009)(53936002)(68736007)(6916009)(6436002)(55016002)(54906003)(81166006)(305945005)(9686003)(74316002)(99286004)(33656002)(71190400001)(229853002)(71200400001)(8936002)(53546011)(7736002)(97736004)(30864003)(8676002)(81156014)(5660300002)(66066001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3186;H:AM4PR05MB3220.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lsun@mellanox.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IM07513HLI2u8qeyEDtx5YaYv99scs37BXp8+KwzQsKaqZyDIimopnNNh+ENedZ+W6ui7J7RlWmqaJ82Pxc0TLsdOz/QHi/I/3aPeRtlKV82roTYHGNLq2TJwzBb3XGilFnEoLWqv0dn0GVPGPxe+O8ljFyjIWvQzxfP7F2DKvjRDXIe2o0SMaINWg/tDdmEVvhRbQSkgYg6hhxPbA1oXDsnrC251sWzYmYjZj3KYUe1Ca0JLKGfCGS+dWVFCEvwBJMAbKs9d5M2V0twfyLPDsqTYHkUAAkVrLJYR6Obpn7zf3lHpVDxPIsfdNXVGdh0WmDFX1OHGqCOyZ1VKPfqSMsuWEtUqpomSbiVtP/D46+n1OtfSIAWduT6LhdAoh1u6bLhbqqeD3QgNG8skCGVgH0tVo6lb6n12A8dRAWZuTY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0349c9a-3e8f-41f0-4bb4-08d6a3d492d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2019 14:44:31.0666
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds the TmFifo platform driver for Mellanox BlueField
-Soc. TmFifo is a shared FIFO which enables external host machine
-to exchange data with the SoC via USB or PCIe. The driver is based
-on virtio framework and has console and network access enabled.
-
-Reviewed-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
-v10->v11:
-    Fixes for comments from Andy:
-    - Use GENMASK_ULL() instead of GENMASK() in mlxbf-tmfifo-regs.h
-    - Removed the cpu_to_le64()/le64_to_cpu() conversion since
-      readq()/writeq() already takes care of it.
-    - Remove the "if (irq)" check in mlxbf_tmfifo_disable_irqs().
-    - Add "u32 count" temp variable in mlxbf_tmfifo_get_tx_avail().
-    - Clean up mlxbf_tmfifo_get_cfg_mac(), use ETH_ALEN instead of
-      value 6.
-    - Change the tx_buf to use Linux existing 'struct circ_buf'.
-    Comment not applied:
-    - "Change macro mlxbf_vdev_to_tmfifo() to one line"
-      Couldn't fit in one line with 80 chracters
-    - "Is it appropriate use of devm_* for 'tm_vdev = devm_kzalloc'"
-      This is SoC, the device won't be closed or detached.
-      The only case is when the driver is unloaded. So it appears
-      ok to use devm_kzalloc() since it's allocated during probe()
-      and released during module unload.
-    Comments from Vadim: OK
-v9->v10:
-    Fixes for comments from Andy:
-    - Use devm_ioremap_resource() instead of devm_ioremap().
-    - Use kernel-doc comments.
-    - Keep Makefile contents sorted.
-    - Use same fixed format for offsets.
-    - Use SZ_1K/SZ_32K instead of 1024/23*1024.
-    - Remove unnecessary comments.
-    - Use one style for max numbers.
-    - More comments for mlxbf_tmfifo_vdev and mlxbf_tmfifo_data_64bit.
-    - Use globally defined MTU instead of new definition.
-    - Remove forward declaration of mlxbf_tmfifo_remove().
-    - Remove PAGE_ALIGN() for dma_alloc_coherent)().
-    - Remove the cast of "struct vring *".
-    - Check return result of test_and_set_bit().
-    - Add a macro mlxbt_vdev_to_tmfifo().
-    - Several other minor coding style comments.
-    Comment not applied:
-    - "Shouldn't be rather helper in EFI lib in kernel"
-      Looks like efi.get_variable() is the way I found in the kernel
-      tree.
-    - "this one is not protected anyhow? Potential race condition"
-      In mlxbf_tmfifo_console_tx(), the spin-lock is used to protect the
-      'tx_buf' only, not the FIFO writes. So there is no race condition.
-    - "Is __packed needed in mlxbf_tmfifo_msg_hdr".
-      Yes, it is needed to make sure the structure is 8 bytes.
-    Fixes for comments from Vadim:
-    - Use tab in mlxbf-tmfifo-regs.h
-    - Use kernel-doc comments for struct mlxbf_tmfifo_msg_hdr and
-      mlxbf_tmfifo_irq_info as well.
-    - Use _MAX instead of _CNT in the macro definition to be consistent.
-    - Fix the MODULE_LICENSE.
-    - Use BIT_ULL() instead of BIT().
-    - Remove argument of 'avail' for mlxbf_tmfifo_rxtx_header() and
-      mlxbf_tmfifo_rxtx_word()
-    - Revise logic in mlxbf_tmfifo_rxtx_one_desc() to remove the
-      WARN_ON().
-    - Change "union mlxbf_tmfifo_u64 u" to "union mlxbf_tmfifo_u64 buf"
-      in mlxbf_tmfifo_rxtx_word().
-    - Change date type of vring_change from 'int' to 'bool'.
-    - Remove the blank lines after Signed-off.
-    - Don’t use declaration in the middle.
-    - Make the network header initialization in some more elegant way.
-    - Change label done to mlxbf_tmfifo_desc_done.
-    - Remove some unnecessary comments, and several other misc coding
-      style comments.
-    - Simplify code logic in mlxbf_tmfifo_virtio_notify()
-    New changes by Liming:
-    - Simplify the Rx/Tx function arguments to make it more readable.
-v8->v9:
-    Fixes for comments from Andy:
-    - Use modern devm_xxx() API instead.
-    Fixes for comments from Vadim:
-    - Split the Rx/Tx function into smaller funcitons.
-    - File name, copyright information.
-    - Function and variable name conversion.
-    - Local variable and indent coding styles.
-    - Remove unnecessary 'inline' declarations.
-    - Use devm_xxx() APIs.
-    - Move the efi_char16_t MAC address definition to global.
-    - Fix warnings reported by 'checkpatch --strict'.
-    - Fix warnings reported by 'make CF="-D__CHECK_ENDIAN__"'.
-    - Change select VIRTIO_xxx to depends on  VIRTIO_ in Kconfig.
-    - Merge mlxbf_tmfifo_vdev_tx_buf_push() and
-      mlxbf_tmfifo_vdev_tx_buf_pop().
-    - Add union to avoid casting between __le64 and u64.
-    - Several other misc coding style comments.
-    New changes by Liming:
-    - Removed the DT binding documentation since only ACPI is
-      supported for now by UEFI on the SoC.
-v8: Re-submit under drivers/platform/mellanox for the target-side
-    platform driver only.
-v7: Added host side drivers into the same patch set.
-v5~v6: Coding style fix.
-v1~v4: Initial version for directory drivers/soc/mellanox.
----
- drivers/platform/mellanox/Kconfig             |   12 +-
- drivers/platform/mellanox/Makefile            |    1 +
- drivers/platform/mellanox/mlxbf-tmfifo-regs.h |   63 ++
- drivers/platform/mellanox/mlxbf-tmfifo.c      | 1286 +++++++++++++++++++++++++
- 4 files changed, 1361 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo-regs.h
- create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo.c
-
-diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-index cd8a908..530fe7e 100644
---- a/drivers/platform/mellanox/Kconfig
-+++ b/drivers/platform/mellanox/Kconfig
-@@ -5,7 +5,7 @@
- 
- menuconfig MELLANOX_PLATFORM
- 	bool "Platform support for Mellanox hardware"
--	depends on X86 || ARM || COMPILE_TEST
-+	depends on X86 || ARM || ARM64 || COMPILE_TEST
- 	---help---
- 	  Say Y here to get to see options for platform support for
- 	  Mellanox systems. This option alone does not add any kernel code.
-@@ -34,4 +34,14 @@ config MLXREG_IO
- 	  to system resets operation, system reset causes monitoring and some
- 	  kinds of mux selection.
- 
-+config MLXBF_TMFIFO
-+	tristate "Mellanox BlueField SoC TmFifo platform driver"
-+	depends on ARM64
-+	depends on ACPI
-+	depends on VIRTIO_CONSOLE && VIRTIO_NET
-+	help
-+	  Say y here to enable TmFifo support. The TmFifo driver provides
-+          platform driver support for the TmFifo which supports console
-+          and networking based on the virtio framework.
-+
- endif # MELLANOX_PLATFORM
-diff --git a/drivers/platform/mellanox/Makefile b/drivers/platform/mellanox/Makefile
-index 57074d9c..a229bda1 100644
---- a/drivers/platform/mellanox/Makefile
-+++ b/drivers/platform/mellanox/Makefile
-@@ -3,5 +3,6 @@
- # Makefile for linux/drivers/platform/mellanox
- # Mellanox Platform-Specific Drivers
- #
-+obj-$(CONFIG_MLXBF_TMFIFO)	+= mlxbf-tmfifo.o
- obj-$(CONFIG_MLXREG_HOTPLUG)	+= mlxreg-hotplug.o
- obj-$(CONFIG_MLXREG_IO) += mlxreg-io.o
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo-regs.h b/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
-new file mode 100644
-index 0000000..e4f0d2e
---- /dev/null
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019, Mellanox Technologies. All rights reserved.
-+ */
-+
-+#ifndef __MLXBF_TMFIFO_REGS_H__
-+#define __MLXBF_TMFIFO_REGS_H__
-+
-+#include <linux/types.h>
-+#include <linux/bits.h>
-+
-+#define MLXBF_TMFIFO_TX_DATA				0x00
-+#define MLXBF_TMFIFO_TX_STS				0x08
-+#define MLXBF_TMFIFO_TX_STS__LENGTH			0x0001
-+#define MLXBF_TMFIFO_TX_STS__COUNT_SHIFT		0
-+#define MLXBF_TMFIFO_TX_STS__COUNT_WIDTH		9
-+#define MLXBF_TMFIFO_TX_STS__COUNT_RESET_VAL		0
-+#define MLXBF_TMFIFO_TX_STS__COUNT_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_TX_STS__COUNT_MASK			GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_TX_CTL				0x10
-+#define MLXBF_TMFIFO_TX_CTL__LENGTH			0x0001
-+#define MLXBF_TMFIFO_TX_CTL__LWM_SHIFT			0
-+#define MLXBF_TMFIFO_TX_CTL__LWM_WIDTH			8
-+#define MLXBF_TMFIFO_TX_CTL__LWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_TX_CTL__LWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_TX_CTL__LWM_MASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_TX_CTL__HWM_SHIFT			8
-+#define MLXBF_TMFIFO_TX_CTL__HWM_WIDTH			8
-+#define MLXBF_TMFIFO_TX_CTL__HWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_TX_CTL__HWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_TX_CTL__HWM_MASK			GENMASK_ULL(15, 8)
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_SHIFT		32
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_WIDTH		9
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_RESET_VAL	256
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_MASK		GENMASK_ULL(40, 32)
-+#define MLXBF_TMFIFO_RX_DATA				0x00
-+#define MLXBF_TMFIFO_RX_STS				0x08
-+#define MLXBF_TMFIFO_RX_STS__LENGTH			0x0001
-+#define MLXBF_TMFIFO_RX_STS__COUNT_SHIFT		0
-+#define MLXBF_TMFIFO_RX_STS__COUNT_WIDTH		9
-+#define MLXBF_TMFIFO_RX_STS__COUNT_RESET_VAL		0
-+#define MLXBF_TMFIFO_RX_STS__COUNT_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_RX_STS__COUNT_MASK			GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_RX_CTL				0x10
-+#define MLXBF_TMFIFO_RX_CTL__LENGTH			0x0001
-+#define MLXBF_TMFIFO_RX_CTL__LWM_SHIFT			0
-+#define MLXBF_TMFIFO_RX_CTL__LWM_WIDTH			8
-+#define MLXBF_TMFIFO_RX_CTL__LWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_RX_CTL__LWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_RX_CTL__LWM_MASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_RX_CTL__HWM_SHIFT			8
-+#define MLXBF_TMFIFO_RX_CTL__HWM_WIDTH			8
-+#define MLXBF_TMFIFO_RX_CTL__HWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_RX_CTL__HWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_RX_CTL__HWM_MASK			GENMASK_ULL(15, 8)
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_SHIFT		32
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_WIDTH		9
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_RESET_VAL	256
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_MASK		GENMASK_ULL(40, 32)
-+
-+#endif /* !defined(__MLXBF_TMFIFO_REGS_H__) */
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-new file mode 100644
-index 0000000..0a31ffa
---- /dev/null
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -0,0 +1,1286 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Mellanox BlueField SoC TmFifo driver
-+ *
-+ * Copyright (C) 2019 Mellanox Technologies
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/circ_buf.h>
-+#include <linux/efi.h>
-+#include <linux/irq.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_console.h>
-+#include <linux/virtio_ids.h>
-+#include <linux/virtio_net.h>
-+#include <linux/virtio_ring.h>
-+
-+#include "mlxbf-tmfifo-regs.h"
-+
-+/* Vring size. */
-+#define MLXBF_TMFIFO_VRING_SIZE			SZ_1K
-+
-+/* Console Tx buffer size. */
-+#define MLXBF_TMFIFO_CON_TX_BUF_SIZE		SZ_32K
-+
-+/* Console Tx buffer reserved space. */
-+#define MLXBF_TMFIFO_CON_TX_BUF_RSV_SIZE	8
-+
-+/* House-keeping timer interval. */
-+#define MLXBF_TMFIFO_TIMER_INTERVAL		(HZ / 10)
-+
-+/* Virtual devices sharing the TM FIFO. */
-+#define MLXBF_TMFIFO_VDEV_MAX		(VIRTIO_ID_CONSOLE + 1)
-+
-+/*
-+ * Reserve 1/16 of TmFifo space, so console messages are not starved by
-+ * the networking traffic.
-+ */
-+#define MLXBF_TMFIFO_RESERVE_RATIO		16
-+
-+/* Message with data needs at least two words (for header & data). */
-+#define MLXBF_TMFIFO_DATA_MIN_WORDS		2
-+
-+struct mlxbf_tmfifo;
-+
-+/**
-+ * mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
-+ * @va: virtual address of the ring
-+ * @dma: dma address of the ring
-+ * @vq: pointer to the virtio virtqueue
-+ * @desc: current descriptor of the pending packet
-+ * @desc_head: head descriptor of the pending packet
-+ * @cur_len: processed length of the current descriptor
-+ * @rem_len: remaining length of the pending packet
-+ * @pkt_len: total length of the pending packet
-+ * @next_avail: next avail descriptor id
-+ * @num: vring size (number of descriptors)
-+ * @align: vring alignment size
-+ * @index: vring index
-+ * @vdev_id: vring virtio id (VIRTIO_ID_xxx)
-+ * @fifo: pointer to the tmfifo structure
-+ */
-+struct mlxbf_tmfifo_vring {
-+	void *va;
-+	dma_addr_t dma;
-+	struct virtqueue *vq;
-+	struct vring_desc *desc;
-+	struct vring_desc *desc_head;
-+	int cur_len;
-+	int rem_len;
-+	u32 pkt_len;
-+	u16 next_avail;
-+	int num;
-+	int align;
-+	int index;
-+	int vdev_id;
-+	struct mlxbf_tmfifo *fifo;
-+};
-+
-+/* Interrupt types. */
-+enum {
-+	MLXBF_TM_RX_LWM_IRQ,
-+	MLXBF_TM_RX_HWM_IRQ,
-+	MLXBF_TM_TX_LWM_IRQ,
-+	MLXBF_TM_TX_HWM_IRQ,
-+	MLXBF_TM_MAX_IRQ
-+};
-+
-+/* Ring types (Rx & Tx). */
-+enum {
-+	MLXBF_TMFIFO_VRING_RX,
-+	MLXBF_TMFIFO_VRING_TX,
-+	MLXBF_TMFIFO_VRING_MAX
-+};
-+
-+/**
-+ * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
-+ * @vdev: virtio device, in which the vdev.id.device field has the
-+ *        VIRTIO_ID_xxx id to distinguish the virtual device.
-+ * @status: status of the device
-+ * @features: supported features of the device
-+ * @vrings: array of tmfifo vrings of this device
-+ * @config.cons: virtual console config -
-+ *               select if vdev.id.device is VIRTIO_ID_CONSOLE
-+ * @config.net: virtual network config -
-+ *              select if vdev.id.device is VIRTIO_ID_NET
-+ * @tx_buf: tx buffer used to buffer data before writing into the FIFO
-+ */
-+struct mlxbf_tmfifo_vdev {
-+	struct virtio_device vdev;
-+	u8 status;
-+	u64 features;
-+	struct mlxbf_tmfifo_vring vrings[MLXBF_TMFIFO_VRING_MAX];
-+	union {
-+		struct virtio_console_config cons;
-+		struct virtio_net_config net;
-+	} config;
-+	struct circ_buf tx_buf;
-+};
-+
-+/**
-+ * mlxbf_tmfifo_irq_info - Structure of the interrupt information
-+ * @fifo: pointer to the tmfifo structure
-+ * @irq: interrupt number
-+ * @index: index into the interrupt array
-+ */
-+struct mlxbf_tmfifo_irq_info {
-+	struct mlxbf_tmfifo *fifo;
-+	int irq;
-+	int index;
-+};
-+
-+/**
-+ * mlxbf_tmfifo - Structure of the TmFifo
-+ * @vdev: array of the virtual devices running over the TmFifo
-+ * @pdev: platform device
-+ * @lock: lock to protect the TmFifo access
-+ * @rx_base: mapped register base address for the Rx fifo
-+ * @tx_base: mapped register base address for the Tx fifo
-+ * @rx_fifo_size: number of entries of the Rx fifo
-+ * @tx_fifo_size: number of entries of the Tx fifo
-+ * @pend_events: pending bits for deferred events
-+ * @irq_info: interrupt information
-+ * @work: work struct for deferred process
-+ * @timer: background timer
-+ * @vring: Tx/Rx ring
-+ * @spin_lock: spin lock
-+ * @is_ready: ready flag
-+ */
-+struct mlxbf_tmfifo {
-+	struct mlxbf_tmfifo_vdev *vdev[MLXBF_TMFIFO_VDEV_MAX];
-+	struct platform_device *pdev;
-+	struct mutex lock;		/* TmFifo lock */
-+	void __iomem *rx_base;
-+	void __iomem *tx_base;
-+	int rx_fifo_size;
-+	int tx_fifo_size;
-+	unsigned long pend_events;
-+	struct mlxbf_tmfifo_irq_info irq_info[MLXBF_TM_MAX_IRQ];
-+	struct work_struct work;
-+	struct timer_list timer;
-+	struct mlxbf_tmfifo_vring *vring[2];
-+	spinlock_t spin_lock;		/* spin lock */
-+	bool is_ready;
-+};
-+
-+/**
-+ * mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
-+ * @type: message type
-+ * @len: payload length
-+ * @u: 64-bit union data
-+ */
-+union mlxbf_tmfifo_msg_hdr {
-+	struct {
-+		u8 type;
-+		__be16 len;
-+		u8 unused[5];
-+	} __packed;
-+	u64 data;
-+};
-+
-+/*
-+ * Default MAC.
-+ * This MAC address will be read from EFI persistent variable if configured.
-+ * It can also be reconfigured with standard Linux tools.
-+ */
-+static u8 mlxbf_tmfifo_net_default_mac[ETH_ALEN] = {
-+	0x00, 0x1A, 0xCA, 0xFF, 0xFF, 0x01};
-+
-+/* EFI variable name of the MAC address. */
-+static efi_char16_t mlxbf_tmfifo_efi_name[] = L"RshimMacAddr";
-+
-+/* Maximum L2 header length. */
-+#define MLXBF_TMFIFO_NET_L2_OVERHEAD	36
-+
-+/* Supported virtio-net features. */
-+#define MLXBF_TMFIFO_NET_FEATURES	(BIT_ULL(VIRTIO_NET_F_MTU) | \
-+					 BIT_ULL(VIRTIO_NET_F_STATUS) | \
-+					 BIT_ULL(VIRTIO_NET_F_MAC))
-+
-+#define mlxbf_vdev_to_tmfifo(dev)	\
-+	container_of(dev, struct mlxbf_tmfifo_vdev, vdev)
-+
-+/* Allocate vrings for the fifo. */
-+static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
-+				     struct mlxbf_tmfifo_vdev *tm_vdev)
-+{
-+	struct mlxbf_tmfifo_vring *vring;
-+	struct device *dev;
-+	dma_addr_t dma;
-+	int i, size;
-+	void *va;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+		vring->fifo = fifo;
-+		vring->num = MLXBF_TMFIFO_VRING_SIZE;
-+		vring->align = SMP_CACHE_BYTES;
-+		vring->index = i;
-+		vring->vdev_id = tm_vdev->vdev.id.device;
-+		dev = &tm_vdev->vdev.dev;
-+
-+		size = vring_size(vring->num, vring->align);
-+		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
-+		if (!va) {
-+			dev_err(dev->parent, "dma_alloc_coherent failed\n");
-+			return -ENOMEM;
-+		}
-+
-+		vring->va = va;
-+		vring->dma = dma;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Free vrings of the fifo device. */
-+static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
-+				     struct mlxbf_tmfifo_vdev *tm_vdev)
-+{
-+	struct mlxbf_tmfifo_vring *vring;
-+	int i, size;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+		if (vring->va) {
-+			size = vring_size(vring->num, vring->align);
-+			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
-+					  vring->va, vring->dma);
-+			vring->va = NULL;
-+			if (vring->vq) {
-+				vring_del_virtqueue(vring->vq);
-+				vring->vq = NULL;
-+			}
-+		}
-+	}
-+}
-+
-+/* Disable interrupts of the fifo device. */
-+static void mlxbf_tmfifo_disable_irqs(struct mlxbf_tmfifo *fifo)
-+{
-+	int i, irq;
-+
-+	for (i = 0; i < MLXBF_TM_MAX_IRQ; i++) {
-+		irq = fifo->irq_info[i].irq;
-+		fifo->irq_info[i].irq = 0;
-+		disable_irq(irq);
-+	}
-+}
-+
-+/* Interrupt handler. */
-+static irqreturn_t mlxbf_tmfifo_irq_handler(int irq, void *arg)
-+{
-+	struct mlxbf_tmfifo_irq_info *irq_info = arg;
-+
-+	if (irq_info->index < MLXBF_TM_MAX_IRQ &&
-+	    !test_and_set_bit(irq_info->index, &irq_info->fifo->pend_events))
-+		schedule_work(&irq_info->fifo->work);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Get the next packet descriptor from the vring. */
-+static struct vring_desc *
-+mlxbf_tmfifo_get_next_desc(struct mlxbf_tmfifo_vring *vring)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	unsigned int idx, head;
-+
-+	if (vring->next_avail == virtio16_to_cpu(vdev, vr->avail->idx))
-+		return NULL;
-+
-+	idx = vring->next_avail % vr->num;
-+	head = virtio16_to_cpu(vdev, vr->avail->ring[idx]);
-+	if (WARN_ON(head >= vr->num))
-+		return NULL;
-+
-+	vring->next_avail++;
-+
-+	return &vr->desc[head];
-+}
-+
-+/* Release virtio descriptor. */
-+static void mlxbf_tmfifo_release_desc(struct mlxbf_tmfifo_vring *vring,
-+				      struct vring_desc *desc, u32 len)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	u16 idx, vr_idx;
-+
-+	vr_idx = virtio16_to_cpu(vdev, vr->used->idx);
-+	idx = vr_idx % vr->num;
-+	vr->used->ring[idx].id = cpu_to_virtio32(vdev, desc - vr->desc);
-+	vr->used->ring[idx].len = cpu_to_virtio32(vdev, len);
-+
-+	/*
-+	 * Virtio could poll and check the 'idx' to decide whether the desc is
-+	 * done or not. Add a memory barrier here to make sure the update above
-+	 * completes before updating the idx.
-+	 */
-+	mb();
-+	vr->used->idx = cpu_to_virtio16(vdev, vr_idx + 1);
-+}
-+
-+/* Get the total length of the descriptor chain. */
-+static u32 mlxbf_tmfifo_get_pkt_len(struct mlxbf_tmfifo_vring *vring,
-+				    struct vring_desc *desc)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	u32 len = 0, idx;
-+
-+	while (desc) {
-+		len += virtio32_to_cpu(vdev, desc->len);
-+		if (!(virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT))
-+			break;
-+		idx = virtio16_to_cpu(vdev, desc->next);
-+		desc = &vr->desc[idx];
-+	}
-+
-+	return len;
-+}
-+
-+static void mlxbf_tmfifo_release_pending_pkt(struct mlxbf_tmfifo_vring *vring)
-+{
-+	struct vring_desc *desc_head;
-+	u32 len = 0;
-+
-+	if (vring->desc_head) {
-+		desc_head = vring->desc_head;
-+		len = vring->pkt_len;
-+	} else {
-+		desc_head = mlxbf_tmfifo_get_next_desc(vring);
-+		if (desc_head)
-+			len = mlxbf_tmfifo_get_pkt_len(vring, desc_head);
-+	}
-+
-+	if (desc_head)
-+		mlxbf_tmfifo_release_desc(vring, desc_head, len);
-+
-+	vring->pkt_len = 0;
-+	vring->desc = NULL;
-+	vring->desc_head = NULL;
-+}
-+
-+static void mlxbf_tmfifo_init_net_desc(struct mlxbf_tmfifo_vring *vring,
-+				       struct vring_desc *desc, bool is_rx)
-+{
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	struct virtio_net_hdr *net_hdr;
-+
-+	net_hdr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+	memset(net_hdr, 0, sizeof(*net_hdr));
-+}
-+
-+/* Get and initialize the next packet. */
-+static struct vring_desc *
-+mlxbf_tmfifo_get_next_pkt(struct mlxbf_tmfifo_vring *vring, bool is_rx)
-+{
-+	struct vring_desc *desc;
-+
-+	desc = mlxbf_tmfifo_get_next_desc(vring);
-+	if (desc && is_rx && vring->vdev_id == VIRTIO_ID_NET)
-+		mlxbf_tmfifo_init_net_desc(vring, desc, is_rx);
-+
-+	vring->desc_head = desc;
-+	vring->desc = desc;
-+
-+	return desc;
-+}
-+
-+/* House-keeping timer. */
-+static void mlxbf_tmfifo_timer(struct timer_list *arg)
-+{
-+	struct mlxbf_tmfifo *fifo = container_of(arg, struct mlxbf_tmfifo,
-+						 timer);
-+	int more;
-+
-+	more = !test_and_set_bit(MLXBF_TM_RX_HWM_IRQ, &fifo->pend_events) ||
-+		    !test_and_set_bit(MLXBF_TM_TX_LWM_IRQ, &fifo->pend_events);
-+
-+	if (more)
-+		schedule_work(&fifo->work);
-+
-+	mod_timer(&fifo->timer, jiffies + MLXBF_TMFIFO_TIMER_INTERVAL);
-+}
-+
-+/* Copy one console packet into the output buffer. */
-+static void mlxbf_tmfifo_console_output_one(struct mlxbf_tmfifo_vdev *cons,
-+					    struct mlxbf_tmfifo_vring *vring,
-+					    struct vring_desc *desc)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = &cons->vdev;
-+	u32 len, idx, seg;
-+	void *addr;
-+
-+	while (desc) {
-+		addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+		len = virtio32_to_cpu(vdev, desc->len);
-+
-+		seg = CIRC_SPACE_TO_END(cons->tx_buf.head, cons->tx_buf.tail,
-+					MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+		if (len <= seg) {
-+			memcpy(cons->tx_buf.buf + cons->tx_buf.head, addr, len);
-+		} else {
-+			memcpy(cons->tx_buf.buf + cons->tx_buf.head, addr, seg);
-+			addr += seg;
-+			memcpy(cons->tx_buf.buf, addr, len - seg);
-+		}
-+		cons->tx_buf.head = (cons->tx_buf.head + len) %
-+			MLXBF_TMFIFO_CON_TX_BUF_SIZE;
-+
-+		if (!(virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT))
-+			break;
-+		idx = virtio16_to_cpu(vdev, desc->next);
-+		desc = &vr->desc[idx];
-+	}
-+}
-+
-+/* Copy console data into the output buffer. */
-+static void mlxbf_tmfifo_console_output(struct mlxbf_tmfifo_vdev *cons,
-+					struct mlxbf_tmfifo_vring *vring)
-+{
-+	struct vring_desc *desc;
-+	u32 len, avail;
-+
-+	desc = mlxbf_tmfifo_get_next_desc(vring);
-+	while (desc) {
-+		/* Release the packet if not enough space. */
-+		len = mlxbf_tmfifo_get_pkt_len(vring, desc);
-+		avail = CIRC_SPACE(cons->tx_buf.head, cons->tx_buf.tail,
-+				   MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+		if (len + MLXBF_TMFIFO_CON_TX_BUF_RSV_SIZE > avail) {
-+			mlxbf_tmfifo_release_desc(vring, desc, len);
-+			break;
-+		}
-+
-+		mlxbf_tmfifo_console_output_one(cons, vring, desc);
-+		mlxbf_tmfifo_release_desc(vring, desc, len);
-+		desc = mlxbf_tmfifo_get_next_desc(vring);
-+	}
-+}
-+
-+/* Get the number of available words in Rx FIFO for receiving. */
-+static int mlxbf_tmfifo_get_rx_avail(struct mlxbf_tmfifo *fifo)
-+{
-+	u64 sts;
-+
-+	sts = readq(fifo->rx_base + MLXBF_TMFIFO_RX_STS);
-+	return FIELD_GET(MLXBF_TMFIFO_RX_STS__COUNT_MASK, sts);
-+}
-+
-+/* Get the number of available words in the TmFifo for sending. */
-+static int mlxbf_tmfifo_get_tx_avail(struct mlxbf_tmfifo *fifo, int vdev_id)
-+{
-+	int tx_reserve;
-+	u32 count;
-+	u64 sts;
-+
-+	/* Reserve some room in FIFO for console messages. */
-+	if (vdev_id == VIRTIO_ID_NET)
-+		tx_reserve = fifo->tx_fifo_size / MLXBF_TMFIFO_RESERVE_RATIO;
-+	else
-+		tx_reserve = 1;
-+
-+	sts = readq(fifo->tx_base + MLXBF_TMFIFO_TX_STS);
-+	count = FIELD_GET(MLXBF_TMFIFO_TX_STS__COUNT_MASK, sts);
-+	return fifo->tx_fifo_size - tx_reserve - count;
-+}
-+
-+/* Console Tx (move data from the output buffer into the TmFifo). */
-+static void mlxbf_tmfifo_console_tx(struct mlxbf_tmfifo *fifo, int avail)
-+{
-+	union mlxbf_tmfifo_msg_hdr hdr;
-+	struct mlxbf_tmfifo_vdev *cons;
-+	unsigned long flags;
-+	int size, seg;
-+	void *addr;
-+	u64 data;
-+
-+	/* Return if not enough space available. */
-+	if (avail < MLXBF_TMFIFO_DATA_MIN_WORDS)
-+		return;
-+
-+	cons = fifo->vdev[VIRTIO_ID_CONSOLE];
-+	if (!cons || !cons->tx_buf.buf)
-+		return;
-+
-+	/* Return if no data to send. */
-+	size = CIRC_CNT(cons->tx_buf.head, cons->tx_buf.tail,
-+			MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+	if (size == 0)
-+		return;
-+
-+	/* Adjust the size to available space. */
-+	if (size + sizeof(hdr) > avail * sizeof(u64))
-+		size = avail * sizeof(u64) - sizeof(hdr);
-+
-+	/* Write header. */
-+	hdr.data = 0;
-+	hdr.type = VIRTIO_ID_CONSOLE;
-+	hdr.len = htons(size);
-+	writeq(hdr.data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+
-+	/* Use spin-lock to protect the 'cons->tx_buf'. */
-+	spin_lock_irqsave(&fifo->spin_lock, flags);
-+
-+	while (size > 0) {
-+		addr = cons->tx_buf.buf + cons->tx_buf.tail;
-+
-+		seg = CIRC_CNT_TO_END(cons->tx_buf.head, cons->tx_buf.tail,
-+				      MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+		if (seg >= sizeof(u64)) {
-+			memcpy(&data, addr, sizeof(u64));
-+		} else {
-+			memcpy(&data, addr, seg);
-+			memcpy((u8 *)&data + seg, cons->tx_buf.buf,
-+			       sizeof(u64) - seg);
-+		}
-+		writeq(data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+
-+		if (size >= sizeof(u64)) {
-+			cons->tx_buf.tail = (cons->tx_buf.tail + sizeof(u64)) %
-+				MLXBF_TMFIFO_CON_TX_BUF_SIZE;
-+			size -= sizeof(u64);
-+		} else {
-+			cons->tx_buf.tail = (cons->tx_buf.tail + size) %
-+				MLXBF_TMFIFO_CON_TX_BUF_SIZE;
-+			size = 0;
-+		}
-+	}
-+
-+	spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+}
-+
-+/* Rx/Tx one word in the descriptor buffer. */
-+static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
-+				   struct vring_desc *desc,
-+				   bool is_rx, int len)
-+{
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	struct mlxbf_tmfifo *fifo = vring->fifo;
-+	void *addr;
-+	u64 data;
-+
-+	/* Get the buffer address of this desc. */
-+	addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+
-+	/* Read a word from FIFO for Rx. */
-+	if (is_rx)
-+		data = readq(fifo->rx_base + MLXBF_TMFIFO_RX_DATA);
-+
-+	if (vring->cur_len + sizeof(u64) <= len) {
-+		/* The whole word. */
-+		if (is_rx)
-+			memcpy(addr + vring->cur_len, &data, sizeof(u64));
-+		else
-+			memcpy(&data, addr + vring->cur_len, sizeof(u64));
-+		vring->cur_len += sizeof(u64);
-+	} else {
-+		/* Leftover bytes. */
-+		if (is_rx)
-+			memcpy(addr + vring->cur_len, &data,
-+			       len - vring->cur_len);
-+		else
-+			memcpy(&data, addr + vring->cur_len,
-+			       len - vring->cur_len);
-+		vring->cur_len = len;
-+	}
-+
-+	/* Write the word into FIFO for Tx. */
-+	if (!is_rx)
-+		writeq(data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+}
-+
-+/*
-+ * Rx/Tx packet header.
-+ *
-+ * In Rx case, the packet might be found to belong to a different vring since
-+ * the TmFifo is shared by different services. In such case, the 'vring_change'
-+ * flag is set.
-+ */
-+static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
-+				     struct vring_desc *desc,
-+				     bool is_rx, bool *vring_change)
-+{
-+	struct mlxbf_tmfifo *fifo = vring->fifo;
-+	struct virtio_net_config *config;
-+	union mlxbf_tmfifo_msg_hdr hdr;
-+	int vdev_id, hdr_len;
-+
-+	/* Read/Write packet header. */
-+	if (is_rx) {
-+		/* Drain one word from the FIFO. */
-+		hdr.data = readq(fifo->rx_base + MLXBF_TMFIFO_RX_DATA);
-+
-+		/* Skip the length 0 packets (keepalive). */
-+		if (hdr.len == 0)
-+			return;
-+
-+		/* Check packet type. */
-+		if (hdr.type == VIRTIO_ID_NET) {
-+			vdev_id = VIRTIO_ID_NET;
-+			hdr_len = sizeof(struct virtio_net_hdr);
-+			config = &fifo->vdev[vdev_id]->config.net;
-+			if (ntohs(hdr.len) > config->mtu +
-+			    MLXBF_TMFIFO_NET_L2_OVERHEAD)
-+				return;
-+		} else {
-+			vdev_id = VIRTIO_ID_CONSOLE;
-+			hdr_len = 0;
-+		}
-+
-+		/*
-+		 * Check whether the new packet still belongs to this vring.
-+		 * If not, update the pkt_len of the new vring.
-+		 */
-+		if (vdev_id != vring->vdev_id) {
-+			struct mlxbf_tmfifo_vdev *tm_dev2 = fifo->vdev[vdev_id];
-+
-+			if (!tm_dev2)
-+				return;
-+			vring->desc = desc;
-+			vring = &tm_dev2->vrings[MLXBF_TMFIFO_VRING_RX];
-+			*vring_change = true;
-+		}
-+		vring->pkt_len = ntohs(hdr.len) + hdr_len;
-+	} else {
-+		/* Network virtio has an extra header. */
-+		hdr_len = (vring->vdev_id == VIRTIO_ID_NET) ?
-+			   sizeof(struct virtio_net_hdr) : 0;
-+		vring->pkt_len = mlxbf_tmfifo_get_pkt_len(vring, desc);
-+		hdr.data = 0;
-+		hdr.type = (vring->vdev_id == VIRTIO_ID_NET) ?
-+			    VIRTIO_ID_NET : VIRTIO_ID_CONSOLE;
-+		hdr.len = htons(vring->pkt_len - hdr_len);
-+		writeq(hdr.data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+	}
-+
-+	vring->cur_len = hdr_len;
-+	vring->rem_len = vring->pkt_len;
-+	fifo->vring[is_rx] = vring;
-+}
-+
-+/*
-+ * Rx/Tx one descriptor.
-+ *
-+ * Return true to indicate more data available.
-+ */
-+static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
-+				       bool is_rx, int *avail)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct mlxbf_tmfifo *fifo = vring->fifo;
-+	struct virtio_device *vdev;
-+	bool vring_change = false;
-+	struct vring_desc *desc;
-+	unsigned long flags;
-+	u32 len, idx;
-+
-+	vdev = &fifo->vdev[vring->vdev_id]->vdev;
-+
-+	/* Get the descriptor of the next packet. */
-+	if (!vring->desc) {
-+		desc = mlxbf_tmfifo_get_next_pkt(vring, is_rx);
-+		if (!desc)
-+			return false;
-+	} else {
-+		desc = vring->desc;
-+	}
-+
-+	/* Beginning of a packet. Start to Rx/Tx packet header. */
-+	if (vring->pkt_len == 0) {
-+		mlxbf_tmfifo_rxtx_header(vring, desc, is_rx, &vring_change);
-+		(*avail)--;
-+
-+		/* Return if new packet is for another ring. */
-+		if (vring_change)
-+			return false;
-+		goto mlxbf_tmfifo_desc_done;
-+	}
-+
-+	/* Get the length of this desc. */
-+	len = virtio32_to_cpu(vdev, desc->len);
-+	if (len > vring->rem_len)
-+		len = vring->rem_len;
-+
-+	/* Rx/Tx one word (8 bytes) if not done. */
-+	if (vring->cur_len < len) {
-+		mlxbf_tmfifo_rxtx_word(vring, desc, is_rx, len);
-+		(*avail)--;
-+	}
-+
-+	/* Check again whether it's done. */
-+	if (vring->cur_len == len) {
-+		vring->cur_len = 0;
-+		vring->rem_len -= len;
-+
-+		/* Get the next desc on the chain. */
-+		if (vring->rem_len > 0 &&
-+		    (virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT)) {
-+			idx = virtio16_to_cpu(vdev, desc->next);
-+			desc = &vr->desc[idx];
-+			goto mlxbf_tmfifo_desc_done;
-+		}
-+
-+		/* Done and release the pending packet. */
-+		mlxbf_tmfifo_release_pending_pkt(vring);
-+		desc = NULL;
-+		fifo->vring[is_rx] = NULL;
-+
-+		/* Notify upper layer that packet is done. */
-+		spin_lock_irqsave(&fifo->spin_lock, flags);
-+		vring_interrupt(0, vring->vq);
-+		spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+	}
-+
-+mlxbf_tmfifo_desc_done:
-+	/* Save the current desc. */
-+	vring->desc = desc;
-+
-+	return true;
-+}
-+
-+/* Rx & Tx processing of a queue. */
-+static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
-+{
-+	int avail = 0, devid = vring->vdev_id;
-+	struct mlxbf_tmfifo *fifo;
-+	bool more;
-+
-+	fifo = vring->fifo;
-+
-+	/* Return if vdev is not ready. */
-+	if (!fifo->vdev[devid])
-+		return;
-+
-+	/* Return if another vring is running. */
-+	if (fifo->vring[is_rx] && fifo->vring[is_rx] != vring)
-+		return;
-+
-+	/* Only handle console and network for now. */
-+	if (WARN_ON(devid != VIRTIO_ID_NET && devid != VIRTIO_ID_CONSOLE))
-+		return;
-+
-+	do {
-+		/* Get available FIFO space. */
-+		if (avail == 0) {
-+			if (is_rx)
-+				avail = mlxbf_tmfifo_get_rx_avail(fifo);
-+			else
-+				avail = mlxbf_tmfifo_get_tx_avail(fifo, devid);
-+			if (avail <= 0)
-+				break;
-+		}
-+
-+		/* Console output always comes from the Tx buffer. */
-+		if (!is_rx && devid == VIRTIO_ID_CONSOLE) {
-+			mlxbf_tmfifo_console_tx(fifo, avail);
-+			break;
-+		}
-+
-+		/* Handle one descriptor. */
-+		more = mlxbf_tmfifo_rxtx_one_desc(vring, is_rx, &avail);
-+	} while (more);
-+}
-+
-+/* Handle Rx or Tx queues. */
-+static void mlxbf_tmfifo_work_rxtx(struct mlxbf_tmfifo *fifo, int queue_id,
-+				   int irq_id, bool is_rx)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+	struct mlxbf_tmfifo_vring *vring;
-+	int i;
-+
-+	if (!test_and_clear_bit(irq_id, &fifo->pend_events) ||
-+	    !fifo->irq_info[irq_id].irq)
-+		return;
-+
-+	for (i = 0; i < MLXBF_TMFIFO_VDEV_MAX; i++) {
-+		tm_vdev = fifo->vdev[i];
-+		if (tm_vdev) {
-+			vring = &tm_vdev->vrings[queue_id];
-+			if (vring->vq)
-+				mlxbf_tmfifo_rxtx(vring, is_rx);
-+		}
-+	}
-+}
-+
-+/* Work handler for Rx and Tx case. */
-+static void mlxbf_tmfifo_work_handler(struct work_struct *work)
-+{
-+	struct mlxbf_tmfifo *fifo;
-+
-+	fifo = container_of(work, struct mlxbf_tmfifo, work);
-+	if (!fifo->is_ready)
-+		return;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	/* Tx (Send data to the TmFifo). */
-+	mlxbf_tmfifo_work_rxtx(fifo, MLXBF_TMFIFO_VRING_TX,
-+			       MLXBF_TM_TX_LWM_IRQ, false);
-+
-+	/* Rx (Receive data from the TmFifo). */
-+	mlxbf_tmfifo_work_rxtx(fifo, MLXBF_TMFIFO_VRING_RX,
-+			       MLXBF_TM_RX_HWM_IRQ, true);
-+
-+	mutex_unlock(&fifo->lock);
-+}
-+
-+/* The notify function is called when new buffers are posted. */
-+static bool mlxbf_tmfifo_virtio_notify(struct virtqueue *vq)
-+{
-+	struct mlxbf_tmfifo_vring *vring = vq->priv;
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+	struct mlxbf_tmfifo *fifo;
-+	unsigned long flags;
-+
-+	fifo = vring->fifo;
-+
-+	/*
-+	 * Virtio maintains vrings in pairs, even number ring for Rx
-+	 * and odd number ring for Tx.
-+	 */
-+	if (!(vring->index & BIT(0))) {
-+		if (test_and_set_bit(MLXBF_TM_RX_HWM_IRQ, &fifo->pend_events))
-+			return true;
-+	} else {
-+		/*
-+		 * Console could make blocking call with interrupts disabled.
-+		 * In such case, the vring needs to be served right away. For
-+		 * other cases, just set the TX LWM bit to start Tx in the
-+		 * worker handler.
-+		 */
-+		if (vring->vdev_id == VIRTIO_ID_CONSOLE) {
-+			spin_lock_irqsave(&fifo->spin_lock, flags);
-+			tm_vdev = fifo->vdev[VIRTIO_ID_CONSOLE];
-+			mlxbf_tmfifo_console_output(tm_vdev, vring);
-+			spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+		} else if (test_and_set_bit(MLXBF_TM_TX_LWM_IRQ,
-+					    &fifo->pend_events)) {
-+			return true;
-+		}
-+	}
-+
-+	schedule_work(&fifo->work);
-+
-+	return true;
-+}
-+
-+/* Get the array of feature bits for this device. */
-+static u64 mlxbf_tmfifo_virtio_get_features(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	return tm_vdev->features;
-+}
-+
-+/* Confirm device features to use. */
-+static int mlxbf_tmfifo_virtio_finalize_features(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	tm_vdev->features = vdev->features;
-+
-+	return 0;
-+}
-+
-+/* Free virtqueues found by find_vqs(). */
-+static void mlxbf_tmfifo_virtio_del_vqs(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+	struct mlxbf_tmfifo_vring *vring;
-+	struct virtqueue *vq;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+
-+		/* Release the pending packet. */
-+		if (vring->desc)
-+			mlxbf_tmfifo_release_pending_pkt(vring);
-+		vq = vring->vq;
-+		if (vq) {
-+			vring->vq = NULL;
-+			vring_del_virtqueue(vq);
-+		}
-+	}
-+}
-+
-+/* Create and initialize the virtual queues. */
-+static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
-+					unsigned int nvqs,
-+					struct virtqueue *vqs[],
-+					vq_callback_t *callbacks[],
-+					const char * const names[],
-+					const bool *ctx,
-+					struct irq_affinity *desc)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+	struct mlxbf_tmfifo_vring *vring;
-+	struct virtqueue *vq;
-+	int i, ret, size;
-+
-+	if (nvqs > ARRAY_SIZE(tm_vdev->vrings))
-+		return -EINVAL;
-+
-+	for (i = 0; i < nvqs; ++i) {
-+		if (!names[i]) {
-+			ret = -EINVAL;
-+			goto error;
-+		}
-+		vring = &tm_vdev->vrings[i];
-+
-+		/* zero vring */
-+		size = vring_size(vring->num, vring->align);
-+		memset(vring->va, 0, size);
-+		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
-+					 false, false, vring->va,
-+					 mlxbf_tmfifo_virtio_notify,
-+					 callbacks[i], names[i]);
-+		if (!vq) {
-+			dev_err(&vdev->dev, "vring_new_virtqueue failed\n");
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		vqs[i] = vq;
-+		vring->vq = vq;
-+		vq->priv = vring;
-+	}
-+
-+	return 0;
-+
-+error:
-+	mlxbf_tmfifo_virtio_del_vqs(vdev);
-+	return ret;
-+}
-+
-+/* Read the status byte. */
-+static u8 mlxbf_tmfifo_virtio_get_status(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	return tm_vdev->status;
-+}
-+
-+/* Write the status byte. */
-+static void mlxbf_tmfifo_virtio_set_status(struct virtio_device *vdev,
-+					   u8 status)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	tm_vdev->status = status;
-+}
-+
-+/* Reset the device. Not much here for now. */
-+static void mlxbf_tmfifo_virtio_reset(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	tm_vdev->status = 0;
-+}
-+
-+/* Read the value of a configuration field. */
-+static void mlxbf_tmfifo_virtio_get(struct virtio_device *vdev,
-+				    unsigned int offset,
-+				    void *buf,
-+				    unsigned int len)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	if (offset + len > sizeof(tm_vdev->config))
-+		return;
-+
-+	memcpy(buf, (u8 *)&tm_vdev->config + offset, len);
-+}
-+
-+/* Write the value of a configuration field. */
-+static void mlxbf_tmfifo_virtio_set(struct virtio_device *vdev,
-+				    unsigned int offset,
-+				    const void *buf,
-+				    unsigned int len)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	if (offset + len > sizeof(tm_vdev->config))
-+		return;
-+
-+	memcpy((u8 *)&tm_vdev->config + offset, buf, len);
-+}
-+
-+/*
-+ * Nothing to do for now. This function is needed to avoid warnings
-+ * when the device is released in device_release().
-+ */
-+static void tmfifo_virtio_dev_release(struct device *dev)
-+{
-+}
-+
-+/* Virtio config operations. */
-+static const struct virtio_config_ops mlxbf_tmfifo_virtio_config_ops = {
-+	.get_features = mlxbf_tmfifo_virtio_get_features,
-+	.finalize_features = mlxbf_tmfifo_virtio_finalize_features,
-+	.find_vqs = mlxbf_tmfifo_virtio_find_vqs,
-+	.del_vqs = mlxbf_tmfifo_virtio_del_vqs,
-+	.reset = mlxbf_tmfifo_virtio_reset,
-+	.set_status = mlxbf_tmfifo_virtio_set_status,
-+	.get_status = mlxbf_tmfifo_virtio_get_status,
-+	.get = mlxbf_tmfifo_virtio_get,
-+	.set = mlxbf_tmfifo_virtio_set,
-+};
-+
-+/* Create vdev type in a tmfifo. */
-+static int mlxbf_tmfifo_create_vdev(struct device *dev,
-+				    struct mlxbf_tmfifo *fifo,
-+				    int vdev_id, u64 features,
-+				    void *config, u32 size)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+	int ret;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	tm_vdev = fifo->vdev[vdev_id];
-+	if (tm_vdev) {
-+		dev_err(dev, "vdev %d already exists\n", vdev_id);
-+		ret = -EEXIST;
-+		goto fail;
-+	}
-+
-+	tm_vdev = devm_kzalloc(dev, sizeof(*tm_vdev), GFP_KERNEL);
-+	if (!tm_vdev) {
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	tm_vdev->vdev.id.device = vdev_id;
-+	tm_vdev->vdev.config = &mlxbf_tmfifo_virtio_config_ops;
-+	tm_vdev->vdev.dev.parent = &fifo->pdev->dev;
-+	tm_vdev->vdev.dev.release = tmfifo_virtio_dev_release;
-+	tm_vdev->features = features;
-+	if (config)
-+		memcpy(&tm_vdev->config, config, size);
-+
-+	if (mlxbf_tmfifo_alloc_vrings(fifo, tm_vdev)) {
-+		dev_err(dev, "unable to allocate vring\n");
-+		ret = -ENOMEM;
-+		goto vdev_fail;
-+	}
-+
-+	/* Allocate an output buffer for the console device. */
-+	if (vdev_id == VIRTIO_ID_CONSOLE)
-+		tm_vdev->tx_buf.buf = devm_kmalloc(dev,
-+						   MLXBF_TMFIFO_CON_TX_BUF_SIZE,
-+						   GFP_KERNEL);
-+	fifo->vdev[vdev_id] = tm_vdev;
-+
-+	/* Register the virtio device. */
-+	ret = register_virtio_device(&tm_vdev->vdev);
-+	if (ret) {
-+		dev_err(&fifo->pdev->dev, "register_virtio_device failed\n");
-+		goto vdev_fail;
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+	return 0;
-+
-+vdev_fail:
-+	mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-+	fifo->vdev[vdev_id] = NULL;
-+fail:
-+	mutex_unlock(&fifo->lock);
-+	return ret;
-+}
-+
-+/* Delete vdev type from a tmfifo. */
-+static int mlxbf_tmfifo_delete_vdev(struct mlxbf_tmfifo *fifo, int vdev_id)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	/* Unregister vdev. */
-+	tm_vdev = fifo->vdev[vdev_id];
-+	if (tm_vdev) {
-+		unregister_virtio_device(&tm_vdev->vdev);
-+		mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-+		fifo->vdev[vdev_id] = NULL;
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+
-+	return 0;
-+}
-+
-+/* Read the configured network MAC address from efi variable. */
-+static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
-+{
-+	efi_guid_t guid = EFI_GLOBAL_VARIABLE_GUID;
-+	unsigned long size = ETH_ALEN;
-+	efi_status_t status;
-+	u8 buf[ETH_ALEN];
-+
-+	status = efi.get_variable(mlxbf_tmfifo_efi_name, &guid, NULL, &size,
-+				  buf);
-+	if (status == EFI_SUCCESS && size == ETH_ALEN)
-+		ether_addr_copy(mac, buf);
-+	else
-+		memcpy(mac, mlxbf_tmfifo_net_default_mac, ETH_ALEN);
-+}
-+
-+/* Set TmFifo thresolds which is used to trigger interrupts. */
-+static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)
-+{
-+	u64 ctl;
-+
-+	/* Get Tx FIFO size and set the low/high watermark. */
-+	ctl = readq(fifo->tx_base + MLXBF_TMFIFO_TX_CTL);
-+	fifo->tx_fifo_size =
-+		FIELD_GET(MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_MASK, ctl);
-+	ctl = (ctl & ~MLXBF_TMFIFO_TX_CTL__LWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_TX_CTL__LWM_MASK,
-+			   fifo->tx_fifo_size / 2);
-+	ctl = (ctl & ~MLXBF_TMFIFO_TX_CTL__HWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_TX_CTL__HWM_MASK,
-+			   fifo->tx_fifo_size - 1);
-+	writeq(ctl, fifo->tx_base + MLXBF_TMFIFO_TX_CTL);
-+
-+	/* Get Rx FIFO size and set the low/high watermark. */
-+	ctl = readq(fifo->rx_base + MLXBF_TMFIFO_RX_CTL);
-+	fifo->rx_fifo_size =
-+		FIELD_GET(MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_MASK, ctl);
-+	ctl = (ctl & ~MLXBF_TMFIFO_RX_CTL__LWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_RX_CTL__LWM_MASK, 0);
-+	ctl = (ctl & ~MLXBF_TMFIFO_RX_CTL__HWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_RX_CTL__HWM_MASK, 1);
-+	writeq(ctl, fifo->rx_base + MLXBF_TMFIFO_RX_CTL);
-+}
-+
-+static void mlxbf_tmfifo_cleanup(struct mlxbf_tmfifo *fifo)
-+{
-+	int i;
-+
-+	fifo->is_ready = false;
-+	del_timer_sync(&fifo->timer);
-+	mlxbf_tmfifo_disable_irqs(fifo);
-+	cancel_work_sync(&fifo->work);
-+	for (i = 0; i < MLXBF_TMFIFO_VDEV_MAX; i++)
-+		mlxbf_tmfifo_delete_vdev(fifo, i);
-+}
-+
-+/* Probe the TMFIFO. */
-+static int mlxbf_tmfifo_probe(struct platform_device *pdev)
-+{
-+	struct virtio_net_config net_config;
-+	struct mlxbf_tmfifo *fifo;
-+	struct resource *res;
-+	int i, ret;
-+
-+	fifo = devm_kzalloc(&pdev->dev, sizeof(*fifo), GFP_KERNEL);
-+	if (!fifo)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&fifo->spin_lock);
-+	INIT_WORK(&fifo->work, mlxbf_tmfifo_work_handler);
-+	mutex_init(&fifo->lock);
-+
-+	/* Get the resource of the Rx FIFO. */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	fifo->rx_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(fifo->rx_base))
-+		return PTR_ERR(fifo->rx_base);
-+
-+	/* Get the resource of the Tx FIFO. */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	fifo->tx_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(fifo->tx_base))
-+		return PTR_ERR(fifo->tx_base);
-+
-+	fifo->pdev = pdev;
-+	platform_set_drvdata(pdev, fifo);
-+
-+	timer_setup(&fifo->timer, mlxbf_tmfifo_timer, 0);
-+
-+	for (i = 0; i < MLXBF_TM_MAX_IRQ; i++) {
-+		fifo->irq_info[i].index = i;
-+		fifo->irq_info[i].fifo = fifo;
-+		fifo->irq_info[i].irq = platform_get_irq(pdev, i);
-+		ret = devm_request_irq(&pdev->dev, fifo->irq_info[i].irq,
-+				       mlxbf_tmfifo_irq_handler, 0,
-+				       "tmfifo", &fifo->irq_info[i]);
-+		if (ret) {
-+			dev_err(&pdev->dev, "devm_request_irq failed\n");
-+			fifo->irq_info[i].irq = 0;
-+			return ret;
-+		}
-+	}
-+
-+	mlxbf_tmfifo_set_threshold(fifo);
-+
-+	/* Create the console vdev. */
-+	ret = mlxbf_tmfifo_create_vdev(&pdev->dev, fifo, VIRTIO_ID_CONSOLE, 0,
-+				       NULL, 0);
-+	if (ret)
-+		goto fail;
-+
-+	/* Create the network vdev. */
-+	memset(&net_config, 0, sizeof(net_config));
-+	net_config.mtu = ETH_DATA_LEN;
-+	net_config.status = VIRTIO_NET_S_LINK_UP;
-+	mlxbf_tmfifo_get_cfg_mac(net_config.mac);
-+	ret = mlxbf_tmfifo_create_vdev(&pdev->dev, fifo, VIRTIO_ID_NET,
-+				       MLXBF_TMFIFO_NET_FEATURES, &net_config,
-+				       sizeof(net_config));
-+	if (ret)
-+		goto fail;
-+
-+	mod_timer(&fifo->timer, jiffies + MLXBF_TMFIFO_TIMER_INTERVAL);
-+
-+	fifo->is_ready = true;
-+	return 0;
-+
-+fail:
-+	mlxbf_tmfifo_cleanup(fifo);
-+	return ret;
-+}
-+
-+/* Device remove function. */
-+static int mlxbf_tmfifo_remove(struct platform_device *pdev)
-+{
-+	struct mlxbf_tmfifo *fifo = platform_get_drvdata(pdev);
-+
-+	mlxbf_tmfifo_cleanup(fifo);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id mlxbf_tmfifo_acpi_match[] = {
-+	{ "MLNXBF01", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, mlxbf_tmfifo_acpi_match);
-+
-+static struct platform_driver mlxbf_tmfifo_driver = {
-+	.probe = mlxbf_tmfifo_probe,
-+	.remove = mlxbf_tmfifo_remove,
-+	.driver = {
-+		.name = "bf-tmfifo",
-+		.acpi_match_table = mlxbf_tmfifo_acpi_match,
-+	},
-+};
-+
-+module_platform_driver(mlxbf_tmfifo_driver);
-+
-+MODULE_DESCRIPTION("Mellanox BlueField SoC TmFifo Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Mellanox Technologies");
--- 
-1.8.3.1
-
+QW5keSwNCg0KVGhlIHYxMSBoYXMgYmVlbiBwb3N0ZWQuDQoNClRoYW5rcyENCkxpbWluZw0KDQo+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExpbWluZyBTdW4NCj4gU2VudDog
+V2VkbmVzZGF5LCBNYXJjaCA2LCAyMDE5IDM6MDEgUE0NCj4gVG86ICdBbmR5IFNoZXZjaGVua28n
+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBDYzogRGF2aWQgV29vZHMgPGR3b29kc0Bt
+ZWxsYW5veC5jb20+OyBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFkLm9yZz47IERhcnJl
+biBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IFZhZGltDQo+IFBhc3Rlcm5hayA8dmFkaW1w
+QG1lbGxhbm94LmNvbT47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci0NCj4geDg2
+QHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2MTBdIHBsYXRmb3JtL21l
+bGxhbm94OiBBZGQgVG1GaWZvIGRyaXZlciBmb3IgTWVsbGFub3ggQmx1ZUZpZWxkIFNvYw0KPiAN
+Cj4gVGhhbmtzIEFuZHkhIFBsZWFzZSBzZWUgbXkgcmVzcG9uc2UgYmVsb3cuIElmIG5vIGZ1cnRo
+ZXIgY29tbWVudHMsIEknbGwgdHJ5IHRvIHBvc3QgdjExIGFmdGVyIG1vcmUgdGVzdGluZy4NCj4g
+DQo+IFJlZ2FyZHMsDQo+IExpbWluZw0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPiA+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4N
+Cj4gPiBTZW50OiBUdWVzZGF5LCBNYXJjaCA1LCAyMDE5IDEwOjM0IEFNDQo+ID4gVG86IExpbWlu
+ZyBTdW4gPGxzdW5AbWVsbGFub3guY29tPg0KPiA+IENjOiBEYXZpZCBXb29kcyA8ZHdvb2RzQG1l
+bGxhbm94LmNvbT47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgRGFycmVu
+IEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgVmFkaW0NCj4gPiBQYXN0ZXJuYWsgPHZhZGlt
+cEBtZWxsYW5veC5jb20+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxA
+dmdlci5rZXJuZWwub3JnPjsgUGxhdGZvcm0gRHJpdmVyIDxwbGF0Zm9ybS1kcml2ZXItDQo+ID4g
+eDg2QHZnZXIua2VybmVsLm9yZz4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMF0gcGxhdGZv
+cm0vbWVsbGFub3g6IEFkZCBUbUZpZm8gZHJpdmVyIGZvciBNZWxsYW5veCBCbHVlRmllbGQgU29j
+DQo+ID4NCj4gPiBPbiBUaHUsIEZlYiAyOCwgMjAxOSBhdCA1OjUxIFBNIExpbWluZyBTdW4gPGxz
+dW5AbWVsbGFub3guY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBUaGlzIGNvbW1pdCBhZGRzIHRo
+ZSBUbUZpZm8gcGxhdGZvcm0gZHJpdmVyIGZvciBNZWxsYW5veCBCbHVlRmllbGQNCj4gPiA+IFNv
+Yy4gVG1GaWZvIGlzIGEgc2hhcmVkIEZJRk8gd2hpY2ggZW5hYmxlcyBleHRlcm5hbCBob3N0IG1h
+Y2hpbmUNCj4gPiA+IHRvIGV4Y2hhbmdlIGRhdGEgd2l0aCB0aGUgU29DIHZpYSBVU0Igb3IgUENJ
+ZS4gVGhlIGRyaXZlciBpcyBiYXNlZA0KPiA+ID4gb24gdmlydGlvIGZyYW1ld29yayBhbmQgaGFz
+IGNvbnNvbGUgYW5kIG5ldHdvcmsgYWNjZXNzIGVuYWJsZWQuDQo+ID4NCj4gPiBUaGFuayB5b3Ug
+Zm9yIGFuIHVwZGF0ZS4NCj4gPg0KPiA+IFVuZm9ydHVuYXRlbHkgbW9yZSB3b3JrIGlzIG5lZWRl
+ZC4gTXkgY29tbWVudHMgYmVsb3cuDQo+ID4NCj4gPiA+ICsjZGVmaW5lIE1MWEJGX1RNRklGT19U
+WF9TVFNfX0NPVU5UX1JNQVNLICAgICAgICAgICAgICAgR0VOTUFTSyg4LCAwKQ0KPiA+ID4gKyNk
+ZWZpbmUgTUxYQkZfVE1GSUZPX1RYX1NUU19fQ09VTlRfTUFTSyAgICAgICAgICAgICAgICAgICAg
+ICAgIEdFTk1BU0soOCwgMCkNCj4gPg0KPiA+ID4gKyNkZWZpbmUgTUxYQkZfVE1GSUZPX1RYX0NU
+TF9fTFdNX1JNQVNLICAgICAgICAgICAgICAgICBHRU5NQVNLKDcsIDApDQo+ID4gPiArI2RlZmlu
+ZSBNTFhCRl9UTUZJRk9fVFhfQ1RMX19MV01fTUFTSyAgICAgICAgICAgICAgICAgIEdFTk1BU0so
+NywgMCkNCj4gPg0KPiA+ID4gKyNkZWZpbmUgTUxYQkZfVE1GSUZPX1RYX0NUTF9fSFdNX1JNQVNL
+ICAgICAgICAgICAgICAgICBHRU5NQVNLKDcsIDApDQo+ID4gPiArI2RlZmluZSBNTFhCRl9UTUZJ
+Rk9fVFhfQ1RMX19IV01fTUFTSyAgICAgICAgICAgICAgICAgIEdFTk1BU0soMTUsIDgpDQo+ID4N
+Cj4gPiA+ICsjZGVmaW5lIE1MWEJGX1RNRklGT19UWF9DVExfX01BWF9FTlRSSUVTX1JNQVNLICAg
+ICAgICAgR0VOTUFTSyg4LCAwKQ0KPiA+ID4gKyNkZWZpbmUgTUxYQkZfVE1GSUZPX1RYX0NUTF9f
+TUFYX0VOVFJJRVNfTUFTSyAgICAgICAgICBHRU5NQVNLX1VMTCg0MCwgMzIpDQo+ID4NCj4gPiA+
+ICsjZGVmaW5lIE1MWEJGX1RNRklGT19SWF9TVFNfX0NPVU5UX1JNQVNLICAgICAgICAgICAgICAg
+R0VOTUFTSyg4LCAwKQ0KPiA+ID4gKyNkZWZpbmUgTUxYQkZfVE1GSUZPX1JYX1NUU19fQ09VTlRf
+TUFTSyAgICAgICAgICAgICAgICAgICAgICAgIEdFTk1BU0soOCwgMCkNCj4gPg0KPiA+ID4gKyNk
+ZWZpbmUgTUxYQkZfVE1GSUZPX1JYX0NUTF9fTFdNX1JNQVNLICAgICAgICAgICAgICAgICBHRU5N
+QVNLKDcsIDApDQo+ID4gPiArI2RlZmluZSBNTFhCRl9UTUZJRk9fUlhfQ1RMX19MV01fTUFTSyAg
+ICAgICAgICAgICAgICAgIEdFTk1BU0soNywgMCkNCj4gPg0KPiA+ID4gKyNkZWZpbmUgTUxYQkZf
+VE1GSUZPX1JYX0NUTF9fSFdNX1JNQVNLICAgICAgICAgICAgICAgICBHRU5NQVNLKDcsIDApDQo+
+ID4gPiArI2RlZmluZSBNTFhCRl9UTUZJRk9fUlhfQ1RMX19IV01fTUFTSyAgICAgICAgICAgICAg
+ICAgIEdFTk1BU0soMTUsIDgpDQo+ID4NCj4gPiA+ICsjZGVmaW5lIE1MWEJGX1RNRklGT19SWF9D
+VExfX01BWF9FTlRSSUVTX1JNQVNLICAgICAgICAgR0VOTUFTSyg4LCAwKQ0KPiA+ID4gKyNkZWZp
+bmUgTUxYQkZfVE1GSUZPX1JYX0NUTF9fTUFYX0VOVFJJRVNfTUFTSyAgICAgICAgICBHRU5NQVNL
+X1VMTCg0MCwgMzIpDQo+ID4NCj4gPiBTaW5jZSB0d28gb2YgdGhlbSBoYXZlIF9VTEwgc3VmZml4
+IEknbSB3b25kZXJpbmcgaWYgeW91IGhhdmUgY2hlY2tlZA0KPiA+IGZvciBzaWRlIGVmZmVjdHMg
+b24gdGhlIHJlc3QsIGkuZS4gaWYgeW91IG9wZXJhdGUgd2l0aCA2NC1iaXQgdmFyaWFibGUNCj4g
+PiBhbmQgdXNlIHNvbWV0aGluZyBsaWtlIH5NTFhCRl9UTUZJRk9fUlhfQ1RMX19NQVhfRU5UUklF
+U19STUFTSywgaXQgbWF5DQo+ID4gZ2l2ZSB5b3UgaW50ZXJlc3RpbmcgcmVzdWx0cy4NCj4gDQo+
+IFRoZSBydW5uaW5nIHN5c3RlbSBvbiB0aGUgU29DIGlzIGFybTY0IHdoZXJlIEJJVFNfUEVSX0xP
+TkcgYW5kDQo+IEJJVFNfUEVSX0xPTkdfTE9ORyBoYXZlIHRoZSBzYW1lIHZhbHVlLiBJbiBzdWNo
+IGNhc2UsIHRoZSB0d28gbWFjcm9zIGFwcGVhcnMNCj4gdG8gYmUgdGhlIHNhbWUuIEJ1dCB5b3Un
+cmUgcmlnaHQsIEkgc2hvdWxkIHVzZSBHRU5NQVNLX1VMTCgpIHRvIGJlIGNvbnNpc3RlbnQNCj4g
+YW5kIG1vcmUgY29ycmVjdGx5LCBqdXN0IGluIGNhc2UgdGhlICJDT05GSUdfNjRCSVQiIGlzIG5v
+dCBkZWZpbmVkIHNvbWVob3cuDQo+IA0KPiBXaWxsIHVwZGF0ZSBpdCBpbiB2MTEuDQo+IA0KPiA+
+DQo+ID4gPiArI2RlZmluZSBNTFhCRl9UTUZJRk9fVElNRVJfSU5URVJWQUwgICAgICAgICAgICAo
+SFogLyAxMCkNCj4gPg0KPiA+ID4gKy8qKg0KPiA+ID4gKyAqIG1seGJmX3RtZmlmb191NjQgLSBV
+bmlvbiBvZiA2NC1iaXQgZGF0YQ0KPiA+ID4gKyAqIEBkYXRhIC0gNjQtYml0IGRhdGEgaW4gaG9z
+dCBieXRlIG9yZGVyDQo+ID4gPiArICogQGRhdGFfbGUgLSA2NC1iaXQgZGF0YSBpbiBsaXR0bGUt
+ZW5kaWFuIGJ5dGUgb3JkZXINCj4gPiA+ICsgKg0KPiA+ID4gKyAqIEl0J3MgZXhwZWN0ZWQgdG8g
+c2VuZCA2NC1iaXQgbGl0dGxlLWVuZGlhbiB2YWx1ZSAoX19sZTY0KSBpbnRvIHRoZSBUbUZpZm8u
+DQo+ID4gPiArICogcmVhZHEoKSBhbmQgd3JpdGVxKCkgZXhwZWN0IHU2NCBpbnN0ZWFkLiBBIHVu
+aW9uIHN0cnVjdHVyZSBpcyB1c2VkIGhlcmUNCj4gPiA+ICsgKiB0byB3b3JrYXJvdW5kIHRoZSBl
+eHBsaWNpdCBjYXN0aW5nIHVzYWdlIGxpa2Ugd3JpdGVxKCoodTY0ICopJmRhdGFfbGUpLg0KPiA+
+ID4gKyAqLw0KPiA+DQo+ID4gSG93IGRvIHlvdSBrbm93IHdoYXQgcmVhZHEoKS93cml0ZXEoKSBk
+b2VzIHdpdGggdGhlIGRhdGE/IElzIGl0IG9uIGFsbA0KPiA+IGFyY2hpdGVjdHVyZXM/DQo+ID4g
+SG93IHRoZSBlbmRpYW5lc3MgY29udmVyc2lvbiBhZmZlY3RzIHRoZSBhY3R1YWwgZGF0YT8NCj4g
+DQo+IFRoZSBTb0MgcnVucyBhcm02NCBhbmQgc3VwcG9ydHMgbGl0dGxlIGVuZGlhbiBmb3Igbm93
+LiBUaGUgRklGTyBoYXMgdHdvIHNpZGVzLA0KPiBvbmUgc2lkZSBpcyB0aGUgU29DLCB0aGUgb3Ro
+ZXIgc2lkZSBpcyBleHRlcm4gaG9zdCBtYWNoaW5lIHdoaWNoIGNvdWxkDQo+IGFjY2VzcyB0aGUg
+RklGTyB2aWEgVVNCIG9yIFBDSWUuIFRoZSBydWxlIGlzIHRoYXQgdGhlICdieXRlIHN0cmVhbScg
+d2lsbA0KPiBrZWVwIHRoZSBzYW1lIHdoZW4gb25lIHNpZGUgd3JpdGUgOCBieXRlcyBhbmQgdGhl
+IG90aGVyIHNpZGUgcmVhZHMNCj4gdGhlIDggYnl0ZXMuIFNvIGFzIGxvbmcgYXMgYm90aCBzaWRl
+cyBoYXZlIGFncmVlbWVudCBvbiB0aGUgYnl0ZS1vcmRlcg0KPiBpdCBzaG91bGQgYmUgZmluZS4N
+Cj4gDQo+IEFmdGVyIGRvdWJsZSBjaGVjayB0aGUgYXJtNjQgcmVhZHEoKS93cml0ZXEoKSBpbXBs
+ZW1lbnRhdGlvbiwgaXQgYXBwZWFycw0KPiB0aGF0IHRoZXNlIEFQSXMgYWxyZWFkeSBkb2VzIGNw
+dV90b19sZTY0KCkgYW5kIGxlNjRfdG9fY3B1KCkNCj4gY29udmVyc2lvbi4gVGhlcmUncyBhY3R1
+YWxseSBubyBuZWVkIHRvIG1ha2UgYW5vdGhlciBjb252ZXJzaW9uDQo+IChhbmQgc2hvdWxkbid0
+IGRvIGl0KS4gSSdsbCByZW1vdmUgdGhlc2UgY29udmVyc2lvbnMgaW4gdjExLiBUaGUgY29kZSB3
+aWxsDQo+IGxvb2sgbXVjaCBjbGVhbmVyLg0KPiANCj4gPg0KPiA+ID4gK3VuaW9uIG1seGJmX3Rt
+Zmlmb191NjQgew0KPiA+ID4gKyAgICAgICB1NjQgZGF0YTsNCj4gPiA+ICsgICAgICAgX19sZTY0
+IGRhdGFfbGU7DQo+ID4gPiArfTsNCj4gPg0KPiA+ID4gKy8qDQo+ID4gPiArICogRGVmYXVsdCBN
+QUMuDQo+ID4gPiArICogVGhpcyBNQUMgYWRkcmVzcyB3aWxsIGJlIHJlYWQgZnJvbSBFRkkgcGVy
+c2lzdGVudCB2YXJpYWJsZSBpZiBjb25maWd1cmVkLg0KPiA+ID4gKyAqIEl0IGNhbiBhbHNvIGJl
+IHJlY29uZmlndXJlZCB3aXRoIHN0YW5kYXJkIExpbnV4IHRvb2xzLg0KPiA+ID4gKyAqLw0KPiA+
+ID4gK3N0YXRpYyB1OCBtbHhiZl90bWZpZm9fbmV0X2RlZmF1bHRfbWFjWzZdID0gew0KPiA+ID4g
+KyAgICAgICAweDAwLCAweDFBLCAweENBLCAweEZGLCAweEZGLCAweDAxfTsNCj4gPg0KPiA+ID4g
+KyNkZWZpbmUgbWx4YmZfdmRldl90b190bWZpZm8oZGV2KSAgICAgIFwNCj4gPiA+ICsgICAgICAg
+Y29udGFpbmVyX29mKGRldiwgc3RydWN0IG1seGJmX3RtZmlmb192ZGV2LCB2ZGV2KQ0KPiA+DQo+
+ID4gT25lIGxpbmU/DQo+IA0KPiBDb3VsZG4ndCBmaXQgaXQgaW50byBvbmUgbGluZSB3aXRoaW4g
+ODAgY2hhcmFjdGVycy4NCj4gKFBsZWFzZSBjb3JyZWN0IG1lIGlmIHlvdSBtZWFudCBzaW5nbGUg
+bGluZSBldmVuIGV4Y2VlZGluZyA4MCBjaHJhY3RlcnMpLg0KPiANCj4gPg0KPiA+ID4gKy8qIFJl
+dHVybiB0aGUgY29uc3VtZWQgVHggYnVmZmVyIHNwYWNlLiAqLw0KPiA+ID4gK3N0YXRpYyBpbnQg
+bWx4YmZfdG1maWZvX3ZkZXZfdHhfYnVmX2xlbihzdHJ1Y3QgbWx4YmZfdG1maWZvX3ZkZXYgKnRt
+X3ZkZXYpDQo+ID4gPiArew0KPiA+ID4gKyAgICAgICBpbnQgbGVuOw0KPiA+ID4gKw0KPiA+ID4g
+KyAgICAgICBpZiAodG1fdmRldi0+dHhfdGFpbCA+PSB0bV92ZGV2LT50eF9oZWFkKQ0KPiA+ID4g
+KyAgICAgICAgICAgICAgIGxlbiA9IHRtX3ZkZXYtPnR4X3RhaWwgLSB0bV92ZGV2LT50eF9oZWFk
+Ow0KPiA+ID4gKyAgICAgICBlbHNlDQo+ID4gPiArICAgICAgICAgICAgICAgbGVuID0gTUxYQkZf
+VE1GSUZPX0NPTlNfVFhfQlVGX1NJWkUgLSB0bV92ZGV2LT50eF9oZWFkICsNCj4gPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIHRtX3ZkZXYtPnR4X3RhaWw7DQo+ID4gPiArICAgICAgIHJldHVy
+biBsZW47DQo+ID4gPiArfQ0KPiA+DQo+ID4gSXMgdGhpcyBjdXN0b20gaW1wbGVtZW50YXRpb24g
+b2Ygc29tZSBraW5kIG9mIGNpcmNfYnVmPw0KPiANCj4gWWVzLiBJJ2xsIHRyeSBpZiBJIGNvdWxk
+IHJlLXVzZSB0aGUgY2lyY19idWYgc3RydWN0dXJlIGFuZCB1cGRhdGUgaXQgaW4gdjExLg0KPiAN
+Cj4gPg0KPiA+ID4gKy8qIEFsbG9jYXRlIHZyaW5ncyBmb3IgdGhlIGZpZm8uICovDQo+ID4gPiAr
+c3RhdGljIGludCBtbHhiZl90bWZpZm9fYWxsb2NfdnJpbmdzKHN0cnVjdCBtbHhiZl90bWZpZm8g
+KmZpZm8sDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0
+IG1seGJmX3RtZmlmb192ZGV2ICp0bV92ZGV2KQ0KPiA+ID4gK3sNCj4gPiA+ICsgICAgICAgc3Ry
+dWN0IG1seGJmX3RtZmlmb192cmluZyAqdnJpbmc7DQo+ID4gPiArICAgICAgIHN0cnVjdCBkZXZp
+Y2UgKmRldjsNCj4gPiA+ICsgICAgICAgZG1hX2FkZHJfdCBkbWE7DQo+ID4gPiArICAgICAgIGlu
+dCBpLCBzaXplOw0KPiA+ID4gKyAgICAgICB2b2lkICp2YTsNCj4gPiA+ICsNCj4gPiA+ICsgICAg
+ICAgZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUodG1fdmRldi0+dnJpbmdzKTsgaSsrKSB7DQo+
+ID4gPiArICAgICAgICAgICAgICAgdnJpbmcgPSAmdG1fdmRldi0+dnJpbmdzW2ldOw0KPiA+ID4g
+KyAgICAgICAgICAgICAgIHZyaW5nLT5maWZvID0gZmlmbzsNCj4gPiA+ICsgICAgICAgICAgICAg
+ICB2cmluZy0+bnVtID0gTUxYQkZfVE1GSUZPX1ZSSU5HX1NJWkU7DQo+ID4gPiArICAgICAgICAg
+ICAgICAgdnJpbmctPmFsaWduID0gU01QX0NBQ0hFX0JZVEVTOw0KPiA+ID4gKyAgICAgICAgICAg
+ICAgIHZyaW5nLT5pbmRleCA9IGk7DQo+ID4gPiArICAgICAgICAgICAgICAgdnJpbmctPnZkZXZf
+aWQgPSB0bV92ZGV2LT52ZGV2LmlkLmRldmljZTsNCj4gPiA+ICsgICAgICAgICAgICAgICBkZXYg
+PSAmdG1fdmRldi0+dmRldi5kZXY7DQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgICAgICAgc2l6
+ZSA9IHZyaW5nX3NpemUodnJpbmctPm51bSwgdnJpbmctPmFsaWduKTsNCj4gPiA+ICsgICAgICAg
+ICAgICAgICB2YSA9IGRtYV9hbGxvY19jb2hlcmVudChkZXYtPnBhcmVudCwgc2l6ZSwgJmRtYSwg
+R0ZQX0tFUk5FTCk7DQo+ID4gPiArICAgICAgICAgICAgICAgaWYgKCF2YSkgew0KPiA+DQo+ID4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldi0+cGFyZW50LCAiZG1hX2FsbG9j
+X2NvaGVyZW50IGZhaWxlZFxuIik7DQo+ID4NCj4gPiBBbmQgaG93IGRvIHlvdSBjbGVhbiBwcmV2
+aW91c2x5IGFsbG9jYXRlZCBpdGVtcz8NCj4gDQo+IEZpeGVkLiBDaGVjayB0aGUgcmV0dXJuIHZh
+bHVlIG9mIG1seGJmX3RtZmlmb19hbGxvY192cmluZ3MoKSBhbmQgZ290bw0KPiAncmVnaXN0ZXJf
+ZmFpbCcgKHByb2JhYmx5IGNoYW5nZSB0byBhIGJldHRlciBuYW1lKSBpbnN0ZWFkIG9mICdmYWls
+Jy4NCj4gSW4gc3VjaCBjYXNlIHRoZSBtbHhiZl90bWZpZm9fZnJlZV92cmluZ3MoKSB3aWxsIGJl
+IGNhbGxlZCB0byBjbGVhbiB1cA0KPiBhbGwgYWxsb2NhdGVkIHZyaW5ncy4NCj4gDQo+ID4NCj4g
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+ID4gKyAgICAg
+ICAgICAgICAgIH0NCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgICAgICAgICB2cmluZy0+dmEgPSB2
+YTsNCj4gPiA+ICsgICAgICAgICAgICAgICB2cmluZy0+ZG1hID0gZG1hOw0KPiA+ID4gKyAgICAg
+ICB9DQo+ID4gPiArDQo+ID4gPiArICAgICAgIHJldHVybiAwOw0KPiA+ID4gK30NCj4gPg0KPiA+
+ID4gKy8qIERpc2FibGUgaW50ZXJydXB0cyBvZiB0aGUgZmlmbyBkZXZpY2UuICovDQo+ID4gPiAr
+c3RhdGljIHZvaWQgbWx4YmZfdG1maWZvX2Rpc2FibGVfaXJxcyhzdHJ1Y3QgbWx4YmZfdG1maWZv
+ICpmaWZvKQ0KPiA+ID4gK3sNCj4gPiA+ICsgICAgICAgaW50IGksIGlycTsNCj4gPiA+ICsNCj4g
+PiA+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IE1MWEJGX1RNX01BWF9JUlE7IGkrKykgew0KPiA+
+ID4gKyAgICAgICAgICAgICAgIGlycSA9IGZpZm8tPmlycV9pbmZvW2ldLmlycTsNCj4gPg0KPiA+
+ID4gKyAgICAgICAgICAgICAgIGlmIChpcnEpIHsNCj4gPg0KPiA+IEkgZG9uJ3QgdGhpbmsgdGhp
+cyBjaGVjayBpcyBuZWVkZWQgaWYgeW91IGNhbiBndWFyYW50ZWUgdGhhdCBpdCBoYXMgbm8NCj4g
+PiBzdGFsZWQgcmVjb3Jkcy4NCj4gDQo+IFllcywgaXQncyBub3QgbmVlZGVkIGFueSBtb3JlIGFj
+Y29yZGluZyB0byB0aGUgY3VycmVudCBjb2RlLg0KPiBXaWxsIHJlbW92ZSBpdCBpbiB2MTEuDQo+
+IA0KPiA+DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBmaWZvLT5pcnFfaW5mb1tpXS5p
+cnEgPSAwOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGlzYWJsZV9pcnEoaXJxKTsN
+Cj4gPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gPiArICAgICAgIH0NCj4gPiA+ICt9DQo+ID4N
+Cj4gPiA+ICsvKiBHZXQgdGhlIG51bWJlciBvZiBhdmFpbGFibGUgd29yZHMgaW4gdGhlIFRtRmlm
+byBmb3Igc2VuZGluZy4gKi8NCj4gPiA+ICtzdGF0aWMgaW50IG1seGJmX3RtZmlmb19nZXRfdHhf
+YXZhaWwoc3RydWN0IG1seGJmX3RtZmlmbyAqZmlmbywgaW50IHZkZXZfaWQpDQo+ID4gPiArew0K
+PiA+ID4gKyAgICAgICBpbnQgdHhfcmVzZXJ2ZTsNCj4gPiA+ICsgICAgICAgdTY0IHN0czsNCj4g
+PiA+ICsNCj4gPiA+ICsgICAgICAgLyogUmVzZXJ2ZSBzb21lIHJvb20gaW4gRklGTyBmb3IgY29u
+c29sZSBtZXNzYWdlcy4gKi8NCj4gPiA+ICsgICAgICAgaWYgKHZkZXZfaWQgPT0gVklSVElPX0lE
+X05FVCkNCj4gPiA+ICsgICAgICAgICAgICAgICB0eF9yZXNlcnZlID0gZmlmby0+dHhfZmlmb19z
+aXplIC8gTUxYQkZfVE1GSUZPX1JFU0VSVkVfUkFUSU87DQo+ID4gPiArICAgICAgIGVsc2UNCj4g
+PiA+ICsgICAgICAgICAgICAgICB0eF9yZXNlcnZlID0gMTsNCj4gPiA+ICsNCj4gPiA+ICsgICAg
+ICAgc3RzID0gcmVhZHEoZmlmby0+dHhfYmFzZSArIE1MWEJGX1RNRklGT19UWF9TVFMpOw0KPiA+
+DQo+ID4gPiArICAgICAgIHJldHVybiAoZmlmby0+dHhfZmlmb19zaXplIC0gdHhfcmVzZXJ2ZSAt
+DQo+ID4gPiArICAgICAgICAgICAgICAgRklFTERfR0VUKE1MWEJGX1RNRklGT19UWF9TVFNfX0NP
+VU5UX01BU0ssIHN0cykpOw0KPiA+DQo+ID4gUmVkdW5kYW50IHBhcmVucy4NCj4gPiBNb3Jlb3Zl
+ciwgY29uc2lkZXINCj4gPg0KPiA+IHUzMiBjb3VudDsgLy8gb3Igd2hhdGV2ZXIgc3VpdHMgZm9y
+IEZJRUxEX0dFVCgpLg0KPiA+IC4uLg0KPiA+DQo+ID4gc3RzID0gcmVhZHEoLi4uKTsNCj4gPiBj
+b3VudCA9IEZJRUxEX0dFVCguLi4pOw0KPiA+IHJldHVybiAuLi47DQo+IA0KPiBXaWxsIHVwZGF0
+ZSBpbiB2MTEuDQo+IA0KPiA+DQo+ID4gPiArfQ0KPiA+DQo+ID4gPiArICAgICAgIHdoaWxlIChz
+aXplID4gMCkgew0KPiA+ID4gKyAgICAgICAgICAgICAgIGFkZHIgPSBjb25zLT50eF9idWYgKyBj
+b25zLT50eF9oZWFkOw0KPiA+ID4gKw0KPiA+ID4gKyAgICAgICAgICAgICAgIGlmIChjb25zLT50
+eF9oZWFkICsgc2l6ZW9mKHU2NCkgPD0NCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgTUxYQkZf
+VE1GSUZPX0NPTlNfVFhfQlVGX1NJWkUpIHsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+IG1lbWNweSgmZGF0YSwgYWRkciwgc2l6ZW9mKHU2NCkpOw0KPiA+ID4gKyAgICAgICAgICAgICAg
+IH0gZWxzZSB7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBwYXJ0aWFsID0gTUxYQkZf
+VE1GSUZPX0NPTlNfVFhfQlVGX1NJWkUgLSBjb25zLT50eF9oZWFkOw0KPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgbWVtY3B5KCZkYXRhLCBhZGRyLCBwYXJ0aWFsKTsNCj4gPg0KPiA+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgbWVtY3B5KCh1OCAqKSZkYXRhICsgcGFydGlhbCwgY29u
+cy0+dHhfYnVmLA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZih1
+NjQpIC0gcGFydGlhbCk7DQo+ID4NCj4gPiBVbmFsaWduZWQgYWNjZXNzPyENCj4gDQo+IFRoZSBj
+b2RlIGhlcmUgaXMgdG8gYnVpbGQgYW5kIGNvcHkgOCBieXRlcyBmcm9tIHRoZSBidWZmZXIgaW50
+byB0aGUgJ2RhdGEnDQo+IHZhcmlhYmxlLiBUaGUgc291cmNlIGNvdWxkIGJlIHVuYWxpZ25lZC4g
+Rm9yIGV4YW1wbGUsIDMgYnl0ZXMgYXJlIGF0IHRoZQ0KPiBlbmQgb2YgdGhlIGJ1ZmZlciBhbmQg
+NSBieXRlcyBhcmUgYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgYnVmZmVyLiBtZW1jcHkoKQ0KPiBp
+cyB1c2VkIHRvIGRvIGJ5dGUtc3RyZWFtIGNvcHkgd2hpY2ggc2VlbXMgb2suIFBsZWFzZSBjb3Jy
+ZWN0IG1lIGlmDQo+IEkgbWlzdW5kZXJzdGFuZCB0aGUgY29tbWVudC4NCj4gDQo+ID4NCj4gPiA+
+ICsgICAgICAgICAgICAgICB9DQo+ID4NCj4gPiA+ICsgICAgICAgICAgICAgICBidWYuZGF0YSA9
+IHJlYWRxKGZpZm8tPnJ4X2Jhc2UgKyBNTFhCRl9UTUZJRk9fUlhfREFUQSk7DQo+ID4gPiArICAg
+ICAgICAgICAgICAgYnVmLmRhdGEgPSBsZTY0X3RvX2NwdShidWYuZGF0YV9sZSk7DQo+ID4NCj4g
+PiBBcmUgeW91IHN1cmUgdGhpcyBpcyBjb3JyZWN0Pw0KPiA+IEhvdyBkaWQgeW91IHRlc3QgdGhp
+cyBvbiBCRSBhcmNoaXRlY3R1cmVzPw0KPiANCj4gVGhhbmtzIGZvciB0aGUgY29tbWVudCEgU2Ft
+ZSBhcyBhYm92ZSwgdGhlIGNvbnZlcnNpb24gaXMgbm90IHJlYWxseSBuZWVkZWQuDQo+IEknbGwg
+cmVtb3ZlIHRoZW0gaW4gdjExLiBBcyBmb3IgdGVzdGluZywgd2Ugb25seSBoYXZlIGFybTY0IGxp
+dHRsZS1lbmRpYW4gTGludXgNCj4gcnVubmluZyBvbiB0aGUgU29DLiBUaGlzIGNvbnZlcnNpb24g
+ZG9lc24ndCBtYWtlIG11Y2ggZGlmZmVyZW5jZSBmb3IgdGhlIFNvQy4NCj4gQXMgZm9yIEJFIGFy
+Y2hpdGVjdHVyZSwgd2UgbWFpbmx5IHZlcmlmeSB0aGUgb3RoZXIgc2lkZSBvZiB0aGUgRklGTywg
+d2hpY2ggaXMgdGhlDQo+IGV4dGVybmFsIGhvc3QgbGlrZSB1c2luZyBwcGM2NC4NCj4gDQo+ID4N
+Cj4gPiA+ICsgICAgICAgdG1fdmRldiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqdG1fdmRl
+diksIEdGUF9LRVJORUwpOw0KPiA+DQo+ID4gSXMgaXQgYXBwcm9wcmlhdGUgdXNlIG9mIGRldm1f
+KiA/DQo+IA0KPiBUaGlzIGlzIFNvQywgdGhlIGRldmljZSB3b24ndCBiZSBjbG9zZWQgb3IgZGV0
+YWNoZWQuIFRoZSBvbmx5IGNhc2UgaXMgd2hlbg0KPiB0aGUgZHJpdmVyIGlzIHVubG9hZGVkLiBT
+byBpdCBhcHBlYXJzIG9rIHRvIHVzZSBkZXZtX2t6YWxsb2MoKSBzaW5jZSBpdCdzDQo+IGFsbG9j
+YXRlZCBkdXJpbmcgcHJvYmUoKSBhbmQgcmVsZWFzZWQgZHVyaW5nIG1vZHVsZSB1bmxvYWQgLiBQ
+bGVhc2UNCj4gY29ycmVjdCBtZSBpZiBJIG1pc3VuZGVyc3RhbmQgaXQuDQo+IA0KPiA+DQo+ID4g
+PiArICAgICAgIGlmICghdG1fdmRldikgew0KPiA+ID4gKyAgICAgICAgICAgICAgIHJldCA9IC1F
+Tk9NRU07DQo+ID4gPiArICAgICAgICAgICAgICAgZ290byBmYWlsOw0KPiA+ID4gKyAgICAgICB9
+DQo+ID4NCj4gPiA+ICsvKiBSZWFkIHRoZSBjb25maWd1cmVkIG5ldHdvcmsgTUFDIGFkZHJlc3Mg
+ZnJvbSBlZmkgdmFyaWFibGUuICovDQo+ID4gPiArc3RhdGljIHZvaWQgbWx4YmZfdG1maWZvX2dl
+dF9jZmdfbWFjKHU4ICptYWMpDQo+ID4gPiArew0KPiA+ID4gKyAgICAgICBlZmlfZ3VpZF90IGd1
+aWQgPSBFRklfR0xPQkFMX1ZBUklBQkxFX0dVSUQ7DQo+ID4gPiArICAgICAgIGVmaV9zdGF0dXNf
+dCBzdGF0dXM7DQo+ID4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcgc2l6ZTsNCj4gPg0KPiA+ID4g
+KyAgICAgICB1OCBidWZbNl07DQo+ID4NCj4gPiBFVEhfQUxFTiA/DQo+IA0KPiBXaWxsIHVwZGF0
+ZSBpdCBpbiB2MTENCj4gDQo+ID4NCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgc2l6ZSA9IHNpemVv
+ZihidWYpOw0KPiA+DQo+ID4gRGl0dG8uDQo+IA0KPiBXaWxsIHVwZGF0ZSBpdCBpbiB2MTENCj4g
+DQo+ID4NCj4gPiA+ICsgICAgICAgc3RhdHVzID0gZWZpLmdldF92YXJpYWJsZShtbHhiZl90bWZp
+Zm9fZWZpX25hbWUsICZndWlkLCBOVUxMLCAmc2l6ZSwNCj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBidWYpOw0KPiA+DQo+ID4gPiArICAgICAgIGlmIChzdGF0dXMgPT0g
+RUZJX1NVQ0NFU1MgJiYgc2l6ZSA9PSBzaXplb2YoYnVmKSkNCj4gPg0KPiA+IERpdHRvLg0KPiAN
+Cj4gV2lsbCB1cGRhdGUgaXQgaW4gdjExDQo+IA0KPiA+DQo+ID4gPiArICAgICAgICAgICAgICAg
+bWVtY3B5KG1hYywgYnVmLCBzaXplb2YoYnVmKSk7DQo+ID4NCj4gPiBldGhlcl9hZGRyX2NvcHko
+KS4NCj4gDQo+IFdpbGwgdXBkYXRlIGl0IGluIHYxMQ0KPiANCj4gPg0KPiA+ID4gK30NCj4gPg0K
+PiA+ID4gKyAgICAgICBtZW1jcHkobmV0X2NvbmZpZy5tYWMsIG1seGJmX3RtZmlmb19uZXRfZGVm
+YXVsdF9tYWMsIDYpOw0KPiA+DQo+ID4gZXRoZXJfYWRkcl9jb3B5KCkuLi4NCj4gPg0KPiA+ID4g
+KyAgICAgICBtbHhiZl90bWZpZm9fZ2V0X2NmZ19tYWMobmV0X2NvbmZpZy5tYWMpOw0KPiA+DQo+
+ID4gLi4uIGJ1dCBhY3R1YWxseSBhYm92ZSBzaG91bGQgYmUgcGFydCBvZiB0aGlzIGZ1bmN0aW9u
+Lg0KPiANCj4gV2lsbCB1cGRhdGUgaXQgaW4gdjExDQo+IA0KPiA+DQo+ID4gLS0NCj4gPiBXaXRo
+IEJlc3QgUmVnYXJkcywNCj4gPiBBbmR5IFNoZXZjaGVua28NCg==
