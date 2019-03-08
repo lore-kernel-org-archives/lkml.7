@@ -2,134 +2,111 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1C1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE38C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3616020811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3404120811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XF93q8eJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itIEC1hP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfCHEhS (ORCPT
+        id S1726361AbfCHEkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 23:37:18 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39902 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfCHEhR (ORCPT
+        Thu, 7 Mar 2019 23:40:18 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33109 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfCHEkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 23:37:17 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i20so13182613pfo.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 20:37:17 -0800 (PST)
+        Thu, 7 Mar 2019 23:40:17 -0500
+Received: by mail-yw1-f66.google.com with SMTP id i204so15361492ywb.0;
+        Thu, 07 Mar 2019 20:40:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6b2TGnM40jjN6eDkMatgtVdtGBBDElcNA9sPAUBmPe4=;
-        b=XF93q8eJwMxPyihQX7r5RWVLl/8vySHjhCdn8HWGFsuUzd53RJYyhQ5SOgujFEkH69
-         /L/71kQvSncOKD5E5b0ZafQdKwXfFPv7gwiLPmahxUCJ+wEqxuwH9pikstS7xX3ZviFs
-         gLd6D64bV2uBAY8+ow5DzNkqiDgjKpHrF4Tn8tr7ihpQf/NZZbR6DU46uvz3wZFY5qqz
-         QvSWLWq0ntOgn/pY5YedhAhj9PoowjsSFs/PEbHvGdplkMoOXjLUdazuDIucgEeiQyKX
-         C7oDdDQ6Qy26NMaKV+xXcXTciXAxusBQ2QITiTFFFAdeL7H73wh80Tp2h7b1HrY8oamo
-         7gmA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HI4tdjYhgKCF3hI9dB2bVFt8dEDjF5MRs9aEylbNYC4=;
+        b=itIEC1hPhgQ3VK9o7gBBojLj1VKKUw2DBtWbw9hAMPUAGBCgz9hp8ySdpJN2ZlNrk6
+         7eGc/mdGg/Z31MG/5S7lfCt8DK2G5gbbYJj2zyPz4Nh/ChN3yCiWP3anrG8A2A/ji0Xd
+         gs4QqZNFfYWYTTK25VfY2b5El6OaCbc7JvujqU3fB/k3PmCxMxmHgYjrIkwNV84iLzit
+         R9SpD53eIEyIykJ85qYAydiR72BAAYxqKW61rfavxkzdjrSllk+aE+n7NBMx5bMLC+6u
+         by/IV0BDHnUJuUM45GgvileZMa2UwiWBCNFZcREK4uuww5+7e8emJ3PNi4NEy1ju4mEr
+         BExA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6b2TGnM40jjN6eDkMatgtVdtGBBDElcNA9sPAUBmPe4=;
-        b=IW+j0R21bgd6xRpvoFUJgzzzz21xjqywcaBZ+kpsT5Tt/NvlFuFp3bKGQcXqifFDbA
-         6ocjOxJUm1jGvYEzJv/pPwtlPjudwOyEnUvtBrYLtwSOPYVcX331YO5WfucHnB2O7clX
-         7SIGJ91SndNBjBqGILsIPqxrjM6XBJ8H44zvVaaQL9OMRdtZuZT3MPE8/519t1zLoUZE
-         rv7VLKU8ZM6qgaCIOe728OeCdKTOYqKcoBy86u8CjjqWGyN7Kv/fBGtgXMqXFtVO1gqE
-         QwL/e0ubdPB1qZB335KZvkry+M/T8QO4p517fcpHxnT3WkV+KOMKxjJLD9spYWsBaLiT
-         YngA==
-X-Gm-Message-State: APjAAAUklsuJEfkWssfZIJhs36nTqpmWmjpYharB1+m1z/VZ8PHAeon6
-        +zdwygf2EQ/Pz0yfOcM6cM4Nog==
-X-Google-Smtp-Source: APXvYqw3BoJVtmvOQAw1ugeNgHZtoa3Lr2Xwv2m5w2DEeaLsC7Gl2SDkf8F0bjaC90MZbK07m8cwAg==
-X-Received: by 2002:a63:6b47:: with SMTP id g68mr14578047pgc.220.1552019836317;
-        Thu, 07 Mar 2019 20:37:16 -0800 (PST)
-Received: from localhost ([122.171.71.18])
-        by smtp.gmail.com with ESMTPSA id n15sm17031696pfi.173.2019.03.07.20.37.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HI4tdjYhgKCF3hI9dB2bVFt8dEDjF5MRs9aEylbNYC4=;
+        b=SXMR5ON7UYNQhZxn4JeZ0Ngv8sv/RQqlk5MI2oZp/C3W3wQfapYW20pYIPCjDkjaZ9
+         oacz6BOxS6VeiGdBr0oHrqJB3TOsDtGHOTHjtWppAAqyAIYv9dWi+nQ5Vn0CuIoqFGhh
+         Ek46iZUJ9dDnJMZrTzoUN8X4RwfsJQfK4BlLjbVcSobkwsKOdsur/mPaak61sia1k6c8
+         MBMF48zvYXnDat//jbGJBbP6bds9g4hB4VWWNxo9YEZeUvex9U0PCdXZxcAEqIL/WXqP
+         J6Qm9Ik1fu6AEYA6eyiSWgyqtkATXvzKhZ7iov6YYgYa7O2WsNCTfMDLnE6MqLsoIEc+
+         cCsQ==
+X-Gm-Message-State: APjAAAVT6kMM5MU4G1B8miioTWX/zqyR1rfWGFwptMh45VU4prcbKWZO
+        m6za56N3U++Csu2EtQ9jf6g=
+X-Google-Smtp-Source: APXvYqxaPIuBKDF7hSNPCFoFqqtVGJkVEn/D01LmrtfoLHS5pZL6dH9mFdkzo8z1e1gRKruqxmwtjQ==
+X-Received: by 2002:a25:b2a4:: with SMTP id k36mr14437608ybj.446.1552020016306;
+        Thu, 07 Mar 2019 20:40:16 -0800 (PST)
+Received: from localhost.localdomain ([191.101.9.198])
+        by smtp.gmail.com with ESMTPSA id z77sm2596233ywz.91.2019.03.07.20.40.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 20:37:14 -0800 (PST)
-Date:   Fri, 8 Mar 2019 10:07:12 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, rjw@rjwysocki.net
-Cc:     nm@ti.com, sboyd@kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] OPP: Fix handling of multiple power domains
-Message-ID: <20190308043712.3aca6lygz2oya3lc@vireshk-i7>
-References: <20190306040726.1930-1-rnayak@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306040726.1930-1-rnayak@codeaurora.org>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+        Thu, 07 Mar 2019 20:40:15 -0800 (PST)
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        ongliubraving@fb.com, yhs@fb.com, davem@davemloft.net
+Cc:     Bo YU <tsu.yubo@gmail.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, yuzibode@126.com
+Subject: [PATCH] bpf: fix warning about using plain integer as NULL
+Date:   Thu,  7 Mar 2019 23:39:56 -0500
+Message-Id: <20190308043956.16906-1-tsu.yubo@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-03-19, 09:37, Rajendra Nayak wrote:
-> We seem to rely on the number of phandles specified in the
-> 'required-opps' property to identify cases where a device is
-> associated with multiple power domains and hence would have
-> multiple virtual devices that have to be dealt with.
-> 
-> In cases where we do have devices with multiple power domains
-> but with only one of them being scalable, this logic seems to
-> fail.
-> 
-> Instead read the number of power domains from DT to identify
-> such cases.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/opp/of.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 06f0f632ec47..443c305ae100 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -172,7 +172,7 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
->  	struct opp_table **required_opp_tables;
->  	struct device **genpd_virt_devs = NULL;
->  	struct device_node *required_np, *np;
-> -	int count, i;
-> +	int count, count_pd, i;
->  
->  	/* Traversing the first OPP node is all we need */
->  	np = of_get_next_available_child(opp_np, NULL);
-> @@ -185,7 +185,19 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
->  	if (!count)
->  		goto put_np;
->  
-> -	if (count > 1) {
-> +	/*
-> +	 * Check the number of power-domains to know if we need to deal
-> +	 * with virtual devices. In some cases we have devices with multiple
-> +	 * power domains but with only one of them being scalable, hence
-> +	 * 'count' could be 1, but we still have to deal with multiple genpds
-> +	 * and virtual devices.
-> +	 */
-> +	count_pd = of_count_phandle_with_args(dev->of_node, "power-domains",
-> +					      "#power-domain-cells");
-> +	if (!count_pd)
-> +		goto put_np;
-> +
-> +	if (count_pd > 1) {
->  		genpd_virt_devs = kcalloc(count, sizeof(*genpd_virt_devs),
->  					GFP_KERNEL);
->  		if (!genpd_virt_devs)
+Sparse warning below:
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+sudo make C=2 CF=-D__CHECK_ENDIAN__ M=net/bpf/
+CHECK   net/bpf//test_run.c
+net/bpf//test_run.c:19:77: warning: Using plain integer as NULL pointer
+./include/linux/bpf-cgroup.h:295:77: warning: Using plain integer as NULL pointer
 
-@Rafael, please pick this up for 5.1-rc2 directly. Thanks.
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ include/linux/bpf-cgroup.h | 2 +-
+ net/bpf/test_run.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index 695b2a880d9a..a4c644c1c091 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -292,7 +292,7 @@ static inline int bpf_cgroup_storage_assign(struct bpf_prog *prog,
+ static inline void bpf_cgroup_storage_release(struct bpf_prog *prog,
+ 					      struct bpf_map *map) {}
+ static inline struct bpf_cgroup_storage *bpf_cgroup_storage_alloc(
+-	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return 0; }
++	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return NULL; }
+ static inline void bpf_cgroup_storage_free(
+ 	struct bpf_cgroup_storage *storage) {}
+ static inline int bpf_percpu_cgroup_storage_copy(struct bpf_map *map, void *key,
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index da7051d62727..fab142b796ef 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -16,7 +16,7 @@
+ static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
+ 			u32 *retval, u32 *time)
+ {
+-	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { 0 };
++	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { NULL };
+ 	enum bpf_cgroup_storage_type stype;
+ 	u64 time_start, time_spent = 0;
+ 	int ret = 0;
 -- 
-viresh
+2.11.0
+
