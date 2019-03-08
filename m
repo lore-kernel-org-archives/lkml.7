@@ -2,186 +2,179 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD45C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E2FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF8320661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B44E20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="p6Pe87Gg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfCHTB1 (ORCPT
+        id S1726776AbfCHTCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:01:27 -0500
-Received: from mga04.intel.com ([192.55.52.120]:29937 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbfCHTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:01:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 11:01:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,456,1544515200"; 
-   d="scan'208";a="132727032"
-Received: from ray.jf.intel.com (HELO [10.24.9.79]) ([10.24.9.79])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Mar 2019 11:01:25 -0800
-Subject: Re: [PATCH 14/22] x86/fpu: Eager switch PKRU state
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20190221115020.12385-1-bigeasy@linutronix.de>
- <20190221115020.12385-15-bigeasy@linutronix.de>
- <eedfbbbe-02d0-f977-2a64-e683b98d3904@intel.com>
- <20190308180849.hy22jejhffp4n6uh@linutronix.de>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <b0f3ffa8-faec-73b2-f6f2-ea37ece3a3b1@intel.com>
-Date:   Fri, 8 Mar 2019 11:01:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190308180849.hy22jejhffp4n6uh@linutronix.de>
-Content-Type: text/plain; charset=utf-8
+        Fri, 8 Mar 2019 14:02:41 -0500
+Received: from mail-eopbgr750103.outbound.protection.outlook.com ([40.107.75.103]:58488
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbfCHTCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 14:02:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=36q6+OgAXWFp3UnEvWYPZYgaJmxXZYacyAh4xGUdfVY=;
+ b=p6Pe87GgR0eHFl47ZgcYVGvRzq/WfN6NZDwa+nP2Tx/R5BjLSbxR607PtyxA+IlJ6sewqACgdt9rRkgr4pVt+kAi/Vb7Gre+FqHM14uFqg0qCABqKInvvk5WV/xnydRAu2uotvoDZ5K5YDmu9oUM/uI3AAe69aCHUS0zD2aSDS8=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1261.namprd22.prod.outlook.com (10.174.162.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Fri, 8 Mar 2019 19:02:34 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1686.019; Fri, 8 Mar 2019
+ 19:02:34 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Yasha Cherikovsky <yasha.che3@gmail.com>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] MIPS: Ensure ELF appended dtb is relocated
+Thread-Topic: [PATCH 1/1] MIPS: Ensure ELF appended dtb is relocated
+Thread-Index: AQHU1a7JcwPZK+U8+0uc89l/lTqXu6YCF5qA
+Date:   Fri, 8 Mar 2019 19:02:34 +0000
+Message-ID: <20190308190233.jqgkw26dpryz5izy@pburton-laptop>
+References: <20190308125851.31806-1-yasha.che3@gmail.com>
+ <20190308125851.31806-2-yasha.che3@gmail.com>
+In-Reply-To: <20190308125851.31806-2-yasha.che3@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR08CA0071.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::48) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd79b40b-3f47-40e3-5e70-08d6a3f89f95
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1261;
+x-ms-traffictypediagnostic: MWHPR2201MB1261:
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;MWHPR2201MB1261;23:2igNi5ArtuH4NcSrGwgfxPrIcZtKxXQDH9d44yf?=
+ =?us-ascii?Q?7jj9Nqa6WDzm/VjzjHnEKplkoespJ81QrzUz8yt8cyKimvpmNi/NNViX5d/X?=
+ =?us-ascii?Q?qCPzC62vBD6rxxl7iFPdzFcgT5wLHbGgzdDDc6HGbflp1ZVnpqfVNfh+a0ep?=
+ =?us-ascii?Q?KycANs0XBpsrEkIAon3sLXKL+IBgAJTmBp+99BHvBFYVG1HWRogUkVVL1Zpa?=
+ =?us-ascii?Q?kJmEkpMaE62oY5Fmzzb+grMOwzwjC/STdAR3GlSqA9yQvjfoQMrfxb6FiYw5?=
+ =?us-ascii?Q?LBi9eajDuuBtWrVEwQvMfEcBGPqpklGwhlMAfChwMQSvbxJOyVl60UFHmdtZ?=
+ =?us-ascii?Q?fhVEneT4s7ImBaP61z1HERIRYlax7vlvsjLmIhLtc8G7SWfTjJnZfSpmTKCZ?=
+ =?us-ascii?Q?bFtCx0Quo/gYKGmpewrpSpE+u3V3n1r5tqVd8m90khLBRV3Tr2gRUOI/6jZK?=
+ =?us-ascii?Q?A+jSYdNrrpxuhWIravrOaiIKsvDh84OzLFLy4RnRDMBNAP8VsjcDB+dTgRAl?=
+ =?us-ascii?Q?rIBn/JU7sM07pUieR3QbNNTt6Sns1V+YPuNHeQf0SX8dS4WHqLklYLimXslt?=
+ =?us-ascii?Q?Dv6J3Rug9jIu+BuoF3/reKa9yQqsmLxKOHNY1qhzdgbd0iVS4FeN7Wf+VsSB?=
+ =?us-ascii?Q?nmGIqEwQmTEZ0HKqF0cQEGETktbrsrkx9zj8q3Pn+CBzBYlKR4hR5hi6WMtX?=
+ =?us-ascii?Q?0a9XADbMhVMuLmnWQHOEje9ayYJP56ZNaDsftp/PC7hVb/Uv8pbyjgaXg/RY?=
+ =?us-ascii?Q?kFRfps3CgQz3JoI4ACPnMwfn0n44x2ecW6GBKfxF2FQsgvJk43YAmXSnB3MF?=
+ =?us-ascii?Q?i+2UAqOdjJO6vuLUtoYK9q67j/Arq9c2Ns+kgiAukPFS9Z4tpeqY786aD3Q2?=
+ =?us-ascii?Q?6wLOo9IN7XT6fD6n0EFVywScPD3PMUBf6J4u5z1NPfvPDyDolC+jDv0uqk+l?=
+ =?us-ascii?Q?uWT+T4QcrRwJ6j9egG8JpM/kNtT1PbK8pm6sF5zEmkNyPrdkmUhPtlJn7gFW?=
+ =?us-ascii?Q?LQ7pquIZ3BvS/IQsd6WzXnawhmCUZWR2s0ivQoPhKUGx8SDTZ4NEiiPtOUkB?=
+ =?us-ascii?Q?4dP0IpBqK7NI1qso4UoZBsQjIxcUgbTO8eYmWkcycSM8sfm3RhDidc5e1wGb?=
+ =?us-ascii?Q?rqP3UjHFRXF0ouEYr7NMjnAYZj7dpontoCi+FJAhQsPyn7f7tCxqUnxA9eUa?=
+ =?us-ascii?Q?7eS+kMqsi9psKjGNdaxpgLakfWzRaQR6MLwMAgPuna3oithH/LvQWHgKqzv0?=
+ =?us-ascii?Q?YiRdMtp8z/ksv6NC+pnCLcg2AKzOwqLFffHuybhs/9qscQNISHXdQT73l8Hs?=
+ =?us-ascii?Q?NPw=3D=3D?=
+x-microsoft-antispam-prvs: <MWHPR2201MB126135FED8A46DD13B643CD1C14D0@MWHPR2201MB1261.namprd22.prod.outlook.com>
+x-forefront-prvs: 0970508454
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(39850400004)(346002)(366004)(376002)(136003)(189003)(199004)(97736004)(53936002)(25786009)(256004)(305945005)(478600001)(6916009)(4326008)(3846002)(106356001)(316002)(6436002)(7736002)(58126008)(54906003)(1076003)(6512007)(5660300002)(9686003)(6486002)(6246003)(71200400001)(33716001)(71190400001)(386003)(102836004)(6506007)(8676002)(68736007)(6116002)(81166006)(81156014)(229853002)(14454004)(186003)(44832011)(2906002)(486006)(42882007)(476003)(11346002)(446003)(99286004)(105586002)(66066001)(76176011)(26005)(52116002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1261;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6jlEY3BoyQjVi+3zkb00TFsf5U4vLox946U9XlpnfmMFQrDKajU4rTSgkdhI1ABquc0Zfv/xG73atkaAxPN5bGphLdMRmkXXNtIMWnIFvmP0Isbye2NAmskpSRj4pWuVDDN9MpKpee73Qbyoet61TB4bT+y3cGd1h0VkMTQ4kDGlXHova3TdBv+N/my7oprF/7V6I8VE4t3LHrLNQ8wQtqzt6KFJyQho04dwfBHcplSmKHrB2KhBKobTxxjsdIQHDACh/YF/K2zmIFarErIN+8v+53rKits5tYDEzdJcx15HYxlU2pS6L63DnhuhN7zcdrr8dg7BIMpGX03S2LKx0HBcbEY/cpK69138NhNUaR5XAKM5KWoDZmemeGJ0+0a6cnrFzplaL+Xy3eVlRFMWHQXak7GVZ7oSqrzN4rnHpWw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <32BDE4A9540F164C9D2A62B4704F4D03@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd79b40b-3f47-40e3-5e70-08d6a3f89f95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2019 19:02:34.7600
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1261
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/8/19 10:08 AM, Sebastian Andrzej Siewior wrote:
-> On 2019-02-25 10:16:24 [-0800], Dave Hansen wrote:
->>> +	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
->>> +		return;
->>> +
->>> +	if (current->mm) {
->>> +		pk = get_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
->>> +		WARN_ON_ONCE(!pk);
->>
->> This can trip on us of the 'init optimization' is in play because
->> get_xsave_addr() checks xsave->header.xfeatures.  That's unlikely today
->> because we usually set PKRU to a restrictive value.  But, it's also not
->> *guaranteed*.
->>
->> Userspace could easily do an XRSTOR that puts PKRU back in its init
->> state if it wanted to, then this would end up with pk==NULL.
->>
->> We might actually want a selftest that *does* that.  I don't think we
->> have one.
-> 
-> So you are saying that the above warning might trigger and be "okay"?
+Hi Yasha,
 
-Nothing will break, but the warning will trigger, which isn't nice.
+On Fri, Mar 08, 2019 at 02:58:51PM +0200, Yasha Cherikovsky wrote:
+> This fixes booting with the combination of CONFIG_RELOCATABLE=3Dy
+> and CONFIG_MIPS_ELF_APPENDED_DTB=3Dy.
+>=20
+> Sections that appear after the relocation table are not relocated
+> on system boot (except .bss, which has special handling).
+>=20
+> With CONFIG_MIPS_ELF_APPENDED_DTB, the dtb is part of the
+> vmlinux ELF, so it must be relocated together with everything else.
 
-> My understanding is that the in-kernel XSAVE will always save everything
-> so we should never "lose" the XFEATURE_PKRU no matter what user space
-> does.
-> 
-> So as test case you want
-> 	xsave (-1 & ~XFEATURE_PKRU)
-> 	xrestore (-1 & ~XFEATURE_PKRU)
-> 
-> in userland and then a context switch to see if the warning above
-> triggers?
+Do you have any ideas how CONFIG_RELOCATABLE interacts with
+CONFIG_MIPS_RAW_APPENDED_DTB? I'm wondering whether we should move both
+variants of appended DTB to before .data.reloc, but haven't yet thought
+it through.
 
-I think you need an XRSTOR with RFBM=-1 (or at least with the PKRU bit
-set) and the PKRU bit in the XFEATURES field in the XSAVE buffer set to 0.
+Thanks,
+    Paul
 
->>> +		if (pk)
->>> +			pkru_val = pk->pkru;
->>> +	}> +	__write_pkru(pkru_val);
->>>  }
->>
->> A comment above __write_pkru() would be nice to say that it only
->> actually does the slow instruction on changes to the value.
-> 
-> Could we please not do this? It is a comment above one of the callers
-> function and we have two or three. And we have that comment already
-> within __write_pkru().
-
-I looked at this code and thought "writing PKRU is slow", and "this
-writes PKRU unconditionally", and "the __ version of the function
-shoudn't have much logic in it".
-
-I got 2/3 wrong.  To me that means this site needs a 1-line comment.
-Feel free to move one of the other comments to here if you think it's
-over-commented, but this site needs one.
-
->> BTW, this has the implicit behavior of always trying to do a
->> __write_pkru(0) on switches to kernel threads.  That seems a bit weird
->> and it is likely to impose WRPKRU overhead on switches between user and
->> kernel threads.
->>
->> The 0 value is also the most permissive, which is not great considering
->> that user mm's can be active the in page tables when running kernel
->> threads if we're being lazy.
->>
->> Seems like we should either leave PKRU alone or have 'init_pkru_value'
->> be the default.  That gives good security properties and is likely to
->> match the application value, removing the WRPKRU overhead.
-> 
-> Last time we talked about this we agreed (or this was my impression) that
-> 0 should be written so that the kernel thread should always be able to
-> write to user space in case it borrowed its mm (otherwise it has none
-> and it would fail anyway).
-
-We can't write to userspace when borrowing an mm.  If the kernel borrows
-an mm, we might as well be on the init_mm which has no userspace mappings.
-
-> We didn't want to leave PKRU alone because the outcome (whether or not
-> the write by the kernel thread succeeds) should not depend on the last
-> running task (and be random) but deterministic.
-
-Right, so let's make it deterministically restrictive: either
-init_pkru_value, or -1 since kernel threads shouldn't be touching
-userspace in the first place.
+> Fixes: 069fd766271d ("MIPS: Reserve space for relocation table")
+> Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: linux-mips@linux-mips.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/mips/kernel/vmlinux.lds.S | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.ld=
+s.S
+> index cb7e9ed7a453..33ee0d18fb0a 100644
+> --- a/arch/mips/kernel/vmlinux.lds.S
+> +++ b/arch/mips/kernel/vmlinux.lds.S
+> @@ -140,6 +140,13 @@ SECTIONS
+>  	PERCPU_SECTION(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
+>  #endif
+> =20
+> +#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
+> +	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
+> +		*(.appended_dtb)
+> +		KEEP(*(.appended_dtb))
+> +	}
+> +#endif
+> +
+>  #ifdef CONFIG_RELOCATABLE
+>  	. =3D ALIGN(4);
+> =20
+> @@ -164,11 +171,6 @@ SECTIONS
+>  	__appended_dtb =3D .;
+>  	/* leave space for appended DTB */
+>  	. +=3D 0x100000;
+> -#elif defined(CONFIG_MIPS_ELF_APPENDED_DTB)
+> -	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
+> -		*(.appended_dtb)
+> -		KEEP(*(.appended_dtb))
+> -	}
+>  #endif
+>  	/*
+>  	 * Align to 64K in attempt to eliminate holes before the
+> --=20
+> 2.21.0
+>=20
