@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B293BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9BDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2EA2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9382087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049919;
-	bh=kW8gyVYBminoXUZpfzTSQknurIBtFVYlu+2Pceudjqs=;
+	s=default; t=1552049923;
+	bh=1iaQKpZ+NBJrfufJ5gS3ru8ut1VRLtvr4dXyWM+M6ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CtuS6U41BR6HbcNYc+OLFXxcpKpXfaDSBk1ezwnIyN9d0JqUsJ5Tw3Cy+ZMmbgb12
-	 jrQ22LPepagQHvhH7w69PzXZbhlXAeq+Znd2tkaoTgUjgEaqLYSELP0/a0J27yPWTE
-	 ZS+DT5kwZuviI43ImIbi0et7j0ozEbbayHaRD2X0=
+	b=InQ9RC0g4+JsGaLI1Tr9UHDpOzTNvqdpC+Ip1GnXD9381oHyK4/Ip9ZNZ7YaYdX00
+	 b6BqDUquwbgwFIni6ggnFePc4GnkdAEVPRamebRFDvRHrvEriGOf1aW1Tb1GJ+0oh8
+	 7Qkok5MFckDJT8n/IeQ6wQfzfrU+aS0enm/HPwn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfCHM6h (ORCPT
+        id S1727975AbfCHM6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:58:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34974 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbfCHM6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:33 -0500
+        id S1728044AbfCHM6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:37 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC0F2085A;
-        Fri,  8 Mar 2019 12:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD2BB20449;
+        Fri,  8 Mar 2019 12:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049912;
-        bh=kW8gyVYBminoXUZpfzTSQknurIBtFVYlu+2Pceudjqs=;
+        s=default; t=1552049916;
+        bh=1iaQKpZ+NBJrfufJ5gS3ru8ut1VRLtvr4dXyWM+M6ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDQTQzZidVxk6nGlDdg+cpeO1tak460dRt7CxBcGui9gDSADWiljAHhR+xE3FOqnk
-         ASHN6NFGk0/1ilrLHfosYsRXmTH+1Qq/jPC2TTnFSXa1gnwI54R32bOrldHuWUNFNs
-         SjLrCblRaHIZQriDqwqEV/k1BUfbdCrDUms0YMBI=
+        b=xpWmjvHwmgIPXfApZ0AlZnnawruvDChKJQSs+RpxTsdH/eF0TM10cRGx9YczPk7vN
+         v1DxVGHRut/RS9KSOxXxgNL2WuqGnY5YmIGhyW0xjyBUjo78K08RgB/bARUurSmfKc
+         Bslj6lOJ5EoYLKagDAMhQSjobr5tSXr4gADJzZXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 25/68] hv_netvsc: Fix IP header checksum for coalesced packets
-Date:   Fri,  8 Mar 2019 13:49:55 +0100
-Message-Id: <20190308124912.050913323@linuxfoundation.org>
+Subject: [PATCH 4.19 26/68] ipv4: Add ICMPv6 support when parse route ipproto
+Date:   Fri,  8 Mar 2019 13:49:56 +0100
+Message-Id: <20190308124912.090410704@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -65,59 +66,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit bf48648d650db1146b75b9bd358502431e86cf4f ]
+[ Upstream commit 5e1a99eae84999a2536f50a0beaf5d5262337f40 ]
 
-Incoming packets may have IP header checksum verified by the host.
-They may not have IP header checksum computed after coalescing.
-This patch re-compute the checksum when necessary, otherwise the
-packets may be dropped, because Linux network stack always checks it.
+For ip rules, we need to use 'ipproto ipv6-icmp' to match ICMPv6 headers.
+But for ip -6 route, currently we only support tcp, udp and icmp.
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Add ICMPv6 support so we can match ipv6-icmp rules for route lookup.
+
+v2: As David Ahern and Sabrina Dubroca suggested, Add an argument to
+rtm_getroute_parse_ip_proto() to handle ICMP/ICMPv6 with different family.
+
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: eacb9384a3fe ("ipv6: support sport, dport and ip_proto in RTM_GETROUTE")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/hyperv/netvsc_drv.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ include/net/ip.h   |    2 +-
+ net/ipv4/netlink.c |   17 +++++++++++++----
+ net/ipv4/route.c   |    2 +-
+ net/ipv6/route.c   |    3 ++-
+ 4 files changed, 17 insertions(+), 7 deletions(-)
 
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -743,6 +743,14 @@ void netvsc_linkstatus_callback(struct n
- 	schedule_delayed_work(&ndev_ctx->dwork, 0);
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -687,7 +687,7 @@ extern int sysctl_icmp_msgs_burst;
+ int ip_misc_proc_init(void);
+ #endif
+ 
+-int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto,
++int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto, u8 family,
+ 				struct netlink_ext_ack *extack);
+ 
+ #endif	/* _IP_H */
+--- a/net/ipv4/netlink.c
++++ b/net/ipv4/netlink.c
+@@ -3,9 +3,10 @@
+ #include <linux/types.h>
+ #include <net/net_namespace.h>
+ #include <net/netlink.h>
++#include <linux/in6.h>
+ #include <net/ip.h>
+ 
+-int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto,
++int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto, u8 family,
+ 				struct netlink_ext_ack *extack)
+ {
+ 	*ip_proto = nla_get_u8(attr);
+@@ -13,11 +14,19 @@ int rtm_getroute_parse_ip_proto(struct n
+ 	switch (*ip_proto) {
+ 	case IPPROTO_TCP:
+ 	case IPPROTO_UDP:
++		return 0;
+ 	case IPPROTO_ICMP:
++		if (family != AF_INET)
++			break;
++		return 0;
++#if IS_ENABLED(CONFIG_IPV6)
++	case IPPROTO_ICMPV6:
++		if (family != AF_INET6)
++			break;
+ 		return 0;
+-	default:
+-		NL_SET_ERR_MSG(extack, "Unsupported ip proto");
+-		return -EOPNOTSUPP;
++#endif
+ 	}
++	NL_SET_ERR_MSG(extack, "Unsupported ip proto");
++	return -EOPNOTSUPP;
  }
+ EXPORT_SYMBOL_GPL(rtm_getroute_parse_ip_proto);
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -2814,7 +2814,7 @@ static int inet_rtm_getroute(struct sk_b
  
-+static void netvsc_comp_ipcsum(struct sk_buff *skb)
-+{
-+	struct iphdr *iph = (struct iphdr *)skb->data;
-+
-+	iph->check = 0;
-+	iph->check = ip_fast_csum(iph, iph->ihl);
-+}
-+
- static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 					     struct napi_struct *napi,
- 					     const struct ndis_tcp_ip_checksum_info *csum_info,
-@@ -766,9 +774,17 @@ static struct sk_buff *netvsc_alloc_recv
- 	/* skb is already created with CHECKSUM_NONE */
- 	skb_checksum_none_assert(skb);
+ 	if (tb[RTA_IP_PROTO]) {
+ 		err = rtm_getroute_parse_ip_proto(tb[RTA_IP_PROTO],
+-						  &ip_proto, extack);
++						  &ip_proto, AF_INET, extack);
+ 		if (err)
+ 			return err;
+ 	}
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -4907,7 +4907,8 @@ static int inet6_rtm_getroute(struct sk_
  
--	/*
--	 * In Linux, the IP checksum is always checked.
--	 * Do L4 checksum offload if enabled and present.
-+	/* Incoming packets may have IP header checksum verified by the host.
-+	 * They may not have IP header checksum computed after coalescing.
-+	 * We compute it here if the flags are set, because on Linux, the IP
-+	 * checksum is always checked.
-+	 */
-+	if (csum_info && csum_info->receive.ip_checksum_value_invalid &&
-+	    csum_info->receive.ip_checksum_succeeded &&
-+	    skb->protocol == htons(ETH_P_IP))
-+		netvsc_comp_ipcsum(skb);
-+
-+	/* Do L4 checksum offload if enabled and present.
- 	 */
- 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
- 		if (csum_info->receive.tcp_checksum_succeeded ||
+ 	if (tb[RTA_IP_PROTO]) {
+ 		err = rtm_getroute_parse_ip_proto(tb[RTA_IP_PROTO],
+-						  &fl6.flowi6_proto, extack);
++						  &fl6.flowi6_proto, AF_INET6,
++						  extack);
+ 		if (err)
+ 			goto errout;
+ 	}
 
 
