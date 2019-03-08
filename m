@@ -2,103 +2,153 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E4EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECF5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C95820661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5FC20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552052873;
+	bh=oGztcOjAhdQ2nrpNpnbciJeFaxjXVFPMlf4tVKl65E0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y1PmzMOpDDOzWRwlp77/wubA8hmS9mWR9+lWiw+sKHQCp6xs+GyPbz2ujwdd2Hiyj
+	 /AlFfiIGh9uODM4yldz9GC3/7+1ig9+/lMnGTijSDX/UGbn88UNAmbhqvRKTigqY0i
+	 iOIgaFgqttcvdyRvdn5/xWIvgo8FJA2LxrTGznQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfCHNqD (ORCPT
+        id S1726709AbfCHNrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:46:03 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54828 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726623AbfCHNqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:46:03 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28Dh1Op102013
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 08:46:02 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r3s361gvg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:46:02 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 8 Mar 2019 13:46:00 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Mar 2019 13:45:56 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x28Djtb552232340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Mar 2019 13:45:55 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F8AD52050;
-        Fri,  8 Mar 2019 13:45:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.116])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B2D9C5204F;
-        Fri,  8 Mar 2019 13:45:54 +0000 (GMT)
-Subject: Re: [PATCH 2/3] scripts/ima: define a set of common functions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Date:   Fri, 08 Mar 2019 08:45:44 -0500
-In-Reply-To: <20190308024450.GC7223@dhcp-128-65.nay.redhat.com>
-References: <1548960936-7800-1-git-send-email-zohar@linux.ibm.com>
-         <1548960936-7800-3-git-send-email-zohar@linux.ibm.com>
-         <20190228134146.GA7528@dhcp-128-65.nay.redhat.com>
-         <1551366343.10911.173.camel@linux.ibm.com>
-         <20190308024450.GC7223@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030813-0028-0000-0000-00000351A64D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030813-0029-0000-0000-000024101CA0
-Message-Id: <1552052744.4134.26.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=592 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903080096
+        Fri, 8 Mar 2019 08:47:51 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:53130 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbfCHNrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:47:51 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1410A3092664;
+        Fri,  8 Mar 2019 13:47:50 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E3305C1B4;
+        Fri,  8 Mar 2019 13:47:47 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCHv5 00/11] perf record: Add support to store data in directory
+Date:   Fri,  8 Mar 2019 14:47:34 +0100
+Message-Id: <20190308134745.5057-1-jolsa@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 08 Mar 2019 13:47:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-08 at 10:44 +0800, Dave Young wrote:
-> Hi Mimi,
-> 
-> Still did not get change to have a look at V2,  but seems you missed the
-> last chunk of comments about the secure boot mode in previous reply?
-> 
-> I just copy it hear:
-> '''
-> Do you want to get the Secureboot status here?
-> I got some advice from Peter Jones previously, thus we have below
-> in our kdump scripts:
-> https://src.fedoraproject.org/cgit/rpms/kexec-tools.git/tree/kdump-lib.sh
-> 
-> See the function is_secure_boot_enforced(), probably you can refer to
-> that function and check setup mode as well.
-> '''
+hi,
+this patchset adds the --dir option to record command (and all
+the other record command that overload cmd_record) that allows
+the data to be stored in directory with multiple data files.
 
-Thank you for the pointer to the kdump scripts and reminder.
+It's next step for multiple threads implementation in record.
+It's now possible to make directory data via --dir option, like:
 
-Mimi
+  $ perf record --dir perf bench sched messaging
+  $ ls -l perf.data
+  total 344
+  -rw-------. 1 jolsa jolsa 43864 Jan 20 22:26 data.0
+  -rw-------. 1 jolsa jolsa 30464 Jan 20 22:26 data.1
+  -rw-------. 1 jolsa jolsa 53816 Jan 20 22:26 data.2
+  -rw-------. 1 jolsa jolsa 30368 Jan 20 22:26 data.3
+  -rw-------. 1 jolsa jolsa 40088 Jan 20 22:26 data.4
+  -rw-------. 1 jolsa jolsa 42592 Jan 20 22:26 data.5
+  -rw-------. 1 jolsa jolsa 56136 Jan 20 22:26 data.6
+  -rw-------. 1 jolsa jolsa 25992 Jan 20 22:26 data.7
+  -rw-------. 1 jolsa jolsa  8832 Jan 20 22:26 header
 
+There's a data file created for every cpu and it's storing
+data for those cpu maps. The report command will read it
+transparently, sort it and display as single file data.
+
+There's new DIR_FORMAT feature to describe directory data
+layout/format. In future we can describe different data files
+layout according to special needs.
+
+It's possible to transform directory data into standard
+perf.data file via simple inject command:
+    
+  $ perf inject -o perf.data.file -i perf.data
+
+The old perf fails over the directory data with following message:
+  $ perf report
+  incompatible file format (rerun with -v to learn more)
+
+I'm now testing the record threads support, so I'd like to
+have some agreement on the directory data support before.
+
+v5 changes:
+  - rebased to latest Arnaldo's perf/core
+
+v4 changes:
+  - some of the patches already taken
+  - removing up perf.data directory on perf_data__open
+    error path
+
+v3 changes:
+  - add rm_rf_perf_data to safely remove file/directory perf data
+  - allocation fix in perf_data__create_dir
+
+v2 changes:
+  - rm_rf changes are already accepted with requested changes
+  - updated doc/man plus adding perf.data-directory-format.txt
+    to describe directory format/layout
+  - the --switch-output options now works over directory data
+  - data rollback is not part of this patchset, updated my TODO though ;-)
+  - added --output-dir option to combine -o and --dir
+  - added DIR_FORMAT feature to describe directory data
+  - disabling directory output for aio for now
+
+It's also available in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/dir
+
+thanks,
+jirka
+
+
+---
+Jiri Olsa (11):
+      perf data: Add directory support
+      perf data: Don't store auxtrace index for directory data file
+      perf data: Add perf_data__update_dir function
+      perf data: Make perf_data__size to work over directory
+      perf header: Add DIR_FORMAT feature to describe directory data
+      perf session: Add process callback to reader object
+      perf session: Add __perf_session__process_dir_events function
+      perf session: Add path to reader object
+      perf record: Add --dir option to store data in directory
+      perf record: Add --output-dir option to store data in directory
+      perf record: Describe perf.data directory format
+
+ tools/lib/subcmd/parse-options.h                        |   4 ++++
+ tools/perf/Documentation/perf-record.txt                |   6 ++++++
+ tools/perf/Documentation/perf.data-directory-format.txt |  54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/builtin-record.c                             |  95 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ tools/perf/util/data.c                                  |  96 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ tools/perf/util/data.h                                  |  12 ++++++++----
+ tools/perf/util/header.c                                |  44 +++++++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/header.h                                |   5 +++++
+ tools/perf/util/mmap.h                                  |  23 ++++++++++++-----------
+ tools/perf/util/session.c                               | 125 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 10 files changed, 430 insertions(+), 34 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf.data-directory-format.txt
