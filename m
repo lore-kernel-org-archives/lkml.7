@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8796C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C30FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690A22085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1022085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049823;
-	bh=W1IyTDWmOnMHqV/x1mAzVg+orWwcs+azvQO7xl1TqAg=;
+	s=default; t=1552049825;
+	bh=EgdEhxbMK1cDntkhMH7d1S/cv1ZGN3NBklk2YHGyDPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZEv7Sf4thbUSoASPzUSKVm0LojRZU0ttbHkpwbQkZcrn8SRojZ2yDUYT/Yh1pZ3M
-	 eu4+D/ZsdNS8nzoIq7XTXbwIJNOkxcRcXNrPZ1mqnKP5n4EK4MU3pGIyhNBRcRgqeU
-	 5ta3NbpXSyjo6XDgaTSWTl+yFYEuYgusua++0PD0=
+	b=0/J6/uanJ1hk3I77O46Tb5Jwj4+AnCgSxUdUnuL7iOdyJaB0ie+N5gkQIbk1rbf+d
+	 rPIpiuNfLcwp7sQ2gXiGlRANFbraG9xT6GsBu0rNTjUPFbFwdUFUKQ6fBWVPt0DNCU
+	 czVYdMQY1exNBB1yHSZ9nPOsMk6oMIhMIIZPuuxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfCHM5C (ORCPT
+        id S1727439AbfCHM5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727694AbfCHM46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:56:58 -0500
+        id S1727777AbfCHM5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:01 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6673C2087C;
-        Fri,  8 Mar 2019 12:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE8120449;
+        Fri,  8 Mar 2019 12:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049817;
-        bh=W1IyTDWmOnMHqV/x1mAzVg+orWwcs+azvQO7xl1TqAg=;
+        s=default; t=1552049820;
+        bh=EgdEhxbMK1cDntkhMH7d1S/cv1ZGN3NBklk2YHGyDPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Y6Q2PqbrzX/UWvZ4urWDUEzG0bqnrqA1ISSSqvwwqHlOtHYLvE0vE2HeVDinxpIz
-         30SwMjR8NGMHRdnPnAJOCxH+aWYXgAWOHP+hZjf/r1R9PW616gNwK0JdO7uN/bAmmN
-         kq5Bu3xIEzfbSBC+qvryJA586/kZx+wS88pHUnUM=
+        b=fjmLSiks5KoxZAtN2L6X0An7VlsnZPfPOHPb2dfypTdnlWx1A0e/7EywIvuV+oiNc
+         Rurforh9YNKv8rKJxpKd1rcxXtza3m2qZQcAFunP7sFQPR+cXvL9TczfepT57Q0IH5
+         XoEIKjWlRmGsqvqluS4CdTP8OC6cEpgPHZN3X2vE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.20 71/76] selftests: firmware: fix verify_reqs() return value
-Date:   Fri,  8 Mar 2019 13:50:23 +0100
-Message-Id: <20190308124917.302557423@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.20 72/76] Bluetooth: btrtl: Restore old logic to assume firmware is already loaded
+Date:   Fri,  8 Mar 2019 13:50:24 +0100
+Message-Id: <20190308124917.338366360@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -63,34 +65,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 344c0152d878922365464b7140c74c2a5e073d99 upstream.
+commit 00df214b1faae520880cc5c57e206f21239ef741 upstream.
 
-commit a6a9be9270c87 ("selftests: firmware: return Kselftest Skip code
-for skipped tests") by Shuah modified failures to return the special
-error code of $ksft_skip (4). We have a corner case issue where we
-*do* want to verify_reqs().
+Realtek bluetooth may not work after reboot:
+[   12.446130] Bluetooth: hci0: RTL: rtl: unknown IC info, lmp subver a99e, hci rev 826c, hci ver 0008
 
-Cc: <stable@vger.kernel.org> # >= 4.18
-Fixes: a6a9be9270c87 ("selftests: firmware: return Kselftest Skip code for for skipped tests")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is a regression introduced by commit 26503ad25de8 ("Bluetooth:
+btrtl: split the device initialization into smaller parts"). The new
+logic errors out early when no matching IC info can be found, in this
+case it means the firmware is already loaded.
+
+So let's assume the firmware is already loaded when we can't find
+matching IC info, like the old logic did.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=201921
+Fixes: 26503ad25de8 ("Bluetooth: btrtl: split the device initialization into smaller parts")
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/firmware/fw_lib.sh |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/btrtl.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -91,7 +91,7 @@ verify_reqs()
- 	if [ "$TEST_REQS_FW_SYSFS_FALLBACK" = "yes" ]; then
- 		if [ ! "$HAS_FW_LOADER_USER_HELPER" = "yes" ]; then
- 			echo "usermode helper disabled so ignoring test"
--			exit $ksft_skip
-+			exit 0
- 		fi
- 	fi
- }
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -552,10 +552,9 @@ struct btrtl_device_info *btrtl_initiali
+ 					    hdev->bus);
+ 
+ 	if (!btrtl_dev->ic_info) {
+-		rtl_dev_err(hdev, "rtl: unknown IC info, lmp subver %04x, hci rev %04x, hci ver %04x",
++		rtl_dev_info(hdev, "rtl: unknown IC info, lmp subver %04x, hci rev %04x, hci ver %04x",
+ 			    lmp_subver, hci_rev, hci_ver);
+-		ret = -EINVAL;
+-		goto err_free;
++		return btrtl_dev;
+ 	}
+ 
+ 	if (btrtl_dev->ic_info->has_rom_version) {
+@@ -610,6 +609,11 @@ int btrtl_download_firmware(struct hci_d
+ 	 * standard btusb. Once that firmware is uploaded, the subver changes
+ 	 * to a different value.
+ 	 */
++	if (!btrtl_dev->ic_info) {
++		rtl_dev_info(hdev, "rtl: assuming no firmware upload needed\n");
++		return 0;
++	}
++
+ 	switch (btrtl_dev->ic_info->lmp_subver) {
+ 	case RTL_ROM_LMP_8723A:
+ 	case RTL_ROM_LMP_3499:
 
 
