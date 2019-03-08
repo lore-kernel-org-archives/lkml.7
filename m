@@ -2,180 +2,168 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A1FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A896C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568472085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDED120851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WiRvvBmH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KEvIMA10"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mlVO6F81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCHMjE (ORCPT
+        id S1726452AbfCHMmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:39:04 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:42472 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHMjE (ORCPT
+        Fri, 8 Mar 2019 07:42:02 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40116 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfCHMmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:39:04 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BB88060397; Fri,  8 Mar 2019 12:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552048742;
-        bh=MBXmJUwHed3uQzfaC5YIkjT0Y2dYWJTpv2JcO5zujxI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WiRvvBmHEUHbkwhjeigqLtqiaJ+lCEin6ObDOVzeD1233zCLRpo5diUwUS2j5dPTj
-         wgfAIoO5tG7HknAaDcl52JVsjd34EQp7gXp3+8mlVCkq6Fm1ft+173m4g+oVzbQ73F
-         lxvDpfZ80KhCSXooWStvWEi+cZAjjjVtyMJmK4O8=
-Received: from lingutla-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: clingutla@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BD0C60264;
-        Fri,  8 Mar 2019 12:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552048741;
-        bh=MBXmJUwHed3uQzfaC5YIkjT0Y2dYWJTpv2JcO5zujxI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEvIMA10n+a33KNJWDRFm40MHFvVu8o2xJPGKQdfzk1WzBniPSo54V43C5Dlsyem/
-         Q7abCh1INfw+1xmWhsx3BhuykvKw43Es/CtFgaTDD9dVQk85ZLhMZtiP8p+u4kkpAP
-         1MvHzVaag9EB6QJxX6LMrGugXhoy2Saz0MDrQ4co=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9BD0C60264
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clingutla@codeaurora.org
-From:   Lingutla Chandrasekhar <clingutla@codeaurora.org>
-To:     quentin.perret@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org
-Cc:     will.deacon@arm.com, catalin.marinas@arm.com,
-        morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org,
-        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
-        Lingutla Chandrasekhar <clingutla@codeaurora.org>
-Subject: [PATCH v2] arch_topology: Make cpu_capacity sysfs node as ready-only
-Date:   Fri,  8 Mar 2019 18:08:48 +0530
-Message-Id: <1552048728-29657-1-git-send-email-clingutla@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <df8c3952-b1ab-bc15-ccb7-e4a5d7d54bf8@arm.com>
-References: <df8c3952-b1ab-bc15-ccb7-e4a5d7d54bf8@arm.com>
+        Fri, 8 Mar 2019 07:42:02 -0500
+Received: by mail-qk1-f194.google.com with SMTP id h28so11033948qkk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 04:42:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=adR+E/OsmXqnABOXHM75x+oGV2p1CkxaPVcL89SSKxk=;
+        b=mlVO6F81w/F/09bjDwhaDMn1EfbWifaSFgeXOqWYz2ouX0yLy/AzOdARDXZF+Tu5sB
+         St06omjkkaGQzT9GNgARgJFqgH6Cm8aDigUHJ5WARK4U6M4qEPqB2qpASegSZtzfFEmc
+         R8LSTlsdehB5Lp+SzadAiUCbkIYHOfEHiTnt/1gt1AH8a3NJVxhcsEjd88fx3PQADjUg
+         JO7xnjhDm/DgIntu7fvZZtWL62zhx3aNQY34E8ZswqhZCN976vV74sh1AhRDGp8OLGBm
+         GoqlxCLp0bLwRzsfqUz14f8t5qWH/opxD2BFKrYVvzko6+7gzu6jXTgEYfVNvQDb/l8u
+         m7/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=adR+E/OsmXqnABOXHM75x+oGV2p1CkxaPVcL89SSKxk=;
+        b=MMxoVaXmJRJR0z1fygZFpw/AvqJXwNUoFWN5xw8Mn1p2jAQavCKopFouHySUY4LhcZ
+         qKY5JhiuoCRAIT8VfKesWHADOrAeRoIT7qTUtQeIgT0XjDYvL3Bjqm4Sp9n7AI0Ks8qJ
+         DDfTWjDiMERsyKr/mh8kcCv+OMgsdw/QkVyDR5BZywtjwndHMkEXaTCetElnYjMeC2sK
+         pR8gYiyGN/at3wgdJKJQ/51pgGEbXz2/6A+q/fLpmeWu5wgd90heaav/Bxp9wtYUIYNn
+         Xok9STBZmeaifC9dsZhTSvpL43FHhWBL59d+xTfH7zk1ny32n3kzQzmrLjLzfAFxZW+M
+         uN4g==
+X-Gm-Message-State: APjAAAWFVGREieYq84uUeFj3wOJELRqfFyYfir1rm4rt6xiXw7EfadiL
+        2p6u7ntepy+g4oBkk3NjWVoCRg==
+X-Google-Smtp-Source: APXvYqzUkMBEatP5qSiaOE3357a7VCo2Pgk5WKbx0F2/RNAXHsIusftrxsMN/Y+SQMO8jAHqwGJRvQ==
+X-Received: by 2002:ae9:c008:: with SMTP id u8mr621240qkk.286.1552048920742;
+        Fri, 08 Mar 2019 04:42:00 -0800 (PST)
+Received: from ziepe.ca ([24.137.65.181])
+        by smtp.gmail.com with ESMTPSA id l16sm3893714qke.20.2019.03.08.04.41.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Mar 2019 04:41:59 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h2Ep4-0006Kj-6d; Fri, 08 Mar 2019 08:41:58 -0400
+Date:   Fri, 8 Mar 2019 08:41:58 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: Re: [PATCH] Avoid that check_shl_overflow() triggers a compiler
+ warning when building with W=1
+Message-ID: <20190308124158.GD9321@ziepe.ca>
+References: <20190307010153.81157-1-bvanassche@acm.org>
+ <20190307012417.GU1758@mellanox.com>
+ <8a5bd9ae-ebfe-687c-2868-d0f2a610d1e0@acm.org>
+ <2c122567-d14b-7867-9230-67f570c13d15@rasmusvillemoes.dk>
+ <1552003703.45180.17.camel@acm.org>
+ <2d60debb-2b64-1b1f-7e16-d20720c93e28@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d60debb-2b64-1b1f-7e16-d20720c93e28@rasmusvillemoes.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If user updates any cpu's cpu_capacity, then the new value is going to
-be applied to all its online sibling cpus. But this need not to be correct
-always, as sibling cpus (in ARM, same micro architecture cpus) would have
-different cpu_capacity with different performance characteristics.
-So updating the user supplied cpu_capacity to all cpu siblings
-is not correct.
+On Fri, Mar 08, 2019 at 08:58:21AM +0100, Rasmus Villemoes wrote:
+> On 08/03/2019 01.08, Bart Van Assche wrote:
+> > On Thu, 2019-03-07 at 08:18 +0100, Rasmus Villemoes wrote:
+> >> On 07/03/2019 03.14, Bart Van Assche wrote:
+> >>> On 3/6/19 5:24 PM, Jason Gunthorpe wrote:
+> >>>>>
+> >>>>> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> >>>>> index 40b48e2133cb..8afe0c0ada6f 100644
+> >>>>> +++ b/include/linux/overflow.h
+> >>>>> @@ -202,6 +202,24 @@
+> >>>>>     #endif /* COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW */
+> >>>>>   +/*
+> >>>>> + * Evaluate a >= 0 without triggering a compiler warning if the type
+> >>>>> of a
+> >>>>> + * is an unsigned type.
+> >>>>> + */
+> >>>>> +#define is_positive(a) ({                    \
+> >>
+> >> is_non_negative, please! positive means > 0. And perhaps it's better to
+> >> move these utility macros closer to the top of the file, together with
+> >> the other type/range helpers.
+> > 
+> > Hi Rasmus,
+> > 
+> > Thank you for the feedback. But according to what I found online opinions
+> > about whether or not zero is a positive number seem to vary. From
+> > https://en.wikipedia.org/wiki/Sign_(mathematics):
+> 
+> Yes, I'm a mathematician, I'm aware of that. You can also find people
+> who use "less than" in the "<=" sense, and then say "strictly less than"
+> when they mean "<".
+> 
+> > Terminology for signs
+> > 
+> > When 0 is said to be neither positive nor negative, the following phrases
+> > may be used to refer to the sign of a number:
+> > * A number is positive if it is greater than zero.
+> > * A number is negative if it is less than zero.
+> > * A number is non-negative if it is greater than or equal to zero.
+> > * A number is non-positive if it is less than or equal to zero.
+> > 
+> > When 0 is said to be both positive and negative, modified phrases are used
+> > to refer to the sign of a number:
+> > * A number is strictly positive if it is greater than zero.
+> > * A number is strictly negative if it is less than zero.
+> > * A number is positive if it is greater than or equal to zero.
+> > * A number is negative if it is less than or equal to zero.
+> 
+> Right, but in no way does it ever make sense to mix these conventions.
+> So the options for describing ">= 0, < 0" are "non_negative, negative"
+> or "positive, strictly_negative".
+> 
+> In the context of the C language, the first convention is used. While
+> not explicitly stated, it can be inferred from usage of the terms.
+> First, the word nonnegative is used (e.g. in defining argc). Second, "If
+> the value of the right operand [in a shift expression] is negative [...]
+> the behaviour is undefined.", so certainly negative cannot include 0.
+> Third, E* constants are required to be positive, and "[errno] is never
+> set to zero by any library function". Etc. etc.
 
-And another problem is, current code assumes that 'all cpus in a cluster
-or with same package_id (core_siblings), would have same cpu_capacity'.
-But with commit '5bdd2b3f0f8 ("arm64: topology: add support to remove
-cpu topology sibling masks")', when a cpu hotplugged out, the cpu
-information gets cleared in its sibling cpus. So user supplied
-cpu_capacity would be applied to only online sibling cpus at the time.
-After that, if any cpu hot plugged in, it would have different cpu_capacity
-than its siblings, which breaks the above assumption.
+Lets use is_unsigned() or is_unsigned_value() then for the name of the
+test, that is pretty unambiguous and alot nicer to read than
+is_not_negative()
 
-So instead of mucking around the core sibling mask for user supplied
-value, use device-tree to set cpu capacity. And make the cpu_capacity
-node as read-only to know the assymetry between cpus in the system.
-While at it, remove cpu_scale_mutex usage, which used for sysfs write
-protection.
+FWIW, in computer science I generally see the terms used as:
 
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Lingutla Chandrasekhar <clingutla@codeaurora.org>
----
+  negatve: < 0
+  positive: >= 0
+  natural: > 0
 
-Changes from v1:
-   - Removed cpu_scale_mutex usage, suggested by Dietmar Eggemann.
----
- drivers/base/arch_topology.c | 36 +-----------------------------------
- 1 file changed, 1 insertion(+), 35 deletions(-)
+This language naturally follows the twos complement construction where
+it is very logical to say a number with the sign bit set is 'negative'
+and a number with it clear is 'positive', which means 0 is positive.
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index edfcf8d..1739d7e 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -7,7 +7,6 @@
-  */
- 
- #include <linux/acpi.h>
--#include <linux/arch_topology.h>
- #include <linux/cpu.h>
- #include <linux/cpufreq.h>
- #include <linux/device.h>
-@@ -31,7 +30,6 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
- 		per_cpu(freq_scale, i) = scale;
- }
- 
--static DEFINE_MUTEX(cpu_scale_mutex);
- DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
- 
- void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
-@@ -51,37 +49,7 @@ static ssize_t cpu_capacity_show(struct device *dev,
- static void update_topology_flags_workfn(struct work_struct *work);
- static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
- 
--static ssize_t cpu_capacity_store(struct device *dev,
--				  struct device_attribute *attr,
--				  const char *buf,
--				  size_t count)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	int this_cpu = cpu->dev.id;
--	int i;
--	unsigned long new_capacity;
--	ssize_t ret;
--
--	if (!count)
--		return 0;
--
--	ret = kstrtoul(buf, 0, &new_capacity);
--	if (ret)
--		return ret;
--	if (new_capacity > SCHED_CAPACITY_SCALE)
--		return -EINVAL;
--
--	mutex_lock(&cpu_scale_mutex);
--	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
--		topology_set_cpu_scale(i, new_capacity);
--	mutex_unlock(&cpu_scale_mutex);
--
--	schedule_work(&update_topology_flags_work);
--
--	return count;
--}
--
--static DEVICE_ATTR_RW(cpu_capacity);
-+static DEVICE_ATTR_RO(cpu_capacity);
- 
- static int register_cpu_capacity_sysctl(void)
- {
-@@ -141,7 +109,6 @@ void topology_normalize_cpu_scale(void)
- 		return;
- 
- 	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
--	mutex_lock(&cpu_scale_mutex);
- 	for_each_possible_cpu(cpu) {
- 		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
- 			 cpu, raw_capacity[cpu]);
-@@ -151,7 +118,6 @@ void topology_normalize_cpu_scale(void)
- 		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
- 			cpu, topology_get_cpu_scale(NULL, cpu));
- 	}
--	mutex_unlock(&cpu_scale_mutex);
- }
- 
- bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
- a Linux Foundation Collaborative Project.
+Which is probably enraging to mathematicians.. But has a certain
+logic.
 
+.. and most CS places don't actually care about the difference
+between > 0 and >= 0 , while < 0 is usually highly interesting.
+
+Jason
