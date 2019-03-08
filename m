@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3401C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8B7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A152146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC872133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049559;
-	bh=UWuBpbfUgdy7cN10moh91UUvFAM/iQIV6WtHB4cOonY=;
+	s=default; t=1552049563;
+	bh=IExom2wyOcO2TzNy4y7JsLret2OwJE1KOVq4X6IAyLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKmu5pqeYXH3tGKPw4eEYLSTvT4nfZzUTREeJp2QRc4zhdWrLER2DBSKjF12H8Yme
-	 dbGzaLW6oqmKrFTunp/pMzQiJEnZAkxVBrMuhwzq8OF09MaSqSfWorRl8YlB6ztMlM
-	 Jc/X9oQDO1y9PHQFHfpfRmc3A+TvYjzU8RIFOt5w=
+	b=XvNi72GZys5GhgoUCdL8IAmRPb+1Etsvc9gAYaGKnQ9RrM2E3Nvgjmn5zrfR3XDAW
+	 uINr02ZVbPaIIClEZ9mcAma8updde145ZQv6jQm0gp5twi2yjcPRTKc2qmsXTDaBSj
+	 dTpDmeKBc1atLLqu/4D8pewZU+L/SfnaZqISLhCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbfCHMwi (ORCPT
+        id S1727009AbfCHMwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:52:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:52:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfCHMwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:35 -0500
+        id S1726620AbfCHMwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:52:39 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A3F92087C;
-        Fri,  8 Mar 2019 12:52:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C06208E4;
+        Fri,  8 Mar 2019 12:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049554;
-        bh=UWuBpbfUgdy7cN10moh91UUvFAM/iQIV6WtHB4cOonY=;
+        s=default; t=1552049558;
+        bh=IExom2wyOcO2TzNy4y7JsLret2OwJE1KOVq4X6IAyLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkWzKJJATVE3VcST+ibEf1TMmT5ouIouahFab5l1Fo67A30p/JRTIL1tMMRhY6XvD
-         +TK09QLOoXSqxE1uZXVpjtEKF1jPJjv/XVmIy834/pcfWMU0F7s/EbSjR8nxodr8N0
-         ji01n4XL6Nu+ZSFyMTxXOYRtNJ84BZEInF7wQSms=
+        b=E4/9CSKH4dn29BS08RcFaymYlhMftMOnMU9FIl/RWaDtzV29r/nrYDupFLgVL6y/n
+         +9VvmOi+Kdm1k0vVua8TntEsUtolZoqDpE5oQ/tsHRGDfx6ojjfXFhNyr27XOnJZBV
+         e9KaSrBF0ClUakUlm17MvVZeJ+dhk9AIvvycN6NE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Christoph Hellwig <hch@lst.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 5.0 07/46] driver core: Postpone DMA tear-down until after devres release
-Date:   Fri,  8 Mar 2019 13:49:40 +0100
-Message-Id: <20190308124902.720204375@linuxfoundation.org>
+        stable@vger.kernel.org, Li Guifu <bluce.liguifu@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.0 08/46] staging: erofs: fix fast symlink w/o xattr when fs xattr is on
+Date:   Fri,  8 Mar 2019 13:49:41 +0100
+Message-Id: <20190308124902.781558752@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -68,113 +65,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 376991db4b6464e906d699ef07681e2ffa8ab08c upstream.
+commit 7077fffcb0b0b65dc75e341306aeef4d0e7f2ec6 upstream.
 
-When unbinding the (IOMMU-enabled) R-Car SATA device on Salvator-XS
-(R-Car H3 ES2.0), in preparation of rebinding against vfio-platform for
-device pass-through for virtualization:
+Currently, this will hit a BUG_ON for these symlinks as follows:
 
-    echo ee300000.sata > /sys/bus/platform/drivers/sata_rcar/unbind
+- kernel message
+------------[ cut here ]------------
+kernel BUG at drivers/staging/erofs/xattr.c:59!
+SMP PTI
+CPU: 1 PID: 1170 Comm: getllxattr Not tainted 4.20.0-rc6+ #92
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+RIP: 0010:init_inode_xattrs+0x22b/0x270
+Code: 48 0f 45 ea f0 ff 4d 34 74 0d 41 83 4c 24 e0 01 31 c0 e9 00 fe ff ff 48 89 ef e8 e0 31 9e ff eb e9 89 e8 e9 ef fd ff ff 0f 0$
+ <0f> 0b 48 89 ef e8 fb f6 9c ff 48 8b 45 08 a8 01 75 24 f0 ff 4d 34
+RSP: 0018:ffffa03ac026bdf8 EFLAGS: 00010246
+------------[ cut here ]------------
+...
+Call Trace:
+ erofs_listxattr+0x30/0x2c0
+ ? selinux_inode_listxattr+0x5a/0x80
+ ? kmem_cache_alloc+0x33/0x170
+ ? security_inode_listxattr+0x27/0x40
+ listxattr+0xaf/0xc0
+ path_listxattr+0x5a/0xa0
+ do_syscall_64+0x43/0xf0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+...
+---[ end trace 3c24b49408dc0c72 ]---
 
-the kernel crashes with:
+Fix it by checking ->xattr_isize in init_inode_xattrs(),
+and it also fixes improper return value -ENOTSUPP
+(it should be -ENODATA if xattr is enabled) for those inodes.
 
-    Unable to handle kernel paging request at virtual address ffffffbf029ffffc
-    Mem abort info:
-      ESR = 0x96000006
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000006
-      CM = 0, WnR = 0
-    swapper pgtable: 4k pages, 39-bit VAs, pgdp = 000000007e8c586c
-    [ffffffbf029ffffc] pgd=000000073bfc6003, pud=000000073bfc6003, pmd=0000000000000000
-    Internal error: Oops: 96000006 [#1] SMP
-    Modules linked in:
-    CPU: 0 PID: 1098 Comm: bash Not tainted 5.0.0-rc5-salvator-x-00452-g37596f884f4318ef #287
-    Hardware name: Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+ (DT)
-    pstate: 60400005 (nZCv daif +PAN -UAO)
-    pc : __free_pages+0x8/0x58
-    lr : __dma_direct_free_pages+0x50/0x5c
-    sp : ffffff801268baa0
-    x29: ffffff801268baa0 x28: 0000000000000000
-    x27: ffffffc6f9c60bf0 x26: ffffffc6f9c60bf0
-    x25: ffffffc6f9c60810 x24: 0000000000000000
-    x23: 00000000fffff000 x22: ffffff8012145000
-    x21: 0000000000000800 x20: ffffffbf029fffc8
-    x19: 0000000000000000 x18: ffffffc6f86c42c8
-    x17: 0000000000000000 x16: 0000000000000070
-    x15: 0000000000000003 x14: 0000000000000000
-    x13: ffffff801103d7f8 x12: 0000000000000028
-    x11: ffffff8011117604 x10: 0000000000009ad8
-    x9 : ffffff80110126d0 x8 : ffffffc6f7563000
-    x7 : 6b6b6b6b6b6b6b6b x6 : 0000000000000018
-    x5 : ffffff8011cf3cc8 x4 : 0000000000004000
-    x3 : 0000000000080000 x2 : 0000000000000001
-    x1 : 0000000000000000 x0 : ffffffbf029fffc8
-    Process bash (pid: 1098, stack limit = 0x00000000c38e3e32)
-    Call trace:
-     __free_pages+0x8/0x58
-     __dma_direct_free_pages+0x50/0x5c
-     arch_dma_free+0x1c/0x98
-     dma_direct_free+0x14/0x24
-     dma_free_attrs+0x9c/0xdc
-     dmam_release+0x18/0x20
-     release_nodes+0x25c/0x28c
-     devres_release_all+0x48/0x4c
-     device_release_driver_internal+0x184/0x1f0
-     device_release_driver+0x14/0x1c
-     unbind_store+0x70/0xb8
-     drv_attr_store+0x24/0x34
-     sysfs_kf_write+0x4c/0x64
-     kernfs_fop_write+0x154/0x1c4
-     __vfs_write+0x34/0x164
-     vfs_write+0xb4/0x16c
-     ksys_write+0x5c/0xbc
-     __arm64_sys_write+0x14/0x1c
-     el0_svc_common+0x98/0x114
-     el0_svc_handler+0x1c/0x24
-     el0_svc+0x8/0xc
-    Code: d51b4234 17fffffa a9bf7bfd 910003fd (b9403404)
-    ---[ end trace 8c564cdd3a1a840f ]---
-
-While I've bisected this to commit e8e683ae9a736407 ("iommu/of: Fix
-probe-deferral"), and reverting that commit on post-v5.0-rc4 kernels
-does fix the problem, this turned out to be a red herring.
-
-On arm64, arch_teardown_dma_ops() resets dev->dma_ops to NULL.
-Hence if a driver has used a managed DMA allocation API, the allocated
-DMA memory will be freed using the direct DMA ops, while it may have
-been allocated using a custom DMA ops (iommu_dma_ops in this case).
-
-Fix this by reversing the order of the calls to devres_release_all() and
-arch_teardown_dma_ops().
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reported-by: Li Guifu <bluce.liguifu@huawei.com>
+Tested-by: Li Guifu <bluce.liguifu@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/dd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/erofs/inode.c |    8 ++++----
+ drivers/staging/erofs/xattr.c |   25 ++++++++++++++++++++-----
+ 2 files changed, 24 insertions(+), 9 deletions(-)
 
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -968,9 +968,9 @@ static void __device_release_driver(stru
- 			drv->remove(dev);
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -185,16 +185,16 @@ static int fill_inode(struct inode *inod
+ 		/* setup the new inode */
+ 		if (S_ISREG(inode->i_mode)) {
+ #ifdef CONFIG_EROFS_FS_XATTR
+-			if (vi->xattr_isize)
+-				inode->i_op = &erofs_generic_xattr_iops;
++			inode->i_op = &erofs_generic_xattr_iops;
+ #endif
+ 			inode->i_fop = &generic_ro_fops;
+ 		} else if (S_ISDIR(inode->i_mode)) {
+ 			inode->i_op =
+ #ifdef CONFIG_EROFS_FS_XATTR
+-				vi->xattr_isize ? &erofs_dir_xattr_iops :
+-#endif
++				&erofs_dir_xattr_iops;
++#else
+ 				&erofs_dir_iops;
++#endif
+ 			inode->i_fop = &erofs_dir_fops;
+ 		} else if (S_ISLNK(inode->i_mode)) {
+ 			/* by default, page_get_link is used for symlink */
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -56,7 +56,26 @@ static int init_inode_xattrs(struct inod
+ 		return 0;
  
- 		device_links_driver_cleanup(dev);
--		arch_teardown_dma_ops(dev);
+ 	vi = EROFS_V(inode);
+-	BUG_ON(!vi->xattr_isize);
++
++	/*
++	 * bypass all xattr operations if ->xattr_isize is not greater than
++	 * sizeof(struct erofs_xattr_ibody_header), in detail:
++	 * 1) it is not enough to contain erofs_xattr_ibody_header then
++	 *    ->xattr_isize should be 0 (it means no xattr);
++	 * 2) it is just to contain erofs_xattr_ibody_header, which is on-disk
++	 *    undefined right now (maybe use later with some new sb feature).
++	 */
++	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
++		errln("xattr_isize %d of nid %llu is not supported yet",
++		      vi->xattr_isize, vi->nid);
++		return -ENOTSUPP;
++	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
++		if (unlikely(vi->xattr_isize)) {
++			DBG_BUGON(1);
++			return -EIO;	/* xattr ondisk layout error */
++		}
++		return -ENOATTR;
++	}
  
- 		devres_release_all(dev);
-+		arch_teardown_dma_ops(dev);
- 		dev->driver = NULL;
- 		dev_set_drvdata(dev, NULL);
- 		if (dev->pm_domain && dev->pm_domain->dismiss)
+ 	sb = inode->i_sb;
+ 	sbi = EROFS_SB(sb);
+@@ -422,7 +441,6 @@ static int erofs_xattr_generic_get(const
+ 		struct dentry *unused, struct inode *inode,
+ 		const char *name, void *buffer, size_t size)
+ {
+-	struct erofs_vnode *const vi = EROFS_V(inode);
+ 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 
+ 	switch (handler->flags) {
+@@ -440,9 +458,6 @@ static int erofs_xattr_generic_get(const
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!vi->xattr_isize)
+-		return -ENOATTR;
+-
+ 	return erofs_getxattr(inode, handler->flags, name, buffer, size);
+ }
+ 
 
 
