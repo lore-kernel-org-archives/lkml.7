@@ -2,132 +2,115 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025C1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B91C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45E520811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UEM2Ogm5"
+	by mail.kernel.org (Postfix) with ESMTP id 1BB5320811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfCHHIM (ORCPT
+        id S1726456AbfCHHJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 02:08:12 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:4175 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbfCHHIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 02:08:11 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Fz9P0Pldz9tySV;
-        Fri,  8 Mar 2019 08:08:09 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UEM2Ogm5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 0JZfNYCKXX_Z; Fri,  8 Mar 2019 08:08:08 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Fz9N6NdYz9tyST;
-        Fri,  8 Mar 2019 08:08:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552028888; bh=ten8fE656Farr7S7zs5HusBTJmYFNYsvq6ZguXQ3SX8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UEM2Ogm58C18/mMhMEsuCwC/DE6jfm44+GLqnvrSJvr9i2WEGKCaZR6wwmXGOdjUc
-         eb2mUeuDMZrYxhlHNzX4nI5Uu3nWxU2khjvjiQa+MD2KLz6wMp/2D0QGeiDpaN+CvI
-         AbJKgiAybs1ILipAta+CDtpGBWtzkuxyYxNBQMYI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C56788BF5C;
-        Fri,  8 Mar 2019 08:08:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OGpU6J3v8nYj; Fri,  8 Mar 2019 08:08:09 +0100 (CET)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9E86C8B75A;
-        Fri,  8 Mar 2019 08:08:09 +0100 (CET)
-Subject: Re: [PATCH v2] powerpc: silence unused-but-set-variable warnings
-To:     Qian Cai <cai@lca.pw>, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190307144031.52494-1-cai@lca.pw>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a89e6a07-da3b-e352-018a-ccfd917eaf74@c-s.fr>
-Date:   Fri, 8 Mar 2019 08:08:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 8 Mar 2019 02:09:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726332AbfCHHJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 02:09:15 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28798j6121609
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 02:09:14 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r3g6hf9na-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 02:09:08 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Fri, 8 Mar 2019 07:08:52 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Mar 2019 07:08:50 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2878nNH31719442
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Mar 2019 07:08:49 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B66A0A405C;
+        Fri,  8 Mar 2019 07:08:49 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8483FA4054;
+        Fri,  8 Mar 2019 07:08:49 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.166.171])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Mar 2019 07:08:49 +0000 (GMT)
+Date:   Fri, 8 Mar 2019 08:08:47 +0100
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] s390/mem_detect: Use IS_ENABLED(CONFIG_BLK_DEV_INITRD)
+In-Reply-To: <d81a9133ad20d478dc8c14fbc8d1bacf4c8ffe94.camel@perches.com>
+References: <d81a9133ad20d478dc8c14fbc8d1bacf4c8ffe94.camel@perches.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190307144031.52494-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030807-0016-0000-0000-0000025F640F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030807-0017-0000-0000-000032B9F56F
+Message-Id: <20190308080847.70910d18@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903080051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 07 Mar 2019 15:51:45 -0800
+Joe Perches <joe@perches.com> wrote:
 
-
-Le 07/03/2019 à 15:40, Qian Cai a écrit :
-> pte_unmap() compiles away on some powerpc platforms, so silence the
-> warnings below by making it a static inline function.
+> IS_ENABLED should generally use CONFIG_ prefaced symbols and
+> it doesn't appear as if there is a BLK_DEV_INITRD define.
 > 
-> mm/memory.c: In function 'copy_pte_range':
-> mm/memory.c:820:24: warning: variable 'orig_dst_pte' set but not used
-> [-Wunused-but-set-variable]
-> mm/memory.c:820:9: warning: variable 'orig_src_pte' set but not used
-> [-Wunused-but-set-variable]
-> mm/madvise.c: In function 'madvise_free_pte_range':
-> mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
-> [-Wunused-but-set-variable]
-> mm/swap_state.c: In function 'swap_ra_info':
-> mm/swap_state.c:634:15: warning: variable 'orig_pte' set but not used
-> [-Wunused-but-set-variable]
-> 
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Qian Cai <cai@lca.pw>
-
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
+> Signed-off-by: Joe Perches <joe@perches.com>
 > ---
+>  arch/s390/boot/mem_detect.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> v2: make it a static inline function.
+> diff --git a/arch/s390/boot/mem_detect.c b/arch/s390/boot/mem_detect.c
+> index 4cb771ba13fa..5d316fe40480 100644
+> --- a/arch/s390/boot/mem_detect.c
+> +++ b/arch/s390/boot/mem_detect.c
+> @@ -25,7 +25,7 @@ static void *mem_detect_alloc_extended(void)
+>  {
+>  	unsigned long offset = ALIGN(mem_safe_offset(), sizeof(u64));
 > 
->   arch/powerpc/include/asm/book3s/64/pgtable.h | 3 ++-
->   arch/powerpc/include/asm/nohash/64/pgtable.h | 3 ++-
->   2 files changed, 4 insertions(+), 2 deletions(-)
+> -	if (IS_ENABLED(BLK_DEV_INITRD) && INITRD_START && INITRD_SIZE &&
+> +	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && INITRD_START && INITRD_SIZE &&
+>  	    INITRD_START < offset + ENTRIES_EXTENDED_MAX)
+>  		offset = ALIGN(INITRD_START + INITRD_SIZE, sizeof(u64));
 > 
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> index 868fcaf56f6b..d798e33a0c86 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -1006,7 +1006,8 @@ extern struct page *pgd_page(pgd_t pgd);
->   	(((pte_t *) pmd_page_vaddr(*(dir))) + pte_index(addr))
->   
->   #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
-> -#define pte_unmap(pte)			do { } while(0)
-> +
-> +static inline void pte_unmap(pte_t *pte) { }
->   
->   /* to find an entry in a kernel page-table-directory */
->   /* This now only contains the vmalloc pages */
-> diff --git a/arch/powerpc/include/asm/nohash/64/pgtable.h b/arch/powerpc/include/asm/nohash/64/pgtable.h
-> index e77ed9761632..0384a3302fb6 100644
-> --- a/arch/powerpc/include/asm/nohash/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/nohash/64/pgtable.h
-> @@ -205,7 +205,8 @@ static inline void pgd_set(pgd_t *pgdp, unsigned long val)
->     (((pte_t *) pmd_page_vaddr(*(dir))) + (((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1)))
->   
->   #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
-> -#define pte_unmap(pte)			do { } while(0)
-> +
-> +static inline void pte_unmap(pte_t *pte) { }
->   
->   /* to find an entry in a kernel page-table-directory */
->   /* This now only contains the vmalloc pages */
 > 
+
+With more than the 255 embedded entries and a initrd that sits in the
+wrong location that would have resulted in a corrupted ramdisk.
+Nice catch, thanks. I'll add the patch to my queue.
+
+-- 
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
