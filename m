@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA21C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A5DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3AB2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553BB20811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049964;
-	bh=dASCwxlIQYhcTfu0H9n+qrR6ITpGRkHj/XOjdHMkSVI=;
+	s=default; t=1552049968;
+	bh=OKkEDT8/7AREiBgS5XCA9bbxM4YCWgu4OPl5T1JKcF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vp1JGWdIsJ1+UHBoUmMjqqvxMXoM6MhbSEjAiCLK0BoTjgoW6fPvuCMXISz2qjvPN
-	 VmxyWQNRT1RiuhjZP3XTkFU6BZZ4hveQuSxLcDLFh1dcZAN2tR8a8Fripfmk2UTgPS
-	 x7iGHRRtZmUKjytvwYs74x1nt/XuFsltWbtXU+Fk=
+	b=WCQxKjcZ+b4wnQb/NEm9MZc4j1ZpqpukDOz4q5gIKfaCwXThHJgKxQU3ooUtOiYIq
+	 dTCSLhg8FnHFlXRjaQiJSOEnKYsIleHUgdcATc5r4W9tKC0qOMP0LO5RA68Ky7hPJ9
+	 5zZ8lzLasfcdeL0VyLv6sTp7uQihjc0Xrb9ZvhM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfCHM7X (ORCPT
+        id S1728156AbfCHM71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:59:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35884 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:59:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbfCHM7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:19 -0500
+        id S1728120AbfCHM7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:59:23 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946A420449;
-        Fri,  8 Mar 2019 12:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6884320449;
+        Fri,  8 Mar 2019 12:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049958;
-        bh=dASCwxlIQYhcTfu0H9n+qrR6ITpGRkHj/XOjdHMkSVI=;
+        s=default; t=1552049961;
+        bh=OKkEDT8/7AREiBgS5XCA9bbxM4YCWgu4OPl5T1JKcF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lYJ4+8qsqDjXK8fPiq9I6z7wejk9ENt2/MraLmGI30f6mWHylTmIxE9uR3I+oweeQ
-         ZAkz90M7SOeiWHw/0xX+qkOpCG0L+4U3csXlcqUaAi2OYhOFkaD4iroTnEBDu6xu3q
-         giqS6EL6erByppNYrJUWjJEFQRNNRAC3x31+qSe0=
+        b=y1KmhsPLI3nr9YccpJ5Q216v4IZDccjJ1cuqntx0dZtzqplmyheWNM6WWgOEdFufj
+         v3ZDF196Z+8tBa3N3UplWgS2KrOPdmWExeA5z4goUvM9SdisvM9luYgUhwDDD+oaiA
+         XchkQ/6Limb+4LqDQQP3Mdpu7Ki/ISC3UTuKO6Iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 05/68] USB: serial: ftdi_sio: add ID for Hjelmslund Electronics USB485
-Date:   Fri,  8 Mar 2019 13:49:35 +0100
-Message-Id: <20190308124911.023248640@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 4.19 06/68] staging: erofs: fix illegal address access under memory pressure
+Date:   Fri,  8 Mar 2019 13:49:36 +0100
+Message-Id: <20190308124911.085367804@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -65,47 +65,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mans Rullgard <mans@mansr.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 8d7fa3d4ea3f0ca69554215e87411494e6346fdc upstream.
+commit 1e5ceeab6929585512c63d05911d6657064abf7b upstream.
 
-This adds the USB ID of the Hjelmslund Electronics USB485 Iso stick.
+Considering a read request with two decompressed file pages,
+If a decompression work cannot be started on the previous page
+due to memory pressure but in-memory LTP map lookup is done,
+builder->work should be still NULL.
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Moreover, if the current page also belongs to the same map,
+it won't try to start the decompression work again and then
+run into trouble.
+
+This patch aims to solve the above issue only with little changes
+as much as possible in order to make the fix backport easier.
+
+kernel message is:
+<4>[1051408.015930s]SLUB: Unable to allocate memory on node -1, gfp=0x2408040(GFP_NOFS|__GFP_ZERO)
+<4>[1051408.015930s]  cache: erofs_compress, object size: 144, buffer size: 144, default order: 0, min order: 0
+<4>[1051408.015930s]  node 0: slabs: 98, objs: 2744, free: 0
+  * Cannot allocate the decompression work
+
+<3>[1051408.015960s]erofs: z_erofs_vle_normalaccess_readpages, readahead error at page 1008 of nid 5391488
+  * Note that the previous page was failed to read
+
+<0>[1051408.015960s]Internal error: Accessing user space memory outside uaccess.h routines: 96000005 [#1] PREEMPT SMP
+...
+<4>[1051408.015991s]Hardware name: kirin710 (DT)
+...
+<4>[1051408.016021s]PC is at z_erofs_vle_work_add_page+0xa0/0x17c
+<4>[1051408.016021s]LR is at z_erofs_do_read_page+0x12c/0xcf0
+...
+<4>[1051408.018096s][<ffffff80c6fb0fd4>] z_erofs_vle_work_add_page+0xa0/0x17c
+<4>[1051408.018096s][<ffffff80c6fb3814>] z_erofs_vle_normalaccess_readpages+0x1a0/0x37c
+<4>[1051408.018096s][<ffffff80c6d670b8>] read_pages+0x70/0x190
+<4>[1051408.018127s][<ffffff80c6d6736c>] __do_page_cache_readahead+0x194/0x1a8
+<4>[1051408.018127s][<ffffff80c6d59318>] filemap_fault+0x398/0x684
+<4>[1051408.018127s][<ffffff80c6d8a9e0>] __do_fault+0x8c/0x138
+<4>[1051408.018127s][<ffffff80c6d8f90c>] handle_pte_fault+0x730/0xb7c
+<4>[1051408.018127s][<ffffff80c6d8fe04>] __handle_mm_fault+0xac/0xf4
+<4>[1051408.018157s][<ffffff80c6d8fec8>] handle_mm_fault+0x7c/0x118
+<4>[1051408.018157s][<ffffff80c8c52998>] do_page_fault+0x354/0x474
+<4>[1051408.018157s][<ffffff80c8c52af8>] do_translation_fault+0x40/0x48
+<4>[1051408.018157s][<ffffff80c6c002f4>] do_mem_abort+0x80/0x100
+<4>[1051408.018310s]---[ end trace 9f4009a3283bd78b ]---
+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ftdi_sio.c     |    2 ++
- drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
- 2 files changed, 8 insertions(+)
+ drivers/staging/erofs/unzip_vle.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1015,6 +1015,8 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(CYPRESS_VID, CYPRESS_WICED_BT_USB_PID) },
- 	{ USB_DEVICE(CYPRESS_VID, CYPRESS_WICED_WL_USB_PID) },
- 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
-+	/* EZPrototypes devices */
-+	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
- 	{ }					/* Terminating entry */
- };
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -622,8 +622,12 @@ repeat:
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1309,6 +1309,12 @@
- #define IONICS_PLUGCOMPUTER_PID		0x0102
+ 	/* lucky, within the range of the current map_blocks */
+ 	if (offset + cur >= map->m_la &&
+-		offset + cur < map->m_la + map->m_llen)
++		offset + cur < map->m_la + map->m_llen) {
++		/* didn't get a valid unzip work previously (very rare) */
++		if (!builder->work)
++			goto restart_now;
+ 		goto hitted;
++	}
  
- /*
-+ * EZPrototypes (PID reseller)
-+ */
-+#define EZPROTOTYPES_VID		0x1c40
-+#define HJELMSLUND_USB485_ISO_PID	0x0477
-+
-+/*
-  * Dresden Elektronik Sensor Terminal Board
-  */
- #define DE_VID			0x1cf1 /* Vendor ID */
+ 	/* go ahead the next map_blocks */
+ 	debugln("%s: [out-of-range] pos %llu", __func__, offset + cur);
+@@ -637,6 +641,7 @@ repeat:
+ 	if (unlikely(err))
+ 		goto err_out;
+ 
++restart_now:
+ 	if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED)))
+ 		goto hitted;
+ 
 
 
