@@ -2,127 +2,177 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F7BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A5CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E850120643
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7AC20643
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=scalemp.com header.i=@scalemp.com header.b="P0u+y0/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfCHVyy (ORCPT
+        id S1726551AbfCHV4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:54:54 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:49990 "EHLO mx1.redhat.com"
+        Fri, 8 Mar 2019 16:56:03 -0500
+Received: from www.scalemp.com ([169.44.78.149]:40219 "EHLO scalemp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfCHVyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:54:54 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 03171307B967;
-        Fri,  8 Mar 2019 21:54:54 +0000 (UTC)
-Received: from treble (ovpn-123-151.rdu2.redhat.com [10.10.123.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A193258B2;
-        Fri,  8 Mar 2019 21:54:51 +0000 (UTC)
-Date:   Fri, 8 Mar 2019 15:54:49 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
-        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
-Message-ID: <20190308215449.47xk64pt7svk4pef@treble>
-References: <20190307114511.870090179@infradead.org>
- <20190307115200.697533978@infradead.org>
- <20190308210209.usq2rpedccz25va5@treble>
- <20190308213155.GD2482@worktop.programming.kicks-ass.net>
+        id S1726267AbfCHV4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 16:56:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=scalemp.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LaoNR2KpBT9oaKGOKsa7lcvXuAU+vC+iGr3pYCS3r+E=; b=P0u+y0/x32XSs+px/3N2th+Vfa
+        Ny/NhI4KSjasXZu4wbqZZ8smRZA1/+K+J2QLjZaf0avx+FtjtGzV59ZLETkjJkYO7tX/NPLIplvaU
+        K60OVurkA4qj+ujfaioGmF4UwvU9kHBuZIS9HFQAOEfwp5pZb3aSuytk0L06HmEve+aU=;
+Received: from 109-186-230-3.bb.netvision.net.il ([109.186.230.3]:58444 helo=[192.168.2.7])
+        by hosting.virtualsmp.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <oren@scalemp.com>)
+        id 1h2NTD-001mEf-3y; Fri, 08 Mar 2019 16:55:59 -0500
+Subject: Re: [PATCH] svm: Fix AVIC incomplete IPI emulation
+From:   Oren Twaig <oren@scalemp.com>
+To:     suravee.suthikulpanit@amd.com
+Cc:     kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+References: <d53d2240-d1f1-da04-9126-9eb3518d0047@scalemp.com>
+Message-ID: <d5b38b30-43e2-7220-6f51-c087a74c37ec@scalemp.com>
+Date:   Fri, 8 Mar 2019 23:56:02 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190308213155.GD2482@worktop.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 08 Mar 2019 21:54:54 +0000 (UTC)
+In-Reply-To: <d53d2240-d1f1-da04-9126-9eb3518d0047@scalemp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hosting.virtualsmp.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - scalemp.com
+X-Get-Message-Sender-Via: hosting.virtualsmp.com: authenticated_id: oren@scalemp.com
+X-Authenticated-Sender: hosting.virtualsmp.com: oren@scalemp.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 10:31:56PM +0100, Peter Zijlstra wrote:
-> On Fri, Mar 08, 2019 at 03:02:09PM -0600, Josh Poimboeuf wrote:
-> > > +static const char *uaccess_safe_builtin[] = {
-> > > +	/* KASAN */
-> > 
-> > A short comment would be good here, something describing why a function
-> > might be added to the list.
-> 
-> There is; but I'm thinking it might be too short?
+Hi,
 
-I actually just meant a comment above uaccess_safe_builtin describing
-what the purpose of the list is and what the expectations are for the
-listed functions.  i.e. these are functions which are allowed to be
-called with the AC flag on, and they should not clear it unless they're
-saving/restoring.
 
-> > > +++ b/tools/objtool/special.c
-> > > @@ -42,6 +42,7 @@
-> > >  #define ALT_NEW_LEN_OFFSET	11
-> > >  
-> > >  #define X86_FEATURE_POPCNT (4*32+23)
-> > > +#define X86_FEATURE_SMAP   (9*32+20)
-> > >  
-> > >  struct special_entry {
-> > >  	const char *sec;
-> > > @@ -107,8 +108,15 @@ static int get_alt_entry(struct elf *elf
-> > >  		 * It has been requested that we don't validate the !POPCNT
-> > >  		 * feature path which is a "very very small percentage of
-> > >  		 * machines".
-> > > +		 *
-> > > +		 * Also, unconditionally enable SMAP; this avoids seeing paths
-> > > +		 * that pass through the STAC alternative and through the CLAC
-> > > +		 * NOPs.
-> > 
-> > Why is this a problem?
-> 
-> 'obvious' violation?
-> 
-> STAC; .... RET; # an AC=1 leak
-> 
-> .... CLAC; # spurious CLAC
-> 
-> If we do the STAC we must also do the CLAC. If we don't do the STAC we
-> must also not do the CLAC.
+Any help appreciated..
 
-Makes sense now, can you add that last sentence to the paragraph?
 
-> > > +		 *
-> > > +		 * XXX: We could do this for all binary NOP/single-INSN
-> > > +		 * alternatives.
-> > 
-> > Same question here.
-> 
-> In general, validating NOPs isn't too interesting, so all NOP/INSN
-> binary alternatives could be forced on.
+Thanks,
 
-Right, but it doesn't sound like there's any real benefit to adding
-extra logic.
+Oren Twaig
 
-> > >  		 */
-> > > -		if (feature == X86_FEATURE_POPCNT)
-> > > +		if (feature == X86_FEATURE_POPCNT || feature == X86_FEATURE_SMAP)
-> > >  			alt->skip_orig = true;
-> > >  	}
-> 
-> I've actually changed this to depend on --uaccess, when set we force on
-> FEATURE_SMAP, otherwise we force off.
-
-Ok.
-
--- 
-Josh
+On 3/4/2019 8:15 PM, Oren Twaig wrote:
+> Hello Suravee,
+>
+> According to AMD's SDM, the target-not-running incomplete
+> ipi exit is only received if any of the destination cpus had the
+>
+> not-running bit set in the avic backing page. However, not
+>
+> before the CPU _already_ set the relevant IRR bit in all these cpus.
+>
+>
+> In this change, the patch forces KVM to send another interrupt
+>
+> to the vcpu whether SVM already did that or not. Which means
+>
+> the vcpu/s, under some conditions, can get an EXTRA interrupt
+>
+> it never intended to get.
+>
+>
+> Example:
+>   1. vcpu B: Is in "not-running" state.
+>   2. vcpu A: Writes to the ICR to send vector 80 to vcpu B
+>   3. vcpu A: SVM updates vcpu B IRR with bit 80
+>   4. vcpu A: SVM exits on incomplete IPI target-not-running exit.
+>   5. vcpu A: Now stops executing any code @ hypervisor level.
+>   6. vcpu B: Due to another interrupt (like lapic timer)
+>      resumes running the guest. While handling interrupts,
+>      it also handles interrupt vector 80 (as it's in his IRR)
+>   7. vcpu A: resumes executing the below code and sends
+>      an _additional_interrupt to vcpu B.
+>
+> Overall, vcpu B got two interrupts. The second is unwanted and
+> not documented in the system architecture.
+>
+> Can you please elaborate more to why the implementation
+>
+> below conflict with the specifications (which was the code
+>
+> before this commit) ?
+>
+>
+> Thanks,
+> Oren Twaig
+>
+>
+> > From    "Suthikulpanit, Suravee" <>
+> > Subject    [PATCH] svm: Fix AVIC incomplete IPI emulation
+> > Date    Tue, 22 Jan 2019 10:25:13 +0000
+> > share
+> > From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> >
+> > In case of incomplete IPI with invalid interrupt type, the current
+> > SVM driver does not properly emulate the IPI, and fails to boot
+> > FreeBSD guests with multiple vcpus when enabling AVIC.
+> >
+> > Fix this by update APIC ICR high/low registers, which also
+> > emulate sending the IPI.
+> >
+> > Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> > ---
+> > arch/x86/kvm/svm.c | 19 ++++---------------
+> > 1 file changed, 4 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index 2aff835a65ed..8a0c9a1f6ac8 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -4504,25 +4504,14 @@ static int 
+> avic_incomplete_ipi_interception(struct vcpu_svm *svm)
+> >          kvm_lapic_reg_write(apic, APIC_ICR, icrl);
+> >          break;
+> >      case AVIC_IPI_FAILURE_TARGET_NOT_RUNNING: {
+> > -        int i;
+> > -        struct kvm_vcpu *vcpu;
+> > -        struct kvm *kvm = svm->vcpu.kvm;
+> >          struct kvm_lapic *apic = svm->vcpu.arch.apic;
+> >
+>          /*
+> > -         * At this point, we expect that the AVIC HW has already
+> > -         * set the appropriate IRR bits on the valid target
+> > -         * vcpus. So, we just need to kick the appropriate vcpu.
+> > +         * Update ICR high and low, then emulate sending IPI,
+> > +         * which is handled when writing APIC_ICR.
+> >           */
+> > -        kvm_for_each_vcpu(i, vcpu, kvm) {
+> > -            bool m = kvm_apic_match_dest(vcpu, apic,
+> > -                             icrl & KVM_APIC_SHORT_MASK,
+> > - GET_APIC_DEST_FIELD(icrh),
+> > -      icrl & KVM_APIC_DEST_MASK);
+> > -
+> > -            if (m && !avic_vcpu_is_running(vcpu))
+> > - kvm_vcpu_wake_up(vcpu);
+> > -        }
+> > +        kvm_lapic_reg_write(apic, APIC_ICR2, icrh);
+> > +        kvm_lapic_reg_write(apic, APIC_ICR, icrl);
+> >          break;
+> >      }
+> >      case AVIC_IPI_FAILURE_INVALID_TARGET:
+> > --
+> > 2.17.1
+>
