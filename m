@@ -5,104 +5,157 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC61C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0D8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3016120851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C32C20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfCHQgs (ORCPT
+        id S1726578AbfCHQhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:36:48 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35040 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHQgs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:36:48 -0500
-Received: by mail-pg1-f196.google.com with SMTP id e17so14561281pgd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:36:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BmKEcNMTVy8VoMuvnQJcGdrDMFCm/RyUclNMu/hBM2I=;
-        b=tBuq3rIlpWVIWqVKjYKGyzqBGJFKOQrN3/ahqvHXh0mINrGPhXrVze8jsGOGZGfh/2
-         fh2goc9DIX43qTRKVOqAYdfT7QINvQ5NacQDbftg4ZoiJC2Dr2BRYz573gXG3UcAiezB
-         6JU01PQ2NNHAF5k2RmIwbSvVf5SRl919KCFUe3VWBFTnscXM/mqdsZwZisWPROZ69IsR
-         lNv6277gYVwxHBVHrm5qzkGbB2izLsrxZ78sQTNM/W4t4Mt2Aka58HXDwFK1cv6iG45/
-         XPttxjCKkZkpraJtFQiq2ebX/ZiwW2t3EOKzZ2Ya18QPzxJopJNFnIKJ9nX3O3xipcXw
-         oPIA==
-X-Gm-Message-State: APjAAAX/dkZKRDo+l+yRvpM5IlN0i1Lhd3CYgVhj2og2TqO9WrSpgANB
-        8+SLxItN/iEInR1B0KPLHMk=
-X-Google-Smtp-Source: APXvYqy+5IxHJCC6AeY6hdM3P7yljGfh2/yDMXbnVGm5JpeMkdUfuZvKaQbnBBYy+gByDnEl128U9g==
-X-Received: by 2002:a17:902:2c01:: with SMTP id m1mr19731405plb.314.1552063006722;
-        Fri, 08 Mar 2019 08:36:46 -0800 (PST)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id s4sm11452057pfe.16.2019.03.08.08.36.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 08:36:46 -0800 (PST)
-Message-ID: <1552063004.45180.19.camel@acm.org>
-Subject: Re: 669de8bda8 ("kernel/workqueue: Use dynamic lockdep keys for
- .."):  WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:995
- lockdep_register_key
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     LKP <lkp@01.org>, linux-kernel@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Date:   Fri, 08 Mar 2019 08:36:44 -0800
-In-Reply-To: <5c81f407.dqtEdGUmHMiobjjO%lkp@intel.com>
-References: <5c81f407.dqtEdGUmHMiobjjO%lkp@intel.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
+        Fri, 8 Mar 2019 11:37:07 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:57326 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbfCHQhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 11:37:07 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C2FE87649;
+        Fri,  8 Mar 2019 16:37:06 +0000 (UTC)
+Received: from [10.36.112.16] (ovpn-112-16.ams2.redhat.com [10.36.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C9365D786;
+        Fri,  8 Mar 2019 16:36:54 +0000 (UTC)
+Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yang Weijiang <weijiang.yang@intel.com>
+Cc:     rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
+        wei.w.wang@intel.com, weijiang.yang@inte.com
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-7-weijiang.yang@intel.com>
+ <20190228161715.GF6166@linux.intel.com>
+ <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
+ <20190301145819.GC22584@linux.intel.com>
+ <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
+ <20190304184307.GC17120@linux.intel.com>
+ <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
+ <20190305031202.GI17120@linux.intel.com>
+ <20190304123655.GB4185@local-michael-cet-test.sh.intel.com>
+ <20190308162835.GB2528@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <9e80935f-b572-8210-6ea1-a582b3d05f88@redhat.com>
+Date:   Fri, 8 Mar 2019 17:36:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190308162835.GB2528@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 08 Mar 2019 16:37:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-08 at 12:48 +-0800, kernel test robot wrote:
-+AD4 +AFs    1.855169+AF0 spin+AF8-lock-torture: lock+AF8-torture+AF8-stats task started
-+AD4 +AFs    2.565387+AF0 workingset: timestamp+AF8-bits+AD0-14 max+AF8-order+AD0-17 bucket+AF8-order+AD0-3
-+AD4 +AFs    2.567522+AF0 NFS: Registering the id+AF8-resolver key type
-+AD4 +AFs    2.568478+AF0 Key type id+AF8-resolver registered
-+AD4 +AFs    2.569072+AF0 Key type id+AF8-legacy registered
-+AD4 +AFs    2.570808+AF0 WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:995 lockdep+AF8-register+AF8-key+-0x37/0x386
-+AD4 +AFs    2.571658+AF0 CPU: 0 PID: 1 Comm: swapper Not tainted 5.0.0-rc8-00054-g669de8b +ACM-496
-+AD4 +AFs    2.571658+AF0 Hardware name: QEMU Standard PC (i440FX +- PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-+AD4 +AFs    2.571658+AF0 EIP: lockdep+AF8-register+AF8-key+-0x37/0x386
-+AD4 +AFs    2.571658+AF0 Code: 20 45 65 94 01 83 15 24 45 65 94 00 81 fe 00 00 80 92 72 2e 81 fe 00 d0 88 95 73 26 83 05 40 45 65 94 01 83 15 44 45 65 94 00 +ADw-0f+AD4 0b 83 05 48 45 65 94 01 83 15 4c 45 65 94 00
-+AD4 83 c4 1c 5b 5e 5f
-+AD4 +AFs    2.571658+AF0 EAX: 9586d254 EBX: 9586d1c0 ECX: 944f9cd8 EDX: 00000000
-+AD4 +AFs    2.571658+AF0 ESI: 9586d254 EDI: 9586d274 EBP: 975a9ee4 ESP: 975a9ebc
-+AD4 +AFs    2.571658+AF0 DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00210246
-+AD4 +AFs    2.571658+AF0 CR0: 80050033 CR2: 00000000 CR3: 1c4a5000 CR4: 00340690
-+AD4 +AFs    2.571658+AF0 DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-+AD4 +AFs    2.571658+AF0 DR6: fffe0ff0 DR7: 00000400
-+AD4 +AFs    2.571658+AF0 Call Trace:
-+AD4 +AFs    2.571658+AF0  ? debug+AF8-mutex+AF8-init+-0x4b/0x63
-+AD4 +AFs    2.571658+AF0  ? +AF8AXw-mutex+AF8-init+-0x59/0x6c
-+AD4 +AFs    2.571658+AF0  alloc+AF8-workqueue+-0x227/0x84e
-+AD4 +AFs    2.571658+AF0  ? proc+AF8-create+-0x3e/0x52
-+AD4 +AFs    2.571658+AF0  ? trace+AF8-event+AF8-define+AF8-fields+AF8-smb3+AF8-rw+AF8-err+AF8-class+-0x1b9/0x1b9
-+AD4 +AFs    2.571658+AF0  init+AF8-cifs+-0x159/0x72f
-+AD4 +AFs    2.571658+AF0  do+AF8-one+AF8-initcall+-0x2c4/0x6bf
-+AD4 +AFs    2.571658+AF0  kernel+AF8-init+AF8-freeable+-0x6ef/0x841
-+AD4 +AFs    2.571658+AF0  ? rest+AF8-init+-0x473/0x473
-+AD4 +AFs    2.571658+AF0  kernel+AF8-init+-0x1e/0x26b
-+AD4 +AFs    2.571658+AF0  ? schedule+AF8-tail+AF8-wrapper+-0x9/0xc
-+AD4 +AFs    2.571658+AF0  ret+AF8-from+AF8-fork+-0x1e/0x28
-+AD4 +AFs    2.571658+AF0 irq event stamp: 410062
-+AD4 +AFs    2.571658+AF0 hardirqs last  enabled at (410061): +AFsAPA-93a2ac73+AD4AXQ +AF8-raw+AF8-spin+AF8-unlock+AF8-irqrestore+-0x133/0x17e
-+AD4 +AFs    2.571658+AF0 hardirqs last disabled at (410062): +AFsAPA-92801bca+AD4AXQ trace+AF8-hardirqs+AF8-off+AF8-thunk+-0xc/0x10
-+AD4 +AFs    2.571658+AF0 softirqs last  enabled at (409970): +AFsAPA-93a2da14+AD4AXQ +AF8AXw-do+AF8-softirq+-0x904/0xa1d
-+AD4 +AFs    2.571658+AF0 softirqs last disabled at (409965): +AFsAPA-92813eb9+AD4AXQ do+AF8-softirq+AF8-own+AF8-stack+-0x3d/0x51
-+AD4 +AFs    2.571658+AF0 ---+AFs end trace c4eabde80fbbdbf0 +AF0----
-+AD4 +AFs    3.753943+AF0 String selftests succeeded
+On 08/03/19 17:28, Sean Christopherson wrote:
+> On Mon, Mar 04, 2019 at 08:36:55PM +0800, Yang Weijiang wrote:
+>> On Mon, Mar 04, 2019 at 07:12:02PM -0800, Sean Christopherson wrote:
+>>> On Mon, Mar 04, 2019 at 05:56:40PM +0800, Yang Weijiang wrote:
+>>>> Cannot agree with you more!
+>>>> This is some design limitation, but from my point of view, once vmm
+>>>> exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
+>>>> which features to be enabled, we don't need to add extra constraints on
+>>>> the usage.
+>>>
+>>> But if KVM allows SHSTK and IBT to be toggled independently then the VMM
+>>> has only exposed SHSTK or IBT, not CET as whole.
+>>>
+>>> Even if SHSTK and IBT are bundled together the guest still has to opt-in
+>>> to enabling each feature.  I don't see what we gain by pretending that
+>>> SHSTK/IBT can be individually exposed to the guest, and on the flip side
+>>> doing so creates a virtualization hole.
+>> you almost convinced me ;-), maybe I'll make the feature as a bundle in
+>> next release after check with kernel team. BTW, what do you mean by
+>> saying "create a virtualization hole"? Is it what you stated in above
+>> reply?
+> 
+> By "virtualization hole" I mean the guest would be able to use a feature
+> that the virtual CPU model says isn't supported.
 
-The following patch should fix this: +AFs-PATCH+AF0 kernel/wq: Fix a alloc+AF8-workqueue()
-error path. See also 
-https://lore.kernel.org/lkml/20190303220046.29448-1-bvanassche+AEA-acm.org/
+I think it's okay to leave the hole and leave it to userspace to forbid
+enabling only one of the bits.
 
-Bart.
+Paolo
+
+> After rereading the XSS architecture, there's a marginally less crappy
+> option for handling XRSTOR as we could use the XSS_EXIT_BITMAP to
+> intercept XRSTOR if SHSTK != IBT and the guest is restoring CET state,
+> e.g. to ensure the guest isn't setting IA32_PL*_SSP if !SHSTK and isn't
+> setting bits that are effectively reserved in IA32_U_CET.
+> 
+> But practically speaking that'd be the same as intercepting XRSTORS
+> unconditionally when the guest is using CET, i.e. it's still going to
+> tank the performance of a guest that uses CET+XSAVES/XRSTORS.
+> 
+
