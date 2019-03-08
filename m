@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896D0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D56C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561ED21019
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7422133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DI5k8NJH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ctEgaZ/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfCHNO7 (ORCPT
+        id S1726560AbfCHNPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:14:59 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46085 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfCHNO7 (ORCPT
+        Fri, 8 Mar 2019 08:15:35 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36813 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfCHNPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:14:59 -0500
-Received: by mail-lj1-f195.google.com with SMTP id v16so17306671ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 05:14:58 -0800 (PST)
+        Fri, 8 Mar 2019 08:15:35 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 197so4343950lfz.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 05:15:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=lVOVxSUrodB+BhbXqXifr3ny6IlC43KfilfGitM/t8c=;
-        b=DI5k8NJHBOAMrzcJ8dtyoII+D+lqXXmcEnc+kukuE1WJ0fRsuOioTQHhBmfWr1h9n5
-         sgKK4zhO5Dp/eaDHUw5VJ5tjTs4TREXQQA41qwL5HxaiF6McBDgNn3pSZI9WwqYpVC2k
-         CZtHxydnpuaYvlS5rcOUrWbXU3OEtR46oqL9MN/eaPns6iP0kCDcEZZ6tDdTVaI7JLaK
-         NUgY+uMfOXJv50h6viw+JCbavfBmUpzomC+Xhe1vZg18yqYsS24x8Ie+lLW+WA5YbFPD
-         OqWD+tcdMMLU5NjvQgp08d01s1MFh3GKFJwaHBf0YvwG2kT20QdgFUiRrr+mVM2hyUw8
-         xIXA==
+        bh=uZMqNKssawoG7Wcg8qolgPtZ3pIACxsWPBW4IABvLiU=;
+        b=ctEgaZ/hLnCi++2JsZeUD7UpNtqdCbQzey9wLyy+9OuWoZUQqto9lOS2zxhdw5FIMo
+         0sOzF4LoH+0YcS2v34TrwI8VtxnO88RRaDbTFDIIo85XQirtb7JgHu/DWHokojsA/+Ej
+         HY3PEouoC8jjVB+YaOeOjBwYbMkqNVoSCepvVxT3OCmshyuhCCAP0WsvcZbTjV66sQop
+         30fwdq1iTvmePTZoVfxh9MFjv1Si82RiN00H0/2ULCHKNrhW6ScVKzXcR+qtwnAR+U8C
+         +0ZsI4kYgjfMUIV7P0xi1kWIbk3SC8adukkhtDfmgQeOD8XScq0RSpIQfxlj0FFx/0B0
+         EXcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lVOVxSUrodB+BhbXqXifr3ny6IlC43KfilfGitM/t8c=;
-        b=LXiRVhdMdCxijLyFtermIr+wP2Kh+afns5GkANtlcSHGT9Hy6EyseVbzO2bIr+EQYw
-         zOiq5KEOO30DsuA8ULqzWYGBBjoMItqA0wSLYOJaCkPyxz9SNIf2B3Kvj/jRMO2F1bao
-         HP7diMICP0NuudLLZTXZZhQ3A8iuWNspeoDrDSfgnU1LK7stz1b4JNGMOJ6uHJu90A3K
-         DF7XKm8RKdjle/gz7Mm15JOd0P4C/8bWDEqSLI0Bpg+F/G1Q3DZAjKEbf80P9GwUPSPW
-         GN99guNiPSOHbbvzX5C/2XpWuDnG1lxNvm4DrOCT3kUC8EKtnLX/X9HJirIm/FPNaCvc
-         a1eg==
-X-Gm-Message-State: APjAAAV75ymOciXDN+aW2gGOwg7EGxSXSB6MdSILhfhpeGo1MJjeY3bc
-        RYFnkSj/TTrJxIxopEvgkW6Eu+wGV6z0VuqsF9O5lg==
-X-Google-Smtp-Source: APXvYqyNxoTh0eAQQNL9mLJ7aHgIKxc0mQdBzP8FJGbcwTw/rUr87fGyrqXGXcu0XV1ZUCE+X3z3FG2if+G3EWKlc+A=
-X-Received: by 2002:a2e:89d9:: with SMTP id c25mr9677882ljk.105.1552050897469;
- Fri, 08 Mar 2019 05:14:57 -0800 (PST)
+        bh=uZMqNKssawoG7Wcg8qolgPtZ3pIACxsWPBW4IABvLiU=;
+        b=VhfRsGeLeBBfR88VD2781rWniSrK8AsYFXm9OrwjvHX5gPCxBbVHHgRh4823oFOAEW
+         iayen/31olgE1l8Btq3I5JFfUL86kJrSLVsFhdCbyziE/VQqo8FzaNtEaJqZ8JiRpHQE
+         IM8Qds7J0+jCvks3O0Mfj966hLGiC4KNXA9IEqxLhAgJ8vtSNy9IkzCPyZAD2CkzHtOT
+         y4/wIC5NhL9ggHebQ3WWm6rb+Li2jcFduJVAzekZkvvbyo6x9D1kjbhCqifXod/2SaM9
+         BX3HZ/w/VY/7DEez4llonB/bCUEfH0SVgnmMCcZVAL8yDHs1Gato/OY+JMxEPYsOGsBM
+         oYGA==
+X-Gm-Message-State: APjAAAXfXgWwXKanicuSd2nfA/1WUQw2MXuD+7xrQuqCsr5NzkzIvqJ3
+        IKPisLFHK8fOG03iD2w03R3DdVgq+XR3EIXzCeQscA==
+X-Google-Smtp-Source: APXvYqyL47OaXzKwZh0+lVn2AflJiOzQqiq8tuF7RRsxjrdMrWapiJ3vFUQACoieCyMvt1Ebv99p48Mfa7RLD/1tXmQ=
+X-Received: by 2002:ac2:4304:: with SMTP id l4mr5876212lfh.168.1552050933303;
+ Fri, 08 Mar 2019 05:15:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20190307125251.724-1-marek.behun@nic.cz> <20190307125251.724-4-marek.behun@nic.cz>
-In-Reply-To: <20190307125251.724-4-marek.behun@nic.cz>
+References: <20190307125251.724-1-marek.behun@nic.cz> <20190307125251.724-2-marek.behun@nic.cz>
+In-Reply-To: <20190307125251.724-2-marek.behun@nic.cz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 8 Mar 2019 14:14:46 +0100
-Message-ID: <CACRpkdb0WUa=Sh+idQUBnCHg4=oD0AFU_FRLbp_7xs8L5UsP4A@mail.gmail.com>
-Subject: Re: [PATCH v4 armsoc/drivers/bus+gpio 3/5] bus: moxtet: Add sysfs and
- debugfs documentation
+Date:   Fri, 8 Mar 2019 14:15:21 +0100
+Message-ID: <CACRpkdb+mR_=tC89AS6XzuB0STb4-H-DHhf+yM8K33V809A60g@mail.gmail.com>
+Subject: Re: [PATCH v4 armsoc/drivers/bus+gpio 1/5] bus: Add support for
+ Moxtet bus
 To:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
 Cc:     Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -74,11 +74,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Mar 7, 2019 at 1:53 PM Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
 
-> Add sysfs ABI documentation for the attribute files module_id and
-> module_name
+> On the Turris Mox router different modules can be connected to the main
+> CPU board: currently a module with a SFP cage, a module with MiniPCIe
+> connector, a PCIe pass-through MiniPCIe connector module, a 4-port
+> switch module, an 8-port switch module, and a 4-port USB3 module.
 >
-> Add debugfs ABI documentation for reading input from the shift registers
-> and reading last written output or write output to the shift registers.
+> For example:
+>   [CPU]-[PCIe-pass-through]-[PCIe]-[8-port switch]-[8-port switch]-[SFP]
+>
+> Each of this modules has an input and output shift register, and these
+> are connected via SPI to the CPU board.
+>
+> Via SPI we are able to discover which modules are connected, in which
+> order, and we can also read some information about the modules (eg.
+> their interrupt status), and configure them.
+> From each module 8 bits can be read (of which low 4 bits identify the
+> module) and 8 bits can be written.
+>
+> For example from the module with a SFP cage we can read the LOS,
+> TX-FAULT and MOD-DEF0 signals, while we can write TX-DISABLE and
+> RATE-SELECT signals.
+>
+> This driver creates a new bus type, called "moxtet". For each Mox module
+> it finds via SPI, it creates a new device on the moxtet bus so that
+> drivers can be written for them.
+>
+> It also implements a virtual interrupt controller for the modules which
+> send their interrupt status over the SPI shift register. These modules
+> do this in addition to sending their interrupt status via the shared
+> interrupt line. When the shared interrupt is triggered, we read from the
+> shift register and handle IRQs for all devices which are in interrupt.
+>
+> The topology of how Mox modules are connected can then be read by
+> listing /sys/bus/moxtet/devices.
 >
 > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
 
