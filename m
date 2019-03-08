@@ -2,89 +2,374 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54292C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA9FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2803720851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7B420851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfCHR0C (ORCPT
+        id S1726825AbfCHR0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:26:02 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33228 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfCHR0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:26:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37302A78;
-        Fri,  8 Mar 2019 09:26:01 -0800 (PST)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F02613F575;
-        Fri,  8 Mar 2019 09:25:58 -0800 (PST)
-Subject: Re: [Xen-devel] [PATCH] Revert "swiotlb: remove SWIOTLB_MAP_ERROR"
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <20190304195951.1118807-1-arnd@arndb.de>
- <b0b995a1-3211-870f-01af-ce837c18e8f9@arm.com>
- <CAK8P3a2KQKTDQCQcFR7ZTFJ+_XhfKpy9W27r+YV=iD6hLVu2xg@mail.gmail.com>
- <957e168a-2589-89c7-3a72-5071a7b6c65a@arm.com>
- <20190308152355.GA20230@lst.de>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <124f4e49-9eb1-99d9-35f4-c2ef3dff8415@arm.com>
-Date:   Fri, 8 Mar 2019 17:25:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 8 Mar 2019 12:26:11 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5227 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726249AbfCHR0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 12:26:11 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3FCE6A31F9BE819D0AD4;
+        Sat,  9 Mar 2019 01:26:02 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Sat, 9 Mar 2019
+ 01:25:56 +0800
+Date:   Fri, 8 Mar 2019 17:25:46 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Keith Busch <keith.busch@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCHv7 03/10] acpi/hmat: Parse and report heterogeneous
+ memory
+Message-ID: <20190308172546.000050f5@huawei.com>
+In-Reply-To: <20190227225038.20438-4-keith.busch@intel.com>
+References: <20190227225038.20438-1-keith.busch@intel.com>
+        <20190227225038.20438-4-keith.busch@intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20190308152355.GA20230@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Wed, 27 Feb 2019 15:50:31 -0700
+Keith Busch <keith.busch@intel.com> wrote:
 
-On 08/03/2019 15:23, Christoph Hellwig wrote:
-> On Tue, Mar 05, 2019 at 09:41:46AM +0000, Julien Grall wrote:
->> On Xen, dma_addr_t will always be 64-bit while the phys_addr_t will depend
->> on the MMU type. So we may have phys_addr_t smaller than dma_addr_t from
->> the kernel point of view.
+> Systems may provide different memory types and export this information
+> in the ACPI Heterogeneous Memory Attribute Table (HMAT). Parse these
+> tables provided by the platform and report the memory access and caching
+> attributes to the kernel messages.
 > 
-> How can dma_addr_t on arm have value > 32-bit when physical
-> addresses are 32-bit only?
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
+Hi Keith,
 
-The number of platform with IOMMU protected all DMA-capable device is not yet 
-there. So we decided to not require IOMMU for Dom0. Instead, its memory is be 
-directly mapped (i.e guest physical address == host physical address) and will 
-always be below 4GB to cater the short page table case.
+Trivial unused variable that could do with tidying up...
 
-In the common case, Dom0 also contains the PV backend drivers. Those drivers may 
-directly use the guest buffer in the DMA request (so a copy is avoided). To 
-avoid using a bounce buffer too much, xen-swiotlb will find the host physical 
-address associated to the guest buffer and will use it to compute the DMA address.
+Thanks,
 
-While Dom0 kernel may only deal with 32-bit physical address, the hypervisor can 
-still deal with up to 40-bit physical address. This means the guest memory can 
-be allocated above the 4GB threshold. Hence why the dma_addr_t is always 64-bit 
-with CONFIG_XEN=y.
+Jonathan
 
-Cheers,
+> ---
+>  drivers/acpi/Kconfig       |   1 +
+>  drivers/acpi/Makefile      |   1 +
+>  drivers/acpi/hmat/Kconfig  |   7 ++
+>  drivers/acpi/hmat/Makefile |   1 +
+>  drivers/acpi/hmat/hmat.c   | 237 +++++++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 247 insertions(+)
+>  create mode 100644 drivers/acpi/hmat/Kconfig
+>  create mode 100644 drivers/acpi/hmat/Makefile
+>  create mode 100644 drivers/acpi/hmat/hmat.c
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 4e015c77e48e..283ee94224c6 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -475,6 +475,7 @@ config ACPI_REDUCED_HARDWARE_ONLY
+>  	  If you are unsure what to do, do not enable this option.
+>  
+>  source "drivers/acpi/nfit/Kconfig"
+> +source "drivers/acpi/hmat/Kconfig"
+>  
+>  source "drivers/acpi/apei/Kconfig"
+>  source "drivers/acpi/dptf/Kconfig"
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index bb857421c2e8..5d361e4e3405 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -80,6 +80,7 @@ obj-$(CONFIG_ACPI_PROCESSOR)	+= processor.o
+>  obj-$(CONFIG_ACPI)		+= container.o
+>  obj-$(CONFIG_ACPI_THERMAL)	+= thermal.o
+>  obj-$(CONFIG_ACPI_NFIT)		+= nfit/
+> +obj-$(CONFIG_ACPI_HMAT)		+= hmat/
+>  obj-$(CONFIG_ACPI)		+= acpi_memhotplug.o
+>  obj-$(CONFIG_ACPI_HOTPLUG_IOAPIC) += ioapic.o
+>  obj-$(CONFIG_ACPI_BATTERY)	+= battery.o
+> diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/hmat/Kconfig
+> new file mode 100644
+> index 000000000000..2f7111b7af62
+> --- /dev/null
+> +++ b/drivers/acpi/hmat/Kconfig
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +config ACPI_HMAT
+> +	bool "ACPI Heterogeneous Memory Attribute Table Support"
+> +	depends on ACPI_NUMA
+> +	help
+> +	 If set, this option has the kernel parse and report the
+> +	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table).
+> diff --git a/drivers/acpi/hmat/Makefile b/drivers/acpi/hmat/Makefile
+> new file mode 100644
+> index 000000000000..e909051d3d00
+> --- /dev/null
+> +++ b/drivers/acpi/hmat/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_ACPI_HMAT) := hmat.o
+> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+> new file mode 100644
+> index 000000000000..99f711420f6d
+> --- /dev/null
+> +++ b/drivers/acpi/hmat/hmat.c
+> @@ -0,0 +1,237 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, Intel Corporation.
+> + *
+> + * Heterogeneous Memory Attributes Table (HMAT) representation
+> + *
+> + * This program parses and reports the platform's HMAT tables, and registers
+> + * the applicable attributes with the node's interfaces.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/bitops.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/list.h>
+> +#include <linux/node.h>
+> +#include <linux/sysfs.h>
+> +
+> +static __initdata u8 hmat_revision;
+> +
+> +static __init const char *hmat_data_type(u8 type)
+> +{
+> +	switch (type) {
+> +	case ACPI_HMAT_ACCESS_LATENCY:
+> +		return "Access Latency";
+> +	case ACPI_HMAT_READ_LATENCY:
+> +		return "Read Latency";
+> +	case ACPI_HMAT_WRITE_LATENCY:
+> +		return "Write Latency";
+> +	case ACPI_HMAT_ACCESS_BANDWIDTH:
+> +		return "Access Bandwidth";
+> +	case ACPI_HMAT_READ_BANDWIDTH:
+> +		return "Read Bandwidth";
+> +	case ACPI_HMAT_WRITE_BANDWIDTH:
+> +		return "Write Bandwidth";
+> +	default:
+> +		return "Reserved";
+> +	}
+> +}
+> +
+> +static __init const char *hmat_data_type_suffix(u8 type)
+> +{
+> +	switch (type) {
+> +	case ACPI_HMAT_ACCESS_LATENCY:
+> +	case ACPI_HMAT_READ_LATENCY:
+> +	case ACPI_HMAT_WRITE_LATENCY:
+> +		return " nsec";
+> +	case ACPI_HMAT_ACCESS_BANDWIDTH:
+> +	case ACPI_HMAT_READ_BANDWIDTH:
+> +	case ACPI_HMAT_WRITE_BANDWIDTH:
+> +		return " MB/s";
+> +	default:
+> +		return "";
+> +	}
+> +}
+> +
+> +static __init u32 hmat_normalize(u16 entry, u64 base, u8 type)
+> +{
+> +	u32 value;
+> +
+> +	/*
+> +	 * Check for invalid and overflow values
+> +	 */
+> +	if (entry == 0xffff || !entry)
+> +		return 0;
+> +	else if (base > (UINT_MAX / (entry)))
+> +		return 0;
+> +
+> +	/*
+> +	 * Divide by the base unit for version 1, convert latency from
+> +	 * picosenonds to nanoseconds if revision 2.
+> +	 */
+> +	value = entry * base;
+> +	if (hmat_revision == 1) {
+> +		if (value < 10)
+> +			return 0;
+> +		value = DIV_ROUND_UP(value, 10);
+> +	} else if (hmat_revision == 2) {
+> +		switch (type) {
+> +		case ACPI_HMAT_ACCESS_LATENCY:
+> +		case ACPI_HMAT_READ_LATENCY:
+> +		case ACPI_HMAT_WRITE_LATENCY:
+> +			value = DIV_ROUND_UP(value, 1000);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +	return value;
+> +}
+> +
+> +static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+> +				      const unsigned long end)
+> +{
+> +	struct acpi_hmat_locality *hmat_loc = (void *)header;
+> +	unsigned int init, targ, total_size, ipds, tpds;
+> +	u32 *inits, *targs, value;
+> +	u16 *entries;
+> +	u8 type;
+> +
+> +	if (hmat_loc->header.length < sizeof(*hmat_loc)) {
+> +		pr_notice("HMAT: Unexpected locality header length: %d\n",
+> +			 hmat_loc->header.length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	type = hmat_loc->data_type;
+> +	ipds = hmat_loc->number_of_initiator_Pds;
+> +	tpds = hmat_loc->number_of_target_Pds;
+> +	total_size = sizeof(*hmat_loc) + sizeof(*entries) * ipds * tpds +
+> +		     sizeof(*inits) * ipds + sizeof(*targs) * tpds;
+> +	if (hmat_loc->header.length < total_size) {
+> +		pr_notice("HMAT: Unexpected locality header length:%d, minimum required:%d\n",
+> +			 hmat_loc->header.length, total_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	pr_info("HMAT: Locality: Flags:%02x Type:%s Initiator Domains:%d Target Domains:%d Base:%lld\n",
+> +		hmat_loc->flags, hmat_data_type(type), ipds, tpds,
+> +		hmat_loc->entry_base_unit);
+> +
+> +	inits = (u32 *)(hmat_loc + 1);
+> +	targs = inits + ipds;
+> +	entries = (u16 *)(targs + tpds);
+> +	for (init = 0; init < ipds; init++) {
+> +		for (targ = 0; targ < tpds; targ++) {
+> +			value = hmat_normalize(entries[init * tpds + targ],
+> +					       hmat_loc->entry_base_unit,
+> +					       type);
+> +			pr_info("  Initiator-Target[%d-%d]:%d%s\n",
+> +				inits[init], targs[targ], value,
+> +				hmat_data_type_suffix(type));
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static __init int hmat_parse_cache(union acpi_subtable_headers *header,
+> +				   const unsigned long end)
+> +{
+> +	struct acpi_hmat_cache *cache = (void *)header;
+> +	u32 attrs;
+> +
+> +	if (cache->header.length < sizeof(*cache)) {
+> +		pr_notice("HMAT: Unexpected cache header length: %d\n",
+> +			 cache->header.length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	attrs = cache->cache_attributes;
+> +	pr_info("HMAT: Cache: Domain:%d Size:%llu Attrs:%08x SMBIOS Handles:%d\n",
+> +		cache->memory_PD, cache->cache_size, attrs,
+> +		cache->number_of_SMBIOShandles);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init hmat_parse_address_range(union acpi_subtable_headers *header,
+> +					   const unsigned long end)
+> +{
+> +	struct acpi_hmat_proximity_domain *p = (void *)header;
+> +	struct memory_target *target = NULL;
 
--- 
-Julien Grall
+Not used anywhere.
+
+> +
+> +	if (p->header.length != sizeof(*p)) {
+> +		pr_notice("HMAT: Unexpected address range header length: %d\n",
+> +			 p->header.length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (hmat_revision == 1)
+> +		pr_info("HMAT: Memory (%#llx length %#llx) Flags:%04x Processor Domain:%d Memory Domain:%d\n",
+> +			p->reserved3, p->reserved4, p->flags, p->processor_PD,
+> +			p->memory_PD);
+> +	else
+> +		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
+> +			p->flags, p->processor_PD, p->memory_PD);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init hmat_parse_subtable(union acpi_subtable_headers *header,
+> +				      const unsigned long end)
+> +{
+> +	struct acpi_hmat_structure *hdr = (void *)header;
+> +
+> +	if (!hdr)
+> +		return -EINVAL;
+> +
+> +	switch (hdr->type) {
+> +	case ACPI_HMAT_TYPE_ADDRESS_RANGE:
+> +		return hmat_parse_address_range(header, end);
+> +	case ACPI_HMAT_TYPE_LOCALITY:
+> +		return hmat_parse_locality(header, end);
+> +	case ACPI_HMAT_TYPE_CACHE:
+> +		return hmat_parse_cache(header, end);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static __init int hmat_init(void)
+> +{
+> +	struct acpi_table_header *tbl;
+> +	enum acpi_hmat_type i;
+> +	acpi_status status;
+> +
+> +	if (srat_disabled())
+> +		return 0;
+> +
+> +	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
+> +	if (ACPI_FAILURE(status))
+> +		return 0;
+> +
+> +	hmat_revision = tbl->revision;
+> +	switch (hmat_revision) {
+> +	case 1:
+> +	case 2:
+> +		break;
+> +	default:
+> +		pr_notice("Ignoring HMAT: Unknown revision:%d\n", hmat_revision);
+> +		goto out_put;
+> +	}
+> +
+> +	for (i = ACPI_HMAT_TYPE_ADDRESS_RANGE; i < ACPI_HMAT_TYPE_RESERVED; i++) {
+> +		if (acpi_table_parse_entries(ACPI_SIG_HMAT,
+> +					     sizeof(struct acpi_table_hmat), i,
+> +					     hmat_parse_subtable, 0) < 0) {
+> +			pr_notice("Ignoring HMAT: Invalid table");
+> +			goto out_put;
+> +		}
+> +	}
+> +out_put:
+> +	acpi_put_table(tbl);
+> +	return 0;
+> +}
+> +subsys_initcall(hmat_init);
+
+
