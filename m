@@ -2,187 +2,310 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B950BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A8FC10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C4220868
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="h4xIcnYx"
+	by mail.kernel.org (Postfix) with ESMTP id 5A80D20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfCHRkS (ORCPT
+        id S1727010AbfCHRk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:40:18 -0500
-Received: from mail-eopbgr10059.outbound.protection.outlook.com ([40.107.1.59]:43909
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726249AbfCHRkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:40:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kLPZuDNtAmLY2pBD2Iev2mhnPm4awKRqYHy4yfIG4ow=;
- b=h4xIcnYxt+qwES/MiAsGiGDzdjU7jQI7LEjgsowgPMEMxiOhhpIYmd7AeuUNu4WpzJW+UQooAucI+O7Ggy8YQvkfmKLf+rU8RMtat2ZKjHfa7u2wuHyF04Ro1gERPI4mP2RxZiBNmZ+OaSu22G2eFDh+2LnrXS1j4wMRr1Xl/k4=
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
- VI1PR0402MB2781.eurprd04.prod.outlook.com (10.172.255.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Fri, 8 Mar 2019 17:39:31 +0000
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::f80e:d03f:57bc:aced]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::f80e:d03f:57bc:aced%2]) with mapi id 15.20.1686.019; Fri, 8 Mar 2019
- 17:39:31 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "festevam@gmail.com" <festevam@gmail.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2] ASoC: fsl: sai: Fix underrrun for playback stream start
-Thread-Topic: [PATCH v2] ASoC: fsl: sai: Fix underrrun for playback stream
- start
-Thread-Index: AQHU1dXiyuPWZlRM30GhOcyE/WGqxg==
-Date:   Fri, 8 Mar 2019 17:39:30 +0000
-Message-ID: <20190308173904.27298-1-daniel.baluta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P194CA0075.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:209:8f::16) To VI1PR0402MB3357.eurprd04.prod.outlook.com
- (2603:10a6:803:2::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [95.76.156.53]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9f41f78d-6bef-4ea3-5efe-08d6a3ed050c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0402MB2781;
-x-ms-traffictypediagnostic: VI1PR0402MB2781:
-x-ms-exchange-purlcount: 1
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;VI1PR0402MB2781;23:xDz/Fg3VsIG1oixmWahXmVgP/9qzrp8uJa1t9?=
- =?iso-8859-1?Q?HdZrvhgHoPE97Qdsr1SfI6sSrxsfOLfaPqM54T7bp+n4QsyIN4+HmDztC7?=
- =?iso-8859-1?Q?02mGADKmiAwRfUyurUjJrv2ootiMu03spx4rxIuE2IukPpL6HAjc2QjOdr?=
- =?iso-8859-1?Q?FX/Ry/C+sz/HjTcNrKJgzxVQ1YTI0TQS9Hk4cNGGW9Vk9KV1arexsI2OE0?=
- =?iso-8859-1?Q?dEbQs6lweCN5C5AkkG+iiBIH5GFRD+SED7UG/fKi2uQt0IJukP91Kl84LF?=
- =?iso-8859-1?Q?0KRBcOmB/KN8g8FS9SnDLbQKUeaOMlVKvGnEfUEfyFOdgaVCdncdexDD/O?=
- =?iso-8859-1?Q?8J6T5tGoFpOwVz/v/Xjs1YEYMu4XtkwZAG8NIe3k6kyTZ9ropyG78uGKAE?=
- =?iso-8859-1?Q?nIOxGZALXGCQ5MrNtFlzDEkv+qOTCSGnP/DATlG57xB1wSJJH+vjyCi3J0?=
- =?iso-8859-1?Q?8sCxrVTzd8yP42Dt+yBQkGltnloXT5mtJPXJvARcJSIIKsD8QT8aZZbznP?=
- =?iso-8859-1?Q?UKF1csaxdl1w1BkXxSuBYepUeIK4pQc1k4C6/9RFtWVOAPXk4Tm+NN+pl2?=
- =?iso-8859-1?Q?kA+nfJCBEJWg6acsSXji2QsVV7qpcDzpMtr2x/+aOU/7rmzkE2SKmQKyO4?=
- =?iso-8859-1?Q?j5ZFdfVzQwLBB+B/mFeNrfC4m+xK24MHntfvyrIIfHkLVNnquDxqWXaVtd?=
- =?iso-8859-1?Q?OOca4QEi0Jou/Bn3Y30RTmCnVTPw5jbiApFYQQuMDzgFPcQz4Hk9xxH+Pi?=
- =?iso-8859-1?Q?1GTelOp+kjiChlMiMwsrTTve+OS+2gCrv3s0tt+AIOQkitINfHiUtkeOuS?=
- =?iso-8859-1?Q?VFKIFMd7oaIP/DlAVbuJUsLQUJInPaIAwzpRGA4OpJ/nINNX44TreSn//G?=
- =?iso-8859-1?Q?g8N7829jSHe3thvuZOjRp+E3rNv9sOtWzUCTi2r4xeLdyQRiz9yE/d8Q4P?=
- =?iso-8859-1?Q?TGITOrornEJl2j1KLGE4/kYvAC/enJpyoW/8LrpVcamb93DVkAzUuaav1X?=
- =?iso-8859-1?Q?FTffU5fdxr7HrRKVzvtiteq69gyLpiyBnSrY8Ml4HtlnOnuLyUQ9aNU2cm?=
- =?iso-8859-1?Q?rK44jKIV6yn3ZUkMM9QaQ3XxtrfmB/QJ+kvsfJTJvWjpatUuSggQ1tLAMb?=
- =?iso-8859-1?Q?NEMGtF7uh56w3sLIqhtQsMNMPxEbjGZSNItmUnQ4HXhnL+Fgmas0LyKpaf?=
- =?iso-8859-1?Q?xlD+Zo3BfHjOGAYaeJ7HFbEU9TGP5vpV6kWgKHNEeHmuj24FZK6hGmTdMX?=
- =?iso-8859-1?Q?IYdSoNgBZAahmElzfzmMFbAVS8i/LDW3NjMwABmq/TcNp1kghcGsIUo/D9?=
- =?iso-8859-1?Q?kfC3cSxAxF87Mn7SBfbdstmv9UUWuAIVC9cRsE+JCSN7ZnzmZKuye3ys7H?=
- =?iso-8859-1?Q?c5PIqzjcWn9oTSDFxGg/MiJfY/fVzdjtCv5B+SeRvO+HRrpIUKLIA=3D?=
- =?iso-8859-1?Q?=3D?=
-x-microsoft-antispam-prvs: <VI1PR0402MB278108BB4046064F8EAC3D8FF94D0@VI1PR0402MB2781.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0970508454
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(366004)(39860400002)(346002)(189003)(199004)(52084003)(6306002)(6512007)(6486002)(6916009)(5640700003)(81166006)(8676002)(316002)(26005)(7736002)(1730700003)(6436002)(54906003)(305945005)(44832011)(81156014)(486006)(86362001)(2616005)(476003)(36756003)(50226002)(66066001)(68736007)(53936002)(97736004)(8936002)(99286004)(256004)(14444005)(105586002)(71200400001)(2351001)(106356001)(52116002)(1076003)(71190400001)(4326008)(966005)(186003)(14454004)(25786009)(6506007)(386003)(2501003)(6116002)(3846002)(478600001)(102836004)(5660300002)(2906002)(49343001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2781;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EmxFJ6dZefxA1KK2weFjn3eqc9ceP94mZjpnZPZWOsH+pNe2eb8OXdkxQIu4q0rYQe//uxluQjucRm0p3gjxLyBBbmjuyHOvcu2f84XFB1OVOvsg3qnIbvGzlnalCda4Tq+z2EQYWxn5Dpic7yB/d96j7EI0WL8wirVFqgrvf+3cmovIfsL3Qwzaui93uG26CftiGlY6OvFy3fZ8Hc1FAWS8/z1OfwfPUSDBXRyG+fSlqgsZ0xixX5UsKDPtXgLs0A391wUsK/ypB+cI6BCWz/moyE2p1okkxTYTuXNaXBnx5EdwQbyKE0EscknDt1R5Ky/yJUXropLPYbLfID+VYkkO11lTboBDG6T5zFauk1uwrRldyPvR/4LoDVKbHcQ6+h5fNRfr+dnBP3R/6uzZsp1Wcvegw8Qhd/tqSYiOU5Y=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 Mar 2019 12:40:29 -0500
+Received: from mailproxy02.manitu.net ([217.11.48.66]:34180 "EHLO
+        mailproxy02.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfCHRk2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 12:40:28 -0500
+Received: from [10.48.228.204] (x59cc82cc.dyn.telefonica.de [89.204.130.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy02.manitu.net (Postfix) with ESMTPSA id D037610200CB;
+        Fri,  8 Mar 2019 18:44:28 +0100 (CET)
+Subject: Re: [PATCH v7 1/4] can: m_can: Create a m_can platform framework
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190305155220.14037-1-dmurphy@ti.com>
+ <5065d6ba-f195-a695-77b1-b837cac1a199@grandegger.com>
+ <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
+ <bf2613ae-67f6-661d-0faa-786308c249a0@grandegger.com>
+ <cea76d80-d85c-2963-2745-4509450e2ea9@grandegger.com>
+ <6016c8aa-01b6-38d5-0e1f-3a999aae6a13@ti.com>
+ <1f6f77c6-dcf2-6212-5d4e-1eb699e603f1@grandegger.com>
+ <1e9acd4e-97ad-1d9c-44b6-1b2d1bbe8c0e@ti.com>
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <2026f4ff-31de-3040-0872-5e9d01cc5aa5@grandegger.com>
+Date:   Fri, 8 Mar 2019 18:40:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f41f78d-6bef-4ea3-5efe-08d6a3ed050c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2019 17:39:31.0159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2781
+In-Reply-To: <1e9acd4e-97ad-1d9c-44b6-1b2d1bbe8c0e@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Hello Dan,
 
-For [dir=3Dplayback, cmd =3D PCM_TRIGGER_START], fsl_sai_trigger
-does the following:
-	* Enable DMA request
-	* Enable Transmitter
+Am 08.03.19 um 18:25 schrieb Dan Murphy:
+> On 3/8/19 11:08 AM, Wolfgang Grandegger wrote:
+>> Hello,
+>>
+>> Am 08.03.19 um 16:48 schrieb Dan Murphy:
+>>> Wolfgang
+>>>
+>>> On 3/8/19 8:41 AM, Wolfgang Grandegger wrote:
+>>>> Hello Dan,
+>>>>
+>>>> thinking more about it...
+>>>>
+>>>> Am 08.03.19 um 14:29 schrieb Wolfgang Grandegger:
+>>>>> Hello Dan,
+>>>>>
+>>>>> Am 08.03.19 um 13:44 schrieb Dan Murphy:
+>>>>>> Wolfgang
+>>>>>>
+>>>>>> On 3/8/19 4:10 AM, Wolfgang Grandegger wrote:
+>>>>>>> Hallo Dan,
+>>>>>>>
+>>>>>>> Am 05.03.19 um 16:52 schrieb Dan Murphy:
+>>>>>>>> Create a m_can platform framework that peripherial
+>>>>>>>> devices can register to and use common code and register sets.
+>>>>>>>> The peripherial devices may provide read/write and configuration
+>>>>>>>> support of the IP.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>>> ---
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
+>>>>>>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
+>>>>>>>>
+>>>>>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+>>>>>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+>>>>>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+>>>>>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+>>>>>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+>>>>>>>>
+>>>>>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
+>>>>>>>>  drivers/net/can/m_can/Makefile         |   1 +
+>>>>>>>>  drivers/net/can/m_can/m_can.c          | 700 +++++++++++++------------
+>>>>>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>>>>>>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
+>>>>>>>>  5 files changed, 682 insertions(+), 344 deletions(-)
+>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
+>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>>>>>>> index 04f20dd39007..f7119fd72df4 100644
+>>>>>>>> --- a/drivers/net/can/m_can/Kconfig
+>>>>>>>> +++ b/drivers/net/can/m_can/Kconfig
+>>>>>>>> @@ -1,5 +1,14 @@
+>>>>>>>>  config CAN_M_CAN
+>>>>>>>> +	tristate "Bosch M_CAN support"
+>>>>>>>> +	---help---
+>>>>>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+>>>>>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
+>>>>>>>> +
+>>>>>>>> +config CAN_M_CAN_PLATFORM
+>>>>>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
+>>>>>>>>  	depends on HAS_IOMEM
+>>>>>>>> -	tristate "Bosch M_CAN devices"
+>>>>>>>> +	depends on CAN_M_CAN
+>>>>>>>>  	---help---
+>>>>>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
+>>>>>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>>>>>>>> +	  This support is for devices that have the Bosch M_CAN controller
+>>>>>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+>>>>>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>>>>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
+>>>>>>>> --- a/drivers/net/can/m_can/Makefile
+>>>>>>>> +++ b/drivers/net/can/m_can/Makefile
+>>>>>>>> @@ -3,3 +3,4 @@
+>>>>>>>>  #
+>>>>>>>>  
+>>>>>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>>>>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>>>>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+>>>>>>>> index 9b449400376b..a60278d94126 100644
+>>>>>>>> --- a/drivers/net/can/m_can/m_can.c
+>>>>>>>> +++ b/drivers/net/can/m_can/m_can.c
+>>>>>>>
+>>>>>>> ... snip...
+>>>>>>>
+>>>>>>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
+>>>>>>>> +				    struct net_device *dev)
+>>>>>>>> +{
+>>>>>>>> +	struct m_can_priv *priv = netdev_priv(dev);
+>>>>>>>> +
+>>>>>>>> +	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>>> +		return NETDEV_TX_OK;
+>>>>>>>> +
+>>>>>>>> +	if (priv->is_peripherial) {
+>>>>>>>> +		if (priv->tx_skb) {
+>>>>>>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
+>>>>>>>> +			return NETDEV_TX_BUSY;
+>>>>>>>> +		}
+>>>>>>>
+>>>>>>> The problem with that approach is, that the upper layer will try to
+>>>>>>> resubmit the current "skb" but not the previous "tx_skb". And the
+>>>>>>> previous "tx_skb" has not been freed yet. I would just drop and free the
+>>>>>>> skb and return NETDEV_TX_OK in m_can_tx_handler() for peripheral devices
+>>>>>>> (like can_dropped_invalid_skb() does).
+>>>>>>>
+>>>>>>
+>>>>>> OK.
+>>>>>>
+>>>>>> So would this also be a bug in the hi3110 and mcp251x drivers (line 521) as well because besides checking tx_length
+>>>>>> this is how these drivers are written.
+>>>>>
+>>>>> This is different. When entering the "start_xmit" routine, the previous
+>>>>> TX is still in progress. It will (hopefully) complete soon. Therefore
+>>>>> returning NETDEV_TX_BUSY is OK. The "start_xmit" routine will be
+>>>>> recalled soon with the same "skb". That scenario should/could also not
+>>>>> happen.
+>>>>
+>>>> In principle, this also applies to the m_can peripheral devices. If
+>>>> tx_skb is not NULL, the TX is still in progress and returning
+>>>> NETDEV_TX_BUSY is just fine.
+>>>>
+>>>>>
+>>>>> In contrast, in "m_can_tx_handler()", the skb could not be handled
+>>>>> because the FIFO is full. The "start_xmit" routine for peripheral
+>>>>> devices for that skb already returned NETDEV_TX_OK. Therefore the only
+>>>>> meaningful action is to drop the skb. Also this error should not happen
+>>>>> and if, something is going really wrong. Therefore I think, a
+>>>>> WARN_ONCE() would be even more appropriate. But that should be a
+>>>>> separate patch.
+>>>>
+>>>> But that's a different issue/error. The tx_skb cannot be processed in
+>>>> "m_can_tx_handler()". Either we drop it or we re-queue it (retry later).
+>>>>
+>>>
+>>> OK I am a bit confused on this.  Are you saying this is not an issue?
+>>> Or are you saying I need to check for tx_len like the other code?
+>>
+>> If you check for tx_skb in the "start_xmit" routine like the hi3110 and
+>> mcp251x, it will work the same way. But only, if the "tx_handler()" has
+>> fully processed the message. It simple means, the TX is still in
+>> progress and will complete soon. But in "m_can_tx_handler()" we return
+>> without handling the message! It will never be sent and freed. Or will
+>> the "m_can_tx_handler()" retry?
+>>
+> 
+> I am not seeing where we are not handling the message in the m_can_tx_handler()
 
-Now, because DMA doesn't copy data to TDR fast enough we hit
-TX FIFO underrun error:
+static void m_can_tx_handler(struct m_can_classdev *priv)
+{
+		...
+		/* Check if FIFO full */
+		if (m_can_tx_fifo_full(priv)) {
+			/* This shouldn't happen */
+			netif_stop_queue(dev);
+			netdev_warn(dev,
+				    "TX queue active although FIFO is full.");
+			return;
+		}
 
-[   37.175974] fsl-sai 308b0000.sai: isr: Transmit underrun detected
+We simply return here. When is the message (tx_skb) processed (sent or freed)?
+What happens with tx_skb?
 
-The explanation for this can be found in SAI documentation for example
-chapter 16.16.3.5.2 FIFO pointers of the i.MX8DXP reference manual [1]
 
-"
-If the Transmit FIFO is empty, then to avoid a FIFO underrun,
-the Transmit Data Register must be written at least 3 bit clocks
-before the start of the next unmasked word. Before enabling the
-transmitter, the Transmit FIFO should be initialized with data
-(since after the transmitter is enabled, the transmitter will
-start a new frame, and if no data is in the FIFO, then the
-transmitter will immediately give an error).
-"
+For the hi3110, we have:
 
-[1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+static void hi3110_tx_work_handler(struct work_struct *ws)
+{
+        struct hi3110_priv *priv = container_of(ws, struct hi3110_priv,
+                                                tx_work);
+        struct spi_device *spi = priv->spi;
+        struct net_device *net = priv->net;
+        struct can_frame *frame;
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
-Changes since v1:
- - as per Fabio's request clarify the issue and the solution
- - move words writing before enabling DMA request
+        mutex_lock(&priv->hi3110_lock);
+        if (priv->tx_skb) {
+                if (priv->can.state == CAN_STATE_BUS_OFF) {
+                        hi3110_clean(net);
+                } else {
+                        frame = (struct can_frame *)priv->tx_skb->data;
+                        hi3110_hw_tx(spi, frame);
+                        priv->tx_len = 1 + frame->can_dlc;
+                        can_put_echo_skb(priv->tx_skb, net, 0);
+                        priv->tx_skb = NULL;
+                }
+        }
+        mutex_unlock(&priv->hi3110_lock);
+}
 
- sound/soc/fsl/fsl_sai.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Either the tx_skb is sent or cleanup (dropped and freed) in case of bus-off.
+Also "hi3110_clean" sets "priv->tx_skb = NULL"! The "tx_len" handles a pending 
+"echo_skb".
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 2d376e3a3c80..a739baa99c1a 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -522,7 +522,9 @@ static int fsl_sai_trigger(struct snd_pcm_substream *su=
-bstream, int cmd,
- {
- 	struct fsl_sai *sai =3D snd_soc_dai_get_drvdata(cpu_dai);
- 	bool tx =3D substream->stream =3D=3D SNDRV_PCM_STREAM_PLAYBACK;
-+	unsigned int channels =3D substream->runtime->channels;
- 	u32 xcsr, count =3D 100;
-+	int i;
-=20
- 	/*
- 	 * Asynchronous mode: Clear SYNC for both Tx and Rx.
-@@ -542,6 +544,11 @@ static int fsl_sai_trigger(struct snd_pcm_substream *s=
-ubstream, int cmd,
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		for (i =3D 0; tx && i < channels; i++)
-+			regmap_write(sai->regmap, FSL_SAI_TDR, 0x0);
-+		if (tx)
-+			udelay(10);
-+
- 		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
- 				   FSL_SAI_CSR_FRDE, FSL_SAI_CSR_FRDE);
-=20
---=20
-2.17.1
-
+> 
+> In the peripheral code the work is queued up.  And the work thread is m_can_tx_work_queue.
+> 
+> This in turn calls the m_can_tx_handler and the worker is blocked until return which means the message
+> would have been processed.
+> 
+> If there is no issue and the handler returns OK then the skb is set to null.
+> Otherwise the only other time that the skb will not be null is if the FIFO was full.
+> 
+> Plus there can only be one work queue at a time so the processing is synchronous.
+> If the upper layer decides to send another packet before the prior one is complete then it will get
+> a TX busy return.
+> 
+> IOmapped calls are blocked on return so this is not an issue.  We cannot do it the same way with peripherals due to the
+> atomic context of the request.
+Wolfgang.
