@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BF2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A080C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654ED2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099752085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049537;
-	bh=Ji9R1xRBdnsdzTW9HWusH7yG4MpQ+LSg+iq0JeRiz7U=;
+	s=default; t=1552049540;
+	bh=rc10ssGyNqn3eBycMw4Z1WjUheVx6y77q+CGXIqx3ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZfWxa8qEeZZDDoduc+Z+D8uqySJGv+kAofZbSVyOWBCp6MreQ6ilHczSK7rWoUY73
-	 6sz1o5Y5lLR/WT6NWWYogJrCRotN+fjXDFZUgbGsBcy4SSg6EsJvpNALSTH2/cL6wc
-	 6XN+OYpaZbBtnH55eIonqJJuH8H67lpp1Za33ovA=
+	b=nhDjbCgVSHSAMKxjjIPUZeJXL9J5tRNzcyb7ykE8OIZMfsEzBmJV4bqNh+457gns6
+	 1tJgNWdGQGgD1oTFojgjNdS7AIQFikkxAoZJJXDwRWnvPbpauqy1HDH3A2nLPtWeqz
+	 VOiZQD6WlZaxIExvZGRj9j/iKQrlzf6kdHlg3B8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfCHMwP (ORCPT
+        id S1726938AbfCHMwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:52:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55732 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:52:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfCHMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:13 -0500
+        id S1726920AbfCHMwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:52:15 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6EDF208E4;
-        Fri,  8 Mar 2019 12:52:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9026D2133F;
+        Fri,  8 Mar 2019 12:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049532;
-        bh=Ji9R1xRBdnsdzTW9HWusH7yG4MpQ+LSg+iq0JeRiz7U=;
+        s=default; t=1552049535;
+        bh=rc10ssGyNqn3eBycMw4Z1WjUheVx6y77q+CGXIqx3ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuRp8nR/3hESFgL+8Z7W1QnQ2eedIuwr8OV34O2A9tXYPq4zfC79p4VcIM9yPBQ7Z
-         2f6gknO81brsj1LL1RTpv/9kedCkCV0cH+xqmwKS4hVj9UedvsFJgz7YYltZ9JVZok
-         Oq12cNY1Lf47h+VkwvNhn/bcx6i574Wpg+u/CfiU=
+        b=i97yD/pcXqsV2IiB9G5LtWfOH61+Kk/9t+G7q+N7h1VEvIqf3GYIufqb08yFJ8Buv
+         pvPKglGjAqaj6mYiJH6J3r4we9URauJLbPwdsFh8CdI8+mMNRbfx0i3EHCj+7C+4pS
+         piPHvy6ur7UB2W6GuOEwpVoaAr8/YXy5qrKli0fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pitam Mitra <pitamm@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bockjoo Kim <bockjoo@phys.ufl.edu>, bp@alien8.de, hpa@zytor.com
-Subject: [PATCH 5.0 30/46] x86/boot/compressed/64: Do not read legacy ROM on EFI system
-Date:   Fri,  8 Mar 2019 13:50:03 +0100
-Message-Id: <20190308124904.216497374@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 31/46] tracing: Fix event filters and triggers to handle negative numbers
+Date:   Fri,  8 Mar 2019 13:50:04 +0100
+Message-Id: <20190308124904.282819500@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -67,76 +66,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+From: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
 
-commit 6f913de3231e1d70a871135b38219da7810df218 upstream.
+commit 6a072128d262d2b98d31626906a96700d1fc11eb upstream.
 
-EFI systems do not necessarily provide a legacy ROM. If the ROM is missing
-the memory is not mapped at all.
+Then tracing syscall exit event it is extremely useful to filter exit
+codes equal to some negative value, to react only to required errors.
+But negative numbers does not work:
 
-Trying to dereference values in the legacy ROM area leads to a crash on
-Macbook Pro.
+[root@snorch sys_exit_read]# echo "ret == -1" > filter
+bash: echo: write error: Invalid argument
+[root@snorch sys_exit_read]# cat filter
+ret == -1
+        ^
+parse_error: Invalid value (did you forget quotes)?
 
-Only look for values in the legacy ROM area for non-EFI system.
+Similar thing happens when setting triggers.
 
-Fixes: 3548e131ec6a ("x86/boot/compressed/64: Find a place for 32-bit trampoline")
-Reported-by: Pitam Mitra <pitamm@gmail.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Bockjoo Kim <bockjoo@phys.ufl.edu>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
+These is a regression in v4.17 introduced by the commit mentioned below,
+testing without these commit shows no problem with negative numbers.
+
+Link: http://lkml.kernel.org/r/20180823102534.7642-1-ptikhomirov@virtuozzo.com
+
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190219075224.35058-1-kirill.shutemov@linux.intel.com
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202351
+Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
+Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/boot/compressed/pgtable_64.c |   19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ kernel/trace/trace_events_filter.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -1,5 +1,7 @@
-+#include <linux/efi.h>
- #include <asm/e820/types.h>
- #include <asm/processor.h>
-+#include <asm/efi.h>
- #include "pgtable.h"
- #include "../string.h"
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1301,7 +1301,7 @@ static int parse_pred(const char *str, v
+ 		/* go past the last quote */
+ 		i++;
  
-@@ -37,9 +39,10 @@ int cmdline_find_option_bool(const char
+-	} else if (isdigit(str[i])) {
++	} else if (isdigit(str[i]) || str[i] == '-') {
  
- static unsigned long find_trampoline_placement(void)
- {
--	unsigned long bios_start, ebda_start;
-+	unsigned long bios_start = 0, ebda_start = 0;
- 	unsigned long trampoline_start;
- 	struct boot_e820_entry *entry;
-+	char *signature;
- 	int i;
+ 		/* Make sure the field is not a string */
+ 		if (is_string_field(field)) {
+@@ -1314,6 +1314,9 @@ static int parse_pred(const char *str, v
+ 			goto err_free;
+ 		}
  
- 	/*
-@@ -47,8 +50,18 @@ static unsigned long find_trampoline_pla
- 	 * This code is based on reserve_bios_regions().
- 	 */
- 
--	ebda_start = *(unsigned short *)0x40e << 4;
--	bios_start = *(unsigned short *)0x413 << 10;
-+	/*
-+	 * EFI systems may not provide legacy ROM. The memory may not be mapped
-+	 * at all.
-+	 *
-+	 * Only look for values in the legacy ROM for non-EFI system.
-+	 */
-+	signature = (char *)&boot_params->efi_info.efi_loader_signature;
-+	if (strncmp(signature, EFI32_LOADER_SIGNATURE, 4) &&
-+	    strncmp(signature, EFI64_LOADER_SIGNATURE, 4)) {
-+		ebda_start = *(unsigned short *)0x40e << 4;
-+		bios_start = *(unsigned short *)0x413 << 10;
-+	}
- 
- 	if (bios_start < BIOS_START_MIN || bios_start > BIOS_START_MAX)
- 		bios_start = BIOS_START_MAX;
++		if (str[i] == '-')
++			i++;
++
+ 		/* We allow 0xDEADBEEF */
+ 		while (isalnum(str[i]))
+ 			i++;
 
 
