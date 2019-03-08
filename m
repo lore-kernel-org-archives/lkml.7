@@ -2,126 +2,153 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EA1C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E58FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857CD20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBE5208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:32:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="YjjsLPA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfCHRcU (ORCPT
+        id S1726901AbfCHRch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:32:20 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:48184 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfCHRcT (ORCPT
+        Fri, 8 Mar 2019 12:32:37 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45715 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfCHRcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:32:19 -0500
-Received: from mail-wr1-f69.google.com ([209.85.221.69])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1h2JM2-00058h-0L
-        for linux-kernel@vger.kernel.org; Fri, 08 Mar 2019 17:32:18 +0000
-Received: by mail-wr1-f69.google.com with SMTP id o6so10504863wrm.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:32:18 -0800 (PST)
+        Fri, 8 Mar 2019 12:32:36 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d24so18053436ljc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:32:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=04OEvy0xZ5LcQH0OJqrzsCA8osIPKjgjUbd8tX0Kghs=;
+        b=YjjsLPA93wIGoIgNkb103Q3G/j/k+9I4c0VFFdo7mBpadNUKe5yEOkVQ6nj1Yl8Ay3
+         lfaa4VZSJfPwFqSLx1mJbb6dNFk4ceMky3BiD+wY8IWhBM9NvMJ2ayQ1A7TQcLpPnoFY
+         19khDqCwUNMogpSp0hwoIQuF0B6nKREpydIbrPmB9yOHPbHZC0NgNrNNP9YSXHVnHY/1
+         d2fCAxvFbu9PRpzqwr4IX/dtwwTCkoQA53nxRGKb+JtdMLCiBsv38dPmYovbptdOS7r+
+         3XNj1PaaTuvfuWfMHDup9yXPN+GXys0SII2767fmaRGyAZe25A7SoujJqkosAvlwYoNp
+         b9Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y41igMRdVdi6O2TKhS1LdJCmwZwAdJ7DsR9RZUvhSc0=;
-        b=VGMqzRfpnAg+GBO9p/Y00f5RmTrewP6W4GpHqBpLemXnxZCN7v0JQPpqj59q3T4zeF
-         FTGpsgnSVN1XFCWhIoWhHNAUB8N7Vi0sMBzra62c9aglGpPxx2ddoINhewPxTDEJZA6c
-         w02y5nV3Ancv+mXj/lHJQk4TT6M66LrNjZrz+NZFtlCeGw8KeS8Lrr1RSu7DDOpj0MRB
-         yvl4yBy1R89Kn+1jlNFQaqjDrH0mYLSaX7nF2Qqtx4vfofwS7sY7AZNAkUow4zWisInB
-         sEityjGPTsqBTC5mIkTArsBHmMjKkeO5PYQrspldfeuE8Bsh47JQZJAxYj1i29qHiO/3
-         L4Fw==
-X-Gm-Message-State: APjAAAVjzf/QJibIA1hbMLOFeZ2NpN+3ued8C/uN63uEZlIDNlnFj2AI
-        w2BbLo4vtzmWaW0fNJGw4q6QP8ppTmf+flVbMUJ2GiXECIGFOYWaAf+O5jczByaBZ7iCVNcb15M
-        +Bnvk1j5PWQa8regSmKPLXsrvTiw5BIq75xfC7c/Duw==
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr12639922wru.173.1552066337671;
-        Fri, 08 Mar 2019 09:32:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwhf68/DQLMK0imMdo9x9Dw8lpezAeVlvI54UAZdInwb89EfAYoRT+MB/jsPlNwEzuHeTEnqg==
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr12639905wru.173.1552066337361;
-        Fri, 08 Mar 2019 09:32:17 -0800 (PST)
-Received: from localhost (host22-124-dynamic.46-79-r.retail.telecomitalia.it. [79.46.124.22])
-        by smtp.gmail.com with ESMTPSA id l18sm8233877wrv.20.2019.03.08.09.32.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 09:32:16 -0800 (PST)
-Date:   Fri, 8 Mar 2019 18:32:15 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] blkcg: sync() isolation
-Message-ID: <20190308173215.GA10148@xps-13>
-References: <20190307180834.22008-1-andrea.righi@canonical.com>
- <20190308172219.clcu6ehjav6y2hxi@MacBook-Pro-91.local>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=04OEvy0xZ5LcQH0OJqrzsCA8osIPKjgjUbd8tX0Kghs=;
+        b=rexPM2FrkxQRTITjr1CaosFBDNfplE/IkGzvttWjL0FxkUZon080NYs1MkEN5HiEfa
+         4wZ/VS01CVKrgEHXGwWQfJpPdqWI6sFD9UEMQb+DdT83QNJYPoscO+9kuG/tDCP++OEa
+         QLJwFmicohGrb4J7n8lpvBIQ2rlrCr5/P2ndUtAJnQiBKXa4KqejQO6VJW+xz45sqZok
+         b9M6sqDMySrJs7OzTmmEfBAcOokwWgNSiI6vhLRGFtDOUgIouecPJTNLFkpV2hDO+OGX
+         bj1bOfl3TOOr9N2+epcbc1PBSLaLhxedVdV2SIfXCpHZ8J6pGhPV8+jQ4wCAYmRjpTus
+         ojqw==
+X-Gm-Message-State: APjAAAXEW+f1++obvt/aU5l20W4ROfNvP6RN2yYbnY96dTWOQYZiboqc
+        crvFdeGA8GWhjC3R9Sv4PRxdug==
+X-Google-Smtp-Source: APXvYqz3wB91MUVB0uy0sHCimDL1sOS3O9t9ZU9NABwG1mdmpIrntTeW9qgW+Lk34VO4teylF/snSA==
+X-Received: by 2002:a2e:2e05:: with SMTP id u5mr9801643lju.85.1552066354148;
+        Fri, 08 Mar 2019 09:32:34 -0800 (PST)
+Received: from wasted.cogentembedded.com ([31.173.80.248])
+        by smtp.gmail.com with ESMTPSA id b64sm1527386ljf.82.2019.03.08.09.32.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 09:32:32 -0800 (PST)
+Subject: Re: [PATCH v8 1/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mason Yang <masonccyang@mxic.com.tw>,
+        Mark Brown <broonie@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        zhengxunli@mxic.com.tw
+References: <1548658158-5460-1-git-send-email-masonccyang@mxic.com.tw>
+ <1548658158-5460-2-git-send-email-masonccyang@mxic.com.tw>
+ <0c54ee2c-016a-bc8e-33ae-fbd04191cc49@cogentembedded.com>
+ <CAMuHMdVjgWNw4fnzJV=Qxs6zyNiBPubJUL-4WDOy26N4TkQ4gQ@mail.gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <b469bffe-b5b2-0b03-b6fb-49bfc8ba74ab@cogentembedded.com>
+Date:   Fri, 8 Mar 2019 20:32:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190308172219.clcu6ehjav6y2hxi@MacBook-Pro-91.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdVjgWNw4fnzJV=Qxs6zyNiBPubJUL-4WDOy26N4TkQ4gQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 12:22:20PM -0500, Josef Bacik wrote:
-> On Thu, Mar 07, 2019 at 07:08:31PM +0100, Andrea Righi wrote:
-> > = Problem =
-> > 
-> > When sync() is executed from a high-priority cgroup, the process is forced to
-> > wait the completion of the entire outstanding writeback I/O, even the I/O that
-> > was originally generated by low-priority cgroups potentially.
-> > 
-> > This may cause massive latencies to random processes (even those running in the
-> > root cgroup) that shouldn't be I/O-throttled at all, similarly to a classic
-> > priority inversion problem.
-> > 
-> > This topic has been previously discussed here:
-> > https://patchwork.kernel.org/patch/10804489/
-> > 
-> 
-> Sorry to move the goal posts on you again Andrea, but Tejun and I talked about
-> this some more offline.
-> 
-> We don't want cgroup to become the arbiter of correctness/behavior here.  We
-> just want it to be isolating things.
-> 
-> For you that means you can drop the per-cgroup flag stuff, and only do the
-> priority boosting for multiple sync(2) waiters.  That is a real priority
-> inversion that needs to be fixed.  io.latency and io.max are capable of noticing
-> that a low priority group is going above their configured limits and putting
-> pressure elsewhere accordingly.
+Hello!
 
-Alright, so IIUC that means we just need patch 1/3 for now (with the
-per-bdi lock instead of the global lock). If that's the case I'll focus
-at that patch then.
+On 03/08/2019 12:14 PM, Geert Uytterhoeven wrote:
 
+>>> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+>>>
+>>> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> [...]
+>>> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-renesas-rpc.c
+>>> new file mode 100644
+>>> index 0000000..ea12017
+>>> --- /dev/null
+>>> +++ b/drivers/spi/spi-renesas-rpc.c
+>>> @@ -0,0 +1,804 @@
+>> [...]
+>>> +static void rpc_spi_hw_init(struct rpc_spi *rpc)
+>>> +{
+>>> +     //
+>>> +     // NOTE: The 0x260 are undocumented bits, but they must be set.
+>>> +     //      RPC_PHYCNT_STRTIM is strobe timing adjustment bit,
+>>> +     //      0x0 : the delay is biggest,
+>>> +     //      0x1 : the delay is 2nd biggest,
+>>> +     //      On H3 ES1.x, the value should be 0, while on others,
+>>> +     //      the value should be 6.
+>>> +     //
+>>> +     regmap_write(rpc->regmap, RPC_PHYCNT, RPC_PHYCNT_CAL |
+>>> +                               RPC_PHYCNT_STRTIM(6) | 0x260);
+>>> +
+>>> +     //
+>>> +     // NOTE: The 0x1511144 are undocumented bits, but they must be set
+>>> +     //       for RPC_PHYOFFSET1.
+>>> +     //       The 0x31 are undocumented bits, but they must be set
+>>> +     //       for RPC_PHYOFFSET2.
+>>> +     //
+>>> +     regmap_write(rpc->regmap, RPC_PHYOFFSET1, RPC_PHYOFFSET1_DDRTMG(3) |
+>>> +                  0x1511144);
+>>> +     regmap_write(rpc->regmap, RPC_PHYOFFSET2, 0x31 |
+>>> +                  RPC_PHYOFFSET2_OCTTMG(4));
+>>> +     regmap_write(rpc->regmap, RPC_SSLDR, RPC_SSLDR_SPNDL(7) |
+>>> +                  RPC_SSLDR_SLNDL(7) | RPC_SSLDR_SCKDL(7));
+>>> +     regmap_write(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD | RPC_CMNCR_SFDE |
+>>> +                  RPC_CMNCR_MOIIO_HIZ | RPC_CMNCR_IOFV_HIZ |
+>>> +                  RPC_CMNCR_BSZ(0));
+>>> +}
+>>
+>>    We clearly need runtime PM get/put() calls around this code. Otherwise,
+>> we're dependant on U-Boot leaving the clocks enabled...
 > 
-> Tejun said he'd rather see the sync(2) isolation be done at the namespace level.
-> That way if you have fs namespacing you are already isolated to your namespace.
-> If you feel like tackling that then hooray, but that's a separate dragon to slay
-> so don't feel like you have to right now.
+> Even that would be futile, as the common clock framework disables all
+> unused clocks at late boot time.
 
-Makes sense. I can take a look and see what I can do after posting the
-new patch with the priority inversion fix only.
+   This code is executed during the probing time and it indeed works. The clocks seem
+to be disabled somewhat later...
 
+> Gr{oetje,eeting}s,
 > 
-> This way we keep cgroup doing its job, controlling resources.  Then we allow
-> namespacing to do its thing, isolating resources.  Thanks,
-> 
-> Josef
+>                         Geert
 
-Looks like a good plan to me. Thanks for the update.
+MBR, Sergei
 
--Andrea
