@@ -2,302 +2,192 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D440EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5DAC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBD020661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:05:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="4ZDMin4V"
+	by mail.kernel.org (Postfix) with ESMTP id 940B9206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfCHTFO (ORCPT
+        id S1726669AbfCHTHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:05:14 -0500
-Received: from mail-eopbgr760081.outbound.protection.outlook.com ([40.107.76.81]:44977
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726258AbfCHTFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:05:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C6yT/KlWIlL5t/I2awd6zrTAkRvF/OjRUxVtfBraEmg=;
- b=4ZDMin4VzYdzS236CLiy6YraNMgTOBA38rSkD1EAosVuuX4/WagP4J2tlqkC/LowDaWzw3S7Zy6MRc4uxfZB0YeuYp5KU/4O0S3FG0BwN+j2SGca2RQbLP7RTlm5cwdbgNGDtpxJJcz2qgi+7MqDP+sfvDJezzN+2hs5mjSk/pI=
-Received: from CY4PR02MB2709.namprd02.prod.outlook.com (10.175.80.9) by
- CY4PR02MB2856.namprd02.prod.outlook.com (10.175.61.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.17; Fri, 8 Mar 2019 19:04:53 +0000
-Received: from CY4PR02MB2709.namprd02.prod.outlook.com
- ([fe80::bc8d:c1a1:e7d9:2983]) by CY4PR02MB2709.namprd02.prod.outlook.com
- ([fe80::bc8d:c1a1:e7d9:2983%11]) with mapi id 15.20.1686.018; Fri, 8 Mar 2019
- 19:04:53 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>
-Subject: RE: [PATCH v3 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
- CSI-2 Rx Subsystem
-Thread-Topic: [PATCH v3 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Thread-Index: AQHUui2firlCePorTEqZepvuAcjfSKXaeICAgCfB/uA=
-Date:   Fri, 8 Mar 2019 19:04:53 +0000
-Message-ID: <CY4PR02MB27098AB5D144C74AE6553699A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
-References: <1549025766-135037-1-git-send-email-vishal.sagar@xilinx.com>
- <1549025766-135037-2-git-send-email-vishal.sagar@xilinx.com>
- <fe975327-2746-28d4-1340-5ad1e71858f1@lucaceresoli.net>
-In-Reply-To: <fe975327-2746-28d4-1340-5ad1e71858f1@lucaceresoli.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vsagar@xilinx.com; 
-x-originating-ip: [122.169.237.165]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: efe33512-c980-43f5-5460-08d6a3f8f2c1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:CY4PR02MB2856;
-x-ms-traffictypediagnostic: CY4PR02MB2856:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtDWTRQUjAyTUIyODU2OzIzOnJNekVsL01qcGN5MkFOWXBBVXhpa2xWRmtF?=
- =?utf-8?B?VTMvc0YrYzl3T29LTHFhTVhtaVUxTVNkRW44dXQ0NitDdW14S3ZreWJtU3dv?=
- =?utf-8?B?QWJYZHRYblord2FMcGQ3RHI1eGM5REhWNEpDN0o2NmIzN0hLejNuMDZsdDk1?=
- =?utf-8?B?VWZRUHdUZmNMNE1yQ3ZnTjZ5QnEzWE5nV2V3S2d3alVWZFIwN2ZuaTdRdWJt?=
- =?utf-8?B?UytlaGtEa0pvcUhJRjZMSHY2NVBXY01UMkJnbWlhdTRxcHJEajQyRjdIOHJV?=
- =?utf-8?B?QVcvOTZCdjdHMDFLMGxGaUF2VlVwVVVSSzBkRzVaSHdrUE5IWnBCMXNrU3hK?=
- =?utf-8?B?NHhnb21OcDNJMDJhWUhpcThCT1RXT2hBR0dkL3MxUkNWSGFLUUl6eWZlWnh2?=
- =?utf-8?B?Z0Q3bndoMS9LUFAyNDZXV1NCNmVOLzNUMDFiVUs2akFUOHVheTZRWGpmUHRP?=
- =?utf-8?B?Rm1QM1lvQlJYRi9mckg3MkJGVHpWblFQdC9NVnQ3Ly9sTmtuL203TlJsd1VZ?=
- =?utf-8?B?a0hvd1JQajkwSStNUkd2anRlTk95ajNDVzdGNmY2dVRjeStEdzFzR1paRSt3?=
- =?utf-8?B?Qm5XdVZLOTNGMWRsWDZnMFU5aExkRnhMUFN6OW1KTngycGhTSENtYkVWZmZT?=
- =?utf-8?B?cHN0MHlVTEdaWlpFeG9LVDlkekxieGMwTUs3bGZMYmMrSklqNkZrd2dpNFVp?=
- =?utf-8?B?ditRSDFlL3hwb0l0UG5IZE1UbU9CZnk2bTA2d2JYRktJOEg3WUIvcU8zdGdL?=
- =?utf-8?B?VkY2M3prQWdySndzZGtqNjFWTjBPUFlNNERSdUpQZzFsbGlMWGFUQ3l4K3l0?=
- =?utf-8?B?enBuREVGR0Zqc0dZQ1lZcjJwUHVQYkxtOFZwMkhQM2hRUnJaaTBGUWY1ZGQz?=
- =?utf-8?B?WnhVcjczM2RLNDZ2NHNheVZSMlFxWlpFenZZMEt2TVBvTzEzdVVXblhYbGNI?=
- =?utf-8?B?bXdneHJDcEFhanVIMU9FRWswRGxrWVNpcXl2WmdDMm1pZ28zRWMyak1ycTRH?=
- =?utf-8?B?U1AzVUFtUDdOc3cwMGhrbU5Ya0RTOHB1Y2p1TjhLdExmaEV6OUZZNU9wUlVC?=
- =?utf-8?B?N0FmS2NpOVY3VHlEMHdrUlVPUDVDVWVtL05Ld0tLcEhpUmJVVkdlaFdtQ0dl?=
- =?utf-8?B?elNwdWkrdDZpekd0MDNoSG4rd05SU0JBN2FFYUpsZE9tUjZ2eXRqaXJ4dnZ6?=
- =?utf-8?B?QU4vOTIzdTRJR0VCYll0R2ZWVlRyM1hMeWpNV1JsL2dWLzB3V1ZMVWZLeE1E?=
- =?utf-8?B?Y29DZmZJM3IwSDM0VFVROTZ2TnBXeis2Tlhic1p1WlM5UTVYNTdxaHE5c0U3?=
- =?utf-8?B?d2RwSHllaVM4RnNtSFVaVmtpSTNoZGVvQ2Q1ZHJHa251V1BYakVockxNeHk1?=
- =?utf-8?B?di9FVzQ3dlZQZmVaeGIwTVNxbzZ0eDZrb0dHelBnY3p6MWNCRlpGenZGSFhH?=
- =?utf-8?B?N2w3WnpqRXNyM0FjVHc1bmRmU3Z3MlRHSVZmK29FUEU4TktyaTYwaXRZWnl5?=
- =?utf-8?B?dmtoWmJHVkR0d0NSdERZVGRINGxUUWhRb0k5blZKdFFDTHpXVDJuS1RuZG9u?=
- =?utf-8?B?YXRtOGoxc3N4bUwrYzIwc3Z1bUZPR05kcGhGak1rc2xkdFJTRmtZNkt4alRD?=
- =?utf-8?B?NFNtR0tGUXlnRUl2ZUVhMjZmZ0RQb3p2RGpyb2JQNHZybVFvUDdyVFRXMDc3?=
- =?utf-8?B?d3FRczFhYy9Iem9TTDFrS0haampsZzVGaFlvOGhSMzBNMTB5a2d4RnJzQ2VX?=
- =?utf-8?B?TUlYSGg3Zys4UzVrTW5PcVNCczhJbEorTGNjMjlmRlphMURLWXdUenZXQ1U3?=
- =?utf-8?Q?vvYBCqjaZ/Vjh?=
-x-microsoft-antispam-prvs: <CY4PR02MB2856481A9CFEFF9B7C856AB3A74D0@CY4PR02MB2856.namprd02.prod.outlook.com>
-x-forefront-prvs: 0970508454
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(376002)(39860400002)(136003)(13464003)(189003)(199004)(2201001)(3846002)(99286004)(68736007)(256004)(186003)(8936002)(2906002)(105586002)(7696005)(102836004)(26005)(6116002)(2501003)(71200400001)(33656002)(6436002)(25786009)(478600001)(71190400001)(7416002)(5660300002)(86362001)(14444005)(74316002)(6246003)(106356001)(305945005)(229853002)(53546011)(55016002)(81166006)(6506007)(7736002)(9686003)(52536013)(6636002)(81156014)(110136005)(14454004)(11346002)(53936002)(316002)(66066001)(76176011)(486006)(446003)(8676002)(476003)(97736004)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2856;H:CY4PR02MB2709.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Uoxh4O9vmkvFt7pNviuU9Jd+xqnchNtcunI5obgFVplONPoGUR46EG/y4E7UxpKS50tThZXPDq2nn5bTeBFew+u9RVgc1EmGGbydaKzKIbATC1mjeKkRcgY/ucYFqH28THj31gxSsAr3HAXm2rudYVVpqj1+Dj2+od6l3XtJKWOQ0Cu4XIRkymzWt2Kh6u09gs+YSTU4p8/39bfEvLYycO33633doBeV11XUiNPwIm+I2PjmFfa49elIsb6QHWp0ker6EYmmVeXMsJi1kyBR2GpWgf28TLllYGASOS3ixoPuELR3a01oDK+D+3WpK5uCbq0l37HGQuRZzhgnvc+YkOD0CrWkIRRNNneayIdR/De/CvleO27uBxk9FNKAkRuOEgi9hs1gZOu4D/TMfPT98ThMqgma2YdepxA5ShSA+vE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 8 Mar 2019 14:07:10 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:36626 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfCHTHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 14:07:09 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B543581F19;
+        Fri,  8 Mar 2019 19:07:08 +0000 (UTC)
+Received: from redhat.com (ovpn-124-248.rdu2.redhat.com [10.10.124.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4CF165C1A1;
+        Fri,  8 Mar 2019 19:07:06 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 14:07:04 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
+ versions
+Message-ID: <20190308190704.GC5618@redhat.com>
+References: <20190306235455.26348-1-jhubbard@nvidia.com>
+ <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efe33512-c980-43f5-5460-08d6a3f8f2c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2019 19:04:53.8656
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2856
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 08 Mar 2019 19:07:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTHVjYSwNCg0KVGhhbmtzIGZvciByZXZpZXdpbmcgdGhpcy4gU29ycnkgSSBtaXNzZWQgb3V0
-IG9uIHJlcGx5aW5nIHRvIHRoaXMgZWFybGllci4NCkkgaGFkIGFscmVhZHkgc2VudCB2NCBidXQg
-aGF2ZSByZXF1ZXN0ZWQgdG8gYmUgaWdub3JlZC4gWW91ciBjb21tZW50cyB3aWxsIGJlIGFkZHJl
-c3NlZCBpbiB0aGUgdjUgcGF0Y2ggc2VyaWVzLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IGxpbnV4LW1lZGlhLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxp
-bnV4LW1lZGlhLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBMdWNhIENl
-cmVzb2xpDQo+IFNlbnQ6IE1vbmRheSwgRmVicnVhcnkgMTEsIDIwMTkgNDoxMiBQTQ0KPiBUbzog
-VmlzaGFsIFNhZ2FyIDx2aXNoYWwuc2FnYXJAeGlsaW54LmNvbT47IEh5dW4gS3dvbiA8aHl1bmtA
-eGlsaW54LmNvbT47DQo+IGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbTsgbWNoZWhh
-YkBrZXJuZWwub3JnOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29t
-OyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IGxpbnV4LW1lZGlhQHZnZXIu
-a2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IHNha2FyaS5haWx1c0Bs
-aW51eC5pbnRlbC5jb207DQo+IGhhbnMudmVya3VpbEBjaXNjby5jb207IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IERpbmVzaCBLdW1hciA8ZGluZXNoa0B4aWxpbnguY29tPjsgU2FuZGlwIEtvdGhhcmkNCj4gPHNh
-bmRpcGtAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxLzJdIG1lZGlhOiBk
-dC1iaW5kaW5nczogbWVkaWE6IHhpbGlueDogQWRkIFhpbGlueCBNSVBJDQo+IENTSS0yIFJ4IFN1
-YnN5c3RlbQ0KPiANCj4gRVhURVJOQUwgRU1BSUwNCj4gDQo+IEhpIFZpc2hhbCwNCj4gDQo+IHNv
-cnJ5IGZvciBqb2luaW5nIGxhdGUgaW4gcmV2aWV3aW5nIHlvdXIgcGF0Y2hlcy4gSSBoYXZlIGEg
-ZmV3IHNtYWxsDQo+IGNvbW1lbnRzLg0KPiANCj4gT24gMDEvMDIvMTkgMTM6NTYsIFZpc2hhbCBT
-YWdhciB3cm90ZToNCj4gPiBBZGQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgWGlsaW54IE1J
-UEkgQ1NJLTIgUnggU3Vic3lzdGVtLg0KPiA+DQo+ID4gVGhlIFhpbGlueCBNSVBJIENTSS0yIFJ4
-IFN1YnN5c3RlbSBjb25zaXN0cyBvZiBhIENTSS0yIFJ4IGNvbnRyb2xsZXIsIGENCj4gPiBEUEhZ
-IGluIFJ4IG1vZGUsIGFuIG9wdGlvbmFsIEkyQyBjb250cm9sbGVyIGFuZCBhIFZpZGVvIEZvcm1h
-dCBCcmlkZ2UuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBWaXNoYWwgU2FnYXIgPHZpc2hhbC5z
-YWdhckB4aWxpbnguY29tPg0KPiA+IC0tLQ0KPiA+IHYzDQo+ID4gLSByZW1vdmVkIGludGVycnVw
-dCBwYXJlbnQgYXMgc3VnZ2VzdGVkIGJ5IFJvYg0KPiA+IC0gcmVtb3ZlZCBkcGh5IGNsb2NrDQo+
-ID4gLSBtb3ZlZCB2ZmIgdG8gb3B0aW9uYWwgcHJvcGVydGllcw0KPiA+IC0gQWRkZWQgcmVxdWly
-ZWQgYW5kIG9wdGlvbmFsIHBvcnQgcHJvcGVydGllcyBzZWN0aW9uDQo+ID4gLSBBZGRlZCBlbmRw
-b2ludCBwcm9wZXJ0eSBzZWN0aW9uDQo+ID4NCj4gPiB2Mg0KPiA+IC0gdXBkYXRlZCB0aGUgY29t
-cGF0aWJsZSBzdHJpbmcgdG8gbGF0ZXN0IHZlcnNpb24gc3VwcG9ydGVkDQo+ID4gLSByZW1vdmVk
-IERQSFkgcmVsYXRlZCBwYXJhbWV0ZXJzDQo+ID4gLSBhZGRlZCBDU0kgdjIuMCByZWxhdGVkIHBy
-b3BlcnR5IChpbmNsdWRpbmcgVkNYIGZvciBzdXBwb3J0aW5nIHVwdG8gMTYNCj4gPiAgIHZpcnR1
-YWwgY2hhbm5lbHMpLg0KPiA+IC0gbW9kaWZpZWQgY3NpLXB4bC1mb3JtYXQgZnJvbSBzdHJpbmcg
-dG8gdW5zaWduZWQgaW50IHR5cGUgd2hlcmUgdGhlIHZhbHVlDQo+ID4gICBpcyBhcyBwZXIgdGhl
-IENTSSBzcGVjaWZpY2F0aW9uDQo+ID4gLSBEZWZpbmVkIHBvcnQgMCBhbmQgcG9ydCAxIGFzIHNp
-bmsgYW5kIHNvdXJjZSBwb3J0cy4NCj4gPiAtIFJlbW92ZWQgbWF4LWxhbmVzIHByb3BlcnR5IGFz
-IHN1Z2dlc3RlZCBieSBSb2IgYW5kIFNha2FyaQ0KPiA+DQo+ID4gIC4uLi9iaW5kaW5ncy9tZWRp
-YS94aWxpbngveGxueCxjc2kycnhzcy50eHQgICAgICAgIHwgMTIzDQo+ICsrKysrKysrKysrKysr
-KysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIzIGluc2VydGlvbnMoKykNCj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
-YS94aWxpbngveGxueCxjc2kycnhzcy50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsY3NpMnJ4c3MudHh0
-DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3hpbGlueC94bG54
-LGNzaTJyeHNzLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAw
-MC4uMzk5ZjdmYQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsY3NpMnJ4c3MudHh0DQo+ID4gQEAg
-LTAsMCArMSwxMjMgQEANCj4gPiArWGlsaW54IE1JUEkgQ1NJMiBSZWNlaXZlciBTdWJzeXN0ZW0g
-RGV2aWNlIFRyZWUgQmluZGluZ3MNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiArDQo+ID4gK1RoZSBYaWxpbnggTUlQSSBD
-U0kyIFJlY2VpdmVyIFN1YnN5c3RlbSBpcyB1c2VkIHRvIGNhcHR1cmUgTUlQSSBDU0kyIHRyYWZm
-aWMNCj4gPiArZnJvbSBjb21wbGlhbnQgY2FtZXJhIHNlbnNvcnMgYW5kIHNlbmQgdGhlIG91dHB1
-dCBhcyBBWEk0IFN0cmVhbSB2aWRlbw0KPiBkYXRhDQo+ID4gK2ZvciBpbWFnZSBwcm9jZXNzaW5n
-Lg0KPiA+ICsNCj4gPiArVGhlIHN1YnN5c3RlbSBjb25zaXN0cyBvZiBhIE1JUEkgRFBIWSBpbiBz
-bGF2ZSBtb2RlIHdoaWNoIGNhcHR1cmVzIHRoZQ0KPiA+ICtkYXRhIHBhY2tldHMuIFRoaXMgaXMg
-cGFzc2VkIGFsb25nIHRoZSBNSVBJIENTSTIgUnggSVAgd2hpY2ggZXh0cmFjdHMgdGhlDQo+ID4g
-K3BhY2tldCBkYXRhLiBUaGUgVmlkZW8gRm9ybWF0IEJyaWRnZSAoVkZCKSBjb252ZXJ0cyB0aGlz
-IGRhdGEgdG8gQVhJNA0KPiBTdHJlYW0NCj4gPiArdmlkZW8gZGF0YS4NCj4gDQo+IEknZCBjbGFy
-aWZ5IHRoZSB2ZmIgaXMgb3B0aW9uYWw6DQo+ICJUaGUgVmlkZW8gRm9ybWF0IEJyaWRnZSIgLT4g
-IlRoZSBvcHRpb25hbCBWaWRlbyBGb3JtYXQgQnJpZGdlIiwNCj4gb3RoZXJ3aXNlIGl0IGhhcyB0
-byBiZSBpbmZlcnJlZCBmcm9tIHRoZSBwcm9wZXJ0eSBkZXNjcmlwdGlvbiBiZWxvdy4NCj4gDQoN
-CkFncmVlZC4gSSB3aWxsIHVwZGF0ZSBhbmQgcmVzZW5kLg0KDQo+ID4gK0ZvciBtb3JlIGRldGFp
-bHMsIHBsZWFzZSByZWZlciB0byBQRzIzMiBYaWxpbnggTUlQSSBDU0ktMiBSZWNlaXZlciBTdWJz
-eXN0ZW0uDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiA+ICstIGNvbXBhdGlibGU6IE11c3QgY29udGFpbiAieGxueCxtaXBpLWNz
-aTItcngtc3Vic3lzdGVtLTQuMCIuDQo+ID4gKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mg
-YW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXJzIHNldCBmb3IgdGhlIGRldmljZS4NCj4gPiArLSBp
-bnRlcnJ1cHRzOiBQcm9wZXJ0eSB3aXRoIGEgdmFsdWUgZGVzY3JpYmluZyB0aGUgaW50ZXJydXB0
-IG51bWJlci4NCj4gPiArLSBjbG9ja3M6IExpc3Qgb2YgcGhhbmRsZXMgdG8gQVhJIExpdGUsIFZp
-ZGVvIGFuZCAyMDAgTUh6IERQSFkgY2xvY2tzLg0KPiA+ICstIGNsb2NrLW5hbWVzOiBNdXN0IGNv
-bnRhaW4gImxpdGVfYWNsayIgYW5kICJ2aWRlb19hY2xrIiBpbiB0aGUgc2FtZSBvcmRlcg0KPiA+
-ICsgIGFzIGNsb2NrcyBsaXN0ZWQgaW4gY2xvY2tzIHByb3BlcnR5Lg0KPiANCj4gVHdvIGNsb2Nr
-IG5hbWVzIGFuZCAzIGNsb2Nrcz8NCj4NCg0KWWVzIEkgbmVlZCB0byBjb3JyZWN0IHRoaXMuIEkg
-d2lsbCB1cGRhdGUgYW5kIHJlc2VuZC4NCg0KPiA+ICstIHhsbngsY3NpLXB4bC1mb3JtYXQ6IFRo
-aXMgZGVub3RlcyB0aGUgQ1NJIERhdGEgdHlwZSBzZWxlY3RlZCBpbiBodyBkZXNpZ24uDQo+ID4g
-KyAgUGFja2V0cyBvdGhlciB0aGFuIHRoaXMgZGF0YSB0eXBlIChleGNlcHQgZm9yIFJBVzggYW5k
-IFVzZXIgZGVmaW5lZCBkYXRhDQo+ID4gKyAgdHlwZXMpIHdpbGwgYmUgZmlsdGVyZWQgb3V0LiBQ
-b3NzaWJsZSB2YWx1ZXMgYXJlIGFzIGJlbG93IC0NCj4gPiArICAweDFFIC0gWVVWNDIyOEINCj4g
-PiArICAweDFGIC0gWVVWNDIyMTBCDQo+ID4gKyAgMHgyMCAtIFJHQjQ0NA0KPiA+ICsgIDB4MjEg
-LSBSR0I1NTUNCj4gPiArICAweDIyIC0gUkdCNTY1DQo+ID4gKyAgMHgyMyAtIFJHQjY2Ng0KPiA+
-ICsgIDB4MjQgLSBSR0I4ODgNCj4gPiArICAweDI4IC0gUkFXNg0KPiA+ICsgIDB4MjkgLSBSQVc3
-DQo+ID4gKyAgMHgyQSAtIFJBVzgNCj4gPiArICAweDJCIC0gUkFXMTANCj4gPiArICAweDJDIC0g
-UkFXMTINCj4gPiArICAweDJEIC0gUkFXMTQNCj4gPiArICAweDJFIC0gUkFXMTYNCj4gPiArICAw
-eDJGIC0gUkFXMjANCj4gPiArDQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+
-ICstLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICstIHhsbngsdmZiOiBUaGlzIGlzIHByZXNlbnQg
-d2hlbiBWaWRlbyBGb3JtYXQgQnJpZGdlIGlzIGVuYWJsZWQuDQo+ID4gKyAgV2l0aG91dCB0aGlz
-IHByb3BlcnR5IHRoZSBkcml2ZXIgd29uJ3QgYmUgbG9hZGVkIGFzIElQIHdvbid0IGJlIGFibGUg
-dG8NCj4gZ2VuZXJhdGUNCj4gPiArICBtZWRpYSBidXMgZm9ybWF0IGNvbXBsaWFudCBzdHJlYW0g
-b3V0cHV0Lg0KPiA+ICstIHhsbngsZW4tY3NpLXYyLTA6IFByZXNlbnQgaWYgQ1NJIHYyIGlzIGVu
-YWJsZWQgaW4gSVAgY29uZmlndXJhdGlvbi4NCj4gPiArLSB4bG54LGVuLXZjeDogV2hlbiBwcmVz
-ZW50LCB0aGVyZSBhcmUgbWF4aW11bSAxNiB2aXJ0dWFsIGNoYW5uZWxzLCBlbHNlDQo+ID4gKyAg
-b25seSA0LiBUaGlzIGlzIHByZXNlbnQgb25seSBpZiB4bG54LGVuLWNzaS12Mi0wIGlzIHByZXNl
-bnQuDQo+ID4gKy0geGxueCxlbi1hY3RpdmUtbGFuZXM6IEVuYWJsZSBBY3RpdmUgbGFuZXMgY29u
-ZmlndXJhdGlvbiBpbiBQcm90b2NvbA0KPiA+ICsgIENvbmZpZ3VyYXRpb24gUmVnaXN0ZXIuDQo+
-IA0KPiBUaGlzIGRvZXNuJ3Qgc2VlbSB2ZXJ5IGNsZWFyIHRvIG1lLiBBY2NvcmRpbmcgdG8gbXkg
-dW5kZXJzdGFuZGluZyBvZiB0aGUNCj4gSVAgYW5kIGRyaXZlciwgSSdkIHJhdGhlciByZXBocmFz
-ZSBhczoNCj4gDQo+IC0geGxueCxlbi1hY3RpdmUtbGFuZXM6IHByZXNlbnQgaWYgdGhlIG51bWJl
-ciBvZiBhY3RpdmUgbGFuZXMgY2FuIGJlDQo+ICAgcmVjb25maWd1cmVkIGF0IHJ1bnRpbWUgaW4g
-dGhlIFByb3RvY29sIENvbmZpZ3VyYXRpb24gUmVnaXN0ZXIuDQo+ICAgSWYgcHJlc2VudCwgdGhl
-IFY0TDJfQ0lEX1hJTElOWF9NSVBJQ1NJU1NfQUNUX0xBTkVTIGlzIGFkZGVkLg0KPiAgIE90aGVy
-d2lzZSBhbGwgbGFuZXMgYXJlIGFsd2F5cyBhY3RpdmUuDQo+IA0KDQpZb3VyIGRlc2NyaXB0aW9u
-IGlzIGJldHRlci4gSSB3aWxsIHVwZGF0ZSB3aXRoIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+
-ID4gK1BvcnRzDQo+ID4gKy0tLS0tDQo+ID4gK1RoZSBkZXZpY2Ugbm9kZSBzaGFsbCBjb250YWlu
-IHR3byAncG9ydCcgY2hpbGQgbm9kZXMgYXMgZGVmaW5lZCBpbg0KPiA+ICtEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuDQo+ID4gKw0K
-PiA+ICtUaGUgcG9ydEAwIGlzIHNpbmsgcG9ydCBhbmQgc2hhbGwgY29ubmVjdCB0byBDU0kyIHNv
-dXJjZSBsaWtlIGNhbWVyYS4NCj4gDQo+ICJpcyBhIHNpbmsgcG9ydCINCg0KQWdyZWUgdG8gdGhp
-cy4NCg0KPiANCj4gPiArSXQgbXVzdCBoYXZlIHRoZSBkYXRhLWxhbmVzIHByb3BlcnR5LiBJdCBt
-YXkgaGF2ZSB0aGUgeGxueCxjZmEtcGF0dGVybg0KPiA+ICtwcm9wZXJ0eSB0byBpbmRpY2F0ZSBi
-YXllciBwYXR0ZXJuIG9mIHNvdXJjZS4NCj4gPiArDQo+ID4gK1RoZSBwb3J0QDEgaXMgc291cmNl
-IHBvcnQgY291bGQgYmUgY29ubmVjdGVkIHRvIGFueSB2aWRlbyBwcm9jZXNzaW5nIElQDQo+IA0K
-PiAiaXMgYSBzb3VyY2UgcG9ydCBhbmQgY2FuIGJlIg0KPiANCg0KQWdyZWUgdG8gdGhpcy4NCg0K
-PiA+ICt3aGljaCBjYW4gd29yayB3aXRoIEFYSTQgU3RyZWFtIGRhdGEuDQo+ID4gKw0KPiA+ICtS
-ZXF1aXJlZCBwb3J0IHByb3BlcnRpZXM6DQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4g
-Ky0gcmVnOiAwIC0gZm9yIHNpbmsgcG9ydC4NCj4gPiArICAgICAgIDEgLSBmb3Igc291cmNlIHBv
-cnQuDQo+ID4gKw0KPiA+ICtPcHRpb25hbCBwb3J0IHByb3BlcnRpZXM6DQo+ID4gKy0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+ID4gKy0geGxueCxjZmEtcGF0dGVybjogVGhpcyBnb2VzIGluIHRoZSBz
-aW5rIHBvcnQgdG8gaW5kaWNhdGUgYmF5ZXIgcGF0dGVybi4NCj4gPiArICBWYWxpZCB2YWx1ZXMg
-YXJlICJiZ2dyIiwgInJnZ2IiLCAiZ2JyZyIgYW5kICJncmJnIi4NCj4gDQo+IFBsZWFzZSBleGN1
-c2UgbXkgaWdub3JhbmNlLCBidXQgZG9lcyB0aGUgY3NpMiByeCBtb2R1bGUgcmVhbGx5IFtuZWVk
-IHRvXQ0KPiBrbm93IHRoZSBjZmEgcGF0dGVybj8gSSB1c2VkIHRvIHRoaW5rICB0aGUgc2Vuc29y
-IGFuZCBkZWJheWVyIG1vZHVsZQ0KPiBuZWVkIHRvIGFncmVlIG9uIGl0IGFuZCBDU0kyIGp1c3Qg
-bW92ZXMgYnl0ZXMgYXJvdW5kLiBBbHNvLCBvdGhlciBDU0kyDQo+IFJYIGRyaXZlcnMgSSd2ZSBs
-b29rZWQgYXQgZG9uJ3QgaGF2ZSB0aGlzIHByb3BlcnR5Lg0KPiANCg0KWW91ciBxdWVyeSBpcyBj
-b3JyZWN0LiANCkkgaGFkIGFzc3VtZWQgdGhhdCB0aGUgYmF5ZXIgcGF0dGVybiB3b3VsZCBhbHdh
-eXMgYmUgcmVxdWlyZWQgaW4gUkFXIGRhdGEgdHlwZSBjYXNlLg0KSSB3aWxsIHJlbW92ZSB0aGUg
-Y2ZhLXBhdHRlcm4gLyBiYXllciBwYXR0ZXJuIGluZm9ybWF0aW9uIGZyb20gdGhlIENTSTIgZHJp
-dmVyIGluIHRoZSBuZXh0IHZlcnNpb24uDQpUaGFua3MgZm9yIGNhdGNoaW5nIHRoaXMuDQoNCj4g
-PiArT3B0aW9uYWwgZW5kcG9pbnQgcHJvcGVydHk6DQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQ0KPiA+ICstIGRhdGEtbGFuZXM6IHNwZWNpZmllcyBNSVBJIENTSS0yIGRhdGEgbGFu
-ZXMgYXMgY292ZXJlZCBpbiB2aWRlby0NCj4gaW50ZXJmYWNlcy50eHQuDQo+ID4gKyAgVGhpcyBz
-aG91bGQgYmUgaW4gdGhlIHNpbmsgcG9ydCBlbmRwb2ludCB3aGljaCBjb25uZWN0cyB0byBNSVBJ
-IENTSTIgc291cmNlDQo+ID4gKyAgbGlrZSBzZW5zb3IuIFRoZSBwb3NzaWJsZSB2YWx1ZXMgYXJl
-Og0KPiA+ICsgIDEgICAgICAgLSBGb3IgMSBsYW5lIGVuYWJsZWQgaW4gSVAuDQo+ID4gKyAgMSAy
-ICAgICAtIEZvciAyIGxhbmVzIGVuYWJsZWQgaW4gSVAuDQo+ID4gKyAgMSAyIDMgICAtIEZvciAz
-IGxhbmVzIGVuYWJsZWQgaW4gSVAuDQo+ID4gKyAgMSAyIDMgNCAtIEZvciA0IGxhbmVzIGVuYWJs
-ZWQgaW4gSVAuDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4gPiArICAgICBjc2lzc18x
-OiBjc2lzc0BhMDAyMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngs
-bWlwaS1jc2kyLXJ4LXN1YnN5c3RlbS00LjAiOw0KPiA+ICsgICAgICAgICAgICAgcmVnID0gPDB4
-MCAweGEwMDIwMDAwIDB4MCAweDEwMDAwPjsNCj4gPiArICAgICAgICAgICAgIGludGVycnVwdC1w
-YXJlbnQgPSA8JmdpYz47DQo+ID4gKyAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgOTUgND47
-DQo+ID4gKyAgICAgICAgICAgICB4bG54LGNzaS1weGwtZm9ybWF0ID0gPDB4MmE+Ow0KPiA+ICsg
-ICAgICAgICAgICAgeGxueCx2ZmI7DQo+ID4gKyAgICAgICAgICAgICB4bG54LGVuLWFjdGl2ZS1s
-YW5lczsNCj4gPiArICAgICAgICAgICAgIHhsbngsZW4tY3NpLXYyLTA7DQo+ID4gKyAgICAgICAg
-ICAgICB4bG54LGVuLXZjeDsNCj4gPiArICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImxpdGVf
-YWNsayIsICJ2aWRlb19hY2xrIjsNCj4gPiArICAgICAgICAgICAgIGNsb2NrcyA9IDwmbWlzY19j
-bGtfMD4sIDwmbWlzY19jbGtfMT4sIDwmbWlzY19jbGtfMj47DQo+IA0KPiBBcyBhYm92ZTogdHdv
-IGNsb2NrIG5hbWVzIGFuZCAzIGNsb2Nrcz8NCg0KSSB3aWxsIHJlbW92ZSB0aGlzIGluIHRoZSBu
-ZXh0IHZlcnNpb24uDQoNClJlZ2FyZHMNClZpc2hhbCBTYWdhcg0KDQo+IA0KPiA+ICsgICAgICAg
-ICAgICAgcG9ydHMgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9
-IDwxPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4g
-Kw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBwb3J0QDAgew0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIC8qIFNpbmsgcG9ydCAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZyA9IDwwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB4
-bG54LGNmYS1wYXR0ZXJuID0gImJnZ3IiDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgY3Npc3NfaW46IGVuZHBvaW50IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGRhdGEtbGFuZXMgPSA8MSAyIDMgND47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAvKiBNSVBJIENTSTIgQ2FtZXJhIGhhbmRsZSAqLw0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZj
-YW1lcmFfb3V0PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICBwb3J0QDEg
-ew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIFNvdXJjZSBwb3J0ICovDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Ow0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGNzaXNzX291dDogZW5kcG9pbnQgew0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ2cHJvY19p
-bj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgIH07DQo+ID4gKyAgICAgfTsNCj4gDQo+
-IC0tDQo+IEx1Y2ENCg==
+On Fri, Mar 08, 2019 at 03:08:40AM +0000, Christopher Lameter wrote:
+> On Wed, 6 Mar 2019, john.hubbard@gmail.com wrote:
+> 
+> 
+> > GUP was first introduced for Direct IO (O_DIRECT), allowing filesystem code
+> > to get the struct page behind a virtual address and to let storage hardware
+> > perform a direct copy to or from that page. This is a short-lived access
+> > pattern, and as such, the window for a concurrent writeback of GUP'd page
+> > was small enough that there were not (we think) any reported problems.
+> > Also, userspace was expected to understand and accept that Direct IO was
+> > not synchronized with memory-mapped access to that data, nor with any
+> > process address space changes such as munmap(), mremap(), etc.
+> 
+> It would good if that understanding would be enforced somehow given the problems
+> that we see.
+
+This has been discuss extensively already. GUP usage is now widespread in
+multiple drivers, removing that would regress userspace ie break existing
+application. We all know what the rules for that is.
+
+> 
+> > Interactions with file systems
+> > ==============================
+> >
+> > File systems expect to be able to write back data, both to reclaim pages,
+> 
+> Regular filesystems do that. But usually those are not used with GUP
+> pinning AFAICT.
+> 
+> > and for data integrity. Allowing other hardware (NICs, GPUs, etc) to gain
+> > write access to the file memory pages means that such hardware can dirty
+> > the pages, without the filesystem being aware. This can, in some cases
+> > (depending on filesystem, filesystem options, block device, block device
+> > options, and other variables), lead to data corruption, and also to kernel
+> > bugs of the form:
+> 
+> > Long term GUP
+> > =============
+> >
+> > Long term GUP is an issue when FOLL_WRITE is specified to GUP (so, a
+> > writeable mapping is created), and the pages are file-backed. That can lead
+> > to filesystem corruption. What happens is that when a file-backed page is
+> > being written back, it is first mapped read-only in all of the CPU page
+> > tables; the file system then assumes that nobody can write to the page, and
+> > that the page content is therefore stable. Unfortunately, the GUP callers
+> > generally do not monitor changes to the CPU pages tables; they instead
+> > assume that the following pattern is safe (it's not):
+> >
+> >     get_user_pages()
+> >
+> >     Hardware can keep a reference to those pages for a very long time,
+> >     and write to it at any time. Because "hardware" here means "devices
+> >     that are not a CPU", this activity occurs without any interaction
+> >     with the kernel's file system code.
+> >
+> >     for each page
+> >         set_page_dirty
+> >         put_page()
+> >
+> > In fact, the GUP documentation even recommends that pattern.
+> 
+> Isnt that pattern safe for anonymous memory and memory filesystems like
+> hugetlbfs etc? Which is the common use case.
+
+Still an issue in respect to swapout ie if anon/shmem page was map
+read only in preparation for swapout and we do not report the page
+as dirty what endup in swap might lack what was written last through
+GUP.
+
+> 
+> > Anyway, the file system assumes that the page is stable (nothing is writing
+> > to the page), and that is a problem: stable page content is necessary for
+> > many filesystem actions during writeback, such as checksum, encryption,
+> > RAID striping, etc. Furthermore, filesystem features like COW (copy on
+> > write) or snapshot also rely on being able to use a new page for as memory
+> > for that memory range inside the file.
+> >
+> > Corruption during write back is clearly possible here. To solve that, one
+> > idea is to identify pages that have active GUP, so that we can use a bounce
+> > page to write stable data to the filesystem. The filesystem would work
+> > on the bounce page, while any of the active GUP might write to the
+> > original page. This would avoid the stable page violation problem, but note
+> > that it is only part of the overall solution, because other problems
+> > remain.
+> 
+> Yes you now have the filesystem as well as the GUP pinner claiming
+> authority over the contents of a single memory segment. Maybe better not
+> allow that?
+
+This goes back to regressing existing driver with existing users.
+
+> 
+> > Direct IO
+> > =========
+> >
+> > Direct IO can cause corruption, if userspace does Direct-IO that writes to
+> > a range of virtual addresses that are mmap'd to a file.  The pages written
+> > to are file-backed pages that can be under write back, while the Direct IO
+> > is taking place.  Here, Direct IO races with a write back: it calls
+> > GUP before page_mkclean() has replaced the CPU pte with a read-only entry.
+> > The race window is pretty small, which is probably why years have gone by
+> > before we noticed this problem: Direct IO is generally very quick, and
+> > tends to finish up before the filesystem gets around to do anything with
+> > the page contents.  However, it's still a real problem.  The solution is
+> > to never let GUP return pages that are under write back, but instead,
+> > force GUP to take a write fault on those pages.  That way, GUP will
+> > properly synchronize with the active write back.  This does not change the
+> > required GUP behavior, it just avoids that race.
+> 
+> Direct IO on a mmapped file backed page doesnt make any sense. The direct
+> I/O write syscall already specifies one file handle of a filesystem that
+> the data is to be written onto.  Plus mmap already established another
+> second filehandle and another filesystem that is also in charge of that
+> memory segment.
+> 
+> Two filesystem trying to sync one memory segment both believing to have
+> exclusive access and we want to sort this out. Why? Dont allow this.
+
+This is allowed, it always was, forbidding that case now would regress
+existing application and it would also means that we are modifying the
+API we expose to userspace. So again this is not something we can block
+without regressing existing user.
+
+Cheers,
+Jérôme
