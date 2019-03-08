@@ -2,160 +2,91 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0D8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A371C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C32C20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3DD20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:38:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FzS+23+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfCHQhH (ORCPT
+        id S1726616AbfCHQiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:37:07 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:57326 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbfCHQhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:37:07 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C2FE87649;
-        Fri,  8 Mar 2019 16:37:06 +0000 (UTC)
-Received: from [10.36.112.16] (ovpn-112-16.ams2.redhat.com [10.36.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C9365D786;
-        Fri,  8 Mar 2019 16:36:54 +0000 (UTC)
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yang Weijiang <weijiang.yang@intel.com>
-Cc:     rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
-        wei.w.wang@intel.com, weijiang.yang@inte.com
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
- <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
- <20190301145819.GC22584@linux.intel.com>
- <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
- <20190304184307.GC17120@linux.intel.com>
- <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
- <20190305031202.GI17120@linux.intel.com>
- <20190304123655.GB4185@local-michael-cet-test.sh.intel.com>
- <20190308162835.GB2528@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <9e80935f-b572-8210-6ea1-a582b3d05f88@redhat.com>
-Date:   Fri, 8 Mar 2019 17:36:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 8 Mar 2019 11:38:20 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45416 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfCHQiU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 11:38:20 -0500
+Received: by mail-io1-f66.google.com with SMTP id x9so17188612iog.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:38:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mc3kgEXstVrKxiL/zW8NxOi7MBM4oD4dA0kJPLSJlGs=;
+        b=FzS+23+QUfF99b+UFD0HpPuw8R2Tmg4Ae57f07RoO/nFhzHUJMEYISnEGs24m30CyV
+         H8fy9aQC2MHFneD2cjd+7F5Gx6jZ0XXkfKgslX0qyncv7PaYIARMyjyPgWsAuVeig0No
+         ngJW5D4ysUYEv2eywvrFQSZ20R/uqt1T+E8vw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mc3kgEXstVrKxiL/zW8NxOi7MBM4oD4dA0kJPLSJlGs=;
+        b=e+k14J1sDXIai6VDp5WHIBHEloIi69VGpCN0iMx4WfPc28YMNJ6y0VJpgyY4dT4U4v
+         Ronx+u+OyoQJWK6v6PfNQAphm8YiFsE/Wl5OKb9gJxUvr/Kqwk5P7kGKMuPNrTmG4SIe
+         76nUu+vWJdboRX374YOUcFiSbB21WyfMIehTrA4Y6ohnSmlJsLWC4d0l/4qo0voM4jSE
+         ijoHvNyXZ6IlfGxSCb7igoiH7sIq2ZxpEt6oaMpadU0Tdeo9UgUdnI/9PtZEyxadJ4ux
+         XoiXIF8LmL+HUhUlZUm+00kRcwAgA+aqpkFmTrmQDdzqDt/S1gHomAdBJ8C6XgUy5LfO
+         s8/A==
+X-Gm-Message-State: APjAAAV2o7H+Xbe5C57u3exZiQE/ItcSv8ntN4IKGuZ23bful8lIRHHs
+        BtR4TcjAli8xRh0HujkMBuGHjWPku5/GrN+GMuGAxA==
+X-Google-Smtp-Source: APXvYqzppXTY5wEZvSKJKgQMuiVD9MKQoixLf0ztyMPnIlCNgAyIDWQ7oTkTJT9MlQtQtrIWt8fv8qIhHJB//xvc65U=
+X-Received: by 2002:a5e:8d13:: with SMTP id m19mr9541141ioj.43.1552063099456;
+ Fri, 08 Mar 2019 08:38:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190308162835.GB2528@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 08 Mar 2019 16:37:06 +0000 (UTC)
+References: <20190220233658.986-1-eric@anholt.net>
+In-Reply-To: <20190220233658.986-1-eric@anholt.net>
+From:   Dave Emett <david.emett@broadcom.com>
+Date:   Fri, 8 Mar 2019 16:38:08 +0000
+Message-ID: <CAApk1dVubN7ME6GNuedGmF4V1qnH_JYnSEvFffAzwsMFaZNmgg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] drm/v3d: Add support for V3D v4.2.
+To:     Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Thomas Spurden <thomas.spurden@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/03/19 17:28, Sean Christopherson wrote:
-> On Mon, Mar 04, 2019 at 08:36:55PM +0800, Yang Weijiang wrote:
->> On Mon, Mar 04, 2019 at 07:12:02PM -0800, Sean Christopherson wrote:
->>> On Mon, Mar 04, 2019 at 05:56:40PM +0800, Yang Weijiang wrote:
->>>> Cannot agree with you more!
->>>> This is some design limitation, but from my point of view, once vmm
->>>> exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
->>>> which features to be enabled, we don't need to add extra constraints on
->>>> the usage.
->>>
->>> But if KVM allows SHSTK and IBT to be toggled independently then the VMM
->>> has only exposed SHSTK or IBT, not CET as whole.
->>>
->>> Even if SHSTK and IBT are bundled together the guest still has to opt-in
->>> to enabling each feature.  I don't see what we gain by pretending that
->>> SHSTK/IBT can be individually exposed to the guest, and on the flip side
->>> doing so creates a virtualization hole.
->> you almost convinced me ;-), maybe I'll make the feature as a bundle in
->> next release after check with kernel team. BTW, what do you mean by
->> saying "create a virtualization hole"? Is it what you stated in above
->> reply?
-> 
-> By "virtualization hole" I mean the guest would be able to use a feature
-> that the virtual CPU model says isn't supported.
+Sorry, a few things I thought of after sending the Reviewed-by email...
 
-I think it's okay to leave the hole and leave it to userspace to forbid
-enabling only one of the bits.
+> +       v3d->reset = devm_reset_control_get_exclusive(dev, NULL);
+> +       if (IS_ERR(v3d->reset)) {
+> +               ret = PTR_ERR(v3d->reset);
+> +
+> +               if (ret == -EPROBE_DEFER)
+> +                       goto dev_free;
+Might be preferable to make this explicitly check against the
+not-found error code (whatever that is)? As in if (not found)
+<fallback to bridge> else <return error code>. Similarly...
 
-Paolo
+> +       if (platform_get_irq(v3d->pdev, 1) < 0) {
+This should probably explicitly check for not-found rather than any
+error. As-is, we might silently go down the single-interrupt-line path
+on a platform with 2 interrupt lines if platform_get_irq(v3d->pdev, 1)
+hits some other error.
 
-> After rereading the XSS architecture, there's a marginally less crappy
-> option for handling XRSTOR as we could use the XSS_EXIT_BITMAP to
-> intercept XRSTOR if SHSTK != IBT and the guest is restoring CET state,
-> e.g. to ensure the guest isn't setting IA32_PL*_SSP if !SHSTK and isn't
-> setting bits that are effectively reserved in IA32_U_CET.
-> 
-> But practically speaking that'd be the same as intercepting XRSTORS
-> unconditionally when the guest is using CET, i.e. it's still going to
-> tank the performance of a guest that uses CET+XSAVES/XRSTORS.
-> 
-
+> +               ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 0),
+> +                                      v3d_hub_irq, IRQF_SHARED,
+> +                                      "v3d_hub", v3d);
+> +               ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 1),
+> +                                      v3d_irq, IRQF_SHARED,
+> +                                      "v3d_core0", v3d);
+Not introduced by this change, but return value from first
+devm_request_irq ignored here?
