@@ -2,67 +2,112 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E12C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A0BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2161D20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725502087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfCHN0z (ORCPT
+        id S1726692AbfCHN1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:26:55 -0500
-Received: from www62.your-server.de ([213.133.104.62]:56646 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfCHN0z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:26:55 -0500
-Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h2FWQ-0002ys-NN; Fri, 08 Mar 2019 14:26:46 +0100
-Received: from [2a02:120b:c3fc:feb0:dda7:bd28:a848:50e2] (helo=linux.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1h2FWQ-0006PF-Cr; Fri, 08 Mar 2019 14:26:46 +0100
-Subject: Re: [PATCH V3] bpf: fix warning about using plain integer as NULL
-To:     Bo YU <tsu.yubo@gmail.com>, ast@kernel.org, kafai@fb.com,
-        ongliubraving@fb.com, yhs@fb.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuzibode@126.com
-References: <20190308064551.17437-1-tsu.yubo@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <27188c5f-c1e4-44df-7553-1529332f41f8@iogearbox.net>
-Date:   Fri, 8 Mar 2019 14:26:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Fri, 8 Mar 2019 08:27:32 -0500
+Received: from verein.lst.de ([213.95.11.211]:53841 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbfCHN1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:27:31 -0500
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id E62D568C4E; Fri,  8 Mar 2019 14:27:27 +0100 (CET)
+Date:   Fri, 8 Mar 2019 14:27:27 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     James Smart <james.smart@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvmet-fc: use zero-sized array and struct_size() in
+ kzalloc()
+Message-ID: <20190308132727.GC18218@lst.de>
+References: <20190223185108.GA6706@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190308064551.17437-1-tsu.yubo@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.2/25382/Fri Mar  8 09:55:42 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190223185108.GA6706@embeddedor>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/08/2019 07:45 AM, Bo YU wrote:
-> Sparse warning below:
-> 
-> sudo make C=2 CF=-D__CHECK_ENDIAN__ M=net/bpf/
-> CHECK   net/bpf//test_run.c
-> net/bpf//test_run.c:19:77: warning: Using plain integer as NULL pointer
-> ./include/linux/bpf-cgroup.h:295:77: warning: Using plain integer as NULL pointer
-> 
-> Fixes: 8bad74f9840f ("bpf: extend cgroup bpf core to allow multiple cgroup storage types")
-> Acked-by: Yonghong Song <yhs@fb.com>
-> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+James, can you take a look at this one?
 
-Applied, thanks!
+On Sat, Feb 23, 2019 at 12:51:08PM -0600, Gustavo A. R. Silva wrote:
+> Update the code to use a zero-sized array instead of a pointer in
+> structure nvmet_fc_tgt_queue and use struct_size() in kzalloc().
+> 
+> Notice that one of the more common cases of allocation size calculations
+> is finding the size of a structure that has a zero-sized array at the end,
+> along with memory for some number of elements for that array. For example:
+> 
+> struct foo {
+> 	int stuff;
+> 	struct boo entry[];
+> };
+> 
+> instance = kzalloc(sizeof(struct foo) + sizeof(struct boo) * count, GFP_KERNEL);
+> 
+> Instead of leaving these open-coded and prone to type mistakes, we can now
+> use the new struct_size() helper:
+> 
+> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/nvme/target/fc.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+> index 1e9654f04c60..23baec38f97e 100644
+> --- a/drivers/nvme/target/fc.c
+> +++ b/drivers/nvme/target/fc.c
+> @@ -128,12 +128,12 @@ struct nvmet_fc_tgt_queue {
+>  	struct nvmet_cq			nvme_cq;
+>  	struct nvmet_sq			nvme_sq;
+>  	struct nvmet_fc_tgt_assoc	*assoc;
+> -	struct nvmet_fc_fcp_iod		*fod;		/* array of fcp_iods */
+>  	struct list_head		fod_list;
+>  	struct list_head		pending_cmd_list;
+>  	struct list_head		avail_defer_list;
+>  	struct workqueue_struct		*work_q;
+>  	struct kref			ref;
+> +	struct nvmet_fc_fcp_iod		fod[];		/* array of fcp_iods */
+>  } __aligned(sizeof(unsigned long long));
+>  
+>  struct nvmet_fc_tgt_assoc {
+> @@ -588,9 +588,7 @@ nvmet_fc_alloc_target_queue(struct nvmet_fc_tgt_assoc *assoc,
+>  	if (qid > NVMET_NR_QUEUES)
+>  		return NULL;
+>  
+> -	queue = kzalloc((sizeof(*queue) +
+> -				(sizeof(struct nvmet_fc_fcp_iod) * sqsize)),
+> -				GFP_KERNEL);
+> +	queue = kzalloc(struct_size(queue, fod, sqsize), GFP_KERNEL);
+>  	if (!queue)
+>  		return NULL;
+>  
+> @@ -603,7 +601,6 @@ nvmet_fc_alloc_target_queue(struct nvmet_fc_tgt_assoc *assoc,
+>  	if (!queue->work_q)
+>  		goto out_a_put;
+>  
+> -	queue->fod = (struct nvmet_fc_fcp_iod *)&queue[1];
+>  	queue->qid = qid;
+>  	queue->sqsize = sqsize;
+>  	queue->assoc = assoc;
+> -- 
+> 2.20.1
+---end quoted text---
