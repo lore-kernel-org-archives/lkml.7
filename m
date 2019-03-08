@@ -2,98 +2,97 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AB1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03222C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46CD520811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KnFYCLJW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QNhzKf7I"
+	by mail.kernel.org (Postfix) with ESMTP id D4BA920811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbfCHIbh (ORCPT
+        id S1726518AbfCHIbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 03:31:37 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:35688 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfCHIbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 03:31:36 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5EF6D60386; Fri,  8 Mar 2019 08:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552033895;
-        bh=b8MtlD+7/yGM3Lr8HhhhyH/yYBErhCRMJVXsCSAyx0k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnFYCLJWnb5yFdO0Why/MTY2vTdUWsC3oVCO0wIaCDgYLM48Z2ZZzbbeEXQQWbpxu
-         g0NaTPBJ1VZ3RZjjPPBMffDr/Gju9wiKBrNt6/h5RJCRXbPtMebwnl5Gcw/cAkCe2j
-         Cr+ra7iQs1GZmqM5XY9Khz3Z6mJ3h9VpWeysVkMk=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 8 Mar 2019 03:31:41 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:50694 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbfCHIbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 03:31:39 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E29260386;
+        by mx1.redhat.com (Postfix) with ESMTPS id E0B2310C6C;
+        Fri,  8 Mar 2019 08:31:38 +0000 (UTC)
+Received: from [10.72.12.27] (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3731611D1;
         Fri,  8 Mar 2019 08:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552033894;
-        bh=b8MtlD+7/yGM3Lr8HhhhyH/yYBErhCRMJVXsCSAyx0k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNhzKf7I8Heq3AHUlsH//wjoQhlUbA+Ecg+liLAO3Jg0XGCuxW2ZeUwgVcy95wplX
-         /y0pL43n8wjWlYOO5aTDBViJ4ClX95iGURJa8M2QxmZ30LTr/lAUggmglmZ3Q4kfU2
-         iSPXc3ehtHELBWMBcjSHjnKYE4OYCuQFw+S4BU50=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E29260386
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     vinholikatti@gmail.com, alim.akhtar@samsung.com,
-        pedrom.Sousa@synopsys.com
-Cc:     subhashj@codeaurora.org, asutoshd@codeaurora.org,
-        linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 2/3] scsi: ufs: Add error checks for pm_runtime_get_sync()
-Date:   Fri,  8 Mar 2019 14:00:52 +0530
-Message-Id: <20190308083053.30631-3-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190308083053.30631-1-rnayak@codeaurora.org>
-References: <20190308083053.30631-1-rnayak@codeaurora.org>
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190306092837-mutt-send-email-mst@kernel.org>
+ <15105894-4ec1-1ed0-1976-7b68ed9eeeda@redhat.com>
+ <20190307101708-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <92dfa6cc-a86c-0cef-6384-98aeb8b9e567@redhat.com>
+Date:   Fri, 8 Mar 2019 16:31:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190307101708-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 08 Mar 2019 08:31:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an error check for pm_runtime_get_sync(), ignoring this can
-hide issues with the runtime pm handling in the driver.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On 2019/3/7 下午11:34, Michael S. Tsirkin wrote:
+> On Thu, Mar 07, 2019 at 10:45:57AM +0800, Jason Wang wrote:
+>> On 2019/3/7 上午12:31, Michael S. Tsirkin wrote:
+>>>> +static void vhost_set_vmap_dirty(struct vhost_vmap *used)
+>>>> +{
+>>>> +	int i;
+>>>> +
+>>>> +	for (i = 0; i < used->npages; i++)
+>>>> +		set_page_dirty_lock(used->pages[i]);
+>>> This seems to rely on page lock to mark page dirty.
+>>>
+>>> Could it happen that page writeback will check the
+>>> page, find it clean, and then you mark it dirty and then
+>>> invalidate callback is called?
+>>>
+>>>
+>> Yes. But does this break anything?
+>> The page is still there, we just remove a
+>> kernel mapping to it.
+>>
+>> Thanks
+> Yes it's the same problem as e.g. RDMA:
+> 	we've just marked the page as dirty without having buffers.
+> 	Eventually writeback will find it and filesystem will complain...
+> 	So if the pages are backed by a non-RAM-based filesystem, it’s all just broken.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2ddf24466a62..060dc38cc582 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -8357,7 +8357,10 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 	}
- 
- 	/* Hold auto suspend until async scan completes */
--	pm_runtime_get_sync(dev);
-+	err = pm_runtime_get_sync(dev);
-+	if (err < 0)
-+		goto out_remove_scsi_host;
-+
- 	atomic_set(&hba->scsi_block_reqs_cnt, 0);
- 	/*
- 	 * We are assuming that device wasn't put in sleep/power-down
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
 
+Yes, we can't depend on the pages that might have been invalidated. As 
+suggested, the only suitable place is the MMU notifier callbacks.
+
+Thanks
+
+
+> one can hope that RDMA guys will fix it in some way eventually.
+> For now, maybe add a flag in e.g. VMA that says that there's no
+> writeback so it's safe to mark page dirty at any point?
+>
+>
+>
+>
+>
