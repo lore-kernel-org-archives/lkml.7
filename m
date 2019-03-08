@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195DFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4E1C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FC820684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108582087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049461;
-	bh=EiC8uTQ65oOFvwVQp+vy+FkKmoTzj8avBcgwtbvMVvc=;
+	s=default; t=1552049465;
+	bh=UZ2wBPdyvhopoDi0zuo0E96ealU35BTJCN/OR3vmPXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ilw+DSH9S3LGOYuqU2X6AuCarg6IVClM6EJN6GxxmpfL8r0lJaa90rBKQDW+V3oqF
-	 6X/jnLkZgi2swszgBElYhiGCd/6QMFFheCnt+EOkjz+EUvxEOF55sqKDF89nQNLq6n
-	 5/IW2mqDFgHlgjrQmyyFJrygHikAsdsqoHIR9wWw=
+	b=ypksKde45q+WHSI0lAdTKM3AGxPNAmtldPWm4EFLkCrcb3mdJ74Fxxq52V6hk3xF8
+	 31Y8py29/Wil9dqZ+opnUpk/Er04HjRZWOANeqLkFRm4x279lzYliMl6RoZMuPUwSk
+	 wkfCQFMeIydY0Q3rm3OMige7TVDXDPwl8Qi+ixBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfCHMu7 (ORCPT
+        id S1726596AbfCHMvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbfCHMu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:50:59 -0500
+        id S1726524AbfCHMvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:02 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86E2620684;
-        Fri,  8 Mar 2019 12:50:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E29152085A;
+        Fri,  8 Mar 2019 12:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049458;
-        bh=EiC8uTQ65oOFvwVQp+vy+FkKmoTzj8avBcgwtbvMVvc=;
+        s=default; t=1552049461;
+        bh=UZ2wBPdyvhopoDi0zuo0E96ealU35BTJCN/OR3vmPXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3am/M8zcnArymZE/sY4uyuK5u8/+quoIuPc/j+fDkGWX3ndAf0FNLN3RLLR1IAcK
-         63tcKh2Cr/BaIBWZ2cOs0vkhIVwoVaTITxy1+nuSdmJ0msBM/Kd2n/YWlyJUtw4f9B
-         H/1+qSAr5A4SSzq1ICNPRDNn7PysaZkmDOrbGwg0=
+        b=IdQ+BIS3iW+MdK8K1Ij1Nze4F23C6Vy5KG41N8CHuTLdrm1SvV0APvvVZgmNtVDes
+         Fo+MGza8RXPcn8VvfoOHdast4gVYyTBV2OB/dSbg3f/NYnagApab1TYwXfOXPT51it
+         4l4PlFi+xZ1tF9giyLVeX9zEuYIgXOjlM8cASgjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Donghee Han <dh.han@samsung.com>,
-        Sangkyu Kim <skwith.kim@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 01/46] cpufreq: Use struct kobj_attribute instead of struct global_attr
-Date:   Fri,  8 Mar 2019 13:49:34 +0100
-Message-Id: <20190308124902.339773379@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.0 10/46] staging: erofs: fix race of initializing xattrs of a inode at the same time
+Date:   Fri,  8 Mar 2019 13:49:43 +0100
+Message-Id: <20190308124902.909181914@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -67,184 +65,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 625c85a62cb7d3c79f6e16de3cfa972033658250 upstream.
+commit 62dc45979f3f8cb0ea67302a93bff686f0c46c5a upstream.
 
-The cpufreq_global_kobject is created using kobject_create_and_add()
-helper, which assigns the kobj_type as dynamic_kobj_ktype and show/store
-routines are set to kobj_attr_show() and kobj_attr_store().
+In real scenario, there could be several threads accessing xattrs
+of the same xattr-uninitialized inode, and init_inode_xattrs()
+almost at the same time.
 
-These routines pass struct kobj_attribute as an argument to the
-show/store callbacks. But all the cpufreq files created using the
-cpufreq_global_kobject expect the argument to be of type struct
-attribute. Things work fine currently as no one accesses the "attr"
-argument. We may not see issues even if the argument is used, as struct
-kobj_attribute has struct attribute as its first element and so they
-will both get same address.
+That's actually an unexpected behavior, this patch closes the race.
 
-But this is logically incorrect and we should rather use struct
-kobj_attribute instead of struct global_attr in the cpufreq core and
-drivers and the show/store callbacks should take struct kobj_attribute
-as argument instead.
-
-This bug is caught using CFI CLANG builds in android kernel which
-catches mismatch in function prototypes for such callbacks.
-
-Reported-by: Donghee Han <dh.han@samsung.com>
-Reported-by: Sangkyu Kim <skwith.kim@samsung.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c      |    6 +++---
- drivers/cpufreq/intel_pstate.c |   23 ++++++++++++-----------
- include/linux/cpufreq.h        |   12 ++----------
- 3 files changed, 17 insertions(+), 24 deletions(-)
+ drivers/staging/erofs/internal.h |   11 +++++++---
+ drivers/staging/erofs/xattr.c    |   41 +++++++++++++++++++++++++++------------
+ 2 files changed, 37 insertions(+), 15 deletions(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -545,13 +545,13 @@ EXPORT_SYMBOL_GPL(cpufreq_policy_transit
-  *                          SYSFS INTERFACE                          *
-  *********************************************************************/
- static ssize_t show_boost(struct kobject *kobj,
--				 struct attribute *attr, char *buf)
-+			  struct kobj_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%d\n", cpufreq_driver->boost_enabled);
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -354,12 +354,17 @@ static inline erofs_off_t iloc(struct er
+ 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
  }
  
--static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
--				  const char *buf, size_t count)
-+static ssize_t store_boost(struct kobject *kobj, struct kobj_attribute *attr,
-+			   const char *buf, size_t count)
- {
- 	int ret, enable;
+-#define inode_set_inited_xattr(inode)   (EROFS_V(inode)->flags |= 1)
+-#define inode_has_inited_xattr(inode)   (EROFS_V(inode)->flags & 1)
++/* atomic flag definitions */
++#define EROFS_V_EA_INITED_BIT	0
++
++/* bitlock definitions (arranged in reverse order) */
++#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
  
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -895,7 +895,7 @@ static void intel_pstate_update_policies
- /************************** sysfs begin ************************/
- #define show_one(file_name, object)					\
- 	static ssize_t show_##file_name					\
--	(struct kobject *kobj, struct attribute *attr, char *buf)	\
-+	(struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
- 	{								\
- 		return sprintf(buf, "%u\n", global.object);		\
+ struct erofs_vnode {
+ 	erofs_nid_t nid;
+-	unsigned int flags;
++
++	/* atomic flags (including bitlocks) */
++	unsigned long flags;
+ 
+ 	unsigned char data_mapping_mode;
+ 	/* inline size in bytes */
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -44,18 +44,25 @@ static inline void xattr_iter_end_final(
+ 
+ static int init_inode_xattrs(struct inode *inode)
+ {
++	struct erofs_vnode *const vi = EROFS_V(inode);
+ 	struct xattr_iter it;
+ 	unsigned int i;
+ 	struct erofs_xattr_ibody_header *ih;
+ 	struct super_block *sb;
+ 	struct erofs_sb_info *sbi;
+-	struct erofs_vnode *vi;
+ 	bool atomic_map;
++	int ret = 0;
+ 
+-	if (likely(inode_has_inited_xattr(inode)))
++	/* the most case is that xattrs of this inode are initialized. */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
+ 		return 0;
+ 
+-	vi = EROFS_V(inode);
++	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
++		return -ERESTARTSYS;
++
++	/* someone has initialized xattrs for us? */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
++		goto out_unlock;
+ 
+ 	/*
+ 	 * bypass all xattr operations if ->xattr_isize is not greater than
+@@ -68,13 +75,16 @@ static int init_inode_xattrs(struct inod
+ 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
+ 		errln("xattr_isize %d of nid %llu is not supported yet",
+ 		      vi->xattr_isize, vi->nid);
+-		return -ENOTSUPP;
++		ret = -ENOTSUPP;
++		goto out_unlock;
+ 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
+ 		if (unlikely(vi->xattr_isize)) {
+ 			DBG_BUGON(1);
+-			return -EIO;	/* xattr ondisk layout error */
++			ret = -EIO;
++			goto out_unlock;	/* xattr ondisk layout error */
+ 		}
+-		return -ENOATTR;
++		ret = -ENOATTR;
++		goto out_unlock;
  	}
-@@ -904,7 +904,7 @@ static ssize_t intel_pstate_show_status(
- static int intel_pstate_update_status(const char *buf, size_t size);
  
- static ssize_t show_status(struct kobject *kobj,
--			   struct attribute *attr, char *buf)
-+			   struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
+ 	sb = inode->i_sb;
+@@ -83,8 +93,10 @@ static int init_inode_xattrs(struct inod
+ 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
  
-@@ -915,7 +915,7 @@ static ssize_t show_status(struct kobjec
- 	return ret;
+ 	it.page = erofs_get_inline_page(inode, it.blkaddr);
+-	if (IS_ERR(it.page))
+-		return PTR_ERR(it.page);
++	if (IS_ERR(it.page)) {
++		ret = PTR_ERR(it.page);
++		goto out_unlock;
++	}
+ 
+ 	/* read in shared xattr array (non-atomic, see kmalloc below) */
+ 	it.kaddr = kmap(it.page);
+@@ -97,7 +109,8 @@ static int init_inode_xattrs(struct inod
+ 						sizeof(uint), GFP_KERNEL);
+ 	if (vi->xattr_shared_xattrs == NULL) {
+ 		xattr_iter_end(&it, atomic_map);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_unlock;
+ 	}
+ 
+ 	/* let's skip ibody header */
+@@ -114,7 +127,8 @@ static int init_inode_xattrs(struct inod
+ 			if (IS_ERR(it.page)) {
+ 				kfree(vi->xattr_shared_xattrs);
+ 				vi->xattr_shared_xattrs = NULL;
+-				return PTR_ERR(it.page);
++				ret = PTR_ERR(it.page);
++				goto out_unlock;
+ 			}
+ 
+ 			it.kaddr = kmap_atomic(it.page);
+@@ -127,8 +141,11 @@ static int init_inode_xattrs(struct inod
+ 	}
+ 	xattr_iter_end(&it, atomic_map);
+ 
+-	inode_set_inited_xattr(inode);
+-	return 0;
++	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
++
++out_unlock:
++	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
++	return ret;
  }
  
--static ssize_t store_status(struct kobject *a, struct attribute *b,
-+static ssize_t store_status(struct kobject *a, struct kobj_attribute *b,
- 			    const char *buf, size_t count)
- {
- 	char *p = memchr(buf, '\n', count);
-@@ -929,7 +929,7 @@ static ssize_t store_status(struct kobje
- }
- 
- static ssize_t show_turbo_pct(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total, no_turbo, turbo_pct;
-@@ -955,7 +955,7 @@ static ssize_t show_turbo_pct(struct kob
- }
- 
- static ssize_t show_num_pstates(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total;
-@@ -976,7 +976,7 @@ static ssize_t show_num_pstates(struct k
- }
- 
- static ssize_t show_no_turbo(struct kobject *kobj,
--			     struct attribute *attr, char *buf)
-+			     struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -998,7 +998,7 @@ static ssize_t show_no_turbo(struct kobj
- 	return ret;
- }
- 
--static ssize_t store_no_turbo(struct kobject *a, struct attribute *b,
-+static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
- 			      const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1045,7 +1045,7 @@ static ssize_t store_no_turbo(struct kob
- 	return count;
- }
- 
--static ssize_t store_max_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1075,7 +1075,7 @@ static ssize_t store_max_perf_pct(struct
- 	return count;
- }
- 
--static ssize_t store_min_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1107,12 +1107,13 @@ static ssize_t store_min_perf_pct(struct
- }
- 
- static ssize_t show_hwp_dynamic_boost(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%u\n", hwp_boost);
- }
- 
--static ssize_t store_hwp_dynamic_boost(struct kobject *a, struct attribute *b,
-+static ssize_t store_hwp_dynamic_boost(struct kobject *a,
-+				       struct kobj_attribute *b,
- 				       const char *buf, size_t count)
- {
- 	unsigned int input;
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -254,20 +254,12 @@ __ATTR(_name, 0644, show_##_name, store_
- static struct freq_attr _name =			\
- __ATTR(_name, 0200, NULL, store_##_name)
- 
--struct global_attr {
--	struct attribute attr;
--	ssize_t (*show)(struct kobject *kobj,
--			struct attribute *attr, char *buf);
--	ssize_t (*store)(struct kobject *a, struct attribute *b,
--			 const char *c, size_t count);
--};
--
- #define define_one_global_ro(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0444, show_##_name, NULL)
- 
- #define define_one_global_rw(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0644, show_##_name, store_##_name)
- 
- 
+ /*
 
 
