@@ -2,161 +2,144 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C2DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C77C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795E820684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFBD20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m2K8o0lw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n18p3TZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfCHSlV (ORCPT
+        id S1726859AbfCHSnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:41:21 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35152 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726625AbfCHSlU (ORCPT
+        Fri, 8 Mar 2019 13:43:12 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34099 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfCHSnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:41:20 -0500
-Received: by mail-lj1-f194.google.com with SMTP id t13so18276829lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:41:19 -0800 (PST)
+        Fri, 8 Mar 2019 13:43:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id i130so14816733pgd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:43:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ylm4GGs3k69mm0+P+ifUy0mBRCQkvW6nh2imUsERxTE=;
-        b=m2K8o0lwm2cn6XcnlMgeBG4Jjzvuf3HwhgVrodtW0wNnips1msVCcWUZrjHD0WTs1o
-         FQxktq+9GaVktGO7Cksbp6egpjLjb2GVxOwIijKJbWVf8Vitwg9AOC8q/hmSsk6GVt8R
-         UYdPksA45A2I5WTdOtBGHJDrYtbHtroRkpmYk=
+        bh=fCT/q+rh5tHWQqsygMsSNNwuHai0Tft4vTsyO7L17Pk=;
+        b=n18p3TZo9bG3bEKWoESloAOmw4Y7aAy/1P6y1jZMXmrraF0lb3ITQRqz5r8e8I68ok
+         TkMvkpv6vcZgmpCN7wQsfuludbOW6xJfTG236+tu+oDovXfZgdwYNsbcR9w8MKUlkx2w
+         mtLmWaej0lm+i21i7FuExxNS4ExdSSxKvfHWhPNaJWvfqxMsnaJD62rhpFOvVbBIjLb4
+         vM8Zc+Pv4LWwbrqYZw0i3/duewiaB5UH2Y7bD8tbBKZyYFgwbW/WF9OkZm6309RUBf6v
+         W9xBaKpGr0g8Gc7RjSKDaVFc4OD6gxbM2Qt6bXO1wp5SxHBW0fyFos0fX+fNG8KCCpun
+         Y7tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ylm4GGs3k69mm0+P+ifUy0mBRCQkvW6nh2imUsERxTE=;
-        b=YUE1YoWzX9vO0qCmwskTzJjUEkpwgqp3Rgw2I9tqBuPk8bgTbwKk6EdrFqDaXoY1a0
-         dEX83Sv6NIpvD3me4CoXCXHLvE1fDNCBzk3nFD9KjZ18W7tnnjzKifs0aICZAJP0Bnhe
-         EZgIJGtw10NoFWHpZGZjXNAdz1EqJYN0tQ4r/QP6hGP58ispnLVbxY7PdfkXJ1OjYnoC
-         TjRuY3MTCKhii4sZ/yOw5WZ6lFmUPOAMavGvSxAu7u1ePDAwODJzmJLSFbjCrBEwIimA
-         fcg0RdU7FtTJk/BtBzHazQC/fL/2t6DxmTdYb53pZz4ghVLYwNG4rNLvRPYB4pq6Md74
-         DBCQ==
-X-Gm-Message-State: APjAAAUHe5krNqFY24b4x0YPTAmfvFx+ASueWIzFz2zXCitMKglEykFc
-        +j/KiRPpM3y1pSo0MSHriewt3/NoU5Y=
-X-Google-Smtp-Source: APXvYqxNdq25V2LzcnL69vOmBO8ebxQX4UQevh9AlCZoFLWEUNAuGOUZBALhdxmR2lv7u8gL7t8+QA==
-X-Received: by 2002:a2e:85d2:: with SMTP id h18mr8620274ljj.69.1552070478435;
-        Fri, 08 Mar 2019 10:41:18 -0800 (PST)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id o12sm1540954ljc.37.2019.03.08.10.41.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 10:41:17 -0800 (PST)
-Received: by mail-lj1-f175.google.com with SMTP id t13so18276756lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:41:16 -0800 (PST)
-X-Received: by 2002:a2e:9f0b:: with SMTP id u11mr10484072ljk.64.1552070476417;
- Fri, 08 Mar 2019 10:41:16 -0800 (PST)
+        bh=fCT/q+rh5tHWQqsygMsSNNwuHai0Tft4vTsyO7L17Pk=;
+        b=ZpnD+uh3Zc0ateW13k5v8pRssmQK2AkJRF7LHu/OewFvnv2wkfvQcNDqymv/+Zrz/5
+         fSgWkAo6x00ZqGNatMYTPYm6SrPXzqCdFetV4Emz0jJkmPoRYNre5z3ktgQKWa0fb0L2
+         lWyd+p1yyu7tAP+Wz+COWf2lp/Z1g+97ZtOIA16ZjK2w7xTayKQ/GB2Zz6Kv1x3u9PzX
+         YnUiuQbdrWDE8DBAas8JukBwBgHnsZKlFaXtb46fp62sAPVUBbrFf16gMv7LHLv6+m+W
+         gJwQmLVEizbB7f4CUAM4y7H+1aOv3aOIAt7rRRTWob1U4R/hvyTVGSXTJm8O/okfAz24
+         aSZA==
+X-Gm-Message-State: APjAAAXE3aroYPL8o840zXi+hb8P3P7Kdo3FgAsVtLro+g2RRgp6hfv1
+        50e1t2neqysTOmC2NqwhnuCXhwnOTIskQ+TmINnqgg==
+X-Google-Smtp-Source: APXvYqwFQUq4LYo5DTpFOxBonknM2ojh1ikoAZNllQMx4/NFwHkKh/MYS/rMZpBjyGdxI1WX7ckWqr7BQ7CSM9QXQuY=
+X-Received: by 2002:a62:2b88:: with SMTP id r130mr19841925pfr.93.1552070590790;
+ Fri, 08 Mar 2019 10:43:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20190208172152.1807-1-georgi.djakov@linaro.org> <20190208172152.1807-2-georgi.djakov@linaro.org>
-In-Reply-To: <20190208172152.1807-2-georgi.djakov@linaro.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 8 Mar 2019 10:40:40 -0800
-X-Gmail-Original-Message-ID: <CAE=gft7uKN_EXqkuPvu+sSmJU69Le18yfqHcfmFApUHQyaBZ-Q@mail.gmail.com>
-Message-ID: <CAE=gft7uKN_EXqkuPvu+sSmJU69Le18yfqHcfmFApUHQyaBZ-Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] interconnect: Add support for path tags
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, daidavid1@codeaurora.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        amit.kucheria@linaro.org, Doug Anderson <dianders@chromium.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ksitaraman@nvidia.com, sanjayc@nvidia.com,
-        henryc.chen@mediatek.com, LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <20190308161308.GC4676@magnolia> <CAKwvOdn0=1svhDUBEP+391NvUXhm8bkzBzNMgNphML8kRzrRJQ@mail.gmail.com>
+ <20190308183830.GC20533@magnolia>
+In-Reply-To: <20190308183830.GC20533@magnolia>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 8 Mar 2019 10:42:59 -0800
+Message-ID: <CAKwvOdnpfQ_v3Hx0Y0ZjzQEet9DH+39RzMeG6rFqp6nw0ha7GQ@mail.gmail.com>
+Subject: Re: [PATCH] xfs: clean up xfs_dir2_leafn_add
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 8, 2019 at 9:21 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On Fri, Mar 8, 2019 at 10:38 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
 >
-> Consumers may have use cases with different bandwidth requirements based
-> on the system or driver state. The consumer driver can append a specific
-> tag to the path and pass this information to the interconnect platform
-> driver to do the aggregation based on this state.
+> On Fri, Mar 08, 2019 at 10:12:33AM -0800, Nick Desaulniers wrote:
+> > On Fri, Mar 8, 2019 at 8:13 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > >
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > >
+> > > Remove typedefs and consolidate local variable initialization.
+> > >
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_dir2_node.c |   20 ++++++++------------
+> > >  1 file changed, 8 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
+> > > index de46f26c5292..16731d2d684b 100644
+> > > --- a/fs/xfs/libxfs/xfs_dir2_node.c
+> > > +++ b/fs/xfs/libxfs/xfs_dir2_node.c
+> > > @@ -426,26 +426,22 @@ xfs_dir2_leaf_to_node(
+> > >  static int                                     /* error */
+> > >  xfs_dir2_leafn_add(
+> > >         struct xfs_buf          *bp,            /* leaf buffer */
+> > > -       xfs_da_args_t           *args,          /* operation arguments */
+> > > +       struct xfs_da_args      *args,          /* operation arguments */
+> > >         int                     index)          /* insertion pt for new entry */
+> > >  {
+> > > +       struct xfs_dir3_icleaf_hdr leafhdr;
+> > > +       struct xfs_inode        *dp = args->dp;
+> > > +       struct xfs_dir2_leaf    *leaf = bp->b_addr;
+> > > +       struct xfs_dir2_leaf_entry *lep;
+> > > +       struct xfs_dir2_leaf_entry *ents;
+> > >         int                     compact;        /* compacting stale leaves */
+> > > -       xfs_inode_t             *dp;            /* incore directory inode */
+> > > -       int                     highstale;      /* next stale entry */
+> > > -       xfs_dir2_leaf_t         *leaf;          /* leaf structure */
+> > > -       xfs_dir2_leaf_entry_t   *lep;           /* leaf entry */
+> > > +       int                     highstale = 0;  /* next stale entry */
+> > >         int                     lfloghigh;      /* high leaf entry logging */
+> > >         int                     lfloglow;       /* low leaf entry logging */
+> > > -       int                     lowstale;       /* previous stale entry */
+> > > -       struct xfs_dir3_icleaf_hdr leafhdr;
+> > > -       struct xfs_dir2_leaf_entry *ents;
+> > > +       int                     lowstale = 0;   /* previous stale entry */
+> > >
+> > >         trace_xfs_dir2_leafn_add(args, index);
+> > >
+> > > -       dp = args->dp;
+> > > -       leaf = bp->b_addr;
+> > > -       highstale = 0;
+> > > -       lowstale = 0;
+> > >         dp->d_ops->leaf_hdr_from_disk(&leafhdr, leaf);
+> > >         ents = dp->d_ops->leaf_ents_p(leaf);
+> >
+> > What about moving the initialization of `ents` above? (Or would that
+> > be over the line limit?)
 >
-> Introduce icc_set_tag() function that will allow the consumers to append
-> an optional tag to each path. The aggregation of these tagged paths is
-> platform specific.
+> It might be over the line limit, but more importantly I prefer to have
+> the tracepoint fire before we start interpreting the on-disk metadata.
+> That way, ftrace data will show exactly where we were in the kernel
+> if any corruption warnings are emitted during that interpretation.
 >
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  drivers/interconnect/core.c           | 27 +++++++++++++++++++++++----
->  drivers/interconnect/qcom/sdm845.c    |  2 +-
->  include/linux/interconnect-provider.h |  4 ++--
->  include/linux/interconnect.h          |  5 +++++
->  4 files changed, 31 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 6005a1c189f6..31eacd0f5349 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -42,10 +42,12 @@ struct icc_req {
->
->  /**
->   * struct icc_path - interconnect path structure
-> + * @tag: path tag (optional)
->   * @num_nodes: number of hops (nodes)
->   * @reqs: array of the requests applicable to this path of nodes
->   */
->  struct icc_path {
-> +       u32 tag;
->         size_t num_nodes;
->         struct icc_req reqs[];
->  };
-> @@ -206,7 +208,7 @@ static struct icc_path *path_find(struct device *dev, struct icc_node *src,
->   * implementing its own aggregate() function.
->   */
->
-> -static int aggregate_requests(struct icc_node *node)
-> +static int aggregate_requests(struct icc_node *node, u32 tag)
->  {
->         struct icc_provider *p = node->provider;
->         struct icc_req *r;
-> @@ -215,7 +217,7 @@ static int aggregate_requests(struct icc_node *node)
->         node->peak_bw = 0;
+> I don't think either of those two functions do that today, but I don't
+> want to leave a logic bomb in case they ever start doing that.
 
-For my suggestion in patch 2, this is where you'd need the callback to
-reset the SLEEP/WAKE shadow aggregation buckets that the provider is
-keeping, since the core just reset the values here. I wonder if you'd
-want to pass the &node->avg_bw and &node->peak_bw in with this
-callback as well... not sure if that's useful. Something like:
+Makes sense, ents is initialized to the results of function call.
+Thanks for the additional info, for accepting the earlier patch, and
+this additional cleanup.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-        if (p->begin_aggregation)
-                p->begin_aggregation(node);
-
->
->         hlist_for_each_entry(r, &node->req_list, req_node)
-> -               p->aggregate(node, r->avg_bw, r->peak_bw,
-> +               p->aggregate(node, tag, r->avg_bw, r->peak_bw,
->                              &node->avg_bw, &node->peak_bw);
-
-Wait I'm confused. The tag is associated with a particular path. But
-now aren't you looping over all the other requests and coloring them
-with whatever tag this is? Don't you need to store the tag with the
-request, and then pass r->tag for each r rather than the tag from
-whichever request happened to initiate the re-aggregation?
-
->
->         return 0;
-> @@ -396,6 +398,23 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
->  }
->  EXPORT_SYMBOL_GPL(of_icc_get);
->
+-- 
+Thanks,
+~Nick Desaulniers
