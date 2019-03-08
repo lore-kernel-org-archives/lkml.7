@@ -2,110 +2,133 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F4C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730B3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCC120857
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552068114;
-	bh=a50geIOnOjK6X0A0X4iFC5JeQKpHie3qNWwacCLaewM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=gv1MV6jVj4Woc/s9C36UI2syLpH18VDVsuBj6ezzLJoZXqerj3P812enPiyqsvkvt
-	 SL8iRtc8tBXqXYIAaa/TDwfPX3tvS6Ht67qt9Y9vBC2wFAP5mkbsqcy2y/BHAi9oh3
-	 JKtBJ8PXOkYGJEwdTChKZ+BoNPMNacIKXvdxgS64=
+	by mail.kernel.org (Postfix) with ESMTP id 4335520851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:03:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DY5g4kf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfCHSBx (ORCPT
+        id S1727051AbfCHSDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:01:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfCHSBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:01:52 -0500
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8999C20851;
-        Fri,  8 Mar 2019 18:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552068111;
-        bh=a50geIOnOjK6X0A0X4iFC5JeQKpHie3qNWwacCLaewM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PIEw29+vLmmxnM4FCsF4pgWc2PidN2E3l8RP08Hea/er4e9gQSTWYW7dBaNdmXzzJ
-         rHySB1SbVO1OJF8S7G3UIovRiweK0QRSgzcR7RDqw47YanhshEHT7Bmz/1uGx6IDef
-         PXEDQh0jKbsnsemWDpY/HR9IRCzVTupHSeb+CU6U=
-Date:   Fri, 8 Mar 2019 12:01:49 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC] Log PCIe service info with pci_dev, not pcie_device
-Message-ID: <20190308180149.GD214730@google.com>
+        Fri, 8 Mar 2019 13:03:21 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13706 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfCHSDU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 13:03:20 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c82ae5e0000>; Fri, 08 Mar 2019 10:03:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 08 Mar 2019 10:03:19 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 08 Mar 2019 10:03:19 -0800
+Received: from nvidia.com (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 8 Mar
+ 2019 18:03:19 +0000
+Date:   Fri, 8 Mar 2019 10:03:18 -0800
+From:   Neo Jia <cjia@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>, <ashok.raj@intel.com>,
+        <sanjay.k.kumar@intel.com>, <jacob.jun.pan@intel.com>,
+        <kevin.tian@intel.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        <yi.l.liu@intel.com>, <yi.y.sun@intel.com>, <peterx@redhat.com>,
+        <tiwei.bie@intel.com>, <xin.zeng@intel.com>,
+        <iommu@lists.linux-foundation.org>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v7 9/9] vfio/type1: Handle different mdev isolation type
+Message-ID: <20190308180317.GA30821@nvidia.com>
+References: <20190222021927.13132-1-baolu.lu@linux.intel.com>
+ <20190222021927.13132-10-baolu.lu@linux.intel.com>
+ <20190307084453.GA9288@nvidia.com>
+ <20190307165623.1834cc93@w520.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190307165623.1834cc93@w520.home>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.6.2 (2016-07-01)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552068190; bh=fFrFN8XvDs31Sgdig4becaBwRkGdQLI18taXp+sytUY=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=DY5g4kf3975d/ppbRlSi9wRtoOzwG0pB6gpqV76vnOTQyQ2OjHO34txOAVNmz1eBA
+         MdScblYqFdqFksSH0u3ip5+S+OnIYdv/7FuSHAnFc8TpENuTovvwLEG7SS5m3KmT5a
+         IHdBH1F7ywm1mDkXqN0mjbfFX4D5CyGpgPRGpJtF9VzsdiDCF8uWN5i/vbVbPV3sId
+         htlf6JLDy9xvnM+yGoTljZzhsYeuqTzDaVpVNBr0wiD3DogbXq89PZksz6a5kdneJp
+         3QzK0oO+9WYC1832dO7JvM9U5/a5+bBPgiTkNf1W3bTiYo16SqYvQJmbRrPrXRO13V
+         u6y1sOyVHSN8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is strictly a discussion starter, obviously not for application.
+On Thu, Mar 07, 2019 at 04:56:23PM -0700, Alex Williamson wrote:
+> On Thu, 7 Mar 2019 00:44:54 -0800
+> Neo Jia <cjia@nvidia.com> wrote:
+> 
+> > On Fri, Feb 22, 2019 at 10:19:27AM +0800, Lu Baolu wrote:
+> > > This adds the support to determine the isolation type
+> > > of a mediated device group by checking whether it has
+> > > an iommu device. If an iommu device exists, an iommu
+> > > domain will be allocated and then attached to the iommu
+> > > device. Otherwise, keep the same behavior as it is.
+> > > 
+> > > Cc: Ashok Raj <ashok.raj@intel.com>
+> > > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > > Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> > > ---
+> > >  drivers/vfio/vfio_iommu_type1.c | 48 ++++++++++++++++++++++++++++-----
+> > >  1 file changed, 41 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > > index ccc4165474aa..f1392c582a3c 100644
+> > > --- a/drivers/vfio/vfio_iommu_type1.c
+> > > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > > @@ -1368,13 +1368,40 @@ static void vfio_iommu_detach_group(struct vfio_domain *domain,
+> > >  		iommu_detach_group(domain->domain, group->iommu_group);
+> > >  }
+> > >    
+> > 
+> > Hi Baolu,
+> > 
+> > To allow IOMMU-awared mdev, I think you need to modify the
+> > vfio_iommu_type1_pin_pages and vfio_iommu_type1_unpin_pages to remove the
+> > iommu->external_domain check.
+> > 
+> > Could you please include that in your patch? If not, I can send out a separate
+> > patch to address that issue.
+> 
+> I figured it was intentional that an IOMMU backed mdev would not use
+> the pin/unpin interface and therefore the exiting -EINVAL returns would
+> be correct.  Can you elaborate on the use case for still requiring the
+> mdev pin/unpin interface for these devices?  Thanks,
 
-The portdrv driver binds to pci_dev for PCIe Root Ports and Switch
-Ports.  It creates additional pcie_devices for each "service" (Power
-Management events, AER, hotplug, Downstream Port Containment, etc).
-These pcie_devices have their own struct device, in addition to the
-one in the struct pci_dev.
+Sure. We are using this api to fetch a pfn of a guest physical address so we can
+access it for PV.
 
-Service drivers can then bind to those pcie_devices, and their
-dev_printk output is typically associated with those, e.g.,
+Thanks,
+Neo
 
-  pciehp 0000:80:10.0:pcie004: Slot #36 ...
-
-The "pcie004" is a bitmask that identifies the particular service, but
-I don't think it's very useful to users, especially since we already
-have "pciehp" as the driver name.
-
-I think the fact that pcie_device has its own struct device is
-probably a design mistake and it would be better if those "services"
-were more tightly integrated into the PCI core.
-
-Changing that would be a big project that I don't want to tackle right
-now, but I think a small step would be to simplify the dmesg logging
-by doing it with the underlying pci_dev instead of the pcie_device.
-For example, we could do something like the patch below, which would
-change the dmesg output like this:
-
-  - pciehp 0000:80:10.0:pcie004: Slot #36 AttnBtn- PwrCtrl- MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock- NoCompl- LLActRep+
-  + pcieport 0000:80:10.0: pciehp: Slot #36 AttnBtn- PwrCtrl- MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock- NoCompl- LLActRep+
-
-Please discuss :)
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 7dd443aea5a5..2761778f2ecc 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -868,7 +868,7 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		PCI_EXP_SLTSTA_MRLSC | PCI_EXP_SLTSTA_CC |
- 		PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC);
- 
--	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c LLActRep%c%s\n",
-+	pci_info(pdev, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c LLActRep%c%s\n",
- 		(slot_cap & PCI_EXP_SLTCAP_PSN) >> 19,
- 		FLAG(slot_cap, PCI_EXP_SLTCAP_ABP),
- 		FLAG(slot_cap, PCI_EXP_SLTCAP_PCP),
+> 
+> Alex
