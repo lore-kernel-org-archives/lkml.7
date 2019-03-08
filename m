@@ -2,264 +2,133 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB03C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853BBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C292086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5178920851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bVqEpM5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCHVCP (ORCPT
+        id S1727122AbfCHVDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:02:15 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:56058 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfCHVCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:02:14 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 137995944A;
-        Fri,  8 Mar 2019 21:02:14 +0000 (UTC)
-Received: from treble (ovpn-123-151.rdu2.redhat.com [10.10.123.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B338B600C1;
-        Fri,  8 Mar 2019 21:02:11 +0000 (UTC)
-Date:   Fri, 8 Mar 2019 15:02:09 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
-        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 18/20] objtool: Add UACCESS validation
-Message-ID: <20190308210209.usq2rpedccz25va5@treble>
-References: <20190307114511.870090179@infradead.org>
- <20190307115200.697533978@infradead.org>
+        Fri, 8 Mar 2019 16:03:00 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36534 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfCHVDA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 16:03:00 -0500
+Received: by mail-pg1-f194.google.com with SMTP id r124so15070680pgr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:02:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OJpFROwChgzZTSFBmKrhhb/VzvkeeuJXo9L7ruuJ3sI=;
+        b=bVqEpM5xkhRW0KGI6a3//IuT4u0V+E+rSMUl07TWeU5vl9f1OARUOOmXDrTcCwpFSl
+         n2SUTOQZKOZHIjkQt8IRU2U57JbGYDpk2k5NyUrCYDKqKx15JMOkUuAyZW8u3j5alFTz
+         6sYqjAhkiaBKsuXlGdZP5eYyDz574vfugp2p/7f+AJRsodOSEGm3whe6ZctP9v8pY1ZE
+         hykUfgraPFb4CBD65Dj0YRxtGREj4+fel/3ZRaH9x3vLoSk3bDODqn8gPkYd80vq4LzN
+         QIewH4FG5Szf3LFcn++fxKnJfQzC4jcqWhSc7dFnuUncqoNkI/Dcj8w2M5Tzu1nFQyS9
+         cYYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OJpFROwChgzZTSFBmKrhhb/VzvkeeuJXo9L7ruuJ3sI=;
+        b=d7N6db+H7rI/hMXpeyavKQkmboYDChHDs01mumdJP7RNboMwqTjA/809OB9tCiZmpH
+         szh7RqPjpNRKlXKbCpp2Cnwd71vZGpi4YSK7hMcChTyo2BYB9xBPjFZ1JAO3DRcFqZoL
+         BcwjoSPRQVeKVP9Fi9c3WxVr/2AZ4uLf2fHylDhVoByEV6Y9JWMJm/0z/0gVSeqPXe0A
+         kwlH8Gn0kJQEo1tZHLpsZjzr7ztLKu4mlqrtupb8iDJraseHhetDGFKeBvOdrYDNvvdZ
+         MNEVgS2i5/NAuO12gKofEkKner/je5x3pfgInTCbQqW+Ia1oUd+WlxE2AYdLf/LB3cHF
+         wgnQ==
+X-Gm-Message-State: APjAAAUZil+L5GZOtN10wakcBwaBir0nOSkT5a9FoU/incTiSqDIjwPZ
+        5kyzp+NiLJsxG0MwDayzr7jLtkmEdWIlWKVjlEI/fw==
+X-Google-Smtp-Source: APXvYqzpEbu25WtrmKx/1TIib0DXqNoV1HLf6loSGwbAG+5ezGBF9eUPcsDE2OBBfn7KJ39gCoXQdHs7EpVJ1P74WP4=
+X-Received: by 2002:a17:902:e85:: with SMTP id 5mr21023659plx.13.1552078978757;
+ Fri, 08 Mar 2019 13:02:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190307115200.697533978@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 08 Mar 2019 21:02:14 +0000 (UTC)
+References: <20190307162101.29204-1-natechancellor@gmail.com> <20190308040239.9400-1-natechancellor@gmail.com>
+In-Reply-To: <20190308040239.9400-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 8 Mar 2019 13:02:47 -0800
+Message-ID: <CAKwvOdkjpRVJ=TE8JCoMDJ46s6ToSgo0c2RcsoQ-JOPYMgLUpw@mail.gmail.com>
+Subject: Re: [PATCH] net: stmmac: Avoid one more sometimes uninitialized Clang warning
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 12:45:29PM +0100, Peter Zijlstra wrote:
-> --- a/tools/objtool/arch/x86/decode.c
-> +++ b/tools/objtool/arch/x86/decode.c
-> @@ -369,7 +369,19 @@ int arch_decode_instruction(struct elf *
->  
->  	case 0x0f:
->  
-> -		if (op2 >= 0x80 && op2 <= 0x8f) {
-> +		if (op2 == 0x01) {
-> +
-> +			if (modrm == 0xca) {
-> +
-> +				*type = INSN_CLAC;
-> +
-> +			} else if (modrm == 0xcb) {
-> +
-> +				*type = INSN_STAC;
-> +
-> +			}
+On Thu, Mar 7, 2019 at 8:02 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
+> 'ns' is used uninitialized whenever 'if' condition is false
+> [-Werror,-Wsometimes-uninitialized]
+> drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
+> 'ns' is used uninitialized whenever '&&' condition is false
+> [-Werror,-Wsometimes-uninitialized]
+>
+> Clang is concerned with the use of stmmac_do_void_callback (which
+> stmmac_get_systime wraps), as it may fail to initialize these values if
+> the if condition was ever false (meaning the callback doesn't exist).
+> It's not wrong because the callback is what initializes ns. While it's
+> unlikely that the callback is going to disappear at some point and make
+> that condition false, we can easily avoid this warning by zero
+> initializing the variable.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/384
+> Fixes: df103170854e ("net: stmmac: Avoid sometimes uninitialized Clang warnings")
 
-Style nit, no need for all those brackets and newlines.
+Was initially confused by the link (thought I caught the 3 previous
+instances in code review of df103170854e).  I see now that I did not
+report stmmac_ptp.c (only stmmac_main.c) properly.  Had I, this could
+have been bundled up into df103170854e indeed.  Sorry.  Thanks for
+circling back and cleaning up this additional instance.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -442,6 +442,81 @@ static void add_ignores(struct objtool_f
->  	}
->  }
->  
-> +static const char *uaccess_safe_builtin[] = {
-> +	/* KASAN */
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+> index 2293e21f789f..cc60b3fb0892 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+> @@ -105,7 +105,7 @@ static int stmmac_get_time(struct ptp_clock_info *ptp, struct timespec64 *ts)
+>         struct stmmac_priv *priv =
+>             container_of(ptp, struct stmmac_priv, ptp_clock_ops);
+>         unsigned long flags;
+> -       u64 ns;
+> +       u64 ns = 0;
+>
+>         spin_lock_irqsave(&priv->ptp_lock, flags);
+>         stmmac_get_systime(priv, priv->ptpaddr, &ns);
+> --
+> 2.21.0
+>
 
-A short comment would be good here, something describing why a function
-might be added to the list.
-
-> +	"memset_orig", /* XXX why not memset_erms */
-> +	"__memset",
-> +	"kasan_poison_shadow",
-> +	"kasan_unpoison_shadow",
-> +	"__asan_poison_stack_memory",
-> +	"__asan_unpoison_stack_memory",
-> +	"kasan_report",
-> +	"check_memory_region",
-> +	/* KASAN out-of-line */
-> +	"__asan_loadN_noabort",
-> +	"__asan_load1_noabort",
-> +	"__asan_load2_noabort",
-> +	"__asan_load4_noabort",
-> +	"__asan_load8_noabort",
-> +	"__asan_load16_noabort",
-> +	"__asan_storeN_noabort",
-> +	"__asan_store1_noabort",
-> +	"__asan_store2_noabort",
-> +	"__asan_store4_noabort",
-> +	"__asan_store8_noabort",
-> +	"__asan_store16_noabort",
-> +	/* KASAN in-line */
-> +	"__asan_report_load_n_noabort",
-> +	"__asan_report_load1_noabort",
-> +	"__asan_report_load2_noabort",
-> +	"__asan_report_load4_noabort",
-> +	"__asan_report_load8_noabort",
-> +	"__asan_report_load16_noabort",
-> +	"__asan_report_store_n_noabort",
-> +	"__asan_report_store1_noabort",
-> +	"__asan_report_store2_noabort",
-> +	"__asan_report_store4_noabort",
-> +	"__asan_report_store8_noabort",
-> +	"__asan_report_store16_noabort",
-> +	/* KCOV */
-> +	"write_comp_data",
-> +	"__sanitizer_cov_trace_pc",
-> +	"__sanitizer_cov_trace_const_cmp1",
-> +	"__sanitizer_cov_trace_const_cmp2",
-> +	"__sanitizer_cov_trace_const_cmp4",
-> +	"__sanitizer_cov_trace_const_cmp8",
-> +	"__sanitizer_cov_trace_cmp1",
-> +	"__sanitizer_cov_trace_cmp2",
-> +	"__sanitizer_cov_trace_cmp4",
-> +	"__sanitizer_cov_trace_cmp8",
-> +	/* UBSAN */
-> +	"ubsan_type_mismatch_common",
-> +	"__ubsan_handle_type_mismatch",
-> +	"__ubsan_handle_type_mismatch_v1",
-> +	/* misc */
-> +	"csum_partial_copy_generic",
-> +	"__memcpy_mcsafe",
-> +	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
-> +	NULL
-> +};
-> +
-> +static void add_uaccess_safe(struct objtool_file *file)
-> +{
-> +	struct symbol *func;
-> +	const char **name;
-> +
-> +	if (!uaccess)
-> +		return;
-> +
-> +	for (name = uaccess_safe_builtin; *name; name++) {
-> +		func = find_symbol_by_name(file->elf, *name);
-> +		if (!func)
-> +			continue;
-
-This won't work if the function name changes due to IPA optimizations.
-I assume these are all global functions so maybe it's fine?
-
-> @@ -1914,6 +2008,16 @@ static int validate_branch(struct objtoo
->  		switch (insn->type) {
->  
->  		case INSN_RETURN:
-> +			if (state.uaccess && !func_uaccess_safe(func)) {
-> +				WARN_FUNC("return with UACCESS enabled", sec, insn->offset);
-> +				return 1;
-> +			}
-> +
-> +			if (!state.uaccess && func_uaccess_safe(func)) {
-> +				WARN_FUNC("return with UACCESS disabled from a UACCESS-safe function", sec, insn->offset);
-> +				return 1;
-> +			}
-> +
->  			if (func && has_modified_stack_frame(&state)) {
->  				WARN_FUNC("return with modified stack frame",
->  					  sec, insn->offset);
-> @@ -1929,17 +2033,32 @@ static int validate_branch(struct objtoo
->  			return 0;
->  
->  		case INSN_CALL:
-> -			if (is_fentry_call(insn))
-> -				break;
-> +		case INSN_CALL_DYNAMIC:
-> +do_call:
-> +			if (state.uaccess && !func_uaccess_safe(insn->call_dest)) {
-> +				WARN_FUNC("call to %s() with UACCESS enabled",
-> +					  sec, insn->offset, insn_dest_name(insn));
-> +				return 1;
-> +			}
->  
-> -			ret = dead_end_function(file, insn->call_dest);
-> -			if (ret == 1)
-> +			if (insn->type == INSN_JUMP_UNCONDITIONAL ||
-> +			    insn->type == INSN_JUMP_DYNAMIC)
->  				return 0;
-> -			if (ret == -1)
-> -				return 1;
->  
-> -			/* fallthrough */
-> -		case INSN_CALL_DYNAMIC:
-> +			if (insn->type == INSN_JUMP_CONDITIONAL)
-> +				break;
-> +
-> +			if (insn->type == INSN_CALL) {
-> +				if (is_fentry_call(insn))
-> +					break;
-> +
-> +				ret = dead_end_function(file, insn->call_dest);
-> +				if (ret == 1)
-> +					return 0;
-> +				if (ret == -1)
-> +					return 1;
-> +			}
-> +
->  			if (!no_fp && func && !has_valid_stack_frame(&state)) {
->  				WARN_FUNC("call without frame pointer save/setup",
->  					  sec, insn->offset);
-> @@ -1956,6 +2075,8 @@ static int validate_branch(struct objtoo
->  							sec, insn->offset);
->  					return 1;
->  				}
-> +				goto do_call;
-> +
-
-These gotos make my head spin.  Again I would much prefer a small amount
-of code duplication over this.
-
-> +++ b/tools/objtool/special.c
-> @@ -42,6 +42,7 @@
->  #define ALT_NEW_LEN_OFFSET	11
->  
->  #define X86_FEATURE_POPCNT (4*32+23)
-> +#define X86_FEATURE_SMAP   (9*32+20)
->  
->  struct special_entry {
->  	const char *sec;
-> @@ -107,8 +108,15 @@ static int get_alt_entry(struct elf *elf
->  		 * It has been requested that we don't validate the !POPCNT
->  		 * feature path which is a "very very small percentage of
->  		 * machines".
-> +		 *
-> +		 * Also, unconditionally enable SMAP; this avoids seeing paths
-> +		 * that pass through the STAC alternative and through the CLAC
-> +		 * NOPs.
-
-Why is this a problem?
-
-> +		 *
-> +		 * XXX: We could do this for all binary NOP/single-INSN
-> +		 * alternatives.
-
-Same question here.
-
->  		 */
-> -		if (feature == X86_FEATURE_POPCNT)
-> +		if (feature == X86_FEATURE_POPCNT || feature == X86_FEATURE_SMAP)
->  			alt->skip_orig = true;
->  	}
->  
-> 
-> 
 
 -- 
-Josh
+Thanks,
+~Nick Desaulniers
