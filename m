@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6452C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135C4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872DE2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABB62087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049757;
-	bh=DPACkLGR2+MUTKET1zcwFuMN8zABKshZkCUQ46c3/mY=;
+	s=default; t=1552049760;
+	bh=5XEe1eTeHv+pS7czFd19eROf1oEed2SFkXpxswNA+PA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eAk029dtcXZ9E9lCuXmKwHeYgTW9ftH2CF/WkIic1bY7ZwGkxpjNJ1adyvgMO8Psd
-	 6Jcnisyb/u3A/26QPdNe/fLKYFXmoZSehqSf+sfOJHgtxXTvFajr076Wk+HzSI+fFf
-	 zE3cYJ+2uKMBvElLUQSDYEb3wkTrWR+JD2Ef0zFA=
+	b=fGPA05uQPoAb1gDl3ovUkdxgqFGjqmWziuf0Q5TkdA0AGaUi+2zqYzvrQd3ZtcXUd
+	 EnEDp4cU7VOjAGtLOBgTYZzy0iHIvTuBjoiRHsmsCK0/DN2Wh9Z6YUx5OrYoKc7PCV
+	 /GTrQjNsK9VHOCjoQMRJycp6fMwg+0iajjLGetVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfCHMz4 (ORCPT
+        id S1727050AbfCHMz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:55:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60090 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:55:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfCHMzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:55:53 -0500
+        id S1726618AbfCHMz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:55:56 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE7AC20449;
-        Fri,  8 Mar 2019 12:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A26C420449;
+        Fri,  8 Mar 2019 12:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049753;
-        bh=DPACkLGR2+MUTKET1zcwFuMN8zABKshZkCUQ46c3/mY=;
+        s=default; t=1552049756;
+        bh=5XEe1eTeHv+pS7czFd19eROf1oEed2SFkXpxswNA+PA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQSY/LzaR7/FMOXuAqWjZ+7TbRQLCxle7yCiOu1BP1BxNVIH3LBxZmV8/mlfPt9Bd
-         zhOyEQyVoBje43pO4WzPEYjivT6cAHg29erZ1hXcLhSUHIZnVjJ6BAByLeMjK32RTU
-         sxjmz0alhEn9CF3ukxv/FPww3DQXTt9gBrD9ara4=
+        b=v3OoBHGUPkIAY/I5CxgvbqKfw7jxlXoZaXK1EE935YB0vaF6cJ0cVPvoX5wpYUdBo
+         gDEiO+ZmorsVDExzVtjWtvviKmJD6IUjph+xsLZauBAesy4ahDqWVMcSkUm+8U2htu
+         /kX4/0Yv3kJUkS5C8f0wtj4nNEj0RDHXQvPUePBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 53/76] mpls: Return error for RTA_GATEWAY attribute
-Date:   Fri,  8 Mar 2019 13:50:05 +0100
-Message-Id: <20190308124916.683905923@linuxfoundation.org>
+Subject: [PATCH 4.20 54/76] ipv4: Pass original device to ip_rcv_finish_core
+Date:   Fri,  8 Mar 2019 13:50:06 +0100
+Message-Id: <20190308124916.717732887@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -67,31 +68,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit be48220edd48ca0d569782992840488a52373a24 ]
+[ Upstream commit a1fd1ad2552fad9e649eeb85fd79301e2880a886 ]
 
-MPLS does not support nexthops with an MPLS address family.
-Specifically, it does not handle RTA_GATEWAY attribute. Make it
-clear by returning an error.
+ip_route_input_rcu expects the original ingress device (e.g., for
+proper multicast handling). The skb->dev can be changed by l3mdev_ip_rcv,
+so dev needs to be saved prior to calling it. This was the behavior prior
+to the listify changes.
 
-Fixes: 03c0566542f4c ("mpls: Netlink commands to add, remove, and dump routes")
+Fixes: 5fa12739a53d0 ("net: ipv4: listify ip_rcv_finish")
+Cc: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mpls/af_mpls.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/ip_input.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/net/mpls/af_mpls.c
-+++ b/net/mpls/af_mpls.c
-@@ -1838,6 +1838,9 @@ static int rtm_to_route_config(struct sk
- 				goto errout;
- 			break;
- 		}
-+		case RTA_GATEWAY:
-+			NL_SET_ERR_MSG(extack, "MPLS does not support RTA_GATEWAY attribute");
-+			goto errout;
- 		case RTA_VIA:
- 		{
- 			if (nla_get_via(nla, &cfg->rc_via_alen,
+--- a/net/ipv4/ip_input.c
++++ b/net/ipv4/ip_input.c
+@@ -308,11 +308,10 @@ drop:
+ }
+ 
+ static int ip_rcv_finish_core(struct net *net, struct sock *sk,
+-			      struct sk_buff *skb)
++			      struct sk_buff *skb, struct net_device *dev)
+ {
+ 	const struct iphdr *iph = ip_hdr(skb);
+ 	int (*edemux)(struct sk_buff *skb);
+-	struct net_device *dev = skb->dev;
+ 	struct rtable *rt;
+ 	int err;
+ 
+@@ -401,6 +400,7 @@ drop_error:
+ 
+ static int ip_rcv_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+ {
++	struct net_device *dev = skb->dev;
+ 	int ret;
+ 
+ 	/* if ingress device is enslaved to an L3 master device pass the
+@@ -410,7 +410,7 @@ static int ip_rcv_finish(struct net *net
+ 	if (!skb)
+ 		return NET_RX_SUCCESS;
+ 
+-	ret = ip_rcv_finish_core(net, sk, skb);
++	ret = ip_rcv_finish_core(net, sk, skb, dev);
+ 	if (ret != NET_RX_DROP)
+ 		ret = dst_input(skb);
+ 	return ret;
+@@ -546,6 +546,7 @@ static void ip_list_rcv_finish(struct ne
+ 
+ 	INIT_LIST_HEAD(&sublist);
+ 	list_for_each_entry_safe(skb, next, head, list) {
++		struct net_device *dev = skb->dev;
+ 		struct dst_entry *dst;
+ 
+ 		skb_list_del_init(skb);
+@@ -555,7 +556,7 @@ static void ip_list_rcv_finish(struct ne
+ 		skb = l3mdev_ip_rcv(skb);
+ 		if (!skb)
+ 			continue;
+-		if (ip_rcv_finish_core(net, sk, skb) == NET_RX_DROP)
++		if (ip_rcv_finish_core(net, sk, skb, dev) == NET_RX_DROP)
+ 			continue;
+ 
+ 		dst = skb_dst(skb);
 
 
