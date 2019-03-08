@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FDEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B5720661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8181F20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050309;
-	bh=NrBPZkbhAGF3+KNXqR+S/OmLVaXaSwG+L+m/lLiTm+o=;
+	s=default; t=1552050330;
+	bh=imlzxDiIhskEDgGPiZg3D9YPSAjyV0iw2NIv/lr/nBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuuJNXL+35cY5Vwt6Vj4foMf/npTHIT7ca1zEU3Ep59PguhgNdUxIo/URsDl3fX7V
-	 Sc0ryV3kzFtkFHWKkezgRLJrbKcZ1kIsVFJ6A7Zpc0aIIGSUk59HUco1vKoFaDZH2u
-	 v0H4TTL1YLLvzx+kuXOq29QnqmyCNrB5PcELCYnw=
+	b=kO1WzKhr/rRWSPnoyn1obOUDosfn6lLnq9iCxPS0lf2Hnr5FPbqalgV5CscqKR8T/
+	 0rGCNPQdhYo270IuxeE6gHTu5cThXfsw6t0QWMXBjfnUNwnMOwwX0AZ1Lke0Xh4uD2
+	 1RUd+qrque6tS0yrQJGt9/2AxkdStCV4VLxB5L1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfCHNFI (ORCPT
+        id S1727258AbfCHM41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:05:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:56:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbfCHM4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:56:54 -0500
+        id S1727321AbfCHM4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:56:23 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB9BF20449;
-        Fri,  8 Mar 2019 12:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B3F62087C;
+        Fri,  8 Mar 2019 12:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049814;
-        bh=NrBPZkbhAGF3+KNXqR+S/OmLVaXaSwG+L+m/lLiTm+o=;
+        s=default; t=1552049782;
+        bh=imlzxDiIhskEDgGPiZg3D9YPSAjyV0iw2NIv/lr/nBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=osuzH4bIpHyrFAU226QN5eCo+O/14cASvUPHEsvj5S2HfqL6WzOOn+hXo74qxlcx3
-         et9jhEE85JZ0pgY8hYIoARqHIJCZXX5CQ9UgDaAU970JlIxpRUcX1qykRHr3pzwmLj
-         V6AZDv2zDI+MQD8STwfP8CKknF1zixRT9njexGcs=
+        b=HLAaSMHE3CDQxwcHMxI9+T6LGsw7T2rGp5a8KYoit4iBf+YWjwrSFflp0/LlIyZ/a
+         XNsxqX1nC4MQPd2GLUnRSMFNLTlakqobqLzQMPsEzPntblbn3awN2naK/z+uO4RH9V
+         won9dDCdkYKGJmJODCqGlrpkeOtwbyqDFt3qQkMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Karoly Pados <pados@pados.hu>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.20 70/76] USB: serial: cp210x: fix GPIO in autosuspend
-Date:   Fri,  8 Mar 2019 13:50:22 +0100
-Message-Id: <20190308124917.269008005@linuxfoundation.org>
+        stable@vger.kernel.org, Pitam Mitra <pitamm@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bockjoo Kim <bockjoo@phys.ufl.edu>, bp@alien8.de, hpa@zytor.com
+Subject: [PATCH 4.20 61/76] x86/boot/compressed/64: Do not read legacy ROM on EFI system
+Date:   Fri,  8 Mar 2019 13:50:13 +0100
+Message-Id: <20190308124916.962790874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -64,60 +66,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Karoly Pados <pados@pados.hu>
+From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-commit 7b0b644b9aa2de5032db0f468fddca091d0b7b90 upstream.
+commit 6f913de3231e1d70a871135b38219da7810df218 upstream.
 
-Current GPIO code in cp210x fails to take USB autosuspend into account,
-making it practically impossible to use GPIOs with autosuspend enabled
-without user configuration. Fix this like for ftdi_sio in a previous patch.
-Tested on a CP2102N.
+EFI systems do not necessarily provide a legacy ROM. If the ROM is missing
+the memory is not mapped at all.
 
-Signed-off-by: Karoly Pados <pados@pados.hu>
-Fixes: cf5276ce7867 ("USB: serial: cp210x: Adding GPIO support for CP2105")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Trying to dereference values in the legacy ROM area leads to a crash on
+Macbook Pro.
+
+Only look for values in the legacy ROM area for non-EFI system.
+
+Fixes: 3548e131ec6a ("x86/boot/compressed/64: Find a place for 32-bit trampoline")
+Reported-by: Pitam Mitra <pitamm@gmail.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Bockjoo Kim <bockjoo@phys.ufl.edu>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190219075224.35058-1-kirill.shutemov@linux.intel.com
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202351
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/boot/compressed/pgtable_64.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -1354,8 +1354,13 @@ static int cp210x_gpio_get(struct gpio_c
- 	if (priv->partnum == CP210X_PARTNUM_CP2105)
- 		req_type = REQTYPE_INTERFACE_TO_HOST;
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -1,5 +1,7 @@
++#include <linux/efi.h>
+ #include <asm/e820/types.h>
+ #include <asm/processor.h>
++#include <asm/efi.h>
+ #include "pgtable.h"
+ #include "../string.h"
  
-+	result = usb_autopm_get_interface(serial->interface);
-+	if (result)
-+		return result;
-+
- 	result = cp210x_read_vendor_block(serial, req_type,
- 					  CP210X_READ_LATCH, &buf, sizeof(buf));
-+	usb_autopm_put_interface(serial->interface);
- 	if (result < 0)
- 		return result;
+@@ -37,9 +39,10 @@ int cmdline_find_option_bool(const char
  
-@@ -1376,6 +1381,10 @@ static void cp210x_gpio_set(struct gpio_
+ static unsigned long find_trampoline_placement(void)
+ {
+-	unsigned long bios_start, ebda_start;
++	unsigned long bios_start = 0, ebda_start = 0;
+ 	unsigned long trampoline_start;
+ 	struct boot_e820_entry *entry;
++	char *signature;
+ 	int i;
  
- 	buf.mask = BIT(gpio);
+ 	/*
+@@ -47,8 +50,18 @@ static unsigned long find_trampoline_pla
+ 	 * This code is based on reserve_bios_regions().
+ 	 */
  
-+	result = usb_autopm_get_interface(serial->interface);
-+	if (result)
-+		goto out;
-+
- 	if (priv->partnum == CP210X_PARTNUM_CP2105) {
- 		result = cp210x_write_vendor_block(serial,
- 						   REQTYPE_HOST_TO_INTERFACE,
-@@ -1393,6 +1402,8 @@ static void cp210x_gpio_set(struct gpio_
- 					 NULL, 0, USB_CTRL_SET_TIMEOUT);
- 	}
+-	ebda_start = *(unsigned short *)0x40e << 4;
+-	bios_start = *(unsigned short *)0x413 << 10;
++	/*
++	 * EFI systems may not provide legacy ROM. The memory may not be mapped
++	 * at all.
++	 *
++	 * Only look for values in the legacy ROM for non-EFI system.
++	 */
++	signature = (char *)&boot_params->efi_info.efi_loader_signature;
++	if (strncmp(signature, EFI32_LOADER_SIGNATURE, 4) &&
++	    strncmp(signature, EFI64_LOADER_SIGNATURE, 4)) {
++		ebda_start = *(unsigned short *)0x40e << 4;
++		bios_start = *(unsigned short *)0x413 << 10;
++	}
  
-+	usb_autopm_put_interface(serial->interface);
-+out:
- 	if (result < 0) {
- 		dev_err(&serial->interface->dev, "failed to set GPIO value: %d\n",
- 				result);
+ 	if (bios_start < BIOS_START_MIN || bios_start > BIOS_START_MAX)
+ 		bios_start = BIOS_START_MAX;
 
 
