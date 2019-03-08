@@ -2,300 +2,113 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2113C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCA6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7C720851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F06820851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZUOyuxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfCHDKd (ORCPT
+        id S1726691AbfCHDKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:10:33 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35540 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726568AbfCHDKb (ORCPT
+        Thu, 7 Mar 2019 22:10:40 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43263 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfCHDKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:10:31 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMDnmcY_1552014618;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMDnmcY_1552014618)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 08 Mar 2019 11:10:18 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        harryxiyou@gmail.com, corbet@lwn.net
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v3 18/31] docs/zh_CN: format the magic-number doc as rst
-Date:   Fri,  8 Mar 2019 11:09:05 +0800
-Message-Id: <20190308030918.22337-19-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.856.g8858448bb
-In-Reply-To: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
-References: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
+        Thu, 7 Mar 2019 22:10:38 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l11so12920664pgq.10;
+        Thu, 07 Mar 2019 19:10:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r58CcJqGlkjX5t1gE9hwdGtnjPHn3TSgMqKl38HW6RI=;
+        b=fZUOyuxgQiPB/aeLl+LEWYMUFvN05GRR9vzfvwH9V4taDcBhsdAwz+ufziywiyEiWy
+         xdG5Awd/8GzmLikLwj7oqmgoo528PMIjXDD2oYw6O1z8NKGso96AJ5KyzjvlBVYgUpft
+         eXNbnevVKsk2KMmNMfd9B79Wlsfvvqzi5KJawqTKPq08YHhId2bsUpeIlBVyOzelmVYy
+         ScUtp4Sod2MB9+GZmrus746c4/BoPLEjGU5RUDYw8MEtnTBF8TVjvcJUpUETQrwM8D+4
+         UtqXyEuKR7s+8Q5vswR+hdZyZHTpF8ten+zKvUYDoDMjH6w3JBgYJ3QFJGBT5jcT16/V
+         5FeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r58CcJqGlkjX5t1gE9hwdGtnjPHn3TSgMqKl38HW6RI=;
+        b=f1wT05GDd3FiUe2V8Sf+Wjnw4k1z9Ov2eGhqWtKeeAPJgoJ/Qi/p1rHTG/RiasKJH4
+         qfb6e+SWp3lTEyjiggDxXwZAc+d4Zbae4JboMBcDLRS9QtgMoTgIO3h4LYRyWYOXONpq
+         ykX2Rm0VHfVfh0OTzlDsOmvCfe8/4XtzQRfcqXOWyqX3nsy1y+DHyfBGB2rt6LwNXSAo
+         9rBMnqIv8q8PRVTkrIwmne8UAasol1hKymk2HohGgVaf+ZE8KMY4ffs2MmZfrSgNAf7Z
+         KQLCqXY24IFgR9cB5z5MJYTrB8p2nEDDnpmvizY0AoRUwkcypidSaITu2GXMmOtibayj
+         zL6A==
+X-Gm-Message-State: APjAAAX8KzqHbWJdexl5URTyAiaUzJhybIKH3EtcZnHyCjPyUxw4DcHN
+        yLUydzQVdN2CVqGonz3PbQM=
+X-Google-Smtp-Source: APXvYqyyQY6qMeYxAnYKCOEOhLjGK+i251PSeQZOsBKMTttgIdTTyD3vT7dvl88LUJIb5aZ+9LSdsg==
+X-Received: by 2002:a62:449b:: with SMTP id m27mr16395336pfi.79.1552014637227;
+        Thu, 07 Mar 2019 19:10:37 -0800 (PST)
+Received: from localhost ([175.223.36.163])
+        by smtp.gmail.com with ESMTPSA id p5sm8456223pfn.154.2019.03.07.19.10.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Mar 2019 19:10:36 -0800 (PST)
+Date:   Fri, 8 Mar 2019 12:10:32 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Calvin Owens <calvinowens@fb.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH 1/4] printk: Introduce per-console loglevel setting
+Message-ID: <20190308031032.GA30056@jagdpanzerIV>
+References: <cover.1551486732.git.calvinowens@fb.com>
+ <06cd267ef5439a9391368423b608959f5f1b1a63.1551486732.git.calvinowens@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06cd267ef5439a9391368423b608959f5f1b1a63.1551486732.git.calvinowens@fb.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-to Make it readble in html etc doc making. And fix the wrong
-translation for 'number' in form.
+On (03/01/19 16:48), Calvin Owens wrote:
+[..]
+>  		msg = log_from_idx(console_idx);
+> -		if (suppress_message_printing(msg->level)) {
+> -			/*
+> -			 * Skip record we have buffered and already printed
+> -			 * directly to the console when we received it, and
+> -			 * record that has level above the console loglevel.
+> -			 */
+> -			console_idx = log_next(console_idx);
+> -			console_seq++;
+> -			goto skip;
+> -		}
+>  
+>  		/* Output to all consoles once old messages replayed. */
+>  		if (unlikely(exclusive_console &&
+> @@ -2405,7 +2402,7 @@ void console_unlock(void)
+>  		console_lock_spinning_enable();
+>  
+>  		stop_critical_timings();	/* don't trace print latency */
+> -		call_console_drivers(ext_text, ext_len, text, len);
+> +		call_console_drivers(ext_text, ext_len, text, len, msg->level);
+>  		start_critical_timings();
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Harry Wei <harryxiyou@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Jia Wei Wei <harryxiyou@gmail.com>
-Cc: Li Zefan <lizefan@huawei.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Coly Li <colyli@suse.de>
----
- .../zh_CN/process/magic-number.rst            | 210 +++++++++---------
- 1 file changed, 104 insertions(+), 106 deletions(-)
+So it seems that now we always format the text and ext message (if
+needed) and only then check if there is at least one console we can
+print that message on.
 
-diff --git a/Documentation/translations/zh_CN/process/magic-number.rst b/Documentation/translations/zh_CN/process/magic-number.rst
-index 7159cec04090..15c592518194 100644
---- a/Documentation/translations/zh_CN/process/magic-number.rst
-+++ b/Documentation/translations/zh_CN/process/magic-number.rst
-@@ -1,33 +1,29 @@
--Chinese translated version of Documentation/process/magic-number.rst
-+.. _cn_magicnumbers:
- 
--If you have any comment or update to the content, please post to LKML directly.
--However, if you have problem communicating in English you can also ask the
--Chinese maintainer for help.  Contact the Chinese maintainer, if this
--translation is outdated or there is problem with translation.
-+.. include:: ../disclaimer-zh_CN.rst
- 
--Chinese maintainer: Jia Wei Wei <harryxiyou@gmail.com>
-----------------------------------------------------------------------
--Documentation/process/magic-number.rst的中文翻译
-+:Original: :ref:`Documentation/process/magic-number.rst <magicnumbers>`
- 
- 如果想评论或更新本文的内容，请直接发信到LKML。如果你使用英文交流有困难的话，也可
--以向中文版维护者求助。如果本翻译更新不及时或者翻译存在问题，请联系中文版维护者。
-+以向中文版维护者求助。如果本翻译更新不及时或者翻译存在问题，请联系中文版维护者::
- 
--中文版维护者： 贾威威 Jia Wei Wei <harryxiyou@gmail.com>
--中文版翻译者： 贾威威 Jia Wei Wei <harryxiyou@gmail.com>
--中文版校译者： 贾威威 Jia Wei Wei <harryxiyou@gmail.com>
-+        中文版维护者： 贾威威 Jia Wei Wei <harryxiyou@gmail.com>
-+        中文版翻译者： 贾威威 Jia Wei Wei <harryxiyou@gmail.com>
-+        中文版校译者： 贾威威 Jia Wei Wei <harryxiyou@gmail.com>
-+
-+Linux 魔术数
-+============
- 
--以下为正文
-----------------------------------------------------------------------
- 这个文件是有关当前使用的魔术值注册表。当你给一个结构添加了一个魔术值，你也应该把这个魔术值添加到这个文件，因为我们最好把用于各种结构的魔术值统一起来。
- 
- 使用魔术值来保护内核数据结构是一个非常好的主意。这就允许你在运行期检查(a)一个结构是否已经被攻击，或者(b)你已经给一个例行程序通过了一个错误的结构。后一种情况特别地有用---特别是当你通过一个空指针指向结构体的时候。tty源码，例如，经常通过特定驱动使用这种方法并且反复地排列特定方面的结构。
- 
--使用魔术值的方法是在结构的开始处声明的，如下：
-+使用魔术值的方法是在结构的开始处声明的，如下::
- 
--struct tty_ldisc {
--	int	magic;
--	...
--};
-+        struct tty_ldisc {
-+	        int	magic;
-+        	...
-+        };
- 
- 当你以后给内核添加增强功能的时候，请遵守这条规则！这样就会节省数不清的调试时间，特别是一些古怪的情况，例如，数组超出范围并且重新写了超出部分。遵守这个规则，‪这些情况可以被快速地，安全地避免。
- 
-@@ -58,93 +54,95 @@ struct tty_ldisc {
-                 <ffrederick@users.sourceforge.net>
- 		09 Jul 2003
- 
--魔术名                 地址         结构               所在文件
--===========================================================================
--PG_MAGIC              'P'         pg_{read,write}_hdr include/linux/pg.h
--CMAGIC                0x0111      user              include/linux/a.out.h
--MKISS_DRIVER_MAGIC    0x04bf      mkiss_channel     drivers/net/mkiss.h
--HDLC_MAGIC            0x239e      n_hdlc            drivers/char/n_hdlc.c
--APM_BIOS_MAGIC        0x4101      apm_user          arch/x86/kernel/apm_32.c
--CYCLADES_MAGIC        0x4359      cyclades_port     include/linux/cyclades.h
--DB_MAGIC              0x4442      fc_info           drivers/net/iph5526_novram.c
--DL_MAGIC              0x444d      fc_info           drivers/net/iph5526_novram.c
--FASYNC_MAGIC          0x4601      fasync_struct     include/linux/fs.h
--FF_MAGIC              0x4646      fc_info           drivers/net/iph5526_novram.c
--ISICOM_MAGIC          0x4d54      isi_port          include/linux/isicom.h
--PTY_MAGIC             0x5001                        drivers/char/pty.c
--PPP_MAGIC             0x5002      ppp               include/linux/if_pppvar.h
--SERIAL_MAGIC          0x5301      async_struct      include/linux/serial.h
--SSTATE_MAGIC          0x5302      serial_state      include/linux/serial.h
--SLIP_MAGIC            0x5302      slip              drivers/net/slip.h
--STRIP_MAGIC           0x5303      strip             drivers/net/strip.c
--X25_ASY_MAGIC         0x5303      x25_asy           drivers/net/x25_asy.h
--SIXPACK_MAGIC         0x5304      sixpack           drivers/net/hamradio/6pack.h
--AX25_MAGIC            0x5316      ax_disp           drivers/net/mkiss.h
--TTY_MAGIC             0x5401      tty_struct        include/linux/tty.h
--MGSL_MAGIC            0x5401      mgsl_info         drivers/char/synclink.c
--TTY_DRIVER_MAGIC      0x5402      tty_driver        include/linux/tty_driver.h
--MGSLPC_MAGIC          0x5402      mgslpc_info       drivers/char/pcmcia/synclink_cs.c
--TTY_LDISC_MAGIC       0x5403      tty_ldisc         include/linux/tty_ldisc.h
--USB_SERIAL_MAGIC      0x6702      usb_serial        drivers/usb/serial/usb-serial.h
--FULL_DUPLEX_MAGIC     0x6969                        drivers/net/ethernet/dec/tulip/de2104x.c
--USB_BLUETOOTH_MAGIC   0x6d02      usb_bluetooth     drivers/usb/class/bluetty.c
--RFCOMM_TTY_MAGIC      0x6d02                        net/bluetooth/rfcomm/tty.c
--USB_SERIAL_PORT_MAGIC 0x7301      usb_serial_port   drivers/usb/serial/usb-serial.h
--CG_MAGIC              0x00090255  ufs_cylinder_group include/linux/ufs_fs.h
--RPORT_MAGIC           0x00525001  r_port            drivers/char/rocket_int.h
--LSEMAGIC              0x05091998  lse               drivers/fc4/fc.c
--GDTIOCTL_MAGIC        0x06030f07  gdth_iowr_str     drivers/scsi/gdth_ioctl.h
--RIEBL_MAGIC           0x09051990                    drivers/net/atarilance.c
--NBD_REQUEST_MAGIC     0x12560953  nbd_request       include/linux/nbd.h
--RED_MAGIC2            0x170fc2a5  (any)             mm/slab.c
--BAYCOM_MAGIC          0x19730510  baycom_state      drivers/net/baycom_epp.c
--ISDN_X25IFACE_MAGIC   0x1e75a2b9  isdn_x25iface_proto_data
--                                                    drivers/isdn/isdn_x25iface.h
--ECP_MAGIC             0x21504345  cdkecpsig         include/linux/cdk.h
--LSOMAGIC              0x27091997  lso               drivers/fc4/fc.c
--LSMAGIC               0x2a3b4d2a  ls                drivers/fc4/fc.c
--WANPIPE_MAGIC         0x414C4453  sdla_{dump,exec}  include/linux/wanpipe.h
--CS_CARD_MAGIC         0x43525553  cs_card           sound/oss/cs46xx.c
--LABELCL_MAGIC         0x4857434c  labelcl_info_s    include/asm/ia64/sn/labelcl.h
--ISDN_ASYNC_MAGIC      0x49344C01  modem_info        include/linux/isdn.h
--CTC_ASYNC_MAGIC       0x49344C01  ctc_tty_info      drivers/s390/net/ctctty.c
--ISDN_NET_MAGIC        0x49344C02  isdn_net_local_s  drivers/isdn/i4l/isdn_net_lib.h
--SAVEKMSG_MAGIC2       0x4B4D5347  savekmsg          arch/*/amiga/config.c
--CS_STATE_MAGIC        0x4c4f4749  cs_state          sound/oss/cs46xx.c
--SLAB_C_MAGIC          0x4f17a36d  kmem_cache        mm/slab.c
--COW_MAGIC             0x4f4f4f4d  cow_header_v1     arch/um/drivers/ubd_user.c
--I810_CARD_MAGIC       0x5072696E  i810_card         sound/oss/i810_audio.c
--TRIDENT_CARD_MAGIC    0x5072696E  trident_card      sound/oss/trident.c
--ROUTER_MAGIC          0x524d4157  wan_device        [in wanrouter.h pre 3.9]
--SAVEKMSG_MAGIC1       0x53415645  savekmsg          arch/*/amiga/config.c
--GDA_MAGIC             0x58464552  gda               arch/mips/include/asm/sn/gda.h
--RED_MAGIC1            0x5a2cf071  (any)             mm/slab.c
--EEPROM_MAGIC_VALUE    0x5ab478d2  lanai_dev         drivers/atm/lanai.c
--HDLCDRV_MAGIC         0x5ac6e778  hdlcdrv_state     include/linux/hdlcdrv.h
--PCXX_MAGIC            0x5c6df104  channel           drivers/char/pcxx.h
--KV_MAGIC              0x5f4b565f  kernel_vars_s     arch/mips/include/asm/sn/klkernvars.h
--I810_STATE_MAGIC      0x63657373  i810_state        sound/oss/i810_audio.c
--TRIDENT_STATE_MAGIC   0x63657373  trient_state      sound/oss/trident.c
--M3_CARD_MAGIC         0x646e6f50  m3_card           sound/oss/maestro3.c
--FW_HEADER_MAGIC       0x65726F66  fw_header         drivers/atm/fore200e.h
--SLOT_MAGIC            0x67267321  slot              drivers/hotplug/cpqphp.h
--SLOT_MAGIC            0x67267322  slot              drivers/hotplug/acpiphp.h
--LO_MAGIC              0x68797548  nbd_device        include/linux/nbd.h
--OPROFILE_MAGIC        0x6f70726f  super_block       drivers/oprofile/oprofilefs.h
--M3_STATE_MAGIC        0x734d724d  m3_state          sound/oss/maestro3.c
--VMALLOC_MAGIC         0x87654320  snd_alloc_track   sound/core/memory.c
--KMALLOC_MAGIC         0x87654321  snd_alloc_track   sound/core/memory.c
--PWC_MAGIC             0x89DC10AB  pwc_device        drivers/usb/media/pwc.h
--NBD_REPLY_MAGIC       0x96744668  nbd_reply         include/linux/nbd.h
--ENI155_MAGIC          0xa54b872d  midway_eprom	    drivers/atm/eni.h
--CODA_MAGIC            0xC0DAC0DA  coda_file_info    include/linux/coda_fs_i.h
--DPMEM_MAGIC           0xc0ffee11  gdt_pci_sram      drivers/scsi/gdth.h
--YAM_MAGIC             0xF10A7654  yam_port          drivers/net/hamradio/yam.c
--CCB_MAGIC             0xf2691ad2  ccb               drivers/scsi/ncr53c8xx.c
--QUEUE_MAGIC_FREE      0xf7e1c9a3  queue_entry       drivers/scsi/arm/queue.c
--QUEUE_MAGIC_USED      0xf7e1cc33  queue_entry       drivers/scsi/arm/queue.c
--HTB_CMAGIC            0xFEFAFEF1  htb_class         net/sched/sch_htb.c
--NMI_MAGIC             0x48414d4d455201 nmi_s        arch/mips/include/asm/sn/nmi.h
-+===================== ================ ======================== ==========================================
-+魔术数名              数字             结构                     文件
-+===================== ================ ======================== ==========================================
-+PG_MAGIC              'P'              pg_{read,write}_hdr      ``include/linux/pg.h``
-+CMAGIC                0x0111           user                     ``include/linux/a.out.h``
-+MKISS_DRIVER_MAGIC    0x04bf           mkiss_channel            ``drivers/net/mkiss.h``
-+HDLC_MAGIC            0x239e           n_hdlc                   ``drivers/char/n_hdlc.c``
-+APM_BIOS_MAGIC        0x4101           apm_user                 ``arch/x86/kernel/apm_32.c``
-+CYCLADES_MAGIC        0x4359           cyclades_port            ``include/linux/cyclades.h``
-+DB_MAGIC              0x4442           fc_info                  ``drivers/net/iph5526_novram.c``
-+DL_MAGIC              0x444d           fc_info                  ``drivers/net/iph5526_novram.c``
-+FASYNC_MAGIC          0x4601           fasync_struct            ``include/linux/fs.h``
-+FF_MAGIC              0x4646           fc_info                  ``drivers/net/iph5526_novram.c``
-+ISICOM_MAGIC          0x4d54           isi_port                 ``include/linux/isicom.h``
-+PTY_MAGIC             0x5001                                    ``drivers/char/pty.c``
-+PPP_MAGIC             0x5002           ppp                      ``include/linux/if_pppvar.h``
-+SERIAL_MAGIC          0x5301           async_struct             ``include/linux/serial.h``
-+SSTATE_MAGIC          0x5302           serial_state             ``include/linux/serial.h``
-+SLIP_MAGIC            0x5302           slip                     ``drivers/net/slip.h``
-+STRIP_MAGIC           0x5303           strip                    ``drivers/net/strip.c``
-+X25_ASY_MAGIC         0x5303           x25_asy                  ``drivers/net/x25_asy.h``
-+SIXPACK_MAGIC         0x5304           sixpack                  ``drivers/net/hamradio/6pack.h``
-+AX25_MAGIC            0x5316           ax_disp                  ``drivers/net/mkiss.h``
-+TTY_MAGIC             0x5401           tty_struct               ``include/linux/tty.h``
-+MGSL_MAGIC            0x5401           mgsl_info                ``drivers/char/synclink.c``
-+TTY_DRIVER_MAGIC      0x5402           tty_driver               ``include/linux/tty_driver.h``
-+MGSLPC_MAGIC          0x5402           mgslpc_info              ``drivers/char/pcmcia/synclink_cs.c``
-+TTY_LDISC_MAGIC       0x5403           tty_ldisc                ``include/linux/tty_ldisc.h``
-+USB_SERIAL_MAGIC      0x6702           usb_serial               ``drivers/usb/serial/usb-serial.h``
-+FULL_DUPLEX_MAGIC     0x6969                                    ``drivers/net/ethernet/dec/tulip/de2104x.c``
-+USB_BLUETOOTH_MAGIC   0x6d02           usb_bluetooth            ``drivers/usb/class/bluetty.c``
-+RFCOMM_TTY_MAGIC      0x6d02                                    ``net/bluetooth/rfcomm/tty.c``
-+USB_SERIAL_PORT_MAGIC 0x7301           usb_serial_port          ``drivers/usb/serial/usb-serial.h``
-+CG_MAGIC              0x00090255       ufs_cylinder_group       ``include/linux/ufs_fs.h``
-+RPORT_MAGIC           0x00525001       r_port                   ``drivers/char/rocket_int.h``
-+LSEMAGIC              0x05091998       lse                      ``drivers/fc4/fc.c``
-+GDTIOCTL_MAGIC        0x06030f07       gdth_iowr_str            ``drivers/scsi/gdth_ioctl.h``
-+RIEBL_MAGIC           0x09051990                                ``drivers/net/atarilance.c``
-+NBD_REQUEST_MAGIC     0x12560953       nbd_request              ``include/linux/nbd.h``
-+RED_MAGIC2            0x170fc2a5       (any)                    ``mm/slab.c``
-+BAYCOM_MAGIC          0x19730510       baycom_state             ``drivers/net/baycom_epp.c``
-+ISDN_X25IFACE_MAGIC   0x1e75a2b9       isdn_x25iface_proto_data ``drivers/isdn/isdn_x25iface.h``
-+ECP_MAGIC             0x21504345       cdkecpsig                ``include/linux/cdk.h``
-+LSOMAGIC              0x27091997       lso                      ``drivers/fc4/fc.c``
-+LSMAGIC               0x2a3b4d2a       ls                       ``drivers/fc4/fc.c``
-+WANPIPE_MAGIC         0x414C4453       sdla_{dump,exec}         ``include/linux/wanpipe.h``
-+CS_CARD_MAGIC         0x43525553       cs_card                  ``sound/oss/cs46xx.c``
-+LABELCL_MAGIC         0x4857434c       labelcl_info_s           ``include/asm/ia64/sn/labelcl.h``
-+ISDN_ASYNC_MAGIC      0x49344C01       modem_info               ``include/linux/isdn.h``
-+CTC_ASYNC_MAGIC       0x49344C01       ctc_tty_info             ``drivers/s390/net/ctctty.c``
-+ISDN_NET_MAGIC        0x49344C02       isdn_net_local_s         ``drivers/isdn/i4l/isdn_net_lib.h``
-+SAVEKMSG_MAGIC2       0x4B4D5347       savekmsg                 ``arch/*/amiga/config.c``
-+CS_STATE_MAGIC        0x4c4f4749       cs_state                 ``sound/oss/cs46xx.c``
-+SLAB_C_MAGIC          0x4f17a36d       kmem_cache               ``mm/slab.c``
-+COW_MAGIC             0x4f4f4f4d       cow_header_v1            ``arch/um/drivers/ubd_user.c``
-+I810_CARD_MAGIC       0x5072696E       i810_card                ``sound/oss/i810_audio.c``
-+TRIDENT_CARD_MAGIC    0x5072696E       trident_card             ``sound/oss/trident.c``
-+ROUTER_MAGIC          0x524d4157       wan_device               [in ``wanrouter.h`` pre 3.9]
-+SAVEKMSG_MAGIC1       0x53415645       savekmsg                 ``arch/*/amiga/config.c``
-+GDA_MAGIC             0x58464552       gda                      ``arch/mips/include/asm/sn/gda.h``
-+RED_MAGIC1            0x5a2cf071       (any)                    ``mm/slab.c``
-+EEPROM_MAGIC_VALUE    0x5ab478d2       lanai_dev                ``drivers/atm/lanai.c``
-+HDLCDRV_MAGIC         0x5ac6e778       hdlcdrv_state            ``include/linux/hdlcdrv.h``
-+PCXX_MAGIC            0x5c6df104       channel                  ``drivers/char/pcxx.h``
-+KV_MAGIC              0x5f4b565f       kernel_vars_s            ``arch/mips/include/asm/sn/klkernvars.h``
-+I810_STATE_MAGIC      0x63657373       i810_state               ``sound/oss/i810_audio.c``
-+TRIDENT_STATE_MAGIC   0x63657373       trient_state             ``sound/oss/trident.c``
-+M3_CARD_MAGIC         0x646e6f50       m3_card                  ``sound/oss/maestro3.c``
-+FW_HEADER_MAGIC       0x65726F66       fw_header                ``drivers/atm/fore200e.h``
-+SLOT_MAGIC            0x67267321       slot                     ``drivers/hotplug/cpqphp.h``
-+SLOT_MAGIC            0x67267322       slot                     ``drivers/hotplug/acpiphp.h``
-+LO_MAGIC              0x68797548       nbd_device               ``include/linux/nbd.h``
-+OPROFILE_MAGIC        0x6f70726f       super_block              ``drivers/oprofile/oprofilefs.h``
-+M3_STATE_MAGIC        0x734d724d       m3_state                 ``sound/oss/maestro3.c``
-+VMALLOC_MAGIC         0x87654320       snd_alloc_track          ``sound/core/memory.c``
-+KMALLOC_MAGIC         0x87654321       snd_alloc_track          ``sound/core/memory.c``
-+PWC_MAGIC             0x89DC10AB       pwc_device               ``drivers/usb/media/pwc.h``
-+NBD_REPLY_MAGIC       0x96744668       nbd_reply                ``include/linux/nbd.h``
-+ENI155_MAGIC          0xa54b872d       midway_eprom	        ``drivers/atm/eni.h``
-+CODA_MAGIC            0xC0DAC0DA       coda_file_info           ``fs/coda/coda_fs_i.h``
-+DPMEM_MAGIC           0xc0ffee11       gdt_pci_sram             ``drivers/scsi/gdth.h``
-+YAM_MAGIC             0xF10A7654       yam_port                 ``drivers/net/hamradio/yam.c``
-+CCB_MAGIC             0xf2691ad2       ccb                      ``drivers/scsi/ncr53c8xx.c``
-+QUEUE_MAGIC_FREE      0xf7e1c9a3       queue_entry              ``drivers/scsi/arm/queue.c``
-+QUEUE_MAGIC_USED      0xf7e1cc33       queue_entry              ``drivers/scsi/arm/queue.c``
-+HTB_CMAGIC            0xFEFAFEF1       htb_class                ``net/sched/sch_htb.c``
-+NMI_MAGIC             0x48414d4d455201 nmi_s                    ``arch/mips/include/asm/sn/nmi.h``
-+===================== ================ ======================== ==========================================
-+
- 
- 请注意，在声音记忆管理中仍然有一些特殊的为每个驱动定义的魔术值。查看include/sound/sndmagic.h来获取他们完整的列表信息。很多OSS声音驱动拥有自己从声卡PCI ID构建的魔术值-他们也没有被列在这里。
- 
--- 
-2.19.1.856.g8858448bb
+Can we iterate the consoles first and check if msg is worth
+the effort (per console suppress_message_printing()) and only
+if it is do all the formatting and call console drivers?
 
+	-ss
