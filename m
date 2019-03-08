@@ -2,115 +2,132 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A91C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A673C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C347A20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9o221zk"
+	by mail.kernel.org (Postfix) with ESMTP id DAB332064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfCHANq (ORCPT
+        id S1726279AbfCHAQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:13:46 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34288 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfCHANp (ORCPT
+        Thu, 7 Mar 2019 19:16:00 -0500
+Received: from smtprelay0140.hostedemail.com ([216.40.44.140]:54435 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726172AbfCHAP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:13:45 -0500
-Received: by mail-pg1-f196.google.com with SMTP id i130so12596002pgd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:13:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+6gecIuSBE8qyocxJuQRfc49X3ESIkgsWlcYLg8y3Fw=;
-        b=M9o221zk8jL1gbNClqI+UMqU7kYB+Fn8as7RBYuS0CyMmAn+xhbC4RD6Lt/9C/OXqc
-         AU4rfDi9nipBkfvWPSE+oPqZ2IpcqMD5S4d6n0k9oMnCbpg2oddm+85gAOOxe/qTGFD8
-         lVX6mPbrh+Rs1RSSozswh+WK8vi9N/l5zjTd/i4jocP7JLTMvzyH7F7G3yHbRQTQR6rR
-         G1X+Lg6jNLtMy337D7sz+WglVyQPI6Zsv9wEMIvRlztCdLgDlu6l9sOewXaUE4tf1y2N
-         4+4BAzuwql058GUR1SokvL0yRMs6GQ8R8F7gVP6VSWwHChsDa+LGge/9EVvsxDZME3rA
-         auIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+6gecIuSBE8qyocxJuQRfc49X3ESIkgsWlcYLg8y3Fw=;
-        b=EXwsCzJYR4cuc5LPhEKtrqstCToMWp6WJECGkUYMUM3F484fmCLR1gFFRbIRXkG9fq
-         2h5oVHvh10IaJ7u/uOiiO2F/EcsPbuUgciC9edgELz1KNaf6NRrPMpOgVJnBDT66DbQI
-         FAed1c/HGw5uNgumPi1FJ5QMWSBGvgt9GywDYw8wm9O60+2usrbCCxPafSVdR0nykkYB
-         mUljLnmYRwMUNTXEIxM7PTGEKUUWhj7MIS0HwfPF8k1RUQprPuheMw/yQEOQz+YjqR81
-         E931s+E4ayMhK44EDCa1+8WnFz6OyuPVt3IZjoNNO7ZH3lG8Se86lRLXdwdVSxUqAy3F
-         g5TQ==
-X-Gm-Message-State: APjAAAXDTYtDZRo2EseUKQSheLbSL1Pegi1G5AsZ52ccAIPArbdRoBdZ
-        Riuj3eLVKeh3JgEbbm7athb5GKxdftNak7yTOFhfL9ATtVI=
-X-Google-Smtp-Source: APXvYqyvWJwsuPme9HBFgLAOidQvbZEWctNHIIyAar97bTin/NfuESN+Qt6mFGQm4igqYHoDHHoVJydcAqESjXs2kq8=
-X-Received: by 2002:a62:e704:: with SMTP id s4mr15410819pfh.94.1552004024414;
- Thu, 07 Mar 2019 16:13:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20190307232933.10145-1-natechancellor@gmail.com>
-In-Reply-To: <20190307232933.10145-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 7 Mar 2019 16:13:33 -0800
-Message-ID: <CAKwvOdnT8Xnq0a495h7-18qAB+5eb9Lw+oKfGef7BErGfXFYUg@mail.gmail.com>
-Subject: Re: [PATCH] net: ethernet: sun: Zero initialize class in default case
- in niu_add_ethtool_tcam_entry
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 7 Mar 2019 19:15:59 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 0245A837F27D;
+        Fri,  8 Mar 2019 00:15:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: join62_16dde06a1a41a
+X-Filterd-Recvd-Size: 2967
+Received: from XPS-9350 (unknown [149.142.244.224])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  8 Mar 2019 00:15:57 +0000 (UTC)
+Message-ID: <5ef0cab4dee128058a43f43c723c13924662e80d.camel@perches.com>
+Subject: [possible PATCH] crypto: sahara - Use #ifdef DEBUG not
+ IS_ENABLED(DEBUG)
+From:   Joe Perches <joe@perches.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 07 Mar 2019 16:15:55 -0800
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 3:29 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building with -Wsometimes-uninitialized, Clang warns:
->
-> drivers/net/ethernet/sun/niu.c:7466:5: warning: variable 'class' is used
-> uninitialized whenever switch default is taken
-> [-Wsometimes-uninitialized]
->
-> The default case can never happen because i can only be 0 to 3
-> (NIU_L3_PROG_CLS is defined as 4). To make this clear to Clang,
-> just zero initialize class in the default case (use the macro
-> CLASS_CODE_UNRECOG to make it clear this shouldn't happen).
+Normal use of IS_ENABLED is with a CONFIG_<SYMBOL> and
+there is no -DDEBUG in the Makefile here.
 
-Good choice. Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Replace the IS_ENABLED(DEBUG) with #ifdef DEBUG/#endif
+blocks.
 
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/403
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/net/ethernet/sun/niu.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/ethernet/sun/niu.c b/drivers/net/ethernet/sun/niu.c
-> index d84501441edd..6f99437a6962 100644
-> --- a/drivers/net/ethernet/sun/niu.c
-> +++ b/drivers/net/ethernet/sun/niu.c
-> @@ -7464,6 +7464,7 @@ static int niu_add_ethtool_tcam_entry(struct niu *np,
->                                         class = CLASS_CODE_USER_PROG4;
->                                         break;
->                                 default:
-> +                                       class = CLASS_CODE_UNRECOG;
->                                         break;
->                                 }
->                                 ret = tcam_user_ip_class_set(np, class, 0,
-> --
-> 2.21.0
->
+Miscellanea:
+
+o Move the sahara_state array into the function that uses it.
+
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/crypto/sahara.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/crypto/sahara.c b/drivers/crypto/sahara.c
+index 8c32a3059b4a..d2b4bd483507 100644
+--- a/drivers/crypto/sahara.c
++++ b/drivers/crypto/sahara.c
+@@ -348,14 +348,13 @@ static void sahara_decode_error(struct sahara_dev *dev, unsigned int error)
+ 	dev_err(dev->device, "\n");
+ }
+ 
+-static const char *sahara_state[4] = { "Idle", "Busy", "Error", "HW Fault" };
+-
+ static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
+ {
++#ifdef DEBUG
+ 	u8 state;
+-
+-	if (!IS_ENABLED(DEBUG))
+-		return;
++	static const char *sahara_state[4] = {
++		"Idle", "Busy", "Error", "HW Fault"
++	};
+ 
+ 	state = SAHARA_STATUS_GET_STATE(status);
+ 
+@@ -400,15 +399,14 @@ static void sahara_decode_status(struct sahara_dev *dev, unsigned int status)
+ 		sahara_read(dev, SAHARA_REG_CDAR));
+ 	dev_dbg(dev->device, "Initial DAR: 0x%08x\n\n",
+ 		sahara_read(dev, SAHARA_REG_IDAR));
++#endif
+ }
+ 
+ static void sahara_dump_descriptors(struct sahara_dev *dev)
+ {
++#ifdef DEBUG
+ 	int i;
+ 
+-	if (!IS_ENABLED(DEBUG))
+-		return;
+-
+ 	for (i = 0; i < SAHARA_MAX_HW_DESC; i++) {
+ 		dev_dbg(dev->device, "Descriptor (%d) (%pad):\n",
+ 			i, &dev->hw_phys_desc[i]);
+@@ -421,15 +419,14 @@ static void sahara_dump_descriptors(struct sahara_dev *dev)
+ 			dev->hw_desc[i]->next);
+ 	}
+ 	dev_dbg(dev->device, "\n");
++#endif
+ }
+ 
+ static void sahara_dump_links(struct sahara_dev *dev)
+ {
++#ifdef DEBUG
+ 	int i;
+ 
+-	if (!IS_ENABLED(DEBUG))
+-		return;
+-
+ 	for (i = 0; i < SAHARA_MAX_HW_LINK; i++) {
+ 		dev_dbg(dev->device, "Link (%d) (%pad):\n",
+ 			i, &dev->hw_phys_link[i]);
+@@ -439,6 +436,7 @@ static void sahara_dump_links(struct sahara_dev *dev)
+ 			dev->hw_link[i]->next);
+ 	}
+ 	dev_dbg(dev->device, "\n");
++#endif
+ }
+ 
+ static int sahara_hw_descriptor_create(struct sahara_dev *dev)
 
 
--- 
-Thanks,
-~Nick Desaulniers
