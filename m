@@ -3,84 +3,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084B5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B75C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C507D2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC312087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfCHPuv (ORCPT
+        id S1726550AbfCHPvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:50:51 -0500
-Received: from mga04.intel.com ([192.55.52.120]:17094 "EHLO mga04.intel.com"
+        Fri, 8 Mar 2019 10:51:03 -0500
+Received: from verein.lst.de ([213.95.11.211]:54709 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfCHPuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:50:50 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 07:50:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,456,1544515200"; 
-   d="scan'208";a="150528249"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Mar 2019 07:50:46 -0800
-Date:   Fri, 8 Mar 2019 07:50:46 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, rkrcmar@redhat.com,
-        jmattson@google.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, mst@redhat.com, yu-cheng.yu@intel.com,
-        yi.z.zhang@intel.com, hjl.tools@gmail.com,
-        Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [PATCH v2 1/7] KVM:VMX: Define CET VMCS fields and bits
-Message-ID: <20190308155046.GA2528@linux.intel.com>
-References: <20190122205909.24165-1-weijiang.yang@intel.com>
- <20190122205909.24165-2-weijiang.yang@intel.com>
- <5a31eef0-2b6c-bdc2-c54b-5dc4cecf084d@redhat.com>
- <20190128103345.GA29895@local-michael-cet-test.sh.intel.com>
- <4d9a5393-163b-f32a-4657-cec54093ee88@redhat.com>
- <20190304185621.GG17120@linux.intel.com>
- <b519607c-a9d2-5b41-07dd-c8ca9ab53d3f@redhat.com>
+        id S1726446AbfCHPvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 10:51:02 -0500
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id B0FB368C4E; Fri,  8 Mar 2019 16:50:56 +0100 (CET)
+Date:   Fri, 8 Mar 2019 16:50:56 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
+        ktkhai@virtuozzo.com, kyeongdon kim <kyeongdon.kim@lge.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
+        syzkaller-bugs@googlegroups.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-aio@kvack.org, houtao1@huawei.com, yi.zhang@huawei.com,
+        avi@scylladb.com
+Subject: Re: [PATCH 1/8] aio: make sure file is pinned
+Message-ID: <20190308155056.GA20563@lst.de>
+References: <CAHk-=wghRmdYKRAwakeHmjcpbLt9fJAHyU2x8s_NZONhz6RTOw@mail.gmail.com> <20190307000316.31133-1-viro@ZenIV.linux.org.uk> <CAHk-=wjzJSnQaj5b02aAjFdVMrKOp8UpyfQcoquRjem=X+SgTA@mail.gmail.com> <20190307004159.GY2217@ZenIV.linux.org.uk> <20190307004828.GZ2217@ZenIV.linux.org.uk> <20190307012036.GA2217@ZenIV.linux.org.uk> <CAHk-=whn7iJsbr=_ab3Ghvd1pzxvio3sktrBuMr6aG=gFLFtEg@mail.gmail.com> <20190308033650.GD2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b519607c-a9d2-5b41-07dd-c8ca9ab53d3f@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190308033650.GD2217@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 10:15:15AM +0100, Paolo Bonzini wrote:
-> On 04/03/19 19:56, Sean Christopherson wrote:
-> > On Tue, Jan 29, 2019 at 04:19:34PM +0100, Paolo Bonzini wrote:
-> >> On 28/01/19 11:33, Yang Weijiang wrote:
-> >>>> There is no code in this series to pass these fields to and from
-> >>>> userspace, and also to save/restore U_CET, INT_SSP_TAB, PL0_SSP and
-> >>>> PL3_SSP across context switches.
-> >>>>
-> >>> The kernel consumes these MSRs, please see kernel CET patch:
-> >>> https://lkml.org/lkml/fancy/2018/11/20/225
-> >>
-> >> Still, even if the kernel saves these fields across context switch in
-> >> XSAVE areas, KVM must support accesses to the MSRs from userspace, for
-> >> example in order to perform live migration.
-> >>
-> >> For example, when reading/writing these in kvm_set_msr or
-> >> kvm_get_msr_common, you would have to do a read/write from the host
-> >> MSRs.  You also have to put kvm_load_guest_fpu/kvm_put_guest_fpu calls
-> >> in __msr_io.
-> > 
-> > Paolo, can you elaborate on why KVM would read the host MSRs?  Wouldn't
-> > kvm_{get,set}_msr() pull the values from the VMCS when necessary?
-> 
-> Not all MSRs are in the VMCS; IA32_U_CET and IA32_PL*_SSP are not.
+On Fri, Mar 08, 2019 at 03:36:50AM +0000, Al Viro wrote:
+> See vfs.git#work.aio; the crucial bits are in these commits:
+>       keep io_event in aio_kiocb
+>       get rid of aio_complete() res/res2 arguments
+>       move aio_complete() to final iocb_put(), try to fix aio_poll() logics
+> The first two are preparations, the last is where the fixes (hopefully)
+> happen.
 
-Ah, "host MSRs" confused me.  I though you meant the host's version of
-the MSRs, but you're saying do an XRSTORS to load the guest's FPU state
-and then {RD,WR}MSR to pull the guest's value from hardware.
+Looks sensible.  I'll try to run the tests over it, and I've added
+Avi so that maybe he can make sure that scylladb is also happy with it,
+that was usually the best way to find aio poll bugs..
