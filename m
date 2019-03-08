@@ -2,113 +2,106 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA2CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B912AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3882087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D222087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6OBewAW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DG7sOVlr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfCHN20 (ORCPT
+        id S1726725AbfCHN2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:28:26 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33420 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfCHN2Z (ORCPT
+        Fri, 8 Mar 2019 08:28:41 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34148 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCHN2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:28:25 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i19so14184886pfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 05:28:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FyjpcBkC3+QXgBsEHjZu+57owpddRjqMxQQ5rKRaBBs=;
-        b=m6OBewAWjkywbpCPTSZabjiZXhK9buy+zAMSO87deXEe85TsdqiOb82Ps2UO9CaQwj
-         SdTfU95zwNKBM3pwRRNO/1GwzPAygbEFDWXL2MRjqR5MtUcp6OZ6P88u36nSn3uQYkk5
-         Iw7dypPK0jor2LxLRL4mOcoIqGjdpVOrdGaPhkCY7cZRbiVfKcszX4i9YDVZrbAjb3Uk
-         8PAylcobfSsQ73t/dXOTVgoUorAjAbtXboW+Pr3fPMDS9KiIDS50MFl5h39BwdlVlA2K
-         GrLLBo1K/6nu1mtaxtwg3b+/P8ByJI5Yrwg5awMFQ7W121ITksrDtw2gYsmvfeO6OQa9
-         GhPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FyjpcBkC3+QXgBsEHjZu+57owpddRjqMxQQ5rKRaBBs=;
-        b=CXgKTkqwr+LwAq6j64cUfn/0wKhr29FbFx4oJtXY5CI3JNf9wUnc24vVOzb8K13IS8
-         GnHI98QeK76lBwcHhcN30aT2FaOdtNLPBKMRKoheh4ZeJXOrgHHNG8EsmplqbkLzTQhH
-         mx+CM3LQLLDu7ypQUfAJoghNuUlMz8HSWnlKLvchslxYDQrVmzHymgDrMxbwOnKxZe5G
-         lLIiYOA9tNCuDwZJwFf08tLM7n+6vBf7rOj0+2sAVRRbfLw9qnUiTWmEACv/aZtcabbH
-         acPfcuSmMfHV7w18ETkng93y1LFy8DAFA+ikM3Nw8/c6MtbFPDjVS4aASq57UR7RtjYu
-         j4RA==
-X-Gm-Message-State: APjAAAXsegOFjPT4DECVGO4EIP5KhIlNTfYaxqtaxkTkTAl3JDMtol/k
-        5uk91LVLir0HoPV8uSmOg/Q70SiS7cJ+m+MtMD0LPw==
-X-Google-Smtp-Source: APXvYqyu0BPW0Y9CUwYxR0k8WbBupMRI6PneB77HpPmxRnIqWxoBwJhmZog67CqS6mTUUH4Fzm4ztWenK+uQk7wDVBI=
-X-Received: by 2002:a65:6651:: with SMTP id z17mr15878595pgv.95.1552051704883;
- Fri, 08 Mar 2019 05:28:24 -0800 (PST)
+        Fri, 8 Mar 2019 08:28:40 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28DSYOI119809;
+        Fri, 8 Mar 2019 07:28:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552051714;
+        bh=/5bTgZWk45LxLNK1weT54abNef08D7JFiCuh3dsPBcY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DG7sOVlrtNLqPZfD+9ruVv5IdfOo6rEhlt7XNgoGves9ealPP6stHy9z/X6JCz8/T
+         OCrk/H1kyc3Z7fOHu2Brlvrs3E0TNzeTArtVO5u8TUSZxViRS7VBZYfOwOnAgmrKuq
+         nXwRFMieS7mUDqXxrKyhhk9jHIxni0B4ACDEmIh4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28DSYTn070108
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Mar 2019 07:28:34 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
+ Mar 2019 07:28:33 -0600
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 8 Mar 2019 07:28:33 -0600
+Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28DSXY5019193;
+        Fri, 8 Mar 2019 07:28:33 -0600
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <tony@atomide.com>, <lee.jones@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20190307220947.20057-1-dmurphy@ti.com>
+ <20190307220947.20057-4-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f618b1dc-abf2-88ba-9b73-1a70471adc6b@ti.com>
+Date:   Fri, 8 Mar 2019 07:28:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-References: <20190307185244.54648-1-cai@lca.pw>
-In-Reply-To: <20190307185244.54648-1-cai@lca.pw>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 8 Mar 2019 14:28:14 +0100
-Message-ID: <CAAeHK+xdGubYXJiJi7J=1NH+-iB_yhXgoMWqacf=xh5UnugO1A@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix variable 'tag' set but not used warning
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190307220947.20057-4-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 7:53 PM Qian Cai <cai@lca.pw> wrote:
->
-> set_tag() compiles away when CONFIG_KASAN_SW_TAGS=n, so make
-> arch_kasan_set_tag() a static inline function to fix warnings below.
->
-> mm/kasan/common.c: In function '__kasan_kmalloc':
-> mm/kasan/common.c:475:5: warning: variable 'tag' set but not used
-> [-Wunused-but-set-variable]
->   u8 tag;
->      ^~~
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Hello
+
+On 3/7/19 4:09 PM, Dan Murphy wrote:
+> Introduce the Texas Instruments LM3532 White LED driver.
+> The driver supports ALS configurability or manual brightness
+> control.
+> 
+> The driver also supports associating LED strings with specific
+> control banks in a group or as individually controlled strings.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  mm/kasan/kasan.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index 3e0c11f7d7a1..3ce956efa0cb 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -163,7 +163,10 @@ static inline u8 random_tag(void)
->  #endif
->
->  #ifndef arch_kasan_set_tag
-> -#define arch_kasan_set_tag(addr, tag)  ((void *)(addr))
-> +static inline const void *arch_kasan_set_tag(const void *addr, u8 tag)
-> +{
-> +       return addr;
-> +}
->  #endif
->  #ifndef arch_kasan_reset_tag
->  #define arch_kasan_reset_tag(addr)     ((void *)(addr))
-> --
-> 2.17.2 (Apple Git-113)
->
+>  drivers/leds/Kconfig                   |  10 +
+>  drivers/leds/Makefile                  |   1 +
+>  drivers/leds/leds-lm3532.c             | 595 +++++++++++++++++++++++++
+>  include/dt-bindings/leds/leds-lm3532.h |  72 +++
+>  4 files changed, 678 insertions(+)
+>  create mode 100644 drivers/leds/leds-lm3532.c
+>  create mode 100644 include/dt-bindings/leds/leds-lm3532.h
+> 
 
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+After thinking about this dt header I am not happy about having it.
+I am thinking of removing this file completely and doing some calculations in the driver
+file for the impedance, averaging time and ramp times.
 
-Thanks!
+I would still like to get comments on the rest of the code but in v2 the dt bindings header will
+go away.
+
+Dan
+
+<snip>
+-- 
+------------------
+Dan Murphy
