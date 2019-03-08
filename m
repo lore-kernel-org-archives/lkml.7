@@ -2,85 +2,133 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DCFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D5CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6402087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gx6Zs3x3"
+	by mail.kernel.org (Postfix) with ESMTP id D0895208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfCHNfV (ORCPT
+        id S1726782AbfCHNhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:35:21 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33854 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfCHNfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:35:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=00hfKE/E7QSgNB45zu00ghT8eHguIg5JcE19KbrZHX0=; b=Gx6Zs3x3YclE4n0E/Is3VYTNm1
-        qF2U6hT3ZnMr71i68fBosTUuf28B3LYdPe/bYwVQe3X6oRCeYOxjCAJi4xmK1JY78mxY1dkMuyPsW
-        fhOGt2WOBAjAPcxbxcA0rXTGf+8axqjzH8O8A7DSqdz/1MutSvtW18EWt8ByugACyEy1We5gHvFuA
-        K775NweKbkwae7Sj6KbcNqF8u3MSuIfAe93tyWy+5OKxyMXoVWL1359y8v3BEF6hD1TlFOV1PXXBe
-        BsaC+TQSTF4Elxszeay18Hj8B1999U3VCZ2rGFB29j0WkcYB1h5boiLu1Wbg14mRONQQSsizcHeFb
-        63maahPA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2Feb-0007Ip-D1; Fri, 08 Mar 2019 13:35:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6AF8120298BA7; Fri,  8 Mar 2019 14:35:10 +0100 (CET)
-Date:   Fri, 8 Mar 2019 14:35:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nadav Amit <namit@vmware.com>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH 1/5] x86/percpu: Differentiate this_cpu_{}() and
- __this_cpu_{}()
-Message-ID: <20190308133510.GX32494@hirez.programming.kicks-ass.net>
-References: <20190227101252.413192716@infradead.org>
- <20190227101544.210748832@infradead.org>
- <CAHk-=wiv6dgJDj81wukpJCJBVhAVn-CYJdhj+o8JGN1LfRwb0g@mail.gmail.com>
- <06F1CFAA-DD80-4DA7-A97C-E57814149CC4@vmware.com>
- <CAHk-=wgfx6rUXpH16A9OAyEEh9nf18pk9mL7Wkz5b6eDc9dPpA@mail.gmail.com>
+        Fri, 8 Mar 2019 08:37:40 -0500
+Received: from mga02.intel.com ([134.134.136.20]:37498 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfCHNhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:37:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 05:37:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,456,1544515200"; 
+   d="scan'208";a="129932536"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Mar 2019 05:37:33 -0800
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kishon@ti.com, zhang.chunyan@linaro.org
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <abcc1506-cd38-5ff4-aaeb-57e9a9622e90@intel.com>
+ <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <63b6631d-86e7-b8ef-ffaf-40e7d4e96cfb@intel.com>
+Date:   Fri, 8 Mar 2019 15:36:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
+In-Reply-To: <8d72ff93-e07f-52b9-da85-acd54f046694@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wgfx6rUXpH16A9OAyEEh9nf18pk9mL7Wkz5b6eDc9dPpA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:41:31AM -0800, Linus Torvalds wrote:
-> On Wed, Feb 27, 2019 at 9:57 AM Nadav Amit <namit@vmware.com> wrote:
-> >
-> > I’ll have a look at some specific function assembly, but overall, the “+m”
-> > approach might prevent even more code optimizations than the “volatile” one.
+On 6/03/19 12:00 PM, Faiz Abbas wrote:
+> Adrian,
 > 
-> Ok, that being the case, let's forget that patch.
+> On 25/02/19 1:47 PM, Adrian Hunter wrote:
+>> On 15/02/19 9:20 PM, Faiz Abbas wrote:
+>>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>>> card insert/remove operations and a tasklet for finishing mmc requests.
+>>> With the addition of external dma support, dmaengine APIs need to
+>>> terminate in non-atomic context before unmapping the dma buffers.
+>>>
+>>> To facilitate this, remove the finish_tasklet and move the call of
+>>> sdhci_request_done() to the threaded_irq() callback.
+>>
+>> The irq thread has a higher latency than the tasklet.  The performance drop
+>> is measurable on the system I tried:
+>>
+>> Before:
+>>
+>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+>> 1+0 records in
+>> 1+0 records out
+>> 1073741824 bytes (1.1 GB) copied, 4.44502 s, 242 MB/s
+>>
+>> After:
+>>
+>> # dd if=/dev/mmcblk1 of=/dev/null bs=1G count=1 &
+>> 1+0 records in
+>> 1+0 records out
+>> 1073741824 bytes (1.1 GB) copied, 4.50898 s, 238 MB/s
+>>
+>> So we only want to resort to the thread for the error case.
+>>
 > 
-> I still wonder about the added volatiles to the xadd/cmpxchg cases,
-> which already had the "memory" clobber which should make the volatile
-> immaterial..
+> Sorry for the late response here, but this is about 1.6% decrease. I
+> tried out the same commands on a dra7xx board here (with about 5
+> consecutive dd of 1GB) and the average decrease was 0.3%. I believe you
+> will also find a lesser percentage change if you average over multiple
+> dd commands.
+> 
+> Is this really so significant that we have to maintain two different
+> bottom halves and keep having difficulty with adding APIs that can sleep?
 
-That was mostly me being OCD style consistent; but also notice that the
-atomic ops also often have volatile even though they have a memory
-clobber.
+It is a performance drop that can be avoided, so it might as well be.
+Splitting the success path from the failure path is common for I/O drivers
+for similar reasons as here: the success path can be optimized whereas the
+failure path potentially needs to sleep.
 
+> 
+> Also I am not sure how to implement only the error handling part in the
+> threaded_irq. We need to enter sdhci_request_done() and get the current
+> mrq before we can check for error conditions like I've done in patch 2:
+> 
+> /* Terminate and synchronize dma in case of an error */
+> if (data && (mrq->cmd->error || data->error) &&
+>     host->use_external_dma) {
+> 	struct dma_chan *chan = sdhci_external_dma_channel(host, data);
+> 	dmaengine_terminate_sync(chan);
+> }
+> 
+> On a related note, do we really need to protect everything in
+> sdhci_request_done() with spinlocks?
+>                                      In patch 2 I have only removed lock
+> for the terminate_sync() parts that I added but the whole
+> dma_unmap/dma_sync parts should be left unprotected IMO.
 
+As it is written, synchronization is needed to stop the same mrq being
+finished twice.
+
+I suggest doing the dmaengine_terminate_sync() before calling
+sdhci_request_done().  Perhaps you could record the channel that needs to be
+sync'd and then do:
+
+	struct dma_chan *chan = READ_ONCE(host->sync_chan);
+
+	if (chan) {
+		dmaengine_terminate_sync(chan);
+		host->sync_chan = NULL;
+	}
