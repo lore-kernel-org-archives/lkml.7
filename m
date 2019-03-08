@@ -2,128 +2,104 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFFEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC63C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F3520855
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152DE2081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:21:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j5eVKL1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfCHVS5 (ORCPT
+        id S1726531AbfCHVVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:18:57 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49603 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfCHVS4 (ORCPT
+        Fri, 8 Mar 2019 16:21:05 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40928 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfCHVVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:18:56 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h2MtJ-0007rp-QB; Fri, 08 Mar 2019 22:18:53 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h2MtI-0007rE-Ue; Fri, 08 Mar 2019 22:18:52 +0100
-Date:   Fri, 8 Mar 2019 22:18:52 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pwm: img: Turn final 'else if' into 'else' in
- img_pwm_config
-Message-ID: <20190308211852.wnhivsnlwhr4kqn3@pengutronix.de>
-References: <20190307223628.21270-1-natechancellor@gmail.com>
- <20190308085316.7eaynrb746o6xsz7@pengutronix.de>
- <CAKwvOdmA6=_-_uC8PAC8i+-mLA8FN6GOeY544139N2AsA8RbsQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdmA6=_-_uC8PAC8i+-mLA8FN6GOeY544139N2AsA8RbsQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 8 Mar 2019 16:21:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t6so3609380wrw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:21:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ne9yb9VUqbc5mhujnU04vF9d+jUVhs1WNFkzZ9SVc1I=;
+        b=j5eVKL1YtiJo+d4hr1Y8V48gVOeI68d2COvxTtMyUTN2ne0EUUqkCxWw/rhq4x1jwV
+         b5waafFFke5yiJCgmu0tIKVv42kGWWXctVwqaKoKs7vCVq8gwL3q+junKGytIIDPV3qF
+         amCBWScoo7+1Yw3sWw3/Gu0pvSMPO0nu6DKmBzEVCR7gF2M7b58Am0C98i4wHHQ01qyk
+         bb+CEJ/FhBXC6nN+v3e5/EQOp/RJ+VRT+yZ2L880aQ8Y7vPHkx0rN0sHV1O4wjBuLbMs
+         QtDZ+NcYEjfBtngv4l3B18d5kJLllNbZFLss7FZNLSm0FJl6zlRMcXcq6oZYczUL2qx2
+         KyVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ne9yb9VUqbc5mhujnU04vF9d+jUVhs1WNFkzZ9SVc1I=;
+        b=WUNkTX86s2uH8uVwh7QgKxmQm/RlexhSjsDVdnzGmcqaL0kN8BxL2928ho5F4/hUMO
+         r7tq28QdZ+da3jLhQBfh8iw+aEihVLwuXwHBjSMbQ7lQod28fh7ZiKPyJsYN5SJk7Srl
+         5vfeLeb67nHsQiz7Awt5f8rbNBMLm9C2R6PtSzxNCvG8KQQT23F/NshqTjXDcZRMrRFk
+         lVqib8S+fTU+CzHT3jN8/prTxme0eXjW6vyxmUP0BivreVBI//F8PS5l93EwnjGKC6YH
+         5/c0Gytj0IeVc2LFpTOBUyud79CQgfL0qy17t5EAD6G302HixgxP9hK5oVla/qIkWQCW
+         WEqw==
+X-Gm-Message-State: APjAAAUJhOP9qufhNGxlDCVHkwXPvP9tZOA9RBW61DjiRSXMaIXl3J12
+        HAoh29WwNslR1CEismpxH6oPlQ==
+X-Google-Smtp-Source: APXvYqy5sMQ046cz6qeeE/yGsSleSz0fXJZqOrl28rQBGCtM3B0TkZMqWr28/KDrvuFpKurv1+XvTg==
+X-Received: by 2002:adf:f711:: with SMTP id r17mr4243207wrp.38.1552080063146;
+        Fri, 08 Mar 2019 13:21:03 -0800 (PST)
+Received: from clegane.local (246.127.130.77.rev.sfr.net. [77.130.127.246])
+        by smtp.gmail.com with ESMTPSA id d2sm13568507wrq.94.2019.03.08.13.21.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 13:21:02 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rjw@rjwysocki.net, tglx@linutronix.de
+Cc:     ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] IRQ next prediction and mbed governor
+Date:   Fri,  8 Mar 2019 22:20:44 +0100
+Message-Id: <20190308212047.28767-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 10:38:11AM -0800, Nick Desaulniers wrote:
-> On Fri, Mar 8, 2019 at 12:53 AM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > On Thu, Mar 07, 2019 at 03:36:28PM -0700, Nathan Chancellor wrote:
-> > > When building with -Wsometimes-uninitialized, Clang warns:
-> > >
-> > > drivers/pwm/pwm-img.c:126:13: error: variable 'timebase' is used
-> > > uninitialized whenever 'if' condition is false
-> > > [-Werror,-Wsometimes-uninitialized]
-> > >
-> > > The final else if functions as an else; make that explicit so that Clang
-> > > understands that timebase cannot be used uninitialized.
-> > >
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/400
-> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > ---
-> > >  drivers/pwm/pwm-img.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-> > > index 815f5333bb8f..1cc5fbe1e1d3 100644
-> > > --- a/drivers/pwm/pwm-img.c
-> > > +++ b/drivers/pwm/pwm-img.c
-> > > @@ -123,7 +123,7 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> > >       } else if (mul <= max_timebase * 512) {
-> > >               div = PWM_CTRL_CFG_SUB_DIV0_DIV1;
-> > >               timebase = DIV_ROUND_UP(mul, 512);
-> > > -     } else if (mul > max_timebase * 512) {
-> > > +     } else {
-> > >               dev_err(chip->dev,
-> > >                       "failed to configure timebase steps/divider value\n");
-> > >               return -EINVAL;
-> >
-> > This can even be simplified further.
-> >
-> > From the probe function we have:
-> >
-> >         pwm_chip->max_period_ns = NSEC_PER_SEC * 512 * max_timebase / input_clk_hz
-> 
-> I had trouble verifying `input_clk_hz` in the above.  The divisor is
-> `clk_get_rate(pwm->pwm_clk)`, but is it guaranteed to always be
-> `input_clk_hz`? If so, where?
+The following patchset provides the missing bits to predict the next
+event on the the current CPU by identifying three categories of wakeup
+sources, the interrupts from the devices, the timers and the IPI
+rescheduling.
 
-In the probe function it's called "clk_rate". We have:
+Initially, the interrupt prediction was based on the statistical
+normal law, discarding interrupt intervals out of the gaussian curve,
+thus allowing to predict only interrupts coming in regular intervals.
+Unfortunately this approach prevents to handle any kind of irregular
+intervals, closing the door for more accuracy in the prediction.
 
-	clk_rate = clk_get_rate(pwm->pwm_clk);
-	...
-	val = (u64)NSEC_PER_SEC * 512 * pwm->data->max_timebase;
-	do_div(val, clk_rate);
-	pwm->max_period_ns = val;
+With a derived array suffixes algorithm, it is possible to quickly
+detect the repeating patterns in less than 1us per interrupt on x86.
 
-and in img_pwm_config we have:
+The algorithm is described in the documentation. It is simple in
+in apparence but it needs some attention to understand how it allows
+to detect the pattern and return a guess estimate of the next event.
 
-	input_clk_hz = clk_get_rate(pwm_chip->pwm_clk);
+And finally, a new cpuidle governor is added to make use of these
+predictions for the different wake up sources but targetting embedded
+systems.
 
-I used the name used in img_pwm_config with the intention that my
-reasoning is easier to understand, but obviously I failed.
+Daniel Lezcano (3):
+  genirq/timings: Remove variance computation code
+  genirq/timings: Add array suffix computation code
+  cpuidle/drivers/mbed: Add new governor for embedded systems
 
-This by the way highlights another patch opportunity: Unify the names
-that the same thing gets the same name in the different functions. This
-doesn't only affect "clk_rate" vs "input_clk_hz", but also "pwm_chip"
-vs. "pwm".
-
-Best regards
-Uwe
+ drivers/cpuidle/Kconfig            |  11 +-
+ drivers/cpuidle/governors/Makefile |   1 +
+ drivers/cpuidle/governors/mbed.c   | 143 +++++++++
+ kernel/irq/timings.c               | 488 +++++++++++++++++++----------
+ 4 files changed, 485 insertions(+), 158 deletions(-)
+ create mode 100644 drivers/cpuidle/governors/mbed.c
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
+
