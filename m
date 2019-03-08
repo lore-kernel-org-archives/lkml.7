@@ -2,254 +2,89 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54292C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482A42173C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="io2C9nZS"
+	by mail.kernel.org (Postfix) with ESMTP id 2803720851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfCHRZe (ORCPT
+        id S1726776AbfCHR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:25:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59054 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHRZe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:25:34 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28HPRD9072247;
-        Fri, 8 Mar 2019 11:25:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552065927;
-        bh=OVyJQ5m0J0fGU/hJIoiIZ3aOj992CJLLZfq/wVmW7wc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=io2C9nZSXPmPnPnI1mKhQk8mPBLd6vvbJOFL3Uy+SS98hT6MUse4cdMWmbdcUokpO
-         qCDi1QLKsBTrqrI+8wnAUWetO3DBB1FQQEBVrr+quhBb8pRLZFbRZ9gbMfXo2YG1d5
-         kHnPseRA8qujSgJZJE1v4mWUPhmJf4pyOUeoGXWg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28HPQbj019650
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 Mar 2019 11:25:26 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
- Mar 2019 11:25:26 -0600
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Fri, 8 Mar 2019 11:25:26 -0600
-Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28HPPLh006612;
-        Fri, 8 Mar 2019 11:25:26 -0600
-Subject: Re: [PATCH v7 1/4] can: m_can: Create a m_can platform framework
-To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190305155220.14037-1-dmurphy@ti.com>
- <5065d6ba-f195-a695-77b1-b837cac1a199@grandegger.com>
- <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
- <bf2613ae-67f6-661d-0faa-786308c249a0@grandegger.com>
- <cea76d80-d85c-2963-2745-4509450e2ea9@grandegger.com>
- <6016c8aa-01b6-38d5-0e1f-3a999aae6a13@ti.com>
- <1f6f77c6-dcf2-6212-5d4e-1eb699e603f1@grandegger.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1e9acd4e-97ad-1d9c-44b6-1b2d1bbe8c0e@ti.com>
-Date:   Fri, 8 Mar 2019 11:25:11 -0600
+        Fri, 8 Mar 2019 12:26:02 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33228 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbfCHR0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 12:26:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37302A78;
+        Fri,  8 Mar 2019 09:26:01 -0800 (PST)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F02613F575;
+        Fri,  8 Mar 2019 09:25:58 -0800 (PST)
+Subject: Re: [Xen-devel] [PATCH] Revert "swiotlb: remove SWIOTLB_MAP_ERROR"
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20190304195951.1118807-1-arnd@arndb.de>
+ <b0b995a1-3211-870f-01af-ce837c18e8f9@arm.com>
+ <CAK8P3a2KQKTDQCQcFR7ZTFJ+_XhfKpy9W27r+YV=iD6hLVu2xg@mail.gmail.com>
+ <957e168a-2589-89c7-3a72-5071a7b6c65a@arm.com>
+ <20190308152355.GA20230@lst.de>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <124f4e49-9eb1-99d9-35f4-c2ef3dff8415@arm.com>
+Date:   Fri, 8 Mar 2019 17:25:57 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1f6f77c6-dcf2-6212-5d4e-1eb699e603f1@grandegger.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190308152355.GA20230@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/8/19 11:08 AM, Wolfgang Grandegger wrote:
-> Hello,
+Hi Christoph,
+
+On 08/03/2019 15:23, Christoph Hellwig wrote:
+> On Tue, Mar 05, 2019 at 09:41:46AM +0000, Julien Grall wrote:
+>> On Xen, dma_addr_t will always be 64-bit while the phys_addr_t will depend
+>> on the MMU type. So we may have phys_addr_t smaller than dma_addr_t from
+>> the kernel point of view.
 > 
-> Am 08.03.19 um 16:48 schrieb Dan Murphy:
->> Wolfgang
->>
->> On 3/8/19 8:41 AM, Wolfgang Grandegger wrote:
->>> Hello Dan,
->>>
->>> thinking more about it...
->>>
->>> Am 08.03.19 um 14:29 schrieb Wolfgang Grandegger:
->>>> Hello Dan,
->>>>
->>>> Am 08.03.19 um 13:44 schrieb Dan Murphy:
->>>>> Wolfgang
->>>>>
->>>>> On 3/8/19 4:10 AM, Wolfgang Grandegger wrote:
->>>>>> Hallo Dan,
->>>>>>
->>>>>> Am 05.03.19 um 16:52 schrieb Dan Murphy:
->>>>>>> Create a m_can platform framework that peripherial
->>>>>>> devices can register to and use common code and register sets.
->>>>>>> The peripherial devices may provide read/write and configuration
->>>>>>> support of the IP.
->>>>>>>
->>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>>> ---
->>>>>>>
->>>>>>>
->>>>>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
->>>>>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
->>>>>>>
->>>>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
->>>>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
->>>>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
->>>>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
->>>>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
->>>>>>>
->>>>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
->>>>>>>  drivers/net/can/m_can/Makefile         |   1 +
->>>>>>>  drivers/net/can/m_can/m_can.c          | 700 +++++++++++++------------
->>>>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
->>>>>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
->>>>>>>  5 files changed, 682 insertions(+), 344 deletions(-)
->>>>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
->>>>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
->>>>>>>
->>>>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
->>>>>>> index 04f20dd39007..f7119fd72df4 100644
->>>>>>> --- a/drivers/net/can/m_can/Kconfig
->>>>>>> +++ b/drivers/net/can/m_can/Kconfig
->>>>>>> @@ -1,5 +1,14 @@
->>>>>>>  config CAN_M_CAN
->>>>>>> +	tristate "Bosch M_CAN support"
->>>>>>> +	---help---
->>>>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
->>>>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
->>>>>>> +
->>>>>>> +config CAN_M_CAN_PLATFORM
->>>>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
->>>>>>>  	depends on HAS_IOMEM
->>>>>>> -	tristate "Bosch M_CAN devices"
->>>>>>> +	depends on CAN_M_CAN
->>>>>>>  	---help---
->>>>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
->>>>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
->>>>>>> +	  This support is for devices that have the Bosch M_CAN controller
->>>>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
->>>>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
->>>>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
->>>>>>> --- a/drivers/net/can/m_can/Makefile
->>>>>>> +++ b/drivers/net/can/m_can/Makefile
->>>>>>> @@ -3,3 +3,4 @@
->>>>>>>  #
->>>>>>>  
->>>>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
->>>>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
->>>>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
->>>>>>> index 9b449400376b..a60278d94126 100644
->>>>>>> --- a/drivers/net/can/m_can/m_can.c
->>>>>>> +++ b/drivers/net/can/m_can/m_can.c
->>>>>>
->>>>>> ... snip...
->>>>>>
->>>>>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
->>>>>>> +				    struct net_device *dev)
->>>>>>> +{
->>>>>>> +	struct m_can_priv *priv = netdev_priv(dev);
->>>>>>> +
->>>>>>> +	if (can_dropped_invalid_skb(dev, skb))
->>>>>>> +		return NETDEV_TX_OK;
->>>>>>> +
->>>>>>> +	if (priv->is_peripherial) {
->>>>>>> +		if (priv->tx_skb) {
->>>>>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
->>>>>>> +			return NETDEV_TX_BUSY;
->>>>>>> +		}
->>>>>>
->>>>>> The problem with that approach is, that the upper layer will try to
->>>>>> resubmit the current "skb" but not the previous "tx_skb". And the
->>>>>> previous "tx_skb" has not been freed yet. I would just drop and free the
->>>>>> skb and return NETDEV_TX_OK in m_can_tx_handler() for peripheral devices
->>>>>> (like can_dropped_invalid_skb() does).
->>>>>>
->>>>>
->>>>> OK.
->>>>>
->>>>> So would this also be a bug in the hi3110 and mcp251x drivers (line 521) as well because besides checking tx_length
->>>>> this is how these drivers are written.
->>>>
->>>> This is different. When entering the "start_xmit" routine, the previous
->>>> TX is still in progress. It will (hopefully) complete soon. Therefore
->>>> returning NETDEV_TX_BUSY is OK. The "start_xmit" routine will be
->>>> recalled soon with the same "skb". That scenario should/could also not
->>>> happen.
->>>
->>> In principle, this also applies to the m_can peripheral devices. If
->>> tx_skb is not NULL, the TX is still in progress and returning
->>> NETDEV_TX_BUSY is just fine.
->>>
->>>>
->>>> In contrast, in "m_can_tx_handler()", the skb could not be handled
->>>> because the FIFO is full. The "start_xmit" routine for peripheral
->>>> devices for that skb already returned NETDEV_TX_OK. Therefore the only
->>>> meaningful action is to drop the skb. Also this error should not happen
->>>> and if, something is going really wrong. Therefore I think, a
->>>> WARN_ONCE() would be even more appropriate. But that should be a
->>>> separate patch.
->>>
->>> But that's a different issue/error. The tx_skb cannot be processed in
->>> "m_can_tx_handler()". Either we drop it or we re-queue it (retry later).
->>>
->>
->> OK I am a bit confused on this.  Are you saying this is not an issue?
->> Or are you saying I need to check for tx_len like the other code?
-> 
-> If you check for tx_skb in the "start_xmit" routine like the hi3110 and
-> mcp251x, it will work the same way. But only, if the "tx_handler()" has
-> fully processed the message. It simple means, the TX is still in
-> progress and will complete soon. But in "m_can_tx_handler()" we return
-> without handling the message! It will never be sent and freed. Or will
-> the "m_can_tx_handler()" retry?
-> 
+> How can dma_addr_t on arm have value > 32-bit when physical
+> addresses are 32-bit only?
 
-I am not seeing where we are not handling the message in the m_can_tx_handler()
+The number of platform with IOMMU protected all DMA-capable device is not yet 
+there. So we decided to not require IOMMU for Dom0. Instead, its memory is be 
+directly mapped (i.e guest physical address == host physical address) and will 
+always be below 4GB to cater the short page table case.
 
-In the peripheral code the work is queued up.  And the work thread is m_can_tx_work_queue.
+In the common case, Dom0 also contains the PV backend drivers. Those drivers may 
+directly use the guest buffer in the DMA request (so a copy is avoided). To 
+avoid using a bounce buffer too much, xen-swiotlb will find the host physical 
+address associated to the guest buffer and will use it to compute the DMA address.
 
-This in turn calls the m_can_tx_handler and the worker is blocked until return which means the message
-would have been processed.
+While Dom0 kernel may only deal with 32-bit physical address, the hypervisor can 
+still deal with up to 40-bit physical address. This means the guest memory can 
+be allocated above the 4GB threshold. Hence why the dma_addr_t is always 64-bit 
+with CONFIG_XEN=y.
 
-If there is no issue and the handler returns OK then the skb is set to null.
-Otherwise the only other time that the skb will not be null is if the FIFO was full.
-
-Plus there can only be one work queue at a time so the processing is synchronous.
-If the upper layer decides to send another packet before the prior one is complete then it will get
-a TX busy return.
-
-IOmapped calls are blocked on return so this is not an issue.  We cannot do it the same way with peripherals due to the
-atomic context of the request.
-
-Dan
-
->> Again if this code is an issue here I believe this is an issue in the hi3110 and mcp251x
-> 
-> I don't think so.
-> 
-> Sorry for confusion.
-> 
-> Wolfgang.
-> 
-
+Cheers,
 
 -- 
-------------------
-Dan Murphy
+Julien Grall
