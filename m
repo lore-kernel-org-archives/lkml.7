@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B681C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80FAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68BC92085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988A820811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049839;
-	bh=R+UDyVvRd5QSFsLymH2JcGpQZ27is08znH1ojbnIUJY=;
+	s=default; t=1552049843;
+	bh=0ccYZRImOq6k7NzkkZ+OtCHu5TNO2LbskclEdxBBP+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tft28Y2Wz/bJqc7AzkxW7tO/EZ9h4p3RxYuZlPz74E87FK0ZdYwDEu38RAP2d8eX/
-	 vHaQFapxwNslXph0T+U5uQ7YmLJ/KxArHFUq8EhmY4Zv2yLXA7N8/yWuKY4N0K4Ta9
-	 ry0OmqtXwcGGzmj/a7Ga+lerl60GJRl3by46v18s=
+	b=Was6sBm4W+PAgfc4vRRs3MX8kUWqFTHZaWQJDIcitXkcKV8vUzlhgnb5VJie8/6jg
+	 Hhigo9UaHNQW2MpC1wfJVkH6aZ6qSA569St0jBcckyBPgeL4ggZDkmlMApL03yy6TE
+	 0CY2aO3Se0uslf5Afs9UBLpQA1rr3rd3Q53vLMqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfCHM5S (ORCPT
+        id S1727844AbfCHM5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbfCHM5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:15 -0500
+        id S1727837AbfCHM5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871A220449;
-        Fri,  8 Mar 2019 12:57:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A94320449;
+        Fri,  8 Mar 2019 12:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049835;
-        bh=R+UDyVvRd5QSFsLymH2JcGpQZ27is08znH1ojbnIUJY=;
+        s=default; t=1552049838;
+        bh=0ccYZRImOq6k7NzkkZ+OtCHu5TNO2LbskclEdxBBP+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f71zDojMz/427xeB/uLT91HZePZNP7qNariiw+Qbh1qVmHJfK10cp/LSGNpHwoqAv
-         egzmrFoO7U6Ivd4SEuezZSgkK/7RT+0/huYFpXmQkGnV4MJqokhiUVqw2gEjPHpG7w
-         59uAhuNLcEc7wrotiSBvYYgDRGe3S2145rFOvv5U=
+        b=JhTTWnntOSWyZQO1L+jZFc9Zp3ySdm/8Revxe9EfmWEFWdlO0pu+z0c8a8VxSReRm
+         y0h/Df8R3KjNXKhM+ymyxNskTt2GbbpFe0mfVmijUqaGJy1JhC0p/Z9zaSIdi0Qugt
+         SdaFi4rk6hhHqAgjOXiYEuqflI7jDKUwkV2MaU68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris.Healy@zii.aero,
+        stable@vger.kernel.org, Chris Healy <Chris.Healy@zii.aero>,
         Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 35/76] net: dsa: mv88e6xxx: Fix statistics on mv88e6161
-Date:   Fri,  8 Mar 2019 13:49:47 +0100
-Message-Id: <20190308124916.062672145@linuxfoundation.org>
+Subject: [PATCH 4.20 36/76] net: dsa: mv88e6xxx: Fix u64 statistics
+Date:   Fri,  8 Mar 2019 13:49:48 +0100
+Message-Id: <20190308124916.098000309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -67,14 +67,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrew Lunn <andrew@lunn.ch>
 
-[ Upstream commit a6da21bb0eae459a375d5bd48baed821d14301d0 ]
+[ Upstream commit 6e46e2d821bb22b285ae8187959096b65d063b0d ]
 
-Despite what the datesheet says, the silicon implements the older way
-of snapshoting the statistics. Change the op.
+The switch maintains u64 counters for the number of octets sent and
+received. These are kept as two u32's which need to be combined.  Fix
+the combing, which wrongly worked on u16's.
 
-Reported-by: Chris.Healy@zii.aero
-Tested-by: Chris.Healy@zii.aero
-Fixes: 0ac64c394900 ("net: dsa: mv88e6xxx: mv88e6161 uses mv88e6320 stats snapshot")
+Fixes: 80c4627b2719 ("dsa: mv88x6xxx: Refactor getting a single statistic")
+Reported-by: Chris Healy <Chris.Healy@zii.aero>
 Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -84,14 +84,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/net/dsa/mv88e6xxx/chip.c
 +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -3082,7 +3082,7 @@ static const struct mv88e6xxx_ops mv88e6
- 	.port_disable_pri_override = mv88e6xxx_port_disable_pri_override,
- 	.port_link_state = mv88e6352_port_link_state,
- 	.port_get_cmode = mv88e6185_port_get_cmode,
--	.stats_snapshot = mv88e6320_g1_stats_snapshot,
-+	.stats_snapshot = mv88e6xxx_g1_stats_snapshot,
- 	.stats_set_histogram = mv88e6095_g1_stats_set_histogram,
- 	.stats_get_sset_count = mv88e6095_stats_get_sset_count,
- 	.stats_get_strings = mv88e6095_stats_get_strings,
+@@ -896,7 +896,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
+ 	default:
+ 		return U64_MAX;
+ 	}
+-	value = (((u64)high) << 16) | low;
++	value = (((u64)high) << 32) | low;
+ 	return value;
+ }
+ 
 
 
