@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A666C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 05:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695A4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 05:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDD52081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 05:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399642081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 05:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHgcPnKH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrue6qLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfCHFd4 (ORCPT
+        id S1726419AbfCHFeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 00:33:56 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:36678 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfCHFd4 (ORCPT
+        Fri, 8 Mar 2019 00:34:10 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36702 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfCHFeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 00:33:56 -0500
-Received: by mail-yw1-f65.google.com with SMTP id 189so15405191ywi.3;
-        Thu, 07 Mar 2019 21:33:55 -0800 (PST)
+        Fri, 8 Mar 2019 00:34:10 -0500
+Received: by mail-yw1-f67.google.com with SMTP id 189so15405501ywi.3;
+        Thu, 07 Mar 2019 21:34:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EkDVjMyOS0P+o/2ObOAgmHD8EBelE89N4wctZePlspc=;
-        b=eHgcPnKHRRjhl94tNB2VXy5pngknJ5GJX1CLY/3dh7SPNWbr9LwiyrfWe5/kDYHSRs
-         6Ym/mDoU2chlSdb+HVQkK8qcHojNZ9FCpPiW+0pnXbIK03oHHcIJwiAaGLwoNcFkfYJ7
-         KcSc3xG+g9CZR8BsYbkXXsX1DMOM7RlHLmQqqQsVC8HF9Te9FQhuNveiWfqMHlEbZw7P
-         9acZRMEw6sAwzCLmDu9Cl7qKQK+3eJXQ9aebvbALLrFhVsjDqyCn8/a4C5o+fqSWoEmj
-         52K+KTYSkte4yFM3Duot6hHt7meEAXAR476PRf3y6gqSfY+7Dx2pg+VyXOJG8eX7Y4v3
-         Af/Q==
+        bh=HuoVqlZmB3nNnfApKk4NxsGfgdExOBI8qX2IeTDEpj8=;
+        b=mrue6qLo5PmYFOkUjkOdpsPOLAIhuvf6o3YW0jBhmNE2xcz7eJLbAJ7kp1y/IJ8mHE
+         GEgvyPhqSmdolMKF6L60UhSZfRE+afRtcNSH6H9OZ/GHUfQQsxn1ykN62NqX0rQsiRAu
+         hruLS/j3YiOWNHTZruqF7iOikVRvtXfWDCtf+8SFZ+ED2tQq4sf7QHposmMXWJ+VDImX
+         DQBx4yUgeyurKUmybavxAMF1e3CtExAAeXEzVv+cV+oCptbvXHZfW1tm2YtdAOfH5GoG
+         FoRdW7+hPx3ZRwiDu23VKiG7YWZHCvvWiaXPE5E6cDN60V8vLfuV8l/IGKkIgCmpDQ9y
+         zgow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EkDVjMyOS0P+o/2ObOAgmHD8EBelE89N4wctZePlspc=;
-        b=k2UrmdZf/kXY6tkqkI1pbdO4GArA4mcYYJh26lxAUbhEGjS1qFxmbd4be7E1sb5am0
-         XhgbZqND9p1dfJnG4cFZhfpQjl9fsT5rMNS2+xviyY72vOcrOIjLOZbAKAcsrwfKEQyl
-         0gLM/krcmka7yDLx2vzRCQt1bb2yu79JRUFeOaHcc0RJHD9O96dj8KG8IqOQwpVUWXLt
-         rXhitIseRP5wms+gFARyEfvn9s6V4yqvbuJmCk/k+B7VopT5PsGfXwMRMjgCuNlqt4qK
-         AmBBafCwTbMu4AHF7P22+32Jx5pvGy0Ej03EAH7DMGqbmz3u+vEOn6pLMsGRLipHK7kc
-         tdsg==
-X-Gm-Message-State: APjAAAXi843jZIuRvHyYZKBbLWwCHSwLvRp7AR4tk0x+aXzgYKCLnW+8
-        LEukKhaljLbd2uanLvKzi+Q=
-X-Google-Smtp-Source: APXvYqwYx5dpHnDU+ZZ5nAIy+z0b39f6L1C3RZ4D3m40wbtfl78cr6wpSZtIgrGVH2Vf4lEY+3hF0Q==
-X-Received: by 2002:a0d:d648:: with SMTP id y69mr1704114ywd.453.1552023234977;
-        Thu, 07 Mar 2019 21:33:54 -0800 (PST)
+        bh=HuoVqlZmB3nNnfApKk4NxsGfgdExOBI8qX2IeTDEpj8=;
+        b=oNRXyCBoYXg4kii3asn3DukiaEAbRGMlqDEYs5+nrPLM5Nq/kQUM1vYluGz6gjkX4A
+         Ku0P36w7mSzLcghSTnC//BIwvcMu0Ql25I/PAPVymerfQd9DmFuxfPPwlGuEPQmCmbjo
+         9W8fMKwXsFuItymq3SyzG0ai4iQKRwT9qq9e59okHq0G2D3BsasgSGXzh5hYFHZ+GhGa
+         oJRUnWLptfeLYDEQ/lFR3w+dlhNPp397HjN+QK8gp/SX7SdOtNYHNXlHWfnAGmjsxSZr
+         kGvmbik2HJcUSHDOK/gkLr9hbrlL5VWCArikvNuX8C4FgRBql2igTs3Ei3G7meUEA5hr
+         Vnxw==
+X-Gm-Message-State: APjAAAVM4wJAzJJq7q4P8Bp1n/RvWhwOQ5pSX27CBgFJjtQtFd9tD3E7
+        0QGbKrM4cqrpQh2qB85d089aZQxFqbU=
+X-Google-Smtp-Source: APXvYqwbhoRSWfUAKOPuzWOpemcLuoB2crd5rI2f+sxvyky5SOf6QT6f2hI8ly+bqA9R3VubPdRe5A==
+X-Received: by 2002:a81:110d:: with SMTP id 13mr13446692ywr.343.1552023249608;
+        Thu, 07 Mar 2019 21:34:09 -0800 (PST)
 Received: from localhost.localdomain ([191.101.9.198])
-        by smtp.gmail.com with ESMTPSA id 130sm2342975ywp.54.2019.03.07.21.33.53
+        by smtp.gmail.com with ESMTPSA id 79sm2315940ywr.110.2019.03.07.21.34.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 21:33:54 -0800 (PST)
+        Thu, 07 Mar 2019 21:34:09 -0800 (PST)
 From:   Bo YU <tsu.yubo@gmail.com>
 To:     j.vosburgh@gmail.com, vfalico@gmail.com, andy@greyhouse.net,
         davem@davemloft.net
 Cc:     Bo YU <tsu.yubo@gmail.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, yuzibode@126.com
-Subject: [PATCH 1/2] net: bonding: fix restricted __be16 degrades to integer
-Date:   Fri,  8 Mar 2019 00:33:50 -0500
-Message-Id: <2a069375f8393bf05a44669e00281714063a8530.1552023000.git.tsu.yubo@gmail.com>
+Subject: [PATCH 2/2] net: bonding: fix incorrect type in assignment
+Date:   Fri,  8 Mar 2019 00:34:05 -0500
+Message-Id: <2fefb2a6962f668f76db79d2f9a2b866b077e42f.1552023000.git.tsu.yubo@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <cover.1552023000.git.tsu.yubo@gmail.com>
 References: <cover.1552023000.git.tsu.yubo@gmail.com>
@@ -75,47 +75,47 @@ There are some warning when:
 
 sudo make C=1 CF=-D__CHECK_ENDIAN__ drivers/net/bonding/
 
-drivers/net/bonding/bond_main.c:2385:26: warning: restricted __be16 degrades to integer
-drivers/net/bonding/bond_main.c:2391:20: warning: restricted __be16 degrades to integer
+drivers/net/bonding/bond_main.c:2438:40: warning: incorrect type in assignment (different base types)
+drivers/net/bonding/bond_main.c:2438:40:    expected restricted __be16 [usertype] vlan_proto
+drivers/net/bonding/bond_main.c:2438:40:
 ...
-drivers/net/bonding/bond_main.c:3241:60: warning: restricted __be16 degrades to integer
-drivers/net/bonding/bond_main.c:3241:60: warning: restricted __be16 degrades to integer
+rivers/net/bonding/bond_options.c:1089:24: warning: incorrect type in assignment (different base types)
+drivers/net/bonding/bond_options.c:1089:24:    expected restricted __be32 [addressable] [usertype] target
+drivers/net/bonding/bond_options.c:1089:24:    got unsigned long long const [usertype] value
 
-So fix it.
+So fix it
 
 Signed-off-by: Bo YU <tsu.yubo@gmail.com>
 ---
- drivers/net/bonding/bond_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/bonding/bond_main.c    | 2 +-
+ drivers/net/bonding/bond_options.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index b59708c35faf..135fec28daa9 100644
+index 135fec28daa9..07e52d863e91 100644
 --- a/drivers/net/bonding/bond_main.c
 +++ b/drivers/net/bonding/bond_main.c
-@@ -2382,13 +2382,13 @@ static void bond_arp_send(struct net_device *slave_dev, int arp_op,
- 		return;
+@@ -2435,7 +2435,7 @@ struct bond_vlan_tag *bond_verify_device_path(struct net_device *start_dev,
+ 		tags = kcalloc(level + 1, sizeof(*tags), GFP_ATOMIC);
+ 		if (!tags)
+ 			return ERR_PTR(-ENOMEM);
+-		tags[level].vlan_proto = VLAN_N_VID;
++		tags[level].vlan_proto = cpu_to_be16(VLAN_N_VID);
+ 		return tags;
  	}
  
--	if (!tags || tags->vlan_proto == VLAN_N_VID)
-+	if (!tags || be16_to_cpu(tags->vlan_proto) == VLAN_N_VID)
- 		goto xmit;
- 
- 	tags++;
- 
- 	/* Go through all the tags backwards and add them to the packet */
--	while (tags->vlan_proto != VLAN_N_VID) {
-+	while (be16_to_cpu(tags->vlan_proto) != VLAN_N_VID) {
- 		if (!tags->vlan_id) {
- 			tags++;
- 			continue;
-@@ -3238,7 +3238,7 @@ static inline u32 bond_eth_hash(struct sk_buff *skb)
- 
- 	ep = skb_header_pointer(skb, 0, sizeof(hdr_tmp), &hdr_tmp);
- 	if (ep)
--		return ep->h_dest[5] ^ ep->h_source[5] ^ ep->h_proto;
-+		return ep->h_dest[5] ^ ep->h_source[5] ^ be16_to_cpu(ep->h_proto);
- 	return 0;
- }
+diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+index da1fc17295d9..3a196999bd1b 100644
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1086,7 +1086,7 @@ static int bond_option_arp_ip_targets_set(struct bonding *bond,
+ 		else
+ 			netdev_err(bond->dev, "no command found in arp_ip_targets file - use +<addr> or -<addr>\n");
+ 	} else {
+-		target = newval->value;
++		target = cpu_to_be32(newval->value);
+ 		ret = bond_option_arp_ip_target_add(bond, target);
+ 	}
  
 -- 
 2.11.0
