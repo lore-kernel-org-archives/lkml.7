@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B18C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA472085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C53020449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049907;
-	bh=GG0E1X/DNvEBBeEcM4q1cM9S6b90b9qDzCRdOqDQEQU=;
+	s=default; t=1552049911;
+	bh=I7XasZIfQBz6BwC7GEFckPwaHhtf4SpEK0J7JXHnIik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HTzaT6j38kSfDASTsJqPyvuZGdqsP6+Sa1txozJDraEmarZUPFlsmS0JZFDb1BZB6
-	 axy88TvovH/boUpNVt0nRbYgFu8iJXC6MN7uRj2DoWPpoz8fv7T2lX7ahdwU9tClC5
-	 GiAQIrDhd/RldO66SQMDwEZMIe1pz054eeQPLrws=
+	b=qsuC+n4jU9T1bQcbXA6A0f9Nw5+G6+UmnE/jDDr2khUJUh1CmWBrtwN2DSs+wSdqb
+	 0lulHr9d2kUWSC3y0MiM50mFodWl8CPf37qNdae6IMF0hGLg9d2BDQc0w6QMdNxBsN
+	 SM45qIsVcApMFJ0LLyzUVlSzDRoOaexvy8maqiE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfCHM6Z (ORCPT
+        id S1728032AbfCHM6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:58:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbfCHM6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:24 -0500
+        id S1727644AbfCHM61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:27 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EDF22085A;
-        Fri,  8 Mar 2019 12:58:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 254B720449;
+        Fri,  8 Mar 2019 12:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049903;
-        bh=GG0E1X/DNvEBBeEcM4q1cM9S6b90b9qDzCRdOqDQEQU=;
+        s=default; t=1552049906;
+        bh=I7XasZIfQBz6BwC7GEFckPwaHhtf4SpEK0J7JXHnIik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeUcgL6Odhe1Gf3+JVG5KZfRscYS+JKesjMLXFcDaqaB2wwZgk4TTXRN8Ky/131+e
-         WK0LmlPN+4LHTKvnI81J/6kQZwVcc8NJ0ZQQPJ/SnpRFjm0xNZanxkJje1GJ3fNahs
-         AIGYOfIIyJ7XAuipFjKe4gCOMY4izjgUFF4x/b1Q=
+        b=YjUsHc9d6GIqEKjddwYX/7UzDpY87dIoSCoQ69yOL+4OgN9cfU5JlNyTmZURb+/Ao
+         Gu9W7gtZ98AY2L+9TVkCAg8v4bPwcLndubUvPm5Gty42VbIMaxvmqsyoD2MCJuHVQx
+         2ezLdMjMWNXJ9zktPiNcU06gN4vuTl6SeBgpc2MU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Hugne <erik.hugne@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 22/68] tipc: fix RDM/DGRAM connect() regression
-Date:   Fri,  8 Mar 2019 13:49:52 +0100
-Message-Id: <20190308124911.920642072@linuxfoundation.org>
+Subject: [PATCH 4.19 23/68] bnxt_en: Drop oversize TX packets to prevent errors.
+Date:   Fri,  8 Mar 2019 13:49:53 +0100
+Message-Id: <20190308124911.960013215@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,36 +64,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Erik Hugne <erik.hugne@gmail.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 0e63208915a8d7590d0a6218dadb2a6a00ac705a ]
+[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
 
-Fix regression bug introduced in
-commit 365ad353c256 ("tipc: reduce risk of user starvation during link
-congestion")
+There have been reports of oversize UDP packets being sent to the
+driver to be transmitted, causing error conditions.  The issue is
+likely caused by the dst of the SKB switching between 'lo' with
+64K MTU and the hardware device with a smaller MTU.  Patches are
+being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
+issue.
 
-Only signal -EDESTADDRREQ for RDM/DGRAM if we don't have a cached
-sockaddr.
+In the meantime, add a quick length check in the driver to prevent
+the error.  The driver uses the TX packet size as index to look up an
+array to setup the TX BD.  The array is large enough to support all MTU
+sizes supported by the driver.  The oversize TX packet causes the
+driver to index beyond the array and put garbage values into the
+TX BD.  Add a simple check to prevent this.
 
-Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
-Signed-off-by: Erik Hugne <erik.hugne@gmail.com>
-Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/socket.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -1318,7 +1318,7 @@ static int __tipc_sendmsg(struct socket
- 
- 	if (unlikely(!dest)) {
- 		dest = &tsk->peer;
--		if (!syn || dest->family != AF_TIPC)
-+		if (!syn && dest->family != AF_TIPC)
- 			return -EDESTADDRREQ;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -463,6 +463,12 @@ normal_tx:
  	}
+ 
+ 	length >>= 9;
++	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
++		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
++				     skb->len);
++		i = 0;
++		goto tx_dma_error;
++	}
+ 	flags |= bnxt_lhint_arr[length];
+ 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
  
 
 
