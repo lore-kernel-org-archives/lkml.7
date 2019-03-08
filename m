@@ -2,171 +2,135 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523F8C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD08C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2426720675
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="cSYLQtG/"
+	by mail.kernel.org (Postfix) with ESMTP id 2060D20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfCHDIn (ORCPT
+        id S1726425AbfCHDJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:08:43 -0500
-Received: from a9-32.smtp-out.amazonses.com ([54.240.9.32]:41754 "EHLO
-        a9-32.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726261AbfCHDIm (ORCPT
+        Thu, 7 Mar 2019 22:09:50 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:38288 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbfCHDJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:08:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1552014520;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=Qsyil3aA8gB2bCI9HRfEXGR5NVCprjsvM1XdMK95rKI=;
-        b=cSYLQtG/NGkELqStS9fYnd9XGtShvawWekbQcHxUgiRa5T6ixwFOhU5nD7/h7oHL
-        A2jHz+Ze6sUjCTS+pO+u1Uf6RyWBCp8BpLs/BfcPr54oLkXiDVO7P5am8S3zp9aHZ5f
-        HO1EhnpUaH4gwXrGIlmtajbNx4EeV+TqJLxqegXw=
-Date:   Fri, 8 Mar 2019 03:08:40 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     john.hubbard@gmail.com
-cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
- versions
-In-Reply-To: <20190306235455.26348-1-jhubbard@nvidia.com>
-Message-ID: <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
-References: <20190306235455.26348-1-jhubbard@nvidia.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 7 Mar 2019 22:09:50 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TMDisGd_1552014583;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMDisGd_1552014583)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 08 Mar 2019 11:09:44 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        harryxiyou@gmail.com, corbet@lwn.net
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v3 00/31] clean up and reorg Chinese kernel docs 
+Date:   Fri,  8 Mar 2019 11:08:47 +0800
+Message-Id: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.03.08-54.240.9.32
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Mar 2019, john.hubbard@gmail.com wrote:
+Hi All,
+
+The following patches change existing Chinese kernel docs to rst format
+and reorg them to make them alive in 'make htmldocs'.
+
+you can view the generated htmldocs from:
+	http://176.122.172.82/translations/zh_CN/index.html 
+
+Or make and review docs on your self box:
+
+	make htmldocs SPHINXDIRS=translations/zh_CN 
+	lynx Documentation/output/translations/zh_CN/index.html
+
+Any comments are appreciated!
+
+V3 changes:
+1, fix a zh_CN/index.rst display issue
+2, update .mailmap for zh_CN transolators'r email address
+
+V2 changes:
+1, change the disclaimer file to Chinese version,
+2, replace the obsolete translator's email address in related files.
+3, fix couple of format issues in couple files
+
+Cheers!
+Alex
 
 
-> GUP was first introduced for Direct IO (O_DIRECT), allowing filesystem code
-> to get the struct page behind a virtual address and to let storage hardware
-> perform a direct copy to or from that page. This is a short-lived access
-> pattern, and as such, the window for a concurrent writeback of GUP'd page
-> was small enough that there were not (we think) any reported problems.
-> Also, userspace was expected to understand and accept that Direct IO was
-> not synchronized with memory-mapped access to that data, nor with any
-> process address space changes such as munmap(), mremap(), etc.
+Alex Shi (31):
+  docs/zh_CN: add disclaimer file
+  docs/zh_CN: move process related docs into process dir
+  docs/zh_CN: change Chinese index to know process dir
+  docs/zh_CN: add index file into process dir
+  docs/zh_CN: rename HOWTO into process directory
+  docs/zh_CN: howto format changes
+  docs/zh_CN: rename SubmittingPatches for html links
+  docs/zh_CN: format the submitting-patches doc to rst
+  docs/zh_CN: rename stable_kernel_rules doc
+  docs/zh_CN: rst format change for stable-kernel-rules
+  docs/zh_CN: rename email-clients.txt as email-clients.rst
+  docs/zh_CN: do rst format for email-clients.rst
+  docs/zh_CN: rename volatile-consider-harmful doc
+  docs/zh_CN: volatile doc format changes
+  docs/zh_CN: rename SubmittingDrivers
+  docs/zh_CN: format submitting drivers as rst
+  docs/zh_CN: rename magic-numbers as rst doc
+  docs/zh_CN: format the magic-number doc as rst
+  docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
+  docs/zh_CN: format stable-api-nonsense
+  docs/zh_CN: update Li Yang's email address
+  mailmap: update Li Yang's email address
+  docs/zh_CN: update Zhang Wei's email address
+  mailmap: update email address for Triplex
+  docs/zh_CN: update TripleX chung's email address
+  docs/zh_CN: fix rst format errors in howto.rst
+  docs/zh_CN: fix indent issue in stable-api-nonsense file
+  docs/zh_CN: fix indent issue in submitting-drivers
+  docs/zh_CN: fix rst format issue in submitting-patch
+  docs/zh_CN: remove zh-kernel.org in MAINTAINERS
+  mailmap: update my obsolete email address
 
-It would good if that understanding would be enforced somehow given the problems
-that we see.
+ .mailmap                                      |   6 +
+ .../translations/zh_CN/disclaimer-zh_CN.rst   |   9 ++
+ Documentation/translations/zh_CN/index.rst    |  17 +-
+ .../translations/zh_CN/magic-number.txt       | 153 ------------------
+ .../translations/zh_CN/oops-tracing.txt       |   2 +-
+ .../zh_CN/{ => process}/coding-style.rst      |   0
+ .../email-clients.rst}                        |  53 +++---
+ .../zh_CN/{HOWTO => process/howto.rst}        |  69 +++++---
+ .../translations/zh_CN/process/index.rst      |  53 ++++++
+ .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
+ .../stable-api-nonsense.rst}                  |  67 ++++----
+ .../stable-kernel-rules.rst}                  |  32 ++--
+ .../submitting-drivers.rst}                   |  34 ++--
+ .../submitting-patches.rst}                   |  60 ++++---
+ .../volatile-considered-harmful.rst}          |  35 ++--
+ Documentation/translations/zh_CN/sparse.txt   |   6 +-
+ MAINTAINERS                                   |   1 -
+ 17 files changed, 408 insertions(+), 340 deletions(-)
+ create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+ delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
+ rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
+ rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
+ rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
+ create mode 100644 Documentation/translations/zh_CN/process/index.rst
+ create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
+ rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (80%)
+ rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
+ rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
+ rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (92%)
+ rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
 
-> Interactions with file systems
-> ==============================
->
-> File systems expect to be able to write back data, both to reclaim pages,
-
-Regular filesystems do that. But usually those are not used with GUP
-pinning AFAICT.
-
-> and for data integrity. Allowing other hardware (NICs, GPUs, etc) to gain
-> write access to the file memory pages means that such hardware can dirty
-> the pages, without the filesystem being aware. This can, in some cases
-> (depending on filesystem, filesystem options, block device, block device
-> options, and other variables), lead to data corruption, and also to kernel
-> bugs of the form:
-
-> Long term GUP
-> =============
->
-> Long term GUP is an issue when FOLL_WRITE is specified to GUP (so, a
-> writeable mapping is created), and the pages are file-backed. That can lead
-> to filesystem corruption. What happens is that when a file-backed page is
-> being written back, it is first mapped read-only in all of the CPU page
-> tables; the file system then assumes that nobody can write to the page, and
-> that the page content is therefore stable. Unfortunately, the GUP callers
-> generally do not monitor changes to the CPU pages tables; they instead
-> assume that the following pattern is safe (it's not):
->
->     get_user_pages()
->
->     Hardware can keep a reference to those pages for a very long time,
->     and write to it at any time. Because "hardware" here means "devices
->     that are not a CPU", this activity occurs without any interaction
->     with the kernel's file system code.
->
->     for each page
->         set_page_dirty
->         put_page()
->
-> In fact, the GUP documentation even recommends that pattern.
-
-Isnt that pattern safe for anonymous memory and memory filesystems like
-hugetlbfs etc? Which is the common use case.
-
-> Anyway, the file system assumes that the page is stable (nothing is writing
-> to the page), and that is a problem: stable page content is necessary for
-> many filesystem actions during writeback, such as checksum, encryption,
-> RAID striping, etc. Furthermore, filesystem features like COW (copy on
-> write) or snapshot also rely on being able to use a new page for as memory
-> for that memory range inside the file.
->
-> Corruption during write back is clearly possible here. To solve that, one
-> idea is to identify pages that have active GUP, so that we can use a bounce
-> page to write stable data to the filesystem. The filesystem would work
-> on the bounce page, while any of the active GUP might write to the
-> original page. This would avoid the stable page violation problem, but note
-> that it is only part of the overall solution, because other problems
-> remain.
-
-Yes you now have the filesystem as well as the GUP pinner claiming
-authority over the contents of a single memory segment. Maybe better not
-allow that?
-
-> Direct IO
-> =========
->
-> Direct IO can cause corruption, if userspace does Direct-IO that writes to
-> a range of virtual addresses that are mmap'd to a file.  The pages written
-> to are file-backed pages that can be under write back, while the Direct IO
-> is taking place.  Here, Direct IO races with a write back: it calls
-> GUP before page_mkclean() has replaced the CPU pte with a read-only entry.
-> The race window is pretty small, which is probably why years have gone by
-> before we noticed this problem: Direct IO is generally very quick, and
-> tends to finish up before the filesystem gets around to do anything with
-> the page contents.  However, it's still a real problem.  The solution is
-> to never let GUP return pages that are under write back, but instead,
-> force GUP to take a write fault on those pages.  That way, GUP will
-> properly synchronize with the active write back.  This does not change the
-> required GUP behavior, it just avoids that race.
-
-Direct IO on a mmapped file backed page doesnt make any sense. The direct
-I/O write syscall already specifies one file handle of a filesystem that
-the data is to be written onto.  Plus mmap already established another
-second filehandle and another filesystem that is also in charge of that
-memory segment.
-
-Two filesystem trying to sync one memory segment both believing to have
-exclusive access and we want to sort this out. Why? Dont allow this.
+-- 
+2.19.1.856.g8858448bb
 
