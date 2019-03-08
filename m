@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA57C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DFBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A6620811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E5C20811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049988;
-	bh=J6oyChEHTQ59lttyCw+g4Z6+orFJLtQ9YPAT3TMg07I=;
+	s=default; t=1552049993;
+	bh=3+P1x8LmfuRHSOJWfnaz3HuG/sWPkyWO058Qpum2HsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQdPq9Kvj3HBns3ZpDeLegAfW0xYRU9ShvQfi9N8bPMZ7mg6PwtE5AZurhoLkiCUS
-	 vtbQgVsP9/2b1s2kopI/mHLHGnvnpHMjFK0JWVr0dBjztO7xDdiUprQLYyfcT672od
-	 QTslrpCEIEmW1El3o6K/1iCQWWR6Vpfrako1NlD4=
+	b=uth4GgzAEMp4vPVRk0XlzUa77L2hNRHKp7uV1Tddy24U8J+9MDB7AuEaINW/wdzX/
+	 Pjr0Asa8eR/+qZYnqs2GHXW3SaH4mvaQYTI0fj/wVkWu0gve3WO5WnVhjvKQ3E8Rxn
+	 j/ZNS+k7syINByzHPnC1up8BjrOAlD7fMR+rmRaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfCHM7q (ORCPT
+        id S1727313AbfCHM7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:59:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36468 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:59:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbfCHM7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:44 -0500
+        id S1727513AbfCHM7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:59:49 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E30520811;
-        Fri,  8 Mar 2019 12:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B7EE2087C;
+        Fri,  8 Mar 2019 12:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049984;
-        bh=J6oyChEHTQ59lttyCw+g4Z6+orFJLtQ9YPAT3TMg07I=;
+        s=default; t=1552049987;
+        bh=3+P1x8LmfuRHSOJWfnaz3HuG/sWPkyWO058Qpum2HsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTqonPcUSj1HT0rdhRP1+M2TePL4Ws7Doah9bCgSVcw3rek8QBcfQpQ4rsF5KDp8l
-         a99eJT3G83QlBquIa6apFFLKHECsEJtFE5wIz+g5/LXHmpKYxuUXEz+HdxNPlLscVL
-         jL9jwGtUg+uERW/QyvP4LbF7e5k8uzYdJOGYbXEQ=
+        b=CTKbPImeB+wLUS6cEN2M5uLixKHvj9ip1mz3eLuqE2a2fyswnGsJ5AFQ0zlhMVnTn
+         tYHV6MMDdXN38MOTzuoiB6T9WEfmu497tl7+pbArao4JdzuWe3pSIt3DqkbEd1RuXd
+         HnKt5xQh+6ApGi4brzSmljvKrVZIe6sxOU/TUAnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 48/68] net: dsa: mv88e6xxx: power serdes on/off for 10G interfaces on 6390X
-Date:   Fri,  8 Mar 2019 13:50:18 +0100
-Message-Id: <20190308124913.035701002@linuxfoundation.org>
+Subject: [PATCH 4.19 49/68] net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode
+Date:   Fri,  8 Mar 2019 13:50:19 +0100
+Message-Id: <20190308124913.073792238@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -67,56 +65,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit d235c48b40d399328585a68f3f9bf7cc3062d586 ]
+[ Upstream commit ed8fe20205ac054bf585156709de3913d1890f30 ]
 
-Upon setting the cmode on 6390 and 6390X, the associated serdes
-interfaces must be powered off/on.
+When debugging another issue I faced an interrupt storm in this
+driver (88E6390, port 9 in SGMII mode), consisting of alternating
+link-up / link-down interrupts. Analysis showed that the driver
+wanted to set a cmode that was set already. But so far
+mv88e6390x_port_set_cmode() doesn't check this and powers down
+SERDES, what causes the link to break, and eventually results in
+the described interrupt storm.
 
-Both 6390X and 6390 share code to do so, but it currently uses the 6390
-specific helper mv88e6390_serdes_power() to disable and enable the
-serdes interface.
+Fix this by checking whether the cmode actually changes. We want
+that the very first call to mv88e6390x_port_set_cmode() always
+configures the registers, therefore initialize port.cmode with
+a value that is different from any supported cmode value.
+We have to take care that we only init the ports cmode once
+chip->info->num_ports is set.
 
-This call will fail silently on 6390X when trying so set a 10G interface
-such as XAUI or RXAUI, since mv88e6390_serdes_power() internally grabs
-the lane number based on modes supported by the 6390, and returns 0 when
-getting -ENODEV as a lane number.
-
-Using mv88e6390x_serdes_power() should be safe here, since we explicitly
-rule-out all ports but the 9 and 10, and because modes supported by 6390
-ports 9 and 10 are a subset of those supported on 6390X.
-
-This was tested on 6390X using RXAUI mode.
+v2:
+- add small helper and init the number of actual ports only
 
 Fixes: 364e9d7776a3 ("net: dsa: mv88e6xxx: Power on/off SERDES on cmode change")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/port.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c |   10 ++++++++++
+ drivers/net/dsa/mv88e6xxx/port.c |    4 ++++
+ drivers/net/dsa/mv88e6xxx/port.h |    1 +
+ 3 files changed, 15 insertions(+)
 
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -4561,6 +4561,14 @@ static int mv88e6xxx_smi_init(struct mv8
+ 	return 0;
+ }
+ 
++static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
++{
++	int i;
++
++	for (i = 0; i < mv88e6xxx_num_ports(chip); i++)
++		chip->ports[i].cmode = MV88E6XXX_PORT_STS_CMODE_INVALID;
++}
++
+ static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
+ 							int port)
+ {
+@@ -4597,6 +4605,8 @@ static const char *mv88e6xxx_drv_probe(s
+ 	if (err)
+ 		goto free;
+ 
++	mv88e6xxx_ports_cmode_init(chip);
++
+ 	mutex_lock(&chip->reg_lock);
+ 	err = mv88e6xxx_switch_reset(chip);
+ 	mutex_unlock(&chip->reg_lock);
 --- a/drivers/net/dsa/mv88e6xxx/port.c
 +++ b/drivers/net/dsa/mv88e6xxx/port.c
-@@ -384,7 +384,7 @@ int mv88e6390x_port_set_cmode(struct mv8
- 			return err;
+@@ -374,6 +374,10 @@ int mv88e6390x_port_set_cmode(struct mv8
+ 		cmode = 0;
  	}
  
--	err = mv88e6390_serdes_power(chip, port, false);
-+	err = mv88e6390x_serdes_power(chip, port, false);
- 	if (err)
- 		return err;
++	/* cmode doesn't change, nothing to do for us */
++	if (cmode == chip->ports[port].cmode)
++		return 0;
++
+ 	lane = mv88e6390x_serdes_get_lane(chip, port);
+ 	if (lane < 0)
+ 		return lane;
+--- a/drivers/net/dsa/mv88e6xxx/port.h
++++ b/drivers/net/dsa/mv88e6xxx/port.h
+@@ -52,6 +52,7 @@
+ #define MV88E6185_PORT_STS_CMODE_1000BASE_X	0x0005
+ #define MV88E6185_PORT_STS_CMODE_PHY		0x0006
+ #define MV88E6185_PORT_STS_CMODE_DISABLED	0x0007
++#define MV88E6XXX_PORT_STS_CMODE_INVALID	0xff
  
-@@ -400,7 +400,7 @@ int mv88e6390x_port_set_cmode(struct mv8
- 		if (err)
- 			return err;
- 
--		err = mv88e6390_serdes_power(chip, port, true);
-+		err = mv88e6390x_serdes_power(chip, port, true);
- 		if (err)
- 			return err;
- 
+ /* Offset 0x01: MAC (or PCS or Physical) Control Register */
+ #define MV88E6XXX_PORT_MAC_CTL				0x01
 
 
