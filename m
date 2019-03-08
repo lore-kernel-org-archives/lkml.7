@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00304C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B08C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C787520661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E7F20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050204;
-	bh=/yByjNCul7Mf5BsuA8M5rc2N1ajWoQqx/UjwxPTdbyc=;
+	s=default; t=1552050213;
+	bh=ChzeojbFhsFOgivCFECU9jCmgJoUOcvQRAW2JEJT8lY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpmzAyGI+l3/j5sOlrFOmmsRhaSdQuW4y7ElYrePgpqAsQk/aAIRAQ9aQF9u0kn4o
-	 6QPy5SDSASpvDxbtt2eIqtO1nbHYx1DzBrCGEoZ13lQg3K/rlyAFwRj96mN1N9d0HD
-	 dZtG3zni8vTSnILv3sG39cRe79gHFDwO2yp+JZos=
+	b=Iv3QIR2zEvueBNAtEl0gjf4CRg6P/lIViShh0kQA2RihiOCd1D9ucKB0a3kNt5Bx0
+	 ujf/mGBC6TZ3JUXobVdHokapHEAyL18OpiLtkivGB8kgqOGJZPTDsGbLB/aDrq8T66
+	 wLOu8S3p6CzGehYGMSymxExDo/qxln4BILOtlTgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfCHM7G (ORCPT
+        id S1728077AbfCHNDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:03:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727563AbfCHM7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:03 -0500
+        id S1727373AbfCHM67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:59 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1375220449;
-        Fri,  8 Mar 2019 12:59:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58FF20661;
+        Fri,  8 Mar 2019 12:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049942;
-        bh=/yByjNCul7Mf5BsuA8M5rc2N1ajWoQqx/UjwxPTdbyc=;
+        s=default; t=1552049938;
+        bh=ChzeojbFhsFOgivCFECU9jCmgJoUOcvQRAW2JEJT8lY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xtuNO15SXl1qqQgLzZCGJyAK9b/D8GFjyaqy1hD3sQnRGer/MIVYIYvEd08D8oItU
-         VVDQWEydElVbD67KQt2CE4hPdm9mvy/1O6+8YN+SOEYMx+IqJsZx5EOw1GdP/ajS7s
-         l0bzooQK77kxVHWeCp2i+aYO0GNC3umnh6Jg5PFA=
+        b=jMVAC/3/33ziv41egbimMg69mw/aOlmrW2jAqPwSsnE5PCxSE6Oq8al5wu7vQh57R
+         KPlS58RIhLOZ5kdQI9i38WOofolFXCAQOBqHIfBz7tCjZSbp9Xngp3chzAzGYjuS9Q
+         Z2koKL+v66HzN6FuZoCcHkhyluk6EMSsiGv3pUk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Onnasch <alexander.onnasch@landisgyr.com>,
-        Rajasingh Thavamani <T.Rajasingh@landisgyr.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 33/68] net: phy: Micrel KSZ8061: link failure after cable connect
-Date:   Fri,  8 Mar 2019 13:50:03 +0100
-Message-Id: <20190308124912.389854678@linuxfoundation.org>
+Subject: [PATCH 4.19 32/68] net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
+Date:   Fri,  8 Mar 2019 13:50:02 +0100
+Message-Id: <20190308124912.351685587@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -68,101 +66,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Rajasingh Thavamani <T.Rajasingh@landisgyr.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 232ba3a51cc224b339c7114888ed7f0d4d95695e ]
+[ Upstream commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 ]
 
-With Micrel KSZ8061 PHY, the link may occasionally not come up after
-Ethernet cable connect. The vendor's (Microchip, former Micrel) errata
-sheet 80000688A.pdf descripes the problem and possible workarounds in
-detail, see below.
-The batch implements workaround 1, which permanently fixes the issue.
+KASAN report this:
 
-DESCRIPTION
-Link-up may not occur properly when the Ethernet cable is initially
-connected. This issue occurs more commonly when the cable is connected
-slowly, but it may occur any time a cable is connected. This issue occurs
-in the auto-negotiation circuit, and will not occur if auto-negotiation
-is disabled (which requires that the two link partners be set to the
-same speed and duplex).
+BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
+Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
 
-END USER IMPLICATIONS
-When this issue occurs, link is not established. Subsequent cable
-plug/unplaug cycle will not correct the issue.
+CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ kasan_report+0x171/0x18d mm/kasan/report.c:321
+ memcpy+0x1f/0x50 mm/kasan/common.c:130
+ nfc_llcp_build_gb+0x37f/0x540 [nfc]
+ nfc_llcp_register_device+0x6eb/0xb50 [nfc]
+ nfc_register_device+0x50/0x1d0 [nfc]
+ nfcsim_device_new+0x394/0x67d [nfcsim]
+ ? 0xffffffffc1080000
+ nfcsim_init+0x6b/0x1000 [nfcsim]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-WORk AROUND
-There are four approaches to work around this issue:
-1. This issue can be prevented by setting bit 15 in MMD device address 1,
-   register 2, prior to connecting the cable or prior to setting the
-   Restart Auto-negotiation bit in register 0h. The MMD registers are
-   accessed via the indirect access registers Dh and Eh, or via the Micrel
-   EthUtil utility as shown here:
-   . if using the EthUtil utility (usually with a Micrel KSZ8061
-     Evaluation Board), type the following commands:
-     > address 1
-     > mmd 1
-     > iw 2 b61a
-   . Alternatively, write the following registers to write to the
-     indirect MMD register:
-     Write register Dh, data 0001h
-     Write register Eh, data 0002h
-     Write register Dh, data 4001h
-     Write register Eh, data B61Ah
-2. The issue can be avoided by disabling auto-negotiation in the KSZ8061,
-   either by the strapping option, or by clearing bit 12 in register 0h.
-   Care must be taken to ensure that the KSZ8061 and the link partner
-   will link with the same speed and duplex. Note that the KSZ8061
-   defaults to full-duplex when auto-negotiation is off, but other
-   devices may default to half-duplex in the event of failed
-   auto-negotiation.
-3. The issue can be avoided by connecting the cable prior to powering-up
-   or resetting the KSZ8061, and leaving it plugged in thereafter.
-4. If the above measures are not taken and the problem occurs, link can
-   be recovered by setting the Restart Auto-Negotiation bit in
-   register 0h, or by resetting or power cycling the device. Reset may
-   be either hardware reset or software reset (register 0h, bit 15).
+nfc_llcp_build_tlv will return NULL on fails, caller should check it,
+otherwise will trigger a NULL dereference.
 
-PLAN
-This errata will not be corrected in the future revision.
-
-Fixes: 7ab59dc15e2f ("drivers/net/phy/micrel_phy: Add support for new PHYs")
-Signed-off-by: Alexander Onnasch <alexander.onnasch@landisgyr.com>
-Signed-off-by: Rajasingh Thavamani <T.Rajasingh@landisgyr.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
+Fixes: d646960f7986 ("NFC: Initial LLCP support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/micrel.c |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ net/nfc/llcp_commands.c |   20 ++++++++++++++++++++
+ net/nfc/llcp_core.c     |   24 ++++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -339,6 +339,17 @@ static int ksz8041_config_aneg(struct ph
- 	return genphy_config_aneg(phydev);
- }
+--- a/net/nfc/llcp_commands.c
++++ b/net/nfc/llcp_commands.c
+@@ -419,6 +419,10 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 						      sock->service_name,
+ 						      sock->service_name_len,
+ 						      &service_name_tlv_length);
++		if (!service_name_tlv) {
++			err = -ENOMEM;
++			goto error_tlv;
++		}
+ 		size += service_name_tlv_length;
+ 	}
  
-+static int ksz8061_config_init(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_PMAPMD, MDIO_DEVID1, 0xB61A);
-+	if (ret)
-+		return ret;
-+
-+	return kszphy_config_init(phydev);
-+}
-+
- static int ksz9021_load_values_from_of(struct phy_device *phydev,
- 				       const struct device_node *of_node,
- 				       u16 reg,
-@@ -934,7 +945,7 @@ static struct phy_driver ksphy_driver[]
- 	.phy_id_mask	= MICREL_PHY_ID_MASK,
- 	.features	= PHY_BASIC_FEATURES,
- 	.flags		= PHY_HAS_INTERRUPT,
--	.config_init	= kszphy_config_init,
-+	.config_init	= ksz8061_config_init,
- 	.ack_interrupt	= kszphy_ack_interrupt,
- 	.config_intr	= kszphy_config_intr,
- 	.suspend	= genphy_suspend,
+@@ -429,9 +433,17 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
+@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
+--- a/net/nfc/llcp_core.c
++++ b/net/nfc/llcp_core.c
+@@ -532,10 +532,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
+ 
+ static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
+ {
+-	u8 *gb_cur, *version_tlv, version, version_length;
+-	u8 *lto_tlv, lto_length;
+-	u8 *wks_tlv, wks_length;
+-	u8 *miux_tlv, miux_length;
++	u8 *gb_cur, version, version_length;
++	u8 lto_length, wks_length, miux_length;
++	u8 *version_tlv = NULL, *lto_tlv = NULL,
++	   *wks_tlv = NULL, *miux_tlv = NULL;
+ 	__be16 wks = cpu_to_be16(local->local_wks);
+ 	u8 gb_len = 0;
+ 	int ret = 0;
+@@ -543,17 +543,33 @@ static int nfc_llcp_build_gb(struct nfc_
+ 	version = LLCP_VERSION_11;
+ 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
+ 					 1, &version_length);
++	if (!version_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += version_length;
+ 
+ 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
++	if (!lto_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += lto_length;
+ 
+ 	pr_debug("Local wks 0x%lx\n", local->local_wks);
+ 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
++	if (!wks_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += wks_length;
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
+ 				      &miux_length);
++	if (!miux_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += miux_length;
+ 
+ 	gb_len += ARRAY_SIZE(llcp_magic);
 
 
