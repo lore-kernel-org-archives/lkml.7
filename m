@@ -2,86 +2,145 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF5BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16019C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAE720851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E989C20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfCHSHp (ORCPT
+        id S1727101AbfCHSI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:07:45 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34804 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726761AbfCHSHo (ORCPT
+        Fri, 8 Mar 2019 13:08:56 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:33143 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfCHSI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:07:44 -0500
-X-Greylist: delayed 371 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Mar 2019 13:07:43 EST
-Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x28Hv3FX015389
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 8 Mar 2019 12:57:04 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 93461423702; Fri,  8 Mar 2019 12:57:03 -0500 (EST)
-Date:   Fri, 8 Mar 2019 12:57:03 -0500
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, apw@canonical.com, joe@perches.com,
-        linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: Debian build polishing
-Message-ID: <20190308175703.GA7178@lambda>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, apw@canonical.com, joe@perches.com,
-        linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <1552049064-32044-1-git-send-email-info@metux.net>
+        Fri, 8 Mar 2019 13:08:56 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h2JvO-0001AH-5o; Fri, 08 Mar 2019 19:08:50 +0100
+Date:   Fri, 8 Mar 2019 19:08:50 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 14/22] x86/fpu: Eager switch PKRU state
+Message-ID: <20190308180849.hy22jejhffp4n6uh@linutronix.de>
+References: <20190221115020.12385-1-bigeasy@linutronix.de>
+ <20190221115020.12385-15-bigeasy@linutronix.de>
+ <eedfbbbe-02d0-f977-2a64-e683b98d3904@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1552049064-32044-1-git-send-email-info@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <eedfbbbe-02d0-f977-2a64-e683b98d3904@intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 01:44:19PM +0100, Enrico Weigelt, metux IT consult wrote:
-> One point still puzzling me: once the debian/rules is applied and
-> somebody calls `make deb-pkg`, he'll end up w/ unclean tree, as
-> now a git-tracked file is changed.
+On 2019-02-25 10:16:24 [-0800], Dave Hansen wrote:
+> On 2/21/19 3:50 AM, Sebastian Andrzej Siewior wrote:
+> > diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+> > index 67e4805bccb6f..05f6fce62e9f1 100644
+> > --- a/arch/x86/include/asm/fpu/internal.h
+> > +++ b/arch/x86/include/asm/fpu/internal.h
+> > @@ -562,8 +562,24 @@ switch_fpu_prepare(struct fpu *old_fpu, int cpu)
+> >   */
+> >  static inline void switch_fpu_finish(struct fpu *new_fpu, int cpu)
+> >  {
+> > -	if (static_cpu_has(X86_FEATURE_FPU))
+> > -		__fpregs_load_activate(new_fpu, cpu);
+> > +	struct pkru_state *pk;
+> > +	u32 pkru_val = 0;
+> > +
+> > +	if (!static_cpu_has(X86_FEATURE_FPU))
+> > +		return;
+> > +
+> > +	__fpregs_load_activate(new_fpu, cpu);
+> 
+> This is still a bit light on comments.
+> 
+> Maybe:
+> 	/* PKRU state is switched eagerly because... */
 
-This is not something I've noticed, but I build my Debian packages
-like this:
+okay, will update.
 
-make O=/build/linux-build bindeb-pkg
+> > +	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
+> > +		return;
+> > +
+> > +	if (current->mm) {
+> > +		pk = get_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
+> > +		WARN_ON_ONCE(!pk);
+> 
+> This can trip on us of the 'init optimization' is in play because
+> get_xsave_addr() checks xsave->header.xfeatures.  That's unlikely today
+> because we usually set PKRU to a restrictive value.  But, it's also not
+> *guaranteed*.
+> 
+> Userspace could easily do an XRSTOR that puts PKRU back in its init
+> state if it wanted to, then this would end up with pk==NULL.
+> 
+> We might actually want a selftest that *does* that.  I don't think we
+> have one.
 
-This works really well for me, since all of the build-artificats land
-in /build, and I can use a HDD (or a PD-HDD when building using Google
-Compute Engine) for /build, while I use a SSD for my source tree.  I
-find that using a HDD for a target of a build doesn't really slow
-things down, and this allows me to save $$$ (when using a Cloud VM)
-and reduce flash wearout and capital cost (on my personal machines).
+So you are saying that the above warning might trigger and be "okay"?
+My understanding is that the in-kernel XSAVE will always save everything
+so we should never "lose" the XFEATURE_PKRU no matter what user space
+does.
 
-So I really hope your patches don't break this.  Also, are there any
-changes the performance of building the Debian packages before and
-after your changes?  And are there any differences in the packages in
-terms of any pre-or-post install/removal scripts?
+So as test case you want
+	xsave (-1 & ~XFEATURE_PKRU)
+	xrestore (-1 & ~XFEATURE_PKRU)
 
-There are a lot of things I really dislike about the "official" Debian
-kernel build processes (they're optimzied for distribution release
-engineers, not kernel developers), so I'm really hoping that making
-things more like the "official Debian way" doesn't break some of the
-things I really like about the existing "make bindeb-pkg" build
-system.
+in userland and then a context switch to see if the warning above
+triggers?
 
-Cheers,
+> > +		if (pk)
+> > +			pkru_val = pk->pkru;
+> > +	}> +	__write_pkru(pkru_val);
+> >  }
+> 
+> A comment above __write_pkru() would be nice to say that it only
+> actually does the slow instruction on changes to the value.
 
-						- Ted
+Could we please not do this? It is a comment above one of the callers
+function and we have two or three. And we have that comment already
+within __write_pkru().
+
+> BTW, this has the implicit behavior of always trying to do a
+> __write_pkru(0) on switches to kernel threads.  That seems a bit weird
+> and it is likely to impose WRPKRU overhead on switches between user and
+> kernel threads.
+> 
+> The 0 value is also the most permissive, which is not great considering
+> that user mm's can be active the in page tables when running kernel
+> threads if we're being lazy.
+> 
+> Seems like we should either leave PKRU alone or have 'init_pkru_value'
+> be the default.  That gives good security properties and is likely to
+> match the application value, removing the WRPKRU overhead.
+
+Last time we talked about this we agreed (or this was my impression) that
+0 should be written so that the kernel thread should always be able to
+write to user space in case it borrowed its mm (otherwise it has none
+and it would fail anyway).
+We didn't want to leave PKRU alone because the outcome (whether or not
+the write by the kernel thread succeeds) should not depend on the last
+running task (and be random) but deterministic.
+
+I am personally open to each outcome you decide :) I you want to use
+`init_pkru_value' instead of 0 then I can change this. If you want to
+skip the possible update for kernel threads then okay but maybe this
+should be documented somehow.
+
+Sebastian
