@@ -2,120 +2,178 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5F6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037A2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBE320851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvzOGQxz"
+	by mail.kernel.org (Postfix) with ESMTP id C372320851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCHLw0 (ORCPT
+        id S1726446AbfCHLxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 06:52:26 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44485 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfCHLwZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 06:52:25 -0500
-Received: by mail-ed1-f67.google.com with SMTP id b20so16152398edw.11;
-        Fri, 08 Mar 2019 03:52:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rmoIicOUfKAbdWBF1twctGd9siL8/G/6oY19Hb9Cc5o=;
-        b=CvzOGQxzc9HX5whEGJsruEdgGMV/wuo9865VjKsDJLYaA+XI5/dXltZsAAIXis6peh
-         93aRm1r/z+b2v09az27NfVEyQE+ulnSa0Ga/Jgf6qB3I3xf9dtSpA1mZW0NvlRiyOoGo
-         fFbwvazLn5t1VGNdaF2qp9YOD55iv+yh6CypC6X6SKQC0Tp7WM8td30CLM9oxOOKOKkc
-         8GjrKQpQG97peTeDYH855NNZmk91JYm9+8ZFBQAE9G/EJTG28opKMlJ8VFssxlw6odzp
-         loUtL9obJbXCfARu/D97dixIkce8vQwBvuc8oB08XCiW4YCZ7KzsAwg42LvCESdnSXR2
-         /N1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rmoIicOUfKAbdWBF1twctGd9siL8/G/6oY19Hb9Cc5o=;
-        b=mjfqEQeqtw6Whv8npxrm/I6CZ5iRgRcYYhs7p9tql3kTy7I9NRRgnErx+d9OMIDI29
-         IOUDlRp48u/b8ABDsxbB4gdL9ErsiPRsbZIDNF6mk4kiM8vJnnEYY5DLBdRfgfz42C8+
-         AaWBnjKnYDNdddKKWSTVbaVO1ry4yHDkf7dJToyD8P43coBtBid02BmdAV0wwAE0uWpW
-         9HzUx8B7xt1XOWPPOCt7AFXUryOaB376N9UeIBltmC+cQisNZ+/+Fn4gMxCIrYd0dTb0
-         QJkCU8+kTtLdwFfHauzRcjzoYID5TDHZQ2ZF4rLQaqL1vNRueKJjPuYn5Qtj1OwrKP22
-         V9TA==
-X-Gm-Message-State: APjAAAUIH+Zg9fgRQz3gwVZPBBuP/BnN5dFKwApaVnHoBVYuBA9ZUsja
-        jj9St+T9IDLbUwafq7IrrDEGhVNg/J9Kpq7GaCk=
-X-Google-Smtp-Source: APXvYqwJCfkvJZLj/3SeehlmxllSDaZ9SPqm5R8hzx0CYdPOvob6ODls3/WKfcP8vTCVGXozJ0qzjb54PDPaySAaan4=
-X-Received: by 2002:a50:aa2e:: with SMTP id o43mr31778552edc.67.1552045943734;
- Fri, 08 Mar 2019 03:52:23 -0800 (PST)
+        Fri, 8 Mar 2019 06:53:41 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:21578 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfCHLxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 06:53:40 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B68D730D78C1;
+        Fri,  8 Mar 2019 11:53:39 +0000 (UTC)
+Received: from [10.36.117.67] (ovpn-117-67.ams2.redhat.com [10.36.117.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C957600C8;
+        Fri,  8 Mar 2019 11:53:27 +0000 (UTC)
+Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <20190306155048.12868-1-nitesh@redhat.com>
+ <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
+ <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
+ <CAKgT0UdNPADF+8NMxnWuiB_+_M6_0jTt5NfoOvFN9qbPjGWNtw@mail.gmail.com>
+ <2269c59c-968c-bbff-34c4-1041a2b1898a@redhat.com>
+ <CAKgT0UdHkDB1vFMp7T9_pdoiuDW4qvgxhqsNztPQXrRCAmYNng@mail.gmail.com>
+ <20190307134744-mutt-send-email-mst@kernel.org>
+ <ebca2674-ac15-f1a9-87a4-2ee17a257e4c@redhat.com>
+ <20190307212253-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <198b3382-e511-2f7d-e738-5aedcb1a09e6@redhat.com>
+Date:   Fri, 8 Mar 2019 12:53:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190227063737.24445-1-daniel.baluta@nxp.com> <20190227063737.24445-6-daniel.baluta@nxp.com>
- <CAOMZO5AY--Q7FDwK-k8u=mkR-9bxz0XWXN3HNZb4Pb+MESZ6Dg@mail.gmail.com>
- <CAEnQRZCyUG33SbwhPkE95tuaBdJ7Lo9WbVfJz06ZB1-X9ZbKww@mail.gmail.com> <CAOMZO5COQNvpbdxG808aRSfMhMHznorPzoCD-Kp7rB6e8jz4Ng@mail.gmail.com>
-In-Reply-To: <CAOMZO5COQNvpbdxG808aRSfMhMHznorPzoCD-Kp7rB6e8jz4Ng@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 8 Mar 2019 13:52:12 +0200
-Message-ID: <CAEnQRZCwW-zqGRHwy8eUUDxFP2kYMpH6PJgSVZuZJCaFJrv+xA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: imx8mq-evk: Enable wm8524 codec
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
-        "spencercw@gmail.com" <spencercw@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190307212253-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 08 Mar 2019 11:53:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 12:32 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Daniel,
->
-> On Fri, Mar 1, 2019 at 12:53 PM Daniel Baluta <daniel.baluta@gmail.com> wrote:
->
-> > They are used by simple-card.c machine driver.
-> >
-> > asoc_simple_card_parse_clk
-> > -> /* Parse dai->sysclk come from "clocks = <&xxx>" */
-> > clk = devm_get_clk_from_child(dev, node, NULL);
->
-> The simple-card looks for the "clocks" properties inside the
-> simple-card node, not inside the codec node, right?
+On 08.03.19 03:24, Michael S. Tsirkin wrote:
+> On Thu, Mar 07, 2019 at 08:27:32PM +0100, David Hildenbrand wrote:
+>> On 07.03.19 19:53, Michael S. Tsirkin wrote:
+>>> On Thu, Mar 07, 2019 at 10:45:58AM -0800, Alexander Duyck wrote:
+>>>> To that end what I think w may want to do is instead just walk the LRU
+>>>> list for a given zone/order in reverse order so that we can try to
+>>>> identify the pages that are most likely to be cold and unused and
+>>>> those are the first ones we want to be hinting on rather than the ones
+>>>> that were just freed. If we can look at doing something like adding a
+>>>> jiffies value to the page indicating when it was last freed we could
+>>>> even have a good point for determining when we should stop processing
+>>>> pages in a given zone/order list.
+>>>>
+>>>> In reality the approach wouldn't be too different from what you are
+>>>> doing now, the only real difference would be that we would just want
+>>>> to walk the LRU list for the given zone/order rather then pulling
+>>>> hints on what to free from the calls to free_one_page. In addition we
+>>>> would need to add a couple bits to indicate if the page has been
+>>>> hinted on, is in the middle of getting hinted on, and something such
+>>>> as the jiffies value I mentioned which we could use to determine how
+>>>> old the page is.
+>>>
+>>> Do we really need bits in the page?
+>>> Would it be bad to just have a separate hint list?
+>>>
+>>> If you run out of free memory you can check the hint
+>>> list, if you find stuff there you can spin
+>>> or kick the hypervisor to hurry up.
+>>>
+>>> Core mm/ changes, so nothing's easy, I know.
+>>
+>> We evaluated the idea of busy spinning on some bit/list entry a while
+>> ago. While it sounds interesting, it is usually not what we want and has
+>> other negative performance impacts.
+>>
+>> Talking about "marking" pages, what we actually would want is to rework
+>> the buddy to skip over these "marked" pages and only really spin in case
+>> there are no other pages left. Allocation paths should only ever be
+>> blocked if OOM, not if just some hinting activity is going on on another
+>> VCPU.
+>>
+>> However as you correctly say: "core mm changes". New page flag?
+>> Basically impossible.
+> 
+> Well not exactly. page bits are at a premium but only for
+> *allocated* pages. pages in the buddy are free and there are
+> some unused bits for these.
+> 
+As I said, we have to be very careful here.
 
-I see your point now.
+Most parts of struct page can me modified by *the owner* of the page. In
+case the page is online but not allocated, buddy is the owner. Not some
+kvm/virtio thingy that hooks into some callback.
 
-Indeed, "clocks" properties is the one inside simple-card.
+Manipulating random page bits of buddy pages in *some* kernel module I
+consider problematic and will most probably not be accepted upstream.
 
-   sound-wm8524 {
-               compatible = "simple-audio-card";
-               link_codec: simple-audio-card,codec {
-                       sound-dai = <&wm8524>;
-                       clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
+What could work is, factoring out these parts e.g. into
+mm/page_hinting.c, then it gets part of the core mm in some way. Which
+would actually be a nice thing to do either way we go.
 
-Will remove them from  wm8524: audio-codec node because
-they are useless there.
 
-thanks,
-Daniel.
+-- 
+
+Thanks,
+
+David / dhildenb
