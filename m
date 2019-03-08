@@ -2,206 +2,97 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB94C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209772054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="BmlGvwto"
+	by mail.kernel.org (Postfix) with ESMTP id 1EE9D2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfCHAJd (ORCPT
+        id S1726381AbfCHAKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:09:33 -0500
-Received: from ozlabs.org ([203.11.71.1]:37141 "EHLO ozlabs.org"
+        Thu, 7 Mar 2019 19:10:17 -0500
+Received: from mail5.windriver.com ([192.103.53.11]:47414 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfCHAJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:09:33 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 44FntL19tvz9sLt; Fri,  8 Mar 2019 11:09:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1552003770;
-        bh=Z1G6wQERSi9C6DfRJOO9SLvi2pEvQsZOuhE6FVvTaEg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BmlGvwto52RxtrYBvul7xyS2k0vwTM/W7/kejrPMN3DzcYsT6oCW/czu1ZB9JtQEb
-         ABDo4jGG1KnIrPcQg7fuq+HR2fweKL2aVZGwPOMTn9hPpulw53+rcdzoz6iBnrVLbK
-         +M9MdiVSk827qq1mgKffbSSK5PUrYTh4dFYZhs4k=
-Date:   Fri, 8 Mar 2019 11:09:23 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Laurent Vivier <lvivier@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/mm: move warning from resize_hpt_for_hotplug()
-Message-ID: <20190308000923.GE7722@umbus.fritz.box>
-References: <20190307145050.17886-1-lvivier@redhat.com>
+        id S1726172AbfCHAKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 19:10:17 -0500
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2807qdM032383
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 7 Mar 2019 16:08:02 -0800
+Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.68]) by
+ ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0439.000; Thu, 7
+ Mar 2019 16:07:41 -0800
+From:   "Liu, Yongxin" <Yongxin.Liu@windriver.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        "Gortmaker, Paul" <Paul.Gortmaker@windriver.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: RE: [PATCH RT] nvdimm: make lane acquirement RT aware
+Thread-Topic: [PATCH RT] nvdimm: make lane acquirement RT aware
+Thread-Index: AQHU1AQaa42orSwEx0mmBzBs0WZNkaYAw5wAgAAVVLA=
+Date:   Fri, 8 Mar 2019 00:07:41 +0000
+Message-ID: <597B109EC20B76429F71A8A97770610D12A52669@ALA-MBD.corp.ad.wrs.com>
+References: <20190306095709.23138-1-yongxin.liu@windriver.com>
+ <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
+In-Reply-To: <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [128.224.162.171]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4imyEzq1NYdDURgI"
-Content-Disposition: inline
-In-Reply-To: <20190307145050.17886-1-lvivier@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---4imyEzq1NYdDURgI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 07, 2019 at 03:50:50PM +0100, Laurent Vivier wrote:
-> resize_hpt_for_hotplug() reports a warning when it cannot
-> resize the hash page table ("Unable to resize hash page
-> table to target order") but in some cases it's not a problem
-> and can make user thinks something has not worked properly.
->=20
-> This patch moves the warning to arch_remove_memory() to
-> only report the problem when it is needed.
->=20
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-
-Looks ok, but apart from the H_PTEG_FULL case this does allow for some
-error paths that previously warned to pass without error, which I
-don't think is wise.
-
-Specifically that will happen the prepare hcall returns H_PARAMETER or
-H_RESOURCE.  Thse will result in -EINVAL or -EPERM from
-pseries_lpar_resize_hpt() which previously would have tripped the
-warning in resize_hpt_for_hotplug() but now will be silently ignored.
-
-> ---
->  arch/powerpc/include/asm/sparsemem.h  |  4 ++--
->  arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
->  arch/powerpc/mm/mem.c                 |  3 ++-
->  arch/powerpc/platforms/pseries/lpar.c |  1 -
->  4 files changed, 10 insertions(+), 15 deletions(-)
->=20
-> diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/=
-asm/sparsemem.h
-> index 68da49320592..3192d454a733 100644
-> --- a/arch/powerpc/include/asm/sparsemem.h
-> +++ b/arch/powerpc/include/asm/sparsemem.h
-> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, =
-unsigned long end, int ni
->  extern int remove_section_mapping(unsigned long start, unsigned long end=
-);
-> =20
->  #ifdef CONFIG_PPC_BOOK3S_64
-> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
-> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
->  #else
-> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
-> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { r=
-eturn 0; }
->  #endif
-> =20
->  #ifdef CONFIG_NUMA
-> diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils=
-_64.c
-> index 0cc7fbc3bd1c..40bb2a8326bb 100644
-> --- a/arch/powerpc/mm/hash_utils_64.c
-> +++ b/arch/powerpc/mm/hash_utils_64.c
-> @@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(voi=
-d)
->  }
-> =20
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
-> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
->  {
->  	unsigned target_hpt_shift;
-> =20
->  	if (!mmu_hash_ops.resize_hpt)
-> -		return;
-> +		return 0;
-> =20
->  	target_hpt_shift =3D htab_shift_for_mem_size(new_mem_size);
-> =20
-> @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_s=
-ize)
->  	 * current shift
->  	 */
->  	if ((target_hpt_shift > ppc64_pft_size)
-> -	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
-> -		int rc;
-> -
-> -		rc =3D mmu_hash_ops.resize_hpt(target_hpt_shift);
-> -		if (rc && (rc !=3D -ENODEV))
-> -			printk(KERN_WARNING
-> -			       "Unable to resize hash page table to target order %d: %d\n",
-> -			       target_hpt_shift, rc);
-> -	}
-> +	    || (target_hpt_shift < (ppc64_pft_size - 1)))
-> +		return mmu_hash_ops.resize_hpt(target_hpt_shift);
-> +
-> +	return 0;
->  }
-> =20
->  int hash__create_section_mapping(unsigned long start, unsigned long end,=
- int nid)
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 33cc6f676fa6..0d40d970cf4a 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, =
-u64 size,
->  	 */
->  	vm_unmap_aliases();
-> =20
-> -	resize_hpt_for_hotplug(memblock_phys_mem_size());
-> +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) =3D=3D -ENOSPC)
-> +		pr_warn("Hash collision while resizing HPT\n");
-> =20
->  	return ret;
->  }
-> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platfor=
-ms/pseries/lpar.c
-> index f2a9f0adc2d3..b407034a80ba 100644
-> --- a/arch/powerpc/platforms/pseries/lpar.c
-> +++ b/arch/powerpc/platforms/pseries/lpar.c
-> @@ -918,7 +918,6 @@ static int pseries_lpar_resize_hpt(unsigned long shif=
-t)
->  	if (rc !=3D 0) {
->  		switch (state.commit_rc) {
->  		case H_PTEG_FULL:
-> -			pr_warn("Hash collision while resizing HPT\n");
->  			return -ENOSPC;
-> =20
->  		default:
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---4imyEzq1NYdDURgI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlyBsrMACgkQbDjKyiDZ
-s5IDbw//ZcZrhFhurgIC/WgRZvDtOB6Th/FrzIzwTS9qcveE14Zqu/aQGci6g7jY
-b6wAzTtPU7kK3hDs6yuFmwsLfqVjwbsai1p1LB6XyaUR81U2C+LySBJJ4cdNofVP
-ux6PjriUbK8/7QI8qo5uSdxgnwYLk3+iDutcDEHeVExwR6LIRVuVTbHLREE0LlFt
-o7JxDFcFKSDxxoop0Jnkh4t2q3CI7Y1RPEH5JejvJ1dJ+hgaBe0zaFTyF6vhnK0Q
-Id5fazTPONYQvtG6yo6hnlVdUoSualsjF6HW9GPQoSk2Dm5da4RnmAQDQ6RWI4ct
-8/k0L1UrkmC2o3bRQzwcZqnyMoSWOAVNIotxsTd4uuVTd6+MiYc0dSAruwZWi4gD
-t3LASKFwu204ov3AulnXZWulWs3NfN2F0Fp8rqsHXYTRcJfV2QL4Cvi94ZdZ/uHr
-VbZir3uVbcEmKrh7EUbnOKQecdS4YvDAs/hnlxTEQmTz4bd+EO8pOnaeZxGwg8hc
-79clDfONS3N0e+UaWGdDkf7fA6W9UQTaJ8A9Hjb1SX1QOikxCat0VLOKaAKa39VM
-VQHQETHRMhCVXo35XRRROLAt2oE8xRv1F+fhjrZzZGHNJaODjc/0L3Tf/9WFPJLb
-ZegRfCPhOLvFMHKpSrGNflgGlzOXkXkvTxmXoe+mBPU7BZfytEA=
-=lw9t
------END PGP SIGNATURE-----
-
---4imyEzq1NYdDURgI--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1rZXJuZWwtb3duZXJA
+dmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgta2VybmVsLQ0KPiBvd25lckB2Z2VyLmtlcm5l
+bC5vcmddIE9uIEJlaGFsZiBPZiBTZWJhc3RpYW4gQW5kcnplaiBTaWV3aW9yDQo+IFNlbnQ6IFRo
+dXJzZGF5LCBNYXJjaCA3LCAyMDE5IDIyOjM0DQo+IFRvOiBMaXUsIFlvbmd4aW4NCj4gQ2M6IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXJ0LXVzZXJzQHZnZXIua2VybmVsLm9y
+ZzsNCj4gdGdseEBsaW51dHJvbml4LmRlOyByb3N0ZWR0QGdvb2RtaXMub3JnOyBkYW4uai53aWxs
+aWFtc0BpbnRlbC5jb207DQo+IHBhZ3VwdGFAcmVkaGF0LmNvbTsgR29ydG1ha2VyLCBQYXVsOyBs
+aW51eC1udmRpbW1AbGlzdHMuMDEub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUlRdIG52ZGlt
+bTogbWFrZSBsYW5lIGFjcXVpcmVtZW50IFJUIGF3YXJlDQo+IA0KPiBPbiAyMDE5LTAzLTA2IDE3
+OjU3OjA5IFsrMDgwMF0sIFlvbmd4aW4gTGl1IHdyb3RlOg0KPiA+IEluIHRoaXMgY2hhbmdlLCB3
+ZSByZXBsYWNlIGdldF9jcHUvcHV0X2NwdSB3aXRoIGxvY2FsX2xvY2tfY3B1Lw0KPiA+IGxvY2Fs
+X3VubG9ja19jcHUsIGFuZCBpbnRyb2R1Y2UgcGVyIENQVSB2YXJpYWJsZSAibmRsX2xvY2FsX2xv
+Y2siLg0KPiA+IER1ZSB0byBwcmVlbXB0aW9uIG9uIFJULCB0aGlzIGxvY2sgY2FuIGF2b2lkIHJh
+Y2UgY29uZGl0aW9uIGZvciB0aGUNCj4gPiBzYW1lIGxhbmUgb24gdGhlIHNhbWUgQ1BVLiBXaGVu
+IENQVSBudW1iZXIgaXMgZ3JlYXRlciB0aGFuIHRoZSBsYW5lDQo+ID4gbnVtYmVyLCBsYW5lIGNh
+biBiZSBzaGFyZWQgYW1vbmcgQ1BVcy4gIm5kbF9sb2NrLT5sb2NrIiBpcyB1c2VkIHRvDQo+ID4g
+cHJvdGVjdCB0aGUgbGFuZSBpbiB0aGlzIHNpdHVhdGlvbi4NCj4gDQo+IHNvIHdoYXQgd2FzIHRo
+ZSByZWFzb24gdGhhdCBnZXRfY3B1KCkgY2FuJ3QgYmUgcmVwbGFjZWQgd2l0aA0KPiByYXdfc21w
+X3Byb2Nlc3Nvcl9pZCgpPw0KPiANCj4gU2ViYXN0aWFuDQoNClRoZSBsYW5lIGlzIGNyaXRpY2Fs
+IHJlc291cmNlIHdoaWNoIG5lZWRzIHRvIGJlIHByb3RlY3RlZC4gT25lIENQVSBjYW4gdXNlIG9u
+bHkgb25lDQpsYW5lLiBJZiBDUFUgbnVtYmVyIGlzIGdyZWF0ZXIgdGhhbiB0aGUgbnVtYmVyIG9m
+IHRvdGFsIGxhbmUsIHRoZSBsYW5lIGNhbiBiZSBzaGFyZWQNCmFtb25nIENQVXMuIA0KDQpJbiBu
+b24tUlQga2VybmVsLCBnZXRfY3B1KCkgZGlzYWJsZSBwcmVlbXB0aW9uIGJ5IGNhbGxpbmcgcHJl
+ZW1wdF9kaXNhYmxlKCkgZmlyc3QuDQpPbmx5IG9uZSB0aHJlYWQgb24gdGhlIHNhbWUgQ1BVIGNh
+biBnZXQgdGhlIGxhbmUuDQoNCkluIFJUIGtlcm5lbCwgaWYgd2Ugb25seSB1c2UgcmF3X3NtcF9w
+cm9jZXNzb3JfaWQoKSwgdGhpcyBkb2Vzbid0IHByb3RlY3QgdGhlIGxhbmUuIA0KVGh1cyB0d28g
+dGhyZWFkcyBvbiB0aGUgc2FtZSBDUFUgY2FuIGdldCB0aGUgc2FtZSBsYW5lIGF0IHRoZSBzYW1l
+IHRpbWUuDQoNCkluIHRoaXMgcGF0Y2gsIHR3by1sZXZlbCBsb2NrIGNhbiBhdm9pZCByYWNlIGNv
+bmRpdGlvbiBmb3IgdGhlIGxhbmUuDQoNCiAgICAgICAgICBDUFUgQSAgICAgICAgICAgICAgICAg
+IENQVSBCIChCID09IEEgJSBudW1fbGFuZXMpDQogDQogICAgdGFzayBBMSAgICB0YXNrIEEyICAg
+ICB0YXNrIEIxICAgIHRhc2sgQjINCiAgICAgICB8ICAgICAgICAgIHwgICAgICAgICAgIHwgICAg
+ICAgICAgfA0KICAgICAgIHxfX19fX19fX19ffCAgICAgICAgICAgfF9fX19fX19fX198DQogICAg
+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgIHwNCiAgICAgICBuZGxfbG9jYWxfbG9jayAg
+ICAgICAgICAgbmRsX2xvY2FsX2xvY2sNCiAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgfA0KICAgICAgICAgICAgfF9fX19fX19fX19fX19fX19fX19fX198DQogICAgICAgICAgICAg
+ICAgICAgICAgIHwNCiAgICAgICAgICAgICAgICAgICAgICAgfA0KICAgICAgICAgICAgICAgICAg
+bmRsX2xvY2stPmxvY2sNCiAgICAgICAgICAgICAgICAgICAgICAgfA0KICAgICAgICAgICAgICAg
+ICAgICAgICB8DQogICAgICAgICAgICAgICAgICAgICAgbGFuZQ0KDQogDQpUaGFua3MsDQpZb25n
+eGluDQo=
