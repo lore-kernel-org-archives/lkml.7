@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E124C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54478C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB90220684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B9A2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049486;
-	bh=TEhuuFoEdZw6p7lmk9+YeF1vIUmTgsdOUXTn3EJq7bQ=;
+	s=default; t=1552049488;
+	bh=l4NgN12fDG4t7+MS3TmCCtM7Cn8B0WWzHn3sHg0bJvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEzkRy5YbpGu1dqrlN8+EZ8rAx6ElEuo1JqjxACIliKY4Lbu1eZI3FQSP3E+0NRpb
-	 pIQuxyn1YgIEMwxcG9x4fvuZ2AzzPGIFmbxqYv0vEPVnTo717N7O5ZalKz/sZH9hiM
-	 otg2QUoE6wg/ZY7YD1ivPhfiUHukSzJGKwKyahG0=
+	b=laLM/iGVs3taCGFOhUANwqOqqxgnDvPK8qSsxzJ3Uvdi+33oW7TcJtwNaplO5K4II
+	 wH31JKUuce8x4TVBy14C8FQagr8x+yjwCoRputL6BMMa158vTzUf3cAsZA//hoLnN6
+	 BppFyFNRa/Cy6GcODqb6qcWPToI3Eh08btUAuAxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfCHMvX (ORCPT
+        id S1726723AbfCHMv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54430 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfCHMvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:22 -0500
+        id S1726711AbfCHMvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:24 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A61220684;
-        Fri,  8 Mar 2019 12:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 147582087C;
+        Fri,  8 Mar 2019 12:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049480;
-        bh=TEhuuFoEdZw6p7lmk9+YeF1vIUmTgsdOUXTn3EJq7bQ=;
+        s=default; t=1552049483;
+        bh=l4NgN12fDG4t7+MS3TmCCtM7Cn8B0WWzHn3sHg0bJvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQN1gkpn+QK31xEnlEMlnSurGBLakE2yZcoPAQQfWjF9rayO+ogUolcvdRSl2r/3s
-         URQMHrTS+EkaYdNSeptNBo27iNIsZNqISGK71AkPHXCJwyuiMpF/vBVh6A6hgWfuDi
-         ZCfH2snpIddoGUNRC3DC1yE0HnqC24es0FAQEyN0=
+        b=JbdtNsbYy8VfZfF4rxRNWAEsNCTbljPAKmK0B8DRV3lM6b0jEl2B+S9HUruCE5KfJ
+         v5O6IaaNvHOMgo0k0fN911tvB+FILu/tmk2VAxs8yk9PV3FScVCWlPOFL4Z8QSnIRF
+         GRmtk1ekm/nnARWtohXuMV85Phc3tInCa/oqJmQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 5.0 16/46] staging: android: ashmem: Avoid range_alloc() allocation with ashmem_mutex held.
-Date:   Fri,  8 Mar 2019 13:49:49 +0100
-Message-Id: <20190308124903.294691449@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 17/46] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
+Date:   Fri,  8 Mar 2019 13:49:50 +0100
+Message-Id: <20190308124903.359583994@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -66,145 +66,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit ecd182cbf4e107928077866399100228d2359c60 upstream.
+[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
 
-ashmem_pin() is calling range_shrink() without checking whether
-range_alloc() succeeded. Also, doing memory allocation with ashmem_mutex
-held should be avoided because ashmem_shrink_scan() tries to hold it.
+Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
+improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
+assume preemption is disabled when incrementing the counter and
+accessing a per-CPU variable.
 
-Therefore, move memory allocation for range_alloc() to ashmem_pin_unpin()
-and make range_alloc() not to fail.
+Preemption can be enabled when we add a route in process context that
+corresponds to packets stored in the unresolved queue, which are then
+forwarded using this route [1].
 
-This patch is mostly meant for backporting purpose for fuzz testing on
-stable/distributor kernels, for there is a plan to remove this code in
-near future.
+Fix this by using IP6_INC_STATS() which takes care of disabling
+preemption on architectures where it is needed.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: stable@vger.kernel.org
-Reviewed-by: Joel Fernandes <joel@joelfernandes.org>
+[1]
+[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
+[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
+[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
+[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  157.460461] Call Trace:
+[  157.460486]  dump_stack+0xf9/0x1be
+[  157.460553]  check_preemption_disabled+0x1d6/0x200
+[  157.460576]  ip6mr_forward2+0x73e/0x10e0
+[  157.460705]  ip6_mr_forward+0x9a0/0x1510
+[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
+[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
+[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
+[  157.462013]  ipv6_setsockopt+0x90/0x110
+[  157.462036]  rawv6_setsockopt+0x4a/0x120
+[  157.462058]  __sys_setsockopt+0x16b/0x340
+[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
+[  157.462220]  do_syscall_64+0x14d/0x610
+[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/android/ashmem.c |   42 ++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ net/ipv6/ip6mr.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -171,19 +171,15 @@ static inline void lru_del(struct ashmem
-  * @end:	   The ending page (inclusive)
-  *
-  * This function is protected by ashmem_mutex.
-- *
-- * Return: 0 if successful, or -ENOMEM if there is an error
-  */
--static int range_alloc(struct ashmem_area *asma,
--		       struct ashmem_range *prev_range, unsigned int purged,
--		       size_t start, size_t end)
-+static void range_alloc(struct ashmem_area *asma,
-+			struct ashmem_range *prev_range, unsigned int purged,
-+			size_t start, size_t end,
-+			struct ashmem_range **new_range)
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -1964,10 +1964,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
+ 
+ static inline int ip6mr_forward2_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
  {
--	struct ashmem_range *range;
--
--	range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
--	if (!range)
--		return -ENOMEM;
-+	struct ashmem_range *range = *new_range;
- 
-+	*new_range = NULL;
- 	range->asma = asma;
- 	range->pgstart = start;
- 	range->pgend = end;
-@@ -193,8 +189,6 @@ static int range_alloc(struct ashmem_are
- 
- 	if (range_on_lru(range))
- 		lru_add(range);
--
--	return 0;
+-	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTFORWDATAGRAMS);
+-	__IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTOCTETS, skb->len);
++	IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTFORWDATAGRAMS);
++	IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTOCTETS, skb->len);
+ 	return dst_output(net, sk, skb);
  }
  
- /**
-@@ -596,7 +590,8 @@ static int get_name(struct ashmem_area *
-  *
-  * Caller must hold ashmem_mutex.
-  */
--static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
-+static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
-+		      struct ashmem_range **new_range)
- {
- 	struct ashmem_range *range, *next;
- 	int ret = ASHMEM_NOT_PURGED;
-@@ -649,7 +644,7 @@ static int ashmem_pin(struct ashmem_area
- 			 * second half and adjust the first chunk's endpoint.
- 			 */
- 			range_alloc(asma, range, range->purged,
--				    pgend + 1, range->pgend);
-+				    pgend + 1, range->pgend, new_range);
- 			range_shrink(range, range->pgstart, pgstart - 1);
- 			break;
- 		}
-@@ -663,7 +658,8 @@ static int ashmem_pin(struct ashmem_area
-  *
-  * Caller must hold ashmem_mutex.
-  */
--static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
-+static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
-+			struct ashmem_range **new_range)
- {
- 	struct ashmem_range *range, *next;
- 	unsigned int purged = ASHMEM_NOT_PURGED;
-@@ -689,7 +685,8 @@ restart:
- 		}
- 	}
- 
--	return range_alloc(asma, range, purged, pgstart, pgend);
-+	range_alloc(asma, range, purged, pgstart, pgend, new_range);
-+	return 0;
- }
- 
- /*
-@@ -722,10 +719,17 @@ static int ashmem_pin_unpin(struct ashme
- 	struct ashmem_pin pin;
- 	size_t pgstart, pgend;
- 	int ret = -EINVAL;
-+	struct ashmem_range *range = NULL;
- 
- 	if (copy_from_user(&pin, p, sizeof(pin)))
- 		return -EFAULT;
- 
-+	if (cmd == ASHMEM_PIN || cmd == ASHMEM_UNPIN) {
-+		range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
-+		if (!range)
-+			return -ENOMEM;
-+	}
-+
- 	mutex_lock(&ashmem_mutex);
- 	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
- 
-@@ -750,10 +754,10 @@ static int ashmem_pin_unpin(struct ashme
- 
- 	switch (cmd) {
- 	case ASHMEM_PIN:
--		ret = ashmem_pin(asma, pgstart, pgend);
-+		ret = ashmem_pin(asma, pgstart, pgend, &range);
- 		break;
- 	case ASHMEM_UNPIN:
--		ret = ashmem_unpin(asma, pgstart, pgend);
-+		ret = ashmem_unpin(asma, pgstart, pgend, &range);
- 		break;
- 	case ASHMEM_GET_PIN_STATUS:
- 		ret = ashmem_get_pin_status(asma, pgstart, pgend);
-@@ -762,6 +766,8 @@ static int ashmem_pin_unpin(struct ashme
- 
- out_unlock:
- 	mutex_unlock(&ashmem_mutex);
-+	if (range)
-+		kmem_cache_free(ashmem_range_cachep, range);
- 
- 	return ret;
- }
 
 
