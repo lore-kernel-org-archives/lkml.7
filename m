@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CEDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02E6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3C72087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A7620661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050543;
-	bh=Zp75eMUR8hwuS/M1FO3fGQdn6CN2XWpBGThxX7WcYck=;
+	s=default; t=1552050567;
+	bh=+Gk/ICgiOSNOTRT5ZTnE++T/Mu47+GCuV7z+25DeWJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzWfJ2VKxC8T/dsS40yrdjN4q6t0L++S0nKnDVl1ssLiJNkHcISctpAknxLSIM+rC
-	 T/RZfcwYJMVIJiir4Zyt3/rcraudwt6KotCoAeAsU0x5awB54HTou7hxpXDg6x1jjI
-	 TPFDvCD2hFpU2I2HnWIR6GIUaiy4I0Ey5EqfRzPc=
+	b=C7IBjYqPcqnTD8/VMijPM59zgFA7Fvqww3FQ+zJghVxw0lS6n0SjTVUBwh0h57rC9
+	 iBv2mK2Z+NAVe57nDqS77lkTw0PSK2i02vsgWWWYQ58LOTcg8skx9vIWffQlbdyW8B
+	 S6SbmvyS/ePOVW4cRwW8uCPiKyyrZ8FF4yHRXU90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfCHNJB (ORCPT
+        id S1726937AbfCHNJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:09:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:09:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726972AbfCHMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:28 -0500
+        id S1726850AbfCHMwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:52:00 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98B98208E4;
-        Fri,  8 Mar 2019 12:52:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E888B2133F;
+        Fri,  8 Mar 2019 12:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049548;
-        bh=Zp75eMUR8hwuS/M1FO3fGQdn6CN2XWpBGThxX7WcYck=;
+        s=default; t=1552049519;
+        bh=+Gk/ICgiOSNOTRT5ZTnE++T/Mu47+GCuV7z+25DeWJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgQ1pts1Ces7Eovtcp/2GgI6yulf+yM6L3HOQpBocumcVDRD8Zh15hJgIcqRnCnkY
-         /fY5KxG7M84oVyKJL86fUxCZC6JHDZAUPHJ54vXbrC0Vogy+N7NtyEDBMwiiTYFYHn
-         unC3RLImvEWsjpd8+Haaj2HwLsdzFWbEmk0uhZ/A=
+        b=ikzQzATAQJTgKECkbSkqs1Ac8S6tiFiGtSii4BniiA4UyewSkfcBYJlnoslo06khb
+         4f8tgPFDvgE6Fm++1HFLe0450LcNy5jIj0/f8gJsMvL+oHwUixIQJtHF0JgV/7vG4B
+         qLj0DZu7oujxlUmR/9vvYyO7yHgjAAblg4Hkarmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.0 05/46] USB: serial: cp210x: add ID for Ingenico 3070
-Date:   Fri,  8 Mar 2019 13:49:38 +0100
-Message-Id: <20190308124902.595957134@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 27/46] team: Free BPF filter when unregistering netdev
+Date:   Fri,  8 Mar 2019 13:50:00 +0100
+Message-Id: <20190308124904.024012177@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -64,39 +66,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ivan Mironov <mironov.ivan@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
+[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
 
-Here is how this device appears in kernel log:
+When team is used in loadbalance mode a BPF filter can be used to
+provide a hash which will determine the Tx port.
 
-	usb 3-1: new full-speed USB device number 18 using xhci_hcd
-	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
-	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-	usb 3-1: Product: Ingenico 3070
-	usb 3-1: Manufacturer: Silicon Labs
-	usb 3-1: SerialNumber: 0001
+When the netdev is later unregistered the filter is not freed which
+results in memory leaks [1].
 
-Apparently this is a POS terminal with embedded USB-to-Serial converter.
+Fix by freeing the program and the corresponding filter when
+unregistering the netdev.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+[1]
+unreferenced object 0xffff8881dbc47cc8 (size 16):
+  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
+  hex dump (first 16 bytes):
+    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
+  backtrace:
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+unreferenced object 0xffff8881e182a588 (size 2048):
+  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
+  hex dump (first 32 bytes):
+    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
+    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
+  backtrace:
+    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+
+Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/cp210x.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -61,6 +61,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
- 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
- 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
-+	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
- 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
- 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
- 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
+--- a/drivers/net/team/team_mode_loadbalance.c
++++ b/drivers/net/team/team_mode_loadbalance.c
+@@ -325,6 +325,20 @@ static int lb_bpf_func_set(struct team *
+ 	return 0;
+ }
+ 
++static void lb_bpf_func_free(struct team *team)
++{
++	struct lb_priv *lb_priv = get_lb_priv(team);
++	struct bpf_prog *fp;
++
++	if (!lb_priv->ex->orig_fprog)
++		return;
++
++	__fprog_destroy(lb_priv->ex->orig_fprog);
++	fp = rcu_dereference_protected(lb_priv->fp,
++				       lockdep_is_held(&team->lock));
++	bpf_prog_destroy(fp);
++}
++
+ static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
+ {
+ 	struct lb_priv *lb_priv = get_lb_priv(team);
+@@ -639,6 +653,7 @@ static void lb_exit(struct team *team)
+ 
+ 	team_options_unregister(team, lb_options,
+ 				ARRAY_SIZE(lb_options));
++	lb_bpf_func_free(team);
+ 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
+ 	free_percpu(lb_priv->pcpu_stats);
+ 	kfree(lb_priv->ex);
 
 
