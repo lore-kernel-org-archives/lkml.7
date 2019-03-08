@@ -2,130 +2,171 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75418C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7023C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B12220684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976F12081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cIxr0QgT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gkEQUODs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EljLzFWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfCHILL (ORCPT
+        id S1726337AbfCHI1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 03:11:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60008 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfCHILK (ORCPT
+        Fri, 8 Mar 2019 03:27:06 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:54466 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfCHI1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 03:11:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4iTz1XotpjVy44GeO18qPJRH/7xSw2g4NpbWO60EeS8=; b=cIxr0QgTtXvHmjYPQbHD9hr0S
-        6OuGpjtaevFVhJrLBnfnBB4k4+0LJXyq7Y9p8d9EYtO5+8MPpkRJvQTs9nsASs/i/8k7lX7d/rK/i
-        nckNewSI8i5jADsSN3aZUvfqiEPR3EivPtLGseEny0Rd2dqvQIhrp51kRNQ0vnMrkn4LMPeg0vWJm
-        MHwvRkiiPjV3HMqg9FBASE+/HlT+7cn7DJafss6sl1Mw++rRXO87AOnTn6WY7e6oe90HNW+VYSZrL
-        jOpdWppefe+EUtuYwDCPUT5elRrFl3wiqwVwXOtXf6lnNh+5LODO4Cbcp6YAmR/ShqnMRpLsEXESU
-        aoyndnOGg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2Aax-0007Hz-MD; Fri, 08 Mar 2019 08:11:07 +0000
-Date:   Fri, 8 Mar 2019 00:11:07 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     syzbot <syzbot+78923eea7cf44364f4fb@syzkaller.appspotmail.com>
-Cc:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low!
-Message-ID: <20190308081107.GD22834@infradead.org>
-References: <000000000000299b190583172880@google.com>
+        Fri, 8 Mar 2019 03:27:05 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 82F046030B; Fri,  8 Mar 2019 08:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552033624;
+        bh=GYvEHVZ8Hz0AsS4XKsMZAKT8P2zqxlUCAlYQX+OQjNY=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=gkEQUODs57Jkna0MdlR5pHeUPzPjk49lTZRkQoWun0TYyRjxJH44tESAhHfLINkkr
+         sYsInxGVWGqWt1UV0tjZBKHsvI4Ii1vTxQBjd8ldC3Yn21p7G/Mnq5vyadg758eb1p
+         yQP8ruLKIzJ2r7LoOyWjPtj/T/OH9hDNmLq5Lc54=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DCA3D6030B;
+        Fri,  8 Mar 2019 08:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552033623;
+        bh=GYvEHVZ8Hz0AsS4XKsMZAKT8P2zqxlUCAlYQX+OQjNY=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=EljLzFWpD8L94mi69QIE/YaL42fk0wnVnK82jrhHawCNWea7at/A0paZmsxzBjYod
+         7+9q63qDvquepsaDdbn1zXbDN+wNeeKwswvlfYQbM636MRxYAn0MMHATfLzhMlsDXz
+         AmvQuiz7i17GEWIkIbgOYWodlHpb4AK+9dx+iuI8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DCA3D6030B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
+References: <20190224140426.3267-1-marc.zyngier@arm.com>
+Date:   Fri, 08 Mar 2019 10:26:57 +0200
+In-Reply-To: <20190224140426.3267-1-marc.zyngier@arm.com> (Marc Zyngier's
+        message of "Sun, 24 Feb 2019 14:04:22 +0000")
+Message-ID: <87ef7hai0e.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000299b190583172880@google.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Probably more a lockdep than XFS thing..
+Marc Zyngier <marc.zyngier@arm.com> writes:
 
-On Fri, Mar 01, 2019 at 11:06:04PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    c63e9e91a254 Add linux-next specific files for 20190301
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16a559b2c00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f5875f9dc6e009b2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=78923eea7cf44364f4fb
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+78923eea7cf44364f4fb@syzkaller.appspotmail.com
-> 
-> BUG: MAX_STACK_TRACE_ENTRIES too low!
-> turning off the locking correctness validator.
-> CPU: 0 PID: 19385 Comm: syz-executor.0 Not tainted 5.0.0-rc8-next-20190301
-> #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  save_trace kernel/locking/lockdep.c:467 [inline]
->  save_trace.cold+0x14/0x19 kernel/locking/lockdep.c:437
->  mark_lock+0x2fb/0x1380 kernel/locking/lockdep.c:3401
->  __lock_acquire+0x548/0x3fb0 kernel/locking/lockdep.c:3648
->  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4202
->  flush_workqueue+0x126/0x14c0 kernel/workqueue.c:2774
->  drain_workqueue+0x1b4/0x470 kernel/workqueue.c:2939
->  destroy_workqueue+0x21/0x700 kernel/workqueue.c:4315
->  xfs_destroy_mount_workqueues+0x11d/0x1c0 fs/xfs/xfs_super.c:906
->  xfs_fs_fill_super+0x8e9/0x1670 fs/xfs/xfs_super.c:1786
->  mount_bdev+0x307/0x3c0 fs/super.c:1346
->  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1834
->  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
->  vfs_get_tree+0x123/0x450 fs/super.c:1481
->  do_new_mount fs/namespace.c:2622 [inline]
->  do_mount+0x1436/0x2c40 fs/namespace.c:2942
->  ksys_mount+0xdb/0x150 fs/namespace.c:3151
->  __do_sys_mount fs/namespace.c:3165 [inline]
->  __se_sys_mount fs/namespace.c:3162 [inline]
->  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
->  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x45a89a
-> Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 2d 8e fb ff c3 66 2e 0f
-> 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff
-> 0f 83 0a 8e fb ff c3 66 0f 1f 84 00 00 00 00 00
-> RSP: 002b:00007f6d038b0a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 00007f6d038b0b30 RCX: 000000000045a89a
-> RDX: 00007f6d038b0ad0 RSI: 0000000020000140 RDI: 00007f6d038b0af0
-> RBP: 0000000020000140 R08: 00007f6d038b0b30 R09: 00007f6d038b0ad0
-> R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000003
-> R13: 0000000000000000 R14: 00000000004dbde0 R15: 00000000ffffffff
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
-> syzbot.
----end quoted text---
+> For quite some time, I wondered why the PCI mwifiex device built in my
+> Chromebook was unable to use the good old legacy interrupts. But as MSIs
+> were working fine, I never really bothered investigating. I finally had a
+> look, and the result isn't very pretty.
+>
+> On this machine (rk3399-based kevin), the wake-up interrupt is described as
+> such:
+>
+> &pci_rootport {
+> 	mvl_wifi: wifi@0,0 {
+> 		compatible = "pci1b4b,2b42";
+> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+> 		interrupt-parent = <&gpio0>;
+> 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&wlan_host_wake_l>;
+> 		wakeup-source;
+> 	};
+> };
+>
+> Note how the interrupt is part of the properties directly attached to the
+> PCI node. And yet, this interrupt has nothing to do with a PCI legacy
+> interrupt, as it is attached to the wake-up widget that bypasses the PCIe RC
+> altogether (Yay for the broken design!). This is in total violation of the
+> IEEE Std 1275-1994 spec[1], which clearly documents that such interrupt
+> specifiers describe the PCI device interrupts, and must obey the
+> INT-{A,B,C,D} mapping. Oops!
+>
+> The net effect of the above is that Linux tries to do something vaguely
+> sensible, and uses the same interrupt for both the wake-up widget and the
+> PCI device. This doesn't work for two reasons: (1) the wake-up widget grabs
+> the interrupt in exclusive mode, and (2) the PCI interrupt is still routed
+> to the RC, leading to a screaming interrupt. This simply cannot work.
+>
+> To sort out this mess, we need to lift the confusion between the two
+> interrupts. This is done by extending the DT binding to allow the wake-up
+> interrupt to be described in a 'wake-up' subnode, sidestepping the issue
+> completely. On my Chromebook, it now looks like this:
+>
+> &pci_rootport {
+> 	mvl_wifi: wifi@0,0 {
+> 		compatible = "pci1b4b,2b42";
+> 		reg = <0x83010000 0x0 0x00000000 0x0 0x00100000
+> 		       0x83010000 0x0 0x00100000 0x0 0x00100000>;
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&wlan_host_wake_l>;
+> 		wake-up {
+> 			interrupt-parent = <&gpio0>;
+> 			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+> 			wakeup-source;
+> 		};
+> 	};
+> };
+>
+> The driver is then updated to look for this subnode first, and fallback to
+> the original, broken behaviour (spitting out a warning in the offending
+> configuration).
+>
+> For good measure, there are two additional patches:
+>
+> - The wake-up interrupt requesting is horribly racy, and could lead to
+>   unpredictable behaviours. Let's fix that properly.
+>
+> - A final patch implementing the above transformation for the whole
+>   RK3399-based Chromebook range, which all use the same broken
+>   configuration.
+>
+> With all that, I finally have PCI legacy interrupts working with the mwifiex
+> driver on my Chromebook.
+>
+> [1] http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+>
+> Marc Zyngier (4):
+>   dt-bindings/marvell-8xxx: Allow wake-up interrupt to be placed in a
+>     separate node
+>   mwifiex: Fetch wake-up interrupt from 'wake-up' subnode when it exists
+>   mwifiex: Flag wake-up interrupt as IRQ_NOAUTOEN rather than disabling
+>     it too late
+>   arm64: dts: rockchip: gru: Move wifi wake-up interrupt into its own
+>     subnode
+>
+>  .../bindings/net/wireless/marvell-8xxx.txt    | 23 ++++++++++++++++++-
+>  .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  8 ++++---
+>  drivers/net/wireless/marvell/mwifiex/main.c   | 13 +++++++++--
+>  3 files changed, 38 insertions(+), 6 deletions(-)
+
+I didn't read the discussion in detail, but I understanding is that I
+should drop this series and wait for a new version. Please correct me if
+I misunderstood.
+
+-- 
+Kalle Valo
