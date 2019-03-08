@@ -2,103 +2,412 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE56CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807A8C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFC820661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450C020661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050407;
-	bh=oloH9UZT6paXQhhxoO2ysRPdbWuSj/G1Dat8h3Bg3iQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UiZUxHR2caaVvXiijueDzmdH4NRBUuHtb0Mko3vvMB5HfR+AhEzfJ959h+o706Yr5
-	 1fl3TPS1llXysfOGkLfVQ9jAahCTiJBIlGUoUiswNHQIfDo8wWkdeNDXNPTJlfCtQ4
-	 FHh0WJATCeimeHfMTVTa6cBF5tgJnrY9WRTACX7s=
+	s=default; t=1552050412;
+	bh=0vjg9Z6BCmzSdqWJuPtP7gcVvBJhzDIEO1/M+lylkdc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cHN5z0J2/KO737WmZUXSYxhjuW0va9X7+so8zGJvPqwoLOOHQhJ3Keu9QCJyWcWhA
+	 YQbwMuj9TphCWcAaP8fwKzUQ2G03oBPahRIuZVbNL+bY5Nsyaopoc7pOKR7RhVucAQ
+	 JGMzbzi9MFFSpBSsx9j32h46yZorZ9oM3fFmASgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfCHNGp (ORCPT
+        id S1727454AbfCHMzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:06:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:55:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfCHMzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:55:14 -0500
+        id S1727069AbfCHMzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:55:04 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D99C2085A;
-        Fri,  8 Mar 2019 12:55:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D5FD2087C;
+        Fri,  8 Mar 2019 12:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049713;
-        bh=oloH9UZT6paXQhhxoO2ysRPdbWuSj/G1Dat8h3Bg3iQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DM6D0LTh/k+tUksc8vQbGCfB/nw/JmuTDjcR0skNjOtqSnRdUOwiT9N7Wi2aepVid
-         WO2KkI4gpb2JEDWoRAJn7Po7P/5WSMwCBOf3/RRZwVR6LPPcqz0H/7/1arcAHQdwBc
-         js7WYdVhZvR+9CK7F7jWgm2uB7l82HbuMsbJqSss=
+        s=default; t=1552049703;
+        bh=0vjg9Z6BCmzSdqWJuPtP7gcVvBJhzDIEO1/M+lylkdc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B6lpxlMz16fn1JCSaNHS8QM6XuA0hlVyUbzWO7zqXkYaX9SNXyxEOG/309orm55GN
+         9nEAmsieR/KGlY0SRcI2GwoGPhrwOgVvGqIpaQ13qGo+X/ng7l/ktWOCFiKGZBICQD
+         ZC1npPxfCkNJNSciD9k9NWcbml4/kYH61V52nSHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 41/76] net: phy: phylink: fix uninitialized variable in phylink_get_mac_state
-Date:   Fri,  8 Mar 2019 13:49:53 +0100
-Message-Id: <20190308124916.271984388@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.20 00/76] 4.20.15-stable review
+Date:   Fri,  8 Mar 2019 13:49:12 +0100
+Message-Id: <20190308124914.789210760@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
-References: <20190308124914.789210760@linuxfoundation.org>
+MIME-Version: 1.0
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.20.15-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.20.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.20.15-rc1
+X-KernelTest-Deadline: 2019-03-10T12:49+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+This is the start of the stable review cycle for the 4.20.15 release.
+There are 76 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-------------------
+Responses should be made by Sun Mar 10 12:48:49 UTC 2019.
+Anything received after that time might be too late.
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.20.15-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.20.y
+and the diffstat can be found below.
 
-[ Upstream commit d25ed413d5e51644e18f66e34eec049f17a7abcb ]
+thanks,
 
-When debugging an issue I found implausible values in state->pause.
-Reason in that state->pause isn't initialized and later only single
-bits are changed. Also the struct itself isn't initialized in
-phylink_resolve(). So better initialize state->pause and other
-not yet initialized fields.
+greg k-h
 
-v2:
-- use right function name in subject
-v3:
-- initialize additional fields
+-------------
+Pseudo-Shortlog of commits:
 
-Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/phylink.c |    4 ++++
- 1 file changed, 4 insertions(+)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.20.15-rc1
 
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -321,6 +321,10 @@ static int phylink_get_mac_state(struct
- 	linkmode_zero(state->lp_advertising);
- 	state->interface = pl->link_config.interface;
- 	state->an_enabled = pl->link_config.an_enabled;
-+	state->speed = SPEED_UNKNOWN;
-+	state->duplex = DUPLEX_UNKNOWN;
-+	state->pause = MLO_PAUSE_NONE;
-+	state->an_complete = 0;
- 	state->link = 1;
- 
- 	return pl->ops->mac_link_state(ndev, state);
+Daniel Borkmann <daniel@iogearbox.net>
+    bpf: fix sanitation rewrite in case of non-pointers
+
+Martin Wilck <mwilck@suse.com>
+    scsi: core: reset host byte in DID_NEXUS_FAILURE case
+
+YueHaibing <yuehaibing@huawei.com>
+    exec: Fix mem leak in kernel_read_file
+
+Matthias Kaehlcke <mka@chromium.org>
+    Bluetooth: Fix locking in bt_accept_enqueue() for BH context
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    Bluetooth: btrtl: Restore old logic to assume firmware is already loaded
+
+Luis Chamberlain <mcgrof@kernel.org>
+    selftests: firmware: fix verify_reqs() return value
+
+Karoly Pados <pados@pados.hu>
+    USB: serial: cp210x: fix GPIO in autosuspend
+
+Johan Hovold <johan@kernel.org>
+    gnss: sirf: fix premature wakeup interrupt enable
+
+Max Filippov <jcmvbkbc@gmail.com>
+    xtensa: fix get_wchan
+
+Bart Van Assche <bvanassche@acm.org>
+    aio: Fix locking in aio_poll()
+
+Liu Xiang <liu.xiang6@zte.com.cn>
+    MIPS: irq: Allocate accurate order pages for irq stack
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    applicom: Fix potential Spectre v1 vulnerabilities
+
+Balaji Manoharan <m.balaji@intel.com>
+    usb: xhci: Fix for Enabling USB ROLE SWITCH QUIRK on INTEL_SUNRISEPOINT_LP_XHCI
+
+Thierry Reding <treding@nvidia.com>
+    xhci: tegra: Prevent error pointer dereference
+
+Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+    tracing: Fix event filters and triggers to handle negative numbers
+
+Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+    x86/boot/compressed/64: Do not read legacy ROM on EFI system
+
+Jiaxun Yang <jiaxun.yang@flygoat.com>
+    x86/CPU/AMD: Set the CPB bit unconditionally on F17h
+
+Vlad Buslov <vladbu@mellanox.com>
+    net: sched: act_tunnel_key: fix NULL pointer dereference during init
+
+Davide Caratti <dcaratti@redhat.com>
+    net/sched: act_skbedit: fix refcount leak when replace fails
+
+Davide Caratti <dcaratti@redhat.com>
+    net/sched: act_ipt: fix refcount leak when replace fails
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode
+
+Maxime Chevallier <maxime.chevallier@bootlin.com>
+    net: dsa: mv88e6xxx: power serdes on/off for 10G interfaces on 6390X
+
+David Ahern <dsahern@gmail.com>
+    ipv4: Pass original device to ip_rcv_finish_core
+
+David Ahern <dsahern@gmail.com>
+    mpls: Return error for RTA_GATEWAY attribute
+
+David Ahern <dsahern@gmail.com>
+    ipv6: Return error for RTA_VIA attribute
+
+David Ahern <dsahern@gmail.com>
+    ipv4: Return error for RTA_VIA attribute
+
+Nazarov Sergey <s-nazarov@yandex.ru>
+    net: avoid use IPCB in cipso_v4_error
+
+Nazarov Sergey <s-nazarov@yandex.ru>
+    net: Add __icmp_send helper.
+
+Timur Celik <mail@timurcelik.de>
+    tun: remove unnecessary memory barrier
+
+Igor Druzhinin <igor.druzhinin@citrix.com>
+    xen-netback: fix occasional leak of grant ref mappings under memory pressure
+
+Igor Druzhinin <igor.druzhinin@citrix.com>
+    xen-netback: don't populate the hash cache on XenBus disconnect
+
+Timur Celik <mail@timurcelik.de>
+    tun: fix blocking read
+
+Tung Nguyen <tung.q.nguyen@dektech.com.au>
+    tipc: fix race condition causing hung sendto
+
+Eric Biggers <ebiggers@google.com>
+    net: socket: set sock->sk to NULL after calling proto_ops::release()
+
+Mao Wenan <maowenan@huawei.com>
+    net: sit: fix memory leak in sit_init_net()
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: phy: phylink: fix uninitialized variable in phylink_get_mac_state
+
+Rajasingh Thavamani <T.Rajasingh@landisgyr.com>
+    net: phy: Micrel KSZ8061: link failure after cable connect
+
+YueHaibing <yuehaibing@huawei.com>
+    net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
+
+Sheng Lan <lansheng@huawei.com>
+    net: netem: fix skb length BUG_ON in __skb_to_sgvec
+
+Paul Moore <paul@paul-moore.com>
+    netlabel: fix out-of-bounds memory accesses
+
+Andrew Lunn <andrew@lunn.ch>
+    net: dsa: mv88e6xxx: Fix u64 statistics
+
+Andrew Lunn <andrew@lunn.ch>
+    net: dsa: mv88e6xxx: Fix statistics on mv88e6161
+
+Bryan Whitehead <Bryan.Whitehead@microchip.com>
+    lan743x: Fix TX Stall Issue
+
+Hangbin Liu <liuhangbin@gmail.com>
+    ipv4: Add ICMPv6 support when parse route ipproto
+
+Haiyang Zhang <haiyangz@microsoft.com>
+    hv_netvsc: Fix IP header checksum for coalesced packets
+
+Jiri Benc <jbenc@redhat.com>
+    geneve: correctly handle ipv6.disable module parameter
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Drop oversize TX packets to prevent errors.
+
+Erik Hugne <erik.hugne@gmail.com>
+    tipc: fix RDM/DGRAM connect() regression
+
+Ido Schimmel <idosch@mellanox.com>
+    team: Free BPF filter when unregistering netdev
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    sky2: Disable MSI on Dell Inspiron 1545 and Gateway P-79
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: call iov_iter_revert() after sending ABORT
+
+Kristian Evensen <kristian.evensen@gmail.com>
+    qmi_wwan: Add support for Quectel EG12/EM12
+
+YueHaibing <yuehaibing@huawei.com>
+    net-sysfs: Fix mem leak in netdev_register_kobject
+
+Eric Dumazet <edumazet@google.com>
+    net: sched: put back q.qlen into a single location
+
+Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+    net: mscc: Enable all ports in QSGMII
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: dsa: mv8e6xxx: fix number of internal PHYs for 88E6x90 family
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: dsa: mv88e6xxx: handle unknown duplex modes gracefully in mv88e6xxx_port_set_duplex
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: dsa: mv88e6xxx: add call to mv88e6xxx_ports_cmode_init to probe for new DSA framework
+
+Ido Schimmel <idosch@mellanox.com>
+    ip6mr: Do not call __IP6_INC_STATS() from preemptible context
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    staging: android: ashmem: Avoid range_alloc() allocation with ashmem_mutex held.
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    staging: android: ashmem: Don't call fallocate() with ashmem_mutex held.
+
+Qing Xia <saberlily.xia@hisilicon.com>
+    staging: android: ion: fix sys heap pool's gfp_flags
+
+Ajay Singh <ajay.kathat@microchip.com>
+    staging: wilc1000: fix to set correct value for 'vif_num'
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    staging: comedi: ni_660x: fix missing break in switch statement
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: compressed_pages should not be accessed again after freed
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: fix illegal address access under memory pressure
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: fix race of initializing xattrs of a inode at the same time
+
+Sheng Yong <shengyong1@huawei.com>
+    staging: erofs: fix memleak of inode's shared xattr array
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: fix fast symlink w/o xattr when fs xattr is on
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    driver core: Postpone DMA tear-down until after devres release
+
+Mans Rullgard <mans@mansr.com>
+    USB: serial: ftdi_sio: add ID for Hjelmslund Electronics USB485
+
+Ivan Mironov <mironov.ivan@gmail.com>
+    USB: serial: cp210x: add ID for Ingenico 3070
+
+Daniele Palmas <dnlplm@gmail.com>
+    USB: serial: option: add Telit ME910 ECM composition
+
+Todd Kjos <tkjos@android.com>
+    binder: create node flag to request sender's security context
+
+Gao Xiang <gaoxiang25@huawei.com>
+    staging: erofs: fix mis-acted TAIL merging behavior
+
+Viresh Kumar <viresh.kumar@linaro.org>
+    cpufreq: Use struct kobj_attribute instead of struct global_attr
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                      |   4 +-
+ arch/mips/kernel/irq.c                        |   4 +-
+ arch/x86/boot/compressed/pgtable_64.c         |  19 ++++-
+ arch/x86/kernel/cpu/amd.c                     |   8 +-
+ arch/xtensa/kernel/process.c                  |   4 +-
+ drivers/android/binder.c                      | 106 ++++++++++++++++++------
+ drivers/base/dd.c                             |   2 +-
+ drivers/bluetooth/btrtl.c                     |  10 ++-
+ drivers/char/applicom.c                       |  35 +++++---
+ drivers/cpufreq/cpufreq.c                     |   6 +-
+ drivers/cpufreq/intel_pstate.c                |  23 +++---
+ drivers/gnss/sirf.c                           |  32 +++----
+ drivers/net/dsa/mv88e6xxx/chip.c              |  27 ++++--
+ drivers/net/dsa/mv88e6xxx/port.c              |  10 ++-
+ drivers/net/dsa/mv88e6xxx/port.h              |   1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     |   6 ++
+ drivers/net/ethernet/marvell/sky2.c           |  24 +++++-
+ drivers/net/ethernet/microchip/lan743x_main.c |  16 +++-
+ drivers/net/ethernet/mscc/ocelot_board.c      |  14 +++-
+ drivers/net/geneve.c                          |  11 ++-
+ drivers/net/hyperv/netvsc_drv.c               |  22 ++++-
+ drivers/net/phy/micrel.c                      |  13 ++-
+ drivers/net/phy/phylink.c                     |   4 +
+ drivers/net/team/team_mode_loadbalance.c      |  15 ++++
+ drivers/net/tun.c                             |   4 +-
+ drivers/net/usb/qmi_wwan.c                    |  26 ++++--
+ drivers/net/xen-netback/hash.c                |   2 +
+ drivers/net/xen-netback/interface.c           |   7 ++
+ drivers/net/xen-netback/netback.c             |  10 +--
+ drivers/scsi/scsi_lib.c                       |   1 +
+ drivers/staging/android/ashmem.c              |  67 +++++++++------
+ drivers/staging/android/ion/ion_system_heap.c |   2 +-
+ drivers/staging/comedi/drivers/ni_660x.c      |   1 +
+ drivers/staging/erofs/inode.c                 |   8 +-
+ drivers/staging/erofs/internal.h              |  11 ++-
+ drivers/staging/erofs/unzip_vle.c             | 115 ++++++++++++++++----------
+ drivers/staging/erofs/unzip_vle.h             |   3 +-
+ drivers/staging/erofs/unzip_vle_lz4.c         |  19 ++---
+ drivers/staging/erofs/xattr.c                 |  65 +++++++++++----
+ drivers/staging/wilc1000/linux_wlan.c         |   4 +-
+ drivers/usb/host/xhci-pci.c                   |   1 +
+ drivers/usb/host/xhci-tegra.c                 |   4 +-
+ drivers/usb/serial/cp210x.c                   |  12 +++
+ drivers/usb/serial/ftdi_sio.c                 |   2 +
+ drivers/usb/serial/ftdi_sio_ids.h             |   6 ++
+ drivers/usb/serial/option.c                   |   2 +
+ fs/aio.c                                      |  12 ++-
+ fs/exec.c                                     |   2 +-
+ include/linux/cpufreq.h                       |  12 +--
+ include/net/bluetooth/bluetooth.h             |   2 +-
+ include/net/icmp.h                            |   9 +-
+ include/net/ip.h                              |   4 +-
+ include/net/sch_generic.h                     |  31 +++----
+ include/uapi/linux/android/binder.h           |  19 +++++
+ kernel/bpf/verifier.c                         |   3 +-
+ kernel/trace/trace_events_filter.c            |   5 +-
+ net/bluetooth/af_bluetooth.c                  |  16 +++-
+ net/bluetooth/l2cap_sock.c                    |   2 +-
+ net/bluetooth/rfcomm/sock.c                   |   2 +-
+ net/bluetooth/sco.c                           |   2 +-
+ net/core/gen_stats.c                          |   2 -
+ net/core/net-sysfs.c                          |   3 +
+ net/ipv4/cipso_ipv4.c                         |  20 ++++-
+ net/ipv4/fib_frontend.c                       |   4 +
+ net/ipv4/icmp.c                               |   7 +-
+ net/ipv4/ip_input.c                           |   9 +-
+ net/ipv4/ip_options.c                         |  22 +++--
+ net/ipv4/netlink.c                            |  17 +++-
+ net/ipv4/route.c                              |   2 +-
+ net/ipv6/ip6mr.c                              |   8 +-
+ net/ipv6/route.c                              |   7 +-
+ net/ipv6/sit.c                                |   1 +
+ net/mpls/af_mpls.c                            |   3 +
+ net/netlabel/netlabel_kapi.c                  |   3 +-
+ net/nfc/llcp_commands.c                       |  20 +++++
+ net/nfc/llcp_core.c                           |  24 +++++-
+ net/sched/act_ipt.c                           |   3 +-
+ net/sched/act_skbedit.c                       |   3 +-
+ net/sched/act_tunnel_key.c                    |   3 +-
+ net/sched/sch_generic.c                       |  13 ++-
+ net/sched/sch_netem.c                         |  10 ++-
+ net/sctp/socket.c                             |   1 +
+ net/socket.c                                  |   1 +
+ net/tipc/socket.c                             |   8 +-
+ tools/testing/selftests/firmware/fw_lib.sh    |   2 +-
+ 85 files changed, 783 insertions(+), 322 deletions(-)
 
 
