@@ -2,256 +2,252 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D529C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F6CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B83620661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:15:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="V2t14GW+"
+	by mail.kernel.org (Postfix) with ESMTP id C7D9720661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfCHSPH (ORCPT
+        id S1727116AbfCHSR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:15:07 -0500
-Received: from mail-eopbgr800072.outbound.protection.outlook.com ([40.107.80.72]:42176
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        Fri, 8 Mar 2019 13:17:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50770 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726761AbfCHSPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:15:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M9zVEsOPjei0EqOkzIICHtL35OQsx7QC2a18ff0Cn8g=;
- b=V2t14GW+zfm8AJwC84FKLzs7cvXtKZPe/FoKpeuDsd/PfcxJlM8/AllEJAZ4wIVAXPB80RDH0+rsmB1HM4sUVAfdl3lu8EpdbhEfi5sqRjg6AiG63ocVaXaBh+MeWSWVAB4XEUJFIZZw4BOdqnUl6Oma/NO3bd4mU66MkuV5KTI=
-Received: from CY4PR02MB2709.namprd02.prod.outlook.com (10.175.80.9) by
- CY4PR02MB2728.namprd02.prod.outlook.com (10.175.60.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Fri, 8 Mar 2019 18:13:22 +0000
-Received: from CY4PR02MB2709.namprd02.prod.outlook.com
- ([fe80::bc8d:c1a1:e7d9:2983]) by CY4PR02MB2709.namprd02.prod.outlook.com
- ([fe80::bc8d:c1a1:e7d9:2983%11]) with mapi id 15.20.1686.018; Fri, 8 Mar 2019
- 18:13:22 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>
-Subject: RE: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-Thread-Topic: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-Thread-Index: AQHU1dWTlxX3cEKB1kuu0S98N+Oij6YCCCNA
-Date:   Fri, 8 Mar 2019 18:13:22 +0000
-Message-ID: <CY4PR02MB27098D65DA1F1903DB8854E0A74D0@CY4PR02MB2709.namprd02.prod.outlook.com>
-References: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
-In-Reply-To: <1552066288-58404-1-git-send-email-vishal.sagar@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vsagar@xilinx.com; 
-x-originating-ip: [122.169.237.165]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e48b337-fc4d-4848-5d6b-08d6a3f1c01f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:CY4PR02MB2728;
-x-ms-traffictypediagnostic: CY4PR02MB2728:
-x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;CY4PR02MB2728;23:U+brQ1ByGe/H4e/0/3+5+dqX+zH30/770ckJvwo6A?=
- =?us-ascii?Q?DXOgdoF9qpYwjVVMv6knIp8NHqD7y5xYVAd3QNTD5v7jUmJVtLSIuVMYFqNx?=
- =?us-ascii?Q?Kl4774YkWJpOUZs5jBgH0Azdnt7OyIDPuWSI9V1D7zGUwzJXy4bd9IKz2zAo?=
- =?us-ascii?Q?iKKLZJFUHwhJ5HGHZUfD8QQ7r9Ghv2BhOKfUl4Sx8NNbk53v6jOz0ZgwV9Wz?=
- =?us-ascii?Q?r8Qm0EMO2uPfu/b9PESgUsVm3bZb37hrJZjGLRveoEKP0+YYrACfbKAO78Sk?=
- =?us-ascii?Q?YmyfAHxX0mmz5EVoHWyKAdVvNy4v8UmCZ7P/KykT9UFMBGdYS1pEsZRxCPux?=
- =?us-ascii?Q?a/SOdEYpDYMsjN+tbQeWkswhWIZ5x2tgWXnRVtM3y/k4R2Ula98VvlZ67mI7?=
- =?us-ascii?Q?/hPj1t3tsFThkcsb2lXMcZxG9/RKCIr1sO1SHJOATXh7OIiUXzXSaAwwG6aD?=
- =?us-ascii?Q?AAfdnM1oY+L1rhSurQR4gfbZUqZZxK3zg2oTyltY0agXn80ViEe4jo+OMJ6a?=
- =?us-ascii?Q?F+Lxg3pbtSo+i2r7gcLJg7e8vJSc0Pkh+t5LMgXDxY+S5sOKiuZD9d1DkdSH?=
- =?us-ascii?Q?mvYm10dVjcAeNaR8pzNz8MT1TLkDechmz8xcXpmI3R/IA73OhZm3KpmJVqws?=
- =?us-ascii?Q?+H517uxgGNPB+tDw+tB78l+GiysytvCLgsZeo4wCIJL5vRXJo8dghbPd+wLX?=
- =?us-ascii?Q?yZPA30Mg89J5VoIV8y8aKJNCimlHifcBnw73QSl7qVAD1rGmPHDHV9zfr+4W?=
- =?us-ascii?Q?59Rwqo8kh59vYvQeoKJVH89klorPcaLjZzgHjNFu4bSMIDZvCPLX2A/2ljHd?=
- =?us-ascii?Q?ZQot3vrM66JzzNO11xiC36zeRwUthlBX5l9T+G9oXQAFYcDe15yepzZO18HA?=
- =?us-ascii?Q?WFpdnkWH+AZ5W6bThHgmn75FQYdegN54GxxOEy3GhYglNKnIE7U28Zz+dbit?=
- =?us-ascii?Q?QCDr8qIBwSpvauKH7OIgC3qQNiTuAUJh82YpIQHKRzLLIaXBnc4KykBdMD8q?=
- =?us-ascii?Q?3zCPtCWw2mXM2CxPT2YRHXRB/OCMjVOH4rOcvWP+AMftHFPOA8vc+yvmCaDP?=
- =?us-ascii?Q?PS3uvYU3rCa9RlGghCQFqlPQE8NwdGuztUuzPhn/OnCSO19P7EF5lm7OOal2?=
- =?us-ascii?Q?BQQ5GtpAesZFVTXu/zVVTcE6wdIL0CmguWsFLQMEN8Qgrz1edAHXRf2oPnwX?=
- =?us-ascii?Q?1VF3G6efzJi9lJQhoFLcH9br0U2TYH3dWdOzTQ73HcIsSXtDJXl9PNHBv7tt?=
- =?us-ascii?Q?vhXlDfFv8rU0FeiU+ttqVg1q/zdQ7JPTgf0LqmAO+WI3qEIHK0rmigPvAOX7?=
- =?us-ascii?Q?pkAWjfeROhPwYygSorcC3Cp7FS9Br2RQqD9n1aoPocezeycmSam31C1UOKoq?=
- =?us-ascii?Q?bVOQg=3D=3D?=
-x-microsoft-antispam-prvs: <CY4PR02MB2728B32BD57275FCAABF4596A74D0@CY4PR02MB2728.namprd02.prod.outlook.com>
-x-forefront-prvs: 0970508454
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(366004)(13464003)(53754006)(199004)(189003)(76176011)(6636002)(5660300002)(6116002)(3846002)(6436002)(2906002)(55016002)(97736004)(102836004)(6506007)(476003)(53546011)(486006)(53936002)(68736007)(6246003)(74316002)(14444005)(256004)(9686003)(446003)(11346002)(186003)(7696005)(26005)(99286004)(105586002)(71200400001)(14454004)(478600001)(25786009)(2501003)(52536013)(7416002)(305945005)(2201001)(110136005)(8936002)(229853002)(316002)(106356001)(66066001)(81166006)(71190400001)(81156014)(7736002)(86362001)(33656002)(8676002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2728;H:CY4PR02MB2709.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WGUT8Flf0AN4fLSkixnoUm+dLwmo/r7xOBU2qvFJavJJVQSrAmmaYiNCDpQYYMKyEwrAp3VB1C2mxOyU6d8zIMPPEuNKEdxdXEyKEfMK8+1GozNtO2pMteW7Zsjv/HBKjIj4hMstIOJ7KvntTF0z4EChBb+hV/5LhnJHdcXyk64FafU4PDbXpC6WyDnYByjGV5DMEvSnI80ig+dREOWQDU33dcGHvLjCSq6VaikpUldTUgm3nA9jjU8zoPn30ahgctD0VsABnrR9XygKvFQz9MTZZX/2mof67AfGGjuQm8K1kjKSIIn7vR7kY2+I5W+latwLo3hwn8EbHH0dhj8nR45pMx7tJe87M0yaJusXoVeqncf5Ox1T+rn1P/uWYEUVI95c6Dc7qG0neOHm5BWIdZi88phEY/Gat70fD1dC1L8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726761AbfCHSR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 13:17:57 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 28613ACF8;
+        Fri,  8 Mar 2019 18:17:55 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 10:17:47 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, mgorman@techsingularity.net,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] tools/perf-bench: Add basic syscall benchmark
+Message-ID: <20190308181747.l36zqz2avtivrr3c@linux-r8p5>
+References: <20190307185253.28432-1-dave@stgolabs.net>
+ <20190307191157.GB32240@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e48b337-fc4d-4848-5d6b-08d6a3f1c01f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2019 18:13:22.4399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2728
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190307191157.GB32240@kernel.org>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Thu, 07 Mar 2019, Arnaldo Carvalho de Melo wrote:
+>You forgot to update tools/perf/Documentation/perf-bench.txt, and please
+>take a look at tools/perf/util/pmu.c convert_scale() to see how to save
+>the current locale, set the one you want, then restore the previous one,
+>so that at the end of this benchmark the environment is back to where it
+>was.
 
-Please ignore this patch series as I missed addressing some comments in thi=
-s patch.
-I will address them in the next series.=20
+Here's an updated version with the corresponding docs, but I removed the
+setlocale() - doesn't seem worth it; I hope Mel has no strong objection.
 
-Regards
-Vishal Sagar
+Thanks.
 
-> -----Original Message-----
-> From: Vishal Sagar [mailto:vishal.sagar@xilinx.com]
-> Sent: Friday, March 08, 2019 11:01 PM
-> To: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
-> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
-> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
-> devicetree@vger.kernel.org; sakari.ailus@linux.intel.com;
-> hans.verkuil@cisco.com; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Dinesh Kumar <dineshk@xilinx.com>; Sandip Kothari
-> <sandipk@xilinx.com>
-> Cc: Vishal Sagar <vishal.sagar@xilinx.com>
-> Subject: [PATCH v4 0/2] Add support for Xilinx CSI2 Receiver Subsystem
->=20
-> Xilinx MIPI CSI-2 Receiver Subsystem
-> ------------------------------------
->=20
-> The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
-> gets the data, an optional I2C, a CSI-2 Receiver which parses the data an=
-d
-> converts it into AXIS data.
-> This stream output maybe connected to a Xilinx Video Format Bridge.
-> The maximum number of lanes supported is fixed in the design.
-> The number of active lanes can be programmed.
-> For e.g. the design may set maximum lanes as 4 but if the camera sensor h=
-as
-> only 1 lane then the active lanes shall be set as 1.
->=20
-> The pixel format set in design acts as a filter allowing only the selecte=
-d
-> data type or RAW8 data packets. The D-PHY register access can be gated in
-> the design. The base address of the DPHY depends on whether the internal
-> Xilinx I2C controller is enabled or not in design.
->=20
-> The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub devi=
-ce
-> having 2 pads. The sink pad is connected to the MIPI camera sensor and
-> output pad is connected to the video node.
-> Refer to xlnx,csi2rxss.txt for device tree node details.
->=20
-> This driver helps configure the number of active lanes to be set, setting
-> and handling interrupts and IP core enable. It logs the number of events
-> occurring according to their type between streaming ON and OFF.
-> It generates a v4l2 event for each short packet data received.
-> The application can then dequeue this event and get the requisite data
-> from the event structure.
->=20
-> It adds new V4L2 controls which are used to get the event counter values
-> and reset the subsystem.
->=20
-> The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
-> used for image processing. This data follows the video formats mentioned
-> in Xilinx UG934 when the Video Format Bridge.
->=20
-> v4
-> - 1/2
->   - Added reviewed by Hyun Kwon
-> - 2/2
->   - Removed irq member from core structure
->   - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
->   - Return -EINVAL in case of invalid ioctl
->   - Code formatting
->   - Added reviewed by Hyun Kwon
->=20
-> v3
-> - 1/2
->   - removed interrupt parent as suggested by Rob
->   - removed dphy clock
->   - moved vfb to optional properties
->   - Added required and optional port properties section
->   - Added endpoint property section
-> - 2/2
->  - Fixed comments given by Hyun.
->  - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
->  - Minor code formatting
->  - en_csi_v20 and vfb members removed from struct and made local to dt
-> parsing
->  - lock description updated
->  - changed to ratelimited type for all dev prints in irq handler
->  - Removed YUV 422 10bpc media format
->=20
-> v2
-> - 1/2
->   - updated the compatible string to latest version supported
->   - removed DPHY related parameters
->   - added CSI v2.0 related property (including VCX for supporting upto 16
->     virtual channels).
->   - modified csi-pxl-format from string to unsigned int type where the va=
-lue
->     is as per the CSI specification
->   - Defined port 0 and port 1 as sink and source ports.
->   - Removed max-lanes property as suggested by Rob and Sakari
->=20
-> - 2/2
->   - Fixed comments given by Hyun and Sakari.
->   - Made all bitmask using BIT() and GENMASK()
->   - Removed unused definitions
->   - Removed DPHY access. This will be done by separate DPHY PHY driver.
->   - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
->     virtual channels
->   - Fixed the ports as sink and source
->   - Now use the v4l2fwnode API to get number of data-lanes
->   - Added clock framework support
->   - Removed the close() function
->   - updated the set format function
->   - Support only VFB enabled config
->=20
-> Vishal Sagar (2):
->   media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
->   media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
->=20
->  .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  123 ++
->  drivers/media/platform/xilinx/Kconfig              |   10 +
->  drivers/media/platform/xilinx/Makefile             |    1 +
->  drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1557
-> ++++++++++++++++++++
->  include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
->  include/uapi/linux/xilinx-v4l2-events.h            |   25 +
->  6 files changed, 1730 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
->  create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
->  create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
->=20
-> --
-> 2.7.4
+-------8<----------------------------------------------------------
+[PATCH v2] tools/perf-bench: Add basic syscall benchmark
+
+The usefulness of having a standard way of testing syscall performance
+has come up from time to time[0]. Furthermore, some of our testing
+machinery (such as 'mmtests') already makes use of a simplified version
+of the microbenchmark. This patch mainly takes the same idea to measure
+syscall throughput compatible with 'perf-bench' via getppid(2), yet
+without any of the additional template stuff from Ingo's version (based
+on numa.c). The code is identical to what mmtests uses.
+
+[0] https://lore.kernel.org/lkml/20160201074156.GA27156@gmail.com/
+
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ tools/perf/Documentation/perf-bench.txt | 11 +++++
+ tools/perf/bench/Build                  |  1 +
+ tools/perf/bench/bench.h                |  1 +
+ tools/perf/bench/syscall.c              | 78 +++++++++++++++++++++++++++++++++
+ tools/perf/builtin-bench.c              |  8 ++++
+ 5 files changed, 99 insertions(+)
+ create mode 100644 tools/perf/bench/syscall.c
+
+diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
+index 0921a3c67381..8093cafc530a 100644
+--- a/tools/perf/Documentation/perf-bench.txt
++++ b/tools/perf/Documentation/perf-bench.txt
+@@ -49,6 +49,9 @@ SUBSYSTEM
+ 'sched'::
+ 	Scheduler and IPC mechanisms.
+ 
++'syscall'::
++	System call performance (throughput).
++
+ 'mem'::
+ 	Memory access performance.
+ 
+@@ -134,6 +137,14 @@ Example of *pipe*
+                 59004 ops/sec
+ ---------------------
+ 
++SUITES FOR 'syscall'
++~~~~~~~~~~~~~~~~~~
++*basic*::
++Suite for evaluating performance of core system call throughput (both usecs/op and ops/sec metrics).
++This uses a single thread simply doing getppid(2), which is a simple syscall where the result is not
++cached by glibc.
++
++
+ SUITES FOR 'mem'
+ ~~~~~~~~~~~~~~~~
+ *memcpy*::
+diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+index e4e321b6f883..839f9b790587 100644
+--- a/tools/perf/bench/Build
++++ b/tools/perf/bench/Build
+@@ -1,5 +1,6 @@
+ perf-y += sched-messaging.o
+ perf-y += sched-pipe.o
++perf-y += syscall.o
+ perf-y += mem-functions.o
+ perf-y += futex-hash.o
+ perf-y += futex-wake.o
+diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+index fddb3ced9db6..31ad3283d41b 100644
+--- a/tools/perf/bench/bench.h
++++ b/tools/perf/bench/bench.h
+@@ -29,6 +29,7 @@
+ int bench_numa(int argc, const char **argv);
+ int bench_sched_messaging(int argc, const char **argv);
+ int bench_sched_pipe(int argc, const char **argv);
++int bench_syscall_basic(int argc, const char **argv);
+ int bench_mem_memcpy(int argc, const char **argv);
+ int bench_mem_memset(int argc, const char **argv);
+ int bench_futex_hash(int argc, const char **argv);
+diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+new file mode 100644
+index 000000000000..409f84a4fe4f
+--- /dev/null
++++ b/tools/perf/bench/syscall.c
+@@ -0,0 +1,78 @@
++/*
++ *
++ * syscall.c
++ *
++ * syscall: Benchmark for system call performance
++ */
++#include "../perf.h"
++#include "../util/util.h"
++#include <subcmd/parse-options.h>
++#include "../builtin.h"
++#include "bench.h"
++
++#include <stdio.h>
++#include <sys/time.h>
++#include <sys/syscall.h>
++
++#define LOOPS_DEFAULT 10000000
++static	int loops = LOOPS_DEFAULT;
++
++static const struct option options[] = {
++	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
++	OPT_END()
++};
++
++static const char * const bench_syscall_usage[] = {
++	"perf bench syscall <options>",
++	NULL
++};
++
++int bench_syscall_basic(int argc, const char **argv)
++{
++	struct timeval start, stop, diff;
++	unsigned long long result_usec = 0;
++	int i;
++
++	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
++
++	gettimeofday(&start, NULL);
++
++	for (i = 0; i < loops; i++)
++		getppid();
++
++	gettimeofday(&stop, NULL);
++	timersub(&stop, &start, &diff);
++
++	switch (bench_format) {
++	case BENCH_FORMAT_DEFAULT:
++		printf("# Executed %'d getppid() calls\n", loops);
++
++		result_usec = diff.tv_sec * 1000000;
++		result_usec += diff.tv_usec;
++
++		printf(" %14s: %lu.%03lu [sec]\n\n", "Total time",
++		       diff.tv_sec,
++		       (unsigned long) (diff.tv_usec/1000));
++
++		printf(" %14lf usecs/op\n",
++		       (double)result_usec / (double)loops);
++		printf(" %'14d ops/sec\n",
++		       (int)((double)loops /
++			     ((double)result_usec / (double)1000000)));
++		break;
++
++	case BENCH_FORMAT_SIMPLE:
++		printf("%lu.%03lu\n",
++		       diff.tv_sec,
++		       (unsigned long) (diff.tv_usec / 1000));
++		break;
++
++	default:
++		/* reaching here is something disaster */
++		fprintf(stderr, "Unknown format:%d\n", bench_format);
++		exit(1);
++		break;
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index 334c77ffc1d9..017029765404 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -11,6 +11,7 @@
+  * Available benchmark collection list:
+  *
+  *  sched ... scheduler and IPC performance
++ *  syscall ... System call performance
+  *  mem   ... memory access performance
+  *  numa  ... NUMA scheduling and MM performance
+  *  futex ... Futex performance
+@@ -50,6 +51,12 @@ static struct bench sched_benchmarks[] = {
+ 	{ NULL,		NULL,						NULL			}
+ };
+ 
++static struct bench syscall_benchmarks[] = {
++	{ "basic",	"Benchmark for basic getppid(2) calls",		bench_syscall_basic	},
++	{ "all",	"Run all syscall benchmarks",			NULL			},
++	{ NULL,		NULL,						NULL			},
++};
++
+ static struct bench mem_benchmarks[] = {
+ 	{ "memcpy",	"Benchmark for memcpy() functions",		bench_mem_memcpy	},
+ 	{ "memset",	"Benchmark for memset() functions",		bench_mem_memset	},
+@@ -85,6 +92,7 @@ struct collection {
+ 
+ static struct collection collections[] = {
+ 	{ "sched",	"Scheduler and IPC benchmarks",			sched_benchmarks	},
++	{ "syscall",	"System call benchmarks",			syscall_benchmarks	},
+ 	{ "mem",	"Memory access benchmarks",			mem_benchmarks		},
+ #ifdef HAVE_LIBNUMA_SUPPORT
+ 	{ "numa",	"NUMA scheduling and MM benchmarks",		numa_benchmarks		},
+-- 
+2.16.4
 
