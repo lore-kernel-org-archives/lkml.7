@@ -2,101 +2,322 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A26C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F40C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7691420854
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF5420854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMlqhyY+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="L46+NeLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfCHKcp (ORCPT
+        id S1726395AbfCHKer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 05:32:45 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42531 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfCHKcp (ORCPT
+        Fri, 8 Mar 2019 05:34:47 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:33996 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfCHKeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 05:32:45 -0500
-Received: by mail-oi1-f196.google.com with SMTP id s16so15448112oih.9;
-        Fri, 08 Mar 2019 02:32:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MlgrN4mQ7XignmdImQgiWV15DEw4HqEFyqPB8KfQ+Gc=;
-        b=OMlqhyY+vjlqFqRLCDFy31g4vd4IMzgd+RPsXWlwUj9EzxtZ7df7B4tajzc3IS6YcP
-         7YB8w5wcKdpm7Mpru231QgXI/KXJ2rbFPnGXZ6uBoVzZFnIGM3+Odk4lvTjIiko5T9nw
-         5nsvc+vE4O5uV+bZ4tJSTErEYnXSuj58ce/VpgVc3o10x/o6WR07cQcnY4O67D2tkz2M
-         wN7S7useiJss88kfAGZppZRRiOiMEPFUbjND1qeuzRteyCEeRnNUjZIKo0qRC2MaKsKK
-         BurV1BdxMw7vAFZrMiplJV8SaRUxa/V3/R7p0w8xq3IjZMbdmK5aQInkqHr8/iPc15wa
-         p7lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MlgrN4mQ7XignmdImQgiWV15DEw4HqEFyqPB8KfQ+Gc=;
-        b=bhHcsIdxY/Q+1/hP0Ssm7MiajXlk+uRlQUrqjuxWoU6ptk52AQrVEXuosjGMelccQq
-         BIyWiyx9qMTC2Sx1oRcYAsWY9qupwgEPGwu35S/d2IKJ+EGvzw4/dnjSwsxfXoCuldDb
-         6UhNeuj6DeZhHCT5qBxlNYrLYf/jZGgZUVJ0FQs1GgjxobZ7KtgDXHZxaEer5bXhs5ao
-         zbL0fibWsx8Qpf0jBYxSvtD7Ou767dy5Ml1DAyWySajbD5aIPDojNlbHcnGjp6Ms0aVH
-         XLMTbs/or9L0x4Q5R56zxHcT+SUP2mB2S8s3IFRW/KpHt0wrJIXlfxGP5GBEFeMpYJoP
-         ZGpQ==
-X-Gm-Message-State: APjAAAVm1CFrAK29xWadxljEAawPpVZmaQNJow/F8dVaovEof64JnXRG
-        48zYEVW+L1RPeREWVvVEUXcWMRB+N1CdWjIxL7s=
-X-Google-Smtp-Source: APXvYqxZ+06K4U3C7ug9RZjNLzZX749mP4L6f5Is0j3Kf3+gp2BWAaWpNqD1n1R7Dv4y241nq2Y/XGojr6CMKVoJmXQ=
-X-Received: by 2002:aca:4a95:: with SMTP id x143mr7976352oia.18.1552041164289;
- Fri, 08 Mar 2019 02:32:44 -0800 (PST)
+        Fri, 8 Mar 2019 05:34:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UjX3ItZ5Vy7aOhCAVrmmE1okjsmhQhugCdlkX5wr5fI=; b=L46+NeLqMiYzLm5WZGnyhLS0n
+        E5Rb+rnlh7icRZKJSm3rHddErALlhENLCIBFOXWFKVvlADlDhNOs3prvkS6vTXe9q2NcF7iHDqoNA
+        gqWzaIDr3F7VEYuW2UdVp9B81fdrP5zCodyveTt6UJthSWPa0cVmhKVwVSnZCKQtsajgf/ge4j7BR
+        etn1LIjEmT9aVJdN7oxQntdYYPRPz+R9rMGAnlOsCHojie4N8Zb6n4yO4UWtPbIskXhwB2pcIPuZx
+        oIUPGOmZfI/sTyEl4U1LJUQPH5ngVc7yDA+krgDd82R83vxOvZg44PpX4DZUvv0DUPAROzCHd+xF+
+        DxEI/L/+g==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37318)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1h2Cpl-0003Hx-Hq; Fri, 08 Mar 2019 10:34:33 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1h2Cph-0005gp-E9; Fri, 08 Mar 2019 10:34:29 +0000
+Date:   Fri, 8 Mar 2019 10:34:29 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Mikael Pettersson <mikpelinux@gmail.com>,
+        Mikael Pettersson <mikpe@it.uu.se>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
+Message-ID: <20190308103429.ycasmpt6tcpsoqps@shell.armlinux.org.uk>
+References: <20190307091514.2489338-1-arnd@arndb.de>
+ <20190307091514.2489338-2-arnd@arndb.de>
+ <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
+ <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk>
+ <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
+ <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk>
+ <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190227063737.24445-1-daniel.baluta@nxp.com> <20190227063737.24445-6-daniel.baluta@nxp.com>
- <CAOMZO5AY--Q7FDwK-k8u=mkR-9bxz0XWXN3HNZb4Pb+MESZ6Dg@mail.gmail.com> <CAEnQRZCyUG33SbwhPkE95tuaBdJ7Lo9WbVfJz06ZB1-X9ZbKww@mail.gmail.com>
-In-Reply-To: <CAEnQRZCyUG33SbwhPkE95tuaBdJ7Lo9WbVfJz06ZB1-X9ZbKww@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 8 Mar 2019 07:32:45 -0300
-Message-ID: <CAOMZO5COQNvpbdxG808aRSfMhMHznorPzoCD-Kp7rB6e8jz4Ng@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: imx8mq-evk: Enable wm8524 codec
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
-        "spencercw@gmail.com" <spencercw@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Fri, Mar 08, 2019 at 11:08:40AM +0100, Ard Biesheuvel wrote:
+> On Fri, 8 Mar 2019 at 10:53, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Fri, Mar 08, 2019 at 09:57:45AM +0100, Ard Biesheuvel wrote:
+> > > On Fri, 8 Mar 2019 at 00:49, Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > >
+> > > > On Thu, Mar 07, 2019 at 11:39:08AM -0800, Nick Desaulniers wrote:
+> > > > > On Thu, Mar 7, 2019 at 1:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > >
+> > > > > > Passing registers containing zero as both the address (NULL pointer)
+> > > > > > and data into cmpxchg_futex_value_locked() leads clang to assign
+> > > > > > the same register for both inputs on ARM, which triggers a warning
+> > > > > > explaining that this instruction has unpredictable behavior on ARMv5.
+> > > > > >
+> > > > > > /tmp/futex-7e740e.s: Assembler messages:
+> > > > > > /tmp/futex-7e740e.s:12713: Warning: source register same as write-back base
+> > > > > >
+> > > > > > This patch was suggested by Mikael Pettersson back in 2011 (!) with gcc-4.4,
+> > > > > > as Mikael wrote:
+> > > > > >  "One way of fixing this is to make uaddr an input/output register, since
+> > > > > >  "that prevents it from overlapping any other input or output."
+> > > > > >
+> > > > > > but then withdrawn as the warning was determined to be harmless, and it
+> > > > > > apparently never showed up again with later gcc versions.
+> > > > > >
+> > > > > > Now the same problem is back when compiling with clang, and we are trying
+> > > > > > to get clang to build the kernel without warnings, as gcc normally does.
+> > > > > >
+> > > > > > Cc: Mikael Pettersson <mikpe@it.uu.se>
+> > > > > > Cc: Mikael Pettersson <mikpelinux@gmail.com>
+> > > > > > Cc: Dave Martin <Dave.Martin@arm.com>
+> > > > > > Link: https://lore.kernel.org/linux-arm-kernel/20009.45690.158286.161591@pilspetsen.it.uu.se/
+> > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > > > > ---
+> > > > > >  arch/arm/include/asm/futex.h | 10 +++++-----
+> > > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > > > >
+> > > > > > diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+> > > > > > index 0a46676b4245..79790912974e 100644
+> > > > > > --- a/arch/arm/include/asm/futex.h
+> > > > > > +++ b/arch/arm/include/asm/futex.h
+> > > > > > @@ -110,13 +110,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+> > > > > >         preempt_disable();
+> > > > > >         __ua_flags = uaccess_save_and_enable();
+> > > > > >         __asm__ __volatile__("@futex_atomic_cmpxchg_inatomic\n"
+> > > > > > -       "1:     " TUSER(ldr) "  %1, [%4]\n"
+> > > > > > -       "       teq     %1, %2\n"
+> > > > > > +       "1:     " TUSER(ldr) "  %1, [%2]\n"
+> > > > > > +       "       teq     %1, %3\n"
+> > > > > >         "       it      eq      @ explicit IT needed for the 2b label\n"
+> > > > > > -       "2:     " TUSER(streq) "        %3, [%4]\n"
+> > > > > > +       "2:     " TUSER(streq) "        %4, [%2]\n"
+> > > > > >         __futex_atomic_ex_table("%5")
+> > > > > > -       : "+r" (ret), "=&r" (val)
+> > > > > > -       : "r" (oldval), "r" (newval), "r" (uaddr), "Ir" (-EFAULT)
+> > > > > > +       : "+&r" (ret), "=&r" (val), "+&r" (uaddr)
+> > > > > > +       : "r" (oldval), "r" (newval), "Ir" (-EFAULT)
+> > > > > >         : "cc", "memory");
+> > > > > >         uaccess_restore(__ua_flags);
+> > > > >
+> > > > > Underspecification of constraints to extended inline assembly is a
+> > > > > common issue exposed by other compilers (and possibly but in-effect
+> > > > > infrequently compiler upgrades).
+> > > > > So the reordering of the constraints means the in the assembly (notes
+> > > > > for other reviewers):
+> > > > > %2 -> %3
+> > > > > %3 -> %4
+> > > > > %4 -> %2
+> > > > > Yep, looks good to me, thanks for finding this old patch and resending, Arnd!
+> > > >
+> > > > I don't see what is "underspecified" in the original constraints.
+> > > > Please explain.
+> > > >
+> > >
+> > > I agree that that statement makes little sense.
+> > >
+> > > As Russell points out in the referenced thread, there is nothing wrong
+> > > with the generated assembly, given that the UNPREDICTABLE opcode is
+> > > unreachable in practice. Unfortunately, we have no way to flag this
+> > > diagnostic as a known false positive, and AFAICT, there is no reason
+> > > we couldn't end up with the same diagnostic popping up for GCC builds
+> > > in the future, considering that the register assignment matches the
+> > > constraints. (We have seen somewhat similar issues where constant
+> > > folded function clones are emitted with a constant argument that could
+> > > never occur in reality [0])
+> > >
+> > > Given the above, the only meaningful way to invoke this function is
+> > > with different registers assigned to %3 and %4, and so tightening the
+> > > constraints to guarantee that does not actually result in worse code
+> > > (except maybe for the instantiations that we won't ever call in the
+> > > first place). So I think we should fix this.
+> > >
+> > > I wonder if just adding
+> > >
+> > > BUG_ON(__builtin_constant_p(uaddr));
+> > >
+> > > at the beginning makes any difference - this shouldn't result in any
+> > > object code differences since the conditional will always evaluate to
+> > > false at build time for instantiations we care about.
+> > >
+> > >
+> > > [0] https://lore.kernel.org/lkml/9c74d635-d0d1-0893-8093-ce20b0933fc7@redhat.com/
+> >
+> > What I'm actually asking is:
+> >
+> > The GCC manual says that input operands _may_ overlap output operands
+> > since GCC assumes that input operands are consumed before output
+> > operands are written.  This is an explicit statement.
+> >
+> > The GCC manual does not say that input operands may overlap with each
+> > other, and the behaviour of GCC thus far (apart from one version,
+> > presumably caused by a bug) has been that input operands are unique.
+> >
+> 
+> Not entirely. I have run into issues where GCC assumes that registers
+> that are only used for input operands are left untouched by the asm
+> code. I.e., if you put an asm() block in a loop and modify an input
+> register, your code may break on the next pass, even if the input
+> register does not overlap with an output register.
 
-On Fri, Mar 1, 2019 at 12:53 PM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+GCC has had the expectation for decades that _input_ operands are not
+changed in value by the code in the assembly.  This isn't quite the
+same thing as the uniqueness of the register allocation for input
+operands.
 
-> They are used by simple-card.c machine driver.
->
-> asoc_simple_card_parse_clk
-> -> /* Parse dai->sysclk come from "clocks = <&xxx>" */
-> clk = devm_get_clk_from_child(dev, node, NULL);
+> To me, that seems to suggest that whether or not inputs may overlap is
+> irrelevant, since they are not expected to be modified.
 
-The simple-card looks for the "clocks" properties inside the
-simple-card node, not inside the codec node, right?
+How is:
+
+	stmfd	sp!, {r0-r3, ip, lr}
+	bl	foo
+	ldmfd	sp!, {r0-r3, ip, lr}
+
+where r1 may be an input operand (to pass an argument to foo) any
+different from:
+
+	ldrt	r0, [r1]
+
+as far as whether r1 is modified in both cases?  In both cases, the
+value of r1 is read and written by both instructions, but in both
+cases the value of r1 remains the same no matter what the value of r1
+was.
+
+The "input operands should not be modified" is entirely orthogonal to
+the input operand register allocation.
+
+> > Clang appears to be different: it allows input operands that are
+> > registers, and contain the same constant value to be the same physical
+> > register.
+> >
+> > The assertion is that the constraints are under-specified.  I am
+> > questioning that assertion.
+> >
+> > If the constraints are under-specified, I would have expected gcc-4.4's
+> > behaviour to have persisted, and we would've been told by gcc's
+> > developers to fix our code.  That didn't happen, and instead gcc seems
+> > to have been fixed.  So, my conclusion is that it is intentional that
+> > input operands to asm() do not overlap with themselves.
+> >
+> 
+> Whether we hit the error or not is not deterministic. Like in the
+> ilog2() case I quoted, GCC may decide to instantiate a constant folded
+> ['curried', if you will] clone of a function, and so even if any calls
+> to futex_atomic_cmpxchg_inatomic() with constant NULL args for newval
+> and uaddr are compiled, it does not mean they occur like that in the C
+> code.
+
+Again, I think this is different: gcc knows what the C code is doing and
+can optimise it.  GCC doesn't have any idea what the code in an asm() is
+doing beyond what the constraints are telling it, and the rules for
+those constraints set out in the GCC manual.
+
+Given that we are explicitly talking about the register allocation for
+input operands, I'm not sure how the ilog2() case you mention applies.
+
+> > It seems to me that the work-around for clang is to change every input
+> > operand to be an output operand with a "+&r" contraint - an operand
+> > that is both read and written by the "instruction", and that the operand
+> > is "earlyclobber".  For something that is really only read, that seems
+> > strange.
+> >
+> > Also, reading GCC's manual, it would appear that "+&" is wrong.
+> >
+> > `+'
+> >      Means that this operand is both read and written by the
+> >      instruction.
+> >
+> >      When the compiler fixes up the operands to satisfy the constraints,
+> >      it needs to know which operands are inputs to the instruction and
+> >      which are outputs from it.  `=' identifies an output; `+'
+> >      identifies an operand that is both input and output; all other
+> >                                    ^^^^^^^^^^^^^^^^^^^^^
+> >      operands are assumed to be input only.
+> >
+> > `&'
+> >      Means (in a particular alternative) that this operand is an
+> >      "earlyclobber" operand, which is modified before the instruction is
+> >      finished using the input operands.  Therefore, this operand may
+> >      not lie in a register that is used as an input operand or as part
+> >      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >      of any memory address.
+> >
+> > So "+" says that this operand is an input but "&" says that it must not
+> > be in a register that is used as an input.  That's contradictory, and I
+> > think we can expect GCC to barf or at least end up doing strange stuff,
+> > if not with existing versions, then with future versions.
+> >
+> 
+> I wondered about the same thing: given that the asm itself is a black
+> box to the compiler, it can never reuse an in/output register for
+> output, so when it is clobbered is irrelevant.
+
+Let me try again - you seem to have completely missed my point.
+
++ specifies that the operand is an input.
+& specifies that the operand is not an input.
+
++ and & are contradictory.
+
+GCC is at liberty to not assign a value to an operand with a +&
+modifier, or error out such a construction.
+
+> 
+> > Hence, I'm asking for clarification why it is thought that the existing
+> > code underspecifies the asm constraints, and I'm trying to get some more
+> > thought about what the constraints should be, in case there is a need to
+> > use "better" constraints.
+> 
+> I think the constraints are correct, but as I argued before,
+> tightening the constraints to ensure that uaddr and newval are not
+> mapped onto the same register should not result in any object code
+> changes, except for the case where the compiler instantiated a
+> constprop clone that is bogus to begin with.
+
+... by tightening it to an undefined combination of constraint modifiers
+that just happens to seem to do the right thing.  No, this is not proper
+"engineering".  This is bodging.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
