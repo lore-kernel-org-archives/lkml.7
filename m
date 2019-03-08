@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE74C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A374AC10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D5120661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A0F20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050458;
-	bh=5o6tHPp04SDLt5dJq08eMfQk1u0bJjqKXdjsEaQ4uZA=;
+	s=default; t=1552050464;
+	bh=mAEgiU6lOXultLVdlHUThsBZjwACq3XNU2uqQ3gT52o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OC02UetqP2HrwCLE9kETtwi4yU8Lb+lhCj3SQuhj/wR+ud8D0mW9xCw9M7GM5Wzlo
-	 pWJJ9/73SKr/Dd+75hEkosNyQmI6i7PfeF9BuuTXoue3zeA2osujtdKb/iWd2n5+i3
-	 Nz9cWY6BBmkooPk8EH/qnY4XGkf+oZyP2wefMT+I=
+	b=2qfDe78msvkybAICRn6z/+JMKMqX86byvkTRGBDoz/czlM/Al7uBy9VdnVpraD2aj
+	 E/D3jJfR5IBjAWnV1Y7xtIiUbqryAkMbsuNA2/jxaktPJpQSWUJuZuB06DXDI3Segc
+	 b8APcQFeN9PQljorCKc7kIlLiKzw1oZx+nm9Z9uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfCHMyD (ORCPT
+        id S1727229AbfCHMxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:54:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfCHMyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:54:00 -0500
+        id S1726625AbfCHMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:50 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ACF5208E4;
-        Fri,  8 Mar 2019 12:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1525F20684;
+        Fri,  8 Mar 2019 12:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049638;
-        bh=5o6tHPp04SDLt5dJq08eMfQk1u0bJjqKXdjsEaQ4uZA=;
+        s=default; t=1552049629;
+        bh=mAEgiU6lOXultLVdlHUThsBZjwACq3XNU2uqQ3gT52o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rBvTotW1OAtrEuNburuyLFoGRzXYTY/7uoHDOTLzM/lnOwJJOotfq55ZBkQS/cALP
-         YSfpLVAgUaMxO4O8rEurUoEl2k3rhsYACx5AVsLFLxjWWX3al5UxL6YHKwX9+LtDIQ
-         hn4tqLCc70IIkBzKyHUAGTjG0/B19qyrK3CQ3+ig=
+        b=hxlKelpCwH/0wAOzOCrCcoC7CchvJbE0OMxdZDUalJWMpKNbPyyiLIAH2Wwo+QbHP
+         Tj6Fvg+7OYeyPAjh09fHiVOBOnLR5+jkKIq/gatvhxJ8d/6auUt9vcqe51CBwkR0MQ
+         Dui3q2IPmnMNtIRD9h5sdFey3pEG6nP2Wx9hMLac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 18/76] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
-Date:   Fri,  8 Mar 2019 13:49:30 +0100
-Message-Id: <20190308124915.422859561@linuxfoundation.org>
+        stable@vger.kernel.org, Qing Xia <saberlily.xia@hisilicon.com>,
+        Jing Xia <jing.xia@unisoc.com>,
+        Yuming Han <yuming.han@unisoc.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH 4.20 15/76] staging: android: ion: fix sys heap pools gfp_flags
+Date:   Fri,  8 Mar 2019 13:49:27 +0100
+Message-Id: <20190308124915.317170968@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -66,67 +68,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Qing Xia <saberlily.xia@hisilicon.com>
 
-[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
+commit 9bcf065e28122588a6cbee08cf847826dacbb438 upstream.
 
-Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
-improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
-assume preemption is disabled when incrementing the counter and
-accessing a per-CPU variable.
+In the first loop, gfp_flags will be modified to high_order_gfp_flags,
+and there will be no chance to change back to low_order_gfp_flags.
 
-Preemption can be enabled when we add a route in process context that
-corresponds to packets stored in the unresolved queue, which are then
-forwarded using this route [1].
-
-Fix this by using IP6_INC_STATS() which takes care of disabling
-preemption on architectures where it is needed.
-
-[1]
-[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
-[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
-[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
-[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  157.460461] Call Trace:
-[  157.460486]  dump_stack+0xf9/0x1be
-[  157.460553]  check_preemption_disabled+0x1d6/0x200
-[  157.460576]  ip6mr_forward2+0x73e/0x10e0
-[  157.460705]  ip6_mr_forward+0x9a0/0x1510
-[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
-[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
-[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
-[  157.462013]  ipv6_setsockopt+0x90/0x110
-[  157.462036]  rawv6_setsockopt+0x4a/0x120
-[  157.462058]  __sys_setsockopt+0x16b/0x340
-[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
-[  157.462220]  do_syscall_64+0x14d/0x610
-[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e7f63771b60e ("ION: Sys_heap: Add cached pool to spead up cached buffer alloc")
+Signed-off-by: Qing Xia <saberlily.xia@hisilicon.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jing Xia <jing.xia@unisoc.com>
+Reviewed-by: Yuming Han <yuming.han@unisoc.com>
+Reviewed-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Reviewed-by: Orson Zhai <orson.zhai@unisoc.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6mr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/ipv6/ip6mr.c
-+++ b/net/ipv6/ip6mr.c
-@@ -1964,10 +1964,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
- 
- static inline int ip6mr_forward2_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+---
+ drivers/staging/android/ion/ion_system_heap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -224,10 +224,10 @@ static void ion_system_heap_destroy_pool
+ static int ion_system_heap_create_pools(struct ion_page_pool **pools)
  {
--	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
--			IPSTATS_MIB_OUTFORWDATAGRAMS);
--	__IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
--			IPSTATS_MIB_OUTOCTETS, skb->len);
-+	IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
-+		      IPSTATS_MIB_OUTFORWDATAGRAMS);
-+	IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
-+		      IPSTATS_MIB_OUTOCTETS, skb->len);
- 	return dst_output(net, sk, skb);
- }
+ 	int i;
+-	gfp_t gfp_flags = low_order_gfp_flags;
  
+ 	for (i = 0; i < NUM_ORDERS; i++) {
+ 		struct ion_page_pool *pool;
++		gfp_t gfp_flags = low_order_gfp_flags;
+ 
+ 		if (orders[i] > 4)
+ 			gfp_flags = high_order_gfp_flags;
 
 
