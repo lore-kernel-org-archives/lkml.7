@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F4BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FEDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2BE21019
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049C02087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049627;
-	bh=VnQrJniqRbYxTeSMMNyZvBs9zvh8wDZED5xINcviBAc=;
+	s=default; t=1552049631;
+	bh=UT43P2M2h2VV/sVCbWxPfMYnXbAhsz2Hg3Bk+qy1ysA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1ipGyLqVDRmUdz5StBaclXmfklDPKOkG2Oku/ivo2asPmF5nO7OyRxsowImsvpb2
-	 Mb3g6dFwgMM7/33pVF4oLRQ7U3ck6YeMFv438I+ho9kOsVilEiQElLiM+VGYNzIF+9
-	 EoNMjJl5AlQjxtnUTmZczTNcW6x6bYL6TUUkAqKc=
+	b=AjeLca6NFoSoRjWj5h1f3yeRGTUJFVowF/WFVICeHPs8o+rj6yVdiqYuA7Z683Pej
+	 ftDXkDb6GoOgvz6VENcWFhyZ59WnPRuOZmMAR6CWOzAWZD8Oglf4lvbe+ORcktdG8E
+	 bb+lNH0cMgkTPI2iDPOvaRd2eDE0MxXTTOnevKPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfCHMxq (ORCPT
+        id S1726744AbfCHMxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:53:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbfCHMxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:53:43 -0500
+        id S1727212AbfCHMxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:46 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC5CD2085A;
-        Fri,  8 Mar 2019 12:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7678F20684;
+        Fri,  8 Mar 2019 12:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049623;
-        bh=VnQrJniqRbYxTeSMMNyZvBs9zvh8wDZED5xINcviBAc=;
+        s=default; t=1552049626;
+        bh=UT43P2M2h2VV/sVCbWxPfMYnXbAhsz2Hg3Bk+qy1ysA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MyiJdAQ57cPFyPhxK2EEVXK4fyyteZ3++PXNWXtndhTnuo7B36CnHMM+tiLPBu3x8
-         BqSOC6kPKHLaYrMua4ozdgVWjxXJ3D6TUqRrY5SnufR1/Zh8AlBEqNlbY5iQsGKoRY
-         82LwHQlQg0H2rPgLBJmADLEyw1EnmW1onCn3eZ1k=
+        b=ZKCr0HSp9QbuwHMeg1PEvEh/3pLPM6nFeWQF2MxNFdnfA1G8xLl4qVC2C8VfF5lZD
+         Y3YHAWaPjnMg+vNkOKeUvBgliicLGWVN8Gk/VtCh8tkZm09rC+HG1pl6k1jDvQm9W7
+         N7HjMjKEChZ3XuYwuvMkSo5+d3XHGbrLwweyiOhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.20 13/76] staging: comedi: ni_660x: fix missing break in switch statement
-Date:   Fri,  8 Mar 2019 13:49:25 +0100
-Message-Id: <20190308124915.250572781@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4.20 14/76] staging: wilc1000: fix to set correct value for vif_num
+Date:   Fri,  8 Mar 2019 13:49:26 +0100
+Message-Id: <20190308124915.283271571@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -65,35 +64,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-commit 479826cc86118e0d87e5cefb3df5b748e0480924 upstream.
+commit dda037057a572f5c82ac2499eb4e6fb17600ba3e upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to the default case and return -EINVAL every time.
+Set correct value in '->vif_num' for the total number of interfaces and
+set '->idx' value using 'i'.
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Fixes: aa94f2888825 ("staging: comedi: ni_660x: tidy up ni_660x_set_pfi_routing()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 735bb39ca3be ("staging: wilc1000: simplify vif[i]->ndev accesses")
+Fixes: 0e490657c721 ("staging: wilc1000: Fix problem with wrong vif index")
+Cc: <stable@vger.kernel.org>
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/ni_660x.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/wilc1000/linux_wlan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/comedi/drivers/ni_660x.c
-+++ b/drivers/staging/comedi/drivers/ni_660x.c
-@@ -656,6 +656,7 @@ static int ni_660x_set_pfi_routing(struc
- 	case NI_660X_PFI_OUTPUT_DIO:
- 		if (chan > 31)
- 			return -EINVAL;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
+--- a/drivers/staging/wilc1000/linux_wlan.c
++++ b/drivers/staging/wilc1000/linux_wlan.c
+@@ -1104,8 +1104,8 @@ int wilc_netdev_init(struct wilc **wilc,
+ 		vif->wilc = *wilc;
+ 		vif->ndev = ndev;
+ 		wl->vif[i] = vif;
+-		wl->vif_num = i;
+-		vif->idx = wl->vif_num;
++		wl->vif_num = i + 1;
++		vif->idx = i;
+ 
+ 		ndev->netdev_ops = &wilc_netdev_ops;
+ 
 
 
