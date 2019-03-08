@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D55C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CCEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA6A20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCB720449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050110;
-	bh=Xtf5RR5EcjhaOqshNUKxyhc3LEjR0fxhzqDZkNZxz24=;
+	s=default; t=1552050116;
+	bh=Jt9Ly9jZS0kVYZUyEnwHKUmh1SvFcIaYHUc3Sfy1l94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HFsuc4KLfLPDExicelntnp+2kyIe9yoQhO5AA7AE8QDKUKoNBxZu3TWgzcIiRGLxy
-	 RF/Mxhz3fZGsmrQpoCGngN9pEnNdZ3bgr/wX9PRHYYBDUQUvyBE//wB2CNuAMsv/xu
-	 RkCIqut1Rdv01uNuwH0+YiMXvLzvfeKypi65fbaU=
+	b=MkpO/SZI7aRoPA17/QJQqdmEKPfycrizmWNfyqWoSiGiCHF0ofp0CU/t1u32lw9dc
+	 ozdMgt3grUUGsQ7NnVx7ImPQHFU8GJO5Kqg2XB+AQru62yvB0pmhZVmWYdvxUaAkFQ
+	 yLu5w3m1m8QdobcsghNL4NIABuBbv+aTyWHaGg3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfCHNBt (ORCPT
+        id S1728372AbfCHNAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:01:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:00:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbfCHNAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:00:55 -0500
+        id S1728358AbfCHNAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:00:46 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B787820811;
-        Fri,  8 Mar 2019 13:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B4B20449;
+        Fri,  8 Mar 2019 13:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552050055;
-        bh=Xtf5RR5EcjhaOqshNUKxyhc3LEjR0fxhzqDZkNZxz24=;
+        s=default; t=1552050046;
+        bh=Jt9Ly9jZS0kVYZUyEnwHKUmh1SvFcIaYHUc3Sfy1l94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4Iz28YsP/VLj2v4/qpWIm/MdfpCyc8qs7XXJZNcF7IknsYyS11sCrJiOPy+eoKXM
-         3JnxvDNldSgK4VXf2TEVcydTlM3qzN3hRzyyAKNtFe2ddvoPfdY9/JwyOcYeT/axBe
-         d/e/kHhh7IF8CRnGZ8VMj/FOTsv+JHz+A6riS5Sw=
+        b=fxSuTWccSNwTqAkAbEDJmmx3sWsMg5IwLKSMyUPCDBhj7VFEG5wJ2unuSMC2glxl6
+         wdB7mD18lWekYnVq5S1iua+Mk1knd/+Np12LHluljz9bAmI5xu5Z8+ZOBz3oosJn7+
+         W/hJAYyS9Tui3cMdjF1qPyYEjghi5A7UJ4Ck1LBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Majkowski <marek@cloudflare.com>,
-        Arthur Fabre <afabre@cloudflare.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.19 68/68] bpf: fix sanitation rewrite in case of non-pointers
-Date:   Fri,  8 Mar 2019 13:50:38 +0100
-Message-Id: <20190308124913.990256931@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thibaut Sautereau <thibaut@sautereau.fr>
+Subject: [PATCH 4.19 66/68] exec: Fix mem leak in kernel_read_file
+Date:   Fri,  8 Mar 2019 13:50:36 +0100
+Message-Id: <20190308124913.858536613@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -68,52 +66,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 3612af783cf52c74a031a2f11b82247b2599d3cd upstream.
+commit f612acfae86af7ecad754ae6a46019be9da05b8e upstream.
 
-Marek reported that he saw an issue with the below snippet in that
-timing measurements where off when loaded as unpriv while results
-were reasonable when loaded as privileged:
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffffc9000488d000 (size 9195520):
+  comm "syz-executor.0", pid 2752, jiffies 4294787496 (age 18.757s)
+  hex dump (first 32 bytes):
+    ff ff ff ff ff ff ff ff a8 00 00 00 01 00 00 00  ................
+    02 00 00 00 00 00 00 00 80 a1 7a c1 ff ff ff ff  ..........z.....
+  backtrace:
+    [<000000000863775c>] __vmalloc_node mm/vmalloc.c:1795 [inline]
+    [<000000000863775c>] __vmalloc_node_flags mm/vmalloc.c:1809 [inline]
+    [<000000000863775c>] vmalloc+0x8c/0xb0 mm/vmalloc.c:1831
+    [<000000003f668111>] kernel_read_file+0x58f/0x7d0 fs/exec.c:924
+    [<000000002385813f>] kernel_read_file_from_fd+0x49/0x80 fs/exec.c:993
+    [<0000000011953ff1>] __do_sys_finit_module+0x13b/0x2a0 kernel/module.c:3895
+    [<000000006f58491f>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+    [<00000000ee78baf4>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000241f889b>] 0xffffffffffffffff
 
-    [...]
-    uint64_t a = bpf_ktime_get_ns();
-    uint64_t b = bpf_ktime_get_ns();
-    uint64_t delta = b - a;
-    if ((int64_t)delta > 0) {
-    [...]
+It should goto 'out_free' lable to free allocated buf while kernel_read
+fails.
 
-Turns out there is a bug where a corner case is missing in the fix
-d3bd7413e0ca ("bpf: fix sanitation of alu op with pointer / scalar
-type from different paths"), namely fixup_bpf_calls() only checks
-whether aux has a non-zero alu_state, but it also needs to test for
-the case of BPF_ALU_NON_POINTER since in both occasions we need to
-skip the masking rewrite (as there is nothing to mask).
-
-Fixes: d3bd7413e0ca ("bpf: fix sanitation of alu op with pointer / scalar type from different paths")
-Reported-by: Marek Majkowski <marek@cloudflare.com>
-Reported-by: Arthur Fabre <afabre@cloudflare.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/netdev/CAJPywTJqP34cK20iLM5YmUMz9KXQOdu1-+BZrGMAGgLuBWz7fg@mail.gmail.com/T/
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 39d637af5aa7 ("vfs: forbid write access when reading a file into memory")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Thibaut Sautereau <thibaut@sautereau.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/verifier.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/exec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -6035,7 +6035,8 @@ static int fixup_bpf_calls(struct bpf_ve
- 			u32 off_reg;
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -929,7 +929,7 @@ int kernel_read_file(struct file *file,
+ 		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
+ 		if (bytes < 0) {
+ 			ret = bytes;
+-			goto out;
++			goto out_free;
+ 		}
  
- 			aux = &env->insn_aux_data[i + delta];
--			if (!aux->alu_state)
-+			if (!aux->alu_state ||
-+			    aux->alu_state == BPF_ALU_NON_POINTER)
- 				continue;
- 
- 			isneg = aux->alu_state & BPF_ALU_NEG_VALUE;
+ 		if (bytes == 0)
 
 
