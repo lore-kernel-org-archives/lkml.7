@@ -2,136 +2,174 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F064FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ABAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF82720643
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B32820643
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a22gjf6f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BGPtMK0h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfCHWdV (ORCPT
+        id S1726630AbfCHWej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 17:33:21 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41963 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfCHWdU (ORCPT
+        Fri, 8 Mar 2019 17:34:39 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:38393 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfCHWei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 17:33:20 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y7so15353502lfg.8;
-        Fri, 08 Mar 2019 14:33:19 -0800 (PST)
+        Fri, 8 Mar 2019 17:34:38 -0500
+Received: by mail-vs1-f65.google.com with SMTP id h132so7597111vsd.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 14:34:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ecuU19qycBJTuwW9GaXqsDT4+0geCFySyYSHZ6pEG4E=;
-        b=a22gjf6ffZBE+VjrXalpQW9UwEAYEosE1HxLWINUzoi53kiMfwIJfVBeaYhPTnfjKU
-         x/AOEDVevz4HdVqJpt17DmoRTpKVlbpD0maZnEXfAQ2xBuFtDuOYDt0X7Y2j/WvD+uP4
-         rH6yJfLv9GVwOUCq10J7Rj67TVWHGUckaqlAv5VwrRY7CP197OgFJB+1ZcX/gi4Cw79z
-         CUTQpBO36CdqUTj/o7qaWeRsbiaQl/NF815caTXLsODYWELhsZq6URGMOA/jlOl7AHW1
-         7NwqMmvuYKz8O5NZK44lA/OVPmCzAKEh4YjR11RIiOc38FUH6YAPvzoV/ehHz4PRE9OR
-         qAiA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9URJUprKYok9DoDJJ1KQjX0JlJiDVTfA7y6V233RllA=;
+        b=BGPtMK0hfmUPWZmPiH4Qqa39rLNoVnmGeDcSCddfwEatoPVyERhOcENk1DM4fG6aik
+         1Qm+086QA5Q1oQkG4EXQ8FQGspczCrIuE/vgXH8OnIUoQudzuMW4jCjKyLAQxZojJD+9
+         zCSoBewAqqLO7eUrPlfHVc7MxFrL1J85gpCXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ecuU19qycBJTuwW9GaXqsDT4+0geCFySyYSHZ6pEG4E=;
-        b=rPH13QBgTGZJGhC6I1dR17RgHgFSn+9Zc88V8RDZjx8eVngRmiGgStKGRhL2uH9VuK
-         FadEYwrYZdTcL5a/5sP6OiPWmKq9RR4faOchYLzSr1hQT2XO7IQmqOS3QL6H2/zSWBNt
-         w/Fl5Ls3G5wtdsgFvgLRuyY47+T1NWwtd+qb0LnBJLUy2o4L7c4osgVi6/yCIYzpC9eW
-         va+AvL8Jsu+TdqOaKednhwJ/JQx7ZVBQAFUDJnvuNkFU/wgOpdmQonBOcZZ/CD6/wXZk
-         xYxeZDOV1ThsJgCmpEFE9MwCdAQdemoHK5EUuNCcnnT++lJSR1/0qBGu4rRlQQnjki41
-         bouQ==
-X-Gm-Message-State: APjAAAV+xCrPC41nFKGqPnEL8Vsht+VYjzqvkLOP7xFsGK+WGsP2rASC
-        I3GJdE7RPgyImaYZmgu1yTk=
-X-Google-Smtp-Source: APXvYqzvR+QrqwxVR+h8NwC66nrrYsmbOfHNFsuvQh0kYi7HK4pBA79nxaljWwfmhBuOkl738GUz0w==
-X-Received: by 2002:a19:2789:: with SMTP id n131mr2181652lfn.23.1552084398215;
-        Fri, 08 Mar 2019 14:33:18 -0800 (PST)
-Received: from localhost (89-64-60-178.dynamic.chello.pl. [89.64.60.178])
-        by smtp.gmail.com with ESMTPSA id j8sm1644362ljh.58.2019.03.08.14.33.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 14:33:17 -0800 (PST)
-Date:   Fri, 8 Mar 2019 23:32:53 +0100
-From:   Tomasz Duszynski <tduszyns@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Tomasz Duszynski <tduszyns@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: Re: [PATCH v2] iio: proximity: as3935: fix use-after-free on device
- remove
-Message-ID: <20190308223249.GC32641@arch>
-References: <20190308175935.21904-1-TheSven73@gmail.com>
- <20190308202936.GA32641@arch>
- <CAGngYiVgEDTQxynjPDMO_ZApAX6uyvUL+iqyK-QHnhDz=E4eCw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9URJUprKYok9DoDJJ1KQjX0JlJiDVTfA7y6V233RllA=;
+        b=S7ZzKHq8BGRBAReLVrWIphRSwnQEgMibwjRCkCNIZQk3acQCRd4ZVQlIICswM1badf
+         gtqd+Zv2lOWb3dQ/rv0Kgwg5pDZSMqa04ix5LvcfqsdMFCw2rsBVajlWoSxbpZviFyiX
+         D9HCNnVEWG9yuHctI+AGixhh41SUsGvLzbgV4ZVbEzhrutlidY+pAEdUUqimQpAqSLDL
+         eiYK0gXsadaeMDOTKU4I/6yrwbhlfz0YKiBORcKtfiBBLi6H99nL8xWx4Bm+O1TXt79P
+         wTo7hN9eG8AgbTbVG+AGTXyZd7p538MxiP37AC0B7gaZBvUFQgQOqDgKQZVpsDt03MoR
+         Xgiw==
+X-Gm-Message-State: APjAAAUbiNB24EB6Y+nScGuZ6YTPYrq6sM6nYpLsJB0zaB7Me69SGSe5
+        felu/YPOlJdaz/1fMGhj+qeCpdRPT4U=
+X-Google-Smtp-Source: APXvYqws8OYcueCuksjqCckuEeFrEqlvQVSDnZ9ROSyjYLD/uM5tILNfvVPM04WJGwhylwlYLK1ITw==
+X-Received: by 2002:a67:af05:: with SMTP id v5mr11720371vsl.114.1552084476973;
+        Fri, 08 Mar 2019 14:34:36 -0800 (PST)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id j186sm1832819vsd.21.2019.03.08.14.34.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 14:34:36 -0800 (PST)
+Received: by mail-vs1-f53.google.com with SMTP id j12so7605861vsd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 14:34:35 -0800 (PST)
+X-Received: by 2002:a67:f611:: with SMTP id k17mr11417614vso.149.1552084475547;
+ Fri, 08 Mar 2019 14:34:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAGngYiVgEDTQxynjPDMO_ZApAX6uyvUL+iqyK-QHnhDz=E4eCw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190308212524.121126-1-dianders@chromium.org> <CABXOdTe6hGWCsRpQcc_coB-whvJR2XfPfdLuc9QHMMvoXDNW=w@mail.gmail.com>
+In-Reply-To: <CABXOdTe6hGWCsRpQcc_coB-whvJR2XfPfdLuc9QHMMvoXDNW=w@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 8 Mar 2019 14:34:24 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VGL-Z93WtU8LTQXeJtdUU085T+Vd_MXNuuvWnJ6-eyDw@mail.gmail.com>
+Message-ID: <CAD=FV=VGL-Z93WtU8LTQXeJtdUU085T+Vd_MXNuuvWnJ6-eyDw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Speed up install, modules_install and kernelrelease
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 03:42:04PM -0500, Sven Van Asbroeck wrote:
-> On Fri, Mar 8, 2019 at 3:30 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> >
-> > > @@ -368,7 +376,6 @@ static int as3935_probe(struct spi_device *spi)
-> > >
-> > >       spi_set_drvdata(spi, indio_dev);
-> > >       mutex_init(&st->lock);
-> > > -     INIT_DELAYED_WORK(&st->work, as3935_event_work);
-> >
-> > Any specific reason for moving this elsewhere?
->
-> Yes. On the remove path, cancel_delayed_work_sync() should execute after
-> free_irq(), but before triggered_buffer_cleanup(). So the devm_add_action()
-> must run right before devm_request_irq(). I figured it would make sense to
-> group the devm_add_action() and INIT_WORK() together, as they are
-> related. This also makes it easier to understand the probe/remove order
-> when reading the code.
->
+Hi,
 
-So perhaps that change deserves a separate patch because it smells like
-a code cleanup.
-
-> > >
-> > >       ret = of_property_read_u32(np,
-> > >                       "ams,tuning-capacitor-pf", &st->tune_cap);
-> > > @@ -414,22 +421,27 @@ static int as3935_probe(struct spi_device *spi)
-> > >       iio_trigger_set_drvdata(trig, indio_dev);
-> > >       trig->ops = &iio_interrupt_trigger_ops;
-> > >
-> > > -     ret = iio_trigger_register(trig);
-> > > +     ret = devm_iio_trigger_register(&spi->dev, trig);
-> > >       if (ret) {
-> > >               dev_err(&spi->dev, "failed to register trigger\n");
-> > >               return ret;
-> > >       }
-> > >
-> > > -     ret = iio_triggered_buffer_setup(indio_dev, iio_pollfunc_store_time,
-> > > -             &as3935_trigger_handler, NULL);
-> > > +     ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> > > +             iio_pollfunc_store_time, as3935_trigger_handler, NULL);
-> >
-> > You can fix arguments alignment while you are at it.
-> >
+On Fri, Mar 8, 2019 at 2:29 PM Guenter Roeck <groeck@google.com> wrote:
 >
-> What type of alignment would you prefer? This?
+> On Fri, Mar 8, 2019 at 1:25 PM Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > As per the description of the old commit 3298b690b21c ("kbuild: Add a
+> > cache for generated variables"), calling the C compiler lots of times
+> > during the parsing stage of the Makefile can be a little slow.  If you
+> > happen to have a C compiler whose fork/exec time isn't optimized
+> > (perhaps it was linked dynamically, or perhaps it's called through
+> > several wrappers, or ...) then this can be more than a little slow, it
+> > can be very slow.
+> >
+> > The above slowness was addressed with the old Makefile cache, but the
+> > cache was reverted in commit e08d6de4e532 ("kbuild: remove kbuild
+> > cache").  That commit indicated that we expected to get the speed
+> > gains back because "the result of compiler tests will be naturally
+> > cached in the .config file", but as of the latest mainline there are
+> > still lots of direct calls to the C compiler that happen in the
+> > Makefile parsing stage.
+> >
+> > Perhaps we could try re-introducing the Makefile cache and fix the
+> > problems it was causing, but this patch codes up another solution that
+> > gets some of the speed gains back, perhaps with less complexity.
+> >
+> > Specifically I observed that by timing the parsing stage of the
+> > Makefile by adding statements like this to the beginning and end of
+> > the Makefile:
+> >   ZZZ := $(shell echo "$$(date '+%T.%N'): ..." >> /tmp/timing.txt)
+> >
+> > ...that three targets were spending 3 seconds each parsing the
+> > Makefile in my environment (building a Chrome OS kernel with clang)
+> > when it felt like they ought to be quick.  These were: install,
+> > modules_install and kernelrelease
+> >
+> > I saw timings that looked like:
+> >   09:23:08.903204451: Parsing Makefile, goals: install
+> >   09:23:11.960515772: Done parsing Makefile, goals: install
+> >
+> > Given that the kbuild system doesn't sync the config for any of these
+> > options I believe it is safe to say that it can't compile any code.
+> > Thus if we can avoid the C compiler invocation here we'll save time.
+> >
+> > The simplest way to accomplish this is to neuter all the calls to the
+> > compiler by stubbing them out.  After doing so (AKA applying this
+> > change) the same timing looks like:
+> >   09:28:04.929252271: Parsing Makefile, goals: install
+> >   09:28:05.107468449: Done parsing Makefile, goals: install
+> >
+> > During an incremental kernel build/install on Chrome OS we call
+> > install once, modules_install twice (once to keep unstripped), and
+> > kernelrelease once.  Thus this saves ~12 seconds on an incremental
+> > kernel build/install.  With my current setup, this brings it from ~40
+> > seconds to ~28 seconds.  Re-introducing the Makefile cache would
+> > likely save us an extra ~3 seconds since we'd avoid the parsing in the
+> > compile stage.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  Makefile | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index f070e0d65186..5f7532d9be65 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -304,6 +304,20 @@ else
+> >  scripts/Kbuild.include: ;
+> >  include scripts/Kbuild.include
+> >
+> > +# If we can't sync the config then we know we can't compile code.
+> > +# Replace the slow option-testing commands with stubs to significantly
+> > +# speed up the Makefile parsing stage of the build.
+> > +ifeq ($(may-sync-config),0)
 >
->         ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
->                                               iio_pollfunc_store_time,
->                                               as3935_trigger_handler, NULL);
+> I think that breaks KBUILD_EXTMOD, which sets the variable to 0.
 
-Yes, this is what I've been thinking about. Thanks.
+Yup, thanks for catching--I should have realized that from the code
+but somehow skimmed over the KBUILD_EXTMOD bits.  I confirmed that
+this is broken.
+
+I can certainly add an extra check to confirm that '$(KBUILD_EXTMOD)'
+is unset and I'll do that in a v2 if I don't hear anything, but before
+sending that I'll give folks a little bit of time to smack down my
+general approach.  To be honest my approach is a bit of a hack so if
+others can think of better ways to avoid all the unnecessary work
+during install / modules_install / kernelrelease then I'm all ears!
+:-)
+
+
+-Doug
