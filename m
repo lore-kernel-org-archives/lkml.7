@@ -2,96 +2,125 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAD4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1345F20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF60520854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ejtivDu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfCHAfV (ORCPT
+        id S1726337AbfCHAfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:35:21 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:40681 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726241AbfCHAfU (ORCPT
+        Thu, 7 Mar 2019 19:35:39 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38623 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfCHAfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:35:20 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TMDiYUt_1552005317;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TMDiYUt_1552005317)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 08 Mar 2019 08:35:17 +0800
-Subject: Re: [PATCH] bcache: add cond_resched() in __bch_cache_cmp()
-To:     Vojtech Pavlik <vojtech@suse.com>, Coly Li <colyli@suse.de>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1551935728-243664-1-git-send-email-shile.zhang@linux.alibaba.com>
- <24916a71-39ff-7324-ad12-9d79cc68d0da@suse.de>
- <3640cd7f-f32a-1509-dbef-6000b6e14e75@linux.alibaba.com>
- <c421d715-6d14-a6f0-907b-644318120c8e@suse.de>
- <20190307154421.GA8829@suse.cz>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <b548e4a1-865e-61f1-1ac1-4daf84111f86@linux.alibaba.com>
-Date:   Fri, 8 Mar 2019 08:35:17 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.1
+        Thu, 7 Mar 2019 19:35:38 -0500
+Received: by mail-pg1-f196.google.com with SMTP id m2so12627236pgl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:35:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aG3QOmEP9Q9OLnyOSa80+pJxYbFD37ymXQLe2O3g+vw=;
+        b=ejtivDu9lB6XzBFllO17yRLe5/WHBaXHpsfem3UCfvOLjtrURGL4QXDgp6tF7drcRS
+         Z78S/bF1NdsJKVxnfXR47n7vrJZQLRPDnUDjqRJiizIZ+E9e/mDYdNd6t2zagztyhB5Z
+         sL4M2YumQ38H+9WxRz3k2fb0DW1vTlivtb4So5aHhZEPcEYQo8vXrlCFagW2n8gQZB3R
+         dvLVokdf4wdRAl2CIYYeQRjj9wV5+jhpK8lGlhNZ99ACN9TxqLbj/gIj+4UMjcXTf5vq
+         L40i8s26a4QAgQvFQNxi7Wq/3HUU1JmYbFCAbeKuyWBBuHA8nL+O3dcWkmepEm+Xp695
+         +OSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aG3QOmEP9Q9OLnyOSa80+pJxYbFD37ymXQLe2O3g+vw=;
+        b=Ukc2Gb3IK32BdOxmFje2VqKLMiJPpUHfSGmTNAPdTPe59pZF4+jIuUIeiGitp4VCXb
+         MFqeo25PgH0b8nChf+xQZNCCZ6R1iZlJaiguUZexwUSbpyyb3CJ/KoLdjo6WE0T+26C6
+         Eth+wqZ41lB2Cq49xXu/JLSqzqK4Fw1GMTRQAPwqim10qHXaN6aB+fFODLnQLfkRyqyx
+         oHi4a2eCVNxiAUPZ+bqhG7cNLeM1AwkdTfjA6MlJmyEyqQPo0HLUIaINjM3Np8qzgOHc
+         kyciIPYgFBPNv4XFvflKh2vq/b5z/90HmAXGRTh/6Zj2RhmqTVtqpNoGvzPqJVmt0Jp/
+         V0bw==
+X-Gm-Message-State: APjAAAXzZq/p9XqRVOQB3In7K1dLxcLhNM6Ok4EWZAqvjurr2pSbwakt
+        QSScXh4vDSnUybyhF+VJUny2j8zlOLa8WrI3iVd0bw==
+X-Google-Smtp-Source: APXvYqwDRcTtOAH26wremieOCn0S7QsBB0GQKFBZLidSGDHTB/I92Zdx1oMFnz3MMC25keYRD+5SzQQFSavA0WBf8Yk=
+X-Received: by 2002:a63:fe58:: with SMTP id x24mr14069519pgj.255.1552005337751;
+ Thu, 07 Mar 2019 16:35:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190307154421.GA8829@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190307214546.9624-1-natechancellor@gmail.com>
+In-Reply-To: <20190307214546.9624-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 7 Mar 2019 16:35:26 -0800
+Message-ID: <CAKwvOdkeVmcoD7WusKE83MmRjX+h73rnHDY=Rn_a7LXsULPsrw@mail.gmail.com>
+Subject: Re: [PATCH] iio: common: ssp_sensors: Initialize calculated_time in ssp_common_process_data
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/3/7 23:44, Vojtech Pavlik wrote:
-> On Thu, Mar 07, 2019 at 11:36:18PM +0800, Coly Li wrote:
->> On 2019/3/7 11:06 下午, Shile Zhang wrote:
->>> On 2019/3/7 18:34, Coly Li wrote:
->>>> On 2019/3/7 1:15 下午, shile.zhang@linux.alibaba.com wrote:
->>>>> From: Shile Zhang <shile.zhang@linux.alibaba.com>
->>>>>
->>>>> Read /sys/fs/bcache/<uuid>/cacheN/priority_stats can take very long
->>>>> time with huge cache after long run.
->>>>>
->>>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
->>>> Hi Shile,
->>>>
->>>> Do you test your change ? It will be helpful with more performance data
->>>> (what problem that you improved).
->>> In case of 960GB SSD cache device, once read of the 'priority_stats'
->>> costs about 600ms in our test environment.
->>>
->> After the fix, how much time it takes ?
->>
->>
->>> The perf tool shown that near 50% CPU time consumed by 'sort()', this
->>> means once sort will hold the CPU near 300ms.
->>>
->>> In our case, the statistics collector reads the 'priority_stats'
->>> periodically, it will trigger the schedule latency jitters of the
->>>
->>> task which shared same CPU core.
->>>
->> Hmm, it seems you just make the sort slower, and nothing more changes.
->> Am I right ?
-> Well, it has to make the sort slower, but it'll also avoid hogging the
-> CPU (on a non-preemptible kernel), avoiding a potential soft lockup
-> warning and allowing other tasks to run.
+On Thu, Mar 7, 2019 at 1:46 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-Yes, there is a risk that other tasks have no chance to run due to sort 
-hogging the CPU, it is harmful to some schedule-latency sensitive tasks.
-This change just try to reduce the impact of sort, but not a performance 
-improvement of it. I'm not sure if a better way can handle it more 
-efficiency.
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: warning: variable
+> 'calculated_time' is used uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>
+> While it isn't wrong, this will never be a problem because
+> iio_push_to_buffers_with_timestamp only uses calculated_time
+> on the same condition that it is assigned (when scan_timestamp
+> is not zero). While iio_push_to_buffers_with_timestamp is marked
+> as inline, Clang does inlining in the optimization stage, which
+> happens after the semantic analysis phase (plus inline is merely
+> a hint to the compiler).
+>
+> Fix this by just zero initializing calculated_time.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/394
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
+Knowing that the same invariant holds across function boundaries to
+protect access of unitialized values and thus undefined behavior
+sounds tricky to diagnose accurately.  Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> ---
+>  drivers/iio/common/ssp_sensors/ssp_iio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/common/ssp_sensors/ssp_iio.c b/drivers/iio/common/ssp_sensors/ssp_iio.c
+> index 645f2e3975db..e38f704d88b7 100644
+> --- a/drivers/iio/common/ssp_sensors/ssp_iio.c
+> +++ b/drivers/iio/common/ssp_sensors/ssp_iio.c
+> @@ -81,7 +81,7 @@ int ssp_common_process_data(struct iio_dev *indio_dev, void *buf,
+>                             unsigned int len, int64_t timestamp)
+>  {
+>         __le32 time;
+> -       int64_t calculated_time;
+> +       int64_t calculated_time = 0;
+>         struct ssp_sensor_data *spd = iio_priv(indio_dev);
+>
+>         if (indio_dev->scan_bytes == 0)
+> --
+> 2.21.0
+>
+
+
+-- 
 Thanks,
-
-Shile
-
-
+~Nick Desaulniers
