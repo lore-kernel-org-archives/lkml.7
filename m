@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DB0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEE1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3172D2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EB02087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049513;
-	bh=wYxZHMbOxcQ0kW33zHYT6IiUB3L066rvUD8UVN47T+M=;
+	s=default; t=1552049518;
+	bh=WitzpoTFEyuYHqOqS20+Z6MobKZaTZ8J+7s0WBeA/RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sENh9x7nNdYzNc5kxJh4AWB+BFnjFVIV92cRBO2x5NQiUPZUam4wosH9T+5Gc2NH9
-	 XBwEr1rN9RVvkG4/6c69sXgAZGQg34gVsBrRVKa6NlWvQy5NwzMkKK2ifjaLBepC0N
-	 O3nIPgSR7yFotllKd5fKTGg/R0i7QrVtOSMBtQzA=
+	b=mmZh2hg6qTr5nk/CNLGmVoFUuxbumkas96dqDhv4o2cxkumRGiIJz1MYursm1LmQZ
+	 CPlSJH89pVGNXsQGt6AaEWycJR1N0QIB45f7yN7Oba+B9ceajF/Ts9t3p/odigGg1T
+	 B2sR9i0VkWYal0hyzyKjeCf+8VTSDS29KhiksCSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfCHMvv (ORCPT
+        id S1726863AbfCHMv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbfCHMvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:47 -0500
+        id S1726850AbfCHMvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:53 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C47E20684;
-        Fri,  8 Mar 2019 12:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C97121019;
+        Fri,  8 Mar 2019 12:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049506;
-        bh=wYxZHMbOxcQ0kW33zHYT6IiUB3L066rvUD8UVN47T+M=;
+        s=default; t=1552049513;
+        bh=WitzpoTFEyuYHqOqS20+Z6MobKZaTZ8J+7s0WBeA/RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWdzwlbLQjxxaA2LKGRi7q9HAs1w4jfovmiFcKar+jU1SnAUZrcErh6X1XgM2YS2H
-         cZ+tnrjqntBQolOEL372eT6YQkjVTrY2LyZzzIlZBVELdqrhaWsHAamgb+fR30i4U+
-         XeiREl0qNrx1ROGoYthD27Ix/ScqWUNR4lmDVJek=
+        b=shzNAgln8n0wKvAp0yaDQym15xo/JlgDPMvRg9fYjqvAZIHa78LN2p7KUtrQnUFYX
+         F8oP0KU8MJpd55qknux1h6fZfQB0aZpfGbnpUy6rbpbbmLXQAU4wDeXxBzTwlikYux
+         4usxTnUGWyuYeUhP7NcgQp8PZwv/sd7hmgbdx/3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 23/46] net-sysfs: Fix mem leak in netdev_register_kobject
-Date:   Fri,  8 Mar 2019 13:49:56 +0100
-Message-Id: <20190308124903.760810158@linuxfoundation.org>
+Subject: [PATCH 5.0 25/46] sctp: call iov_iter_revert() after sending ABORT
+Date:   Fri,  8 Mar 2019 13:49:58 +0100
+Message-Id: <20190308124903.891387187@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -66,55 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
+[ Upstream commit 901efe12318b1ea8d3e2c88a7b75ed6e6d5d7245 ]
 
-syzkaller report this:
-BUG: memory leak
-unreferenced object 0xffff88837a71a500 (size 256):
-  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
-  hex dump (first 32 bytes):
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
-  backtrace:
-    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
-    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
-    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
-    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
-    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
-    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
-    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
-    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
-    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
-    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
-    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000115be9bb>] 0xffffffffffffffff
+The user msg is also copied to the abort packet when doing SCTP_ABORT in
+sctp_sendmsg_check_sflags(). When SCTP_SENDALL is set, iov_iter_revert()
+should have been called for sending abort on the next asoc with copying
+this msg. Otherwise, memcpy_from_msg() in sctp_make_abort_user() will
+fail and return error.
 
-It should call kset_unregister to free 'dev->queues_kset'
-in error path of register_queue_kobjects, otherwise will cause a mem leak.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 4910280503f3 ("sctp: add support for snd flag SCTP_SENDALL process in sendmsg")
+Reported-by: Ying Xu <yinxu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/net-sysfs.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/sctp/socket.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1547,6 +1547,9 @@ static int register_queue_kobjects(struc
- error:
- 	netdev_queue_update_kobjects(dev, txq, 0);
- 	net_rx_queue_update_kobjects(dev, rxq, 0);
-+#ifdef CONFIG_SYSFS
-+	kset_unregister(dev->queues_kset);
-+#endif
- 	return error;
- }
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -1866,6 +1866,7 @@ static int sctp_sendmsg_check_sflags(str
  
+ 		pr_debug("%s: aborting association:%p\n", __func__, asoc);
+ 		sctp_primitive_ABORT(net, asoc, chunk);
++		iov_iter_revert(&msg->msg_iter, msg_len);
+ 
+ 		return 0;
+ 	}
 
 
