@@ -2,116 +2,135 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1EFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCFDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A942081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B644620851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecjf3r1o"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="H88o9g7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfCHADn (ORCPT
+        id S1726358AbfCHADv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:03:43 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44456 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfCHADn (ORCPT
+        Thu, 7 Mar 2019 19:03:51 -0500
+Received: from sonic304-25.consmr.mail.gq1.yahoo.com ([98.137.68.206]:33507
+        "EHLO sonic304-25.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726328AbfCHADt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:03:43 -0500
-Received: by mail-ed1-f66.google.com with SMTP id b20so14965199edw.11;
-        Thu, 07 Mar 2019 16:03:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c0itl/kabfcQpva9bMOxqZi7A9Q75b5+ipUV2o5Snj0=;
-        b=ecjf3r1oNYBJD70KohhbMpD0eAzYhbNWAXi7cXHOTkwL+Q+Y9lOkHWX77Lx3C/kqEA
-         xn+TuCnowVMGUfrqnx191+tnBLktasckojiJ91JBPovIAtU/f696+EzRLLSwgB265a1G
-         LAUUx51utTgOUYZcRfngdy7mMcnzM7oNnFBQad76fr7jFi/f1vw4zHauMpPf126D48Hb
-         ibELvjOFX4+ptiVfVGeaYf8JFpiZnZdcHSW6sX0yAgQWL6ftCc60rUQKw7lbh3HtCJjG
-         +tF0NVz3d1b3dIC13rQoGMG73TENWpUZnDge1uu285P7nyNA+UkLqftJR8Dch7BJm9O+
-         Igxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c0itl/kabfcQpva9bMOxqZi7A9Q75b5+ipUV2o5Snj0=;
-        b=J/xlGmOmsGKIpzBXhD/CVsmNotZQJw5gt4cOK20WlOIkHL1WSZoV1ohKw5r8LUV4TC
-         Z8tvGbamNY0WeN+Gbe3lBQVjwvYNSXPI47PAB6nhrqA2JhDsU1FzCTfhO4S2gKdd0yTN
-         7uvcqiLWEfaRQVum0TE5NmN0/+m+a3DSM9Rk8HbigDjM2BxiQrrTRdhFadqvMhP1nibl
-         XunOTUgGv4onF1pkUI4+qEHAtBVh3t9EXCzg0ySvPN8IDX/i0ME6mlzOlXcPjVaCUojW
-         vLAC6naRDseF0gIHkfDaBOP3bCGVmOeuR4ap35iG5j1zYa7Nx77QMzZHlLFKbPyy9EtN
-         NkJA==
-X-Gm-Message-State: APjAAAVrYlB/hGp8uqE1SJtN0e8LDrUwF+OqkBTTiT+2QqhmB1cCA+QM
-        fxP6aon+G8tFbfcQYLw0gZg=
-X-Google-Smtp-Source: APXvYqzg5o6pRHnv/iEHXNX5tiIJtkK1uV8Ws3xkM4myX3HCRqd9BESS8c/9WEfowWZHZtdUa1YCnA==
-X-Received: by 2002:a50:b16e:: with SMTP id l43mr28698148edd.99.1552003420949;
-        Thu, 07 Mar 2019 16:03:40 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id z39sm1742849edc.96.2019.03.07.16.03.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 16:03:40 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] iwlwifi: mvm: Change an 'else if' into an 'else' in iwl_mvm_send_add_bcast_sta
-Date:   Thu,  7 Mar 2019 17:03:22 -0700
-Message-Id: <20190308000322.5379-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 7 Mar 2019 19:03:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1552003428; bh=pTk9jg8tKtz9gDaZTovaO7ioRq8KfVCHxt2a33PGA7c=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=H88o9g7tz8QudLljc5uTw2gV98GTPfMAtd0sdkxNcNmEL3Z19QYHgJyvzdjD/EfgpBNJt4HYr2JyboP8uD9uFZNF7tqYQWODDAhbmCponu+WDh7Ef4YLK2IFqIZtJEz2pfwwNd5mdcFWafTNI69eAhvD8FnCbFkSbvlUcBw35zY/YwXkE5m6Ze+GXoi/5ieLUgdFH7nL1SOJ7UXM6Vnd2/nvQuMkOJVvAfqDcuEoVQruEb3mdNtmSeP7g1pVzoKjEcygFz0G2uxPQiuP94YRDhgKSDNlvu+LP3OMd1eGBl+oSQUlzJBD8VFfRtppslW638pn1yjSWrP/ucv+pvYxsQ==
+X-YMail-OSG: I4AaH5QVM1nWqecuv31MdxdDvJNEfc.SIhuP5PDL04m4NeffWj34WQ4tgUkX0pE
+ B6ICbhxaSZ9j.SbAgaZzyGLa5u4xxThbYTUP0aWG7REzsYo7NyIMcstpDcLM.MQ_4Tp6uMZaAITq
+ pUOZqsRxuVx11yFZ0zVCx_quFkRZzr54e54mzXQUF8RUcOFCx3CopfJ6ig8QUFx8ftvU8fFn5vmI
+ xv0cN3I1KpQ1BSph7ilBre0ECsJhgd9bvfxaP6jVrEbkNbpAPnqQL.oeoGnjKpOVpvTtAQPX3d3m
+ P4L4ZW0VLWB.YS6QSANSHQHL_wS5BP4tM24YLnCJKozgGbNU4WCxpmbocqZj.aqNxf7lBeyt2DoZ
+ 6ZgEhYV4e6XCoqQgwAY859ch17moaVlYmkPKWBiPjmOO5sK3I6vIEFugueH9CMozMC6x1tzn0MoI
+ esdlmZxoIxZ5zaRSrEDjUMq7Z_IqbQYRwdTvfLna67yFh6td8gxfti9P_9h.aWHCj12Sv9OoDTM2
+ HxuovR4kS_agBrWKYqHPtITG.DdyGS6swnTEeYZGJ2MzIyisp2N3YtOp9LB.oM4r1abPpljn76._
+ RP5aAcB_w54w8lAD9uTsNryf3T3uNBFM.Qy3X1Oa2xWCyC4lfhzp73oRMNUJWGZiMV9t2h8qUGMl
+ Ov9ksVeh16MnwMYqvJCL1oIKFrkyzNBK.tqaX4W._KIUswPqzMfALdHBFrEHmFP.Wr6UnbnAzd9F
+ 3HbDtjBWceXnNEYwZOE.iKrhISlF.MfVconhEckgbGA75QqfqoXzE1FkIF00Jb8ySsV10hNj9ZRq
+ yGB4_lLgLp.3hpFc.pYua.KeSAFnGztS9ENtHeCasx02uXWL88gJY16ymImTLaUjI_Ac1vx5yt3k
+ Sk31JOkbYe702IZ.v1NF9P2Sz_Yvt2qK_RFpWJFTfOHqB.yVCOGYrz7hLXQ4q_nkWdT88WxSf9FB
+ .YEL2VHccVw5Z0TrAWu3aOxqLR..MOZjlHDF9ForwvipHzdF6fn2gOnvlq2_xpe3CCaKgePU3hVF
+ I9.66Fys27JuhNmT462dUmFs-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Fri, 8 Mar 2019 00:03:48 +0000
+Received: from 36.24.171.113 (EHLO [192.168.199.149]) ([36.24.171.113])
+          by smtp431.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d9329a980e37cd530ba7804660e51cc2;
+          Fri, 08 Mar 2019 00:03:45 +0000 (UTC)
+Subject: Re: [PATCH for-4.19] staging: erofs: fix mis-acted TAIL merging
+ behavior
+To:     Greg KH <greg@kroah.com>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, Sasha Levin <sashal@kernel.org>,
+        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+References: <20190301212203.5FE0C2084F@mail.kernel.org>
+ <20190307053404.29108-1-gaoxiang25@huawei.com>
+ <20190307122539.GD21325@kroah.com>
+ <5b7e1914-f8e5-da3d-4492-17d6afc00fb1@huawei.com>
+ <20190307152147.GA24453@kroah.com>
+From:   Gao Xiang <hsiangkao@aol.com>
+Message-ID: <3110c661-ceae-2014-c5eb-50aa72e9b087@aol.com>
+Date:   Fri, 8 Mar 2019 08:03:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190307152147.GA24453@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
 
-drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2114:12: warning: variable
-'queue' is used uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
 
-Clang can't evaluate at this point that WARN(1, ...) always returns true
-because __ret_warn_on is defined as !!(condition), which isn't
-immediately evaluated as 1. Change this branch to else so that it's
-clear to Clang that we intend to bail out here.
+On 2019/3/7 23:21, Greg KH wrote:
+> On Thu, Mar 07, 2019 at 09:04:06PM +0800, Gao Xiang wrote:
+>> Hi Greg,
+>>
+>> On 2019/3/7 20:25, Greg KH wrote:
+>>> On Thu, Mar 07, 2019 at 01:34:04PM +0800, Gao Xiang wrote:
+>>>> commit a112152f6f3a2a88caa6f414d540bd49e406af60 upstream.
+>>>>
+>>>> EROFS has an optimized path called TAIL merging, which is designed
+>>>> to merge multiple reads and the corresponding decompressions into
+>>>> one if these requests read continuous pages almost at the same time.
+>>>>
+>>>> In general, it behaves as follows:
+>>>>  ________________________________________________________________
+>>>>   ... |  TAIL  .  HEAD  |  PAGE  |  PAGE  |  TAIL    . HEAD | ...
+>>>>  _____|_combined page A_|________|________|_combined page B_|____
+>>>>         1  ]  ->  [  2                          ]  ->  [ 3
+>>>> If the above three reads are requested in the order 1-2-3, it will
+>>>> generate a large work chain rather than 3 individual work chains
+>>>> to reduce scheduling overhead and boost up sequential read.
+>>>>
+>>>> However, if Read 2 is processed slightly earlier than Read 1,
+>>>> currently it still generates 2 individual work chains (chain 1, 2)
+>>>> but it does in-place decompression for combined page A, moreover,
+>>>> if chain 2 decompresses ahead of chain 1, it will be a race and
+>>>> lead to corrupted decompressed page. This patch fixes it.
+>>>>
+>>>> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+>>>> Cc: <stable@vger.kernel.org> # 4.19+
+>>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>>>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>>>> ---
+>>>>  drivers/staging/erofs/unzip_vle.c | 69 +++++++++++++++++++++++++--------------
+>>>>  1 file changed, 44 insertions(+), 25 deletions(-)
+>>>>
+>>>
+>>> thanks for the backport, now applied.
+>>
+>> Yes, it seems that Sasha's bot cannot cherry-pick it directly,
+>> therefore I made this patch for 4.19 by hand...
+>>
+>> BTW, there is another patch called "staging: erofs: compressed_pages should not be accessed again after freed"
+>> in the same condition... And I also send 4.19 and 4.20 version to stable mailing list,
+>> could you also kindly check them out?
+> 
+> Yes, please give me a chance to catch up on stable pending patches to
+> process:
+> 
+> 	$ mdfrm -c ~/mail/stable/
+> 	585 messages in /home/gregkh/mail/stable/
+> 
+> You are in good company :)
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/399
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks for taking time.
+I received more reports which shows some 5.1-rc patches are failed to be applied,
+I will backport them later. :)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index 498c315291cf..360724ec41a6 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2111,8 +2111,10 @@ int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
- 			queue = mvm->probe_queue;
- 		else if (vif->type == NL80211_IFTYPE_P2P_DEVICE)
- 			queue = mvm->p2p_dev_queue;
--		else if (WARN(1, "Missing required TXQ for adding bcast STA\n"))
-+		else {
-+			WARN(1, "Missing required TXQ for adding bcast STA\n");
- 			return -EINVAL;
-+		}
- 
- 		bsta->tfd_queue_msk |= BIT(queue);
- 
--- 
-2.21.0
+Thanks,
+Gao Xiang
 
+> 
+> greg k-h
+> 
