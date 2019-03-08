@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30928C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D0AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040F820661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C372087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050477;
-	bh=cmRrDCP0yk410vOws96NOfIwetHIayultEdjCOMilEk=;
+	s=default; t=1552050482;
+	bh=RmUB11PO3CjNsQxc99UWf462Sxc+WuJSoxVUvFm8mgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmotNKLqDVQEInrOt2+3WNHzw+Kgmyyu4B4oABB884FPdvNnVE+rhBekrRQ7QFGsA
-	 zfUmvLobET0gbXnDkVMKcWE8oJt87tZG4ephf20x/VsDpcaeeGJRqzVk2QIXMegnD9
-	 +8/qG522ULbOIhj1mfXtxuX1PQGkY7P+7QOyOuxY=
+	b=bgH+0PFpbSptdGgvFN3dIdGZ/Kzdl81APUMur9OmBU5Sj+Pag1lyeh8fhNpjZVZw0
+	 htVTMgpd/ZGoSrkn0ppqLcrQPdEcA9S41FoKaNMtlv4cURzddEL8Rjo8w3ZBxMFVZA
+	 lCz0+brRe3hnLhhv5YasqgW6Y/FmBQhzGWCIW//E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfCHMxi (ORCPT
+        id S1727160AbfCHMxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:53:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727167AbfCHMxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:53:34 -0500
+        id S1727141AbfCHMx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:27 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFF52085A;
-        Fri,  8 Mar 2019 12:53:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C7D20684;
+        Fri,  8 Mar 2019 12:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049613;
-        bh=cmRrDCP0yk410vOws96NOfIwetHIayultEdjCOMilEk=;
+        s=default; t=1552049606;
+        bh=RmUB11PO3CjNsQxc99UWf462Sxc+WuJSoxVUvFm8mgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPXt2I+jWgZAVOnbK7xiI5t49M6hmm/v5mfJoxsB7mAS8JZQBCOW8xOU0zL70PcFP
-         9T2CopolIcNYyrDJxVOdncwTk8Nat6vut+zPuDL2hUkSmBqcRERTQWkyqxRqNPPcAZ
-         pJUEIPRjAhGoTznv82rKWOF2LqgdFT5lTBhJ8MNo=
+        b=vpKSb1+YYoCf26SLvaqjr8iV/SFYCkjA6TXmnpwERbKnYMezHn/7QW+haFKBFKhLE
+         pTgEyQ4gt5iBt2OqJVzmLr0Rx9azHtOrMyIbg3c7HZ4eOL4AE4sQnEKDOVbYDniZdZ
+         NDD+uOJtdEFA7KanIo2VgRVe+aIH1gDGEoteWMFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 4.20 10/76] staging: erofs: fix race of initializing xattrs of a inode at the same time
-Date:   Fri,  8 Mar 2019 13:49:22 +0100
-Message-Id: <20190308124915.149162065@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 5.0 34/46] applicom: Fix potential Spectre v1 vulnerabilities
+Date:   Fri,  8 Mar 2019 13:50:07 +0100
+Message-Id: <20190308124904.465092673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
-References: <20190308124914.789210760@linuxfoundation.org>
+In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
+References: <20190308124902.257040783@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,151 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 62dc45979f3f8cb0ea67302a93bff686f0c46c5a upstream.
+commit d7ac3c6ef5d8ce14b6381d52eb7adafdd6c8bb3c upstream.
 
-In real scenario, there could be several threads accessing xattrs
-of the same xattr-uninitialized inode, and init_inode_xattrs()
-almost at the same time.
+IndexCard is indirectly controlled by user-space, hence leading to
+a potential exploitation of the Spectre variant 1 vulnerability.
 
-That's actually an unexpected behavior, this patch closes the race.
+This issue was detected with the help of Smatch:
 
-Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+drivers/char/applicom.c:418 ac_write() warn: potential spectre issue 'apbs' [r]
+drivers/char/applicom.c:728 ac_ioctl() warn: potential spectre issue 'apbs' [r] (local cap)
+
+Fix this by sanitizing IndexCard before using it to index apbs.
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/erofs/internal.h |   11 +++++++---
- drivers/staging/erofs/xattr.c    |   41 +++++++++++++++++++++++++++------------
- 2 files changed, 37 insertions(+), 15 deletions(-)
+ drivers/char/applicom.c |   35 ++++++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -352,12 +352,17 @@ static inline erofs_off_t iloc(struct er
- 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
- }
+--- a/drivers/char/applicom.c
++++ b/drivers/char/applicom.c
+@@ -32,6 +32,7 @@
+ #include <linux/wait.h>
+ #include <linux/init.h>
+ #include <linux/fs.h>
++#include <linux/nospec.h>
  
--#define inode_set_inited_xattr(inode)   (EROFS_V(inode)->flags |= 1)
--#define inode_has_inited_xattr(inode)   (EROFS_V(inode)->flags & 1)
-+/* atomic flag definitions */
-+#define EROFS_V_EA_INITED_BIT	0
+ #include <asm/io.h>
+ #include <linux/uaccess.h>
+@@ -386,7 +387,11 @@ static ssize_t ac_write(struct file *fil
+ 	TicCard = st_loc.tic_des_from_pc;	/* tic number to send            */
+ 	IndexCard = NumCard - 1;
+ 
+-	if((NumCard < 1) || (NumCard > MAX_BOARD) || !apbs[IndexCard].RamIO)
++	if (IndexCard >= MAX_BOARD)
++		return -EINVAL;
++	IndexCard = array_index_nospec(IndexCard, MAX_BOARD);
 +
-+/* bitlock definitions (arranged in reverse order) */
-+#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
++	if (!apbs[IndexCard].RamIO)
+ 		return -EINVAL;
  
- struct erofs_vnode {
- 	erofs_nid_t nid;
--	unsigned int flags;
+ #ifdef DEBUG
+@@ -697,6 +702,7 @@ static long ac_ioctl(struct file *file,
+ 	unsigned char IndexCard;
+ 	void __iomem *pmem;
+ 	int ret = 0;
++	static int warncount = 10;
+ 	volatile unsigned char byte_reset_it;
+ 	struct st_ram_io *adgl;
+ 	void __user *argp = (void __user *)arg;
+@@ -711,16 +717,12 @@ static long ac_ioctl(struct file *file,
+ 	mutex_lock(&ac_mutex);	
+ 	IndexCard = adgl->num_card-1;
+ 	 
+-	if(cmd != 6 && ((IndexCard >= MAX_BOARD) || !apbs[IndexCard].RamIO)) {
+-		static int warncount = 10;
+-		if (warncount) {
+-			printk( KERN_WARNING "APPLICOM driver IOCTL, bad board number %d\n",(int)IndexCard+1);
+-			warncount--;
+-		}
+-		kfree(adgl);
+-		mutex_unlock(&ac_mutex);
+-		return -EINVAL;
+-	}
++	if (cmd != 6 && IndexCard >= MAX_BOARD)
++		goto err;
++	IndexCard = array_index_nospec(IndexCard, MAX_BOARD);
 +
-+	/* atomic flags (including bitlocks) */
-+	unsigned long flags;
++	if (cmd != 6 && !apbs[IndexCard].RamIO)
++		goto err;
  
- 	unsigned char data_mapping_mode;
- 	/* inline size in bytes */
---- a/drivers/staging/erofs/xattr.c
-+++ b/drivers/staging/erofs/xattr.c
-@@ -44,18 +44,25 @@ static inline void xattr_iter_end_final(
- 
- static int init_inode_xattrs(struct inode *inode)
- {
-+	struct erofs_vnode *const vi = EROFS_V(inode);
- 	struct xattr_iter it;
- 	unsigned int i;
- 	struct erofs_xattr_ibody_header *ih;
- 	struct super_block *sb;
- 	struct erofs_sb_info *sbi;
--	struct erofs_vnode *vi;
- 	bool atomic_map;
-+	int ret = 0;
- 
--	if (likely(inode_has_inited_xattr(inode)))
-+	/* the most case is that xattrs of this inode are initialized. */
-+	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
- 		return 0;
- 
--	vi = EROFS_V(inode);
-+	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
-+		return -ERESTARTSYS;
+ 	switch (cmd) {
+ 		
+@@ -838,5 +840,16 @@ static long ac_ioctl(struct file *file,
+ 	kfree(adgl);
+ 	mutex_unlock(&ac_mutex);
+ 	return 0;
 +
-+	/* someone has initialized xattrs for us? */
-+	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
-+		goto out_unlock;
- 
- 	/*
- 	 * bypass all xattr operations if ->xattr_isize is not greater than
-@@ -68,13 +75,16 @@ static int init_inode_xattrs(struct inod
- 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
- 		errln("xattr_isize %d of nid %llu is not supported yet",
- 		      vi->xattr_isize, vi->nid);
--		return -ENOTSUPP;
-+		ret = -ENOTSUPP;
-+		goto out_unlock;
- 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
- 		if (unlikely(vi->xattr_isize)) {
- 			DBG_BUGON(1);
--			return -EIO;	/* xattr ondisk layout error */
-+			ret = -EIO;
-+			goto out_unlock;	/* xattr ondisk layout error */
- 		}
--		return -ENOATTR;
-+		ret = -ENOATTR;
-+		goto out_unlock;
- 	}
- 
- 	sb = inode->i_sb;
-@@ -83,8 +93,10 @@ static int init_inode_xattrs(struct inod
- 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
- 
- 	it.page = erofs_get_inline_page(inode, it.blkaddr);
--	if (IS_ERR(it.page))
--		return PTR_ERR(it.page);
-+	if (IS_ERR(it.page)) {
-+		ret = PTR_ERR(it.page);
-+		goto out_unlock;
++err:
++	if (warncount) {
++		pr_warn("APPLICOM driver IOCTL, bad board number %d\n",
++			(int)IndexCard + 1);
++		warncount--;
 +	}
- 
- 	/* read in shared xattr array (non-atomic, see kmalloc below) */
- 	it.kaddr = kmap(it.page);
-@@ -97,7 +109,8 @@ static int init_inode_xattrs(struct inod
- 						sizeof(uint), GFP_KERNEL);
- 	if (vi->xattr_shared_xattrs == NULL) {
- 		xattr_iter_end(&it, atomic_map);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_unlock;
- 	}
- 
- 	/* let's skip ibody header */
-@@ -114,7 +127,8 @@ static int init_inode_xattrs(struct inod
- 			if (IS_ERR(it.page)) {
- 				kfree(vi->xattr_shared_xattrs);
- 				vi->xattr_shared_xattrs = NULL;
--				return PTR_ERR(it.page);
-+				ret = PTR_ERR(it.page);
-+				goto out_unlock;
- 			}
- 
- 			it.kaddr = kmap_atomic(it.page);
-@@ -127,8 +141,11 @@ static int init_inode_xattrs(struct inod
- 	}
- 	xattr_iter_end(&it, atomic_map);
- 
--	inode_set_inited_xattr(inode);
--	return 0;
-+	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
++	kfree(adgl);
++	mutex_unlock(&ac_mutex);
++	return -EINVAL;
 +
-+out_unlock:
-+	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
-+	return ret;
  }
  
- /*
 
 
