@@ -2,123 +2,193 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B527C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38799C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CFC2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0682C2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rrEh/Kz/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tl2unvK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfCHAKy (ORCPT
+        id S1726320AbfCHAMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:10:54 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36864 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfCHAKx (ORCPT
+        Thu, 7 Mar 2019 19:12:07 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35618 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfCHAMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:10:53 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s22so12722508pfh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:10:52 -0800 (PST)
+        Thu, 7 Mar 2019 19:12:07 -0500
+Received: by mail-it1-f195.google.com with SMTP id 188so18865498itb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:12:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FPWrQ1cSPMenIAj108hM5wihwBVvhY7nmepw5K/L790=;
-        b=rrEh/Kz/UkCKlwKoFikz58ADbzrpl6uII1IkLRBtSgs+fMTCX19lkMhDpRdwisIdcT
-         2hyzfRVN1ndSN+K+kVjWsYMXNeeE3n3XoXrMJMEHlYw/aVi5/4cyzrKBUE1H89icFAb7
-         cyRkqn+/jGJk0YS/ff94hjMCXRmmmHh5PqOjjfihTYHcllBshYeOkqq5KwMZS9gmO/46
-         CCgSLy/pkXULfqAOcF9xaCY3I0n1epfxQg0qvSj5k9EHOz3tNroBFZrzRYyUsq8oH6fH
-         O70/8IEJNH5oLtZgKykqj9fdPAhisEI9XFftFE9ejNuehLigIKzO+IEi5sL+9TVIEua+
-         Y5tg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iaLKDxo0uwhel0Mf+OjeSn4ciEkuMwdbGhBvvoMu/xM=;
+        b=Tl2unvK6BkzMftMiaCXmG3OGTBGFNn8XmV/28iFv5ZP3VntP3vcCEHBN9zm4YLSWZ8
+         MDc2wyoN3rfoFvImZ+uknUb4bzj1B/ZM8O1VI20RxvniKiUKM3Vs5MAgAbldD5677ET6
+         9L4Tbb8B78ioeJqcdVSP9hAvw7OG113vMxAwY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FPWrQ1cSPMenIAj108hM5wihwBVvhY7nmepw5K/L790=;
-        b=lfQBHzeYmppQ1CxtWrsEmRABX5Ev13qSkF9wp9xZTUZjmV/fui7t2VwIAdvtGng+Wx
-         8LmBmc/6Xt792AzECdXyIsD72jHgM2u3KVDilH5xVIfLbLQVSEJlu3TKS2h6PDpW0L+p
-         7DK+ONl20EBr8A/NbMpQJ6hvNqxbjKp27VMg13ONMnAcHiP9vTnDDpgaOjq3rG+8//ko
-         LDOeLJBVBZJJMueiT2Or1ETQ4L1tYfFfU3eHkgc5oh6hbSc4oqlgfhy3W0iB4MHA6VuU
-         P+104AVWDWr2Dshg8rLoALd3YnaW1KL6mvOK/CLafIbZ99hDy/bTJDy30+IdHw2+Fb4i
-         KnZA==
-X-Gm-Message-State: APjAAAXcVGnTsKfBEybFmfupulSAzEQLKGFw+9DqW1z1AI5f2nyOUbV2
-        yToUeRKsK94SSJCWAsAv4DeUTZqfN+2Xfhmg7A2iww==
-X-Google-Smtp-Source: APXvYqwClCVQPtzQu8hgy2ct8axlYfAuq/rk5+P0Xz8rHY9dMhDfaL0yJcOkkRNNa4M57LG6PXIwZb1rXMmGmS0aF5g=
-X-Received: by 2002:a17:902:380c:: with SMTP id l12mr4033884plc.238.1552003852417;
- Thu, 07 Mar 2019 16:10:52 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iaLKDxo0uwhel0Mf+OjeSn4ciEkuMwdbGhBvvoMu/xM=;
+        b=PnDBHv6zLir20jKyUxGAyYCHEYUnxFaVi1FmY48om+i579O9/5gg1nYV1YNn+GwqTq
+         OzqVWftnrWSdFLlv7FNn2W9g9z/2i9oYMKsIVsbbdYml0ABqp+I5rUHxYxDYQnihrTJu
+         l/rfe4kzwSsdtOMjk5X2uIdWOkDeBsBfkFsA22H0E2d+UJp5NdpRds46MvGqUrQETDuF
+         yN8WWDsLp1CMIHChqa0c+clvFu0pQ7ubvmFUgxbEGn0SbPfRUdylv7tQuUaHCzJumhpk
+         iBGrebSkEIS6ofoGJuWqZLY2r7DwWxY/Iz1Ivb1EyAvmOeJmMrRffC3G8EiKFLB6U9TT
+         UW/A==
+X-Gm-Message-State: APjAAAXVWD6an59e4iCQi/Mg3MWyuMPr5gtYAKf8BGjwSONiBa0Q0oMR
+        7JCrrW2hyieUBaX387JRBx36PQ==
+X-Google-Smtp-Source: APXvYqzbcQ3CaB9dhSaCmmViKRD+EkWuPKIiz6lPeHT4BrcQBy7LwH2XRGbjFcenwO6HWDP6Z2qYfg==
+X-Received: by 2002:a24:7c0b:: with SMTP id a11mr6868462itd.161.1552003926268;
+        Thu, 07 Mar 2019 16:12:06 -0800 (PST)
+Received: from ravisadineni0.mtv.corp.google.com ([2620:15c:202:1:98d2:1663:78dd:3593])
+        by smtp.gmail.com with ESMTPSA id 68sm3208434itk.40.2019.03.07.16.12.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 07 Mar 2019 16:12:05 -0800 (PST)
+From:   RaviChandra Sadineni <ravisadineni@chromium.org>
+X-Google-Original-From: RaviChandra Sadineni <ravisadineni@google.com>
+To:     ravisadineni@chromium.org
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V4] cros_ec: Expose sysfile to force battery cutoff on shutdown.
+Date:   Thu,  7 Mar 2019 16:11:59 -0800
+Message-Id: <20190308001159.210832-1-ravisadineni@google.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <404dd7fe-23de-e5c4-48c2-5cd77a14e72b@collabora.com>
+References: <404dd7fe-23de-e5c4-48c2-5cd77a14e72b@collabora.com>
 MIME-Version: 1.0
-References: <20190307235735.31487-1-natechancellor@gmail.com>
-In-Reply-To: <20190307235735.31487-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 7 Mar 2019 16:10:41 -0800
-Message-ID: <CAKwvOdmX64a+aaSKU=FmnMSKnu0WiEezHds0OL9PMnEHe-OrJw@mail.gmail.com>
-Subject: Re: [PATCH] cfg80211: Change an 'else if' into an 'else' in cfg80211_calculate_bitrate_he
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 3:57 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building with -Wsometimes-uninitialized, Clang warns:
->
-> net/wireless/util.c:1223:11: warning: variable 'result' is used
-> uninitialized whenever 'if' condition is false
-> [-Wsometimes-uninitialized]
->
-> Clang can't evaluate at this point that WARN(1, ...) always returns true
-> because __ret_warn_on is defined as !!(condition), which isn't
-> immediately evaluated as 1. Change this branch to else so that it's
-> clear to Clang that we intend to bail out here.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/382
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+From: RaviChandra Sadineni <ravisadineni@chromium.org>
 
-Thanks for the quick fix!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+On chromebooks, power_manager daemon normally shuts down(S5) the device
+when the battery charge falls below 4% threshold. ChromeOS EC then
+normally spends an hour in S5 before hibernating. If the battery charge
+falls below critical threshold in the mean time, EC does a battery cutoff
+instead of hibernating. On some chromebooks, S5 is optimal enough
+resulting in EC hibernating without battery cutoff. This results in
+battery deep discharging. This is a bad user experience as battery
+has to trickle charge before booting when the AC is plugged in the next
+time.
 
-> ---
->  net/wireless/util.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/net/wireless/util.c b/net/wireless/util.c
-> index e4b8db5e81ec..75899b62bdc9 100644
-> --- a/net/wireless/util.c
-> +++ b/net/wireless/util.c
-> @@ -1220,9 +1220,11 @@ static u32 cfg80211_calculate_bitrate_he(struct rate_info *rate)
->         else if (rate->bw == RATE_INFO_BW_HE_RU &&
->                  rate->he_ru_alloc == NL80211_RATE_INFO_HE_RU_ALLOC_26)
->                 result = rates_26[rate->he_gi];
-> -       else if (WARN(1, "invalid HE MCS: bw:%d, ru:%d\n",
-> -                     rate->bw, rate->he_ru_alloc))
-> +       else {
-> +               WARN(1, "invalid HE MCS: bw:%d, ru:%d\n",
-> +                    rate->bw, rate->he_ru_alloc);
->                 return 0;
-> +       }
->
->         /* now scale to the appropriate MCS */
->         tmp = result;
-> --
-> 2.21.0
->
+This patch exposes a sysfs file for an userland daemon to suggest EC if it
+has to do a battery cutoff instead of hibernating when the system enters
+S5 next time.
 
+Signed-off-by: RaviChandra Sadineni <ravisadineni@chromium.org>
+---
+V4: Addressed comments from Enric.
+V3: Make battery-cutoff generic and expose 'at-shutdown' flag.
+V2: Use kstrtobool() instead of kstrtou8() and add documentation.
 
+.../ABI/testing/sysfs-class-chromeos          | 16 +++++++
+ drivers/platform/chrome/cros_ec_sysfs.c       | 47 +++++++++++++++++++
+ 2 files changed, 63 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-chromeos b/Documentation/ABI/testing/sysfs-class-chromeos
+index 5819699d66ec..0927704d1629 100644
+--- a/Documentation/ABI/testing/sysfs-class-chromeos
++++ b/Documentation/ABI/testing/sysfs-class-chromeos
+@@ -30,3 +30,19 @@ Date:		August 2015
+ KernelVersion:	4.2
+ Description:
+ 		Show the information about the EC software and hardware.
++
++What:           /sys/class/chromeos/<ec-device-name>/battery_cuttoff
++Date:           February 2019
++Contact:        Ravi Chandra Sadineni <ravisadineni@chromium.org>
++Description:
++                cros_ec battery cuttoff configuration. Only option
++                currently exposed is 'at-shutdown'.
++
++                'at-shutdown' sends a host command to EC requesting
++                battery cutoff on next shutdown. If AC is plugged
++                in before next shutdown, EC ignores the request and
++                resets the flag.
++
++                Currently EC does not expose a host command to read
++                the status of battery cutoff configuration. Thus this
++                flag is write-only.
+diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+index fe0b7614ae1b..a35e1188f28f 100644
+--- a/drivers/platform/chrome/cros_ec_sysfs.c
++++ b/drivers/platform/chrome/cros_ec_sysfs.c
+@@ -308,14 +308,61 @@ static ssize_t kb_wake_angle_store(struct device *dev,
+ 	return count;
+ }
+ 
++/* Battery cutoff control */
++static ssize_t battery_cutoff_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t count)
++{
++	struct ec_params_battery_cutoff *param;
++	struct cros_ec_command *msg;
++	int ret;
++	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
++	char *p;
++	int len;
++
++	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	param = (struct ec_params_battery_cutoff *)msg->data;
++	msg->command = EC_CMD_BATTERY_CUT_OFF + ec->cmd_offset;
++	msg->version = 1;
++	msg->outsize = sizeof(*param);
++	msg->insize = 0;
++
++	p = memchr(buf, '\n', count);
++	len = p ? p - buf : count;
++
++	if (len == 11 && !strncmp(buf, "at-shutdown", len)) {
++		param->flags = EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN;
++	} else {
++		count = -EINVAL;
++		goto exit;
++	}
++
++	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	if (ret < 0)
++		count = ret;
++exit:
++	kfree(msg);
++	return count;
++}
++
+ /* Module initialization */
+ 
+ static DEVICE_ATTR_RW(reboot);
+ static DEVICE_ATTR_RO(version);
+ static DEVICE_ATTR_RO(flashinfo);
+ static DEVICE_ATTR_RW(kb_wake_angle);
++/*
++ * Currently EC does not expose a host command to read the status of
++ * battery cutoff configuration. Also there is no requirement to read
++ * the flag from userland. So marking this attribute as write-only.
++ */
++static DEVICE_ATTR_WO(battery_cutoff);
+ 
+ static struct attribute *__ec_attrs[] = {
++	&dev_attr_battery_cutoff.attr,
+ 	&dev_attr_kb_wake_angle.attr,
+ 	&dev_attr_reboot.attr,
+ 	&dev_attr_version.attr,
 -- 
-Thanks,
-~Nick Desaulniers
+2.20.1
+
