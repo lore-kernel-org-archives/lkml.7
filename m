@@ -2,322 +2,91 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F40C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF5420854
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C0D20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="L46+NeLq"
+	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="Kjx6zL4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfCHKer (ORCPT
+        id S1726443AbfCHKfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 05:34:47 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33996 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfCHKeq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 05:34:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UjX3ItZ5Vy7aOhCAVrmmE1okjsmhQhugCdlkX5wr5fI=; b=L46+NeLqMiYzLm5WZGnyhLS0n
-        E5Rb+rnlh7icRZKJSm3rHddErALlhENLCIBFOXWFKVvlADlDhNOs3prvkS6vTXe9q2NcF7iHDqoNA
-        gqWzaIDr3F7VEYuW2UdVp9B81fdrP5zCodyveTt6UJthSWPa0cVmhKVwVSnZCKQtsajgf/ge4j7BR
-        etn1LIjEmT9aVJdN7oxQntdYYPRPz+R9rMGAnlOsCHojie4N8Zb6n4yO4UWtPbIskXhwB2pcIPuZx
-        oIUPGOmZfI/sTyEl4U1LJUQPH5ngVc7yDA+krgDd82R83vxOvZg44PpX4DZUvv0DUPAROzCHd+xF+
-        DxEI/L/+g==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37318)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1h2Cpl-0003Hx-Hq; Fri, 08 Mar 2019 10:34:33 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1h2Cph-0005gp-E9; Fri, 08 Mar 2019 10:34:29 +0000
-Date:   Fri, 8 Mar 2019 10:34:29 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Mikael Pettersson <mikpelinux@gmail.com>,
-        Mikael Pettersson <mikpe@it.uu.se>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
-Message-ID: <20190308103429.ycasmpt6tcpsoqps@shell.armlinux.org.uk>
-References: <20190307091514.2489338-1-arnd@arndb.de>
- <20190307091514.2489338-2-arnd@arndb.de>
- <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
- <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk>
- <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
- <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk>
- <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
+        Fri, 8 Mar 2019 05:35:50 -0500
+Received: from tomli.me ([153.92.126.73]:49410 "EHLO tomli.me"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfCHKfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 05:35:50 -0500
+Received: from tomli.me (localhost [127.0.0.1])
+        by tomli.me (OpenSMTPD) with ESMTP id f1c332d7;
+        Fri, 8 Mar 2019 10:35:47 +0000 (UTC)
+X-HELO: localhost.localdomain
+Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
+Received: from Unknown (HELO localhost.localdomain) (2402:f000:1:1501:200:5efe:72f4:b31)
+ by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Fri, 08 Mar 2019 10:35:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=date:from:to:cc:subject:message-id:references:mime-version:content-type:in-reply-to; s=1490979754; bh=t9wemqcEPJHkmqGG1fVbiGvM/fm7piN+icR+Ynx6f/o=; b=Kjx6zL4e3/ejaNt60TP/meuBpEcb+zXdiZioZ3dX0Ec3yil9NKRu4CNxRQ9OAW0LNMyLFHJomHlCn+LgUvnN6YlTOSyVWJrXVItzoD+XN7LwVk6jTKIkqJ36vykdAt9NOVPHS5oh9i6C5oqLr8MbK3vwJZx6Nf7WtqKBz+5y8AuK+SENE/KDW8Ql76c2c9yloRVR5F6vcUdFqq1i9a1wqnfdbN6Phm1ftey2lKA2gNr31qbNVejZd9g+ZoG6Bk2lEk3FqeTZktMN70EaOjoKNXSnFn+ifc1RKX4t9q3j79VNIcmnv4hcAMC0j70Gg0Ku9Ee+0/w7i5XmCvruplGoRA==
+Date:   Fri, 8 Mar 2019 18:35:36 +0800
+From:   Tom Li <tomli@tomli.me>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>
+Subject: Re: Is it possible to reset graphics controller on reboot in a
+ framebuffer driver?
+Message-ID: <20190308103536.GA17258@localhost.localdomain>
+References: <20190307051641.GA7012@localhost.localdomain>
+ <871s3jm532.fsf@intel.com>
+ <CAMuHMdU_+4_T4B67Z-Y-wgHQs6o1yuh9H4m82Lym+_Jno5Mgzg@mail.gmail.com>
+ <20190307213759.GA14798@localhost.localdomain>
+ <CAMuHMdVnkdrUTL_3UaoaOondGxCB_FpEYOTDmLeh1C0W5j0-Hw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAMuHMdVnkdrUTL_3UaoaOondGxCB_FpEYOTDmLeh1C0W5j0-Hw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 11:08:40AM +0100, Ard Biesheuvel wrote:
-> On Fri, 8 Mar 2019 at 10:53, Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Fri, Mar 08, 2019 at 09:57:45AM +0100, Ard Biesheuvel wrote:
-> > > On Fri, 8 Mar 2019 at 00:49, Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > On Thu, Mar 07, 2019 at 11:39:08AM -0800, Nick Desaulniers wrote:
-> > > > > On Thu, Mar 7, 2019 at 1:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > >
-> > > > > > Passing registers containing zero as both the address (NULL pointer)
-> > > > > > and data into cmpxchg_futex_value_locked() leads clang to assign
-> > > > > > the same register for both inputs on ARM, which triggers a warning
-> > > > > > explaining that this instruction has unpredictable behavior on ARMv5.
-> > > > > >
-> > > > > > /tmp/futex-7e740e.s: Assembler messages:
-> > > > > > /tmp/futex-7e740e.s:12713: Warning: source register same as write-back base
-> > > > > >
-> > > > > > This patch was suggested by Mikael Pettersson back in 2011 (!) with gcc-4.4,
-> > > > > > as Mikael wrote:
-> > > > > >  "One way of fixing this is to make uaddr an input/output register, since
-> > > > > >  "that prevents it from overlapping any other input or output."
-> > > > > >
-> > > > > > but then withdrawn as the warning was determined to be harmless, and it
-> > > > > > apparently never showed up again with later gcc versions.
-> > > > > >
-> > > > > > Now the same problem is back when compiling with clang, and we are trying
-> > > > > > to get clang to build the kernel without warnings, as gcc normally does.
-> > > > > >
-> > > > > > Cc: Mikael Pettersson <mikpe@it.uu.se>
-> > > > > > Cc: Mikael Pettersson <mikpelinux@gmail.com>
-> > > > > > Cc: Dave Martin <Dave.Martin@arm.com>
-> > > > > > Link: https://lore.kernel.org/linux-arm-kernel/20009.45690.158286.161591@pilspetsen.it.uu.se/
-> > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > > ---
-> > > > > >  arch/arm/include/asm/futex.h | 10 +++++-----
-> > > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > > > > >
-> > > > > > diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-> > > > > > index 0a46676b4245..79790912974e 100644
-> > > > > > --- a/arch/arm/include/asm/futex.h
-> > > > > > +++ b/arch/arm/include/asm/futex.h
-> > > > > > @@ -110,13 +110,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
-> > > > > >         preempt_disable();
-> > > > > >         __ua_flags = uaccess_save_and_enable();
-> > > > > >         __asm__ __volatile__("@futex_atomic_cmpxchg_inatomic\n"
-> > > > > > -       "1:     " TUSER(ldr) "  %1, [%4]\n"
-> > > > > > -       "       teq     %1, %2\n"
-> > > > > > +       "1:     " TUSER(ldr) "  %1, [%2]\n"
-> > > > > > +       "       teq     %1, %3\n"
-> > > > > >         "       it      eq      @ explicit IT needed for the 2b label\n"
-> > > > > > -       "2:     " TUSER(streq) "        %3, [%4]\n"
-> > > > > > +       "2:     " TUSER(streq) "        %4, [%2]\n"
-> > > > > >         __futex_atomic_ex_table("%5")
-> > > > > > -       : "+r" (ret), "=&r" (val)
-> > > > > > -       : "r" (oldval), "r" (newval), "r" (uaddr), "Ir" (-EFAULT)
-> > > > > > +       : "+&r" (ret), "=&r" (val), "+&r" (uaddr)
-> > > > > > +       : "r" (oldval), "r" (newval), "Ir" (-EFAULT)
-> > > > > >         : "cc", "memory");
-> > > > > >         uaccess_restore(__ua_flags);
-> > > > >
-> > > > > Underspecification of constraints to extended inline assembly is a
-> > > > > common issue exposed by other compilers (and possibly but in-effect
-> > > > > infrequently compiler upgrades).
-> > > > > So the reordering of the constraints means the in the assembly (notes
-> > > > > for other reviewers):
-> > > > > %2 -> %3
-> > > > > %3 -> %4
-> > > > > %4 -> %2
-> > > > > Yep, looks good to me, thanks for finding this old patch and resending, Arnd!
-> > > >
-> > > > I don't see what is "underspecified" in the original constraints.
-> > > > Please explain.
-> > > >
-> > >
-> > > I agree that that statement makes little sense.
-> > >
-> > > As Russell points out in the referenced thread, there is nothing wrong
-> > > with the generated assembly, given that the UNPREDICTABLE opcode is
-> > > unreachable in practice. Unfortunately, we have no way to flag this
-> > > diagnostic as a known false positive, and AFAICT, there is no reason
-> > > we couldn't end up with the same diagnostic popping up for GCC builds
-> > > in the future, considering that the register assignment matches the
-> > > constraints. (We have seen somewhat similar issues where constant
-> > > folded function clones are emitted with a constant argument that could
-> > > never occur in reality [0])
-> > >
-> > > Given the above, the only meaningful way to invoke this function is
-> > > with different registers assigned to %3 and %4, and so tightening the
-> > > constraints to guarantee that does not actually result in worse code
-> > > (except maybe for the instantiations that we won't ever call in the
-> > > first place). So I think we should fix this.
-> > >
-> > > I wonder if just adding
-> > >
-> > > BUG_ON(__builtin_constant_p(uaddr));
-> > >
-> > > at the beginning makes any difference - this shouldn't result in any
-> > > object code differences since the conditional will always evaluate to
-> > > false at build time for instantiations we care about.
-> > >
-> > >
-> > > [0] https://lore.kernel.org/lkml/9c74d635-d0d1-0893-8093-ce20b0933fc7@redhat.com/
-> >
-> > What I'm actually asking is:
-> >
-> > The GCC manual says that input operands _may_ overlap output operands
-> > since GCC assumes that input operands are consumed before output
-> > operands are written.  This is an explicit statement.
-> >
-> > The GCC manual does not say that input operands may overlap with each
-> > other, and the behaviour of GCC thus far (apart from one version,
-> > presumably caused by a bug) has been that input operands are unique.
-> >
+On Fri, Mar 08, 2019 at 10:13:58AM +0100, Geert Uytterhoeven wrote:
+> Hi Tom,
 > 
-> Not entirely. I have run into issues where GCC assumes that registers
-> that are only used for input operands are left untouched by the asm
-> code. I.e., if you put an asm() block in a loop and modify an input
-> register, your code may break on the next pass, even if the input
-> register does not overlap with an output register.
+> If the kernel just crashes, of course all of that doesn't happen.
+> Is your graphics card reset when the reset button is pressed, or only on
+> cold power on?
 
-GCC has had the expectation for decades that _input_ operands are not
-changed in value by the code in the assembly.  This isn't quite the
-same thing as the uniqueness of the register allocation for input
-operands.
+It's a laptop, so it doesn't have a reset button. I've tried reboot=cold/warn
+but apparently it doesn't make any difference. So I think only a cold boot can
+reset the graphics card.
 
-> To me, that seems to suggest that whether or not inputs may overlap is
-> irrelevant, since they are not expected to be modified.
-
-How is:
-
-	stmfd	sp!, {r0-r3, ip, lr}
-	bl	foo
-	ldmfd	sp!, {r0-r3, ip, lr}
-
-where r1 may be an input operand (to pass an argument to foo) any
-different from:
-
-	ldrt	r0, [r1]
-
-as far as whether r1 is modified in both cases?  In both cases, the
-value of r1 is read and written by both instructions, but in both
-cases the value of r1 remains the same no matter what the value of r1
-was.
-
-The "input operands should not be modified" is entirely orthogonal to
-the input operand register allocation.
-
-> > Clang appears to be different: it allows input operands that are
-> > registers, and contain the same constant value to be the same physical
-> > register.
-> >
-> > The assertion is that the constraints are under-specified.  I am
-> > questioning that assertion.
-> >
-> > If the constraints are under-specified, I would have expected gcc-4.4's
-> > behaviour to have persisted, and we would've been told by gcc's
-> > developers to fix our code.  That didn't happen, and instead gcc seems
-> > to have been fixed.  So, my conclusion is that it is intentional that
-> > input operands to asm() do not overlap with themselves.
-> >
+> On Thu, Mar 7, 2019 at 10:38 PM Tom Li <tomli@tomli.me> wrote:
+> > Nevertheless, does it mean there's no way to prevent it from happening if the
+> > user issues a emergency reboot? Like an automatic reboot after a kernel panic,
+> > or a SysRq-B reboot.
 > 
-> Whether we hit the error or not is not deterministic. Like in the
-> ilog2() case I quoted, GCC may decide to instantiate a constant folded
-> ['curried', if you will] clone of a function, and so even if any calls
-> to futex_atomic_cmpxchg_inatomic() with constant NULL args for newval
-> and uaddr are compiled, it does not mean they occur like that in the C
-> code.
+> If Linux performs a reboot, it calls the shutdown handlers.
+> I think that includes reboot on panic, or SysRq-B, but I'd have to check to
+> be 100% sure.
 
-Again, I think this is different: gcc knows what the C code is doing and
-can optimise it.  GCC doesn't have any idea what the code in an asm() is
-doing beyond what the constraints are telling it, and the rules for
-those constraints set out in the GCC manual.
+Okay, glad to hear that. If it works for SysRq-B or panic reboot, I think
+it would be enough. After all, hard kernel crashes are rare nowadays, and
+most crashes are hard lockups. In case it happens, the user just presses
+the power button to halt.
 
-Given that we are explicitly talking about the register allocation for
-input operands, I'm not sure how the ilog2() case you mention applies.
+NMI watchdog reset is still an issue though, but I don't think people who
+are playing with those ~1999-2002 hardware (like this one) is actually using
+it. Anyway, In this case, I think putting a special note in the documentation,
+and raising a warning in dmesg (WARNING: LCD output may be corrupted on reset,
+read ./Documentation/fb/sm712fb.txt!) would be adequate.
 
-> > It seems to me that the work-around for clang is to change every input
-> > operand to be an output operand with a "+&r" contraint - an operand
-> > that is both read and written by the "instruction", and that the operand
-> > is "earlyclobber".  For something that is really only read, that seems
-> > strange.
-> >
-> > Also, reading GCC's manual, it would appear that "+&" is wrong.
-> >
-> > `+'
-> >      Means that this operand is both read and written by the
-> >      instruction.
-> >
-> >      When the compiler fixes up the operands to satisfy the constraints,
-> >      it needs to know which operands are inputs to the instruction and
-> >      which are outputs from it.  `=' identifies an output; `+'
-> >      identifies an operand that is both input and output; all other
-> >                                    ^^^^^^^^^^^^^^^^^^^^^
-> >      operands are assumed to be input only.
-> >
-> > `&'
-> >      Means (in a particular alternative) that this operand is an
-> >      "earlyclobber" operand, which is modified before the instruction is
-> >      finished using the input operands.  Therefore, this operand may
-> >      not lie in a register that is used as an input operand or as part
-> >      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >      of any memory address.
-> >
-> > So "+" says that this operand is an input but "&" says that it must not
-> > be in a register that is used as an input.  That's contradictory, and I
-> > think we can expect GCC to barf or at least end up doing strange stuff,
-> > if not with existing versions, then with future versions.
-> >
-> 
-> I wondered about the same thing: given that the asm itself is a black
-> box to the compiler, it can never reuse an in/output register for
-> output, so when it is clobbered is irrelevant.
-
-Let me try again - you seem to have completely missed my point.
-
-+ specifies that the operand is an input.
-& specifies that the operand is not an input.
-
-+ and & are contradictory.
-
-GCC is at liberty to not assign a value to an operand with a +&
-modifier, or error out such a construction.
-
-> 
-> > Hence, I'm asking for clarification why it is thought that the existing
-> > code underspecifies the asm constraints, and I'm trying to get some more
-> > thought about what the constraints should be, in case there is a need to
-> > use "better" constraints.
-> 
-> I think the constraints are correct, but as I argued before,
-> tightening the constraints to ensure that uaddr and newval are not
-> mapped onto the same register should not result in any object code
-> changes, except for the case where the compiler instantiated a
-> constprop clone that is bogus to begin with.
-
-... by tightening it to an undefined combination of constraint modifiers
-that just happens to seem to do the right thing.  No, this is not proper
-"engineering".  This is bodging.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Thanks,
+Tom Li
