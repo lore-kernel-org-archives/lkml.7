@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF701C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DAAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8925F206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D849206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dK2oAMh4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FLvLVIFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfCHTv4 (ORCPT
+        id S1726933AbfCHTxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:51:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55748 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfCHTv4 (ORCPT
+        Fri, 8 Mar 2019 14:53:08 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:36764 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfCHTxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:51:56 -0500
+        Fri, 8 Mar 2019 14:53:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dv2V8wr/+jDFhO+CSaxcM0k8+xpFCd25a6io7mFXdGY=; b=dK2oAMh4DnZAmDeohbz3SBy6I
-        eDY0ngFlar10sop96KHbLvcWwosWvp8QvG4YQjkugfYKiTF88KxgVGFvMd7YpAMSQ+uZdweoa6xl7
-        YOl2zGIQMziDVfEQcc7XQG2q7ZjnWEomrmHTztqSftJfmguaEU29Xp5imnzB/KkZzxIupMxOk7dzf
-        SA9FEoQStaC5+pWiqXwp2JjoM+2zD5ehjWO3Ksq69wUHHvfIK5XreB5quF2RsCm6El2eBPsrC7gp/
-        XQFYjuAfdVqeJSIQFlpfGwiQG+CzvqnChpg1YluCF6aB6uvafDfv7RcX7ysuheGwjI2vPwAt2NQsF
-        6i1rOS9Jg==;
+         bh=HmHDBcWa41rLW3eKSxE7V5EQqNizppq/JTPzVj4Lfeo=; b=FLvLVIFj49657IYlGILZDJCbM
+        qp+VimSYf9hwKDcjF4rPrWnR1dowUy2n8jZqo3ZCXHXTMK1bV0VJqpVbYAah5GRr0lznYRduhHmY4
+        VwRdJHP+4P9HKkwFwQLDv+fpTGd6SEhNOeYoXMWIlU3v3TuH2uORkcYxHI1Mp6xD/N7QSMAh7HWKO
+        serp/S8Sc39Axi9wnhvYYRdvNol4/q3dKBTWbp9k/onX3vAShtLNhbpUEDGVHzOLRPX2CI628/DAL
+        pePJMtErt2XYRyTDCutF0BsLldfgYXdP6Z6i7EMDtt4yF5A84PQFxIiLwL9naFKEVuSWMeNU1iT5p
+        yWSJkS2Bw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2LWy-0003iv-LS; Fri, 08 Mar 2019 19:51:44 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h2LY7-0001Vb-U4; Fri, 08 Mar 2019 19:52:56 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A1A9120281DC5; Fri,  8 Mar 2019 20:51:41 +0100 (CET)
-Date:   Fri, 8 Mar 2019 20:51:41 +0100
+        id 902F020281DC5; Fri,  8 Mar 2019 20:52:54 +0100 (CET)
+Date:   Fri, 8 Mar 2019 20:52:54 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>
 Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
@@ -48,51 +48,35 @@ Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
         valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
         bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
         dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 12/20] objtool: Set insn->func for alternatives
-Message-ID: <20190308195141.GF32494@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH 13/20] objtool: Hande function aliases
+Message-ID: <20190308195254.GG32494@hirez.programming.kicks-ass.net>
 References: <20190307114511.870090179@infradead.org>
- <20190307115200.149650756@infradead.org>
- <20190308191629.4kbufjzb4hkbxern@treble>
+ <20190307115200.238778618@infradead.org>
+ <20190308192358.65kzunthwzvsdifg@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190308191629.4kbufjzb4hkbxern@treble>
+In-Reply-To: <20190308192358.65kzunthwzvsdifg@treble>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 01:16:29PM -0600, Josh Poimboeuf wrote:
-> On Thu, Mar 07, 2019 at 12:45:23PM +0100, Peter Zijlstra wrote:
-> > Make sure we set the function association for alternative instruction
-> > sequences; they are after all still part of the function.
+On Fri, Mar 08, 2019 at 01:23:58PM -0600, Josh Poimboeuf wrote:
 > 
-> Can you also say _why_?  I presume it's so the warning messages will be
-> saner.
-
-Right; because I'll introduce function attributes later on, so it
-becomes important to know what function an instruction belongs to.
-
-I'll update the Changelog.
-
+> On Thu, Mar 07, 2019 at 12:45:24PM +0100, Peter Zijlstra wrote:
+> > Function aliases result in different symbols for the same set of
+> > instructions; track a canonical symbol so there is a unique point of
+> > access.
+> > 
 > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  tools/objtool/check.c |    1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -695,6 +695,7 @@ static int handle_group_alt(struct objto
-> >  		last_new_insn = insn;
-> >  
-> >  		insn->ignore = orig_insn->ignore_alts;
-> > +		insn->func = orig_insn->func;
-> >  
-> >  		if (insn->type != INSN_JUMP_CONDITIONAL &&
-> >  		    insn->type != INSN_JUMP_UNCONDITIONAL)
-> > 
-> > 
 > 
-> -- 
-> Josh
+> s/Hande/Handle/ in $SUBJECT
+
+Whoops :-)
+
+> Also you can clarify why we need to track aliases?
+
+Function attributes (as per that previous patch) and: git grep "alias"
+mm/kasan.
