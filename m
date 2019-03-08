@@ -2,89 +2,88 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCFEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AE0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30AD20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE58920661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pNZr09HN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VSB70xMd";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VSB70xMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfCHSTH (ORCPT
+        id S1727110AbfCHSW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:19:07 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46731 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfCHSTG (ORCPT
+        Fri, 8 Mar 2019 13:22:27 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:60164 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfCHSW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:19:06 -0500
-Received: by mail-pf1-f193.google.com with SMTP id g6so14709904pfh.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:19:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9E1RtucpClX9JPnyrfI3RA4M8vk12wnyerrbZa60sRs=;
-        b=pNZr09HNIdo7AX9hMQYIvtdFBT48wqf91GR51LH5R8rDaii6S3rSHrsTMrCe6US368
-         90JAV6d61SL+33ZsOexztnSTLxiQXesUVkKYA9oYWWAvx3CW46TTNY2/uYGxTJ7LYt8v
-         lAB+e6dFYX26RqFyru5YzSQqD38Yn6IJv3dOSvc08nYHEMdP0BSoff2CrDmZabj6BCNT
-         KLVqztXq+hxJfWCBlTU21j3chfPuIVhrcOhvIywa/UtcRagDLBy5yAvHJZs2JbjYl5fs
-         3htQQLF6AkPJb2w1U03VfGewVldIlx6nmO7TFmsx3wi1SCVm/OZRNP6kJMriBpzv3906
-         r+cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9E1RtucpClX9JPnyrfI3RA4M8vk12wnyerrbZa60sRs=;
-        b=umBYbMEXfSiPmNk09DDS8XiV76iBi53ouVmvvEHETPB9vWYjLDDNi8+Tq9Uui/adZH
-         i+NZWhMvtfMZ9Y9dHvdeel6M06De7CeRLpwFdbODjQ+aIt3I5iCf5SNwZJHnjltIBFXy
-         oPkwwjXHXF9Md7A2DvDPo8tEsSubh4ZTFGL4lMXfBB64mmqwfbh+87mFwkQQe7A3JWDH
-         oeWhW5SUgmLduy3Oi2S1LI1atOx8UnllAhvoeFDRjPalfbTu36trJk/h744lKNk40e2h
-         7JaKfsVFnPdFhf1/dqD0dBbJEsT/zoundtsU12tatCdq2Lio8UceYHNrhFVjTvykzd7q
-         2dhQ==
-X-Gm-Message-State: APjAAAUKNxgLiAm7f5pQAipVVFsujH0nOmRsRHsE9Bte4dPZaoZmXBQd
-        xYmc10OniE0/Iv4IRAn1cBc2wiUG8QyOwEeeQ1t2kw==
-X-Google-Smtp-Source: APXvYqzbzEGvbYuV0AUuxw55zYZ2lEhmUAqI5s0kHD27vnm02bXQDBME5zE3SnEvGNlymdGSHAHxihdS77x/2hws2vk=
-X-Received: by 2002:a17:902:42d:: with SMTP id 42mr20700362ple.229.1552069145988;
- Fri, 08 Mar 2019 10:19:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20190307223628.21270-1-natechancellor@gmail.com> <20190308085831.6c4gorhjxg62tkea@pengutronix.de>
-In-Reply-To: <20190308085831.6c4gorhjxg62tkea@pengutronix.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 8 Mar 2019 10:18:54 -0800
-Message-ID: <CAKwvOdnV2LE0-Q5-QaBrmajr=re7mmvTr3v3v+9SbLSO+V9+kQ@mail.gmail.com>
-Subject: Re: [PATCH] pwm: img: Turn final 'else if' into 'else' in img_pwm_config
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 Mar 2019 13:22:27 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id ACD1B6034E; Fri,  8 Mar 2019 18:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552069346;
+        bh=OURoWfpHWvN8EdZDSq2mUIEodWPXBk4ki8GJ0CtPU34=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VSB70xMdslXUuSJBPt2Z4HSKBGPZZUj5bTvYGnj/fK63IP4JPs8zgHESQOAjDov27
+         atAu1uNhLt4BLvXcWfoB2SFKQxXjvUBud8w20J+mBrDqRZOdwXHG5Rw4SF7Z731YO6
+         QKTmsSaP4heg85eJOQrWwp2Cq9XTCx1PX/k8gDFQ=
+Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE4286030B;
+        Fri,  8 Mar 2019 18:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552069346;
+        bh=OURoWfpHWvN8EdZDSq2mUIEodWPXBk4ki8GJ0CtPU34=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VSB70xMdslXUuSJBPt2Z4HSKBGPZZUj5bTvYGnj/fK63IP4JPs8zgHESQOAjDov27
+         atAu1uNhLt4BLvXcWfoB2SFKQxXjvUBud8w20J+mBrDqRZOdwXHG5Rw4SF7Z731YO6
+         QKTmsSaP4heg85eJOQrWwp2Cq9XTCx1PX/k8gDFQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CE4286030B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+To:     paulmck@linux.vnet.ibm.com, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com
+Cc:     linux-kernel@vger.kernel.org,
+        Neeraj Upadhyay <neeraju@codeaurora.org>
+Subject: [PATCH] rcu/tree_plugin: Fix nohz status in stall warning
+Date:   Fri,  8 Mar 2019 23:51:49 +0530
+Message-Id: <1552069309-24392-1-git-send-email-neeraju@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 12:58 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello Nathan,
->
-> the copy of my mail sent to clang-built-linux@googlegroups.com was not
-> accepted. (So I dropped this address from the recipients for this
-> reply.) Probably this list isn't open for non-members to post to. This
-> is a bit annoying, so I ask you to either fix that or don't add this
-> address to the recipients of your posts where non-members might answer.
+Fix stall warning, to show correct nohz marker.
 
-Ah, sorry, I did not realize that it would annoy people like this when
-I set it up.  We've email vger post master to get us set up with a
-list.  No response yet.
---=20
-Thanks,
-~Nick Desaulniers
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+---
+ kernel/rcu/tree_plugin.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 97dba50..93da32c 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -1659,7 +1659,7 @@ static void print_cpu_stall_fast_no_hz(char *cp, int cpu)
+ 		rdp->last_accelerate & 0xffff, jiffies & 0xffff,
+ 		".l"[rdp->all_lazy],
+ 		".L"[!rcu_segcblist_n_nonlazy_cbs(&rdp->cblist)],
+-		".D"[!rdp->tick_nohz_enabled_snap]);
++		".D"[!!rdp->tick_nohz_enabled_snap]);
+ }
+ 
+ #else /* #ifdef CONFIG_RCU_FAST_NO_HZ */
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
