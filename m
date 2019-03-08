@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8367C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3821CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC6E2147A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0C82146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049529;
-	bh=H3zgb8VYJU5qUcRPWpKJ8G0uQ1YQ/7ofRDtV5eNbdqc=;
+	s=default; t=1552049533;
+	bh=qQbLZ71ig9rU2ip/dv2w6NKrZrQszs3IqPL59wXAf48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CuEX4x14ay7ZJKQzefOf/ZKW/KOw1jkP0aooPQXSCxnS8+67kY9fjioFKEBw3aWWC
-	 kmTlSEO8UaCAgqnvySRWvkDLoOZMEUI5v5CiZvyz5BXmvCdu96iftfzMfWHs3ynBmY
-	 tp5ghIcOZC9EpYjLvu77mtc+9ugm8h3DihkCTZzI=
+	b=kFtq+9rXJErm4L7PLQXMLPsDRTC/SK0T4n86m2tUmzfmd8eJa5/ao+ibjCqLlHhxC
+	 CL0blelwd37mnlsPB6rifwUoioi5nWi98+sEcXT0PyWKqScpJEcKzZGitzZ/mrhltH
+	 7jZPr9V9qAPDnCJ00spYCe8I9EeFmvhYO5K9ZRxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfCHMwI (ORCPT
+        id S1726914AbfCHMwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:52:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:52:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbfCHMwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:06 -0500
+        id S1726903AbfCHMwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:52:10 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412802085A;
-        Fri,  8 Mar 2019 12:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB3B2133F;
+        Fri,  8 Mar 2019 12:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049525;
-        bh=H3zgb8VYJU5qUcRPWpKJ8G0uQ1YQ/7ofRDtV5eNbdqc=;
+        s=default; t=1552049528;
+        bh=qQbLZ71ig9rU2ip/dv2w6NKrZrQszs3IqPL59wXAf48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1pn2GkeLVb4uUHxqECNVYxxhY6yu3uSGONe+GDS/AOqANQ8mZc2Fs151WCS05k+X
-         T9xIYX/xbZA6FrNE8M4qx4jELF4f5uoFIHyd3XXl3CovM9isb7DDBgO/FIKfyhLlLR
-         VimPbbZqqVAy7WOSjQ6F9jJvSx+IkwBTLaYKB1D8=
+        b=VOkr1jp59cLLtKfd9BRFPJ1NCpiOO9BJOTaMdXgBuTUZZP5y08LYMP15a8sF4/HUT
+         y9oJ5i2r9PFufe+Uf9zJSQCvuN7SxI0EM9xJTx1jV/SJQQcFQ4QeDV8zxSMnqgFq3o
+         VKI8hnNRCyht7Z/95ivHrmGBTAV4TcMWalI7IQTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Sherry Hurwitz <sherry.hurwitz@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 5.0 29/46] x86/CPU/AMD: Set the CPB bit unconditionally on F17h
-Date:   Fri,  8 Mar 2019 13:50:02 +0100
-Message-Id: <20190308124904.151115316@linuxfoundation.org>
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 5.0 03/46] binder: create node flag to request senders security context
+Date:   Fri,  8 Mar 2019 13:49:36 +0100
+Message-Id: <20190308124902.462820025@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -70,47 +65,332 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Todd Kjos <tkjos@android.com>
 
-commit 0237199186e7a4aa5310741f0a6498a20c820fd7 upstream.
+commit ec74136ded792deed80780a2f8baf3521eeb72f9 upstream.
 
-Some F17h models do not have CPB set in CPUID even though the CPU
-supports it. Set the feature bit unconditionally on all F17h.
+To allow servers to verify client identity, allow a node
+flag to be set that causes the sender's security context
+to be delivered with the transaction. The BR_TRANSACTION
+command is extended in BR_TRANSACTION_SEC_CTX to
+contain a pointer to the security context string.
 
- [ bp: Rewrite commit message and patch. ]
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181120030018.5185-1-jiaxun.yang@flygoat.com
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/amd.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/android/binder.c            |  106 ++++++++++++++++++++++++++++--------
+ include/uapi/linux/android/binder.h |   19 ++++++
+ 2 files changed, 102 insertions(+), 23 deletions(-)
 
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -819,11 +819,9 @@ static void init_amd_bd(struct cpuinfo_x
- static void init_amd_zn(struct cpuinfo_x86 *c)
- {
- 	set_cpu_cap(c, X86_FEATURE_ZEN);
--	/*
--	 * Fix erratum 1076: CPB feature bit not being set in CPUID. It affects
--	 * all up to and including B1.
--	 */
--	if (c->x86_model <= 1 && c->x86_stepping <= 1)
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -329,6 +329,8 @@ struct binder_error {
+  *                        (invariant after initialized)
+  * @min_priority:         minimum scheduling priority
+  *                        (invariant after initialized)
++ * @txn_security_ctx:     require sender's security context
++ *                        (invariant after initialized)
+  * @async_todo:           list of async work items
+  *                        (protected by @proc->inner_lock)
+  *
+@@ -365,6 +367,7 @@ struct binder_node {
+ 		 * invariant after initialization
+ 		 */
+ 		u8 accept_fds:1;
++		u8 txn_security_ctx:1;
+ 		u8 min_priority;
+ 	};
+ 	bool has_async_transaction;
+@@ -615,6 +618,7 @@ struct binder_transaction {
+ 	long	saved_priority;
+ 	kuid_t	sender_euid;
+ 	struct list_head fd_fixups;
++	binder_uintptr_t security_ctx;
+ 	/**
+ 	 * @lock:  protects @from, @to_proc, and @to_thread
+ 	 *
+@@ -1152,6 +1156,7 @@ static struct binder_node *binder_init_n
+ 	node->work.type = BINDER_WORK_NODE;
+ 	node->min_priority = flags & FLAT_BINDER_FLAG_PRIORITY_MASK;
+ 	node->accept_fds = !!(flags & FLAT_BINDER_FLAG_ACCEPTS_FDS);
++	node->txn_security_ctx = !!(flags & FLAT_BINDER_FLAG_TXN_SECURITY_CTX);
+ 	spin_lock_init(&node->lock);
+ 	INIT_LIST_HEAD(&node->work.entry);
+ 	INIT_LIST_HEAD(&node->async_todo);
+@@ -2778,6 +2783,8 @@ static void binder_transaction(struct bi
+ 	binder_size_t last_fixup_min_off = 0;
+ 	struct binder_context *context = proc->context;
+ 	int t_debug_id = atomic_inc_return(&binder_last_id);
++	char *secctx = NULL;
++	u32 secctx_sz = 0;
+ 
+ 	e = binder_transaction_log_add(&binder_transaction_log);
+ 	e->debug_id = t_debug_id;
+@@ -3020,6 +3027,20 @@ static void binder_transaction(struct bi
+ 	t->flags = tr->flags;
+ 	t->priority = task_nice(current);
+ 
++	if (target_node && target_node->txn_security_ctx) {
++		u32 secid;
 +
-+	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
-+	if (!cpu_has(c, X86_FEATURE_CPB))
- 		set_cpu_cap(c, X86_FEATURE_CPB);
++		security_task_getsecid(proc->tsk, &secid);
++		ret = security_secid_to_secctx(secid, &secctx, &secctx_sz);
++		if (ret) {
++			return_error = BR_FAILED_REPLY;
++			return_error_param = ret;
++			return_error_line = __LINE__;
++			goto err_get_secctx_failed;
++		}
++		extra_buffers_size += ALIGN(secctx_sz, sizeof(u64));
++	}
++
+ 	trace_binder_transaction(reply, t, target_node);
+ 
+ 	t->buffer = binder_alloc_new_buf(&target_proc->alloc, tr->data_size,
+@@ -3036,6 +3057,19 @@ static void binder_transaction(struct bi
+ 		t->buffer = NULL;
+ 		goto err_binder_alloc_buf_failed;
+ 	}
++	if (secctx) {
++		size_t buf_offset = ALIGN(tr->data_size, sizeof(void *)) +
++				    ALIGN(tr->offsets_size, sizeof(void *)) +
++				    ALIGN(extra_buffers_size, sizeof(void *)) -
++				    ALIGN(secctx_sz, sizeof(u64));
++		char *kptr = t->buffer->data + buf_offset;
++
++		t->security_ctx = (uintptr_t)kptr +
++		    binder_alloc_get_user_buffer_offset(&target_proc->alloc);
++		memcpy(kptr, secctx, secctx_sz);
++		security_release_secctx(secctx, secctx_sz);
++		secctx = NULL;
++	}
+ 	t->buffer->debug_id = t->debug_id;
+ 	t->buffer->transaction = t;
+ 	t->buffer->target_node = target_node;
+@@ -3305,6 +3339,9 @@ err_copy_data_failed:
+ 	t->buffer->transaction = NULL;
+ 	binder_alloc_free_buf(&target_proc->alloc, t->buffer);
+ err_binder_alloc_buf_failed:
++	if (secctx)
++		security_release_secctx(secctx, secctx_sz);
++err_get_secctx_failed:
+ 	kfree(tcomplete);
+ 	binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
+ err_alloc_tcomplete_failed:
+@@ -4036,11 +4073,13 @@ retry:
+ 
+ 	while (1) {
+ 		uint32_t cmd;
+-		struct binder_transaction_data tr;
++		struct binder_transaction_data_secctx tr;
++		struct binder_transaction_data *trd = &tr.transaction_data;
+ 		struct binder_work *w = NULL;
+ 		struct list_head *list = NULL;
+ 		struct binder_transaction *t = NULL;
+ 		struct binder_thread *t_from;
++		size_t trsize = sizeof(*trd);
+ 
+ 		binder_inner_proc_lock(proc);
+ 		if (!binder_worklist_empty_ilocked(&thread->todo))
+@@ -4240,8 +4279,8 @@ retry:
+ 		if (t->buffer->target_node) {
+ 			struct binder_node *target_node = t->buffer->target_node;
+ 
+-			tr.target.ptr = target_node->ptr;
+-			tr.cookie =  target_node->cookie;
++			trd->target.ptr = target_node->ptr;
++			trd->cookie =  target_node->cookie;
+ 			t->saved_priority = task_nice(current);
+ 			if (t->priority < target_node->min_priority &&
+ 			    !(t->flags & TF_ONE_WAY))
+@@ -4251,22 +4290,23 @@ retry:
+ 				binder_set_nice(target_node->min_priority);
+ 			cmd = BR_TRANSACTION;
+ 		} else {
+-			tr.target.ptr = 0;
+-			tr.cookie = 0;
++			trd->target.ptr = 0;
++			trd->cookie = 0;
+ 			cmd = BR_REPLY;
+ 		}
+-		tr.code = t->code;
+-		tr.flags = t->flags;
+-		tr.sender_euid = from_kuid(current_user_ns(), t->sender_euid);
++		trd->code = t->code;
++		trd->flags = t->flags;
++		trd->sender_euid = from_kuid(current_user_ns(), t->sender_euid);
+ 
+ 		t_from = binder_get_txn_from(t);
+ 		if (t_from) {
+ 			struct task_struct *sender = t_from->proc->tsk;
+ 
+-			tr.sender_pid = task_tgid_nr_ns(sender,
+-							task_active_pid_ns(current));
++			trd->sender_pid =
++				task_tgid_nr_ns(sender,
++						task_active_pid_ns(current));
+ 		} else {
+-			tr.sender_pid = 0;
++			trd->sender_pid = 0;
+ 		}
+ 
+ 		ret = binder_apply_fd_fixups(t);
+@@ -4297,15 +4337,20 @@ retry:
+ 			}
+ 			continue;
+ 		}
+-		tr.data_size = t->buffer->data_size;
+-		tr.offsets_size = t->buffer->offsets_size;
+-		tr.data.ptr.buffer = (binder_uintptr_t)
++		trd->data_size = t->buffer->data_size;
++		trd->offsets_size = t->buffer->offsets_size;
++		trd->data.ptr.buffer = (binder_uintptr_t)
+ 			((uintptr_t)t->buffer->data +
+ 			binder_alloc_get_user_buffer_offset(&proc->alloc));
+-		tr.data.ptr.offsets = tr.data.ptr.buffer +
++		trd->data.ptr.offsets = trd->data.ptr.buffer +
+ 					ALIGN(t->buffer->data_size,
+ 					    sizeof(void *));
+ 
++		tr.secctx = t->security_ctx;
++		if (t->security_ctx) {
++			cmd = BR_TRANSACTION_SEC_CTX;
++			trsize = sizeof(tr);
++		}
+ 		if (put_user(cmd, (uint32_t __user *)ptr)) {
+ 			if (t_from)
+ 				binder_thread_dec_tmpref(t_from);
+@@ -4316,7 +4361,7 @@ retry:
+ 			return -EFAULT;
+ 		}
+ 		ptr += sizeof(uint32_t);
+-		if (copy_to_user(ptr, &tr, sizeof(tr))) {
++		if (copy_to_user(ptr, &tr, trsize)) {
+ 			if (t_from)
+ 				binder_thread_dec_tmpref(t_from);
+ 
+@@ -4325,7 +4370,7 @@ retry:
+ 
+ 			return -EFAULT;
+ 		}
+-		ptr += sizeof(tr);
++		ptr += trsize;
+ 
+ 		trace_binder_transaction_received(t);
+ 		binder_stat_br(proc, thread, cmd);
+@@ -4333,16 +4378,18 @@ retry:
+ 			     "%d:%d %s %d %d:%d, cmd %d size %zd-%zd ptr %016llx-%016llx\n",
+ 			     proc->pid, thread->pid,
+ 			     (cmd == BR_TRANSACTION) ? "BR_TRANSACTION" :
+-			     "BR_REPLY",
++				(cmd == BR_TRANSACTION_SEC_CTX) ?
++				     "BR_TRANSACTION_SEC_CTX" : "BR_REPLY",
+ 			     t->debug_id, t_from ? t_from->proc->pid : 0,
+ 			     t_from ? t_from->pid : 0, cmd,
+ 			     t->buffer->data_size, t->buffer->offsets_size,
+-			     (u64)tr.data.ptr.buffer, (u64)tr.data.ptr.offsets);
++			     (u64)trd->data.ptr.buffer,
++			     (u64)trd->data.ptr.offsets);
+ 
+ 		if (t_from)
+ 			binder_thread_dec_tmpref(t_from);
+ 		t->buffer->allow_user_free = 1;
+-		if (cmd == BR_TRANSACTION && !(t->flags & TF_ONE_WAY)) {
++		if (cmd != BR_REPLY && !(t->flags & TF_ONE_WAY)) {
+ 			binder_inner_proc_lock(thread->proc);
+ 			t->to_parent = thread->transaction_stack;
+ 			t->to_thread = thread;
+@@ -4690,7 +4737,8 @@ out:
+ 	return ret;
  }
  
+-static int binder_ioctl_set_ctx_mgr(struct file *filp)
++static int binder_ioctl_set_ctx_mgr(struct file *filp,
++				    struct flat_binder_object *fbo)
+ {
+ 	int ret = 0;
+ 	struct binder_proc *proc = filp->private_data;
+@@ -4719,7 +4767,7 @@ static int binder_ioctl_set_ctx_mgr(stru
+ 	} else {
+ 		context->binder_context_mgr_uid = curr_euid;
+ 	}
+-	new_node = binder_new_node(proc, NULL);
++	new_node = binder_new_node(proc, fbo);
+ 	if (!new_node) {
+ 		ret = -ENOMEM;
+ 		goto out;
+@@ -4842,8 +4890,20 @@ static long binder_ioctl(struct file *fi
+ 		binder_inner_proc_unlock(proc);
+ 		break;
+ 	}
++	case BINDER_SET_CONTEXT_MGR_EXT: {
++		struct flat_binder_object fbo;
++
++		if (copy_from_user(&fbo, ubuf, sizeof(fbo))) {
++			ret = -EINVAL;
++			goto err;
++		}
++		ret = binder_ioctl_set_ctx_mgr(filp, &fbo);
++		if (ret)
++			goto err;
++		break;
++	}
+ 	case BINDER_SET_CONTEXT_MGR:
+-		ret = binder_ioctl_set_ctx_mgr(filp);
++		ret = binder_ioctl_set_ctx_mgr(filp, NULL);
+ 		if (ret)
+ 			goto err;
+ 		break;
+--- a/include/uapi/linux/android/binder.h
++++ b/include/uapi/linux/android/binder.h
+@@ -41,6 +41,14 @@ enum {
+ enum {
+ 	FLAT_BINDER_FLAG_PRIORITY_MASK = 0xff,
+ 	FLAT_BINDER_FLAG_ACCEPTS_FDS = 0x100,
++
++	/**
++	 * @FLAT_BINDER_FLAG_TXN_SECURITY_CTX: request security contexts
++	 *
++	 * Only when set, causes senders to include their security
++	 * context
++	 */
++	FLAT_BINDER_FLAG_TXN_SECURITY_CTX = 0x1000,
+ };
+ 
+ #ifdef BINDER_IPC_32BIT
+@@ -218,6 +226,7 @@ struct binder_node_info_for_ref {
+ #define BINDER_VERSION			_IOWR('b', 9, struct binder_version)
+ #define BINDER_GET_NODE_DEBUG_INFO	_IOWR('b', 11, struct binder_node_debug_info)
+ #define BINDER_GET_NODE_INFO_FOR_REF	_IOWR('b', 12, struct binder_node_info_for_ref)
++#define BINDER_SET_CONTEXT_MGR_EXT	_IOW('b', 13, struct flat_binder_object)
+ 
+ /*
+  * NOTE: Two special error codes you should check for when calling
+@@ -276,6 +285,11 @@ struct binder_transaction_data {
+ 	} data;
+ };
+ 
++struct binder_transaction_data_secctx {
++	struct binder_transaction_data transaction_data;
++	binder_uintptr_t secctx;
++};
++
+ struct binder_transaction_data_sg {
+ 	struct binder_transaction_data transaction_data;
+ 	binder_size_t buffers_size;
+@@ -311,6 +325,11 @@ enum binder_driver_return_protocol {
+ 	BR_OK = _IO('r', 1),
+ 	/* No parameters! */
+ 
++	BR_TRANSACTION_SEC_CTX = _IOR('r', 2,
++				      struct binder_transaction_data_secctx),
++	/*
++	 * binder_transaction_data_secctx: the received command.
++	 */
+ 	BR_TRANSACTION = _IOR('r', 2, struct binder_transaction_data),
+ 	BR_REPLY = _IOR('r', 3, struct binder_transaction_data),
+ 	/*
 
 
