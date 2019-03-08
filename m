@@ -2,78 +2,129 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC28C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FE5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E6A20840
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DE420840
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:28:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AdjE0Jhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfCHA1Z (ORCPT
+        id S1726367AbfCHA20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:27:25 -0500
-Received: from smtprelay0066.hostedemail.com ([216.40.44.66]:48817 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726266AbfCHA1Y (ORCPT
+        Thu, 7 Mar 2019 19:28:26 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35206 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbfCHA2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:27:24 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id F2085181D3403;
-        Fri,  8 Mar 2019 00:27:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: jail11_7a595f8329b3a
-X-Filterd-Recvd-Size: 2024
-Received: from XPS-9350 (unknown [149.142.244.224])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  8 Mar 2019 00:27:20 +0000 (UTC)
-Message-ID: <31b6d5bdfda9cbadffa6d8cb3ad0991e237a364c.camel@perches.com>
-Subject: Re: [PATCH] signal: fix building with clang
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-mips@vger.kernel.org
-Date:   Thu, 07 Mar 2019 16:27:19 -0800
-In-Reply-To: <CAKwvOd=nyhM72CxdO-YYSsXr7rh3LUALn_ezVNzyiBaOD7KZkA@mail.gmail.com>
-References: <20190307091218.2343836-1-arnd@arndb.de>
-         <20190307152805.GA25101@redhat.com>
-         <CAK8P3a2fuD-UBJET_OBKekCxrTDpnAxb0Bpu2LCCXaVT3pXTMQ@mail.gmail.com>
-         <20190307164647.GC25101@redhat.com>
-         <CAK8P3a2FU55-7wQnLXDAmRCgiZ-W+2rY6p7CrTiKNe0wda-Hsg@mail.gmail.com>
-         <CAKwvOd=nyhM72CxdO-YYSsXr7rh3LUALn_ezVNzyiBaOD7KZkA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 7 Mar 2019 19:28:25 -0500
+Received: by mail-pf1-f194.google.com with SMTP id j5so12758133pfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:28:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5aMcC2e3BRQ8MRf8jt7V0HNINMgwvCC+sL+z9DPUXa0=;
+        b=AdjE0Jhe/W8RMuzX16dGstwkm5owLC3kBObuSKcmTNAKrznDmH9HvVUiQhOQmhBQC/
+         tfM6bEnZKO5tAv7X3HtrvHvW6FtdMbGGT2LzHor94c/9FysgbEU2Sz+V6kkQijaDR5ER
+         yXbSfczGGPSieziqaCgFUuZQhkgKWjnLpDXx2l4U9wQ+kVaf3ciiH0Asj58mOMb5lBvA
+         1CPzjh2K3BHJXB6D2DBwRaqj+NTrt2n00CKGHXilOz5G7i4DDi0l0vJFpkdK9rkaf5BC
+         01OI/EO42I42hzzlqgydH10w5Rei5pUUuipOD3+LEF4QQyGBvx+YMv9PaEiHlgjKqm3p
+         zytA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5aMcC2e3BRQ8MRf8jt7V0HNINMgwvCC+sL+z9DPUXa0=;
+        b=oBvetzOw26LSjc05UxxFBdQReUgKFBMZVsX2C+UriTAo1oBr2w1LDUglvNRCiTTh9j
+         +A3gH1pf04OqNPvC3k3rABqNcHL7GwP1s/SAt8+2e8/j7IRZBvWYVgvTjZaw2+4hXjKx
+         XzfPXVnf9RBc+87bCGbFBccRfaZfYzYRAKIJ3Ubz3IWHX2zijkdn9U4W2wW8aUVxWp4H
+         OeGdLr0GPoGiV0YqXwtOWbMRqGzxn+9l3HbRwAfZvyY/0EIJY+NnHbIJOwrnoWIAYV9W
+         8lHbDrAqzDbrOh9Yv380y2tw0KuQQDI2nq6VLyy1iDW+PYfKgTUbWxc9jVtp+HU1n/oO
+         KnqA==
+X-Gm-Message-State: APjAAAUiRdGo/iS4krlR8tnqoPyXur3VcMdq1ZiKFplvMeomvjpo9aHm
+        IXgA3P+GqQZ33LR82tEwl1+I/07QyCTW2ECfwKm3YA==
+X-Google-Smtp-Source: APXvYqz8C8r70r0KeTZ7YIUrd6RMV44hIv7t234JWXMEU8TVol8TlPepCyoL7c2/aUvZMSXjx029rvaRMZueMZrN4Cw=
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr15649767plf.320.1552004904690;
+ Thu, 07 Mar 2019 16:28:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20190307222611.18100-1-natechancellor@gmail.com>
+In-Reply-To: <20190307222611.18100-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 7 Mar 2019 16:28:13 -0800
+Message-ID: <CAKwvOd=4AT4AEkmVLi+sxCwKMCFgpx=AVsJ-ajhnSWOH=xFy4Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/vmwgfx: Zero initialize handle in vmw_execbuf_process
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-07 at 16:22 -0800, Nick Desaulniers wrote:
-> On Thu, Mar 7, 2019 at 1:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > I'd have to try, but I think you are right. It was probably an
-> > overoptimization back in 1997 when the code got added to
-> > linux-2.1.68pre1, and compilers have become smarter in the
-> > meantime ;-)
-> 
-> How do you track history pre-git (2.6.XX)?
+On Thu, Mar 7, 2019 at 2:26 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c:3964:7: warning: variable
+> 'handle' is used uninitialized whenever '?:' condition is false
+> [-Wsometimes-uninitialized]
+>
+> It's not wrong; however, in practice, this is never an issue because
+> the value of handle isn't used when user_fence_rep is NULL because
+> vmw_execbuf_copy_fence_user returns immediately when that is the case.
 
-https://landley.net/kdocs/fullhist/
+Still, it's better not to conditionally pass unitialized memory to
+functions.  Invariants like "don't touch this possibly unitialized
+memory in THIS case" don't always pass from maintainer to maintainer.
+Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> Just zero initialize this variable so that Clang no longer warns.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/397
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> index 88b8178d4687..4ba06c2828a1 100644
+> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> @@ -3829,7 +3829,7 @@ int vmw_execbuf_process(struct drm_file *file_priv,
+>         struct vmw_sw_context *sw_context = &dev_priv->ctx;
+>         struct vmw_fence_obj *fence = NULL;
+>         struct vmw_cmdbuf_header *header;
+> -       uint32_t handle;
+> +       uint32_t handle = 0;
+>         int ret;
+>         int32_t out_fence_fd = -1;
+>         struct sync_file *sync_file = NULL;
+> --
+> 2.21.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To post to this group, send email to clang-built-linux@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190307222611.18100-1-natechancellor%40gmail.com.
+> For more options, visit https://groups.google.com/d/optout.
 
 
+
+-- 
+Thanks,
+~Nick Desaulniers
