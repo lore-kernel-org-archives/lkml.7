@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09BDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B934C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E6221019
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E270B21019
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049501;
-	bh=IdHsUZiMazwry2KxSiATNJWfGNpVZ0nOHBAHhS73thA=;
+	s=default; t=1552049505;
+	bh=fVkrHAjwHzWflKEjrmMLZbrRPF5MAAHMs6qY41OOG2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wRuepCJjw8XFaIK1Y9Hy+3mKOel+4Ha758Im46+Aw997e8V8TcSOmOU4mjSYNfBJ6
-	 MFWEvMAvYpRd2agSWijZMi9Dci8mZOwIOq2MOVatcTlBkK67orZ+W011wVK3Uw/V8+
-	 c0Xhah6HAYegUNtzv31J6eZafT0ZPur/19pkru4I=
+	b=WGuYUj7EfLU67+711x4/iM70ahvIekOSElRud/EzjRJf6PAD+xYADsQQiepekIQFM
+	 qdr0u41sRSopjjpkNpUakrmJ6YcEj0D9GQcF/sqp/vvGkM2q2E8vgIE4zSYgKH64j7
+	 p7d0/mQKz1gSY2rpTBGORgxM14KV96hcpvzurdCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfCHMvk (ORCPT
+        id S1726797AbfCHMvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54848 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbfCHMvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:37 -0500
+        id S1726610AbfCHMvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:41 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09B7321019;
-        Fri,  8 Mar 2019 12:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49F720684;
+        Fri,  8 Mar 2019 12:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049496;
-        bh=IdHsUZiMazwry2KxSiATNJWfGNpVZ0nOHBAHhS73thA=;
+        s=default; t=1552049500;
+        bh=fVkrHAjwHzWflKEjrmMLZbrRPF5MAAHMs6qY41OOG2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lFWvdLikxxzzVh/oBZLqVCWUiro5L7jhD6esgr7NMCBrfjGDzzYrsE02habH7bi2Q
-         XmSCnPY00gJ/z9yPuG6DyzbvQsXDqAE/c0UeDnbvmCQjD/zPWUQG3SnUdtVQqz4Jft
-         M5I7rBJeJD7oMGbzANuVpDdAx0SadrpX9s3k8Oqw=
+        b=lBq3JwC8jlleOXxCyGoJ+V62NZZW8cfGkCw/NErwEhkv9McpFXzD0joVV2dA4XGhT
+         QofypIb7kTF1sZXvLxvUtg0Ey23rVZqsznYFl2kqMyaAaml6slWHKf8eio3RXxd7Ep
+         PGKWZZtTnmET5BF/KOOSxkIWoLzoxbUw+jAJNM0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org,
+        Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 20/46] net: dsa: mv8e6xxx: fix number of internal PHYs for 88E6x90 family
-Date:   Fri,  8 Mar 2019 13:49:53 +0100
-Message-Id: <20190308124903.558050430@linuxfoundation.org>
+Subject: [PATCH 5.0 21/46] net: mscc: Enable all ports in QSGMII
+Date:   Fri,  8 Mar 2019 13:49:54 +0100
+Message-Id: <20190308124903.630465180@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -66,80 +67,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
 
-[ Upstream commit 95150f29ae480276e76368cdf8a9524b5a96c0ca ]
+[ Upstream commit 084e5bb16bd7dc2b551bbd9fb358bf73e03ee8d8 ]
 
-Ports 9 and 10 don't have internal PHY's but are (dependent on the
-version) SERDES/SGMII/XAUI/RXAUI ports.
+When Ocelot phy-mode is QSGMII, all 4 ports involved in
+QSGMII shall be kept out of reset and
+Tx lanes shall be enabled to pass the data.
 
-v2:
-- fix it for all 88E6x90 family members
-
-Fixes: bc3931557d1d ("net: dsa: mv88e6xxx: Add number of internal PHYs")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+Signed-off-by: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+Signed-off-by: Steen Hegelund <Steen.Hegelund@microchip.com>
+Co-developed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mscc/ocelot_board.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -4222,7 +4222,7 @@ static const struct mv88e6xxx_info mv88e
- 		.name = "Marvell 88E6190",
- 		.num_databases = 4096,
- 		.num_ports = 11,	/* 10 + Z80 */
--		.num_internal_phys = 11,
-+		.num_internal_phys = 9,
- 		.num_gpio = 16,
- 		.max_vid = 8191,
- 		.port_base_addr = 0x0,
-@@ -4245,7 +4245,7 @@ static const struct mv88e6xxx_info mv88e
- 		.name = "Marvell 88E6190X",
- 		.num_databases = 4096,
- 		.num_ports = 11,	/* 10 + Z80 */
--		.num_internal_phys = 11,
-+		.num_internal_phys = 9,
- 		.num_gpio = 16,
- 		.max_vid = 8191,
- 		.port_base_addr = 0x0,
-@@ -4268,7 +4268,7 @@ static const struct mv88e6xxx_info mv88e
- 		.name = "Marvell 88E6191",
- 		.num_databases = 4096,
- 		.num_ports = 11,	/* 10 + Z80 */
--		.num_internal_phys = 11,
-+		.num_internal_phys = 9,
- 		.max_vid = 8191,
- 		.port_base_addr = 0x0,
- 		.phy_base_addr = 0x0,
-@@ -4315,7 +4315,7 @@ static const struct mv88e6xxx_info mv88e
- 		.name = "Marvell 88E6290",
- 		.num_databases = 4096,
- 		.num_ports = 11,	/* 10 + Z80 */
--		.num_internal_phys = 11,
-+		.num_internal_phys = 9,
- 		.num_gpio = 16,
- 		.max_vid = 8191,
- 		.port_base_addr = 0x0,
-@@ -4477,7 +4477,7 @@ static const struct mv88e6xxx_info mv88e
- 		.name = "Marvell 88E6390",
- 		.num_databases = 4096,
- 		.num_ports = 11,	/* 10 + Z80 */
--		.num_internal_phys = 11,
-+		.num_internal_phys = 9,
- 		.num_gpio = 16,
- 		.max_vid = 8191,
- 		.port_base_addr = 0x0,
-@@ -4500,7 +4500,7 @@ static const struct mv88e6xxx_info mv88e
- 		.name = "Marvell 88E6390X",
- 		.num_databases = 4096,
- 		.num_ports = 11,	/* 10 + Z80 */
--		.num_internal_phys = 11,
-+		.num_internal_phys = 9,
- 		.num_gpio = 16,
- 		.max_vid = 8191,
- 		.port_base_addr = 0x0,
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -267,6 +267,7 @@ static int mscc_ocelot_probe(struct plat
+ 		struct phy *serdes;
+ 		void __iomem *regs;
+ 		char res_name[8];
++		int phy_mode;
+ 		u32 port;
+ 
+ 		if (of_property_read_u32(portnp, "reg", &port))
+@@ -292,11 +293,11 @@ static int mscc_ocelot_probe(struct plat
+ 		if (err)
+ 			return err;
+ 
+-		err = of_get_phy_mode(portnp);
+-		if (err < 0)
++		phy_mode = of_get_phy_mode(portnp);
++		if (phy_mode < 0)
+ 			ocelot->ports[port]->phy_mode = PHY_INTERFACE_MODE_NA;
+ 		else
+-			ocelot->ports[port]->phy_mode = err;
++			ocelot->ports[port]->phy_mode = phy_mode;
+ 
+ 		switch (ocelot->ports[port]->phy_mode) {
+ 		case PHY_INTERFACE_MODE_NA:
+@@ -304,6 +305,13 @@ static int mscc_ocelot_probe(struct plat
+ 		case PHY_INTERFACE_MODE_SGMII:
+ 			break;
+ 		case PHY_INTERFACE_MODE_QSGMII:
++			/* Ensure clock signals and speed is set on all
++			 * QSGMII links
++			 */
++			ocelot_port_writel(ocelot->ports[port],
++					   DEV_CLOCK_CFG_LINK_SPEED
++					   (OCELOT_SPEED_1000),
++					   DEV_CLOCK_CFG);
+ 			break;
+ 		default:
+ 			dev_err(ocelot->dev,
 
 
