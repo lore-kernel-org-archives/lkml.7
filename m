@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F7CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4FCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8B2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DDD2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049616;
-	bh=8BIM5txYh0hQpTGXMdpLDc/FJYhbwLA9xy1Gb91XfFE=;
+	s=default; t=1552049622;
+	bh=EShz7fnOTlvMOfgPn9Xy3ZHlCcDrtiynqbqlAPTZ9Xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5zs/dDAc+4hJ+zlFwtxk9vgntPUACXRPuhHMm3lkD7VRBcIOxl+ljS3OS+gOR9Eb
-	 ov67MRFY+e+kh69Gh4hmqV36x9IPSNgnAgm3JO/rdxdythRQnw+Ry6ncqr0axjWoch
-	 MEgr71QGpsOuSYy9yWcJr1KYAp5wnME6vUeIXMs4=
+	b=oIsdfBiQutyoHmFEDpXR1S9CdRQfRBEJ3Zytkc5cFQt0eHGIprqfQfuG56rbTPaaV
+	 aEXDiT8wBMsCYSBXvuU/YDiYoUWQY07Wy5EvnxahDTx0TRIsp1yg89ouylbf5zc7u4
+	 fSlPgZ3lmvelSIqF0h1xIRNhqISd/yAA8Qy8v6Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfCHMxe (ORCPT
+        id S1726588AbfCHMxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57210 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbfCHMxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:53:32 -0500
+        id S1726763AbfCHMxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:38 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C772085A;
-        Fri,  8 Mar 2019 12:53:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557F72133F;
+        Fri,  8 Mar 2019 12:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049610;
-        bh=8BIM5txYh0hQpTGXMdpLDc/FJYhbwLA9xy1Gb91XfFE=;
+        s=default; t=1552049616;
+        bh=EShz7fnOTlvMOfgPn9Xy3ZHlCcDrtiynqbqlAPTZ9Xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/qg0dL5PF78oyxebx2FByQ5G6j8sAK3T6mudt+y25bMOPWVyzfGwN0pnt8BXaTXd
-         e97R+O2Zb7ijQ6WaPzWtQ+NOU8gP1kstaxNGsSH9YC8iB2+GoaBZmCsB1s/U6F7d0a
-         U0iSkSm2Eqb0IWvgQR9clGR/6AsvCE2X7BzOMAjo=
+        b=Dwr2aV8rCRZW2C6wtGEB5Kk/W7jnMjE4NnhmGyooXUpHHwA23wLJYoaPwDzNWES4V
+         cuPGjfL5NtiPu3Tpn8ubDrIMQSnoYbXmcitOWZ76Y2p+7XRIB7MDjMHCU8qeI+GFSk
+         dGJjX1tnaVWithG8fh7XW2PHDUlt4UcdAQ+Vo3HQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Donghee Han <dh.han@samsung.com>,
-        Sangkyu Kim <skwith.kim@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.20 01/76] cpufreq: Use struct kobj_attribute instead of struct global_attr
-Date:   Fri,  8 Mar 2019 13:49:13 +0100
-Message-Id: <20190308124914.844414523@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 4.20 11/76] staging: erofs: fix illegal address access under memory pressure
+Date:   Fri,  8 Mar 2019 13:49:23 +0100
+Message-Id: <20190308124915.182837841@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -67,184 +65,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 625c85a62cb7d3c79f6e16de3cfa972033658250 upstream.
+commit 1e5ceeab6929585512c63d05911d6657064abf7b upstream.
 
-The cpufreq_global_kobject is created using kobject_create_and_add()
-helper, which assigns the kobj_type as dynamic_kobj_ktype and show/store
-routines are set to kobj_attr_show() and kobj_attr_store().
+Considering a read request with two decompressed file pages,
+If a decompression work cannot be started on the previous page
+due to memory pressure but in-memory LTP map lookup is done,
+builder->work should be still NULL.
 
-These routines pass struct kobj_attribute as an argument to the
-show/store callbacks. But all the cpufreq files created using the
-cpufreq_global_kobject expect the argument to be of type struct
-attribute. Things work fine currently as no one accesses the "attr"
-argument. We may not see issues even if the argument is used, as struct
-kobj_attribute has struct attribute as its first element and so they
-will both get same address.
+Moreover, if the current page also belongs to the same map,
+it won't try to start the decompression work again and then
+run into trouble.
 
-But this is logically incorrect and we should rather use struct
-kobj_attribute instead of struct global_attr in the cpufreq core and
-drivers and the show/store callbacks should take struct kobj_attribute
-as argument instead.
+This patch aims to solve the above issue only with little changes
+as much as possible in order to make the fix backport easier.
 
-This bug is caught using CFI CLANG builds in android kernel which
-catches mismatch in function prototypes for such callbacks.
+kernel message is:
+<4>[1051408.015930s]SLUB: Unable to allocate memory on node -1, gfp=0x2408040(GFP_NOFS|__GFP_ZERO)
+<4>[1051408.015930s]  cache: erofs_compress, object size: 144, buffer size: 144, default order: 0, min order: 0
+<4>[1051408.015930s]  node 0: slabs: 98, objs: 2744, free: 0
+  * Cannot allocate the decompression work
 
-Reported-by: Donghee Han <dh.han@samsung.com>
-Reported-by: Sangkyu Kim <skwith.kim@samsung.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+<3>[1051408.015960s]erofs: z_erofs_vle_normalaccess_readpages, readahead error at page 1008 of nid 5391488
+  * Note that the previous page was failed to read
+
+<0>[1051408.015960s]Internal error: Accessing user space memory outside uaccess.h routines: 96000005 [#1] PREEMPT SMP
+...
+<4>[1051408.015991s]Hardware name: kirin710 (DT)
+...
+<4>[1051408.016021s]PC is at z_erofs_vle_work_add_page+0xa0/0x17c
+<4>[1051408.016021s]LR is at z_erofs_do_read_page+0x12c/0xcf0
+...
+<4>[1051408.018096s][<ffffff80c6fb0fd4>] z_erofs_vle_work_add_page+0xa0/0x17c
+<4>[1051408.018096s][<ffffff80c6fb3814>] z_erofs_vle_normalaccess_readpages+0x1a0/0x37c
+<4>[1051408.018096s][<ffffff80c6d670b8>] read_pages+0x70/0x190
+<4>[1051408.018127s][<ffffff80c6d6736c>] __do_page_cache_readahead+0x194/0x1a8
+<4>[1051408.018127s][<ffffff80c6d59318>] filemap_fault+0x398/0x684
+<4>[1051408.018127s][<ffffff80c6d8a9e0>] __do_fault+0x8c/0x138
+<4>[1051408.018127s][<ffffff80c6d8f90c>] handle_pte_fault+0x730/0xb7c
+<4>[1051408.018127s][<ffffff80c6d8fe04>] __handle_mm_fault+0xac/0xf4
+<4>[1051408.018157s][<ffffff80c6d8fec8>] handle_mm_fault+0x7c/0x118
+<4>[1051408.018157s][<ffffff80c8c52998>] do_page_fault+0x354/0x474
+<4>[1051408.018157s][<ffffff80c8c52af8>] do_translation_fault+0x40/0x48
+<4>[1051408.018157s][<ffffff80c6c002f4>] do_mem_abort+0x80/0x100
+<4>[1051408.018310s]---[ end trace 9f4009a3283bd78b ]---
+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c      |    6 +++---
- drivers/cpufreq/intel_pstate.c |   23 ++++++++++++-----------
- include/linux/cpufreq.h        |   12 ++----------
- 3 files changed, 17 insertions(+), 24 deletions(-)
+ drivers/staging/erofs/unzip_vle.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -545,13 +545,13 @@ EXPORT_SYMBOL_GPL(cpufreq_policy_transit
-  *                          SYSFS INTERFACE                          *
-  *********************************************************************/
- static ssize_t show_boost(struct kobject *kobj,
--				 struct attribute *attr, char *buf)
-+			  struct kobj_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%d\n", cpufreq_driver->boost_enabled);
- }
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -626,8 +626,12 @@ repeat:
  
--static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
--				  const char *buf, size_t count)
-+static ssize_t store_boost(struct kobject *kobj, struct kobj_attribute *attr,
-+			   const char *buf, size_t count)
- {
- 	int ret, enable;
+ 	/* lucky, within the range of the current map_blocks */
+ 	if (offset + cur >= map->m_la &&
+-		offset + cur < map->m_la + map->m_llen)
++		offset + cur < map->m_la + map->m_llen) {
++		/* didn't get a valid unzip work previously (very rare) */
++		if (!builder->work)
++			goto restart_now;
+ 		goto hitted;
++	}
  
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -873,7 +873,7 @@ static void intel_pstate_update_policies
- /************************** sysfs begin ************************/
- #define show_one(file_name, object)					\
- 	static ssize_t show_##file_name					\
--	(struct kobject *kobj, struct attribute *attr, char *buf)	\
-+	(struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
- 	{								\
- 		return sprintf(buf, "%u\n", global.object);		\
- 	}
-@@ -882,7 +882,7 @@ static ssize_t intel_pstate_show_status(
- static int intel_pstate_update_status(const char *buf, size_t size);
+ 	/* go ahead the next map_blocks */
+ 	debugln("%s: [out-of-range] pos %llu", __func__, offset + cur);
+@@ -641,6 +645,7 @@ repeat:
+ 	if (unlikely(err))
+ 		goto err_out;
  
- static ssize_t show_status(struct kobject *kobj,
--			   struct attribute *attr, char *buf)
-+			   struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -893,7 +893,7 @@ static ssize_t show_status(struct kobjec
- 	return ret;
- }
- 
--static ssize_t store_status(struct kobject *a, struct attribute *b,
-+static ssize_t store_status(struct kobject *a, struct kobj_attribute *b,
- 			    const char *buf, size_t count)
- {
- 	char *p = memchr(buf, '\n', count);
-@@ -907,7 +907,7 @@ static ssize_t store_status(struct kobje
- }
- 
- static ssize_t show_turbo_pct(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total, no_turbo, turbo_pct;
-@@ -933,7 +933,7 @@ static ssize_t show_turbo_pct(struct kob
- }
- 
- static ssize_t show_num_pstates(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total;
-@@ -954,7 +954,7 @@ static ssize_t show_num_pstates(struct k
- }
- 
- static ssize_t show_no_turbo(struct kobject *kobj,
--			     struct attribute *attr, char *buf)
-+			     struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -976,7 +976,7 @@ static ssize_t show_no_turbo(struct kobj
- 	return ret;
- }
- 
--static ssize_t store_no_turbo(struct kobject *a, struct attribute *b,
-+static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
- 			      const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1023,7 +1023,7 @@ static ssize_t store_no_turbo(struct kob
- 	return count;
- }
- 
--static ssize_t store_max_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1053,7 +1053,7 @@ static ssize_t store_max_perf_pct(struct
- 	return count;
- }
- 
--static ssize_t store_min_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -1085,12 +1085,13 @@ static ssize_t store_min_perf_pct(struct
- }
- 
- static ssize_t show_hwp_dynamic_boost(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%u\n", hwp_boost);
- }
- 
--static ssize_t store_hwp_dynamic_boost(struct kobject *a, struct attribute *b,
-+static ssize_t store_hwp_dynamic_boost(struct kobject *a,
-+				       struct kobj_attribute *b,
- 				       const char *buf, size_t count)
- {
- 	unsigned int input;
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -254,20 +254,12 @@ __ATTR(_name, 0644, show_##_name, store_
- static struct freq_attr _name =			\
- __ATTR(_name, 0200, NULL, store_##_name)
- 
--struct global_attr {
--	struct attribute attr;
--	ssize_t (*show)(struct kobject *kobj,
--			struct attribute *attr, char *buf);
--	ssize_t (*store)(struct kobject *a, struct attribute *b,
--			 const char *c, size_t count);
--};
--
- #define define_one_global_ro(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0444, show_##_name, NULL)
- 
- #define define_one_global_rw(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0644, show_##_name, store_##_name)
- 
++restart_now:
+ 	if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED)))
+ 		goto hitted;
  
 
 
