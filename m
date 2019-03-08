@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DD3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFB0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6894A2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCE020811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049884;
-	bh=8EX4hCtOps28asK9OFFnUk58VUg6VAW4nr1HpYYyhh4=;
+	s=default; t=1552049889;
+	bh=lim4Oj3ZY5dUMUEAG0MvNIfe82k9BuYrwzTE80Crq+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5ERAWgiNQMfCcGf6c4zrxWO//OGEYJgu0EPxVeQ1qVx1Qq5EPN1wtDEvSBa87+4N
-	 HX+uIkr+zCq7ZpwRN1MrVWmQwhSkXKbpjpvLQJa3OkVCJrBZqhS/R3xaXubJzk6xok
-	 E1HYSl+X0HhslCn7ApSQObXhwwtpz/F6ZzA5y5l4=
+	b=Dony2PYtvVQiC2tQKCHHM1wzY8zTzsFsIECqetVoUSBQLBLq/wFXMz11WpB7MQ7Zl
+	 9GPLTwPJWhHagKvIDbaq9iT/Q6DWA1orJaQQHuKtLCi1uB1gzxpghqUPCSiLQtgW8H
+	 ZAocKQKBj9edalqvipb0NBMqZzgDDJqLc+LC2AYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfCHM6D (ORCPT
+        id S1727962AbfCHM6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:58:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbfCHM6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:01 -0500
+        id S1727613AbfCHM6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:04 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 804D620449;
-        Fri,  8 Mar 2019 12:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42E6A20449;
+        Fri,  8 Mar 2019 12:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049880;
-        bh=8EX4hCtOps28asK9OFFnUk58VUg6VAW4nr1HpYYyhh4=;
+        s=default; t=1552049883;
+        bh=lim4Oj3ZY5dUMUEAG0MvNIfe82k9BuYrwzTE80Crq+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3x0LsAsVp6uqOVWuBrfdjUTkAc/J+vGjCRXmyjv3xsKBs48uq57ONrSyX2Tfqc/u
-         qPwVoM+fP1qpUg5pMOspr7i/nN6ux+IO1RC0Wf94D+xzWW4wsixGMs01MoB5UIh77e
-         vKwBNadqZzpOVqaoiNw6psT7tQupmRPqbko3MeYE=
+        b=j87qgSvAlWW9z3ytM0JzIk4IVh8cWhm+9VUgD3hSmieSi5n6f05ncbQIIVmsT+N+q
+         X3YGcnYUg1De90/5isXXgnh7u52vhP70/jXgywr4g4eLSg7uGu8DaUScQCbOcj+1c5
+         lFO4mLvqr32b1wrY0MYU3ARaoEZkABnVw+gC/iIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 16/68] net: sched: put back q.qlen into a single location
-Date:   Fri,  8 Mar 2019 13:49:46 +0100
-Message-Id: <20190308124911.641479057@linuxfoundation.org>
+Subject: [PATCH 4.19 17/68] net-sysfs: Fix mem leak in netdev_register_kobject
+Date:   Fri,  8 Mar 2019 13:49:47 +0100
+Message-Id: <20190308124911.690040226@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -69,218 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 46b1c18f9deb326a7e18348e668e4c7ab7c7458b ]
+[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
 
-In the series fc8b81a5981f ("Merge branch 'lockless-qdisc-series'")
-John made the assumption that the data path had no need to read
-the qdisc qlen (number of packets in the qdisc).
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffff88837a71a500 (size 256):
+  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
+  backtrace:
+    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
+    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
+    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
+    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
+    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
+    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
+    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
+    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
+    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
+    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
+    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000115be9bb>] 0xffffffffffffffff
 
-It is true when pfifo_fast is used as the root qdisc, or as direct MQ/MQPRIO
-children.
+It should call kset_unregister to free 'dev->queues_kset'
+in error path of register_queue_kobjects, otherwise will cause a mem leak.
 
-But pfifo_fast can be used as leaf in class full qdiscs, and existing
-logic needs to access the child qlen in an efficient way.
-
-HTB breaks badly, since it uses cl->leaf.q->q.qlen in :
-  htb_activate() -> WARN_ON()
-  htb_dequeue_tree() to decide if a class can be htb_deactivated
-  when it has no more packets.
-
-HFSC, DRR, CBQ, QFQ have similar issues, and some calls to
-qdisc_tree_reduce_backlog() also read q.qlen directly.
-
-Using qdisc_qlen_sum() (which iterates over all possible cpus)
-in the data path is a non starter.
-
-It seems we have to put back qlen in a central location,
-at least for stable kernels.
-
-For all qdisc but pfifo_fast, qlen is guarded by the qdisc lock,
-so the existing q.qlen{++|--} are correct.
-
-For 'lockless' qdisc (pfifo_fast so far), we need to use atomic_{inc|dec}()
-because the spinlock might be not held (for example from
-pfifo_fast_enqueue() and pfifo_fast_dequeue())
-
-This patch adds atomic_qlen (in the same location than qlen)
-and renames the following helpers, since we want to express
-they can be used without qdisc lock, and that qlen is no longer percpu.
-
-- qdisc_qstats_cpu_qlen_dec -> qdisc_qstats_atomic_qlen_dec()
-- qdisc_qstats_cpu_qlen_inc -> qdisc_qstats_atomic_qlen_inc()
-
-Later (net-next) we might revert this patch by tracking all these
-qlen uses and replace them by a more efficient method (not having
-to access a precise qlen, but an empty/non_empty status that might
-be less expensive to maintain/track).
-
-Another possibility is to have a legacy pfifo_fast version that would
-be used when used a a child qdisc, since the parent qdisc needs
-a spinlock anyway. But then, future lockless qdiscs would also
-have the same problem.
-
-Fixes: 7e66016f2c65 ("net: sched: helpers to sum qlen and qlen for per cpu logic")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sch_generic.h |   31 +++++++++++++------------------
- net/core/gen_stats.c      |    2 --
- net/sched/sch_generic.c   |   13 ++++++-------
- 3 files changed, 19 insertions(+), 27 deletions(-)
+ net/core/net-sysfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -47,7 +47,10 @@ struct qdisc_size_table {
- struct qdisc_skb_head {
- 	struct sk_buff	*head;
- 	struct sk_buff	*tail;
--	__u32		qlen;
-+	union {
-+		u32		qlen;
-+		atomic_t	atomic_qlen;
-+	};
- 	spinlock_t	lock;
- };
- 
-@@ -384,27 +387,19 @@ static inline void qdisc_cb_private_vali
- 	BUILD_BUG_ON(sizeof(qcb->data) < sz);
- }
- 
--static inline int qdisc_qlen_cpu(const struct Qdisc *q)
--{
--	return this_cpu_ptr(q->cpu_qstats)->qlen;
--}
--
- static inline int qdisc_qlen(const struct Qdisc *q)
- {
- 	return q->q.qlen;
- }
- 
--static inline int qdisc_qlen_sum(const struct Qdisc *q)
-+static inline u32 qdisc_qlen_sum(const struct Qdisc *q)
- {
--	__u32 qlen = q->qstats.qlen;
--	int i;
-+	u32 qlen = q->qstats.qlen;
- 
--	if (q->flags & TCQ_F_NOLOCK) {
--		for_each_possible_cpu(i)
--			qlen += per_cpu_ptr(q->cpu_qstats, i)->qlen;
--	} else {
-+	if (q->flags & TCQ_F_NOLOCK)
-+		qlen += atomic_read(&q->q.atomic_qlen);
-+	else
- 		qlen += q->q.qlen;
--	}
- 
- 	return qlen;
- }
-@@ -776,14 +771,14 @@ static inline void qdisc_qstats_cpu_back
- 	this_cpu_add(sch->cpu_qstats->backlog, qdisc_pkt_len(skb));
- }
- 
--static inline void qdisc_qstats_cpu_qlen_inc(struct Qdisc *sch)
-+static inline void qdisc_qstats_atomic_qlen_inc(struct Qdisc *sch)
- {
--	this_cpu_inc(sch->cpu_qstats->qlen);
-+	atomic_inc(&sch->q.atomic_qlen);
- }
- 
--static inline void qdisc_qstats_cpu_qlen_dec(struct Qdisc *sch)
-+static inline void qdisc_qstats_atomic_qlen_dec(struct Qdisc *sch)
- {
--	this_cpu_dec(sch->cpu_qstats->qlen);
-+	atomic_dec(&sch->q.atomic_qlen);
- }
- 
- static inline void qdisc_qstats_cpu_requeues_inc(struct Qdisc *sch)
---- a/net/core/gen_stats.c
-+++ b/net/core/gen_stats.c
-@@ -256,7 +256,6 @@ __gnet_stats_copy_queue_cpu(struct gnet_
- 	for_each_possible_cpu(i) {
- 		const struct gnet_stats_queue *qcpu = per_cpu_ptr(q, i);
- 
--		qstats->qlen = 0;
- 		qstats->backlog += qcpu->backlog;
- 		qstats->drops += qcpu->drops;
- 		qstats->requeues += qcpu->requeues;
-@@ -272,7 +271,6 @@ void __gnet_stats_copy_queue(struct gnet
- 	if (cpu) {
- 		__gnet_stats_copy_queue_cpu(qstats, cpu);
- 	} else {
--		qstats->qlen = q->qlen;
- 		qstats->backlog = q->backlog;
- 		qstats->drops = q->drops;
- 		qstats->requeues = q->requeues;
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -68,7 +68,7 @@ static inline struct sk_buff *__skb_dequ
- 			skb = __skb_dequeue(&q->skb_bad_txq);
- 			if (qdisc_is_percpu_stats(q)) {
- 				qdisc_qstats_cpu_backlog_dec(q, skb);
--				qdisc_qstats_cpu_qlen_dec(q);
-+				qdisc_qstats_atomic_qlen_dec(q);
- 			} else {
- 				qdisc_qstats_backlog_dec(q, skb);
- 				q->q.qlen--;
-@@ -108,7 +108,7 @@ static inline void qdisc_enqueue_skb_bad
- 
- 	if (qdisc_is_percpu_stats(q)) {
- 		qdisc_qstats_cpu_backlog_inc(q, skb);
--		qdisc_qstats_cpu_qlen_inc(q);
-+		qdisc_qstats_atomic_qlen_inc(q);
- 	} else {
- 		qdisc_qstats_backlog_inc(q, skb);
- 		q->q.qlen++;
-@@ -147,7 +147,7 @@ static inline int dev_requeue_skb_locked
- 
- 		qdisc_qstats_cpu_requeues_inc(q);
- 		qdisc_qstats_cpu_backlog_inc(q, skb);
--		qdisc_qstats_cpu_qlen_inc(q);
-+		qdisc_qstats_atomic_qlen_inc(q);
- 
- 		skb = next;
- 	}
-@@ -252,7 +252,7 @@ static struct sk_buff *dequeue_skb(struc
- 			skb = __skb_dequeue(&q->gso_skb);
- 			if (qdisc_is_percpu_stats(q)) {
- 				qdisc_qstats_cpu_backlog_dec(q, skb);
--				qdisc_qstats_cpu_qlen_dec(q);
-+				qdisc_qstats_atomic_qlen_dec(q);
- 			} else {
- 				qdisc_qstats_backlog_dec(q, skb);
- 				q->q.qlen--;
-@@ -633,7 +633,7 @@ static int pfifo_fast_enqueue(struct sk_
- 	if (unlikely(err))
- 		return qdisc_drop_cpu(skb, qdisc, to_free);
- 
--	qdisc_qstats_cpu_qlen_inc(qdisc);
-+	qdisc_qstats_atomic_qlen_inc(qdisc);
- 	/* Note: skb can not be used after skb_array_produce(),
- 	 * so we better not use qdisc_qstats_cpu_backlog_inc()
- 	 */
-@@ -658,7 +658,7 @@ static struct sk_buff *pfifo_fast_dequeu
- 	if (likely(skb)) {
- 		qdisc_qstats_cpu_backlog_dec(qdisc, skb);
- 		qdisc_bstats_cpu_update(qdisc, skb);
--		qdisc_qstats_cpu_qlen_dec(qdisc);
-+		qdisc_qstats_atomic_qlen_dec(qdisc);
- 	}
- 
- 	return skb;
-@@ -702,7 +702,6 @@ static void pfifo_fast_reset(struct Qdis
- 		struct gnet_stats_queue *q = per_cpu_ptr(qdisc->cpu_qstats, i);
- 
- 		q->backlog = 0;
--		q->qlen = 0;
- 	}
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1547,6 +1547,9 @@ static int register_queue_kobjects(struc
+ error:
+ 	netdev_queue_update_kobjects(dev, txq, 0);
+ 	net_rx_queue_update_kobjects(dev, rxq, 0);
++#ifdef CONFIG_SYSFS
++	kset_unregister(dev->queues_kset);
++#endif
+ 	return error;
  }
  
 
