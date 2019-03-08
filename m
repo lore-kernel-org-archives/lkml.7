@@ -2,174 +2,219 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ABAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5232BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B32820643
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:34:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BGPtMK0h"
+	by mail.kernel.org (Postfix) with ESMTP id 1634B2081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCHWej (ORCPT
+        id S1726578AbfCHWnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 17:34:39 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38393 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfCHWei (ORCPT
+        Fri, 8 Mar 2019 17:43:55 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbfCHWny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 17:34:38 -0500
-Received: by mail-vs1-f65.google.com with SMTP id h132so7597111vsd.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 14:34:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9URJUprKYok9DoDJJ1KQjX0JlJiDVTfA7y6V233RllA=;
-        b=BGPtMK0hfmUPWZmPiH4Qqa39rLNoVnmGeDcSCddfwEatoPVyERhOcENk1DM4fG6aik
-         1Qm+086QA5Q1oQkG4EXQ8FQGspczCrIuE/vgXH8OnIUoQudzuMW4jCjKyLAQxZojJD+9
-         zCSoBewAqqLO7eUrPlfHVc7MxFrL1J85gpCXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9URJUprKYok9DoDJJ1KQjX0JlJiDVTfA7y6V233RllA=;
-        b=S7ZzKHq8BGRBAReLVrWIphRSwnQEgMibwjRCkCNIZQk3acQCRd4ZVQlIICswM1badf
-         gtqd+Zv2lOWb3dQ/rv0Kgwg5pDZSMqa04ix5LvcfqsdMFCw2rsBVajlWoSxbpZviFyiX
-         D9HCNnVEWG9yuHctI+AGixhh41SUsGvLzbgV4ZVbEzhrutlidY+pAEdUUqimQpAqSLDL
-         eiYK0gXsadaeMDOTKU4I/6yrwbhlfz0YKiBORcKtfiBBLi6H99nL8xWx4Bm+O1TXt79P
-         wTo7hN9eG8AgbTbVG+AGTXyZd7p538MxiP37AC0B7gaZBvUFQgQOqDgKQZVpsDt03MoR
-         Xgiw==
-X-Gm-Message-State: APjAAAUbiNB24EB6Y+nScGuZ6YTPYrq6sM6nYpLsJB0zaB7Me69SGSe5
-        felu/YPOlJdaz/1fMGhj+qeCpdRPT4U=
-X-Google-Smtp-Source: APXvYqws8OYcueCuksjqCckuEeFrEqlvQVSDnZ9ROSyjYLD/uM5tILNfvVPM04WJGwhylwlYLK1ITw==
-X-Received: by 2002:a67:af05:: with SMTP id v5mr11720371vsl.114.1552084476973;
-        Fri, 08 Mar 2019 14:34:36 -0800 (PST)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id j186sm1832819vsd.21.2019.03.08.14.34.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 14:34:36 -0800 (PST)
-Received: by mail-vs1-f53.google.com with SMTP id j12so7605861vsd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 14:34:35 -0800 (PST)
-X-Received: by 2002:a67:f611:: with SMTP id k17mr11417614vso.149.1552084475547;
- Fri, 08 Mar 2019 14:34:35 -0800 (PST)
+        Fri, 8 Mar 2019 17:43:54 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28Md4qG186593
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 17:43:53 -0500
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r40862ktm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 17:43:52 -0500
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Fri, 8 Mar 2019 22:43:52 -0000
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Mar 2019 22:43:50 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x28Mhkhl24838194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Mar 2019 22:43:46 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78063B2064;
+        Fri,  8 Mar 2019 22:43:46 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3861B205F;
+        Fri,  8 Mar 2019 22:43:45 +0000 (GMT)
+Received: from [9.85.161.201] (unknown [9.85.161.201])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Mar 2019 22:43:45 +0000 (GMT)
+Subject: Re: [PATCH v4 6/7] s390: ap: Cleanup on removing the AP device
+To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-7-git-send-email-pmorel@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Fri, 8 Mar 2019 17:43:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190308212524.121126-1-dianders@chromium.org> <CABXOdTe6hGWCsRpQcc_coB-whvJR2XfPfdLuc9QHMMvoXDNW=w@mail.gmail.com>
-In-Reply-To: <CABXOdTe6hGWCsRpQcc_coB-whvJR2XfPfdLuc9QHMMvoXDNW=w@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 8 Mar 2019 14:34:24 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VGL-Z93WtU8LTQXeJtdUU085T+Vd_MXNuuvWnJ6-eyDw@mail.gmail.com>
-Message-ID: <CAD=FV=VGL-Z93WtU8LTQXeJtdUU085T+Vd_MXNuuvWnJ6-eyDw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Speed up install, modules_install and kernelrelease
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1550849400-27152-7-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030822-0040-0000-0000-000004CEF425
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010729; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01171580; UDB=6.00606765; IPR=6.00952223;
+ MB=3.00025899; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-08 22:43:51
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030822-0041-0000-0000-000008DA03F1
+Message-Id: <3956ad4c-55c9-e42c-4ab2-00ddae05b317@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_19:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903080156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2/22/19 10:29 AM, Pierre Morel wrote:
+> When the device is remove, we must make sure to
+> clear the interruption and reset the AP device.
+> 
+> We also need to clear the CRYCB of the guest.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_drv.c     | 35 +++++++++++++++++++++++++++++++++++
+>   drivers/s390/crypto/vfio_ap_ops.c     |  3 ++-
+>   drivers/s390/crypto/vfio_ap_private.h |  3 +++
+>   3 files changed, 40 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index eca0ffc..e5d91ff 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -5,6 +5,7 @@
+>    * Copyright IBM Corp. 2018
+>    *
+>    * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
+> + *	      Pierre Morel <pmorel@linux.ibm.com>
+>    */
+>   
+>   #include <linux/module.h>
+> @@ -12,6 +13,8 @@
+>   #include <linux/slab.h>
+>   #include <linux/string.h>
+>   #include <asm/facility.h>
+> +#include <linux/bitops.h>
+> +#include <linux/kvm_host.h>
+>   #include "vfio_ap_private.h"
+>   
+>   #define VFIO_AP_ROOT_NAME "vfio_ap"
+> @@ -61,6 +64,33 @@ static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>   }
+>   
+>   /**
+> + * vfio_ap_update_crycb
+> + * @q: A pointer to the queue being removed
+> + *
+> + * We clear the APID of the queue, making this queue unusable for the guest.
+> + * After this function we can reset the queue without to fear a race with
+> + * the guest to access the queue again.
+> + * We do not fear race with the host as we still get the device.
+> + */
+> +static void vfio_ap_update_crycb(struct vfio_ap_queue *q)
+> +{
+> +	struct ap_matrix_mdev *matrix_mdev = q->matrix_mdev;
+> +
+> +	if (!matrix_mdev)
+> +		return;
+> +
+> +	clear_bit_inv(AP_QID_CARD(q->apqn), matrix_mdev->matrix.apm);
+> +
+> +	if (!matrix_mdev->kvm)
+> +		return;
+> +
+> +	kvm_arch_crypto_set_masks(matrix_mdev->kvm,
+> +				  matrix_mdev->matrix.apm,
+> +				  matrix_mdev->matrix.aqm,
+> +				  matrix_mdev->matrix.adm);
+> +}
+> +
+> +/**
+>    * vfio_ap_queue_dev_remove:
+>    *
+>    * Free the associated vfio_ap_queue structure
+> @@ -70,6 +100,11 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>   	struct vfio_ap_queue *q;
+>   
+>   	q = dev_get_drvdata(&apdev->device);
+> +	if (!q)
+> +		return;
+> +
+> +	vfio_ap_update_crycb(q);
+> +	vfio_ap_mdev_reset_queue(q);
 
-On Fri, Mar 8, 2019 at 2:29 PM Guenter Roeck <groeck@google.com> wrote:
->
-> On Fri, Mar 8, 2019 at 1:25 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > As per the description of the old commit 3298b690b21c ("kbuild: Add a
-> > cache for generated variables"), calling the C compiler lots of times
-> > during the parsing stage of the Makefile can be a little slow.  If you
-> > happen to have a C compiler whose fork/exec time isn't optimized
-> > (perhaps it was linked dynamically, or perhaps it's called through
-> > several wrappers, or ...) then this can be more than a little slow, it
-> > can be very slow.
-> >
-> > The above slowness was addressed with the old Makefile cache, but the
-> > cache was reverted in commit e08d6de4e532 ("kbuild: remove kbuild
-> > cache").  That commit indicated that we expected to get the speed
-> > gains back because "the result of compiler tests will be naturally
-> > cached in the .config file", but as of the latest mainline there are
-> > still lots of direct calls to the C compiler that happen in the
-> > Makefile parsing stage.
-> >
-> > Perhaps we could try re-introducing the Makefile cache and fix the
-> > problems it was causing, but this patch codes up another solution that
-> > gets some of the speed gains back, perhaps with less complexity.
-> >
-> > Specifically I observed that by timing the parsing stage of the
-> > Makefile by adding statements like this to the beginning and end of
-> > the Makefile:
-> >   ZZZ := $(shell echo "$$(date '+%T.%N'): ..." >> /tmp/timing.txt)
-> >
-> > ...that three targets were spending 3 seconds each parsing the
-> > Makefile in my environment (building a Chrome OS kernel with clang)
-> > when it felt like they ought to be quick.  These were: install,
-> > modules_install and kernelrelease
-> >
-> > I saw timings that looked like:
-> >   09:23:08.903204451: Parsing Makefile, goals: install
-> >   09:23:11.960515772: Done parsing Makefile, goals: install
-> >
-> > Given that the kbuild system doesn't sync the config for any of these
-> > options I believe it is safe to say that it can't compile any code.
-> > Thus if we can avoid the C compiler invocation here we'll save time.
-> >
-> > The simplest way to accomplish this is to neuter all the calls to the
-> > compiler by stubbing them out.  After doing so (AKA applying this
-> > change) the same timing looks like:
-> >   09:28:04.929252271: Parsing Makefile, goals: install
-> >   09:28:05.107468449: Done parsing Makefile, goals: install
-> >
-> > During an incremental kernel build/install on Chrome OS we call
-> > install once, modules_install twice (once to keep unstripped), and
-> > kernelrelease once.  Thus this saves ~12 seconds on an incremental
-> > kernel build/install.  With my current setup, this brings it from ~40
-> > seconds to ~28 seconds.  Re-introducing the Makefile cache would
-> > likely save us an extra ~3 seconds since we'd avoid the parsing in the
-> > compile stage.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  Makefile | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index f070e0d65186..5f7532d9be65 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -304,6 +304,20 @@ else
-> >  scripts/Kbuild.include: ;
-> >  include scripts/Kbuild.include
-> >
-> > +# If we can't sync the config then we know we can't compile code.
-> > +# Replace the slow option-testing commands with stubs to significantly
-> > +# speed up the Makefile parsing stage of the build.
-> > +ifeq ($(may-sync-config),0)
->
-> I think that breaks KBUILD_EXTMOD, which sets the variable to 0.
+Since the bit corresponding to the APID is cleared in the
+vfio_ap_update_crycb() above, shouldn't all queues on that
+card also be reset?
 
-Yup, thanks for catching--I should have realized that from the code
-but somehow skimmed over the KBUILD_EXTMOD bits.  I confirmed that
-this is broken.
+>   	list_del(&q->list);
+>   	kfree(q);
+>   }
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 0196065..5b9bb33 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -59,6 +59,7 @@ int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+>   			if (retry <= 0)
+>   				pr_warn("%s: queue 0x%04x not empty\n",
+>   					__func__, q->apqn);
+> +			vfio_ap_free_irq(q);
 
-I can certainly add an extra check to confirm that '$(KBUILD_EXTMOD)'
-is unset and I'll do that in a v2 if I don't hear anything, but before
-sending that I'll give folks a little bit of time to smack down my
-general approach.  To be honest my approach is a bit of a hack so if
-others can think of better ways to avoid all the unnecessary work
-during install / modules_install / kernelrelease then I'm all ears!
-:-)
+Shouldn't this be done for the response codes that terminate this loop
+such as those caught by the default case?
 
+>   			return 0;
+>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+>   		case AP_RESPONSE_BUSY:
+> @@ -83,7 +84,7 @@ int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+>    * Unregister the ISC from the GIB alert
+>    * Clear the vfio_ap_queue intern fields
+>    */
+> -static void vfio_ap_free_irq(struct vfio_ap_queue *q)
+> +void vfio_ap_free_irq(struct vfio_ap_queue *q)
+>   {
+>   	if (!q)
+>   		return;
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index e2fd2c0..cc18215 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -4,6 +4,7 @@
+>    *
+>    * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
+>    *	      Halil Pasic <pasic@linux.ibm.com>
+> + *	      Pierre Morel <pmorel@linux.ibm.com>
+>    *
+>    * Copyright IBM Corp. 2018
+>    */
+> @@ -98,4 +99,6 @@ struct vfio_ap_queue {
+>   	int	apqn;
+>   	unsigned char isc;
+>   };
+> +void vfio_ap_free_irq(struct vfio_ap_queue *q);
+> +int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q);
+>   #endif /* _VFIO_AP_PRIVATE_H_ */
+> 
 
--Doug
