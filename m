@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACF6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD72DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADD62085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF04C20449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049744;
-	bh=NMmRWd60uI2k7MyEBJc15srcrY8oaYUy3I3NntViH24=;
+	s=default; t=1552049747;
+	bh=5Uu9HhoF6zpuPAf42qg5I6QjdkLAz9Zt8+FvmvpJUwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yhw29ScU6x7hChc6Tp5JSznD+NwNg9Hp5QARKBEJXWEA7u4n68hKyTgPIc4CYQdCN
-	 RLQFvnI+uj8FvOv7gAZz1krjRN/hUDnOHO+ROYWhEuI3ojteQI3+95gvyStYt9pXNz
-	 j0ESuBLPwkAziIU3/ZvnEp7dQ/ZxHld2lIqKVpjQ=
+	b=kboJ7M9UzIpChbKHrDShuS+KTFe/vU2oYJWGwwSeNCC6iQwTAD89AooOMSftU3pCk
+	 AjRT4xoCf+sDKIhCA+uQON9w5+ZX98p8jDWiVbKde1zOf5rhKC96o81mJMtE93nfjL
+	 8SmAiZ2qkFKBQfdpXU26xIlBgXLXXTe3olFAJfFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfCHMzm (ORCPT
+        id S1727561AbfCHMzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:55:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59722 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbfCHMzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:55:37 -0500
+        id S1726856AbfCHMzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:55:43 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2472C2085A;
-        Fri,  8 Mar 2019 12:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB32F20449;
+        Fri,  8 Mar 2019 12:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049736;
-        bh=NMmRWd60uI2k7MyEBJc15srcrY8oaYUy3I3NntViH24=;
+        s=default; t=1552049743;
+        bh=5Uu9HhoF6zpuPAf42qg5I6QjdkLAz9Zt8+FvmvpJUwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xsMoNXsFbKLIbdzeynjR7qchOT2JEQq0FfnGTBqDOddRR31luPs4/7HKU/w/Av9Hw
-         VK/e2k+ClGfVTsDErcFG75ar7+qbqYFdGt+tS5/7rM26wS39GKn7GleT3Swvo83q/U
-         Y6Y4eVoFpPJ2rKrWj6YHzWjfiMixh257HHEQwKQ4=
+        b=fU4XZ9uWqVzuZRlPmjc8iLVlyQTNrpasmh0okxCls2fxqq+mQXDbARLAY0C0921Q0
+         U2Un5Enl7khTYaxmLWkHaoZeD+dKOzZIlbYrfxO4Rwwr+jt+SVYX58ybwPg7kE9VcS
+         IJh4yUxOT4/0IFp1HUaaGxGCTUslMAwIDnm7Ijk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sergey Nazarov <s-nazarov@yandex.ru>,
         Paul Moore <paul@paul-moore.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 49/76] net: Add __icmp_send helper.
-Date:   Fri,  8 Mar 2019 13:50:01 +0100
-Message-Id: <20190308124916.548932747@linuxfoundation.org>
+Subject: [PATCH 4.20 50/76] net: avoid use IPCB in cipso_v4_error
+Date:   Fri,  8 Mar 2019 13:50:02 +0100
+Message-Id: <20190308124916.582948026@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -68,73 +68,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nazarov Sergey <s-nazarov@yandex.ru>
 
-[ Upstream commit 9ef6b42ad6fd7929dd1b6092cb02014e382c6a91 ]
+[ Upstream commit 3da1ed7ac398f34fff1694017a07054d69c5f5c5 ]
 
-Add __icmp_send function having ip_options struct parameter
+Extract IP options in cipso_v4_error and use __icmp_send.
 
 Signed-off-by: Sergey Nazarov <s-nazarov@yandex.ru>
-Reviewed-by: Paul Moore <paul@paul-moore.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/icmp.h |    9 ++++++++-
- net/ipv4/icmp.c    |    7 ++++---
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ include/net/ip.h      |    2 ++
+ net/ipv4/cipso_ipv4.c |   17 +++++++++++++++--
+ net/ipv4/ip_options.c |   22 +++++++++++++++++-----
+ 3 files changed, 34 insertions(+), 7 deletions(-)
 
---- a/include/net/icmp.h
-+++ b/include/net/icmp.h
-@@ -22,6 +22,7 @@
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -665,6 +665,8 @@ static inline int ip_options_echo(struct
+ }
  
- #include <net/inet_sock.h>
- #include <net/snmp.h>
-+#include <net/ip.h>
- 
- struct icmp_err {
-   int		errno;
-@@ -39,7 +40,13 @@ struct net_proto_family;
- struct sk_buff;
- struct net;
- 
--void icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info);
-+void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-+		 const struct ip_options *opt);
-+static inline void icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info)
-+{
-+	__icmp_send(skb_in, type, code, info, &IPCB(skb_in)->opt);
-+}
+ void ip_options_fragment(struct sk_buff *skb);
++int __ip_options_compile(struct net *net, struct ip_options *opt,
++			 struct sk_buff *skb, __be32 *info);
+ int ip_options_compile(struct net *net, struct ip_options *opt,
+ 		       struct sk_buff *skb);
+ int ip_options_get(struct net *net, struct ip_options_rcu **optp,
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -1736,13 +1736,26 @@ validate_return:
+  */
+ void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
+ {
++	unsigned char optbuf[sizeof(struct ip_options) + 40];
++	struct ip_options *opt = (struct ip_options *)optbuf;
 +
- int icmp_rcv(struct sk_buff *skb);
- void icmp_err(struct sk_buff *skb, u32 info);
- int icmp_init(void);
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -570,7 +570,8 @@ relookup_failed:
-  *			MUST reply to only the first fragment.
+ 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
+ 		return;
+ 
++	/*
++	 * We might be called above the IP layer,
++	 * so we can not use icmp_send and IPCB here.
++	 */
++
++	memset(opt, 0, sizeof(struct ip_options));
++	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
++	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
++		return;
++
+ 	if (gateway)
+-		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0);
++		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0, opt);
+ 	else
+-		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0);
++		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0, opt);
+ }
+ 
+ /**
+--- a/net/ipv4/ip_options.c
++++ b/net/ipv4/ip_options.c
+@@ -251,8 +251,9 @@ static void spec_dst_fill(__be32 *spec_d
+  * If opt == NULL, then skb->data should point to IP header.
   */
  
--void icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info)
-+void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-+		 const struct ip_options *opt)
+-int ip_options_compile(struct net *net,
+-		       struct ip_options *opt, struct sk_buff *skb)
++int __ip_options_compile(struct net *net,
++			 struct ip_options *opt, struct sk_buff *skb,
++			 __be32 *info)
  {
- 	struct iphdr *iph;
- 	int room;
-@@ -691,7 +692,7 @@ void icmp_send(struct sk_buff *skb_in, i
- 					  iph->tos;
- 	mark = IP4_REPLY_MARK(net, skb_in->mark);
+ 	__be32 spec_dst = htonl(INADDR_ANY);
+ 	unsigned char *pp_ptr = NULL;
+@@ -468,11 +469,22 @@ eol:
+ 		return 0;
  
--	if (ip_options_echo(net, &icmp_param.replyopts.opt.opt, skb_in))
-+	if (__ip_options_echo(net, &icmp_param.replyopts.opt.opt, skb_in, opt))
- 		goto out_unlock;
- 
- 
-@@ -742,7 +743,7 @@ out_bh_enable:
- 	local_bh_enable();
- out:;
+ error:
+-	if (skb) {
+-		icmp_send(skb, ICMP_PARAMETERPROB, 0, htonl((pp_ptr-iph)<<24));
+-	}
++	if (info)
++		*info = htonl((pp_ptr-iph)<<24);
+ 	return -EINVAL;
  }
--EXPORT_SYMBOL(icmp_send);
-+EXPORT_SYMBOL(__icmp_send);
++
++int ip_options_compile(struct net *net,
++		       struct ip_options *opt, struct sk_buff *skb)
++{
++	int ret;
++	__be32 info;
++
++	ret = __ip_options_compile(net, opt, skb, &info);
++	if (ret != 0 && skb)
++		icmp_send(skb, ICMP_PARAMETERPROB, 0, info);
++	return ret;
++}
+ EXPORT_SYMBOL(ip_options_compile);
  
- 
- static void icmp_socket_deliver(struct sk_buff *skb, u32 info)
+ /*
 
 
