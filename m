@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02303C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA8EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B5720449
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA472085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049905;
-	bh=59JnZbT0EdUAPW82Ju/pzTc8aKPzgrKnXhecP6IFeig=;
+	s=default; t=1552049907;
+	bh=GG0E1X/DNvEBBeEcM4q1cM9S6b90b9qDzCRdOqDQEQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OaIoKHSfMfxeIO9d8pxDWKIMwHSIURP7lvV4R/QdTRtuIM2/Kw3nkHycrz7k9Ybpk
-	 VIqw9HJsAhon7uERNltdnF7iuIwkCJNC+6WTlUXtGyuYCyQ+cemBSR7nL4kluB9TDf
-	 /ewDuSVwPyUMthUqmeKts9MBit3bG+pFozP3D2qs=
+	b=HTzaT6j38kSfDASTsJqPyvuZGdqsP6+Sa1txozJDraEmarZUPFlsmS0JZFDb1BZB6
+	 axy88TvovH/boUpNVt0nRbYgFu8iJXC6MN7uRj2DoWPpoz8fv7T2lX7ahdwU9tClC5
+	 GiAQIrDhd/RldO66SQMDwEZMIe1pz054eeQPLrws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfCHM6Y (ORCPT
+        id S1726932AbfCHM6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:58:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbfCHM6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:21 -0500
+        id S1728010AbfCHM6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:24 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 376C120449;
-        Fri,  8 Mar 2019 12:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EDF22085A;
+        Fri,  8 Mar 2019 12:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049900;
-        bh=59JnZbT0EdUAPW82Ju/pzTc8aKPzgrKnXhecP6IFeig=;
+        s=default; t=1552049903;
+        bh=GG0E1X/DNvEBBeEcM4q1cM9S6b90b9qDzCRdOqDQEQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smTYdZctsE1ILCSIDnGh7oRr8NvH5VV4oAKhfZeOtpTuVY7CAeS0GN03ZJrKKW1uh
-         k8a2v0He4XlwO10OIcKrNcEpPTipn8Qm7XArxKHixujPRR64r/oD8DJR4vL5bV+FCt
-         goQ2saWexVkhhKdPXofncTTSzLcrMu/n2Y1B3RVg=
+        b=OeUcgL6Odhe1Gf3+JVG5KZfRscYS+JKesjMLXFcDaqaB2wwZgk4TTXRN8Ky/131+e
+         WK0LmlPN+4LHTKvnI81J/6kQZwVcc8NJ0ZQQPJ/SnpRFjm0xNZanxkJje1GJ3fNahs
+         AIGYOfIIyJ7XAuipFjKe4gCOMY4izjgUFF4x/b1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Erik Hugne <erik.hugne@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 21/68] team: Free BPF filter when unregistering netdev
-Date:   Fri,  8 Mar 2019 13:49:51 +0100
-Message-Id: <20190308124911.873793408@linuxfoundation.org>
+Subject: [PATCH 4.19 22/68] tipc: fix RDM/DGRAM connect() regression
+Date:   Fri,  8 Mar 2019 13:49:52 +0100
+Message-Id: <20190308124911.920642072@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -67,99 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Erik Hugne <erik.hugne@gmail.com>
 
-[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
+[ Upstream commit 0e63208915a8d7590d0a6218dadb2a6a00ac705a ]
 
-When team is used in loadbalance mode a BPF filter can be used to
-provide a hash which will determine the Tx port.
+Fix regression bug introduced in
+commit 365ad353c256 ("tipc: reduce risk of user starvation during link
+congestion")
 
-When the netdev is later unregistered the filter is not freed which
-results in memory leaks [1].
+Only signal -EDESTADDRREQ for RDM/DGRAM if we don't have a cached
+sockaddr.
 
-Fix by freeing the program and the corresponding filter when
-unregistering the netdev.
-
-[1]
-unreferenced object 0xffff8881dbc47cc8 (size 16):
-  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
-  hex dump (first 16 bytes):
-    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
-  backtrace:
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-unreferenced object 0xffff8881e182a588 (size 2048):
-  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
-  hex dump (first 32 bytes):
-    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
-    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
-  backtrace:
-    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-
-Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
+Signed-off-by: Erik Hugne <erik.hugne@gmail.com>
+Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ net/tipc/socket.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/team/team_mode_loadbalance.c
-+++ b/drivers/net/team/team_mode_loadbalance.c
-@@ -325,6 +325,20 @@ static int lb_bpf_func_set(struct team *
- 	return 0;
- }
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -1318,7 +1318,7 @@ static int __tipc_sendmsg(struct socket
  
-+static void lb_bpf_func_free(struct team *team)
-+{
-+	struct lb_priv *lb_priv = get_lb_priv(team);
-+	struct bpf_prog *fp;
-+
-+	if (!lb_priv->ex->orig_fprog)
-+		return;
-+
-+	__fprog_destroy(lb_priv->ex->orig_fprog);
-+	fp = rcu_dereference_protected(lb_priv->fp,
-+				       lockdep_is_held(&team->lock));
-+	bpf_prog_destroy(fp);
-+}
-+
- static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
- {
- 	struct lb_priv *lb_priv = get_lb_priv(team);
-@@ -639,6 +653,7 @@ static void lb_exit(struct team *team)
+ 	if (unlikely(!dest)) {
+ 		dest = &tsk->peer;
+-		if (!syn || dest->family != AF_TIPC)
++		if (!syn && dest->family != AF_TIPC)
+ 			return -EDESTADDRREQ;
+ 	}
  
- 	team_options_unregister(team, lb_options,
- 				ARRAY_SIZE(lb_options));
-+	lb_bpf_func_free(team);
- 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
- 	free_percpu(lb_priv->pcpu_stats);
- 	kfree(lb_priv->ex);
 
 
