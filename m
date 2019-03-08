@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0832CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31664C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D709220811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 094CC20811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfCHGO2 (ORCPT
+        id S1726450AbfCHGOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:14:28 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:29577 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725789AbfCHGO2 (ORCPT
+        Fri, 8 Mar 2019 01:14:41 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:41183 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726428AbfCHGOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:14:28 -0500
-X-UUID: a9c7826e57ff42209afa1906290f40dc-20190308
-X-UUID: a9c7826e57ff42209afa1906290f40dc-20190308
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Fri, 8 Mar 2019 01:14:41 -0500
+X-UUID: d36696245be6468eadda53c949ca5ed1-20190308
+X-UUID: d36696245be6468eadda53c949ca5ed1-20190308
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 374926068; Fri, 08 Mar 2019 14:14:18 +0800
+        with ESMTP id 1875569268; Fri, 08 Mar 2019 14:14:35 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 8 Mar 2019 14:14:10 +0800
+ 15.0.1395.4; Fri, 8 Mar 2019 14:14:27 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 8 Mar 2019 14:14:04 +0800
+ Transport; Fri, 8 Mar 2019 14:14:20 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 1/5] dt-bindings: connector: add optional properties for Type-B
-Date:   Fri, 8 Mar 2019 14:13:38 +0800
-Message-ID: <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH 2/5] dt-bindings: usb: mtu3: add properties about USB Role Switch
+Date:   Fri, 8 Mar 2019 14:13:39 +0800
+Message-ID: <1552025622-15582-3-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
@@ -62,35 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-usb-b-connector
+Now the USB Role Switch is supported, so add properties about it
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index a9a2f2fc44f2..7a07b0f4f973 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -17,6 +17,16 @@ Optional properties:
- - self-powered: Set this property if the usb device that has its own power
-   source.
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+index 3382b5cb471d..97239913a7bd 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+@@ -27,7 +27,9 @@ Optional properties:
+  - ranges : allows valid 1:1 translation between child's address space and
+ 	parent's address space
+  - extcon : external connector for vbus and idpin changes detection, needed
+-	when supports dual-role mode.
++	when supports dual-role mode; it's consiedered valid for compatibility
++	reasons, and not allowed for new bindings, use the property
++	usb-role-switch instead.
+  - vbus-supply : reference to the VBUS regulator, needed when supports
+ 	dual-role mode.
+  - pinctrl-names : a pinctrl state named "default" is optional, and need be
+@@ -36,7 +38,8 @@ Optional properties:
+ 	is not set.
+  - pinctrl-0 : pin control group
+ 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-
++ - usb-role-switch : use USB Role Switch to support dual-role siwtch, but
++	not extcon
+  - maximum-speed : valid arguments are "super-speed", "high-speed" and
+ 	"full-speed"; refer to usb/generic.txt
+  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
+@@ -61,6 +64,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
+ if host mode is enabled. The DT binding details of xhci can be found in:
+ Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
  
-+Optional properties for usb-b-connector:
-+- id-gpios: gpio for USB ID pin.
-+- vbus-gpios: gpio for USB VBUS pin.
-+  see gpio/gpio.txt.
-+- vbus-supply: reference to the VBUS regulator, needed when supports
-+  dual-role mode.
-+- pinctrl-names : a pinctrl state named "default" is optional
-+- pinctrl-0 : pin control group
-+  see pinctrl/pinctrl-bindings.txt
++The connector would be added as subnode if receptacle is Micro, see
++connector/usb-connector.txt
 +
- Optional properties for usb-c-connector:
- - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-   connector has power support.
+ Example:
+ ssusb: usb@11271000 {
+ 	compatible = "mediatek,mt8173-mtu3";
 -- 
 2.20.1
 
