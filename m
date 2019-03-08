@@ -2,90 +2,104 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F7EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A634C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61841206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o41lkOl7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JtYN7lxR"
+	by mail.kernel.org (Postfix) with ESMTP id 7655F206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfCHTK5 (ORCPT
+        id S1726995AbfCHTLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:10:57 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:51256 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCHTK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:10:57 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1380660328; Fri,  8 Mar 2019 19:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552072257;
-        bh=KIuY/fnsBMdVj6LI3KgOrerVjV+pV+jtJWAGSUdkvcI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=o41lkOl78Rt0k2la8UqwoxxgJC4RbN2BLn3yWa7JS4ysQhzSS+/1/NwZQTo2upMAT
-         JEfIGUEzULvdSk7i+jPFQsaVf+mGLuGJF+AyrbaM3jZxTJPpdq9/bQVA9BgN3arTk0
-         l428Be7aDQsXSt0EGT/RYY5QCU80OWZLxkJ8j0Ic=
-Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 8 Mar 2019 14:11:16 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:48336 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfCHTLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 14:11:15 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44ED160328;
-        Fri,  8 Mar 2019 19:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552072256;
-        bh=KIuY/fnsBMdVj6LI3KgOrerVjV+pV+jtJWAGSUdkvcI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JtYN7lxRbzqdsq5hkrqsf5qQFbnfOTm/Q9MyAtI78XlQBaHHdrkwwL6aCQXyONGap
-         nmF38Q3/oV1utNOImJDnGoGvg10JDtxY7FaF8cHGDWnJ2DSbIywnQixwEoyZyBgucU
-         jReDqLABqYI9oa4S7yptYpIdP+KYAJRJ0s6qNTpc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 44ED160328
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     paulmck@linux.vnet.ibm.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Cc:     linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH] rcu/rcutorture: Fix expected forward progress duration in oom notifier
-Date:   Sat,  9 Mar 2019 00:40:45 +0530
-Message-Id: <1552072245-31273-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 8ED46C05D261;
+        Fri,  8 Mar 2019 19:11:15 +0000 (UTC)
+Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDECF60856;
+        Fri,  8 Mar 2019 19:11:08 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 14:11:08 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, Jan Kara <jack@suse.cz>
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190308191108.GA26923@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190306092837-mutt-send-email-mst@kernel.org>
+ <15105894-4ec1-1ed0-1976-7b68ed9eeeda@redhat.com>
+ <20190307101708-mutt-send-email-mst@kernel.org>
+ <20190307190910.GE3835@redhat.com>
+ <20190307193838.GQ23850@redhat.com>
+ <20190307201722.GG3835@redhat.com>
+ <20190307212717.GS23850@redhat.com>
+ <671c4a98-4699-836e-79fc-0ce650c7f701@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <671c4a98-4699-836e-79fc-0ce650c7f701@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 08 Mar 2019 19:11:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a possible miscalculation in rcutorture_oom_notify(),
-for the expected forward progress duration of current
-forward progress test.
+On Fri, Mar 08, 2019 at 05:13:26PM +0800, Jason Wang wrote:
+> Actually not wrapping around,  the pages for used ring was marked as 
+> dirty after a round of virtqueue processing when we're sure vhost wrote 
+> something there.
 
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
- kernel/rcu/rcutorture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the clarification. So we need to convert it to
+set_page_dirty and move it to the mmu notifier invalidate but in those
+cases where gup_fast was called with write=1 (1 out of 3).
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index f14d1b1..5d09f79 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1848,7 +1848,7 @@ static int rcutorture_oom_notify(struct notifier_block *self,
- 	WARN(1, "%s invoked upon OOM during forward-progress testing.\n",
- 	     __func__);
- 	rcu_torture_fwd_cb_hist();
--	rcu_fwd_progress_check(1 + (jiffies - READ_ONCE(rcu_fwd_startat) / 2));
-+	rcu_fwd_progress_check(1 + (jiffies - READ_ONCE(rcu_fwd_startat)) / 2);
- 	WRITE_ONCE(rcu_fwd_emergency_stop, true);
- 	smp_mb(); /* Emergency stop before free and wait to avoid hangs. */
- 	pr_info("%s: Freed %lu RCU callbacks.\n",
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+If using ->invalidate_range the page pin also must be removed
+immediately after get_user_pages returns (not ok to hold the pin in
+vmap until ->invalidate_range is called) to avoid false positive gup
+pin checks in things like KSM, or the pin must be released in
+invalidate_range_start (which is called before the pin checks).
 
+Here's why:
+
+		/*
+		 * Check that no O_DIRECT or similar I/O is in progress on the
+		 * page
+		 */
+		if (page_mapcount(page) + 1 + swapped != page_count(page)) {
+			set_pte_at(mm, pvmw.address, pvmw.pte, entry);
+			goto out_unlock;
+		}
+		[..]
+		set_pte_at_notify(mm, pvmw.address, pvmw.pte, entry);
+			  ^^^^^^^ too late release the pin here, the
+				  above already failed
+
+->invalidate_range cannot be used with mutex anyway so you need to go
+back with invalidate_range_start/end anyway, just the pin must be
+released in _start at the latest in such case.
+
+My prefer is generally to call gup_fast() followed by immediate
+put_page() because I always want to drop FOLL_GET from gup_fast as a
+whole to avoid 2 useless atomic ops per gup_fast.
+
+I'll write more about vmap in answer to the other email.
+
+Thanks,
+Andrea
