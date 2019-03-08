@@ -2,170 +2,173 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098B2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFDFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A1B20811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D36920854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:57:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jlNUbOfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbfCHK4H (ORCPT
+        id S1726431AbfCHK5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 05:56:07 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:34416 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfCHK4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 05:56:06 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1ADB830EBE80;
-        Fri,  8 Mar 2019 10:56:06 +0000 (UTC)
-Received: from [10.40.204.24] (ovpn-204-24.brq.redhat.com [10.40.204.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C3D817D61;
-        Fri,  8 Mar 2019 10:56:04 +0000 (UTC)
-Subject: Re: [PATCH v2] powerpc/mm: move warning from resize_hpt_for_hotplug()
-To:     linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-References: <20190308105413.4302-1-lvivier@redhat.com>
-From:   Laurent Vivier <lvivier@redhat.com>
-Message-ID: <e94638bb-11b4-7a08-3aba-fd3610add0b5@redhat.com>
-Date:   Fri, 8 Mar 2019 11:56:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Fri, 8 Mar 2019 05:57:14 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34298 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfCHK5N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 05:57:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hrliJgZSHEqg0C+vJCT2WhttKwSy9xwOOLnILNV2vOQ=; b=jlNUbOfOmJqVZynxd0YWPJdNk
+        nhZIPGREt0fQLiNqqKyajpEFZNm81ffanEaLnb2mOXdrM610XEi1XdIR2tCA/N2KJy/paXV8N0o08
+        mmYx6OANvjnIoQme9C0UQW5+/AqDrqD40kryyCe4N+hZasqC9Jg7/WLp17G4Oo4oWGdcFgOPGMj0L
+        P5iY1vEvzlK9QlCHg36kBFayMbxCMxR+aLcDbumBAdQlYvhW3YigMUDWb95EUtiOEXI5AYjMMpX4E
+        N68edhxxa8/95Iq6ihyKbyXY4NfmshxOMEXYNewFS3jK6rHiZb1cAVTALlwB/FYrFZVwqUE+Ny/4X
+        IjHOdGciA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51664)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1h2DBY-0003Np-4s; Fri, 08 Mar 2019 10:57:04 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1h2DBS-0005ht-N7; Fri, 08 Mar 2019 10:56:58 +0000
+Date:   Fri, 8 Mar 2019 10:56:58 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Mikael Pettersson <mikpelinux@gmail.com>,
+        Mikael Pettersson <mikpe@it.uu.se>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
+Message-ID: <20190308105658.y6ctbfggheavwxs4@shell.armlinux.org.uk>
+References: <20190307091514.2489338-1-arnd@arndb.de>
+ <20190307091514.2489338-2-arnd@arndb.de>
+ <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
+ <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk>
+ <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
+ <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk>
+ <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
+ <CAKv+Gu-4bcnVc_v_syaUFXfbyPeo_LGuh7waWQojdGTSS6TeEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190308105413.4302-1-lvivier@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 08 Mar 2019 10:56:06 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-4bcnVc_v_syaUFXfbyPeo_LGuh7waWQojdGTSS6TeEw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I forgot the version change note:
-
-  v2: add warning messages for H_PARAMETER and H_RESOURCE
-
-Thanks,
-Laurent
-
-On 08/03/2019 11:54, Laurent Vivier wrote:
-> resize_hpt_for_hotplug() reports a warning when it cannot
-> resize the hash page table ("Unable to resize hash page
-> table to target order") but in some cases it's not a problem
-> and can make user thinks something has not worked properly.
+On Fri, Mar 08, 2019 at 11:16:47AM +0100, Ard Biesheuvel wrote:
+> Compiling the following code
 > 
-> This patch moves the warning to arch_remove_memory() to
-> only report the problem when it is needed.
+> """
+> #include <stdio.h>
 > 
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-> ---
->  arch/powerpc/include/asm/sparsemem.h  |  4 ++--
->  arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
->  arch/powerpc/mm/mem.c                 |  3 ++-
->  arch/powerpc/platforms/pseries/lpar.c |  3 ++-
->  4 files changed, 12 insertions(+), 15 deletions(-)
+> static void foo(void *a, int b)
+> {
+>     asm("str %0, [%1]" :: "r"(a), "r"(b));
+> }
 > 
-> diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
-> index 68da49320592..3192d454a733 100644
-> --- a/arch/powerpc/include/asm/sparsemem.h
-> +++ b/arch/powerpc/include/asm/sparsemem.h
-> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, unsigned long end, int ni
->  extern int remove_section_mapping(unsigned long start, unsigned long end);
->  
->  #ifdef CONFIG_PPC_BOOK3S_64
-> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
-> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
->  #else
-> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
-> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { return 0; }
->  #endif
->  
->  #ifdef CONFIG_NUMA
-> diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-> index 0cc7fbc3bd1c..40bb2a8326bb 100644
-> --- a/arch/powerpc/mm/hash_utils_64.c
-> +++ b/arch/powerpc/mm/hash_utils_64.c
-> @@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(void)
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
-> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
->  {
->  	unsigned target_hpt_shift;
->  
->  	if (!mmu_hash_ops.resize_hpt)
-> -		return;
-> +		return 0;
->  
->  	target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
->  
-> @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_size)
->  	 * current shift
->  	 */
->  	if ((target_hpt_shift > ppc64_pft_size)
-> -	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
-> -		int rc;
-> -
-> -		rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
-> -		if (rc && (rc != -ENODEV))
-> -			printk(KERN_WARNING
-> -			       "Unable to resize hash page table to target order %d: %d\n",
-> -			       target_hpt_shift, rc);
-> -	}
-> +	    || (target_hpt_shift < (ppc64_pft_size - 1)))
-> +		return mmu_hash_ops.resize_hpt(target_hpt_shift);
-> +
-> +	return 0;
->  }
->  
->  int hash__create_section_mapping(unsigned long start, unsigned long end, int nid)
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 33cc6f676fa6..0d40d970cf4a 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, u64 size,
->  	 */
->  	vm_unmap_aliases();
->  
-> -	resize_hpt_for_hotplug(memblock_phys_mem_size());
-> +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) == -ENOSPC)
-> +		pr_warn("Hash collision while resizing HPT\n");
->  
->  	return ret;
->  }
-> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-> index f2a9f0adc2d3..1034ef1fe2b4 100644
-> --- a/arch/powerpc/platforms/pseries/lpar.c
-> +++ b/arch/powerpc/platforms/pseries/lpar.c
-> @@ -901,8 +901,10 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
->  		break;
->  
->  	case H_PARAMETER:
-> +		pr_warn("Invalid argument from H_RESIZE_HPT_PREPARE\n");
->  		return -EINVAL;
->  	case H_RESOURCE:
-> +		pr_warn("Operation not permitted from H_RESIZE_HPT_PREPARE\n");
->  		return -EPERM;
->  	default:
->  		pr_warn("Unexpected error %d from H_RESIZE_HPT_PREPARE\n", rc);
-> @@ -918,7 +920,6 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
->  	if (rc != 0) {
->  		switch (state.commit_rc) {
->  		case H_PTEG_FULL:
-> -			pr_warn("Hash collision while resizing HPT\n");
->  			return -ENOSPC;
->  
->  		default:
+> int main(void)
+> {
+>     foo(NULL, 0);
+> }
+> """
 > 
+> with GCC 6.3 (at -O2) gives me
+> 
+> .arch armv7-a
+> .eabi_attribute 28, 1
+> .eabi_attribute 20, 1
+> .eabi_attribute 21, 1
+> .eabi_attribute 23, 3
+> .eabi_attribute 24, 1
+> .eabi_attribute 25, 1
+> .eabi_attribute 26, 2
+> .eabi_attribute 30, 2
+> .eabi_attribute 34, 1
+> .eabi_attribute 18, 4
+> .file "futex.c"
+> .section .text.startup,"ax",%progbits
+> .align 1
+> .p2align 2,,3
+> .global main
+> .syntax unified
+> .thumb
+> .thumb_func
+> .fpu vfpv3-d16
+> .type main, %function
+> main:
+> @ args = 0, pretend = 0, frame = 0
+> @ frame_needed = 0, uses_anonymous_args = 0
+> @ link register save eliminated.
+> movs r0, #0
+> .syntax unified
+> @ 6 "/tmp/futex.c" 1
+> str r0, [r0]
+> @ 0 "" 2
+> .thumb
+> .syntax unified
+> bx lr
+> .size main, .-main
+> .ident "GCC: (Debian 6.3.0-18) 6.3.0 20170516"
+> .section .note.GNU-stack,"",%progbits
+> 
+> and so GCC definitely behaves similar in this regard.
 
+Let's take this further - a volatile is required for these cases to
+avoid gcc eliminating the asm() due to the output not being used:
+
+#define NULL ((void *)0)
+static void foo(void *a, int b)
+{
+    asm volatile("str %1, [%0]" : "=&r" (a) : "0" (a), "r" (b));
+}
+int main(void)
+{
+    foo(NULL, 0);
+}
+
+produces:
+
+        mov     r3, #0
+        mov     r2, r3
+        str r2, [r2]
+
+which looks to me to be incorrect to the GCC manual - the '&' on the
+output operand should mean that it does not conflict with other input
+operands, but clearly 'r2' has ended up being 'b' as well.  I suspect
+this is a bug, or if not, is completely counter-intuitive from the
+description in the GCC manual.
+
+Using "+r" (a) : "r" (b) also results in:
+
+        mov     r3, #0
+        str r3, [r3]
+
+It seems that only using "+&r" (a) : "r" (b) avoids a and b being in
+the same register, but I question whether we are stepping into
+undefined compiler behaviour with that.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
