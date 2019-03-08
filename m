@@ -2,156 +2,186 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D555C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E6AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC20F20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8902087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552048315;
+	bh=mnYR4NzsIbK8WlErtVJzY23YkceQl9WkGTYDEHykWvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DrbyArMmfvQuKLkoUco5xOtKELbtQLB9ctLKq4bPPiiJosprEuWn4tebPwzVWUOV3
+	 oaVnLwawPhzDDkfrYFxWLkFBPXpCl1fxgE0l0FmbR5H9zFWPks48LTyBE5fqQDsllL
+	 DsJy9GBpYOkP3m+VGPNOdG7kczTFJDsYlOMTghXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfCHMbK (ORCPT
+        id S1726484AbfCHMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:31:10 -0500
-Received: from mga03.intel.com ([134.134.136.65]:63683 "EHLO mga03.intel.com"
+        Fri, 8 Mar 2019 07:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbfCHMbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:31:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 04:31:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,455,1544515200"; 
-   d="scan'208";a="129920879"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Mar 2019 04:31:05 -0800
-Subject: Re: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
- CMD_TIMING
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Asutosh Das <asutoshd@codeaurora.org>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
- <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
- <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
- <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
- <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <1fa6f529-2cb8-0108-2041-99ad9b39498f@intel.com>
-Date:   Fri, 8 Mar 2019 14:29:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        id S1726249AbfCHMbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:31:53 -0500
+Received: from linux-8ccs (nat.nue.novell.com [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 245AD20851;
+        Fri,  8 Mar 2019 12:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552048312;
+        bh=mnYR4NzsIbK8WlErtVJzY23YkceQl9WkGTYDEHykWvc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PrNUBSeRa8n/l4caBMrvV5QgNB5LmLgkAzO8jtreTuQJnSbD9R2MLvqU+8WGOZ8jd
+         WuLKlOznb1A3mZe6MAV1AEPMR8Q0r8KaCWSHRyODOXlqD+FRavwSwpinzhOFtgnUiY
+         dbEWncn1oblYfqyCoSye113H/2y4TqWUfltv9iqM=
+Date:   Fri, 8 Mar 2019 13:31:43 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Eugene Loh <eugene.loh@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH] kallsyms: store type information in its own array
+Message-ID: <20190308123143.GA21385@linux-8ccs>
+References: <1551124798-12712-1-git-send-email-eugene.loh@oracle.com>
+ <6f25e7d5-ccf5-8ea6-e73e-ca8d4e5800f2@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <6f25e7d5-ccf5-8ea6-e73e-ca8d4e5800f2@oracle.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/03/19 8:16 PM, Sowjanya Komatineni wrote:
-> 
->> On 3/6/2019 6:30 PM, Adrian Hunter wrote:
->>> On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
->>>> This patch adds a quirk for setting CMD_TIMING to 1 in descriptor for 
->>>> DCMD with R1B response type to allow the command to be sent to device 
->>>> during data activity or busy time.
->>>>
->>>> Tegra186 CQHCI host has bug where it selects DATA_PRESENT_SELECT to 1 
->>>> by CQHCI controller for DCMDs with R1B response type and since DCMD 
->>>> does not trigger any data transfer, DCMD task complete happens 
->>>> leaving the DATA FSM of host controller in wait state for data.
->>>>
->>>> This effects the data transfer task issued after R1B DCMD task and no 
->>>> interrupt is generated for the data transfer task.
->>>>
->>>> SW WAR for this issue is to set CMD_TIMING bit to 1 in DCMD task 
->>>> descriptor and as DCMD task descriptor preparation is done by cqhci 
->>>> driver, this patch adds cqequirk to handle this.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/mmc/host/cqhci.c | 5 ++++-
->>>>   drivers/mmc/host/cqhci.h | 1 +
->>>>   2 files changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c 
->>>> index a8af682a9182..b34c07125f32 100644
->>>> --- a/drivers/mmc/host/cqhci.c
->>>> +++ b/drivers/mmc/host/cqhci.c
->>>> @@ -521,7 +521,10 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
->>>>   	} else {
->>>>   		if (mrq->cmd->flags & MMC_RSP_R1B) {
->>>>   			resp_type = 0x3;
->>>> -			timing = 0x0;
->>>> +			if (cq_host->quirks & CQHCI_QUIRK_CMD_TIMING_R1B_DCMD)
->>>> +				timing = 0x1;
->>>> +			else
->>>> +				timing = 0x0;
->>> I was thinking it would be nice if there was a generic way for drivers 
->>> to make changes to descriptors before a task is started.  Currently 
->>> there is
->>> host->ops->write_l() which would make it possible by checking for 
->>> host->ops->CQHCI_TDBR
->>> register and, in this case, the DCMD tag.  We would need to export 
->>> get_desc(), perhaps rename it cqhci_get_desc() and put it in cqhci.h 
->>> since it is an inline function.
->>
->> We take spin_lock_irqsave after the descriptor is prepared and before writing to TDBR.
->> Not sure but tomorrow this may become a limitation for drivers to make changes to descriptors if they edit descriptors in host->ops->write_l() call.
->> Though in this case it is not required here.
->>
->>>
->>> Alternatively we could add host->ops for descriptor preparation.
->>
->> Both ways sounds good to me.
->> But maybe adding a host->ops for descriptor preparation is better way to go,
->> since that will be the right interface exposed to make changes to 
->> descriptors.
->>
-> 
-> DCMD descriptor attributes remain same for any host and also task parameters as QBR need to be enabled with DCMD.
-> So I believe it should be ok if we just add callback to allow hosts to update command parameters of DCMD descriptor only thru cqhci_host_ops.
++++ Eugene Loh [07/03/19 15:37 -0800]:
+>It's been 1.5 weeks.  Could I get some feedback on this patch? Thanks.
 
-That sounds fine to me.  Maybe do that for the next version of this patchset.
+Apologies, I was on vacation the past week.
 
-> 
-> Also, don’t see any requirement for host specific Task parameter updates in Task descriptor so not sure if there is any need to provide callback for task descriptor data preparation to hosts.
-> Please confirm.
-> 
->>>
->>> What do people think?
->>>
->>>>   		} else {
->>>>   			resp_type = 0x2;
->>>>   			timing = 0x1;
->>>> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
->>>> index 9e68286a07b4..f96d8565cc07 100644
->>>> --- a/drivers/mmc/host/cqhci.h
->>>> +++ b/drivers/mmc/host/cqhci.h
->>>> @@ -170,6 +170,7 @@ struct cqhci_host {
->>>>   
->>>>   	u32 quirks;
->>>>   #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
->>>> +#define CQHCI_QUIRK_CMD_TIMING_R1B_DCMD	0x2
->>>>   
->>>>   	bool enabled;
->>>>   	bool halted;
->>>>
+Added some CC's from the last time we talked about overwriting the
+st_size/st_info Elf_Sym fields, in case anyone else has comments.
 
+>On 02/25/2019 11:59 AM, eugene.loh@oracle.com wrote:
+>>From: Eugene Loh <eugene.loh@oracle.com>
+>>
+>>When a module is loaded, its symbols' Elf_Sym information is stored
+>>in a symtab.  Further, type information is also captured.  Since
+>>Elf_Sym has no type field, historically the st_info field has been
+>>hijacked for storing type:  st_info was overwritten.
+>>
+>>commit 5439c985c5a83a8419f762115afdf560ab72a452 ("module: Overwrite
+>>st_size instead of st_info") changes that practice, as its one-liner
+>>indicates.  Unfortunately, this change overwrites symbol size,
+>>information that a tool like DTrace expects to find.
+>>
+>>Allocate a typetab array to store type information so that no Elf_Sym
+>>field needs to be overwritten.
+>>
+>>Fixes: 5439c985c5a8 ("module: Overwrite st_size instead of st_info")
+>>Signed-off-by: Eugene Loh <eugene.loh@oracle.com>
+>>Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+>>---
+>>  include/linux/module.h   |  1 +
+>>  kernel/module-internal.h |  2 +-
+>>  kernel/module.c          | 21 ++++++++++++++-------
+>>  3 files changed, 16 insertions(+), 8 deletions(-)
+>>
+>>diff --git a/include/linux/module.h b/include/linux/module.h
+>>index f5bc4c0..9c1bc21 100644
+>>--- a/include/linux/module.h
+>>+++ b/include/linux/module.h
+>>@@ -315,6 +315,7 @@ struct mod_kallsyms {
+>>  	Elf_Sym *symtab;
+>>  	unsigned int num_symtab;
+>>  	char *strtab;
+>>+	char *typetab;
+>>  };
+>>  #ifdef CONFIG_LIVEPATCH
+>>diff --git a/kernel/module-internal.h b/kernel/module-internal.h
+>>index 79c9be2..67828af 100644
+>>--- a/kernel/module-internal.h
+>>+++ b/kernel/module-internal.h
+>>@@ -20,7 +20,7 @@ struct load_info {
+>>  	unsigned long len;
+>>  	Elf_Shdr *sechdrs;
+>>  	char *secstrings, *strtab;
+>>-	unsigned long symoffs, stroffs;
+>>+	unsigned long symoffs, stroffs, init_typeoff, core_typeoff;
+
+Small nit: typeoff to typeoffs to match symoffs and stroffs.
+
+Otherwise the rest looks fine to me. I guess it's about time we get
+rid of the Elf_Sym field hijacking anyway :-)
+
+Thanks!
+
+Jessica
+
+>>  	struct _ddebug *debug;
+>>  	unsigned int num_debug;
+>>  	bool sig_ok;
+>>diff --git a/kernel/module.c b/kernel/module.c
+>>index 2ad1b52..c7c1bcd 100644
+>>--- a/kernel/module.c
+>>+++ b/kernel/module.c
+>>@@ -2647,6 +2647,8 @@ static void layout_symtab(struct module *mod, struct load_info *info)
+>>  	info->symoffs = ALIGN(mod->core_layout.size, symsect->sh_addralign ?: 1);
+>>  	info->stroffs = mod->core_layout.size = info->symoffs + ndst * sizeof(Elf_Sym);
+>>  	mod->core_layout.size += strtab_size;
+>>+	info->core_typeoff = mod->core_layout.size;
+>>+	mod->core_layout.size += ndst * sizeof(char);
+>>  	mod->core_layout.size = debug_align(mod->core_layout.size);
+>>  	/* Put string table section at end of init part of module. */
+>>@@ -2660,6 +2662,8 @@ static void layout_symtab(struct module *mod, struct load_info *info)
+>>  				      __alignof__(struct mod_kallsyms));
+>>  	info->mod_kallsyms_init_off = mod->init_layout.size;
+>>  	mod->init_layout.size += sizeof(struct mod_kallsyms);
+>>+	info->init_typeoff = mod->init_layout.size;
+>>+	mod->init_layout.size += nsrc * sizeof(char);
+>>  	mod->init_layout.size = debug_align(mod->init_layout.size);
+>>  }
+>>@@ -2683,20 +2687,23 @@ static void add_kallsyms(struct module *mod, const struct load_info *info)
+>>  	mod->kallsyms->num_symtab = symsec->sh_size / sizeof(Elf_Sym);
+>>  	/* Make sure we get permanent strtab: don't use info->strtab. */
+>>  	mod->kallsyms->strtab = (void *)info->sechdrs[info->index.str].sh_addr;
+>>+	mod->kallsyms->typetab = mod->init_layout.base + info->init_typeoff;
+>>-	/* Set types up while we still have access to sections. */
+>>-	for (i = 0; i < mod->kallsyms->num_symtab; i++)
+>>-		mod->kallsyms->symtab[i].st_size
+>>-			= elf_type(&mod->kallsyms->symtab[i], info);
+>>-
+>>-	/* Now populate the cut down core kallsyms for after init. */
+>>+	/*
+>>+	 * Now populate the cut down core kallsyms for after init
+>>+	 * and set types up while we still have access to sections.
+>>+	 */
+>>  	mod->core_kallsyms.symtab = dst = mod->core_layout.base + info->symoffs;
+>>  	mod->core_kallsyms.strtab = s = mod->core_layout.base + info->stroffs;
+>>+	mod->core_kallsyms.typetab = mod->core_layout.base + info->core_typeoff;
+>>  	src = mod->kallsyms->symtab;
+>>  	for (ndst = i = 0; i < mod->kallsyms->num_symtab; i++) {
+>>+		mod->kallsyms->typetab[i] = elf_type(src + i, info);
+>>  		if (i == 0 || is_livepatch_module(mod) ||
+>>  		    is_core_symbol(src+i, info->sechdrs, info->hdr->e_shnum,
+>>  				   info->index.pcpu)) {
+>>+			mod->core_kallsyms.typetab[ndst] =
+>>+			    mod->kallsyms->typetab[i];
+>>  			dst[ndst] = src[i];
+>>  			dst[ndst++].st_name = s - mod->core_kallsyms.strtab;
+>>  			s += strlcpy(s, &mod->kallsyms->strtab[src[i].st_name],
+>>@@ -4084,7 +4091,7 @@ int module_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+>>  			const Elf_Sym *sym = &kallsyms->symtab[symnum];
+>>  			*value = kallsyms_symbol_value(sym);
+>>-			*type = sym->st_size;
+>>+			*type = kallsyms->typetab[symnum];
+>>  			strlcpy(name, kallsyms_symbol_name(kallsyms, symnum), KSYM_NAME_LEN);
+>>  			strlcpy(module_name, mod->name, MODULE_NAME_LEN);
+>>  			*exported = is_exported(name, *value, mod);
+>
