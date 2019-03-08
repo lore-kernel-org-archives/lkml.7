@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A042EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9FFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B4C2081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29A820851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 02:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552012241;
-	bh=QzKc8DQK/MBMnrEgQGyMXtQkDOxvn5GZeR41XeuOU5I=;
+	s=default; t=1552012245;
+	bh=NHg1i7HETl8ePrra3N3j2Zge8MUF20auc5czPwEtJAo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=f/VHyjbui60nUMB8nKA3eliyzmTtrNys3dnXHB3jaoYQDai8J0Yw5WJFX+W3FQp67
-	 LE16M63hE53dWrcDRb2imH2COAicejeGvzadeE6ThQc19H5l9Rq1KWu7Jp5N50NTLJ
-	 cTPqYrIVDRRDnT77AoDiskEGBT+dx9Cm8pojjMgc=
+	b=y8NGdog+8ChV8W0//Vqj99YR6tMM/oPbyEVWh+rNzIM3hkPKtGFVQTnPn0BekY+jO
+	 7LsRikO3MdDQHHLmfot97bcTdqokxbN51WZv7oDzJlYM0TdGLHWu2AOfw+Q6zMAHyk
+	 seZFPKXkRSfB4uY/fBu1Fmj6ed5O8sYr9mc1qX+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfCHCaW (ORCPT
+        id S1726530AbfCHCao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 21:30:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39718 "EHLO mail.kernel.org"
+        Thu, 7 Mar 2019 21:30:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726395AbfCHCaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 21:30:19 -0500
-Subject: Re: [GIT PULL] x86/kdump changes for v5.1
+        id S1726379AbfCHCaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 21:30:17 -0500
+Subject: Re: [GIT PULL] x86/cleanups for v5.1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552012218;
-        bh=QzKc8DQK/MBMnrEgQGyMXtQkDOxvn5GZeR41XeuOU5I=;
+        s=default; t=1552012216;
+        bh=NHg1i7HETl8ePrra3N3j2Zge8MUF20auc5czPwEtJAo=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OJ9a8N2G/SIWYYLis5hGwQZ0tOpfRYFSspMUZjW8tkyEDW9Z1O9E7HXHIS0e0TY6m
-         Pqm8Q5ttR6RDJpLsY4to3HYeDLKV6ZeaBwcPwMdFlmaNAotCQgJCsfMFg5NjLOO1Oi
-         YSKt4ojjXPuDIMxux4PSgw8EZcPz7biYMl5wP9cY=
+        b=2sdV3edFVcVSaTnD/2mgHXYKxkF43inYaTwSCe87Mc3aQWOr/ptNIhNpoOKnkkiwj
+         Mgk0MUDOXZMBC28E3isoFMszGcQeI7raOwSMEtzZUmsD5YGS9EBtgMZ57QedHDxmw/
+         rZf36etnqQ9xCFNBZ35krDmlPUgoYweNZWN8pecw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190307192305.GA33711@gmail.com>
-References: <20190307192305.GA33711@gmail.com>
+In-Reply-To: <20190307171709.GA85168@gmail.com>
+References: <20190307171709.GA85168@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190307192305.GA33711@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-kdump-for-linus
-X-PR-Tracked-Commit-Id: f263245a0ce2c4e23b89a58fa5f7dfc048e11929
+X-PR-Tracked-Message-Id: <20190307171709.GA85168@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ x86-cleanups-for-linus
+X-PR-Tracked-Commit-Id: 2e7614c0736de93c8796bb2d58debb8871a59db8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d2cb698f6896d4b3fc6794142a902d2647f7dbae
-Message-Id: <155201221860.3231.12941507867963462063.pr-tracker-bot@kernel.org>
-Date:   Fri, 08 Mar 2019 02:30:18 +0000
+X-PR-Merge-Commit-Id: bcd49c3dd172c38e14faf151adca63c8db4c9557
+Message-Id: <155201221693.3231.9248885442714187848.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 Mar 2019 02:30:16 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
@@ -57,12 +58,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 7 Mar 2019 20:23:05 +0100:
+The pull request you sent on Thu, 7 Mar 2019 18:17:09 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-kdump-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cleanups-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d2cb698f6896d4b3fc6794142a902d2647f7dbae
+https://git.kernel.org/torvalds/c/bcd49c3dd172c38e14faf151adca63c8db4c9557
 
 Thank you!
 
