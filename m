@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E841C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189CEC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDB620811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4F120811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:21:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GapW1JLa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BxbKtbnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfCHGUk (ORCPT
+        id S1726404AbfCHGVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:20:40 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40880 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfCHGUj (ORCPT
+        Fri, 8 Mar 2019 01:21:10 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37716 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbfCHGVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:20:39 -0500
-Received: by mail-qt1-f195.google.com with SMTP id f11so2852804qti.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 22:20:38 -0800 (PST)
+        Fri, 8 Mar 2019 01:21:10 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m9so10588770qkl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 22:21:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=R+gdPO7fY5tTH/m3FxX3K7mDEJi/gpdfcz2YIq3CUUg=;
-        b=GapW1JLaJ6exck5zqur7H9xa6LmAY04nZ3nBYz09k36u0oV7tN2jIGNBTpqtrCPbdT
-         cXLy7gjRYRVxbcX52KBPEgSDcEEEKEcudHSbHZvpKpN5kHIhhQwtEFiaUX/dVqnucA+T
-         054dUzDhQbEo9zz9G+XjSUcx5vUkoOvzrtNOM=
+        bh=wJt9KTqEs6PQ/4BCTlYdLFCrzchCw4x0e5cQ1YECBGE=;
+        b=BxbKtbnn2Okxku+HH5kPqtvTDZf4c85eiZfk/e1uwTKj1NUThDKfaoOQ8o78fT70ka
+         HuyA2ix+2trqd59FzZ1OcrcEby3hlyU25Jo/BBKnFjlXJjiel/JhrpizMvKjJwgCrWLn
+         aooKtAmWXKGf6kCfKqTuh33caKKtN3cQtcKF0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=R+gdPO7fY5tTH/m3FxX3K7mDEJi/gpdfcz2YIq3CUUg=;
-        b=MeL2lIviuiiiqX1CS15xy08zPXyFf6xXByelln5hDq2WEcyX93VqREmZJxz92kPYDH
-         8Z1il1sXt1NVjj88mmPPzOItAwJpbKBSu5qwjx80ZY9mFyxr27egb11ugtORAWIPtlzd
-         QU9scqBx1D4kw4v6QrXCsPSUE6eCy82FNqjhqKYodzl5IkPJ+60IEU75tfUtWrY0H9da
-         KFEmfxvevMjggSGwcEAUenkc1Gr78v2er4uGahKREzflc+ctFuLJNU5O252Zw5Q606PJ
-         mEccoNJuOk9W/+sY1yr1hrf7kiHg8TIWCw0fW3a3bA3k+b10V0f1tnGnuP1JXa9tFfNb
-         /bQw==
-X-Gm-Message-State: APjAAAUptzrdSoOOFyfXYnfHfOamOmDsgypapAImD8bxLL7yVpl4QjcA
-        L4NHwinsPmx/8sJOpVEMnStCE79jU79Vg6xV6vV8eA==
-X-Google-Smtp-Source: APXvYqycuNUCRTBMw9eqN926FLE+mJ/TQF1vIviboDCHHH8v9eqqiQH8JnCbme63zJLHB4w3GjItufwI04c64KSxwIA=
-X-Received: by 2002:ac8:3015:: with SMTP id f21mr664920qte.144.1552026038286;
- Thu, 07 Mar 2019 22:20:38 -0800 (PST)
+        bh=wJt9KTqEs6PQ/4BCTlYdLFCrzchCw4x0e5cQ1YECBGE=;
+        b=KdwR/d6dMkXC7vG+Cs4E200TS8q9Tn+YkpD6hMJXx8IVEVSuyapnwDJzAFRotYa6Wo
+         iikJDQr0CJw7QGpwJmSImoZntilH5yhwG76wqkOsA4BXdVPwh7K2oTYQSvmoOkfcUFSk
+         lvZNqV65dU/z59aZ0W0c6IryLf4n1nnMpRndj/faZZE4hGcTT9l5yySg+F7mn+ocsqyy
+         WxZ4f/A8cRMkJ99cotOTBT0Uz0/fPXeBjB1wo2vaGVo3ANHMpCuOta2xKZsJB1eMhjso
+         hcEXNbIKE2HVp7+nydFlb8ZzUdTe1d2/2etYU/9nu+c2rRYLNmXM1vtrx9bMPtRyOm/c
+         kf8w==
+X-Gm-Message-State: APjAAAUfnovXNQR/DPW+IVLLSIHdGuTiZ1n2yWFugW5646QzEDnQNZW+
+        wq0lZku94LDaLDKOZ42U5frjTq/os8IAFPmehYg/yg==
+X-Google-Smtp-Source: APXvYqybJK5qXcEabDpsCMW8zALansvSkmLUu6sxPflep+rejmofeFNC/0wT4mTJ7Iajmg2ubwnFzfcfxpJZeEd3nNU=
+X-Received: by 2002:ae9:ef05:: with SMTP id d5mr13058150qkg.323.1552026068798;
+ Thu, 07 Mar 2019 22:21:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20190305050546.23431-1-weiyi.lu@mediatek.com> <20190305050546.23431-5-weiyi.lu@mediatek.com>
-In-Reply-To: <20190305050546.23431-5-weiyi.lu@mediatek.com>
+References: <20190305050546.23431-1-weiyi.lu@mediatek.com> <20190305050546.23431-8-weiyi.lu@mediatek.com>
+In-Reply-To: <20190305050546.23431-8-weiyi.lu@mediatek.com>
 From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 8 Mar 2019 14:20:27 +0800
-Message-ID: <CANMq1KDciN76ZRL7kLPWM--3sHNi3bbjV86Sixm4R=QUKwrx1A@mail.gmail.com>
-Subject: Re: [PATCH v5 3/9] clk: mediatek: Add configurable pcwibits and fmin
- to mtk_pll_data
+Date:   Fri, 8 Mar 2019 14:20:57 +0800
+Message-ID: <CANMq1KDzSpc6sam5wgUZX_vD4200WPnVs5CxQuu-CSV69ffArQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/9] clk: mediatek: Add flags support for mtk_gate data
 To:     Weiyi Lu <weiyi.lu@mediatek.com>
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         Stephen Boyd <sboyd@codeaurora.org>,
@@ -68,7 +67,7 @@ Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>, linux-clk@vger.kernel.org,
         srv_heupstream <srv_heupstream@mediatek.com>,
-        stable@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>
+        stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -77,96 +76,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, Mar 5, 2019 at 1:06 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
 >
-> From: Owen Chen <owen.chen@mediatek.com>
+> On some Mediatek platforms, there are critical clocks of
+> clock gate type.
+> To register clock gate with flags CLK_IS_CRITICAL,
+> we need to add the flags field in mtk_gate data and register APIs.
 >
-> 1. pcwibits: The integer bits of pcw for plls is extend to 8 bits,
->    add a variable to indicate this change and
->    backward-compatible.
-> 2. fmin: The pll freqency lower-bound is vary from 1GMhz to
-
-Minor nit: frequency (Stephen I guess you could fix that when applying...)
-
->    1.5Ghz, add a variable to indicate platform-dependent.
->
-> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
 > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> Acked-by: Sean Wang <sean.wang@kernel.org>
 
 Reviewed-and-tested-by: Nicolas Boichat <drinkcat@chromium.org>
 
 > ---
->  drivers/clk/mediatek/clk-mtk.h |  2 ++
->  drivers/clk/mediatek/clk-pll.c | 15 +++++++++++----
->  2 files changed, 13 insertions(+), 4 deletions(-)
+>  drivers/clk/mediatek/clk-gate.c | 5 +++--
+>  drivers/clk/mediatek/clk-gate.h | 3 ++-
+>  drivers/clk/mediatek/clk-mtk.c  | 3 ++-
+>  drivers/clk/mediatek/clk-mtk.h  | 1 +
+>  4 files changed, 8 insertions(+), 4 deletions(-)
 >
+> diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+> index 934bf0e45e26..85daf826619a 100644
+> --- a/drivers/clk/mediatek/clk-gate.c
+> +++ b/drivers/clk/mediatek/clk-gate.c
+> @@ -157,7 +157,8 @@ struct clk *mtk_clk_register_gate(
+>                 int clr_ofs,
+>                 int sta_ofs,
+>                 u8 bit,
+> -               const struct clk_ops *ops)
+> +               const struct clk_ops *ops,
+> +               unsigned long flags)
+>  {
+>         struct mtk_clk_gate *cg;
+>         struct clk *clk;
+> @@ -168,7 +169,7 @@ struct clk *mtk_clk_register_gate(
+>                 return ERR_PTR(-ENOMEM);
+>
+>         init.name = name;
+> -       init.flags = CLK_SET_RATE_PARENT;
+> +       init.flags = flags | CLK_SET_RATE_PARENT;
+>         init.parent_names = parent_name ? &parent_name : NULL;
+>         init.num_parents = parent_name ? 1 : 0;
+>         init.ops = ops;
+> diff --git a/drivers/clk/mediatek/clk-gate.h b/drivers/clk/mediatek/clk-gate.h
+> index 72ef89b3ad7b..9f766dfe1d57 100644
+> --- a/drivers/clk/mediatek/clk-gate.h
+> +++ b/drivers/clk/mediatek/clk-gate.h
+> @@ -47,6 +47,7 @@ struct clk *mtk_clk_register_gate(
+>                 int clr_ofs,
+>                 int sta_ofs,
+>                 u8 bit,
+> -               const struct clk_ops *ops);
+> +               const struct clk_ops *ops,
+> +               unsigned long flags);
+>
+>  #endif /* __DRV_CLK_GATE_H */
+> diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+> index 9c0ae4278a94..35359e5397c7 100644
+> --- a/drivers/clk/mediatek/clk-mtk.c
+> +++ b/drivers/clk/mediatek/clk-mtk.c
+> @@ -130,7 +130,8 @@ int mtk_clk_register_gates(struct device_node *node,
+>                                 gate->regs->set_ofs,
+>                                 gate->regs->clr_ofs,
+>                                 gate->regs->sta_ofs,
+> -                               gate->shift, gate->ops);
+> +                               gate->shift, gate->ops,
+> +                               gate->flags);
+>
+>                 if (IS_ERR(clk)) {
+>                         pr_err("Failed to register clk %s: %ld\n",
 > diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-> index f83c2bbb677e..11b5517903d0 100644
+> index 11b5517903d0..928905496c4b 100644
 > --- a/drivers/clk/mediatek/clk-mtk.h
 > +++ b/drivers/clk/mediatek/clk-mtk.h
-> @@ -214,8 +214,10 @@ struct mtk_pll_data {
->         unsigned int flags;
+> @@ -158,6 +158,7 @@ struct mtk_gate {
+>         const struct mtk_gate_regs *regs;
+>         int shift;
 >         const struct clk_ops *ops;
->         u32 rst_bar_mask;
-> +       unsigned long fmin;
->         unsigned long fmax;
->         int pcwbits;
-> +       int pcwibits;
->         uint32_t pcw_reg;
->         int pcw_shift;
->         const struct mtk_pll_div_table *div_table;
-> diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
-> index 18842d660317..67aaa3082d9b 100644
-> --- a/drivers/clk/mediatek/clk-pll.c
-> +++ b/drivers/clk/mediatek/clk-pll.c
-> @@ -32,6 +32,8 @@
->  #define AUDPLL_TUNER_EN                BIT(31)
+> +       unsigned long flags;
+>  };
 >
->  #define POSTDIV_MASK           0x7
-> +
-> +/* default 7 bits integer, can be overridden with pcwibits. */
->  #define INTEGER_BITS           7
->
->  /*
-> @@ -68,12 +70,15 @@ static unsigned long __mtk_pll_recalc_rate(struct mtk_clk_pll *pll, u32 fin,
->                 u32 pcw, int postdiv)
->  {
->         int pcwbits = pll->data->pcwbits;
-> -       int pcwfbits;
-> +       int pcwfbits = 0;
-> +       int ibits;
->         u64 vco;
->         u8 c = 0;
->
->         /* The fractional part of the PLL divider. */
-> -       pcwfbits = pcwbits > INTEGER_BITS ? pcwbits - INTEGER_BITS : 0;
-> +       ibits = pll->data->pcwibits ? pll->data->pcwibits : INTEGER_BITS;
-> +       if (pcwbits > ibits)
-> +               pcwfbits = pcwbits - ibits;
->
->         vco = (u64)fin * pcw;
->
-> @@ -170,9 +175,10 @@ static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
->  static void mtk_pll_calc_values(struct mtk_clk_pll *pll, u32 *pcw, u32 *postdiv,
->                 u32 freq, u32 fin)
->  {
-> -       unsigned long fmin = 1000 * MHZ;
-> +       unsigned long fmin = pll->data->fmin ? pll->data->fmin : (1000 * MHZ);
->         const struct mtk_pll_div_table *div_table = pll->data->div_table;
->         u64 _pcw;
-> +       int ibits;
->         u32 val;
->
->         if (freq > pll->data->fmax)
-> @@ -196,7 +202,8 @@ static void mtk_pll_calc_values(struct mtk_clk_pll *pll, u32 *pcw, u32 *postdiv,
->         }
->
->         /* _pcw = freq * postdiv / fin * 2^pcwfbits */
-> -       _pcw = ((u64)freq << val) << (pll->data->pcwbits - INTEGER_BITS);
-> +       ibits = pll->data->pcwibits ? pll->data->pcwibits : INTEGER_BITS;
-> +       _pcw = ((u64)freq << val) << (pll->data->pcwbits - ibits);
->         do_div(_pcw, fin);
->
->         *pcw = (u32)_pcw;
+>  int mtk_clk_register_gates(struct device_node *node,
 > --
 > 2.18.0
 >
