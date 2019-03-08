@@ -2,136 +2,176 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634B2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE12C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307C42087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF47F2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZiSySr8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfCHPof (ORCPT
+        id S1726473AbfCHPpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:44:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57842 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726171AbfCHPoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:44:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 72583AFCE;
-        Fri,  8 Mar 2019 15:44:32 +0000 (UTC)
-Date:   Fri, 8 Mar 2019 16:44:31 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Calvin Owens <calvinowens@fb.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 2/4] printk: Add ability to set loglevel via "console="
- cmdline
-Message-ID: <20190308154431.vutfqckuv3t57znd@pathway.suse.cz>
-References: <cover.1551486732.git.calvinowens@fb.com>
- <e1311e98d6803f678cdcaa2be1cfb58d667fe3fd.1551486732.git.calvinowens@fb.com>
+        Fri, 8 Mar 2019 10:45:35 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46318 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCHPpe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 10:45:34 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28FjQPw058955;
+        Fri, 8 Mar 2019 09:45:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552059926;
+        bh=AXGiandPfOX9MAjnJ0OCtvKw7K2ZfHgj3oUlfjTqnqw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZiSySr8t6sNmTrVK41uopkMrnm2/9DQGI8t7s8w/B0w+i+wYtSdtx1n4hUss3iVnR
+         xkxGnAmwwye3OVNT1jCCphIBZXsDt8WCrtEoK1Oknv2tGVvnOf9/Pyvnc4BK6/Xv0E
+         xuA2YLaBAcursZzcwfspDMr+SZG2AEUwFk8CVupM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28FjQ08065988
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Mar 2019 09:45:26 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
+ Mar 2019 09:45:26 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 8 Mar 2019 09:45:26 -0600
+Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28FjPFt006738;
+        Fri, 8 Mar 2019 09:45:25 -0600
+Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
+ properties
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>,
+        <tony@atomide.com>, <lee.jones@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20190307220947.20057-1-dmurphy@ti.com>
+ <20190307220947.20057-2-dmurphy@ti.com> <20190308151422.GA10378@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6d9a5821-a634-8ea2-4fe3-0603af757668@ti.com>
+Date:   Fri, 8 Mar 2019 09:45:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1311e98d6803f678cdcaa2be1cfb58d667fe3fd.1551486732.git.calvinowens@fb.com>
-User-Agent: NeoMutt/20170421 (1.8.2)
+In-Reply-To: <20190308151422.GA10378@amd>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-03-01 16:48:18, Calvin Owens wrote:
-> This extends the "console=" interface to allow setting the per-console
-> loglevel by adding "/N" to the string, where N is the desired loglevel
-> expressed as a base 10 integer. Invalid values are silently ignored.
+Pavel
+
+Thanks for the review.
+
+On 3/8/19 9:14 AM, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Calvin Owens <calvinowens@fb.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  6 ++--
->  kernel/printk/console_cmdline.h               |  1 +
->  kernel/printk/printk.c                        | 30 +++++++++++++++----
->  3 files changed, 28 insertions(+), 9 deletions(-)
+>> Update the properties for the lm3532 device node for droid4.
+>> With this change the backlight LED string and the keypad
+>> LED strings will be controlled separately.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>  arch/arm/boot/dts/omap4-droid4-xt894.dts | 27 +++++++++++++++++-------
+>>  1 file changed, 19 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+>> index e21ec929f096..94e3d53dbcf3 100644
+>> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+>> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+>> @@ -6,6 +6,7 @@
+>>  /dts-v1/;
+>>  
+>>  #include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/leds/leds-lm3532.h>
+>>  #include "omap443x.dtsi"
+>>  #include "motorola-cpcap-mapphone.dtsi"
+>>  
+>> @@ -383,20 +384,30 @@
+>>  };
+>>  
+>>  &i2c1 {
+>> -	lm3532@38 {
+>> +	led-controller@38 {
+>>  		compatible = "ti,lm3532";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>>  		reg = <0x38>;
+>>  
+>>  		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+>>  
+>> -		lcd_backlight: backlight {
+>> -			compatible = "ti,lm3532-backlight";
+>> +		ramp-up-ms = <LM3532_RAMP_1024us>;
+>> +		ramp-down-ms = <LM3532_RAMP_65536us>;
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 858b6c0b9a15..afada61dcbce 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -612,10 +612,10 @@
->  		ttyS<n>[,options]
->  		ttyUSB0[,options]
->  			Use the specified serial port.  The options are of
-> -			the form "bbbbpnf", where "bbbb" is the baud rate,
-> +			the form "bbbbpnf/l", where "bbbb" is the baud rate,
->  			"p" is parity ("n", "o", or "e"), "n" is number of
-> -			bits, and "f" is flow control ("r" for RTS or
-> -			omit it).  Default is "9600n8".
-> +			bits, "f" is flow control ("r" for RTS or omit it),
-> +			and "l" is the loglevel on [0,7]. Default is "9600n8".
+> I guess dt people will have some comments here. I'd expect
+> 
+> ramp-up-us = <1024> would be more natural.
+> 
 
-We should a more detailed explanation about the loglevel semantic. It
-is either minimal loglevel. Or that it overrides the global
-console_loglevel if you accept my proposal.
+Actually ramp-up-us/ramp-down-us is more correct this is an error in this dt definition
+and will be fixed in v2
 
->  
->  			See Documentation/admin-guide/serial-console.rst for more
->  			information.  See
-> diff --git a/kernel/printk/console_cmdline.h b/kernel/printk/console_cmdline.h
-> index 11f19c466af5..fbf9b539366e 100644
-> --- a/kernel/printk/console_cmdline.h
-> +++ b/kernel/printk/console_cmdline.h
-> @@ -6,6 +6,7 @@ struct console_cmdline
->  {
->  	char	name[16];			/* Name of the driver	    */
->  	int	index;				/* Minor dev. to use	    */
-> +	int	loglevel;			/* Loglevel to use */
 
-The comment will be true only with the new proposal.
+>> +		lcd_backlight: led@0 {
+>> +			reg = <0>;
+>> +			led-sources = <2>;
+>> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
+>> +			label = "backlight";
+> 
+> Ok, so we'll have lm3532::backlight. That is not too useful, as it
+> does not tell userland what kaclight it is.
+> 
+> main_display::backlight ?
+> 
+> OTOH this one is not too important as backlight subsystem should
+> handle this.
+> 
 
->  	char	*options;			/* Options for the driver   */
->  #ifdef CONFIG_A11Y_BRAILLE_CONSOLE
->  	char	*brl_options;			/* Options for braille driver */
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 6ead14f8c2bc..2e0eb89f046c 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2104,8 +2105,8 @@ __setup("console_msg_format=", console_msg_format_setup);
->  static int __init console_setup(char *str)
->  {
->  	char buf[sizeof(console_cmdline[0].name) + 4]; /* 4 for "ttyS" */
-> -	char *s, *options, *brl_options = NULL;
-> -	int idx;
-> +	char *s, *options, *llevel, *brl_options = NULL;
-> +	int idx, loglevel = LOGLEVEL_EMERG;
->  
->  	if (_braille_console_setup(&str, &brl_options))
->  		return 1;
-> @@ -2123,6 +2124,14 @@ static int __init console_setup(char *str)
->  	options = strchr(str, ',');
->  	if (options)
->  		*(options++) = 0;
-> +
-> +	llevel = strchr(str, '/');
+For Droid4 I am not particular to any specific label.
 
-This should be:
+And if the series in https://lkml.org/lkml/2018/11/7/144
+is ever implemented then the label may change as well.
 
-      if (options)
-		llevel = strchr(options, '/');
+The driver forces the lm3532 string to be part of the label.
 
-> +	if (llevel) {
-> +		*(llevel++) = 0;
-> +		if (kstrtoint(llevel, 10, &loglevel))
-> +			loglevel = LOGLEVEL_EMERG;
-> +	}
-> +
->  #ifdef __sparc__
->  	if (!strcmp(str, "ttya"))
->  		strcpy(buf, "ttyS0");
+This was a discussion a while back with Jacek when I submitted other drivers.
 
-Best Regards,
-Petr
+>> +		led@1 {
+>> +			reg = <1>;
+>> +			led-sources = <1>;
+>> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
+>> +			label = "keypad";
+> 
+> I guess best variant would be inputX::backlight here, but that might
+> be tricky to implement.
+> 
+
+Yeah because we don't know what input the keyboard would be on.
+Unless there are APIs to retrieve that info.  I have not looked at the input
+framework in a while.
+
+Dan
+
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
