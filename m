@@ -2,130 +2,171 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A608AC10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B67C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813C920684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBC620684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:02:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YeHqf1KP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfCHL5f (ORCPT
+        id S1726444AbfCHMCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 06:57:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49841 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfCHL5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 06:57:34 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h2E80-0003WO-6a; Fri, 08 Mar 2019 12:57:28 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h2E7y-0006fT-Mh; Fri, 08 Mar 2019 12:57:26 +0100
-Date:   Fri, 8 Mar 2019 12:57:26 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Message-ID: <20190308115726.smgooacsr37fmxwg@pengutronix.de>
-References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
- <1551437599-29509-3-git-send-email-yash.shah@sifive.com>
- <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
- <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
+        Fri, 8 Mar 2019 07:02:40 -0500
+Received: from mail-eopbgr10053.outbound.protection.outlook.com ([40.107.1.53]:15337
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726286AbfCHMCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:02:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pEZq2TR3bJk00a3rJY2c3mwKVvWrjzYGswVhXCtpW7Y=;
+ b=YeHqf1KP9R/6/0kXptWqjJ8mHZ5O/YzjZRVSrp9QH3x0C0xnTMG5duqFH2jHRN+K6VqDNRIGcTwug7HziKcu/w5ATZzD7RsmSmmlK8rb7cTUUmPSiwcqMy8rTMatnORaXQgju8etWffYrALGGQ89oz101wCdAa0U5hZd5kk300w=
+Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
+ VI1PR0402MB3776.eurprd04.prod.outlook.com (52.134.15.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Fri, 8 Mar 2019 12:02:21 +0000
+Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
+ ([fe80::f80e:d03f:57bc:aced]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
+ ([fe80::f80e:d03f:57bc:aced%2]) with mapi id 15.20.1686.019; Fri, 8 Mar 2019
+ 12:02:21 +0000
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+        "spencercw@gmail.com" <spencercw@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v6 0/4] Enable wm8524 on i.MX8MQ-EVK
+Thread-Topic: [PATCH v6 0/4] Enable wm8524 on i.MX8MQ-EVK
+Thread-Index: AQHU1abIRppiqmtEjUatHwfHKpgWzg==
+Date:   Fri, 8 Mar 2019 12:02:21 +0000
+Message-ID: <20190308120141.3698-1-daniel.baluta@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P193CA0074.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:209:88::15) To VI1PR0402MB3357.eurprd04.prod.outlook.com
+ (2603:10a6:803:2::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [95.76.156.53]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7e1c347a-2d18-4b18-c720-08d6a3bdeb14
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0402MB3776;
+x-ms-traffictypediagnostic: VI1PR0402MB3776:
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;VI1PR0402MB3776;23:kDxdaAKsOFpQ+ZEjx4fZ/4YIWgNCt6fHgDiYz?=
+ =?iso-8859-1?Q?wx8x6mD8KsvLbDZ9/Uax2qPCA51jcqV3/l6FR0HnrJz2U5SXvUuOt4hjtd?=
+ =?iso-8859-1?Q?M2fwKJYO6xjzxbL7zR+u/1ShaQTBW1nMKeAvaFAvUqbm+22qONUONc9/tK?=
+ =?iso-8859-1?Q?obCWrfvehJgcEoVyN1vqBtvXTf8ipwb/zDa+F49epGfGw3NNixFey+00jL?=
+ =?iso-8859-1?Q?+avj1Zzbnm/2VW4/DQ+wej9i2jiCmZPgr9ANj9CFZfOsB6dZJn/BXHmgzH?=
+ =?iso-8859-1?Q?qJROgfHEtx0euT6C8Dq9ZhEmRKyFxbJCd67xQq7NsYY8YX4ZTi0AkGYeHe?=
+ =?iso-8859-1?Q?0zLOVip/j9m+HQE2Q+8bIRODG4Hc4519TH8gtwZyAQYlAiNUVftWnyjyZI?=
+ =?iso-8859-1?Q?9tQHf4KA1zN5LXmuHaXpV50WTtYmxWfEd/L+LEoDC5SzUo4+GHk5lQVyl7?=
+ =?iso-8859-1?Q?x5uWWlhwp9mSGbPhSC1k2qs5mnoe8gxv+YsUGctsKW07awPeAxifQSxB1t?=
+ =?iso-8859-1?Q?Xsz6RAGG3aq6AHTSr323H+FE909RDuMUUTDmFLt8YKcUpu/Ok4b58hsaWI?=
+ =?iso-8859-1?Q?5izXAixRXBB8+JqaYPTCC/HsFcpvl/dIZDF/EF+h6TScXu6vHC9X38o9W8?=
+ =?iso-8859-1?Q?yizwPI9bhkWsTCrO4SAfNO7p71xNOz7RCA4FniHlzv7qtNc2Ojpcc6D3Ap?=
+ =?iso-8859-1?Q?fTHu9aWUXeJx3A3eV29ZS9Xg2Na50SluXsJEaUoVBK7UGAGc4XHP6o33eg?=
+ =?iso-8859-1?Q?GlsdxFifYNZAPXdJuSzeE29xTqeJpreGCTHowCfzh2Y3cqezehG9ol/ECH?=
+ =?iso-8859-1?Q?S9pahOBMDeAkw4hVRjTXh30/NZMTnqtMD21ZC036sHi/0b5+PDx89OjH3w?=
+ =?iso-8859-1?Q?XytWDo6IjEmxEDVe7eEgtzLxQ1i233oKgh8CUswjTkaFKes4RjwSZakhiK?=
+ =?iso-8859-1?Q?Npb4R9WcKGS7FHYGH1iH6J+odbyufJsIqjJvELRbMUYUKj2LAubsfHQoHe?=
+ =?iso-8859-1?Q?yt6W3mmRVzcMIJvbTFQeUuToXaZiCvaVkkzw9JBk9kYQEqbWhQWqEFZ5bU?=
+ =?iso-8859-1?Q?swbSXiZbkKzpf4GP5Veosy1N+bYDIPMCrjE0sqIRpvW3/fjMFUNgchunkr?=
+ =?iso-8859-1?Q?3J6jK7J+n6mGiRhSn4fQ6L+5F9uOSypwflnVFLpr9ObpzSzJOWXm+VHGdV?=
+ =?iso-8859-1?Q?vFKBKoO7mF2uyWmRwXYcpN5FdqS/xg/thgKm8rh7d5CdNSNOvUYfrzlkPi?=
+ =?iso-8859-1?Q?G/5LUIWhmxW86tTZHrZ+286c3Q1mpG6WbBJ2E60aufgHJTtV6xQFuN+6cI?=
+ =?iso-8859-1?Q?jnUs4jme1zN/9/m2tyAdBI5irw/pn141puUU+x2SYF1HIbg=3D=3D?=
+x-microsoft-antispam-prvs: <VI1PR0402MB37768D4907BC8E45080DE0CAF94D0@VI1PR0402MB3776.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0970508454
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(366004)(376002)(136003)(39860400002)(199004)(189003)(36756003)(52116002)(2906002)(68736007)(6436002)(25786009)(7736002)(478600001)(305945005)(105586002)(1076003)(14454004)(2351001)(81166006)(106356001)(256004)(14444005)(6486002)(8676002)(8936002)(50226002)(6916009)(4326008)(102836004)(54906003)(3846002)(6506007)(26005)(66066001)(386003)(6116002)(316002)(486006)(1730700003)(81156014)(97736004)(44832011)(6512007)(476003)(186003)(7416002)(86362001)(5640700003)(71200400001)(71190400001)(99286004)(2616005)(53936002)(2501003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3776;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RKfkElPOi18ATPNhRf2ygESJzwnx4zOIN9Ns1JewOEzDk70vQ+BjXKqkx1I2M7+iw/q7NQbvXILkpKr+fm3Pzia45NgglSqIQMJx7DxfvUt/GYkz04fJJzI8OtPs2tvkgtl+O7f6/TGERkbhTWhWxDSsxevST3mSTK9LerPxhc2ZjdRcW0O9xHYUW0xgrDII3Wsk/WIJw3qAQQuGO5CUcvo6nIZPbi8kxKjwhZZq4s0uWIlh6YXY2lLexn+zQ/jR6+VRMu4+9dO07YxSSJT2ou4c3mwVwJgWUI45Mw5erFd5v8wul/kuYdv1GYjJedIdeE1cawXF8fA8BqNXc5tn/RaLszbUFuhgwfo6dAR9pestR+YZB3SjUxTnE61e5+twsKv0Ut9JW13UkPQzLhkndTfLELuVWBXHLOPZPTZv+BQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e1c347a-2d18-4b18-c720-08d6a3bdeb14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2019 12:02:21.1360
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3776
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On i.MX8MQ EVK we can start the party using the wm8524 codec
+which gets it's data through the SAI2 interface.
 
-On Fri, Mar 08, 2019 at 04:59:36PM +0530, Yash Shah wrote:
-> On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
-> > > +                         struct pwm_state *state)
-> > > +{
-> > > +     struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-> > > +     unsigned int duty_cycle, x;
-> > > +     u32 frac;
-> > > +     struct pwm_state cur_state;
-> > > +     bool enabled;
-> > > +     int ret = 0;
-> > > +     unsigned long num;
-> > > +
-> > > +     if (state->polarity != PWM_POLARITY_INVERSED)
-> > > +             return -EINVAL;
-> > > +
-> > > +     mutex_lock(&pwm->lock);
-> > > +     pwm_get_state(dev, &cur_state);
-> > > +     enabled = cur_state.enabled;
-> > > +
-> > > +     if (state->period != cur_state.period) {
-> >
-> > Did you test this with more than one consumer? For sure the following
-> > should work:
-> >
-> >         pwm1 = pwm_get(.. the first ..);
-> >         pwm_apply_state(pwm1, { .enabled = true, .period = 10000000, .... });
-> >
-> >         pwm2 = pwm_get(.. the second ..);
-> >         pwm_apply_state(pwm2, { .enabled = true, .period = 10000000, .... });
-> >
-> > but for the second pwm_apply_state() run state->period is likely not
-> > exactly 10000000.
-> 
-> Yes, I have tested multiple consumers using sysfs interface. It is working.
+In order to make it work this patch series enables the SDMA nodes,
+sets the correct pinctrl configuration and uses the simple card
+machine driver to put everything together.
 
-Can you provide details about your testing here? What is the parent clk
-rate? Which settings did you test? Can you confirm my claim that the
-above sequence would fail or point out my error in reasoning?
+Changes since v5:
+	- remove clocks and clock-names properties from wm8524
+	code node as they are not used.
 
-> > > +     x = 1U << PWM_SIFIVE_CMPWIDTH;
-> > > +     num = (u64)duty_cycle * x + x / 2;
-> > > +     frac = div_u64(num, state->period);
-> >
-> > I don't understand the "+ x / 2" part. Should this better be
-> > "+ state->period / 2"? Something like
-> 
-> This eqn is as per your comments against v5 of this patch series.
->  frac = (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 <<
-> PWM_SIFIVE_CMPWIDTH) / 2) / period;
+Changes since v4 (after Fabio's review)
+	- removed mclk0 from sai2 node because it is not yet supported
+	  by SAI driver
+	- s/audio-codec-0/audio-codec
+	- squashed patches 4 and 5
 
-OK, then not only the code is wrong, but also my suggestion was. :-)
+Changes since v3:
+	- use "arm64: dts: imx8mq-evk" prefix for patches specific to
+	  8MQ-EVK
+	- squash together patches for setting up SAI (previous 3/5 and
+	  4/5)
+	- add back and document "fsl, imx8mq-sdma" compatbile string
 
-> > #define div_u64_round(a, b) ({typeof(b) __b = b; div_u64(a + __b / 2, __b)})
-> >
-> > would make this less error prone.
+Changes since v2:
+        - s/QM/MQ after Chris comments
 
-This still stands. It makes it easier to get the code right and makes it
-easier to understand.
+Changes since v1:
+        - added cover letter
+        - remove "fsl,imx8mq-sdma" compatible for sdma.
 
-Best regards
-Uwe
+Daniel Baluta (4):
+  arm64: dts: imx8mq: Add SDMA nodes
+  bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma compatbile string
+  arm64: dts: imx8mq: Add SAI2 node
+  arm64: dts: imx8mq-evk: Enable audio codec wm8952
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt  |  1 +
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 46 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 37 +++++++++++++++
+ 3 files changed, 84 insertions(+)
+
+--=20
+2.17.1
+
