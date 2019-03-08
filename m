@@ -2,106 +2,128 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27959C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE8320851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P6TjMG7f"
+	by mail.kernel.org (Postfix) with ESMTP id F23B920851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfCHVKA (ORCPT
+        id S1726676AbfCHVKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:10:00 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39335 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfCHVKA (ORCPT
+        Fri, 8 Mar 2019 16:10:41 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:50389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfCHVKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:10:00 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i20so15008528pfo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S1cde1jQsu/UmZpXHCI4YVyEziLBMknSj83sr+RMBZs=;
-        b=P6TjMG7fGRK7XyKsHWb0VTW6Q9whc9pDX0eApYKLPbELPHCHHvNO1r7DQOut67QdQf
-         FuTtzYitbpr7AHdi+ap23htEvIVldeQFt0CZig1xUByIAmLIDI2O4k4YHsBwJ64kaQWd
-         tv9j1KHx2JH1J2tmZPJhMNVFB8etwLial5vzaeR/9qwAV2c1yBvLA3TTyt4/i+HmPcTL
-         T/oBwnARgQbuOoODRHRkgsClw63M47siEORCvHIoDAARpKe6irP/WtLHcw7Dj8eT5JuA
-         Ilbxwx/EPXlacKb9cRMv1rJi0/JemVW4Hm0J0lIdqHk5YR9babjNToAKh+r2oIKnNfY4
-         f0Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S1cde1jQsu/UmZpXHCI4YVyEziLBMknSj83sr+RMBZs=;
-        b=esS1ZmAmeQi+Z9B9SdklzBWANOW/f3aqe3Wh5jkmGE+DI4dBz09fyyMzf9cHFikJMU
-         RBuq2IEu4q5qRX3P2ZuFEgTp+TbYqBiMmDCIDi5ZhfFq9kd4W8VS6f+3w4tlJxdrcHyB
-         0EcXqwOaBBRz7y/f9CsdEI5kTMzM4Qb9PVjgUxjGmcU1e98E56Z6NT9AsRXhCdLmCQNq
-         5fEk70/Q9Jiiks3g/4p+UdUKMNzZmzI0CaGqp2GmioF+2hr2MNolJuJAEqc9czk0FPKz
-         ylHivoz6zSEVM1Bvh4pvCTYpQvDkMl07gbJfc58bBPTaBjfqSoGF8fmZtc7hZN+0zvw7
-         3jnw==
-X-Gm-Message-State: APjAAAVEWN8UlXeC1eZuwItIyE2OzQ4pTWpYxiVCC+YLdobB2Q1uj8/J
-        8BN78yxR+c7DxIMgUUuhSa1T4Rsz50SuoZK4Dw65PQ==
-X-Google-Smtp-Source: APXvYqxaUQ5jhATdW1RKgLqB4lqdILD9dACC3jIaYW5eDACGP9qzaugQ2z2LCqttDQxBnJJNnWoLEVD25z3YeGBTuYs=
-X-Received: by 2002:a17:902:56a:: with SMTP id 97mr20702494plf.320.1552079398761;
- Fri, 08 Mar 2019 13:09:58 -0800 (PST)
+        Fri, 8 Mar 2019 16:10:41 -0500
+Received: from [192.168.1.110] ([95.117.97.241]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MUGmJ-1hSSDN38p1-00RKt3; Fri, 08 Mar 2019 22:10:22 +0100
+Subject: Re: Debian build polishing
+To:     Theodore Ts'o <tytso@mit.edu>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, apw@canonical.com, joe@perches.com,
+        linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <1552049064-32044-1-git-send-email-info@metux.net>
+ <20190308175703.GA7178@lambda>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <fe53cd84-5953-786a-3a4f-6eac652a1cdd@metux.net>
+Date:   Fri, 8 Mar 2019 22:10:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190307091218.2343836-1-arnd@arndb.de> <20190307152805.GA25101@redhat.com>
- <CAK8P3a2fuD-UBJET_OBKekCxrTDpnAxb0Bpu2LCCXaVT3pXTMQ@mail.gmail.com>
- <20190307164647.GC25101@redhat.com> <CAK8P3a2FU55-7wQnLXDAmRCgiZ-W+2rY6p7CrTiKNe0wda-Hsg@mail.gmail.com>
- <CAKwvOd=nyhM72CxdO-YYSsXr7rh3LUALn_ezVNzyiBaOD7KZkA@mail.gmail.com> <31b6d5bdfda9cbadffa6d8cb3ad0991e237a364c.camel@perches.com>
-In-Reply-To: <31b6d5bdfda9cbadffa6d8cb3ad0991e237a364c.camel@perches.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 8 Mar 2019 13:09:47 -0800
-Message-ID: <CAKwvOd=+_FjWmo2McyLOAL3r6JOuu1wZEzQknY-GToDnCwzhsQ@mail.gmail.com>
-Subject: Re: [PATCH] signal: fix building with clang
-To:     Joe Perches <joe@perches.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190308175703.GA7178@lambda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:3PmkOyG6x/QQ8jBy7+rUN/zFUMrd1+8/SGCKfaNgpnEqF0QY1Yq
+ kdT4zLl7Hajp/VMYG9pj+GyQCMPhKKjSa5x1s4MTzL/QmMMe+4QaeRXILdHuRGY9+et6+qp
+ HxWhZN5UQHkHpVdvUsIwURT1Vwwqr9kVOEb3wKq+7+80QsECpQMs1kPcYkXK1ddjjl4AlEi
+ LeFGbyyRzNRvViX8g47+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:k1/nOnkA0zQ=:EOzz3SvJKSI/o9mRfWIb/8
+ BD5jiEtAKecdN9Vv4vDPSDCvQC32lj1IBnsi81diCLmWthfMTRzZwlbt/Fdak0NL32wgfnZEA
+ 6Qackka/zPsoyQgh6DO3I3pEYbAVb+F08/PnHBEsgu/VL3Iy3be8ggFv+IniY76qcNCkltfu1
+ QBEDS+YlzeZZcDzRe8+nMxWulFA03MKs8BrN9CCEBssm/kmHruL1ZWo2hd1g602bxY8x08CBa
+ 5yKYKrw5okkp5ePICTTH/OiQnscXBgxn//09qs0a4uKtiixv9GiPFYB/cPYI9mGLS8dxNYu7b
+ BrhT4hlauTslRVq6lef4KPUny/3J13CVA/pyvRNSSxzQGiWy98S7TLdTCjl4fSk2Iz0LTV4h9
+ hde1CteuahXeBMIHNf6MEkqjo6E0e7bkaA16Nwbzq+CaY2wHBwQBDnwKUKch78s+UcArBq208
+ acIKm4lc7x1WKaq2EG1lh8SmcBNocg7ArIVlHTKo1lnYsFI2Mz1O/nFo9isJvMjWsHMtzjqWD
+ qoWoDEwKCHuZEsIGzYrUJspDQGqTLI/P9p/sveQmd0grcLaB869pv6NBUalNxtGrqj/MBkHfZ
+ 1tcSZg1SnkY/Vr2zuUNFGBrRm2VJls22ZYs7cqWt8tOM1tTsEO4y4gqXrlGsLUF5v4Rv9f3a4
+ WGM+4wGkdhzghZ+RUngSkey6Ux2lsZo1pTuuTW4dQ9EDFDpZrviOk6J/ae+VQicN1/4AT/Ev9
+ Gy7p8qNrqkz96TVBfmRiO960TUoPs9q3ul3GEHTSb5u3/XtiRiNQo11oNcU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 4:27 PM Joe Perches <joe@perches.com> wrote:
->
-> On Thu, 2019-03-07 at 16:22 -0800, Nick Desaulniers wrote:
-> > On Thu, Mar 7, 2019 at 1:45 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > I'd have to try, but I think you are right. It was probably an
-> > > overoptimization back in 1997 when the code got added to
-> > > linux-2.1.68pre1, and compilers have become smarter in the
-> > > meantime ;-)
-> >
-> > How do you track history pre-git (2.6.XX)?
->
-> https://landley.net/kdocs/fullhist/
+On 08.03.19 18:57, Theodore Ts'o wrote:
+> On Fri, Mar 08, 2019 at 01:44:19PM +0100, Enrico Weigelt, metux IT consult wrote:
+>> One point still puzzling me: once the debian/rules is applied and
+>> somebody calls `make deb-pkg`, he'll end up w/ unclean tree, as
+>> now a git-tracked file is changed.
+> 
+> This is not something I've noticed, but I build my Debian packages
+> like this:
+> 
+> make O=/build/linux-build bindeb-pkg
 
-Ah neat! Thanks for the link.  Now to wire that up to fugitive:
-http://vimcasts.org/episodes/fugitive-vim-exploring-the-history-of-a-git-repository/
+This doesn't work for my environment:
 
-The LLVM project recently switched to git from svn.  For quite some
-time the move was delayed in order to preserve history (including for
-parked release branches and all kinds of edge cases and things that
-don't quite translate from svn to git).  Now I better appreciate the
-history preservation.
+The requirement is that every debian source tree has a ./debian/rules
+file (w/ the standard rules like binary, clean, ...). This is called by
+upper level build machinery (git-buildpackage, dpkg-buildpackage, ...)
+
+The idea behind is building all packages exactly the same way - one
+standard workflow, that just takes a source tree (from git) and spits
+out some .deb files.
+
+> So I really hope your patches don't break this.  
+
+It shouldn't (at least I dont intend to). Haven't tried where exactly
+the generated debian/rules file lands in your case.
+
+> Also, are there any changes the performance of building the Debian
+> packages before and after your changes?  And are there any differences 
+> in the packages in terms of any pre-or-post install/removal scripts?
+
+I don't think so. In essence I just replace the generated rules file by
+a fixed one. Okay, it will take *a little* bit longer, as the rules file
+now calls `make kernelarch`, `make kernelrelease` and `make
+kernellocalversion`, before starting actual build. But that shouldn't be
+the big deal, IMHO.
+
+> There are a lot of things I really dislike about the "official" Debian
+> kernel build processes (they're optimzied for distribution release
+> engineers, not kernel developers), 
+
+I try to bring these two world a bit closer together.
+
+> so I'm really hoping that making
+> things more like the "official Debian way" doesn't break some of the
+> things I really like about the existing "make bindeb-pkg" build
+> system.
+
+I intend not to.
+
+Actually, the official Debian way for Kernel build is entirely
+different, and that's really complicated and hard to really understand
+(that's why I'm  doing this here).
+
+But here I'm just coping w/ the first entry point into the build
+process, which now becomes `./debian/rules binary` instead of
+`make bindeb-pkg`. The final result (in the .deb files) should be
+the time (unless I did something wrong).
+
+
+--mtx
+
 -- 
-Thanks,
-~Nick Desaulniers
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
