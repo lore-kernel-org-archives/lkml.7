@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C76C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869142133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581772133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050011;
-	bh=ZONGwsc25RLm/pUotu47qFCcz2uqK6xfSCy+q/TQayA=;
+	s=default; t=1552050014;
+	bh=c3eKBxLTjxTPFVNeMBbdwEjTdIBaH5OoN7kYQ77NDMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jRHU5qdryisloN9tCX/lzIUhYybxRMjLi4193W87QOTaaT44LpK9v0r4nezlwBrKR
-	 iroBchv5ZADfaZRbAb+7t6nYGxz0MXuPdxEeWXHFTpk8z9at+ffVHGffcey09pOAPx
-	 SjVS405ofaSDqq02edWxp2PTop1ymVS1XRYrBWb0=
+	b=W1JFvhZB3XBTguJjOv4AgkFXIUFG0HxK44EdUNKe+yaAM00qRqFuv+hnVjaCoZA07
+	 wPm03xAiRPFp38yhdiOUf+x8DSTFciK23Kx51XGH2U3qdzpkuCQCUZbxFMb1rGXIdX
+	 KOgPH1fkmT4mXRq1lw2Eez404dv/nCKTFGvo1cAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfCHNAK (ORCPT
+        id S1727351AbfCHNAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:00:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:00:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfCHNAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:00:07 -0500
+        id S1728261AbfCHNAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:00:10 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA8E120811;
-        Fri,  8 Mar 2019 13:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8225E2133F;
+        Fri,  8 Mar 2019 13:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552050007;
-        bh=ZONGwsc25RLm/pUotu47qFCcz2uqK6xfSCy+q/TQayA=;
+        s=default; t=1552050010;
+        bh=c3eKBxLTjxTPFVNeMBbdwEjTdIBaH5OoN7kYQ77NDMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUvovPTZX0mh0cbryZDqnbO+Eq7W0HSzZsdXj1Q74cRww4OcCw0kNJVgCiY1vMo1I
-         2nWAZ++ri6IG9oEY89mzq1OfbPfvlUsB33+UOebiLMNNkWRSx7PMZVKUvFTVEYr5Gt
-         pmmUAHbSxAIPi403oIBzcGnoNtKGPasmqZnK40fo=
+        b=clrDFOC93kZrgHGG7GdBlCnL/TNVaff5hCDimKIATpKJLLL8ZNxvGg76ihG3VLPPD
+         fpJ+gQPxcOeoyGqlIc2yoAhVpAS4al7WQ1xPyzALhil/5rjYL5IX3rgn0FreP1PU4L
+         +B7XbaCXUaFUOTJf5W0SeQzGG+irCb6ukTQi0XKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 55/68] tracing: Fix event filters and triggers to handle negative numbers
-Date:   Fri,  8 Mar 2019 13:50:25 +0100
-Message-Id: <20190308124913.336680043@linuxfoundation.org>
+        stable@vger.kernel.org, Balaji Manoharan <m.balaji@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 56/68] usb: xhci: Fix for Enabling USB ROLE SWITCH QUIRK on INTEL_SUNRISEPOINT_LP_XHCI
+Date:   Fri,  8 Mar 2019 13:50:26 +0100
+Message-Id: <20190308124913.374858967@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,58 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+From: Balaji Manoharan <m.balaji@intel.com>
 
-commit 6a072128d262d2b98d31626906a96700d1fc11eb upstream.
+commit 8fde481ef3674ae5ad0dbfef4df18ff507c5675a upstream.
 
-Then tracing syscall exit event it is extremely useful to filter exit
-codes equal to some negative value, to react only to required errors.
-But negative numbers does not work:
+This fix enables USB role feature on intel commercial nuc
+platform which is based on Kabylake chipset.
 
-[root@snorch sys_exit_read]# echo "ret == -1" > filter
-bash: echo: write error: Invalid argument
-[root@snorch sys_exit_read]# cat filter
-ret == -1
-        ^
-parse_error: Invalid value (did you forget quotes)?
-
-Similar thing happens when setting triggers.
-
-These is a regression in v4.17 introduced by the commit mentioned below,
-testing without these commit shows no problem with negative numbers.
-
-Link: http://lkml.kernel.org/r/20180823102534.7642-1-ptikhomirov@virtuozzo.com
-
-Cc: stable@vger.kernel.org
-Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
-Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Balaji Manoharan <m.balaji@intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_filter.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-pci.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1301,7 +1301,7 @@ static int parse_pred(const char *str, v
- 		/* go past the last quote */
- 		i++;
- 
--	} else if (isdigit(str[i])) {
-+	} else if (isdigit(str[i]) || str[i] == '-') {
- 
- 		/* Make sure the field is not a string */
- 		if (is_string_field(field)) {
-@@ -1314,6 +1314,9 @@ static int parse_pred(const char *str, v
- 			goto err_free;
- 		}
- 
-+		if (str[i] == '-')
-+			i++;
-+
- 		/* We allow 0xDEADBEEF */
- 		while (isalnum(str[i]))
- 			i++;
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -187,6 +187,7 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
++	     pdev->device == PCI_DEVICE_ID_INTEL_SUNRISEPOINT_LP_XHCI ||
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_APL_XHCI))
+ 		xhci->quirks |= XHCI_INTEL_USB_ROLE_SW;
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
 
 
