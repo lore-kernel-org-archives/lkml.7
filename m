@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1551EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE74C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D966E20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D5120661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050445;
-	bh=sBjtU5TT1V1Gzcn9lLKsjz8nlrnXqRcMXeXUwu45toQ=;
+	s=default; t=1552050458;
+	bh=5o6tHPp04SDLt5dJq08eMfQk1u0bJjqKXdjsEaQ4uZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXipoY4ILnTTIRxKBr2xY52+HRLg45IX0mj3Z8UNYhh0LgSPBsT7OOSRGSAenNpLZ
-	 QuJNJt+2iZpsazLZbtV/v6fLu+hafzGgZ5b08sZe3iKg3dFP5UukE1nq5LYQpEpPp3
-	 XyzK2x/11EWKiyHhUiRTHcy6aOnWn6xtZwNq9tNE=
+	b=OC02UetqP2HrwCLE9kETtwi4yU8Lb+lhCj3SQuhj/wR+ud8D0mW9xCw9M7GM5Wzlo
+	 pWJJ9/73SKr/Dd+75hEkosNyQmI6i7PfeF9BuuTXoue3zeA2osujtdKb/iWd2n5+i3
+	 Nz9cWY6BBmkooPk8EH/qnY4XGkf+oZyP2wefMT+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfCHMyT (ORCPT
+        id S1727267AbfCHMyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:54:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:54:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbfCHMyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:54:16 -0500
+        id S1727246AbfCHMyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:54:00 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76BA20449;
-        Fri,  8 Mar 2019 12:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ACF5208E4;
+        Fri,  8 Mar 2019 12:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049655;
-        bh=sBjtU5TT1V1Gzcn9lLKsjz8nlrnXqRcMXeXUwu45toQ=;
+        s=default; t=1552049638;
+        bh=5o6tHPp04SDLt5dJq08eMfQk1u0bJjqKXdjsEaQ4uZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWOUWAYrf9t6wgLZDNxJmk9lRYlpfmiGamfal5VV4bimeh/V3iwl3PRxr3hdYxOf/
-         7G00VUN8Qv+pmCUDNXlgtdZJmivms14WJ/1+85i9J69L8yj9r0Rc6apSRdrE9PmCre
-         VqHKK5qZ+lWL3I9essmyGzT7P9xMPHWTYoWtiXM0=
+        b=rBvTotW1OAtrEuNburuyLFoGRzXYTY/7uoHDOTLzM/lnOwJJOotfq55ZBkQS/cALP
+         YSfpLVAgUaMxO4O8rEurUoEl2k3rhsYACx5AVsLFLxjWWX3al5UxL6YHKwX9+LtDIQ
+         hn4tqLCc70IIkBzKyHUAGTjG0/B19qyrK3CQ3+ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 22/76] net: mscc: Enable all ports in QSGMII
-Date:   Fri,  8 Mar 2019 13:49:34 +0100
-Message-Id: <20190308124915.561260801@linuxfoundation.org>
+Subject: [PATCH 4.20 18/76] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
+Date:   Fri,  8 Mar 2019 13:49:30 +0100
+Message-Id: <20190308124915.422859561@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -67,62 +66,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 084e5bb16bd7dc2b551bbd9fb358bf73e03ee8d8 ]
+[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
 
-When Ocelot phy-mode is QSGMII, all 4 ports involved in
-QSGMII shall be kept out of reset and
-Tx lanes shall be enabled to pass the data.
+Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
+improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
+assume preemption is disabled when incrementing the counter and
+accessing a per-CPU variable.
 
-Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
-Signed-off-by: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
-Signed-off-by: Steen Hegelund <Steen.Hegelund@microchip.com>
-Co-developed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
+Preemption can be enabled when we add a route in process context that
+corresponds to packets stored in the unresolved queue, which are then
+forwarded using this route [1].
+
+Fix this by using IP6_INC_STATS() which takes care of disabling
+preemption on architectures where it is needed.
+
+[1]
+[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
+[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
+[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
+[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  157.460461] Call Trace:
+[  157.460486]  dump_stack+0xf9/0x1be
+[  157.460553]  check_preemption_disabled+0x1d6/0x200
+[  157.460576]  ip6mr_forward2+0x73e/0x10e0
+[  157.460705]  ip6_mr_forward+0x9a0/0x1510
+[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
+[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
+[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
+[  157.462013]  ipv6_setsockopt+0x90/0x110
+[  157.462036]  rawv6_setsockopt+0x4a/0x120
+[  157.462058]  __sys_setsockopt+0x16b/0x340
+[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
+[  157.462220]  do_syscall_64+0x14d/0x610
+[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mscc/ocelot_board.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ net/ipv6/ip6mr.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -266,6 +266,7 @@ static int mscc_ocelot_probe(struct plat
- 		struct phy *serdes;
- 		void __iomem *regs;
- 		char res_name[8];
-+		int phy_mode;
- 		u32 port;
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -1964,10 +1964,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
  
- 		if (of_property_read_u32(portnp, "reg", &port))
-@@ -291,11 +292,11 @@ static int mscc_ocelot_probe(struct plat
- 		if (err)
- 			return err;
+ static inline int ip6mr_forward2_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+ {
+-	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTFORWDATAGRAMS);
+-	__IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTOCTETS, skb->len);
++	IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTFORWDATAGRAMS);
++	IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTOCTETS, skb->len);
+ 	return dst_output(net, sk, skb);
+ }
  
--		err = of_get_phy_mode(portnp);
--		if (err < 0)
-+		phy_mode = of_get_phy_mode(portnp);
-+		if (phy_mode < 0)
- 			ocelot->ports[port]->phy_mode = PHY_INTERFACE_MODE_NA;
- 		else
--			ocelot->ports[port]->phy_mode = err;
-+			ocelot->ports[port]->phy_mode = phy_mode;
- 
- 		switch (ocelot->ports[port]->phy_mode) {
- 		case PHY_INTERFACE_MODE_NA:
-@@ -303,6 +304,13 @@ static int mscc_ocelot_probe(struct plat
- 		case PHY_INTERFACE_MODE_SGMII:
- 			break;
- 		case PHY_INTERFACE_MODE_QSGMII:
-+			/* Ensure clock signals and speed is set on all
-+			 * QSGMII links
-+			 */
-+			ocelot_port_writel(ocelot->ports[port],
-+					   DEV_CLOCK_CFG_LINK_SPEED
-+					   (OCELOT_SPEED_1000),
-+					   DEV_CLOCK_CFG);
- 			break;
- 		default:
- 			dev_err(ocelot->dev,
 
 
