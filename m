@@ -6,78 +6,80 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96380C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F42C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECCC20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F330920684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="p34Wd6Th";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dNnI+ALy"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="IipLBBMV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Br/3kQ9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfCHE5p (ORCPT
+        id S1726342AbfCHE6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 23:57:45 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:39607 "EHLO
+        Thu, 7 Mar 2019 23:58:52 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:53565 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726250AbfCHE5o (ORCPT
+        by vger.kernel.org with ESMTP id S1726250AbfCHE6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 23:57:44 -0500
+        Thu, 7 Mar 2019 23:58:52 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 890B2369B;
-        Thu,  7 Mar 2019 23:57:43 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2019 23:57:43 -0500
+        by mailout.west.internal (Postfix) with ESMTP id 301A8369F;
+        Thu,  7 Mar 2019 23:58:51 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 07 Mar 2019 23:58:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
         :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=o2MepDzSP35m0IiRL/9IyDqlu2i
-        fmBOioFrdhQpCCc8=; b=p34Wd6ThiD7bDjxFY+xZ0ykeyvQbBHAGizyfm4/5p23
-        FPq+C9zaUqKTg8TMgXYugJb93HwXchptCg5SFgO5l0uuPEGJsWu+44h6vc4oSFfn
-        +Ld5ne/OlBkGrYcfuQgr7SpcTq1jdaDpRJ01ghYfJLtjeBeSx7tSh31BkhhhuTlC
-        cglx9CbdsZ9xTWQUKWPdvudXy+LaF9iRHWgH7Ass5ntNnHQf5Q8jWkKbALlhdj37
-        SGZtFQfSbX7duajz4Ueed56dGtRDuKXeKhZgBgA/1vkHGPY0bPoy4MZo1aFfz4IB
-        GyU93vRjiLU0lLIS5LMIwR7VhO9SP0YEF8dM6RB/UCA==
+        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=N
+        tl0HyXUKFmWcU1ZViuVMqOeZG8DDg45ANx81HTvSsM=; b=IipLBBMVWKpXba0Eu
+        70Oty66NGlxNqo6VEbVFsKOnJ+jLA+jwLFEDv7PmThAsEdrL8263d7U5pRioACU4
+        xC9HuwUkDoUITUvS+M0ESVDtfBy1kB0uV+wV2kgxqjiAg3oQA4x1YpMHc0hL6Y5o
+        VBOlBcC2JWaNP9WiNNzyQIblZZc7D1db9/1i3fO4KvVDAZ6Qxm+caqvlZbzbOjff
+        2KLFeBp7/HaQiqLz1hr+8f5cFvZ+akLtR9jKBPTsvhXiB52iAJtxH6sch/+lYr1C
+        ZUj+KzjXCKVI3yRTjqtgu/7lwpOHvDkrV5vc1nwOPMgi923tEV3BqKLtVBA3reVG
+        nQARw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=o2MepD
-        zSP35m0IiRL/9IyDqlu2ifmBOioFrdhQpCCc8=; b=dNnI+ALy0gyMsbBt/1GHRs
-        nNM9ujddCChzZouf2dmBWohvKcryzfAvS4ScFS1U8rVh1LWEs6DfJzra55G0ckxF
-        aZ6xyQICU5bG78aFprQ+yqdrr5xb2XbR0taI0f5DLyvnpQScmy38raQi7wcb9unj
-        2whGpvbX/rQG96Dr2Pu6BaM1Wm3tpkS2TQurwt7Egz7zMbDTdura3rls4zfA2bCz
-        WKZDWYK+CTz8wpkHMdDIjQncpNLMIeO4Aa9DZwVlxfZ+ClBJj62T9l/AhZvWmp4M
-        UJkEPDEHcL9ZV3MdC4MH5JVPOxKoRKsgKLQqjwfcM9a10Q3iqfW+gKJkffp/CvEw
-        ==
-X-ME-Sender: <xms:RvaBXKmfh0aBEtfFzD7myewcupgvIpFdo4o2BaQbDobdbD82_730KA>
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=Ntl0HyXUKFmWcU1ZViuVMqOeZG8DDg45ANx81HTvS
+        sM=; b=Br/3kQ9lE7j+bDxwUANWyiM2G2jCwjsxRyzq5Vx9L5afOK+r+6E/nK5nX
+        nxk/12SlPkvvsSuJ+1OizLCFfyt0b4oPbgMNzui/g6gYKnOiD/FwZwDg/61TvPK4
+        qn3lAgWctMnSSdVSZ6cakicBHc6DLPIQxpu4N9lRCju0RrM4ybfCsq6VpoZga8C6
+        JOsSYgpI53Zlt/ZVevdHMPfbj1/BsoQBcSdQskAO0GFCwiZMVp6N24Sst3ONuNUm
+        05EdggGMuEh1l80UqqCAhtoWacGoXJhAWdy8Ojgkfr2CFKSKbtploBu/bPCapJCk
+        UfPVj9Afu1UjTK6IPVWO5g4vVScsQ==
+X-ME-Sender: <xms:ivaBXM5j_kdaVXILeVN-UTjHNdFBYtLvvIeXjzh6pU1GsOqnxLeCJw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeelgdejvdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvgedrudeiledrhedrudehkeenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:RvaBXJvbp7lW87E_cwBy1w6C-YuSIZiKnXKj5GpYfWkoZMe6PCoKKw>
-    <xmx:RvaBXIAiXWy7Y3HqmJuRXsRmT3qQHXStHEjcEITdcHBRkQ5XyB19UA>
-    <xmx:RvaBXGU4-LLoAbcCL6gsssQZtQNVW_9weDby6yQjhWDDN9kmSO8LwQ>
-    <xmx:R_aBXE8DALOEnvjci6K_e6fsmXEXncoquILxhbQ6wow715S-fVapQQ>
+    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtugfgjgfofgesthekredt
+    oferjeenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdehrdduheeknecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:ivaBXJc59aCiNproRA_5kxmHsOfVJS2R7r_JH9T7Hkn_Vh3lQmZ6uQ>
+    <xmx:ivaBXLfLVbGOP26OSXQo9-F_VwDGrcglqZq7PA4_0t-KuoF0Pxu_mA>
+    <xmx:ivaBXGEakxfZmNpv9LWUWXgfdSqUEIpOMAEP7saMcW0XC8jD7q7sOg>
+    <xmx:ivaBXAn6aQISKr-mK7UcZCvVyWsQujYlEns4Owni3tZWsenJGWGhpw>
 Received: from localhost (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B9AA91030F;
-        Thu,  7 Mar 2019 23:57:41 -0500 (EST)
-Date:   Fri, 8 Mar 2019 15:57:14 +1100
+        by mail.messagingengine.com (Postfix) with ESMTPA id E8ED7E4362;
+        Thu,  7 Mar 2019 23:58:49 -0500 (EST)
+Date:   Fri, 8 Mar 2019 15:58:31 +1100
 From:   "Tobin C. Harding" <me@tobin.cc>
 To:     Randy Dunlap <rdunlap@infradead.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/9] docs: Fix Title underline too short warning
-Message-ID: <20190308045714.GA17221@eros.localdomain>
+Subject: Re: [PATCH 6/9] docs: Use correct list markup character
+Message-ID: <20190308045830.GB17221@eros.localdomain>
 References: <20190307211153.28400-1-tobin@kernel.org>
- <20190307211153.28400-9-tobin@kernel.org>
- <a195b380-4be4-512d-0a24-9f83082b9d83@infradead.org>
+ <20190307211153.28400-7-tobin@kernel.org>
+ <f5d4469a-ab32-46cb-c1e9-16712043465b@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a195b380-4be4-512d-0a24-9f83082b9d83@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f5d4469a-ab32-46cb-c1e9-16712043465b@infradead.org>
 X-Mailer: Mutt 1.11.3 (2019-02-01)
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,25 +87,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:42:03PM -0800, Randy Dunlap wrote:
+On Thu, Mar 07, 2019 at 07:40:14PM -0800, Randy Dunlap wrote:
 > On 3/7/19 1:11 PM, Tobin C. Harding wrote:
-> > Sphinx emits a bunch of 'Title underline too short' warnings.  We can
-> > fix these by using the correct length underlines.
+> > Sphinx uses a star not a hyphen for lists.
 > > 
-> > Fix Title underline too short warning by amending heading underline.
+> > Use correct list markup character.
 > > 
 > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > ---
-> >  Documentation/filesystems/path-lookup.rst | 24 +++++-----
-> >  Documentation/networking/snmp_counter.rst | 58 +++++++++++------------
-> >  2 files changed, 41 insertions(+), 41 deletions(-)
 > 
-> Hi,
+> Hi Tobin,
 > 
-> These are already fixed.  Did you try the pending docs tree
-> (for which a pull request was sent a few hours ago)?
+> The blank line insertions are all that is needed.
+> And I have already sent a patch for that.
+> 
+> Also, a list can begin with any of:
+> "A text block which begins with a "*", "+", "-", "•", "‣", or "⁃", followed by whitespace, is a bullet list item (a.k.a. "unordered" list item)."
 
-Oh man, - face palm.  I've been hacking on mm lately and they use
-mainline, thanks for response.
+Oh, cool.  I didn't realise.  Thanks Randy.
 
-	  Tobin
+	Tobin
