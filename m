@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2127C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C83EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88164206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F5E206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbTn8BUf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSAgw7gk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfCHTrr (ORCPT
+        id S1727006AbfCHTrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:47:47 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40606 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfCHTrq (ORCPT
+        Fri, 8 Mar 2019 14:47:55 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33200 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfCHTry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:47:46 -0500
-Received: by mail-qk1-f196.google.com with SMTP id h28so11868778qkk.7;
-        Fri, 08 Mar 2019 11:47:46 -0800 (PST)
+        Fri, 8 Mar 2019 14:47:54 -0500
+Received: by mail-qt1-f196.google.com with SMTP id z39so22580580qtz.0;
+        Fri, 08 Mar 2019 11:47:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PCmgnf+DSePwylqGHbW4EX8PQba6O1Evd59WRGue5aM=;
-        b=jbTn8BUf9D4Hq3835SC0r4+906XV2OJt9ZHAECl/2hx9e/16jENlWcbhh8vhnrPTEt
-         UgE0LspmAuFH+A/DDj5LNLoC1qBmCaMkzIUEfmjQupWa13Ufxe4JHKrnMEABIpxv17uf
-         6Ul9BNThi83zpMwzfK6MsEFJW10ZPOBtbUs30kyNUDYrA7AdQrvrwHvqvAxLwQ4B8bB3
-         x36o+Gx+d6v+XLebvGXe825MCePQJfLkhEj35ihaqXAYUeqmyBHpE90leZizxyVBLoCj
-         wBN7H3NzxSI3MLN9RrMiVu+ZdO3JNY2B7CpVXi6Zt1oYPwDfnHIsYAQk+2i9Sh1SiOqX
-         fbqg==
+        bh=RrEnffFHlOD8ovUk228i30cx429UY6FjxAK/KSGO/hk=;
+        b=cSAgw7gkCCwz21cKMyBbT6sKKKpZwA8Ju/AeHRPRoaBYC7UhizTBeYwXLETDbScOlt
+         zfHnUYLSXxKyouhGhFVXnAFTGHB0h6HNojpEdTecogIJ787e5X2T4MbRaXbsXrKlpZwV
+         SkWFB5SaS3pFIzRkdqjvjKQR6kxMkh5H3FxYbYZFhuBloiKdF90Y2Zzp7dwCptQ+CDxY
+         0qmc4WVuWomKiHoeKXEj1qFNjhPpc8ttNsw3ojvy5vzDj8xtQlCSyK1jGOO4P2QQhVtc
+         1XfCHjhpQB4wf4PRUNPDVWk4oOkl/Z+VdDUdV9EI6rr0Ej9Wd46+Bhensg3K7LjKKuvQ
+         kZuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PCmgnf+DSePwylqGHbW4EX8PQba6O1Evd59WRGue5aM=;
-        b=bdHzWk2osGUtOgBqufVodLuETeQOMzOnIPQfAcnREVz2msmZzqYkAIWhrSn0EdyG9b
-         jGdKNHF2GyGsEEshDNlpFsOEkooNkeWuVBCoC8B4Sd8nCPT+DGi8l1TbzlWwLRpJ+inH
-         w8zQ2R45TYUD0r15+Oxqd9Achv1MIOYKo/MddrzMMtxI+F2vjBGJ/hJ8b2/yfQNjpO+2
-         CGmWRISRc4qPyiTJw2j7hHLAYII+QXAk7BGnx1yNeWM/t+M13nsT8svsyTJ/2Z3KgOol
-         6+oJAmqZ/a4PF2KyfLnaTPCf2TJO7a9zKkJ265fwMuLgC56UTKdbjokAGDt9PEFTuauz
-         oIKA==
-X-Gm-Message-State: APjAAAWImbxmi6lXYsm+Z99DQxK1TpI209YpGpBzq+MALVcd0+jmiHOI
-        2TsRSgA6moyueVJFRtvzILI=
-X-Google-Smtp-Source: APXvYqwVVKo5PrEmmRlLWdBO1b/hrn/JB5tEBL9+KIlMira8qsKmHodyMhtCHGjltLo0uMHlTl3IWg==
-X-Received: by 2002:a37:6042:: with SMTP id u63mr14587176qkb.289.1552074465571;
-        Fri, 08 Mar 2019 11:47:45 -0800 (PST)
+        bh=RrEnffFHlOD8ovUk228i30cx429UY6FjxAK/KSGO/hk=;
+        b=LRBV85akN48hZQcjeNZx4nLa/ihaHvZWuQhrP928XyKak88PWoJueWfWPU9XS8AH8b
+         r1/+QWhNI2b7zuh6x/UECi08S6K4pf3xM1X+P5AVJvJpKSQI/KtSaHHC8b045/f7Rk6x
+         Cys9U+qhSPhQbiy9wqykUowqr4ygo9+EHntypOmGp2GtDuZU0I/za9PwA0ozvauXwMm/
+         wIlnN0J+DDXBiB0zl9FrqZQPp35vrbqurtchLB66LXmYQLaDP4D2gOYQOLMXcji2V6vk
+         U3agoSVQLcE0bHPE62IMSsW3h4W76elwQ5OuE8j6fsGMFjgVOY5iupjlxHSieuOCUsN0
+         8OTA==
+X-Gm-Message-State: APjAAAWsgH2dytV92WrXjqkBdoAbcF8bUGMS5nKD7k2ii4h6Y8bzqmTH
+        B8K2SFcpeOW/Pnbxyj4su80=
+X-Google-Smtp-Source: APXvYqxXRO54DIoDjTs7SHBRMb9v7T5ktd4ozhmpf8eak+y0mKmwIE2DRz+BSqn4vajm2fVJCYw9Ag==
+X-Received: by 2002:ac8:37f6:: with SMTP id e51mr15910001qtc.1.1552074473449;
+        Fri, 08 Mar 2019 11:47:53 -0800 (PST)
 Received: from crypto.semfio.usp.br ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id n27sm2393038qtf.11.2019.03.08.11.47.42
+        by smtp.gmail.com with ESMTPSA id n27sm2393038qtf.11.2019.03.08.11.47.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 11:47:44 -0800 (PST)
+        Fri, 08 Mar 2019 11:47:52 -0800 (PST)
 From:   Anderson Reis <andersonreisrosa@gmail.com>
 X-Google-Original-From: Anderson Reis <anderson.reis.rosa@usp.com>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
@@ -65,9 +65,9 @@ Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Anderson Reis <anderson.reis.rosa@usp.com>,
         Lucas Oshiro <lucasseikioshiro@gmail.com>,
         Anderson Reis <andersonreisrosa@gmail.com>
-Subject: [PATCH v2 2/4] iio:potentiostat:lmp91000: reduce line width and remove blank line
-Date:   Fri,  8 Mar 2019 16:46:53 -0300
-Message-Id: <20190308194655.5983-3-anderson.reis.rosa@usp.com>
+Subject: [PATCH v2 3/4] iio:potentiostat:lmp91000: invert if statement
+Date:   Fri,  8 Mar 2019 16:46:54 -0300
+Message-Id: <20190308194655.5983-4-anderson.reis.rosa@usp.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190308194655.5983-1-anderson.reis.rosa@usp.com>
 References: <20190308194655.5983-1-anderson.reis.rosa@usp.com>
@@ -78,12 +78,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Break the line 258 in order fit the line width on 80 characters. Remove
-the blank line 279, as the line before is also a blank line. Solve these
-checkpath.el WARNING and CHECK:
+Invert if statement arms in line 214, in order to make the code cleaner,
+solve these checkpatch.pl CHECKs:
 
-- lmp91000.c:258: WARNING: line over 80 characters
-- lmp91000.c:279: CHECK: Please don't use multiple blank lines
+- lmp9100.c:214: CHECK: braces {} should be used on all arms of this statement
+- lmp9100.c:216: CHECK: Unbalanced braces around else statement
 
 Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
 Signed-off-by: Anderson Reis <andersonreisrosa@gmail.com>
@@ -92,28 +91,24 @@ Signed-off-by: Anderson Reis <andersonreisrosa@gmail.com>
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
-index 03d277621861..c45cfb632649 100644
+index c45cfb632649..1de17924e154 100644
 --- a/drivers/iio/potentiostat/lmp91000.c
 +++ b/drivers/iio/potentiostat/lmp91000.c
-@@ -255,8 +255,8 @@ static int lmp91000_read_config(struct lmp91000_data *data)
+@@ -211,12 +211,11 @@ static int lmp91000_read_config(struct lmp91000_data *data)
  
- 	regmap_write(data->regmap, LMP91000_REG_LOCK, 0);
- 	regmap_write(data->regmap, LMP91000_REG_TIACN, reg);
--	regmap_write(data->regmap, LMP91000_REG_REFCN, LMP91000_REG_REFCN_EXT_REF
--					| LMP91000_REG_REFCN_50_ZERO);
-+	regmap_write(data->regmap, LMP91000_REG_REFCN,
-+		     LMP91000_REG_REFCN_EXT_REF | LMP91000_REG_REFCN_50_ZERO);
- 	regmap_write(data->regmap, LMP91000_REG_LOCK, 1);
+ 	ret = of_property_read_u32(np, "ti,tia-gain-ohm", &val);
+ 	if (ret) {
+-		if (of_property_read_bool(np, "ti,external-tia-resistor"))
+-			val = 0;
+-		else {
++		if (!of_property_read_bool(np, "ti,external-tia-resistor"))
+ 			dev_err(dev, "no ti,tia-gain-ohm defined");
+ 			return ret;
+ 		}
++		val = 0;
+ 	}
  
- 	return 0;
-@@ -276,7 +276,6 @@ static int lmp91000_buffer_cb(const void *val, void *private)
- static const struct iio_trigger_ops lmp91000_trigger_ops = {
- };
- 
--
- static int lmp91000_buffer_preenable(struct iio_dev *indio_dev)
- {
- 	struct lmp91000_data *data = iio_priv(indio_dev);
+ 	ret = -EINVAL;
 -- 
 2.20.1
 
