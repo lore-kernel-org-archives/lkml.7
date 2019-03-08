@@ -2,97 +2,123 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B527C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE9D2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CFC2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rrEh/Kz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfCHAKR (ORCPT
+        id S1726412AbfCHAKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:10:17 -0500
-Received: from mail5.windriver.com ([192.103.53.11]:47414 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726172AbfCHAKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:10:17 -0500
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x2807qdM032383
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Thu, 7 Mar 2019 16:08:02 -0800
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.68]) by
- ALA-HCB.corp.ad.wrs.com ([147.11.189.41]) with mapi id 14.03.0439.000; Thu, 7
- Mar 2019 16:07:41 -0800
-From:   "Liu, Yongxin" <Yongxin.Liu@windriver.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "pagupta@redhat.com" <pagupta@redhat.com>,
-        "Gortmaker, Paul" <Paul.Gortmaker@windriver.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: RE: [PATCH RT] nvdimm: make lane acquirement RT aware
-Thread-Topic: [PATCH RT] nvdimm: make lane acquirement RT aware
-Thread-Index: AQHU1AQaa42orSwEx0mmBzBs0WZNkaYAw5wAgAAVVLA=
-Date:   Fri, 8 Mar 2019 00:07:41 +0000
-Message-ID: <597B109EC20B76429F71A8A97770610D12A52669@ALA-MBD.corp.ad.wrs.com>
-References: <20190306095709.23138-1-yongxin.liu@windriver.com>
- <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
-In-Reply-To: <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [128.224.162.171]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 7 Mar 2019 19:10:54 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36864 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfCHAKx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 19:10:53 -0500
+Received: by mail-pf1-f194.google.com with SMTP id s22so12722508pfh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:10:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FPWrQ1cSPMenIAj108hM5wihwBVvhY7nmepw5K/L790=;
+        b=rrEh/Kz/UkCKlwKoFikz58ADbzrpl6uII1IkLRBtSgs+fMTCX19lkMhDpRdwisIdcT
+         2hyzfRVN1ndSN+K+kVjWsYMXNeeE3n3XoXrMJMEHlYw/aVi5/4cyzrKBUE1H89icFAb7
+         cyRkqn+/jGJk0YS/ff94hjMCXRmmmHh5PqOjjfihTYHcllBshYeOkqq5KwMZS9gmO/46
+         CCgSLy/pkXULfqAOcF9xaCY3I0n1epfxQg0qvSj5k9EHOz3tNroBFZrzRYyUsq8oH6fH
+         O70/8IEJNH5oLtZgKykqj9fdPAhisEI9XFftFE9ejNuehLigIKzO+IEi5sL+9TVIEua+
+         Y5tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FPWrQ1cSPMenIAj108hM5wihwBVvhY7nmepw5K/L790=;
+        b=lfQBHzeYmppQ1CxtWrsEmRABX5Ev13qSkF9wp9xZTUZjmV/fui7t2VwIAdvtGng+Wx
+         8LmBmc/6Xt792AzECdXyIsD72jHgM2u3KVDilH5xVIfLbLQVSEJlu3TKS2h6PDpW0L+p
+         7DK+ONl20EBr8A/NbMpQJ6hvNqxbjKp27VMg13ONMnAcHiP9vTnDDpgaOjq3rG+8//ko
+         LDOeLJBVBZJJMueiT2Or1ETQ4L1tYfFfU3eHkgc5oh6hbSc4oqlgfhy3W0iB4MHA6VuU
+         P+104AVWDWr2Dshg8rLoALd3YnaW1KL6mvOK/CLafIbZ99hDy/bTJDy30+IdHw2+Fb4i
+         KnZA==
+X-Gm-Message-State: APjAAAXcVGnTsKfBEybFmfupulSAzEQLKGFw+9DqW1z1AI5f2nyOUbV2
+        yToUeRKsK94SSJCWAsAv4DeUTZqfN+2Xfhmg7A2iww==
+X-Google-Smtp-Source: APXvYqwClCVQPtzQu8hgy2ct8axlYfAuq/rk5+P0Xz8rHY9dMhDfaL0yJcOkkRNNa4M57LG6PXIwZb1rXMmGmS0aF5g=
+X-Received: by 2002:a17:902:380c:: with SMTP id l12mr4033884plc.238.1552003852417;
+ Thu, 07 Mar 2019 16:10:52 -0800 (PST)
 MIME-Version: 1.0
+References: <20190307235735.31487-1-natechancellor@gmail.com>
+In-Reply-To: <20190307235735.31487-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 7 Mar 2019 16:10:41 -0800
+Message-ID: <CAKwvOdmX64a+aaSKU=FmnMSKnu0WiEezHds0OL9PMnEHe-OrJw@mail.gmail.com>
+Subject: Re: [PATCH] cfg80211: Change an 'else if' into an 'else' in cfg80211_calculate_bitrate_he
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1rZXJuZWwtb3duZXJA
-dmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgta2VybmVsLQ0KPiBvd25lckB2Z2VyLmtlcm5l
-bC5vcmddIE9uIEJlaGFsZiBPZiBTZWJhc3RpYW4gQW5kcnplaiBTaWV3aW9yDQo+IFNlbnQ6IFRo
-dXJzZGF5LCBNYXJjaCA3LCAyMDE5IDIyOjM0DQo+IFRvOiBMaXUsIFlvbmd4aW4NCj4gQ2M6IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXJ0LXVzZXJzQHZnZXIua2VybmVsLm9y
-ZzsNCj4gdGdseEBsaW51dHJvbml4LmRlOyByb3N0ZWR0QGdvb2RtaXMub3JnOyBkYW4uai53aWxs
-aWFtc0BpbnRlbC5jb207DQo+IHBhZ3VwdGFAcmVkaGF0LmNvbTsgR29ydG1ha2VyLCBQYXVsOyBs
-aW51eC1udmRpbW1AbGlzdHMuMDEub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUlRdIG52ZGlt
-bTogbWFrZSBsYW5lIGFjcXVpcmVtZW50IFJUIGF3YXJlDQo+IA0KPiBPbiAyMDE5LTAzLTA2IDE3
-OjU3OjA5IFsrMDgwMF0sIFlvbmd4aW4gTGl1IHdyb3RlOg0KPiA+IEluIHRoaXMgY2hhbmdlLCB3
-ZSByZXBsYWNlIGdldF9jcHUvcHV0X2NwdSB3aXRoIGxvY2FsX2xvY2tfY3B1Lw0KPiA+IGxvY2Fs
-X3VubG9ja19jcHUsIGFuZCBpbnRyb2R1Y2UgcGVyIENQVSB2YXJpYWJsZSAibmRsX2xvY2FsX2xv
-Y2siLg0KPiA+IER1ZSB0byBwcmVlbXB0aW9uIG9uIFJULCB0aGlzIGxvY2sgY2FuIGF2b2lkIHJh
-Y2UgY29uZGl0aW9uIGZvciB0aGUNCj4gPiBzYW1lIGxhbmUgb24gdGhlIHNhbWUgQ1BVLiBXaGVu
-IENQVSBudW1iZXIgaXMgZ3JlYXRlciB0aGFuIHRoZSBsYW5lDQo+ID4gbnVtYmVyLCBsYW5lIGNh
-biBiZSBzaGFyZWQgYW1vbmcgQ1BVcy4gIm5kbF9sb2NrLT5sb2NrIiBpcyB1c2VkIHRvDQo+ID4g
-cHJvdGVjdCB0aGUgbGFuZSBpbiB0aGlzIHNpdHVhdGlvbi4NCj4gDQo+IHNvIHdoYXQgd2FzIHRo
-ZSByZWFzb24gdGhhdCBnZXRfY3B1KCkgY2FuJ3QgYmUgcmVwbGFjZWQgd2l0aA0KPiByYXdfc21w
-X3Byb2Nlc3Nvcl9pZCgpPw0KPiANCj4gU2ViYXN0aWFuDQoNClRoZSBsYW5lIGlzIGNyaXRpY2Fs
-IHJlc291cmNlIHdoaWNoIG5lZWRzIHRvIGJlIHByb3RlY3RlZC4gT25lIENQVSBjYW4gdXNlIG9u
-bHkgb25lDQpsYW5lLiBJZiBDUFUgbnVtYmVyIGlzIGdyZWF0ZXIgdGhhbiB0aGUgbnVtYmVyIG9m
-IHRvdGFsIGxhbmUsIHRoZSBsYW5lIGNhbiBiZSBzaGFyZWQNCmFtb25nIENQVXMuIA0KDQpJbiBu
-b24tUlQga2VybmVsLCBnZXRfY3B1KCkgZGlzYWJsZSBwcmVlbXB0aW9uIGJ5IGNhbGxpbmcgcHJl
-ZW1wdF9kaXNhYmxlKCkgZmlyc3QuDQpPbmx5IG9uZSB0aHJlYWQgb24gdGhlIHNhbWUgQ1BVIGNh
-biBnZXQgdGhlIGxhbmUuDQoNCkluIFJUIGtlcm5lbCwgaWYgd2Ugb25seSB1c2UgcmF3X3NtcF9w
-cm9jZXNzb3JfaWQoKSwgdGhpcyBkb2Vzbid0IHByb3RlY3QgdGhlIGxhbmUuIA0KVGh1cyB0d28g
-dGhyZWFkcyBvbiB0aGUgc2FtZSBDUFUgY2FuIGdldCB0aGUgc2FtZSBsYW5lIGF0IHRoZSBzYW1l
-IHRpbWUuDQoNCkluIHRoaXMgcGF0Y2gsIHR3by1sZXZlbCBsb2NrIGNhbiBhdm9pZCByYWNlIGNv
-bmRpdGlvbiBmb3IgdGhlIGxhbmUuDQoNCiAgICAgICAgICBDUFUgQSAgICAgICAgICAgICAgICAg
-IENQVSBCIChCID09IEEgJSBudW1fbGFuZXMpDQogDQogICAgdGFzayBBMSAgICB0YXNrIEEyICAg
-ICB0YXNrIEIxICAgIHRhc2sgQjINCiAgICAgICB8ICAgICAgICAgIHwgICAgICAgICAgIHwgICAg
-ICAgICAgfA0KICAgICAgIHxfX19fX19fX19ffCAgICAgICAgICAgfF9fX19fX19fX198DQogICAg
-ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgIHwNCiAgICAgICBuZGxfbG9jYWxfbG9jayAg
-ICAgICAgICAgbmRsX2xvY2FsX2xvY2sNCiAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAg
-ICAgfA0KICAgICAgICAgICAgfF9fX19fX19fX19fX19fX19fX19fX198DQogICAgICAgICAgICAg
-ICAgICAgICAgIHwNCiAgICAgICAgICAgICAgICAgICAgICAgfA0KICAgICAgICAgICAgICAgICAg
-bmRsX2xvY2stPmxvY2sNCiAgICAgICAgICAgICAgICAgICAgICAgfA0KICAgICAgICAgICAgICAg
-ICAgICAgICB8DQogICAgICAgICAgICAgICAgICAgICAgbGFuZQ0KDQogDQpUaGFua3MsDQpZb25n
-eGluDQo=
+On Thu, Mar 7, 2019 at 3:57 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> net/wireless/util.c:1223:11: warning: variable 'result' is used
+> uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>
+> Clang can't evaluate at this point that WARN(1, ...) always returns true
+> because __ret_warn_on is defined as !!(condition), which isn't
+> immediately evaluated as 1. Change this branch to else so that it's
+> clear to Clang that we intend to bail out here.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/382
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Thanks for the quick fix!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> ---
+>  net/wireless/util.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/wireless/util.c b/net/wireless/util.c
+> index e4b8db5e81ec..75899b62bdc9 100644
+> --- a/net/wireless/util.c
+> +++ b/net/wireless/util.c
+> @@ -1220,9 +1220,11 @@ static u32 cfg80211_calculate_bitrate_he(struct rate_info *rate)
+>         else if (rate->bw == RATE_INFO_BW_HE_RU &&
+>                  rate->he_ru_alloc == NL80211_RATE_INFO_HE_RU_ALLOC_26)
+>                 result = rates_26[rate->he_gi];
+> -       else if (WARN(1, "invalid HE MCS: bw:%d, ru:%d\n",
+> -                     rate->bw, rate->he_ru_alloc))
+> +       else {
+> +               WARN(1, "invalid HE MCS: bw:%d, ru:%d\n",
+> +                    rate->bw, rate->he_ru_alloc);
+>                 return 0;
+> +       }
+>
+>         /* now scale to the appropriate MCS */
+>         tmp = result;
+> --
+> 2.21.0
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
