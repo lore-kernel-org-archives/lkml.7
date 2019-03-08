@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C784C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE36C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F9221019
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DBE20811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050036;
-	bh=zM1cNWDTW6HD1JLPgzWiCG0TWfRGwwm+oeZTBpn+wig=;
+	s=default; t=1552050041;
+	bh=8F4AalCUPH8qygl8D1NQHBuNxMKxtS/RyhokzLwoG2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y+plxrSJ4AiHVv0APIcWZIx8eVD2oF/Cgancq7e1RXIjEPrnbNVE42zqBciT7znkI
-	 xRtdsTGojwKFgCVjSVYpYntdrn6wq6dcRPr3ftEyzacDRqTDW+4ua1ipWWUlP1P/V6
-	 7MOQtFsY7Y6QUlH2LBEse/MZq4TOvcA+KiOa73N4=
+	b=CNQXT0NL3f5u7R8bsOlp/h2G5lf/w+lWkow87Md4jaxcUpo8zu+aW9ytznrliIe2+
+	 Aycthpw3eeoQSwYSYzit3bRMYgAT4+4fnKrSU4qAT0Jnr2T6I22VQEN+x/S74PAfyt
+	 hVOA4/thusMlmj2HhuzKVksyegbNS8j/f7YhSO3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfCHNAf (ORCPT
+        id S1728338AbfCHNAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:00:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37622 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:00:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbfCHNAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:00:34 -0500
+        id S1726925AbfCHNAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:00:36 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA85720449;
-        Fri,  8 Mar 2019 13:00:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75BB820811;
+        Fri,  8 Mar 2019 13:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552050033;
-        bh=zM1cNWDTW6HD1JLPgzWiCG0TWfRGwwm+oeZTBpn+wig=;
+        s=default; t=1552050036;
+        bh=8F4AalCUPH8qygl8D1NQHBuNxMKxtS/RyhokzLwoG2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/IaFZmbxat6qmiRItyfQriUzYPUqB5A7yekHXU8IpZyB3sQuHbVs76yirBNL/1MQ
-         R7l+mhkf3pmk/9OyQDF+X7YIWlm8nwrKCltIbeLK+xh48SwcyMSNRrgImtHhM2nLId
-         Rmi8m0pEeMyP2QhAEEoCRKBjXxv+pbsHgZj0eJEc=
+        b=vlBmkyfIKePe61QEsM/Z2MZCqqps/R2/EXkB6oQ+0vc7ri+nU6DuQF3qzqm6JnrfC
+         jDY3RtrkVCWbVvkgr7yf2Z7TMHHnGx5lYNyE41dhR3e8Nc31h1KOQotER14RfqJE5v
+         BSi/OkaGjg0MkBDVkDJDNfTqASOtRXL2Y4/B1qh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Karoly Pados <pados@pados.hu>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 62/68] USB: serial: cp210x: fix GPIO in autosuspend
-Date:   Fri,  8 Mar 2019 13:50:32 +0100
-Message-Id: <20190308124913.629685254@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 63/68] selftests: firmware: fix verify_reqs() return value
+Date:   Fri,  8 Mar 2019 13:50:33 +0100
+Message-Id: <20190308124913.668799042@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -65,60 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Karoly Pados <pados@pados.hu>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-commit 7b0b644b9aa2de5032db0f468fddca091d0b7b90 upstream.
+commit 344c0152d878922365464b7140c74c2a5e073d99 upstream.
 
-Current GPIO code in cp210x fails to take USB autosuspend into account,
-making it practically impossible to use GPIOs with autosuspend enabled
-without user configuration. Fix this like for ftdi_sio in a previous patch.
-Tested on a CP2102N.
+commit a6a9be9270c87 ("selftests: firmware: return Kselftest Skip code
+for skipped tests") by Shuah modified failures to return the special
+error code of $ksft_skip (4). We have a corner case issue where we
+*do* want to verify_reqs().
 
-Signed-off-by: Karoly Pados <pados@pados.hu>
-Fixes: cf5276ce7867 ("USB: serial: cp210x: Adding GPIO support for CP2105")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: <stable@vger.kernel.org> # >= 4.18
+Fixes: a6a9be9270c87 ("selftests: firmware: return Kselftest Skip code for for skipped tests")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/testing/selftests/firmware/fw_lib.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -1354,8 +1354,13 @@ static int cp210x_gpio_get(struct gpio_c
- 	if (priv->partnum == CP210X_PARTNUM_CP2105)
- 		req_type = REQTYPE_INTERFACE_TO_HOST;
- 
-+	result = usb_autopm_get_interface(serial->interface);
-+	if (result)
-+		return result;
-+
- 	result = cp210x_read_vendor_block(serial, req_type,
- 					  CP210X_READ_LATCH, &buf, sizeof(buf));
-+	usb_autopm_put_interface(serial->interface);
- 	if (result < 0)
- 		return result;
- 
-@@ -1376,6 +1381,10 @@ static void cp210x_gpio_set(struct gpio_
- 
- 	buf.mask = BIT(gpio);
- 
-+	result = usb_autopm_get_interface(serial->interface);
-+	if (result)
-+		goto out;
-+
- 	if (priv->partnum == CP210X_PARTNUM_CP2105) {
- 		result = cp210x_write_vendor_block(serial,
- 						   REQTYPE_HOST_TO_INTERFACE,
-@@ -1393,6 +1402,8 @@ static void cp210x_gpio_set(struct gpio_
- 					 NULL, 0, USB_CTRL_SET_TIMEOUT);
- 	}
- 
-+	usb_autopm_put_interface(serial->interface);
-+out:
- 	if (result < 0) {
- 		dev_err(&serial->interface->dev, "failed to set GPIO value: %d\n",
- 				result);
+--- a/tools/testing/selftests/firmware/fw_lib.sh
++++ b/tools/testing/selftests/firmware/fw_lib.sh
+@@ -91,7 +91,7 @@ verify_reqs()
+ 	if [ "$TEST_REQS_FW_SYSFS_FALLBACK" = "yes" ]; then
+ 		if [ ! "$HAS_FW_LOADER_USER_HELPER" = "yes" ]; then
+ 			echo "usermode helper disabled so ignoring test"
+-			exit $ksft_skip
++			exit 0
+ 		fi
+ 	fi
+ }
 
 
