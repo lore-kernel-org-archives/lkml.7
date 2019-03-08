@@ -2,43 +2,43 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70244C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F6CC10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9332087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE092087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfCHPKi (ORCPT
+        id S1726998AbfCHPKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:10:38 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21749 "EHLO
+        Fri, 8 Mar 2019 10:10:41 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39682 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726631AbfCHPKi (ORCPT
+        by vger.kernel.org with ESMTP id S1726946AbfCHPKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:10:38 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28F7KXH016159;
-        Fri, 8 Mar 2019 16:10:28 +0100
+        Fri, 8 Mar 2019 10:10:39 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28EuNL5011427;
+        Fri, 8 Mar 2019 16:10:29 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhgbea9s-1
+        by mx08-00178001.pphosted.com with ESMTP id 2qyhknpfrk-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 08 Mar 2019 16:10:28 +0100
+        Fri, 08 Mar 2019 16:10:29 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 205AA31;
-        Fri,  8 Mar 2019 15:10:26 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A23E75936;
-        Fri,  8 Mar 2019 15:10:26 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 8 Mar 2019
- 16:10:26 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5F7FC3A;
+        Fri,  8 Mar 2019 15:10:28 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3D1EE5936;
+        Fri,  8 Mar 2019 15:10:28 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 8 Mar 2019
+ 16:10:28 +0100
 Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
  (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 8 Mar 2019
- 16:10:26 +0100
+ 16:10:28 +0100
 From:   Ludovic Barre <ludovic.Barre@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -49,14 +49,16 @@ CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH  0/2] ARM: dts: stm32: qspi update for stm32mp157c-ev1
-Date:   Fri, 8 Mar 2019 16:10:21 +0100
-Message-ID: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH  2/2] ARM: dts: stm32: add jedec compatible for nor flash on stm32mp157c-ev1
+Date:   Fri, 8 Mar 2019 16:10:23 +0100
+Message-ID: <1552057823-10876-3-git-send-email-ludovic.Barre@st.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
+References: <1552057823-10876-1-git-send-email-ludovic.Barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_12:,,
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_13:,,
  signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,17 +67,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch series add sleep pins configuration needed to suspend support
-and add jedec compatible for 2 nor flash of stm32mp157c-ev1.
+This patch adds jedec compatible for spi-nor flash
+on stm32mp157c-ev1 (needed with new spi-mem interface).
 
-Ludovic Barre (2):
-  ARM: dts: stm32: add pinctrl sleep config for qspi on stm32mp157c-ev1
-  ARM: dts: stm32: add jedec compatible for nor flash on stm32mp157c-ev1
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-ev1.dts     |  5 ++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 7fef155..cae88d9 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -140,6 +140,7 @@
+ 	status = "okay";
+ 
+ 	flash0: mx66l51235l@0 {
++		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-rx-bus-width = <4>;
+ 		spi-max-frequency = <108000000>;
+@@ -148,6 +149,7 @@
+ 	};
+ 
+ 	flash1: mx66l51235l@1 {
++		compatible = "jedec,spi-nor";
+ 		reg = <1>;
+ 		spi-rx-bus-width = <4>;
+ 		spi-max-frequency = <108000000>;
 -- 
 2.7.4
 
