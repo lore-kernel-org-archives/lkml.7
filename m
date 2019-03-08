@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBEBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A64C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CBD20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146BF20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050071;
-	bh=JbJqeOia4R7QHIFHKqpUuAcYzNZYojxlNLepwDpmHPY=;
+	s=default; t=1552050075;
+	bh=F50Opl0m8B1UjAdxZxX6o/ZNw+1kvvP4s7nh74I4fRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nAgjRSjL6Qw3xstdZnmJ+Gk5dA/76Xhvs+6enX52ZA5HDMVEuS9SLr0SH7nfYcq2C
-	 jwMZugr0MUW8+a+J0ckdBoROxlCEZ/5Fzf6jAZLhSVNIj1HDZUp2yaxSkk8/wDZq+E
-	 kO/duetNWuUC3yVH/1bvqES6NwL7N2ZfBQbHlclc=
+	b=eM/6Ei1vkVYI+QIoOzakEoII/gcPB/chn/1d4v9d+ABFxicoHoO6CPmFoMbxHd4pH
+	 MVbt3YW2Uxq1rUVFG0WMK2uBo9CSE5FyP+dzHlDYb3Lo5nbSHLUYZadXSOrZZfu/ma
+	 3CfL3RmQd7fFlWK/NCPE7jKNGU1fRpuibwcQMOIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfCHNBK (ORCPT
+        id S1728401AbfCHNBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:01:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38312 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:01:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728319AbfCHNBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:01:06 -0500
+        id S1728384AbfCHNBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:01:08 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA66214AE;
-        Fri,  8 Mar 2019 13:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BB9B20449;
+        Fri,  8 Mar 2019 13:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552050065;
-        bh=JbJqeOia4R7QHIFHKqpUuAcYzNZYojxlNLepwDpmHPY=;
+        s=default; t=1552050068;
+        bh=F50Opl0m8B1UjAdxZxX6o/ZNw+1kvvP4s7nh74I4fRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ac75dO+r7dhju5LsJgEGuhKVZL0KoJDigUOEnod35oF89yFARS5TZeU96X6/pSLcT
-         mLiXON5TuooHQlo0JR17VPJUpSg9lSpbAgipbLWGtB1VuTYluuvNQAZu7ysnJUBOK1
-         hojUeDBC4USQgwq6z6OtD9v/dM4vz+W4Qk8S3PAk=
+        b=AA3XV4OnRrwLNC29H2gVAZg6WH+UQ0XZQXsocZvFcPYcMiFmO8i6tZIXdkGebk814
+         SfiNhMa8g2ofBFj+1xdg0PXZbOxgMEUPNi1S5mofvCp7KEFxrxt1b/K8elJvklCjaH
+         A6n0OCGntvhhBsdC4+vsvtSnjgeCFyjBYqkrsQ3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Nazarov <s-nazarov@yandex.ru>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 43/68] net: avoid use IPCB in cipso_v4_error
-Date:   Fri,  8 Mar 2019 13:50:13 +0100
-Message-Id: <20190308124912.820469319@linuxfoundation.org>
+Subject: [PATCH 4.19 44/68] ipv4: Return error for RTA_VIA attribute
+Date:   Fri,  8 Mar 2019 13:50:14 +0100
+Message-Id: <20190308124912.860675285@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,103 +65,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nazarov Sergey <s-nazarov@yandex.ru>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 3da1ed7ac398f34fff1694017a07054d69c5f5c5 ]
+[ Upstream commit b6e9e5df4ecf100f6a10ab2ade8e46d47a4b9779 ]
 
-Extract IP options in cipso_v4_error and use __icmp_send.
+IPv4 currently does not support nexthops outside of the AF_INET family.
+Specifically, it does not handle RTA_VIA attribute. If it is passed
+in a route add request, the actual route added only uses the device
+which is clearly not what the user intended:
 
-Signed-off-by: Sergey Nazarov <s-nazarov@yandex.ru>
-Acked-by: Paul Moore <paul@paul-moore.com>
+  $ ip ro add 172.16.1.0/24 via inet6 2001:db8:1::1 dev eth0
+  $ ip ro ls
+  ...
+  172.16.1.0/24 dev eth0
+
+Catch this and fail the route add:
+  $ ip ro add 172.16.1.0/24 via inet6 2001:db8:1::1 dev eth0
+  Error: IPv4 does not support RTA_VIA attribute.
+
+Fixes: 03c0566542f4c ("mpls: Netlink commands to add, remove, and dump routes")
+Signed-off-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip.h      |    2 ++
- net/ipv4/cipso_ipv4.c |   17 +++++++++++++++--
- net/ipv4/ip_options.c |   22 +++++++++++++++++-----
- 3 files changed, 34 insertions(+), 7 deletions(-)
+ net/ipv4/fib_frontend.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -638,6 +638,8 @@ static inline int ip_options_echo(struct
- }
- 
- void ip_options_fragment(struct sk_buff *skb);
-+int __ip_options_compile(struct net *net, struct ip_options *opt,
-+			 struct sk_buff *skb, __be32 *info);
- int ip_options_compile(struct net *net, struct ip_options *opt,
- 		       struct sk_buff *skb);
- int ip_options_get(struct net *net, struct ip_options_rcu **optp,
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1736,13 +1736,26 @@ validate_return:
-  */
- void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
- {
-+	unsigned char optbuf[sizeof(struct ip_options) + 40];
-+	struct ip_options *opt = (struct ip_options *)optbuf;
-+
- 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
- 		return;
- 
-+	/*
-+	 * We might be called above the IP layer,
-+	 * so we can not use icmp_send and IPCB here.
-+	 */
-+
-+	memset(opt, 0, sizeof(struct ip_options));
-+	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
-+	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
-+		return;
-+
- 	if (gateway)
--		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0);
-+		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0, opt);
- 	else
--		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0);
-+		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0, opt);
- }
- 
- /**
---- a/net/ipv4/ip_options.c
-+++ b/net/ipv4/ip_options.c
-@@ -251,8 +251,9 @@ static void spec_dst_fill(__be32 *spec_d
-  * If opt == NULL, then skb->data should point to IP header.
-  */
- 
--int ip_options_compile(struct net *net,
--		       struct ip_options *opt, struct sk_buff *skb)
-+int __ip_options_compile(struct net *net,
-+			 struct ip_options *opt, struct sk_buff *skb,
-+			 __be32 *info)
- {
- 	__be32 spec_dst = htonl(INADDR_ANY);
- 	unsigned char *pp_ptr = NULL;
-@@ -468,11 +469,22 @@ eol:
- 		return 0;
- 
- error:
--	if (skb) {
--		icmp_send(skb, ICMP_PARAMETERPROB, 0, htonl((pp_ptr-iph)<<24));
--	}
-+	if (info)
-+		*info = htonl((pp_ptr-iph)<<24);
- 	return -EINVAL;
- }
-+
-+int ip_options_compile(struct net *net,
-+		       struct ip_options *opt, struct sk_buff *skb)
-+{
-+	int ret;
-+	__be32 info;
-+
-+	ret = __ip_options_compile(net, opt, skb, &info);
-+	if (ret != 0 && skb)
-+		icmp_send(skb, ICMP_PARAMETERPROB, 0, info);
-+	return ret;
-+}
- EXPORT_SYMBOL(ip_options_compile);
- 
- /*
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -700,6 +700,10 @@ static int rtm_to_fib_config(struct net
+ 		case RTA_GATEWAY:
+ 			cfg->fc_gw = nla_get_be32(attr);
+ 			break;
++		case RTA_VIA:
++			NL_SET_ERR_MSG(extack, "IPv4 does not support RTA_VIA attribute");
++			err = -EINVAL;
++			goto errout;
+ 		case RTA_PRIORITY:
+ 			cfg->fc_priority = nla_get_u32(attr);
+ 			break;
 
 
