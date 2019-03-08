@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB29C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4696CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9292087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CC720661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049944;
-	bh=UH2ROS3OGu1Xs1DDX1GPh6kCA4wh+JvVaN+SkLGich0=;
+	s=default; t=1552049950;
+	bh=xcOmjIWBR2O4nY3nlnkZDbouCF0fV9NPCt2+8yrjI10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m0eKQJ0RAwkWu8GwjtuHaVn7Jv3TPvg0RjOOSau+Rm6N7ueGzqzxhXcIjyW3kVdYh
-	 Vc6yxAlPNsrTL899iStEKJ7VWp2GbOTA8xo2bpMZT0JSgKrYKP+YOT62LYDnmLxT1V
-	 7dltxhCDq/peTMVX5PnqEG3PR2NfmdjJxqWRDy90=
+	b=OZY1uxdZFLUjpxVwCKJf5jdIgKhVgRbU5/4VDq3QLtivf4UM3uiQGwYW9wEbsK68o
+	 Ex7+2FXTRaC0AuyaOx6ydDTV7hZ8vAfApjlbL9KNaABSxFl39T8QKRReDQ1rM0w88+
+	 RP8lrKS3gmA/gAMLYBabxiRsj4Q+d1/561oILllg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfCHM7C (ORCPT
+        id S1728114AbfCHM7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:59:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:59:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbfCHM6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:52 -0500
+        id S1728088AbfCHM7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:59:06 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629D420449;
-        Fri,  8 Mar 2019 12:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4AF920661;
+        Fri,  8 Mar 2019 12:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049931;
-        bh=UH2ROS3OGu1Xs1DDX1GPh6kCA4wh+JvVaN+SkLGich0=;
+        s=default; t=1552049945;
+        bh=xcOmjIWBR2O4nY3nlnkZDbouCF0fV9NPCt2+8yrjI10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWyXqaHpYyLE2hlYUdXffXR35AO1Y8Ym62i8AOb2+GCw5VHUfA1xLzu2UuNntZAo/
-         SFrW1/+X+DWbMTyH6pgiePek0CZm4Lk2l13oND4sbo6KZ0uUiCo5kmvYQzq9JsY3Lk
-         xlH6DXWhAtsVYFMHbQe7Le3TUzqjvtZlSsIKy9+s=
+        b=i3jXM1PtwY13NSZJ2vk1aEXq4ajcLmzYV4PgAXncOpW0QJEXSaaYX2yqrfJs2RXhi
+         ExQ342RLbcGFYRN6W4csVIzeVA4wcPWDP2gzo5230+TNak/BU8spTNcZAyz1aP+Oq2
+         tSN2sMYFVYjU49asrlSZWD/Rg5dfRSZxiOBD87Yk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 30/68] netlabel: fix out-of-bounds memory accesses
-Date:   Fri,  8 Mar 2019 13:50:00 +0100
-Message-Id: <20190308124912.261955640@linuxfoundation.org>
+Subject: [PATCH 4.19 34/68] net: phy: phylink: fix uninitialized variable in phylink_get_mac_state
+Date:   Fri,  8 Mar 2019 13:50:04 +0100
+Message-Id: <20190308124912.432418042@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -65,53 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Moore <paul@paul-moore.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 5578de4834fe0f2a34fedc7374be691443396d1f ]
+[ Upstream commit d25ed413d5e51644e18f66e34eec049f17a7abcb ]
 
-There are two array out-of-bounds memory accesses, one in
-cipso_v4_map_lvl_valid(), the other in netlbl_bitmap_walk().  Both
-errors are embarassingly simple, and the fixes are straightforward.
+When debugging an issue I found implausible values in state->pause.
+Reason in that state->pause isn't initialized and later only single
+bits are changed. Also the struct itself isn't initialized in
+phylink_resolve(). So better initialize state->pause and other
+not yet initialized fields.
 
-As a FYI for anyone backporting this patch to kernels prior to v4.8,
-you'll want to apply the netlbl_bitmap_walk() patch to
-cipso_v4_bitmap_walk() as netlbl_bitmap_walk() doesn't exist before
-Linux v4.8.
+v2:
+- use right function name in subject
+v3:
+- initialize additional fields
 
-Reported-by: Jann Horn <jannh@google.com>
-Fixes: 446fda4f2682 ("[NetLabel]: CIPSOv4 engine")
-Fixes: 3faa8f982f95 ("netlabel: Move bitmap manipulation functions to the NetLabel core.")
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/cipso_ipv4.c        |    3 ++-
- net/netlabel/netlabel_kapi.c |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/phy/phylink.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -667,7 +667,8 @@ static int cipso_v4_map_lvl_valid(const
- 	case CIPSO_V4_MAP_PASS:
- 		return 0;
- 	case CIPSO_V4_MAP_TRANS:
--		if (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL)
-+		if ((level < doi_def->map.std->lvl.cipso_size) &&
-+		    (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL))
- 			return 0;
- 		break;
- 	}
---- a/net/netlabel/netlabel_kapi.c
-+++ b/net/netlabel/netlabel_kapi.c
-@@ -903,7 +903,8 @@ int netlbl_bitmap_walk(const unsigned ch
- 		    (state == 0 && (byte & bitmask) == 0))
- 			return bit_spot;
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -348,6 +348,10 @@ static int phylink_get_mac_state(struct
+ 	linkmode_zero(state->lp_advertising);
+ 	state->interface = pl->link_config.interface;
+ 	state->an_enabled = pl->link_config.an_enabled;
++	state->speed = SPEED_UNKNOWN;
++	state->duplex = DUPLEX_UNKNOWN;
++	state->pause = MLO_PAUSE_NONE;
++	state->an_complete = 0;
+ 	state->link = 1;
  
--		bit_spot++;
-+		if (++bit_spot >= bitmap_len)
-+			return -1;
- 		bitmask >>= 1;
- 		if (bitmask == 0) {
- 			byte = bitmap[++byte_offset];
+ 	return pl->ops->mac_link_state(ndev, state);
 
 
