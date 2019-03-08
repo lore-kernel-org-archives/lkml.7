@@ -2,95 +2,88 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F2DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D304C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F78B20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE5020684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfCHK6s (ORCPT
+        id S1726352AbfCHLQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 05:58:48 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:55787 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCHK6s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 05:58:48 -0500
-Received: from orion.localdomain ([95.117.97.241]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MHX7f-1hFjro3T7Z-00DVp3 for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019
- 11:58:45 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH] lib: devres: devm_ioremap_resource() make res parameter const
-Date:   Fri,  8 Mar 2019 11:58:45 +0100
-Message-Id: <1552042725-6630-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:usIacfcXO+AJZ9TT/P/mR/xRHR2qdnB5GBwEjrWRhVI3pBGK5md
- N4Z4QM+AN7+OhmuPly7u5vLDYADv6JGVZYXY5CMAEeQOUErXzAIRcwpjGZHfqofekITHCOy
- m0lGfPd8/jvgytcQ7WuCPsV8rZVydqglDUMx2/j3O4vkk0zYE5Vld6jzfONsSkT+MEQQ+BI
- cbKk/8bcanPYSjkfSUJwA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7ONx18+mqGY=:RJf5K1iraiddrANcQ66p3G
- TZZI43+I4spOV2ovWcO+hIRWjuoSjoJYl6FjS1QMbFLBPyMhSalCgC6GFBQs+uR2Tc0hQZqNZ
- Wi3IgHlCDqwLqP53hD2v1KleRC7nCnTGuIYLrqiBEU6Oj7GbM9dBXZmVy74LH8L5ESxItSpN6
- eg0JXTWJAme9sKFNYrP/EVsS05fz67r6YD+mX5nFPuc+7DjxkJJotnEIeUCn6czz1oGfNfIoa
- 8MLPn60ge5U4+a1mALD+W6PLYeXJ2KQuvMCxv4qLICBsRAm4p9wC3rTRmfpq3UQz3f8qzTQo/
- /Xg9wJWcQekO0J9iT+lhcJtrwNDK+K09fYQyNBYQSmFBySB37CbibCpCpGmDnE4mBvs/ZQabi
- qKw5sN4TRU39FkoT0ep41/fZ7qqU3f4BijI9NiFfUVCuCo/EzV+8rjCKIOwMm7F0XFAYRRsIN
- 0vXNGvZVIxADKh+kF5Mb1VwvGW9hcUVxgpgcRzQ62N5zG6EHCxk+jSm4y1FA1jx636NECU8ti
- o7D7H14udP87yIz9gWkMIQeiZUEA6MMcs1r8/RG/wp+AU8yUxHUegHaCO2d+utvVwJebQzzKg
- 1l3hrr9ZgBneKbIM2sHb9gX9+5z9qhv8nIqgLitfnVZ9eMq0/N8HBxXlY0gFPOb8wEsG688LZ
- CL2MslRbTy/jzdYzxypqn5XSgVDOzMyShEj29WNA/rAK3ksGJAmGqkiWD42JmkuO9a/tOsVv8
- o1gx5n5b8xNWvpkgk75iueb7LHkuMqe0U4kRxw==
+        Fri, 8 Mar 2019 06:16:38 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54378 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725789AbfCHLQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 06:16:37 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 352A85FDFA920979826A;
+        Fri,  8 Mar 2019 19:16:35 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Fri, 8 Mar 2019
+ 19:16:25 +0800
+Subject: Re: [PATCH 2/8] aio_poll_wake(): don't set ->woken if we ignore the
+ wakeup
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>, <kgraul@linux.ibm.com>,
+        <ktkhai@virtuozzo.com>, <kyeongdon.kim@lge.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, <pabeni@redhat.com>,
+        <syzkaller-bugs@googlegroups.com>, <xiyou.wangcong@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, <bcrl@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-aio@kvack.org>,
+        <houtao1@huawei.com>, <yi.zhang@huawei.com>
+References: <CAHk-=wghRmdYKRAwakeHmjcpbLt9fJAHyU2x8s_NZONhz6RTOw@mail.gmail.com>
+ <20190307000316.31133-1-viro@ZenIV.linux.org.uk>
+ <20190307000316.31133-2-viro@ZenIV.linux.org.uk>
+ <20190307021844.GC2217@ZenIV.linux.org.uk>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <c02a5a3c-c617-b0d2-28a0-462f26b0c1c8@huawei.com>
+Date:   Fri, 8 Mar 2019 19:16:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <20190307021844.GC2217@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_ioremap_resource() doesn't change the passed struct resource,
-so it can be a const pointer.
+So, what should we do?
 
-Now, calls sites w/ fixed resources can declare them static.
-(in some cases possibly even __initconst)
-
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- include/linux/device.h | 3 ++-
- lib/devres.c           | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 54b58610..c387901 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -706,7 +706,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
- 					 gfp_t gfp_mask, unsigned int order);
- extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res);
- 
- void __iomem *devm_of_iomap(struct device *dev,
- 			    struct device_node *node, int index,
-diff --git a/lib/devres.c b/lib/devres.c
-index 69bed2f..6a0e9bd 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -131,7 +131,8 @@ void devm_iounmap(struct device *dev, void __iomem *addr)
-  *	if (IS_ERR(base))
-  *		return PTR_ERR(base);
-  */
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
--- 
-1.9.1
+On 2019/3/7 10:18, Al Viro wrote:
+> On Thu, Mar 07, 2019 at 12:03:10AM +0000, Al Viro wrote:
+>> From: Al Viro <viro@zeniv.linux.org.uk>
+>>
+>> In case of early wakeups, aio_poll() assumes that aio_poll_complete()
+>> has either already happened or is imminent.  In that case we do not
+>> want to put iocb on the list of cancellables.  However, ignored
+>> wakeups need to be treated as if wakeup has not happened at all.
+>> Trivially fixed by having aio_poll_wake() set ->woken only after
+>> it's committed to taking iocb out of the waitqueue.
+>>
+>> Spotted-by: zhengbin <zhengbin13@huawei.com>
+>> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> ... and unfortunately it's worse than just that - what both of us
+> have missed is that one could have non-specific wakep + schedule_work +
+> aio_poll_complete_work() rechecking ->poll(), seeing nothing of
+> interest and reinserting into queue.  All before vfs_poll() manages
+> to return into aio_poll().  The window is harder to hit, but it's
+> still there, with exact same "failed to add to cancel list" kind of bug
+> if we do hit it ;-/
+> 
+> .
+> 
 
