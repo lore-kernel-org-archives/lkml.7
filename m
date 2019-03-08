@@ -2,77 +2,102 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE00C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E72C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF19C20652
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC3A20855
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r5fmDJPb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=demfloro.ru header.i=@demfloro.ru header.b="FT25lT+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfCHVeb (ORCPT
+        id S1726688AbfCHVfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:34:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47678 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfCHVea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:34:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CxB8s96WjghhiesOt5ydVNCuiwaAMnUIxwjNAKFzIeQ=; b=r5fmDJPb2lVy/CXQoQTgE8OdX
-        rsD8rfaVhOJXNDqQxsWQv7aN95BTuUTrAFRCrVTKif+pfd8HMmDKFqf8pXei/116oLGklmoRHptLf
-        Ds/RlzO8MViDL3tzGVmQp0c1qxXI/i+Q2kL8KW2PB9IGkArKQpLCWsWWufnxlw+ND/NIQji6pOjo8
-        sddRitabkt0R2J5W/Tk6RaktvEc40upTuXSwjahZuxqtgVcrpomHPnkow79jUhhGimYyFOXQRXrCs
-        fYU8qPjCgjGmEoq3VYwiGkzuK58waJMbenl6R2PA9PtHZFbX8277e36bCQbtDp9nwpFvglNwm42e0
-        N5wXo4QEw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2N8H-00027H-0R; Fri, 08 Mar 2019 21:34:21 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D4112981BBE; Fri,  8 Mar 2019 22:34:18 +0100 (CET)
-Date:   Fri, 8 Mar 2019 22:34:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
-        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
-        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, rostedt@goodmis.org
-Subject: Re: [PATCH 16/20] objtool: Rewrite alt->skip_orig
-Message-ID: <20190308213418.GF2482@worktop.programming.kicks-ass.net>
-References: <20190307114511.870090179@infradead.org>
- <20190307115200.515578829@infradead.org>
- <20190308201510.4luzked52x3sdezg@treble>
+        Fri, 8 Mar 2019 16:35:42 -0500
+Received: from mx.demfloro.ru ([185.52.0.75]:57788 "EHLO mx.demfloro.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfCHVfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 16:35:42 -0500
+Received: from fire.localdomain (unknown [IPv6:2001:470:28:88::100])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: demfloro)
+        by mx.demfloro.ru (Postfix) with ESMTPSA id 44GLQN0Dk4z9MJn;
+        Fri,  8 Mar 2019 21:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=demfloro.ru; s=052018;
+        t=1552080940; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y7nZaSChMz0r8a7eHA7+Mu8+tsWlceflRQ0tJR7jmVo=;
+        b=FT25lT+vCwMbCLl0h3yziB2m/pXc591UWumjKUemT+fEMZPOzlJQyWU8y1ffnhpsB0b9gD
+        uMaqWMke0anRv4JmYLy2pcOEqovgHbJJqsuYCZLf5xUenpS6kjHfe+wI2Rmh29W0HrVgDE
+        JyBDD9wyt7HkAGdXBAGRiulkDw8txjX30hdXf2RiT+u+enzwgICrUuu7MO9xPWDPXDe7OH
+        fx+tqF+CMglDqa3o+C/eEzVxEQYFfHgcpDwfOr6dNVB8e8uu0HOKoxWZqBGW2EvCObtxW0
+        MDZzOlAne5e+5d1+2AKU9aOmpkToH4kAHEA7gyW2veCrq3n3zYR29vn8F0NLew==
+Date:   Sat, 9 Mar 2019 00:35:34 +0300
+From:   Dmitrii Tcvetkov <demfloro@demfloro.ru>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: NULL pointer dereference in nft_set_elem_destroy()
+Message-ID: <20190309003534.4f114b38@fire.localdomain>
+In-Reply-To: <20190308105039.xmf3ho3nixhfnnmh@breakpoint.cc>
+References: <20190308131746.5899877a@fire.localdomain>
+        <20190308105039.xmf3ho3nixhfnnmh@breakpoint.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190308201510.4luzked52x3sdezg@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=demfloro.ru;
+        s=arc052018; t=1552080940;
+        h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y7nZaSChMz0r8a7eHA7+Mu8+tsWlceflRQ0tJR7jmVo=;
+        b=Bc2MSetKEHKw0jEgeV7B8+WpMxWf3uRydAC/p0AEY4hOVLfBq6S+EkZNZBdI/MMLAUvFDB
+        CSZmNiVPIdxuUQt2zmsooHTxamP1C9x4ZJRkv5LYsYvsuihds/MClYwxaQJj/0PxcKpO7E
+        SThMmVeqvuQM5a2szVgVQnOJaQa4SZKId6ApM/s4+gRbyJttdKW9a2yBGDZvITxz5NkjuA
+        yH5W3TCV1DvEdCKEEA5GcZrMwkMPp4+9hsWXdMTaCAvJEeLDyMTYhwurJCxQicqRbanKdl
+        nMAxcq++iZQ6QHOPug2zvNnHI7YbjsgGYEzSdvA4gPKMfwNyCFE/jepk1jvYsQ==
+ARC-Seal: i=1; s=arc052018; d=demfloro.ru; t=1552080940; a=rsa-sha256;
+        cv=none;
+        b=iB6lkVt6kVh9J5gDX2e9Xjo1o7nL3/HOgyhhvE1LwsQAslPdtTJtDtBDDiSTodouuQhZkB
+        cFQU0Cvy7Feuo/M/72sMp7Ru1YmnT/APs6NTeuPv1KNXx87i2Zx+GxFdPaO4GqPZu8ZjwH
+        UvgXqb2lnDUvNOUOmkwy4lFazA0H9XQdntVIU8IMt2oeNnF8blld4VG31CXsX9T0RvCVY/
+        ozu82r+0XB8ZA5huPPT6q3Hh8hW/aT87N1cXcFzfbUU2jnlqCADtAcAWinmAknFmAoyEMh
+        v3KHJ3ucYBCOCjEiX1u/ckyFmKP7pr5OYd9Gd7kUR96BdLlnwxCV7+P3oGjtiw==
+ARC-Authentication-Results: i=1;
+        mx.demfloro.ru;
+        auth=pass smtp.auth=demfloro smtp.mailfrom=demfloro@demfloro.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 02:15:56PM -0600, Josh Poimboeuf wrote:
-> On Thu, Mar 07, 2019 at 12:45:27PM +0100, Peter Zijlstra wrote:
-> > Really skip the original instruction flow, instead of letting it
-> > continue with NOPs.
-> > 
-> > Since the alternative code flow already continues after the original
-> > instructions, only the alt-original is skipped.
-> 
-> I like this approach.  I wonder if we can do something similar to get
-> rid of the nasty fake jumps.
+On Fri, 8 Mar 2019 11:50:39 +0100
+Florian Westphal <fw@strlen.de> wrote:
 
-This actually hard relies on those fake jumps. Or am I missing the
-point?
+> Dmitrii Tcvetkov <demfloro@demfloro.ru> wrote:
+> > After upgrade to 5.0 on XPS 13 9360 I get NULL pointer dereference
+> > in dmesg (attached). Distro is Arch Linux, kernel is built with
+> > custom config (attached), but distro kernel[1] reproduces the issue
+> > on the laptop as well.
+> > 
+> > Bisect led me to commit f6ac858589768 (netfilter: nf_tables: unbind
+> > set in rule from commit path), bisect log attached. The commit
+> > doesn't revert cleanly on top of v5.0, and conflicts aren't trivial
+> > for me to resolve.
+> 
+> Please see
+> https://patchwork.ozlabs.org/patch/1053232/
+> 
+> this probably resolves this crash as well.
+
+Thank you! With the patch nft loads ruleset fine.
