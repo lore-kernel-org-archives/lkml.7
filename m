@@ -2,99 +2,94 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5BFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6E420684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20067206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:23:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fSfpD4mb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfCHWNK (ORCPT
+        id S1726452AbfCHWXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 17:13:10 -0500
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56909 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfCHWNK (ORCPT
+        Fri, 8 Mar 2019 17:23:47 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43826 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfCHWXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 17:13:10 -0500
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 8CC3B80213; Fri,  8 Mar 2019 23:13:00 +0100 (CET)
-Date:   Fri, 8 Mar 2019 23:13:07 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dmitry Torokhov <dtor@chromium.org>
-Cc:     Nick Crews <ncrews@chromium.org>, enric.balletbo@collabora.com,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, lkml <linux-kernel@vger.kernel.org>,
-        dlaurie@chromium.org, Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
- support
-Message-ID: <20190308221307.GB16125@amd>
-References: <20190308203801.57920-1-ncrews@chromium.org>
- <CAE_wzQ-Ds5a9iPuLTpV5mBHBtoUUh_-fRw66s0Su7eOifygqKQ@mail.gmail.com>
+        Fri, 8 Mar 2019 17:23:46 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z20so18705873ljj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 14:23:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lO7SZ2brTDoO1a0egWwhDfNQfKSc2gBmtdk6iWrE7tY=;
+        b=fSfpD4mbl3+RT47Jlb31fJMiwcm3HsDrnCYrZPcX+15p8qAN7YW4SFZ4wRhoEvat45
+         v8OQlu3+OexHqSEh1wSL7oTnvW7HUaWUtbBd1O39QxCbATDIzgJXZvPutZ2c2kwmgyBv
+         6zo6wE1hS2+QRKcTo8asfrLSQ7X5pD3XgUAl5IWbUGz35/udsuHPxxT9mz779rsxttGs
+         sjqiBEG916F1FkkOvPxHejyGoFTOpx9YMPqnrA0N8yQPM/uEmFhBX31XkpfW8FUJJgmi
+         K3wM1TROc30Dwh+vIc2DDyJkvrPMdL6QnDFahJaCeyBkTMp2M4QhJbotNxGGVptyWi6r
+         V/lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lO7SZ2brTDoO1a0egWwhDfNQfKSc2gBmtdk6iWrE7tY=;
+        b=UnWRgfwQMtenk3fdjgi/GR4QyI8SxRWbr1RQzwZGTNlZ8Cfl4ulPzGAlxdLcbm0m/i
+         wk9akXF7HfdiZZLTv/f/2qFFFFczvMgTYFO5bCDjzLqT7EbrddX3T3zSt3uf5gMLKHBH
+         DmaWhdZ4lrsyigu7A1k6mSlN2IUR4P2Vi5w2EupAcEIS5tTxyPcNkBq3qrM60Lm8LTSy
+         wQ5OPtWdov/tTYe+/jTGRqn+ED9QVtbi0hKyZuKPQySoVKzGP9fJ+VBpJYjvcexMyCS/
+         CCLBfqi/x4v1wHPpwDn2EwvjfWp0eTtRzxtOU6dkbF5cPGBXdlJWNc7ZQuNlzfM225T7
+         KL4Q==
+X-Gm-Message-State: APjAAAUm9leYdrrNdoiAze/FUJLcxfBCzRGNfHnGsJh8JecxBp0II/d8
+        +8SL+3brMwH34G5etV2XKRngC4z7/kimb8zBdFugNg==
+X-Google-Smtp-Source: APXvYqz6acVE0S1CBvA7fh1Gfw4lcA41lkfcJ54ZuL2G+Xh6ke/d7K5NF00aDkGTm8s6kyOjh05ejSFz7rnUrVBPfNA=
+X-Received: by 2002:a2e:90cd:: with SMTP id o13mr10317613ljg.153.1552083825496;
+ Fri, 08 Mar 2019 14:23:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
-Content-Disposition: inline
-In-Reply-To: <CAE_wzQ-Ds5a9iPuLTpV5mBHBtoUUh_-fRw66s0Su7eOifygqKQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190228220756.20262-1-paul@crapouillou.net> <20190228220756.20262-2-paul@crapouillou.net>
+ <20190301201624.GA22317@ravnborg.org> <1551480042.1526.0@crapouillou.net>
+In-Reply-To: <1551480042.1526.0@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 8 Mar 2019 23:23:33 +0100
+Message-ID: <CACRpkdbtnuHC6Ob-soewxKbH_AR+ijg-zkc_w2ZTBg8qBPkoZw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add doc for the ingenic-drm driver
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 1, 2019 at 11:41 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I also have a board with a "smart" panel (ili9331)
+> that needs a special configuration in the IP. There is nothing in
+> the drm_panel interface that tells me what mode I should use for what
+> panel...
 
-Hi!
+Is the ILI9331 anything similar to ILI9322 that I have a driver
+for in drivers/gpu/drm/panel/panel-ilitek-ili9322.c?
+I was hoping they would be similar and we =E1=BA=83ould be able
+to just reuse that driver for more of them but I might be
+mistaken.
 
-> > This patch is meant to be applied on top of the for-next
-> > branch of the platform/chrome repository, as it uses some of
-> > the code staged there.
-> >
-> > The EC is in charge of controlling the keyboard backlight on
-> > the Wilco platform. We expose a standard LED class device at
-> > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
-> > after the standard Chrome OS keyboard backlight driver at
-> > drivers/platform/chrome/cros_kbd_led_backlight.c
-> >
-> > Some Wilco devices do not support a keyboard backlight. This
-> > is checked in probe(), and in this case the sysfs entry will
-> > not appear, and everything will behave normally.
->=20
-> It would be even better if we did not register platform device if EC
-> does not support backlight.
->=20
-> > +       data->led.brightness_set =3D keyboard_led_set_brightness;
-> > +       data->led.brightness_get =3D keyboard_led_get_brightness;
->=20
-> wilco_ec_mailbox() may sleep, so you need to assign it to
-> led.brightness_set_blocking.
-
-Hmm. Seeing get method there... can the EC change the brightness
-without command from kernel?
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyC6PIACgkQMOfwapXb+vJgYACfaU3yqM27r6b74FhCd4n08Tgc
-PasAoKN1IIyZGfLN4wpS9meOEMoVtC9G
-=zU94
------END PGP SIGNATURE-----
-
---H+4ONPRPur6+Ovig--
+Yours,
+Linus Walleij
