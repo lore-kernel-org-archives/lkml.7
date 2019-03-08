@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD2EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E93C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACCA2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56FF2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049723;
-	bh=E93aChJlTgxlKNZlKxwrG0y+LaXLDVu8i9E4LKqev74=;
+	s=default; t=1552049727;
+	bh=WuN4myv/MmAWxUToWiKQL4wuNanrB2+QB1PM0n4EMgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=snf5YqRVO/bGZAIH/jUizJyWwzcuxMnaIpWd9s8J7Pf2+dRAkd+DfHLjedVzOO4uo
-	 E6Y3fy7ZLpHsXqiO8C4+OuMfaRBAfcQ0z7Yt2FW9GEgYyFtFd92IOBFl0JRJ7yGiNl
-	 6lMZua5FZ/T9DafgnmffwOtKy/r+MFi11W030lAQ=
+	b=LygU3RL8TTjwFhdX++N8zIvIkU9x/JxHA8OROzav6v7QGNlW8aoIvnYnhuWUI1bSc
+	 FKBbjevg4HoV10qqBQsaX3Zro0SPSz0j861XCwPDke42mw8f6tiuBepszEd5MBaq9g
+	 nZJEFjolD36s/DLtIgLN+3IGEgSURqy0bC3XnWE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfCHMzV (ORCPT
+        id S1727507AbfCHMz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:55:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59262 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:55:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727452AbfCHMzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:55:16 -0500
+        id S1727109AbfCHMzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:55:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBDB32085A;
-        Fri,  8 Mar 2019 12:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B543208E4;
+        Fri,  8 Mar 2019 12:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049716;
-        bh=E93aChJlTgxlKNZlKxwrG0y+LaXLDVu8i9E4LKqev74=;
+        s=default; t=1552049719;
+        bh=WuN4myv/MmAWxUToWiKQL4wuNanrB2+QB1PM0n4EMgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2COVQm+F4GQ8HWVcueEUhwaq1nbX5EerinU8h4/UZsyOZgorBXOWvhzbvkHRx21/O
-         KBTGWjRnggob5LflIyBT2TVNsgd6lYWsDe2OyEWsf1RWATwpTqzoqXmsQXXFhiiw6F
-         TyWsLLZyfaoOSI/viiP/FJkqQE37nzJcjXGeR3e8=
+        b=ienCSLim2QcYRVElGmLArzt5mUF/trNJ8ZOHfA8iixWTJt71B6OQie/nj42A2BG4d
+         eSeTnQrD4hTdH7+902n/Np8AapbTT/AyR4xqeTHaFRWhMcfH+3clzGBy+sNpw/wb7i
+         Uqy5gGmeRpKpGYMJ5F/nYvKqkIi27gtcVHOuzjfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 42/76] net: sit: fix memory leak in sit_init_net()
-Date:   Fri,  8 Mar 2019 13:49:54 +0100
-Message-Id: <20190308124916.307231587@linuxfoundation.org>
+Subject: [PATCH 4.20 43/76] net: socket: set sock->sk to NULL after calling proto_ops::release()
+Date:   Fri,  8 Mar 2019 13:49:55 +0100
+Message-Id: <20190308124916.341416395@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -64,53 +65,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 07f12b26e21ab359261bf75cfcb424fdc7daeb6d ]
+[ Upstream commit ff7b11aa481f682e0e9711abfeb7d03f5cd612bf ]
 
-If register_netdev() is failed to register sitn->fb_tunnel_dev,
-it will go to err_reg_dev and forget to free netdev(sitn->fb_tunnel_dev).
+Commit 9060cb719e61 ("net: crypto set sk to NULL when af_alg_release.")
+fixed a use-after-free in sockfs_setattr() when an AF_ALG socket is
+closed concurrently with fchownat().  However, it ignored that many
+other proto_ops::release() methods don't set sock->sk to NULL and
+therefore allow the same use-after-free:
 
-BUG: memory leak
-unreferenced object 0xffff888378daad00 (size 512):
-  comm "syz-executor.1", pid 4006, jiffies 4295121142 (age 16.115s)
-  hex dump (first 32 bytes):
-    00 e6 ed c0 83 88 ff ff 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-backtrace:
-    [<00000000d6dcb63e>] kvmalloc include/linux/mm.h:577 [inline]
-    [<00000000d6dcb63e>] kvzalloc include/linux/mm.h:585 [inline]
-    [<00000000d6dcb63e>] netif_alloc_netdev_queues net/core/dev.c:8380 [inline]
-    [<00000000d6dcb63e>] alloc_netdev_mqs+0x600/0xcc0 net/core/dev.c:8970
-    [<00000000867e172f>] sit_init_net+0x295/0xa40 net/ipv6/sit.c:1848
-    [<00000000871019fa>] ops_init+0xad/0x3e0 net/core/net_namespace.c:129
-    [<00000000319507f6>] setup_net+0x2ba/0x690 net/core/net_namespace.c:314
-    [<0000000087db4f96>] copy_net_ns+0x1dc/0x330 net/core/net_namespace.c:437
-    [<0000000057efc651>] create_new_namespaces+0x382/0x730 kernel/nsproxy.c:107
-    [<00000000676f83de>] copy_namespaces+0x2ed/0x3d0 kernel/nsproxy.c:165
-    [<0000000030b74bac>] copy_process.part.27+0x231e/0x6db0 kernel/fork.c:1919
-    [<00000000fff78746>] copy_process kernel/fork.c:1713 [inline]
-    [<00000000fff78746>] _do_fork+0x1bc/0xe90 kernel/fork.c:2224
-    [<000000001c2e0d1c>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-    [<00000000ec48bd44>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<0000000039acff8a>] 0xffffffffffffffff
+    - base_sock_release
+    - bnep_sock_release
+    - cmtp_sock_release
+    - data_sock_release
+    - dn_release
+    - hci_sock_release
+    - hidp_sock_release
+    - iucv_sock_release
+    - l2cap_sock_release
+    - llcp_sock_release
+    - llc_ui_release
+    - rawsock_release
+    - rfcomm_sock_release
+    - sco_sock_release
+    - svc_release
+    - vcc_release
+    - x25_release
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Rather than fixing all these and relying on every socket type to get
+this right forever, just make __sock_release() set sock->sk to NULL
+itself after calling proto_ops::release().
+
+Reproducer that produces the KASAN splat when any of these socket types
+are configured into the kernel:
+
+    #include <pthread.h>
+    #include <stdlib.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+
+    pthread_t t;
+    volatile int fd;
+
+    void *close_thread(void *arg)
+    {
+        for (;;) {
+            usleep(rand() % 100);
+            close(fd);
+        }
+    }
+
+    int main()
+    {
+        pthread_create(&t, NULL, close_thread, NULL);
+        for (;;) {
+            fd = socket(rand() % 50, rand() % 11, 0);
+            fchownat(fd, "", 1000, 1000, 0x1000);
+            close(fd);
+        }
+    }
+
+Fixes: 86741ec25462 ("net: core: Add a UID field to struct sock.")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/sit.c |    1 +
+ net/socket.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1873,6 +1873,7 @@ static int __net_init sit_init_net(struc
- 
- err_reg_dev:
- 	ipip6_dev_free(sitn->fb_tunnel_dev);
-+	free_netdev(sitn->fb_tunnel_dev);
- err_alloc_dev:
- 	return err;
- }
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -577,6 +577,7 @@ static void __sock_release(struct socket
+ 		if (inode)
+ 			inode_lock(inode);
+ 		sock->ops->release(sock);
++		sock->sk = NULL;
+ 		if (inode)
+ 			inode_unlock(inode);
+ 		sock->ops = NULL;
 
 
