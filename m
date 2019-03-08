@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38174C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172A5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F066E20811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EA920811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049878;
-	bh=9oWkjAoQZ29KKU1VkFfAgcK1bfjgD+sLYMpknyZeIVg=;
+	s=default; t=1552049881;
+	bh=tTKcWgvrEI57gFVRuV4DZRWJzDUlY4L5FMJnr63vKXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lB2cH3KON4vd8STnao/9me3mrNETHZVTdkCYoDetGg2uoPgCCPWeNzRufUZFSaQ89
-	 9YgpQO66UbzRnjYFihWHAWKkSYkTxvnbAH7nDe4bII2VRY3tyEC/mQ2Ie5b1yoUzPX
-	 udEdv5x5PqMGt6gA6ym48BGh4f4AO//AxFwrvHM8=
+	b=smO2LbfmDyGKQJW2LsyocegK1cjEmNHYcltI6BEwS/61OfonL+Nmvy2DnX2nWQynS
+	 Q1Pn9zQUnLdwbbgrrV3mC1EKXVKtGsMhylpIsInAtpXJIhGZMKgwQ65JseClSu+vFI
+	 rxVNN1Poixp7/8xtGTpBOWwVDZMkfHJ0WHbpdrX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfCHM54 (ORCPT
+        id S1727941AbfCHM6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbfCHM5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:48 -0500
+        id S1727573AbfCHM55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:57 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B227020449;
-        Fri,  8 Mar 2019 12:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34AF20449;
+        Fri,  8 Mar 2019 12:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049867;
-        bh=9oWkjAoQZ29KKU1VkFfAgcK1bfjgD+sLYMpknyZeIVg=;
+        s=default; t=1552049877;
+        bh=tTKcWgvrEI57gFVRuV4DZRWJzDUlY4L5FMJnr63vKXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gc4uVbNwj34fR0Ri5REfcmTWcW2ukWMDe6UJOYahmbnb166fX91pNV7UfR3Y1Y292
-         084HqpXzZAWQjG29Ibw7cLPb2UqLB/z2B+cgBVqDOPrVK2I0hlRhag9UPZVwAPqmVL
-         zWqL16CyzERJ8pQigypMlh4za541vDSMu16b8VEk=
+        b=2R77cN92DOj24jN7KeVndmQAudaxtqipJO5pslZ48N0dBTSmYX2J2VwzyKmbdG3MT
+         tLKpGJTRPYm5qVU2jRoz8uoKeFcRQFQzdq0gEpjcsaoMTEJ5bOrhZKgaimFELBFB+c
+         v9Gkk8ubPm3reQE+RqhK6UVW/uo8TN5ohjfJQHXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 4.19 12/68] staging: android: ashmem: Avoid range_alloc() allocation with ashmem_mutex held.
-Date:   Fri,  8 Mar 2019 13:49:42 +0100
-Message-Id: <20190308124911.422474451@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 15/68] net: dsa: mv8e6xxx: fix number of internal PHYs for 88E6x90 family
+Date:   Fri,  8 Mar 2019 13:49:45 +0100
+Message-Id: <20190308124911.593128094@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,145 +66,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit ecd182cbf4e107928077866399100228d2359c60 upstream.
+[ Upstream commit 95150f29ae480276e76368cdf8a9524b5a96c0ca ]
 
-ashmem_pin() is calling range_shrink() without checking whether
-range_alloc() succeeded. Also, doing memory allocation with ashmem_mutex
-held should be avoided because ashmem_shrink_scan() tries to hold it.
+Ports 9 and 10 don't have internal PHY's but are (dependent on the
+version) SERDES/SGMII/XAUI/RXAUI ports.
 
-Therefore, move memory allocation for range_alloc() to ashmem_pin_unpin()
-and make range_alloc() not to fail.
+v2:
+- fix it for all 88E6x90 family members
 
-This patch is mostly meant for backporting purpose for fuzz testing on
-stable/distributor kernels, for there is a plan to remove this code in
-near future.
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: stable@vger.kernel.org
-Reviewed-by: Joel Fernandes <joel@joelfernandes.org>
+Fixes: bc3931557d1d ("net: dsa: mv88e6xxx: Add number of internal PHYs")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/android/ashmem.c |   42 ++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -171,19 +171,15 @@ static inline void lru_del(struct ashmem
-  * @end:	   The ending page (inclusive)
-  *
-  * This function is protected by ashmem_mutex.
-- *
-- * Return: 0 if successful, or -ENOMEM if there is an error
-  */
--static int range_alloc(struct ashmem_area *asma,
--		       struct ashmem_range *prev_range, unsigned int purged,
--		       size_t start, size_t end)
-+static void range_alloc(struct ashmem_area *asma,
-+			struct ashmem_range *prev_range, unsigned int purged,
-+			size_t start, size_t end,
-+			struct ashmem_range **new_range)
- {
--	struct ashmem_range *range;
--
--	range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
--	if (!range)
--		return -ENOMEM;
-+	struct ashmem_range *range = *new_range;
- 
-+	*new_range = NULL;
- 	range->asma = asma;
- 	range->pgstart = start;
- 	range->pgend = end;
-@@ -193,8 +189,6 @@ static int range_alloc(struct ashmem_are
- 
- 	if (range_on_lru(range))
- 		lru_add(range);
--
--	return 0;
- }
- 
- /**
-@@ -596,7 +590,8 @@ static int get_name(struct ashmem_area *
-  *
-  * Caller must hold ashmem_mutex.
-  */
--static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
-+static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
-+		      struct ashmem_range **new_range)
- {
- 	struct ashmem_range *range, *next;
- 	int ret = ASHMEM_NOT_PURGED;
-@@ -649,7 +644,7 @@ static int ashmem_pin(struct ashmem_area
- 			 * second half and adjust the first chunk's endpoint.
- 			 */
- 			range_alloc(asma, range, range->purged,
--				    pgend + 1, range->pgend);
-+				    pgend + 1, range->pgend, new_range);
- 			range_shrink(range, range->pgstart, pgstart - 1);
- 			break;
- 		}
-@@ -663,7 +658,8 @@ static int ashmem_pin(struct ashmem_area
-  *
-  * Caller must hold ashmem_mutex.
-  */
--static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
-+static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
-+			struct ashmem_range **new_range)
- {
- 	struct ashmem_range *range, *next;
- 	unsigned int purged = ASHMEM_NOT_PURGED;
-@@ -689,7 +685,8 @@ restart:
- 		}
- 	}
- 
--	return range_alloc(asma, range, purged, pgstart, pgend);
-+	range_alloc(asma, range, purged, pgstart, pgend, new_range);
-+	return 0;
- }
- 
- /*
-@@ -722,10 +719,17 @@ static int ashmem_pin_unpin(struct ashme
- 	struct ashmem_pin pin;
- 	size_t pgstart, pgend;
- 	int ret = -EINVAL;
-+	struct ashmem_range *range = NULL;
- 
- 	if (copy_from_user(&pin, p, sizeof(pin)))
- 		return -EFAULT;
- 
-+	if (cmd == ASHMEM_PIN || cmd == ASHMEM_UNPIN) {
-+		range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
-+		if (!range)
-+			return -ENOMEM;
-+	}
-+
- 	mutex_lock(&ashmem_mutex);
- 	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
- 
-@@ -750,10 +754,10 @@ static int ashmem_pin_unpin(struct ashme
- 
- 	switch (cmd) {
- 	case ASHMEM_PIN:
--		ret = ashmem_pin(asma, pgstart, pgend);
-+		ret = ashmem_pin(asma, pgstart, pgend, &range);
- 		break;
- 	case ASHMEM_UNPIN:
--		ret = ashmem_unpin(asma, pgstart, pgend);
-+		ret = ashmem_unpin(asma, pgstart, pgend, &range);
- 		break;
- 	case ASHMEM_GET_PIN_STATUS:
- 		ret = ashmem_get_pin_status(asma, pgstart, pgend);
-@@ -762,6 +766,8 @@ static int ashmem_pin_unpin(struct ashme
- 
- out_unlock:
- 	mutex_unlock(&ashmem_mutex);
-+	if (range)
-+		kmem_cache_free(ashmem_range_cachep, range);
- 
- 	return ret;
- }
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -4188,7 +4188,7 @@ static const struct mv88e6xxx_info mv88e
+ 		.name = "Marvell 88E6190",
+ 		.num_databases = 4096,
+ 		.num_ports = 11,	/* 10 + Z80 */
+-		.num_internal_phys = 11,
++		.num_internal_phys = 9,
+ 		.num_gpio = 16,
+ 		.max_vid = 8191,
+ 		.port_base_addr = 0x0,
+@@ -4211,7 +4211,7 @@ static const struct mv88e6xxx_info mv88e
+ 		.name = "Marvell 88E6190X",
+ 		.num_databases = 4096,
+ 		.num_ports = 11,	/* 10 + Z80 */
+-		.num_internal_phys = 11,
++		.num_internal_phys = 9,
+ 		.num_gpio = 16,
+ 		.max_vid = 8191,
+ 		.port_base_addr = 0x0,
+@@ -4234,7 +4234,7 @@ static const struct mv88e6xxx_info mv88e
+ 		.name = "Marvell 88E6191",
+ 		.num_databases = 4096,
+ 		.num_ports = 11,	/* 10 + Z80 */
+-		.num_internal_phys = 11,
++		.num_internal_phys = 9,
+ 		.max_vid = 8191,
+ 		.port_base_addr = 0x0,
+ 		.phy_base_addr = 0x0,
+@@ -4281,7 +4281,7 @@ static const struct mv88e6xxx_info mv88e
+ 		.name = "Marvell 88E6290",
+ 		.num_databases = 4096,
+ 		.num_ports = 11,	/* 10 + Z80 */
+-		.num_internal_phys = 11,
++		.num_internal_phys = 9,
+ 		.num_gpio = 16,
+ 		.max_vid = 8191,
+ 		.port_base_addr = 0x0,
+@@ -4443,7 +4443,7 @@ static const struct mv88e6xxx_info mv88e
+ 		.name = "Marvell 88E6390",
+ 		.num_databases = 4096,
+ 		.num_ports = 11,	/* 10 + Z80 */
+-		.num_internal_phys = 11,
++		.num_internal_phys = 9,
+ 		.num_gpio = 16,
+ 		.max_vid = 8191,
+ 		.port_base_addr = 0x0,
+@@ -4466,7 +4466,7 @@ static const struct mv88e6xxx_info mv88e
+ 		.name = "Marvell 88E6390X",
+ 		.num_databases = 4096,
+ 		.num_ports = 11,	/* 10 + Z80 */
+-		.num_internal_phys = 11,
++		.num_internal_phys = 9,
+ 		.num_gpio = 16,
+ 		.max_vid = 8191,
+ 		.port_base_addr = 0x0,
 
 
