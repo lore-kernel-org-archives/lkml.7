@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4FCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DDD2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E50520684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049622;
-	bh=EShz7fnOTlvMOfgPn9Xy3ZHlCcDrtiynqbqlAPTZ9Xk=;
+	s=default; t=1552049624;
+	bh=geCoCHVQx863wbIYzfpjXsM0WX8fBztZydOAlQk+AX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIsdfBiQutyoHmFEDpXR1S9CdRQfRBEJ3Zytkc5cFQt0eHGIprqfQfuG56rbTPaaV
-	 aEXDiT8wBMsCYSBXvuU/YDiYoUWQY07Wy5EvnxahDTx0TRIsp1yg89ouylbf5zc7u4
-	 fSlPgZ3lmvelSIqF0h1xIRNhqISd/yAA8Qy8v6Y8=
+	b=sfzaANMh5nPtBQYR20a4FQ6ArXsz+/KJ8m0xA+OVt4ngpkNjJJE1SzlmtD2iHRLGm
+	 HdV3qKp7ZDUZ9svEabjP9Cjj/wrZs7sVCnp1+qWStq8dQ5NtHiP3Ha55vgHyHWtqT6
+	 azkJbUk9uTJyFrEZOxY1DhmgZJpWiZMF+B07ojMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfCHMxk (ORCPT
+        id S1727193AbfCHMxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:53:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbfCHMxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:53:38 -0500
+        id S1726496AbfCHMxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:40 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 557F72133F;
-        Fri,  8 Mar 2019 12:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F39B20684;
+        Fri,  8 Mar 2019 12:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049616;
-        bh=EShz7fnOTlvMOfgPn9Xy3ZHlCcDrtiynqbqlAPTZ9Xk=;
+        s=default; t=1552049619;
+        bh=geCoCHVQx863wbIYzfpjXsM0WX8fBztZydOAlQk+AX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dwr2aV8rCRZW2C6wtGEB5Kk/W7jnMjE4NnhmGyooXUpHHwA23wLJYoaPwDzNWES4V
-         cuPGjfL5NtiPu3Tpn8ubDrIMQSnoYbXmcitOWZ76Y2p+7XRIB7MDjMHCU8qeI+GFSk
-         dGJjX1tnaVWithG8fh7XW2PHDUlt4UcdAQ+Vo3HQ=
+        b=IeyqHuAx02OkYPuG5fkfOTavO+nZCIFXEY81wx5gfBqq2UMnzzGFyKJTlObRGrO4+
+         Ijnl8u5F5WZ4q2OF+gJp7BuxDemm9pPy7GjayNeStk95AgC+0DlIl+zSEzyCuq7yU1
+         04Njy5towT+fLTtGUQjAp/g9plHyL6fwbf9uw6Vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 4.20 11/76] staging: erofs: fix illegal address access under memory pressure
-Date:   Fri,  8 Mar 2019 13:49:23 +0100
-Message-Id: <20190308124915.182837841@linuxfoundation.org>
+Subject: [PATCH 4.20 12/76] staging: erofs: compressed_pages should not be accessed again after freed
+Date:   Fri,  8 Mar 2019 13:49:24 +0100
+Message-Id: <20190308124915.216782955@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -67,84 +67,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 1e5ceeab6929585512c63d05911d6657064abf7b upstream.
+commit af692e117cb8cd9d3d844d413095775abc1217f9 upstream.
 
-Considering a read request with two decompressed file pages,
-If a decompression work cannot be started on the previous page
-due to memory pressure but in-memory LTP map lookup is done,
-builder->work should be still NULL.
+This patch resolves the following page use-after-free issue,
+z_erofs_vle_unzip:
+    ...
+    for (i = 0; i < nr_pages; ++i) {
+        ...
+        z_erofs_onlinepage_endio(page);  (1)
+    }
 
-Moreover, if the current page also belongs to the same map,
-it won't try to start the decompression work again and then
-run into trouble.
+    for (i = 0; i < clusterpages; ++i) {
+        page = compressed_pages[i];
+
+        if (page->mapping == mngda)      (2)
+            continue;
+        /* recycle all individual staging pages */
+        (void)z_erofs_gather_if_stagingpage(page_pool, page); (3)
+        WRITE_ONCE(compressed_pages[i], NULL);
+    }
+    ...
+
+After (1) is executed, page is freed and could be then reused, if
+compressed_pages is scanned after that, it could fall info (2) or
+(3) by mistake and that could finally be in a mess.
 
 This patch aims to solve the above issue only with little changes
 as much as possible in order to make the fix backport easier.
-
-kernel message is:
-<4>[1051408.015930s]SLUB: Unable to allocate memory on node -1, gfp=0x2408040(GFP_NOFS|__GFP_ZERO)
-<4>[1051408.015930s]  cache: erofs_compress, object size: 144, buffer size: 144, default order: 0, min order: 0
-<4>[1051408.015930s]  node 0: slabs: 98, objs: 2744, free: 0
-  * Cannot allocate the decompression work
-
-<3>[1051408.015960s]erofs: z_erofs_vle_normalaccess_readpages, readahead error at page 1008 of nid 5391488
-  * Note that the previous page was failed to read
-
-<0>[1051408.015960s]Internal error: Accessing user space memory outside uaccess.h routines: 96000005 [#1] PREEMPT SMP
-...
-<4>[1051408.015991s]Hardware name: kirin710 (DT)
-...
-<4>[1051408.016021s]PC is at z_erofs_vle_work_add_page+0xa0/0x17c
-<4>[1051408.016021s]LR is at z_erofs_do_read_page+0x12c/0xcf0
-...
-<4>[1051408.018096s][<ffffff80c6fb0fd4>] z_erofs_vle_work_add_page+0xa0/0x17c
-<4>[1051408.018096s][<ffffff80c6fb3814>] z_erofs_vle_normalaccess_readpages+0x1a0/0x37c
-<4>[1051408.018096s][<ffffff80c6d670b8>] read_pages+0x70/0x190
-<4>[1051408.018127s][<ffffff80c6d6736c>] __do_page_cache_readahead+0x194/0x1a8
-<4>[1051408.018127s][<ffffff80c6d59318>] filemap_fault+0x398/0x684
-<4>[1051408.018127s][<ffffff80c6d8a9e0>] __do_fault+0x8c/0x138
-<4>[1051408.018127s][<ffffff80c6d8f90c>] handle_pte_fault+0x730/0xb7c
-<4>[1051408.018127s][<ffffff80c6d8fe04>] __handle_mm_fault+0xac/0xf4
-<4>[1051408.018157s][<ffffff80c6d8fec8>] handle_mm_fault+0x7c/0x118
-<4>[1051408.018157s][<ffffff80c8c52998>] do_page_fault+0x354/0x474
-<4>[1051408.018157s][<ffffff80c8c52af8>] do_translation_fault+0x40/0x48
-<4>[1051408.018157s][<ffffff80c6c002f4>] do_mem_abort+0x80/0x100
-<4>[1051408.018310s]---[ end trace 9f4009a3283bd78b ]---
 
 Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
 Cc: <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 
 ---
- drivers/staging/erofs/unzip_vle.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/staging/erofs/unzip_vle.c     |   38 +++++++++++++++++-----------------
+ drivers/staging/erofs/unzip_vle.h     |    3 --
+ drivers/staging/erofs/unzip_vle_lz4.c |   19 +++++++----------
+ 3 files changed, 29 insertions(+), 31 deletions(-)
 
 --- a/drivers/staging/erofs/unzip_vle.c
 +++ b/drivers/staging/erofs/unzip_vle.c
-@@ -626,8 +626,12 @@ repeat:
+@@ -929,11 +929,10 @@ repeat:
+ 	if (llen > grp->llen)
+ 		llen = grp->llen;
  
- 	/* lucky, within the range of the current map_blocks */
- 	if (offset + cur >= map->m_la &&
--		offset + cur < map->m_la + map->m_llen)
-+		offset + cur < map->m_la + map->m_llen) {
-+		/* didn't get a valid unzip work previously (very rare) */
-+		if (!builder->work)
-+			goto restart_now;
- 		goto hitted;
+-	err = z_erofs_vle_unzip_fast_percpu(compressed_pages,
+-		clusterpages, pages, llen, work->pageofs,
+-		z_erofs_onlinepage_endio);
++	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
++					    pages, llen, work->pageofs);
+ 	if (err != -ENOTSUPP)
+-		goto out_percpu;
++		goto out;
+ 
+ 	if (sparsemem_pages >= nr_pages)
+ 		goto skip_allocpage;
+@@ -954,8 +953,25 @@ skip_allocpage:
+ 	erofs_vunmap(vout, nr_pages);
+ 
+ out:
++	/* must handle all compressed pages before endding pages */
++	for (i = 0; i < clusterpages; ++i) {
++		page = compressed_pages[i];
++
++#ifdef EROFS_FS_HAS_MANAGED_CACHE
++		if (page->mapping == mngda)
++			continue;
++#endif
++		/* recycle all individual staging pages */
++		(void)z_erofs_gather_if_stagingpage(page_pool, page);
++
++		WRITE_ONCE(compressed_pages[i], NULL);
 +	}
++
+ 	for (i = 0; i < nr_pages; ++i) {
+ 		page = pages[i];
++		if (!page)
++			continue;
++
+ 		DBG_BUGON(page->mapping == NULL);
  
- 	/* go ahead the next map_blocks */
- 	debugln("%s: [out-of-range] pos %llu", __func__, offset + cur);
-@@ -641,6 +645,7 @@ repeat:
- 	if (unlikely(err))
- 		goto err_out;
+ 		/* recycle all individual staging pages */
+@@ -968,20 +984,6 @@ out:
+ 		z_erofs_onlinepage_endio(page);
+ 	}
  
-+restart_now:
- 	if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED)))
- 		goto hitted;
+-out_percpu:
+-	for (i = 0; i < clusterpages; ++i) {
+-		page = compressed_pages[i];
+-
+-#ifdef EROFS_FS_HAS_MANAGED_CACHE
+-		if (page->mapping == mngda)
+-			continue;
+-#endif
+-		/* recycle all individual staging pages */
+-		(void)z_erofs_gather_if_stagingpage(page_pool, page);
+-
+-		WRITE_ONCE(compressed_pages[i], NULL);
+-	}
+-
+ 	if (pages == z_pagemap_global)
+ 		mutex_unlock(&z_pagemap_global_lock);
+ 	else if (unlikely(pages != pages_onstack))
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/unzip_vle.h
+@@ -218,8 +218,7 @@ extern int z_erofs_vle_plain_copy(struct
  
+ extern int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+ 	unsigned clusterpages, struct page **pages,
+-	unsigned outlen, unsigned short pageofs,
+-	void (*endio)(struct page *));
++	unsigned int outlen, unsigned short pageofs);
+ 
+ extern int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+ 	unsigned clusterpages, void *vaddr, unsigned llen,
+--- a/drivers/staging/erofs/unzip_vle_lz4.c
++++ b/drivers/staging/erofs/unzip_vle_lz4.c
+@@ -105,8 +105,7 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 				  unsigned int clusterpages,
+ 				  struct page **pages,
+ 				  unsigned int outlen,
+-				  unsigned short pageofs,
+-				  void (*endio)(struct page *))
++				  unsigned short pageofs)
+ {
+ 	void *vin, *vout;
+ 	unsigned int nr_pages, i, j;
+@@ -128,19 +127,16 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
+ 				clusterpages * PAGE_SIZE, outlen);
+ 
+-	if (ret >= 0) {
+-		outlen = ret;
+-		ret = 0;
+-	}
++	if (ret < 0)
++		goto out;
++	ret = 0;
+ 
+ 	for (i = 0; i < nr_pages; ++i) {
+ 		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
+ 
+ 		if (pages[i]) {
+-			if (ret < 0) {
+-				SetPageError(pages[i]);
+-			} else if (clusterpages == 1 &&
+-				   pages[i] == compressed_pages[0]) {
++			if (clusterpages == 1 &&
++			    pages[i] == compressed_pages[0]) {
+ 				memcpy(vin + pageofs, vout + pageofs, j);
+ 			} else {
+ 				void *dst = kmap_atomic(pages[i]);
+@@ -148,12 +144,13 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 				memcpy(dst + pageofs, vout + pageofs, j);
+ 				kunmap_atomic(dst);
+ 			}
+-			endio(pages[i]);
+ 		}
+ 		vout += PAGE_SIZE;
+ 		outlen -= j;
+ 		pageofs = 0;
+ 	}
++
++out:
+ 	preempt_enable();
+ 
+ 	if (clusterpages == 1)
 
 
