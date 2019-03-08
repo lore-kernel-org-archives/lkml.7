@@ -5,40 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5BCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AF3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6902081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C32C2081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="jXm9uSN1"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iIEORsAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfCHWER (ORCPT
+        id S1726606AbfCHWEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 17:04:17 -0500
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45378 "EHLO
+        Fri, 8 Mar 2019 17:04:23 -0500
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45394 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726286AbfCHWEP (ORCPT
+        by vger.kernel.org with ESMTP id S1726307AbfCHWEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Mar 2019 17:04:15 -0500
 Received: from nis-sj1-27.broadcom.com (nis-sj1-27.lvn.broadcom.net [10.75.144.136])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id F331030C053;
-        Fri,  8 Mar 2019 14:04:11 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com F331030C053
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id D002330C05B;
+        Fri,  8 Mar 2019 14:04:12 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com D002330C05B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
         s=dkimrelay; t=1552082652;
-        bh=6v8rWmKbm19cPG30ujMQBqdZv3fhMujqMeaEXG+Iib8=;
+        bh=Mix7QeUhjDF5ZaxgkIrCQUvVl+Yxt7W7zCnZpEOfNro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jXm9uSN1kC8rty64c9WCfQEMXacgLcs8Z9A31zlXUTpKKklWUlTI/7sjkiJXFNcxk
-         qPjlxooN4JK1R1JeFNBlNwzFTBGoZzA+nCRXGm+5N7YM5EOCr87MIdC8zPZMpRufgh
-         QdLm/lziTpe/tSgbB7yL3rCm1ElB6/N4uqB7v5So=
+        b=iIEORsAIYfXHsbPiEDLCkYzCazsO8rgG7LvOX9FS/2YH9ldUZz9HxPRbzG0xuC5wT
+         +cWK6lWirs1dGFqKGZQ4iHWnaQPQrckHjSlpx+VUWgCrSyGnAaWMll08hNetk4o1lF
+         kZqE1QvKu/AvX2KMhduVgUOZmWHfTbqC6TO+0tOY=
 Received: from stbirv-lnx-2.igp.broadcom.net (stbirv-lnx-2.igp.broadcom.net [10.67.48.34])
-        by nis-sj1-27.broadcom.com (Postfix) with ESMTP id 12BF9AC07B4;
+        by nis-sj1-27.broadcom.com (Postfix) with ESMTP id E07A8AC071C;
         Fri,  8 Mar 2019 14:04:12 -0800 (PST)
 Received: by stbirv-lnx-2.igp.broadcom.net (Postfix, from userid 47169)
-        id 044DE27FECD; Fri,  8 Mar 2019 14:04:12 -0800 (PST)
+        id D282427FECD; Fri,  8 Mar 2019 14:04:12 -0800 (PST)
 From:   justinpopo6@gmail.com
 To:     linux-iio@vger.kernel.org
 Cc:     linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
@@ -46,9 +47,9 @@ Cc:     linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
         linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de,
         lars@metafoo.de, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org,
         Justin Chen <justinpopo6@gmail.com>
-Subject: [PATCH v5 1/2] iio: adc: ti-ads7950: Fix improper use of mlock
-Date:   Fri,  8 Mar 2019 14:03:27 -0800
-Message-Id: <1552082608-42603-2-git-send-email-justinpopo6@gmail.com>
+Subject: [PATCH v5 2/2] iio: adc: ti-ads7950: add GPIO support
+Date:   Fri,  8 Mar 2019 14:03:28 -0800
+Message-Id: <1552082608-42603-3-git-send-email-justinpopo6@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552082608-42603-1-git-send-email-justinpopo6@gmail.com>
 References: <1552082608-42603-1-git-send-email-justinpopo6@gmail.com>
@@ -59,103 +60,314 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Justin Chen <justinpopo6@gmail.com>
 
-Indio->mlock is used for protecting the different iio device modes.
-It is currently not being used in this way. Replace the lock with
-an internal lock specifically used for protecting the SPI transfer
-buffer.
+The ADS79XX has GPIO pins that can be used. Add support for the GPIO
+pins using the GPIO chip framework.
 
 Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/iio/adc/ti-ads7950.c | 200 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 194 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-index 0ad6359..1e47bef 100644
+index 1e47bef..2e66e4d 100644
 --- a/drivers/iio/adc/ti-ads7950.c
 +++ b/drivers/iio/adc/ti-ads7950.c
-@@ -56,6 +56,9 @@ struct ti_ads7950_state {
- 	struct spi_message	ring_msg;
- 	struct spi_message	scan_single_msg;
+@@ -17,6 +17,7 @@
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -36,12 +37,15 @@
+  */
+ #define TI_ADS7950_VA_MV_ACPI_DEFAULT	5000
  
-+	/* Lock to protect the spi xfer buffers */
-+	struct mutex		slock;
++#define TI_ADS7950_CR_GPIO	BIT(14)
+ #define TI_ADS7950_CR_MANUAL	BIT(12)
+ #define TI_ADS7950_CR_WRITE	BIT(11)
+ #define TI_ADS7950_CR_CHAN(ch)	((ch) << 7)
+ #define TI_ADS7950_CR_RANGE_5V	BIT(6)
++#define TI_ADS7950_CR_GPIO_DATA	BIT(4)
+ 
+ #define TI_ADS7950_MAX_CHAN	16
++#define TI_ADS7950_NUM_GPIOS	4
+ 
+ #define TI_ADS7950_TIMESTAMP_SIZE (sizeof(int64_t) / sizeof(__be16))
+ 
+@@ -49,6 +53,16 @@
+ #define TI_ADS7950_EXTRACT(val, dec, bits) \
+ 	(((val) >> (dec)) & ((1 << (bits)) - 1))
+ 
++#define TI_ADS7950_MAN_CMD(cmd)         (TI_ADS7950_CR_MANUAL | (cmd))
++#define TI_ADS7950_GPIO_CMD(cmd)        (TI_ADS7950_CR_GPIO | (cmd))
 +
++/* Manual mode configuration */
++#define TI_ADS7950_MAN_CMD_SETTINGS(st) \
++	(TI_ADS7950_MAN_CMD(TI_ADS7950_CR_WRITE | st->cmd_settings_bitmask))
++/* GPIO mode configuration */
++#define TI_ADS7950_GPIO_CMD_SETTINGS(st) \
++	(TI_ADS7950_GPIO_CMD(st->gpio_cmd_settings_bitmask))
++
+ struct ti_ads7950_state {
+ 	struct spi_device	*spi;
+ 	struct spi_transfer	ring_xfer;
+@@ -58,11 +72,34 @@ struct ti_ads7950_state {
+ 
+ 	/* Lock to protect the spi xfer buffers */
+ 	struct mutex		slock;
++	struct gpio_chip	chip;
+ 
  	struct regulator	*reg;
  	unsigned int		vref_mv;
  
-@@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
- 	struct ti_ads7950_state *st = iio_priv(indio_dev);
- 	int ret;
+-	unsigned int		settings;
++	/*
++	 * Bitmask of lower 7 bits used for configuration
++	 * These bits only can be written when TI_ADS7950_CR_WRITE
++	 * is set, otherwise it retains its original state.
++	 * [0-3] GPIO signal
++	 * [4]   Set following frame to return GPIO signal values
++	 * [5]   Powers down device
++	 * [6]   Sets Vref range1(2.5v) or range2(5v)
++	 *
++	 * Bits present on Manual/Auto1/Auto2 commands
++	 */
++	unsigned int		cmd_settings_bitmask;
++
++	/*
++	 * Bitmask of GPIO command
++	 * [0-3] GPIO direction
++	 * [4-6] Different GPIO alarm mode configurations
++	 * [7]   GPIO 2 as device range input
++	 * [8]   GPIO 3 as device power down input
++	 * [9]   Reset all registers
++	 * [10-11] N/A
++	 */
++	unsigned int		gpio_cmd_settings_bitmask;
  
-+	mutex_lock(&st->slock);
- 	ret = spi_sync(st->spi, &st->ring_msg);
- 	if (ret < 0)
- 		goto out;
-@@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
- 					   iio_get_time_ns(indio_dev));
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the
+@@ -251,7 +288,7 @@ static int ti_ads7950_update_scan_mode(struct iio_dev *indio_dev,
  
- out:
-+	mutex_unlock(&st->slock);
- 	iio_trigger_notify_done(indio_dev->trig);
+ 	len = 0;
+ 	for_each_set_bit(i, active_scan_mask, indio_dev->num_channels) {
+-		cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(i) | st->settings;
++		cmd = TI_ADS7950_MAN_CMD(TI_ADS7950_CR_CHAN(i));
+ 		st->tx_buf[len++] = cmd;
+ 	}
  
- 	return IRQ_HANDLED;
-@@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
- 	struct ti_ads7950_state *st = iio_priv(indio_dev);
+@@ -292,8 +329,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
  	int ret, cmd;
  
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->slock);
- 
- 	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
+ 	mutex_lock(&st->slock);
+-
+-	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
++	cmd = TI_ADS7950_MAN_CMD(TI_ADS7950_CR_CHAN(ch));
  	st->single_tx = cmd;
-@@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
- 	ret = st->single_rx;
  
- out:
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->slock);
+ 	ret = spi_sync(st->spi, &st->scan_single_msg);
+@@ -322,7 +358,7 @@ static int ti_ads7950_get_range(struct ti_ads7950_state *st)
+ 		vref /= 1000;
+ 	}
  
- 	return ret;
- }
-@@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	if (ACPI_COMPANION(&spi->dev))
- 		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
+-	if (st->settings & TI_ADS7950_CR_RANGE_5V)
++	if (st->cmd_settings_bitmask & TI_ADS7950_CR_RANGE_5V)
+ 		vref *= 2;
  
-+	mutex_init(&st->slock);
+ 	return vref;
+@@ -367,6 +403,132 @@ static const struct iio_info ti_ads7950_info = {
+ 	.update_scan_mode	= ti_ads7950_update_scan_mode,
+ };
+ 
++static void ti_ads7950_set(struct gpio_chip *chip, unsigned int offset,
++			   int value)
++{
++	struct ti_ads7950_state *st = gpiochip_get_data(chip);
 +
- 	st->reg = devm_regulator_get(&spi->dev, "vref");
- 	if (IS_ERR(st->reg)) {
- 		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
--		return PTR_ERR(st->reg);
-+		ret = PTR_ERR(st->reg);
-+		goto error_destroy_mutex;
++	mutex_lock(&st->slock);
++
++	if (value)
++		st->cmd_settings_bitmask |= BIT(offset);
++	else
++		st->cmd_settings_bitmask &= ~BIT(offset);
++
++	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
++	spi_sync(st->spi, &st->scan_single_msg);
++
++	mutex_unlock(&st->slock);
++}
++
++static int ti_ads7950_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct ti_ads7950_state *st = gpiochip_get_data(chip);
++	int ret;
++
++	mutex_lock(&st->slock);
++
++	/* If set as output, return the output */
++	if (st->gpio_cmd_settings_bitmask & BIT(offset)) {
++		ret = st->cmd_settings_bitmask & BIT(offset);
++		goto out;
++	}
++
++	/* GPIO data bit sets SDO bits 12-15 to GPIO input */
++	st->cmd_settings_bitmask |= TI_ADS7950_CR_GPIO_DATA;
++	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
++	ret = spi_sync(st->spi, &st->scan_single_msg);
++	if (ret)
++		goto out;
++
++	ret = ((st->single_rx >> 12) & BIT(offset)) ? 1 : 0;
++
++	/* Revert back to original settings */
++	st->cmd_settings_bitmask &= ~TI_ADS7950_CR_GPIO_DATA;
++	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
++	ret = spi_sync(st->spi, &st->scan_single_msg);
++	if (ret)
++		goto out;
++
++out:
++	mutex_unlock(&st->slock);
++
++	return ret;
++}
++
++static int ti_ads7950_get_direction(struct gpio_chip *chip,
++				    unsigned int offset)
++{
++	struct ti_ads7950_state *st = gpiochip_get_data(chip);
++
++	/* Bitmask is inverted from GPIO framework 0=input/1=output */
++	return !(st->gpio_cmd_settings_bitmask & BIT(offset));
++}
++
++static int _ti_ads7950_set_direction(struct gpio_chip *chip, int offset,
++				     int input)
++{
++	struct ti_ads7950_state *st = gpiochip_get_data(chip);
++	int ret = 0;
++
++	mutex_lock(&st->slock);
++
++	/* Only change direction if needed */
++	if (input && (st->gpio_cmd_settings_bitmask & BIT(offset)))
++		st->gpio_cmd_settings_bitmask &= ~BIT(offset);
++	else if (!input && !(st->gpio_cmd_settings_bitmask & BIT(offset)))
++		st->gpio_cmd_settings_bitmask |= BIT(offset);
++	else
++		goto out;
++
++	st->single_tx = TI_ADS7950_GPIO_CMD_SETTINGS(st);
++	ret = spi_sync(st->spi, &st->scan_single_msg);
++
++out:
++	mutex_unlock(&st->slock);
++
++	return ret;
++}
++
++static int ti_ads7950_direction_input(struct gpio_chip *chip,
++				      unsigned int offset)
++{
++	return _ti_ads7950_set_direction(chip, offset, 1);
++}
++
++static int ti_ads7950_direction_output(struct gpio_chip *chip,
++				       unsigned int offset, int value)
++{
++	ti_ads7950_set(chip, offset, value);
++
++	return _ti_ads7950_set_direction(chip, offset, 0);
++}
++
++static int ti_ads7950_init_hw(struct ti_ads7950_state *st)
++{
++	int ret = 0;
++
++	mutex_lock(&st->slock);
++
++	/* Settings for Manual/Auto1/Auto2 commands */
++	/* Default to 5v ref */
++	st->cmd_settings_bitmask = TI_ADS7950_CR_RANGE_5V;
++	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
++	ret = spi_sync(st->spi, &st->scan_single_msg);
++	if (ret)
++		goto out;
++
++	/* Settings for GPIO command */
++	st->gpio_cmd_settings_bitmask = 0x0;
++	st->single_tx = TI_ADS7950_GPIO_CMD_SETTINGS(st);
++	ret = spi_sync(st->spi, &st->scan_single_msg);
++
++out:
++	mutex_unlock(&st->slock);
++
++	return ret;
++}
++
+ static int ti_ads7950_probe(struct spi_device *spi)
+ {
+ 	struct ti_ads7950_state *st;
+@@ -391,7 +553,6 @@ static int ti_ads7950_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, indio_dev);
+ 
+ 	st->spi = spi;
+-	st->settings = TI_ADS7950_CR_MANUAL | TI_ADS7950_CR_RANGE_5V;
+ 
+ 	info = &ti_ads7950_chip_info[spi_get_device_id(spi)->driver_data];
+ 
+@@ -459,14 +620,40 @@ static int ti_ads7950_probe(struct spi_device *spi)
+ 		goto error_disable_reg;
  	}
  
- 	ret = regulator_enable(st->reg);
++	ret = ti_ads7950_init_hw(st);
++	if (ret) {
++		dev_err(&spi->dev, "Failed to init adc chip\n");
++		goto error_cleanup_ring;
++	}
++
+ 	ret = iio_device_register(indio_dev);
  	if (ret) {
- 		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
--		return ret;
-+		goto error_destroy_mutex;
+ 		dev_err(&spi->dev, "Failed to register iio device\n");
+ 		goto error_cleanup_ring;
  	}
  
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-@@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
++	/* Add GPIO chip */
++	st->chip.label = dev_name(&st->spi->dev);
++	st->chip.parent = &st->spi->dev;
++	st->chip.owner = THIS_MODULE;
++	st->chip.base = -1;
++	st->chip.ngpio = TI_ADS7950_NUM_GPIOS;
++	st->chip.get_direction = ti_ads7950_get_direction;
++	st->chip.direction_input = ti_ads7950_direction_input;
++	st->chip.direction_output = ti_ads7950_direction_output;
++	st->chip.get = ti_ads7950_get;
++	st->chip.set = ti_ads7950_set;
++
++	ret = gpiochip_add_data(&st->chip, st);
++	if (ret) {
++		dev_err(&spi->dev, "Failed to init GPIOs\n");
++		goto error_iio_device;
++	}
++
+ 	return 0;
+ 
++error_iio_device:
++	iio_device_unregister(indio_dev);
+ error_cleanup_ring:
  	iio_triggered_buffer_cleanup(indio_dev);
  error_disable_reg:
- 	regulator_disable(st->reg);
-+error_destroy_mutex:
-+	mutex_destroy(&st->slock);
+@@ -482,6 +669,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
+ 	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+ 	struct ti_ads7950_state *st = iio_priv(indio_dev);
  
- 	return ret;
- }
-@@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
++	gpiochip_remove(&st->chip);
  	iio_device_unregister(indio_dev);
  	iio_triggered_buffer_cleanup(indio_dev);
  	regulator_disable(st->reg);
-+	mutex_destroy(&st->slock);
- 
- 	return 0;
- }
 -- 
 2.7.4
 
