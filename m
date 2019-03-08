@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FDEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3021C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8181F20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11D420661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050330;
-	bh=imlzxDiIhskEDgGPiZg3D9YPSAjyV0iw2NIv/lr/nBY=;
+	s=default; t=1552050337;
+	bh=YQXWPrOmGyoDsiYLKWTZiW2e8BDLAIkbDp39ntU/qik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kO1WzKhr/rRWSPnoyn1obOUDosfn6lLnq9iCxPS0lf2Hnr5FPbqalgV5CscqKR8T/
-	 0rGCNPQdhYo270IuxeE6gHTu5cThXfsw6t0QWMXBjfnUNwnMOwwX0AZ1Lke0Xh4uD2
-	 1RUd+qrque6tS0yrQJGt9/2AxkdStCV4VLxB5L1Y=
+	b=SfHsd35QSej38tQzm/yeOGjTY79QZiyBouW4Dl7ku4LyfsnphHyYW2YwyO4ZXvMBs
+	 e7cpMRxYAkjo4LTd7Gk1bxeU5cjHRyhfLhjbkQKqgcHdONfNV8wqMvwz54k9inJOoV
+	 lvHYUWe2oGr2oy1pZG1frOwspGprVaCZLyZV9OO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfCHM41 (ORCPT
+        id S1727321AbfCHNFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:56:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:05:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727321AbfCHM4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:56:23 -0500
+        id S1727647AbfCHM4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:56:16 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B3F62087C;
-        Fri,  8 Mar 2019 12:56:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 222CB20449;
+        Fri,  8 Mar 2019 12:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049782;
-        bh=imlzxDiIhskEDgGPiZg3D9YPSAjyV0iw2NIv/lr/nBY=;
+        s=default; t=1552049775;
+        bh=YQXWPrOmGyoDsiYLKWTZiW2e8BDLAIkbDp39ntU/qik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HLAaSMHE3CDQxwcHMxI9+T6LGsw7T2rGp5a8KYoit4iBf+YWjwrSFflp0/LlIyZ/a
-         XNsxqX1nC4MQPd2GLUnRSMFNLTlakqobqLzQMPsEzPntblbn3awN2naK/z+uO4RH9V
-         won9dDCdkYKGJmJODCqGlrpkeOtwbyqDFt3qQkMo=
+        b=G4FvBFw7N/HmEunurUGMba0EnkUdbyuN32+y7mmDHWRfcx0QmbGceljtRXFj6L8kB
+         XXTYZUCvlibDyMjZAaPSFbWfulOMYxZiAXWX76FMZLzDI+bEecwDchkl8peSD6rbaL
+         Oow75/l6aW2C2M0bpNkv+AwmbDXhgtZEeVI8JXMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pitam Mitra <pitamm@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bockjoo Kim <bockjoo@phys.ufl.edu>, bp@alien8.de, hpa@zytor.com
-Subject: [PATCH 4.20 61/76] x86/boot/compressed/64: Do not read legacy ROM on EFI system
-Date:   Fri,  8 Mar 2019 13:50:13 +0100
-Message-Id: <20190308124916.962790874@linuxfoundation.org>
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.20 33/76] ipv4: Add ICMPv6 support when parse route ipproto
+Date:   Fri,  8 Mar 2019 13:49:45 +0100
+Message-Id: <20190308124915.990717230@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -66,76 +66,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 6f913de3231e1d70a871135b38219da7810df218 upstream.
+[ Upstream commit 5e1a99eae84999a2536f50a0beaf5d5262337f40 ]
 
-EFI systems do not necessarily provide a legacy ROM. If the ROM is missing
-the memory is not mapped at all.
+For ip rules, we need to use 'ipproto ipv6-icmp' to match ICMPv6 headers.
+But for ip -6 route, currently we only support tcp, udp and icmp.
 
-Trying to dereference values in the legacy ROM area leads to a crash on
-Macbook Pro.
+Add ICMPv6 support so we can match ipv6-icmp rules for route lookup.
 
-Only look for values in the legacy ROM area for non-EFI system.
+v2: As David Ahern and Sabrina Dubroca suggested, Add an argument to
+rtm_getroute_parse_ip_proto() to handle ICMP/ICMPv6 with different family.
 
-Fixes: 3548e131ec6a ("x86/boot/compressed/64: Find a place for 32-bit trampoline")
-Reported-by: Pitam Mitra <pitamm@gmail.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Bockjoo Kim <bockjoo@phys.ufl.edu>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190219075224.35058-1-kirill.shutemov@linux.intel.com
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202351
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Fixes: eacb9384a3fe ("ipv6: support sport, dport and ip_proto in RTM_GETROUTE")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/boot/compressed/pgtable_64.c |   19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ include/net/ip.h   |    2 +-
+ net/ipv4/netlink.c |   17 +++++++++++++----
+ net/ipv4/route.c   |    2 +-
+ net/ipv6/route.c   |    3 ++-
+ 4 files changed, 17 insertions(+), 7 deletions(-)
 
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -1,5 +1,7 @@
-+#include <linux/efi.h>
- #include <asm/e820/types.h>
- #include <asm/processor.h>
-+#include <asm/efi.h>
- #include "pgtable.h"
- #include "../string.h"
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -714,7 +714,7 @@ extern int sysctl_icmp_msgs_burst;
+ int ip_misc_proc_init(void);
+ #endif
  
-@@ -37,9 +39,10 @@ int cmdline_find_option_bool(const char
+-int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto,
++int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto, u8 family,
+ 				struct netlink_ext_ack *extack);
  
- static unsigned long find_trampoline_placement(void)
+ #endif	/* _IP_H */
+--- a/net/ipv4/netlink.c
++++ b/net/ipv4/netlink.c
+@@ -3,9 +3,10 @@
+ #include <linux/types.h>
+ #include <net/net_namespace.h>
+ #include <net/netlink.h>
++#include <linux/in6.h>
+ #include <net/ip.h>
+ 
+-int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto,
++int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto, u8 family,
+ 				struct netlink_ext_ack *extack)
  {
--	unsigned long bios_start, ebda_start;
-+	unsigned long bios_start = 0, ebda_start = 0;
- 	unsigned long trampoline_start;
- 	struct boot_e820_entry *entry;
-+	char *signature;
- 	int i;
+ 	*ip_proto = nla_get_u8(attr);
+@@ -13,11 +14,19 @@ int rtm_getroute_parse_ip_proto(struct n
+ 	switch (*ip_proto) {
+ 	case IPPROTO_TCP:
+ 	case IPPROTO_UDP:
++		return 0;
+ 	case IPPROTO_ICMP:
++		if (family != AF_INET)
++			break;
++		return 0;
++#if IS_ENABLED(CONFIG_IPV6)
++	case IPPROTO_ICMPV6:
++		if (family != AF_INET6)
++			break;
+ 		return 0;
+-	default:
+-		NL_SET_ERR_MSG(extack, "Unsupported ip proto");
+-		return -EOPNOTSUPP;
++#endif
+ 	}
++	NL_SET_ERR_MSG(extack, "Unsupported ip proto");
++	return -EOPNOTSUPP;
+ }
+ EXPORT_SYMBOL_GPL(rtm_getroute_parse_ip_proto);
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -2803,7 +2803,7 @@ static int inet_rtm_getroute(struct sk_b
  
- 	/*
-@@ -47,8 +50,18 @@ static unsigned long find_trampoline_pla
- 	 * This code is based on reserve_bios_regions().
- 	 */
+ 	if (tb[RTA_IP_PROTO]) {
+ 		err = rtm_getroute_parse_ip_proto(tb[RTA_IP_PROTO],
+-						  &ip_proto, extack);
++						  &ip_proto, AF_INET, extack);
+ 		if (err)
+ 			return err;
+ 	}
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -4880,7 +4880,8 @@ static int inet6_rtm_getroute(struct sk_
  
--	ebda_start = *(unsigned short *)0x40e << 4;
--	bios_start = *(unsigned short *)0x413 << 10;
-+	/*
-+	 * EFI systems may not provide legacy ROM. The memory may not be mapped
-+	 * at all.
-+	 *
-+	 * Only look for values in the legacy ROM for non-EFI system.
-+	 */
-+	signature = (char *)&boot_params->efi_info.efi_loader_signature;
-+	if (strncmp(signature, EFI32_LOADER_SIGNATURE, 4) &&
-+	    strncmp(signature, EFI64_LOADER_SIGNATURE, 4)) {
-+		ebda_start = *(unsigned short *)0x40e << 4;
-+		bios_start = *(unsigned short *)0x413 << 10;
-+	}
- 
- 	if (bios_start < BIOS_START_MIN || bios_start > BIOS_START_MAX)
- 		bios_start = BIOS_START_MAX;
+ 	if (tb[RTA_IP_PROTO]) {
+ 		err = rtm_getroute_parse_ip_proto(tb[RTA_IP_PROTO],
+-						  &fl6.flowi6_proto, extack);
++						  &fl6.flowi6_proto, AF_INET6,
++						  extack);
+ 		if (err)
+ 			goto errout;
+ 	}
 
 
