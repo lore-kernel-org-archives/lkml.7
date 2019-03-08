@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B5FC10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA74C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26BB2208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C51E2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049476;
-	bh=Sy4UbLyDmS1wYLWAdAIpfi7b8Uz/5/Clvllosf084qo=;
+	s=default; t=1552049477;
+	bh=UBe65DMEFErbnmhCj8b77tZCKuMKP6DSFR34N2t2YOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Df1TVrjMxgliZvY9UcnNwtPtOposvTnAQJT2BXfLWMosEmzjNbpxaa/PAXu+9RVEQ
-	 WlaeF59fUm064p/l0NSJSdmOrJqxn7E1dup+Bnu7cR2ZUTUQenU9qpPPOuUinOJeTM
-	 2bzm8xdShhxEPKqbrYE9Jml9Cf50W4DH5/m4jrgs=
+	b=yA21zgUtKvtKPBCNb3oFWVvoLxcipNr5ZHLMGk/PAtjFLXba5esW6qmMg7SglPs9n
+	 TUUTYldzKj/YvqCKsd7brqmVULTMk8N3GNNKTMuzVhG+UuOdjyA4ONlO8xQ8YqxS2W
+	 papYDNQWB3XRIvn8F14qV0Wcfqi8U0F3JK+ynw0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfCHMvO (ORCPT
+        id S1726685AbfCHMvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:51:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfCHMvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:51:11 -0500
+        id S1726669AbfCHMvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:14 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 361972085A;
-        Fri,  8 Mar 2019 12:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D206B2085A;
+        Fri,  8 Mar 2019 12:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049470;
-        bh=Sy4UbLyDmS1wYLWAdAIpfi7b8Uz/5/Clvllosf084qo=;
+        s=default; t=1552049474;
+        bh=UBe65DMEFErbnmhCj8b77tZCKuMKP6DSFR34N2t2YOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SEicbfpxkZIU39dQS5bZ4hEQf878es35NAcx4oIuA0ICMoNWQzhVtg5ZItM6WivAr
-         SCwDBfUf6xH9aGyvvW0+APbuT6rfSUTM0X1T/jVm83fVZ7yyl3vHe3oaXsZ79bZyQQ
-         Vq3Zie9vS37CYKvmGrOv1DBr8IbOWrPd7QvMo2Uw=
+        b=ZBqnXvB79IXubjLVmwvPDOfYn2azdZb/b5aYr8lowIUZb2Am9JGXalk0NuVTZTbml
+         JA37b3Z4SUwEWg1JNiZ+PEg3sxjDeA/ZJjESgY6wi8/poCyM4bvZyIZ9wahDTtnmtw
+         eyuTwIITXsIqtGBxqVbJDeQTuq/8JtL+HJjreFJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.0 13/46] staging: wilc1000: fix to set correct value for vif_num
-Date:   Fri,  8 Mar 2019 13:49:46 +0100
-Message-Id: <20190308124903.105184268@linuxfoundation.org>
+        stable@vger.kernel.org, Qing Xia <saberlily.xia@hisilicon.com>,
+        Jing Xia <jing.xia@unisoc.com>,
+        Yuming Han <yuming.han@unisoc.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH 5.0 14/46] staging: android: ion: fix sys heap pools gfp_flags
+Date:   Fri,  8 Mar 2019 13:49:47 +0100
+Message-Id: <20190308124903.168231186@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -64,37 +68,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Qing Xia <saberlily.xia@hisilicon.com>
 
-commit dda037057a572f5c82ac2499eb4e6fb17600ba3e upstream.
+commit 9bcf065e28122588a6cbee08cf847826dacbb438 upstream.
 
-Set correct value in '->vif_num' for the total number of interfaces and
-set '->idx' value using 'i'.
+In the first loop, gfp_flags will be modified to high_order_gfp_flags,
+and there will be no chance to change back to low_order_gfp_flags.
 
-Fixes: 735bb39ca3be ("staging: wilc1000: simplify vif[i]->ndev accesses")
-Fixes: 0e490657c721 ("staging: wilc1000: Fix problem with wrong vif index")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e7f63771b60e ("ION: Sys_heap: Add cached pool to spead up cached buffer alloc")
+Signed-off-by: Qing Xia <saberlily.xia@hisilicon.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jing Xia <jing.xia@unisoc.com>
+Reviewed-by: Yuming Han <yuming.han@unisoc.com>
+Reviewed-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Reviewed-by: Orson Zhai <orson.zhai@unisoc.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wilc1000/linux_wlan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/android/ion/ion_system_heap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/wilc1000/linux_wlan.c
-+++ b/drivers/staging/wilc1000/linux_wlan.c
-@@ -1086,8 +1086,8 @@ int wilc_netdev_init(struct wilc **wilc,
- 		vif->wilc = *wilc;
- 		vif->ndev = ndev;
- 		wl->vif[i] = vif;
--		wl->vif_num = i;
--		vif->idx = wl->vif_num;
-+		wl->vif_num = i + 1;
-+		vif->idx = i;
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -223,10 +223,10 @@ static void ion_system_heap_destroy_pool
+ static int ion_system_heap_create_pools(struct ion_page_pool **pools)
+ {
+ 	int i;
+-	gfp_t gfp_flags = low_order_gfp_flags;
  
- 		ndev->netdev_ops = &wilc_netdev_ops;
+ 	for (i = 0; i < NUM_ORDERS; i++) {
+ 		struct ion_page_pool *pool;
++		gfp_t gfp_flags = low_order_gfp_flags;
  
+ 		if (orders[i] > 4)
+ 			gfp_flags = high_order_gfp_flags;
 
 
