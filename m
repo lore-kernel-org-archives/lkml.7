@@ -2,117 +2,187 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57281C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C285AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AAF2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552056878;
-	bh=4aboBRavMPzk24ub+4zG7EAt7vahfO4a4nnF/qW4njE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X6+2Nn1UK/EhmYVsx6GeanPucWQZ41lq27GVU5HOM74YIQ8aY4RbHlgIU/sE8v0iL
-	 EzA0Yb8yC4OHJSg/cf6oA7awqS/H+UZYZLqsiqDvV7dujdLqaiLe5tOmSHa14SwiRO
-	 6xp6uJF/zn7GT44jO20LgkJqmPIWPfa/4Pgu7JgM=
+	by mail.kernel.org (Postfix) with ESMTP id 9293A20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfCHOyg (ORCPT
+        id S1726856AbfCHO6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 09:54:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 09:58:12 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60926 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfCHOyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 09:54:36 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726171AbfCHO6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 09:58:11 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAD212146E
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 14:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552056875;
-        bh=4aboBRavMPzk24ub+4zG7EAt7vahfO4a4nnF/qW4njE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JrtZS4hJE9qP/CD1btG871lfsSxoOqdTnJLVwTcj3iYSb34kivRoz1tcAijpUDBNB
-         kAuUfYBggounFFCQciRAb9MK+5llIEWMIobrFK7z0DC9VpRutF2YPwO7HvIlSvOU4C
-         equays8Z3r2zyhvLxvBOV6mIKt9dweyGPBowMrcs=
-Received: by mail-qt1-f179.google.com with SMTP id d18so21437270qtg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 06:54:34 -0800 (PST)
-X-Gm-Message-State: APjAAAV0hrOAfs21n67AnXk/GiSgMlbWz4bMR0+iVacu4MBW0iHh7jg1
-        z8IJFkdsFK5O75xAafvxuce7KMAxS/5G4vKszQ==
-X-Google-Smtp-Source: APXvYqwHBa9l0tLCztQbL2/xiRTLGHfjE2CpSkVzPplCHB3+Uo7iEpRpw28U6Z1Kc3Dvv2m3LdDzYjMWLwz5sxUeMqw=
-X-Received: by 2002:ac8:3015:: with SMTP id f21mr2248856qte.144.1552056874013;
- Fri, 08 Mar 2019 06:54:34 -0800 (PST)
+        by mx1.redhat.com (Postfix) with ESMTPS id 26733307CDC7;
+        Fri,  8 Mar 2019 14:58:11 +0000 (UTC)
+Received: from redhat.com (ovpn-124-248.rdu2.redhat.com [10.10.124.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F1D65D9CD;
+        Fri,  8 Mar 2019 14:58:04 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 09:58:01 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com, linux-mm@kvack.org
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190308145800.GA3661@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191622.GP23850@redhat.com>
+ <e2fad6ed-9257-b53c-394b-bc913fc444c0@redhat.com>
 MIME-Version: 1.0
-References: <1549022873-40549-1-git-send-email-narmstrong@baylibre.com>
- <1549022873-40549-2-git-send-email-narmstrong@baylibre.com>
- <CAL_JsqLa1QNYTo+Yj-5fC4k8C1bd+V8qi5LiHgLA_qZY+Gy5cg@mail.gmail.com> <36800d4e-0bb7-378c-e512-5ae02406865b@baylibre.com>
-In-Reply-To: <36800d4e-0bb7-378c-e512-5ae02406865b@baylibre.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 8 Mar 2019 08:54:22 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+-q3+PtU6zS-dLSy3Gx+xOzquLyuW3n3ey6iRT3tw9KA@mail.gmail.com>
-Message-ID: <CAL_Jsq+-q3+PtU6zS-dLSy3Gx+xOzquLyuW3n3ey6iRT3tw9KA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sandy Huang <hjc@rock-chips.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        linux-amlogic@lists.infradead.org, Huicong Xu <xhc@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e2fad6ed-9257-b53c-394b-bc913fc444c0@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 08 Mar 2019 14:58:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 2:05 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Rob,
->
-> On 08/03/2019 00:13, Rob Herring wrote:
-> > On Fri, Feb 1, 2019 at 6:08 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> Add support for SCDC Setup for TMDS Clock > 3.4GHz and enable TMDS
-> >> Scrambling when supported or mandatory.
-> >>
-> >> This patch also adds an helper to setup the control bit to support
-> >> the high TMDS Bit Period/TMDS Clock-Period Ratio as required with
-> >> TMDS Clock > 3.4GHz for HDMI2.0 3840x2160@60/50 modes.
-> >>
-> >> These changes were based on work done by Huicong Xu <xhc@rock-chips.com>
-> >> and Nickey Yang <nickey.yang@rock-chips.com> to support HDMI2.0 modes
-> >> on the Rockchip 4.4 BSP kernel at [1]
-> >>
-> >> [1] https://github.com/rockchip-linux/kernel/tree/release-4.4
-> >>
-> >> Cc: Nickey Yang <nickey.yang@rock-chips.com>
-> >> Cc: Huicong Xu <xhc@rock-chips.com>
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> >> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> >> ---
-> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 85 ++++++++++++++++++++++++++++++-
-> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h |  1 +
-> >>  include/drm/bridge/dw_hdmi.h              |  1 +
-> >>  3 files changed, 85 insertions(+), 2 deletions(-)
-> >
-> > This commit in drm-misc-next is breaking booting on the Rock960. I
-> > have FB and fbcon enabled. The boot hangs after this message:
-> >
-> > [    3.012334] [drm:rockchip_drm_fbdev_create] FB [1920x1080]-24
-> > kvaddr=(____ptrval____) offset=0 size=8294400
->
-> Could you give more details on the tree used ? did you bisect to find this commit ?
+On Fri, Mar 08, 2019 at 04:50:36PM +0800, Jason Wang wrote:
+> 
+> On 2019/3/8 上午3:16, Andrea Arcangeli wrote:
+> > On Thu, Mar 07, 2019 at 12:56:45PM -0500, Michael S. Tsirkin wrote:
+> > > On Thu, Mar 07, 2019 at 10:47:22AM -0500, Michael S. Tsirkin wrote:
+> > > > On Wed, Mar 06, 2019 at 02:18:12AM -0500, Jason Wang wrote:
+> > > > > +static const struct mmu_notifier_ops vhost_mmu_notifier_ops = {
+> > > > > +	.invalidate_range = vhost_invalidate_range,
+> > > > > +};
+> > > > > +
+> > > > >   void vhost_dev_init(struct vhost_dev *dev,
+> > > > >   		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
+> > > > >   {
+> > > > I also wonder here: when page is write protected then
+> > > > it does not look like .invalidate_range is invoked.
+> > > > 
+> > > > E.g. mm/ksm.c calls
+> > > > 
+> > > > mmu_notifier_invalidate_range_start and
+> > > > mmu_notifier_invalidate_range_end but not mmu_notifier_invalidate_range.
+> > > > 
+> > > > Similarly, rmap in page_mkclean_one will not call
+> > > > mmu_notifier_invalidate_range.
+> > > > 
+> > > > If I'm right vhost won't get notified when page is write-protected since you
+> > > > didn't install start/end notifiers. Note that end notifier can be called
+> > > > with page locked, so it's not as straight-forward as just adding a call.
+> > > > Writing into a write-protected page isn't a good idea.
+> > > > 
+> > > > Note that documentation says:
+> > > > 	it is fine to delay the mmu_notifier_invalidate_range
+> > > > 	call to mmu_notifier_invalidate_range_end() outside the page table lock.
+> > > > implying it's called just later.
+> > > OK I missed the fact that _end actually calls
+> > > mmu_notifier_invalidate_range internally. So that part is fine but the
+> > > fact that you are trying to take page lock under VQ mutex and take same
+> > > mutex within notifier probably means it's broken for ksm and rmap at
+> > > least since these call invalidate with lock taken.
+> > Yes this lock inversion needs more thoughts.
+> > 
+> > > And generally, Andrea told me offline one can not take mutex under
+> > > the notifier callback. I CC'd Andrea for why.
+> > Yes, the problem then is the ->invalidate_page is called then under PT
+> > lock so it cannot take mutex, you also cannot take the page_lock, it
+> > can at most take a spinlock or trylock_page.
+> > 
+> > So it must switch back to the _start/_end methods unless you rewrite
+> > the locking.
+> > 
+> > The difference with _start/_end, is that ->invalidate_range avoids the
+> > _start callback basically, but to avoid the _start callback safely, it
+> > has to be called in between the ptep_clear_flush and the set_pte_at
+> > whenever the pfn changes like during a COW. So it cannot be coalesced
+> > in a single TLB flush that invalidates all sptes in a range like we
+> > prefer for performance reasons for example in KVM. It also cannot
+> > sleep.
+> > 
+> > In short ->invalidate_range must be really fast (it shouldn't require
+> > to send IPI to all other CPUs like KVM may require during an
+> > invalidate_range_start) and it must not sleep, in order to prefer it
+> > to _start/_end.
+> > 
+> > I.e. the invalidate of the secondary MMU that walks the linux
+> > pagetables in hardware (in vhost case with GUP in software) has to
+> > happen while the linux pagetable is zero, otherwise a concurrent
+> > hardware pagetable lookup could re-instantiate a mapping to the old
+> > page in between the set_pte_at and the invalidate_range_end (which
+> > internally calls ->invalidate_range). Jerome documented it nicely in
+> > Documentation/vm/mmu_notifier.rst .
+> 
+> 
+> Right, I've actually gone through this several times but some details were
+> missed by me obviously.
+> 
+> 
+> > 
+> > Now you don't really walk the pagetable in hardware in vhost, but if
+> > you use gup_fast after usemm() it's similar.
+> > 
+> > For vhost the invalidate would be really fast, there are no IPI to
+> > deliver at all, the problem is just the mutex.
+> 
+> 
+> Yes. A possible solution is to introduce a valid flag for VA. Vhost may only
+> try to access kernel VA when it was valid. Invalidate_range_start() will
+> clear this under the protection of the vq mutex when it can block. Then
+> invalidate_range_end() then can clear this flag. An issue is blockable is 
+> always false for range_end().
+> 
 
-As I said above, drm-misc-next (from drm-misc tree) is the branch. I
-bisected between it and v5.0. Reverting it fixes booting.
+Note that there can be multiple asynchronous concurrent invalidate_range
+callbacks. So a flag does not work but a counter of number of active
+invalidation would. See how KSM is doing it for instance in kvm_main.c
 
-Rob
+The pattern for this kind of thing is:
+    my_invalidate_range_start(start,end) {
+        ...
+        if (mystruct_overlap(mystruct, start, end)) {
+            mystruct_lock();
+            mystruct->invalidate_count++;
+            ...
+            mystruct_unlock();
+        }
+    }
+
+    my_invalidate_range_end(start,end) {
+        ...
+        if (mystruct_overlap(mystruct, start, end)) {
+            mystruct_lock();
+            mystruct->invalidate_count--;
+            ...
+            mystruct_unlock();
+        }
+    }
+
+    my_access_va(mystruct) {
+    again:
+        wait_on(!mystruct->invalidate_count)
+        mystruct_lock();
+        if (mystruct->invalidate_count) {
+            mystruct_unlock();
+            goto again;
+        }
+        GUP();
+        ...
+        mystruct_unlock();
+    }
+
+Cheers,
+Jérôme
