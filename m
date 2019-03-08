@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D830C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4ADC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CF520661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E3020661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050261;
-	bh=HhpyA9SlxQyZzhW83zy6W0aqUiyD4EPXzT7rHqCafBo=;
+	s=default; t=1552050265;
+	bh=x+N5/BNJNP0pWFQ2w+WXOTRwJWTLjlX2nnTpJb+Cibs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+7uRQSTjsATvQLAaIZ2vSpBHaPS4WLba7dEqc8I3sQ841fLpy2VmXgDFAYvTJ9MV
-	 BujSMpP3BLG5gJplBDsQaonm0OLDLs0YT/hzGVY//RVbKQZdn0SODPtM3FXZhQRGkP
-	 fzSTltAOxH0k5RxjfqhQXAaQbPV8fhy7x754uiHs=
+	b=xe2LPO7oEGRpnlthRijbNmdykVvjK3A1iIV408cUPAWZmPhwEu2ofam6vjbSG1Dzz
+	 vaWAF12abaJEM9nNAgrLjavOPEFEt0+ICOp1tPQBoB/OWUhp7OiyAMkY2eUxQ/FiCJ
+	 fhy+8PwAUF/sED/G+B+lV6d30coIhNtOicgLqXFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfCHM5z (ORCPT
+        id S1727408AbfCHNEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbfCHM5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:45 -0500
+        id S1727914AbfCHM5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:54 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBBA620449;
-        Fri,  8 Mar 2019 12:57:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7792085A;
+        Fri,  8 Mar 2019 12:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049864;
-        bh=HhpyA9SlxQyZzhW83zy6W0aqUiyD4EPXzT7rHqCafBo=;
+        s=default; t=1552049873;
+        bh=x+N5/BNJNP0pWFQ2w+WXOTRwJWTLjlX2nnTpJb+Cibs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=euTFf2n9MTLVwZIJFJ+fMuVFvbAAss8MUcX4sqpI2rt/E/rByGNbiNsNTDA1hfvzY
-         0u9CQB9pzK2n7noU+eWnjYVP9FrwpM+bnPPkfPd3LYnd+j/PJMgWAvJrwVueRKZwm9
-         E/Muj//QXq/XNnWQFvpIKm6/C9UWG98YbpSVzWuU=
+        b=BiKlRW2eYjhyMam2HXFXXKxkZfB3dlMbjBNR/4bcZp4SVcnonalY5APVEan/CVWfO
+         CuFhaj6U4hub/owpgK1hjMmNM8opCZov6oNp6zeFC3NNUsA/PMhETRtj/m2SgBAvV/
+         3m2GzOS5EZgUBFx/+5LbjoPF4kkISoDgqHf28vvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+a76129f18c89f3e2ddd4@syzkaller.appspotmail.com>,
-        syzbot <syzbot+148c2885d71194f18d28@syzkaller.appspotmail.com>,
-        syzbot <syzbot+4b8b031b89e6b96c4b2e@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 4.19 11/68] staging: android: ashmem: Dont call fallocate() with ashmem_mutex held.
-Date:   Fri,  8 Mar 2019 13:49:41 +0100
-Message-Id: <20190308124911.357363186@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 14/68] net: dsa: mv88e6xxx: handle unknown duplex modes gracefully in mv88e6xxx_port_set_duplex
+Date:   Fri,  8 Mar 2019 13:49:44 +0100
+Message-Id: <20190308124911.539032091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -69,95 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit fb4415a12632f0b9078a0aa80c16745d48fcfc74 upstream.
+[ Upstream commit c6195a8bdfc62a7cecf7df685e64847a4b700275 ]
 
-syzbot is hitting lockdep warnings [1][2][3]. This patch tries to fix
-the warning by eliminating ashmem_shrink_scan() => {shmem|vfs}_fallocate()
-sequence.
+When testing another issue I faced the problem that
+mv88e6xxx_port_setup_mac() failed due to DUPLEX_UNKNOWN being passed
+as argument to mv88e6xxx_port_set_duplex(). We should handle this case
+gracefully and return -EOPNOTSUPP, like e.g. mv88e6xxx_port_set_speed()
+is doing it.
 
-[1] https://syzkaller.appspot.com/bug?id=87c399f6fa6955006080b24142e2ce7680295ad4
-[2] https://syzkaller.appspot.com/bug?id=7ebea492de7521048355fc84210220e1038a7908
-[3] https://syzkaller.appspot.com/bug?id=e02419c12131c24e2a957ea050c2ab6dcbbc3270
-
-Reported-by: syzbot <syzbot+a76129f18c89f3e2ddd4@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+148c2885d71194f18d28@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+4b8b031b89e6b96c4b2e@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: stable@vger.kernel.org
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Fixes: 7f1ae07b51e8 ("net: dsa: mv88e6xxx: add port duplex setter")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/android/ashmem.c |   25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/net/dsa/mv88e6xxx/port.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -75,6 +75,9 @@ struct ashmem_range {
- /* LRU list of unpinned pages, protected by ashmem_mutex */
- static LIST_HEAD(ashmem_lru_list);
- 
-+static atomic_t ashmem_shrink_inflight = ATOMIC_INIT(0);
-+static DECLARE_WAIT_QUEUE_HEAD(ashmem_shrink_wait);
-+
- /*
-  * long lru_count - The count of pages on our LRU list.
-  *
-@@ -438,7 +441,6 @@ out:
- static unsigned long
- ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- {
--	struct ashmem_range *range, *next;
- 	unsigned long freed = 0;
- 
- 	/* We might recurse into filesystem code, so bail out if necessary */
-@@ -448,21 +450,33 @@ ashmem_shrink_scan(struct shrinker *shri
- 	if (!mutex_trylock(&ashmem_mutex))
- 		return -1;
- 
--	list_for_each_entry_safe(range, next, &ashmem_lru_list, lru) {
-+	while (!list_empty(&ashmem_lru_list)) {
-+		struct ashmem_range *range =
-+			list_first_entry(&ashmem_lru_list, typeof(*range), lru);
- 		loff_t start = range->pgstart * PAGE_SIZE;
- 		loff_t end = (range->pgend + 1) * PAGE_SIZE;
-+		struct file *f = range->asma->file;
- 
--		range->asma->file->f_op->fallocate(range->asma->file,
--				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
--				start, end - start);
-+		get_file(f);
-+		atomic_inc(&ashmem_shrink_inflight);
- 		range->purged = ASHMEM_WAS_PURGED;
- 		lru_del(range);
- 
- 		freed += range_size(range);
-+		mutex_unlock(&ashmem_mutex);
-+		f->f_op->fallocate(f,
-+				   FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-+				   start, end - start);
-+		fput(f);
-+		if (atomic_dec_and_test(&ashmem_shrink_inflight))
-+			wake_up_all(&ashmem_shrink_wait);
-+		if (!mutex_trylock(&ashmem_mutex))
-+			goto out;
- 		if (--sc->nr_to_scan <= 0)
- 			break;
+--- a/drivers/net/dsa/mv88e6xxx/port.c
++++ b/drivers/net/dsa/mv88e6xxx/port.c
+@@ -190,7 +190,7 @@ int mv88e6xxx_port_set_duplex(struct mv8
+ 		/* normal duplex detection */
+ 		break;
+ 	default:
+-		return -EINVAL;
++		return -EOPNOTSUPP;
  	}
- 	mutex_unlock(&ashmem_mutex);
-+out:
- 	return freed;
- }
  
-@@ -713,6 +727,7 @@ static int ashmem_pin_unpin(struct ashme
- 		return -EFAULT;
- 
- 	mutex_lock(&ashmem_mutex);
-+	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
- 
- 	if (!asma->file)
- 		goto out_unlock;
+ 	err = mv88e6xxx_port_write(chip, port, MV88E6XXX_PORT_MAC_CTL, reg);
 
 
