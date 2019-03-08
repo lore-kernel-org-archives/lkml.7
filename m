@@ -2,107 +2,96 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE57EC10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12380C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907952146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D191F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="SG7C/hir"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4WWaPKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfCHQWl (ORCPT
+        id S1726694AbfCHQWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:22:41 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:34793 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCHQWk (ORCPT
+        Fri, 8 Mar 2019 11:22:48 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40582 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfCHQWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:22:40 -0500
-Received: by mail-yw1-f68.google.com with SMTP id u205so16745878ywe.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:22:40 -0800 (PST)
+        Fri, 8 Mar 2019 11:22:47 -0500
+Received: by mail-qk1-f193.google.com with SMTP id h28so11472677qkk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:22:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WzKuwNcoBCL9U3oKIOmrzCFFAxc+z1LWxRP1k9/QX/E=;
-        b=SG7C/hirBfsngAx8tMYp7iQ2Mn1Ob3ERIllqoGDkUqsdKmlsr3niO9F1qYEdWlXJT5
-         5huxqo+SBPoSaFESP33Fr+t4Rzc7tBcT53NFWE97GDftecwMEGLtMcJEKzTlYzhpLnjp
-         PuLBtdeQPLuJdl/1xPm2jytSmlRCT7HODg/Q4SaxZOhoIjCr+nOrurOhGAUQvxjBushv
-         VSshXN4DTpsbkqebvP8BaJ2f/1P8BVWJKOUfKhPy+hFhz8NyRj2qwYNuhG8S+244L3mg
-         2rsJQLWJNet7OgegqzSPFhMr6SnTVwIdJM6Qx0Qe8hkfgjqe61Vb5dvKJ37kp0Yb39/1
-         JBTw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x9XZ6z5esk2ECGEn4d82w7AcqDOl+V/uIb9RPUFwu48=;
+        b=c4WWaPKINbHnmdFXfBgz9Uesn6cP6DQv3/hQGrlVW+4+qBOuTMdK66k8ll1OfwPyYi
+         RfRCkYRVaIlvlu75cldS/fFWU3PTHCQJtSsL+0FCKyR0bgodMznZ3GWLTu8hg8A7Sxf2
+         gAVzAJhhfiB6BHtFBXJeLQQ5UiV+lHqPxVMrk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WzKuwNcoBCL9U3oKIOmrzCFFAxc+z1LWxRP1k9/QX/E=;
-        b=YO3tgHsi/hRF+3kdmu826iwARysWtSZggYfHoxPJsXEMuxziBbuHKiGOINlW0ZSBV6
-         BDzqvNiH1mn8bp8oYRLlJg3gzMDm8ltLstLWfWYvc/Fg+V2DsW2lq6LzCqh4gjQWzD2a
-         MxpJV8TYIbQ2iXnmqf5odIhTqOm3HFnco9NcptAi6hPqpcwgGBhnFY3OSZY5cezA3hdr
-         AVLdGWQXf+luMDpc6+s8nOU1wPcthc8pecfTQhko6Ekq06M1+pDWmgHhUNKTO3AzjMvI
-         28UGaGi5lw8dIBeoVLnynZwqpPB8nZdLVA73d6PCQh5olos3U/AgrwA+ZC/pE0jD5CKY
-         jqWQ==
-X-Gm-Message-State: APjAAAV6ZSLxafcX9aSwDz62R2QqxwpwW+1WlUitWPoL2lGY7vr4dv2f
-        vDb75t89tDki5y3+FXSzp3Cx5tjnrRc=
-X-Google-Smtp-Source: APXvYqybyQpoib8PQzxv71EAfMfQyD8hak5sv0O2aTEddKGWaVGDr90e5pRzxkWR369jDKk+hsc2Jw==
-X-Received: by 2002:a81:78d6:: with SMTP id t205mr15398565ywc.181.1552062159853;
-        Fri, 08 Mar 2019 08:22:39 -0800 (PST)
-Received: from cisco ([2601:282:901:dd7b:316c:2a55:1ab5:9f1c])
-        by smtp.gmail.com with ESMTPSA id h204sm3082190ywh.52.2019.03.08.08.22.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 08:22:39 -0800 (PST)
-Date:   Fri, 8 Mar 2019 09:22:37 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 02/15] slub: Add isolate() and migrate() methods
-Message-ID: <20190308162237.GD373@cisco>
-References: <20190308041426.16654-1-tobin@kernel.org>
- <20190308041426.16654-3-tobin@kernel.org>
- <20190308152820.GB373@cisco>
- <010001695e16cdef-9831bf56-3075-4f0e-8c25-5d60103cb95f-000000@email.amazonses.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x9XZ6z5esk2ECGEn4d82w7AcqDOl+V/uIb9RPUFwu48=;
+        b=OJt++nTe/5615TagpuXtGeCFoTQ7ErNvQDe+a3oJ2F5jhj+7MWN2gIc18tlNfIeSe8
+         DHopS8g2x11RQ5uxR0/DB4AM4KrUp/0DxzzE5Ppth1MNk1Z7Gwz6cXfypuicQD42jfEg
+         lq1J7O3zr9Jg3qWaBuFhlgIO9mVPTLwcAPXjVbsvPF/dHgJE8KFyprHFfJZOI6ljb7OV
+         LlWOXl0gmFInk7BmT03HPmdUUjji/iz6ifq6etZDSNxXP4Db6PWspzkdulMInyhq7/RZ
+         OYU2c6tzc+04JstQ+kVfaljBAVAvyw49bQQawiYneJlh5trpUY6v3yyGxDomLqJVuCfI
+         8JuQ==
+X-Gm-Message-State: APjAAAU0KLhkAmMq906QBdoJZJiCBSLb41iF3iSmJBZhpyVyeVb51srm
+        RaEgPyAqY+eQpkXwmaCiO3kzo/rxBmjQN6yJDZFqzA==
+X-Google-Smtp-Source: APXvYqwt8riDsgQHsTbxRjcgAfQbY7NpR5rSRwOB/QePjDLMVnpwnQ3nDZciRmGSB9EX1iLBMYKMykA2rIpmLXT/cKE=
+X-Received: by 2002:a05:620a:124c:: with SMTP id a12mr14663552qkl.103.1552062166543;
+ Fri, 08 Mar 2019 08:22:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <010001695e16cdef-9831bf56-3075-4f0e-8c25-5d60103cb95f-000000@email.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190215090202.157100-1-hsinyi@chromium.org> <20190215090959.soxkf3ho3or2geme@ninjato>
+ <CAJMQK-jrpnfzKNYh01Pg6QydSSa-=6x44Pj1wwMdXw7G3x-ybA@mail.gmail.com>
+ <20190215092500.6q3hqnoufyowiqaz@ninjato> <20190215163657.fs6t7p3vqez53su3@ninjato>
+ <CAJMQK-jzvMBD_AaB7XMJtMqNWiEin25bem4Zo9T5W86Z-U=Tww@mail.gmail.com>
+ <20190308112919.GA1674@kunai> <CAJMQK-j9b3o+KQfN8nLXGiP+TXi8i77=yTTQsEARa6cotPhxzw@mail.gmail.com>
+ <20190308145203.GA4743@kunai>
+In-Reply-To: <20190308145203.GA4743@kunai>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Sat, 9 Mar 2019 00:22:35 +0800
+Message-ID: <CAJMQK-jRheyFwvKDURF9kxW4MXTQmgQjuGbXjerth26PLF_3dQ@mail.gmail.com>
+Subject: Re: [PATCH] i2c: mediatek: modify threshold passed to i2c_get_dma_safe_msg_buf()
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jun Gao <jun.gao@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>, linux-i2c@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        qii.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 04:15:46PM +0000, Christopher Lameter wrote:
-> On Fri, 8 Mar 2019, Tycho Andersen wrote:
-> 
-> > On Fri, Mar 08, 2019 at 03:14:13PM +1100, Tobin C. Harding wrote:
-> > > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > > index f9d89c1b5977..754acdb292e4 100644
-> > > --- a/mm/slab_common.c
-> > > +++ b/mm/slab_common.c
-> > > @@ -298,6 +298,10 @@ int slab_unmergeable(struct kmem_cache *s)
-> > >  	if (!is_root_cache(s))
-> > >  		return 1;
+On Fri, Mar 8, 2019 at 10:52 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+>
+> > > I just checked this issue again and concluded that both are reasonable,
+> > > the suggestion from me below with the adapter quirk AND your original
+> > > patch setting the threshold to 1. With my suggestion the core will
+> > > prevent 0-length messages. But still, we should set the threshold to 1
+> > > because 0 is a value the HW is not capable of.
 > > >
-> > > +	/*
-> > > +	 * s->isolate and s->migrate imply s->ctor so no need to
-> > > +	 * check them explicitly.
-> > > +	 */
-> >
-> > Shouldn't this implication go the other way, i.e.
-> >     s->ctor => s->isolate & s->migrate
-> 
-> A cache can have a constructor but the object may not be movable (I.e.
-> currently dentries and inodes).
+> > I think quirk might be better, since mediatek said they might have some ICs
+> > that can handle zero-length transfer in the future, so flags might be
+> > more clear if they want to restore functionality.
+>
+> But I guess you don't want to do the zero-length transfer with DMA then?
+> With that in mind, raising the threshold still makes sense to me.
+>
+Yes. Then I think this patch is okay for merge?
 
-Yep, thanks. Somehow I got confused by the comment.
+And since the mt8183 patches are still under reviewing, we'll upload adapter
+quirk patch after those are merged.
 
-Tycho
+Thanks
