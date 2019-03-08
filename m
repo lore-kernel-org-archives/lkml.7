@@ -2,197 +2,161 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B3EC10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D4BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F2221019
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8A721019
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:21:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="AOyx7MgX"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ORlCKUb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfCHNUp (ORCPT
+        id S1726617AbfCHNVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:20:45 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34560 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbfCHNUo (ORCPT
+        Fri, 8 Mar 2019 08:21:44 -0500
+Received: from forward102j.mail.yandex.net ([5.45.198.243]:38102 "EHLO
+        forward102j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726287AbfCHNVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:20:44 -0500
-Received: by mail-lj1-f195.google.com with SMTP id l5so17368748lje.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 05:20:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jcVr0ILNjn7FhY+CJM+wWJingxIUPixHn4Q+s5GjHXQ=;
-        b=AOyx7MgXsevhp1sRwYiSEvL8l/sscnmAWWGEwzl5y+p2deLOLMMpFUxQvIE/t4cD5z
-         pGuN9t/av9OhbgbzLW8It194pFAGcPybpNqF3u6z0LflfLS8o/C/2DDSAsoyqfZ6Yt2S
-         Lyw9e941D74BmH23JL8Cr+dcdQHF4+Bi9ODWmMjop2bsQAIY708d+uNYgJlGgYXJ6avh
-         e0no/oSmb1WzZckI2M81zedQTH/8IiZeq/6rRJs1YnDNhREggNZ+bziEmp/ZRjgEzGmU
-         jTUswPk5Ymc2vxZX/cT8+X2itrPD7Y7vLWGU8a3wTp11GxPpXlZnxx45cm2JbDNc/SLH
-         6z2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jcVr0ILNjn7FhY+CJM+wWJingxIUPixHn4Q+s5GjHXQ=;
-        b=RDbdFMahf2WoRH2d03UY7kWy6z+BT7CFrI50aV5Prj4zPkH/lIanA4EYuj4NCuT1/f
-         LGE+boZp55/nww6Dkcx5q33oPsAbRK3YtIE/KHT1LyUNnPkiUSP5NBOGBLr+3ldlVD5C
-         1r6P1Hk+w7scScXjsZtCsuZoVV6TvsDe8fM8JZMM20qnPVPH/hYKTO/VSQPKMG5pNUOB
-         tBw8pkrhDSIqyKrYUYi3CyII/o6EvvygM8L9HvP2xnG5242xDt6Vsr8whDudmGpPD+fg
-         PVgILWV0RzzQQ+geWSz1h3jiSseuIpS+doYiSbEKlt7XmYcN5+xAezWwX2BaAHNe+T8c
-         DXdA==
-X-Gm-Message-State: APjAAAU6Dlx1BJoHbKUr1klUQ21FzhxPtACc2QoV/IrfhH4cYeM9fN2H
-        TTCcAXomyRcMQ1XVJBz7sEaUbOPtIwL8Ll1mN2zk
-X-Google-Smtp-Source: APXvYqwjT2gxMzRcGyyoNKgjH2PQitq1u7aAI/U+rxwcRzQFr85Wnga9PcEBHGgOGOM6MBPnFMQt4Ppv2WHIzaxTLz0=
-X-Received: by 2002:a2e:88d1:: with SMTP id a17mr9051825ljk.169.1552051241503;
- Fri, 08 Mar 2019 05:20:41 -0800 (PST)
+        Fri, 8 Mar 2019 08:21:44 -0500
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Mar 2019 08:21:41 EST
+Received: from mxback11o.mail.yandex.net (mxback11o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::62])
+        by forward102j.mail.yandex.net (Yandex) with ESMTP id E7C47F20A16;
+        Fri,  8 Mar 2019 16:14:58 +0300 (MSK)
+Received: from smtp1o.mail.yandex.net (smtp1o.mail.yandex.net [2a02:6b8:0:1a2d::25])
+        by mxback11o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id OzD0CcTL3J-EwAuF58O;
+        Fri, 08 Mar 2019 16:14:58 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1552050898;
+        bh=r0jroba10AtHNL8QkSVj6KitIiEZyasMYlRIApO3mdE=;
+        h=Subject:To:From:Message-Id:Cc:Date;
+        b=ORlCKUb/sMlevvMWOn1Y79JiwOonpOf60G0vf7V3hyjs4M7b/ygBY2IHG3ZGGFNuc
+         cTd/mCJYOivXBYdBRTeLswWObWHX6RD9qT9plEaqJBTOy6oCdPhNtmnSl4HPh3Y5Zs
+         WgTn2ENlCeGPenkEL8Ohwp8G5TwrfcITui7kCcjE=
+Authentication-Results: mxback11o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 7UnA1kZuEv-EpOCgePs;
+        Fri, 08 Mar 2019 16:14:56 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     ibm-acpi@hmh.eng.br
+Cc:     dvhart@infradead.org, andy@infradead.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Read EC information on newer models
+Date:   Fri,  8 Mar 2019 21:14:26 +0800
+Message-Id: <20190308131426.10254-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190307025731.49369-1-maowenan@huawei.com> <CAHC9VhRBFwTbkE1YbQkRfxia5XZaWBK_D4WG4nNgMgF=wKf_fw@mail.gmail.com>
- <a3c0277d-7314-d95a-e704-be654a162efa@huawei.com>
-In-Reply-To: <a3c0277d-7314-d95a-e704-be654a162efa@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 8 Mar 2019 08:20:30 -0500
-Message-ID: <CAHC9VhSVmBfsgGVoLd9b1HoZxECHu_Uj8mSi+UUE_CzgB=Y-tg@mail.gmail.com>
-Subject: Re: [PATCH net] net: selinux: fix memory leak in selinux_netlbl_socket_post_create()
-To:     maowenan <maowenan@huawei.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 1:31 AM maowenan <maowenan@huawei.com> wrote:
-> On 2019/3/8 4:36, Paul Moore wrote:
-> > On Wed, Mar 6, 2019 at 9:44 PM Mao Wenan <maowenan@huawei.com> wrote:
-> >>
-> >> If netlbl_sock_setattr() is failed, it directly returns rc and forgets
-> >> to free secattr.
-> >>
-> >> BUG: memory leak
-> >> unreferenced object 0xffff8883c3ea4200 (size 2664):
-> >>   comm "syz-executor.2", pid 8813, jiffies 4297264419 (age 156.090s)
-> >>   hex dump (first 32 bytes):
-> >>     7f 00 00 01 7f 00 00 01 eb 7f ed 71 4e 24 00 00  ...........qN$..
-> >>     02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-> >>   backtrace:
-> >>     [<000000004c0228da>] sk_alloc+0x3d/0xc00 net/core/sock.c:1523
-> >>     [<00000000535a3da2>] inet_create+0x339/0xe10 net/ipv4/af_inet.c:321
-> >>     [<000000009aec3cfe>] __sock_create+0x3fa/0x790 net/socket.c:1275
-> >>     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
-> >>     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
-> >>     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
-> >>     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
-> >>     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
-> >>     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-> >>     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>     [<00000000f737e62f>] 0xffffffffffffffff
-> >>
-> >> BUG: memory leak
-> >> unreferenced object 0xffff8883de23d570 (size 32):
-> >>   comm "syz-executor.2", pid 8813, jiffies 4297264419 (age 156.090s)
-> >>   hex dump (first 32 bytes):
-> >>     02 00 00 00 00 00 00 00 60 a9 40 ce 83 88 ff ff  ........`.@.....
-> >>     01 00 00 00 03 00 00 00 10 00 00 00 00 00 00 00  ................
-> >>   backtrace:
-> >>     [<0000000035ba8b75>] security_sk_alloc+0x5e/0xb0 security/security.c:1473
-> >>     [<00000000302cc426>] sk_prot_alloc+0x8e/0x290 net/core/sock.c:1472
-> >>     [<000000004c0228da>] sk_alloc+0x3d/0xc00 net/core/sock.c:1523
-> >>     [<00000000535a3da2>] inet_create+0x339/0xe10 net/ipv4/af_inet.c:321
-> >>     [<000000009aec3cfe>] __sock_create+0x3fa/0x790 net/socket.c:1275
-> >>     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
-> >>     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
-> >>     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
-> >>     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
-> >>     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
-> >>     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-> >>     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>     [<00000000f737e62f>] 0xffffffffffffffff
-> >>
-> >> BUG: memory leak
-> >> unreferenced object 0xffff8883ce40a960 (size 64):
-> >>   comm "syz-executor.2", pid 8813, jiffies 4297264420 (age 156.089s)
-> >>   hex dump (first 32 bytes):
-> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >>   backtrace:
-> >>     [<0000000029add401>] selinux_netlbl_socket_post_create+0x68/0x130 security/selinux/netlabel.c:416
-> >>     [<000000005368a19c>] selinux_socket_post_create+0x31a/0x7f0 security/selinux/hooks.c:4597
-> >>     [<00000000bd4730e2>] security_socket_post_create+0x70/0xc0 security/security.c:1385
-> >>     [<00000000671052a4>] __sock_create+0x5a6/0x790 net/socket.c:1291
-> >>     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
-> >>     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
-> >>     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
-> >>     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
-> >>     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
-> >>     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-> >>     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>     [<00000000f737e62f>] 0xffffffffffffffff
-> >>
-> >> Fixes: 389fb800ac8b("netlabel: Label incoming TCP connections correctly in SELinux")
-> >> Reported-by: Hulk Robot <hulkci@huawei.com>
-> >> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> >> ---
-> >>  security/selinux/netlabel.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
-> >> index 186e727b737b..f3da05338580 100644
-> >> --- a/security/selinux/netlabel.c
-> >> +++ b/security/selinux/netlabel.c
-> >> @@ -426,6 +426,9 @@ int selinux_netlbl_socket_post_create(struct sock *sk, u16 family)
-> >>                 rc = 0;
-> >>                 break;
-> >>         }
-> >> +       if (rc != 0) {
-> >> +               netlbl_secattr_free(secattr);
-> >> +       }
-> >
-> > This is likely going to cause a problem as the
-> > sock->sk_security->nlbl_secattr still has a reference to the secattr
-> > pointer you are releasing here.  Assuming things are working correctly
-> > elsewhere, I believe freeing secattr here will result in a double free
-> > when the network stacks cleans up after the failed socket creation
-> > (via the sock_release() call in the error handling code).
-> Do you mean here?
->         err = security_socket_post_create(sock, family, type, protocol, kern);
->         if (err)
->                 goto out_sock_release;
->         ...
->
->         out_sock_release:
->                 sock_release(sock);
->                 return err;
-> yes, the call trace may like below:
->         sock_release->__sock_release->inet_release->tcp_close->sock_put->sk_free->__sk_free->sk_destruct->
->         __sk_destruct->sk_prot_free->security_sk_free->selinux_sk_free_security->selinux_netlbl_sk_security_free->
->         netlbl_secattr_free
->
-> so, it is no need to free in selinux_netlbl_socket_post_create().
-> Please correct me if this is incorrect.
+Newer ThinkPads have a totally different EC program information DMI
+table. And thermal subdriver can't work without correct EC version.
 
-I haven't followed the entirely call stack lately, but that looks right.
+Read from this entry if the old method failed to get EC information.
 
-> > It looks like you may have found this via a test tool (syzbot?), do
-> > you have a reproducer you can share?
->
-> The issue has been found by syzkaller, but unfortunately it is no reproducer, it is
-> only some backtrace.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 62 ++++++++++++++++++++++------
+ 1 file changed, 49 insertions(+), 13 deletions(-)
 
-If you are able to reproduce this please let us know, it may be a sign
-that something is wrong with the LSM hooks.
-
-Thanks.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2e24ee42a3c6..17fd2065000b 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9959,6 +9959,37 @@ static char __init tpacpi_parse_fw_id(const char * const s,
+ 	return '\0';
+ }
+ 
++static void find_new_ec_fwstr(const struct dmi_header *dm, void *private)
++{
++	char *ec_fw_string = (char *) private;
++	const char *dmi_data = (const char *)dm;
++	/*
++	 * ThinkPad Embedded Controller Program Table on newer models
++	 *
++	 * Offset |  Name                | Width  | Description
++	 * ----------------------------------------------------
++	 *  0x00  | Type                 | BYTE   | 0x8C
++	 *  0x01  | Length               | BYTE   |
++	 *  0x02  | Handle               | WORD   | Varies
++	 *  0x04  | Signature            | BYTEx6 | ASCII for "LENOVO"
++	 *  0x0A  | OEM struct offset    | BYTE   | 0x0B
++	 *  0x0B  | OEM struct number    | BYTE   | 0x07, for this structure
++	 *  0x0C  | OEM struct revision  | BYTE   | 0x01, for this format
++	 *  0x0D  | ECP version ID       | STR ID |
++	 *  0x0E  | ECP release date     | STR ID |
++	 */
++
++	/* Return if data structure not match */
++	if (dm->type != 140 || dm->length < 0x0F ||
++	memcmp(dmi_data + 4, "LENOVO", 6) != 0 ||
++	dmi_data[0x0A] != 0x0B || dmi_data[0x0B] != 0x07 ||
++	dmi_data[0x0C] != 0x01)
++		return;
++
++	/* fwstr is the first 8byte string  */
++	strncpy(ec_fw_string, dmi_data + 0x0F, 8);
++}
++
+ /* returns 0 - probe ok, or < 0 - probe error.
+  * Probe ok doesn't mean thinkpad found.
+  * On error, kfree() cleanup on tp->* is not performed, caller must do it */
+@@ -9966,7 +9997,7 @@ static int __must_check __init get_thinkpad_model_data(
+ 						struct thinkpad_id_data *tp)
+ {
+ 	const struct dmi_device *dev = NULL;
+-	char ec_fw_string[18];
++	char ec_fw_string[18] = {0};
+ 	char const *s;
+ 	char t;
+ 
+@@ -10006,20 +10037,25 @@ static int __must_check __init get_thinkpad_model_data(
+ 			   ec_fw_string) == 1) {
+ 			ec_fw_string[sizeof(ec_fw_string) - 1] = 0;
+ 			ec_fw_string[strcspn(ec_fw_string, " ]")] = 0;
++			break;
++		}
++	}
+ 
+-			tp->ec_version_str = kstrdup(ec_fw_string, GFP_KERNEL);
+-			if (!tp->ec_version_str)
+-				return -ENOMEM;
++	/* Newer ThinkPads have different EC program info table */
++	if (!ec_fw_string[0])
++		dmi_walk(find_new_ec_fwstr, &ec_fw_string);
+ 
+-			t = tpacpi_parse_fw_id(ec_fw_string,
+-					       &tp->ec_model, &tp->ec_release);
+-			if (t != 'H') {
+-				pr_notice("ThinkPad firmware release %s doesn't match the known patterns\n",
+-					  ec_fw_string);
+-				pr_notice("please report this to %s\n",
+-					  TPACPI_MAIL);
+-			}
+-			break;
++	if (ec_fw_string[0]) {
++		tp->ec_version_str = kstrdup(ec_fw_string, GFP_KERNEL);
++		if (!tp->ec_version_str)
++			return -ENOMEM;
++
++		t = tpacpi_parse_fw_id(ec_fw_string,
++			 &tp->ec_model, &tp->ec_release);
++		if (t != 'H') {
++			pr_notice("ThinkPad firmware release %s doesn't match the known patterns\n",
++				  ec_fw_string);
++			pr_notice("please report this to %s\n", TPACPI_MAIL);
+ 		}
+ 	}
+ 
 -- 
-paul moore
-www.paul-moore.com
+2.20.1
+
