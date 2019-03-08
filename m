@@ -6,111 +6,254 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B91C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872CBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB5320811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4119220811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 07:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfCHHJP (ORCPT
+        id S1726483AbfCHHKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 02:09:15 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726332AbfCHHJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 02:09:15 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28798j6121609
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 02:09:14 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r3g6hf9na-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 02:09:08 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Fri, 8 Mar 2019 07:08:52 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Mar 2019 07:08:50 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2878nNH31719442
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Mar 2019 07:08:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B66A0A405C;
-        Fri,  8 Mar 2019 07:08:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8483FA4054;
-        Fri,  8 Mar 2019 07:08:49 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.145.166.171])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Mar 2019 07:08:49 +0000 (GMT)
-Date:   Fri, 8 Mar 2019 08:08:47 +0100
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] s390/mem_detect: Use IS_ENABLED(CONFIG_BLK_DEV_INITRD)
-In-Reply-To: <d81a9133ad20d478dc8c14fbc8d1bacf4c8ffe94.camel@perches.com>
-References: <d81a9133ad20d478dc8c14fbc8d1bacf4c8ffe94.camel@perches.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 8 Mar 2019 02:10:16 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45704 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726261AbfCHHKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 02:10:16 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 691174F64368DBA4DBF9;
+        Fri,  8 Mar 2019 15:10:14 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Fri, 8 Mar 2019
+ 15:10:10 +0800
+Message-ID: <5C821550.50506@huawei.com>
+Date:   Fri, 8 Mar 2019 15:10:08 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+To:     Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Peter Xu <peterx@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
+        Michal Hocko <mhocko@kernel.org>, <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
+References: <00000000000006457e057c341ff8@google.com> <5C7BFE94.6070500@huawei.com> <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com> <5C7D2F82.40907@huawei.com> <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com> <5C7D4500.3070607@huawei.com> <CACT4Y+b6y_3gTpR8LvNREHOV0TP7jB=Zp1L03dzpaz_SaeESng@mail.gmail.com> <5C7E1A38.2060906@huawei.com> <20190306020540.GA23850@redhat.com>
+In-Reply-To: <20190306020540.GA23850@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030807-0016-0000-0000-0000025F640F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030807-0017-0000-0000-000032B9F56F
-Message-Id: <20190308080847.70910d18@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903080051
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Mar 2019 15:51:45 -0800
-Joe Perches <joe@perches.com> wrote:
+On 2019/3/6 10:05, Andrea Arcangeli wrote:
+> Hello everyone,
+>
+> [ CC'ed Mike and Peter ]
+>
+> On Tue, Mar 05, 2019 at 02:42:00PM +0800, zhong jiang wrote:
+>> On 2019/3/5 14:26, Dmitry Vyukov wrote:
+>>> On Mon, Mar 4, 2019 at 4:32 PM zhong jiang <zhongjiang@huawei.com> wrote:
+>>>> On 2019/3/4 22:11, Dmitry Vyukov wrote:
+>>>>> On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
+>>>>>> On 2019/3/4 15:40, Dmitry Vyukov wrote:
+>>>>>>> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
+>>>>>>>> Hi, guys
+>>>>>>>>
+>>>>>>>> I also hit the following issue. but it fails to reproduce the issue by the log.
+>>>>>>>>
+>>>>>>>> it seems to the case that we access the mm->owner and deference it will result in the UAF.
+>>>>>>>> But it should not be possible that we specify the incomplete process to be the mm->owner.
+>>>>>>>>
+>>>>>>>> Any thoughts?
+>>>>>>> FWIW syzbot was able to reproduce this with this reproducer.
+>>>>>>> This looks like a very subtle race (threaded reproducer that runs
+>>>>>>> repeatedly in multiple processes), so most likely we are looking for
+>>>>>>> something like few instructions inconsistency window.
+>>>>>>>
+>>>>>> I has a little doubtful about the instrustions inconsistency window.
+>>>>>>
+>>>>>> I guess that you mean some smb barriers should be taken into account.:-)
+>>>>>>
+>>>>>> Because IMO, It should not be the lock case to result in the issue.
+>>>>> Since the crash was triggered on x86 _most likley_ this is not a
+>>>>> missed barrier. What I meant is that one thread needs to executed some
+>>>>> code, while another thread is stopped within few instructions.
+>>>>>
+>>>>>
+>>>> It is weird and I can not find any relationship you had said with the issue.:-(
+>>>>
+>>>> Because It is the cause that mm->owner has been freed, whereas we still deference it.
+>>>>
+>>>> From the lastest freed task call trace, It fails to create process.
+>>>>
+>>>> Am I miss something or I misunderstand your meaning. Please correct me.
+>>> Your analysis looks correct. I am just saying that the root cause of
+>>> this use-after-free seems to be a race condition.
+>>>
+>>>
+>>>
+>> Yep, Indeed,  I can not figure out how the race works. I will dig up further.
+> Yes it's a race condition.
+>
+> We were aware about the non-cooperative fork userfaultfd feature
+> creating userfaultfd file descriptor that gets reported to the parent
+> uffd, despite they belong to mm created by failed forks.
+>
+> https://www.spinics.net/lists/linux-mm/msg136357.html
+>
+> The fork failure in my testcase happened because of signal pending
+> that interrupted fork after the failed-fork uffd context, was already
+> pushed to the userfaultfd reader/monitor. CRIU then takes care of
+> filtering the failed fork cases so we didn't want to make the fork
+> code more complicated just for userfaultfd.
+>
+> In reality if MEMCG is enabled at build time, mm->owner maintainance
+> code now creates a race condition in the above case, with any fork
+> failure.
+>
+> I pinged Mike yesterday to ask if my theory could be true for this bug
+> and one solution he suggested is to do the userfaultfd_dup at a point
+> where fork cannot fail anymore. That's precisely what we were
+> wondering to do back then to avoid the failed fork reports to the
+> non cooperative uffd monitor.
+>
+> That will solve the false positive deliveries that CRIU manager
+> currently filters out too. From a theoretical standpoint it's also
+> quite strange to even allow any uffd ioctl to run on a otherwise long
+> gone mm created for a process that in the end wasn't even created (the
+> mm got temporarily fully created, but no child task really ever used
+> such mm). However that mm is on its way to exit_mmap as soon as the
+> ioclt returns and this only ever happens during race conditions, so
+> the way CRIU monitor works there wasn't anything fundamentally
+> concerning about this detail, despite it's remarkably "strange". Our
+> priority was to keep the fork code as simple as possible and keep
+> userfaultfd as non intrusive as possible.
+>
+> One alternative solution I'm wondering about for this memcg issue is
+> to free the task struct with RCU also when fork has failed and to add
+> the mm_update_next_owner before mmput. That will still report failed
+> forks to the uffd monitor, so it's not the ideal fix, but since it's
+> probably simpler I'm posting it below. Also I couldn't reproduce the
+> problem with the testcase here yet.
+>
+> >From 6cbf9d377b705476e5226704422357176f79e32c Mon Sep 17 00:00:00 2001
+> From: Andrea Arcangeli <aarcange@redhat.com>
+> Date: Tue, 5 Mar 2019 19:21:37 -0500
+> Subject: [PATCH 1/1] userfaultfd: use RCU to free the task struct when fork
+>  fails if MEMCG
+>
+> MEMCG depends on the task structure not to be freed under
+> rcu_read_lock() in get_mem_cgroup_from_mm() after it dereferences
+> mm->owner.
+>
+> A better fix would be to avoid registering forked vmas in userfaultfd
+> contexts reported to the monitor, if case fork ends up failing.
+Hi,  Andrea
 
-> IS_ENABLED should generally use CONFIG_ prefaced symbols and
-> it doesn't appear as if there is a BLK_DEV_INITRD define.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+I can reproduce the issue in arm64 qemu machine.  The issue will leave after applying the
+patch.
+
+Tested-by: zhong jiang <zhongjiang@huawei.com>
+
+Meanwhile,  I just has a little doubt whether it is necessary to use RCU to free the task struct or not.
+I think that mm->owner alway be NULL after failing to create to process. Because we call mm_clear_owner.
+
+Thanks,
+zhong jiang
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 > ---
->  arch/s390/boot/mem_detect.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/boot/mem_detect.c b/arch/s390/boot/mem_detect.c
-> index 4cb771ba13fa..5d316fe40480 100644
-> --- a/arch/s390/boot/mem_detect.c
-> +++ b/arch/s390/boot/mem_detect.c
-> @@ -25,7 +25,7 @@ static void *mem_detect_alloc_extended(void)
+>  kernel/fork.c | 34 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 32 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index eb9953c82104..3bcbb361ffbc 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -953,6 +953,15 @@ static void mm_init_aio(struct mm_struct *mm)
+>  #endif
+>  }
+>  
+> +static __always_inline void mm_clear_owner(struct mm_struct *mm,
+> +					   struct task_struct *p)
+> +{
+> +#ifdef CONFIG_MEMCG
+> +	if (mm->owner == p)
+> +		mm->owner = NULL;
+> +#endif
+> +}
+> +
+>  static void mm_init_owner(struct mm_struct *mm, struct task_struct *p)
 >  {
->  	unsigned long offset = ALIGN(mem_safe_offset(), sizeof(u64));
-> 
-> -	if (IS_ENABLED(BLK_DEV_INITRD) && INITRD_START && INITRD_SIZE &&
-> +	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && INITRD_START && INITRD_SIZE &&
->  	    INITRD_START < offset + ENTRIES_EXTENDED_MAX)
->  		offset = ALIGN(INITRD_START + INITRD_SIZE, sizeof(u64));
-> 
-> 
+>  #ifdef CONFIG_MEMCG
+> @@ -1345,6 +1354,7 @@ static struct mm_struct *dup_mm(struct task_struct *tsk)
+>  free_pt:
+>  	/* don't put binfmt in mmput, we haven't got module yet */
+>  	mm->binfmt = NULL;
+> +	mm_init_owner(mm, NULL);
+>  	mmput(mm);
+>  
+>  fail_nomem:
+> @@ -1676,6 +1686,24 @@ static inline void rcu_copy_process(struct task_struct *p)
+>  #endif /* #ifdef CONFIG_TASKS_RCU */
+>  }
+>  
+> +#ifdef CONFIG_MEMCG
+> +static void __delayed_free_task(struct rcu_head *rhp)
+> +{
+> +	struct task_struct *tsk = container_of(rhp, struct task_struct, rcu);
+> +
+> +	free_task(tsk);
+> +}
+> +#endif /* CONFIG_MEMCG */
+> +
+> +static __always_inline void delayed_free_task(struct task_struct *tsk)
+> +{
+> +#ifdef CONFIG_MEMCG
+> +	call_rcu(&tsk->rcu, __delayed_free_task);
+> +#else /* CONFIG_MEMCG */
+> +	free_task(tsk);
+> +#endif /* CONFIG_MEMCG */
+> +}
+> +
+>  /*
+>   * This creates a new process as a copy of the old one,
+>   * but does not actually start it yet.
+> @@ -2137,8 +2165,10 @@ static __latent_entropy struct task_struct *copy_process(
+>  bad_fork_cleanup_namespaces:
+>  	exit_task_namespaces(p);
+>  bad_fork_cleanup_mm:
+> -	if (p->mm)
+> +	if (p->mm) {
+> +		mm_clear_owner(p->mm, p);
+>  		mmput(p->mm);
+> +	}
+>  bad_fork_cleanup_signal:
+>  	if (!(clone_flags & CLONE_THREAD))
+>  		free_signal_struct(p->signal);
+> @@ -2169,7 +2199,7 @@ static __latent_entropy struct task_struct *copy_process(
+>  bad_fork_free:
+>  	p->state = TASK_DEAD;
+>  	put_task_stack(p);
+> -	free_task(p);
+> +	delayed_free_task(p);
+>  fork_out:
+>  	spin_lock_irq(&current->sighand->siglock);
+>  	hlist_del_init(&delayed.node);
+>
+> .
+>
 
-With more than the 255 embedded entries and a initrd that sits in the
-wrong location that would have resulted in a corrupted ramdisk.
-Nice catch, thanks. I'll add the patch to my queue.
-
--- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
 
