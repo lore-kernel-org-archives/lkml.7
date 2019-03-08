@@ -2,116 +2,127 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A11C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3372081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:17:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZiUxcLm"
+	by mail.kernel.org (Postfix) with ESMTP id 9DE762081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfCHVRC (ORCPT
+        id S1726559AbfCHVSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:17:02 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33297 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHVRB (ORCPT
+        Fri, 8 Mar 2019 16:18:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37638 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726375AbfCHVSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:17:01 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h11so15102125pgl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PC+irVBjfIRVPxtTFF9v199fQw8q2YEazxKDDM5NSTQ=;
-        b=oZiUxcLmr1zGuLQnooeRsFYGtVga0zrRpXSRztMGlrPf8vfU7Ot5cCJSI5LVHEOwjh
-         G3NfGoXQS6+EvbLNy81FuhrqJ2GTosxuj2Fc9+WWZ+d8KuEVQ6tLKuXdhozyaNT5ff0l
-         USTLG9B6A+HkbhMtgzsPoX+jfA67dPieHbSyvBcLv5pRuAn/CneQY4jklegr1zwa7Zak
-         C0LNWORZyrdKvLfGHwYGeLBkyRzMuisDeGaYIhReAfRT/w74P3zODwEZK416wMMJaCKU
-         aqXyOI+IqsqlOzbNZqzwt+eIH+mqu0iDnLmAjbMUwA94Qo0Gw6eRPoTaVmQNbtCrIKfF
-         g/Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PC+irVBjfIRVPxtTFF9v199fQw8q2YEazxKDDM5NSTQ=;
-        b=F4WpVSrSNABE8sAIG4E3L37iwhjwqzCRLvg6t0gfvr5/CjqhGAggNZK11kjbtn1vc8
-         f8VPj1YHlDukyi/BM0pHfO1JRhJDUBT5vCkpgk7Mlre0sCfaOUCDWgVmAGsBH/DaGhtU
-         DxxeqatxbtaIkBku/Yleau0Oigmia4moJ8UFk5DUaAoeY/V0gri8XX8PtefBQ9if74qH
-         GL8Hzzrb3kTmwyGPd2+khuRTMOeiA+dfPbstb97oi55DvBpZjMvGgxpIkvymxCt312mG
-         JKatTtACmQMH1tsgbHG+2Aipc+9TteBpiiOeP8Z7jxNx/B9FrJgRWyOsytri1/17es9o
-         T/gg==
-X-Gm-Message-State: APjAAAUlcfzTfDTaYaCc7hbG2JPpEhSwNSILJVkOMLRLZM9s4aJ64/MO
-        krcWB+kaB3ZgcFNCCXBBX0ySp+Vqodpkar0OL5MQmQ==
-X-Google-Smtp-Source: APXvYqwwpRN5yGydOWvfotDSxw3NfN8emixvBOyhhLcsE5ejRVK0UCyHWXnsqH24MGl9L47JtG7qcbIeuPub2ljIre0=
-X-Received: by 2002:a63:fe58:: with SMTP id x24mr18688399pgj.255.1552079820211;
- Fri, 08 Mar 2019 13:17:00 -0800 (PST)
+        Fri, 8 Mar 2019 16:18:47 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28L3lcw005993
+        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 16:18:45 -0500
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r3wthnyju-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 16:18:45 -0500
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 8 Mar 2019 21:18:44 -0000
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Mar 2019 21:18:41 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x28LIeBk23003182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Mar 2019 21:18:40 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BBF9B2064;
+        Fri,  8 Mar 2019 21:18:40 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F098B2066;
+        Fri,  8 Mar 2019 21:18:40 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Mar 2019 21:18:40 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 3F0CA16C2A1A; Fri,  8 Mar 2019 13:18:40 -0800 (PST)
+Date:   Fri, 8 Mar 2019 13:18:40 -0800
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu/tree_plugin: Fix nohz status in stall warning
+Reply-To: paulmck@linux.ibm.com
+References: <1552069309-24392-1-git-send-email-neeraju@codeaurora.org>
 MIME-Version: 1.0
-References: <20190307184125.21419-1-natechancellor@gmail.com> <20190307231534.2640-1-natechancellor@gmail.com>
-In-Reply-To: <20190307231534.2640-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 8 Mar 2019 13:16:49 -0800
-Message-ID: <CAKwvOdmFnnGOnbQ-0fAeOpAMDjnYnN1mkiNjbcW8uNss9cSrVg@mail.gmail.com>
-Subject: Re: [PATCH v2] scsi: qla4xxx: Don't call dma_free_coherent when buf
- is NULL
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552069309-24392-1-git-send-email-neeraju@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19030821-0068-0000-0000-000003A20785
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010728; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01171551; UDB=6.00612381; IPR=6.00952195;
+ MB=3.00025898; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-08 21:18:43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030821-0069-0000-0000-000047C174FD
+Message-Id: <20190308211840.GW13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_18:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903080147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 3:17 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building with -Wsometimes-uninitialized, Clang warns:
->
-> drivers/scsi/qla4xxx/ql4_os.c:5915:7: warning: variable 'buf_dma' is
-> used uninitialized whenever 'if' condition is false
-> [-Wsometimes-uninitialized]
->
-> Don't call dma_free_coherent when buf is NULL, meaning that we never
-> called dma_alloc_coherent and initialized buf_dma.
->
-> Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/391
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, Mar 08, 2019 at 11:51:49PM +0530, Neeraj Upadhyay wrote:
+> Fix stall warning, to show correct nohz marker.
+> 
+> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+
+Good eyes, thank you!
+
+I applied and pushed all three with modified commit logs.  Please check
+to make sure that I didn't mess anything up.  If testing and reviews
+are OK, I expect to submit them for the v5.2 merge window.
+
+I had to hand-apply this one, so in future patches could you please
+generate them against -rcu?  It may be found here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+
+							Thanx, Paul
+
 > ---
->
-> v1 -> v2:
->
-> * Check that buf is not NULL, which matches how dma_free_coherent is
->   called in the rest of the tree. This still fixes the warning.
->
->  drivers/scsi/qla4xxx/ql4_os.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-> index 16a18d5d856f..9f56dafc3cda 100644
-> --- a/drivers/scsi/qla4xxx/ql4_os.c
-> +++ b/drivers/scsi/qla4xxx/ql4_os.c
-> @@ -5982,7 +5982,8 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
->                           ddb_index[1]));
->
->  exit_boot_info_free:
-> -       dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
-> +       if (buf)
-> +               dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
+>  kernel/rcu/tree_plugin.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 97dba50..93da32c 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -1659,7 +1659,7 @@ static void print_cpu_stall_fast_no_hz(char *cp, int cpu)
+>  		rdp->last_accelerate & 0xffff, jiffies & 0xffff,
+>  		".l"[rdp->all_lazy],
+>  		".L"[!rcu_segcblist_n_nonlazy_cbs(&rdp->cblist)],
+> -		".D"[!rdp->tick_nohz_enabled_snap]);
+> +		".D"[!!rdp->tick_nohz_enabled_snap]);
+>  }
+> 
+>  #else /* #ifdef CONFIG_RCU_FAST_NO_HZ */
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member of the Code Aurora Forum, hosted by The Linux Foundation
+> 
 
-Same thoughts as: https://lkml.org/lkml/2019/3/8/786
-WDYT?
-
--- 
-Thanks,
-~Nick Desaulniers
