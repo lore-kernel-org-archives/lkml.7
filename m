@@ -2,94 +2,92 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52171C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 01:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ED6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 01:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241C320661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 01:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FCD20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 01:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfCHBse (ORCPT
+        id S1726323AbfCHB4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 20:48:34 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:57478 "EHLO mx1.redhat.com"
+        Thu, 7 Mar 2019 20:56:32 -0500
+Received: from mga18.intel.com ([134.134.136.126]:27470 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbfCHBsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 20:48:33 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6A0F93003D2A;
-        Fri,  8 Mar 2019 01:48:33 +0000 (UTC)
-Received: from straylight.hirudinean.org (ovpn-123-76.rdu2.redhat.com [10.10.123.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4442819C65;
-        Fri,  8 Mar 2019 01:48:32 +0000 (UTC)
-Date:   Thu, 7 Mar 2019 17:48:29 -0800
-From:   Chris Leech <cleech@redhat.com>
-To:     Lee Duncan <lduncan@suse.com>
-Cc:     Lee Duncan <leeman.duncan@gmail.com>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hare@suse.de
-Subject: Re: [PATCH v2] scsi:libiscsi: Hold back_lock when calling
- iscsi_complete_task
-Message-ID: <20190308014829.GD68002@straylight.hirudinean.org>
-Mail-Followup-To: Chris Leech <cleech@redhat.com>,
-        Lee Duncan <lduncan@suse.com>, Lee Duncan <leeman.duncan@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hare@suse.de
-References: <20190225174130.29496-1-leeman.duncan@gmail.com>
- <20190306182349.GB68002@straylight.hirudinean.org>
- <88c1457c-7831-3341-1c63-11eb82244c4b@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88c1457c-7831-3341-1c63-11eb82244c4b@suse.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 08 Mar 2019 01:48:33 +0000 (UTC)
+        id S1726248AbfCHB4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 20:56:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2019 17:56:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,454,1544515200"; 
+   d="scan'208";a="129808401"
+Received: from lxy-dell.sh.intel.com ([10.239.159.147])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Mar 2019 17:56:29 -0800
+Message-ID: <1622bef446a79151c78960f61674495b0857b716.camel@linux.intel.com>
+Subject: Re: [PATCH] kvm/x86/vmx: Make the emulation of
+ MSR_IA32_ARCH_CAPABILITIES only for vmx
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 08 Mar 2019 09:53:14 +0800
+In-Reply-To: <55caabc3-e075-3282-a000-88356ddb15c2@redhat.com>
+References: <20190307093143.77182-1-xiaoyao.li@linux.intel.com>
+         <20190307173744.GB4986@linux.intel.com>
+         <55caabc3-e075-3282-a000-88356ddb15c2@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 05:37:50PM -0800, Lee Duncan wrote:
-> On 3/6/19 10:23 AM, Chris Leech wrote:
-> > On Mon, Feb 25, 2019 at 09:41:30AM -0800, Lee Duncan wrote:
-> >> From: Lee Duncan <lduncan@suse.com>
-> >>
-> >> If there is an error queueing an iscsi command in
-> >> iscsi_queuecommand(), for example if the transport fails
-> >> to take the command in sessuin->tt->xmit_task(), then
-> >> the error path can call iscsi_complete_task() without
-> >> first aquiring the back_lock as required. This can
-> >> lead to things like ITT pool can get corrupt, resulting
-> >> in duplicate ITTs being sent out.
-> >>
-> >> The solution is to hold the back_lock around
-> >> iscsi_complete_task() calls, and to add a little commenting
-> >> to help others understand when back_lock must be held.
-> >>
-> >> Signed-off-by: Lee Duncan <lduncan@suse.com>
-> >> ---
+On Thu, 2019-03-07 at 19:15 +0100, Paolo Bonzini wrote:
+> On 07/03/19 18:37, Sean Christopherson wrote:
+> > On Thu, Mar 07, 2019 at 05:31:43PM +0800, Xiaoyao Li wrote:
+> > > At present, we report F(ARCH_CAPABILITIES) for x86 arch(both vmx and svm)
+> > > unconditionally, but we only emulate this MSR in vmx. It will cause #GP
+> > > while guest kernel rdmsr(MSR_IA32_ARCH_CAPABILITIES) in an AMD host.
+> > > 
+> > > Since MSR IA32_ARCH_CAPABILITIES is an intel-specific MSR, it makes no
+> > > sense to emulate it in svm. Thus this patch chooses to only emulate it
+> > > for vmx, and moves the related handling to vmx related files.
 > > 
-> > Lee,
+> > What about emulating the MSR on an AMD host for testing purpsoes?  It
+> > might be a useful way for someone without Intel hardware to test spectre
+> > related flows.
 > > 
-> > Quick question, can you confirm that you tested this with lockdep?
-> > 
-> > It seems right to me, it's just that we've been hit with lockdep
-> > problems dealing with these locks before.
-> > 
-> > - Chris
+> > In other words, an alternative to restricting emulation of the MSR to
+> > Intel CPUS would be to move MSR_IA32_ARCH_CAPABILITIES handling into
+> > kvm_{get,set}_msr_common().  Guest access to MSR_IA32_ARCH_CAPABILITIES
+> > is gated by X86_FEATURE_ARCH_CAPABILITIES in the guest's CPUID, e.g.
+> > RDMSR will naturally #GP fault if userspace passes through the host's
+> > CPUID on a non-Intel system.
 > 
-> I'm glad you asked, to keep me honest -- I had not done it yet, because
-> it seemed obvious to me.
+> This is also better because it wouldn't change the guest ABI for AMD
+> processors.  Dropping CPUID flags is generally not a good idea.
 > 
-> But I did check today, and did not find any deadlock nor leaks. I was
-> testing on a 5.0.0-1 kernel.
+> Paolo
 
-Thanks!
+Hi, Paolo and Sean,
 
-Acked-by: Chris Leech <cleech@redhat.com>
+OK, as you think it's better to emulate MSR ARCH_CAPABILITIES on all x86 host,
+so should I make the same to MSR CORE_CAPABILITY?
+
+If so, I will make it for our v5 patches of split lock detection to emualte MSR
+CORE_CAPABILITY in this way.
+
+Thanks,
+Xiaoyao
+
 
