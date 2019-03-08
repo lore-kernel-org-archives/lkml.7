@@ -2,175 +2,254 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE1AC10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988BBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3E3208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8362085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PonC0iRS"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="bwIyArRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfCHQyP (ORCPT
+        id S1727742AbfCHQ6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:54:15 -0500
-Received: from mail-pf1-f174.google.com ([209.85.210.174]:35201 "EHLO
-        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfCHQyO (ORCPT
+        Fri, 8 Mar 2019 11:58:09 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34689 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfCHQ6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:54:14 -0500
-Received: by mail-pf1-f174.google.com with SMTP id j5so14561836pfa.2;
-        Fri, 08 Mar 2019 08:54:13 -0800 (PST)
+        Fri, 8 Mar 2019 11:58:08 -0500
+Received: by mail-ed1-f68.google.com with SMTP id a16so16975597edn.1
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:58:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=sTVn5fgUvG+GIwC733X/NGFmVF4SAb1JPy7RcnKrDQM=;
-        b=PonC0iRSOt71d03cuXAwPIn5opeTuqfSMvavm2iuaKQGb3IqY8K6zh91w/d3u+OYIu
-         70BkIiKHzfDg0vYPsIFKqeafE4Ob6K6Hr3rZOjbl13w6SUgl4hFhuOI/kDw/nsQn6Ip1
-         h95Mn9iXF/jlq66kgRyourrWrFp/Kj32mkK4XTnkr05i2v4YOyW6LW6Bjd+4iAOHDN3r
-         t4Q2KodUWj5QtwxIEaJbzMzZseCEMCNEnnUshwBYMfmXJU6BD6P8fgR2lhUXeMtXKBd1
-         AoJ0VXzE18KF+a4Nj82CxxMJ291PmZl+skW3tCIBxO3gQtgUSK+euQeFRC2J8Bw/RK8C
-         lGew==
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Yf11JY4QW5DYIgcSOJXbLDEFlf/lVTxt6UlHCia5XY0=;
+        b=bwIyArRYqixgIvVQ7TJAPLeD+w+Bt3Nleit1iINymcs70Q9HLXzZitRrWktO0WXF9B
+         kbHAdKKFMj5gisUiPoaMPMeKJHXZx8RJZhsJz0CheRVi5CeEKLhQJ4o+UzUwxVi8V784
+         +gsexLFarTOIl5faiLmrO3yuaEQPIYSRxox88IgeHOXQOHt+3FYBZduk7g83qg4UvYKs
+         7TqkrWJq9txulO64nLs+A8A7K4nBlZUU+hc+nCqC17+I+As3iyIQORlfAXBMDUthYH2h
+         Dm+EEGjDdH4BOR+OnUIre23paFIsJiNMKs6AkplfH3Tk/mBqVxm/VF0b+Lae8rNrqM1v
+         N5yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=sTVn5fgUvG+GIwC733X/NGFmVF4SAb1JPy7RcnKrDQM=;
-        b=k3QAJAJLfOyxa/6sF7VUwXvTKU/sGM0xxIN+6bjhSE+KqcTGGE3gcki4H4ZKqcwOQc
-         9YWFacyxLiiEAS+96QDx269Xzxgp3BH+dTZYLJ8Iy93unmRkoeodQnInUYZLNjSOZLwh
-         5JcHvnUKWWO3t4tTmAYzhrpbKTg9Gs09+zueS6XzeFcQaiY7DgUjVHianMUH1moTwc7L
-         4sO68ennpspd5wyplf+RVm0YXZtawuuQQWJp0TQd+K5GICsLLTVhYWdfUhJL8F6rB98d
-         z1EDxMjaIbg/jnu4ZYOlm0SzuQPEgSRg7m8w0Tiffb8V2U9euiDPpWdaqRfGx6/Nxx7A
-         9oHw==
-X-Gm-Message-State: APjAAAWMKlj1p1ZZ2HRKVHLdIr9oBXbLHrJQ+0RHlF4HubpA4I5nh7QS
-        kk1ZT2cWRuWXiuyFnWAgQkBP6YGCjVHxpNYKGJJosiZX
-X-Google-Smtp-Source: APXvYqwVGUB9BN7OurtgiO+qhdZ4zcIxo/n7d/fvSKYV5S4mQtsMM2DD+8UCUmYPdgglMhvfHMHalNH/j4gNp82mw4U=
-X-Received: by 2002:a62:b2d9:: with SMTP id z86mr19538997pfl.255.1552064053098;
- Fri, 08 Mar 2019 08:54:13 -0800 (PST)
-MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Fri, 8 Mar 2019 10:54:02 -0600
-Message-ID: <CAH2r5mst=W==ug8Xdt93P3iE1HqeXEjaxYj25TYTs9_1XLfCVg@mail.gmail.com>
-Subject: [GIT][PULL] smb3 fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Yf11JY4QW5DYIgcSOJXbLDEFlf/lVTxt6UlHCia5XY0=;
+        b=igV3mTNfa7WMiXmENaqDjR+6DN7Emz24TA4+SVjRvFGmcPOYxGHLG6ibyAYJsLQB7l
+         02hnnIIVFjhYJ5CI6yZDUbAX6IF8OCUNThEhYPsoor76xKCFc4MT8YkyIcYi84nJ41j1
+         7qyy0Wf7KQkmMpLp6ehBsRO55Fwk8G9ApPdgMrZ6cmK+Ys4Vzb88im0+QPmHjN0vGLaq
+         dyCmVIyFTSA1jGB8KJEEsHrntDEtz2LizGcWd8Pa/oEncxN1zkDQ6lArsEUUuiCl4KM6
+         9ArCZnA91Az9slP2pTt8fc5Pud9E5m+ZYtF6DGBvmvqW6AwZt5zaEtRx8JUdtnlnsx5c
+         2+4g==
+X-Gm-Message-State: APjAAAWi/2z1t24vL8OofNsaMmqRmF4aqBUrdADdUQO2U3eTl1HAn74l
+        kjqgQR+CrZq9tLEn4dKokKoubMMA1Cw=
+X-Google-Smtp-Source: APXvYqw+ucFa281PRVFoVi3tbL8h5oYOYU2/PCtUDpfrHrLvNTlEbws5VX3Lm6PS4UfA20dzhPkFcw==
+X-Received: by 2002:a17:906:1e0f:: with SMTP id g15mr12179568ejj.166.1552064286392;
+        Fri, 08 Mar 2019 08:58:06 -0800 (PST)
+Received: from [10.83.32.113] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id b10sm2263067edy.80.2019.03.08.08.58.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 08:58:05 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH 4/4] iommu/vt-d: Remove lazy allocation of domains
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <bb9c941b-05b6-27aa-d0ca-1d9c56f8f277@linux.intel.com>
+Date:   Fri, 8 Mar 2019 16:57:03 +0000
+Cc:     iommu@lists.linux-foundation.org, Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A5E61244-386C-4FD8-AAF8-3135F471B92E@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <2C75F46E-78FE-45E9-9E7D-280B3138EA13@arista.com>
+ <F83456DB-81DD-4E9B-9204-12ED9972D2FA@arista.com>
+ <7F6B5F6A-EC76-4A9F-8EB6-AEAB9994D91A@arista.com>
+ <fdd74d83-acd4-23da-6c0c-b52573d999bb@linux.intel.com>
+ <4B054B40-0B13-4F1E-87D6-8D2F072B5B9C@arista.com>
+ <06aa306a-278a-a22f-7718-200f6f9e5e87@linux.intel.com>
+ <A8A495EE-D3EA-4D84-AB92-9B4742E6E500@arista.com>
+ <4b3e29ce-1dff-eb7d-9b7e-1cde54a24dec@linux.intel.com>
+ <8ED1B579-C6B9-49E0-BD9A-5751474682D1@arista.com>
+ <bb9c941b-05b6-27aa-d0ca-1d9c56f8f277@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-1c163f4c7b3f621efff9b28a47abb36f7378d783:
+Hey Lu,
 
-  Linux 5.0 (2019-03-03 15:21:29 -0800)
+> On 8 Mar 2019, at 03:09, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>=20
+> Hi James,
+>=20
+> On 3/7/19 6:21 PM, James Sewart wrote:
+>> Hey Lu,
+>>> On 7 Mar 2019, at 06:31, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>=20
+>>> Hi James,
+>>>=20
+>>> On 3/7/19 2:08 AM, James Sewart wrote:
+>>>>>>>> -	/*
+>>>>>>>> -	 * For each rmrr
+>>>>>>>> -	 *   for each dev attached to rmrr
+>>>>>>>> -	 *   do
+>>>>>>>> -	 *     locate drhd for dev, alloc domain for dev
+>>>>>>>> -	 *     allocate free domain
+>>>>>>>> -	 *     allocate page table entries for rmrr
+>>>>>>>> -	 *     if context not allocated for bus
+>>>>>>>> -	 *           allocate and init context
+>>>>>>>> -	 *           set present in root table for this bus
+>>>>>>>> -	 *     init context with domain, translation etc
+>>>>>>>> -	 *    endfor
+>>>>>>>> -	 * endfor
+>>>>>>>> -	 */
+>>>>>>>> -	pr_info("Setting RMRR:\n");
+>>>>>>>> -	for_each_rmrr_units(rmrr) {
+>>>>>>>> -		/* some BIOS lists non-exist devices in DMAR =
+table. */
+>>>>>>>> -		for_each_active_dev_scope(rmrr->devices, =
+rmrr->devices_cnt,
+>>>>>>>> -					  i, dev) {
+>>>>>>>> -			ret =3D iommu_prepare_rmrr_dev(rmrr, =
+dev);
+>>>>>>>> -			if (ret)
+>>>>>>>> -				pr_err("Mapping reserved region =
+failed\n");
+>>>>>>>> -		}
+>>>>>>>> -	}
+>>>>>>>> -
+>>>>>>>> -	iommu_prepare_isa();
+>>>>>>> Why do you want to remove this segment of code?
+>>>>>> This will only work if the lazy allocation of domains exists, =
+these
+>>>>>> mappings will disappear once a default domain is attached to a =
+device and
+>>>>>> then remade by iommu_group_create_direct_mappings. This code is =
+redundant
+>>>>>> and removing it allows us to remove all the lazy allocation =
+logic.
+>>>>> No exactly.
+>>>>>=20
+>>>>> We need to setup the rmrr mapping before enabling dma remapping,
+>>>>> otherwise, there will be a window after dma remapping enabling and
+>>>>> rmrr getting mapped, during which people might see dma faults.
+>>>> Do you think this patch instead should be a refactoring to simplify =
+this initial domain setup before the default domain takes over? It seems =
+like duplicated effort to have both lazy allocated domains and =
+externally managed domains. We could allocate a domain here for any =
+devices with RMRR and call get_resv_regions to avoid duplicating RMRR =
+loop.
+>>>=20
+>>> Agree. We should replace the lazy allocated domains with default =
+domain
+>>> in a clean way. Actually, your patches look great to me. But I do =
+think
+>>> we need further cleanups. The rmrr code is one example, and the =
+identity
+>>> domain (si_domain) is another.
+>>>=20
+>>> Do you mind if I work on top of your patches for further cleanups =
+and
+>>> sign off a v2 together with you?
+>> Sure, sounds good. I=E2=80=99ll fixup patch 3 and have a go at =
+integrating
+>> iommu_prepare_isa into get_resv_regions. This should make the initial
+>> domain logic here quite concise.
+>=20
+> Here attached three extra patches which I think should be added before
+> PATCH 3/4, and some further cleanup changes which you can merge with
+> PATCH 4/4.
+>=20
+> ----------------
+>=20
+> 0006-iommu-Add-ops-entry-for-vendor-specific-default-doma.patch
+> 0007-iommu-vt-d-Add-is_identity_map-ops-entry.patch
+>=20
+> These two patches aim to add a generic method for vendor specific =
+iommu
+> drivers to specify the type of the default domain for a device. Intel
+> iommu driver will register an ops for this since it already has its =
+own
+> identity map adjudicator for a long time.
 
-are available in the Git repository at:
+This seems like a good idea, but as domain alloc is only called for the=20=
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.1-rc-smb3-fixes
+default domain on first device attached to a group, we may miss checking=20=
 
-for you to fetch changes up to 50cfad780bcf9e03d11aaf0a7296a4c0ed336b54:
+whether a device added later should have an identity domain. Should =
+there=20
+be paths to downgrade a groups domain if one of the devices requires =
+one?
 
-  fs: cifs: Kconfig: pedantic formatting (2019-03-06 21:55:12 -0600)
+>=20
+> ----------------
+>=20
+> 0008-iommu-vt-d-Enable-DMA-remapping-after-rmrr-mapped.patch
+>=20
+> This aims to address the requirement of rmrr identity map before
+> enabling DMA remapping. With default domain mechanism, the default
+> domain will be allocated and attached to the device in bus_set_iommu()
+> during boot. Move enabling DMA remapping engines after bus_set_iommu()
+> will fix the rmrr issue.
 
-----------------------------------------------------------------
-smb3/cifs fixes including for large i/o error cases, fixes for 3
-xfstests, improved crediting (smb3 flow control); improved tracing
+Thats pretty neat, avoids any temporary domain allocation, nice!
 
-----------------------------------------------------------------
-Enrico Weigelt, metux IT consult (1):
-      fs: cifs: Kconfig: pedantic formatting
+>=20
+> ----------------
+>=20
+> 0009-return-si_domain-directly.patch
+>=20
+> I suggest that we should keep current si_domain implementation since
+> changing si_domain is not the purpose of this patch set. Please merge
+> this with PATCH 3/4 if you like it.
 
-Louis Taylor (1):
-      cifs: use correct format characters
+Seems reasonable.
 
-Namjae Jeon (1):
-      cifs: Accept validate negotiate if server return NT_STATUS_NOT_SUPPORTED
+>=20
+> ----------------
+>=20
+> 0010-iommu-vt-d-remove-floopy-workaround.patch
+> 0011-iommu-vt-d-remove-prepare-rmrr-helpers.patch
+> 0012-iommu-vt-d-remove-prepare-identity-map-during-boot.patch
+>=20
+> Above patches are further cleanups as the result of switching to =
+default
+> domain. Please consider to merge them with PATCH 4/4.
 
-Pavel Shilovsky (24):
-      CIFS: Fix leaking locked VFS cache pages in writeback retry
-      CIFS: Do not reset lease state to NONE on lease break
-      CIFS: Do not skip SMB2 message IDs on send failures
-      CIFS: Always reset read error to -EIO if no response
-      CIFS: Do not log credits when unmounting a share
-      CIFS: Count SMB3 credits for malformed pending responses
-      CIFS: Respect SMB2 hdr preamble size in read responses
-      CIFS: Set reconnect instance to one initially
-      CIFS: Respect reconnect in MTU credits calculations
-      CIFS: Respect reconnect in non-MTU credits calculations
-      CIFS: Check for reconnects before sending async requests
-      CIFS: Check for reconnects before sending compound requests
-      CIFS: Adjust MTU credits before reopening a file
-      CIFS: Remove custom credit adjustments for SMB2 async IO
-      CIFS: Reopen file before get SMB2 MTU credits for async IO
-      CIFS: Find and reopen a file before get MTU credits in writepages
-      CIFS: Move unlocking pages from wdata_send_pages()
-      CIFS: Move open file handling to writepages
-      CIFS: Return error code when getting file handle for writeback
-      CIFS: Try to acquire credits at once for compound requests
-      CIFS: Fix read after write for files with read caching
-      CIFS: Only send SMB2_NEGOTIATE command on new TCP connections
-      CIFS: Return -EAGAIN instead of -ENOTSOCK
-      CIFS: Mask off signals when sending SMB packets
+Nice, good catch.
 
-Ronnie Sahlberg (3):
-      cifs: replace snprintf with scnprintf
-      cifs: add credits from unmatched responses/messages
-      cifs: return -ENODATA when deleting an xattr that does not exist
+>=20
+> ----------------
+>=20
+> I have done some sanity checks on my local machine against all =
+patches.
+> I can do more tests after you submit a v2.
+>=20
+>=20
+> Best regards,
+> Lu Baolu
+>=20
+>=20
+> =
+<0006-iommu-Add-ops-entry-for-vendor-specific-default-doma.patch><0007-iom=
+mu-vt-d-Add-is_identity_map-ops-entry.patch><0008-iommu-vt-d-Enable-DMA-re=
+mapping-after-rmrr-mapped.patch><0009-return-si_domain-directly.patch><001=
+0-iommu-vt-d-remove-floopy-workaround.patch><0011-iommu-vt-d-remove-prepar=
+e-rmrr-helpers.patch><0012-iommu-vt-d-remove-prepare-identity-map-during-b=
+oot.patch>
 
-Steve French (13):
-      smb3: fix bytes_read statistics
-      smb3: make default i/o size for smb3 mounts larger
-      smb3: request more credits on tree connect
-      cifs: update internal module version number
-      smb3: Update POSIX negotiate context with POSIX ctxt GUID
-      smb3: add tracepoints for query dir
-      smb3: Add tracepoints for read, write and query_dir enter
-      smb3: add missing read completion trace point
-      smb3: improve dynamic tracing of open and posix mkdir
-      smb3: add dynamic trace point for smb3_cmd_enter
-      smb3: add dynamic trace point for query_info_enter/done
-      smb3: for kerberos mounts display the credential uid used
-      smb3: request more credits on normal (non-large read/write) ops
+I have revised my patches and hope to do some testing before reposting.
 
-Yao Liu (1):
-      cifs: Fix NULL pointer dereference of devname
+Cheers,
+James.
 
- fs/cifs/Kconfig         | 120
-++++++++++++++++++++++++++++-----------------------------
- fs/cifs/cifs_dfs_ref.c  |   4 +-
- fs/cifs/cifs_fs_sb.h    |   1 +
- fs/cifs/cifsfs.c        |   3 +-
- fs/cifs/cifsfs.h        |   2 +-
- fs/cifs/cifsglob.h      |  65 ++++++++++++++++++++++++-------
- fs/cifs/cifsproto.h     |   8 +++-
- fs/cifs/cifssmb.c       |  54 +++++++++++++++++---------
- fs/cifs/connect.c       |  66 +++++++++++++++++++++++++++-----
- fs/cifs/file.c          | 269
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------------------
- fs/cifs/inode.c         |   2 +-
- fs/cifs/link.c          |  14 +++----
- fs/cifs/smb1ops.c       |   8 ++--
- fs/cifs/smb2misc.c      |  24 +++++++-----
- fs/cifs/smb2ops.c       | 115
-++++++++++++++++++++++++++++++++++++++++++++++---------
- fs/cifs/smb2pdu.c       | 179
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------
- fs/cifs/smb2pdu.h       |   4 +-
- fs/cifs/smb2transport.c |  25 +++++++++++-
- fs/cifs/smbdirect.c     |   6 +--
- fs/cifs/trace.h         |  89 ++++++++++++++++++++++++++++++++++++++++++-
- fs/cifs/transport.c     | 208
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
- 21 files changed, 929 insertions(+), 337 deletions(-)
-
-
--- 
-Thanks,
-
-Steve
