@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65E3C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15047C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CE72085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC28620449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049636;
-	bh=kAF+jAqt+Ux3Rqbawlym4fuWoWDe1mA5SH1So9tO2FU=;
+	s=default; t=1552049640;
+	bh=Jum0vySXMqLaQBofYTLAwsRSd6M8wmbOBBe3ADvG0X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I6WIjbd96HwaIUjfp+bUHaMla5mSvJSE9FK9LzIdYpnP5oHnjDDaFrlBweSe/vj5n
-	 XU7T3gp/3pXAYHGQ8hQOXEpzPs3EY1aSql5yb+5usIDrDvUY0SPcTmEqE9VUmL1eGU
-	 KMD6buiDvhO0Z75Qv+lMa71YqvF1v/tYtojuMEvM=
+	b=Lt5l5l+0pcFkfh+4CUoEp1XxBb2F4+XARxKtoho7uK5KN+Lw/js8dfkPDplWlAM/9
+	 zIQuqtWsxoHwF6AXZQMBT8W2hMb6JTBUh0Uo7lrrZrEpvi9lnLe8ZiwHsGZ3TCId9+
+	 QlYtb5c82+7KSa9d8hnft0SFoKUFArJ1MpQ7BTCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfCHMxz (ORCPT
+        id S1727253AbfCHMx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:53:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:53:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbfCHMxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:53:53 -0500
+        id S1726658AbfCHMx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:53:56 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8EAF208E4;
-        Fri,  8 Mar 2019 12:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 857D820449;
+        Fri,  8 Mar 2019 12:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049632;
-        bh=kAF+jAqt+Ux3Rqbawlym4fuWoWDe1mA5SH1So9tO2FU=;
+        s=default; t=1552049636;
+        bh=Jum0vySXMqLaQBofYTLAwsRSd6M8wmbOBBe3ADvG0X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGW/E797Au/ZLj0ZIKyFHjfdWuoTQnm8s+seOM/Oz2jajTbXhvVSS5T/Lf6PstF3X
-         8WfhNveIQr57VQmWemyj/w3kLd9ULVn5eZfDLU+ylAz4mYZf9TpTQIAUsK4CDYnaLV
-         Q3YUNMoBjl4tdOF9uh0kRl/QUh4tyDrs4Q1qO84I=
+        b=RX3XEfbiQn5DxVx4fplDX8jqZkV2a+dN26I7OX1cBz0B8T7MrPdK+jbbF8MMDwfiY
+         NhkXowPD0GAqAgHxsAxyeuCYqDis4QukFMdJ+i9mlVbzkI4d08DDo7fcpIHNcdFeCm
+         PP7P7Lfi0aG/l6UkOT1hVJBpKC15EyYNjoHQpD34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot <syzbot+a76129f18c89f3e2ddd4@syzkaller.appspotmail.com>,
-        syzbot <syzbot+148c2885d71194f18d28@syzkaller.appspotmail.com>,
-        syzbot <syzbot+4b8b031b89e6b96c4b2e@syzkaller.appspotmail.com>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 4.20 16/76] staging: android: ashmem: Dont call fallocate() with ashmem_mutex held.
-Date:   Fri,  8 Mar 2019 13:49:28 +0100
-Message-Id: <20190308124915.350067312@linuxfoundation.org>
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [PATCH 4.20 17/76] staging: android: ashmem: Avoid range_alloc() allocation with ashmem_mutex held.
+Date:   Fri,  8 Mar 2019 13:49:29 +0100
+Message-Id: <20190308124915.389907586@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -71,93 +68,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit fb4415a12632f0b9078a0aa80c16745d48fcfc74 upstream.
+commit ecd182cbf4e107928077866399100228d2359c60 upstream.
 
-syzbot is hitting lockdep warnings [1][2][3]. This patch tries to fix
-the warning by eliminating ashmem_shrink_scan() => {shmem|vfs}_fallocate()
-sequence.
+ashmem_pin() is calling range_shrink() without checking whether
+range_alloc() succeeded. Also, doing memory allocation with ashmem_mutex
+held should be avoided because ashmem_shrink_scan() tries to hold it.
 
-[1] https://syzkaller.appspot.com/bug?id=87c399f6fa6955006080b24142e2ce7680295ad4
-[2] https://syzkaller.appspot.com/bug?id=7ebea492de7521048355fc84210220e1038a7908
-[3] https://syzkaller.appspot.com/bug?id=e02419c12131c24e2a957ea050c2ab6dcbbc3270
+Therefore, move memory allocation for range_alloc() to ashmem_pin_unpin()
+and make range_alloc() not to fail.
 
-Reported-by: syzbot <syzbot+a76129f18c89f3e2ddd4@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+148c2885d71194f18d28@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+4b8b031b89e6b96c4b2e@syzkaller.appspotmail.com>
+This patch is mostly meant for backporting purpose for fuzz testing on
+stable/distributor kernels, for there is a plan to remove this code in
+near future.
+
 Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Cc: stable@vger.kernel.org
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes <joel@joelfernandes.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ashmem.c |   25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/staging/android/ashmem.c |   42 ++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
 
 --- a/drivers/staging/android/ashmem.c
 +++ b/drivers/staging/android/ashmem.c
-@@ -75,6 +75,9 @@ struct ashmem_range {
- /* LRU list of unpinned pages, protected by ashmem_mutex */
- static LIST_HEAD(ashmem_lru_list);
- 
-+static atomic_t ashmem_shrink_inflight = ATOMIC_INIT(0);
-+static DECLARE_WAIT_QUEUE_HEAD(ashmem_shrink_wait);
-+
- /*
-  * long lru_count - The count of pages on our LRU list.
+@@ -171,19 +171,15 @@ static inline void lru_del(struct ashmem
+  * @end:	   The ending page (inclusive)
   *
-@@ -438,7 +441,6 @@ out:
- static unsigned long
- ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+  * This function is protected by ashmem_mutex.
+- *
+- * Return: 0 if successful, or -ENOMEM if there is an error
+  */
+-static int range_alloc(struct ashmem_area *asma,
+-		       struct ashmem_range *prev_range, unsigned int purged,
+-		       size_t start, size_t end)
++static void range_alloc(struct ashmem_area *asma,
++			struct ashmem_range *prev_range, unsigned int purged,
++			size_t start, size_t end,
++			struct ashmem_range **new_range)
  {
--	struct ashmem_range *range, *next;
- 	unsigned long freed = 0;
+-	struct ashmem_range *range;
+-
+-	range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
+-	if (!range)
+-		return -ENOMEM;
++	struct ashmem_range *range = *new_range;
  
- 	/* We might recurse into filesystem code, so bail out if necessary */
-@@ -448,21 +450,33 @@ ashmem_shrink_scan(struct shrinker *shri
- 	if (!mutex_trylock(&ashmem_mutex))
- 		return -1;
++	*new_range = NULL;
+ 	range->asma = asma;
+ 	range->pgstart = start;
+ 	range->pgend = end;
+@@ -193,8 +189,6 @@ static int range_alloc(struct ashmem_are
  
--	list_for_each_entry_safe(range, next, &ashmem_lru_list, lru) {
-+	while (!list_empty(&ashmem_lru_list)) {
-+		struct ashmem_range *range =
-+			list_first_entry(&ashmem_lru_list, typeof(*range), lru);
- 		loff_t start = range->pgstart * PAGE_SIZE;
- 		loff_t end = (range->pgend + 1) * PAGE_SIZE;
-+		struct file *f = range->asma->file;
- 
--		range->asma->file->f_op->fallocate(range->asma->file,
--				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
--				start, end - start);
-+		get_file(f);
-+		atomic_inc(&ashmem_shrink_inflight);
- 		range->purged = ASHMEM_WAS_PURGED;
- 		lru_del(range);
- 
- 		freed += range_size(range);
-+		mutex_unlock(&ashmem_mutex);
-+		f->f_op->fallocate(f,
-+				   FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-+				   start, end - start);
-+		fput(f);
-+		if (atomic_dec_and_test(&ashmem_shrink_inflight))
-+			wake_up_all(&ashmem_shrink_wait);
-+		if (!mutex_trylock(&ashmem_mutex))
-+			goto out;
- 		if (--sc->nr_to_scan <= 0)
- 			break;
- 	}
- 	mutex_unlock(&ashmem_mutex);
-+out:
- 	return freed;
+ 	if (range_on_lru(range))
+ 		lru_add(range);
+-
+-	return 0;
  }
  
-@@ -713,6 +727,7 @@ static int ashmem_pin_unpin(struct ashme
+ /**
+@@ -596,7 +590,8 @@ static int get_name(struct ashmem_area *
+  *
+  * Caller must hold ashmem_mutex.
+  */
+-static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
++static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
++		      struct ashmem_range **new_range)
+ {
+ 	struct ashmem_range *range, *next;
+ 	int ret = ASHMEM_NOT_PURGED;
+@@ -649,7 +644,7 @@ static int ashmem_pin(struct ashmem_area
+ 			 * second half and adjust the first chunk's endpoint.
+ 			 */
+ 			range_alloc(asma, range, range->purged,
+-				    pgend + 1, range->pgend);
++				    pgend + 1, range->pgend, new_range);
+ 			range_shrink(range, range->pgstart, pgstart - 1);
+ 			break;
+ 		}
+@@ -663,7 +658,8 @@ static int ashmem_pin(struct ashmem_area
+  *
+  * Caller must hold ashmem_mutex.
+  */
+-static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
++static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
++			struct ashmem_range **new_range)
+ {
+ 	struct ashmem_range *range, *next;
+ 	unsigned int purged = ASHMEM_NOT_PURGED;
+@@ -689,7 +685,8 @@ restart:
+ 		}
+ 	}
+ 
+-	return range_alloc(asma, range, purged, pgstart, pgend);
++	range_alloc(asma, range, purged, pgstart, pgend, new_range);
++	return 0;
+ }
+ 
+ /*
+@@ -722,10 +719,17 @@ static int ashmem_pin_unpin(struct ashme
+ 	struct ashmem_pin pin;
+ 	size_t pgstart, pgend;
+ 	int ret = -EINVAL;
++	struct ashmem_range *range = NULL;
+ 
+ 	if (copy_from_user(&pin, p, sizeof(pin)))
  		return -EFAULT;
  
++	if (cmd == ASHMEM_PIN || cmd == ASHMEM_UNPIN) {
++		range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
++		if (!range)
++			return -ENOMEM;
++	}
++
  	mutex_lock(&ashmem_mutex);
-+	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
+ 	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
  
- 	if (!asma->file)
- 		goto out_unlock;
+@@ -750,10 +754,10 @@ static int ashmem_pin_unpin(struct ashme
+ 
+ 	switch (cmd) {
+ 	case ASHMEM_PIN:
+-		ret = ashmem_pin(asma, pgstart, pgend);
++		ret = ashmem_pin(asma, pgstart, pgend, &range);
+ 		break;
+ 	case ASHMEM_UNPIN:
+-		ret = ashmem_unpin(asma, pgstart, pgend);
++		ret = ashmem_unpin(asma, pgstart, pgend, &range);
+ 		break;
+ 	case ASHMEM_GET_PIN_STATUS:
+ 		ret = ashmem_get_pin_status(asma, pgstart, pgend);
+@@ -762,6 +766,8 @@ static int ashmem_pin_unpin(struct ashme
+ 
+ out_unlock:
+ 	mutex_unlock(&ashmem_mutex);
++	if (range)
++		kmem_cache_free(ashmem_range_cachep, range);
+ 
+ 	return ret;
+ }
 
 
