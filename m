@@ -2,139 +2,113 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F18C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12043C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDA820868
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C162085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 14:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhYTVLS9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fjMA0C3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfCHOjc (ORCPT
+        id S1726860AbfCHOkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 09:39:32 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33025 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfCHOjc (ORCPT
+        Fri, 8 Mar 2019 09:40:03 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34930 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbfCHOkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 09:39:32 -0500
-Received: by mail-qk1-f193.google.com with SMTP id x9so11292573qkf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 06:39:31 -0800 (PST)
+        Fri, 8 Mar 2019 09:40:02 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p48so21408256qtk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 06:40:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i1POeuV6FZITxTAGW4IZUlBNpnMfWOtIF6lLlEeC7iQ=;
-        b=WhYTVLS9tgDlKkI7D5y8082vIJE6RYRtjN3/f0JqKdX1lvdITF5Bn3nVztg1PS5roZ
-         accCjnjjdbXJM2eJQXXadiRLliuMJpL9zIlGidCcxMHjeox6vZsbX/bpmkUYiPAx9Ucv
-         tajnRlKAwyP0Iz9CO7/hdGJJ3HUCykTZ3FdNBvwsn0y2pMKpw7hmrcKbC/MCSmUVD9eR
-         +WaY1pz/mLQMXIgpnO0MFPODrgb3kTjZ3huNXPQfY24GgPLPbKnwmFp6f2iYMn4/p5Ss
-         ombTxsVteY/Y9bA1COutSQrqtoXwxvtdg3VJHHuCz1DjHzTK+q5YfkrFfdbwD0HgOWUq
-         G6iA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J/UzdaxQ9ACqS+UVbyaPF7mwuYfnnJaCv3WnuPaGHOs=;
+        b=fjMA0C3KREUT2ZDqBR7P1XyaKxrl+cq6a3pG9ape/Z4ShU0QZZ7qtKSTokbSKs8Nnj
+         EQsLrjB0Y6rHCFh1VeC7bc/jlXdqHhOzBVxyE63/r2nAY+MTJ9S5XWn7trgWssihXwQC
+         FbuT7+eYnwKeI4r+4+oHObGUZjUDpKjFiYXNM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i1POeuV6FZITxTAGW4IZUlBNpnMfWOtIF6lLlEeC7iQ=;
-        b=LnQgEuTKyFm9MkN/yGv+jGJoxX7vvZh3ixqHX68TzDp1NukMVWr9w54rTBeNUBOH9M
-         wsmXDgwnAs6ePSBfj0aaKt0tsCeJZtt4QkFi5V4BFr5bKzpsZdUbEumgwWSlIIeG8pI6
-         sNGKoFodlEJLwkAYgBUsLcEVi98SUIGnG+TVbA4ydCx0zc72HoXWB0ZEv9ESMbmDSs71
-         fWMgk2aWEG0KJbuYpshnWGj7FzFEaC3rV9zd/5arPA5+nGJ2OVK7wX3q44iuUmIOQCvQ
-         s4lFxf+96LxZTh2aAyBE19tzYift3LuH5uwJ25psM4rWiMzU6FhMW7aQh5MRzZSZgf5s
-         t/2Q==
-X-Gm-Message-State: APjAAAUUVdFYVincf7ebRD7YecK7juTi9/UmgbHc0OHcBcGJZarCIWaf
-        qMHasKuuG3WnB8Rwq0xwhm8=
-X-Google-Smtp-Source: APXvYqwOfrHkJ6vstvr+Fmt03DIgMTb8FF8ztmFySTz1WPIWhwJ8fApSyxQqi4dJY8BHbStwpeYWgg==
-X-Received: by 2002:a05:620a:124c:: with SMTP id a12mr14264212qkl.103.1552055970991;
-        Fri, 08 Mar 2019 06:39:30 -0800 (PST)
-Received: from quaco.ghostprotocols.net (177-59-154-188.3g.claro.net.br. [177.59.154.188])
-        by smtp.gmail.com with ESMTPSA id p64sm4128318qkc.62.2019.03.08.06.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 06:39:30 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A29E94039C; Fri,  8 Mar 2019 11:39:26 -0300 (-03)
-Date:   Fri, 8 Mar 2019 11:39:26 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        luto@kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Xu Yu <xuyu@linux.alibaba.com>, peterz@infradead.org,
-        mingo@redhat.com
-Subject: Re: [PATCH] perf probe: Fix getting the kernel map
-Message-ID: <20190308143926.GB19877@kernel.org>
-References: <1a4240a8-288b-45d0-073d-d5cb8f0c63eb@linux.alibaba.com>
- <20190226090505.GA24409@kroah.com>
- <c7ccd9cb-3a66-98a9-faa1-7ee5ed20ff88@linux.alibaba.com>
- <20190226130802.GA10343@kroah.com>
- <20190226142009.GC26786@kernel.org>
- <3b233ff2-e87a-1c61-d516-6c4cdecb4f01@intel.com>
- <8e798942-0e71-c88f-866f-88e55177e286@linux.alibaba.com>
- <fea29ce5-b410-27cc-045e-feeecbc4a7f5@intel.com>
- <ab136937-2af8-d3bc-634a-17d06c42a5c7@linux.alibaba.com>
- <2ed432de-e904-85d2-5c36-5897ddc5b23b@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J/UzdaxQ9ACqS+UVbyaPF7mwuYfnnJaCv3WnuPaGHOs=;
+        b=qG0YW25y91MDBzCVVz5/lM5b6lU930V9D36y0mnMtn9AH6LHMYyb1RQnHBz1iaF+tB
+         nK4oefYEuK4ob1ircN3/YiEHAIxhWU5mHNFsnfCnZFSM92EIsrsijhxB/LOoRyed9tGF
+         g/jiJcU7rEoRI/1HCG8aQxObg4fXFjx/7cdwd+X+AFgtWmLT5PBjPLTXR0Jp7Ib8eP9c
+         TgYQP9/pH0InD8TnnC6/oCQF3RsJggUr9hOcCaNzpmbN0dRV15XpmLCaBo5ejSrl6v/I
+         76NizR9hylXjaw3JJ1h2uJVw66K+89lD4Eyl3a/KfVky16yjP+Wl1ztKCBtFjsTqDLG8
+         12Bw==
+X-Gm-Message-State: APjAAAWvBBoH8a1uUVOB3Xz92cmMVP6yoQTJKN2u4yMrO4vTfz3wDlz5
+        /W5MyC47VO/dnEP7V0Fx/nNcZMxDdXX62FztxJTQZA==
+X-Google-Smtp-Source: APXvYqwuXlZAj2Is7ebxIxgNJSYV1+u9aalZa2hA5n4kQurZf8EqmTRAzHmGzz/U8gAVZKAZVVsx7W9CC2wUuyfkbho=
+X-Received: by 2002:ac8:1c71:: with SMTP id j46mr14685921qtk.307.1552056001300;
+ Fri, 08 Mar 2019 06:40:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ed432de-e904-85d2-5c36-5897ddc5b23b@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190215090202.157100-1-hsinyi@chromium.org> <20190215090959.soxkf3ho3or2geme@ninjato>
+ <CAJMQK-jrpnfzKNYh01Pg6QydSSa-=6x44Pj1wwMdXw7G3x-ybA@mail.gmail.com>
+ <20190215092500.6q3hqnoufyowiqaz@ninjato> <20190215163657.fs6t7p3vqez53su3@ninjato>
+ <CAJMQK-jzvMBD_AaB7XMJtMqNWiEin25bem4Zo9T5W86Z-U=Tww@mail.gmail.com> <20190308112919.GA1674@kunai>
+In-Reply-To: <20190308112919.GA1674@kunai>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 8 Mar 2019 22:39:50 +0800
+Message-ID: <CAJMQK-j9b3o+KQfN8nLXGiP+TXi8i77=yTTQsEARa6cotPhxzw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: mediatek: modify threshold passed to i2c_get_dma_safe_msg_buf()
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jun Gao <jun.gao@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>, linux-i2c@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        qii.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 04, 2019 at 03:13:21PM +0200, Adrian Hunter escreveu:
-> Since commit 4d99e4136580 ("perf machine: Workaround missing maps for x86
-> PTI entry trampolines"), perf tools has been creating more than one kernel
-> map, however 'perf probe' assumed there could be only one.
-> 
-> Fix by using machine__kernel_map() to get the main kernel map.
-
-Masami, can I get your Acked-by?
-
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Fixes: 4d99e4136580 ("perf machine: Workaround missing maps for x86 PTI entry trampolines")
-> Fixes: d83212d5dd67 ("kallsyms, x86: Export addresses of PTI entry trampolines")
-> Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/util/probe-event.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index e86f8be89157..6cd96f9b346d 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -157,8 +157,10 @@ static struct map *kernel_get_module_map(const char *module)
->  	if (module && strchr(module, '/'))
->  		return dso__new_map(module);
->  
-> -	if (!module)
-> -		module = "kernel";
-> +	if (!module) {
-> +		pos = machine__kernel_map(host_machine);
-> +		return map__get(pos);
-> +	}
->  
->  	for (pos = maps__first(maps); pos; pos = map__next(pos)) {
->  		/* short_name is "[module]" */
-> -- 
-> 2.19.1
-
--- 
-
-- Arnaldo
+On Fri, Mar 8, 2019 at 7:29 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> On Fri, Feb 22, 2019 at 02:04:11PM +0800, Hsin-Yi Wang wrote:
+> > Thanks for the solution.
+> > Previously we were testing if the driver can handle zero-length
+> > transfer, but it turns out it will timeout. (Also checked this from
+> > mtk's datasheet)
+> > Adding original owner qii.wang to verify that. We'll apply this after
+> > verification.
+>
+> I just checked this issue again and concluded that both are reasonable,
+> the suggestion from me below with the adapter quirk AND your original
+> patch setting the threshold to 1. With my suggestion the core will
+> prevent 0-length messages. But still, we should set the threshold to 1
+> because 0 is a value the HW is not capable of.
+>
+I think quirk might be better, since mediatek said they might have some ICs
+that can handle zero-length transfer in the future, so flags might be
+more clear if they want to restore functionality.
+> >
+> > On Sat, Feb 16, 2019 at 12:36 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > >
+> > >
+> > > >> > Ok, I can add a check in another patch. Should we return NULL pointer
+> > > >> > if msg->len is 0 or print out some warnings? Thanks.
+> > > >>
+> > > >> No warning, msg->len == 0 is a valid setting. But interesting question:
+> > > >> I was about to say NULL, but your driver would assume ENOMEM there and
+> > > >> discard the message which is also not correct since msg->len == 0 is a
+> > > >> valid setting. So, should we just return msg->buf then? Will this work
+> > > >> with your driver? Can it handle zero-length transfers?
+> > > >
+> > > > dma_map_single(i2c->dev, msg->buf , msgs->len, DMA_TO_DEVICE); breaks
+> > > > kernel if msgs->len is 0, so I think it doesn't handle zero-length transfer.
+> > >
+> > > Please don't drop the lists.
+> > >
+> > > Then, the correct solution is to forbid those transfer with this
+> > > controller. Check I2C_AQ_NO_ZERO_LEN. Also, update the functionality
+> > > like this .. (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK).
+> > >
