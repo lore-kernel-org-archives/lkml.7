@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A080C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA3AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099752085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D6D20684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049540;
-	bh=rc10ssGyNqn3eBycMw4Z1WjUheVx6y77q+CGXIqx3ec=;
+	s=default; t=1552049544;
+	bh=wL1lv6rd90Q6YJOcJdIhH0Q5p8dL4wVoDLgeGPtUXTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nhDjbCgVSHSAMKxjjIPUZeJXL9J5tRNzcyb7ykE8OIZMfsEzBmJV4bqNh+457gns6
-	 1tJgNWdGQGgD1oTFojgjNdS7AIQFikkxAoZJJXDwRWnvPbpauqy1HDH3A2nLPtWeqz
-	 VOiZQD6WlZaxIExvZGRj9j/iKQrlzf6kdHlg3B8c=
+	b=wFEPkW+0v85HeJXM353s/ywrjxxBrYZ/t5PuiGdv6kIqJIz082UzrA26YqcmzB9y4
+	 /Q/DkTMqMZM2cIAG9uj0vABDQjA3Of6utKfKhY0g7zsEm/tX/J/ta19loS/fJ3jCDO
+	 kcbQrbv5UuxEGykD4jLTg+4Hh3L4KTSazfpqSH+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbfCHMwS (ORCPT
+        id S1726955AbfCHMwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:52:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:52:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfCHMwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:15 -0500
+        id S1726940AbfCHMwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:52:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9026D2133F;
-        Fri,  8 Mar 2019 12:52:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366992085A;
+        Fri,  8 Mar 2019 12:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049535;
-        bh=rc10ssGyNqn3eBycMw4Z1WjUheVx6y77q+CGXIqx3ec=;
+        s=default; t=1552049538;
+        bh=wL1lv6rd90Q6YJOcJdIhH0Q5p8dL4wVoDLgeGPtUXTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i97yD/pcXqsV2IiB9G5LtWfOH61+Kk/9t+G7q+N7h1VEvIqf3GYIufqb08yFJ8Buv
-         pvPKglGjAqaj6mYiJH6J3r4we9URauJLbPwdsFh8CdI8+mMNRbfx0i3EHCj+7C+4pS
-         piPHvy6ur7UB2W6GuOEwpVoaAr8/YXy5qrKli0fw=
+        b=D0SJQtIzno7EwElC+HYkQHS5emrmQIlYoSRoV4mXlvvfccULEJUt0pioBPvErJwR0
+         S0raB2h9zX8YvxfEatbrn9cTIRc+Wn4ucVAcb3uvAIjQFhWjrmgiMzld4oaAl/0FaO
+         2A0mWaXrfLeKv8F1ptHDR/F3XucTFREpGiW0+L7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 31/46] tracing: Fix event filters and triggers to handle negative numbers
-Date:   Fri,  8 Mar 2019 13:50:04 +0100
-Message-Id: <20190308124904.282819500@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.0 32/46] xhci: tegra: Prevent error pointer dereference
+Date:   Fri,  8 Mar 2019 13:50:05 +0100
+Message-Id: <20190308124904.348733379@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -66,58 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit 6a072128d262d2b98d31626906a96700d1fc11eb upstream.
+commit 0326ccb5feac6eac35ba6254260e2774277cd976 upstream.
 
-Then tracing syscall exit event it is extremely useful to filter exit
-codes equal to some negative value, to react only to required errors.
-But negative numbers does not work:
+During initialization, the host and super-speed power domains will
+contain an ERR_PTR() encoded error code rather than being NULL. To
+avoid a crash, use a !IS_ERR_OR_NULL() condition during cleanup.
 
-[root@snorch sys_exit_read]# echo "ret == -1" > filter
-bash: echo: write error: Invalid argument
-[root@snorch sys_exit_read]# cat filter
-ret == -1
-        ^
-parse_error: Invalid value (did you forget quotes)?
-
-Similar thing happens when setting triggers.
-
-These is a regression in v4.17 introduced by the commit mentioned below,
-testing without these commit shows no problem with negative numbers.
-
-Link: http://lkml.kernel.org/r/20180823102534.7642-1-ptikhomirov@virtuozzo.com
-
-Cc: stable@vger.kernel.org
-Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
-Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 6494a9ad86de ("usb: xhci: tegra: Add genpd support")
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_filter.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-tegra.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1301,7 +1301,7 @@ static int parse_pred(const char *str, v
- 		/* go past the last quote */
- 		i++;
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -941,9 +941,9 @@ static void tegra_xusb_powerdomain_remov
+ 		device_link_del(tegra->genpd_dl_ss);
+ 	if (tegra->genpd_dl_host)
+ 		device_link_del(tegra->genpd_dl_host);
+-	if (tegra->genpd_dev_ss)
++	if (!IS_ERR_OR_NULL(tegra->genpd_dev_ss))
+ 		dev_pm_domain_detach(tegra->genpd_dev_ss, true);
+-	if (tegra->genpd_dev_host)
++	if (!IS_ERR_OR_NULL(tegra->genpd_dev_host))
+ 		dev_pm_domain_detach(tegra->genpd_dev_host, true);
+ }
  
--	} else if (isdigit(str[i])) {
-+	} else if (isdigit(str[i]) || str[i] == '-') {
- 
- 		/* Make sure the field is not a string */
- 		if (is_string_field(field)) {
-@@ -1314,6 +1314,9 @@ static int parse_pred(const char *str, v
- 			goto err_free;
- 		}
- 
-+		if (str[i] == '-')
-+			i++;
-+
- 		/* We allow 0xDEADBEEF */
- 		while (isalnum(str[i]))
- 			i++;
 
 
