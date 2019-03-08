@@ -2,94 +2,116 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295E2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393C8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48FD20840
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K8b1f9Ix"
+	by mail.kernel.org (Postfix) with ESMTP id 0F0AD20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfCHDgV (ORCPT
+        id S1726387AbfCHDhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:36:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50780 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfCHDgU (ORCPT
+        Thu, 7 Mar 2019 22:37:07 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:59130 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfCHDhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:36:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hEIOs61BtfWHOjyOIdRs5JpXBjP0ZWSuSdwwQrlCROQ=; b=K8b1f9IxhP1JdKqEi1CPkLUtb
-        ey6S/k6nAovrTU/zfPj0y10ZpZjdZYX1HTUf/YbdJbheIVgsSOzGB3KLXicuklm8sy3++DrTd7gLJ
-        kqo49ncD7l9WDS/bFIVdtDkLCfydTFLTf8qZHaZhTezcEVds4ULJyxtx/i9VbjKqOubZKeE6vTjey
-        gkDLjENmbPoQ8TNAwFt4YyVQSmzGa4AuPtG3nkf467kPVXlH3CZqOy+4sngwLGnIPw1cMF+xLv1qB
-        bDGpXuNiJHKxd/VuwiefxyTG9VjIQPUbBjUHbxzUK6EIEattMMUyaksNQGnuJVvP5M4TrotAbAXK1
-        SZ1nGPu2w==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h26J1-0004cn-Jw; Fri, 08 Mar 2019 03:36:20 +0000
-Subject: Re: [PATCH 5/9] docs: Replace backtick with apostrophe.
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190307211153.28400-1-tobin@kernel.org>
- <20190307211153.28400-6-tobin@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7aa62b55-00ce-7722-2f87-bcd7f95a0a5c@infradead.org>
-Date:   Thu, 7 Mar 2019 19:35:40 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 7 Mar 2019 22:37:06 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1h26JW-0007sr-Pl; Fri, 08 Mar 2019 03:36:50 +0000
+Date:   Fri, 8 Mar 2019 03:36:50 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
+        ktkhai@virtuozzo.com, kyeongdon kim <kyeongdon.kim@lge.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
+        syzkaller-bugs@googlegroups.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-aio@kvack.org, houtao1@huawei.com, yi.zhang@huawei.com
+Subject: Re: [PATCH 1/8] aio: make sure file is pinned
+Message-ID: <20190308033650.GD2217@ZenIV.linux.org.uk>
+References: <CAHk-=wghRmdYKRAwakeHmjcpbLt9fJAHyU2x8s_NZONhz6RTOw@mail.gmail.com>
+ <20190307000316.31133-1-viro@ZenIV.linux.org.uk>
+ <CAHk-=wjzJSnQaj5b02aAjFdVMrKOp8UpyfQcoquRjem=X+SgTA@mail.gmail.com>
+ <20190307004159.GY2217@ZenIV.linux.org.uk>
+ <20190307004828.GZ2217@ZenIV.linux.org.uk>
+ <20190307012036.GA2217@ZenIV.linux.org.uk>
+ <CAHk-=whn7iJsbr=_ab3Ghvd1pzxvio3sktrBuMr6aG=gFLFtEg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190307211153.28400-6-tobin@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whn7iJsbr=_ab3Ghvd1pzxvio3sktrBuMr6aG=gFLFtEg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/7/19 1:11 PM, Tobin C. Harding wrote:
-> Sphinx emits:
+On Wed, Mar 06, 2019 at 05:30:21PM -0800, Linus Torvalds wrote:
+> On Wed, Mar 6, 2019 at 5:20 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > I'll try to massage that series on top of your patch; I still hate the
+> > post-vfs_poll() logics in aio_poll() ;-/  Give me about half an hour
+> > and I'll have something to post.
 > 
-> 	WARNING: Inline interpreted text or phrase reference
-> 	start-string without end-string.
+> No inherent hurry, I sent the ping just to make sure it hadn't gotten lost.
 > 
-> This is caused by a spurious backtick.
+> And yeah, I think the post-vfs_poll() logic cannot possibly be
+> necessary. My gut feel is that *if* we have the refcounting right,
+> then we should be able to just let the wakeup come in at any later
+> point, and ordering shouldn't matter all that much, and we shouldn't
+> even need any locking.
 > 
-> Replace backtick with apostrophe.
+> I'd like to think that it can be done with something like "just 'or'
+> in the mask atomically" (so that we don't care about ordering between
+> the synchronous vfs_poll() and the async poll wakeup), together with
+> "when refcount goes to zero, finish the thing off and complete it" (so
+> that we don't care who finishes first).
 > 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
->  include/linux/kernel.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> No "woken" logic, no "who fired first" logic, no BS. Just make the
+> operations work regardless of ordering.
 > 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 8f0e68e250a7..59c16c763086 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -134,7 +134,7 @@
->   * Rounds @x up to next multiple of @y. If @y will always be a power
->   * of 2, consider using the faster round_up().
->   *
-> - * The `const' here prevents gcc-3.3 from calling __divdi3
-> + * The 'const' here prevents gcc-3.3 from calling __divdi3
->   */
->  #define roundup(x, y) (					\
->  {							\
-> 
+> And maybe it can't be done. But the current model seems just so hacky
+> that it can't be the right model.
 
-That line is being removed completely since gcc 3.3 is no longer supported.
+Umm...  It is kinda-sorta doable; we do need something vaguely similar
+to ->woken ("should we add it to the list of cancellables, or is the
+async reference already gone?"), but other than that it seems to be
+feasible.
 
+See vfs.git#work.aio; the crucial bits are in these commits:
+      keep io_event in aio_kiocb
+      get rid of aio_complete() res/res2 arguments
+      move aio_complete() to final iocb_put(), try to fix aio_poll() logics
+The first two are preparations, the last is where the fixes (hopefully)
+happen.
 
--- 
-~Randy
+The logics in aio_poll() after vfs_poll():
+	* we might want to steal the async reference (e.g. due to event
+returned from the very beginning, or due to attempt to put on more than
+one waitqueue, which makes results unreliable).  That's _NOT_ possible
+if the thing had been put on a waitqueue, but currently isn't there.
+It might be either due to early wakeup having done everything or the
+same having scheduled aio_poll_complete_work().  In either case, the
+best we can do is to ignore the return value of vfs_poll() and, in
+case of error, mark the sucker cancelled.  We *can't* return an error
+in that case.
+
+	* if we want and can steal the async reference, rip it from
+waitqueue; otherwise, put it on the "cancellable" list, unless it's
+already gone or unless we are simulating the cancel ourselves.
+
+	* if vfs_poll() has reported something we want and we have
+successufully stolen the iocb, put it there, have the reference
+we'd taken over dropped and return 0
+
+Comments?
