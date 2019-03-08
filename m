@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C83EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F345C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F5E206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252BA206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSAgw7gk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+8O2BzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfCHTrz (ORCPT
+        id S1727050AbfCHTsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:47:55 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33200 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfCHTry (ORCPT
+        Fri, 8 Mar 2019 14:48:00 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35565 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbfCHTsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:47:54 -0500
-Received: by mail-qt1-f196.google.com with SMTP id z39so22580580qtz.0;
-        Fri, 08 Mar 2019 11:47:53 -0800 (PST)
+        Fri, 8 Mar 2019 14:48:00 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z13so11886585qki.2;
+        Fri, 08 Mar 2019 11:47:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RrEnffFHlOD8ovUk228i30cx429UY6FjxAK/KSGO/hk=;
-        b=cSAgw7gkCCwz21cKMyBbT6sKKKpZwA8Ju/AeHRPRoaBYC7UhizTBeYwXLETDbScOlt
-         zfHnUYLSXxKyouhGhFVXnAFTGHB0h6HNojpEdTecogIJ787e5X2T4MbRaXbsXrKlpZwV
-         SkWFB5SaS3pFIzRkdqjvjKQR6kxMkh5H3FxYbYZFhuBloiKdF90Y2Zzp7dwCptQ+CDxY
-         0qmc4WVuWomKiHoeKXEj1qFNjhPpc8ttNsw3ojvy5vzDj8xtQlCSyK1jGOO4P2QQhVtc
-         1XfCHjhpQB4wf4PRUNPDVWk4oOkl/Z+VdDUdV9EI6rr0Ej9Wd46+Bhensg3K7LjKKuvQ
-         kZuw==
+        bh=M8JbYhBkREjKi9HdILjG0gKF6tKhRCypgsFQponE9l8=;
+        b=B+8O2BzAqk0hBkXUnzUXqQ53gf9+a2gRiTVy2oQ+Bp+kEhjqEGhrxI8HYWrD/ghZMu
+         CgQPUM6WPv3u4Zw9Gn/DNMn37eDETlFx5XMWd7/Cmb+dcf9eS+0S8mibk2beyaI724la
+         6zCuFK6x5A7qbFUoAUsxB2P541BhfrfAjtB6A7maH7/HAMQvT5edgOk2ODj9CwvQLRvx
+         B49KBLthWqCZUOvCgDNxpKX1AmE147nr0Xe2TKQNmE/dUecYJCN3ojxjiKuZi9NtOuqB
+         PGA8yLoNN+DLrtVDwNXBhQSXgvlqykL9Q+ZbyQD2RYS4yVrboo1Hmc1tWctkxA139LCh
+         blvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RrEnffFHlOD8ovUk228i30cx429UY6FjxAK/KSGO/hk=;
-        b=LRBV85akN48hZQcjeNZx4nLa/ihaHvZWuQhrP928XyKak88PWoJueWfWPU9XS8AH8b
-         r1/+QWhNI2b7zuh6x/UECi08S6K4pf3xM1X+P5AVJvJpKSQI/KtSaHHC8b045/f7Rk6x
-         Cys9U+qhSPhQbiy9wqykUowqr4ygo9+EHntypOmGp2GtDuZU0I/za9PwA0ozvauXwMm/
-         wIlnN0J+DDXBiB0zl9FrqZQPp35vrbqurtchLB66LXmYQLaDP4D2gOYQOLMXcji2V6vk
-         U3agoSVQLcE0bHPE62IMSsW3h4W76elwQ5OuE8j6fsGMFjgVOY5iupjlxHSieuOCUsN0
-         8OTA==
-X-Gm-Message-State: APjAAAWsgH2dytV92WrXjqkBdoAbcF8bUGMS5nKD7k2ii4h6Y8bzqmTH
-        B8K2SFcpeOW/Pnbxyj4su80=
-X-Google-Smtp-Source: APXvYqxXRO54DIoDjTs7SHBRMb9v7T5ktd4ozhmpf8eak+y0mKmwIE2DRz+BSqn4vajm2fVJCYw9Ag==
-X-Received: by 2002:ac8:37f6:: with SMTP id e51mr15910001qtc.1.1552074473449;
-        Fri, 08 Mar 2019 11:47:53 -0800 (PST)
+        bh=M8JbYhBkREjKi9HdILjG0gKF6tKhRCypgsFQponE9l8=;
+        b=qdMh9Fo39ye6LSQQG+kEvwcqW+64PKROcxsoe1Z2wCccDy2gYfc2vD2q+iPsX13yb5
+         HDFIUs55ig6wSl/5C+k1/O+TdSZoRo5jCEEmDH7x0Smyk63xd06WLZHALSwRG5zp8z9N
+         HXucthNh6IXpDW6MWk7BiTSDHu6k1e9NTnOaoHDK/mHdRPnwoKOEbgKpqUSnZ+5eMY4n
+         khrjVkw19TTNi9acLmFOWXnjcZSr1eEg255ZE59rWtwt2P/92Fa62cPUyEOmWMz6+2of
+         j7MCP3AJeijJg7lKUNISbBp/kRjNWn1aXcJiBdzkwOqmdEL0WRnYAH4rmBbSQcCBXs9l
+         Hyrg==
+X-Gm-Message-State: APjAAAUPjPRlKAX0MiLiQCTWqaljLr3q5tI28XWoCL09JhZbmgYL1m/y
+        tNIOMsY2VuRfbd1PIiiP0gE=
+X-Google-Smtp-Source: APXvYqzWZqkNZGP7vjDwLBBxZZzQaOdHtuZX3zfIZKaDB8RgVqw6yh5tV73IyiMXWmvL606KM9/V3w==
+X-Received: by 2002:a37:a10d:: with SMTP id k13mr6739803qke.203.1552074479453;
+        Fri, 08 Mar 2019 11:47:59 -0800 (PST)
 Received: from crypto.semfio.usp.br ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id n27sm2393038qtf.11.2019.03.08.11.47.49
+        by smtp.gmail.com with ESMTPSA id n27sm2393038qtf.11.2019.03.08.11.47.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 11:47:52 -0800 (PST)
+        Fri, 08 Mar 2019 11:47:58 -0800 (PST)
 From:   Anderson Reis <andersonreisrosa@gmail.com>
 X-Google-Original-From: Anderson Reis <anderson.reis.rosa@usp.com>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
@@ -63,11 +63,11 @@ To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
 Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-usp@googlegroups.com,
         Anderson Reis <anderson.reis.rosa@usp.com>,
-        Lucas Oshiro <lucasseikioshiro@gmail.com>,
-        Anderson Reis <andersonreisrosa@gmail.com>
-Subject: [PATCH v2 3/4] iio:potentiostat:lmp91000: invert if statement
-Date:   Fri,  8 Mar 2019 16:46:54 -0300
-Message-Id: <20190308194655.5983-4-anderson.reis.rosa@usp.com>
+        Anderson Reis <andersonreisrosa@gmail.com>,
+        Lucas Oshiro <lucasseikioshiro@gmail.com>
+Subject: [PATCH v2 4/4] iio:potentiostat:lmp91000: change dev_err message
+Date:   Fri,  8 Mar 2019 16:46:55 -0300
+Message-Id: <20190308194655.5983-5-anderson.reis.rosa@usp.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190308194655.5983-1-anderson.reis.rosa@usp.com>
 References: <20190308194655.5983-1-anderson.reis.rosa@usp.com>
@@ -78,37 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Invert if statement arms in line 214, in order to make the code cleaner,
-solve these checkpatch.pl CHECKs:
+Change dev_err message on line 215 in order to inform that
+tia-gain-ohm is not defined and an external resistor is not
+specified.
 
-- lmp9100.c:214: CHECK: braces {} should be used on all arms of this statement
-- lmp9100.c:216: CHECK: Unbalanced braces around else statement
-
-Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
 Signed-off-by: Anderson Reis <andersonreisrosa@gmail.com>
+Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
 ---
- drivers/iio/potentiostat/lmp91000.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/iio/potentiostat/lmp91000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
-index c45cfb632649..1de17924e154 100644
+index 1de17924e154..5ed9752008a5 100644
 --- a/drivers/iio/potentiostat/lmp91000.c
 +++ b/drivers/iio/potentiostat/lmp91000.c
-@@ -211,12 +211,11 @@ static int lmp91000_read_config(struct lmp91000_data *data)
- 
+@@ -212,7 +212,7 @@ static int lmp91000_read_config(struct lmp91000_data *data)
  	ret = of_property_read_u32(np, "ti,tia-gain-ohm", &val);
  	if (ret) {
--		if (of_property_read_bool(np, "ti,external-tia-resistor"))
--			val = 0;
--		else {
-+		if (!of_property_read_bool(np, "ti,external-tia-resistor"))
- 			dev_err(dev, "no ti,tia-gain-ohm defined");
+ 		if (!of_property_read_bool(np, "ti,external-tia-resistor"))
+-			dev_err(dev, "no ti,tia-gain-ohm defined");
++			dev_err(dev, "no ti,tia-gain-ohm defined and external resistor not specified\n");
  			return ret;
  		}
-+		val = 0;
- 	}
- 
- 	ret = -EINVAL;
+ 		val = 0;
 -- 
 2.20.1
 
