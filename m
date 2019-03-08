@@ -2,107 +2,156 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F42C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38472C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 05:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F330920684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="IipLBBMV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Br/3kQ9l"
+	by mail.kernel.org (Postfix) with ESMTP id 0B48B20684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 05:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfCHE6w (ORCPT
+        id S1726274AbfCHFGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 23:58:52 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:53565 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726250AbfCHE6w (ORCPT
+        Fri, 8 Mar 2019 00:06:01 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56874 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725308AbfCHFGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 23:58:52 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 301A8369F;
-        Thu,  7 Mar 2019 23:58:51 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2019 23:58:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=N
-        tl0HyXUKFmWcU1ZViuVMqOeZG8DDg45ANx81HTvSsM=; b=IipLBBMVWKpXba0Eu
-        70Oty66NGlxNqo6VEbVFsKOnJ+jLA+jwLFEDv7PmThAsEdrL8263d7U5pRioACU4
-        xC9HuwUkDoUITUvS+M0ESVDtfBy1kB0uV+wV2kgxqjiAg3oQA4x1YpMHc0hL6Y5o
-        VBOlBcC2JWaNP9WiNNzyQIblZZc7D1db9/1i3fO4KvVDAZ6Qxm+caqvlZbzbOjff
-        2KLFeBp7/HaQiqLz1hr+8f5cFvZ+akLtR9jKBPTsvhXiB52iAJtxH6sch/+lYr1C
-        ZUj+KzjXCKVI3yRTjqtgu/7lwpOHvDkrV5vc1nwOPMgi923tEV3BqKLtVBA3reVG
-        nQARw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=Ntl0HyXUKFmWcU1ZViuVMqOeZG8DDg45ANx81HTvS
-        sM=; b=Br/3kQ9lE7j+bDxwUANWyiM2G2jCwjsxRyzq5Vx9L5afOK+r+6E/nK5nX
-        nxk/12SlPkvvsSuJ+1OizLCFfyt0b4oPbgMNzui/g6gYKnOiD/FwZwDg/61TvPK4
-        qn3lAgWctMnSSdVSZ6cakicBHc6DLPIQxpu4N9lRCju0RrM4ybfCsq6VpoZga8C6
-        JOsSYgpI53Zlt/ZVevdHMPfbj1/BsoQBcSdQskAO0GFCwiZMVp6N24Sst3ONuNUm
-        05EdggGMuEh1l80UqqCAhtoWacGoXJhAWdy8Ojgkfr2CFKSKbtploBu/bPCapJCk
-        UfPVj9Afu1UjTK6IPVWO5g4vVScsQ==
-X-ME-Sender: <xms:ivaBXM5j_kdaVXILeVN-UTjHNdFBYtLvvIeXjzh6pU1GsOqnxLeCJw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeelgdejvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtugfgjgfofgesthekredt
-    oferjeenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdehrdduheeknecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:ivaBXJc59aCiNproRA_5kxmHsOfVJS2R7r_JH9T7Hkn_Vh3lQmZ6uQ>
-    <xmx:ivaBXLfLVbGOP26OSXQo9-F_VwDGrcglqZq7PA4_0t-KuoF0Pxu_mA>
-    <xmx:ivaBXGEakxfZmNpv9LWUWXgfdSqUEIpOMAEP7saMcW0XC8jD7q7sOg>
-    <xmx:ivaBXAn6aQISKr-mK7UcZCvVyWsQujYlEns4Owni3tZWsenJGWGhpw>
-Received: from localhost (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E8ED7E4362;
-        Thu,  7 Mar 2019 23:58:49 -0500 (EST)
-Date:   Fri, 8 Mar 2019 15:58:31 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] docs: Use correct list markup character
-Message-ID: <20190308045830.GB17221@eros.localdomain>
-References: <20190307211153.28400-1-tobin@kernel.org>
- <20190307211153.28400-7-tobin@kernel.org>
- <f5d4469a-ab32-46cb-c1e9-16712043465b@infradead.org>
+        Fri, 8 Mar 2019 00:06:00 -0500
+X-UUID: 84d5dc55514c4a3c99afa0f68756a119-20190308
+X-UUID: 84d5dc55514c4a3c99afa0f68756a119-20190308
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 600735392; Fri, 08 Mar 2019 13:05:56 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 8 Mar 2019 13:05:54 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 8 Mar 2019 13:05:53 +0800
+Message-ID: <1552021553.2863.18.camel@mtksdaap41>
+Subject: Re: [PATCH v2 06/10] soc: mediatek: cmdq: clear the event in cmdq
+ initial flow
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Fri, 8 Mar 2019 13:05:53 +0800
+In-Reply-To: <1551865835-50974-7-git-send-email-bibby.hsieh@mediatek.com>
+References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1551865835-50974-7-git-send-email-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f5d4469a-ab32-46cb-c1e9-16712043465b@infradead.org>
-X-Mailer: Mutt 1.11.3 (2019-02-01)
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 577F4E38EFFC2A64725F701CF5D4118C1E19CAA0CBC8100B71147EA7969D973E2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:40:14PM -0800, Randy Dunlap wrote:
-> On 3/7/19 1:11 PM, Tobin C. Harding wrote:
-> > Sphinx uses a star not a hyphen for lists.
-> > 
-> > Use correct list markup character.
-> > 
-> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> 
-> Hi Tobin,
-> 
-> The blank line insertions are all that is needed.
-> And I have already sent a patch for that.
-> 
-> Also, a list can begin with any of:
-> "A text block which begins with a "*", "+", "-", "•", "‣", or "⁃", followed by whitespace, is a bullet list item (a.k.a. "unordered" list item)."
+Hi, Bibby:
 
-Oh, cool.  I didn't realise.  Thanks Randy.
+On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
+> GCE hardware stored event information in own internal sysram,
+> if the initial value in those sysram is not zero value
+> it will cause a situation that gce can wait the event immediately
+> after client ask gce to wait event but not really trigger the
+> corresponding hardware.
+> 
+> In order to make sure that the wait event function is
+> exactly correct, we need to clear the sysram value in
+> cmdq initial flow.
+> 
+> Fixup commit 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
 
-	Tobin
+Please refer to [1] for the fix tag.
+
+[1] https://www.kernel.org/doc/html/v5.0/process/submitting-patches.html
+
+Regards,
+CK
+
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
+>  include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
+>  3 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 6db1e2d..4e744cf 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -33,6 +33,7 @@
+>  #define CMDQ_THR_END_ADDR		0x24
+>  #define CMDQ_THR_WAIT_TOKEN		0x30
+>  #define CMDQ_THR_PRIORITY		0x40
+> +#define CMDQ_SYNC_TOKEN_UPDATE		0x68
+>  
+>  #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
+>  #define CMDQ_THR_ENABLED		0x1
+> @@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
+>  
+>  static void cmdq_init(struct cmdq *cmdq)
+>  {
+> +	int i;
+> +
+>  	WARN_ON(clk_enable(cmdq->clock) < 0);
+>  	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
+> +	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
+> +		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
+>  	clk_disable(cmdq->clock);
+>  }
+>  
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index ccb7342..911475da 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +/** cmdq event maximum */
+> +#define CMDQ_MAX_EVENT			0x3ff
+>  
+>  /*
+>   * CMDQ_CODE_MASK:
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 54ade13..4e88999 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -13,9 +13,6 @@
+>  
+>  #define CMDQ_NO_TIMEOUT		0xffffffffu
+>  
+> -/** cmdq event maximum */
+> -#define CMDQ_MAX_EVENT				0x3ff
+> -
+>  struct cmdq_pkt;
+>  
+>  struct cmdq_client {
+
+
