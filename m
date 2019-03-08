@@ -2,117 +2,97 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B355C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967F1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091AE2081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:46:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oium6+NZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5A13720854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCHGp7 (ORCPT
+        id S1726352AbfCHGrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:45:59 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:39449 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfCHGp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:45:59 -0500
-Received: by mail-yw1-f68.google.com with SMTP id z191so15502998ywa.6;
-        Thu, 07 Mar 2019 22:45:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=N/qtDf5fnqM9VoWDcwIOX2JbfjPFNVEEncbZjpulgtI=;
-        b=Oium6+NZkouHu57X10Chbvt6YdngPWL0x8Non/LDqmpvO699UxmHknIpfkvVUCr0H7
-         fMVEAmWGrTxB9tE23eiLXH0bPoWHEYnJolSI8V6g4hOLKo2JC3nXmnN/TiP46ah6pF8Z
-         /kjz7SRy0YopGqK3+5T5Z++gHnIglpPmkssBNlBssZi2+DSvkLcP+MzVyni51wdlnOYg
-         MoBf4vO5c/ttkfSRmyvIdewMP0OBnfJwE9T5hp2bsJnen4/1zl39JcLppeT57sTYOAJc
-         HrfhM/CPhGU84oq/6Ro6OnQnWlzDt7KRGQ+3J5fWp4wzUaRfGZw+/305/pUi4FhJL9n6
-         VuLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=N/qtDf5fnqM9VoWDcwIOX2JbfjPFNVEEncbZjpulgtI=;
-        b=dqAQqG98zge6mG9guPDof1L0PWmkGsZujtOjtSGEB0nDp3mYJhdGQcTMDwNTGPINL9
-         tPx58u4NwDMHfkuXUpJ8j4py0cgTI+yyu4FR56YkJ+2dPmPjKsNH8BDs9Z9gWoooq0GG
-         Y+gY0qZWod8wJZw+h67T2qSrbxIrdvxLm4PRsxYtJFFo6KIOy0PLogX9E/oCR2MgAYVx
-         0VpvG2v/KyQb4htU8GsJ1cVk0Ggl4AYUdlaV7xwoAzVJAsaI5t0N/SJzetjWY4y235U9
-         S7HRb0daLFNhFy071gu14JF78wyGCUsrWYIq+iASQnvg3oTLi53uwVXzPv1pDOcOMK3U
-         JH5w==
-X-Gm-Message-State: APjAAAXYhf6WGMbFOCTWbvn91Y8rZXkzbCknsgeJdaY+d91bBNfEufo7
-        Qb57cdp4xrN2mEK5ab8GQ2Q=
-X-Google-Smtp-Source: APXvYqyqOikmrYlfDVaQmwSdBbpLljoHYEu4OR6dibvJ7d05mmOJCDS6q9hD/Xg9KmnAOwICPotAVg==
-X-Received: by 2002:a5b:42:: with SMTP id e2mr9964922ybp.141.1552027557907;
-        Thu, 07 Mar 2019 22:45:57 -0800 (PST)
-Received: from localhost.localdomain ([191.101.9.198])
-        by smtp.gmail.com with ESMTPSA id 186sm2408540ywi.104.2019.03.07.22.45.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 22:45:57 -0800 (PST)
-From:   Bo YU <tsu.yubo@gmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        ongliubraving@fb.com, yhs@fb.com, davem@davemloft.net
-Cc:     Bo YU <tsu.yubo@gmail.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, yuzibode@126.com
-Subject: [PATCH V3] bpf: fix warning about using plain integer as NULL
-Date:   Fri,  8 Mar 2019 01:45:51 -0500
-Message-Id: <20190308064551.17437-1-tsu.yubo@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 8 Mar 2019 01:47:46 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52646 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725372AbfCHGrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 01:47:45 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BE25B47C25AD5E53302B
+        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 14:47:43 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Fri, 8 Mar 2019
+ 14:47:39 +0800
+Subject: Re: [PATCH v3] posix-cpu-timers: Avoid undefined behaviour in
+ timespec64_to_ns()
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1551861646-52541-1-git-send-email-wangxiongfeng2@huawei.com>
+ <CAK8P3a2VicE7e8pU8UD9UwEmr_wb9GdxKWdE64mKGkvU4Ac37A@mail.gmail.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <e8f0948b-81dd-53c9-6a18-1da50b099b7a@huawei.com>
+Date:   Fri, 8 Mar 2019 14:47:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a2VicE7e8pU8UD9UwEmr_wb9GdxKWdE64mKGkvU4Ac37A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.52.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse warning below:
 
-sudo make C=2 CF=-D__CHECK_ENDIAN__ M=net/bpf/
-CHECK   net/bpf//test_run.c
-net/bpf//test_run.c:19:77: warning: Using plain integer as NULL pointer
-./include/linux/bpf-cgroup.h:295:77: warning: Using plain integer as NULL pointer
 
-Fixes: 8bad74f9840f ("bpf: extend cgroup bpf core to allow multiple cgroup storage types")
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
----
-V3: put fix tag all in a line
-V2: Add fix-up tag from Yonghong
----
- include/linux/bpf-cgroup.h | 2 +-
- net/bpf/test_run.c         | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 2019/3/6 18:38, Arnd Bergmann wrote:
+> On Wed, Mar 6, 2019 at 9:41 AM Xiongfeng Wang <wangxiongfeng2@huawei.com> wrote:
+>>
+>>
+>> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+>> index 0e84bb7..4b57566 100644
+>> --- a/kernel/time/posix-timers.c
+>> +++ b/kernel/time/posix-timers.c
+>> @@ -856,6 +856,10 @@ static int do_timer_settime(timer_t timer_id, int flags,
+>>         if (!timespec64_valid(&new_spec64->it_interval) ||
+>>             !timespec64_valid(&new_spec64->it_value))
+>>                 return -EINVAL;
+>> +       if (new_spec64->it_interval.tv_sec > KTIME_SEC_MAX)
+>> +               new_spec64->it_interval.tv_sec = KTIME_SEC_MAX;
+>> +       if (new_spec64->it_value.tv_sec > KTIME_SEC_MAX)
+>> +               new_spec64->it_value.tv_sec = KTIME_SEC_MAX;
+>>
+> 
+> I looked at the calculation we do later, and I think this can still overflow
+> if tv_nsec is too large. The largest timespec value we can support is
+> 
+> (struct timespec64) { .tv_sec = 9223372036, .tv_nsec = 854775807 }
+> 
+> Your patch caps the tv_sec value to 9223372036, but it does not
+> cap the tv_nsec. The easiest fix would be to always set tv_nsec
+> to 0 if tv_sec>=9223372036, or a more correct calculation would
+> have to limit tv_nsec if tv_sec==9223372036. I don't know if that
+> matters or not (it should not, unless we explicitly compare the
+> ktime_t for equality with KTIME_MAX later).
 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index 695b2a880d9a..a4c644c1c091 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -292,7 +292,7 @@ static inline int bpf_cgroup_storage_assign(struct bpf_prog *prog,
- static inline void bpf_cgroup_storage_release(struct bpf_prog *prog,
- 					      struct bpf_map *map) {}
- static inline struct bpf_cgroup_storage *bpf_cgroup_storage_alloc(
--	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return 0; }
-+	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return NULL; }
- static inline void bpf_cgroup_storage_free(
- 	struct bpf_cgroup_storage *storage) {}
- static inline int bpf_percpu_cgroup_storage_copy(struct bpf_map *map, void *key,
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index da7051d62727..fab142b796ef 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -16,7 +16,7 @@
- static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
- 			u32 *retval, u32 *time)
- {
--	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { 0 };
-+	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { NULL };
- 	enum bpf_cgroup_storage_type stype;
- 	u64 time_start, time_spent = 0;
- 	int ret = 0;
--- 
-2.11.0
+Thanks for your advice. I will send another one to  set tv_nsec
+to 0 if tv_sec>=9223372036.
+Do need to add a helper to clamp timespec64, such as 'saturate_timespec64_valid()'
+to limit it between 0 and KTIME_MAX(or KTIME_SEC_MAX, it's easier.)
+
+Thanks,
+Xiongfeng
+
+> 
+>      Arnd
+> 
+> .
+> 
 
