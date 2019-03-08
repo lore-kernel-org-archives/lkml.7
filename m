@@ -2,80 +2,107 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_PAST_03_06,
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLACK,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E96C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9588C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E10A2146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768522171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552064688;
-	bh=3yOYRbBMPGsq0XJ7ErPVFh/TDFyNM/K59FU5669SGGU=;
+	s=default; t=1552064700;
+	bh=wWxR9hRaEHAVMKJhNe3opZ01U3EQ5LfT2qwcS5LBxZA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U7ANAyN9pjn8+iz1Yi2GTmsd0JZxUknRSxTDOLZSIN5Afb9lRmCsy/PDUHTHlKaFt
-	 mgtuRYTmL00RG2zF0GXTyEXEYY8Mte4yf7k2NxGfcPqFw/dX+TKoWqDQ/AwSTrOyfT
-	 /XYyYz6SDjYMdOg/whQA+2Pg3/DLZo2Q5ey5vLps=
+	b=kXPE3ZRJps1XbrOmpr8NU0l17Es2/NI7vES7rYSIW/KD+695Tqmo90X31ztQmecK4
+	 U9yCLLK3N0h3K9i+wRVhmPNUsEzoaLTafjgVtN6kPM+7ISzfngxeUwBRqTHa+S+StU
+	 3w5Brj/X92p46pHbO8Yd1QMnmjVMLlf0ys4ZFJcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfCHREr (ORCPT
+        id S1727009AbfCHRE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:04:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 12:04:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbfCHREq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:04:46 -0500
+        id S1726286AbfCHRE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 12:04:58 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822A4205F4;
-        Fri,  8 Mar 2019 17:04:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 285E8205F4;
+        Fri,  8 Mar 2019 17:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552064686;
-        bh=3yOYRbBMPGsq0XJ7ErPVFh/TDFyNM/K59FU5669SGGU=;
+        s=default; t=1552064697;
+        bh=wWxR9hRaEHAVMKJhNe3opZ01U3EQ5LfT2qwcS5LBxZA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LsWwJHfH0u9wN7k78y/jeX8cmChGSnBsCmMz8bkHBjJefnKCc/h4a5gtMEtaF4faU
-         0GqhQ6xJJ5VOa+23Rzi8J56aVrzy9TDDFM2OsxO/e59bOOy94d9mz1ZLxwvrakDXz4
-         6v0tMworCEkBQY0VGRpA5hoBy9yP3Um4oAUIy2dI=
-Date:   Fri, 8 Mar 2019 14:39:44 +0100
+        b=dsIFXEPsKBgBYHpWOJ+dmybmjRZnIqzuEluYQnl3BgXlmUwXrYzY/h4jMihKH9Wmq
+         RX2xmsyEa+7CBuCXxeSksWzNUUHhSkyuUFfK7BR/0qALmpJZEjU7a/SlHlV6MBpvUh
+         WuzqdgupmDahhSe1icgn1kUT2KwBTjCxPbqvQ+O4=
+Date:   Fri, 8 Mar 2019 15:02:51 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Read EC information on
- newer models
-Message-ID: <20190308133944.GA22787@kroah.com>
-References: <20190308131426.10254-1-jiaxun.yang@flygoat.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190308140251.GC25768@kroah.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+ <20190307150343.GB258852@google.com>
+ <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
+ <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190308131426.10254-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 09:14:26PM +0800, Jiaxun Yang wrote:
-> Newer ThinkPads have a totally different EC program information DMI
-> table. And thermal subdriver can't work without correct EC version.
+On Fri, Mar 08, 2019 at 05:42:32AM -0800, Joel Fernandes wrote:
+> HI Geert,
 > 
-> Read from this entry if the old method failed to get EC information.
+> On Fri, Mar 8, 2019, 3:53 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > It is just so much easier to use tar + xz at build time, and leave the
+> > > decompression task to the user. After decompression, the files will live on
+> > > the disk and the page-cache mechanism will free memory when/if the files fall
+> > > off the LRUs.
+> >
+> > I'm also considering how generic and extensible the solution is.
+> > What if people need other build artifacts in the future (e.g. signing key to
+> > load signed modules)?
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 62 ++++++++++++++++++++++------
->  1 file changed, 49 insertions(+), 13 deletions(-)
+> That sounds like it could be useful. I don't see any reason off the
+> top why that would not be possible to add to the list of archived
+> files in the future. The patch allows populating the list of files
+> from Kbuild using ikh_file_list variable.
 
-<formletter>
+Um, no, you don't want the signing key in the kernel itself, as that
+totally defeats the purpose of the signing key :)
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
-
-</formletter>
+greg k-h
