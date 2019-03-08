@@ -5,38 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FF7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44248C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B957F20811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFF72146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfCHLcM (ORCPT
+        id S1726444AbfCHLcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 06:32:12 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:53162 "EHLO mx1.redhat.com"
+        Fri, 8 Mar 2019 06:32:21 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:53490 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbfCHLcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 06:32:11 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726415AbfCHLcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 06:32:21 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1603A81104;
-        Fri,  8 Mar 2019 11:32:11 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8E6E780F7A;
+        Fri,  8 Mar 2019 11:32:20 +0000 (UTC)
 Received: from [10.36.112.53] (ovpn-112-53.ams2.redhat.com [10.36.112.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4CB5660BE5;
-        Fri,  8 Mar 2019 11:32:06 +0000 (UTC)
-Subject: Re: [PATCH v3 7/8] KVM:X86: Add XSS bit 11 and 12 support for CET
- xsaves/xrstors.
-To:     Yang Weijiang <weijiang.yang@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     rkrcmar@redhat.com, jmattson@google.com,
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B9725D719;
+        Fri,  8 Mar 2019 11:32:15 +0000 (UTC)
+Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
+To:     Yang Weijiang <weijiang.yang@intel.com>, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, jmattson@google.com,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+        yu-cheng.yu@intel.com
+Cc:     Zhang Yi Z <yi.z.zhang@linux.intel.com>
 References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-8-weijiang.yang@intel.com>
- <20190228162512.GG6166@linux.intel.com>
- <20190228084404.GD12006@local-michael-cet-test.sh.intel.com>
+ <20190225132716.6982-4-weijiang.yang@intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
@@ -94,39 +91,29 @@ Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
  DduC0U3xYkfbGAUvbxeepjgzp0uEnBXfPTy09JGpgWbg0w91GyfT/ujKaGd4vxG2Ei+MMNDm
  S1SMx7wu0evvQ5kT9NPzyq8R2GIhVSiAd2jioGuTjX6AZCFv3ToO53DliFMkVTecLptsXaes
  uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <f1b0c3ab-a377-d998-34d3-67c5e951f4e1@redhat.com>
-Date:   Fri, 8 Mar 2019 12:32:04 +0100
+Message-ID: <7b6f1186-71a1-4246-3884-92cc52853fea@redhat.com>
+Date:   Fri, 8 Mar 2019 12:32:12 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190228084404.GD12006@local-michael-cet-test.sh.intel.com>
+In-Reply-To: <20190225132716.6982-4-weijiang.yang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 08 Mar 2019 11:32:11 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 08 Mar 2019 11:32:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/19 09:44, Yang Weijiang wrote:
->>>  		if (!vmx_xsaves_supported())
->>>  			return 1;
->>> +
->>>  		/*
->>> -		 * The only supported bit as of Skylake is bit 8, but
->>> -		 * it is not supported on KVM.
->>> +		 * Check bits being set are supported in KVM.
->> I'd drop the comment altogether, it's pretty obvious from the code that
->> were checking which bits are supported.
-> you won't see these redundancies in next version ;)
->>>  		 */
->>> -		if (data != 0)
->>> +		if (data & ~kvm_supported_xss())
->>>  			return 1;
+On 25/02/19 14:27, Yang Weijiang wrote:
+> +				compacted = entry[i].eax &
+> +					(F(XSAVES) | F(XSAVEC));
+> +				entry[i].ebx = xstate_required_size(supported,
+> +								    compacted);
 
-You should instead check this against CPUID[0xD, 1].EDX:ECX.  If CET is
-disabled in CPUID, the guest should not be able to set it in MSR_IA32_CSS.
+If XSAVES and XSAVEC are both false, just set ebx to 0 as it was before
+this patch.
 
 Paolo
