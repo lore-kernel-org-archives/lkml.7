@@ -2,136 +2,199 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE6CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08596C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0EE2081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:49:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cPBtA15q"
+	by mail.kernel.org (Postfix) with ESMTP id CD8EC2081B
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 22:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfCHWtA (ORCPT
+        id S1726776AbfCHWt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 17:49:00 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:53872 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfCHWs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 17:48:59 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x28MjIg3055924;
-        Fri, 8 Mar 2019 22:48:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=O5EHSkQ/u9+Ox2Mr2Uq0ikS/eyXYPl8wihZ948OlhZ0=;
- b=cPBtA15qK2/F168SBEZ+z7296XCrKvDYA9dCZ7BC1hmaZsAgpKaYCNw+nR1umxdgUFzB
- BsqwwVFqXv1doaaG2tN1P35Euo9dMadG8mwvqb3Bs/21Pg3miTNm7S0SwZZhFgU56te7
- 6qs5LcAT5hkU9g1ijsbSWLQcI5bn0lfxrdN0yG2h/nMAtUuHOV1+NWw0RzpUhpiNY5Rx
- h+1/lH5q3dDcPEbjHZemaORGLDkToIFD/nhoUl867Cje5jU8+xZ6OzxCZ/RjE9xrEDom
- 4hKTcFC+nzmnjfjmgmaWTRsBHVMP1b9k848Do5sqLkjhoNvC7qv5ZA73r6PMGdTcy2An tw== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by aserp2130.oracle.com with ESMTP id 2qyfbeu3w0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 08 Mar 2019 22:48:47 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x28MmfV0019849
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Mar 2019 22:48:42 GMT
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x28MmfTb027797;
-        Fri, 8 Mar 2019 22:48:41 GMT
-Received: from monkey.oracle.com (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Mar 2019 14:48:41 -0800
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH 1/2] huegtlbfs: on restore reserve error path retain subpool reservation
-Date:   Fri,  8 Mar 2019 14:48:22 -0800
-Message-Id: <20190308224823.15051-2-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190308224823.15051-1-mike.kravetz@oracle.com>
-References: <20190308224823.15051-1-mike.kravetz@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9189 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903080157
+        Fri, 8 Mar 2019 17:49:57 -0500
+Received: from namei.org ([65.99.196.166]:56184 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbfCHWt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 17:49:56 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x28MnuOi012462;
+        Fri, 8 Mar 2019 22:49:56 GMT
+Date:   Sat, 9 Mar 2019 09:49:56 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: [GIT PULL] security: tpm subsystem updates for v5.1
+Message-ID: <alpine.LRH.2.21.1903090946210.12052@namei.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a huge page is allocated, PagePrivate() is set if the allocation
-consumed a reservation.  When freeing a huge page, PagePrivate is checked.
-If set, it indicates the reservation should be restored.  PagePrivate
-being set at free huge page time mostly happens on error paths.
+Please pull these updates from Jarkko Sakkinen:
 
-When huge page reservations are created, a check is made to determine if
-the mapping is associated with an explicitly mounted filesystem.  If so,
-pages are also reserved within the filesystem.  The default action when
-freeing a huge page is to decrement the usage count in any associated
-explicitly mounted filesystem.  However, if the reservation is to be
-restored the reservation/use count within the filesystem should not be
-decrementd.  Otherwise, a subsequent page allocation and free for the same
-mapping location will cause the file filesystem usage to go 'negative'.
+"
+Clean up the transmission flow
+==============================
 
-Filesystem                         Size  Used Avail Use% Mounted on
-nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
+Cleaned up the whole transmission flow. Locking of the chip is now done in 
+the level of tpm_try_get_ops() and tpm_put_ops() instead taking the chip 
+lock inside tpm_transmit(). The nested calls inside tpm_transmit(), used 
+with the resource manager, have been refactored out.
 
-To fix, when freeing a huge page do not adjust filesystem usage if
-PagePrivate() is set to indicate the reservation should be restored.
+Should make easier to perform more complex transactions with the TPM 
+without making the subsystem a bigger mess (e.g. encrypted channel patches 
+by James Bottomley).
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+PPI 1.3 support 
+===============
+
+TPM PPI 1.3 introduces an additional optional command parameter that may 
+be
+needed for some commands. Display the parameter if the command requires
+such a parameter. Only command 23 (SetPCRBanks) needs one.
+
+The PPI request file will show output like this then:
+
+# echo "23 16" > request 
+# cat request 
+23 16   
+
+# echo "5" > request 
+# cat request 
+5       
+
+Extend all PCR banks in IMA
+===========================
+
+Instead of static PCR banks array, the array of available PCR banks is now 
+allocated dynamically. The digests sizes are determined dynamically using 
+a probe PCR read without relying crypto's static list of hash algorithms.
+
+This should finally make sealing of measurements in IMA safe and secure. 
+
+TPM 2.0 selftests
+=================
+
+Added a test suite to tools/testing/selftests/tpm2 previously outside of
+the kernel tree: https://github.com/jsakkine-intel/tpm2-scripts.
+
+"
+
 ---
- mm/hugetlb.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 8dfdffc34a99..64ef640126cd 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1257,12 +1257,23 @@ void free_huge_page(struct page *page)
- 	ClearPagePrivate(page);
- 
- 	/*
--	 * A return code of zero implies that the subpool will be under its
--	 * minimum size if the reservation is not restored after page is free.
--	 * Therefore, force restore_reserve operation.
-+	 * If PagePrivate() was set on page, page allocation consumed a
-+	 * reservation.  If the page was associated with a subpool, there
-+	 * would have been a page reserved in the subpool before allocation
-+	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
-+	 * reservtion, do not call hugepage_subpool_put_pages() as this will
-+	 * remove the reserved page from the subpool.
- 	 */
--	if (hugepage_subpool_put_pages(spool, 1) == 0)
--		restore_reserve = true;
-+	if (!restore_reserve) {
-+		/*
-+		 * A return code of zero implies that the subpool will be
-+		 * under its minimum size if the reservation is not restored
-+		 * after page is free.  Therefore, force restore_reserve
-+		 * operation.
-+		 */
-+		if (hugepage_subpool_put_pages(spool, 1) == 0)
-+			restore_reserve = true;
-+	}
- 
- 	spin_lock(&hugetlb_lock);
- 	clear_page_huge_active(page);
--- 
-2.17.2
 
+The following changes since commit e7a44cfd639945a0dec749f896adc1d340c2a6aa:
+
+  LSM: fix return value check in safesetid_init_securityfs() (2019-02-12 10:59:22 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-tpm
+
+for you to fetch changes up to 5da10728037afea6743b76afddfdc9950cd711b3:
+
+  Merge tag 'tpmdd-next-20190213' of git://git.infradead.org/users/jjs/linux-tpmdd into next-tpm (2019-02-13 12:01:00 -0800)
+
+----------------------------------------------------------------
+James Morris (1):
+      Merge tag 'tpmdd-next-20190213' of git://git.infradead.org/users/jjs/linux-tpmdd into next-tpm
+
+Jarkko Sakkinen (21):
+      tpm/tpm_crb: Avoid unaligned reads in crb_recv()
+      tpm: Fix some name collisions with drivers/char/tpm.h
+      selftests: add TPM 2.0 tests
+      tpm: Unify the send callback behaviour
+      tpm/tpm_i2c_atmel: Return -E2BIG when the transfer is incomplete
+      tpm: use tpm_buf in tpm_transmit_cmd() as the IO parameter
+      tpm: fix invalid return value in pubek_show()
+      tpm: return 0 from pcrs_show() when tpm1_pcr_read() fails
+      tpm: print tpm2_commit_space() error inside tpm2_commit_space()
+      tpm: declare struct tpm_header
+      tpm: access command header through struct in tpm_try_transmit()
+      tpm: encapsulate tpm_dev_transmit()
+      tpm: clean up tpm_try_transmit() error handling flow
+      tpm: move tpm_validate_commmand() to tpm2-space.c
+      tpm: move TPM space code out of tpm_transmit()
+      tpm: remove @space from tpm_transmit()
+      tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+      tpm: remove TPM_TRANSMIT_UNLOCKED flag
+      tpm: introduce tpm_chip_start() and tpm_chip_stop()
+      tpm: take TPM chip power gating out of tpm_transmit()
+      tpm: remove @flags from tpm_transmit()
+
+Jerry Snitselaar (2):
+      tpm: don't print error message in tpm_transmit_cmd when tpm still testing
+      tpm: don't return bool from update_timeouts
+
+Jia Zhang (2):
+      tpm: Simplify the measurements loop
+      tpm: Fix off-by-one when reading binary_bios_measurements
+
+Roberto Sassu (7):
+      tpm: add _head suffix to tcg_efi_specid_event and tcg_pcr_event2
+      tpm: dynamically allocate the allocated_banks array
+      tpm: rename and export tpm2_digest and tpm2_algorithms
+      tpm: retrieve digest size of unknown algorithms with PCR read
+      tpm: move tpm_chip definition to include/linux/tpm.h
+      KEYS: trusted: explicitly use tpm_chip structure from tpm_default_chip()
+      tpm: pass an array of tpm_extend_digest structures to tpm_pcr_extend()
+
+Stefan Berger (5):
+      tpm/ppi: pass function revision ID to tpm_eval_dsm()
+      tpm/ppi: rename TPM_PPI_REVISION_ID to TPM_PPI_REVISION_ID_1
+      tpm/ppi: Display up to 101 operations as define for version 1.3
+      tpm/ppi: Possibly show command parameter if TPM PPI 1.3 is used
+      tpm/ppi: Enable submission of optional command parameter for PPI 1.3
+
+ drivers/char/tpm/eventlog/tpm1.c           |  41 +-
+ drivers/char/tpm/eventlog/tpm2.c           |  12 +-
+ drivers/char/tpm/st33zp24/i2c.c            |   2 +-
+ drivers/char/tpm/st33zp24/spi.c            |   2 +-
+ drivers/char/tpm/st33zp24/st33zp24.c       |   2 +-
+ drivers/char/tpm/st33zp24/st33zp24.h       |   4 +-
+ drivers/char/tpm/tpm-chip.c                | 124 ++++-
+ drivers/char/tpm/tpm-dev-common.c          |  44 +-
+ drivers/char/tpm/tpm-interface.c           | 327 ++++----------
+ drivers/char/tpm/tpm-sysfs.c               | 138 +++---
+ drivers/char/tpm/tpm.h                     | 180 ++------
+ drivers/char/tpm/tpm1-cmd.c                |  43 +-
+ drivers/char/tpm/tpm2-cmd.c                | 208 +++++----
+ drivers/char/tpm/tpm2-space.c              |  90 +++-
+ drivers/char/tpm/tpm_atmel.c               |   2 +-
+ drivers/char/tpm/tpm_crb.c                 |  22 +-
+ drivers/char/tpm/tpm_i2c_atmel.c           |  15 +-
+ drivers/char/tpm/tpm_i2c_infineon.c        |  17 +-
+ drivers/char/tpm/tpm_i2c_nuvoton.c         |  18 +-
+ drivers/char/tpm/tpm_ibmvtpm.c             |   8 +-
+ drivers/char/tpm/tpm_infineon.c            |   2 +-
+ drivers/char/tpm/tpm_nsc.c                 |   2 +-
+ drivers/char/tpm/tpm_ppi.c                 |  78 +++-
+ drivers/char/tpm/tpm_tis_core.c            |  21 +-
+ drivers/char/tpm/tpm_vtpm_proxy.c          |  15 +-
+ drivers/char/tpm/xen-tpmfront.c            |   4 +-
+ include/linux/tpm.h                        | 129 +++++-
+ include/linux/tpm_eventlog.h               |  19 +-
+ security/integrity/ima/ima.h               |   1 +
+ security/integrity/ima/ima_crypto.c        |  10 +-
+ security/integrity/ima/ima_init.c          |   4 +
+ security/integrity/ima/ima_queue.c         |  27 +-
+ security/keys/trusted.c                    |  73 ++-
+ tools/testing/selftests/Makefile           |   1 +
+ tools/testing/selftests/tpm2/Makefile      |   4 +
+ tools/testing/selftests/tpm2/test_smoke.sh |   4 +
+ tools/testing/selftests/tpm2/test_space.sh |   4 +
+ tools/testing/selftests/tpm2/tpm2.py       | 696 +++++++++++++++++++++++++++++
+ tools/testing/selftests/tpm2/tpm2_tests.py | 227 ++++++++++
+ 39 files changed, 1876 insertions(+), 744 deletions(-)
+ create mode 100644 tools/testing/selftests/tpm2/Makefile
+ create mode 100755 tools/testing/selftests/tpm2/test_smoke.sh
+ create mode 100755 tools/testing/selftests/tpm2/test_space.sh
+ create mode 100644 tools/testing/selftests/tpm2/tpm2.py
+ create mode 100644 tools/testing/selftests/tpm2/tpm2_tests.py
