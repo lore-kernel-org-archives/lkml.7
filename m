@@ -2,123 +2,206 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF33AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB94C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E3820851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209772054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UrMfgjGU"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="BmlGvwto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfCHAJI (ORCPT
+        id S1726364AbfCHAJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:09:08 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45438 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfCHAJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:09:07 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 125so12339383pgc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 16:09:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fvg9NbXPnU3p4ZPcj3iIqmSG1j2etsWEod71O4uV8KM=;
-        b=UrMfgjGU4xy8L5BmGVqU0zFJVTvWqcqyXsKe9xJ3QqBKI/F0WatTSi9Z9nJN+h3VwN
-         ZHMYezryxnSSE9WeyPth7ZrYuwBq7yadvKJcVBRLQGeWWmYp+6SxnMQ38wEfSAYsWAX0
-         SIwmo7yvHN+duNs/EFhCo95dD+RWg7OjNRGWi1I6oam50V+NkYKfsoKA0hgRaXO4/e0d
-         Sf1Qr8OWJOmHg5I9urimtf0sVSyu9J4XMA1/F2EQJt+vie3fXwJP/CduoWbxyj6nF3XG
-         wurZlKgWekG+/mf4HyB4MhAUIGjov3g6G9T10bavHASMXGTT8P7G4vLTkQprGcuBN2Bp
-         PO3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fvg9NbXPnU3p4ZPcj3iIqmSG1j2etsWEod71O4uV8KM=;
-        b=ScM+eqcR7S+fMilZkn0xTWlTj/cBfU7cPGx+SNypIxr69nrWJebEGbbv34wBQ6mlrq
-         AmnY2rZFct2pKaL9fkgpYp0e6xVjaA+Ezft4vzcYXV6/3WiuknqXYc86BctYA+NgX2Wr
-         9GAu6gjkjJyWgqVyBF+Px8NnjZ9Ydgjpjrj2+gQ2GzoYOQmWLHCCqUkxTiMnvS7VcYgJ
-         giyujTmBFdWSS1zWyVxey2LP2M9L8jXvMqElkfpZnc4IFkSS+3OSOXp9TMcXhjPncJYO
-         tHwDdQn1OkatWTmgeA/LrqqACsZZ9Epk2GynurVN6OLzOJx/49uIarKzoaFYu1RwzhTH
-         gb1w==
-X-Gm-Message-State: APjAAAUOcRJnR85ea2Nl6LvT1Ur5LpXJX/OpXWB/Bsq8yEhiISHv4Jjp
-        OKyHQE/Qop9xbo8dSSAuarlE83sIcXm0DEa6IOB1eQ==
-X-Google-Smtp-Source: APXvYqzwPuN9LFvpxnTBcY4LeTUJroexnI+x0pO0xm8nmgYoFBJH4oHA5u5prVk5dDwkwdZ65tkhwDBcguHwctlja/o=
-X-Received: by 2002:a62:e704:: with SMTP id s4mr15388994pfh.94.1552003746377;
- Thu, 07 Mar 2019 16:09:06 -0800 (PST)
+        Thu, 7 Mar 2019 19:09:33 -0500
+Received: from ozlabs.org ([203.11.71.1]:37141 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfCHAJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 19:09:33 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 44FntL19tvz9sLt; Fri,  8 Mar 2019 11:09:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1552003770;
+        bh=Z1G6wQERSi9C6DfRJOO9SLvi2pEvQsZOuhE6FVvTaEg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BmlGvwto52RxtrYBvul7xyS2k0vwTM/W7/kejrPMN3DzcYsT6oCW/czu1ZB9JtQEb
+         ABDo4jGG1KnIrPcQg7fuq+HR2fweKL2aVZGwPOMTn9hPpulw53+rcdzoz6iBnrVLbK
+         +M9MdiVSk827qq1mgKffbSSK5PUrYTh4dFYZhs4k=
+Date:   Fri, 8 Mar 2019 11:09:23 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Laurent Vivier <lvivier@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/mm: move warning from resize_hpt_for_hotplug()
+Message-ID: <20190308000923.GE7722@umbus.fritz.box>
+References: <20190307145050.17886-1-lvivier@redhat.com>
 MIME-Version: 1.0
-References: <20190308000322.5379-1-natechancellor@gmail.com>
-In-Reply-To: <20190308000322.5379-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 7 Mar 2019 16:08:55 -0800
-Message-ID: <CAKwvOdn183kWz=+6robC44m4YWPXBLVJzhxL6f9jftvRi-=sxA@mail.gmail.com>
-Subject: Re: [PATCH] iwlwifi: mvm: Change an 'else if' into an 'else' in iwl_mvm_send_add_bcast_sta
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4imyEzq1NYdDURgI"
+Content-Disposition: inline
+In-Reply-To: <20190307145050.17886-1-lvivier@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 4:03 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> When building with -Wsometimes-uninitialized, Clang warns:
->
-> drivers/net/wireless/intel/iwlwifi/mvm/sta.c:2114:12: warning: variable
-> 'queue' is used uninitialized whenever 'if' condition is false
-> [-Wsometimes-uninitialized]
->
-> Clang can't evaluate at this point that WARN(1, ...) always returns true
-> because __ret_warn_on is defined as !!(condition), which isn't
-> immediately evaluated as 1. Change this branch to else so that it's
-> clear to Clang that we intend to bail out here.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/399
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Thanks for the simple fix.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+--4imyEzq1NYdDURgI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 07, 2019 at 03:50:50PM +0100, Laurent Vivier wrote:
+> resize_hpt_for_hotplug() reports a warning when it cannot
+> resize the hash page table ("Unable to resize hash page
+> table to target order") but in some cases it's not a problem
+> and can make user thinks something has not worked properly.
+>=20
+> This patch moves the warning to arch_remove_memory() to
+> only report the problem when it is needed.
+>=20
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+
+Looks ok, but apart from the H_PTEG_FULL case this does allow for some
+error paths that previously warned to pass without error, which I
+don't think is wise.
+
+Specifically that will happen the prepare hcall returns H_PARAMETER or
+H_RESOURCE.  Thse will result in -EINVAL or -EPERM from
+pseries_lpar_resize_hpt() which previously would have tripped the
+warning in resize_hpt_for_hotplug() but now will be silently ignored.
 
 > ---
->  drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-> index 498c315291cf..360724ec41a6 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-> @@ -2111,8 +2111,10 @@ int iwl_mvm_send_add_bcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
->                         queue = mvm->probe_queue;
->                 else if (vif->type == NL80211_IFTYPE_P2P_DEVICE)
->                         queue = mvm->p2p_dev_queue;
-> -               else if (WARN(1, "Missing required TXQ for adding bcast STA\n"))
-> +               else {
-> +                       WARN(1, "Missing required TXQ for adding bcast STA\n");
->                         return -EINVAL;
-> +               }
->
->                 bsta->tfd_queue_msk |= BIT(queue);
->
-> --
-> 2.21.0
->
+>  arch/powerpc/include/asm/sparsemem.h  |  4 ++--
+>  arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
+>  arch/powerpc/mm/mem.c                 |  3 ++-
+>  arch/powerpc/platforms/pseries/lpar.c |  1 -
+>  4 files changed, 10 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/=
+asm/sparsemem.h
+> index 68da49320592..3192d454a733 100644
+> --- a/arch/powerpc/include/asm/sparsemem.h
+> +++ b/arch/powerpc/include/asm/sparsemem.h
+> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, =
+unsigned long end, int ni
+>  extern int remove_section_mapping(unsigned long start, unsigned long end=
+);
+> =20
+>  #ifdef CONFIG_PPC_BOOK3S_64
+> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
+> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
+>  #else
+> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
+> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { r=
+eturn 0; }
+>  #endif
+> =20
+>  #ifdef CONFIG_NUMA
+> diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils=
+_64.c
+> index 0cc7fbc3bd1c..40bb2a8326bb 100644
+> --- a/arch/powerpc/mm/hash_utils_64.c
+> +++ b/arch/powerpc/mm/hash_utils_64.c
+> @@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(voi=
+d)
+>  }
+> =20
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
+> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
+>  {
+>  	unsigned target_hpt_shift;
+> =20
+>  	if (!mmu_hash_ops.resize_hpt)
+> -		return;
+> +		return 0;
+> =20
+>  	target_hpt_shift =3D htab_shift_for_mem_size(new_mem_size);
+> =20
+> @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_s=
+ize)
+>  	 * current shift
+>  	 */
+>  	if ((target_hpt_shift > ppc64_pft_size)
+> -	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
+> -		int rc;
+> -
+> -		rc =3D mmu_hash_ops.resize_hpt(target_hpt_shift);
+> -		if (rc && (rc !=3D -ENODEV))
+> -			printk(KERN_WARNING
+> -			       "Unable to resize hash page table to target order %d: %d\n",
+> -			       target_hpt_shift, rc);
+> -	}
+> +	    || (target_hpt_shift < (ppc64_pft_size - 1)))
+> +		return mmu_hash_ops.resize_hpt(target_hpt_shift);
+> +
+> +	return 0;
+>  }
+> =20
+>  int hash__create_section_mapping(unsigned long start, unsigned long end,=
+ int nid)
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 33cc6f676fa6..0d40d970cf4a 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, =
+u64 size,
+>  	 */
+>  	vm_unmap_aliases();
+> =20
+> -	resize_hpt_for_hotplug(memblock_phys_mem_size());
+> +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) =3D=3D -ENOSPC)
+> +		pr_warn("Hash collision while resizing HPT\n");
+> =20
+>  	return ret;
+>  }
+> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platfor=
+ms/pseries/lpar.c
+> index f2a9f0adc2d3..b407034a80ba 100644
+> --- a/arch/powerpc/platforms/pseries/lpar.c
+> +++ b/arch/powerpc/platforms/pseries/lpar.c
+> @@ -918,7 +918,6 @@ static int pseries_lpar_resize_hpt(unsigned long shif=
+t)
+>  	if (rc !=3D 0) {
+>  		switch (state.commit_rc) {
+>  		case H_PTEG_FULL:
+> -			pr_warn("Hash collision while resizing HPT\n");
+>  			return -ENOSPC;
+> =20
+>  		default:
 
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
--- 
-Thanks,
-~Nick Desaulniers
+--4imyEzq1NYdDURgI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlyBsrMACgkQbDjKyiDZ
+s5IDbw//ZcZrhFhurgIC/WgRZvDtOB6Th/FrzIzwTS9qcveE14Zqu/aQGci6g7jY
+b6wAzTtPU7kK3hDs6yuFmwsLfqVjwbsai1p1LB6XyaUR81U2C+LySBJJ4cdNofVP
+ux6PjriUbK8/7QI8qo5uSdxgnwYLk3+iDutcDEHeVExwR6LIRVuVTbHLREE0LlFt
+o7JxDFcFKSDxxoop0Jnkh4t2q3CI7Y1RPEH5JejvJ1dJ+hgaBe0zaFTyF6vhnK0Q
+Id5fazTPONYQvtG6yo6hnlVdUoSualsjF6HW9GPQoSk2Dm5da4RnmAQDQ6RWI4ct
+8/k0L1UrkmC2o3bRQzwcZqnyMoSWOAVNIotxsTd4uuVTd6+MiYc0dSAruwZWi4gD
+t3LASKFwu204ov3AulnXZWulWs3NfN2F0Fp8rqsHXYTRcJfV2QL4Cvi94ZdZ/uHr
+VbZir3uVbcEmKrh7EUbnOKQecdS4YvDAs/hnlxTEQmTz4bd+EO8pOnaeZxGwg8hc
+79clDfONS3N0e+UaWGdDkf7fA6W9UQTaJ8A9Hjb1SX1QOikxCat0VLOKaAKa39VM
+VQHQETHRMhCVXo35XRRROLAt2oE8xRv1F+fhjrZzZGHNJaODjc/0L3Tf/9WFPJLb
+ZegRfCPhOLvFMHKpSrGNflgGlzOXkXkvTxmXoe+mBPU7BZfytEA=
+=lw9t
+-----END PGP SIGNATURE-----
+
+--4imyEzq1NYdDURgI--
