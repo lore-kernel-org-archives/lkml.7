@@ -2,116 +2,100 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B62C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0130C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124692146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="BupmmeZk"
+	by mail.kernel.org (Postfix) with ESMTP id C31D620851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfCHRWX (ORCPT
+        id S1726753AbfCHRYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:22:23 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37767 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfCHRWX (ORCPT
+        Fri, 8 Mar 2019 12:24:45 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:33049 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfCHRYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:22:23 -0500
-Received: by mail-qt1-f196.google.com with SMTP id a48so22042421qtb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:22:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JbH57hj38dbuvh9sgqbNRJMeCQlSikG1kcp1+esyKsE=;
-        b=BupmmeZkBGvKHTBw9Ba0knKotbsh2ucjHI0nGoWNbNfY/Vz5l98p4lh36/ATOGGIy/
-         9kATlqWal45/OVi5k69K+pOW61YgOyiLvZ6r0VrpTgcM+sOfWv88hoQebSU3FIik95m/
-         nqd7OdcTF0ygteH8C37NMIK2loiV2y+1untflcF5ccuY+lM7Ifx55dznXKhzRlE6DpzN
-         0oexkJ8SnQGCq+yKpGzbO4uUslVcAW+V7oupFlO+Lnf8/ZjjXcXnppBSPK4iRRUext12
-         wqA3iL83EOzC7Qf31kwEaU5WWO5d7OKXziWjufIToX8G26BQJNNAxiq2D1WEyceZLyho
-         bvsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JbH57hj38dbuvh9sgqbNRJMeCQlSikG1kcp1+esyKsE=;
-        b=gdgsrgTZ/jowWFNn6sSiy1TgbARO9ihV2/oFzLhiHK8V5HQODKQQoPn0PT1IL/RBEM
-         yzU+QCyYei4zOQMqeHOiaGio6TjNQfWf55HU3JAXFcTKgc8sqj51HdlBcD9d2k/Dtl1n
-         /oiH+QMa/olvlc5gNfboDiTO30sI2TvQA3aF3kzoWcFpv1qoKVONeSBvEvgIFAGIJ4KV
-         GEPn3Y/wbO5/0AJR+hcWGAYuZvtDcIkcK6hD/wPmIA7hPkTw1H+u1E6tlNl9Yv/bZHo8
-         9MaUAv6gp+1yaiImHc0ybgFuGRXC8iCZ5swhpcLNgbPjNxEbC6SbCq7vOpBH0+szIwGo
-         /OlQ==
-X-Gm-Message-State: APjAAAX+QsjRxH8SXPSZZPwlSFKN+xF1lzaJfgGOBSSsiICcB1wt0NyU
-        OfHVP42FGfHXx4st49hw/ZdC1g==
-X-Google-Smtp-Source: APXvYqxFeMvdRVtcxpV/iBEVratRFw6cxDJJ6VFy3yGqZG2kucewCRZA1txSERTsvGbbrU+ybjftdQ==
-X-Received: by 2002:a0c:b785:: with SMTP id l5mr15957092qve.225.1552065742151;
-        Fri, 08 Mar 2019 09:22:22 -0800 (PST)
-Received: from localhost ([107.15.81.208])
-        by smtp.gmail.com with ESMTPSA id n27sm2064404qtf.11.2019.03.08.09.22.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 09:22:21 -0800 (PST)
-Date:   Fri, 8 Mar 2019 12:22:20 -0500
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] blkcg: sync() isolation
-Message-ID: <20190308172219.clcu6ehjav6y2hxi@MacBook-Pro-91.local>
-References: <20190307180834.22008-1-andrea.righi@canonical.com>
+        Fri, 8 Mar 2019 12:24:45 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h2JEY-0000Xy-Tx; Fri, 08 Mar 2019 18:24:35 +0100
+Date:   Fri, 8 Mar 2019 18:24:34 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 12/22] x86/fpu: Only write PKRU if it is different from
+ current
+Message-ID: <20190308172434.6mshxok52syxwsrz@linutronix.de>
+References: <20190221115020.12385-1-bigeasy@linutronix.de>
+ <20190221115020.12385-13-bigeasy@linutronix.de>
+ <198b2412-e81d-6c55-c74f-c2cab60fc5f2@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190307180834.22008-1-andrea.righi@canonical.com>
+In-Reply-To: <198b2412-e81d-6c55-c74f-c2cab60fc5f2@intel.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 07:08:31PM +0100, Andrea Righi wrote:
-> = Problem =
+On 2019-02-25 10:08:10 [-0800], Dave Hansen wrote:
+> On 2/21/19 3:50 AM, Sebastian Andrzej Siewior wrote:
+> > @@ -111,6 +111,12 @@ static inline void __write_pkru(u32 pkru)
+> >  {
+> >  	u32 ecx = 0, edx = 0;
+> >  
+> > +	/*
+> > +	 * WRPKRU is relatively expensive compared to RDPKRU.
+> > +	 * Avoid WRPKRU when it would not change the value.
+> > +	 */
+> > +	if (pkru == __read_pkru())
+> > +		return;
+> >  	/*
+> >  	 * "wrpkru" instruction.  Loads contents in EAX to PKRU,
+> >  	 * requires that ecx = edx = 0.
 > 
-> When sync() is executed from a high-priority cgroup, the process is forced to
-> wait the completion of the entire outstanding writeback I/O, even the I/O that
-> was originally generated by low-priority cgroups potentially.
-> 
-> This may cause massive latencies to random processes (even those running in the
-> root cgroup) that shouldn't be I/O-throttled at all, similarly to a classic
-> priority inversion problem.
-> 
-> This topic has been previously discussed here:
-> https://patchwork.kernel.org/patch/10804489/
-> 
+> Could we do this in write_pkru() instead?  I tried to keep the __
+> versions of read and write as simple and symmetric as possible.
 
-Sorry to move the goal posts on you again Andrea, but Tejun and I talked about
-this some more offline.
+write_pkru() has:
+| static inline void write_pkru(u32 pkru)
+| {
+|         struct pkru_state *pk;
+| 
+|         if (!boot_cpu_has(X86_FEATURE_OSPKE))
+|                 return;
+|         
+|         pk = get_xsave_addr(&current->thread.fpu.state.xsave, XFEATURE_PKRU);
+|         /*
+|          * The PKRU value in xstate needs to be in sync with the value that is
+|          * written to the CPU. The FPU restore on return to userland would
+|          * otherwise load the previous value again.
+|          */
+|         fpregs_lock();
+|         if (pk)
+|                 pk->pkru = pkru;
+|         __write_pkru(pkru);
+|         fpregs_unlock();
+| }
 
-We don't want cgroup to become the arbiter of correctness/behavior here.  We
-just want it to be isolating things.
+and is other callers besides write_pkru():
+|arch/x86/include/asm/fpu/internal.h:    __write_pkru(pkru_val);
+|arch/x86/kvm/vmx/vmx.c:         __write_pkru(vcpu->arch.pkru);
+|arch/x86/kvm/vmx/vmx.c:                 __write_pkru(vmx->host_pkru)
 
-For you that means you can drop the per-cgroup flag stuff, and only do the
-priority boosting for multiple sync(2) waiters.  That is a real priority
-inversion that needs to be fixed.  io.latency and io.max are capable of noticing
-that a low priority group is going above their configured limits and putting
-pressure elsewhere accordingly.
+Do want __write_pkru_isn() and __read_pkru_isn() so those are symmetric
+and then we would have __write_pkru() which does the read check and
+invokes __write_pkru_isn()?
 
-Tejun said he'd rather see the sync(2) isolation be done at the namespace level.
-That way if you have fs namespacing you are already isolated to your namespace.
-If you feel like tackling that then hooray, but that's a separate dragon to slay
-so don't feel like you have to right now.
-
-This way we keep cgroup doing its job, controlling resources.  Then we allow
-namespacing to do its thing, isolating resources.  Thanks,
-
-Josef
+Sebastian
