@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9934C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D75C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB78B20811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DF420811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050000;
-	bh=GlSUIhiD6oatdqoOuzMaRg7fon4+1+Lqr+XIt8x0kIk=;
+	s=default; t=1552050003;
+	bh=SPxXSvOW/mMl7eb36t/DsmXEuvSe4qiF1H+LgWNrRJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gP2MuJe8Lrmupewv3+qsbpG4qBx1oqI+AxTiJ81fLKPvg9GkCgPRXJrAmi9tMAJoH
-	 ekgjyeximTEBvW2sJvf5rogV/B6opz0wIc77Y42RRypaB+Xhkfkqw5pZLq2jcxiV+d
-	 wyuVXgRmQfmDzGLGMX3fS7NDERzwJw0H3Xj6xBxc=
+	b=LVESFU16/TefWIF2IWsJQ+4THBjQHe+zoJ3FckOWU8/QK1z2/E8hjybrxkY6FVC69
+	 t25tRBIRt2eDEj96l480Yy9u3FKXWFXS+m4jdyG4ORV4CrDskuUSoHAlSfAyrZWmlO
+	 PhuwfZqZ5X917niE7revUfiHiaJey9ZvTl8PgHJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfCHM77 (ORCPT
+        id S1728219AbfCHNAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 08:00:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbfCHM75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:59:57 -0500
+        id S1727710AbfCHNAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:00:01 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 718B120449;
-        Fri,  8 Mar 2019 12:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B43A20449;
+        Fri,  8 Mar 2019 13:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049997;
-        bh=GlSUIhiD6oatdqoOuzMaRg7fon4+1+Lqr+XIt8x0kIk=;
+        s=default; t=1552050000;
+        bh=SPxXSvOW/mMl7eb36t/DsmXEuvSe4qiF1H+LgWNrRJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzkaLHyzKiAyttrlAjZCIa8GkE5bqKlVE3OfdLTHc9eX57bExV39zlK06LhsTx6K9
-         Zk6N7cJPs/nHb7bxLsIn95q48aeVxdoJ2cvf1PrkV/83gu8/YDijdnPrjdX+D74pkS
-         TAef6sRHWWvvDa7Yo5gn6IKn/OkqN3Sw0ytU+mRA=
+        b=Q6r0rtmylHf4bpzKFQhbBFFVQ4Ko3iuTYN8ytr0MJ6PbHwQ+v+oCCy867dg0WIjlM
+         JNs8Gy0ccJmbuZ5pB5OmZgsTPz1hi5hcyQeGW8Ndb8Qk3exkFsRDmE8mYrspDGed0t
+         wsg1L9qcnmkrMTMb2Kt17qklf2etVRr8azyVkNPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
-        Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 52/68] net: sched: act_tunnel_key: fix NULL pointer dereference during init
-Date:   Fri,  8 Mar 2019 13:50:22 +0100
-Message-Id: <20190308124913.203887649@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Sherry Hurwitz <sherry.hurwitz@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.19 53/68] x86/CPU/AMD: Set the CPB bit unconditionally on F17h
+Date:   Fri,  8 Mar 2019 13:50:23 +0100
+Message-Id: <20190308124913.248273597@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,35 +70,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit a3df633a3c92bb96b06552c3f828d7c267774379 ]
+commit 0237199186e7a4aa5310741f0a6498a20c820fd7 upstream.
 
-Metadata pointer is only initialized for action TCA_TUNNEL_KEY_ACT_SET, but
-it is unconditionally dereferenced in tunnel_key_init() error handler.
-Verify that metadata pointer is not NULL before dereferencing it in
-tunnel_key_init error handling code.
+Some F17h models do not have CPB set in CPUID even though the CPU
+supports it. Set the feature bit unconditionally on all F17h.
 
-Fixes: ee28bb56ac5b ("net/sched: fix memory leak in act_tunnel_key_init()")
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Reviewed-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ [ bp: Rewrite commit message and patch. ]
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181120030018.5185-1-jiaxun.yang@flygoat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/act_tunnel_key.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/sched/act_tunnel_key.c
-+++ b/net/sched/act_tunnel_key.c
-@@ -377,7 +377,8 @@ static int tunnel_key_init(struct net *n
- 	return ret;
+---
+ arch/x86/kernel/cpu/amd.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -818,11 +818,9 @@ static void init_amd_bd(struct cpuinfo_x
+ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
+-	/*
+-	 * Fix erratum 1076: CPB feature bit not being set in CPUID. It affects
+-	 * all up to and including B1.
+-	 */
+-	if (c->x86_model <= 1 && c->x86_stepping <= 1)
++
++	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
++	if (!cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+ }
  
- release_tun_meta:
--	dst_release(&metadata->dst);
-+	if (metadata)
-+		dst_release(&metadata->dst);
- 
- err_out:
- 	if (exists)
 
 
