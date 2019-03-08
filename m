@@ -2,116 +2,108 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F031C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D452FC10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6D72146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FA220868
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="zrmfr+7X"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rJHLseQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfCHQBz (ORCPT
+        id S1726524AbfCHQDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:01:55 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:41633 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbfCHQBy (ORCPT
+        Fri, 8 Mar 2019 11:03:19 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15528 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfCHQDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:01:54 -0500
-Received: by mail-yw1-f68.google.com with SMTP id q128so16639579ywg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:01:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7Mrnt0v5aTwQKX4K+a22sLlI7mhOrdlmXcat3QdWb0c=;
-        b=zrmfr+7XYf//JgH/JmL+nDOiY0Sn4Cn0/tQ6vGXOCsbi5D0ocV11dHDDQm4Brp4j48
-         S9A5J6ijrUgsJdPMKZKFojQr2KUKKskPD7i3+dLAiGc54OcWWxcYLzEbdwletNluQOHL
-         o3pAGw2BAogHLKZxBl0vS2CQr9jm/IJ9pw6p/UUN1pqx0Q80oo3qCnSmslx0o+dXFL61
-         ENnC3P/EsdxY30F8N1PzTIZRyWNg3ReytprClO2X02QbqbRU3AEZFI3EXsTPxXF0GtuY
-         lZQ9qZ2qjexeS1iLkhfHNPx2BMTq8qwcUc3PqDe3l5evwK4WKd8WFyX5xJmnxhTQKMly
-         GTUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7Mrnt0v5aTwQKX4K+a22sLlI7mhOrdlmXcat3QdWb0c=;
-        b=ieEv6YXACT6kHTP3MJqoJaOchxkT61Gs/c7seFN/6b1XlUN+ofgUyB1R1itiwidlQX
-         aiLXdyTEfOLElnfNa6NHoIF+MQkzKmGGviq39GQKPKJ9DzoEUjRNEqzLny5INLp9To4j
-         r2t82mJsVW/s7b/jzn2OLjbCloc0dadmt/LWD3VsNPil5K0VeDUR33whDtJ7daztmcuv
-         ywYDTlyz2BRkHzDDYb/pKIrP9BNfr5yUkMDLY0C/+4uamQ8w91aZxMP42t7/pvQd+5Oo
-         UEa0j0weMksKpmju7RPYoCEn79JS6QlDXhrxRTixEqQiY3IwoJhVvn/KYhrblI/AzKQY
-         EKxQ==
-X-Gm-Message-State: APjAAAX6483rXOcYSBW0VJEyEwU/LO2PDRNFizZe3RbkcoHQUGvaj5nx
-        gyzGnbtARW2kDWNB/lPC9XMFjw==
-X-Google-Smtp-Source: APXvYqzbRZ5z4rBPAYJpioypz0Qfq6hwxf1QV1sbef612TXie7Xx3GmmEU8nebWZS5r6iWB0vXbNmA==
-X-Received: by 2002:a0d:e612:: with SMTP id p18mr14576212ywe.445.1552060913522;
-        Fri, 08 Mar 2019 08:01:53 -0800 (PST)
-Received: from cisco ([2601:282:901:dd7b:316c:2a55:1ab5:9f1c])
-        by smtp.gmail.com with ESMTPSA id g82sm3210342ywg.60.2019.03.08.08.01.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 08:01:52 -0800 (PST)
-Date:   Fri, 8 Mar 2019 09:01:51 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 07/15] slub: Add defrag_used_ratio field and sysfs support
-Message-ID: <20190308160151.GC373@cisco>
-References: <20190308041426.16654-1-tobin@kernel.org>
- <20190308041426.16654-8-tobin@kernel.org>
+        Fri, 8 Mar 2019 11:03:19 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c8292450000>; Fri, 08 Mar 2019 08:03:17 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 08 Mar 2019 08:03:18 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 08 Mar 2019 08:03:18 -0800
+Received: from [10.26.11.61] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 8 Mar
+ 2019 16:03:15 +0000
+Subject: Re: [PATCH 4.19 00/68] 4.19.28-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190308124910.696595153@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <348c60a4-149a-9c2d-1452-d8177c6685a4@nvidia.com>
+Date:   Fri, 8 Mar 2019 16:03:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190308041426.16654-8-tobin@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552060997; bh=LilXXrPjXho01zlDIleIvdiON4LkwuM03fwxdLHPIr4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rJHLseQuHrUtoVCjS5+1vUXKx3tFvgtSjZsjLC/GFyw7XAm1w/dOfe5mrXjboy+VW
+         OFWx1zo3SOYb5aomwt3TiAGExo5+SzqTh4cy6YOeBjWVv2DIx0igQgeEfsdEA0Z8Pq
+         bW4LdnfUvSr9/VCqRXl4BHVlqkBb8a6jkCM3pmQqFnjUUB+ekBG9NMHHC05dl3wbvr
+         WHyP+su2MiP7MaD227ztn17rnDBVBRyf9EoIrozW2j4lzIEVCXn4rl5EJWh3lu8TaD
+         x2GwjiqP2top2KaJAVhp58dYrDqXvKOf/gDc7wtScxVB6zwjfj9HsJaOTVwBGPnt8+
+         Tj+9SM8GLm7DA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 03:14:18PM +1100, Tobin C. Harding wrote:
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -3642,6 +3642,7 @@ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
->  
->  	set_cpu_partial(s);
->  
-> +	s->defrag_used_ratio = 30;
->  #ifdef CONFIG_NUMA
->  	s->remote_node_defrag_ratio = 1000;
->  #endif
-> @@ -5261,6 +5262,28 @@ static ssize_t destroy_by_rcu_show(struct kmem_cache *s, char *buf)
->  }
->  SLAB_ATTR_RO(destroy_by_rcu);
->  
-> +static ssize_t defrag_used_ratio_show(struct kmem_cache *s, char *buf)
-> +{
-> +	return sprintf(buf, "%d\n", s->defrag_used_ratio);
-> +}
-> +
-> +static ssize_t defrag_used_ratio_store(struct kmem_cache *s,
-> +				       const char *buf, size_t length)
-> +{
-> +	unsigned long ratio;
-> +	int err;
-> +
-> +	err = kstrtoul(buf, 10, &ratio);
-> +	if (err)
-> +		return err;
-> +
-> +	if (ratio <= 100)
-> +		s->defrag_used_ratio = ratio;
-    else
-        return -EINVAL;
 
-maybe?
+On 08/03/2019 12:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.28 release.
+> There are 68 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun Mar 10 12:48:45 UTC 2019.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.28-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+All tests passing for Tegra ...
 
-Tycho
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    28 tests:	28 pass, 0 fail
+
+Linux version:	4.19.28-rc1-g838c866
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
