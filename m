@@ -2,106 +2,216 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B912AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554BDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D222087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:28:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DG7sOVlr"
+	by mail.kernel.org (Postfix) with ESMTP id 257D12087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfCHN2l (ORCPT
+        id S1726689AbfCHN3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:28:41 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34148 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfCHN2k (ORCPT
+        Fri, 8 Mar 2019 08:29:52 -0500
+Received: from mailproxy02.manitu.net ([217.11.48.66]:47070 "EHLO
+        mailproxy02.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCHN3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:28:40 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28DSYOI119809;
-        Fri, 8 Mar 2019 07:28:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552051714;
-        bh=/5bTgZWk45LxLNK1weT54abNef08D7JFiCuh3dsPBcY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DG7sOVlrtNLqPZfD+9ruVv5IdfOo6rEhlt7XNgoGves9ealPP6stHy9z/X6JCz8/T
-         OCrk/H1kyc3Z7fOHu2Brlvrs3E0TNzeTArtVO5u8TUSZxViRS7VBZYfOwOnAgmrKuq
-         nXwRFMieS7mUDqXxrKyhhk9jHIxni0B4ACDEmIh4=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28DSYTn070108
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 8 Mar 2019 07:28:34 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
- Mar 2019 07:28:33 -0600
-Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Fri, 8 Mar 2019 07:28:33 -0600
-Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28DSXY5019193;
-        Fri, 8 Mar 2019 07:28:33 -0600
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <tony@atomide.com>, <lee.jones@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-4-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f618b1dc-abf2-88ba-9b73-1a70471adc6b@ti.com>
-Date:   Fri, 8 Mar 2019 07:28:19 -0600
+        Fri, 8 Mar 2019 08:29:52 -0500
+Received: from [10.0.30.7] (dslb-188-099-219-116.188.099.pools.vodafone-ip.de [188.99.219.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy02.manitu.net (Postfix) with ESMTPSA id 4081910200CC;
+        Fri,  8 Mar 2019 14:33:52 +0100 (CET)
+Subject: Re: [PATCH v7 1/4] can: m_can: Create a m_can platform framework
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190305155220.14037-1-dmurphy@ti.com>
+ <5065d6ba-f195-a695-77b1-b837cac1a199@grandegger.com>
+ <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <bf2613ae-67f6-661d-0faa-786308c249a0@grandegger.com>
+Date:   Fri, 8 Mar 2019 14:29:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190307220947.20057-4-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Hello Dan,
 
-On 3/7/19 4:09 PM, Dan Murphy wrote:
-> Introduce the Texas Instruments LM3532 White LED driver.
-> The driver supports ALS configurability or manual brightness
-> control.
+Am 08.03.19 um 13:44 schrieb Dan Murphy:
+> Wolfgang
 > 
-> The driver also supports associating LED strings with specific
-> control banks in a group or as individually controlled strings.
+> On 3/8/19 4:10 AM, Wolfgang Grandegger wrote:
+>> Hallo Dan,
+>>
+>> Am 05.03.19 um 16:52 schrieb Dan Murphy:
+>>> Create a m_can platform framework that peripherial
+>>> devices can register to and use common code and register sets.
+>>> The peripherial devices may provide read/write and configuration
+>>> support of the IP.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>
+>>>
+>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
+>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
+>>>
+>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+>>>
+>>>  drivers/net/can/m_can/Kconfig          |  13 +-
+>>>  drivers/net/can/m_can/Makefile         |   1 +
+>>>  drivers/net/can/m_can/m_can.c          | 700 +++++++++++++------------
+>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
+>>>  5 files changed, 682 insertions(+), 344 deletions(-)
+>>>  create mode 100644 drivers/net/can/m_can/m_can.h
+>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>>>
+>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>> index 04f20dd39007..f7119fd72df4 100644
+>>> --- a/drivers/net/can/m_can/Kconfig
+>>> +++ b/drivers/net/can/m_can/Kconfig
+>>> @@ -1,5 +1,14 @@
+>>>  config CAN_M_CAN
+>>> +	tristate "Bosch M_CAN support"
+>>> +	---help---
+>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
+>>> +
+>>> +config CAN_M_CAN_PLATFORM
+>>> +	tristate "Bosch M_CAN support for io-mapped devices"
+>>>  	depends on HAS_IOMEM
+>>> -	tristate "Bosch M_CAN devices"
+>>> +	depends on CAN_M_CAN
+>>>  	---help---
+>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
+>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>>> +	  This support is for devices that have the Bosch M_CAN controller
+>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>> index 8bbd7f24f5be..057bbcdb3c74 100644
+>>> --- a/drivers/net/can/m_can/Makefile
+>>> +++ b/drivers/net/can/m_can/Makefile
+>>> @@ -3,3 +3,4 @@
+>>>  #
+>>>  
+>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+>>> index 9b449400376b..a60278d94126 100644
+>>> --- a/drivers/net/can/m_can/m_can.c
+>>> +++ b/drivers/net/can/m_can/m_can.c
+>>
+>> ... snip...
+>>
+>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
+>>> +				    struct net_device *dev)
+>>> +{
+>>> +	struct m_can_priv *priv = netdev_priv(dev);
+>>> +
+>>> +	if (can_dropped_invalid_skb(dev, skb))
+>>> +		return NETDEV_TX_OK;
+>>> +
+>>> +	if (priv->is_peripherial) {
+>>> +		if (priv->tx_skb) {
+>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
+>>> +			return NETDEV_TX_BUSY;
+>>> +		}
+>>
+>> The problem with that approach is, that the upper layer will try to
+>> resubmit the current "skb" but not the previous "tx_skb". And the
+>> previous "tx_skb" has not been freed yet. I would just drop and free the
+>> skb and return NETDEV_TX_OK in m_can_tx_handler() for peripheral devices
+>> (like can_dropped_invalid_skb() does).
+>>
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/Kconfig                   |  10 +
->  drivers/leds/Makefile                  |   1 +
->  drivers/leds/leds-lm3532.c             | 595 +++++++++++++++++++++++++
->  include/dt-bindings/leds/leds-lm3532.h |  72 +++
->  4 files changed, 678 insertions(+)
->  create mode 100644 drivers/leds/leds-lm3532.c
->  create mode 100644 include/dt-bindings/leds/leds-lm3532.h
+> OK.
 > 
+> So would this also be a bug in the hi3110 and mcp251x drivers (line 521) as well because besides checking tx_length
+> this is how these drivers are written.
 
-After thinking about this dt header I am not happy about having it.
-I am thinking of removing this file completely and doing some calculations in the driver
-file for the impedance, averaging time and ramp times.
+This is different. When entering the "start_xmit" routine, the previous
+TX is still in progress. It will (hopefully) complete soon. Therefore
+returning NETDEV_TX_BUSY is OK. The "start_xmit" routine will be
+recalled soon with the same "skb". That scenario should/could also not
+happen.
 
-I would still like to get comments on the rest of the code but in v2 the dt bindings header will
-go away.
+In contrast, in "m_can_tx_handler()", the skb could not be handled
+because the FIFO is full. The "start_xmit" routine for peripheral
+devices for that skb already returned NETDEV_TX_OK. Therefore the only
+meaningful action is to drop the skb. Also this error should not happen
+and if, something is going really wrong. Therefore I think, a
+WARN_ONCE() would be even more appropriate. But that should be a
+separate patch.
 
-Dan
+> 
+> In addition in the peripheral context the work queue does not report up to the upper layer the status.
+> Again the hi3110 and mcp251x drivers are written this way.
+> 
+> The only issue I see here is that the dropped and invalid check needs to come after the tx_skb check.
 
-<snip>
--- 
-------------------
-Dan Murphy
+See above.
+
+Wolfgang.
