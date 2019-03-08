@@ -2,90 +2,74 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870EEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF39D20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpWy2UR4"
+	by mail.kernel.org (Postfix) with ESMTP id 555E120657
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfCHQQB (ORCPT
+        id S1726578AbfCHQRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:16:01 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43655 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfCHQQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:16:00 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i8so16264716oib.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:16:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p9phEvB0DMgLtUOyraVJIIi4zEnL4/7qOkhyfeNgeSY=;
-        b=WpWy2UR4YYQvUr2ZO+Uey4SM87AeRmXIj+8nGLiFJaSmq/Hwa7X78YEVXm/XZgoyDn
-         beWZXrn19JPJAbcMv3zY027glUzWqWIAvOU6T7WexIczEIWoc8wN7QxQiOPlXjrUru2/
-         69fqjq+rxBvSwIm4v7NbmpnmnaaPc8XptUw8ofyXvrJwZCE6rkkmaOugSi4xqAyrajGq
-         KPczGNA5/Kl4mtHV07H5+d/sMZixeatMib+aSQpOWbqM6dNG3jI9xd6T4OwnWL4GOm+I
-         RABGhfd9SCH6N5ZJh3QKuPY1n+sIpchmVlLYVS8Pr30AyKsUTPXnvAukxzphZYdR/2/s
-         JfVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p9phEvB0DMgLtUOyraVJIIi4zEnL4/7qOkhyfeNgeSY=;
-        b=nZc2WIu1+4skLVr3IO0oDTcKQVWY5z+/nX+QOJ6M7G2WsgiT0pBUSwT3q4FLets3cO
-         0Oke2Y4XuNcKf8NjKDf7R1C25wwDoOgLEIYF+4xVFoq/tatm8l8NL3oyq1IiJUOvfWSw
-         SjZlB6cEnw33i8VXsrN5+P1YIb/AEh6O+xG42irnQKfoP03P1vDbDJRlpDGtUBKlWHDG
-         dAoO2p75zVwgbqhJQFabD4wWHCSLYCGhO6+BiI3WPf3WED1Tup0AgFRr4MsOWmEKikYD
-         hyhk9RmGGgYDBPfTANIZMTPwKTU4t5PUsGg2DVUcP5BWK/oY6j6jDMAcIz7rKLmAifWh
-         T8bQ==
-X-Gm-Message-State: APjAAAUbBwMqusyKR0CXsmPWyFQQLwSvC403OeQ8A/oHxqnY06jbDLHb
-        TwevEPUE5+HR4R4gunOrm6NpE6xlNS6/RZH5io8=
-X-Google-Smtp-Source: APXvYqxcBIfqIvD8GFazh84Wi4PKHVrttaT+z+ib/F7AUWDhzgP92WT8Gf66oMf4c+phKyF4eDS7w4hOH8yS39SSCIs=
-X-Received: by 2002:aca:4a95:: with SMTP id x143mr8863272oia.18.1552061759927;
- Fri, 08 Mar 2019 08:15:59 -0800 (PST)
+        Fri, 8 Mar 2019 11:17:20 -0500
+Received: from anholt.net ([50.246.234.109]:52524 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfCHQRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 11:17:19 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 1767D10A2E2F;
+        Fri,  8 Mar 2019 08:17:19 -0800 (PST)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id 1yUUo0CszL-l; Fri,  8 Mar 2019 08:17:17 -0800 (PST)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 50E0F10A2E21;
+        Fri,  8 Mar 2019 08:17:17 -0800 (PST)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id 217D72FE4653; Fri,  8 Mar 2019 08:17:16 -0800 (PST)
+From:   Eric Anholt <eric@anholt.net>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        david.emett@broadcom.com, thomas.spurden@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Subject: [PATCH 0/4] drm/v3d: Add drm core helper, use shmem helpers
+Date:   Fri,  8 Mar 2019 08:17:12 -0800
+Message-Id: <20190308161716.2466-1-eric@anholt.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190308160933.29899-1-daniel.baluta@nxp.com>
-In-Reply-To: <20190308160933.29899-1-daniel.baluta@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 8 Mar 2019 13:16:04 -0300
-Message-ID: <CAOMZO5CLjZ7W0Z4ZHbx1YXMxjH5RzjEQPxPtP4Sd+ANF_eyG+g@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl: sai: Reduce underrun when stream starts
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+This was inspired by Rob's respin of the shmem helpers patch for
+panfrost (which the final patch depends on).  And, looking at panfrost
+and lima, recently I realized that we all had some nasty cargo-cult
+code for BO reservations that we can share now that the reservation
+object is in the core GEM struct.
 
-On Fri, Mar 8, 2019 at 1:09 PM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> From: Shengjiu Wang <shengjiu.wang@nxp.com>
->
-> Write initial words into SAI FIFO to reduce the underrun
-> error.
+Eric Anholt (4):
+  drm: Add helpers for locking an array of BO reservations.
+  drm/v3d: Use drm_gem_lock_reservations()/drm_gem_unlock_reservations()
+  drm/v3d: Remove some dead members of struct v3d_bo.
+  drm/v3d: Use the new shmem helpers to reduce driver boilerplate.
 
-Please provide a better explanation.
+ drivers/gpu/drm/drm_gem.c     |  76 +++++++++
+ drivers/gpu/drm/v3d/Kconfig   |   1 +
+ drivers/gpu/drm/v3d/v3d_bo.c  | 309 ++++++++++------------------------
+ drivers/gpu/drm/v3d/v3d_drv.c |  27 +--
+ drivers/gpu/drm/v3d/v3d_drv.h |  25 +--
+ drivers/gpu/drm/v3d/v3d_gem.c |  67 ++------
+ drivers/gpu/drm/v3d/v3d_irq.c |   8 +-
+ drivers/gpu/drm/v3d/v3d_mmu.c |  34 +++-
+ include/drm/drm_gem.h         |   4 +
+ 9 files changed, 220 insertions(+), 331 deletions(-)
 
-Why does performing these writes help?
+-- 
+2.20.1
 
-Also, the commit message says "reduce", so it seems this is a
-workaround instead of a proper fix?
