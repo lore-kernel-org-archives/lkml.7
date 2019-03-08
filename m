@@ -2,148 +2,215 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15097C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150AAC10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E452B20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB26420855
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfCHIrw (ORCPT
+        id S1726386AbfCHIut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 03:47:52 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:1969 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726238AbfCHIrw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 03:47:52 -0500
-X-UUID: c6a993b043be42d7bad82109c0eb2468-20190308
-X-UUID: c6a993b043be42d7bad82109c0eb2468-20190308
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 110564800; Fri, 08 Mar 2019 16:47:40 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 8 Mar 2019 16:47:39 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 8 Mar 2019 16:47:39 +0800
-Message-ID: <1552034858.2863.25.camel@mtksdaap41>
-Subject: Re: [PATCH v2 02/10] dt-binding: gce: add binding for gce event
- property
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Date:   Fri, 8 Mar 2019 16:47:38 +0800
-In-Reply-To: <1551865835-50974-3-git-send-email-bibby.hsieh@mediatek.com>
-References: <1551865835-50974-1-git-send-email-bibby.hsieh@mediatek.com>
-         <1551865835-50974-3-git-send-email-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 8 Mar 2019 03:50:49 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33532 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfCHIut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 03:50:49 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6D5C788306;
+        Fri,  8 Mar 2019 08:50:48 +0000 (UTC)
+Received: from [10.72.12.27] (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD200611DF;
+        Fri,  8 Mar 2019 08:50:37 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+To:     Andrea Arcangeli <aarcange@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org,
+        Jerome Glisse <jglisse@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191622.GP23850@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e2fad6ed-9257-b53c-394b-bc913fc444c0@redhat.com>
+Date:   Fri, 8 Mar 2019 16:50:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 53E949AEC08988B78A0AC1647D487C3228351745EA3C37EF067C1A23601FEB272000:8
-X-MTK:  N
+In-Reply-To: <20190307191622.GP23850@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 08 Mar 2019 08:50:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
 
-On Wed, 2019-03-06 at 17:50 +0800, Bibby Hsieh wrote:
-> cmdq driver provide a function that get event number
-> from device node for client.
-
-I think device tree is based on the view of hardware design, so you need
-not to mention how the driver design. 
-
-Client hardware would send event to GCE hardware, so this property
-present this event.
-
-
-> add specification for #event-cells,
-> mediatek,gce-event-names, mediatek,gce-events.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> index 9c0d982..812698f 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-> @@ -21,12 +21,20 @@ Required properties:
->  	priority: Priority of GCE thread.
->  	atomic_exec: GCE processing continuous packets of commands in atomic
->  		way.
-> +- #event-cells: Should be 1.
-> +	<&phandle event_number>
-> +	phandle: Label name of a gce node.
-> +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
-> +		      or 'dt-binding/gce/mt8183-gce.h'.
->  
->  Required properties for a client device:
->  - mboxes: Client use mailbox to communicate with GCE, it should have this
->    property and list of phandle, mailbox specifiers.
->  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
->    to the register address.
-> +- mediatek,gce-event-names: the event name can be defined by user.
-> +- mediatek,gce-events: u32, the event number defined in
-> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
-
-I think both gce-subsys and gce-event are optional and depend on the
-hardware design.
-
-Regards,
-CK
-
->  
->  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
->  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-> @@ -41,6 +49,7 @@ Example:
->  		clock-names = "gce";
->  		thread-num = CMDQ_THR_MAX_COUNT;
->  		#mbox-cells = <3>;
-> +		#event-cells = <1>;
->  	};
->  
->  Example for a client device:
-> @@ -50,8 +59,9 @@ Example for a client device:
->  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
->  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
->  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
-> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
-> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
-> -
-> +		mediatek,gce-event-names = "rdma0_sof",
-> +					   "rsz0_sof";
-> +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
-> +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
->  		...
->  	};
+On 2019/3/8 上午3:16, Andrea Arcangeli wrote:
+> On Thu, Mar 07, 2019 at 12:56:45PM -0500, Michael S. Tsirkin wrote:
+>> On Thu, Mar 07, 2019 at 10:47:22AM -0500, Michael S. Tsirkin wrote:
+>>> On Wed, Mar 06, 2019 at 02:18:12AM -0500, Jason Wang wrote:
+>>>> +static const struct mmu_notifier_ops vhost_mmu_notifier_ops = {
+>>>> +	.invalidate_range = vhost_invalidate_range,
+>>>> +};
+>>>> +
+>>>>   void vhost_dev_init(struct vhost_dev *dev,
+>>>>   		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
+>>>>   {
+>>> I also wonder here: when page is write protected then
+>>> it does not look like .invalidate_range is invoked.
+>>>
+>>> E.g. mm/ksm.c calls
+>>>
+>>> mmu_notifier_invalidate_range_start and
+>>> mmu_notifier_invalidate_range_end but not mmu_notifier_invalidate_range.
+>>>
+>>> Similarly, rmap in page_mkclean_one will not call
+>>> mmu_notifier_invalidate_range.
+>>>
+>>> If I'm right vhost won't get notified when page is write-protected since you
+>>> didn't install start/end notifiers. Note that end notifier can be called
+>>> with page locked, so it's not as straight-forward as just adding a call.
+>>> Writing into a write-protected page isn't a good idea.
+>>>
+>>> Note that documentation says:
+>>> 	it is fine to delay the mmu_notifier_invalidate_range
+>>> 	call to mmu_notifier_invalidate_range_end() outside the page table lock.
+>>> implying it's called just later.
+>> OK I missed the fact that _end actually calls
+>> mmu_notifier_invalidate_range internally. So that part is fine but the
+>> fact that you are trying to take page lock under VQ mutex and take same
+>> mutex within notifier probably means it's broken for ksm and rmap at
+>> least since these call invalidate with lock taken.
+> Yes this lock inversion needs more thoughts.
+>
+>> And generally, Andrea told me offline one can not take mutex under
+>> the notifier callback. I CC'd Andrea for why.
+> Yes, the problem then is the ->invalidate_page is called then under PT
+> lock so it cannot take mutex, you also cannot take the page_lock, it
+> can at most take a spinlock or trylock_page.
+>
+> So it must switch back to the _start/_end methods unless you rewrite
+> the locking.
+>
+> The difference with _start/_end, is that ->invalidate_range avoids the
+> _start callback basically, but to avoid the _start callback safely, it
+> has to be called in between the ptep_clear_flush and the set_pte_at
+> whenever the pfn changes like during a COW. So it cannot be coalesced
+> in a single TLB flush that invalidates all sptes in a range like we
+> prefer for performance reasons for example in KVM. It also cannot
+> sleep.
+>
+> In short ->invalidate_range must be really fast (it shouldn't require
+> to send IPI to all other CPUs like KVM may require during an
+> invalidate_range_start) and it must not sleep, in order to prefer it
+> to _start/_end.
+>
+> I.e. the invalidate of the secondary MMU that walks the linux
+> pagetables in hardware (in vhost case with GUP in software) has to
+> happen while the linux pagetable is zero, otherwise a concurrent
+> hardware pagetable lookup could re-instantiate a mapping to the old
+> page in between the set_pte_at and the invalidate_range_end (which
+> internally calls ->invalidate_range). Jerome documented it nicely in
+> Documentation/vm/mmu_notifier.rst .
 
 
+Right, I've actually gone through this several times but some details 
+were missed by me obviously.
+
+
+>
+> Now you don't really walk the pagetable in hardware in vhost, but if
+> you use gup_fast after usemm() it's similar.
+>
+> For vhost the invalidate would be really fast, there are no IPI to
+> deliver at all, the problem is just the mutex.
+
+
+Yes. A possible solution is to introduce a valid flag for VA. Vhost may 
+only try to access kernel VA when it was valid. Invalidate_range_start() 
+will clear this under the protection of the vq mutex when it can block. 
+Then invalidate_range_end() then can clear this flag. An issue is 
+blockable is  always false for range_end().
+
+
+>
+>> That's a separate issue from set_page_dirty when memory is file backed.
+> Yes. I don't yet know why the ext4 internal __writepage cannot
+> re-create the bh if they've been freed by the VM and why such race
+> where the bh are freed for a pinned VM_SHARED ext4 page doesn't even
+> exist for transient pins like O_DIRECT (does it work by luck?), but
+> with mmu notifiers there are no long term pins anyway, so this works
+> normally and it's like the memory isn't pinned. In any case I think
+> that's a kernel bug in either __writepage or try_to_free_buffers, so I
+> would ignore it considering qemu will only use anon memory or tmpfs or
+> hugetlbfs as backing store for the virtio ring. It wouldn't make sense
+> for qemu to risk triggering I/O on a VM_SHARED ext4, so we shouldn't
+> be even exposed to what seems to be an orthogonal kernel bug.
+>
+> I suppose whatever solution will fix the set_page_dirty_lock on
+> VM_SHARED ext4 for the other places that don't or can't use mmu
+> notifiers, will then work for vhost too which uses mmu notifiers and
+> will be less affected from the start if something.
+>
+> Reading the lwn link about the discussion about the long term GUP pin
+> from Jan vs set_page_dirty_lock: I can only agree with the last part
+> where Jerome correctly pointed out at the end that mellanox RDMA got
+> it right by avoiding completely long term pins by using mmu notifier
+> and in general mmu notifier is the standard solution to avoid long
+> term pins. Nothing should ever take long term GUP pins, if it does it
+> means software is bad or the hardware lacks features to support on
+> demand paging. Still I don't get why transient pins like O_DIRECT
+> where mmu notifier would be prohibitive to use (registering into mmu
+> notifier cannot be done at high frequency, the locking to do so is
+> massive) cannot end up into the same ext4 _writepage crash as long
+> term pins: long term or short term transient is a subjective measure
+> from VM standpoint, the VM won't know the difference, luck will
+> instead.
+>
+>> It's because of all these issues that I preferred just accessing
+>> userspace memory and handling faults. Unfortunately there does not
+>> appear to exist an API that whitelists a specific driver along the lines
+>> of "I checked this code for speculative info leaks, don't add barriers
+>> on data path please".
+> Yes that's unfortunate, __uaccess_begin_nospec() is now making
+> prohibitive to frequently access userland code.
+>
+> I doubt we can do like access_ok() and only check it once. access_ok
+> checks the virtual address, and if the virtual address is ok doesn't
+> wrap around and it points to userland in a safe range, it's always
+> ok. There's no need to run access_ok again if we keep hitting on the
+> very same address.
+>
+> __uaccess_begin_nospec() instead is about runtime stuff that can
+> change the moment copy-user has completed even before returning to
+> userland, so there's no easy way to do it just once.
+>
+> On top of skipping the __uaccess_begin_nospec(), the mmu notifier soft
+> vhost design will further boost the performance by guaranteeing the
+> use of gigapages TLBs when available (or 2M TLBs worst case) even if
+> QEMU runs on smaller pages.
+
+
+Just to make sure I understand here. For boosting through huge TLB, do 
+you mean we can do that in the future (e.g by mapping more userspace 
+pages to kenrel) or it can be done by this series (only about three 4K 
+pages were vmapped per virtqueue)?
+
+Thanks
+
+
+>
+> Thanks,
+> Andrea
