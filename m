@@ -2,109 +2,91 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3207C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF89C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC83520675
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:45:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Skm0pkRK"
+	by mail.kernel.org (Postfix) with ESMTP id 67B7020675
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfCHApb (ORCPT
+        id S1726319AbfCHArs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:45:31 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37770 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfCHApa (ORCPT
+        Thu, 7 Mar 2019 19:47:48 -0500
+Received: from linux-libre.fsfla.org ([209.51.188.54]:38844 "EHLO
+        linux-libre.fsfla.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfCHArs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:45:30 -0500
-Received: by mail-ed1-f68.google.com with SMTP id m12so15046869edv.4;
-        Thu, 07 Mar 2019 16:45:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=VMLhAY8wK4w6r18X3jvuwsh+ayxD4nX3lDwgwhyfbI8=;
-        b=Skm0pkRKbbpsM3vXLXw5vDD7DYuq18a4Ud/aGDPHtSt80GhcJa7v6V/UICic9xUscj
-         SsPWNGOCl43ruhH5g3MZ23fM7/i/mZFXIUi5FSxv6FUs135EwlAkAjlNodeVWmPwfyxf
-         7DG19jkwrC0TvjOAlrNmrYlybqbo86+ZfOKlsXZoKxOWJlQvUbNUY8FTJf0rPnvl/TbS
-         dYoGX/szk1awlURLL+OOXPKr619CkyKSs9zqU30vyBj6VfcR3qFdgH9yezYipXuY+xPH
-         OQsdje1/rRbQXmOWHX1phUsig9VoPaAE5wWqs4KSiX1dtpE40YKk7FrJxtZhW8lwEhaL
-         EueA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VMLhAY8wK4w6r18X3jvuwsh+ayxD4nX3lDwgwhyfbI8=;
-        b=CALw7TVzyv/y0lzUBLvZ03QfX2MMeprvCZ+bIz0PBvqzwNGQGm0FOWWM2J+G4XqShD
-         bfiiJyEkCtN9QrOUipDykFsAogAXkEwwxx3JLlZm+Ta6WaH+4fG3uqKcfF3iMzX6AHcO
-         JKo7GIqWBe3tihQwMlK5ejIUkT2Ijf+GaP4KiWTf2S7wAB7FVlY+VwDYljDgr5CfuleR
-         TWIMciLl22WBDYXivfgcg+jMcN7Pre1EujWbhMRe/2UJTOBwuWWf+TBjUOKdyl+jPPPJ
-         Fp4P3VNPWhPPDm+vK/4UA3RMP/6/G0jBM49NNTAIrmp41zl1gEb4y8E9qQ92zKBe2P26
-         JzdQ==
-X-Gm-Message-State: APjAAAXwjuBholS667ZwwrWostFvG9V8GivPfeG0aQKtoM3WKrcaHvHa
-        6SFhh1qNNLmrboa511JS7yM=
-X-Google-Smtp-Source: APXvYqw+Bjp4okBvWYUXlM5z0RJvyprggwXnv81W3/0acEHSrexNbsqJo3rk6omQxy4P4YAK5I3VSw==
-X-Received: by 2002:a17:906:c355:: with SMTP id ci21mr9727802ejb.246.1552005928617;
-        Thu, 07 Mar 2019 16:45:28 -0800 (PST)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id p4sm1149012eja.40.2019.03.07.16.45.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 07 Mar 2019 16:45:28 -0800 (PST)
-Date:   Thu, 7 Mar 2019 17:45:26 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Subject: -Wsometimes-uninitialized Clang warning in
- drivers/tty/serial/qcom_geni_serial.c
-Message-ID: <20190308004526.GA11580@archlinux-ryzen>
+        Thu, 7 Mar 2019 19:47:48 -0500
+Received: from free.home (home.lxoliva.fsfla.org [172.31.160.164])
+        by linux-libre.fsfla.org (8.15.2/8.15.2/Debian-3) with ESMTP id x280lDiH031397;
+        Fri, 8 Mar 2019 00:47:15 GMT
+Received: from livre (livre.home [172.31.160.2])
+        by free.home (8.15.2/8.15.2) with ESMTP id x280kkci391076;
+        Thu, 7 Mar 2019 21:46:46 -0300
+From:   Alexandre Oliva <lxoliva@fsfla.org>
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, Tom Li <tomli@tomli.me>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform Drivers
+Organization: Free thinker, not speaking for FSF Latin America
+References: <20190208083038.GA1433@localhost.localdomain>
+        <orbm3i5xrn.fsf@lxoliva.fsfla.org>
+        <20190211125506.GA21280@localhost.localdomain>
+        <orimxq3q9j.fsf@lxoliva.fsfla.org>
+        <20190211230614.GB22242@darkstar.musicnaut.iki.fi>
+        <orva1jj9ht.fsf@lxoliva.fsfla.org>
+        <20190217235951.GA20700@darkstar.musicnaut.iki.fi>
+        <orpnrpj2rk.fsf@lxoliva.fsfla.org>
+        <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
+        <orlg1ryyo2.fsf@lxoliva.fsfla.org>
+        <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
+Date:   Thu, 07 Mar 2019 21:46:46 -0300
+In-Reply-To: <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org> (Maciej
+        W. Rozycki's message of "Thu, 7 Mar 2019 17:59:42 +0000 (GMT)")
+Message-ID: <orwolaw5u1.fsf@lxoliva.fsfla.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.84
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mar  7, 2019, "Maciej W. Rozycki" <macro@linux-mips.org> wrote:
 
-We are trying to get Clang's -Wsometimes-uninitialized turned on for the
-kernel as it can catch some bugs that GCC can't. This warning came up:
+>  So this seems backwards to me, port I/O is supposed to be strongly 
+> ordered, so if removing the ordering guarantee "fixes" your problem, then 
+> there must be a second bottom here.
 
-drivers/tty/serial/qcom_geni_serial.c:1079:6: warning: variable 'baud' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-        if (options)
-            ^~~~~~~
-drivers/tty/serial/qcom_geni_serial.c:1082:37: note: uninitialized use occurs here
-        return uart_set_options(uport, co, baud, parity, bits, flow);
-                                           ^~~~
-drivers/tty/serial/qcom_geni_serial.c:1079:2: note: remove the 'if' if its condition is always true
-        if (options)
-        ^~~~~~~~~~~~
-drivers/tty/serial/qcom_geni_serial.c:1053:10: note: initialize the variable 'baud' to silence this warning
-        int baud;
-                ^
-                 = 0
-1 warning generated.
+Well, it partially restores the earlier state, so the actual bug goes
+back to latent.  We just have to find out what it is.  My plan, in the
+next time slot I can devote to this investigation, is to try to bisect
+source files that use these interfaces to identify a minimal set that
+can switch to the new barriers without breaking anything, then report
+back after failing to make sense of it myself ;-)  So, yeah, several
+more bottoms to dig through.
 
-While this is probably not an issue in practice (I assume baud is always
-supplied as an option), we should clean up this warning. I would fix it
-myself but I have no idea what baud's initial value should be as it
-seems it is dependent on the driver. Your input would be much
-appreciated.
+> Does your platform use `war_io_reorder_wmb'?
 
-Cheers,
-Nathan
+Err...  I'm not sure I understand your question.
+
+It uses it in __BUILD_IOPORT_SINGLE within the expanded out function,
+given !barrier, but you already knew that.
+
+Did you mean to ask what war_io_reorder_wmb expand to, or whether there
+are other uses of war_io_reorder_wmb, or what?
+
+-- 
+Alexandre Oliva, freedom fighter   https://FSFLA.org/blogs/lxo
+Be the change, be Free!         FSF Latin America board member
+GNU Toolchain Engineer                Free Software Evangelist
+Hay que enGNUrecerse, pero sin perder la terGNUra jamás-GNUChe
