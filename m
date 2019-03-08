@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B93C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98693C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB80C20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6974920854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 04:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552018514;
-	bh=i5iYS1UUrGWDIJn3OIlheZKlSRej5H8KN8BHhIWkMDw=;
+	s=default; t=1552018521;
+	bh=Hje9/miB8HnT3SOg0QILE73sJxRfOIYJ8ShM+OHA4vA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ojgLAgcZET6D7jjAbGyB1e1GtdT54fbAEGxPY0XMLdkexYZ0ye+7HujGTn0vgJ4XD
-	 pj7Oqj/yHO8tHQedzk8fUApADjjbwtyfBJNdMAwxS296i+y0WpwQxXzUhH6efPOU0p
-	 2ohsoUhK3xbV9VnXTs+xjVG/tbweGsRdMKVQ//2s=
+	b=FvjPrsKjsEdt7s5IbQKXJJdUzTFDWFY79/s/8L4lHlE/HOStY4zErzlZg2xtAqzBb
+	 pm2Sq2xyOJ0zLhTfXpStiWlMvp1x/h8Im+lKGpIF8CNpuskWeCljjp03HeuzfFuI7E
+	 wFbponDjBXea5op+EcASZlA3ndvTNiANZ/PGeThQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfCHEPN (ORCPT
+        id S1726422AbfCHEPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 23:15:13 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:60341 "EHLO
+        Thu, 7 Mar 2019 23:15:17 -0500
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:36749 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726250AbfCHEPL (ORCPT
+        by vger.kernel.org with ESMTP id S1726250AbfCHEPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 23:15:11 -0500
+        Thu, 7 Mar 2019 23:15:14 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id D3BD236A7;
-        Thu,  7 Mar 2019 23:15:09 -0500 (EST)
+        by mailout.west.internal (Postfix) with ESMTP id 46DC2344B;
+        Thu,  7 Mar 2019 23:15:13 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 07 Mar 2019 23:15:10 -0500
+  by compute3.internal (MEProxy); Thu, 07 Mar 2019 23:15:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=O+DTezmhhc3P3jb0PBTMRAkkiTEY+lCxD+tCh+cgBHo=; b=8PgI+TUX
-        d++yguSzS1y5c4WM0fBOLRR6TTLDx4kG9oKzNZDHCt7viNyjm0wNEIkRA2Fu+psU
-        cA9580Ry0ysSv/RbM3+27g2Qxf33jRydYnLfTfzG9/Nkeq+JVYxpx5HGJw0fzB3N
-        /Oq8eG35zbMlg1GDqb/8ElS68ZgC2MjxbRgusH5jn1c4ICGVsBp0o1RLElQRR5Zj
-        XjY82iFl2rl6cmxWytjWqJbAxlPyQs0WYstoQhzvCevIRyNr5nYvIcyGdevSc1xH
-        X81e3CVfHUmEtf/E2C2kSOBpajX8kVjHdkDLd1BfjNR7ghG62GiYNbazFdIM1g6Z
-        Dk7PaKdLfcclKw==
-X-ME-Sender: <xms:TeyBXMQngIWs4Wro-cWjtU1EDL_Ex286kGT_mCyueHqqdfCc6c9LJQ>
+        fm2; bh=JsjE/DB7CgND14aqwEzfQQRvORRnlRv5KuF04km8r4g=; b=5HYCTy6Q
+        SrpVPWr/y+ND4NM8vTUOx2ewIo94P8eltVKp2IISnKwCwKGZpS7bBcL5LhXseLEf
+        BFc3fPcknZqqUCRxQLGeyeIJH8jV82MMXd68wn5ZyBCjgOSNxyxN6s66vpg8kN6+
+        9N5SlPIlYPUa0n+55Rw1mG5uewIztNB24PdDIsi9uZ1R6N4mXIK3gsY+7ylL4XZ9
+        mcwf7Y6iJ/qdj45+nd8XdsDgTPCC85svuHWJsVwblWMXRu17KzS6Fonpednchwzj
+        CssUz1rmk/3sOkyr1qd7/tJh+ALGFCfejcKwQ1Ns50O9P+QeCATwIj85kM11HrmN
+        UmDYJba33ioUWQ==
+X-ME-Sender: <xms:UOyBXJ-vpX7X9ZFa0mQKkveizclr0CW4dj0DV-h98tM6aHYWHsaiOw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeelgdeifecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -52,13 +52,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfeelgdeifecutefuodetggdote
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrhedrudehkeenucfrrghrrghmpehmrghilhhfrhhomhepthhosghi
     nheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepvd
-X-ME-Proxy: <xmx:TeyBXOD7Hz0izU4eKfipnKxymz0nJyHpUA-GjOV3FIME4_sZBurxNA>
-    <xmx:TeyBXE1rFPcjNicgsEz7eI1tMkmxOL4Itgn_ncwxI8lUqvOaC490SQ>
-    <xmx:TeyBXEXnE0zIdZDUprUhdC12aKOS4mFK_db_s-6rNILWfQ3nAUxAyg>
-    <xmx:TeyBXM_YwbhcI4q6pKMCaGrJKdtLjofWgXU-Zl4zT_RlzWVA1P3eEQ>
+X-ME-Proxy: <xmx:UOyBXPTdlsN7t1M6OwkaV7SuR43XoemkdTkjad_kTS-gaMKODTYFgg>
+    <xmx:UOyBXGRPIE5V-OHnFl50fCvBkP6fnejxg8ljXUvUvTdVOvRbYxXH_A>
+    <xmx:UOyBXD53RF56hdvw_xduML2C7WYaI6Oae5pZvDrE9Xvk-LYeF2HA7A>
+    <xmx:UOyBXOCGLMrGWXXV7Eh4AzC4XNnqcQNl2Bon-NOil2xPN_tQlFvGyA>
 Received: from eros.localdomain (124-169-5-158.dyn.iinet.net.au [124.169.5.158])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3CCD8E46B8;
-        Thu,  7 Mar 2019 23:15:05 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id EA496E4481;
+        Thu,  7 Mar 2019 23:15:09 -0500 (EST)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Matthew Wilcox <willy@infradead.org>,
         Tycho Andersen <tycho@tycho.ws>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC 03/15] tools/vm/slabinfo: Add support for -C and -F options
-Date:   Fri,  8 Mar 2019 15:14:14 +1100
-Message-Id: <20190308041426.16654-4-tobin@kernel.org>
+Subject: [RFC 04/15] slub: Enable Slab Movable Objects (SMO)
+Date:   Fri,  8 Mar 2019 15:14:15 +1100
+Message-Id: <20190308041426.16654-5-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308041426.16654-1-tobin@kernel.org>
 References: <20190308041426.16654-1-tobin@kernel.org>
@@ -80,139 +80,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--F lists caches that support object migration.
+We have now in place a mechanism for adding callbacks to a cache in
+order to be able to implement object migration.
 
--C lists caches that use a ctor.
-
-Add command line options to show caches with a constructor and caches
-with that are migratable (i.e. have isolate and migrate functions).
+Add a function __move() that implements SMO by moving all objects in a
+slab page using the isolate/migrate callback methods.
 
 Co-developed-by: Christoph Lameter <cl@linux.com>
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- tools/vm/slabinfo.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+ mm/slub.c | 85 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/tools/vm/slabinfo.c b/tools/vm/slabinfo.c
-index 73818f1b2ef8..6ba8ffb4ea50 100644
---- a/tools/vm/slabinfo.c
-+++ b/tools/vm/slabinfo.c
-@@ -33,6 +33,7 @@ struct slabinfo {
- 	unsigned int hwcache_align, object_size, objs_per_slab;
- 	unsigned int sanity_checks, slab_size, store_user, trace;
- 	int order, poison, reclaim_account, red_zone;
-+	int movable, ctor;
- 	unsigned long partial, objects, slabs, objects_partial, objects_total;
- 	unsigned long alloc_fastpath, alloc_slowpath;
- 	unsigned long free_fastpath, free_slowpath;
-@@ -67,6 +68,8 @@ int show_report;
- int show_alias;
- int show_slab;
- int skip_zero = 1;
-+int show_movable;
-+int show_ctor;
- int show_numa;
- int show_track;
- int show_first_alias;
-@@ -109,14 +112,17 @@ static void fatal(const char *x, ...)
- 
- static void usage(void)
- {
--	printf("slabinfo 4/15/2011. (c) 2007 sgi/(c) 2011 Linux Foundation.\n\n"
--		"slabinfo [-aADefhilnosrStTvz1LXBU] [N=K] [-dafzput] [slab-regexp]\n"
-+	printf("slabinfo 4/15/2017. (c) 2007 sgi/(c) 2011 Linux Foundation/(c) 2017 Jump Trading LLC.\n\n"
-+	       "slabinfo [-aACDefFhilnosrStTvz1LXBU] [N=K] [-dafzput] [slab-regexp]\n"
-+
- 		"-a|--aliases           Show aliases\n"
- 		"-A|--activity          Most active slabs first\n"
- 		"-B|--Bytes             Show size in bytes\n"
-+		"-C|--ctor              Show slabs with ctors\n"
- 		"-D|--display-active    Switch line format to activity\n"
- 		"-e|--empty             Show empty slabs\n"
- 		"-f|--first-alias       Show first alias\n"
-+		"-F|--movable           Show caches that support movable objects\n"
- 		"-h|--help              Show usage information\n"
- 		"-i|--inverted          Inverted list\n"
- 		"-l|--slabs             Show slabs\n"
-@@ -588,6 +594,12 @@ static void slabcache(struct slabinfo *s)
- 	if (show_empty && s->slabs)
- 		return;
- 
-+	if (show_movable && !s->movable)
-+		return;
-+
-+	if (show_ctor && !s->ctor)
-+		return;
-+
- 	if (sort_loss == 0)
- 		store_size(size_str, slab_size(s));
- 	else
-@@ -602,6 +614,10 @@ static void slabcache(struct slabinfo *s)
- 		*p++ = '*';
- 	if (s->cache_dma)
- 		*p++ = 'd';
-+	if (s->movable)
-+		*p++ = 'F';
-+	if (s->ctor)
-+		*p++ = 'C';
- 	if (s->hwcache_align)
- 		*p++ = 'A';
- 	if (s->poison)
-@@ -636,7 +652,8 @@ static void slabcache(struct slabinfo *s)
- 		printf("%-21s %8ld %7d %15s %14s %4d %1d %3ld %3ld %s\n",
- 			s->name, s->objects, s->object_size, size_str, dist_str,
- 			s->objs_per_slab, s->order,
--			s->slabs ? (s->partial * 100) / s->slabs : 100,
-+			s->slabs ? (s->partial * 100) /
-+					(s->slabs * s->objs_per_slab) : 100,
- 			s->slabs ? (s->objects * s->object_size * 100) /
- 				(s->slabs * (page_size << s->order)) : 100,
- 			flags);
-@@ -1256,6 +1273,13 @@ static void read_slab_dir(void)
- 			slab->alloc_node_mismatch = get_obj("alloc_node_mismatch");
- 			slab->deactivate_bypass = get_obj("deactivate_bypass");
- 			chdir("..");
-+			if (read_slab_obj(slab, "ops")) {
-+				if (strstr(buffer, "ctor :"))
-+					slab->ctor = 1;
-+				if (strstr(buffer, "migrate :"))
-+					slab->movable = 1;
-+			}
-+
- 			if (slab->name[0] == ':')
- 				alias_targets++;
- 			slab++;
-@@ -1332,6 +1356,8 @@ static void xtotals(void)
+diff --git a/mm/slub.c b/mm/slub.c
+index 0133168d1089..6ce866b420f1 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4325,6 +4325,91 @@ int __kmem_cache_create(struct kmem_cache *s, slab_flags_t flags)
+ 	return err;
  }
  
- struct option opts[] = {
-+	{ "ctor", no_argument, NULL, 'C' },
-+	{ "movable", no_argument, NULL, 'F' },
- 	{ "aliases", no_argument, NULL, 'a' },
- 	{ "activity", no_argument, NULL, 'A' },
- 	{ "debug", optional_argument, NULL, 'd' },
-@@ -1367,7 +1393,7 @@ int main(int argc, char *argv[])
- 
- 	page_size = getpagesize();
- 
--	while ((c = getopt_long(argc, argv, "aAd::Defhil1noprstvzTSN:LXBU",
-+	while ((c = getopt_long(argc, argv, "aACd::DefFhil1noprstvzTSN:LXBU",
- 						opts, NULL)) != -1)
- 		switch (c) {
- 		case '1':
-@@ -1423,6 +1449,12 @@ int main(int argc, char *argv[])
- 		case 'z':
- 			skip_zero = 0;
- 			break;
-+		case 'C':
-+			show_ctor = 1;
-+			break;
-+		case 'F':
-+			show_movable = 1;
-+			break;
- 		case 'T':
- 			show_totals = 1;
- 			break;
++/*
++ * Allocate a slab scratch space that is sufficient to keep pointers to
++ * individual objects for all objects in cache and also a bitmap for the
++ * objects (used to mark which objects are active).
++ */
++static inline void *alloc_scratch(struct kmem_cache *s)
++{
++	unsigned int size = oo_objects(s->max);
++
++	return kmalloc(size * sizeof(void *) +
++		       BITS_TO_LONGS(size) * sizeof(unsigned long),
++		       GFP_KERNEL);
++}
++
++/*
++ * __move() - Move all objects in the given slab.
++ * @page: The slab we are working on.
++ * @scratch: Pointer to scratch space.
++ * @node: The target node to move objects to.
++ *
++ * If the target node is not the current node then the object is moved
++ * to the target node.  If the target node is the current node then this
++ * is an effective way of defragmentation since the current slab page
++ * with its object is exempt from allocation.
++ */
++static void __move(struct page *page, void *scratch, int node)
++{
++	unsigned long objects;
++	struct kmem_cache *s;
++	unsigned long flags;
++	unsigned long *map;
++	void *private;
++	int count;
++	void *p;
++	void **vector = scratch;
++	void *addr = page_address(page);
++
++	local_irq_save(flags);
++	slab_lock(page);
++
++	BUG_ON(!PageSlab(page)); /* Must be s slab page */
++	BUG_ON(!page->frozen);	 /* Slab must have been frozen earlier */
++
++	s = page->slab_cache;
++	objects = page->objects;
++	map = scratch + objects * sizeof(void **);
++
++	/* Determine used objects */
++	bitmap_fill(map, objects);
++	for (p = page->freelist; p; p = get_freepointer(s, p))
++		__clear_bit(slab_index(p, s, addr), map);
++
++	/* Build vector of pointers to objects */
++	count = 0;
++	memset(vector, 0, objects * sizeof(void **));
++	for_each_object(p, s, addr, objects)
++		if (test_bit(slab_index(p, s, addr), map))
++			vector[count++] = p;
++
++	if (s->isolate)
++		private = s->isolate(s, vector, count);
++	else
++		/* Objects do not need to be isolated */
++		private = NULL;
++
++	/*
++	 * Pinned the objects. Now we can drop the slab lock. The slab
++	 * is frozen so it cannot vanish from under us nor will
++	 * allocations be performed on the slab. However, unlocking the
++	 * slab will allow concurrent slab_frees to proceed. So the
++	 * subsystem must have a way to tell from the content of the
++	 * object that it was freed.
++	 *
++	 * If neither RCU nor ctor is being used then the object may be
++	 * modified by the allocator after being freed which may disrupt
++	 * the ability of the migrate function to tell if the object is
++	 * free or not.
++	 */
++	slab_unlock(page);
++	local_irq_restore(flags);
++
++	/* Perform callback to move the objects */
++	s->migrate(s, vector, count, node, private);
++}
++
+ void kmem_cache_setup_mobility(struct kmem_cache *s,
+ 			       kmem_cache_isolate_func isolate,
+ 			       kmem_cache_migrate_func migrate)
 -- 
 2.21.0
 
