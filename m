@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8070C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38174C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B37F20811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F066E20811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049872;
-	bh=65eL7LjSPHqObtQXc3xFm/NqJ+rMAglano3YBhcfnqY=;
+	s=default; t=1552049878;
+	bh=9oWkjAoQZ29KKU1VkFfAgcK1bfjgD+sLYMpknyZeIVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VIGwT37j8o0AF8JRdZhhAa4wbgbotb3vqF7pT//dUoBDfA5TiZx10SvU4kmea+3v
-	 E4flwHZbutcmmKEgGbumo1jLqndwaUMxuLNlv85X4NeZhF24YK6pt1oHuN2NXFVTXs
-	 +plpEUk71LAB1iReDr2PallDBgtYwEvD9YmwvTmA=
+	b=lB2cH3KON4vd8STnao/9me3mrNETHZVTdkCYoDetGg2uoPgCCPWeNzRufUZFSaQ89
+	 9YgpQO66UbzRnjYFihWHAWKkSYkTxvnbAH7nDe4bII2VRY3tyEC/mQ2Ie5b1yoUzPX
+	 udEdv5x5PqMGt6gA6ym48BGh4f4AO//AxFwrvHM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfCHM5u (ORCPT
+        id S1727921AbfCHM54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfCHM5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:41 -0500
+        id S1727895AbfCHM5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:48 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D962085A;
-        Fri,  8 Mar 2019 12:57:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B227020449;
+        Fri,  8 Mar 2019 12:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049860;
-        bh=65eL7LjSPHqObtQXc3xFm/NqJ+rMAglano3YBhcfnqY=;
+        s=default; t=1552049867;
+        bh=9oWkjAoQZ29KKU1VkFfAgcK1bfjgD+sLYMpknyZeIVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHshxJcMVvRa3h7YVZRoozCRWVUG1MB5BgztiZ8R7RHHyZ2+g09fUYzzy+XctaqV0
-         FBxDmkzSdPyzYIijY7T7RZnfv99At1QpfI+J5I+m+2JjH3BaeX46rOlJazpRoNErwN
-         jzbxi7FDGK+T90W4X1TeRV3BBRmRbUwB/5xPuCbE=
+        b=Gc4uVbNwj34fR0Ri5REfcmTWcW2ukWMDe6UJOYahmbnb166fX91pNV7UfR3Y1Y292
+         084HqpXzZAWQjG29Ibw7cLPb2UqLB/z2B+cgBVqDOPrVK2I0hlRhag9UPZVwAPqmVL
+         zWqL16CyzERJ8pQigypMlh4za541vDSMu16b8VEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qing Xia <saberlily.xia@hisilicon.com>,
-        Jing Xia <jing.xia@unisoc.com>,
-        Yuming Han <yuming.han@unisoc.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH 4.19 10/68] staging: android: ion: fix sys heap pools gfp_flags
-Date:   Fri,  8 Mar 2019 13:49:40 +0100
-Message-Id: <20190308124911.293733093@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [PATCH 4.19 12/68] staging: android: ashmem: Avoid range_alloc() allocation with ashmem_mutex held.
+Date:   Fri,  8 Mar 2019 13:49:42 +0100
+Message-Id: <20190308124911.422474451@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -68,39 +66,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qing Xia <saberlily.xia@hisilicon.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 9bcf065e28122588a6cbee08cf847826dacbb438 upstream.
+commit ecd182cbf4e107928077866399100228d2359c60 upstream.
 
-In the first loop, gfp_flags will be modified to high_order_gfp_flags,
-and there will be no chance to change back to low_order_gfp_flags.
+ashmem_pin() is calling range_shrink() without checking whether
+range_alloc() succeeded. Also, doing memory allocation with ashmem_mutex
+held should be avoided because ashmem_shrink_scan() tries to hold it.
 
-Fixes: e7f63771b60e ("ION: Sys_heap: Add cached pool to spead up cached buffer alloc")
-Signed-off-by: Qing Xia <saberlily.xia@hisilicon.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Jing Xia <jing.xia@unisoc.com>
-Reviewed-by: Yuming Han <yuming.han@unisoc.com>
-Reviewed-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Reviewed-by: Orson Zhai <orson.zhai@unisoc.com>
+Therefore, move memory allocation for range_alloc() to ashmem_pin_unpin()
+and make range_alloc() not to fail.
+
+This patch is mostly meant for backporting purpose for fuzz testing on
+stable/distributor kernels, for there is a plan to remove this code in
+near future.
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable@vger.kernel.org
+Reviewed-by: Joel Fernandes <joel@joelfernandes.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ion/ion_system_heap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/android/ashmem.c |   42 ++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
 
---- a/drivers/staging/android/ion/ion_system_heap.c
-+++ b/drivers/staging/android/ion/ion_system_heap.c
-@@ -247,10 +247,10 @@ static void ion_system_heap_destroy_pool
- static int ion_system_heap_create_pools(struct ion_page_pool **pools)
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -171,19 +171,15 @@ static inline void lru_del(struct ashmem
+  * @end:	   The ending page (inclusive)
+  *
+  * This function is protected by ashmem_mutex.
+- *
+- * Return: 0 if successful, or -ENOMEM if there is an error
+  */
+-static int range_alloc(struct ashmem_area *asma,
+-		       struct ashmem_range *prev_range, unsigned int purged,
+-		       size_t start, size_t end)
++static void range_alloc(struct ashmem_area *asma,
++			struct ashmem_range *prev_range, unsigned int purged,
++			size_t start, size_t end,
++			struct ashmem_range **new_range)
  {
- 	int i;
--	gfp_t gfp_flags = low_order_gfp_flags;
+-	struct ashmem_range *range;
+-
+-	range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
+-	if (!range)
+-		return -ENOMEM;
++	struct ashmem_range *range = *new_range;
  
- 	for (i = 0; i < NUM_ORDERS; i++) {
- 		struct ion_page_pool *pool;
-+		gfp_t gfp_flags = low_order_gfp_flags;
++	*new_range = NULL;
+ 	range->asma = asma;
+ 	range->pgstart = start;
+ 	range->pgend = end;
+@@ -193,8 +189,6 @@ static int range_alloc(struct ashmem_are
  
- 		if (orders[i] > 4)
- 			gfp_flags = high_order_gfp_flags;
+ 	if (range_on_lru(range))
+ 		lru_add(range);
+-
+-	return 0;
+ }
+ 
+ /**
+@@ -596,7 +590,8 @@ static int get_name(struct ashmem_area *
+  *
+  * Caller must hold ashmem_mutex.
+  */
+-static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
++static int ashmem_pin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
++		      struct ashmem_range **new_range)
+ {
+ 	struct ashmem_range *range, *next;
+ 	int ret = ASHMEM_NOT_PURGED;
+@@ -649,7 +644,7 @@ static int ashmem_pin(struct ashmem_area
+ 			 * second half and adjust the first chunk's endpoint.
+ 			 */
+ 			range_alloc(asma, range, range->purged,
+-				    pgend + 1, range->pgend);
++				    pgend + 1, range->pgend, new_range);
+ 			range_shrink(range, range->pgstart, pgstart - 1);
+ 			break;
+ 		}
+@@ -663,7 +658,8 @@ static int ashmem_pin(struct ashmem_area
+  *
+  * Caller must hold ashmem_mutex.
+  */
+-static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend)
++static int ashmem_unpin(struct ashmem_area *asma, size_t pgstart, size_t pgend,
++			struct ashmem_range **new_range)
+ {
+ 	struct ashmem_range *range, *next;
+ 	unsigned int purged = ASHMEM_NOT_PURGED;
+@@ -689,7 +685,8 @@ restart:
+ 		}
+ 	}
+ 
+-	return range_alloc(asma, range, purged, pgstart, pgend);
++	range_alloc(asma, range, purged, pgstart, pgend, new_range);
++	return 0;
+ }
+ 
+ /*
+@@ -722,10 +719,17 @@ static int ashmem_pin_unpin(struct ashme
+ 	struct ashmem_pin pin;
+ 	size_t pgstart, pgend;
+ 	int ret = -EINVAL;
++	struct ashmem_range *range = NULL;
+ 
+ 	if (copy_from_user(&pin, p, sizeof(pin)))
+ 		return -EFAULT;
+ 
++	if (cmd == ASHMEM_PIN || cmd == ASHMEM_UNPIN) {
++		range = kmem_cache_zalloc(ashmem_range_cachep, GFP_KERNEL);
++		if (!range)
++			return -ENOMEM;
++	}
++
+ 	mutex_lock(&ashmem_mutex);
+ 	wait_event(ashmem_shrink_wait, !atomic_read(&ashmem_shrink_inflight));
+ 
+@@ -750,10 +754,10 @@ static int ashmem_pin_unpin(struct ashme
+ 
+ 	switch (cmd) {
+ 	case ASHMEM_PIN:
+-		ret = ashmem_pin(asma, pgstart, pgend);
++		ret = ashmem_pin(asma, pgstart, pgend, &range);
+ 		break;
+ 	case ASHMEM_UNPIN:
+-		ret = ashmem_unpin(asma, pgstart, pgend);
++		ret = ashmem_unpin(asma, pgstart, pgend, &range);
+ 		break;
+ 	case ASHMEM_GET_PIN_STATUS:
+ 		ret = ashmem_get_pin_status(asma, pgstart, pgend);
+@@ -762,6 +766,8 @@ static int ashmem_pin_unpin(struct ashme
+ 
+ out_unlock:
+ 	mutex_unlock(&ashmem_mutex);
++	if (range)
++		kmem_cache_free(ashmem_range_cachep, range);
+ 
+ 	return ret;
+ }
 
 
