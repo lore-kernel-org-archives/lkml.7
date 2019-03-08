@@ -2,169 +2,98 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51A8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3114C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0FF20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FA620851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfCHU0F (ORCPT
+        id S1727027AbfCHU0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 15:26:05 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:36102 "EHLO mx1.redhat.com"
+        Fri, 8 Mar 2019 15:26:48 -0500
+Received: from mleia.com ([178.79.152.223]:37814 "EHLO mail.mleia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfCHU0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 15:26:05 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 908287FDE5;
-        Fri,  8 Mar 2019 20:26:04 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-21.phx2.redhat.com [10.3.112.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E27C0600CD;
-        Fri,  8 Mar 2019 20:25:57 +0000 (UTC)
-Date:   Fri, 8 Mar 2019 15:25:55 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-audit@redhat.com, Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH ghak10 v6 0/2] audit: Log changes that can affect the
- system clock
-Message-ID: <20190308202555.dj75sfdxxxnckygq@madcap2.tricolour.ca>
-References: <20190307123254.348-1-omosnace@redhat.com>
+        id S1726275AbfCHU0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 15:26:46 -0500
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id 1E225457450;
+        Fri,  8 Mar 2019 20:26:45 +0000 (GMT)
+Subject: Re: [PATCH serial] sc16is7xx: missing unregister/delete driver on
+ error in sc16is7xx_init()
+To:     Mao Wenan <maowenan@huawei.com>, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-serial@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190308140933.55262-1-maowenan@huawei.com>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <d2888b44-2475-ebe1-bbc7-844147e9d11a@mleia.com>
+Date:   Fri, 8 Mar 2019 22:26:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307123254.348-1-omosnace@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 08 Mar 2019 20:26:04 +0000 (UTC)
+In-Reply-To: <20190308140933.55262-1-maowenan@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20190308_202645_145327_089369F5 
+X-CRM114-Status: GOOD (  13.54  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-07 13:32, Ondrej Mosnacek wrote:
-> This patchset implements auditing of (syscall-triggered) changes that
-> can modify or indirectly affect the system clock. Some of these
-> changes can already be detected by simply logging relevant syscalls,
-> but this has some disadvantages:
->   a) It is usually not possible to find out from the syscall records
->      the amount by which the time was shifted.
->   b) Syscalls like adjtimex(2) or clock_adjtime(2) can be used also
->      for read-only operations, which might flood the audit log with
->      false positives. (Note that these patches don't solve this
->      problem yet due to the limitations of current record filtering
->      capabilities.)
+On 03/08/2019 04:09 PM, Mao Wenan wrote:
+> Add the missing uart_unregister_driver() and i2c_del_driver() before return
+> from sc16is7xx_init() in the error handling case.
 > 
-> The main motivation is to provide better reliability of timestamps
-> on the system as mandated by the FPT_STM.1 security functional
-> requirement from Common Criteria. This requirement apparently demands
-> that it is possible to reconstruct from audit trail the old and new
-> values of the time when it is adjusted (see [1]).
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/tty/serial/sc16is7xx.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-> The current version of the patchset logs the following changes:
->   - direct setting of system time to a given value
->   - direct injection of timekeeping offset
->   - adjustment of timekeeping's TAI offset
->   - NTP value adjustments:
->     - time_offset
->     - time_freq
->     - time_status
->     - time_adjust
->     - tick_usec
-> 
-> Changes to the following NTP values are not logged, as they are not
-> important for security:
->   - time_maxerror
->   - time_esterror
->   - time_constant
-> 
-> Audit kernel GitHub issue: https://github.com/linux-audit/audit-kernel/issues/10
-> Audit kernel RFE page: https://github.com/linux-audit/audit-kernel/wiki/RFE-More-detailed-auditing-of-changes-to-system-clock
-> 
-> Testing: Passed audit-testuite; functional tests TBD
-
-Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
-
-How do you plan to test this in the audit-testsuite?
-
-> Changes in v6:
->   - Reorganized the patches to group changes by record type, not
->     kernel subsytem, as suggested in earlier discussions
->   - Added checks to ignore no-change events (new value == old value)
->   - Added TIME_INJOFFSET logging also to do_settimeofday64() to cover
->     syscalls such as settimeofday(2), stime(2), clock_settime(2)
->   - Created an RFE page on audit-kernel GitHub
-> TODO:
->   - tests for audit-testsuite
-> 
-> v5: https://www.redhat.com/archives/linux-audit/2018-August/msg00039.html
-> Changes in v5:
->   - Dropped logging of some less important changes and update commit messages
->   - No longer mark the patchset as RFC
-> 
-> v4: https://www.redhat.com/archives/linux-audit/2018-August/msg00023.html
-> Changes in v4:
->   - Squashed first two patches into one
->   - Renamed ADJNTPVAL's "type" field to "op" to align with audit record
->     conventions
->   - Minor commit message editing
->   - Cc timekeeping/NTP people for feedback
-> 
-> v3: https://www.redhat.com/archives/linux-audit/2018-July/msg00001.html
-> Changes in v3:
->   - Switched to separate records for each variable
->   - Both old and new value is now reported for each change
->   - Injecting offset is reported via a separate record (since this
->     offset consists of two values and is added directly to the clock,
->     i.e. it doesn't make sense to log old and new value)
->   - Added example records produced by chronyd -q (see the commit message
->     of the last patch)
-> 
-> v2: https://www.redhat.com/archives/linux-audit/2018-June/msg00114.html
-> Changes in v2:
->   - The audit_adjtime() function has been modified to only log those
->     fields that contain values that are actually used, resulting in more
->     compact records.
->   - The audit_adjtime() call has been moved to do_adjtimex() in
->     timekeeping.c
->   - Added an additional patch (for review) that simplifies the detection
->     if the syscall is read-only.
-> 
-> v1: https://www.redhat.com/archives/linux-audit/2018-June/msg00095.html
-> 
-> [1] https://www.niap-ccevs.org/MMO/PP/pp_ca_v2.1.pdf -- section 5.1,
->     table 4
-> 
-> Ondrej Mosnacek (2):
->   timekeeping: Audit clock adjustments
->   ntp: Audit NTP parameters adjustment
-> 
->  include/linux/audit.h      | 29 +++++++++++++++++++++++++++++
->  include/uapi/linux/audit.h |  2 ++
->  kernel/auditsc.c           | 15 +++++++++++++++
->  kernel/time/ntp.c          | 38 ++++++++++++++++++++++++++++++--------
->  kernel/time/timekeeping.c  |  6 ++++++
->  5 files changed, 82 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.20.1
+> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+> index 268098681856..114e94f476c6 100644
+> --- a/drivers/tty/serial/sc16is7xx.c
+> +++ b/drivers/tty/serial/sc16is7xx.c
+> @@ -1509,7 +1509,7 @@ static int __init sc16is7xx_init(void)
+>  	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
+>  	if (ret < 0) {
+>  		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
+> -		return ret;
+> +		goto err_i2c;
+>  	}
+>  #endif
+>  
+> @@ -1517,10 +1517,18 @@ static int __init sc16is7xx_init(void)
+>  	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
+>  	if (ret < 0) {
+>  		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
+> -		return ret;
+> +		goto err_spi;
+>  	}
+>  #endif
+>  	return ret;
+> +
+> +err_spi:
+> +#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
+> +	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
+> +#endif
+> +err_i2c:
+> +	uart_unregister_driver(&sc16is7xx_uart);
+> +	return ret;
+>  }
+>  module_init(sc16is7xx_init);
+>  
 > 
 
-- RGB
+Nice catch, thank you!
+
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
 
 --
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Best wishes,
+Vladimir
