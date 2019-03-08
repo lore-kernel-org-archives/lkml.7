@@ -2,114 +2,96 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA434C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAD4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7915720840
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJeOPnGQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1345F20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 00:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfCHAe0 (ORCPT
+        id S1726309AbfCHAfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 19:34:26 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36044 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfCHAe0 (ORCPT
+        Thu, 7 Mar 2019 19:35:21 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:40681 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726241AbfCHAfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 19:34:26 -0500
-Received: by mail-ed1-f66.google.com with SMTP id g9so15034940eds.3;
-        Thu, 07 Mar 2019 16:34:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uzDbEfVZ0JKScB+VD8mAu8ZcFBVdjaYxgrBDjaB0nn4=;
-        b=jJeOPnGQjXHIM2zOOmzam7TFLhCAAp+gn55olh1C5UbXQ7VUIy0qDyKImzxoYYJJOw
-         8xEvtWtPCPwCJLdtAEVpCgRNtjQ8y1UKHl3asOIdo7QnaFlsVZ4ES7q1IoyHNBI2ZnIR
-         WtLZepoAlE/7Dk1/JT6Qw61rtrb/XytITeqqPwRO4e0VO0wkJ/0JvS2f6NgOe+XTXhG3
-         UFa3/HeGKrOcOoiEO0Am7o8omNJgNifrsREtqaJwFifNwPQrkb1tQCkIJu61JrDN1XPx
-         t+kLCctAgh+HvTfFLoAkbwuOIlTVti2+3dIhDoplfD2qe91ib/+b6KtkjqBHnkMHJFqy
-         JYHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uzDbEfVZ0JKScB+VD8mAu8ZcFBVdjaYxgrBDjaB0nn4=;
-        b=mhvM1jaSNZNO9tXsOWwCbU6ZR6Y9j31Q4TOmUNrV5RcSfP7YflXY2WU0S5+RCi/KOX
-         34JC9l8/L2wR+klPaqngIvYOAfEF/UPM7bSBLpNh5U6voIccVXsbXGboewKOGP1P3Ucs
-         K92BM56S/c/EAIGGRGO3iGYBjnyVt8yggSa3kBvTDl01i0467gWuJLMWxRfFfVG8klZn
-         pGc1msgG8gSsNVtB+nzFlSVrORPyvoB4VXcWTk5d8jeLJKdi8PbleUEh8fTNMADxWrgB
-         2sNc6JgK1bhAj8c6BbclUltLfiFwoNYkYWNUT8U7ReCt+RSD/yjB7RZNCeBUdNpToK70
-         jGpg==
-X-Gm-Message-State: APjAAAULY8gOyiFusRdXNjume5NYiB6GhqUpSbwiu3w5eSU9Hqrhrd2U
-        VJTeg9LIOmjVt4y+4j4JXYI=
-X-Google-Smtp-Source: APXvYqzKfKxWW+sLft20azD1DIH1II0QkoCKDIdHrg4ZWqd/5Iuou6qE8kmo2HM3JgA12QuXXQbf2w==
-X-Received: by 2002:a17:906:3d7:: with SMTP id c23mr9698330eja.138.1552005263829;
-        Thu, 07 Mar 2019 16:34:23 -0800 (PST)
-Received: from localhost.localdomain ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id i19sm1135241ejh.44.2019.03.07.16.34.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Mar 2019 16:34:23 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] xfs: Zero initialize highstale and lowstale in xfs_dir2_leafn_add
-Date:   Thu,  7 Mar 2019 17:34:13 -0700
-Message-Id: <20190308003413.25068-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 7 Mar 2019 19:35:20 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TMDiYUt_1552005317;
+Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TMDiYUt_1552005317)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 08 Mar 2019 08:35:17 +0800
+Subject: Re: [PATCH] bcache: add cond_resched() in __bch_cache_cmp()
+To:     Vojtech Pavlik <vojtech@suse.com>, Coly Li <colyli@suse.de>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1551935728-243664-1-git-send-email-shile.zhang@linux.alibaba.com>
+ <24916a71-39ff-7324-ad12-9d79cc68d0da@suse.de>
+ <3640cd7f-f32a-1509-dbef-6000b6e14e75@linux.alibaba.com>
+ <c421d715-6d14-a6f0-907b-644318120c8e@suse.de>
+ <20190307154421.GA8829@suse.cz>
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+Message-ID: <b548e4a1-865e-61f1-1ac1-4daf84111f86@linux.alibaba.com>
+Date:   Fri, 8 Mar 2019 08:35:17 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+In-Reply-To: <20190307154421.GA8829@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wsometimes-uninitialized, Clang warns:
 
-fs/xfs/libxfs/xfs_dir2_node.c:481:6: warning: variable 'lowstale' is
-used uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
-fs/xfs/libxfs/xfs_dir2_node.c:481:6: warning: variable 'highstale' is
-used uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
+On 2019/3/7 23:44, Vojtech Pavlik wrote:
+> On Thu, Mar 07, 2019 at 11:36:18PM +0800, Coly Li wrote:
+>> On 2019/3/7 11:06 下午, Shile Zhang wrote:
+>>> On 2019/3/7 18:34, Coly Li wrote:
+>>>> On 2019/3/7 1:15 下午, shile.zhang@linux.alibaba.com wrote:
+>>>>> From: Shile Zhang <shile.zhang@linux.alibaba.com>
+>>>>>
+>>>>> Read /sys/fs/bcache/<uuid>/cacheN/priority_stats can take very long
+>>>>> time with huge cache after long run.
+>>>>>
+>>>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>>>> Hi Shile,
+>>>>
+>>>> Do you test your change ? It will be helpful with more performance data
+>>>> (what problem that you improved).
+>>> In case of 960GB SSD cache device, once read of the 'priority_stats'
+>>> costs about 600ms in our test environment.
+>>>
+>> After the fix, how much time it takes ?
+>>
+>>
+>>> The perf tool shown that near 50% CPU time consumed by 'sort()', this
+>>> means once sort will hold the CPU near 300ms.
+>>>
+>>> In our case, the statistics collector reads the 'priority_stats'
+>>> periodically, it will trigger the schedule latency jitters of the
+>>>
+>>> task which shared same CPU core.
+>>>
+>> Hmm, it seems you just make the sort slower, and nothing more changes.
+>> Am I right ?
+> Well, it has to make the sort slower, but it'll also avoid hogging the
+> CPU (on a non-preemptible kernel), avoiding a potential soft lockup
+> warning and allowing other tasks to run.
+>
+Yes, there is a risk that other tasks have no chance to run due to sort 
+hogging the CPU, it is harmful to some schedule-latency sensitive tasks.
+This change just try to reduce the impact of sort, but not a performance 
+improvement of it. I'm not sure if a better way can handle it more 
+efficiency.
 
-While it isn't technically wrong, it isn't a problem in practice because
-highstale and lowstale are only initialized in xfs_dir2_leafn_add when
-compact is not zero then they are passed to xfs_dir3_leaf_find_entry,
-where they are initialized before use when compact is zero. Regardless,
-it's better not to be passing around uninitialized stack memory so zero
-initialize these variables, which silences this warning.
+Thanks,
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/393
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- fs/xfs/libxfs/xfs_dir2_node.c | 2 ++
- 1 file changed, 2 insertions(+)
+Shile
 
-diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
-index 3b03703c5c3d..de46f26c5292 100644
---- a/fs/xfs/libxfs/xfs_dir2_node.c
-+++ b/fs/xfs/libxfs/xfs_dir2_node.c
-@@ -444,6 +444,8 @@ xfs_dir2_leafn_add(
- 
- 	dp = args->dp;
- 	leaf = bp->b_addr;
-+	highstale = 0;
-+	lowstale = 0;
- 	dp->d_ops->leaf_hdr_from_disk(&leafhdr, leaf);
- 	ents = dp->d_ops->leaf_ents_p(leaf);
- 
--- 
-2.21.0
 
