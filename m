@@ -2,151 +2,421 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2C9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4A020851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566E520851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfCHR7H (ORCPT
+        id S1727069AbfCHR7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:59:07 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35717 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfCHR7G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:59:06 -0500
-Received: by mail-io1-f70.google.com with SMTP id s9so16078592ioj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 09:59:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=akIbWxugt/bxGxCb+VSxkCYQ054e8TlMOmMbTTBccgY=;
-        b=e3F+2LTWvNFpibh18wA2GYw4RxmucLRpxst/Gquh7LV7hNpyIZsh0E5y1hcj0M80f/
-         e2YeysatF1DZo1efUVTa0oBtyVxiRhoMyWVIPGk9++osEdC+Y8dJ+6icWa6uLCdbGVmq
-         C2xmb16GcI6bff01HpGy7YLl0JRQirAhaw7j2ZlGVd1OPduUYKWqAtIUf+KapAK2Bk7h
-         GJh7GJSB45Na4cdv65TAA3TaIfO2Df3F3LxBRXjApYjj5tv5PPPYFVVC8cgIEoYXpq/e
-         i4W4LiAtpSermrEWRcxy8DqucGpeBbH0Zwmxh9LVzH52Ss1I19EFgTamRoU+ePjydLWI
-         sqYg==
-X-Gm-Message-State: APjAAAUVvrC7suk66WLo8+aJrrq8H/eB64lRvTFzQktHcTKKG2WbUnZu
-        sQpohJvTekQyU9gXj7mDUEBF2/hf9Qi49Q9SlfHCF2y9CYPb
-X-Google-Smtp-Source: APXvYqz9BLEWYQ07xEGez/Nf8YUyvv+FV+M2KBZqXzsxCnBPJIbxCinRs0rFJv3jzSAH9ajAMnGWt2SOGw4BkBjTdBJPRbKQU+gJ
+        Fri, 8 Mar 2019 12:59:35 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:55038 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfCHR7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 12:59:34 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6C3E630718CB;
+        Fri,  8 Mar 2019 17:59:33 +0000 (UTC)
+Received: from x2.localnet (ovpn-122-103.rdu2.redhat.com [10.10.122.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 755B1600C8;
+        Fri,  8 Mar 2019 17:59:25 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     linux-audit@redhat.com, Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH ghak10 v6 2/2] ntp: Audit NTP parameters adjustment
+Date:   Fri, 08 Mar 2019 12:59:19 -0500
+Message-ID: <2029938.2WYqZXpe8D@x2>
+Organization: Red Hat
+In-Reply-To: <20190307123254.348-3-omosnace@redhat.com>
+References: <20190307123254.348-1-omosnace@redhat.com> <20190307123254.348-3-omosnace@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:4d8e:: with SMTP id l136mr13173466itb.5.1552067945222;
- Fri, 08 Mar 2019 09:59:05 -0800 (PST)
-Date:   Fri, 08 Mar 2019 09:59:05 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008adf52058398fa93@google.com>
-Subject: kernel BUG at arch/x86/kvm/x86.c:LINE! (3)
-From:   syzbot <syzbot+83a3e122f8c1b25b3111@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 08 Mar 2019 17:59:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thursday, March 7, 2019 7:32:54 AM EST Ondrej Mosnacek wrote:
+> Emit an audit record every time selected NTP parameters are modified
+> from userspace (via adjtimex(2) or clock_adjtime(2)).
+> 
+> Such events will now generate records of type AUDIT_TIME_ADJNTPVAL
+> containing the following fields:
+>   - op -- which value was adjusted:
+>     - offset -- corresponding to the time_offset variable
+>     - freq   -- corresponding to the time_freq variable
+>     - status -- corresponding to the time_status variable
+>     - adjust -- corresponding to the time_adjust variable
+>     - tick   -- corresponding to the tick_usec variable
+>     - tai    -- corresponding to the timekeeping's TAI offset
+>   - old -- the old value
+>   - new -- the new value
+> 
+> For reference, running the following commands:
+> 
+>     auditctl -D
+>     auditctl -a exit,always -F arch=b64 -S adjtimex
+>     chronyd -q
+> 
+> produces audit records like this:
+> 
+> type=SYSCALL msg=audit(1530616044.507:5): arch=c000003e syscall=159
+> success=yes exit=5 a0=7fff57e78c00 a1=0 a2=4 a3=7f754ae28c0a items=0
+> ppid=626 pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0
+> fsgid=0 tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
+> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
+> msg=audit(1530616044.507:5): proctitle=6368726F6E7964002D71 type=SYSCALL
+> msg=audit(1530616044.507:6): arch=c000003e syscall=159 success=yes exit=5
+> a0=7fff57e78c00 a1=1 a2=1 a3=7f754ae28c0a items=0 ppid=626 pid=629 auid=0
+> uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=1
+> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
+> key=(null) type=PROCTITLE msg=audit(1530616044.507:6):
+> proctitle=6368726F6E7964002D71 type=TIME_ADJNTPVAL
+> msg=audit(1530616044.507:7): op=status old=64 new=8256 type=SYSCALL
+> msg=audit(1530616044.507:7): arch=c000003e syscall=159 success=yes exit=5
+> a0=7fff57e78c00 a1=1 a2=1 a3=7f754ae28c0a items=0 ppid=626 pid=629 auid=0
+> uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=1
+> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
+> key=(null) type=PROCTITLE msg=audit(1530616044.507:7):
+> proctitle=6368726F6E7964002D71 type=TIME_ADJNTPVAL
+> msg=audit(1530616044.507:8): op=status old=8256 new=8257 type=SYSCALL
+> msg=audit(1530616044.507:8): arch=c000003e syscall=159 success=yes exit=5
+> a0=7fff57e78ab0 a1=0 a2=55e129c850c0 a3=7f754ae28c0a items=0 ppid=626
+> pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0
+> tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
+> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
+> msg=audit(1530616044.507:8): proctitle=6368726F6E7964002D71
+> type=TIME_ADJNTPVAL msg=audit(1530616044.507:9): op=status old=8257 new=64
+> type=SYSCALL msg=audit(1530616044.507:9): arch=c000003e syscall=159
+> success=yes exit=5 a0=7fff57e78ab0 a1=0 a2=55e129c850c0 a3=7f754ae28c0a
+> items=0 ppid=626 pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0
+> sgid=0 fsgid=0 tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
+> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
+> msg=audit(1530616044.507:9): proctitle=6368726F6E7964002D71 type=SYSCALL
+> msg=audit(1530616044.507:10): arch=c000003e syscall=159 success=yes exit=5
+> a0=7fff57e78a70 a1=0 a2=55e129c850c0 a3=7f754ae28c0a items=0 ppid=626
+> pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0
+> tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
+> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
+> msg=audit(1530616044.507:10): proctitle=6368726F6E7964002D71
+> type=TIME_ADJNTPVAL msg=audit(1530616044.511:11): op=freq old=0
+> new=49180377088000 type=SYSCALL msg=audit(1530616044.511:11):
+> arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78ad0 a1=0 a2=2710
+> a3=f42f82a800000 items=0 ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385
+> suid=385 fsuid=385 egid=382 sgid=382 fsgid=382 tty=(none) ses=1
+> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
+> key=(null) type=PROCTITLE msg=audit(1530616044.511:11):
+> proctitle=6368726F6E7964002D71 type=SYSCALL msg=audit(1530616044.521:12):
+> arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78b40 a1=1 a2=40
+> a3=f91f6ef84fbab items=0 ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385
+> suid=385 fsuid=385 egid=382 sgid=382 fsgid=382 tty=(none) ses=1
+> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
+> key=(null) type=PROCTITLE msg=audit(1530616044.521:12):
+> proctitle=6368726F6E7964002D71 type=TIME_ADJNTPVAL
+> msg=audit(1530616049.652:13): op=status old=64 new=8256 type=SYSCALL
+> msg=audit(1530616049.652:13): arch=c000003e syscall=159 success=yes exit=5
+> a0=7fff57e78270 a1=1 a2=fffffffffffffff0 a3=137b828205ca12 items=0
+> ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385 suid=385 fsuid=385
+> egid=382 sgid=382 fsgid=382 tty=(none) ses=1 comm="chronyd"
+> exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0 key=(null)
+> type=PROCTITLE msg=audit(1530616049.652:13):
+> proctitle=6368726F6E7964002D71 type=SYSCALL msg=audit(1530616033.783:14):
+> arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78bc0 a1=0 a2=2710
+> a3=0 items=0 ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385 suid=385
+> fsuid=385 egid=382 sgid=382 fsgid=382 tty=(none) ses=1 comm="chronyd"
+> exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0 key=(null)
+> type=PROCTITLE msg=audit(1530616033.783:14):
+> proctitle=6368726F6E7964002D71
+> 
+> The chronyd command that produced the above records executed the
+> following adjtimex(2) syscalls (as per strace output):
+> 
+> adjtimex({modes=ADJ_OFFSET|0x8000, offset=0, freq=0, maxerror=16000000,
+> esterror=16000000, status=STA_UNSYNC, constant=2, precision=1,
+> tolerance=32768000, time={tv_sec=1530616044, tv_usec=507215}, tick=10000,
+> ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0, errcnt=0,
+> stbcnt=0, tai=0}) = 5 (TIME_ERROR) adjtimex({modes=ADJ_MAXERROR, offset=0,
+> freq=0, maxerror=0, esterror=16000000, status=STA_UNSYNC, constant=2,
+> precision=1, tolerance=32768000, time={tv_sec=1530616044, tv_usec=507438},
+> tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0,
+> errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_SETOFFSET|ADJ_NANO, offset=0, freq=0,
+> maxerror=16000000, esterror=16000000, status=STA_UNSYNC|STA_NANO,
+> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616044,
+> tv_usec=507604737}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
+> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_OFFSET|ADJ_STATUS, offset=0, freq=0,
+> maxerror=16000000, esterror=16000000, status=STA_PLL|STA_UNSYNC|STA_NANO,
+> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616044,
+> tv_usec=507698330}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
+> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_STATUS, offset=0, freq=0, maxerror=16000000,
+> esterror=16000000, status=STA_UNSYNC, constant=2, precision=1,
+> tolerance=32768000, time={tv_sec=1530616044, tv_usec=507792}, tick=10000,
+> ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0, errcnt=0,
+> stbcnt=0, tai=0}) = 5 (TIME_ERROR) adjtimex({modes=0, offset=0, freq=0,
+> maxerror=16000000, esterror=16000000, status=STA_UNSYNC, constant=2,
+> precision=1, tolerance=32768000, time={tv_sec=1530616044, tv_usec=508000},
+> tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0,
+> errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_FREQUENCY|ADJ_TICK, offset=0, freq=750433,
+> maxerror=16000000, esterror=16000000, status=STA_UNSYNC, constant=2,
+> precision=1, tolerance=32768000, time={tv_sec=1530616044, tv_usec=512146},
+> tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0,
+> errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_MAXERROR|ADJ_ESTERROR|ADJ_STATUS, offset=0,
+> freq=750433, maxerror=16000000, esterror=16000000, status=STA_UNSYNC,
+> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616044,
+> tv_usec=522506}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
+> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_SETOFFSET|ADJ_NANO, offset=0, freq=750433,
+> maxerror=16000000, esterror=16000000, status=STA_UNSYNC|STA_NANO,
+> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616033,
+> tv_usec=778717675}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
+> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+> adjtimex({modes=ADJ_FREQUENCY|ADJ_TICK, offset=0, freq=750433,
+> maxerror=16000000, esterror=16000000, status=STA_UNSYNC|STA_NANO,
+> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616033,
+> tv_usec=784644657}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
+> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
 
-syzbot found the following crash on:
+This is needed for common criteria. Requirements are getting stricter in 
+certifications of IT products that are time stamp sensitive. The new record 
+format looks fine to me.
 
-HEAD commit:    cf08baa2 Add linux-next specific files for 20190306
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f3819d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c8b6073d992e8217
-dashboard link: https://syzkaller.appspot.com/bug?extid=83a3e122f8c1b25b3111
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: amd64
+Ack for the record format.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+-Steve
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+83a3e122f8c1b25b3111@syzkaller.appspotmail.com
+> (The struct timex fields above are from *after* the syscall was
+> executed, so they contain the current (new) values as set from the
+> kernel, except of the 'modes' field, which contains the original value
+> sent by the caller.)
+> 
+> The changes to the time_maxerror, time_esterror, and time_constant
+> variables are not logged, as these are not important for security. Also,
+> no-op adjustments that do not actually change the value are not logged.
+> 
+> An overview of parameter changes that can be done via do_adjtimex()
+> (based on information from Miroslav Lichvar) and whether they are
+> audited:
+>   __timekeeping_set_tai_offset() -- sets the offset from the
+>                                     International Atomic Time
+>                                     (AUDITED)
+>   NTP variables:
+>     time_offset -- can adjust the clock by up to 0.5 seconds per call
+>                    and also speed it up or slow down by up to about
+>                    0.05% (43 seconds per day) (AUDITED)
+>     time_freq -- can speed up or slow down by up to about 0.05%
+>     time_status -- can insert/delete leap seconds and it also enables/
+>                    disables synchronization of the hardware real-time
+>                    clock (AUDITED)
+>     time_maxerror, time_esterror -- change error estimates used to
+>                                     inform userspace applications
+>                                     (NOT AUDITED)
+>     time_constant -- controls the speed of the clock adjustments that
+>                      are made when time_offset is set (NOT AUDITED)
+>     time_adjust -- can temporarily speed up or slow down the clock by up
+>                    to 0.05% (AUDITED)
+>     tick_usec -- a more extreme version of time_freq; can speed up or
+>                  slow down the clock by up to 10% (AUDITED)
+> 
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> ---
+>  include/linux/audit.h      | 14 ++++++++++++++
+>  include/uapi/linux/audit.h |  1 +
+>  kernel/auditsc.c           |  7 +++++++
+>  kernel/time/ntp.c          | 38 ++++++++++++++++++++++++++++++--------
+>  4 files changed, 52 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 43a60fbe74be..0f67964544cc 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -367,6 +367,7 @@ extern void __audit_mmap_fd(int fd, int flags);
+>  extern void __audit_log_kern_module(char *name);
+>  extern void __audit_fanotify(unsigned int response);
+>  extern void __audit_tk_injoffset(struct timespec64 offset);
+> +extern void __audit_ntp_adjust(const char *type, s64 oldval, s64 newval);
+> 
+>  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
+>  {
+> @@ -479,6 +480,16 @@ static inline void audit_tk_injoffset(struct
+> timespec64 offset) __audit_tk_injoffset(offset);
+>  }
+> 
+> +static inline void audit_ntp_adjust(const char *type, s64 oldval, s64
+> newval) +{
+> +	/* ignore no-op events */
+> +	if (newval == oldval)
+> +		return;
+> +
+> +	if (!audit_dummy_context())
+> +		__audit_ntp_adjust(type, oldval, newval);
+> +}
+> +
+>  extern int audit_n_rules;
+>  extern int audit_signals;
+>  #else /* CONFIG_AUDITSYSCALL */
+> @@ -595,6 +606,9 @@ static inline void audit_fanotify(unsigned int
+> response) static inline void audit_tk_injoffset(struct timespec64 offset)
+>  { }
+> 
+> +static inline void audit_ntp_adjust(const char *type, s64 oldval, s64
+> newval) +{ }
+> +
+>  static inline void audit_ptrace(struct task_struct *t)
+>  { }
+>  #define audit_n_rules 0
+> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> index 2167d55bc800..e9781f0385eb 100644
+> --- a/include/uapi/linux/audit.h
+> +++ b/include/uapi/linux/audit.h
+> @@ -115,6 +115,7 @@
+>  #define AUDIT_KERN_MODULE	1330	/* Kernel Module events */
+>  #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
+>  #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
+> +#define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
+> 
+>  #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
+>  #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index 781336d0f2de..946806174cd9 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -2520,6 +2520,13 @@ void __audit_tk_injoffset(struct timespec64 offset)
+>  		  "sec=%lli nsec=%li", (long long)offset.tv_sec, 
+offset.tv_nsec);
+>  }
+> 
+> +void __audit_ntp_adjust(const char *type, s64 oldval, s64 newval)
+> +{
+> +	audit_log(audit_context(), GFP_ATOMIC, AUDIT_TIME_ADJNTPVAL,
+> +		  "op=%s old=%lli new=%lli", type,
+> +		  (long long)oldval, (long long)newval);
+> +}
+> +
+>  static void audit_log_task(struct audit_buffer *ab)
+>  {
+>  	kuid_t auid, uid;
+> diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+> index 36a2bef00125..5f456a84151a 100644
+> --- a/kernel/time/ntp.c
+> +++ b/kernel/time/ntp.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/rtc.h>
+> +#include <linux/audit.h>
+> 
+>  #include "ntp_internal.h"
+>  #include "timekeeping_internal.h"
+> @@ -293,6 +294,8 @@ static inline s64 ntp_update_offset_fll(s64 offset64,
+> long secs)
+> 
+>  static void ntp_update_offset(long offset)
+>  {
+> +	s64 old_offset = time_offset;
+> +	s64 old_freq = time_freq;
+>  	s64 freq_adj;
+>  	s64 offset64;
+>  	long secs;
+> @@ -341,6 +344,9 @@ static void ntp_update_offset(long offset)
+>  	time_freq   = max(freq_adj, -MAXFREQ_SCALED);
+> 
+>  	time_offset = div_s64(offset64 << NTP_SCALE_SHIFT, NTP_INTERVAL_FREQ);
+> +
+> +	audit_ntp_adjust("offset", old_offset, time_offset);
+> +	audit_ntp_adjust("freq", old_freq, time_freq);
+>  }
+> 
+>  /**
+> @@ -658,21 +664,31 @@ static inline void process_adj_status(const struct
+> timex *txc)
+> 
+>  static inline void process_adjtimex_modes(const struct timex *txc, s32
+> *time_tai) {
+> -	if (txc->modes & ADJ_STATUS)
+> -		process_adj_status(txc);
+> +	if (txc->modes & (ADJ_STATUS | ADJ_NANO | ADJ_MICRO)) {
+> +		int old_status = time_status;
+> +
+> +		if (txc->modes & ADJ_STATUS)
+> +			process_adj_status(txc);
+> 
+> -	if (txc->modes & ADJ_NANO)
+> -		time_status |= STA_NANO;
+> +		if (txc->modes & ADJ_NANO)
+> +			time_status |= STA_NANO;
+> 
+> -	if (txc->modes & ADJ_MICRO)
+> -		time_status &= ~STA_NANO;
+> +		if (txc->modes & ADJ_MICRO)
+> +			time_status &= ~STA_NANO;
+> +
+> +		audit_ntp_adjust("status", old_status, time_status);
+> +	}
+> 
+>  	if (txc->modes & ADJ_FREQUENCY) {
+> +		s64 old_freq = time_freq;
+> +
+>  		time_freq = txc->freq * PPM_SCALE;
+>  		time_freq = min(time_freq, MAXFREQ_SCALED);
+>  		time_freq = max(time_freq, -MAXFREQ_SCALED);
+>  		/* update pps_freq */
+>  		pps_set_freq(time_freq);
+> +
+> +		audit_ntp_adjust("freq", old_freq, time_freq);
+>  	}
+> 
+>  	if (txc->modes & ADJ_MAXERROR)
+> @@ -689,14 +705,18 @@ static inline void process_adjtimex_modes(const
+> struct timex *txc, s32 *time_tai time_constant = max(time_constant, 0l);
+>  	}
+> 
+> -	if (txc->modes & ADJ_TAI && txc->constant > 0)
+> +	if (txc->modes & ADJ_TAI && txc->constant > 0) {
+> +		audit_ntp_adjust("tai", *time_tai, txc->constant);
+>  		*time_tai = txc->constant;
+> +	}
+> 
+>  	if (txc->modes & ADJ_OFFSET)
+>  		ntp_update_offset(txc->offset);
+> 
+> -	if (txc->modes & ADJ_TICK)
+> +	if (txc->modes & ADJ_TICK) {
+> +		audit_ntp_adjust("tick", tick_usec, txc->tick);
+>  		tick_usec = txc->tick;
+> +	}
+> 
+>  	if (txc->modes & (ADJ_TICK|ADJ_FREQUENCY|ADJ_OFFSET))
+>  		ntp_update_frequency();
+> @@ -718,6 +738,8 @@ int __do_adjtimex(struct timex *txc, const struct
+> timespec64 *ts, s32 *time_tai) /* adjtime() is independent from
+> ntp_adjtime() */
+>  			time_adjust = txc->offset;
+>  			ntp_update_frequency();
+> +
+> +			audit_ntp_adjust("adjust", save_adjust, txc->offset);
+>  		}
+>  		txc->offset = save_adjust;
+>  	} else {
 
-------------[ cut here ]------------
-kernel BUG at arch/x86/kvm/x86.c:357!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 2530 Comm: kworker/u4:4 Not tainted 5.0.0-next-20190306 #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: bat_events batadv_nc_worker
-RIP: 0010:kvm_spurious_fault+0x9/0x10 arch/x86/kvm/x86.c:357
-Code: e8 bc 7d 66 00 41 bd 03 00 00 00 5b 44 89 e8 41 5c 41 5d 5d c3 66 90  
-66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 e8 97 7d 66 00 <0f> 0b 0f 1f 44  
-00 00 55 48 89 e5 41 57 41 56 49 89 d6 41 55 41 54
-RSP: 0018:ffff8880ae907e80 EFLAGS: 00010006
-RAX: ffff8880a1650200 RBX: ffff888053363f68 RCX: ffffffff8132bc7a
-RDX: 0000000000010000 RSI: ffffffff810a1699 RDI: 0000000000000007
-RBP: ffff8880ae907e80 R08: ffff8880a1650200 R09: ffffed1015d25be9
-R10: ffffed1015d25be8 R11: ffff8880ae92df47 R12: 1ffff11015d20fd3
-R13: ffff888098456000 R14: ffff8880ae907ef8 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8880ae907eb8 CR3: 000000005bdae000 CR4: 00000000001426e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  <IRQ>
-  vmcs_clear arch/x86/kvm/vmx/ops.h:185 [inline]
-  loaded_vmcs_init+0x95/0x250 arch/x86/kvm/vmx/vmx.c:570
-  __loaded_vmcs_clear+0x229/0x360 arch/x86/kvm/vmx/vmx.c:637
-  flush_smp_call_function_queue+0x14a/0x500 kernel/smp.c:243
-  generic_smp_call_function_single_interrupt+0x13/0x2b kernel/smp.c:192
-  smp_call_function_single_interrupt+0xa3/0x460 arch/x86/kernel/smp.c:296
-  call_function_single_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:767  
-[inline]
-RIP: 0010:lock_acquire+0x1ea/0x3f0 kernel/locking/lockdep.c:4205
-Code: 7c 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 c7 01 00 00 48  
-83 3d d2 fa 3a 07 00 0f 84 3b 01 00 00 48 8b 7d c8 57 9d <0f> 1f 44 00 00  
-48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 8b
-RSP: 0018:ffff8880a165fc80 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff04
-RAX: 1ffffffff11252b6 RBX: ffff8880a1650200 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000001 RDI: 0000000000000286
-RBP: ffff8880a165fcc8 R08: 0000000069c38c2d R09: ffffffff895e57b4
-R10: ffff8880a1650ad0 R11: ffff8880a1650200 R12: ffffffff889a5b00
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000002
-  rcu_lock_acquire include/linux/rcupdate.h:210 [inline]
-  rcu_read_lock include/linux/rcupdate.h:595 [inline]
-  batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:419 [inline]
-  batadv_nc_worker+0x117/0x760 net/batman-adv/network-coding.c:730
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 909e627acbdd0177 ]---
-RIP: 0010:kvm_spurious_fault+0x9/0x10 arch/x86/kvm/x86.c:357
-Code: e8 bc 7d 66 00 41 bd 03 00 00 00 5b 44 89 e8 41 5c 41 5d 5d c3 66 90  
-66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 e8 97 7d 66 00 <0f> 0b 0f 1f 44  
-00 00 55 48 89 e5 41 57 41 56 49 89 d6 41 55 41 54
-RSP: 0018:ffff8880ae907e80 EFLAGS: 00010006
-RAX: ffff8880a1650200 RBX: ffff888053363f68 RCX: ffffffff8132bc7a
-RDX: 0000000000010000 RSI: ffffffff810a1699 RDI: 0000000000000007
-RBP: ffff8880ae907e80 R08: ffff8880a1650200 R09: ffffed1015d25be9
-R10: ffffed1015d25be8 R11: ffff8880ae92df47 R12: 1ffff11015d20fd3
-R13: ffff888098456000 R14: ffff8880ae907ef8 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8880ae907eb8 CR3: 000000005bdae000 CR4: 00000000001426e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
-syzbot.
