@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A39FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F279C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F9120811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269F320811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 09:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QtwSLJx4"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="U5Mf7vt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfCHJ5E (ORCPT
+        id S1726400AbfCHJ5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 04:57:04 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:58442 "EHLO
+        Fri, 8 Mar 2019 04:57:06 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:58422 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfCHJ5E (ORCPT
+        with ESMTP id S1725789AbfCHJ5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 Mar 2019 04:57:04 -0500
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x289uSqa003883;
-        Fri, 8 Mar 2019 18:56:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x289uSqa003883
+        by conuserg-12.nifty.com with ESMTP id x289uSqb003883;
+        Fri, 8 Mar 2019 18:56:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x289uSqb003883
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552038988;
-        bh=5cYoMwhwP7MQYAIXIKGJrDLwUHl9mhxyYhEh0rTq03E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QtwSLJx4pij8cDr3SpU0PP5Go2irqNyGZnV4pc+AVkvWfXfBkqx8JuUZgH4hJBnra
-         ilSYT9pXLo39QIEPV85b8ozgvl79zk8ifYpPxAVJ5QBE+6YgCxa2Lc1dh5COrqCyKp
-         pbinu8xM4lxPjGctdz1K/EmWK0mmjLtTdRC1P5q+RMLdaw6A1i3EaUHgL70De5RSJ1
-         USOF4qzt8BxQVJZczbd8CKXkcOTAW1muRSZngZEuyYKPkX3MBjhwaeZJ6jS9l3e9UT
-         yBeIynAO+gZDawfJ78TaYsbQ5vNA5jyeQnjmwaFv3o06HucGuzQ2Vf53LGE0oWcneI
-         GwJ0TojfST8Fw==
+        s=dec2015msa; t=1552038989;
+        bh=RgPK6RyeZQS/j5UUx+A+6DjCZHX16Ul3T0bN38trg6A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U5Mf7vt2Lj55D8v4cq5ylCQruTnP6JnFCKh6LKWQK2HqEBRvbN/FDiOjClhBDTklG
+         x9BMLQElIweMk+QLXy8OTWdcCSurHVgmXR6X0RMXC9hrZWkIi8BNhU6ASmN4JV9d+G
+         53I3XxLaze+i0kTenvYW0oQYAXM+8d8gLVIeblYuGnyIFX/mrGRb+JnEcVzH4hfJ2J
+         ee2vMtOpsE0J6hK7R/rXaVqSv/VsUcHNPtrbui+NumMxeWPL1QZXIJfNPJxFnjItJ3
+         JBNupGhbtx7a9LS84ZeLAuYe+TYpNXQCcxlOiBoFqcIYKUJAFXiLHCMNYyc6MPAGII
+         vz2mzdjqsqB/A==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -43,100 +43,123 @@ Cc:     Ben Hutchings <ben@decadent.org.uk>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] kbuild: deb-pkg: add CONFIG_ prefix to kernel config options
-Date:   Fri,  8 Mar 2019 18:56:23 +0900
-Message-Id: <1552038985-10473-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH 2/3] kbuild: deb-pkg: introduce is_enabled and if_enabled_echo to builddeb
+Date:   Fri,  8 Mar 2019 18:56:24 +0900
+Message-Id: <1552038985-10473-2-git-send-email-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1552038985-10473-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1552038985-10473-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This might be a kind of bike-shed, but I personally prefer grep'able
-code.
+I think is_enabled() and if_enable_echo() in scripts/package/mkdebian
+are useful.
 
-I often do 'git grep CONFIG_FOO' instead of 'git grep FOO' when I
-want to know where that CONFIG option is used.
-
-This makes code longer, but I hope this is acceptable level.
+builddeb also has many repetitive greps over the kernel config, so I
+borrowed the idea to clean it up.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/package/mkdebian | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ scripts/package/builddeb | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index f030961..e3726e8 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -7,7 +7,7 @@
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index 8ac25d1..e2cb438 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -12,6 +12,18 @@
+ 
  set -e
  
- is_enabled() {
--	grep -q "^CONFIG_$1=y" $KCONFIG_CONFIG
++is_enabled() {
 +	grep -q "^$1=y" $KCONFIG_CONFIG
- }
++}
++
++if_enabled_echo() {
++	if is_enabled "$1"; then
++		echo -n "$2"
++	elif [ $# -ge 3 ]; then
++		echo -n "$3"
++	fi
++}
++
+ create_package() {
+ 	local pname="$1" pdir="$2"
  
- if_enabled_echo() {
-@@ -31,23 +31,23 @@ set_debarch() {
- 	x86_64)
- 		debarch=amd64 ;;
- 	sparc*)
--		debarch=sparc$(if_enabled_echo 64BIT 64) ;;
-+		debarch=sparc$(if_enabled_echo CONFIG_64BIT 64) ;;
- 	s390*)
- 		debarch=s390x ;;
- 	ppc*)
--		if is_enabled 64BIT; then
--			debarch=ppc64$(if_enabled_echo CPU_LITTLE_ENDIAN el)
-+		if is_enabled CONFIG_64BIT; then
-+			debarch=ppc64$(if_enabled_echo CONFIG_CPU_LITTLE_ENDIAN el)
- 		else
--			debarch=powerpc$(if_enabled_echo SPE spe)
-+			debarch=powerpc$(if_enabled_echo CONFIG_SPE spe)
+@@ -62,7 +74,7 @@ parisc|mips|powerpc)
+ 	installed_image_path="boot/vmlinuz-$version"
+ esac
+ 
+-BUILD_DEBUG="$(grep -s '^CONFIG_DEBUG_INFO=y' $KCONFIG_CONFIG || true)"
++BUILD_DEBUG=$(if_enabled_echo CONFIG_DEBUG_INFO Yes)
+ 
+ # Setup the directory structure
+ rm -rf "$tmpdir" "$kernel_headers_dir" "$libc_headers_dir" "$dbg_dir" $objtree/debian/files
+@@ -83,14 +95,14 @@ else
+ fi
+ cp "$($MAKE -s -f $srctree/Makefile image_name)" "$tmpdir/$installed_image_path"
+ 
+-if grep -q "^CONFIG_OF_EARLY_FLATTREE=y" $KCONFIG_CONFIG ; then
++if is_enabled CONFIG_OF_EARLY_FLATTREE; then
+ 	# Only some architectures with OF support have this target
+ 	if [ -d "${srctree}/arch/$SRCARCH/boot/dts" ]; then
+ 		$MAKE -f $srctree/Makefile INSTALL_DTBS_PATH="$tmpdir/usr/lib/$packagename" dtbs_install
+ 	fi
+ fi
+ 
+-if grep -q '^CONFIG_MODULES=y' $KCONFIG_CONFIG ; then
++if is_enabled CONFIG_MODULES; then
+ 	INSTALL_MOD_PATH="$tmpdir" $MAKE -f $srctree/Makefile modules_install
+ 	rm -f "$tmpdir/lib/modules/$version/build"
+ 	rm -f "$tmpdir/lib/modules/$version/source"
+@@ -111,8 +123,7 @@ if grep -q '^CONFIG_MODULES=y' $KCONFIG_CONFIG ; then
+ 		done
+ 
+ 		# resign stripped modules
+-		MODULE_SIG_ALL="$(grep -s '^CONFIG_MODULE_SIG_ALL=y' $KCONFIG_CONFIG || true)"
+-		if [ -n "$MODULE_SIG_ALL" ]; then
++		if is_enabled CONFIG_MODULE_SIG_ALL; then
+ 			INSTALL_MOD_PATH="$tmpdir" $MAKE -f $srctree/Makefile modules_sign
  		fi
- 		;;
- 	parisc*)
- 		debarch=hppa ;;
- 	mips*)
--		if is_enabled CPU_LITTLE_ENDIAN; then
--			debarch=mips$(if_enabled_echo 64BIT 64)$(if_enabled_echo CPU_MIPSR6 r6)el
--		elif is_enabled CPU_MIPSR6; then
--			debarch=mips$(if_enabled_echo 64BIT 64)r6
-+		if is_enabled CONFIG_CPU_LITTLE_ENDIAN; then
-+			debarch=mips$(if_enabled_echo CONFIG_64BIT 64)$(if_enabled_echo CONFIG_CPU_MIPSR6 r6)el
-+		elif is_enabled CONFIG_CPU_MIPSR6; then
-+			debarch=mips$(if_enabled_echo CONFIG_64BIT 64)r6
- 		else
- 			debarch=mips
- 		fi
-@@ -55,8 +55,8 @@ set_debarch() {
- 	aarch64|arm64)
- 		debarch=arm64 ;;
- 	arm*)
--		if is_enabled AEABI; then
--			debarch=arm$(if_enabled_echo VFP hf el)
-+		if is_enabled CONFIG_AEABI; then
-+			debarch=arm$(if_enabled_echo CONFIG_VFP hf el)
- 		else
- 			debarch=arm
- 		fi
-@@ -64,10 +64,10 @@ set_debarch() {
- 	openrisc)
- 		debarch=or1k ;;
- 	sh)
--		if is_enabled CPU_SH3; then
--			debarch=sh3$(if_enabled_echo CPU_BIG_ENDIAN eb)
--		elif is_enabled CPU_SH4; then
--			debarch=sh4$(if_enabled_echo CPU_BIG_ENDIAN eb)
-+		if is_enabled CONFIG_CPU_SH3; then
-+			debarch=sh3$(if_enabled_echo CONFIG_CPU_BIG_ENDIAN eb)
-+		elif is_enabled CONFIG_CPU_SH4; then
-+			debarch=sh4$(if_enabled_echo CONFIG_CPU_BIG_ENDIAN eb)
- 		fi
- 		;;
- 	esac
+ 	fi
+@@ -129,11 +140,6 @@ fi
+ # make-kpkg sets $INITRD to indicate whether an initramfs is wanted, and
+ # so do we; recent versions of dracut and initramfs-tools will obey this.
+ debhookdir=${KDEB_HOOKDIR:-/etc/kernel}
+-if grep -q '^CONFIG_BLK_DEV_INITRD=y' $KCONFIG_CONFIG; then
+-	want_initrd=Yes
+-else
+-	want_initrd=No
+-fi
+ for script in postinst postrm preinst prerm ; do
+ 	mkdir -p "$tmpdir$debhookdir/$script.d"
+ 	cat <<EOF > "$tmpdir/DEBIAN/$script"
+@@ -145,7 +151,7 @@ set -e
+ export DEB_MAINT_PARAMS="\$*"
+ 
+ # Tell initramfs builder whether it's wanted
+-export INITRD=$want_initrd
++export INITRD=$(if_enabled_echo CONFIG_BLK_DEV_INITRD Yes No)
+ 
+ test -d $debhookdir/$script.d && run-parts --arg="$version" --arg="/$installed_image_path" $debhookdir/$script.d
+ exit 0
+@@ -158,11 +164,11 @@ done
+ (cd $srctree; find arch/*/include include scripts -type f -o -type l) >> "$objtree/debian/hdrsrcfiles"
+ (cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> "$objtree/debian/hdrsrcfiles"
+ (cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> "$objtree/debian/hdrsrcfiles"
+-if grep -q '^CONFIG_STACK_VALIDATION=y' $KCONFIG_CONFIG ; then
++if is_enabled CONFIG_STACK_VALIDATION; then
+ 	(cd $objtree; find tools/objtool -type f -executable) >> "$objtree/debian/hdrobjfiles"
+ fi
+ (cd $objtree; find arch/$SRCARCH/include Module.symvers include scripts -type f) >> "$objtree/debian/hdrobjfiles"
+-if grep -q '^CONFIG_GCC_PLUGINS=y' $KCONFIG_CONFIG ; then
++if is_enabled CONFIG_GCC_PLUGINS; then
+ 	(cd $objtree; find scripts/gcc-plugins -name \*.so -o -name gcc-common.h) >> "$objtree/debian/hdrobjfiles"
+ fi
+ destdir=$kernel_headers_dir/usr/src/linux-headers-$version
 -- 
 2.7.4
 
