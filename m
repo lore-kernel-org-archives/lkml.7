@@ -2,445 +2,160 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D99FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F0CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0692A20652
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F85420652
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:31:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pw4cF24v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfCHV2O (ORCPT
+        id S1726578AbfCHVbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:28:14 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51945 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfCHV2O (ORCPT
+        Fri, 8 Mar 2019 16:31:48 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45172 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfCHVbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:28:14 -0500
-Received: from mail-wr1-f69.google.com ([209.85.221.69])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1h2N2H-0001SU-5F
-        for linux-kernel@vger.kernel.org; Fri, 08 Mar 2019 21:28:09 +0000
-Received: by mail-wr1-f69.google.com with SMTP id a5so10763903wrq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 13:28:09 -0800 (PST)
+        Fri, 8 Mar 2019 16:31:48 -0500
+Received: by mail-ed1-f65.google.com with SMTP id f19so17495152eds.12;
+        Fri, 08 Mar 2019 13:31:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RwsqCdHvR3rbiOCETjcmDCfMp3jBGc/+lyHTDiVUUJ8=;
+        b=pw4cF24vO/hqrKcjVG8Z+vpxkpf62pd1fhKKUpDrQTUe1BK+7rxcA9hmKfaDIirDze
+         wnJSuDdzlqu5UBI+Lq8BnHljzC1LfKFtIvgDLSeJadN+pDbgIaCXpKYFU5m5lHsRg97+
+         9BYrh4NsoXCAHSUwmV2XVgv8STegPQwv1ZXTX56MREdsiholGTYB2DtwW/Ha+SLHe/NW
+         4o9IwyFhgSWmzM/0BE6NW9LVGNVfq32YqYppGpoint/lRH46uc2SWBDSjBwZ20m7KP4b
+         OcuCWpJoagt5B4B2NiaA/3WbuHf/U+kfP/g0hvBt9x2jqyGlEERww0TpVlxwc1uWQnsB
+         ex8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=JaqPMjNUg8YGoZrvXWIJxyaScX79kLBvByC21D5oQZA=;
-        b=Qpro2E+iK29yXRoXr6guGDEnoaRsPy6nEJZf82f+dj/E3SEeK5NJLBWJ0TVUpDJ7qf
-         MagBhr5WdzjMGf3Ki+65/D4A0bttp118vHUdUbd0EWanNIATzHLq2Pt8sPSenGzNKoEH
-         i/uWCqVkffDEG8/btmYoOj7bn6SL4iliDxJ4+6GODZ/GpGsOo30G6yJEBdG3roUyZgLy
-         MA4AEZHnoBEYsXgFzPrs7yS1zh2vO5gPvS2Nz58ZIZcVGxmRMMvPsXcozYx80pd3JQm/
-         gTT60fb9Ofig20bqsKLENsJosdPwEBKiiAdvG2eMDtUSlEjxMJce44tVl/OqFb7BXygS
-         ZoQA==
-X-Gm-Message-State: APjAAAXCIuJ/Aw3tF4UhyRBajgjZ0bFwUWNOBNnc1IbXdCkjOxH2iQox
-        ceNt665LyxxebNV6jKg9beS6ifNPCf0DqSc3s+Yhck1RQ70J+MF5M7BtxAoo2+gjlMkzhsfwtGW
-        ATM5Jv8ExSwwjv1pKNKVDowBR93KnbOtL12F+bH3XTg==
-X-Received: by 2002:adf:f744:: with SMTP id z4mr4414411wrp.66.1552080488695;
-        Fri, 08 Mar 2019 13:28:08 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx18c9EP9BRDvqLHtJH9vgVY0UctVy04X6I/Injc/9wNRluHINnyGSDysWWYJeLFwQWhzYdtQ==
-X-Received: by 2002:adf:f744:: with SMTP id z4mr4414388wrp.66.1552080488308;
-        Fri, 08 Mar 2019 13:28:08 -0800 (PST)
-Received: from localhost (host157-124-dynamic.27-79-r.retail.telecomitalia.it. [79.27.124.157])
-        by smtp.gmail.com with ESMTPSA id g3sm5072472wmk.32.2019.03.08.13.28.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 08 Mar 2019 13:28:07 -0800 (PST)
-Date:   Fri, 8 Mar 2019 22:28:06 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Josef Bacik <josef@toxicpanda.com>, Tejun Heo <tj@kernel.org>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] blkcg: prevent priority inversion problem during sync()
-Message-ID: <20190308212806.GA1172@xps-13>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RwsqCdHvR3rbiOCETjcmDCfMp3jBGc/+lyHTDiVUUJ8=;
+        b=MKujTHSDMbbtER3O4CHJN8hrnKnqzPt+947n20UhZmlRcbHcU1ylpdDJ2h1NnzjwiB
+         8Yr7jMd4Qy0hUi4jG9YR9+ghTPs017/smdijaLYAKQi+JTLaKmmc26dH8+A5CGEZx+ZV
+         VHREmGr6dt4F8vX02VRQf6tdx7QVQwOg1mxXj5rtN2Wa+YHc6gOqnOEAwYm5E0XMK6nF
+         0nysYk9P8ZVnIQxCUy/7RuyXdiucAmLb3Rqv6/LSeLxdHWJR9PiZdLydyFmDEjnOL4mf
+         iHa5f6RK+/IcY94ockhRi291wJjVtuULEXgASPFUdqxGTkrbMwztL0Q1Nj5LJQovtDZG
+         Q9Rw==
+X-Gm-Message-State: APjAAAWXJEL4XsY0zWZAuWdnCzvIA7N8LE1roXzaVt+mLidmo4NXn+IF
+        XNm9azUo0SZwBLrM7YgdSPo=
+X-Google-Smtp-Source: APXvYqyfcZ+P/67O+FDFj5UvG7yQYcnigWBpQ21woVLlkX0cVDF3ENSOVbI+0eVvTjFojrFSnDl63w==
+X-Received: by 2002:a50:b3cd:: with SMTP id t13mr34053028edd.150.1552080706151;
+        Fri, 08 Mar 2019 13:31:46 -0800 (PST)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id v1sm1609810eja.7.2019.03.08.13.31.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 08 Mar 2019 13:31:45 -0800 (PST)
+Date:   Fri, 8 Mar 2019 14:31:43 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Achim Leubner <achim_leubner@adaptec.com>,
+        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] scsi: gdth: Only call dma_free_coherent when buf is not
+ NULL in ioc_general
+Message-ID: <20190308213143.GA27509@archlinux-ryzen>
+References: <20190307231839.3330-1-natechancellor@gmail.com>
+ <CAKwvOd=PZUW1U0KiBgn8z8ReHeRX=s8xEtS7Gebf9-AXxguNNQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOd=PZUW1U0KiBgn8z8ReHeRX=s8xEtS7Gebf9-AXxguNNQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When sync(2) is executed from a high-priority cgroup, the process is
-forced to wait the completion of the entire outstanding writeback I/O,
-even the I/O that was originally generated by low-priority cgroups
-potentially.
+On Fri, Mar 08, 2019 at 01:14:25PM -0800, Nick Desaulniers wrote:
+> On Thu, Mar 7, 2019 at 3:19 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > When building with -Wsometimes-uninitialized, Clang warns:
+> >
+> > drivers/scsi/gdth.c:3662:6: warning: variable 'paddr' is used
+> > uninitialized whenever 'if' condition is false
+> > [-Wsometimes-uninitialized]
+> >
+> > Don't attempt to call dma_free_coherent when buf is NULL (meaning that
+> > we never called dma_alloc_coherent and initialized paddr), which avoids
+> > this warning.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/402
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/scsi/gdth.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/scsi/gdth.c b/drivers/scsi/gdth.c
+> > index e7f1dd4f3b66..0ca9b4393770 100644
+> > --- a/drivers/scsi/gdth.c
+> > +++ b/drivers/scsi/gdth.c
+> > @@ -3697,8 +3697,9 @@ static int ioc_general(void __user *arg, char *cmnd)
+> >
+> >         rval = 0;
+> >  out_free_buf:
+> > -       dma_free_coherent(&ha->pdev->dev, gen.data_len + gen.sense_len, buf,
+> > -                       paddr);
+> > +       if (buf)
+> > +               dma_free_coherent(&ha->pdev->dev, gen.data_len + gen.sense_len,
+> > +                                 buf, paddr);
+> >         return rval;
+> >  }
+> >
+> > --
+> > 2.21.0
+> >
+> 
+> Alternatively, paddr is a dma_addr_t defined in include/linux/types.h:
+> 
+> #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+> typedef u64 dma_addr_t;
+> #else
+> typedef u32 dma_addr_t;
+> #endif
+> 
+> Just initializing it to zero might be simpler than complicating the
+> control flow of this function further. Thoughts?
+> 
+> diff --git a/drivers/scsi/gdth.c b/drivers/scsi/gdth.c
+> index e7f1dd4f3b66..5a3f849ebf64 100644
+> --- a/drivers/scsi/gdth.c
+> +++ b/drivers/scsi/gdth.c
+> @@ -3643,7 +3643,7 @@ static int ioc_general(void __user *arg, char *cmnd)
+>         gdth_ioctl_general gen;
+>         gdth_ha_str *ha;
+>         char *buf = NULL;
+> -       dma_addr_t paddr;
+> +       dma_addr_t paddr = 0U;
+>         int rval;
+> 
+>         if (copy_from_user(&gen, arg, sizeof(gdth_ioctl_general)))
+> -- 
+> Thanks,
+> ~Nick Desaulniers
 
-This may cause massive latencies to random processes (even those running
-in the root cgroup) that shouldn't be I/O-throttled at all, similarly to
-a classic priority inversion problem.
+I suppose it depends on if it's okay to call dma_free_coherent without
+dma_alloc_coherent. I did a scan of the tree before sending this out
+and pretty much all sites that have error handling check that the third
+parameter is not NULL before calling it.
 
-Prevent this problem by saving a list of blkcg's that are waiting for
-writeback: every time a sync(2) is executed the current blkcg is added
-to the list.
+I should have added Christoph to this thread when I initially sent it
+out since commit 9f475ebff8e4 ("scsi: gdth: refactor ioc_general")
+introduced this. Done now.
 
-Then, when I/O is throttled, if there's a blkcg waiting for writeback
-different than the current blkcg, no throttling is applied (we can
-probably refine this logic later, i.e., a better policy could be to
-adjust the I/O rate using the blkcg with the highest speed from the list
-of waiters).
-
-See also:
-  https://lkml.org/lkml/2019/3/7/640
-
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
-Changes in v3:
- - drop sync(2) isolation patches (this will be addressed by another
-   patch, potentially operating at the fs namespace level)
- - use a per-bdi lock and a per-bdi list instead of a global lock and a
-   global list to save the list of sync(2) waiters
-
- block/blk-cgroup.c               | 130 +++++++++++++++++++++++++++++++
- block/blk-throttle.c             |  11 ++-
- fs/fs-writeback.c                |   5 ++
- fs/sync.c                        |   8 +-
- include/linux/backing-dev-defs.h |   2 +
- include/linux/blk-cgroup.h       |  25 ++++++
- mm/backing-dev.c                 |   2 +
- 7 files changed, 179 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 2bed5725aa03..b380d678cfc2 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1351,6 +1351,136 @@ struct cgroup_subsys io_cgrp_subsys = {
- };
- EXPORT_SYMBOL_GPL(io_cgrp_subsys);
- 
-+#ifdef CONFIG_CGROUP_WRITEBACK
-+struct blkcg_wb_sleeper {
-+	struct blkcg *blkcg;
-+	refcount_t refcnt;
-+	struct list_head node;
-+};
-+
-+static struct blkcg_wb_sleeper *
-+blkcg_wb_sleeper_find(struct blkcg *blkcg, struct backing_dev_info *bdi)
-+{
-+	struct blkcg_wb_sleeper *bws;
-+
-+	list_for_each_entry(bws, &bdi->cgwb_waiters, node)
-+		if (bws->blkcg == blkcg)
-+			return bws;
-+	return NULL;
-+}
-+
-+static void
-+blkcg_wb_sleeper_add(struct backing_dev_info *bdi, struct blkcg_wb_sleeper *bws)
-+{
-+	list_add(&bws->node, &bdi->cgwb_waiters);
-+}
-+
-+static void
-+blkcg_wb_sleeper_del(struct backing_dev_info *bdi, struct blkcg_wb_sleeper *bws)
-+{
-+	list_del_init(&bws->node);
-+}
-+
-+/**
-+ * blkcg_wb_waiters_on_bdi - check for writeback waiters on a block device
-+ * @blkcg: current blkcg cgroup
-+ * @bdi: block device to check
-+ *
-+ * Return true if any other blkcg different than the current one is waiting for
-+ * writeback on the target block device, false otherwise.
-+ */
-+bool blkcg_wb_waiters_on_bdi(struct blkcg *blkcg, struct backing_dev_info *bdi)
-+{
-+	struct blkcg_wb_sleeper *bws;
-+	bool ret = false;
-+
-+	if (likely(list_empty(&bdi->cgwb_waiters)))
-+		return false;
-+	spin_lock(&bdi->cgwb_waiters_lock);
-+	list_for_each_entry(bws, &bdi->cgwb_waiters, node)
-+		if (bws->blkcg != blkcg) {
-+			ret = true;
-+			break;
-+		}
-+	spin_unlock(&bdi->cgwb_waiters_lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * blkcg_start_wb_wait_on_bdi - add current blkcg to writeback waiters list
-+ * @bdi: target block device
-+ *
-+ * Add current blkcg to the list of writeback waiters on target block device.
-+ */
-+void blkcg_start_wb_wait_on_bdi(struct backing_dev_info *bdi)
-+{
-+	struct blkcg_wb_sleeper *new_bws, *bws;
-+	struct blkcg *blkcg;
-+
-+	new_bws = kzalloc(sizeof(*new_bws), GFP_KERNEL);
-+	if (unlikely(!new_bws))
-+		return;
-+
-+	rcu_read_lock();
-+	blkcg = blkcg_from_current();
-+	if (likely(blkcg)) {
-+		/* Check if blkcg is already sleeping on bdi */
-+		spin_lock_bh(&bdi->cgwb_waiters_lock);
-+		bws = blkcg_wb_sleeper_find(blkcg, bdi);
-+		if (bws) {
-+			refcount_inc(&bws->refcnt);
-+		} else {
-+			/* Add current blkcg as a new wb sleeper on bdi */
-+			css_get(&blkcg->css);
-+			new_bws->blkcg = blkcg;
-+			refcount_set(&new_bws->refcnt, 1);
-+			blkcg_wb_sleeper_add(bdi, new_bws);
-+			new_bws = NULL;
-+		}
-+		spin_unlock_bh(&bdi->cgwb_waiters_lock);
-+	}
-+	rcu_read_unlock();
-+
-+	kfree(new_bws);
-+}
-+
-+/**
-+ * blkcg_stop_wb_wait_on_bdi - remove current blkcg from writeback waiters list
-+ * @bdi: target block device
-+ *
-+ * Remove current blkcg from the list of writeback waiters on target block
-+ * device.
-+ */
-+void blkcg_stop_wb_wait_on_bdi(struct backing_dev_info *bdi)
-+{
-+	struct blkcg_wb_sleeper *bws = NULL;
-+	struct blkcg *blkcg;
-+
-+	rcu_read_lock();
-+	blkcg = blkcg_from_current();
-+	if (!blkcg) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	spin_lock_bh(&bdi->cgwb_waiters_lock);
-+	bws = blkcg_wb_sleeper_find(blkcg, bdi);
-+	if (unlikely(!bws)) {
-+		/* blkcg_start/stop_wb_wait_on_bdi() mismatch */
-+		WARN_ON(1);
-+		goto out_unlock;
-+	}
-+	if (refcount_dec_and_test(&bws->refcnt)) {
-+		blkcg_wb_sleeper_del(bdi, bws);
-+		css_put(&blkcg->css);
-+		kfree(bws);
-+	}
-+out_unlock:
-+	spin_unlock_bh(&bdi->cgwb_waiters_lock);
-+	rcu_read_unlock();
-+}
-+#endif
-+
- /**
-  * blkcg_activate_policy - activate a blkcg policy on a request_queue
-  * @q: request_queue of interest
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 1b97a73d2fb1..da817896cded 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -970,9 +970,13 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- {
- 	bool rw = bio_data_dir(bio);
- 	unsigned long bps_wait = 0, iops_wait = 0, max_wait = 0;
-+	struct throtl_data *td = tg->td;
-+	struct request_queue *q = td->queue;
-+	struct backing_dev_info *bdi = q->backing_dev_info;
-+	struct blkcg_gq *blkg = tg_to_blkg(tg);
- 
- 	/*
-- 	 * Currently whole state machine of group depends on first bio
-+	 * Currently whole state machine of group depends on first bio
- 	 * queued in the group bio list. So one should not be calling
- 	 * this function with a different bio if there are other bios
- 	 * queued.
-@@ -981,8 +985,9 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- 	       bio != throtl_peek_queued(&tg->service_queue.queued[rw]));
- 
- 	/* If tg->bps = -1, then BW is unlimited */
--	if (tg_bps_limit(tg, rw) == U64_MAX &&
--	    tg_iops_limit(tg, rw) == UINT_MAX) {
-+	if (blkcg_wb_waiters_on_bdi(blkg->blkcg, bdi) ||
-+	    (tg_bps_limit(tg, rw) == U64_MAX &&
-+	    tg_iops_limit(tg, rw) == UINT_MAX)) {
- 		if (wait)
- 			*wait = 0;
- 		return true;
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 36855c1f8daf..77c039a0ec25 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -28,6 +28,7 @@
- #include <linux/tracepoint.h>
- #include <linux/device.h>
- #include <linux/memcontrol.h>
-+#include <linux/blk-cgroup.h>
- #include "internal.h"
- 
- /*
-@@ -2446,6 +2447,8 @@ void sync_inodes_sb(struct super_block *sb)
- 		return;
- 	WARN_ON(!rwsem_is_locked(&sb->s_umount));
- 
-+	blkcg_start_wb_wait_on_bdi(bdi);
-+
- 	/* protect against inode wb switch, see inode_switch_wbs_work_fn() */
- 	bdi_down_write_wb_switch_rwsem(bdi);
- 	bdi_split_work_to_wbs(bdi, &work, false);
-@@ -2453,6 +2456,8 @@ void sync_inodes_sb(struct super_block *sb)
- 	bdi_up_write_wb_switch_rwsem(bdi);
- 
- 	wait_sb_inodes(sb);
-+
-+	blkcg_stop_wb_wait_on_bdi(bdi);
- }
- EXPORT_SYMBOL(sync_inodes_sb);
- 
-diff --git a/fs/sync.c b/fs/sync.c
-index b54e0541ad89..3958b8f98b85 100644
---- a/fs/sync.c
-+++ b/fs/sync.c
-@@ -16,6 +16,7 @@
- #include <linux/pagemap.h>
- #include <linux/quotaops.h>
- #include <linux/backing-dev.h>
-+#include <linux/blk-cgroup.h>
- #include "internal.h"
- 
- #define VALID_FLAGS (SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE| \
-@@ -76,8 +77,13 @@ static void sync_inodes_one_sb(struct super_block *sb, void *arg)
- 
- static void sync_fs_one_sb(struct super_block *sb, void *arg)
- {
--	if (!sb_rdonly(sb) && sb->s_op->sync_fs)
-+	struct backing_dev_info *bdi = sb->s_bdi;
-+
-+	if (!sb_rdonly(sb) && sb->s_op->sync_fs) {
-+		blkcg_start_wb_wait_on_bdi(bdi);
- 		sb->s_op->sync_fs(sb, *(int *)arg);
-+		blkcg_stop_wb_wait_on_bdi(bdi);
-+	}
- }
- 
- static void fdatawrite_one_bdev(struct block_device *bdev, void *arg)
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 07e02d6df5ad..095e4dd0427b 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -191,6 +191,8 @@ struct backing_dev_info {
- 	struct rb_root cgwb_congested_tree; /* their congested states */
- 	struct mutex cgwb_release_mutex;  /* protect shutdown of wb structs */
- 	struct rw_semaphore wb_switch_rwsem; /* no cgwb switch while syncing */
-+	struct list_head cgwb_waiters; /* list of all waiters for writeback */
-+	spinlock_t cgwb_waiters_lock; /* protect cgwb_waiters list */
- #else
- 	struct bdi_writeback_congested *wb_congested;
- #endif
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index 76c61318fda5..66d7b6901c77 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -56,6 +56,7 @@ struct blkcg {
- 
- 	struct list_head		all_blkcgs_node;
- #ifdef CONFIG_CGROUP_WRITEBACK
-+	struct list_head		cgwb_wait_node;
- 	struct list_head		cgwb_list;
- 	refcount_t			cgwb_refcnt;
- #endif
-@@ -252,6 +253,12 @@ static inline struct blkcg *css_to_blkcg(struct cgroup_subsys_state *css)
- 	return css ? container_of(css, struct blkcg, css) : NULL;
- }
- 
-+static inline struct blkcg *blkcg_from_current(void)
-+{
-+	WARN_ON_ONCE(!rcu_read_lock_held());
-+	return css_to_blkcg(blkcg_css());
-+}
-+
- /**
-  * __bio_blkcg - internal, inconsistent version to get blkcg
-  *
-@@ -454,6 +461,10 @@ static inline void blkcg_cgwb_put(struct blkcg *blkcg)
- 		blkcg_destroy_blkgs(blkcg);
- }
- 
-+bool blkcg_wb_waiters_on_bdi(struct blkcg *blkcg, struct backing_dev_info *bdi);
-+void blkcg_start_wb_wait_on_bdi(struct backing_dev_info *bdi);
-+void blkcg_stop_wb_wait_on_bdi(struct backing_dev_info *bdi);
-+
- #else
- 
- static inline void blkcg_cgwb_get(struct blkcg *blkcg) { }
-@@ -464,6 +475,14 @@ static inline void blkcg_cgwb_put(struct blkcg *blkcg)
- 	blkcg_destroy_blkgs(blkcg);
- }
- 
-+static inline bool
-+blkcg_wb_waiters_on_bdi(struct blkcg *blkcg, struct backing_dev_info *bdi)
-+{
-+	return false;
-+}
-+static inline void blkcg_start_wb_wait_on_bdi(struct backing_dev_info *bdi) { }
-+static inline void blkcg_stop_wb_wait_on_bdi(struct backing_dev_info *bdi) { }
-+
- #endif
- 
- /**
-@@ -772,6 +791,7 @@ static inline void blkcg_bio_issue_init(struct bio *bio)
- static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 					 struct bio *bio)
- {
-+	struct backing_dev_info *bdi = q->backing_dev_info;
- 	struct blkcg_gq *blkg;
- 	bool throtl = false;
- 
-@@ -788,6 +808,11 @@ static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 
- 	blkg = bio->bi_blkg;
- 
-+	local_bh_disable();
-+	if (blkcg_wb_waiters_on_bdi(blkg->blkcg, bdi))
-+		bio_set_flag(bio, BIO_THROTTLED);
-+	local_bh_enable();
-+
- 	throtl = blk_throtl_bio(q, blkg, bio);
- 
- 	if (!throtl) {
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 72e6d0c55cfa..8848d26e8bf6 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -686,10 +686,12 @@ static int cgwb_bdi_init(struct backing_dev_info *bdi)
- {
- 	int ret;
- 
-+	INIT_LIST_HEAD(&bdi->cgwb_waiters);
- 	INIT_RADIX_TREE(&bdi->cgwb_tree, GFP_ATOMIC);
- 	bdi->cgwb_congested_tree = RB_ROOT;
- 	mutex_init(&bdi->cgwb_release_mutex);
- 	init_rwsem(&bdi->wb_switch_rwsem);
-+	spin_lock_init(&bdi->cgwb_waiters_lock);
- 
- 	ret = wb_init(&bdi->wb, bdi, 1, GFP_KERNEL);
- 	if (!ret) {
--- 
-2.20.1
-
+Cheers,
+Nathan
