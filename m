@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02E6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C607C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A7620661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3675F2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552050567;
-	bh=+Gk/ICgiOSNOTRT5ZTnE++T/Mu47+GCuV7z+25DeWJI=;
+	s=default; t=1552050572;
+	bh=ZmNebayGu8OeGTlBsPxKKJdIGCyE+qwB8zIQN8VDEsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7IBjYqPcqnTD8/VMijPM59zgFA7Fvqww3FQ+zJghVxw0lS6n0SjTVUBwh0h57rC9
-	 iBv2mK2Z+NAVe57nDqS77lkTw0PSK2i02vsgWWWYQ58LOTcg8skx9vIWffQlbdyW8B
-	 S6SbmvyS/ePOVW4cRwW8uCPiKyyrZ8FF4yHRXU90=
+	b=KPQPd9Lx/Q8BD2tY56zYOk3zP5vsDEyZx9SyOpSwuaGr8ZtTwJx1nIzBIk9OBxAht
+	 EjuExvoqKlDWNS37ms4ZqNLNih0SPPTVmO+ra4kIJp8dQR8o0wpZNN89NRBfX6Brl6
+	 hxmcK8vN5/QWKay/9uqOKstqFM3qtEv96/C7xDj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfCHNJ0 (ORCPT
+        id S1726631AbfCHMvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:09:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:51:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726850AbfCHMwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:52:00 -0500
+        id S1726828AbfCHMvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:51:50 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E888B2133F;
-        Fri,  8 Mar 2019 12:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A5C2087C;
+        Fri,  8 Mar 2019 12:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049519;
-        bh=+Gk/ICgiOSNOTRT5ZTnE++T/Mu47+GCuV7z+25DeWJI=;
+        s=default; t=1552049509;
+        bh=ZmNebayGu8OeGTlBsPxKKJdIGCyE+qwB8zIQN8VDEsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikzQzATAQJTgKECkbSkqs1Ac8S6tiFiGtSii4BniiA4UyewSkfcBYJlnoslo06khb
-         4f8tgPFDvgE6Fm++1HFLe0450LcNy5jIj0/f8gJsMvL+oHwUixIQJtHF0JgV/7vG4B
-         qLj0DZu7oujxlUmR/9vvYyO7yHgjAAblg4Hkarmg=
+        b=1pbzHAvGBglfHj4BNwdn2kKB1WRUWn8B+Bg2Ai3QObo85O28i9QnYeORcyjGn2lpu
+         aTOo+DZ9t9CnVNBnUR4LLo5Unpjeh2OBzD0d3cFqH7wEhthAYlrU/1adpFQDXkUhji
+         eDasVdOuazzFCY9GFjktu8niN/KsALH28D3tVp0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org,
+        Kristian Evensen <kristian.evensen@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 27/46] team: Free BPF filter when unregistering netdev
-Date:   Fri,  8 Mar 2019 13:50:00 +0100
-Message-Id: <20190308124904.024012177@linuxfoundation.org>
+Subject: [PATCH 5.0 24/46] qmi_wwan: Add support for Quectel EG12/EM12
+Date:   Fri,  8 Mar 2019 13:49:57 +0100
+Message-Id: <20190308124903.829561358@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124902.257040783@linuxfoundation.org>
 References: <20190308124902.257040783@linuxfoundation.org>
@@ -66,99 +67,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Kristian Evensen <kristian.evensen@gmail.com>
 
-[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
+[ Upstream commit 822e44b45eb991c63487c5e2ce7d636411870a8d ]
 
-When team is used in loadbalance mode a BPF filter can be used to
-provide a hash which will determine the Tx port.
+Quectel EG12 (module)/EM12 (M.2 card) is a Cat. 12 LTE modem. The modem
+behaves in the same way as the EP06, so the "set DTR"-quirk must be
+applied and the diagnostic-interface check performed. Since the
+diagnostic-check now applies to more modems, I have renamed the function
+from quectel_ep06_diag_detected() to quectel_diag_detected().
 
-When the netdev is later unregistered the filter is not freed which
-results in memory leaks [1].
-
-Fix by freeing the program and the corresponding filter when
-unregistering the netdev.
-
-[1]
-unreferenced object 0xffff8881dbc47cc8 (size 16):
-  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
-  hex dump (first 16 bytes):
-    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
-  backtrace:
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-unreferenced object 0xffff8881e182a588 (size 2048):
-  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
-  hex dump (first 32 bytes):
-    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
-    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
-  backtrace:
-    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-
-Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/usb/qmi_wwan.c |   26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
---- a/drivers/net/team/team_mode_loadbalance.c
-+++ b/drivers/net/team/team_mode_loadbalance.c
-@@ -325,6 +325,20 @@ static int lb_bpf_func_set(struct team *
- 	return 0;
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -976,6 +976,13 @@ static const struct usb_device_id produc
+ 					      0xff),
+ 		.driver_info	    = (unsigned long)&qmi_wwan_info_quirk_dtr,
+ 	},
++	{	/* Quectel EG12/EM12 */
++		USB_DEVICE_AND_INTERFACE_INFO(0x2c7c, 0x0512,
++					      USB_CLASS_VENDOR_SPEC,
++					      USB_SUBCLASS_VENDOR_SPEC,
++					      0xff),
++		.driver_info	    = (unsigned long)&qmi_wwan_info_quirk_dtr,
++	},
+ 
+ 	/* 3. Combined interface devices matching on interface number */
+ 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
+@@ -1343,17 +1350,20 @@ static bool quectel_ec20_detected(struct
+ 	return false;
  }
  
-+static void lb_bpf_func_free(struct team *team)
-+{
-+	struct lb_priv *lb_priv = get_lb_priv(team);
-+	struct bpf_prog *fp;
-+
-+	if (!lb_priv->ex->orig_fprog)
-+		return;
-+
-+	__fprog_destroy(lb_priv->ex->orig_fprog);
-+	fp = rcu_dereference_protected(lb_priv->fp,
-+				       lockdep_is_held(&team->lock));
-+	bpf_prog_destroy(fp);
-+}
-+
- static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
+-static bool quectel_ep06_diag_detected(struct usb_interface *intf)
++static bool quectel_diag_detected(struct usb_interface *intf)
  {
- 	struct lb_priv *lb_priv = get_lb_priv(team);
-@@ -639,6 +653,7 @@ static void lb_exit(struct team *team)
+ 	struct usb_device *dev = interface_to_usbdev(intf);
+ 	struct usb_interface_descriptor intf_desc = intf->cur_altsetting->desc;
++	u16 id_vendor = le16_to_cpu(dev->descriptor.idVendor);
++	u16 id_product = le16_to_cpu(dev->descriptor.idProduct);
  
- 	team_options_unregister(team, lb_options,
- 				ARRAY_SIZE(lb_options));
-+	lb_bpf_func_free(team);
- 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
- 	free_percpu(lb_priv->pcpu_stats);
- 	kfree(lb_priv->ex);
+-	if (le16_to_cpu(dev->descriptor.idVendor) == 0x2c7c &&
+-	    le16_to_cpu(dev->descriptor.idProduct) == 0x0306 &&
+-	    intf_desc.bNumEndpoints == 2)
+-		return true;
++	if (id_vendor != 0x2c7c || intf_desc.bNumEndpoints != 2)
++		return false;
+ 
+-	return false;
++	if (id_product == 0x0306 || id_product == 0x0512)
++		return true;
++	else
++		return false;
+ }
+ 
+ static int qmi_wwan_probe(struct usb_interface *intf,
+@@ -1390,13 +1400,13 @@ static int qmi_wwan_probe(struct usb_int
+ 		return -ENODEV;
+ 	}
+ 
+-	/* Quectel EP06/EM06/EG06 supports dynamic interface configuration, so
++	/* Several Quectel modems supports dynamic interface configuration, so
+ 	 * we need to match on class/subclass/protocol. These values are
+ 	 * identical for the diagnostic- and QMI-interface, but bNumEndpoints is
+ 	 * different. Ignore the current interface if the number of endpoints
+ 	 * the number for the diag interface (two).
+ 	 */
+-	if (quectel_ep06_diag_detected(intf))
++	if (quectel_diag_detected(intf))
+ 		return -ENODEV;
+ 
+ 	return usbnet_probe(intf, id);
 
 
