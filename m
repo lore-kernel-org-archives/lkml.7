@@ -2,168 +2,110 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E32C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E92C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B26020855
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0E620684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:39:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k26Srl1E";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EY+geo8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCHGbR (ORCPT
+        id S1726379AbfCHGjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:31:17 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5219 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725372AbfCHGbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:31:15 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5AB2187F31ED1E99CCD1;
-        Fri,  8 Mar 2019 14:31:12 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Fri, 8 Mar 2019
- 14:31:11 +0800
-Subject: Re: [PATCH net] net: selinux: fix memory leak in
- selinux_netlbl_socket_post_create()
-To:     Paul Moore <paul@paul-moore.com>
-References: <20190307025731.49369-1-maowenan@huawei.com>
- <CAHC9VhRBFwTbkE1YbQkRfxia5XZaWBK_D4WG4nNgMgF=wKf_fw@mail.gmail.com>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, <selinux@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <a3c0277d-7314-d95a-e704-be654a162efa@huawei.com>
-Date:   Fri, 8 Mar 2019 14:31:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 8 Mar 2019 01:39:32 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:33406 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfCHGjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 01:39:31 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CE9A860397; Fri,  8 Mar 2019 06:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552027170;
+        bh=OCKRJRCa90OGruMso0QcaVfoNv7SXhszXRyOQ2z4oSw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k26Srl1EBeAf8P7onzTuRr8eRic9RnOSRzJdsJKyoFgLhBaNcDBnsCisIqYJqbQh1
+         slwH+2qI1aiKlHmKqrC296GSk85TNg5/uDfM5vMnm4qdPfmcnT7VwnQ6pmV2mk5JGY
+         9KgHIDMRlLFMjqgFAHwn3N7HUpazCqQwLnuJ78hQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id D8BBA602BA;
+        Fri,  8 Mar 2019 06:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552027169;
+        bh=OCKRJRCa90OGruMso0QcaVfoNv7SXhszXRyOQ2z4oSw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EY+geo8npCh34Xx4HEpzLeuNHMbp+K6yFJEabe6d2GXpkk/sOtkPn/qWDyxVtpP9y
+         4UNjWgqNzySWsbE51/aXJYqh+qF6+6iP/i0b12ErbNEFCVY0By5gqMzX/d3gnmt5Yi
+         g1Z6TUOr3gZ4Rie61CY3MIrjx74eLZL+1k0FlQPU=
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhRBFwTbkE1YbQkRfxia5XZaWBK_D4WG4nNgMgF=wKf_fw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Date:   Fri, 08 Mar 2019 12:09:29 +0530
+From:   c-hbandi@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Enable Bluetooth functionality for wcn3998.
+In-Reply-To: <20190307191840.GC138592@google.com>
+References: <1551961012-23898-1-git-send-email-c-hbandi@codeaurora.org>
+ <20190307191840.GC138592@google.com>
+Message-ID: <316cc8c5a45a184efc2ac4e5b65b9182@codeaurora.org>
+X-Sender: c-hbandi@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mathias,
 
-
-On 2019/3/8 4:36, Paul Moore wrote:
-> On Wed, Mar 6, 2019 at 9:44 PM Mao Wenan <maowenan@huawei.com> wrote:
->>
->> If netlbl_sock_setattr() is failed, it directly returns rc and forgets
->> to free secattr.
->>
->> BUG: memory leak
->> unreferenced object 0xffff8883c3ea4200 (size 2664):
->>   comm "syz-executor.2", pid 8813, jiffies 4297264419 (age 156.090s)
->>   hex dump (first 32 bytes):
->>     7f 00 00 01 7f 00 00 01 eb 7f ed 71 4e 24 00 00  ...........qN$..
->>     02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
->>   backtrace:
->>     [<000000004c0228da>] sk_alloc+0x3d/0xc00 net/core/sock.c:1523
->>     [<00000000535a3da2>] inet_create+0x339/0xe10 net/ipv4/af_inet.c:321
->>     [<000000009aec3cfe>] __sock_create+0x3fa/0x790 net/socket.c:1275
->>     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
->>     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
->>     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
->>     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
->>     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
->>     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->>     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>     [<00000000f737e62f>] 0xffffffffffffffff
->>
->> BUG: memory leak
->> unreferenced object 0xffff8883de23d570 (size 32):
->>   comm "syz-executor.2", pid 8813, jiffies 4297264419 (age 156.090s)
->>   hex dump (first 32 bytes):
->>     02 00 00 00 00 00 00 00 60 a9 40 ce 83 88 ff ff  ........`.@.....
->>     01 00 00 00 03 00 00 00 10 00 00 00 00 00 00 00  ................
->>   backtrace:
->>     [<0000000035ba8b75>] security_sk_alloc+0x5e/0xb0 security/security.c:1473
->>     [<00000000302cc426>] sk_prot_alloc+0x8e/0x290 net/core/sock.c:1472
->>     [<000000004c0228da>] sk_alloc+0x3d/0xc00 net/core/sock.c:1523
->>     [<00000000535a3da2>] inet_create+0x339/0xe10 net/ipv4/af_inet.c:321
->>     [<000000009aec3cfe>] __sock_create+0x3fa/0x790 net/socket.c:1275
->>     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
->>     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
->>     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
->>     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
->>     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
->>     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->>     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>     [<00000000f737e62f>] 0xffffffffffffffff
->>
->> BUG: memory leak
->> unreferenced object 0xffff8883ce40a960 (size 64):
->>   comm "syz-executor.2", pid 8813, jiffies 4297264420 (age 156.089s)
->>   hex dump (first 32 bytes):
->>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>   backtrace:
->>     [<0000000029add401>] selinux_netlbl_socket_post_create+0x68/0x130 security/selinux/netlabel.c:416
->>     [<000000005368a19c>] selinux_socket_post_create+0x31a/0x7f0 security/selinux/hooks.c:4597
->>     [<00000000bd4730e2>] security_socket_post_create+0x70/0xc0 security/security.c:1385
->>     [<00000000671052a4>] __sock_create+0x5a6/0x790 net/socket.c:1291
->>     [<000000004274b384>] sock_create net/socket.c:1315 [inline]
->>     [<000000004274b384>] __sys_socket+0xe7/0x1d0 net/socket.c:1345
->>     [<00000000b3fdc826>] __do_sys_socket net/socket.c:1354 [inline]
->>     [<00000000b3fdc826>] __se_sys_socket net/socket.c:1352 [inline]
->>     [<00000000b3fdc826>] __x64_sys_socket+0x74/0xb0 net/socket.c:1352
->>     [<000000004ae3186e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->>     [<00000000bc0d2230>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>     [<00000000f737e62f>] 0xffffffffffffffff
->>
->> Fixes: 389fb800ac8b("netlabel: Label incoming TCP connections correctly in SELinux")
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  security/selinux/netlabel.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
->> index 186e727b737b..f3da05338580 100644
->> --- a/security/selinux/netlabel.c
->> +++ b/security/selinux/netlabel.c
->> @@ -426,6 +426,9 @@ int selinux_netlbl_socket_post_create(struct sock *sk, u16 family)
->>                 rc = 0;
->>                 break;
->>         }
->> +       if (rc != 0) {
->> +               netlbl_secattr_free(secattr);
->> +       }
+On 2019-03-08 00:48, Matthias Kaehlcke wrote:
+> + device tree folks
 > 
-> This is likely going to cause a problem as the
-> sock->sk_security->nlbl_secattr still has a reference to the secattr
-> pointer you are releasing here.  Assuming things are working correctly
-> elsewhere, I believe freeing secattr here will result in a double free
-> when the network stacks cleans up after the failed socket creation
-> (via the sock_release() call in the error handling code).
-Do you mean here?
-	err = security_socket_post_create(sock, family, type, protocol, kern);
-	if (err)
-		goto out_sock_release;
-        ...
-
-	out_sock_release:
-		sock_release(sock);
-		return err;
-yes, the call trace may like below:
-	sock_release->__sock_release->inet_release->tcp_close->sock_put->sk_free->__sk_free->sk_destruct->
-	__sk_destruct->sk_prot_free->security_sk_free->selinux_sk_free_security->selinux_netlbl_sk_security_free->
-	netlbl_secattr_free
-
-so, it is no need to free in selinux_netlbl_socket_post_create().
-Please correct me if this is incorrect.
-
+> On Thu, Mar 07, 2019 at 05:46:50PM +0530, Harish Bandi wrote:
+>> This patch series we add support for wcn3998 BT chip set. This new 
+>> chipset
+>> is based from the wcn3990 with minimal power numbers. So here in this 
+>> patch
+>> The major difference between wcn3990 and wcn3998 is only power 
+>> numbers. where
+>> as init process and fw download is same with wcn3990.So we are 
+>> leveraging the
+>> existing code of wcn3990 along with readiing the voltages from the dts 
+>> file.
 > 
-> It looks like you may have found this via a test tool (syzbot?), do
-> you have a reproducer you can share?
+> About how many different variants are we talking?
+[Harish]  As of now we are seeing 2 more variants based on wcn3990
 > 
-The issue has been found by syzkaller, but unfortunately it is no reproducer, it is
-only some backtrace.
+> Couldn't you just use a different compatible string for each variant
+> and specify the voltage/current limits in the hci_qca.c driver, as
+> currently done for the WCN3990? I understand that it requires touching
+> the driver for each new variant, but it might be preferable to specify
+> these static values in a single location, instead of repeating them in
+> the DT snippets of every device that uses such a controller, with the
+> possiblity of configuration errors.
+> 
+[Harish] Insight of coming chip sets based on wcn3990, for now we
+are adding new compatible in hci_qca.c driver itself with compatible
+name as QCA_WCN3998.But in future if we have more variants based on same
+chip set wcn3990. It may be good to have it in DTS.
+For now we will provide the updated patch  with new compatible and
+let's continue to discuss with DT folks for their view on these cases.
 
+> The DT folks can probably provide guidance on what is typically done
+> in cases like this.
+> 
+> Thanks
+> 
+> Matthias
