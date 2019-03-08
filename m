@@ -2,109 +2,156 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10354C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D555C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D054A20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:30:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cesnet.cz header.i=@cesnet.cz header.b="QSy/yd9P"
+	by mail.kernel.org (Postfix) with ESMTP id DC20F20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfCHMaX (ORCPT
+        id S1726442AbfCHMbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:30:23 -0500
-Received: from office2.cesnet.cz ([195.113.144.244]:52286 "EHLO
-        office2.cesnet.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHMaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:30:22 -0500
-Received: from localhost (unknown [IPv6:2001:718:1:2e:9077:1a3:d51f:f1d6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by office2.cesnet.cz (Postfix) with ESMTPSA id B9E21400052;
-        Fri,  8 Mar 2019 13:30:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cesnet.cz;
-        s=office2; t=1552048220;
-        bh=SBBa6lnP9fD+d6QoieQY26EXoZCaDtsyg2OKmlZnQ9E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=QSy/yd9P1lunywE43Y2sagg4AQnAWWs49T+a4Mnx5cwpmswBxkxlDGPECdD7c4Kri
-         J7BFFutNXlq5lz1FfN3EHxASM2SvlEAKvLnq5DFik1SADU0wwmNGMBa/RjHEUmnh3s
-         aLqT4L15ZfKmoSJ+ovwDW1gUbjULld3XP985DK24=
-From:   =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lars Poeschel <poeschel@lemonage.de>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: mcp23s08: Allocate =?iso-8859-1?Q?irq=5Fchip_dynamic?=
-Date:   Fri, 08 Mar 2019 13:30:19 +0100
+        Fri, 8 Mar 2019 07:31:10 -0500
+Received: from mga03.intel.com ([134.134.136.65]:63683 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbfCHMbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:31:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 04:31:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,455,1544515200"; 
+   d="scan'208";a="129920879"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Mar 2019 04:31:05 -0800
+Subject: Re: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
+ CMD_TIMING
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Asutosh Das <asutoshd@codeaurora.org>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Aniruddha Tvs Rao <anrao@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+ <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
+ <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
+ <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
+ <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <1fa6f529-2cb8-0108-2041-99ad9b39498f@intel.com>
+Date:   Fri, 8 Mar 2019 14:29:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Message-ID: <a79af7cc-20e7-4a52-b77f-24f40ddca23d@cesnet.cz>
-In-Reply-To: <CACRpkdYJHyj+TMOde=veQsj8m+xFf0XGEnT0DS0qgMXCSA5iOA@mail.gmail.com>
-References: <20190111162516.28197-1-poeschel@lemonage.de>
- <CACRpkdZFFu=wgHw0BqXUHiC5euGwWuYbr5bH60zDvFr+q394=w@mail.gmail.com>
- <7ce47f34-ed9f-44ac-b966-68e3bbf3b052@cesnet.cz>
- <CACRpkdYJHyj+TMOde=veQsj8m+xFf0XGEnT0DS0qgMXCSA5iOA@mail.gmail.com>
-Organization: CESNET
-User-Agent: Trojita/v0.7-377-g27bf90aa; Qt/5.11.0; xcb; Linux; Gentoo Base System release 2.4.1
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On p=C3=A1tek 8. b=C5=99ezna 2019 10:15:50 CET, Linus Walleij wrote:
-> On Tue, Mar 5, 2019 at 4:19 PM Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz> wro=
-te:
->
->> This commit should probably go to 5.0-stable and 4.20-stable as well
->
-> I doubt that this commit is fixing a regression, but who knows...
->> If I cherry-pick the following two commits to my 5.0, my board boots once
->> again:
->>=20
->> 16f4372fd7a5 pinctrl: mcp23s08: use struct_size() in devm_kzalloc()
->> 19ab5ca9b77d pinctrl: mcp23s08: Allocate irq_chip dynamic
->
-> Hm weird.
+On 7/03/19 8:16 PM, Sowjanya Komatineni wrote:
+> 
+>> On 3/6/2019 6:30 PM, Adrian Hunter wrote:
+>>> On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
+>>>> This patch adds a quirk for setting CMD_TIMING to 1 in descriptor for 
+>>>> DCMD with R1B response type to allow the command to be sent to device 
+>>>> during data activity or busy time.
+>>>>
+>>>> Tegra186 CQHCI host has bug where it selects DATA_PRESENT_SELECT to 1 
+>>>> by CQHCI controller for DCMDs with R1B response type and since DCMD 
+>>>> does not trigger any data transfer, DCMD task complete happens 
+>>>> leaving the DATA FSM of host controller in wait state for data.
+>>>>
+>>>> This effects the data transfer task issued after R1B DCMD task and no 
+>>>> interrupt is generated for the data transfer task.
+>>>>
+>>>> SW WAR for this issue is to set CMD_TIMING bit to 1 in DCMD task 
+>>>> descriptor and as DCMD task descriptor preparation is done by cqhci 
+>>>> driver, this patch adds cqequirk to handle this.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/mmc/host/cqhci.c | 5 ++++-
+>>>>   drivers/mmc/host/cqhci.h | 1 +
+>>>>   2 files changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c 
+>>>> index a8af682a9182..b34c07125f32 100644
+>>>> --- a/drivers/mmc/host/cqhci.c
+>>>> +++ b/drivers/mmc/host/cqhci.c
+>>>> @@ -521,7 +521,10 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
+>>>>   	} else {
+>>>>   		if (mrq->cmd->flags & MMC_RSP_R1B) {
+>>>>   			resp_type = 0x3;
+>>>> -			timing = 0x0;
+>>>> +			if (cq_host->quirks & CQHCI_QUIRK_CMD_TIMING_R1B_DCMD)
+>>>> +				timing = 0x1;
+>>>> +			else
+>>>> +				timing = 0x0;
+>>> I was thinking it would be nice if there was a generic way for drivers 
+>>> to make changes to descriptors before a task is started.  Currently 
+>>> there is
+>>> host->ops->write_l() which would make it possible by checking for 
+>>> host->ops->CQHCI_TDBR
+>>> register and, in this case, the DCMD tag.  We would need to export 
+>>> get_desc(), perhaps rename it cqhci_get_desc() and put it in cqhci.h 
+>>> since it is an inline function.
+>>
+>> We take spin_lock_irqsave after the descriptor is prepared and before writing to TDBR.
+>> Not sure but tomorrow this may become a limitation for drivers to make changes to descriptors if they edit descriptors in host->ops->write_l() call.
+>> Though in this case it is not required here.
+>>
+>>>
+>>> Alternatively we could add host->ops for descriptor preparation.
+>>
+>> Both ways sounds good to me.
+>> But maybe adding a host->ops for descriptor preparation is better way to go,
+>> since that will be the right interface exposed to make changes to 
+>> descriptors.
+>>
+> 
+> DCMD descriptor attributes remain same for any host and also task parameters as QBR need to be enabled with DCMD.
+> So I believe it should be ok if we just add callback to allow hosts to update command parameters of DCMD descriptor only thru cqhci_host_ops.
 
-My working theory is that this is because I have two physical chips on the=20=
+That sounds fine to me.  Maybe do that for the next version of this patchset.
 
-same SPI CS. If I am correct, it works like this between 4.20 and current=20
-gpio-next:
+> 
+> Also, don’t see any requirement for host specific Task parameter updates in Task descriptor so not sure if there is any need to provide callback for task descriptor data preparation to hosts.
+> Please confirm.
+> 
+>>>
+>>> What do people think?
+>>>
+>>>>   		} else {
+>>>>   			resp_type = 0x2;
+>>>>   			timing = 0x1;
+>>>> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+>>>> index 9e68286a07b4..f96d8565cc07 100644
+>>>> --- a/drivers/mmc/host/cqhci.h
+>>>> +++ b/drivers/mmc/host/cqhci.h
+>>>> @@ -170,6 +170,7 @@ struct cqhci_host {
+>>>>   
+>>>>   	u32 quirks;
+>>>>   #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
+>>>> +#define CQHCI_QUIRK_CMD_TIMING_R1B_DCMD	0x2
+>>>>   
+>>>>   	bool enabled;
+>>>>   	bool halted;
+>>>>
 
-- GPIO expander #1 is initialized, including the irqchip
-- GPIO expander #2 is initialized, and the irqchip initialization fails
-- an interrupt on a shared IRQ line which is common to GPIO expanders #1=20
-and #2 and one other unrelated device starts to be processed
-- GPIO expander #1 says "not mine interrupt"
-- GPIO expander #2 attempts to dereference a null pointer becase since=20
-171948ea33e14, the gpiochip->irq.irq_enable/disable are not initialized
-
->> As on "why am I hitting this while nobody else did", my board has a shared=
-
->> IRQ line which is active during bootup, perhaps that might have something
->> to do with this -- I don't know.
->
-> Sounds like the code in mcp23s08 .probe() should write to all
-> registers clearing and disabling interrupts before proceeding to
-> request interrupts or register the irqchip, else it will fire immediately
-> and cause oopses.
-
-I do not think that this would help me. My IRQ line is shared with another=20=
-
-chip, so it can be physically asserted even if this particular GPIO=20
-expander doesn't generate an interrupt.
-
-I suspect that this configuration (multiple MCP23S17 on one SPI CS, and an=20=
-
-IRQ line shared with something else) is quite rare...
-
-With kind regards,
-Jan
