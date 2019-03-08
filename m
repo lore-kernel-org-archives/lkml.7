@@ -2,88 +2,87 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44760C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236AB20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XngsJLtp"
+	by mail.kernel.org (Postfix) with ESMTP id 0B98B20855
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 20:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552078684;
+	bh=kAJSTBqZ526vDFCJLf/MIgvu4F3feFgc0QoXSw3HS58=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=tQbUh20KCNScCED78VwiA8TaibjCoBDeJXRmDmQEUKZQkuas1EfEIiSuB3sMU0eJ+
+	 /fAKz3eVmLXnPgiUMwwGYYKvsKHVKlinslqE0kWkHE3vQfccNV6nRnz/vowmQuc7N8
+	 30B84kKqlNwpUehWtrm71d8QaJgWL7aBVuM48TxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfCHU4t (ORCPT
+        id S1727136AbfCHU6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 15:56:49 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:37196 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbfCHU4t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 15:56:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=pRS49PyQ6iProwSA1EgHrfH201whlfaQihWkrf2O/dw=; b=XngsJLtpgBHMfgXROo9pWaU/sp
-        5yrSifEb3GEmFsk2Agq9LEBL6LLbWRPukYd2Kou0tPwibUbpdAs4sOcfmXUFavNldc6TN330CQ9Bx
-        /Sl0gt/5JJEPyx5qP5zkKib/h42zp6tu/SIb0L+OnE5c8lbXAs7U6ilTOhQBx6vjsLJnLZqgZaiZE
-        /IjnfVBU3pUARCF8SnEySxtP49UkWczWpZ8+ggbxWXAoFvo6fzbScVDWcHHRtcNdGy1Cb+tFJw5mr
-        yzrdjBEliJX+mhjo2aUYUJ2c7xWKeR5kyoAed0XnXPBPLTuHszuV9PcPOxQR2EP1hkqCnV+pgu7e4
-        jdLVdwAg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2MXp-0001oL-Ci; Fri, 08 Mar 2019 20:56:41 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8E784981BBE; Fri,  8 Mar 2019 21:56:37 +0100 (CET)
-Date:   Fri, 8 Mar 2019 21:56:37 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] x86/percpu semantics and fixes
-Message-ID: <20190308205637.GC2482@worktop.programming.kicks-ass.net>
-References: <20190227101252.413192716@infradead.org>
- <20190308145031.GY32494@hirez.programming.kicks-ass.net>
- <64526663-1F10-42A6-A005-92657264D587@vmware.com>
+        Fri, 8 Mar 2019 15:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbfCHU6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 15:58:02 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AB4120851;
+        Fri,  8 Mar 2019 20:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552078681;
+        bh=kAJSTBqZ526vDFCJLf/MIgvu4F3feFgc0QoXSw3HS58=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=at7JzOhM9B6fcPc3WhKNq7Oi6VPq8K2dHNosCSpnLF5f5rDmJUtEvcAtzFLDq3qKc
+         KqTwknONcLx2lNxYSO2CpMJ9CdBW+gCOtNG6QJNKhnDrcc2Tl7dyFKBSLmAanXjbZG
+         MnG2gcK38JQf1dn0zyp0/1fE95KyNzigY3BzJpMk=
+Subject: Re: [PATCH 4.20 00/76] 4.20.15-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190308124914.789210760@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ff75d111-cc66-bd6c-1618-f72e6d3ce23b@kernel.org>
+Date:   Fri, 8 Mar 2019 13:57:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <64526663-1F10-42A6-A005-92657264D587@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 07:35:17PM +0000, Nadav Amit wrote:
+On 3/8/19 5:49 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.20.15 release.
+> There are 76 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun Mar 10 12:48:49 UTC 2019.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.20.15-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.20.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-> Nice script! I keep asking myself how comparing two binaries can provide
-> some “number” to indicate how “good” the binary is (at least relatively to
-> another one) - either during compilation or after. Code size, as you show,
-> is the wrong metric.
+Compiled and booted on my test system. No dmesg regressions.
 
-Right; I'm still pondering other metrics, like:
+thanks,
+-- Shuah
 
-  readelf -WS | grep AX | grep -v -e init -e exit -e altinstr -e unlikely -e fixup
-
-which is only 'fast' path text.
-
-> Anyhow, I am a little disappointed (and surprised) that in most cases that I
-> played with, this kind of optimizations have marginal impact on performance
-> at best, even when the binary changes “a lot” and when microbenchmarks are
-> used.
-
-Right, but if we don't care, it'll be death by 1000 cuts.
-
-Anyway, can anybody explain percpu_stable_op() vs percpu_from_op() ?
-
-I'm thinking of a variant of Linus' patch, but I'm confused about the
-above.
