@@ -2,92 +2,149 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AC6C10F09
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DCFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70C52081B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894A420851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfCHQ2h (ORCPT
+        id S1726419AbfCHQfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:28:37 -0500
-Received: from mga09.intel.com ([134.134.136.24]:8476 "EHLO mga09.intel.com"
+        Fri, 8 Mar 2019 11:35:19 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:49970 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfCHQ2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:28:37 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 08:28:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,456,1544515200"; 
-   d="scan'208";a="153281553"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Mar 2019 08:28:35 -0800
-Date:   Fri, 8 Mar 2019 08:28:35 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
-        wei.w.wang@intel.com, weijiang.yang@inte.com
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190308162835.GB2528@linux.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
- <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
- <20190301145819.GC22584@linux.intel.com>
- <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
- <20190304184307.GC17120@linux.intel.com>
- <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
- <20190305031202.GI17120@linux.intel.com>
- <20190304123655.GB4185@local-michael-cet-test.sh.intel.com>
+        id S1726249AbfCHQfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 11:35:18 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EF6CBDFA;
+        Fri,  8 Mar 2019 16:35:18 +0000 (UTC)
+Received: from [10.36.112.16] (ovpn-112-16.ams2.redhat.com [10.36.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E676660857;
+        Fri,  8 Mar 2019 16:35:08 +0000 (UTC)
+Subject: Re: [PATCH v2 1/7] KVM:VMX: Define CET VMCS fields and bits
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, rkrcmar@redhat.com,
+        jmattson@google.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, mst@redhat.com, yu-cheng.yu@intel.com,
+        yi.z.zhang@intel.com, hjl.tools@gmail.com,
+        Zhang Yi Z <yi.z.zhang@linux.intel.com>
+References: <20190122205909.24165-1-weijiang.yang@intel.com>
+ <20190122205909.24165-2-weijiang.yang@intel.com>
+ <5a31eef0-2b6c-bdc2-c54b-5dc4cecf084d@redhat.com>
+ <20190128103345.GA29895@local-michael-cet-test.sh.intel.com>
+ <4d9a5393-163b-f32a-4657-cec54093ee88@redhat.com>
+ <20190304185621.GG17120@linux.intel.com>
+ <b519607c-a9d2-5b41-07dd-c8ca9ab53d3f@redhat.com>
+ <20190308155046.GA2528@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <02328ef3-0b3b-5c7f-df23-39faa621cdeb@redhat.com>
+Date:   Fri, 8 Mar 2019 17:34:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304123655.GB4185@local-michael-cet-test.sh.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190308155046.GA2528@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 08 Mar 2019 16:35:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 08:36:55PM +0800, Yang Weijiang wrote:
-> On Mon, Mar 04, 2019 at 07:12:02PM -0800, Sean Christopherson wrote:
-> > On Mon, Mar 04, 2019 at 05:56:40PM +0800, Yang Weijiang wrote:
-> > > Cannot agree with you more!
-> > > This is some design limitation, but from my point of view, once vmm
-> > > exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
-> > > which features to be enabled, we don't need to add extra constraints on
-> > > the usage.
-> > 
-> > But if KVM allows SHSTK and IBT to be toggled independently then the VMM
-> > has only exposed SHSTK or IBT, not CET as whole.
-> > 
-> > Even if SHSTK and IBT are bundled together the guest still has to opt-in
-> > to enabling each feature.  I don't see what we gain by pretending that
-> > SHSTK/IBT can be individually exposed to the guest, and on the flip side
-> > doing so creates a virtualization hole.
-> you almost convinced me ;-), maybe I'll make the feature as a bundle in
-> next release after check with kernel team. BTW, what do you mean by
-> saying "create a virtualization hole"? Is it what you stated in above
-> reply?
+On 08/03/19 16:50, Sean Christopherson wrote:
+> On Fri, Mar 08, 2019 at 10:15:15AM +0100, Paolo Bonzini wrote:
+>> On 04/03/19 19:56, Sean Christopherson wrote:
+>>> On Tue, Jan 29, 2019 at 04:19:34PM +0100, Paolo Bonzini wrote:
+>>>> On 28/01/19 11:33, Yang Weijiang wrote:
+>>>>>> There is no code in this series to pass these fields to and from
+>>>>>> userspace, and also to save/restore U_CET, INT_SSP_TAB, PL0_SSP and
+>>>>>> PL3_SSP across context switches.
+>>>>>>
+>>>>> The kernel consumes these MSRs, please see kernel CET patch:
+>>>>> https://lkml.org/lkml/fancy/2018/11/20/225
+>>>>
+>>>> Still, even if the kernel saves these fields across context switch in
+>>>> XSAVE areas, KVM must support accesses to the MSRs from userspace, for
+>>>> example in order to perform live migration.
+>>>>
+>>>> For example, when reading/writing these in kvm_set_msr or
+>>>> kvm_get_msr_common, you would have to do a read/write from the host
+>>>> MSRs.  You also have to put kvm_load_guest_fpu/kvm_put_guest_fpu calls
+>>>> in __msr_io.
+>>>
+>>> Paolo, can you elaborate on why KVM would read the host MSRs?  Wouldn't
+>>> kvm_{get,set}_msr() pull the values from the VMCS when necessary?
+>>
+>> Not all MSRs are in the VMCS; IA32_U_CET and IA32_PL*_SSP are not.
+> 
+> Ah, "host MSRs" confused me.  I though you meant the host's version of
+> the MSRs, but you're saying do an XRSTORS to load the guest's FPU state
+> and then {RD,WR}MSR to pull the guest's value from hardware.
 
-By "virtualization hole" I mean the guest would be able to use a feature
-that the virtual CPU model says isn't supported.
+Yes, that's what Weijang's patches are already doing in the next version.
 
-After rereading the XSS architecture, there's a marginally less crappy
-option for handling XRSTOR as we could use the XSS_EXIT_BITMAP to
-intercept XRSTOR if SHSTK != IBT and the guest is restoring CET state,
-e.g. to ensure the guest isn't setting IA32_PL*_SSP if !SHSTK and isn't
-setting bits that are effectively reserved in IA32_U_CET.
+Paolo
 
-But practically speaking that'd be the same as intercepting XRSTORS
-unconditionally when the guest is using CET, i.e. it's still going to
-tank the performance of a guest that uses CET+XSAVES/XRSTORS.
