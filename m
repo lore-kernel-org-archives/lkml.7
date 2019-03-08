@@ -2,130 +2,226 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAADC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD80C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5514E20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:03:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c//MCzmW"
+	by mail.kernel.org (Postfix) with ESMTP id 656B120675
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbfCHDDq (ORCPT
+        id S1726441AbfCHDGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:03:46 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34685 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfCHDDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:03:46 -0500
-Received: by mail-lj1-f194.google.com with SMTP id l5so16171737lje.1
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 19:03:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XOdoGoPqsBrpNR+sr6f/M0KLXQUMtWTZm9TpBp/xnVE=;
-        b=c//MCzmWZjEMLa/ETbqKv4K5xOSGukyK1EuO0WPQRdOpZ19Elf6Dl1xbq1RjyPgOOs
-         KQFkVDGyamEx4nam/ZOSAzD9ebRTOBLrrIvLwzXLq0nloCneuCoAsljmbHQMOE6jKACV
-         rLEhjEFKbflhXSgqCCtcXv2/2ovenW69yG83AThl+FlrGfgw5DPab6dqmPe/qTz+2ncV
-         S/TuawnXt+S5i+N2A72lQL7I9hDy2E8ZVAnixb7jNGSJWKmvkzrdtxDPdgUPtcd4uL6Y
-         u6e4YJARy6xWa5MpFaJ5KMlyBT8tspQ6mZqv8WQXkJq0MyT4Oh+ATJR3MEislHBB3+j8
-         9u3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XOdoGoPqsBrpNR+sr6f/M0KLXQUMtWTZm9TpBp/xnVE=;
-        b=Er2But+xqbUPgrfQXTu6bz8YavbtcUbOmeknu28TJavILPpbsguD+ABCA1VYi7Jx0y
-         WLNUHo5gZjLXpd+8BZS7wt8z/lIEHo51d1GGSG0RtnAS+mPxCnKdhypQXuOwUmCqOLl8
-         r3OrFhwugTIZoEIpIYXQ0Dmbe7qsml+cLZ2dlloTGISP74L7CiFcUQOdP1NWV1dm6pUH
-         UNbcfF8rT1r7g3JHs6np5EsM1i3RO7xSLHDvXCQpat0NmbIxn9N23eYUFT9voe95Mhz1
-         zy4vFjvrZgNNLnV01j6oiWex8t7HTWKOPcHLlK0yDS5eGEpCO1rl/Xx3l/eb5f7xZgRY
-         vx6A==
-X-Gm-Message-State: APjAAAU3UiUq3wAFyj5WSMynpKT5jXnD28yj42JjreQJKcyodabqnPLZ
-        J9qyHSk9jDPEanHbGv19gV9NKiTTpcza9G99k/4=
-X-Google-Smtp-Source: APXvYqycao6IfUCpZdvTe04mJcr2kYiysV/ShktNMCsh8kRWFdG5H0a6c7txy6GZcZBkV093G0x1VyJK6H9MxlP5dVs=
-X-Received: by 2002:a2e:8886:: with SMTP id k6mr8258223lji.43.1552014223831;
- Thu, 07 Mar 2019 19:03:43 -0800 (PST)
-MIME-Version: 1.0
-References: <1fa6fadf644859e8a6a8ecce258444b49be8c7ee.1551716733.git.andreyknvl@google.com>
- <67536e1d-2819-553d-521c-bae21a51e0f7@virtuozzo.com>
-In-Reply-To: <67536e1d-2819-553d-521c-bae21a51e0f7@virtuozzo.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Fri, 8 Mar 2019 08:33:31 +0530
-Message-ID: <CAFqt6zY387LVbo3sxBvDDvKMb+41KcLcmN-W+ncPJbrUm5STaw@mail.gmail.com>
-Subject: Re: [PATCH] kasan: fix coccinelle warnings in kasan_p*_table
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        Thu, 7 Mar 2019 22:06:23 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33368 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfCHDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Mar 2019 22:06:23 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B65F11E317;
+        Fri,  8 Mar 2019 03:06:22 +0000 (UTC)
+Received: from kasong-laptop-rh.nay.redhat.com (unknown [10.66.128.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C2D21001E66;
+        Fri,  8 Mar 2019 03:06:16 +0000 (UTC)
+From:   Kairui Song <kasong@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Kostya Serebryany <kcc@google.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Omar Sandoval <osandov@fb.com>, Jiri Bohac <jbohac@suse.cz>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: [PATCH v5] x86/gart/kcore: Exclude GART aperture from kcore
+Date:   Fri,  8 Mar 2019 11:05:08 +0800
+Message-Id: <20190308030508.13548-1-kasong@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 08 Mar 2019 03:06:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 9:43 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
->
->
->
-> On 3/4/19 8:04 PM, Andrey Konovalov wrote:
-> > kasan_p4d_table, kasan_pmd_table and kasan_pud_table are declared as
-> > returning bool, but return 0 instead of false, which produces a coccinelle
-> > warning. Fix it.
-> >
-> > Fixes: 0207df4fa1a8 ("kernel/memremap, kasan: make ZONE_DEVICE with work with KASAN")
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
->
-> Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
->
->
-> >  mm/kasan/init.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-> > index 45a1b5e38e1e..fcaa1ca03175 100644
-> > --- a/mm/kasan/init.c
-> > +++ b/mm/kasan/init.c
-> > @@ -42,7 +42,7 @@ static inline bool kasan_p4d_table(pgd_t pgd)
-> >  #else
-> >  static inline bool kasan_p4d_table(pgd_t pgd)
-> >  {
-> > -     return 0;
-> > +     return false;
-> >  }
-> >  #endif
-> >  #if CONFIG_PGTABLE_LEVELS > 3
-> > @@ -54,7 +54,7 @@ static inline bool kasan_pud_table(p4d_t p4d)
-> >  #else
-> >  static inline bool kasan_pud_table(p4d_t p4d)
-> >  {
-> > -     return 0;
-> > +     return false;
-> >  }
-> >  #endif
-> >  #if CONFIG_PGTABLE_LEVELS > 2
-> > @@ -66,7 +66,7 @@ static inline bool kasan_pmd_table(pud_t pud)
-> >  #else
-> >  static inline bool kasan_pmd_table(pud_t pud)
-> >  {
-> > -     return 0;
-> > +     return false;
-> >  }
-> >  #endif
-> >  pte_t kasan_early_shadow_pte[PTRS_PER_PTE] __page_aligned_bss;
-> >
->
+On machines where the GART aperture is mapped over physical RAM,
+/proc/kcore contains the GART aperture range and reading it may lead
+to kernel panic.
 
-Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+Vmcore used to have the same issue, until we fixed it in
+commit 2a3e83c6f96c ("x86/gart: Exclude GART aperture from vmcore")',
+leveraging existing hook infrastructure in vmcore to let /proc/vmcore
+return zeroes when attempting to read the aperture region, and so it
+won't read from the actual memory.
+
+We apply the same workaround for kcore. First implement the same hook
+infrastructure for kcore, then reuse the hook functions introduced in
+previous vmcore fix. Just with some minor adjustment, rename some
+functions for more general usage, and simplify the hook infrastructure
+a bit as there is no module usage yet.
+
+Suggested-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+
+---
+
+Update from V4:
+- Remove the unregistering funtion and move functions never used after
+  init to .init
+
+Update from V3:
+- Reuse the approach in V2, as Jiri noticed V3 approach may fail
+  some use case. It introduce overlapped region in kcore, and can't
+  garenteen the read request will fall into the region we wanted.
+- Improve some function naming suggested by Baoquan in V2.
+- Simplify the hook registering and checking, we are not exporting the
+  hook register function for now, no need to make it that complex.
+
+Update from V2:
+Instead of repeating the same hook infrastructure for kcore, introduce
+a new kcore area type to avoid reading from, and let kcore always bypass
+this kind of area.
+
+Update from V1:
+Fix a complie error when CONFIG_PROC_KCORE is not set
+
+ arch/x86/kernel/aperture_64.c | 20 +++++++++++++-------
+ fs/proc/kcore.c               | 27 +++++++++++++++++++++++++++
+ include/linux/kcore.h         |  2 ++
+ 3 files changed, 42 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
+index 58176b56354e..294ed4392a0e 100644
+--- a/arch/x86/kernel/aperture_64.c
++++ b/arch/x86/kernel/aperture_64.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) "AGP: " fmt
+ 
+ #include <linux/kernel.h>
++#include <linux/kcore.h>
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/memblock.h>
+@@ -57,7 +58,7 @@ int fallback_aper_force __initdata;
+ 
+ int fix_aperture __initdata = 1;
+ 
+-#ifdef CONFIG_PROC_VMCORE
++#if defined(CONFIG_PROC_VMCORE) || defined(CONFIG_PROC_KCORE)
+ /*
+  * If the first kernel maps the aperture over e820 RAM, the kdump kernel will
+  * use the same range because it will remain configured in the northbridge.
+@@ -66,20 +67,25 @@ int fix_aperture __initdata = 1;
+  */
+ static unsigned long aperture_pfn_start, aperture_page_count;
+ 
+-static int gart_oldmem_pfn_is_ram(unsigned long pfn)
++static int gart_mem_pfn_is_ram(unsigned long pfn)
+ {
+ 	return likely((pfn < aperture_pfn_start) ||
+ 		      (pfn >= aperture_pfn_start + aperture_page_count));
+ }
+ 
+-static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++static void __init exclude_from_core(u64 aper_base, u32 aper_order)
+ {
+ 	aperture_pfn_start = aper_base >> PAGE_SHIFT;
+ 	aperture_page_count = (32 * 1024 * 1024) << aper_order >> PAGE_SHIFT;
+-	WARN_ON(register_oldmem_pfn_is_ram(&gart_oldmem_pfn_is_ram));
++#ifdef CONFIG_PROC_VMCORE
++	WARN_ON(register_oldmem_pfn_is_ram(&gart_mem_pfn_is_ram));
++#endif
++#ifdef CONFIG_PROC_KCORE
++	WARN_ON(register_mem_pfn_is_ram(&gart_mem_pfn_is_ram));
++#endif
+ }
+ #else
+-static void exclude_from_vmcore(u64 aper_base, u32 aper_order)
++static void exclude_from_core(u64 aper_base, u32 aper_order)
+ {
+ }
+ #endif
+@@ -474,7 +480,7 @@ int __init gart_iommu_hole_init(void)
+ 			 * may have allocated the range over its e820 RAM
+ 			 * and fixed up the northbridge
+ 			 */
+-			exclude_from_vmcore(last_aper_base, last_aper_order);
++			exclude_from_core(last_aper_base, last_aper_order);
+ 
+ 			return 1;
+ 		}
+@@ -520,7 +526,7 @@ int __init gart_iommu_hole_init(void)
+ 	 * overlap with the first kernel's memory. We can't access the
+ 	 * range through vmcore even though it should be part of the dump.
+ 	 */
+-	exclude_from_vmcore(aper_alloc, aper_order);
++	exclude_from_core(aper_alloc, aper_order);
+ 
+ 	/* Fix up the north bridges */
+ 	for (i = 0; i < amd_nb_bus_dev_ranges[i].dev_limit; i++) {
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index bbcc185062bb..d29d869abec1 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -54,6 +54,28 @@ static LIST_HEAD(kclist_head);
+ static DECLARE_RWSEM(kclist_lock);
+ static int kcore_need_update = 1;
+ 
++/*
++ * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
++ * Same as oldmem_pfn_is_ram in vmcore
++ */
++static int (*mem_pfn_is_ram)(unsigned long pfn);
++
++int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn))
++{
++	if (mem_pfn_is_ram)
++		return -EBUSY;
++	mem_pfn_is_ram = fn;
++	return 0;
++}
++
++static int pfn_is_ram(unsigned long pfn)
++{
++	if (mem_pfn_is_ram)
++		return mem_pfn_is_ram(pfn);
++	else
++		return 1;
++}
++
+ /* This doesn't grab kclist_lock, so it should only be used at init time. */
+ void __init kclist_add(struct kcore_list *new, void *addr, size_t size,
+ 		       int type)
+@@ -465,6 +487,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 				goto out;
+ 			}
+ 			m = NULL;	/* skip the list anchor */
++		} else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
++			if (clear_user(buffer, tsz)) {
++				ret = -EFAULT;
++				goto out;
++			}
+ 		} else if (m->type == KCORE_VMALLOC) {
+ 			vread(buf, (char *)start, tsz);
+ 			/* we have to zero-fill user buffer even if no read */
+diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+index 8c3f8c14eeaa..c843f4a9c512 100644
+--- a/include/linux/kcore.h
++++ b/include/linux/kcore.h
+@@ -44,6 +44,8 @@ void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
+ 	m->vaddr = (unsigned long)vaddr;
+ 	kclist_add(m, addr, sz, KCORE_REMAP);
+ }
++
++extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
+ #else
+ static inline
+ void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
+-- 
+2.20.1
+
