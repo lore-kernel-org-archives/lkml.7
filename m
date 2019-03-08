@@ -3,147 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C68C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7F9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A42208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77235208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 15:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfCHPdn (ORCPT
+        id S1726599AbfCHPfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 10:33:43 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60454 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726297AbfCHPdn (ORCPT
+        Fri, 8 Mar 2019 10:35:09 -0500
+Received: from mx1.hrz.uni-dortmund.de ([129.217.128.51]:49908 "EHLO
+        unimail.uni-dortmund.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfCHPfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 10:33:43 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28FTC7W092001
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 10:33:42 -0500
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r3tfjacw6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:33:41 -0500
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Fri, 8 Mar 2019 15:33:41 -0000
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Mar 2019 15:33:38 -0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x28FXb4025100504
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Mar 2019 15:33:37 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87FAFC6057;
-        Fri,  8 Mar 2019 15:33:37 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 38402C6059;
-        Fri,  8 Mar 2019 15:33:37 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.102.1.126])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri,  8 Mar 2019 15:33:37 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 560D92E2D49; Fri,  8 Mar 2019 21:03:34 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Pavithra R. Prakash" <pavrampu@in.ibm.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH] pseries/energy: Use OF accessor functions to read ibm,drc-indexes
-Date:   Fri,  8 Mar 2019 21:03:24 +0530
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 19030815-0036-0000-0000-00000A95EEC4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010727; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01171437; UDB=6.00612311; IPR=6.00952080;
- MB=3.00025893; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-08 15:33:40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030815-0037-0000-0000-00004AF751AD
-Message-Id: <1552059204-18626-1-git-send-email-ego@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903080108
+        Fri, 8 Mar 2019 10:35:08 -0500
+Received: from ios.cs.uni-dortmund.de (ios.cs.uni-dortmund.de [129.217.43.100])
+        (authenticated bits=0)
+        by unimail.uni-dortmund.de (8.16.0.29/8.16.0.41) with ESMTPSA id x28F4lga021937
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 8 Mar 2019 16:05:03 +0100 (CET)
+From:   Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
+        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
+Subject: [PATCH 1/1] Updated locking documentation for struct inode
+Date:   Fri,  8 Mar 2019 16:04:47 +0100
+Message-Id: <20190308150447.96311-1-alexander.lochmann@tu-dortmund.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+We used LockDoc to derive locking rules for each member
+of struct inode.
+Based on those results, we extended the existing documentation
+by more members of struct inode, and updated the existing
+documentation.
 
-In cpu_to_drc_index() in the case when FW_FEATURE_DRC_INFO is absent,
-we currently use of_read_property() to obtain the pointer to the array
-corresponding to the property "ibm,drc-indexes". The elements of this
-array are of type __be32, but are accessed without any conversion to
-the OS-endianness, which is buggy on a Little Endian OS.
-
-Fix this by using of_property_read_u32_index() accessor function to
-safely read the elements of the array.
-
-Fixes: commit e83636ac3334 ("pseries/drc-info: Search DRC properties for CPU indexes")
-Cc: <stable@vger.kernel.org> #v4.16+
-Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
 ---
- arch/powerpc/platforms/pseries/pseries_energy.c | 27 ++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ fs/inode.c         | 49 ++++++++++++++++++++++++++++++++++++----------
+ include/linux/fs.h |  2 +-
+ 2 files changed, 40 insertions(+), 11 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/pseries_energy.c b/arch/powerpc/platforms/pseries/pseries_energy.c
-index 6ed2212..1c4d1ba 100644
---- a/arch/powerpc/platforms/pseries/pseries_energy.c
-+++ b/arch/powerpc/platforms/pseries/pseries_energy.c
-@@ -77,18 +77,27 @@ static u32 cpu_to_drc_index(int cpu)
+diff --git a/fs/inode.c b/fs/inode.c
+index 0cd47fe0dbe5..ade9d3aa1ada 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -24,17 +24,46 @@
  
- 		ret = drc.drc_index_start + (thread_index * drc.sequential_inc);
- 	} else {
--		const __be32 *indexes;
--
--		indexes = of_get_property(dn, "ibm,drc-indexes", NULL);
--		if (indexes == NULL)
--			goto err_of_node_put;
-+		u32 nr_drc_indexes, thread_drc_index;
- 
- 		/*
--		 * The first element indexes[0] is the number of drc_indexes
--		 * returned in the list.  Hence thread_index+1 will get the
--		 * drc_index corresponding to core number thread_index.
-+		 * The first element of ibm,drc-indexes array is the
-+		 * number of drc_indexes returned in the list.  Hence
-+		 * thread_index+1 will get the drc_index corresponding
-+		 * to core number thread_index.
- 		 */
--		ret = indexes[thread_index + 1];
-+		rc = of_property_read_u32_index(dn, "ibm,drc-indexes",
-+						0, &nr_drc_indexes);
-+		if (rc)
-+			goto err_of_node_put;
-+
-+		WARN_ON(thread_index > nr_drc_indexes);
-+		rc = of_property_read_u32_index(dn, "ibm,drc-indexes",
-+						thread_index + 1,
-+						&thread_drc_index);
-+		if (rc)
-+			goto err_of_node_put;
-+
-+		ret = thread_drc_index;
- 	}
- 
- 	rc = 0;
+ /*
+  * Inode locking rules:
++ * (Documentation improved by LockDoc)
+  *
+- * inode->i_lock protects:
+- *   inode->i_state, inode->i_hash, __iget()
+- * Inode LRU list locks protect:
+- *   inode->i_sb->s_inode_lru, inode->i_lru
+- * inode->i_sb->s_inode_list_lock protects:
+- *   inode->i_sb->s_inodes, inode->i_sb_list
+- * bdi->wb.list_lock protects:
+- *   bdi->wb.b_{dirty,io,more_io,dirty_time}, inode->i_io_list
+- * inode_hash_lock protects:
+- *   inode_hashtable, inode->i_hash
++ * No locks needed for:
++ *   i_data.a_ops, i_data.nrexceptional, i_rdev, i_data.gfp_mask,
++ *   i_generation, i_security, i_nlink, __i_nlink, i_flctx,
++ *   i_size, i_atime, i_mtime, i_data.host, i_sb
++ *
++ * backing_dev_info.wb.list_lock protects:
++ *   dirtied_when, i_io_list
++ *
++ * inode.i_rwsem protects:
++ *   i_flags, i_uid, i_gid, i_version, i_ctime, i_size_seqcount
++ *
++ * inode.i_rwsem -> rcu protects:
++ *   i_default_acl
++ *
++ * block_device.bd_mutex protects:
++ *   i_blkbits
++ *
++ * cdev_lock protects:
++ *   i_cdev, i_devices
++ *
++ * inode.i_data.i_mmap_rwsem protects:
++ *   i_data.i_mmap, i_data.i_mmap
++ *
++ * hardirq -> inode.i_data.tree_lock protects:
++ *   i_data.page_tree, i_wb_list, i_data.nrpages
++ *
++ * hardirq -> super_block.s_inode_wblist_lock protects:
++ *   i_wb_list
++ *
++ * inode.i_lock protects:
++ *   i_pipe, i_fsnotify_mask, i_fsnotify_marks, i_blocks, i_opflags,
++ *   i_state, i_bytes
++ *
++ * super_block.s_inode_list_lock protects:
++ *   i_sb_list
++ *
++ * inode_hash_lock -> inode.i_lock protects:
++ *   i_hash
+  *
+  * Lock ordering:
+  *
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 92966678539d..744e2a817ad3 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -639,7 +639,7 @@ struct inode {
+ 	struct timespec64	i_atime;
+ 	struct timespec64	i_mtime;
+ 	struct timespec64	i_ctime;
+-	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
++	spinlock_t		i_lock;
+ 	unsigned short          i_bytes;
+ 	u8			i_blkbits;
+ 	u8			i_write_hint;
 -- 
-1.9.4
+2.20.1
 
