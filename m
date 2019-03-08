@@ -2,178 +2,279 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037A2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A249C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C372320851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C085220851
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 11:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCHLxl (ORCPT
+        id S1726419AbfCHLzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 06:53:41 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:21578 "EHLO mx1.redhat.com"
+        Fri, 8 Mar 2019 06:55:55 -0500
+Received: from foss.arm.com ([217.140.101.70]:57224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfCHLxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 06:53:40 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B68D730D78C1;
-        Fri,  8 Mar 2019 11:53:39 +0000 (UTC)
-Received: from [10.36.117.67] (ovpn-117-67.ams2.redhat.com [10.36.117.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C957600C8;
-        Fri,  8 Mar 2019 11:53:27 +0000 (UTC)
-Subject: Re: [RFC][Patch v9 0/6] KVM: Guest Free Page Hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
+        id S1726042AbfCHLzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 06:55:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A63B80D;
+        Fri,  8 Mar 2019 03:55:54 -0800 (PST)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 063193F706;
+        Fri,  8 Mar 2019 03:55:51 -0800 (PST)
+Date:   Fri, 8 Mar 2019 11:55:49 +0000
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Mikael Pettersson <mikpelinux@gmail.com>,
+        Mikael Pettersson <mikpe@it.uu.se>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <CAKgT0Ud35pmmfAabYJijWo8qpucUWS8-OzBW=gsotfxZFuS9PQ@mail.gmail.com>
- <1d5e27dc-aade-1be7-2076-b7710fa513b6@redhat.com>
- <CAKgT0UdNPADF+8NMxnWuiB_+_M6_0jTt5NfoOvFN9qbPjGWNtw@mail.gmail.com>
- <2269c59c-968c-bbff-34c4-1041a2b1898a@redhat.com>
- <CAKgT0UdHkDB1vFMp7T9_pdoiuDW4qvgxhqsNztPQXrRCAmYNng@mail.gmail.com>
- <20190307134744-mutt-send-email-mst@kernel.org>
- <ebca2674-ac15-f1a9-87a4-2ee17a257e4c@redhat.com>
- <20190307212253-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <198b3382-e511-2f7d-e738-5aedcb1a09e6@redhat.com>
-Date:   Fri, 8 Mar 2019 12:53:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
+Message-ID: <20190308115546.GM3567@e103592.cambridge.arm.com>
+References: <20190307091514.2489338-1-arnd@arndb.de>
+ <20190307091514.2489338-2-arnd@arndb.de>
+ <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
+ <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk>
+ <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
+ <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk>
+ <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
+ <20190308103429.ycasmpt6tcpsoqps@shell.armlinux.org.uk>
+ <CAKv+Gu_9=G3U6Yaw8fLfTP3QT38WdwrFaC-BqLTCr2NihWA2ZA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190307212253-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 08 Mar 2019 11:53:39 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_9=G3U6Yaw8fLfTP3QT38WdwrFaC-BqLTCr2NihWA2ZA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.03.19 03:24, Michael S. Tsirkin wrote:
-> On Thu, Mar 07, 2019 at 08:27:32PM +0100, David Hildenbrand wrote:
->> On 07.03.19 19:53, Michael S. Tsirkin wrote:
->>> On Thu, Mar 07, 2019 at 10:45:58AM -0800, Alexander Duyck wrote:
->>>> To that end what I think w may want to do is instead just walk the LRU
->>>> list for a given zone/order in reverse order so that we can try to
->>>> identify the pages that are most likely to be cold and unused and
->>>> those are the first ones we want to be hinting on rather than the ones
->>>> that were just freed. If we can look at doing something like adding a
->>>> jiffies value to the page indicating when it was last freed we could
->>>> even have a good point for determining when we should stop processing
->>>> pages in a given zone/order list.
->>>>
->>>> In reality the approach wouldn't be too different from what you are
->>>> doing now, the only real difference would be that we would just want
->>>> to walk the LRU list for the given zone/order rather then pulling
->>>> hints on what to free from the calls to free_one_page. In addition we
->>>> would need to add a couple bits to indicate if the page has been
->>>> hinted on, is in the middle of getting hinted on, and something such
->>>> as the jiffies value I mentioned which we could use to determine how
->>>> old the page is.
->>>
->>> Do we really need bits in the page?
->>> Would it be bad to just have a separate hint list?
->>>
->>> If you run out of free memory you can check the hint
->>> list, if you find stuff there you can spin
->>> or kick the hypervisor to hurry up.
->>>
->>> Core mm/ changes, so nothing's easy, I know.
->>
->> We evaluated the idea of busy spinning on some bit/list entry a while
->> ago. While it sounds interesting, it is usually not what we want and has
->> other negative performance impacts.
->>
->> Talking about "marking" pages, what we actually would want is to rework
->> the buddy to skip over these "marked" pages and only really spin in case
->> there are no other pages left. Allocation paths should only ever be
->> blocked if OOM, not if just some hinting activity is going on on another
->> VCPU.
->>
->> However as you correctly say: "core mm changes". New page flag?
->> Basically impossible.
+oN fRI, Mar 08, 2019 at 11:45:21AM +0100, Ard Biesheuvel wrote:
+> On Fri, 8 Mar 2019 at 11:34, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Fri, Mar 08, 2019 at 11:08:40AM +0100, Ard Biesheuvel wrote:
+> > > On Fri, 8 Mar 2019 at 10:53, Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > >
+> > > > On Fri, Mar 08, 2019 at 09:57:45AM +0100, Ard Biesheuvel wrote:
+> > > > > On Fri, 8 Mar 2019 at 00:49, Russell King - ARM Linux admin
+> > > > > <linux@armlinux.org.uk> wrote:
+> > > > > >
+> > > > > > On Thu, Mar 07, 2019 at 11:39:08AM -0800, Nick Desaulniers wrote:
+> > > > > > > On Thu, Mar 7, 2019 at 1:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > > > >
+> > > > > > > > Passing registers containing zero as both the address (NULL pointer)
+> > > > > > > > and data into cmpxchg_futex_value_locked() leads clang to assign
+> > > > > > > > the same register for both inputs on ARM, which triggers a warning
+> > > > > > > > explaining that this instruction has unpredictable behavior on ARMv5.
+> > > > > > > >
+> > > > > > > > /tmp/futex-7e740e.s: Assembler messages:
+> > > > > > > > /tmp/futex-7e740e.s:12713: Warning: source register same as write-back base
+> > > > > > > >
+> > > > > > > > This patch was suggested by Mikael Pettersson back in 2011 (!) with gcc-4.4,
+> > > > > > > > as Mikael wrote:
+> > > > > > > >  "One way of fixing this is to make uaddr an input/output register, since
+> > > > > > > >  "that prevents it from overlapping any other input or output."
+> > > > > > > >
+> > > > > > > > but then withdrawn as the warning was determined to be harmless, and it
+> > > > > > > > apparently never showed up again with later gcc versions.
+> > > > > > > >
+> > > > > > > > Now the same problem is back when compiling with clang, and we are trying
+> > > > > > > > to get clang to build the kernel without warnings, as gcc normally does.
+> > > > > > > >
+> > > > > > > > Cc: Mikael Pettersson <mikpe@it.uu.se>
+> > > > > > > > Cc: Mikael Pettersson <mikpelinux@gmail.com>
+> > > > > > > > Cc: Dave Martin <Dave.Martin@arm.com>
+> > > > > > > > Link: https://lore.kernel.org/linux-arm-kernel/20009.45690.158286.161591@pilspetsen.it.uu.se/
+> > > > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > > > > > > ---
+> > > > > > > >  arch/arm/include/asm/futex.h | 10 +++++-----
+> > > > > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+> > > > > > > > index 0a46676b4245..79790912974e 100644
+> > > > > > > > --- a/arch/arm/include/asm/futex.h
+> > > > > > > > +++ b/arch/arm/include/asm/futex.h
+> > > > > > > > @@ -110,13 +110,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+> > > > > > > >         preempt_disable();
+> > > > > > > >         __ua_flags = uaccess_save_and_enable();
+> > > > > > > >         __asm__ __volatile__("@futex_atomic_cmpxchg_inatomic\n"
+> > > > > > > > -       "1:     " TUSER(ldr) "  %1, [%4]\n"
+> > > > > > > > -       "       teq     %1, %2\n"
+> > > > > > > > +       "1:     " TUSER(ldr) "  %1, [%2]\n"
+> > > > > > > > +       "       teq     %1, %3\n"
+> > > > > > > >         "       it      eq      @ explicit IT needed for the 2b label\n"
+> > > > > > > > -       "2:     " TUSER(streq) "        %3, [%4]\n"
+> > > > > > > > +       "2:     " TUSER(streq) "        %4, [%2]\n"
+> > > > > > > >         __futex_atomic_ex_table("%5")
+> > > > > > > > -       : "+r" (ret), "=&r" (val)
+> > > > > > > > -       : "r" (oldval), "r" (newval), "r" (uaddr), "Ir" (-EFAULT)
+> > > > > > > > +       : "+&r" (ret), "=&r" (val), "+&r" (uaddr)
+> > > > > > > > +       : "r" (oldval), "r" (newval), "Ir" (-EFAULT)
+> > > > > > > >         : "cc", "memory");
+> > > > > > > >         uaccess_restore(__ua_flags);
+> > > > > > >
+> > > > > > > Underspecification of constraints to extended inline assembly is a
+> > > > > > > common issue exposed by other compilers (and possibly but in-effect
+> > > > > > > infrequently compiler upgrades).
+> > > > > > > So the reordering of the constraints means the in the assembly (notes
+> > > > > > > for other reviewers):
+> > > > > > > %2 -> %3
+> > > > > > > %3 -> %4
+> > > > > > > %4 -> %2
+> > > > > > > Yep, looks good to me, thanks for finding this old patch and resending, Arnd!
+> > > > > >
+> > > > > > I don't see what is "underspecified" in the original constraints.
+> > > > > > Please explain.
+> > > > > >
+> > > > >
+> > > > > I agree that that statement makes little sense.
+> > > > >
+> > > > > As Russell points out in the referenced thread, there is nothing wrong
+> > > > > with the generated assembly, given that the UNPREDICTABLE opcode is
+> > > > > unreachable in practice. Unfortunately, we have no way to flag this
+> > > > > diagnostic as a known false positive, and AFAICT, there is no reason
+> > > > > we couldn't end up with the same diagnostic popping up for GCC builds
+> > > > > in the future, considering that the register assignment matches the
+> > > > > constraints. (We have seen somewhat similar issues where constant
+> > > > > folded function clones are emitted with a constant argument that could
+> > > > > never occur in reality [0])
+> > > > >
+> > > > > Given the above, the only meaningful way to invoke this function is
+> > > > > with different registers assigned to %3 and %4, and so tightening the
+> > > > > constraints to guarantee that does not actually result in worse code
+> > > > > (except maybe for the instantiations that we won't ever call in the
+> > > > > first place). So I think we should fix this.
+> > > > >
+> > > > > I wonder if just adding
+> > > > >
+> > > > > BUG_ON(__builtin_constant_p(uaddr));
+> > > > >
+> > > > > at the beginning makes any difference - this shouldn't result in any
+> > > > > object code differences since the conditional will always evaluate to
+> > > > > false at build time for instantiations we care about.
+> > > > >
+> > > > >
+> > > > > [0] https://lore.kernel.org/lkml/9c74d635-d0d1-0893-8093-ce20b0933fc7@redhat.com/
+> > > >
+> > > > What I'm actually asking is:
+> > > >
+> > > > The GCC manual says that input operands _may_ overlap output operands
+> > > > since GCC assumes that input operands are consumed before output
+> > > > operands are written.  This is an explicit statement.
+> > > >
+> > > > The GCC manual does not say that input operands may overlap with each
+> > > > other, and the behaviour of GCC thus far (apart from one version,
+> > > > presumably caused by a bug) has been that input operands are unique.
+> > > >
+> > >
+> > > Not entirely. I have run into issues where GCC assumes that registers
+> > > that are only used for input operands are left untouched by the asm
+> > > code. I.e., if you put an asm() block in a loop and modify an input
+> > > register, your code may break on the next pass, even if the input
+> > > register does not overlap with an output register.
+> >
+> > GCC has had the expectation for decades that _input_ operands are not
+> > changed in value by the code in the assembly.  This isn't quite the
+> > same thing as the uniqueness of the register allocation for input
+> > operands.
+> >
+> > > To me, that seems to suggest that whether or not inputs may overlap is
+> > > irrelevant, since they are not expected to be modified.
+> >
+> > How is:
+> >
+> >         stmfd   sp!, {r0-r3, ip, lr}
+> >         bl      foo
+> >         ldmfd   sp!, {r0-r3, ip, lr}
+> >
+> > where r1 may be an input operand (to pass an argument to foo) any
+> > different from:
+> >
+> >         ldrt    r0, [r1]
+> >
+> > as far as whether r1 is modified in both cases?  In both cases, the
+> > value of r1 is read and written by both instructions, but in both
+> > cases the value of r1 remains the same no matter what the value of r1
+> > was.
+> >
+> > The "input operands should not be modified" is entirely orthogonal to
+> > the input operand register allocation.
+> >
 > 
-> Well not exactly. page bits are at a premium but only for
-> *allocated* pages. pages in the buddy are free and there are
-> some unused bits for these.
-> 
-As I said, we have to be very careful here.
+> The question is whether it is reasonable for GCC to use the same
+> register for input operands that have the same value. From the
+> assumption that GCC makes that the asm will not modified follows
+> directly that we can use the same register for different operands.
 
-Most parts of struct page can me modified by *the owner* of the page. In
-case the page is online but not allocated, buddy is the owner. Not some
-kvm/virtio thingy that hooks into some callback.
+Whether "reasonable" or not, GCC does it.  And I don't think this is new
+behaviour...
 
-Manipulating random page bits of buddy pages in *some* kernel module I
-consider problematic and will most probably not be accepted upstream.
+int f(void)
+{
+	int res;
 
-What could work is, factoring out these parts e.g. into
-mm/page_hinting.c, then it gets part of the core mm in some way. Which
-would actually be a nice thing to do either way we go.
+	asm ("ADD %0, %0, %0" : "=r" (res) : "r" (77), "r" (77));
+	
+	return res;
+}
 
+->
 
--- 
+00000000 <f>:
+   0:   e3a0004d       mov      r0, #77 ; 0x4d
+   4:   e0800000       add      r0, r0, r0
+   8:   e12fff1e       bx       lr
 
-Thanks,
+> And in fact, since that asm code (when built in ARM mode) does modify
+> the register, uaddr should not be an input operand to begin with. In
+> other words, there is an actual bug here, and this patch fixes it.
 
-David / dhildenb
+Does the old code modify the register?
+
+As I read it, the register is written (in the ARM case) by the
+underlying STRT instruction, but since the post-index offset it 0, the
+value written back is the same as the value originally read.
+
+In ARMv7-A,
+
+	strt	r0, [r0], #imm
+
+will store the original (unmodified) value of r0 if I read the
+pseudocode correctly.  I can't remember the history, but I think that
+older architecture versions provided a choice about whether the
+unmodified or modified value was stored.  So gas probably just checks
+whether the registers are the same and emits a warning to be on the safe
+side.  If #imm is 0 (as in the existing futex code here) then it may
+make no difference in practice though.
+
+So, I'm not absolutely convinced there's a bug here, unless this is
+truly specified as UNPREDICATABLE in older arch versions.
+
+But the warning it at least annoying and use of "&" to prevent gas
+allocating things to the same register is already widespread for "+"
+asm arguments, even for arm.
+
+If the _value_ of the affected operand is not changed by the asm, I
+think we don't strictly need "+", but we are using "&" here for its
+register allocation side-effects, and "&" (for its original purpose at
+least) is only applicable to output ("=" or "+") operands.
+
+So I think the patch probably makes sense.
+
+IMHO the gas documentation is misleading (or at least unhelpful).
+
+Cheers
+---Dave
