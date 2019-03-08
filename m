@@ -2,127 +2,118 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED8BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA98C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8882120811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0A820854
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 06:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D36ef2t3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GT5lBK7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfCHGAM (ORCPT
+        id S1726378AbfCHGJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 01:00:12 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40833 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfCHGAL (ORCPT
+        Fri, 8 Mar 2019 01:09:47 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:39223 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfCHGJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 01:00:11 -0500
-Received: by mail-qk1-f194.google.com with SMTP id h28so10563018qkk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Mar 2019 22:00:10 -0800 (PST)
+        Fri, 8 Mar 2019 01:09:46 -0500
+Received: by mail-yw1-f65.google.com with SMTP id z191so15452840ywa.6;
+        Thu, 07 Mar 2019 22:09:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJYlzDu9YbkzO82ISmD3yyfoe4fNowe/ukm/U3OC36s=;
-        b=D36ef2t3lahyHKJer0RBlKqCaYBOwdjmzBb9K+0SFHwBKTWXpuEuwOBwWVUkb4L0Wl
-         /aB1+aCONHEH5drJ1LtLQ2sjTd4ToOUEVMnujTXuLnb+a2H/jeUA2clUOPIij5D9uynX
-         BrturceBcxBGruZFUXvlFCzAviOliX/ZcUffA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EoYCz66ft2NTt/PnS2Fszn3JHSWf44OPbEFuS+P6CWA=;
+        b=GT5lBK7jcxiBo1mdUIhPLQ77v+xpOIRYaRVJP23+lECYhMWp4+EUK5XeTW5gL+CWi2
+         yViBkvp+NI2+//OTDorQeDrlhoRmze15rF1X7gTNDxUV5cbcSKsUty2sgc3py9NGmF7v
+         z3lsA87yrsuRmIXYDwABWwbbZiKLR95TnALBZW+srnX4kFISQWxGVRXWxw43KO7LnN91
+         tecvml5XX3RkWYUrKI+2sbmDwWwF6ejdEQCtcaABmoyH9xCtKqzlUnhJX8djyrqKPWdT
+         qkU/jRh0ubk3/DGwjP9GMiWl9ECluKzZS4pxxiNaR/9i36Kg21WQjwdNN2/gtV4tmUUR
+         owFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJYlzDu9YbkzO82ISmD3yyfoe4fNowe/ukm/U3OC36s=;
-        b=EwL4xpbkgqp39BgCYkc04dLPbpogUjfW8iwhFPuxdbVnFxbxZMje4H9U+Qi6Jg3bDY
-         zuOGpi9Z60Kx9vK0X5bdrK7I0HJ/VjupvbVdVG5Zz3a89aZOhEM/QxM5RmYvvSi1B3Gh
-         OBikPKmSWxZS2F4LCAyEHnpXfqsiYHOkmOcwm9HZIGJ8IouKjTTF7thWId3DBOtl+zRf
-         727tkx/Z5IbdHJooq8YDTiByR9mBLg1Nj6VUuHFPyvSWFrOEf95TxEd1KkSGY/f9J/Oq
-         uLutgEdZRBQIe0w7JV55jU2A+SRu/TpqIscRQdj1hpfNvZoTzIfMtD4nnY9EJFXkYcJY
-         TyOw==
-X-Gm-Message-State: APjAAAUdOvMeZBffnZZp7g575gUHN34UQPr6eLS8u4FgMjGKugEpfkz8
-        wSkUyTD8hg9d7T1CfYzKinqBahpkxMmmWFRPF6pyAA==
-X-Google-Smtp-Source: APXvYqx/Dj+KMbdrYN38gMGjqxoy/uyHmXZuYCmgrGhfG0jKXNwhXakEnVzAyKCGfJT9sdpzb9D4GYKSrWghoFrH+CE=
-X-Received: by 2002:a37:9682:: with SMTP id y124mr4303743qkd.288.1552024809757;
- Thu, 07 Mar 2019 22:00:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20190303015341.986-1-zhiyong.tao@mediatek.com> <20190303015341.986-2-zhiyong.tao@mediatek.com>
-In-Reply-To: <20190303015341.986-2-zhiyong.tao@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 8 Mar 2019 13:59:58 +0800
-Message-ID: <CANMq1KAyvBLzGKOp=LXy3Ft3khs=QsUgTLXMq1mTd7o2_phcsg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: add drive for I2C related pins on MT8183
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        liguo.zhang@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>,
-        hongkun.cao@mediatek.com, biao.huang@mediatek.com,
-        hongzhou.yang@mediatek.com, chuanjia.liu@mediatek.com,
-        Erin Lo <erin.lo@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EoYCz66ft2NTt/PnS2Fszn3JHSWf44OPbEFuS+P6CWA=;
+        b=PRIcY9Nkv2EmHZdF4BbBHBROS1XWg0bSsD19K4DWw3W/MNsuIahltBp7AOjPz+pSu8
+         4Ujz+pnHlLeg1bMk7xFbDzazSkQ726tJB9t53Nd/j5GpcSJfxEwwdL/4Fa2/yQHJsbK7
+         QSM+qSTkAf1b+2O/mGl5scTWJ0dGL59Xtcb3ME8qudVKQaJW9zjyfXlC8hDmdz1ryUtN
+         +nJHvzh9BJYclXg83zGVeJVLb3YCEAEicJKBzAcduk+Ug6TKETB+SNhYI6qwYxWMLI+l
+         Y2leBVssYaPCMsqLXvZyiQPrQ43a1oF/AEueaMPVog87citKMek2+2/IMPWT03oNKnKE
+         cXQA==
+X-Gm-Message-State: APjAAAX4L9Co1G0W/+ORHgawHxVCgSF60L9lBXYTc5U25M0G+QJIH6WJ
+        5LhgWEG2Y5Q2ClYDBwHbF/4=
+X-Google-Smtp-Source: APXvYqzO38qgvPeJVyZfA8tFK6M9Vil7cgMK4Rvz2vIxSNSxyAQmxzt14FvBrdeYfHntvPMy871IgA==
+X-Received: by 2002:a0d:c544:: with SMTP id h65mr13252955ywd.35.1552025385446;
+        Thu, 07 Mar 2019 22:09:45 -0800 (PST)
+Received: from localhost.localdomain ([191.101.9.198])
+        by smtp.gmail.com with ESMTPSA id s5sm2436205ywg.108.2019.03.07.22.09.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Mar 2019 22:09:45 -0800 (PST)
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        ongliubraving@fb.com, yhs@fb.com, davem@davemloft.net
+Cc:     Bo YU <tsu.yubo@gmail.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, yuzibode@126.com
+Subject: [PATCH V2] bpf: fix warning about using plain integer as NULL
+Date:   Fri,  8 Mar 2019 01:09:38 -0500
+Message-Id: <20190308060938.17305-1-tsu.yubo@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a v3, I think, please make sure the update the email title,
-and add a changelog below ---.
+Sparse warning below:
 
-On Sun, Mar 3, 2019 at 9:54 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->
-> This patch provides the advanced drive for I2C used pins on MT8183.
-> The detail strength specification description of the I2C pin is as follows.
-> When E1=0/E0=0, the strength is 0.125mA.
-> When E1=0/E0=1, the strength is 0.25mA.
-> When E1=1/E0=0, the strength is 0.5mA.
-> When E1=1/E0=1, the strength is 1mA.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 45 +++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 13 ++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 20 ++++++++++
->  4 files changed, 128 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> index 6262fd3678ea..f034574fc593 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> @@ -472,6 +472,51 @@ static const struct mtk_pin_field_calc mt8183_pin_r1_range[] = {
->         PIN_FIELD_BASE(133, 133, 8, 0x0D0, 0x10, 13, 1),
->  };
-[snip]
->  static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->         [PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8183_pin_mode_range),
->         [PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8183_pin_dir_range),
-> @@ -485,6 +530,9 @@ static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
->         [PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt8183_pin_pupd_range),
->         [PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8183_pin_r0_range),
->         [PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8183_pin_r1_range),
-> +       [PINCTRL_PIN_REG_DRV_EN_DIS] = MTK_RANGE(mt8183_pin_e1e0en_range),
+sudo make C=2 CF=-D__CHECK_ENDIAN__ M=net/bpf/
+CHECK   net/bpf//test_run.c
+net/bpf//test_run.c:19:77: warning: Using plain integer as NULL pointer
+./include/linux/bpf-cgroup.h:295:77: warning: Using plain integer as NULL pointer
 
-I find the name EN_DIS confusing: I think it means ENable_DISable, but
-when I read the code, I see stuff like (MANY_WORDS)_DIS = enable ? 1 :
-0, which make me think that the polarity is wrong.
+Fixes: 8bad74f9840f ("bpf: extend cgroup bpf core to allow multiple
+cgroup storage types")
 
-Can we just call this PINCTRL_PIN_REG_DRV_EN?
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+V2: Add fix-up tag from Yonghong
+---
+ include/linux/bpf-cgroup.h | 2 +-
+ net/bpf/test_run.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> +       [PINCTRL_PIN_REG_DRV_E0] = MTK_RANGE(mt8183_pin_e0_range),
-> +       [PINCTRL_PIN_REG_DRV_E1] = MTK_RANGE(mt8183_pin_e1_range),
->  };
->
-[snip]
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index 695b2a880d9a..a4c644c1c091 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -292,7 +292,7 @@ static inline int bpf_cgroup_storage_assign(struct bpf_prog *prog,
+ static inline void bpf_cgroup_storage_release(struct bpf_prog *prog,
+ 					      struct bpf_map *map) {}
+ static inline struct bpf_cgroup_storage *bpf_cgroup_storage_alloc(
+-	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return 0; }
++	struct bpf_prog *prog, enum bpf_cgroup_storage_type stype) { return NULL; }
+ static inline void bpf_cgroup_storage_free(
+ 	struct bpf_cgroup_storage *storage) {}
+ static inline int bpf_percpu_cgroup_storage_copy(struct bpf_map *map, void *key,
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index da7051d62727..fab142b796ef 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -16,7 +16,7 @@
+ static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
+ 			u32 *retval, u32 *time)
+ {
+-	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { 0 };
++	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { NULL };
+ 	enum bpf_cgroup_storage_type stype;
+ 	u64 time_start, time_spent = 0;
+ 	int ret = 0;
+-- 
+2.11.0
+
