@@ -2,154 +2,116 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241BCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F031C10F09
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA27B20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6D72146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 16:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="zrmfr+7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfCHQBq (ORCPT
+        id S1726604AbfCHQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 11:01:46 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49418 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726258AbfCHQBn (ORCPT
+        Fri, 8 Mar 2019 11:01:55 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41633 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbfCHQBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 11:01:43 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x28FxJdX115907
-        for <linux-kernel@vger.kernel.org>; Fri, 8 Mar 2019 11:01:42 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r3sbyenkh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 11:01:39 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <svaidy@linux.vnet.ibm.com>;
-        Fri, 8 Mar 2019 16:01:15 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 8 Mar 2019 16:01:11 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x28G1A6737355686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 8 Mar 2019 16:01:10 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9BCD4C040;
-        Fri,  8 Mar 2019 16:01:10 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA0CC4C05E;
-        Fri,  8 Mar 2019 16:01:08 +0000 (GMT)
-Received: from drishya.in.ibm.com (unknown [9.85.68.185])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  8 Mar 2019 16:01:08 +0000 (GMT)
-Date:   Fri, 8 Mar 2019 21:31:06 +0530
-From:   Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc:     Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Pavithra R. Prakash" <pavrampu@in.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] pseries/energy: Use OF accessor functions to read
- ibm,drc-indexes
-Reply-To: svaidy@linux.vnet.ibm.com
-References: <1552059204-18626-1-git-send-email-ego@linux.vnet.ibm.com>
+        Fri, 8 Mar 2019 11:01:54 -0500
+Received: by mail-yw1-f68.google.com with SMTP id q128so16639579ywg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 08:01:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7Mrnt0v5aTwQKX4K+a22sLlI7mhOrdlmXcat3QdWb0c=;
+        b=zrmfr+7XYf//JgH/JmL+nDOiY0Sn4Cn0/tQ6vGXOCsbi5D0ocV11dHDDQm4Brp4j48
+         S9A5J6ijrUgsJdPMKZKFojQr2KUKKskPD7i3+dLAiGc54OcWWxcYLzEbdwletNluQOHL
+         o3pAGw2BAogHLKZxBl0vS2CQr9jm/IJ9pw6p/UUN1pqx0Q80oo3qCnSmslx0o+dXFL61
+         ENnC3P/EsdxY30F8N1PzTIZRyWNg3ReytprClO2X02QbqbRU3AEZFI3EXsTPxXF0GtuY
+         lZQ9qZ2qjexeS1iLkhfHNPx2BMTq8qwcUc3PqDe3l5evwK4WKd8WFyX5xJmnxhTQKMly
+         GTUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7Mrnt0v5aTwQKX4K+a22sLlI7mhOrdlmXcat3QdWb0c=;
+        b=ieEv6YXACT6kHTP3MJqoJaOchxkT61Gs/c7seFN/6b1XlUN+ofgUyB1R1itiwidlQX
+         aiLXdyTEfOLElnfNa6NHoIF+MQkzKmGGviq39GQKPKJ9DzoEUjRNEqzLny5INLp9To4j
+         r2t82mJsVW/s7b/jzn2OLjbCloc0dadmt/LWD3VsNPil5K0VeDUR33whDtJ7daztmcuv
+         ywYDTlyz2BRkHzDDYb/pKIrP9BNfr5yUkMDLY0C/+4uamQ8w91aZxMP42t7/pvQd+5Oo
+         UEa0j0weMksKpmju7RPYoCEn79JS6QlDXhrxRTixEqQiY3IwoJhVvn/KYhrblI/AzKQY
+         EKxQ==
+X-Gm-Message-State: APjAAAX6483rXOcYSBW0VJEyEwU/LO2PDRNFizZe3RbkcoHQUGvaj5nx
+        gyzGnbtARW2kDWNB/lPC9XMFjw==
+X-Google-Smtp-Source: APXvYqzbRZ5z4rBPAYJpioypz0Qfq6hwxf1QV1sbef612TXie7Xx3GmmEU8nebWZS5r6iWB0vXbNmA==
+X-Received: by 2002:a0d:e612:: with SMTP id p18mr14576212ywe.445.1552060913522;
+        Fri, 08 Mar 2019 08:01:53 -0800 (PST)
+Received: from cisco ([2601:282:901:dd7b:316c:2a55:1ab5:9f1c])
+        by smtp.gmail.com with ESMTPSA id g82sm3210342ywg.60.2019.03.08.08.01.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Mar 2019 08:01:52 -0800 (PST)
+Date:   Fri, 8 Mar 2019 09:01:51 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 07/15] slub: Add defrag_used_ratio field and sysfs support
+Message-ID: <20190308160151.GC373@cisco>
+References: <20190308041426.16654-1-tobin@kernel.org>
+ <20190308041426.16654-8-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552059204-18626-1-git-send-email-ego@linux.vnet.ibm.com>
+In-Reply-To: <20190308041426.16654-8-tobin@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19030816-4275-0000-0000-00000318A81D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030816-4276-0000-0000-0000382706D3
-Message-Id: <20190308160106.GA5263@drishya.in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-08_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903080110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Gautham R Shenoy <ego@linux.vnet.ibm.com> [2019-03-08 21:03:24]:
-
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> 
-> In cpu_to_drc_index() in the case when FW_FEATURE_DRC_INFO is absent,
-> we currently use of_read_property() to obtain the pointer to the array
-> corresponding to the property "ibm,drc-indexes". The elements of this
-> array are of type __be32, but are accessed without any conversion to
-> the OS-endianness, which is buggy on a Little Endian OS.
-> 
-> Fix this by using of_property_read_u32_index() accessor function to
-> safely read the elements of the array.
-> 
-> Fixes: commit e83636ac3334 ("pseries/drc-info: Search DRC properties for CPU indexes")
-> Cc: <stable@vger.kernel.org> #v4.16+
-> Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
-Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-
-> ---
->  arch/powerpc/platforms/pseries/pseries_energy.c | 27 ++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/pseries_energy.c b/arch/powerpc/platforms/pseries/pseries_energy.c
-> index 6ed2212..1c4d1ba 100644
-> --- a/arch/powerpc/platforms/pseries/pseries_energy.c
-> +++ b/arch/powerpc/platforms/pseries/pseries_energy.c
-> @@ -77,18 +77,27 @@ static u32 cpu_to_drc_index(int cpu)
-> 
->  		ret = drc.drc_index_start + (thread_index * drc.sequential_inc);
->  	} else {
-> -		const __be32 *indexes;
-> -
-> -		indexes = of_get_property(dn, "ibm,drc-indexes", NULL);
-> -		if (indexes == NULL)
-> -			goto err_of_node_put;
-> +		u32 nr_drc_indexes, thread_drc_index;
-> 
->  		/*
-> -		 * The first element indexes[0] is the number of drc_indexes
-> -		 * returned in the list.  Hence thread_index+1 will get the
-> -		 * drc_index corresponding to core number thread_index.
-> +		 * The first element of ibm,drc-indexes array is the
-> +		 * number of drc_indexes returned in the list.  Hence
-> +		 * thread_index+1 will get the drc_index corresponding
-> +		 * to core number thread_index.
->  		 */
-> -		ret = indexes[thread_index + 1];
-> +		rc = of_property_read_u32_index(dn, "ibm,drc-indexes",
-> +						0, &nr_drc_indexes);
-> +		if (rc)
-> +			goto err_of_node_put;
+On Fri, Mar 08, 2019 at 03:14:18PM +1100, Tobin C. Harding wrote:
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -3642,6 +3642,7 @@ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
+>  
+>  	set_cpu_partial(s);
+>  
+> +	s->defrag_used_ratio = 30;
+>  #ifdef CONFIG_NUMA
+>  	s->remote_node_defrag_ratio = 1000;
+>  #endif
+> @@ -5261,6 +5262,28 @@ static ssize_t destroy_by_rcu_show(struct kmem_cache *s, char *buf)
+>  }
+>  SLAB_ATTR_RO(destroy_by_rcu);
+>  
+> +static ssize_t defrag_used_ratio_show(struct kmem_cache *s, char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", s->defrag_used_ratio);
+> +}
 > +
-> +		WARN_ON(thread_index > nr_drc_indexes);
-> +		rc = of_property_read_u32_index(dn, "ibm,drc-indexes",
-> +						thread_index + 1,
-> +						&thread_drc_index);
-> +		if (rc)
-> +			goto err_of_node_put;
+> +static ssize_t defrag_used_ratio_store(struct kmem_cache *s,
+> +				       const char *buf, size_t length)
+> +{
+> +	unsigned long ratio;
+> +	int err;
 > +
-> +		ret = thread_drc_index;
+> +	err = kstrtoul(buf, 10, &ratio);
+> +	if (err)
+> +		return err;
+> +
+> +	if (ratio <= 100)
+> +		s->defrag_used_ratio = ratio;
+    else
+        return -EINVAL;
 
-Oops!  Good bugfix.  We should use device tree accessors like this in
-all places for correct and safe code.
+maybe?
 
-Thanks!
-
---Vaidy
-
+Tycho
