@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEFDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C4DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B8C20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354CB20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 03:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCHDKX (ORCPT
+        id S1726646AbfCHDKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Mar 2019 22:10:23 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47428 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726525AbfCHDKS (ORCPT
+        Thu, 7 Mar 2019 22:10:25 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:48591 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726568AbfCHDKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Mar 2019 22:10:18 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMEGnq9_1552014611;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMEGnq9_1552014611)
+        Thu, 7 Mar 2019 22:10:20 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMDnmcC_1552014617;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMDnmcC_1552014617)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 08 Mar 2019 11:10:11 +0800
+          Fri, 08 Mar 2019 11:10:17 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         harryxiyou@gmail.com, corbet@lwn.net
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        TripleX Chung <xxx.phy@gmail.com>,
-        Li Zefan <lizefan@huawei.com>,
+        Li Yang <leoyang.li@nxp.com>, Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v3 08/31] docs/zh_CN: format the submitting-patches doc to rst
-Date:   Fri,  8 Mar 2019 11:08:55 +0800
-Message-Id: <20190308030918.22337-9-alex.shi@linux.alibaba.com>
+Subject: [PATCH v3 16/31] docs/zh_CN: format submitting drivers as rst
+Date:   Fri,  8 Mar 2019 11:09:03 +0800
+Message-Id: <20190308030918.22337-17-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
 References: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
@@ -46,28 +45,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And remove Enghlish explainations in the docs, which it isn't
-necessary in Chinese doc.
+to Make it readble for html etc docs making.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: TripleX Chung <xxx.phy@gmail.com>
+Cc: Li Yang <leoyang.li@nxp.com>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 ---
- .../zh_CN/process/submitting-patches.rst      | 36 +++++++------------
- 1 file changed, 13 insertions(+), 23 deletions(-)
+ .../zh_CN/process/submitting-drivers.rst      | 30 +++++++------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
-index e9098da8f1a4..2a2989733c8d 100644
---- a/Documentation/translations/zh_CN/process/submitting-patches.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
-@@ -1,31 +1,21 @@
--Chinese translated version of Documentation/process/submitting-patches.rst
-+.. _cn_process_submittingpatches:
+diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+index 15e73562f710..c90ab5ae233d 100644
+--- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
++++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+@@ -1,30 +1,22 @@
+-﻿Chinese translated version of Documentation/process/submitting-drivers.rst
++﻿.. _cn_submittingdrivers:
  
 -If you have any comment or update to the content, please contact the
 -original document maintainer directly.  However, if you have a problem
@@ -76,53 +74,37 @@ index e9098da8f1a4..2a2989733c8d 100644
 -or if there is a problem with the translation.
 +.. include:: ../disclaimer-zh_CN.rst
  
--Chinese maintainer: TripleX Chung <triplex@zh-kernel.org>
+-Chinese maintainer: Li Yang <leo@zh-kernel.org>
 ----------------------------------------------------------------------
--Documentation/process/submitting-patches.rst 的中文翻译
-+:Original: :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
+-Documentation/process/submitting-drivers.rst 的中文翻译
++:Original: :ref:`Documentation/process/submitting-drivers.rst
++           <submittingdrivers>`
  
  如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
  交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
 -译存在问题，请联系中文版维护者。
 +译存在问题，请联系中文版维护者::
  
--中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
--中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
--中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
+-中文版维护者： 李阳  Li Yang <leo@zh-kernel.org>
+-中文版翻译者： 李阳  Li Yang <leo@zh-kernel.org>
+-中文版校译者： 陈琦 Maggie Chen <chenqi@beyondsoft.com>
 -               王聪 Wang Cong <xiyou.wangcong@gmail.com>
-+        中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
-+        中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
-+        中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
-+                       王聪 Wang Cong <xiyou.wangcong@gmail.com>
- 
+-               张巍 Zhang Wei <Wei.Zhang@freescale.com>
+-
 -以下为正文
 ----------------------------------------------------------------------
++        中文版维护者： 李阳  Li Yang <leo@zh-kernel.org>
++        中文版翻译者： 李阳  Li Yang <leo@zh-kernel.org>
++        中文版校译者： 陈琦 Maggie Chen <chenqi@beyondsoft.com>
++                       王聪 Wang Cong <xiyou.wangcong@gmail.com>
++                       张巍 Zhang Wei <Wei.Zhang@freescale.com>
  
--   如何让你的改动进入内核
--     或者
--  获得亲爱的 Linus Torvalds 的关注和处理
------------------------------------
-+如何让你的改动进入内核
-+======================
+ 如何向 Linux 内核提交驱动程序
+------------------------------
++=============================
  
- 对于想要将改动提交到 Linux 内核的个人或者公司来说，如果不熟悉“规矩”，
- 提交的流程会让人畏惧。本文档收集了一系列建议，这些建议可以大大的提高你
-@@ -35,12 +25,12 @@ Documentation/process/submitting-patches.rst 的中文翻译
- Documentation/process/submitting-drivers.rst 。
- 
- 
----------------------------
-+---------------------------
- 第一节 - 创建并发送你的改动
----------------------------
-+---------------------------
- 
- 1) "diff -up"
-------------
-+-------------
- 
- 使用 "diff -up" 或者 "diff -uprN" 来创建补丁。
- 
+ 这篇文档将会解释如何向不同的内核源码树提交设备驱动程序。请注意，如果你感
+ 兴趣的是显卡驱动程序，你也许应该访问 XFree86 项目(http://www.xfree86.org/)
 -- 
 2.19.1.856.g8858448bb
 
