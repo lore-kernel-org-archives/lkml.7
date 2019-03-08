@@ -2,107 +2,107 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772E8C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE7420851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9390E20855
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 21:08:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l7C+TBoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfCHVIC (ORCPT
+        id S1726631AbfCHVIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 16:08:02 -0500
-Received: from anholt.net ([50.246.234.109]:54398 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfCHVIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 16:08:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id D36AF10A2E2B;
-        Fri,  8 Mar 2019 13:08:01 -0800 (PST)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id NYB-UFRLxABq; Fri,  8 Mar 2019 13:08:00 -0800 (PST)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id C19E510A2BEE;
-        Fri,  8 Mar 2019 13:08:00 -0800 (PST)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 690432FE4653; Fri,  8 Mar 2019 13:08:00 -0800 (PST)
-From:   Eric Anholt <eric@anholt.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [GIT PULL 2/2] bcm2835-drivers-next-2019-03-04
-In-Reply-To: <f07ce14b-53be-623e-deeb-d968745c31b4@gmail.com>
-References: <20190305000218.15180-1-eric@anholt.net> <20190305000218.15180-2-eric@anholt.net> <f07ce14b-53be-623e-deeb-d968745c31b4@gmail.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
-Date:   Fri, 08 Mar 2019 13:07:58 -0800
-Message-ID: <87ef7h3wi9.fsf@anholt.net>
+        Fri, 8 Mar 2019 16:08:38 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55754 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfCHVIi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 16:08:38 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x28L8VO1122932;
+        Fri, 8 Mar 2019 15:08:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552079311;
+        bh=ZWTTGyTvHvJr20kzN0lMY7xk4FIsBDGym+RyyL3K204=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=l7C+TBohd10Mx/VnIvMCKNKK67l+hjJDCLHOdMI9YpnYueb+iyUQ6VthEBViKBZWx
+         U2HKVRWQ39x5CJ4GnZlJcmf/c4FrvklnmdAda1gF23oxptbfLHBfnT0rBzMnDEZbui
+         lq1i8CLyCsWhVp+3ZsQJbDc0dd7NjsJDNEQuNQGs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x28L8Vis052784
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 Mar 2019 15:08:31 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 8
+ Mar 2019 15:08:31 -0600
+Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 8 Mar 2019 15:08:31 -0600
+Received: from [172.22.114.154] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x28L8U5N012651;
+        Fri, 8 Mar 2019 15:08:30 -0600
+Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
+ properties
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>,
+        <tony@atomide.com>, <lee.jones@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20190307220947.20057-1-dmurphy@ti.com>
+ <20190307220947.20057-2-dmurphy@ti.com> <20190308151422.GA10378@amd>
+ <6d9a5821-a634-8ea2-4fe3-0603af757668@ti.com> <20190308210649.GC17626@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <9e0a5485-d338-e4e8-5333-cac873158a93@ti.com>
+Date:   Fri, 8 Mar 2019 15:08:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <20190308210649.GC17626@amd>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Pavel
 
-Florian Fainelli <f.fainelli@gmail.com> writes:
+On 3/8/19 3:06 PM, Pavel Machek wrote:
+> 
+>>>> +		led@1 {
+>>>> +			reg = <1>;
+>>>> +			led-sources = <1>;
+>>>> +			ti,led-mode = <LM3532_BL_MODE_MANUAL>;
+>>>> +			label = "keypad";
+>>>
+>>> I guess best variant would be inputX::backlight here, but that might
+>>> be tricky to implement.
+>>>
+>>
+>> Yeah because we don't know what input the keyboard would be on.
+>> Unless there are APIs to retrieve that info.  I have not looked at the input
+>> framework in a while.
+> 
+> Lets just make it "platform::kbd_backlight". *:kbd_backlight is
+> already used by quite a few drivers.
+> 
 
-> On 3/4/19 4:02 PM, Eric Anholt wrote:
->> The following changes since commit e1dc2b2e1bef7237fd8fc055fe1ec2a6ff001=
-f91:
->>=20
->>   ARM: bcm283x: Switch V3D over to using the PM driver instead of firmwa=
-re. (2019-02-01 10:34:32 +0100)
->>=20
->> are available in the Git repository at:
->>=20
->>   git://github.com/anholt/linux tags/bcm2835-drivers-next-2019-03-04
->>=20
->> for you to fetch changes up to 4deabfae643d8852c643664d9088a647abfaa5d0:
->>=20
->>   soc: bcm: bcm2835-pm: Fix error paths of initialization. (2019-03-04 1=
-5:33:14 -0800)
->>=20
->> ----------------------------------------------------------------
->> This pull request brings in two fixes for the new native bcm2835 power
->> domains driver.
->>=20
->> ----------------------------------------------------------------
->
-> Looks like Stefan found an arm64 build configuration that failed linking
-> with the driver, do you want to add an additional fix to this pull
-> request that addresses that?
+Sounds fine to me.  I will update in v3 as I posted v2 with a lot of deltas
 
-Took a look at it now, sent a fix.
+Dan
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> 									Pavel
+> 
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyC2a4ACgkQtdYpNtH8
-nuh0bA//YPEs77Ca9YpZuOUKo1A9/kPWaRqzJMBmNqdLvAwCij57YDsnwqEaJjha
-2De5P3qeJhnENdKAOQfCRHLD3SBGtgsUqKj9hnRRYryhJuxeVn/kpIQoiezj9fCy
-Wl9tPGo/5vjtJdA9Pqm86ZVWk9q7bDR0210Mk+Dvif4smAz+APqMOcN0ojA3W2QJ
-9aEjPGQVLAskEpgOvh4oIOU5lUf/hMOrXoR6U0p11hQyAZGWXmwXv6MmqlU+7Qfu
-I+NoSbBBqz5cWFFNmNSBI2xrxX/rjGnLFLgWgWXorT9QI5gXFgFhQbFjEDsRvkeX
-YyasRtdLUM4ksfbS7vp0brIvjq6COF9X27f7WyY5E9gk/GvJM9he2mJ25DlE/JQP
-ZwpfXJtpZqtBpep5Z2yxMXThUMo9sABz9hHSYc3M3n8ba0ncQ0oVjU6eRr5EadOQ
-OX7xALKy77nNGfigBKNjwAOdB6RN2vl6WgLeouL3pNAehlBbHSKMx1kbPWzlabVC
-Y+MZ7sfa5lyS2DY+eiTgNGWfgIweTxDguDN2pV2ZtLeBBNntkJBQoDARY8XhsSb1
-jql+xZ5LpqZVUOJmV/cv+BjhY6W2KlO8YJ85Aa3U2P6hro/Y1EupqtsFAR0qAbBF
-NOD5hTmbDUxgEaZJ58+Ha3EcAp1U5OyE6P+sy+ArASO6B7TAv6o=
-=Nt2W
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+------------------
+Dan Murphy
