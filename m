@@ -2,88 +2,158 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AE0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA568C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE58920661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BB420661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 18:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VSB70xMd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VSB70xMd"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aoWJ3jb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfCHSW1 (ORCPT
+        id S1727389AbfCHSWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 13:22:27 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:60164 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfCHSW1 (ORCPT
+        Fri, 8 Mar 2019 13:22:38 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33126 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfCHSWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 13:22:27 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id ACD1B6034E; Fri,  8 Mar 2019 18:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552069346;
-        bh=OURoWfpHWvN8EdZDSq2mUIEodWPXBk4ki8GJ0CtPU34=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VSB70xMdslXUuSJBPt2Z4HSKBGPZZUj5bTvYGnj/fK63IP4JPs8zgHESQOAjDov27
-         atAu1uNhLt4BLvXcWfoB2SFKQxXjvUBud8w20J+mBrDqRZOdwXHG5Rw4SF7Z731YO6
-         QKTmsSaP4heg85eJOQrWwp2Cq9XTCx1PX/k8gDFQ=
-Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE4286030B;
-        Fri,  8 Mar 2019 18:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552069346;
-        bh=OURoWfpHWvN8EdZDSq2mUIEodWPXBk4ki8GJ0CtPU34=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VSB70xMdslXUuSJBPt2Z4HSKBGPZZUj5bTvYGnj/fK63IP4JPs8zgHESQOAjDov27
-         atAu1uNhLt4BLvXcWfoB2SFKQxXjvUBud8w20J+mBrDqRZOdwXHG5Rw4SF7Z731YO6
-         QKTmsSaP4heg85eJOQrWwp2Cq9XTCx1PX/k8gDFQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CE4286030B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     paulmck@linux.vnet.ibm.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com
-Cc:     linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH] rcu/tree_plugin: Fix nohz status in stall warning
-Date:   Fri,  8 Mar 2019 23:51:49 +0530
-Message-Id: <1552069309-24392-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 8 Mar 2019 13:22:37 -0500
+Received: by mail-io1-f68.google.com with SMTP id b6so3982971iog.0
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 10:22:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=728tjrB/mPVe4ObjyZU9gbstsdRZdOqnDGnO5vOhmrE=;
+        b=aoWJ3jb8ZSX7eLjI8KMSJQl2HBrnFy6BuqPhoke+XnFeX1+5toPUZnd6H2xNWpInjT
+         CyqbvK9M9cGUqz2LXO6nFZBU1q4NnYdAAdHpUslgJIzuliQlBqS0KnhRx7TexhbdzUji
+         SXly/U6XqCJqX9yFLEq413VCrAz7yI5kEhMbk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=728tjrB/mPVe4ObjyZU9gbstsdRZdOqnDGnO5vOhmrE=;
+        b=kZfvKQ9A4IjU0hQCbvDGLi72HMuyE9y30eRSTTa3vHglZ1IrfzhMS4KO4/GTr4nx8y
+         zWRetXzZL1DpmPSbPHHLFhm41jqUT9W/v45n8F23G4VDNtPKiwKVBvrYxEhilVb2fpR1
+         REgS5vcGsv3zKb3Xc6tbznIFoHLUafiUhUWcVsm4Hlnv53DfSQWwszmxlhNJcdDpEPzI
+         WjgOjmHOlOuMLSH3urL3bLwf/2fzhbKSx3dY6NqUk5PNzIIs8FjdBh8lmE2b1gm+h7V7
+         SczMNJUUfbdJhBvW16a64tGsxS6OGUkqHOlwX8e9O/08YytwSZvzvqPCnfwLKBw+XNEO
+         ZCcQ==
+X-Gm-Message-State: APjAAAWMC3Zc5O9zThfI6zsZhi73C9aszaAi0Mm6+M2ie47QBNXyMOWy
+        XjBpTzdyBQ/QnwFIMLe6dOyNY1h0jPOk2lWaho5OmxCcGdQ=
+X-Google-Smtp-Source: APXvYqyLu3TuJoyDDqmgCpespAmtrZ8p6k45Q9W/RNGHFsVXw7qlAacIVmyrEvOFnD6ZKtHXtxCQgHLO6Rk9s0Uz25k=
+X-Received: by 2002:a5d:97c8:: with SMTP id k8mr10849983ios.267.1552069356927;
+ Fri, 08 Mar 2019 10:22:36 -0800 (PST)
+MIME-Version: 1.0
+References: <20190308174336.7866-1-eric@anholt.net>
+In-Reply-To: <20190308174336.7866-1-eric@anholt.net>
+From:   Dave Emett <david.emett@broadcom.com>
+Date:   Fri, 8 Mar 2019 18:22:26 +0000
+Message-ID: <CAApk1dV2muXmJ8q+aimexr4d-5K9uPm0dHDqmrCgF9-0hczb7A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] drm/v3d: Handle errors from IRQ setup.
+To:     Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Thomas Spurden <thomas.spurden@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix stall warning, to show correct nohz marker.
+On Fri, 8 Mar 2019 at 17:43, Eric Anholt <eric@anholt.net> wrote:
+>
+> Noted in review by Dave Emett for V3D 4.2 support.
+>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
- kernel/rcu/tree_plugin.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Dave Emett <david.emett@broadcom.com>
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 97dba50..93da32c 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -1659,7 +1659,7 @@ static void print_cpu_stall_fast_no_hz(char *cp, int cpu)
- 		rdp->last_accelerate & 0xffff, jiffies & 0xffff,
- 		".l"[rdp->all_lazy],
- 		".L"[!rcu_segcblist_n_nonlazy_cbs(&rdp->cblist)],
--		".D"[!rdp->tick_nohz_enabled_snap]);
-+		".D"[!!rdp->tick_nohz_enabled_snap]);
- }
- 
- #else /* #ifdef CONFIG_RCU_FAST_NO_HZ */
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
+> ---
+>  drivers/gpu/drm/v3d/v3d_drv.c |  8 ++++++--
+>  drivers/gpu/drm/v3d/v3d_drv.h |  2 +-
+>  drivers/gpu/drm/v3d/v3d_irq.c | 13 +++++++++++--
+>  3 files changed, 18 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
+> index 3680ebd229f2..f9906cac7a88 100644
+> --- a/drivers/gpu/drm/v3d/v3d_drv.c
+> +++ b/drivers/gpu/drm/v3d/v3d_drv.c
+> @@ -311,14 +311,18 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
+>         if (ret)
+>                 goto dev_destroy;
+>
+> -       v3d_irq_init(v3d);
+> +       ret = v3d_irq_init(v3d);
+> +       if (ret)
+> +               goto gem_destroy;
+>
+>         ret = drm_dev_register(drm, 0);
+>         if (ret)
+> -               goto gem_destroy;
+> +               goto irq_disable;
+>
+>         return 0;
+>
+> +irq_disable:
+> +       v3d_irq_disable(v3d);
+>  gem_destroy:
+>         v3d_gem_destroy(drm);
+>  dev_destroy:
+> diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
+> index d856159bd007..bb58ecb9d9c5 100644
+> --- a/drivers/gpu/drm/v3d/v3d_drv.h
+> +++ b/drivers/gpu/drm/v3d/v3d_drv.h
+> @@ -304,7 +304,7 @@ void v3d_reset(struct v3d_dev *v3d);
+>  void v3d_invalidate_caches(struct v3d_dev *v3d);
+>
+>  /* v3d_irq.c */
+> -void v3d_irq_init(struct v3d_dev *v3d);
+> +int v3d_irq_init(struct v3d_dev *v3d);
+>  void v3d_irq_enable(struct v3d_dev *v3d);
+>  void v3d_irq_disable(struct v3d_dev *v3d);
+>  void v3d_irq_reset(struct v3d_dev *v3d);
+> diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
+> index 69338da70ddc..29d746cfce57 100644
+> --- a/drivers/gpu/drm/v3d/v3d_irq.c
+> +++ b/drivers/gpu/drm/v3d/v3d_irq.c
+> @@ -156,7 +156,7 @@ v3d_hub_irq(int irq, void *arg)
+>         return status;
+>  }
+>
+> -void
+> +int
+>  v3d_irq_init(struct v3d_dev *v3d)
+>  {
+>         int ret, core;
+> @@ -173,13 +173,22 @@ v3d_irq_init(struct v3d_dev *v3d)
+>         ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 0),
+>                                v3d_hub_irq, IRQF_SHARED,
+>                                "v3d_hub", v3d);
+> +       if (ret)
+> +               goto fail;
+> +
+>         ret = devm_request_irq(v3d->dev, platform_get_irq(v3d->pdev, 1),
+>                                v3d_irq, IRQF_SHARED,
+>                                "v3d_core0", v3d);
+>         if (ret)
+> -               dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
+> +               goto fail;
+>
+>         v3d_irq_enable(v3d);
+> +       return 0;
+> +
+> +fail:
+> +       if (ret != -EPROBE_DEFER)
+> +               dev_err(v3d->dev, "IRQ setup failed: %d\n", ret);
+> +       return ret;
+>  }
+>
+>  void
+> --
+> 2.20.1
+>
