@@ -2,161 +2,145 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16953C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC9FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FBF20855
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE2E20684
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 08:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHL3NkzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfCHIxa (ORCPT
+        id S1726332AbfCHI44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 03:53:30 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:46699 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfCHIxV (ORCPT
+        Fri, 8 Mar 2019 03:56:56 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42237 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfCHI4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 03:53:21 -0500
-Received: by mail-ua1-f67.google.com with SMTP id j8so11148898uae.13;
-        Fri, 08 Mar 2019 00:53:20 -0800 (PST)
+        Fri, 8 Mar 2019 03:56:55 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b2so13615092pgl.9;
+        Fri, 08 Mar 2019 00:56:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EvaF26RI7c5HyTPz/s7fr3l3YkC9rN6qerGwkguRTR8=;
+        b=gHL3NkzMk1rMibDf4b7nqUDivvpIM8faxWPoOea5c8ln2b9GzJbwW8+kqpdb3KQOVS
+         S0ttHMbEGe3tlrF4cP3chkm3KHKGufEgDPpEDDqHkV2xTEEyDaB+35pywPK++4lc4cYt
+         G3NjQ1JZXfQvS87kPipvCvbmUTwntS3owjOPIst5LqYyq/pMd+ZUmDsWsJleAuHpWJ/J
+         +cap0A5siHiHMcJSbS1YotI/T0OAlaJiVKwHy10y4gYbs6i3ak87ruIjJa8vhKeQaYW8
+         Cb/iwj+81A1k4vA0pBEvuiMqyw/bZUTj0FZWGxIxCo42BP8SJgM9px39W3D6XBHqzx3p
+         aGRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Epzvyc9GGSP7cfqVVNfvz4S/KW5UlhBXOeZbYred4hw=;
-        b=s1Yn6trgpLNxnMgCyP+Z030k1bFjedhlFDi2z6E6cw+g6iD8rvWMYf9/ilw6og+Tis
-         jUgzSHf/j8Iw+D8aosrJaNz0h2+dlru6UzDB1nX2mI6Dp7tN17GzU+WvRt5srItlUbz6
-         XoqSFuCqWx/5beplAz10Vau14WklJtc+w5DEem21YmXSLl5ZUpzmCya4Z7ZFXGptMbQO
-         Ts8FGgDYf7JoTDRGdic8cVMILXC3ka1rGNw/t5lgHHIimWUYqCHzqo0U4e+4pcLUqka+
-         3Vwg9FEJQrcQ83+AyzfYgfJFoC8Y9N/gdt7Z/xkQQVVOUlOa/mo1ZVLx3Ffp2aYudcif
-         Ob5g==
-X-Gm-Message-State: APjAAAVgqHidXtZtxgG+ga/FJYwY5sRTFBDplE1tyATpu+8lLtQHJ1bK
-        52y2Jg2bKnM7tOKmLZwWZHzV/LiX01QGqYptbk0=
-X-Google-Smtp-Source: APXvYqzH78I36PVbTINXJE8yFq87TmwZTLoEQLDtrKnJtuRJVZeGdF4xBDJWMtLst6mGELKutdWl6GQgrnj0JuawYTM=
-X-Received: by 2002:a9f:30dc:: with SMTP id k28mr9442718uab.75.1552035200158;
- Fri, 08 Mar 2019 00:53:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com> <20190307150343.GB258852@google.com>
-In-Reply-To: <20190307150343.GB258852@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 8 Mar 2019 09:53:07 +0100
-Message-ID: <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>, atishp04@gmail.com,
-        dancol@google.com, Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EvaF26RI7c5HyTPz/s7fr3l3YkC9rN6qerGwkguRTR8=;
+        b=hySY9qt5XYJbLHv5sfNLC3SPJMmjZRasbMg+kFq0xMdBCKeEWLJHSpO+KIcRTBjBtD
+         nLpAYNzrqjtCz+aqwXCz8SUGAyP1IQreOzS2dCEQf+QD+jVJNI+OzZTD6kWQTT+en0Rl
+         Ui0lc155Kz0HHSJek8cskzMxtPvI50lgkwM4/5yVaLy2XiJiyTiD/M5M86W0AtZ5Op6k
+         8EQ9OLHIp3lfl4Db+2Sa7xvrHyy5i+o/H/VjfwC2u3vc5DYmPjlrVa8PI0U4q7Yair3p
+         ZcHP3ZvsyBPZPSWPyQu5JlRuGWdjv6XS7hIkgMrd8XifrCkj6qHYBMkssmhzBQX6u+Lq
+         /BwA==
+X-Gm-Message-State: APjAAAUYvYGZ/XFVcQWUeAoJziINW7QKaJN8os7Rjnzf21VxO1VFh/n4
+        v98ck2eO+7EXMticvSDTgJyu7fng8TI=
+X-Google-Smtp-Source: APXvYqxjNo60pDjliav6Hb6c59I3IewkFpnQk8a3UZqoyEjjf0blzslJRWbMbT5LxTFtZoONDR90wQ==
+X-Received: by 2002:aa7:8497:: with SMTP id u23mr17544958pfn.253.1552035414114;
+        Fri, 08 Mar 2019 00:56:54 -0800 (PST)
+Received: from icarus ([2001:268:c0a4:4f3d:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id n10sm9524340pfa.139.2019.03.08.00.56.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Mar 2019 00:56:53 -0800 (PST)
+Date:   Fri, 8 Mar 2019 17:57:33 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arch@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>, qais.yousef@arm.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 1/9] bitops: Introduce the for_each_set_clump8 macro
+Message-ID: <20190308085733.GA3903@icarus>
+References: <cover.1551598603.git.vilhelm.gray@gmail.com>
+ <12b3a364ac7fc32194fa6f55911dd800aca92a56.1551598603.git.vilhelm.gray@gmail.com>
+ <CACRpkdbvCGRjB1sZWqN3wm660cP8S4-j0ub1j1iYpitDK_eXcQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbvCGRjB1sZWqN3wm660cP8S4-j0ub1j1iYpitDK_eXcQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
-
-On Thu, Mar 7, 2019 at 4:03 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> On Thu, Mar 07, 2019 at 09:58:24AM +0100, Geert Uytterhoeven wrote:
-> > On Fri, Mar 1, 2019 at 5:10 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > > Introduce in-kernel headers and other artifacts which are made available
-> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > > it possible to build kernel modules, run eBPF programs, and other
-> > > tracing programs that need to extend the kernel for tracing purposes
-> > > without any dependency on the file system having headers and build
-> > > artifacts.
-> > >
-> > > On Android and embedded systems, it is common to switch kernels but not
-> > > have kernel headers available on the file system. Raw kernel headers
-> > > also cannot be copied into the filesystem like they can be on other
-> > > distros, due to licensing and other issues. There's no linux-headers
-> > > package on Android. Further once a different kernel is booted, any
-> > > headers stored on the file system will no longer be useful. By storing
-> > > the headers as a compressed archive within the kernel, we can avoid these
-> > > issues that have been a hindrance for a long time.
-> > >
-> > > The feature is also buildable as a module just in case the user desires
-> > > it not being part of the kernel image. This makes it possible to load
-> > > and unload the headers on demand. A tracing program, or a kernel module
-> > > builder can load the module, do its operations, and then unload the
-> > > module to save kernel memory. The total memory needed is 3.8MB.
-> > >
-> > > The code to read the headers is based on /proc/config.gz code and uses
-> > > the same technique to embed the headers.
-> > >
-> > > To build a module, the below steps have been tested on an x86 machine:
-> > > modprobe kheaders
-> > > rm -rf $HOME/headers
-> > > mkdir -p $HOME/headers
-> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > cd my-kernel-module
-> > > make -C $HOME/headers M=$(pwd) modules
-> > > rmmod kheaders
+On Fri, Mar 08, 2019 at 09:31:00AM +0100, Linus Walleij wrote:
+> On Sun, Mar 3, 2019 at 8:47 AM William Breathitt Gray
+> <vilhelm.gray@gmail.com> wrote:
+> 
+> > This macro iterates for each 8-bit group of bits (clump) with set bits,
+> > within a bitmap memory region. For each iteration, "start" is set to the
+> > bit offset of the found clump, while the respective clump value is
+> > stored to the location pointed by "clump". Additionally, the
+> > bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> > respectively get and set an 8-bit value in a bitmap memory region.
 > >
-> > As the usage pattern will be accessing the individual files, what about
-> > implementing a file system that provides read-only access to the internal
-> > kheaders archive?
-> >
-> >     mount kheaders $HOME/headers -t kheaders
->
-> I thought about it already. This is easier said than done though. The archive
-> is compressed from 40MB to 3.6MB. If we leave it uncompressed in RAM, then it
-> will take up the entire 40MB of RAM and in Android we don't even use
-> disk-based swap.
+> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> 
+> Andrew: would you be OK with this being merged in v5.1?
+> 
+> If we need to move the code to drivers/gpio that's OK (though
+> I think it's generally useful) but I need to know to proceed with
+> the William's nice optimization of these drivers.
+> 
+> Yours,
+> Linus Walleij
 
-Sure.
+I was waiting on Andy to suggest some examples out of the GPIO realm,
+but he may be under a heavy workload right so I decided to do a quick
+search for one.
 
-> So we will need some kind of intra file compressed memory representation that
-> a filesystem can use for the backing store. I thought of RAM-backed squashfs
+In drivers/of/unittest.c, there is loop across a bitmap in the
+of_unittest_destroy_tracked_overlays function:
 
-Right, I didn't think of squashfs. Having a kernel module that sets up an MTD
-that can be mounted with squashfs is IMHO an even better (and more generic)
-solution.
+	for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
+		if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
+			continue;
 
-> but it requires squashfs-tools to be installed at build time (which my host
-> distro itself didn't have).
+This section of code is checking each bit individually, and skipping if
+that bit is not set. This looping can be optimized by using the
+for_each_set_clump8 macro to skip clumps of nonset bits (not to mention
+make the logic of the code much simpler and easier to follow by reducing
+the code to a single line):
 
-Squashfs not being part of your host distro is not the hardest problem
-to solve...
+	for_each_set_clump8(id, clump, overlay_id_bits, MAX_UNITTEST_OVERLAYS-1)
 
-> It is just so much easier to use tar + xz at build time, and leave the
-> decompression task to the user. After decompression, the files will live on
-> the disk and the page-cache mechanism will free memory when/if the files fall
-> off the LRUs.
+The for_each_set_clump8 macro is not specific to the GPIO subsystem; I
+just happen to use it in these GPIO drivers simply because I am most
+familar with this section of the kernel (it's where most of my
+contributions occur afterall).
 
-I'm also considering how generic and extensible the solution is.
-What if people need other build artifacts in the future (e.g. signing key to
-load signed modules)?
+Consider this, if I am able to find a use for this macro outside of the
+GPIO subsystem within a matter minutes, then there must be some benefit
+in allowing the rest of the kernel to use the for_each_set_clump8 macro.
+So let's put it in bitops.h rather than restrict it to just the GPIO
+subsystem.
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+William Breathitt Gray
