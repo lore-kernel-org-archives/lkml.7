@@ -2,39 +2,39 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901CEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB13C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E70620661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F3820661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 13:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552052888;
-	bh=I5YNxRpXLfFH6RrhERBJmgRNIZb3XjbJwfpZ0/PbNAs=;
+	s=default; t=1552052890;
+	bh=We3LhRZYculZGs8BV0MSOU2Ntdq8kYRfDs48QsiPEo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOUNxEwYn/NAGyBuCPjPkILurDp9b9sZS/SqXxKfSfSa7ZAMEJLzupS/1bQ2nT73b
-	 M5va5H7l1MC4vxHiqrlE+c0nlODTGNqYSSBcyheUKGzNDVbkMyaZXIaF5hZFRnajNd
-	 Nvgn3MXOOuxdMoafDUVx0mM0fJC4N4S2uF7BfkCI=
+	b=HnEl9JxjwVo/EVYs5WKElJb3d3vCyehG8tw/TWbYqC2eXwCyxeQcvcCRiEQSN6uPA
+	 gglefXoXez60KQs7F0GSMUUPi5O6HAF/tUj01dE+F8GI5yad/qMsXfID5ArXeqxWWG
+	 Q86jfHHII6dCW6c5cva2Wq7HOix1R4PUoxA/ztBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfCHNsH (ORCPT
+        id S1726874AbfCHNsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 08:48:07 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:37846 "EHLO mx1.redhat.com"
+        Fri, 8 Mar 2019 08:48:09 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:47650 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbfCHNr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 08:47:58 -0500
+        id S1726807AbfCHNsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 08:48:03 -0500
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A61C5883CA;
-        Fri,  8 Mar 2019 13:47:57 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id B87B030D78C1;
+        Fri,  8 Mar 2019 13:48:02 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7530E5C1B4;
-        Fri,  8 Mar 2019 13:47:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8856B5C1B4;
+        Fri,  8 Mar 2019 13:48:00 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,69 +46,201 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH 03/11] perf data: Add perf_data__update_dir function
-Date:   Fri,  8 Mar 2019 14:47:37 +0100
-Message-Id: <20190308134745.5057-4-jolsa@kernel.org>
+Subject: [PATCH 05/11] perf header: Add DIR_FORMAT feature to describe directory data
+Date:   Fri,  8 Mar 2019 14:47:39 +0100
+Message-Id: <20190308134745.5057-6-jolsa@kernel.org>
 In-Reply-To: <20190308134745.5057-1-jolsa@kernel.org>
 References: <20190308134745.5057-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 08 Mar 2019 13:47:57 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 08 Mar 2019 13:48:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding perf_data__update_dir function to update
-size for every file within the perf.data directory.
+The data files layout is described by HEADER_DIR_FORMAT
+feature.  Currently it holds only version number (1):
 
-Link: http://lkml.kernel.org/n/tip-3ii12l48u4tyvrzxo1797w7e@git.kernel.org
+     uint64_t version;
+
+The current version holds only version value (1) means
+that data files:
+  - follow the 'data.*' name format
+  - contain raw events data in standard perf format as
+    read from kernel (and need to be sorted)
+
+Future versions are expected to describe different data
+files layout according to special needs.
+
+Link: http://lkml.kernel.org/n/tip-6l53s3oabwr1r4n6wke21d8g@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/util/data.c | 20 ++++++++++++++++++++
- tools/perf/util/data.h |  1 +
- 2 files changed, 21 insertions(+)
+ tools/perf/builtin-record.c |  2 ++
+ tools/perf/util/data.c      | 10 +++++++--
+ tools/perf/util/data.h      |  1 +
+ tools/perf/util/header.c    | 44 ++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/header.h    |  5 +++++
+ 5 files changed, 59 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index e28fd0fde5e0..d568975c5ee3 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -124,6 +124,26 @@ int perf_data__open_dir(struct perf_data *data)
- 	return ret;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e983c8d71a79..a468d882e74f 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -837,6 +837,8 @@ static void record__init_features(struct record *rec)
+ 	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
+ 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
+ 
++	perf_header__clear_feat(&session->header, HEADER_DIR_FORMAT);
++
+ 	perf_header__clear_feat(&session->header, HEADER_STAT);
  }
  
-+int perf_data__update_dir(struct perf_data *data)
-+{
-+	int i;
-+
-+	if (WARN_ON(!data->is_dir))
-+		return -EINVAL;
-+
-+	for (i = 0; i < data->dir.nr; i++) {
-+		struct perf_data_file *file = &data->dir.files[i];
-+		struct stat st;
-+
-+		if (fstat(file->fd, &st))
-+			return -1;
-+
-+		file->size = st.st_size;
-+	}
-+
-+	return 0;
-+}
-+
- static bool check_pipe(struct perf_data *data)
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 498c531e2cb9..41a9f478f0f0 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -14,6 +14,7 @@
+ #include "data.h"
+ #include "util.h"
+ #include "debug.h"
++#include "header.h"
+ 
+ static void close_dir(struct perf_data_file *files, int nr)
  {
- 	struct stat st;
+@@ -41,8 +42,9 @@ int perf_data__create_dir(struct perf_data *data, int nr)
+ 	if (!files)
+ 		return -ENOMEM;
+ 
+-	data->dir.files = files;
+-	data->dir.nr    = nr;
++	data->dir.version = PERF_DIR_VERSION;
++	data->dir.files   = files;
++	data->dir.nr      = nr;
+ 
+ 	for (i = 0; i < nr; i++) {
+ 		struct perf_data_file *file = &files[i];
+@@ -75,6 +77,10 @@ int perf_data__open_dir(struct perf_data *data)
+ 	if (WARN_ON(!data->is_dir))
+ 		return -EINVAL;
+ 
++	/* The version is provided by DIR_FORMAT feature. */
++	if (WARN_ON(data->dir.version != PERF_DIR_VERSION))
++		return -1;
++
+ 	dir = opendir(data->path);
+ 	if (!dir)
+ 		return -EINVAL;
 diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 06aefeda311f..0deeb1af9f54 100644
+index d342469bdfda..6aef8746469f 100644
 --- a/tools/perf/util/data.h
 +++ b/tools/perf/util/data.h
-@@ -79,4 +79,5 @@ int perf_data__switch(struct perf_data *data,
- int perf_data__create_dir(struct perf_data *data, int nr);
- int perf_data__open_dir(struct perf_data *data);
- void perf_data__close_dir(struct perf_data *data);
-+int perf_data__update_dir(struct perf_data *data);
- #endif /* __PERF_DATA_H */
+@@ -24,6 +24,7 @@ struct perf_data {
+ 	enum perf_data_mode	 mode;
+ 
+ 	struct {
++		u64			 version;
+ 		struct perf_data_file	*files;
+ 		int			 nr;
+ 	} dir;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 01b324c275b9..b0683bf4d9f3 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -861,6 +861,21 @@ static int write_clockid(struct feat_fd *ff,
+ 			sizeof(ff->ph->env.clockid_res_ns));
+ }
+ 
++static int write_dir_format(struct feat_fd *ff,
++			    struct perf_evlist *evlist __maybe_unused)
++{
++	struct perf_session *session;
++	struct perf_data *data;
++
++	session = container_of(ff->ph, struct perf_session, header);
++	data = session->data;
++
++	if (WARN_ON(!perf_data__is_dir(data)))
++		return -1;
++
++	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
++}
++
+ static int cpu_cache_level__sort(const void *a, const void *b)
+ {
+ 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
+@@ -1341,6 +1356,17 @@ static void print_clockid(struct feat_fd *ff, FILE *fp)
+ 		ff->ph->env.clockid_res_ns * 1000);
+ }
+ 
++static void print_dir_format(struct feat_fd *ff, FILE *fp)
++{
++	struct perf_session *session;
++	struct perf_data *data;
++
++	session = container_of(ff->ph, struct perf_session, header);
++	data = session->data;
++
++	fprintf(fp, "# directory data version : %"PRIu64"\n", data->dir.version);
++}
++
+ static void free_event_desc(struct perf_evsel *events)
+ {
+ 	struct perf_evsel *evsel;
+@@ -2373,6 +2399,21 @@ static int process_clockid(struct feat_fd *ff,
+ 	return 0;
+ }
+ 
++static int process_dir_format(struct feat_fd *ff,
++			      void *_data __maybe_unused)
++{
++	struct perf_session *session;
++	struct perf_data *data;
++
++	session = container_of(ff->ph, struct perf_session, header);
++	data = session->data;
++
++	if (WARN_ON(!perf_data__is_dir(data)))
++		return -1;
++
++	return do_read_u64(ff, &data->dir.version);
++}
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2432,7 +2473,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPN(CACHE,		cache,		true),
+ 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
+-	FEAT_OPR(CLOCKID,       clockid,        false)
++	FEAT_OPR(CLOCKID,	clockid,	false),
++	FEAT_OPN(DIR_FORMAT,	dir_format,	false)
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 0d553ddca0a3..6a231340238d 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -39,6 +39,7 @@ enum {
+ 	HEADER_SAMPLE_TIME,
+ 	HEADER_MEM_TOPOLOGY,
+ 	HEADER_CLOCKID,
++	HEADER_DIR_FORMAT,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
+@@ -48,6 +49,10 @@ enum perf_header_version {
+ 	PERF_HEADER_VERSION_2,
+ };
+ 
++enum perf_dir_version {
++	PERF_DIR_VERSION	= 1,
++};
++
+ struct perf_file_section {
+ 	u64 offset;
+ 	u64 size;
 -- 
 2.17.2
 
