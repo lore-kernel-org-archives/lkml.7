@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BB6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D303DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F38420811
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A407720811
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 10:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfCHKAW (ORCPT
+        id S1726298AbfCHKEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 05:00:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53384 "EHLO mx1.suse.de"
+        Fri, 8 Mar 2019 05:04:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55084 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726286AbfCHKAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 05:00:22 -0500
+        id S1725789AbfCHKEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 05:04:53 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0977AF50;
-        Fri,  8 Mar 2019 10:00:19 +0000 (UTC)
-Date:   Fri, 8 Mar 2019 11:00:16 +0100
+        by mx1.suse.de (Postfix) with ESMTP id 67407AD4C;
+        Fri,  8 Mar 2019 10:04:52 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 11:04:49 +0100
 From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
         linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -39,53 +39,49 @@ Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Peter Feiner <pfeiner@google.com>,
         linux-serial@vger.kernel.org,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20190308100016.d2v6avtotjo3eyxo@pathway.suse.cz>
+Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
+Message-ID: <20190308100449.dccctqo6i4xa6bhq@pathway.suse.cz>
 References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190213025520.GA5803@jagdpanzerIV>
- <874l9721hf.fsf@linutronix.de>
- <20190304052335.GA6648@jagdpanzerIV>
- <87lg1rggcz.fsf@linutronix.de>
+ <20190212143003.48446-9-john.ogness@linutronix.de>
+ <20190304073856.GA552@jagdpanzerIV>
+ <87va0uopmd.fsf@linutronix.de>
+ <20190308013134.GB4063@jagdpanzerIV>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87lg1rggcz.fsf@linutronix.de>
+In-Reply-To: <20190308013134.GB4063@jagdpanzerIV>
 User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-03-07 10:53:48, John Ogness wrote:
-> On 2019-03-04, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
-> > If there are setups which can be fully !atomic (in terms of console
-> > output) then we, essentially, have a fully preemptible kthread printk
-> > implementation.
+On Fri 2019-03-08 10:31:34, Sergey Senozhatsky wrote:
+> On (03/07/19 13:06), John Ogness wrote:
+> > On 2019-03-04, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+> > > This, theoretically, creates a whole new world of possibilities for
+> > > console drivers. Now they can do GFP_KERNEL allocations and stall
+> > > printk_kthread during OOM; or they can explicitly reschedule from
+> > > ->write() callback (via console_conditional_schedule()) because
+> > > console_lock() sets console_may_schedule.
+> > 
+> This can stall the entire printing pipeline
 > 
-> Correct. I've mentioned in another response[0] some ideas about what
-> could be done to aid this.
+> OOM -> printk_kthread() -> console_lock() -> con_foo() -> kmalloc(GFP_KERNEL) -> OOM
 > 
-> I understand that fully preemptible kthread printing is unacceptable for
-> you. Since all current console drivers are already irq safe, I'm
-> wondering if using irq_work to handle the emergency printing for console
-> drivers without write_atomic() would help. (If the printk caller is in a
-> context that write() supports, then write() could be called directly.)
-> This would also demand that the irq-safe requirements for write() are
-> not relaxed. The printk-kthread might still be faster than irq_work, but
-> it might increase reliability if an irq_work is triggered as an extra
-> precaution.
+> > Although, as I mentioned in a previous response[0], perhaps we should
+> > not loosen the requirements on write().
+> 
+> Right. Console drivers better stay restricted; very restricted.
 
-It is getting more and more complicated. The messages would be pushed
-directly, from irq, and kthread. It would depend how the code would
-look like but I am not much optimistic.
+I agree here.
 
-Note that you could not pass any data to the irq_work handler.
-It would need to iterate over the logbuffer and take care of
-all non-handled emergency messages.
+> > It is exactly that disable_preempt() that is so harmful for realtime tasks.
 
-Anyway, we could solve this later. We need to keep the current
-console_unlock() handling as a fallback until enough consoles
-support the direct mode anyway.
+> I'll reply in another email (later today, or tomorrow).
+
+I see. But I have troubles to imagine a preemtible direct console
+output. The result would be mixed messages on a single line.
 
 Best Regards,
 Petr
