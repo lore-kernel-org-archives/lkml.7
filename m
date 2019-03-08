@@ -2,101 +2,79 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622CCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A89C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A61C20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593F42171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfCHMpI (ORCPT
+        id S1726588AbfCHMpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:45:08 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:45769 "EHLO
+        Fri, 8 Mar 2019 07:45:12 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:53981 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbfCHMpH (ORCPT
+        with ESMTP id S1726540AbfCHMpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:45:07 -0500
+        Fri, 8 Mar 2019 07:45:09 -0500
 Received: from orion.localdomain ([95.117.97.241]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N6bPS-1h0eOv3BrK-0183ts; Fri, 08 Mar 2019 13:44:55 +0100
+ 1MXXhv-1hZz9T2kzH-00Z0GT; Fri, 08 Mar 2019 13:44:56 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
         info@metux.net, apw@canonical.com, joe@perches.com,
         linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Debian build polishing
-Date:   Fri,  8 Mar 2019 13:44:19 +0100
-Message-Id: <1552049064-32044-1-git-send-email-info@metux.net>
+Subject: [PATCH v1 3/5] scripts: mkdebian: fix missing dependencies
+Date:   Fri,  8 Mar 2019 13:44:22 +0100
+Message-Id: <1552049064-32044-4-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:jdbW23/4ghILwIplAy6XJQc6Z8fdTfXkxdh6S1EwuIyw7WIrHTh
- OInxqbLJSC745PYd4K5lPNtBWGgQV/fgVlNcI0VRyHhczyauxA0IZg44O2/Y2HcBsFaUgJL
- AuRLczXLsW8pRpc3avB+CiJaIzS4Kj9k2sU+c00hw0ET3z+aDnKCHsDqKRGElB3Jsex8n5l
- ZWmunmPJI2iEbUvpS/1Vw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rFLE0CIvP0s=:Z1cGy8778McGRyBXeAPAea
- r5a74Jts7tbIeG/9oTF25b2MdD17b4b47BokYkWnozLp7U61n3bHC9E5A+tI2bn6iR8fwo61L
- gm0UnCFoJW5C5cz/9uURAwqBOaQb0lh8cGiN/eeRsj20kj/UNKvbVJmjcH2wlNVpjEzcChLJC
- cQLZBJP1FeH2+CT9fVFhJxV4Pvre6p9n0vR1pIBEV/en+4qBn7Qdi+TFyagua+ct/ifMEHhg6
- 93IVgzm73AioZ2r/iwJPoaOp9wGgggT3XYPr7hePMzKoknJkSA9zMMKOIlZN3VAtXZXaHo1fe
- lzMHwp5vDKk+7qRMs2SV18AtQARzB2/oBzvHJisR5xPd89YnR8ik99EK2ONSceLvsV9pFE/Mb
- 7ez82dkzzBG82S6viplefqBuPnXyXGYkpkKD5u+OoZizCzyTPON/8Wj2zLKC32zr+N5Azy9F/
- 6BiNtXnxnIazAbVVtYFieP/n1perYLBAnjJjACQbewUp3OtngP3C6ofL8UrDxW2gijo4yNzCQ
- ozv+i/aUofWFdKR7xaI5cxwGRpXf8hXpSv6vtXZFlmx9HQdcXyiPv1xSrUp3+4EWktDamzq+x
- M21etRDS4rYs4JEb+UCj9Q2Oo/EZONca94yz7OAufukfnF72ELJ1MtrLMwtkG/RV6h7DJuXsJ
- /MW6xBlQ6p8LTxNAbE85MAQScg1Kuoe2iyQXv78pPoOKZSgV7jaaTZdM82Id1KMCTqUeC86GT
- M7VCfL+k1eWNzLtZHy8qDFF92tvN9lemuC8EOg==
+In-Reply-To: <1552049064-32044-1-git-send-email-info@metux.net>
+References: <1552049064-32044-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:OWyby/vHANVNNMYaidRl2wwWpg1kO3p0r+hXraXU1Tf2ssUBzr9
+ dyd6kvrBNBzqHxakCo0LQvcZlH8oNuuanpoTRkLEDqhoKGHLBUWBBUHPewtPmpnDVpBsWGx
+ A2Mc/4Oqf8j5Kv6j89BLnNndENBSOGj+64lJZ/tp1K67mk3pWOmA/KUhORhZuMo2ZPDozPn
+ i09lGvD/uHC00uMFqPTyg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:C3yabQBAdw4=:kGWe2kRo8q+AWt4ba012Vj
+ XCERP/kV+/9ZHCa5QTWgZBdOIs8G+ZhuKlKIl5746z14kYPdEwlW66W9lWryVBugwtVpbCL+n
+ L3OhSeKL41CrzOPgNpSaV5xValD2ditTBFtmzHRet2zIRJ7vMaIAenNHFRe+MDMb2DSpRBtMW
+ q5oWLvfNUFOSPoV0bDVgJ6Uik88MiQ+rC6rk2/LQBLHT9B4KwvVZo70oiXa19FszxjS1nuuPH
+ yuHGk0aH4o3t1+LCErjj9iqAdmISOaoijCmwQmiJePUDUpRFX3UOM6C2UVQAuQbgNvDfQxzZs
+ SwjwQJI1vAz7gpAW2yDkRncu3O/+N3ZkOXp5XRTRHIVHdhR3YmplAvpB1AVX7iKUCYfXMs5H8
+ mWqdJtYGgWWKtpIdoQnhR+3R9xZRiRsccht5NkUgYbllXoEvyfL8YFVEesdJ2vfqXI3AK4BHA
+ ackWEUsIUrFXfceF2mWUhEcvOe02afBJU3H0kK9LsUdUulfQ4EyUh6ErvW4/mBbNRCVxRd0sH
+ vsR0/6YsbyeJqKkigvAMHM00uECaclJ7XuG5Bcn1csAZpAe53ajJqJYrc+7QIa1rLHgm7ApmX
+ nSO+cFTM5xWQ5JRXjOo4VJLdzzDIEWXgkUrT6TRH7Btvo7z4NC7kCD2pmx7DpqLqHlAr10dTg
+ 9I177g1/iEv5uH0R7RiLjpU/AyA0/ttCJMqx+T5q6aNVyiBspGvyWPa2c2u2fwnA43jYbA2TE
+ 9NaeDj4AAEev+hcQgN10C01W2/WfyDqMmkTTCg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+We missed some build dependencies in the generated debian/control file.
 
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ scripts/package/mkdebian | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-here're some patches for polishing up the Debian packaging stuff,
-so it can be directly used w/ usual Debian machinery like
-pbuilder, git-buildpackage, dck-buildpackage, etc.
-
-These expect debian/rules to exist in the unpacked/patched tree
-and drive the whole build. Currently 'make deb-pkg' does it in
-the opposite direction - it creates debian/rules and fills in
-some data, that's derived from .config etc.
-
-My goal is building the kernel package in exactly the same way as
-any other Debian package - so there must be a debian/rules as the
-primary entry point. To do that, w/ minimal change and w/o breaking
-the existing machinery, I'm going in several steps:
-
-#1: add Makefile rules for retrieving missing makefile-internal
-    variables kernel config system .config (eg. kernel arch).
-
-    this could be used for other build systems, too.
-    just call: `make kernelarch` or `make kernellocalversion`
-
-#2: add an env variable for changing the name of the rules file
-    generated by mkdebian. When coming from an existing rules
-    file, we can prevent this from being overwritten.
-
-#3: add a generic debian/rules file, that calls mkdebian to
-    create the remaining debian control files (w/ rules redirected
-    into nirvana)
-
-The existing `make deb-pkg` is bypassed and remains ontouched.
-
-One point still puzzling me: once the debian/rules is applied and
-somebody calls `make deb-pkg`, he'll end up w/ unclean tree, as
-now a git-tracked file is changed.
-
-Perhaps I just change deb-pkg to call debian/rules then, but I'd
-like to hear your oppinions about this, before.
-
-
-What do you think about that ?
-
-
---mtx
-
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index ff226be..1caaf0b 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -173,7 +173,7 @@ Source: $sourcename
+ Section: kernel
+ Priority: optional
+ Maintainer: $maintainer
+-Build-Depends: bc, kmod, cpio
++Build-Depends: bc, kmod, cpio, bison, libelf-dev, libssl-dev, flex
+ Homepage: http://www.kernel.org/
+ 
+ Package: $packagename
+-- 
+1.9.1
 
