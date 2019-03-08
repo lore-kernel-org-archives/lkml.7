@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9BDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318CBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9382087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAFE2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049923;
-	bh=1iaQKpZ+NBJrfufJ5gS3ru8ut1VRLtvr4dXyWM+M6ww=;
+	s=default; t=1552049928;
+	bh=RwfKB2IeNVEDA84hpAvqr4EoCGU59xUT9gm9arikQWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=InQ9RC0g4+JsGaLI1Tr9UHDpOzTNvqdpC+Ip1GnXD9381oHyK4/Ip9ZNZ7YaYdX00
-	 b6BqDUquwbgwFIni6ggnFePc4GnkdAEVPRamebRFDvRHrvEriGOf1aW1Tb1GJ+0oh8
-	 7Qkok5MFckDJT8n/IeQ6wQfzfrU+aS0enm/HPwn8=
+	b=Vs2qoU6DAv9806+844IWrehjQceXTo1t5cNdkLjk9QbmytzxQhq4sDjzzQhZ+CeXX
+	 El4/NroNImfF7VZdVBVUEumvNUyL3NEp3+s5yrDCFe8f/SA4vgIyoBld/88g8nbtc3
+	 AXz4iJuUPI5WT7w1C79MBuej/HY1cpRishMXMQfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfCHM6m (ORCPT
+        id S1728060AbfCHM6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:58:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:58:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfCHM6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:58:37 -0500
+        id S1728044AbfCHM6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:58:43 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD2BB20449;
-        Fri,  8 Mar 2019 12:58:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 052692085A;
+        Fri,  8 Mar 2019 12:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049916;
-        bh=1iaQKpZ+NBJrfufJ5gS3ru8ut1VRLtvr4dXyWM+M6ww=;
+        s=default; t=1552049922;
+        bh=RwfKB2IeNVEDA84hpAvqr4EoCGU59xUT9gm9arikQWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xpWmjvHwmgIPXfApZ0AlZnnawruvDChKJQSs+RpxTsdH/eF0TM10cRGx9YczPk7vN
-         v1DxVGHRut/RS9KSOxXxgNL2WuqGnY5YmIGhyW0xjyBUjo78K08RgB/bARUurSmfKc
-         Bslj6lOJ5EoYLKagDAMhQSjobr5tSXr4gADJzZXI=
+        b=rTBX9aDGFfMO6bTa1gObibBJzJbbKOQeeoUQtGvdAIiCD6xPPLhiyquG6b5uN5yDU
+         UsLkJY7/g4jQh/WyqHyEN8WQq4mGKN29bF5zgcK3ckyv7tHGtaX4N7M8XXLx+iyF4m
+         O5ErPkJrcwA75/h7V7uzgWN/Hph9iBbClq7itVbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org, Chris.Healy@zii.aero,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 26/68] ipv4: Add ICMPv6 support when parse route ipproto
-Date:   Fri,  8 Mar 2019 13:49:56 +0100
-Message-Id: <20190308124912.090410704@linuxfoundation.org>
+Subject: [PATCH 4.19 28/68] net: dsa: mv88e6xxx: Fix statistics on mv88e6161
+Date:   Fri,  8 Mar 2019 13:49:58 +0100
+Message-Id: <20190308124912.173890754@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
 References: <20190308124910.696595153@linuxfoundation.org>
@@ -66,100 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
 
-[ Upstream commit 5e1a99eae84999a2536f50a0beaf5d5262337f40 ]
+[ Upstream commit a6da21bb0eae459a375d5bd48baed821d14301d0 ]
 
-For ip rules, we need to use 'ipproto ipv6-icmp' to match ICMPv6 headers.
-But for ip -6 route, currently we only support tcp, udp and icmp.
+Despite what the datesheet says, the silicon implements the older way
+of snapshoting the statistics. Change the op.
 
-Add ICMPv6 support so we can match ipv6-icmp rules for route lookup.
-
-v2: As David Ahern and Sabrina Dubroca suggested, Add an argument to
-rtm_getroute_parse_ip_proto() to handle ICMP/ICMPv6 with different family.
-
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Fixes: eacb9384a3fe ("ipv6: support sport, dport and ip_proto in RTM_GETROUTE")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reported-by: Chris.Healy@zii.aero
+Tested-by: Chris.Healy@zii.aero
+Fixes: 0ac64c394900 ("net: dsa: mv88e6xxx: mv88e6161 uses mv88e6320 stats snapshot")
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip.h   |    2 +-
- net/ipv4/netlink.c |   17 +++++++++++++----
- net/ipv4/route.c   |    2 +-
- net/ipv6/route.c   |    3 ++-
- 4 files changed, 17 insertions(+), 7 deletions(-)
+ drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -687,7 +687,7 @@ extern int sysctl_icmp_msgs_burst;
- int ip_misc_proc_init(void);
- #endif
- 
--int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto,
-+int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto, u8 family,
- 				struct netlink_ext_ack *extack);
- 
- #endif	/* _IP_H */
---- a/net/ipv4/netlink.c
-+++ b/net/ipv4/netlink.c
-@@ -3,9 +3,10 @@
- #include <linux/types.h>
- #include <net/net_namespace.h>
- #include <net/netlink.h>
-+#include <linux/in6.h>
- #include <net/ip.h>
- 
--int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto,
-+int rtm_getroute_parse_ip_proto(struct nlattr *attr, u8 *ip_proto, u8 family,
- 				struct netlink_ext_ack *extack)
- {
- 	*ip_proto = nla_get_u8(attr);
-@@ -13,11 +14,19 @@ int rtm_getroute_parse_ip_proto(struct n
- 	switch (*ip_proto) {
- 	case IPPROTO_TCP:
- 	case IPPROTO_UDP:
-+		return 0;
- 	case IPPROTO_ICMP:
-+		if (family != AF_INET)
-+			break;
-+		return 0;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case IPPROTO_ICMPV6:
-+		if (family != AF_INET6)
-+			break;
- 		return 0;
--	default:
--		NL_SET_ERR_MSG(extack, "Unsupported ip proto");
--		return -EOPNOTSUPP;
-+#endif
- 	}
-+	NL_SET_ERR_MSG(extack, "Unsupported ip proto");
-+	return -EOPNOTSUPP;
- }
- EXPORT_SYMBOL_GPL(rtm_getroute_parse_ip_proto);
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -2814,7 +2814,7 @@ static int inet_rtm_getroute(struct sk_b
- 
- 	if (tb[RTA_IP_PROTO]) {
- 		err = rtm_getroute_parse_ip_proto(tb[RTA_IP_PROTO],
--						  &ip_proto, extack);
-+						  &ip_proto, AF_INET, extack);
- 		if (err)
- 			return err;
- 	}
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -4907,7 +4907,8 @@ static int inet6_rtm_getroute(struct sk_
- 
- 	if (tb[RTA_IP_PROTO]) {
- 		err = rtm_getroute_parse_ip_proto(tb[RTA_IP_PROTO],
--						  &fl6.flowi6_proto, extack);
-+						  &fl6.flowi6_proto, AF_INET6,
-+						  extack);
- 		if (err)
- 			goto errout;
- 	}
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -3070,7 +3070,7 @@ static const struct mv88e6xxx_ops mv88e6
+ 	.port_disable_pri_override = mv88e6xxx_port_disable_pri_override,
+ 	.port_link_state = mv88e6352_port_link_state,
+ 	.port_get_cmode = mv88e6185_port_get_cmode,
+-	.stats_snapshot = mv88e6320_g1_stats_snapshot,
++	.stats_snapshot = mv88e6xxx_g1_stats_snapshot,
+ 	.stats_set_histogram = mv88e6095_g1_stats_set_histogram,
+ 	.stats_get_sset_count = mv88e6095_stats_get_sset_count,
+ 	.stats_get_strings = mv88e6095_stats_get_strings,
 
 
