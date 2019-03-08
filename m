@@ -2,421 +2,116 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2C9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052EAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566E520851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D8620857
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 17:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfCHR7f (ORCPT
+        id S1727087AbfCHR7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 12:59:35 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:55038 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfCHR7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 12:59:34 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C3E630718CB;
-        Fri,  8 Mar 2019 17:59:33 +0000 (UTC)
-Received: from x2.localnet (ovpn-122-103.rdu2.redhat.com [10.10.122.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 755B1600C8;
-        Fri,  8 Mar 2019 17:59:25 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     linux-audit@redhat.com, Paul Moore <paul@paul-moore.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH ghak10 v6 2/2] ntp: Audit NTP parameters adjustment
-Date:   Fri, 08 Mar 2019 12:59:19 -0500
-Message-ID: <2029938.2WYqZXpe8D@x2>
-Organization: Red Hat
-In-Reply-To: <20190307123254.348-3-omosnace@redhat.com>
-References: <20190307123254.348-1-omosnace@redhat.com> <20190307123254.348-3-omosnace@redhat.com>
+        Fri, 8 Mar 2019 12:59:39 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:33865 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfCHR7i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 12:59:38 -0500
+Received: by mail-vs1-f67.google.com with SMTP id h7so7162794vsl.1;
+        Fri, 08 Mar 2019 09:59:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bl23IqlXVLl4dYGtmdvkTWrze0qrDnnH2IRJyRYQ07A=;
+        b=Ji01P01h5hyyxyyp6yKIIczbonBI9eBQP6wlkptiqGmBcxLypFENFRcj2+1Iytl9Eh
+         ArKd03pQ0c6y8ZxzBOC4K9wH/QU+1SqLLSolDuHO4HbmNTSDoO4WQjrsgpvFL0E7keBI
+         pCC8/KjX8QMgFXQ54kEKq5tT6/c1Cj3h4p/Wna6aXFYIpu5w+VbGWK430yi/E/cw3T5B
+         h/21LpDK9OzbkPWLKAVbuOMA6bKhpWJ3Dbi7HwjQdId7Jho4QzwvOwVcHxNFsDkzMb35
+         sWc7fohzrjtyQqgpBiM1e7J+jtizpb8ezUPLqv2XCiDrdro9wrviTixVrglvZqEQ3Frl
+         STzw==
+X-Gm-Message-State: APjAAAXH+knGDrkbvJ0zJypbzLTMEq32TgdTcB1hx1jHf+X1jAbYy8TL
+        h52U9y2HpodlYOURJq+FjJGNvf7ZUJCjYOGBwz4=
+X-Google-Smtp-Source: APXvYqxNU0D/qLTuYnHQcOn7djLmaMNaAdJtt5VLHICD1D64fK6fLPvqzV1httDPl0lGr28w+SEkOKlMXij+q9SlbI8=
+X-Received: by 2002:a67:fc9a:: with SMTP id x26mr10580270vsp.166.1552067976545;
+ Fri, 08 Mar 2019 09:59:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 08 Mar 2019 17:59:33 +0000 (UTC)
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+ <20190307150343.GB258852@google.com> <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
+ <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com> <20190308140251.GC25768@kroah.com>
+In-Reply-To: <20190308140251.GC25768@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 8 Mar 2019 18:59:23 +0100
+Message-ID: <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, March 7, 2019 7:32:54 AM EST Ondrej Mosnacek wrote:
-> Emit an audit record every time selected NTP parameters are modified
-> from userspace (via adjtimex(2) or clock_adjtime(2)).
-> 
-> Such events will now generate records of type AUDIT_TIME_ADJNTPVAL
-> containing the following fields:
->   - op -- which value was adjusted:
->     - offset -- corresponding to the time_offset variable
->     - freq   -- corresponding to the time_freq variable
->     - status -- corresponding to the time_status variable
->     - adjust -- corresponding to the time_adjust variable
->     - tick   -- corresponding to the tick_usec variable
->     - tai    -- corresponding to the timekeeping's TAI offset
->   - old -- the old value
->   - new -- the new value
-> 
-> For reference, running the following commands:
-> 
->     auditctl -D
->     auditctl -a exit,always -F arch=b64 -S adjtimex
->     chronyd -q
-> 
-> produces audit records like this:
-> 
-> type=SYSCALL msg=audit(1530616044.507:5): arch=c000003e syscall=159
-> success=yes exit=5 a0=7fff57e78c00 a1=0 a2=4 a3=7f754ae28c0a items=0
-> ppid=626 pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0
-> fsgid=0 tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
-> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
-> msg=audit(1530616044.507:5): proctitle=6368726F6E7964002D71 type=SYSCALL
-> msg=audit(1530616044.507:6): arch=c000003e syscall=159 success=yes exit=5
-> a0=7fff57e78c00 a1=1 a2=1 a3=7f754ae28c0a items=0 ppid=626 pid=629 auid=0
-> uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=1
-> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
-> key=(null) type=PROCTITLE msg=audit(1530616044.507:6):
-> proctitle=6368726F6E7964002D71 type=TIME_ADJNTPVAL
-> msg=audit(1530616044.507:7): op=status old=64 new=8256 type=SYSCALL
-> msg=audit(1530616044.507:7): arch=c000003e syscall=159 success=yes exit=5
-> a0=7fff57e78c00 a1=1 a2=1 a3=7f754ae28c0a items=0 ppid=626 pid=629 auid=0
-> uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=1
-> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
-> key=(null) type=PROCTITLE msg=audit(1530616044.507:7):
-> proctitle=6368726F6E7964002D71 type=TIME_ADJNTPVAL
-> msg=audit(1530616044.507:8): op=status old=8256 new=8257 type=SYSCALL
-> msg=audit(1530616044.507:8): arch=c000003e syscall=159 success=yes exit=5
-> a0=7fff57e78ab0 a1=0 a2=55e129c850c0 a3=7f754ae28c0a items=0 ppid=626
-> pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0
-> tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
-> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
-> msg=audit(1530616044.507:8): proctitle=6368726F6E7964002D71
-> type=TIME_ADJNTPVAL msg=audit(1530616044.507:9): op=status old=8257 new=64
-> type=SYSCALL msg=audit(1530616044.507:9): arch=c000003e syscall=159
-> success=yes exit=5 a0=7fff57e78ab0 a1=0 a2=55e129c850c0 a3=7f754ae28c0a
-> items=0 ppid=626 pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0
-> sgid=0 fsgid=0 tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
-> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
-> msg=audit(1530616044.507:9): proctitle=6368726F6E7964002D71 type=SYSCALL
-> msg=audit(1530616044.507:10): arch=c000003e syscall=159 success=yes exit=5
-> a0=7fff57e78a70 a1=0 a2=55e129c850c0 a3=7f754ae28c0a items=0 ppid=626
-> pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0
-> tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd"
-> subj=system_u:system_r:kernel_t:s0 key=(null) type=PROCTITLE
-> msg=audit(1530616044.507:10): proctitle=6368726F6E7964002D71
-> type=TIME_ADJNTPVAL msg=audit(1530616044.511:11): op=freq old=0
-> new=49180377088000 type=SYSCALL msg=audit(1530616044.511:11):
-> arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78ad0 a1=0 a2=2710
-> a3=f42f82a800000 items=0 ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385
-> suid=385 fsuid=385 egid=382 sgid=382 fsgid=382 tty=(none) ses=1
-> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
-> key=(null) type=PROCTITLE msg=audit(1530616044.511:11):
-> proctitle=6368726F6E7964002D71 type=SYSCALL msg=audit(1530616044.521:12):
-> arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78b40 a1=1 a2=40
-> a3=f91f6ef84fbab items=0 ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385
-> suid=385 fsuid=385 egid=382 sgid=382 fsgid=382 tty=(none) ses=1
-> comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0
-> key=(null) type=PROCTITLE msg=audit(1530616044.521:12):
-> proctitle=6368726F6E7964002D71 type=TIME_ADJNTPVAL
-> msg=audit(1530616049.652:13): op=status old=64 new=8256 type=SYSCALL
-> msg=audit(1530616049.652:13): arch=c000003e syscall=159 success=yes exit=5
-> a0=7fff57e78270 a1=1 a2=fffffffffffffff0 a3=137b828205ca12 items=0
-> ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385 suid=385 fsuid=385
-> egid=382 sgid=382 fsgid=382 tty=(none) ses=1 comm="chronyd"
-> exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0 key=(null)
-> type=PROCTITLE msg=audit(1530616049.652:13):
-> proctitle=6368726F6E7964002D71 type=SYSCALL msg=audit(1530616033.783:14):
-> arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78bc0 a1=0 a2=2710
-> a3=0 items=0 ppid=626 pid=629 auid=0 uid=385 gid=382 euid=385 suid=385
-> fsuid=385 egid=382 sgid=382 fsgid=382 tty=(none) ses=1 comm="chronyd"
-> exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0 key=(null)
-> type=PROCTITLE msg=audit(1530616033.783:14):
-> proctitle=6368726F6E7964002D71
-> 
-> The chronyd command that produced the above records executed the
-> following adjtimex(2) syscalls (as per strace output):
-> 
-> adjtimex({modes=ADJ_OFFSET|0x8000, offset=0, freq=0, maxerror=16000000,
-> esterror=16000000, status=STA_UNSYNC, constant=2, precision=1,
-> tolerance=32768000, time={tv_sec=1530616044, tv_usec=507215}, tick=10000,
-> ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0, errcnt=0,
-> stbcnt=0, tai=0}) = 5 (TIME_ERROR) adjtimex({modes=ADJ_MAXERROR, offset=0,
-> freq=0, maxerror=0, esterror=16000000, status=STA_UNSYNC, constant=2,
-> precision=1, tolerance=32768000, time={tv_sec=1530616044, tv_usec=507438},
-> tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0,
-> errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_SETOFFSET|ADJ_NANO, offset=0, freq=0,
-> maxerror=16000000, esterror=16000000, status=STA_UNSYNC|STA_NANO,
-> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616044,
-> tv_usec=507604737}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
-> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_OFFSET|ADJ_STATUS, offset=0, freq=0,
-> maxerror=16000000, esterror=16000000, status=STA_PLL|STA_UNSYNC|STA_NANO,
-> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616044,
-> tv_usec=507698330}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
-> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_STATUS, offset=0, freq=0, maxerror=16000000,
-> esterror=16000000, status=STA_UNSYNC, constant=2, precision=1,
-> tolerance=32768000, time={tv_sec=1530616044, tv_usec=507792}, tick=10000,
-> ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0, errcnt=0,
-> stbcnt=0, tai=0}) = 5 (TIME_ERROR) adjtimex({modes=0, offset=0, freq=0,
-> maxerror=16000000, esterror=16000000, status=STA_UNSYNC, constant=2,
-> precision=1, tolerance=32768000, time={tv_sec=1530616044, tv_usec=508000},
-> tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0,
-> errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_FREQUENCY|ADJ_TICK, offset=0, freq=750433,
-> maxerror=16000000, esterror=16000000, status=STA_UNSYNC, constant=2,
-> precision=1, tolerance=32768000, time={tv_sec=1530616044, tv_usec=512146},
-> tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0, jitcnt=0, calcnt=0,
-> errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_MAXERROR|ADJ_ESTERROR|ADJ_STATUS, offset=0,
-> freq=750433, maxerror=16000000, esterror=16000000, status=STA_UNSYNC,
-> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616044,
-> tv_usec=522506}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
-> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_SETOFFSET|ADJ_NANO, offset=0, freq=750433,
-> maxerror=16000000, esterror=16000000, status=STA_UNSYNC|STA_NANO,
-> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616033,
-> tv_usec=778717675}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
-> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
-> adjtimex({modes=ADJ_FREQUENCY|ADJ_TICK, offset=0, freq=750433,
-> maxerror=16000000, esterror=16000000, status=STA_UNSYNC|STA_NANO,
-> constant=2, precision=1, tolerance=32768000, time={tv_sec=1530616033,
-> tv_usec=784644657}, tick=10000, ppsfreq=0, jitter=0, shift=0, stabil=0,
-> jitcnt=0, calcnt=0, errcnt=0, stbcnt=0, tai=0}) = 5 (TIME_ERROR)
+Hi Greg,
 
-This is needed for common criteria. Requirements are getting stricter in 
-certifications of IT products that are time stamp sensitive. The new record 
-format looks fine to me.
+On Fri, Mar 8, 2019 at 6:05 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, Mar 08, 2019 at 05:42:32AM -0800, Joel Fernandes wrote:
+> > On Fri, Mar 8, 2019, 3:53 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > It is just so much easier to use tar + xz at build time, and leave the
+> > > > decompression task to the user. After decompression, the files will live on
+> > > > the disk and the page-cache mechanism will free memory when/if the files fall
+> > > > off the LRUs.
+> > >
+> > > I'm also considering how generic and extensible the solution is.
+> > > What if people need other build artifacts in the future (e.g. signing key to
+> > > load signed modules)?
+> >
+> > That sounds like it could be useful. I don't see any reason off the
+> > top why that would not be possible to add to the list of archived
+> > files in the future. The patch allows populating the list of files
+> > from Kbuild using ikh_file_list variable.
+>
+> Um, no, you don't want the signing key in the kernel itself, as that
+> totally defeats the purpose of the signing key :)
 
-Ack for the record format.
+In a loadable module?
+He who has the module, can build and sign more modules.
 
--Steve
+Gr{oetje,eeting}s,
 
-> (The struct timex fields above are from *after* the syscall was
-> executed, so they contain the current (new) values as set from the
-> kernel, except of the 'modes' field, which contains the original value
-> sent by the caller.)
-> 
-> The changes to the time_maxerror, time_esterror, and time_constant
-> variables are not logged, as these are not important for security. Also,
-> no-op adjustments that do not actually change the value are not logged.
-> 
-> An overview of parameter changes that can be done via do_adjtimex()
-> (based on information from Miroslav Lichvar) and whether they are
-> audited:
->   __timekeeping_set_tai_offset() -- sets the offset from the
->                                     International Atomic Time
->                                     (AUDITED)
->   NTP variables:
->     time_offset -- can adjust the clock by up to 0.5 seconds per call
->                    and also speed it up or slow down by up to about
->                    0.05% (43 seconds per day) (AUDITED)
->     time_freq -- can speed up or slow down by up to about 0.05%
->     time_status -- can insert/delete leap seconds and it also enables/
->                    disables synchronization of the hardware real-time
->                    clock (AUDITED)
->     time_maxerror, time_esterror -- change error estimates used to
->                                     inform userspace applications
->                                     (NOT AUDITED)
->     time_constant -- controls the speed of the clock adjustments that
->                      are made when time_offset is set (NOT AUDITED)
->     time_adjust -- can temporarily speed up or slow down the clock by up
->                    to 0.05% (AUDITED)
->     tick_usec -- a more extreme version of time_freq; can speed up or
->                  slow down the clock by up to 10% (AUDITED)
-> 
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->  include/linux/audit.h      | 14 ++++++++++++++
->  include/uapi/linux/audit.h |  1 +
->  kernel/auditsc.c           |  7 +++++++
->  kernel/time/ntp.c          | 38 ++++++++++++++++++++++++++++++--------
->  4 files changed, 52 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 43a60fbe74be..0f67964544cc 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -367,6 +367,7 @@ extern void __audit_mmap_fd(int fd, int flags);
->  extern void __audit_log_kern_module(char *name);
->  extern void __audit_fanotify(unsigned int response);
->  extern void __audit_tk_injoffset(struct timespec64 offset);
-> +extern void __audit_ntp_adjust(const char *type, s64 oldval, s64 newval);
-> 
->  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
->  {
-> @@ -479,6 +480,16 @@ static inline void audit_tk_injoffset(struct
-> timespec64 offset) __audit_tk_injoffset(offset);
->  }
-> 
-> +static inline void audit_ntp_adjust(const char *type, s64 oldval, s64
-> newval) +{
-> +	/* ignore no-op events */
-> +	if (newval == oldval)
-> +		return;
-> +
-> +	if (!audit_dummy_context())
-> +		__audit_ntp_adjust(type, oldval, newval);
-> +}
-> +
->  extern int audit_n_rules;
->  extern int audit_signals;
->  #else /* CONFIG_AUDITSYSCALL */
-> @@ -595,6 +606,9 @@ static inline void audit_fanotify(unsigned int
-> response) static inline void audit_tk_injoffset(struct timespec64 offset)
->  { }
-> 
-> +static inline void audit_ntp_adjust(const char *type, s64 oldval, s64
-> newval) +{ }
-> +
->  static inline void audit_ptrace(struct task_struct *t)
->  { }
->  #define audit_n_rules 0
-> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> index 2167d55bc800..e9781f0385eb 100644
-> --- a/include/uapi/linux/audit.h
-> +++ b/include/uapi/linux/audit.h
-> @@ -115,6 +115,7 @@
->  #define AUDIT_KERN_MODULE	1330	/* Kernel Module events */
->  #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
->  #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
-> +#define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
-> 
->  #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
->  #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 781336d0f2de..946806174cd9 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -2520,6 +2520,13 @@ void __audit_tk_injoffset(struct timespec64 offset)
->  		  "sec=%lli nsec=%li", (long long)offset.tv_sec, 
-offset.tv_nsec);
->  }
-> 
-> +void __audit_ntp_adjust(const char *type, s64 oldval, s64 newval)
-> +{
-> +	audit_log(audit_context(), GFP_ATOMIC, AUDIT_TIME_ADJNTPVAL,
-> +		  "op=%s old=%lli new=%lli", type,
-> +		  (long long)oldval, (long long)newval);
-> +}
-> +
->  static void audit_log_task(struct audit_buffer *ab)
->  {
->  	kuid_t auid, uid;
-> diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-> index 36a2bef00125..5f456a84151a 100644
-> --- a/kernel/time/ntp.c
-> +++ b/kernel/time/ntp.c
-> @@ -17,6 +17,7 @@
->  #include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/rtc.h>
-> +#include <linux/audit.h>
-> 
->  #include "ntp_internal.h"
->  #include "timekeeping_internal.h"
-> @@ -293,6 +294,8 @@ static inline s64 ntp_update_offset_fll(s64 offset64,
-> long secs)
-> 
->  static void ntp_update_offset(long offset)
->  {
-> +	s64 old_offset = time_offset;
-> +	s64 old_freq = time_freq;
->  	s64 freq_adj;
->  	s64 offset64;
->  	long secs;
-> @@ -341,6 +344,9 @@ static void ntp_update_offset(long offset)
->  	time_freq   = max(freq_adj, -MAXFREQ_SCALED);
-> 
->  	time_offset = div_s64(offset64 << NTP_SCALE_SHIFT, NTP_INTERVAL_FREQ);
-> +
-> +	audit_ntp_adjust("offset", old_offset, time_offset);
-> +	audit_ntp_adjust("freq", old_freq, time_freq);
->  }
-> 
->  /**
-> @@ -658,21 +664,31 @@ static inline void process_adj_status(const struct
-> timex *txc)
-> 
->  static inline void process_adjtimex_modes(const struct timex *txc, s32
-> *time_tai) {
-> -	if (txc->modes & ADJ_STATUS)
-> -		process_adj_status(txc);
-> +	if (txc->modes & (ADJ_STATUS | ADJ_NANO | ADJ_MICRO)) {
-> +		int old_status = time_status;
-> +
-> +		if (txc->modes & ADJ_STATUS)
-> +			process_adj_status(txc);
-> 
-> -	if (txc->modes & ADJ_NANO)
-> -		time_status |= STA_NANO;
-> +		if (txc->modes & ADJ_NANO)
-> +			time_status |= STA_NANO;
-> 
-> -	if (txc->modes & ADJ_MICRO)
-> -		time_status &= ~STA_NANO;
-> +		if (txc->modes & ADJ_MICRO)
-> +			time_status &= ~STA_NANO;
-> +
-> +		audit_ntp_adjust("status", old_status, time_status);
-> +	}
-> 
->  	if (txc->modes & ADJ_FREQUENCY) {
-> +		s64 old_freq = time_freq;
-> +
->  		time_freq = txc->freq * PPM_SCALE;
->  		time_freq = min(time_freq, MAXFREQ_SCALED);
->  		time_freq = max(time_freq, -MAXFREQ_SCALED);
->  		/* update pps_freq */
->  		pps_set_freq(time_freq);
-> +
-> +		audit_ntp_adjust("freq", old_freq, time_freq);
->  	}
-> 
->  	if (txc->modes & ADJ_MAXERROR)
-> @@ -689,14 +705,18 @@ static inline void process_adjtimex_modes(const
-> struct timex *txc, s32 *time_tai time_constant = max(time_constant, 0l);
->  	}
-> 
-> -	if (txc->modes & ADJ_TAI && txc->constant > 0)
-> +	if (txc->modes & ADJ_TAI && txc->constant > 0) {
-> +		audit_ntp_adjust("tai", *time_tai, txc->constant);
->  		*time_tai = txc->constant;
-> +	}
-> 
->  	if (txc->modes & ADJ_OFFSET)
->  		ntp_update_offset(txc->offset);
-> 
-> -	if (txc->modes & ADJ_TICK)
-> +	if (txc->modes & ADJ_TICK) {
-> +		audit_ntp_adjust("tick", tick_usec, txc->tick);
->  		tick_usec = txc->tick;
-> +	}
-> 
->  	if (txc->modes & (ADJ_TICK|ADJ_FREQUENCY|ADJ_OFFSET))
->  		ntp_update_frequency();
-> @@ -718,6 +738,8 @@ int __do_adjtimex(struct timex *txc, const struct
-> timespec64 *ts, s32 *time_tai) /* adjtime() is independent from
-> ntp_adjtime() */
->  			time_adjust = txc->offset;
->  			ntp_update_frequency();
-> +
-> +			audit_ntp_adjust("adjust", save_adjust, txc->offset);
->  		}
->  		txc->offset = save_adjust;
->  	} else {
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
