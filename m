@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F786C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F202087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471042087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049811;
-	bh=Jucgem0i9WwQ18f9bEjIqwv2MyPRPKxHVFB4Lz8xAoI=;
+	s=default; t=1552049816;
+	bh=LfpCe6Wmlq2iUtRMSgfXQtNncMXIOn45/568VDgfkAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yuvnkaNbcbVyYxpWzAa8vMlvl1f1uPMOEL1kiUTK1QSYq7A48EJfUV258yPOiUENn
-	 dJoZVOUkevNKCWEsHDxwONy/PlqazQ1RH2RKHhBhcDXN1V7bYPJGNtXyZt1Ee6sX5r
-	 gEhhmCqiy/Oa02+OR0HvaxyBAl+MWQ1VgG6hfO6E=
+	b=FuaRCPLeIgJeSrrch8NgJQzZqiH4w6FNyCZZVkmWsfayJKp83uzb62oRhOShj5O8t
+	 QDTVibX8nkbeyHO+zU3p6ZlqeKGMTw+G7/7BwSNMpStDF+gLgUJdMqYVLtY7GkJeNr
+	 zhkFnaAuq6rj/K40+KBToFH+MEpbD+GLdv0JbO94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCHM4u (ORCPT
+        id S1727049AbfCHM4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:56:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:56:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727657AbfCHM4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:56:45 -0500
+        id S1727657AbfCHM4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:56:52 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADB1621019;
-        Fri,  8 Mar 2019 12:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9FCC20449;
+        Fri,  8 Mar 2019 12:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049805;
-        bh=Jucgem0i9WwQ18f9bEjIqwv2MyPRPKxHVFB4Lz8xAoI=;
+        s=default; t=1552049811;
+        bh=LfpCe6Wmlq2iUtRMSgfXQtNncMXIOn45/568VDgfkAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/lhgT0j7nIgJF7rot8wkdfnzMV3AZliPtQMk5LE2+/bDu66sjiREiUCV88Fy+zve
-         Ten4eDx/JFDVo7OCEZRdfjSG9bRJTkY8TTNyteZxNoKoVIa95fcDU6069ai2+bY2ms
-         Dy5cMKElPHizKTGHaDNfRDiXnbw38TzyXRPMqGMM=
+        b=xJ1NOsHj94i70cPCXd3P0KIWpqQbWKF6ZWQ6k3Hg/cAdVdir7Cct3k57HVCfiBsq5
+         bH/+v9tbGuxVOV/zEmY3lr8cvcVfpa7CnlG06tDvmWBnY5sldqiX5R67lnqw5KWXMy
+         HKLZk9cvMeD2xKoFds5bBJmRUshCY3wCkB6FeAZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.20 68/76] xtensa: fix get_wchan
-Date:   Fri,  8 Mar 2019 13:50:20 +0100
-Message-Id: <20190308124917.202790656@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bryan Whitehead <Bryan.Whitehead@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.20 34/76] lan743x: Fix TX Stall Issue
+Date:   Fri,  8 Mar 2019 13:49:46 +0100
+Message-Id: <20190308124916.027484092@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -63,35 +66,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Bryan Whitehead <Bryan.Whitehead@microchip.com>
 
-commit d90b88fd3653f1fb66ecc6571b860d5a5749fa56 upstream.
+[ Upstream commit 90490ef7269906423a1c1b917fc24be8b1602658 ]
 
-Stack unwinding is implemented incorrectly in xtensa get_wchan: instead
-of extracting a0 and a1 registers from the spill location under the
-stack pointer it extracts a word pointed to by the stack pointer and
-subtracts 4 or 3 from it.
+It has been observed that tx queue stalls while downloading
+from certain web sites (example www.speedtest.net)
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+The cause has been tracked down to a corner case where
+dma descriptors where not setup properly. And there for a tx
+completion interrupt was not signaled.
+
+This fix corrects the problem by properly marking the end of
+a multi descriptor transmission.
+
+Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
+Signed-off-by: Bryan Whitehead <Bryan.Whitehead@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/xtensa/kernel/process.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/microchip/lan743x_main.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/arch/xtensa/kernel/process.c
-+++ b/arch/xtensa/kernel/process.c
-@@ -320,8 +320,8 @@ unsigned long get_wchan(struct task_stru
- 
- 		/* Stack layout: sp-4: ra, sp-3: sp' */
- 
--		pc = MAKE_PC_FROM_RA(*(unsigned long*)sp - 4, sp);
--		sp = *(unsigned long *)sp - 3;
-+		pc = MAKE_PC_FROM_RA(SPILL_SLOT(sp, 0), sp);
-+		sp = SPILL_SLOT(sp, 1);
- 	} while (count++ < 16);
- 	return 0;
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -1400,7 +1400,8 @@ static int lan743x_tx_frame_start(struct
  }
+ 
+ static void lan743x_tx_frame_add_lso(struct lan743x_tx *tx,
+-				     unsigned int frame_length)
++				     unsigned int frame_length,
++				     int nr_frags)
+ {
+ 	/* called only from within lan743x_tx_xmit_frame.
+ 	 * assuming tx->ring_lock has already been acquired.
+@@ -1410,6 +1411,10 @@ static void lan743x_tx_frame_add_lso(str
+ 
+ 	/* wrap up previous descriptor */
+ 	tx->frame_data0 |= TX_DESC_DATA0_EXT_;
++	if (nr_frags <= 0) {
++		tx->frame_data0 |= TX_DESC_DATA0_LS_;
++		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
++	}
+ 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
+ 	tx_descriptor->data0 = tx->frame_data0;
+ 
+@@ -1514,8 +1519,11 @@ static void lan743x_tx_frame_end(struct
+ 	u32 tx_tail_flags = 0;
+ 
+ 	/* wrap up previous descriptor */
+-	tx->frame_data0 |= TX_DESC_DATA0_LS_;
+-	tx->frame_data0 |= TX_DESC_DATA0_IOC_;
++	if ((tx->frame_data0 & TX_DESC_DATA0_DTYPE_MASK_) ==
++	    TX_DESC_DATA0_DTYPE_DATA_) {
++		tx->frame_data0 |= TX_DESC_DATA0_LS_;
++		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
++	}
+ 
+ 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
+ 	buffer_info = &tx->buffer_info[tx->frame_tail];
+@@ -1600,7 +1608,7 @@ static netdev_tx_t lan743x_tx_xmit_frame
+ 	}
+ 
+ 	if (gso)
+-		lan743x_tx_frame_add_lso(tx, frame_length);
++		lan743x_tx_frame_add_lso(tx, frame_length, nr_frags);
+ 
+ 	if (nr_frags <= 0)
+ 		goto finish;
 
 
