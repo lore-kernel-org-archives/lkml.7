@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAF4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFCE20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A2D20449
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 12:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552049850;
-	bh=FZ5No3eQ/rPZ3Vjg1ZghoB8yQIhaoZw3bZkb15CMhm0=;
+	s=default; t=1552049853;
+	bh=oUxcCuBzt1EzjRyfck6bSWUOnqwbWETFT11/x3XfGlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DgKBhxgWdwssXn6TRItvZOLlfIyNKRQ7WbQa/vq9tErMEC3KlKZmgJA04y8woPOkp
-	 wBCj2GJaMK8OT2bnqoNt5ZteGq/vmrBQxWfYnfHDgmp1ke+lgifO9U+w+atWh1nLkk
-	 YM0y0/FufjsCZi2lvGVvZVlsvk2VwXKYyjB0kJrg=
+	b=ZWccnn0d9iwwytdlQYFTHPR0+rrvxAo5wHmg5fLAlT+cNB9Wykiap8a+fx5txWfy5
+	 uDZ9t4Nmme89CeW3ewFKlZf13OXIMVnXZ/YllSrmNR0dgA6rR7MH3BG0A+M/15k502
+	 WdkQgrtZtWdu2Ilo5VDs3thdA24Ov7zDKJfUaHK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfCHM53 (ORCPT
+        id S1727872AbfCHM5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 07:57:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
+        Fri, 8 Mar 2019 07:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbfCHM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 07:57:26 -0500
+        id S1727291AbfCHM53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 07:57:29 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F6820449;
-        Fri,  8 Mar 2019 12:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C9A20811;
+        Fri,  8 Mar 2019 12:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552049845;
-        bh=FZ5No3eQ/rPZ3Vjg1ZghoB8yQIhaoZw3bZkb15CMhm0=;
+        s=default; t=1552049847;
+        bh=oUxcCuBzt1EzjRyfck6bSWUOnqwbWETFT11/x3XfGlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFsJmEp8HofNvnYFB+RnqhiBYqwruhiniDCsQP0dFGAlzJvWTWrF39e7MzT9n3/C2
-         7pGMyk7scr/1Zr47sl8L5dmrYulAbRmAFXXvBI6cJFoG/nl1lyBntMMzSyucaowSJn
-         gyPPTnz3Jo09Sry+uQe+42b3Gol8/DtJpnr2qm1o=
+        b=1N75YMJ1eSy4EMAQCu8C4wibMeSyYaTsdSoEoy15S6P1XqE5HzFP44ZuhThMqZIPu
+         RUzmMwDGVAZsUrpiBVO+FoSBt63XSIshgu8T5EbWaGjJtZgRegl1lktUBvyDfKkV4f
+         h0cv+n8DpgYnyAkKhQv0kluOdQAbNjAcwl01zudE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sheng Lan <lansheng@huawei.com>,
-        Qin Ji <jiqin.ji@huawei.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.20 38/76] net: netem: fix skb length BUG_ON in __skb_to_sgvec
-Date:   Fri,  8 Mar 2019 13:49:50 +0100
-Message-Id: <20190308124916.168317453@linuxfoundation.org>
+Subject: [PATCH 4.20 39/76] net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
+Date:   Fri,  8 Mar 2019 13:49:51 +0100
+Message-Id: <20190308124916.203440642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 References: <20190308124914.789210760@linuxfoundation.org>
@@ -68,108 +66,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sheng Lan <lansheng@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 5845f706388a4cde0f6b80f9e5d33527e942b7d9 ]
+[ Upstream commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 ]
 
-It can be reproduced by following steps:
-1. virtio_net NIC is configured with gso/tso on
-2. configure nginx as http server with an index file bigger than 1M bytes
-3. use tc netem to produce duplicate packets and delay:
-   tc qdisc add dev eth0 root netem delay 100ms 10ms 30% duplicate 90%
-4. continually curl the nginx http server to get index file on client
-5. BUG_ON is seen quickly
+KASAN report this:
 
-[10258690.371129] kernel BUG at net/core/skbuff.c:4028!
-[10258690.371748] invalid opcode: 0000 [#1] SMP PTI
-[10258690.372094] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G        W         5.0.0-rc6 #2
-[10258690.372094] RSP: 0018:ffffa05797b43da0 EFLAGS: 00010202
-[10258690.372094] RBP: 00000000000005ea R08: 0000000000000000 R09: 00000000000005ea
-[10258690.372094] R10: ffffa0579334d800 R11: 00000000000002c0 R12: 0000000000000002
-[10258690.372094] R13: 0000000000000000 R14: ffffa05793122900 R15: ffffa0578f7cb028
-[10258690.372094] FS:  0000000000000000(0000) GS:ffffa05797b40000(0000) knlGS:0000000000000000
-[10258690.372094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[10258690.372094] CR2: 00007f1a6dc00868 CR3: 000000001000e000 CR4: 00000000000006e0
-[10258690.372094] Call Trace:
-[10258690.372094]  <IRQ>
-[10258690.372094]  skb_to_sgvec+0x11/0x40
-[10258690.372094]  start_xmit+0x38c/0x520 [virtio_net]
-[10258690.372094]  dev_hard_start_xmit+0x9b/0x200
-[10258690.372094]  sch_direct_xmit+0xff/0x260
-[10258690.372094]  __qdisc_run+0x15e/0x4e0
-[10258690.372094]  net_tx_action+0x137/0x210
-[10258690.372094]  __do_softirq+0xd6/0x2a9
-[10258690.372094]  irq_exit+0xde/0xf0
-[10258690.372094]  smp_apic_timer_interrupt+0x74/0x140
-[10258690.372094]  apic_timer_interrupt+0xf/0x20
-[10258690.372094]  </IRQ>
+BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
+Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
 
-In __skb_to_sgvec(), the skb->len is not equal to the sum of the skb's
-linear data size and nonlinear data size, thus BUG_ON triggered.
-Because the skb is cloned and a part of nonlinear data is split off.
+CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ kasan_report+0x171/0x18d mm/kasan/report.c:321
+ memcpy+0x1f/0x50 mm/kasan/common.c:130
+ nfc_llcp_build_gb+0x37f/0x540 [nfc]
+ nfc_llcp_register_device+0x6eb/0xb50 [nfc]
+ nfc_register_device+0x50/0x1d0 [nfc]
+ nfcsim_device_new+0x394/0x67d [nfcsim]
+ ? 0xffffffffc1080000
+ nfcsim_init+0x6b/0x1000 [nfcsim]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-Duplicate packet is cloned in netem_enqueue() and may be delayed
-some time in qdisc. When qdisc len reached the limit and returns
-NET_XMIT_DROP, the skb will be retransmit later in write queue.
-the skb will be fragmented by tso_fragment(), the limit size
-that depends on cwnd and mss decrease, the skb's nonlinear
-data will be split off. The length of the skb cloned by netem
-will not be updated. When we use virtio_net NIC and invoke skb_to_sgvec(),
-the BUG_ON trigger.
+nfc_llcp_build_tlv will return NULL on fails, caller should check it,
+otherwise will trigger a NULL dereference.
 
-To fix it, netem returns NET_XMIT_SUCCESS to upper stack
-when it clones a duplicate packet.
-
-Fixes: 35d889d1 ("sch_netem: fix skb leak in netem_enqueue()")
-Signed-off-by: Sheng Lan <lansheng@huawei.com>
-Reported-by: Qin Ji <jiqin.ji@huawei.com>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
+Fixes: d646960f7986 ("NFC: Initial LLCP support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_netem.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/nfc/llcp_commands.c |   20 ++++++++++++++++++++
+ net/nfc/llcp_core.c     |   24 ++++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -430,6 +430,7 @@ static int netem_enqueue(struct sk_buff
- 	int nb = 0;
- 	int count = 1;
- 	int rc = NET_XMIT_SUCCESS;
-+	int rc_drop = NET_XMIT_DROP;
- 
- 	/* Do not fool qdisc_drop_all() */
- 	skb->prev = NULL;
-@@ -469,6 +470,7 @@ static int netem_enqueue(struct sk_buff
- 		q->duplicate = 0;
- 		rootq->enqueue(skb2, rootq, to_free);
- 		q->duplicate = dupsave;
-+		rc_drop = NET_XMIT_SUCCESS;
+--- a/net/nfc/llcp_commands.c
++++ b/net/nfc/llcp_commands.c
+@@ -419,6 +419,10 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 						      sock->service_name,
+ 						      sock->service_name_len,
+ 						      &service_name_tlv_length);
++		if (!service_name_tlv) {
++			err = -ENOMEM;
++			goto error_tlv;
++		}
+ 		size += service_name_tlv_length;
  	}
  
- 	/*
-@@ -481,7 +483,7 @@ static int netem_enqueue(struct sk_buff
- 		if (skb_is_gso(skb)) {
- 			segs = netem_segment(skb, sch, to_free);
- 			if (!segs)
--				return NET_XMIT_DROP;
-+				return rc_drop;
- 		} else {
- 			segs = skb;
- 		}
-@@ -504,8 +506,10 @@ static int netem_enqueue(struct sk_buff
- 			1<<(prandom_u32() % 8);
- 	}
+@@ -429,9 +433,17 @@ int nfc_llcp_send_connect(struct nfc_llc
  
--	if (unlikely(sch->q.qlen >= sch->limit))
--		return qdisc_drop_all(skb, sch, to_free);
-+	if (unlikely(sch->q.qlen >= sch->limit)) {
-+		qdisc_drop_all(skb, sch, to_free);
-+		return rc_drop;
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
 +	}
+ 	size += miux_tlv_length;
  
- 	qdisc_qstats_backlog_inc(sch, skb);
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
  
+ 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
+@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
+--- a/net/nfc/llcp_core.c
++++ b/net/nfc/llcp_core.c
+@@ -532,10 +532,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
+ 
+ static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
+ {
+-	u8 *gb_cur, *version_tlv, version, version_length;
+-	u8 *lto_tlv, lto_length;
+-	u8 *wks_tlv, wks_length;
+-	u8 *miux_tlv, miux_length;
++	u8 *gb_cur, version, version_length;
++	u8 lto_length, wks_length, miux_length;
++	u8 *version_tlv = NULL, *lto_tlv = NULL,
++	   *wks_tlv = NULL, *miux_tlv = NULL;
+ 	__be16 wks = cpu_to_be16(local->local_wks);
+ 	u8 gb_len = 0;
+ 	int ret = 0;
+@@ -543,17 +543,33 @@ static int nfc_llcp_build_gb(struct nfc_
+ 	version = LLCP_VERSION_11;
+ 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
+ 					 1, &version_length);
++	if (!version_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += version_length;
+ 
+ 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
++	if (!lto_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += lto_length;
+ 
+ 	pr_debug("Local wks 0x%lx\n", local->local_wks);
+ 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
++	if (!wks_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += wks_length;
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
+ 				      &miux_length);
++	if (!miux_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += miux_length;
+ 
+ 	gb_len += ARRAY_SIZE(llcp_magic);
 
 
