@@ -2,108 +2,91 @@ Return-Path: <SRS0=vL1f=RL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CC9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E68C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D88620851
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC3C20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 Mar 2019 19:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfCHT3r (ORCPT
+        id S1726858AbfCHT3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 14:29:47 -0500
-Received: from fieldses.org ([173.255.197.46]:45044 "EHLO fieldses.org"
+        Fri, 8 Mar 2019 14:29:53 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33202 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfCHT3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 14:29:47 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0ACCD1C82; Fri,  8 Mar 2019 14:29:47 -0500 (EST)
-Date:   Fri, 8 Mar 2019 14:29:47 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: allow nfsv3 readdir request to be larger.
-Message-ID: <20190308192947.GA27011@fieldses.org>
-References: <87lg1vs5eh.fsf@notabene.neil.brown.name>
- <20190304164725.GE13690@fieldses.org>
- <877ederyjm.fsf@notabene.neil.brown.name>
- <20190305214212.GC27437@fieldses.org>
- <87y35rr52t.fsf@notabene.neil.brown.name>
+        id S1726294AbfCHT3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 14:29:51 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B91353082B1E;
+        Fri,  8 Mar 2019 19:29:51 +0000 (UTC)
+Received: from treble (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 49D455D787;
+        Fri,  8 Mar 2019 19:29:48 +0000 (UTC)
+Date:   Fri, 8 Mar 2019 13:29:45 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, luto@kernel.org,
+        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, rostedt@goodmis.org
+Subject: Re: [PATCH 14/20] objtool: Rewrite add_ignores()
+Message-ID: <20190308192945.345bw2ut7bsd5ckl@treble>
+References: <20190307114511.870090179@infradead.org>
+ <20190307115200.330826767@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87y35rr52t.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190307115200.330826767@infradead.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 08 Mar 2019 19:29:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks!  Applied.
-
-On Thu, Mar 07, 2019 at 09:49:46AM +1100, NeilBrown wrote:
-> 
-> nfsd currently reports the NFSv4 dtpref FSINFO parameter
-
-(Just changed NFSv4 here to NFSv3.)--b.
-
-> to be PAGE_SIZE, so NFS clients will typically ask for one
-> page of directory entries at a time.  This is needlessly restrictive
-> as nfsd can handle larger replies easily.
-> 
-> Also, a READDIR request (but not a READDIRPLUS request) has the count
-> size clipped to PAGE_SIE, again unnecessary.
-> 
-> This patch lifts these limits so that larger readdir requests can be
-> used.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.com>
-> ---
->  fs/nfsd/nfs3proc.c | 2 +-
->  fs/nfsd/nfs3xdr.c  | 4 +++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index c9cf46e0c040..8f933e84cec1 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -588,7 +588,7 @@ nfsd3_proc_fsinfo(struct svc_rqst *rqstp)
->  	resp->f_wtmax  = max_blocksize;
->  	resp->f_wtpref = max_blocksize;
->  	resp->f_wtmult = PAGE_SIZE;
-> -	resp->f_dtpref = PAGE_SIZE;
-> +	resp->f_dtpref = max_blocksize;
->  	resp->f_maxfilesize = ~(u32) 0;
->  	resp->f_properties = NFS3_FSF_DEFAULT;
+On Thu, Mar 07, 2019 at 12:45:25PM +0100, Peter Zijlstra wrote:
+> @@ -436,18 +413,31 @@ static void add_ignores(struct objtool_f
+>  	struct instruction *insn;
+>  	struct section *sec;
+>  	struct symbol *func;
+> +	struct rela *rela;
 >  
-> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-> index 83919116d5cb..93fea246f676 100644
-> --- a/fs/nfsd/nfs3xdr.c
-> +++ b/fs/nfsd/nfs3xdr.c
-> @@ -573,6 +573,8 @@ int
->  nfs3svc_decode_readdirargs(struct svc_rqst *rqstp, __be32 *p)
->  {
->  	struct nfsd3_readdirargs *args = rqstp->rq_argp;
-> +	u32 max_blocksize = svc_max_payload(rqstp);
+> -	for_each_sec(file, sec) {
+> -		list_for_each_entry(func, &sec->symbol_list, list) {
+> -			if (func->type != STT_FUNC)
+> -				continue;
+> +	sec = find_section_by_name(file->elf, ".rela.discard.func_stack_frame_non_standard");
+> +	if (!sec)
+> +		return;
+>  
+> -			if (!ignore_func(file, func))
+> +	list_for_each_entry(rela, &sec->rela_list, list) {
+> +		switch (rela->sym->type) {
+> +		case STT_FUNC:
+> +			func = rela->sym;
+> +			break;
 > +
->  	p = decode_fh(p, &args->fh);
->  	if (!p)
->  		return 0;
-> @@ -580,7 +582,7 @@ nfs3svc_decode_readdirargs(struct svc_rqst *rqstp, __be32 *p)
->  	args->verf   = p; p += 2;
->  	args->dircount = ~0;
->  	args->count  = ntohl(*p++);
-> -	args->count  = min_t(u32, args->count, PAGE_SIZE);
-> +	args->count  = min_t(u32, args->count, max_blocksize);
->  	args->buffer = page_address(*(rqstp->rq_next_page++));
+> +		case STT_SECTION:
+> +			func = find_symbol_by_offset(rela->sym->sec, rela->addend);
+> +			if (!func || func->type != STT_FUNC)
+>  				continue;
+> +			break;
 >  
->  	return xdr_argsize_check(rqstp, p);
-> -- 
-> 2.14.0.rc0.dirty
-> 
+> -			func_for_each_insn_all(file, func, insn)
+> -				insn->ignore = true;
+> +		default:
+> +			WARN("unexpected relation symbol type in %s: %d", sec->name, rela->sym->type);
+> +			continue;
 
+s/relation/relocation
 
+-- 
+Josh
