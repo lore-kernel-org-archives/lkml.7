@@ -4,46 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209F7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE05206BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D61206BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfCIT7m (ORCPT
+        id S1726608AbfCIUA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 14:59:42 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:45153 "EHLO
+        Sat, 9 Mar 2019 15:00:29 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:47523 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfCIT7l (ORCPT
+        with ESMTP id S1726340AbfCIUA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 14:59:41 -0500
+        Sat, 9 Mar 2019 15:00:28 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29JxYF13203236
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29K0Eil3203501
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 11:59:34 -0800
+        Sat, 9 Mar 2019 12:00:14 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29JxY6R3203233;
-        Sat, 9 Mar 2019 11:59:34 -0800
-Date:   Sat, 9 Mar 2019 11:59:34 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29K0DBe3203488;
+        Sat, 9 Mar 2019 12:00:13 -0800
+Date:   Sat, 9 Mar 2019 12:00:13 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-153259382633ecbbc0af4f3f0b6515757ebe2984@git.kernel.org>
-Cc:     namhyung@kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        ak@linux.intel.com, acme@redhat.com, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, hpa@zytor.com
-Reply-To: mingo@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-          hpa@zytor.com, jolsa@kernel.org, acme@redhat.com,
-          linux-kernel@vger.kernel.org, ak@linux.intel.com
-In-Reply-To: <20190305144758.12397-2-andi@firstfloor.org>
-References: <20190305144758.12397-2-andi@firstfloor.org>
+From:   tip-bot for Jin Yao <tipbot@zytor.com>
+Message-ID: <tip-4802138d78caed36cee2a859f77fb2035f230018@git.kernel.org>
+Cc:     yao.jin@intel.com, alexander.shishkin@linux.intel.com,
+        acme@redhat.com, mingo@kernel.org, yao.jin@linux.intel.com,
+        ak@linux.intel.com, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        kan.liang@linux.intel.com, hpa@zytor.com, peterz@infradead.org
+Reply-To: ak@linux.intel.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, peterz@infradead.org, jolsa@kernel.org,
+          alexander.shishkin@linux.intel.com, yao.jin@intel.com,
+          hpa@zytor.com, acme@redhat.com, kan.liang@linux.intel.com,
+          mingo@kernel.org, yao.jin@linux.intel.com
+In-Reply-To: <1551791143-10334-2-git-send-email-yao.jin@linux.intel.com>
+References: <1551791143-10334-2-git-send-email-yao.jin@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf thread: Generalize function to copy from
- thread addr space from intel-bts code
-Git-Commit-ID: 153259382633ecbbc0af4f3f0b6515757ebe2984
+Subject: [tip:perf/urgent] perf diff: Support --time filter option
+Git-Commit-ID: 4802138d78caed36cee2a859f77fb2035f230018
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,134 +60,368 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  153259382633ecbbc0af4f3f0b6515757ebe2984
-Gitweb:     https://git.kernel.org/tip/153259382633ecbbc0af4f3f0b6515757ebe2984
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Wed, 6 Mar 2019 17:55:35 -0300
+Commit-ID:  4802138d78caed36cee2a859f77fb2035f230018
+Gitweb:     https://git.kernel.org/tip/4802138d78caed36cee2a859f77fb2035f230018
+Author:     Jin Yao <yao.jin@linux.intel.com>
+AuthorDate: Tue, 5 Mar 2019 21:05:41 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 6 Mar 2019 17:55:35 -0300
+CommitDate: Wed, 6 Mar 2019 18:03:23 -0300
 
-perf thread: Generalize function to copy from thread addr space from intel-bts code
+perf diff: Support --time filter option
 
-Add a utility function to fetch executable code. Convert one
-user over to it. There are more places doing that, but they
-do significantly different actions, so they are not
-easy to fit into a single library function.
+To improve 'perf diff', implement a --time filter option to diff the
+samples within given time window.
 
-Committer changes:
+It supports time percent with multiple time ranges. The time string
+format is 'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
 
-. No need to cast around, make 'buf' be a void pointer.
+For example:
 
-. Rename it to thread__memcpy() to reflect the fact it is about copying
-  a chunk of memory from a thread, i.e. from its address space.
+Select the second 10% time slice to diff:
 
-. No need to have it in a separate object file, move it to thread.[ch]
+  perf diff --time 10%/2
 
-. Check the return of map__load(), the original code didn't do it, but
-  since we're moving this around, check that as well.
+Select from 0% to 10% time slice to diff:
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/r/20190305144758.12397-2-andi@firstfloor.org
+  perf diff --time 0%-10%
+
+Select the first and the second 10% time slices to diff:
+
+  perf diff --time 10%/1,10%/2
+
+Select from 0% to 10% and 30% to 40% slices to diff:
+
+  perf diff --time 0%-10%,30%-40%
+
+It also supports analysing samples within a given time window
+<start>,<stop>.
+
+Times have the format seconds.microseconds.
+
+If 'start' is not given (i.e., time string is ',x.y') then analysis starts at
+the beginning of the file.
+
+If the stop time is not given (i.e, time string is 'x.y,') then analysis
+goes to end of file.
+
+Time string is 'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for
+different perf.data files.
+
+For example, we get the timestamp information from perf script.
+
+  perf script -i perf.data.old
+
+    mgen 13940 [000]  3946.361400: ...
+
+  perf script -i perf.data
+
+    mgen 13940 [000]  3971.150589 ...
+
+  perf diff --time 3946.361400,:3971.150589,
+
+It analyzes the perf.data.old from the timestamp 3946.361400 to the end of
+perf.data.old and analyzes the perf.data from the timestamp 3971.150589 to the
+end of perf.data.
+
+ v4:
+ ---
+ Update abstime_str_dup(), let it return error if strdup
+ is failed, and update __cmd_diff() accordingly.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1551791143-10334-2-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-bts.c | 20 ++------------------
- tools/perf/util/thread.c    | 23 +++++++++++++++++++++++
- tools/perf/util/thread.h    |  3 +++
- 3 files changed, 28 insertions(+), 18 deletions(-)
+ tools/perf/Documentation/perf-diff.txt |  45 ++++++++++
+ tools/perf/builtin-diff.c              | 148 +++++++++++++++++++++++++++++----
+ 2 files changed, 179 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 0c0180c67574..47025bc727e1 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -328,35 +328,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
- {
- 	struct machine *machine = btsq->bts->machine;
- 	struct thread *thread;
--	struct addr_location al;
- 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
- 	ssize_t len;
--	int x86_64;
--	uint8_t cpumode;
-+	bool x86_64;
- 	int err = -1;
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index a79c84ae61aa..036d65bded51 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -118,6 +118,51 @@ OPTIONS
+ 	sum of shown entries will be always 100%.  "absolute" means it retains
+ 	the original value before and after the filter is applied.
  
--	if (machine__kernel_ip(machine, ip))
--		cpumode = PERF_RECORD_MISC_KERNEL;
--	else
--		cpumode = PERF_RECORD_MISC_USER;
--
- 	thread = machine__find_thread(machine, -1, btsq->tid);
- 	if (!thread)
- 		return -1;
++--time::
++	Analyze samples within given time window. It supports time
++	percent with multiple time ranges. Time string is 'a%/n,b%/m,...'
++	or 'a%-b%,c%-%d,...'.
++
++	For example:
++
++	Select the second 10% time slice to diff:
++
++	  perf diff --time 10%/2
++
++	Select from 0% to 10% time slice to diff:
++
++	  perf diff --time 0%-10%
++
++	Select the first and the second 10% time slices to diff:
++
++	  perf diff --time 10%/1,10%/2
++
++	Select from 0% to 10% and 30% to 40% slices to diff:
++
++	  perf diff --time 0%-10%,30%-40%
++
++	It also supports analyzing samples within a given time window
++	<start>,<stop>. Times have the format seconds.microseconds. If 'start'
++	is not given (i.e., time string is ',x.y') then analysis starts at
++	the beginning of the file. If stop time is not given (i.e, time
++	string is 'x.y,') then analysis goes to the end of the file. Time string is
++	'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
++	perf.data files.
++
++	For example, we get the timestamp information from 'perf script'.
++
++	  perf script -i perf.data.old
++	    mgen 13940 [000]  3946.361400: ...
++
++	  perf script -i perf.data
++	    mgen 13940 [000]  3971.150589 ...
++
++	  perf diff --time 3946.361400,:3971.150589,
++
++	It analyzes the perf.data.old from the timestamp 3946.361400 to
++	the end of perf.data.old and analyzes the perf.data from the
++	timestamp 3971.150589 to the end of perf.data.
++
+ COMPARISON
+ ----------
+ The comparison is governed by the baseline file. The baseline perf.data
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 58fe0e88215c..17cd898074c8 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -19,12 +19,21 @@
+ #include "util/util.h"
+ #include "util/data.h"
+ #include "util/config.h"
++#include "util/time-utils.h"
  
--	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
--		goto out_put;
--
--	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
--				  INTEL_PT_INSN_BUF_SZ);
-+	len = thread__memcpy(thread, machine, buf, ip, INTEL_PT_INSN_BUF_SZ, &x86_64);
- 	if (len <= 0)
- 		goto out_put;
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <stdlib.h>
+ #include <math.h>
  
--	/* Load maps to ensure dso->is_64_bit has been updated */
--	map__load(al.map);
--
--	x86_64 = al.map->dso->is_64_bit;
--
- 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
- 		goto out_put;
- 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 4c179fef442d..50678d318185 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -12,6 +12,7 @@
- #include "debug.h"
- #include "namespaces.h"
- #include "comm.h"
-+#include "map.h"
- #include "symbol.h"
- #include "unwind.h"
- 
-@@ -393,3 +394,25 @@ struct thread *thread__main_thread(struct machine *machine, struct thread *threa
- 
- 	return machine__find_thread(machine, thread->pid_, thread->pid_);
++struct perf_diff {
++	struct perf_tool		 tool;
++	const char			*time_str;
++	struct perf_time_interval	*ptime_range;
++	int				 range_size;
++	int				 range_num;
++};
++
+ /* Diff command specific HPP columns. */
+ enum {
+ 	PERF_HPP_DIFF__BASELINE,
+@@ -323,16 +332,22 @@ static int formula_fprintf(struct hist_entry *he, struct hist_entry *pair,
+ 	return -1;
  }
-+
-+int thread__memcpy(struct thread *thread, struct machine *machine,
-+		   void *buf, u64 ip, int len, bool *is64bit)
-+{
-+       u8 cpumode = PERF_RECORD_MISC_USER;
-+       struct addr_location al;
-+       long offset;
-+
-+       if (machine__kernel_ip(machine, ip))
-+               cpumode = PERF_RECORD_MISC_KERNEL;
-+
-+       if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso ||
-+	   al.map->dso->data.status == DSO_DATA_STATUS_ERROR ||
-+	   map__load(al.map) < 0)
-+               return -1;
-+
-+       offset = al.map->map_ip(al.map, ip);
-+       if (is64bit)
-+               *is64bit = al.map->dso->is_64_bit;
-+
-+       return dso__data_read_offset(al.map->dso, machine, offset, buf, len);
-+}
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 8276ffeec556..cf8375c017a0 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -113,6 +113,9 @@ struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
- void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
- 					struct addr_location *al);
  
-+int thread__memcpy(struct thread *thread, struct machine *machine,
-+		   void *buf, u64 ip, int len, bool *is64bit);
-+
- static inline void *thread__priv(struct thread *thread)
+-static int diff__process_sample_event(struct perf_tool *tool __maybe_unused,
++static int diff__process_sample_event(struct perf_tool *tool,
+ 				      union perf_event *event,
+ 				      struct perf_sample *sample,
+ 				      struct perf_evsel *evsel,
+ 				      struct machine *machine)
  {
- 	return thread->priv;
++	struct perf_diff *pdiff = container_of(tool, struct perf_diff, tool);
+ 	struct addr_location al;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	int ret = -1;
+ 
++	if (perf_time__ranges_skip_sample(pdiff->ptime_range, pdiff->range_num,
++					  sample->time)) {
++		return 0;
++	}
++
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_warning("problem processing %d event, skipping it.\n",
+ 			   event->header.type);
+@@ -359,17 +374,19 @@ out_put:
+ 	return ret;
+ }
+ 
+-static struct perf_tool tool = {
+-	.sample	= diff__process_sample_event,
+-	.mmap	= perf_event__process_mmap,
+-	.mmap2	= perf_event__process_mmap2,
+-	.comm	= perf_event__process_comm,
+-	.exit	= perf_event__process_exit,
+-	.fork	= perf_event__process_fork,
+-	.lost	= perf_event__process_lost,
+-	.namespaces = perf_event__process_namespaces,
+-	.ordered_events = true,
+-	.ordering_requires_timestamps = true,
++static struct perf_diff pdiff = {
++	.tool = {
++		.sample	= diff__process_sample_event,
++		.mmap	= perf_event__process_mmap,
++		.mmap2	= perf_event__process_mmap2,
++		.comm	= perf_event__process_comm,
++		.exit	= perf_event__process_exit,
++		.fork	= perf_event__process_fork,
++		.lost	= perf_event__process_lost,
++		.namespaces = perf_event__process_namespaces,
++		.ordered_events = true,
++		.ordering_requires_timestamps = true,
++	},
+ };
+ 
+ static struct perf_evsel *evsel_match(struct perf_evsel *evsel,
+@@ -771,19 +788,110 @@ static void data__free(struct data__file *d)
+ 	}
+ }
+ 
++static int abstime_str_dup(char **pstr)
++{
++	char *str = NULL;
++
++	if (pdiff.time_str && strchr(pdiff.time_str, ':')) {
++		str = strdup(pdiff.time_str);
++		if (!str)
++			return -ENOMEM;
++	}
++
++	*pstr = str;
++	return 0;
++}
++
++static int parse_absolute_time(struct data__file *d, char **pstr)
++{
++	char *p = *pstr;
++	int ret;
++
++	/*
++	 * Absolute timestamp for one file has the format: a.b,c.d
++	 * For multiple files, the format is: a.b,c.d:a.b,c.d
++	 */
++	p = strchr(*pstr, ':');
++	if (p) {
++		if (p == *pstr) {
++			pr_err("Invalid time string\n");
++			return -EINVAL;
++		}
++
++		*p = 0;
++		p++;
++		if (*p == 0) {
++			pr_err("Invalid time string\n");
++			return -EINVAL;
++		}
++	}
++
++	ret = perf_time__parse_for_ranges(*pstr, d->session,
++					  &pdiff.ptime_range,
++					  &pdiff.range_size,
++					  &pdiff.range_num);
++	if (ret < 0)
++		return ret;
++
++	if (!p || *p == 0)
++		*pstr = NULL;
++	else
++		*pstr = p;
++
++	return ret;
++}
++
++static int parse_percent_time(struct data__file *d)
++{
++	int ret;
++
++	ret = perf_time__parse_for_ranges(pdiff.time_str, d->session,
++					  &pdiff.ptime_range,
++					  &pdiff.range_size,
++					  &pdiff.range_num);
++	return ret;
++}
++
++static int parse_time_str(struct data__file *d, char *abstime_ostr,
++			   char **pabstime_tmp)
++{
++	int ret = 0;
++
++	if (abstime_ostr)
++		ret = parse_absolute_time(d, pabstime_tmp);
++	else if (pdiff.time_str)
++		ret = parse_percent_time(d);
++
++	return ret;
++}
++
+ static int __cmd_diff(void)
+ {
+ 	struct data__file *d;
+-	int ret = -EINVAL, i;
++	int ret, i;
++	char *abstime_ostr, *abstime_tmp;
++
++	ret = abstime_str_dup(&abstime_ostr);
++	if (ret)
++		return ret;
++
++	abstime_tmp = abstime_ostr;
++	ret = -EINVAL;
+ 
+ 	data__for_each_file(i, d) {
+-		d->session = perf_session__new(&d->data, false, &tool);
++		d->session = perf_session__new(&d->data, false, &pdiff.tool);
+ 		if (!d->session) {
+ 			pr_err("Failed to open %s\n", d->data.path);
+ 			ret = -1;
+ 			goto out_delete;
+ 		}
+ 
++		if (pdiff.time_str) {
++			ret = parse_time_str(d, abstime_ostr, &abstime_tmp);
++			if (ret < 0)
++				goto out_delete;
++		}
++
+ 		ret = perf_session__process_events(d->session);
+ 		if (ret) {
+ 			pr_err("Failed to process %s\n", d->data.path);
+@@ -791,6 +899,9 @@ static int __cmd_diff(void)
+ 		}
+ 
+ 		perf_evlist__collapse_resort(d->session->evlist);
++
++		if (pdiff.ptime_range)
++			zfree(&pdiff.ptime_range);
+ 	}
+ 
+ 	data_process();
+@@ -802,6 +913,13 @@ static int __cmd_diff(void)
+ 	}
+ 
+ 	free(data__files);
++
++	if (pdiff.ptime_range)
++		zfree(&pdiff.ptime_range);
++
++	if (abstime_ostr)
++		free(abstime_ostr);
++
+ 	return ret;
+ }
+ 
+@@ -849,6 +967,8 @@ static const struct option options[] = {
+ 	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
+ 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+ 		     "How to display percentage of filtered entries", parse_filter_percentage),
++	OPT_STRING(0, "time", &pdiff.time_str, "str",
++		   "Time span (time percent or absolute timestamp)"),
+ 	OPT_END()
+ };
+ 
