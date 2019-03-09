@@ -2,141 +2,104 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E26C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 08:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D68C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 08:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FF5207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 08:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rNufaa1n"
+	by mail.kernel.org (Postfix) with ESMTP id ACDCA20866
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 08:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfCIIOa (ORCPT
+        id S1726359AbfCIIhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 03:14:30 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:48196 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfCIIO3 (ORCPT
+        Sat, 9 Mar 2019 03:37:45 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:32851 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfCIIhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 03:14:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=peOy3Y+WhvWXicOY3w9ET9C2fT9Mhlo5Qck9S6sVUDo=; b=rNufaa1ngiNnm6rlzNwyrSmRc
-        mbcl3iwuW61iHXBrIj5GqNlZ6AL8kemfclzVyfr2W/Rk4Q0y4Rm8N+gONblboXzpvTYWrf7ZtXHml
-        WvPHrseeo6t3YfarnauNZlw6tUV3f0xIX6zBZE/rVxwHalIiifF0RbQSR0kWbNEuAZgYfomgOmfec
-        axhj/H+ste3/gqCqkmNGOLlOhuPY+GUp1WfDcSi+9PFw5c5rtNDxmrrJrLY5JyQA6raqI2LNkEbPw
-        iQgBgAx+NUtz6+yhVudPGKlOVc3OVzDZDGriVZkuXFh9UqE7TD3izvfKq5L5bZFaGWZV7ASgvxTsk
-        OR8gzO5eA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55042)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1h2X7X-0000Tl-MH; Sat, 09 Mar 2019 08:14:15 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1h2X7T-0006Tf-2O; Sat, 09 Mar 2019 08:14:11 +0000
-Date:   Sat, 9 Mar 2019 08:14:10 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     wang.yi59@zte.com.cn, linux-arm-kernel@lists.infradead.org,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/15] ARM: actions: fix a leaked reference by adding
- missing of_node_put
-Message-ID: <20190309081410.yqc4e45zk7grolja@shell.armlinux.org.uk>
-References: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
- <20190305114048.egpbeddy4pqbwl5b@shell.armlinux.org.uk>
- <20190309021742.GA5664@Mani-XPS-13-9360>
+        Sat, 9 Mar 2019 03:37:45 -0500
+Received: from [114.245.43.129] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1h2XUC-00053i-KW; Sat, 09 Mar 2019 08:37:41 +0000
+Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
+To:     Christopher Heiny <Cheiny@synaptics.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Duggan <aduggan@synaptics.com>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>
+References: <20190220164200.31044-1-aaron.ma@canonical.com>
+ <17cd420ea32a9787c56ba25e36e7661541c2f65f.camel@synaptics.com>
+From:   Aaron Ma <aaron.ma@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
+ 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
+ BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
+ MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
+ ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
+ AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
+ AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
+ LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
+ GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
+ 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
+ V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
+ cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
+ sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
+ +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
+ 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
+ mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
+ Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
+ 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
+ VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
+ NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
+ 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
+ nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
+Message-ID: <a0f21198-5715-8858-8368-51e43092181e@canonical.com>
+Date:   Sat, 9 Mar 2019 16:37:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190309021742.GA5664@Mani-XPS-13-9360>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <17cd420ea32a9787c56ba25e36e7661541c2f65f.camel@synaptics.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 07:47:42AM +0530, Manivannan Sadhasivam wrote:
-> Hi Russel,
-> 
-> On Tue, Mar 05, 2019 at 11:40:48AM +0000, Russell King - ARM Linux admin wrote:
-> > On Tue, Mar 05, 2019 at 07:33:52PM +0800, Wen Yang wrote:
-> > > The call to of_get_next_child returns a node pointer with refcount
-> > > incremented thus it must be explicitly decremented after the last
-> > > usage.
-> > > 
-> > > Detected by coccinelle with the following warnings:
-> > > ./arch/arm/mach-actions/platsmp.c:112:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 103, but without a corresponding object release within this function.
-> > > ./arch/arm/mach-actions/platsmp.c:124:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 115, but without a corresponding object release within this function.
-> > > ./arch/arm/mach-actions/platsmp.c:137:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 128, but without a corresponding object release within this function.
-> > 
-> > I question this.  Your reasoning is that the node is no longer used
-> > so the reference count needs to be put.
-> > 
-> > However, in all these cases, data is read from the nodes properties
-> > and the device remains in-use for the life of the kernel.  There is
-> > a big difference here.
-> > 
-> > With normal drivers, each device is bound to their associated device
-> > node associated with the device.  When the device node goes away, then
-> > the corresponding device goes away too, which causes the driver to be
-> > unbound from the device.
-> > 
-> > However, there is another class of "driver" which are the ones below,
-> > where they are "permanent" devices.  These can never go away, even if
-> > the device node refcount hits zero and the device node is freed - the
-> > device is still present and in-use in the system.  So, having the
-> > device node refcount hit zero is actually a bug: what that's saying
-> > is the system device (eg, SCU) has gone away.  If you somehow were to
-> > remove the SCU from the system, you'd end up severing the connection
-> > between the CPU cores and the rest of the system - obviously resulting
-> > in a dead system!
-> > 
-> > So, what is the point of dropping these refcounts for devices that can
-> > never go away - and thus their associated device_node should also never
-> > go away?
-> > 
-> 
-> Yes, practically we would never hit this case but theoretically we should
-> decrement the refcount for nodes/properties whenever we are done with it.
-> As you know, there are 'n' number of places in kernel where we can see the
-> refcount not being put after use. So I would welcome these kind of patches
-> to set an example for someone who tries to use the of_* calls in future.
-> 
-> IMO, DT should've handled the refcount internally without exposing the
-> pointers to external world.
+Hi,
 
-It doesn't, that's my point.
+On 3/9/19 7:13 AM, Christopher Heiny wrote:
+> I'm not sure this is a safe action, due to a race condition with the
+> actual IRQ handler (rmi_process_interrupt_requests from rmi_driver.c). 
+> Remember that reading the IRQ status register clears all the IRQ bits. 
+> So you're faced with this possible scenario:
+>     - ATTN asserted, indicating new data in IRQ status register
+>     - rmi_driver_set_irq_bits called
+>     - rmi_driver_set_irq_bits reads IRQ status, clearing bits
+>     - rmi_process_interrupt_requests called
+>     - rmi_process_interrupt_request reads IRQ status, sees no
+>       bits set, nested IRQs are not handled
+> This could lead to loss of data or inconsistent system state
+> information.  For example, a button up or down event may be lost, with
+> consequent weird behavior by the user interface.
 
-In the case of normal drivers, there's an _extra_ refcount held by the
-device that is created - see the of_node_get() in of_device_alloc().
-This refcount exists for the lifetime of the device structure.  That
-refcount exists for the duration that the device exists, which bounds
-the lifetime of the availability of the device to the driver.
+rmi_driver_set_irq_bits is only called to config and enable specific
+functions of RMI.
+Reading IRQ status before set irqs is supposed to clear spam data/irq
+status.
+spam data make probe/detect touchpad/trackpoint fail.
 
-In effect, while the device driver is bound, there is a refcount on
-the device node.  So, the device node is guaranteed to be around for
-as long as the device driver is bound to the device.
+rmi_smb_resume -> rmi_driver_reset_handler -> fn-config ->
+clear_irq_bits -> set_irq_bits -> enable_irq -> irq_handler  ->
+rmi_process_interrupt_requests
 
-For the cases being addressed in these patches, there is no driver, so
-there is no bounding of the lifetime: the expectation is that the
-lifetime is the duration of the kernel.  If such a device node were to
-be deleted, then there is no way to unbind the driver, and if we have
-dropped the refcount, the device node will be immediately freed.
-However, the device is still in use.
+set_irq_bits will not be in interrupt context, it enables IRQ bits of RMI.
 
-These are a different "class" of driver.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Regards,
+Aaron
