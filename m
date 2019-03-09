@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB5AC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 06:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D220C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 06:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884622081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 06:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB370207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 06:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2Ey5b3i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k9xUBkw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfCIGmE (ORCPT
+        id S1726571AbfCIGou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 01:42:04 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38461 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfCIGmE (ORCPT
+        Sat, 9 Mar 2019 01:44:50 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40538 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbfCIGou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 01:42:04 -0500
-Received: by mail-lf1-f66.google.com with SMTP id k136so5485716lfg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 22:42:03 -0800 (PST)
+        Sat, 9 Mar 2019 01:44:50 -0500
+Received: by mail-lf1-f65.google.com with SMTP id u68so139406lff.7
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 22:44:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=Sk/8pA/sLnOJ4GgTi/s8ahIwTBPr5d0RSuBzB1QwcIs=;
-        b=l2Ey5b3iqZyTB0K9Dg9AIkTqKugnOfd80sICpo5xCfcXiT9L/WLGzfQYkKUkuroPDm
-         ICe7A6y05rGNNX3XN0rWCdGquNgVK4Q72eVxYk7kwnbqVKei7Ea3Vdecd6XpgbqYiciG
-         hjKPIGQnNrtWcITK839ArvAdUw5mcb0YSH/oZ1uj2ZWjU+OrPf7m5ol7YrJBiPOATw0w
-         U32OtVLJC25+9ZNv2VHPm/Ou8UnNPkXmUUhbMRgs5rso6kYqqATDfYyib2k87ShVt6CB
-         XnVm+Cwor063wGYhR32hzsnp/FXFgF+Hx5LuFVvwioYjR8wm2ea5r8NQOjDTWhn7Dk2o
-         WXxA==
+        bh=J8d74+zlN8JK3x+6M6/ucvABcQVQb+dGrRSI9O+hyvs=;
+        b=k9xUBkw321IbrFgzvJOvwM9UotM+DQhdREHztlYPDFMlHDPZAxqToRmCZUxtGFuN9O
+         pvki4JHb2kWpZMHzSCRuEd4VH/xynEWId3xnxKvmYwgxdbHd5X6Z54WS8l7nYGCKz6a9
+         u2c3t1cqbTUhJoBA5U6x4NFl2I3LSZPC5+Koz7EQZTPah1FN7Odyys4QmEBGQRx1WxiP
+         VRJQOwXVyjt80nsU88UscL4TnEOEqHg6ILNpkRB5pwxceez7RB0VUSIflJ2z6tbh+ZEW
+         ZeggGLNYPkKo2+CbZbWIkFv5V5Tw8jYj08HwdkprNHpHhlBQb82h3qlYSt5diAlwn5WN
+         iv0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sk/8pA/sLnOJ4GgTi/s8ahIwTBPr5d0RSuBzB1QwcIs=;
-        b=YxsmxZop5WLxZXPYNbXOTBQV/UPEM0TIyqmmdfFLN5wgzsk8AWR20R4FhCwzKd23Db
-         oi8GNprWhaB8a8h4SjNYeTzg+KBnuH0w5+31B7aeL7OJzTqzwvL6fduxD6IzXMe0E2fy
-         dIanmx1PhoxvBVqgwo6YON7rI3/k16WtXmo8dMIORpLSVjKquHSozLC0KqvdPDmjO38B
-         8+c8MfgW1dewZzAtte6dpWYGJE6bxVPoAxZYeplNrBjSEu1dUZq9z3kI7g+Gdp6HKnGh
-         oApR7WR7v/UzAgiP5lNQqyl0xxZaF9TnydkMCn4pCf0Y8Ls+ixOOEVlpbpsan7SdzzWY
-         Lf9Q==
-X-Gm-Message-State: APjAAAXICXSNRzd/ZshM1d7j+5BQHgnIQestyZiJYT3FrVfs4wtRw5Fk
-        8hBY6UoJr0CISEyo5hM5ahaie6BW1Ev/ONZxzaPEHA==
-X-Google-Smtp-Source: APXvYqz1znzkI5kNdaXtKovcx55DpIzVpMWzzBssNx5wq8jsbUyQH7O/XSrR3d6zMzIp2UFuu4ffrsmy3F0a+ktCSFI=
-X-Received: by 2002:a19:57c6:: with SMTP id l189mr364061lfb.0.1552113721662;
- Fri, 08 Mar 2019 22:42:01 -0800 (PST)
+        bh=J8d74+zlN8JK3x+6M6/ucvABcQVQb+dGrRSI9O+hyvs=;
+        b=UKh8Vynr8PhyH4QHm9E3huJGxpjdwOCj2SiN4BgQbVBgZpb9IV8vngaSPQiAY+Mg0X
+         1tjPcCBGnNWpQVnadjWVS8mll9EOfnoYMwazctK9SKhQxxW+souZxOlC3bY3x3X3lCSP
+         g6arSLq8WxyuCBJIF5iiSS04S5yoLC/irSOzmJs0D1NgI/DZmE+HydXIIt3U2Im7B5sb
+         /gGUyW3fxgtQeiAliZRFaIWsx0MG9BNtXfXBCyk5jYPAKWLxTYxErf+ilCztU3tlV+t6
+         d3V6JaNkHsDMooorRa4iEp5Gcxmm4zxim1z+o7kdTXHs0RUuTKG4qeqXt7H5d/0yhSlI
+         ko5A==
+X-Gm-Message-State: APjAAAX9OrBAtGsz/V9z6A8hpkwKW5iPa303XI0YDig/0vzs7yp/5imB
+        yOKPv2Ix+4srvP1l7ym3VmzgJTPC3qLUSUHQyZXM8w==
+X-Google-Smtp-Source: APXvYqxXxe08ButJ2M79fYbBE5PF1uv47KFWguiMBoyLB5AHH7MvqnwripC7MskAH+dJCaQIpvpmsek5ZBwom3W3JGQ=
+X-Received: by 2002:ac2:4292:: with SMTP id m18mr11706302lfh.60.1552113888140;
+ Fri, 08 Mar 2019 22:44:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20190308124910.696595153@linuxfoundation.org>
-In-Reply-To: <20190308124910.696595153@linuxfoundation.org>
+References: <20190308124914.789210760@linuxfoundation.org>
+In-Reply-To: <20190308124914.789210760@linuxfoundation.org>
 From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 9 Mar 2019 12:11:50 +0530
-Message-ID: <CA+G9fYtAc2tWvurS0CLD9nYS67mSY=A_mQf=Sv6SfDtXHNcdOQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/68] 4.19.28-stable review
+Date:   Sat, 9 Mar 2019 12:14:37 +0530
+Message-ID: <CA+G9fYufNRN6CS8+psJY055Fww+motv+theDnp5OkW+t2uqW2A@mail.gmail.com>
+Subject: Re: [PATCH 4.20 00/76] 4.20.15-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
         Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
         lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,23 +75,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 Mar 2019 at 18:29, Greg Kroah-Hartman
+On Fri, 8 Mar 2019 at 18:25, Greg Kroah-Hartman
 <gregkh@linuxfoundation.org> wrote:
 >
-> This is the start of the stable review cycle for the 4.19.28 release.
-> There are 68 patches in this series, all will be posted as a response
+> This is the start of the stable review cycle for the 4.20.15 release.
+> There are 76 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 >
-> Responses should be made by Sun Mar 10 12:48:45 UTC 2019.
+> Responses should be made by Sun Mar 10 12:48:49 UTC 2019.
 > Anything received after that time might be too late.
 >
 > The whole patch series can be found in one patch at:
 >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.28-rc1.gz
+4.20.15-rc1.gz
 > or in the git tree and branch at:
 >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
+-rc.git linux-4.20.y
 > and the diffstat can be found below.
 >
 > thanks,
@@ -105,23 +105,22 @@ No regressions on arm64, arm, x86_64, and i386.
 Summary
 ------------------------------------------------------------------------
 
-kernel: 4.19.28-rc1
+kernel: 4.20.15-rc1
 git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
 le-rc.git
-git branch: linux-4.19.y
-git commit: 838c866ce1705a8e395223329e59c4db2eaf78d8
-git describe: v4.19.26-148-g838c866ce170
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.26-148-g838c866ce170
+git branch: linux-4.20.y
+git commit: b80b02d1b1651606ab4c202888512583ffcc6bf3
+git describe: v4.20.13-166-gb80b02d1b165
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.20-oe/bu=
+ild/v4.20.13-166-gb80b02d1b165
 
 
-No regressions (compared to build v4.19.26)
+No regressions (compared to build v4.20.13)
 
-No fixes (compared to build v4.19.26)
+No fixes (compared to build v4.20.13)
 
 
-
-Ran 21748 total tests in the following environments and test suites.
+Ran 20015 total tests in the following environments and test suites.
 
 Environments
 --------------
@@ -150,7 +149,6 @@ Test Suites
 * ltp-dio-tests
 * ltp-fcntl-locktests-tests
 * ltp-filecaps-tests
-* ltp-fs-tests
 * ltp-fs_bind-tests
 * ltp-fs_perms_simple-tests
 * ltp-fsx-tests
@@ -166,9 +164,9 @@ Test Suites
 * ltp-syscalls-tests
 * ltp-timers-tests
 * spectre-meltdown-checker-test
+* ltp-fs-tests
 * ltp-open-posix-tests
 * kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
 
 --=20
 Linaro LKFT
