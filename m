@@ -2,94 +2,101 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12169C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E845C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D670D207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fla19zIt"
+	by mail.kernel.org (Postfix) with ESMTP id D941C2081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552156337;
+	bh=6lPZlMTvvri4ScMoHSfcP+yxbIS9i4YA7ALgI779Fn0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gF2fSLgY0zTDOL4mPDqfiEHz1XK0x1JOO1FhsJHn2vGmJ1iNYci/yt4kHqGAdvLeT
+	 VqnNBVAF2lEDEGHtdXNcDFFUD23/CkloU+wr/MRxY+lQnCPH45LpOJC8BEga0uToRK
+	 R89vVFEWcXlfWoKi45g7rT8cKJgaWWYsjZrsdvSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfCISbd (ORCPT
+        id S1726612AbfCIScP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 13:31:33 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37735 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfCISbU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 13:31:20 -0500
-Received: by mail-qt1-f195.google.com with SMTP id z17so867876qtn.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 10:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ag25KiQTY1FVAqTfM/8d5N/iuytix/eDd7Dz7lVbk7c=;
-        b=fla19zIt03pKGA2jIckEfER1BPLVC09vGz87VAbhxGMqfA/EpgMJa67eW8jimeSDCQ
-         6myBoAois0bSen92W/AhY0xikCai7JVRkEqcZuACJF6S17i2lDc6Anxs1yuU2k/3Yds3
-         Jck35B3kjOBAhCXjNWkcej9zZI3AsHggev3wPOd8apWk8fuALTUTrU2UF9cefLuWqVBy
-         VjIoMRoHF1Z8PISXKzOP7E7CPsRT3Plze7Ko+GwWhuxHg0BsICk5ErgiNXgVmiYTf59U
-         3oPDbQYBTcAjz22xzgr8onmuxPGWNyuXRLdnJpYduDay4FSvt/EPqyOM8TMik2h6rVI9
-         9qjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ag25KiQTY1FVAqTfM/8d5N/iuytix/eDd7Dz7lVbk7c=;
-        b=aP2OS1JWsCuTO6IjZuXZ5ccFJxv3piFvuceKqVZE8sDiEbKQYELmvLFK6yserghEWP
-         89J4FoSyHnXg5GiHGZ7ibxjqc+mejoQpVTUQu2Nwb1oCShma7i1aNFkzmoEFwfTo1KDq
-         uvmwUQbYc2qDgbdZ01fEONOg0PF2cwSKxxYKKJ4ved/JW9vmYzxmoVDXgEwQtfrDyoaj
-         5foFmvQiQdghFz4zPuWgJPndlpMG6S2KK/AHm0YfEtw37WOA9RxM0IyoM7pPbVE0pXic
-         C0abg8IZs1WNvCLncPnVBxjBGeyMlT/abnGl4TwEx9hZTYJn7k95QiQUKDJ4fuBpVqPi
-         rO9g==
-X-Gm-Message-State: APjAAAWgC78fDzPR7MuuY60OElzPyKvxxKotwHZLrvGgU8WSvE7TadmJ
-        mAyYL9020GK1myWhRzlKv+Y=
-X-Google-Smtp-Source: APXvYqxmGyp/4zHd7ZAQrtSerWO7HMA0lgMLrLylPO8coeteLotT0HvNmc5plFa9IsWZkuljrLGDeQ==
-X-Received: by 2002:a0c:b6d1:: with SMTP id h17mr20246069qve.135.1552156279247;
-        Sat, 09 Mar 2019 10:31:19 -0800 (PST)
-Received: from localhost.localdomain ([191.8.88.159])
-        by smtp.gmail.com with ESMTPSA id f8sm558824qkl.11.2019.03.09.10.31.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Mar 2019 10:31:18 -0800 (PST)
-From:   Guilherme Tadashi Maeoka <gui.maeoka@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Guilherme Tadashi Maeoka <gui.maeoka@gmail.com>
-Subject: [PATCH 4/5] Staging: rtl8723bs: os_dep: Fix space in pointer definition
-Date:   Sat,  9 Mar 2019 15:30:46 -0300
-Message-Id: <20190309183047.10781-5-gui.maeoka@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190309183047.10781-1-gui.maeoka@gmail.com>
-References: <20190309183047.10781-1-gui.maeoka@gmail.com>
+        Sat, 9 Mar 2019 13:32:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726348AbfCIScO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 13:32:14 -0500
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47C40207E0;
+        Sat,  9 Mar 2019 18:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552156334;
+        bh=6lPZlMTvvri4ScMoHSfcP+yxbIS9i4YA7ALgI779Fn0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HQWnHMIpJfmK0sEV1+od5GAII9LkllxxeWL/0FhrGqzcSZ8YBaziZ07n2pY38BHKq
+         Dx7a5YB9IIbNLV/6xU/0xlOZfh0nkhZo5whWtg3dJtKW8SaDQ8jV8lykDalvKqLMkb
+         ZvUjA9TZASBOZ0I0oKstc1o1G1Cr1YY0T+m3R7Ps=
+Date:   Sat, 9 Mar 2019 18:32:07 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: fix a potential NULL pointer dereference
+Message-ID: <20190309183207.42b68d90@archlinux>
+In-Reply-To: <20190309045356.8892-1-kjlu@umn.edu>
+References: <20190309045356.8892-1-kjlu@umn.edu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pointer definition "foo * bar" should be "foo *bar".
+On Fri,  8 Mar 2019 22:53:55 -0600
+Kangjie Lu <kjlu@umn.edu> wrote:
 
-Signed-off-by: Guilherme Tadashi Maeoka <gui.maeoka@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/osdep_service.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> devm_iio_trigger_alloc may fail and return NULL. The fix returns
+> ENOMEM when it fails.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Seems obviously correct to me.  As it's been there a 'while'
+I'm not going to rush it in however. This can wait for the next
+merge window.
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/osdep_service.c b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
-index 65921b946ff7..262b70e88e67 100644
---- a/drivers/staging/rtl8723bs/os_dep/osdep_service.c
-+++ b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
-@@ -248,7 +248,7 @@ struct net_device *rtw_alloc_etherdev(int sizeof_priv)
- 	return pnetdev;
- }
- 
--void rtw_free_netdev(struct net_device * netdev)
-+void rtw_free_netdev(struct net_device *netdev)
- {
- 	struct rtw_netdev_priv_indicator *pnpi;
- 
--- 
-2.17.1
+Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/mxs-lradc-adc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/mxs-lradc-adc.c b/drivers/iio/adc/mxs-lradc-adc.c
+> index c627513d9f0f..5384472b6c4d 100644
+> --- a/drivers/iio/adc/mxs-lradc-adc.c
+> +++ b/drivers/iio/adc/mxs-lradc-adc.c
+> @@ -465,6 +465,8 @@ static int mxs_lradc_adc_trigger_init(struct iio_dev *iio)
+>  
+>  	trig = devm_iio_trigger_alloc(&iio->dev, "%s-dev%i", iio->name,
+>  				      iio->id);
+> +	if (!trig)
+> +		return -ENOMEM;
+>  
+>  	trig->dev.parent = adc->dev;
+>  	iio_trigger_set_drvdata(trig, iio);
 
