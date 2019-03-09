@@ -2,124 +2,105 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CD7C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3169C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD03D2086A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552115813;
-	bh=3a7gG3pp+mG5ONImlfhwqWkzQUgWi52EWnoy5AxrD7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uersqwS17YymQ06PhDn45MNpTx5xDc8sTdW5IvdcQYZOiV4ybE5Mtxh/+KHxnqmvz
-	 n51qH/KDlJFJtFVMUaGNQrs52f6Zw9Kk4byqNDKijZWj0M4ot+DD4kfOXTrs1kxOTf
-	 dSg+O1Vwg2sRC+ydmT1hXQ88EqudJbb3Hgonf5WA=
+	by mail.kernel.org (Postfix) with ESMTP id C755D20868
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfCIHQw (ORCPT
+        id S1726757AbfCIHSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 02:16:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfCIHQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 02:16:52 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA402081B;
-        Sat,  9 Mar 2019 07:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552115810;
-        bh=3a7gG3pp+mG5ONImlfhwqWkzQUgWi52EWnoy5AxrD7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oovrxlzhPlEjwhbXu791o5H50eG3jEMsQjABDd9udX4QO498ML9W5vjcEQeiq9xRx
-         hA+qEewiB5AUrnr0wJuOMZJ+70j9L4qNMzvRoM3TiWJ/a8wXQ7SFRA4EpAt9ZD3onT
-         zjFEABMTDBpq6XdCmzfvvQCr54sgr9JQPlP3+Avs=
-Date:   Sat, 9 Mar 2019 08:16:48 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190309071648.GE3882@kroah.com>
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
- <20190307150343.GB258852@google.com>
- <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
- <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
- <20190308140251.GC25768@kroah.com>
- <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+        Sat, 9 Mar 2019 02:18:08 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45482 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725787AbfCIHSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 02:18:08 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A845633CF4A8AD12130D;
+        Sat,  9 Mar 2019 15:18:05 +0800 (CST)
+Received: from localhost (10.177.246.209) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Sat, 9 Mar 2019
+ 15:17:57 +0800
+From:   "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     <mst@redhat.com>, <jasowang@redhat.com>
+CC:     <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, Longpeng <longpeng2@huawei.com>,
+        Gonglei <arei.gonglei@huawei.com>
+Subject: [PATCH] virtio_pci: fix a NULL pointer reference in vp_del_vqs
+Date:   Sat, 9 Mar 2019 15:17:40 +0800
+Message-ID: <1552115860-328324-1-git-send-email-longpeng2@huawei.com>
+X-Mailer: git-send-email 1.8.4.msysgit.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Originating-IP: [10.177.246.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 06:59:23PM +0100, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> On Fri, Mar 8, 2019 at 6:05 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Fri, Mar 08, 2019 at 05:42:32AM -0800, Joel Fernandes wrote:
-> > > On Fri, Mar 8, 2019, 3:53 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > It is just so much easier to use tar + xz at build time, and leave the
-> > > > > decompression task to the user. After decompression, the files will live on
-> > > > > the disk and the page-cache mechanism will free memory when/if the files fall
-> > > > > off the LRUs.
-> > > >
-> > > > I'm also considering how generic and extensible the solution is.
-> > > > What if people need other build artifacts in the future (e.g. signing key to
-> > > > load signed modules)?
-> > >
-> > > That sounds like it could be useful. I don't see any reason off the
-> > > top why that would not be possible to add to the list of archived
-> > > files in the future. The patch allows populating the list of files
-> > > from Kbuild using ikh_file_list variable.
-> >
-> > Um, no, you don't want the signing key in the kernel itself, as that
-> > totally defeats the purpose of the signing key :)
-> 
-> In a loadable module?
-> He who has the module, can build and sign more modules.
+From: Longpeng <longpeng2@huawei.com>
 
-Again, that's pretty foolish.
+If the msix_affinity_masks is alloced failed, then we'll
+try to free some resources in vp_free_vectors() that may
+access it directly.
 
-Signing keys should be kept secure, or better yet, just deleted entirely
-after creating and signing with them.  That's what I do for my kernels
-and I'm pretty sure that some distros also do this.  That way there's no
-chance that someone else can sign a module and have it loaded without
-detection, which is what signing is supposed to prevent from happening.
+We met the following stack in our production:
+[   29.296767] BUG: unable to handle kernel NULL pointer dereference at  (null)
+[   29.311151] IP: [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
+[   29.324787] PGD 0
+[   29.333224] Oops: 0000 [#1] SMP
+[...]
+[   29.425175] RIP: 0010:[<ffffffffc04fe35a>]  [<ffffffffc04fe35a>] vp_free_vectors+0x6a/0x150 [virtio_pci]
+[   29.441405] RSP: 0018:ffff9a55c2dcfa10  EFLAGS: 00010206
+[   29.453491] RAX: 0000000000000000 RBX: ffff9a55c322c400 RCX: 0000000000000000
+[   29.467488] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a55c322c400
+[   29.481461] RBP: ffff9a55c2dcfa20 R08: 0000000000000000 R09: ffffc1b6806ff020
+[   29.495427] R10: 0000000000000e95 R11: 0000000000aaaaaa R12: 0000000000000000
+[   29.509414] R13: 0000000000010000 R14: ffff9a55bd2d9e98 R15: ffff9a55c322c400
+[   29.523407] FS:  00007fdcba69f8c0(0000) GS:ffff9a55c2840000(0000) knlGS:0000000000000000
+[   29.538472] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   29.551621] CR2: 0000000000000000 CR3: 000000003ce52000 CR4: 00000000003607a0
+[   29.565886] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   29.580055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   29.594122] Call Trace:
+[   29.603446]  [<ffffffffc04fe8a2>] vp_request_msix_vectors+0xe2/0x260 [virtio_pci]
+[   29.618017]  [<ffffffffc04fedc5>] vp_try_to_find_vqs+0x95/0x3b0 [virtio_pci]
+[   29.632152]  [<ffffffffc04ff117>] vp_find_vqs+0x37/0xb0 [virtio_pci]
+[   29.645582]  [<ffffffffc057bf63>] init_vq+0x153/0x260 [virtio_blk]
+[   29.658831]  [<ffffffffc057c1e8>] virtblk_probe+0xe8/0x87f [virtio_blk]
+[...]
 
-thanks,
+Cc: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng <longpeng2@huawei.com>
+---
+ drivers/virtio/virtio_pci_common.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-greg k-h
+diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
+index d0584c0..7a0398b 100644
+--- a/drivers/virtio/virtio_pci_common.c
++++ b/drivers/virtio/virtio_pci_common.c
+@@ -255,9 +255,11 @@ void vp_del_vqs(struct virtio_device *vdev)
+ 	for (i = 0; i < vp_dev->msix_used_vectors; ++i)
+ 		free_irq(pci_irq_vector(vp_dev->pci_dev, i), vp_dev);
+ 
+-	for (i = 0; i < vp_dev->msix_vectors; i++)
+-		if (vp_dev->msix_affinity_masks[i])
+-			free_cpumask_var(vp_dev->msix_affinity_masks[i]);
++	if (vp_dev->msix_affinity_masks) {
++		for (i = 0; i < vp_dev->msix_vectors; i++)
++			if (vp_dev->msix_affinity_masks[i])
++				free_cpumask_var(vp_dev->msix_affinity_masks[i]);
++	}
+ 
+ 	if (vp_dev->msix_enabled) {
+ 		/* Disable the vector used for configuration */
+-- 
+1.8.3.1
+
+
