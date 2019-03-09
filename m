@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8113EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C0CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBB5207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416CA20851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfCIOid (ORCPT
+        id S1726488AbfCIOkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 09:38:33 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:56947 "EHLO
+        Sat, 9 Mar 2019 09:40:18 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:37151 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCIOid (ORCPT
+        with ESMTP id S1725841AbfCIOkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 09:38:33 -0500
+        Sat, 9 Mar 2019 09:40:18 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29EcEGR3109009
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29EdeZ93109332
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 06:38:15 -0800
+        Sat, 9 Mar 2019 06:39:40 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29EcCfp3109006;
-        Sat, 9 Mar 2019 06:38:12 -0800
-Date:   Sat, 9 Mar 2019 06:38:12 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29Edbbg3109322;
+        Sat, 9 Mar 2019 06:39:37 -0800
+Date:   Sat, 9 Mar 2019 06:39:37 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Valentin Schneider <tipbot@zytor.com>
-Message-ID: <tip-ce28d2e53cda890771360d32259495dd6a9c4253@git.kernel.org>
-Cc:     peterz@infradead.org, morten.rasmussen@arm.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
-        riel@surriel.com, torvalds@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org,
-        valentin.schneider@arm.com, tglx@linutronix.de
-Reply-To: morten.rasmussen@arm.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, bp@alien8.de,
-          mingo@kernel.org, riel@surriel.com,
-          torvalds@linux-foundation.org, dave.hansen@linux.intel.com,
-          luto@kernel.org, tglx@linutronix.de, valentin.schneider@arm.com
-In-Reply-To: <20190211175946.4961-4-valentin.schneider@arm.com>
-References: <20190211175946.4961-4-valentin.schneider@arm.com>
+From:   tip-bot for Kan Liang <tipbot@zytor.com>
+Message-ID: <tip-8041ffd36f42d8521d66dd1e236feb58cecd68bc@git.kernel.org>
+Cc:     acme@redhat.com, bp@alien8.de, alexander.shishkin@linux.intel.com,
+        torvalds@linux-foundation.org, dave.hansen@linux.intel.com,
+        kan.liang@linux.intel.com, tglx@linutronix.de, luto@kernel.org,
+        peterz@infradead.org, riel@surriel.com, yao.jin@linux.intel.com,
+        hpa@zytor.com, mingo@kernel.org, eranian@google.com,
+        vincent.weaver@maine.edu, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org
+Reply-To: yao.jin@linux.intel.com, mingo@kernel.org, hpa@zytor.com,
+          jolsa@redhat.com, eranian@google.com, vincent.weaver@maine.edu,
+          linux-kernel@vger.kernel.org, bp@alien8.de,
+          alexander.shishkin@linux.intel.com,
+          torvalds@linux-foundation.org, acme@redhat.com,
+          dave.hansen@linux.intel.com, kan.liang@linux.intel.com,
+          peterz@infradead.org, tglx@linutronix.de, luto@kernel.org,
+          riel@surriel.com
+In-Reply-To: <20190227165729.1861-1-kan.liang@linux.intel.com>
+References: <20190227165729.1861-1-kan.liang@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/urgent] sched/fair: Skip LLC NOHZ logic for asymmetric
- systems
-Git-Commit-ID: ce28d2e53cda890771360d32259495dd6a9c4253
+Subject: [tip:perf/urgent] perf/x86/intel/uncore: Fix client IMC events
+ return huge result
+Git-Commit-ID: 8041ffd36f42d8521d66dd1e236feb58cecd68bc
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -61,137 +66,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ce28d2e53cda890771360d32259495dd6a9c4253
-Gitweb:     https://git.kernel.org/tip/ce28d2e53cda890771360d32259495dd6a9c4253
-Author:     Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate: Mon, 11 Feb 2019 17:59:46 +0000
+Commit-ID:  8041ffd36f42d8521d66dd1e236feb58cecd68bc
+Gitweb:     https://git.kernel.org/tip/8041ffd36f42d8521d66dd1e236feb58cecd68bc
+Author:     Kan Liang <kan.liang@linux.intel.com>
+AuthorDate: Wed, 27 Feb 2019 08:57:29 -0800
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Sat, 9 Mar 2019 14:03:53 +0100
+CommitDate: Sat, 9 Mar 2019 14:10:31 +0100
 
-sched/fair: Skip LLC NOHZ logic for asymmetric systems
+perf/x86/intel/uncore: Fix client IMC events return huge result
 
-The LLC NOHZ condition will become true as soon as >=2 CPUs in a
-single LLC domain are busy. On big.LITTLE systems, this translates to
-two or more CPUs of a "cluster" (big or LITTLE) being busy.
+The client IMC bandwidth events currently return very large values:
 
-Issuing a NOHZ kick in these conditions isn't desired for asymmetric
-systems, as if the busy CPUs can provide enough compute capacity to
-the running tasks, then we can leave the NOHZ CPUs in peace.
+  $ perf stat -e uncore_imc/data_reads/ -e uncore_imc/data_writes/ -I 10000 -a
 
-Skip the LLC NOHZ condition for asymmetric systems, and rely on
-nr_running & capacity checks to trigger NOHZ kicks when the system
-actually needs them.
+  10.000117222 34,788.76 MiB uncore_imc/data_reads/
+  10.000117222 8.26 MiB uncore_imc/data_writes/
+  20.000374584 34,842.89 MiB uncore_imc/data_reads/
+  20.000374584 10.45 MiB uncore_imc/data_writes/
+  30.000633299 37,965.29 MiB uncore_imc/data_reads/
+  30.000633299 323.62 MiB uncore_imc/data_writes/
+  40.000891548 41,012.88 MiB uncore_imc/data_reads/
+  40.000891548 6.98 MiB uncore_imc/data_writes/
+  50.001142480 1,125,899,906,621,494.75 MiB uncore_imc/data_reads/
+  50.001142480 6.97 MiB uncore_imc/data_writes/
 
-Suggested-by: Morten Rasmussen <morten.rasmussen@arm.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+The client IMC events are freerunning counters. They still use the
+old event encoding format (0x1 for data_read and 0x2 for data write).
+The counter bit width is calculated by common code, which assume that
+the standard encoding format is used for the freerunning counters.
+Error bit width information is calculated.
+
+The patch intends to convert the old client IMC event encoding to the
+standard encoding format.
+
+Current common code uses event->attr.config which directly copy from
+user space. We should not implicitly modify it for a converted event.
+The event->hw.config is used to replace the event->attr.config in
+common code.
+
+For client IMC events, the event->attr.config is used to calculate a
+converted event with standard encoding format in the custom
+event_init(). The converted event is stored in event->hw.config.
+For other events of freerunning counters, they already use the standard
+encoding format. The same value as event->attr.config is assigned to
+event->hw.config in common event_init().
+
+Reported-by: Jin Yao <yao.jin@linux.intel.com>
+Tested-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dietmar.Eggemann@arm.com
 Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Rik van Riel <riel@surriel.com>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: vincent.guittot@linaro.org
-Link: https://lkml.kernel.org/r/20190211175946.4961-4-valentin.schneider@arm.com
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: stable@kernel.org # v4.18+
+Fixes: 9aae1780e7e8 ("perf/x86/intel/uncore: Clean up client IMC uncore")
+Link: https://lkml.kernel.org/r/20190227165729.1861-1-kan.liang@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 65 ++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 37 insertions(+), 28 deletions(-)
+ arch/x86/events/intel/uncore.c     |  1 +
+ arch/x86/events/intel/uncore.h     | 12 ++++++------
+ arch/x86/events/intel/uncore_snb.c |  4 +++-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f0d2f8a352bf..51003e1c794d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9603,24 +9603,6 @@ static void nohz_balancer_kick(struct rq *rq)
- 	}
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index d516161c00c4..9fe64c01a2e5 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -732,6 +732,7 @@ static int uncore_pmu_event_init(struct perf_event *event)
+ 		/* fixed counters have event field hardcoded to zero */
+ 		hwc->config = 0ULL;
+ 	} else if (is_freerunning_event(event)) {
++		hwc->config = event->attr.config;
+ 		if (!check_valid_freerunning_event(box, event))
+ 			return -EINVAL;
+ 		event->hw.idx = UNCORE_PMC_IDX_FREERUNNING;
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index cb46d602a6b8..853a49a8ccf6 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -292,8 +292,8 @@ static inline
+ unsigned int uncore_freerunning_counter(struct intel_uncore_box *box,
+ 					struct perf_event *event)
+ {
+-	unsigned int type = uncore_freerunning_type(event->attr.config);
+-	unsigned int idx = uncore_freerunning_idx(event->attr.config);
++	unsigned int type = uncore_freerunning_type(event->hw.config);
++	unsigned int idx = uncore_freerunning_idx(event->hw.config);
+ 	struct intel_uncore_pmu *pmu = box->pmu;
  
- 	rcu_read_lock();
--	sds = rcu_dereference(per_cpu(sd_llc_shared, cpu));
--	if (sds) {
--		/*
--		 * If there is an imbalance between LLC domains (IOW we could
--		 * increase the overall cache use), we need some less-loaded LLC
--		 * domain to pull some load. Likewise, we may need to spread
--		 * load within the current LLC domain (e.g. packed SMT cores but
--		 * other CPUs are idle). We can't really know from here how busy
--		 * the others are - so just get a nohz balance going if it looks
--		 * like this LLC domain has tasks we could move.
--		 */
--		nr_busy = atomic_read(&sds->nr_busy_cpus);
--		if (nr_busy > 1) {
--			flags = NOHZ_KICK_MASK;
--			goto unlock;
--		}
--
--	}
+ 	return pmu->type->freerunning[type].counter_base +
+@@ -377,7 +377,7 @@ static inline
+ unsigned int uncore_freerunning_bits(struct intel_uncore_box *box,
+ 				     struct perf_event *event)
+ {
+-	unsigned int type = uncore_freerunning_type(event->attr.config);
++	unsigned int type = uncore_freerunning_type(event->hw.config);
  
- 	sd = rcu_dereference(rq->sd);
- 	if (sd) {
-@@ -9635,6 +9617,21 @@ static void nohz_balancer_kick(struct rq *rq)
- 		}
- 	}
+ 	return box->pmu->type->freerunning[type].bits;
+ }
+@@ -385,7 +385,7 @@ unsigned int uncore_freerunning_bits(struct intel_uncore_box *box,
+ static inline int uncore_num_freerunning(struct intel_uncore_box *box,
+ 					 struct perf_event *event)
+ {
+-	unsigned int type = uncore_freerunning_type(event->attr.config);
++	unsigned int type = uncore_freerunning_type(event->hw.config);
  
-+	sd = rcu_dereference(per_cpu(sd_asym_packing, cpu));
-+	if (sd) {
-+		/*
-+		 * When ASYM_PACKING; see if there's a more preferred CPU
-+		 * currently idle; in which case, kick the ILB to move tasks
-+		 * around.
-+		 */
-+		for_each_cpu_and(i, sched_domain_span(sd), nohz.idle_cpus_mask) {
-+			if (sched_asym_prefer(i, cpu)) {
-+				flags = NOHZ_KICK_MASK;
-+				goto unlock;
-+			}
-+		}
-+	}
+ 	return box->pmu->type->freerunning[type].num_counters;
+ }
+@@ -399,8 +399,8 @@ static inline int uncore_num_freerunning_types(struct intel_uncore_box *box,
+ static inline bool check_valid_freerunning_event(struct intel_uncore_box *box,
+ 						 struct perf_event *event)
+ {
+-	unsigned int type = uncore_freerunning_type(event->attr.config);
+-	unsigned int idx = uncore_freerunning_idx(event->attr.config);
++	unsigned int type = uncore_freerunning_type(event->hw.config);
++	unsigned int idx = uncore_freerunning_idx(event->hw.config);
+ 
+ 	return (type < uncore_num_freerunning_types(box, event)) &&
+ 	       (idx < uncore_num_freerunning(box, event));
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index b12517fae77a..13493f43b247 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -442,9 +442,11 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
+ 
+ 	/* must be done before validate_group */
+ 	event->hw.event_base = base;
+-	event->hw.config = cfg;
+ 	event->hw.idx = idx;
+ 
++	/* Convert to standard encoding format for freerunning counters */
++	event->hw.config = ((cfg - 1) << 8) | 0x10ff;
 +
- 	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, cpu));
- 	if (sd) {
- 		/*
-@@ -9645,20 +9642,32 @@ static void nohz_balancer_kick(struct rq *rq)
- 			flags = NOHZ_KICK_MASK;
- 			goto unlock;
- 		}
-+
-+		/*
-+		 * For asymmetric systems, we do not want to nicely balance
-+		 * cache use, instead we want to embrace asymmetry and only
-+		 * ensure tasks have enough CPU capacity.
-+		 *
-+		 * Skip the LLC logic because it's not relevant in that case.
-+		 */
-+		goto unlock;
- 	}
+ 	/* no group validation needed, we have free running counters */
  
--	sd = rcu_dereference(per_cpu(sd_asym_packing, cpu));
--	if (sd) {
-+	sds = rcu_dereference(per_cpu(sd_llc_shared, cpu));
-+	if (sds) {
- 		/*
--		 * When ASYM_PACKING; see if there's a more preferred CPU
--		 * currently idle; in which case, kick the ILB to move tasks
--		 * around.
-+		 * If there is an imbalance between LLC domains (IOW we could
-+		 * increase the overall cache use), we need some less-loaded LLC
-+		 * domain to pull some load. Likewise, we may need to spread
-+		 * load within the current LLC domain (e.g. packed SMT cores but
-+		 * other CPUs are idle). We can't really know from here how busy
-+		 * the others are - so just get a nohz balance going if it looks
-+		 * like this LLC domain has tasks we could move.
- 		 */
--		for_each_cpu_and(i, sched_domain_span(sd), nohz.idle_cpus_mask) {
--			if (sched_asym_prefer(i, cpu)) {
--				flags = NOHZ_KICK_MASK;
--				goto unlock;
--			}
-+		nr_busy = atomic_read(&sds->nr_busy_cpus);
-+		if (nr_busy > 1) {
-+			flags = NOHZ_KICK_MASK;
-+			goto unlock;
- 		}
- 	}
- unlock:
+ 	return 0;
