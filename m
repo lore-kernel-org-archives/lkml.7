@@ -2,931 +2,675 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8064C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3A5C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F4E206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="WWkq+Km9"
+	by mail.kernel.org (Postfix) with ESMTP id 03FF4206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfCIXgi (ORCPT
+        id S1726385AbfCIXla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 18:36:38 -0500
-Received: from nala.villavu.com ([188.165.243.101]:58157 "EHLO
-        nala.villavu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfCIXgi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 18:36:38 -0500
-X-Greylist: delayed 987 seconds by postgrey-1.27 at vger.kernel.org; Sat, 09 Mar 2019 18:36:36 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:
-        Sender:Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=LaCNSHSgKP0cId58SjMFde+jnaUIF25AEqq58qZa7K0=; b=WWkq+Km9nBHtEuv2kuAKfTyBTI
-        2WzLcy4PMSac5yRgEpZHVxDpiqMOeB9/AbVoggwUoEh4OTFyj2PGZgrIyUZLiIecd5A0rfJYu8z3h
-        qujzJkmOU25hILJt3rlH7xZNKweGzGHmhrYmmx+LdEQXz9Md6K4lLSwyNYo/wXmxL7kHXwt05IhHo
-        WR5fzM46SXrnOZOUK5W0TeSyuhM8FsKOiW2WrN6au2txPON4TZEDM0QzgD31bvhE03yXqPltFO2Hv
-        gm7K2PZtASpTPJJEV6w72qcw8Of6sDzc9LTVFRiQoPLM6Rr2i5JMyX/g9syQCiT5GJ1eWyXsoSovh
-        7MVCrVaw==;
-Received: from a82-161-36-93.adsl.xs4all.nl ([82.161.36.93] helo=[0.0.0.0])
-        by nala.villavu.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <merlijn@wizzup.org>)
-        id 1h2lGA-0002AZ-E2; Sun, 10 Mar 2019 00:20:06 +0100
-To:     kvalo@codeaurora.org
-Cc:     linux-omap <linux-omap@vger.kernel.org>,
-        linux-wireless@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
-From:   Merlijn Wajer <merlijn@wizzup.org>
-Subject: Nokia N900: wl1251 spi3.0: EOW timed out on
-Openpgp: preference=signencrypt
-Message-ID: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
-Date:   Sun, 10 Mar 2019 00:22:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sat, 9 Mar 2019 18:41:30 -0500
+Received: from mga06.intel.com ([134.134.136.31]:51179 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfCIXla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 18:41:30 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2019 15:41:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,462,1544515200"; 
+   d="gz'50?scan'50,208,50";a="132754799"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 09 Mar 2019 15:41:27 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h2lao-000DPE-RK; Sun, 10 Mar 2019 07:41:26 +0800
+Date:   Sun, 10 Mar 2019 07:41:22 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        tipbuild@zytor.com, Ingo Molnar <mingo@kernel.org>
+Subject: [tip:sched/urgent 1/5] kernel/sched/cpufreq_schedutil.c:346:26:
+ note: in expansion of macro 'min'
+Message-ID: <201903100720.uk4snqnu%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="lFe5UGXsGwoI6W64sCD1IK4O6IgQl1yZe"
+Content-Type: multipart/mixed; boundary="r5Pyd7+fXNt84Ff3"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---lFe5UGXsGwoI6W64sCD1IK4O6IgQl1yZe
-Content-Type: multipart/mixed; boundary="O05gz5M94nKtVxJB3hnr58ESOqlkdB4PK";
- protected-headers="v1"
-From: Merlijn Wajer <merlijn@wizzup.org>
-To: kvalo@codeaurora.org
-Cc: linux-omap <linux-omap@vger.kernel.org>, linux-wireless@vger.kernel.org,
- Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
-Message-ID: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
-Subject: Nokia N900: wl1251 spi3.0: EOW timed out on
 
---O05gz5M94nKtVxJB3hnr58ESOqlkdB4PK
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
+head:   ce28d2e53cda890771360d32259495dd6a9c4253
+commit: f1212844e9dc3a31d41f99713c5522acf92ff291 [1/5] sched/cpufreq: Fix 32-bit math overflow
+config: i386-randconfig-s2-201910 (attached as .config)
+compiler: gcc-6 (Debian 6.5.0-2) 6.5.0 20181026
+reproduce:
+        git checkout f1212844e9dc3a31d41f99713c5522acf92ff291
+        # save the attached .config to linux build tree
+        make ARCH=i386 
 
-I just migrated to Linux 5.0  (from 4.15) on my Nokia N900, and I'm
-getting a lot of messages like this:
+All warnings (new ones prefixed by >>):
 
-> wl1251 spi3.0: EOW timed out
+   In file included from arch/x86/include/asm/percpu.h:45:0,
+                    from arch/x86/include/asm/current.h:6,
+                    from include/linux/sched.h:12,
+                    from kernel/sched/sched.h:5,
+                    from kernel/sched/cpufreq_schedutil.c:11:
+   kernel/sched/cpufreq_schedutil.c: In function 'sugov_iowait_boost':
+   include/linux/kernel.h:846:29: warning: comparison of distinct pointer types lacks a cast
+      (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                                ^
+   include/linux/kernel.h:860:4: note: in expansion of macro '__typecheck'
+      (__typecheck(x, y) && __no_side_effects(x, y))
+       ^~~~~~~~~~~
+   include/linux/kernel.h:870:24: note: in expansion of macro '__safe_cmp'
+     __builtin_choose_expr(__safe_cmp(x, y), \
+                           ^~~~~~~~~~
+   include/linux/kernel.h:879:19: note: in expansion of macro '__careful_cmp'
+    #define min(x, y) __careful_cmp(x, y, <)
+                      ^~~~~~~~~~~~~
+>> kernel/sched/cpufreq_schedutil.c:346:26: note: in expansion of macro 'min'
+      sg_cpu->iowait_boost = min(sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
+                             ^~~
 
-and it ends with:
+vim +/min +346 kernel/sched/cpufreq_schedutil.c
 
-> [   29.072174] wl1251: ERROR chip id doesn't match after firmware boot
+   311	
+   312	/**
+   313	 * sugov_iowait_boost() - Updates the IO boost status of a CPU.
+   314	 * @sg_cpu: the sugov data for the CPU to boost
+   315	 * @time: the update time from the caller
+   316	 * @flags: SCHED_CPUFREQ_IOWAIT if the task is waking up after an IO wait
+   317	 *
+   318	 * Each time a task wakes up after an IO operation, the CPU utilization can be
+   319	 * boosted to a certain utilization which doubles at each "frequent and
+   320	 * successive" wakeup from IO, ranging from the utilization of the minimum
+   321	 * OPP to the utilization of the maximum OPP.
+   322	 * To keep doubling, an IO boost has to be requested at least once per tick,
+   323	 * otherwise we restart from the utilization of the minimum OPP.
+   324	 */
+   325	static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+   326				       unsigned int flags)
+   327	{
+   328		bool set_iowait_boost = flags & SCHED_CPUFREQ_IOWAIT;
+   329	
+   330		/* Reset boost if the CPU appears to have been idle enough */
+   331		if (sg_cpu->iowait_boost &&
+   332		    sugov_iowait_reset(sg_cpu, time, set_iowait_boost))
+   333			return;
+   334	
+   335		/* Boost only tasks waking up after IO */
+   336		if (!set_iowait_boost)
+   337			return;
+   338	
+   339		/* Ensure boost doubles only one time at each request */
+   340		if (sg_cpu->iowait_boost_pending)
+   341			return;
+   342		sg_cpu->iowait_boost_pending = true;
+   343	
+   344		/* Double the boost at each request */
+   345		if (sg_cpu->iowait_boost) {
+ > 346			sg_cpu->iowait_boost = min(sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
+   347			return;
+   348		}
+   349	
+   350		/* First wakeup after IO: start with minimum boost */
+   351		sg_cpu->iowait_boost = sg_cpu->min;
+   352	}
+   353	
 
-My tree carries some patches, but none are related to SPI or wl1251. Any
-clue what might be up?
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-dmesg attached.
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
-Cheers,
-Merlijn
+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
 
-[1]
-
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 5.0.0+ (merlijn@kgpe-d16) (gcc version
-7.3.0 (Gentoo Hardened 7.3.0-r3 p1.4)) #6 PREEMPT Wed Mar 6 08:35:59 CET
-2019
-[    0.000000] CPU: ARMv7 Processor [411fc083] revision 3 (ARMv7),
-cr=3D10c5387d
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT nonaliasing
-instruction cache
-[    0.000000] OF: fdt: Machine model: Nokia N900
-[    0.000000] Memory policy: Data cache writeback
-[    0.000000] On node 0 totalpages: 65280
-[    0.000000]   Normal zone: 510 pages used for memmap
-[    0.000000]   Normal zone: 0 pages reserved
-[    0.000000]   Normal zone: 65280 pages, LIFO batch:15
-[    0.000000] CPU: All CPU(s) started in SVC mode.
-[    0.000000] OMAP3430/3530 ES3.1 (l2cache iva sgx neon isp)
-[    0.000000] random: get_random_bytes called from
-start_kernel+0x80/0x3fc with crng_init=3D0
-[    0.000000] pcpu-alloc: s0 r0 d32768 u32768 alloc=3D1*32768
-[    0.000000] pcpu-alloc: [0] 0
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 647=
-70
-[    0.000000] Kernel command line: root=3D/dev/mmcblk0p2 rootwait rw
-mtdoops.mtddev=3Dlog console=3Dtty1 omapfb.vram=3D0:4M
-omapfb.mode=3Dlcd:848x480-16 nokia-modem.pm=3D1
-[    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072
-bytes)
-[    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 byt=
-es)
-[    0.000000] Memory: 216140K/261120K available (6144K kernel code,
-258K rwdata, 1856K rodata, 1024K init, 32920K bss, 44980K reserved, 0K
-cma-reserved, 0K highmem)
-[    0.000000] Virtual kernel memory layout:
-                   vector  : 0xffff0000 - 0xffff1000   (   4 kB)
-                   fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
-                   vmalloc : 0xd0000000 - 0xff800000   ( 760 MB)
-                   lowmem  : 0xc0000000 - 0xcff00000   ( 255 MB)
-                   pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
-                   modules : 0xbf000000 - 0xbfe00000   (  14 MB)
-                     .text : 0x(ptrval) - 0x(ptrval)   (7136 kB)
-                     .init : 0x(ptrval) - 0x(ptrval)   (1024 kB)
-                     .data : 0x(ptrval) - 0x(ptrval)   ( 259 kB)
-                      .bss : 0x(ptrval) - 0x(ptrval)   (32921 kB)
-[    0.000000] SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D1,=
- Nodes=3D1
-[    0.000000] rcu: Preemptible hierarchical RCU implementation.
-[    0.000000]  Tasks RCU enabled.
-[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
-is 10 jiffies.
-[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-[    0.000000] IRQ: Found an INTC at 0x(ptrval) (revision 4.0) with 96
-interrupts
-[    0.000000] Clocking rate (Crystal/Core/MPU): 19.2/332/500 MHz
-[    0.000000] OMAP clockevent source: timer1 at 32768 Hz
-[    0.000000] clocksource: 32k_counter: mask: 0xffffffff max_cycles:
-0xffffffff, max_idle_ns: 58327039986419 ns
-[    0.000030] sched_clock: 32 bits at 32kHz, resolution 30517ns, wraps
-every 65535999984741ns
-[    0.000030] OMAP clocksource: 32k_counter at 32768 Hz
-[    0.000579] Console: colour dummy device 80x30
-[    0.001647] printk: console [tty1] enabled
-[    0.001708] Calibrating delay loop... 496.43 BogoMIPS (lpj=3D2482176)
-[    0.048919] pid_max: default: 32768 minimum: 301
-[    0.049133] LSM: Security Framework initializing
-[    0.049255] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes=
-)
-[    0.049316] Mountpoint-cache hash table entries: 1024 (order: 0, 4096
-bytes)
-[    0.050628] CPU: Testing write buffer coherency: ok
-[    0.050750] CPU0: Spectre v2: using BPIALL workaround
-[    0.052307] Setting up static identity map for 0x80100000 - 0x80100060=
-
-[    0.052612] rcu: Hierarchical SRCU implementation.
-[    0.056457] devtmpfs: initialized
-[    0.086242] VFP support v0.3: implementor 41 architecture 3 part 30
-variant c rev 1
-[    0.086944] clocksource: jiffies: mask: 0xffffffff max_cycles:
-0xffffffff, max_idle_ns: 19112604462750000 ns
-[    0.087036] futex hash table entries: 256 (order: -1, 3072 bytes)
-[    0.087280] xor: measuring software checksum speed
-[    0.178619]    arm4regs  :   623.600 MB/sec
-[    0.278381]    8regs     :   459.600 MB/sec
-[    0.378173]    32regs    :   600.000 MB/sec
-[    0.477966]    neon      :   444.800 MB/sec
-[    0.477996] xor: using function: arm4regs (623.600 MB/sec)
-[    0.478149] pinctrl core: initialized pinctrl subsystem
-[    0.479644] NET: Registered protocol family 16
-[    0.481414] DMA: preallocated 256 KiB pool for atomic coherent
-allocations
-[    0.501464] omap_hwmod: mcbsp2_sidetone using broken dt data from mcbs=
-p
-[    0.502136] omap_hwmod: mcbsp3_sidetone using broken dt data from mcbs=
-p
-[    0.552520] cpuidle: using governor ladder
-[    0.552612] cpuidle: using governor menu
-[    0.553283] Reprogramming SDRC clock to 332000000 Hz
-[    0.559783] OMAP GPIO hardware version 2.5
-[    0.582397] RX-51: Enabling ARM errata 430973 workaround
-[    0.584259] RX-51: Registering OMAP3 HWRNG device
-[    0.584808] hw-breakpoint: debug architecture 0x4 unsupported.
-[    0.586090] Reserving DMA channels 0 and 1 for HS ROM code
-[    0.586151] OMAP DMA hardware revision 4.0
-[    0.767700] raid6: neonx8   gen()   156 MB/s
-[    0.937103] raid6: neonx8   xor()   205 MB/s
-[    1.106658] raid6: neonx4   gen()   595 MB/s
-[    1.276367] raid6: neonx4   xor()   447 MB/s
-[    1.446044] raid6: neonx2   gen()   463 MB/s
-[    1.615631] raid6: neonx2   xor()   380 MB/s
-[    1.785247] raid6: neonx1   gen()   229 MB/s
-[    1.955017] raid6: neonx1   xor()   212 MB/s
-[    2.125213] raid6: int32x8  gen()    89 MB/s
-[    2.294403] raid6: int32x8  xor()    58 MB/s
-[    2.464355] raid6: int32x4  gen()    90 MB/s
-[    2.553649] random: fast init done
-[    2.633544] raid6: int32x4  xor()    70 MB/s
-[    2.803527] raid6: int32x2  gen()   110 MB/s
-[    2.972930] raid6: int32x2  xor()    69 MB/s
-[    3.142791] raid6: int32x1  gen()    55 MB/s
-[    3.312438] raid6: int32x1  xor()    45 MB/s
-[    3.312469] raid6: using algorithm neonx4 gen() 595 MB/s
-[    3.312499] raid6: .... xor() 447 MB/s, rmw enabled
-[    3.312530] raid6: using neon recovery algorithm
-[    3.328796] omap-dma-engine 48056000.dma-controller: OMAP DMA engine
-driver
-[    3.335205] omap-iommu 480bd400.mmu: 480bd400.mmu registered
-[    3.335845] iommu: Adding device 480bc000.isp to group 0
-[    3.336273] usbcore: registered new interface driver usbfs
-[    3.336425] usbcore: registered new interface driver hub
-[    3.336639] usbcore: registered new device driver usb
-[    3.338134] omap-mailbox 48094000.mailbox: omap mailbox rev 0x40
-[    3.338806] Advanced Linux Sound Architecture Driver Initialized.
-[    3.340484] clocksource: Switched to clocksource 32k_counter
-[    3.340728] VFS: Disk quotas dquot_6.6.0
-[    3.340881] VFS: Dquot-cache hash table entries: 1024 (order 0, 4096
-bytes)
-[    3.357482] NET: Registered protocol family 2
-[    3.358886] tcp_listen_portaddr_hash hash table entries: 512 (order:
-0, 4096 bytes)
-[    3.358978] TCP established hash table entries: 2048 (order: 1, 8192
-bytes)
-[    3.359069] TCP bind hash table entries: 2048 (order: 1, 8192 bytes)
-[    3.359130] TCP: Hash tables configured (established 2048 bind 2048)
-[    3.359374] UDP hash table entries: 256 (order: 0, 4096 bytes)
-[    3.359436] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
-[    3.359741] NET: Registered protocol family 1
-[    3.366088] Initialise system trusted keyrings
-[    3.366485] workingset: timestamp_bits=3D30 max_order=3D16 bucket_orde=
-r=3D0
-[    3.379058] squashfs: version 4.0 (2009/01/31) Phillip Lougher
-[    3.386352] Key type asymmetric registered
-[    3.386413] Asymmetric key parser 'x509' registered
-[    3.386474] io scheduler mq-deadline registered
-[    3.386505] io scheduler kyber registered
-[    3.388366] ti-sysc 480cb024.target-module: sysc_flags 00000100 !=3D
-00000110
-[    3.389739] ti-sysc 480c9024.target-module: sysc_flags 00000100 !=3D
-00000110
-[    3.392486] pinctrl-single 48002030.pinmux: 284 pins, size 568
-[    3.393218] pinctrl-single 48002a00.pinmux: 46 pins, size 92
-[    3.394042] pinctrl-single 480025d8.pinmux: 18 pins, size 36
-[    3.396789] omapdss_dss 48050000.dss: 48050000.dss supply vdda_video
-not found, using dummy regulator
-[    3.397064] omapdss_dss 48050000.dss: Linked as a consumer to regulato=
-r.0
-[    3.397247] OMAP DSS rev 2.0
-[    3.397521] omapdss_dss 48050000.dss: bound 48050400.dispc (ops
-dispc_component_ops)
-[    3.397888] omapdss_dss 48050000.dss: bound 48050c00.encoder (ops
-venc_component_ops)
-[    3.399566] omapfb omapfb: failed to connect default display
-[    3.399627] omapfb omapfb: failed to init overlay connections
-[    3.399871] omapfb omapfb: failed to setup omapfb
-[    3.402923] omap_uart 4806c000.serial: no wakeirq for uart1
-[    3.403289] 4806c000.serial: ttyO1 at MMIO 0x4806c000 (irq =3D 89,
-base_baud =3D 3000000) is a OMAP UART1
-[    3.404296] 49020000.serial: ttyO2 at MMIO 0x49020000 (irq =3D 90,
-base_baud =3D 3000000) is a OMAP UART2
-[    3.405761] omap3_rom_rng: initializing
-[    3.405975] omap3_rom_rng: unable to get RNG clock
-[    3.406036] omap3-rom-rng: probe of omap3-rom-rng failed with error -2=
-
-[    3.424102] brd: module loaded
-[    3.439697] acx565akm spi0.2: omapfb: acx565akm rev ad LCD detected
-[    3.446807] i2c /dev entries driver
-[    3.447967] omap_wdt: OMAP Watchdog Timer Rev 0x31: initial timeout
-60 sec
-[    3.450347] omap_gpio 49058000.gpio: Could not set line 0 debounce to
-200000 microseconds (-22)
-[    3.450439] omap_hsmmc 4809c000.mmc: Got CD GPIO
-[    3.467132] Initializing XFRM netlink socket
-[    3.467254] NET: Registered protocol family 17
-[    3.467346] NET: Registered protocol family 15
-[    3.467407] NET: Registered protocol family 35
-[    3.467864] Key type dns_resolver registered
-[    3.468200] ThumbEE CPU extension supported.
-[    3.468322] omap2_set_init_voltage: unable to find boot up OPP for
-vdd_mpu_iva
-[    3.468353] omap2_set_init_voltage: unable to set vdd_mpu_iva
-[    3.468414] omap2_set_init_voltage: unable to find boot up OPP for
-vdd_core
-[    3.468475] omap2_set_init_voltage: unable to set vdd_core
-[    3.472229] SmartReflex Class3 initialized
-[    3.473449] registered taskstats version 1
-[    3.473510] Loading compiled-in X.509 certificates
-[    3.477539] Btrfs loaded, crc32c=3Dcrc32c-generic
-[    3.502410] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
-[    3.502502] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
-[    3.504272] omap2-onenand 1000000.onenand: initializing on CS0
-(0x01000000), va (ptrval), DMA mode
-[    3.504364] OneNAND Manufacturer: Unknown (0xa0)
-[    3.509002] Skipping twl internal clock init and using bootloader
-value (unknown osc rate)
-[    3.831176] twl 1-0048: PIH (irq 23) chaining IRQs 146..154
-[    3.831329] twl 1-0048: power (irq 151) chaining IRQs 154..161
-[    3.891784] twl_rtc 48070000.i2c:twl@48:rtc: Power up reset detected.
-[    3.920745] twl_rtc 48070000.i2c:twl@48:rtc: Enabling TWL-RTC
-[    4.041534] twl_rtc 48070000.i2c:twl@48:rtc: registered as rtc0
-[    5.151458] V28_A: Bringing 2600000uV into 2800000-2800000uV
-[    5.962188] twl4030_gpio twl4030-gpio: gpio (irq 146) chaining IRQs
-162..179
-[    6.110900] twl4030_usb 48070000.i2c:twl@48:twl4030-usb: Linked as a
-consumer to regulator.16
-[    6.170898] twl4030_usb 48070000.i2c:twl@48:twl4030-usb: Linked as a
-consumer to regulator.14
-[    6.230926] twl4030_usb 48070000.i2c:twl@48:twl4030-usb: Linked as a
-consumer to regulator.15
-[    6.721160] twl4030_usb 48070000.i2c:twl@48:twl4030-usb: Initialized
-TWL4030 USB module
-[    6.781066] input: twl4030_pwrbutton as
-/devices/platform/68000000.ocp/48070000.i2c/i2c-1/1-0048/48070000.i2c:twl=
-@48:pwrbutton/input/input0
-[    6.782592] input: TWL4030 Keypad as
-/devices/platform/68000000.ocp/48070000.i2c/i2c-1/1-0048/48070000.i2c:twl=
-@48:keypad/input/input1
-[    7.110839] twl4030_madc 48070000.i2c:twl@48:madc:
-48070000.i2c:twl@48:madc supply vusb3v1 not found, using dummy regulator
-[    7.111114] twl4030_madc 48070000.i2c:twl@48:madc: Linked as a
-consumer to regulator.0
-[   13.170959] omap_i2c 48070000.i2c: bus 1 rev3.3 at 2200 kHz
-[   13.173492] tlv320aic3x-codec 2-0018: Linked as a consumer to regulato=
-r.8
-[   13.174011] tlv320aic3x-codec 2-0018: Linked as a consumer to
-regulator.13
-[   13.175476] tlv320aic3x-codec 2-0019: Linked as a consumer to regulato=
-r.8
-[   13.175903] tlv320aic3x-codec 2-0019: Linked as a consumer to
-regulator.13
-[   13.178161] tpa6130a2 2-0060: Linked as a consumer to regulator.13
-[   13.179412] omap_i2c 48072000.i2c: bus 2 rev3.3 at 100 kHz
-[   13.181793] omap_i2c 48060000.i2c: bus 3 rev3.3 at 400 kHz
-[   13.183044] omapdss_dss 48050000.dss: Linked as a consumer to regulato=
-r.2
-[   13.183258] omapdss_venc 48050c00.encoder: Linked as a consumer to
-regulator.7
-[   13.205535] Console: switching to colour frame buffer device 100x30
-[   13.291076] omapfb omapfb: using display 'lcd' mode 800x480
-[   13.661804] cpu cpu0: Linked as a consumer to regulator.6
-[   13.668945] cpu cpu0: Dropping the link to regulator.6
-[   13.676269] cpu cpu0: Linked as a consumer to regulator.6
-[   13.685058] omap_gpio 49058000.gpio: Could not set line 0 debounce to
-200000 microseconds (-22)
-[   13.692199] omap_hsmmc 4809c000.mmc: Got CD GPIO
-[   13.699615] omap_hsmmc 4809c000.mmc: Linked as a consumer to regulator=
-=2E12
-[   13.706542] omap_hsmmc 4809c000.mmc: Linked as a consumer to regulator=
-=2E1
-[   13.864776] omap_hsmmc 480b4000.mmc: Linked as a consumer to regulator=
-=2E4
-[   13.890441] omap_hsmmc 480b4000.mmc: Linked as a consumer to regulator=
-=2E19
-[   14.011383] twl_rtc 48070000.i2c:twl@48:rtc: setting system clock to
-2000-01-01T00:00:10 UTC (946684810)
-[   14.037658] smartreflex 480cb000.smartreflex: omap_sr_probe:
-SmartReflex driver initialized
-[   14.045013] smartreflex 480c9000.smartreflex: omap_sr_probe:
-SmartReflex driver initialized
-[   14.071289] VCSI: disabling
-[   14.102355] mmc0: host does not support reading read-only switch,
-assuming write-enable
-[   14.119567] mmc0: new high speed SDHC card at address aaaa
-[   14.131958] VDAC: disabling
-[   14.148376] mmcblk0: mmc0:aaaa SC32G 29.7 GiB
-[   14.161926] mmc1: switch to bus width 8 failed
-[   14.175750] mmc1: switch to bus width 4 failed
-[   14.181823]  mmcblk0: p1 p2
-[   14.188018] mmc1: new high speed MMC card at address 0001
-[   14.197631] mmcblk1: mmc1:0001 MMC32G 29.8 GiB
-[   14.203582] ALSA device list:
-[   14.209289]   No soundcards found.
-[   14.216796] mmcblk1boot0: mmc1:0001 MMC32G partition 1 512 KiB
-[   14.224304] mmcblk1boot1: mmc1:0001 MMC32G partition 2 512 KiB
-[   14.232025]  mmcblk1: p1 p2 p3
-[   14.274627] EXT4-fs (mmcblk0p2): mounted filesystem with ordered data
-mode. Opts: (null)
-[   14.279998] VFS: Mounted root (ext4 filesystem) on device 179:2.
-[   14.297088] devtmpfs: mounted
-[   14.306671] Freeing unused kernel memory: 1024K
-[   14.312835] Run /sbin/init as init process
-[   21.703887] udevd[664]: starting version 3.2.2
-[   21.752258] random: udevd: uninitialized urandom read (16 bytes read)
-[   21.761779] random: udevd: uninitialized urandom read (16 bytes read)
-[   21.773956] random: udevd: uninitialized urandom read (16 bytes read)
-[   22.068450] udevd[665]: starting eudev-3.2.2
-[   22.481353] ti-soc-thermal 48002524.bandgap: This OMAP thermal sensor
-is unreliable. You've been warned
-[   22.539520] ti-soc-thermal 48002524.bandgap: Non-trimmed BGAP, Temp
-not accurate
-[   22.924926] omap_ssi 48058000.ssi-controller: ssi controller 0
-initialized (1 ports)!
-[   22.989501] lis3lv02d_i2c 3-001d: Linked as a consumer to regulator.2
-[   23.064086] omap_ssi_port 4805a000.ssi-port: ssi port 0 successfully
-initialized
-[   23.069732] lis3lv02d_i2c 3-001d: Linked as a consumer to regulator.8
-[   23.142425] input: twl4030:vibrator as
-/devices/platform/68000000.ocp/48070000.i2c/i2c-1/1-0048/48070000.i2c:twl=
-@48:audio/twl4030-vibra/input/input2
-[   23.154266] lis3lv02d: 8 bits sensor found
-[   23.271240] input: ST LIS3LV02DL Accelerometer as
-/devices/platform/lis3lv02d/input/input3
-[   23.675292] power_supply bq27200-0: Not all required supplies found,
-defer probe
-[   23.702728] tsl2563 2-0029: model 7, rev. 0
-[   23.715972] media: Linux media interface: v0.10
-[   23.811065] bq27xxx-battery 2-0055: failed to register battery
-[   23.855712] tsc2005 spi0.0: Linked as a consumer to regulator.8
-[   23.907867] input: TSC2005 touchscreen as
-/devices/platform/68000000.ocp/48098000.spi/spi_master/spi0/spi0.0/input/=
-input4
-[   23.991668] videodev: Linux video capture interface: v2.00
-[   24.027893] power_supply bq27200-0: bq27200-0: Found supply : bq24150a=
--0
-[   24.148590] random: crng init done
-[   24.155151] random: 2 urandom warning(s) missed due to ratelimiting
-[   24.420288] si4713 2-0063: Linked as a consumer to regulator.2
-[   24.498260] si4713 2-0063: Linked as a consumer to regulator.8
-[   24.547149] cfg80211: Loading compiled-in X.509 certificates for
-regulatory database
-[   24.731201] omap3isp 480bc000.isp: ignoring dependency for device,
-assuming no driver
-[   24.738342] omap3isp 480bc000.isp: parsing endpoint
-/ocp@68000000/isp@480bc000/ports/port@1/endpoint, interface 1
-[   24.738372] omap3isp 480bc000.isp: CSI-1/CCP-2 configuration
-[   24.738372] omap3isp 480bc000.isp: clock lane polarity 0, pos 1
-[   24.738403] omap3isp 480bc000.isp: data lane polarity 0, pos 0
-[   24.738464] omap3isp 480bc000.isp: 480bc000.isp supply vdd-csiphy1
-not found, using dummy regulator
-[   24.800781] omap_i2c 48072000.i2c: controller timed out
-[   24.809997] cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'=
-
-[   24.833770] bq2415x-charger 2-006b: automode supported, waiting for
-events
-[   24.859039] bq2415x-charger 2-006b: driver registered
-[   24.866424] platform regulatory.0: Direct firmware load for
-regulatory.db failed with error -2
-[   24.902069] platform regulatory.0: Falling back to syfs fallback for:
-regulatory.db
-[   24.928802] omap3isp 480bc000.isp: Linked as a consumer to regulator.0=
-
-[   24.946075] si4713 2-0063: chip found @ 0xc6 (OMAP I2C adapter)
-[   24.997772] omap3isp 480bc000.isp: 480bc000.isp supply vdd-csiphy2
-not found, using dummy regulator
-[   25.117736] omap3isp 480bc000.isp: Revision 2.0 found
-[   25.150817] lp5523x 2-0032: lp5523 Programmable led chip found
-[   25.168640] omap-iommu 480bd400.mmu: 480bd400.mmu: version 1.1
-[   25.204071] isp1704_charger isp1707: init gpio 67
-[   25.221405] omap3isp 480bc000.isp: Linked as a consumer to regulator.3=
-
-[   25.227905] omap3isp 480bc000.isp: hist: using DMA channel dma0chan10
-[   25.227966] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-CCP2 was not initialized!
-[   25.251342] isp1704_charger isp1707: registered with product id isp170=
-7
-[   25.308929] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-CSI2a was not initialized!
-[   25.356964] input: gpio_keys as /devices/platform/gpio_keys/input/inpu=
-t5
-[   25.364501] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-CCDC was not initialized!
-[   25.409423] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-preview was not initialized!
-[   25.453552] rc rc0: Unspecified device as
-/devices/platform/n900-ir/rc/rc0
-[   25.497741] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-resizer was not initialized!
-[   25.568054] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-AEWB was not initialized!
-[   25.574859] smc91x: not found (-19).
-[   25.631713] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-AF was not initialized!
-[   25.638366] omap3isp 480bc000.isp: Entity type for entity OMAP3 ISP
-histogram was not initialized!
-[   26.078918] HSI/SSI char device loaded
-[   26.257537] mousedev: PS/2 mouse device common for all mice
-[   26.295654] cfg80211: failed to load regulatory.db
-[   26.380493] wl1251 spi3.0: Linked as a consumer to regulator.8
-[   26.403289] radio-si4713 radio-si4713: New device successfully probed
-[   26.464630] wl1251: WARNING MAC address in eeprom or nvs data is not
-valid
-[   26.464660] wl1251: WARNING Setting random MAC address: 00:1f:df:05:29=
-:05
-[   26.686614] ieee80211 phy0: Selected rate control algorithm 'minstrel_=
-ht'
-[   26.687866] wl1251: loaded
-[   26.711761] wl1251: initialized
-[   27.715240] wl1251 spi3.0: EOW timed out
-[   27.732025] wl1251 spi3.0: EOW timed out
-[   27.746063] wl1251 spi3.0: EOW timed out
-[   27.760833] wl1251 spi3.0: EOW timed out
-[   27.770843] wl1251 spi3.0: EOW timed out
-[   27.780242] wl1251 spi3.0: EOW timed out
-[   27.798156] wl1251 spi3.0: EOW timed out
-[   27.807128] wl1251 spi3.0: EOW timed out
-[   27.822204] wl1251 spi3.0: EOW timed out
-[   27.837829] wl1251 spi3.0: EOW timed out
-[   27.843841] wl1251 spi3.0: EOW timed out
-[   27.852020] wl1251 spi3.0: EOW timed out
-[   27.861511] wl1251 spi3.0: EOW timed out
-[   27.870788] wl1251 spi3.0: EOW timed out
-[   27.879028] wl1251 spi3.0: EOW timed out
-[   27.885345] wl1251 spi3.0: EOW timed out
-[   27.891479] wl1251 spi3.0: EOW timed out
-[   27.910034] wl1251 spi3.0: EOW timed out
-[   27.916351] wl1251 spi3.0: EOW timed out
-[   27.923980] wl1251 spi3.0: EOW timed out
-[   27.939575] wl1251 spi3.0: EOW timed out
-[   27.948028] wl1251 spi3.0: EOW timed out
-[   27.951934] wl1251 spi3.0: EOW timed out
-[   27.958038] wl1251 spi3.0: EOW timed out
-[   27.962341] wl1251 spi3.0: EOW timed out
-[   27.965789] wl1251 spi3.0: EOW timed out
-[   27.968627] wl1251 spi3.0: EOW timed out
-[   27.972442] wl1251 spi3.0: EOW timed out
-[   27.980834] wl1251 spi3.0: EOW timed out
-[   27.992126] wl1251 spi3.0: EOW timed out
-[   27.994567] wl1251 spi3.0: EOW timed out
-[   27.996612] wl1251 spi3.0: EOW timed out
-[   27.998870] wl1251 spi3.0: EOW timed out
-[   28.000976] wl1251 spi3.0: EOW timed out
-[   28.003570] wl1251 spi3.0: EOW timed out
-[   28.007049] wl1251 spi3.0: EOW timed out
-[   28.009216] wl1251 spi3.0: EOW timed out
-[   28.018859] wl1251 spi3.0: EOW timed out
-[   28.028411] wl1251 spi3.0: EOW timed out
-[   28.030731] wl1251 spi3.0: EOW timed out
-[   28.032775] wl1251 spi3.0: EOW timed out
-[   28.037994] wl1251 spi3.0: EOW timed out
-[   28.040191] wl1251 spi3.0: EOW timed out
-[   28.042358] wl1251 spi3.0: EOW timed out
-[   28.044433] wl1251 spi3.0: EOW timed out
-[   28.046447] wl1251 spi3.0: EOW timed out
-[   28.048461] wl1251 spi3.0: EOW timed out
-[   28.050476] wl1251 spi3.0: EOW timed out
-[   28.052856] wl1251 spi3.0: EOW timed out
-[   28.054870] wl1251 spi3.0: EOW timed out
-[   28.056854] wl1251 spi3.0: EOW timed out
-[   28.058868] wl1251 spi3.0: EOW timed out
-[   28.068420] wl1251 spi3.0: EOW timed out
-[   28.071899] wl1251 spi3.0: EOW timed out
-[   28.079223] wl1251 spi3.0: EOW timed out
-[   28.081481] wl1251 spi3.0: EOW timed out
-[   28.084167] wl1251 spi3.0: EOW timed out
-[   28.086273] wl1251 spi3.0: EOW timed out
-[   28.088287] wl1251 spi3.0: EOW timed out
-[   28.090301] wl1251 spi3.0: EOW timed out
-[   28.092590] wl1251 spi3.0: EOW timed out
-[   28.094635] wl1251 spi3.0: EOW timed out
-[   28.096618] wl1251 spi3.0: EOW timed out
-[   28.100860] wl1251 spi3.0: EOW timed out
-[   28.110656] wl1251 spi3.0: EOW timed out
-[   28.112854] wl1251 spi3.0: EOW timed out
-[   28.114868] wl1251 spi3.0: EOW timed out
-[   28.119171] wl1251 spi3.0: EOW timed out
-[   28.121337] wl1251 spi3.0: EOW timed out
-[   28.123474] wl1251 spi3.0: EOW timed out
-[   28.128326] wl1251 spi3.0: EOW timed out
-[   28.130523] wl1251 spi3.0: EOW timed out
-[   28.132873] wl1251 spi3.0: EOW timed out
-[   28.134857] wl1251 spi3.0: EOW timed out
-[   28.136840] wl1251 spi3.0: EOW timed out
-[   28.138824] wl1251 spi3.0: EOW timed out
-[   28.141021] wl1251 spi3.0: EOW timed out
-[   28.143035] wl1251 spi3.0: EOW timed out
-[   28.145050] wl1251 spi3.0: EOW timed out
-[   28.147033] wl1251 spi3.0: EOW timed out
-[   28.148986] wl1251 spi3.0: EOW timed out
-[   28.158477] wl1251 spi3.0: EOW timed out
-[   28.162017] wl1251 spi3.0: EOW timed out
-[   28.168945] wl1251 spi3.0: EOW timed out
-[   28.171173] wl1251 spi3.0: EOW timed out
-[   28.173858] wl1251 spi3.0: EOW timed out
-[   28.175964] wl1251 spi3.0: EOW timed out
-[   28.177947] wl1251 spi3.0: EOW timed out
-[   28.179962] wl1251 spi3.0: EOW timed out
-[   28.182250] wl1251 spi3.0: EOW timed out
-[   28.184265] wl1251 spi3.0: EOW timed out
-[   28.186248] wl1251 spi3.0: EOW timed out
-[   28.190887] wl1251 spi3.0: EOW timed out
-[   28.200408] wl1251 spi3.0: EOW timed out
-[   28.202758] wl1251 spi3.0: EOW timed out
-[   28.204833] wl1251 spi3.0: EOW timed out
-[   28.208435] wl1251 spi3.0: EOW timed out
-[   28.210662] wl1251 spi3.0: EOW timed out
-[   28.212799] wl1251 spi3.0: EOW timed out
-[   28.217620] wl1251 spi3.0: EOW timed out
-[   28.219818] wl1251 spi3.0: EOW timed out
-[   28.222167] wl1251 spi3.0: EOW timed out
-[   28.224212] wl1251 spi3.0: EOW timed out
-[   28.226196] wl1251 spi3.0: EOW timed out
-[   28.228149] wl1251 spi3.0: EOW timed out
-[   28.230133] wl1251 spi3.0: EOW timed out
-[   28.232391] wl1251 spi3.0: EOW timed out
-[   28.234405] wl1251 spi3.0: EOW timed out
-[   28.236419] wl1251 spi3.0: EOW timed out
-[   28.240844] wl1251 spi3.0: EOW timed out
-[   28.251037] wl1251 spi3.0: EOW timed out
-[   28.253143] wl1251 spi3.0: EOW timed out
-[   28.255218] wl1251 spi3.0: EOW timed out
-[   28.259918] wl1251 spi3.0: EOW timed out
-[   28.263000] wl1251 spi3.0: EOW timed out
-[   28.265930] wl1251 spi3.0: EOW timed out
-[   28.267974] wl1251 spi3.0: EOW timed out
-[   28.269989] wl1251 spi3.0: EOW timed out
-[   28.272338] wl1251 spi3.0: EOW timed out
-[   28.274353] wl1251 spi3.0: EOW timed out
-[   28.276336] wl1251 spi3.0: EOW timed out
-[   28.280914] wl1251 spi3.0: EOW timed out
-[   28.290649] wl1251 spi3.0: EOW timed out
-[   28.292785] wl1251 spi3.0: EOW timed out
-[   28.294799] wl1251 spi3.0: EOW timed out
-[   28.296813] wl1251 spi3.0: EOW timed out
-[   28.300384] wl1251 spi3.0: EOW timed out
-[   28.302764] wl1251 spi3.0: EOW timed out
-[   28.310791] wl1251 spi3.0: EOW timed out
-[   28.312927] wl1251 spi3.0: EOW timed out
-[   28.314971] wl1251 spi3.0: EOW timed out
-[   28.316986] wl1251 spi3.0: EOW timed out
-[   28.318969] wl1251 spi3.0: EOW timed out
-[   28.321105] wl1251 spi3.0: EOW timed out
-[   28.326293] wl1251 spi3.0: EOW timed out
-[   28.330749] wl1251 spi3.0: EOW timed out
-[   28.332946] wl1251 spi3.0: EOW timed out
-[   28.334930] wl1251 spi3.0: EOW timed out
-[   28.339508] wl1251 spi3.0: EOW timed out
-[   28.341613] wl1251 spi3.0: EOW timed out
-[   28.343597] wl1251 spi3.0: EOW timed out
-[   28.345550] wl1251 spi3.0: EOW timed out
-[   28.347656] wl1251 spi3.0: EOW timed out
-[   28.349639] wl1251 spi3.0: EOW timed out
-[   28.351623] wl1251 spi3.0: EOW timed out
-[   28.353729] wl1251 spi3.0: EOW timed out
-[   28.360046] wl1251 spi3.0: EOW timed out
-[   28.363281] wl1251 spi3.0: EOW timed out
-[   28.365356] wl1251 spi3.0: EOW timed out
-[   28.368377] wl1251 spi3.0: EOW timed out
-[   28.370758] wl1251 spi3.0: EOW timed out
-[   28.375091] wl1251 spi3.0: EOW timed out
-[   28.377197] wl1251 spi3.0: EOW timed out
-[   28.380950] wl1251 spi3.0: EOW timed out
-[   28.383026] wl1251 spi3.0: EOW timed out
-[   28.385040] wl1251 spi3.0: EOW timed out
-[   28.387054] wl1251 spi3.0: EOW timed out
-[   28.390869] wl1251 spi3.0: EOW timed out
-[   28.393920] wl1251 spi3.0: EOW timed out
-[   28.396026] wl1251 spi3.0: EOW timed out
-[   28.398010] wl1251 spi3.0: EOW timed out
-[   28.399993] wl1251 spi3.0: EOW timed out
-[   28.402282] wl1251 spi3.0: EOW timed out
-[   28.404296] wl1251 spi3.0: EOW timed out
-[   28.406280] wl1251 spi3.0: EOW timed out
-[   28.408233] wl1251 spi3.0: EOW timed out
-[   28.413665] wl1251 spi3.0: EOW timed out
-[   28.415771] wl1251 spi3.0: EOW timed out
-[   28.417785] wl1251 spi3.0: EOW timed out
-[   28.420867] wl1251 spi3.0: EOW timed out
-[   28.422943] wl1251 spi3.0: EOW timed out
-[   28.425140] wl1251 spi3.0: EOW timed out
-[   28.427917] wl1251 spi3.0: EOW timed out
-[   28.430053] wl1251 spi3.0: EOW timed out
-[   28.435485] wl1251 spi3.0: EOW timed out
-[   28.438812] wl1251 spi3.0: EOW timed out
-[   28.441009] wl1251 spi3.0: EOW timed out
-[   28.443054] wl1251 spi3.0: EOW timed out
-[   28.445068] wl1251 spi3.0: EOW timed out
-[   28.447113] wl1251 spi3.0: EOW timed out
-[   28.449127] wl1251 spi3.0: EOW timed out
-[   28.451293] wl1251 spi3.0: EOW timed out
-[   28.455139] wl1251 spi3.0: EOW timed out
-[   28.457183] wl1251 spi3.0: EOW timed out
-[   28.461822] wl1251 spi3.0: EOW timed out
-[   28.475524] wl1251 spi3.0: EOW timed out
-[   28.477691] wl1251 spi3.0: EOW timed out
-[   28.480316] wl1251 spi3.0: EOW timed out
-[   28.482757] wl1251 spi3.0: EOW timed out
-[   28.489959] wl1251 spi3.0: EOW timed out
-[   28.500885] wl1251 spi3.0: EOW timed out
-[   28.503021] wl1251 spi3.0: EOW timed out
-[   28.505035] wl1251 spi3.0: EOW timed out
-[   28.507049] wl1251 spi3.0: EOW timed out
-[   28.509063] wl1251 spi3.0: EOW timed out
-[   28.511077] wl1251 spi3.0: EOW timed out
-[   28.518280] wl1251 spi3.0: EOW timed out
-[   28.520416] wl1251 spi3.0: EOW timed out
-[   28.527008] wl1251 spi3.0: EOW timed out
-[   28.530853] wl1251 spi3.0: EOW timed out
-[   28.532928] wl1251 spi3.0: EOW timed out
-[   28.534973] wl1251 spi3.0: EOW timed out
-[   28.536987] wl1251 spi3.0: EOW timed out
-[   28.539245] wl1251 spi3.0: EOW timed out
-[   28.541717] wl1251 spi3.0: EOW timed out
-[   28.544403] wl1251 spi3.0: EOW timed out
-[   28.546478] wl1251 spi3.0: EOW timed out
-[   28.548461] wl1251 spi3.0: EOW timed out
-[   28.551055] wl1251 spi3.0: EOW timed out
-[   28.553741] wl1251 spi3.0: EOW timed out
-[   28.555999] wl1251 spi3.0: EOW timed out
-[   28.560791] wl1251 spi3.0: EOW timed out
-[   28.567291] wl1251 spi3.0: EOW timed out
-[   28.569458] wl1251 spi3.0: EOW timed out
-[   28.572326] wl1251 spi3.0: EOW timed out
-[   28.574493] wl1251 spi3.0: EOW timed out
-[   28.576568] wl1251 spi3.0: EOW timed out
-[   28.580810] wl1251 spi3.0: EOW timed out
-[   28.583007] wl1251 spi3.0: EOW timed out
-[   28.585144] wl1251 spi3.0: EOW timed out
-[   28.587310] wl1251 spi3.0: EOW timed out
-[   28.590301] wl1251 spi3.0: EOW timed out
-[   28.592712] wl1251 spi3.0: EOW timed out
-[   28.596343] wl1251 spi3.0: EOW timed out
-[   28.598541] wl1251 spi3.0: EOW timed out
-[   28.601104] wl1251 spi3.0: EOW timed out
-[   28.604766] wl1251 spi3.0: EOW timed out
-[   28.610900] wl1251 spi3.0: EOW timed out
-[   28.613647] wl1251 spi3.0: EOW timed out
-[   28.615783] wl1251 spi3.0: EOW timed out
-[   28.617919] wl1251 spi3.0: EOW timed out
-[   28.619995] wl1251 spi3.0: EOW timed out
-[   28.626007] wl1251 spi3.0: EOW timed out
-[   28.628265] wl1251 spi3.0: EOW timed out
-[   28.631347] wl1251 spi3.0: EOW timed out
-[   28.640258] wl1251 spi3.0: EOW timed out
-[   28.642669] wl1251 spi3.0: EOW timed out
-[   28.648529] wl1251 spi3.0: EOW timed out
-[   28.652038] wl1251 spi3.0: EOW timed out
-[   28.654235] wl1251 spi3.0: EOW timed out
-[   28.656311] wl1251 spi3.0: EOW timed out
-[   28.658447] wl1251 spi3.0: EOW timed out
-[   28.661193] wl1251 spi3.0: EOW timed out
-[   28.663269] wl1251 spi3.0: EOW timed out
-[   28.670135] wl1251 spi3.0: EOW timed out
-[   28.672851] wl1251 spi3.0: EOW timed out
-[   28.674926] wl1251 spi3.0: EOW timed out
-[   28.677154] wl1251 spi3.0: EOW timed out
-[   28.679199] wl1251 spi3.0: EOW timed out
-[   28.682281] wl1251 spi3.0: EOW timed out
-[   28.690948] wl1251 spi3.0: EOW timed out
-[   28.693084] wl1251 spi3.0: EOW timed out
-[   28.695098] wl1251 spi3.0: EOW timed out
-[   28.697113] wl1251 spi3.0: EOW timed out
-[   28.699127] wl1251 spi3.0: EOW timed out
-[   28.701080] wl1251 spi3.0: EOW timed out
-[   28.709564] wl1251 spi3.0: EOW timed out
-[   28.720886] wl1251 spi3.0: EOW timed out
-[   28.723052] wl1251 spi3.0: EOW timed out
-[   28.725219] wl1251 spi3.0: EOW timed out
-[   28.727386] wl1251 spi3.0: EOW timed out
-[   28.729370] wl1251 spi3.0: EOW timed out
-[   28.737426] wl1251 spi3.0: EOW timed out
-[   28.739654] wl1251 spi3.0: EOW timed out
-[   28.750823] wl1251 spi3.0: EOW timed out
-[   28.752990] wl1251 spi3.0: EOW timed out
-[   28.755004] wl1251 spi3.0: EOW timed out
-[   28.757049] wl1251 spi3.0: EOW timed out
-[   28.759063] wl1251 spi3.0: EOW timed out
-[   28.760955] wl1251 spi3.0: EOW timed out
-[   28.770782] wl1251 spi3.0: EOW timed out
-[   28.772857] wl1251 spi3.0: EOW timed out
-[   28.774841] wl1251 spi3.0: EOW timed out
-[   28.776855] wl1251 spi3.0: EOW timed out
-[   28.778747] wl1251 spi3.0: EOW timed out
-[   28.780761] wl1251 spi3.0: EOW timed out
-[   28.790832] wl1251 spi3.0: EOW timed out
-[   28.792785] wl1251 spi3.0: EOW timed out
-[   28.794891] wl1251 spi3.0: EOW timed out
-[   28.796783] wl1251 spi3.0: EOW timed out
-[   28.798706] wl1251 spi3.0: EOW timed out
-[   28.800659] wl1251 spi3.0: EOW timed out
-[   28.802581] wl1251 spi3.0: EOW timed out
-[   28.810668] wl1251 spi3.0: EOW timed out
-[   28.812774] wl1251 spi3.0: EOW timed out
-[   28.814697] wl1251 spi3.0: EOW timed out
-[   28.816589] wl1251 spi3.0: EOW timed out
-[   28.818695] wl1251 spi3.0: EOW timed out
-[   28.820739] wl1251 spi3.0: EOW timed out
-[   28.822723] wl1251 spi3.0: EOW timed out
-[   28.829986] wl1251 spi3.0: EOW timed out
-[   28.832183] wl1251 spi3.0: EOW timed out
-[   28.834197] wl1251 spi3.0: EOW timed out
-[   28.836181] wl1251 spi3.0: EOW timed out
-[   28.838989] wl1251 spi3.0: EOW timed out
-[   28.840637] wl1251 spi3.0: EOW timed out
-[   28.842285] wl1251 spi3.0: EOW timed out
-[   28.843872] wl1251 spi3.0: EOW timed out
-[   28.845428] wl1251 spi3.0: EOW timed out
-[   28.846984] wl1251 spi3.0: EOW timed out
-[   28.848541] wl1251 spi3.0: EOW timed out
-[   28.850097] wl1251 spi3.0: EOW timed out
-[   28.851715] wl1251 spi3.0: EOW timed out
-[   28.853393] wl1251 spi3.0: EOW timed out
-[   28.854980] wl1251 spi3.0: EOW timed out
-[   28.856536] wl1251 spi3.0: EOW timed out
-[   28.858093] wl1251 spi3.0: EOW timed out
-[   28.859649] wl1251 spi3.0: EOW timed out
-[   28.861267] wl1251 spi3.0: EOW timed out
-[   28.862854] wl1251 spi3.0: EOW timed out
-[   28.864410] wl1251 spi3.0: EOW timed out
-[   28.865966] wl1251 spi3.0: EOW timed out
-[   28.867523] wl1251 spi3.0: EOW timed out
-[   28.869079] wl1251 spi3.0: EOW timed out
-[   28.870666] wl1251 spi3.0: EOW timed out
-[   28.872222] wl1251 spi3.0: EOW timed out
-[   28.873779] wl1251 spi3.0: EOW timed out
-[   28.875335] wl1251 spi3.0: EOW timed out
-[   28.876892] wl1251 spi3.0: EOW timed out
-[   28.878448] wl1251 spi3.0: EOW timed out
-[   28.880004] wl1251 spi3.0: EOW timed out
-[   28.881591] wl1251 spi3.0: EOW timed out
-[   28.882904] wl1251 spi3.0: EOW timed out
-[   28.884185] wl1251 spi3.0: EOW timed out
-[   28.886138] wl1251 spi3.0: EOW timed out
-[   28.887237] wl1251 spi3.0: EOW timed out
-[   28.888610] wl1251 spi3.0: EOW timed out
-[   28.890930] wl1251 spi3.0: EOW timed out
-[   28.893127] wl1251 spi3.0: EOW timed out
-[   28.900115] wl1251 spi3.0: EOW timed out
-[   28.902679] wl1251 spi3.0: EOW timed out
-[   28.904907] wl1251 spi3.0: EOW timed out
-[   28.908081] wl1251 spi3.0: EOW timed out
-[   28.910400] wl1251 spi3.0: EOW timed out
-[   28.920837] wl1251 spi3.0: EOW timed out
-[   28.923187] wl1251 spi3.0: EOW timed out
-[   28.925476] wl1251 spi3.0: EOW timed out
-[   28.927703] wl1251 spi3.0: EOW timed out
-[   28.930053] wl1251 spi3.0: EOW timed out
-[   28.940856] wl1251 spi3.0: EOW timed out
-[   28.943176] wl1251 spi3.0: EOW timed out
-[   28.945373] wl1251 spi3.0: EOW timed out
-[   28.947540] wl1251 spi3.0: EOW timed out
-[   28.949768] wl1251 spi3.0: EOW timed out
-[   28.952270] wl1251 spi3.0: EOW timed out
-[   28.955810] wl1251 spi3.0: EOW timed out
-[   28.958099] wl1251 spi3.0: EOW timed out
-[   28.960357] wl1251 spi3.0: EOW timed out
-[   28.963195] wl1251 spi3.0: EOW timed out
-[   28.970886] wl1251 spi3.0: EOW timed out
-[   28.973205] wl1251 spi3.0: EOW timed out
-[   28.975433] wl1251 spi3.0: EOW timed out
-[   28.977508] wl1251 spi3.0: EOW timed out
-[   28.979797] wl1251 spi3.0: EOW timed out
-[   28.989746] wl1251 spi3.0: EOW timed out
-[   28.992156] wl1251 spi3.0: EOW timed out
-[   28.994201] wl1251 spi3.0: EOW timed out
-[   28.996246] wl1251 spi3.0: EOW timed out
-[   29.000152] wl1251 spi3.0: EOW timed out
-[   29.002441] wl1251 spi3.0: EOW timed out
-[   29.008361] wl1251 spi3.0: EOW timed out
-[   29.010467] wl1251 spi3.0: EOW timed out
-[   29.012786] wl1251 spi3.0: EOW timed out
-[   29.014801] wl1251 spi3.0: EOW timed out
-[   29.020172] wl1251 spi3.0: EOW timed out
-[   29.024658] wl1251 spi3.0: EOW timed out
-[   29.026763] wl1251 spi3.0: EOW timed out
-[   29.028778] wl1251 spi3.0: EOW timed out
-[   29.030914] wl1251 spi3.0: EOW timed out
-[   29.032958] wl1251 spi3.0: EOW timed out
-[   29.036651] wl1251 spi3.0: EOW timed out
-[   29.039001] wl1251 spi3.0: EOW timed out
-[   29.041229] wl1251 spi3.0: EOW timed out
-[   29.043884] wl1251 spi3.0: EOW timed out
-[   29.045989] wl1251 spi3.0: EOW timed out
-[   29.048004] wl1251 spi3.0: EOW timed out
-[   29.050231] wl1251 spi3.0: EOW timed out
-[   29.063598] wl1251 spi3.0: EOW timed out
-[   29.070861] wl1251 spi3.0: EOW timed out
-[   29.072174] wl1251: ERROR chip id doesn't match after firmware boot
-[   30.585205] EXT4-fs (mmcblk0p2): re-mounted. Opts: (null)
-[   38.298400] SSI protocol aka McSAAB added
-[   38.427978] CMT speech driver added
-[   38.506958] nokia-modem n900-modem: Registered Nokia HSI modem
-[   42.001647] SGX clock rate 110 MHz
-[   45.676727] NET: Registered protocol family 10
-[   45.711944] Segment Routing with IPv6
-[   53.900360] using random self ethernet address
-[   53.912231] using random host ethernet address
-[   53.943572] usb0: HOST MAC 8e:81:2f:99:ec:36
-[   53.956573] usb0: MAC f2:99:b7:97:ba:31
-[   54.373260] configfs-gadget gadget: high-speed config #1: The only one=
-
-[   54.563568] using random self ethernet address
-[   54.568939] using random host ethernet address
-[   54.612243] usb0: HOST MAC 6e:95:7f:5f:6f:45
-[   54.617523] usb0: MAC b6:a9:66:15:5a:1d
-[   55.059234] configfs-gadget gadget: high-speed config #1: The only one=
-
-[   55.066650] IPv6: ADDRCONF(NETDEV_CHANGE): usb0: link becomes ready
-[   59.141021] Bluetooth: Core ver 2.22
-[   59.144165] NET: Registered protocol family 31
-[   59.144195] Bluetooth: HCI device and connection manager initialized
-[   59.144256] Bluetooth: HCI socket layer initialized
-[   59.144287] Bluetooth: L2CAP socket layer initialized
-[   59.144317] Bluetooth: SCO socket layer initialized
-[   59.277160] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-[   59.277191] Bluetooth: BNEP filters: protocol multicast
-[   59.277252] Bluetooth: BNEP socket layer initialized
-
-
---O05gz5M94nKtVxJB3hnr58ESOqlkdB4PK--
-
---lFe5UGXsGwoI6W64sCD1IK4O6IgQl1yZe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXIRKuwAKCRAGN09rynK8
-WnNbAP9XZL8CPxaed0H9PKV3SvkOTvq5AlxvCAqnrN9umhrqTgEAtuEfQSooQ0vU
-M0vdbbxdnun0R3Lv49cHniHioQ97WwQ=
-=Y9Am
------END PGP SIGNATURE-----
-
---lFe5UGXsGwoI6W64sCD1IK4O6IgQl1yZe--
+--r5Pyd7+fXNt84Ff3--
