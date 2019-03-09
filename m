@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF9EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD000C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540FD206BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C6A206BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfCIUDo (ORCPT
+        id S1726586AbfCIUEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 15:03:44 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:37267 "EHLO
+        Sat, 9 Mar 2019 15:04:25 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:52735 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfCIUDo (ORCPT
+        with ESMTP id S1726298AbfCIUEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 15:03:44 -0500
+        Sat, 9 Mar 2019 15:04:25 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29K3XrP3203951
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29K4E573205557
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 12:03:33 -0800
+        Sat, 9 Mar 2019 12:04:15 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29K3X2b3203948;
-        Sat, 9 Mar 2019 12:03:33 -0800
-Date:   Sat, 9 Mar 2019 12:03:33 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29K4EYw3205554;
+        Sat, 9 Mar 2019 12:04:14 -0800
+Date:   Sat, 9 Mar 2019 12:04:14 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tony Jones <tipbot@zytor.com>
-Message-ID: <tip-57e604b16362273af6a517abaa6cd1133a7fc732@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, s1seetee@linux.vnet.ibm.com,
-        acme@redhat.com, tonyj@suse.de, hpa@zytor.com, tglx@linutronix.de,
-        mingo@kernel.org, tzanussi@gmail.com
-Reply-To: tglx@linutronix.de, mingo@kernel.org, tzanussi@gmail.com,
-          tonyj@suse.de, hpa@zytor.com, s1seetee@linux.vnet.ibm.com,
-          acme@redhat.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190302011903.2416-4-tonyj@suse.de>
-References: <20190302011903.2416-4-tonyj@suse.de>
+Message-ID: <tip-c253c72e9d6723c8b078beb362f050059ef5de39@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, feng.tang@intel.com,
+        tonyj@suse.de, s1seetee@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, acme@redhat.com, hpa@zytor.com
+Reply-To: feng.tang@intel.com, tonyj@suse.de, tglx@linutronix.de,
+          mingo@kernel.org, acme@redhat.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, s1seetee@linux.vnet.ibm.com
+In-Reply-To: <20190302011903.2416-5-tonyj@suse.de>
+References: <20190302011903.2416-5-tonyj@suse.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf script python: add Python3 support to
- check-perf-trace.py
-Git-Commit-ID: 57e604b16362273af6a517abaa6cd1133a7fc732
+Subject: [tip:perf/urgent] perf script python: Add Python3 support to
+ event_analyzing_sample.py
+Git-Commit-ID: c253c72e9d6723c8b078beb362f050059ef5de39
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,112 +57,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  57e604b16362273af6a517abaa6cd1133a7fc732
-Gitweb:     https://git.kernel.org/tip/57e604b16362273af6a517abaa6cd1133a7fc732
+Commit-ID:  c253c72e9d6723c8b078beb362f050059ef5de39
+Gitweb:     https://git.kernel.org/tip/c253c72e9d6723c8b078beb362f050059ef5de39
 Author:     Tony Jones <tonyj@suse.de>
-AuthorDate: Fri, 1 Mar 2019 17:18:59 -0800
+AuthorDate: Fri, 1 Mar 2019 17:19:00 -0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 6 Mar 2019 18:10:46 -0300
+CommitDate: Wed, 6 Mar 2019 18:11:11 -0300
 
-perf script python: add Python3 support to check-perf-trace.py
+perf script python: Add Python3 support to event_analyzing_sample.py
 
-Support both Python 2 and Python 3 in the check-perf-trace.py script.
+Support both Python2 and Python3 in the event_analyzing_sample.py script
 
 There may be differences in the ordering of output lines due to
 differences in dictionary ordering etc.  However the format within lines
 should be unchanged.
 
-The use of from __future__ implies the minimum supported version of
-Python2 is now v2.6
+The use of 'from __future__' implies the minimum supported Python2 version
+is now v2.6
 
 Signed-off-by: Tony Jones <tonyj@suse.de>
-Cc: Tom Zanussi <tzanussi@gmail.com>
-Link: http://lkml.kernel.org/r/20190302011903.2416-4-tonyj@suse.de
+Cc: Feng Tang <feng.tang@intel.com>
+Link: http://lkml.kernel.org/r/20190302011903.2416-5-tonyj@suse.de
 Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/check-perf-trace.py | 31 +++++++++++++++------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ .../perf/scripts/python/event_analyzing_sample.py  | 48 +++++++++++-----------
+ 1 file changed, 25 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/scripts/python/check-perf-trace.py b/tools/perf/scripts/python/check-perf-trace.py
-index f4838db3e518..d2c22954800d 100644
---- a/tools/perf/scripts/python/check-perf-trace.py
-+++ b/tools/perf/scripts/python/check-perf-trace.py
-@@ -7,6 +7,8 @@
- # events, etc.  Basically, if this script runs successfully and
- # displays expected results, Python scripting support should be ok.
+diff --git a/tools/perf/scripts/python/event_analyzing_sample.py b/tools/perf/scripts/python/event_analyzing_sample.py
+index 2ec8915b74c5..aa1e2cfa26a6 100644
+--- a/tools/perf/scripts/python/event_analyzing_sample.py
++++ b/tools/perf/scripts/python/event_analyzing_sample.py
+@@ -15,6 +15,8 @@
+ # for a x86 HW PMU event: PEBS with load latency data.
+ #
  
 +from __future__ import print_function
 +
  import os
  import sys
- 
-@@ -19,7 +21,7 @@ from perf_trace_context import *
- unhandled = autodict()
+ import math
+@@ -37,7 +39,7 @@ con = sqlite3.connect("/dev/shm/perf.db")
+ con.isolation_level = None
  
  def trace_begin():
--	print "trace_begin"
-+	print("trace_begin")
- 	pass
+-        print "In trace_begin:\n"
++        print("In trace_begin:\n")
+ 
+         #
+         # Will create several tables at the start, pebs_ll is for PEBS data with
+@@ -76,12 +78,12 @@ def process_event(param_dict):
+         name       = param_dict["ev_name"]
+ 
+         # Symbol and dso info are not always resolved
+-        if (param_dict.has_key("dso")):
++        if ("dso" in param_dict):
+                 dso = param_dict["dso"]
+         else:
+                 dso = "Unknown_dso"
+ 
+-        if (param_dict.has_key("symbol")):
++        if ("symbol" in param_dict):
+                 symbol = param_dict["symbol"]
+         else:
+                 symbol = "Unknown_symbol"
+@@ -102,7 +104,7 @@ def insert_db(event):
+                                 event.ip, event.status, event.dse, event.dla, event.lat))
  
  def trace_end():
-@@ -33,7 +35,7 @@ def irq__softirq_entry(event_name, context, common_cpu,
+-        print "In trace_end:\n"
++        print("In trace_end:\n")
+         # We show the basic info for the 2 type of event classes
+         show_general_events()
+         show_pebs_ll()
+@@ -123,29 +125,29 @@ def show_general_events():
+         # Check the total record number in the table
+         count = con.execute("select count(*) from gen_events")
+         for t in count:
+-                print "There is %d records in gen_events table" % t[0]
++                print("There is %d records in gen_events table" % t[0])
+                 if t[0] == 0:
+                         return
  
- 	print_uncommon(context)
+-        print "Statistics about the general events grouped by thread/symbol/dso: \n"
++        print("Statistics about the general events grouped by thread/symbol/dso: \n")
  
--	print "vec=%s\n" % (symbol_str("irq__softirq_entry", "vec", vec)),
-+	print("vec=%s" % (symbol_str("irq__softirq_entry", "vec", vec)))
+          # Group by thread
+         commq = con.execute("select comm, count(comm) from gen_events group by comm order by -count(comm)")
+-        print "\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42)
++        print("\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42))
+         for row in commq:
+-             print "%16s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%16s %8d     %s" % (row[0], row[1], num2sym(row[1])))
  
- def kmem__kmalloc(event_name, context, common_cpu,
- 		  common_secs, common_nsecs, common_pid, common_comm,
-@@ -44,10 +46,10 @@ def kmem__kmalloc(event_name, context, common_cpu,
+         # Group by symbol
+-        print "\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58)
++        print("\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58))
+         symbolq = con.execute("select symbol, count(symbol) from gen_events group by symbol order by -count(symbol)")
+         for row in symbolq:
+-             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
  
- 	print_uncommon(context)
+         # Group by dso
+-        print "\n%40s %8s %16s\n%s" % ("dso", "number", "histogram", "="*74)
++        print("\n%40s %8s %16s\n%s" % ("dso", "number", "histogram", "="*74))
+         dsoq = con.execute("select dso, count(dso) from gen_events group by dso order by -count(dso)")
+         for row in dsoq:
+-             print "%40s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%40s %8d     %s" % (row[0], row[1], num2sym(row[1])))
  
--	print "call_site=%u, ptr=%u, bytes_req=%u, " \
--		"bytes_alloc=%u, gfp_flags=%s\n" % \
-+	print("call_site=%u, ptr=%u, bytes_req=%u, "
-+		"bytes_alloc=%u, gfp_flags=%s" %
- 		(call_site, ptr, bytes_req, bytes_alloc,
--		flag_str("kmem__kmalloc", "gfp_flags", gfp_flags)),
-+		flag_str("kmem__kmalloc", "gfp_flags", gfp_flags)))
+ #
+ # This function just shows the basic info, and we could do more with the
+@@ -156,35 +158,35 @@ def show_pebs_ll():
+ 
+         count = con.execute("select count(*) from pebs_ll")
+         for t in count:
+-                print "There is %d records in pebs_ll table" % t[0]
++                print("There is %d records in pebs_ll table" % t[0])
+                 if t[0] == 0:
+                         return
+ 
+-        print "Statistics about the PEBS Load Latency events grouped by thread/symbol/dse/latency: \n"
++        print("Statistics about the PEBS Load Latency events grouped by thread/symbol/dse/latency: \n")
+ 
+         # Group by thread
+         commq = con.execute("select comm, count(comm) from pebs_ll group by comm order by -count(comm)")
+-        print "\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42)
++        print("\n%16s %8s %16s\n%s" % ("comm", "number", "histogram", "="*42))
+         for row in commq:
+-             print "%16s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%16s %8d     %s" % (row[0], row[1], num2sym(row[1])))
+ 
+         # Group by symbol
+-        print "\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58)
++        print("\n%32s %8s %16s\n%s" % ("symbol", "number", "histogram", "="*58))
+         symbolq = con.execute("select symbol, count(symbol) from pebs_ll group by symbol order by -count(symbol)")
+         for row in symbolq:
+-             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
+ 
+         # Group by dse
+         dseq = con.execute("select dse, count(dse) from pebs_ll group by dse order by -count(dse)")
+-        print "\n%32s %8s %16s\n%s" % ("dse", "number", "histogram", "="*58)
++        print("\n%32s %8s %16s\n%s" % ("dse", "number", "histogram", "="*58))
+         for row in dseq:
+-             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
+ 
+         # Group by latency
+         latq = con.execute("select lat, count(lat) from pebs_ll group by lat order by lat")
+-        print "\n%32s %8s %16s\n%s" % ("latency", "number", "histogram", "="*58)
++        print("\n%32s %8s %16s\n%s" % ("latency", "number", "histogram", "="*58))
+         for row in latq:
+-             print "%32s %8d     %s" % (row[0], row[1], num2sym(row[1]))
++             print("%32s %8d     %s" % (row[0], row[1], num2sym(row[1])))
  
  def trace_unhandled(event_name, context, event_fields_dict):
- 	try:
-@@ -56,26 +58,27 @@ def trace_unhandled(event_name, context, event_fields_dict):
- 		unhandled[event_name] = 1
- 
- def print_header(event_name, cpu, secs, nsecs, pid, comm):
--	print "%-20s %5u %05u.%09u %8u %-20s " % \
-+	print("%-20s %5u %05u.%09u %8u %-20s " %
- 		(event_name, cpu, secs, nsecs, pid, comm),
-+		end=' ')
- 
- # print trace fields not included in handler args
- def print_uncommon(context):
--	print "common_preempt_count=%d, common_flags=%s, " \
--		"common_lock_depth=%d, " % \
-+	print("common_preempt_count=%d, common_flags=%s, "
-+		"common_lock_depth=%d, " %
- 		(common_pc(context), trace_flag_str(common_flags(context)),
--		common_lock_depth(context))
-+		common_lock_depth(context)))
- 
- def print_unhandled():
- 	keys = unhandled.keys()
- 	if not keys:
- 		return
- 
--	print "\nunhandled events:\n\n",
-+	print("\nunhandled events:\n")
- 
--	print "%-40s  %10s\n" % ("event", "count"),
--	print "%-40s  %10s\n" % ("----------------------------------------", \
--				"-----------"),
-+	print("%-40s  %10s" % ("event", "count"))
-+	print("%-40s  %10s" % ("----------------------------------------",
-+				"-----------"))
- 
- 	for event_name in keys:
--		print "%-40s  %10d\n" % (event_name, unhandled[event_name])
-+		print("%-40s  %10d\n" % (event_name, unhandled[event_name]))
+-        print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
++        print (' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
