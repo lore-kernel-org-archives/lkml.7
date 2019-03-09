@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A8FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFAFC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A9B2081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D752081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552156486;
-	bh=flmMOEoEdSmSBfc7ltQFCjwpzDC1bz5Oi6wc1NnW0i8=;
+	s=default; t=1552156631;
+	bh=Nfz403lDd8pt7WEkj5q1Ikgohgob4/USeawIX9xlPmg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=18oQfSskJCQKB6c+XMqEGiqD/N5mc3pDC+4lQHWaU2JZsYyu9YKylafg9zIWYdP3q
-	 nKAIII06eaIct4z+A62YJ+EaefpCbEJ2e0EJgUtOLZxfdCqplWSsoaWKp3fE8VyVb+
-	 txYrv0cYFJXZn5jRU9/g9M70IQFD0egOA4SX6oJ8=
+	b=F7yWt9GRj/0Apqht9ZIJ+/IiZHSExiELTqd5+upJDf3252ujqQ8alf0m31mie1rKy
+	 8DYsWZnUEQn5GiM8T9jTn9xI+bvOYDUr95Xxg14MkVi8Sc0R31xCVr2QomdR7aAIHo
+	 h++aagE2TiB+fpos6aLZCEOvDnJmteHHbPNpjXLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfCISeo (ORCPT
+        id S1726435AbfCIShJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 13:34:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
+        Sat, 9 Mar 2019 13:37:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfCISeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 13:34:44 -0500
+        id S1726313AbfCIShJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 13:37:09 -0500
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A8F3207E0;
-        Sat,  9 Mar 2019 18:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A1CE207E0;
+        Sat,  9 Mar 2019 18:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552156483;
-        bh=flmMOEoEdSmSBfc7ltQFCjwpzDC1bz5Oi6wc1NnW0i8=;
+        s=default; t=1552156627;
+        bh=Nfz403lDd8pt7WEkj5q1Ikgohgob4/USeawIX9xlPmg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ef8CqWZNrYs7uxoff89lnsMQrpfurEyteZqYsCqPUIpjH2kjzfc1wwG7ndZtGKToh
-         23p+alM7FZZKvXuXOYNPWTuu8/P5kRRvp4D8kXxhHOZOhjRDyT/gDVLq9YZuJIMRjy
-         9LInmNB74ivy96meOC2lhl2u9SB6cEdpoIJEhNI0=
-Date:   Sat, 9 Mar 2019 18:34:37 +0000
+        b=KSJJWmiirvgOuIWEC+pfGANJYcEA/bA9D601nSTx5L+EelcRAJZg4GHN2CtOAFvOc
+         Qq4PCU9jQ+CmchNGx05wSUAGrF94vKbA7i+1A3tsWI5c6wuzwAiAn7fH8URaADDu5c
+         8l3FqIRrflQ0xlKMvi+Bd+mIVo26xgLV63f2sVSc=
+Date:   Sat, 9 Mar 2019 18:37:01 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Tomasz Duszynski <tduszyns@gmail.com>
-Cc:     Kangjie Lu <kjlu@umn.edu>, pakki001@umn.edu,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: max9611: fix a NULL pointer dereference
-Message-ID: <20190309183437.479f90a1@archlinux>
-In-Reply-To: <20190309151916.GB7820@arch>
-References: <20190309045141.8015-1-kjlu@umn.edu>
-        <20190309151916.GB7820@arch>
+Cc:     justinpopo6@gmail.com, linux-iio@vger.kernel.org,
+        linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        f.fainelli@gmail.com, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] iio: adc: ti-ads7950: Fix improper use of mlock
+Message-ID: <20190309183701.03afd62b@archlinux>
+In-Reply-To: <20190309162935.GC7820@arch>
+References: <1552082608-42603-1-git-send-email-justinpopo6@gmail.com>
+        <1552082608-42603-2-git-send-email-justinpopo6@gmail.com>
+        <20190309162935.GC7820@arch>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,55 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 Mar 2019 16:19:17 +0100
+On Sat, 9 Mar 2019 17:29:36 +0100
 Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-> On Fri, Mar 08, 2019 at 10:51:40PM -0600, Kangjie Lu wrote:
-> > of_match_device may return NULL when it fails, and in this case,
-> > there will be a NULL pointer dereference. The fix returns
-> > EINVAL when of_match_device returns NULL.
+> On Fri, Mar 08, 2019 at 02:03:27PM -0800, justinpopo6@gmail.com wrote:
+> > From: Justin Chen <justinpopo6@gmail.com>
 > >
-> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > Indio->mlock is used for protecting the different iio device modes.
+> > It is currently not being used in this way. Replace the lock with
+> > an internal lock specifically used for protecting the SPI transfer
+> > buffer.
+> >
+> > Signed-off-by: Justin Chen <justinpopo6@gmail.com>
 > > ---
-> >  drivers/iio/adc/max9611.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >  drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
+> >  1 file changed, 15 insertions(+), 4 deletions(-)
 > >
-> > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> > index 917223d5ff5b..531b6614ea29 100644
-> > --- a/drivers/iio/adc/max9611.c
-> > +++ b/drivers/iio/adc/max9611.c
-> > @@ -524,13 +524,16 @@ static int max9611_probe(struct i2c_client *client,
-> >  {
-> >  	const char * const shunt_res_prop = "shunt-resistor-micro-ohms";
-> >  	const struct device_node *of_node = client->dev.of_node;
-> > -	const struct of_device_id *of_id =
-> > -		of_match_device(max9611_of_table, &client->dev);  
-> 
-> Given we got to this point how this can go wrong?
-
-If this is to squash a warning then there may be some argument
-even though it can't actually fail.  If there is such a warning
-please put it in the patch description.
-
-Thanks,
-
-Jonathan
-
-> 
-> > +	const struct of_device_id *of_id;
-> >  	struct max9611_dev *max9611;
-> >  	struct iio_dev *indio_dev;
-> >  	unsigned int of_shunt;
+> > diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
+> > index 0ad6359..1e47bef 100644
+> > --- a/drivers/iio/adc/ti-ads7950.c
+> > +++ b/drivers/iio/adc/ti-ads7950.c
+> > @@ -56,6 +56,9 @@ struct ti_ads7950_state {
+> >  	struct spi_message	ring_msg;
+> >  	struct spi_message	scan_single_msg;
+> >
+> > +	/* Lock to protect the spi xfer buffers */
+> > +	struct mutex		slock;
+> > +
+> >  	struct regulator	*reg;
+> >  	unsigned int		vref_mv;
+> >
+> > @@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
+> >  	struct ti_ads7950_state *st = iio_priv(indio_dev);
 > >  	int ret;
 > >
-> > +	of_id = of_match_device(max9611_of_table, &client->dev);
-> > +	if (!of_id)
-> > +		return -EINVAL;
+> > +	mutex_lock(&st->slock);
+> >  	ret = spi_sync(st->spi, &st->ring_msg);
+> >  	if (ret < 0)
+> >  		goto out;
+> > @@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
+> >  					   iio_get_time_ns(indio_dev));
+> >
+> >  out:
+> > +	mutex_unlock(&st->slock);
+> >  	iio_trigger_notify_done(indio_dev->trig);
+> >
+> >  	return IRQ_HANDLED;
+> > @@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
+> >  	struct ti_ads7950_state *st = iio_priv(indio_dev);
+> >  	int ret, cmd;
+> >
+> > -	mutex_lock(&indio_dev->mlock);
+> > +	mutex_lock(&st->slock);
+> >
+> >  	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
+> >  	st->single_tx = cmd;
+> > @@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
+> >  	ret = st->single_rx;
+> >
+> >  out:
+> > -	mutex_unlock(&indio_dev->mlock);
+> > +	mutex_unlock(&st->slock);
+> >
+> >  	return ret;
+> >  }
+> > @@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
+> >  	if (ACPI_COMPANION(&spi->dev))
+> >  		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
+> >
+> > +	mutex_init(&st->slock);
 > > +
-> >  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*max9611));
-> >  	if (!indio_dev)
-> >  		return -ENOMEM;
+> >  	st->reg = devm_regulator_get(&spi->dev, "vref");
+> >  	if (IS_ERR(st->reg)) {
+> >  		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
+> > -		return PTR_ERR(st->reg);
+> > +		ret = PTR_ERR(st->reg);
+> > +		goto error_destroy_mutex;
+> >  	}
+> >
+> >  	ret = regulator_enable(st->reg);
+> >  	if (ret) {
+> >  		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
+> > -		return ret;
+> > +		goto error_destroy_mutex;
+> >  	}
+> >
+> >  	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> > @@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
+> >  	iio_triggered_buffer_cleanup(indio_dev);
+> >  error_disable_reg:
+> >  	regulator_disable(st->reg);
+> > +error_destroy_mutex:
+> > +	mutex_destroy(&st->slock);  
+> 
+> If your intention was to do resources cleanup then this is not
+> what this api was designed for. This is actually for debugging unwanted
+> subsequent mutex usage.
+
+Yes. In a case like this where it is the last thing in a remove
+it adds little value as there should be nothing left to take the mutex
+anyway.  This is the reason (I guess) there has never been a 
+devm_mutex_init function to tidy this up automatically...
+
+> 
+> >
+> >  	return ret;
+> >  }
+> > @@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
+> >  	iio_device_unregister(indio_dev);
+> >  	iio_triggered_buffer_cleanup(indio_dev);
+> >  	regulator_disable(st->reg);
+> > +	mutex_destroy(&st->slock);
+> >
+> >  	return 0;
+> >  }
 > > --
-> > 2.17.1
+> > 2.7.4
 > >  
 
