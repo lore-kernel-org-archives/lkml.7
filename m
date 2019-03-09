@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51485C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D6C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF432081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32377207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfCIF5V (ORCPT
+        id S1726821AbfCIF52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 00:57:21 -0500
+        Sat, 9 Mar 2019 00:57:28 -0500
 Received: from mga05.intel.com ([192.55.52.43]:26841 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfCIF4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726425AbfCIF4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 Mar 2019 00:56:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:42 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,458,1544515200"; 
-   d="scan'208";a="281138793"
+   d="scan'208";a="281138788"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
   by orsmga004.jf.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id D14D0301CBD; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
+        id AA978301CE1; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v5 13/15] perf tools report: Add custom scripts to script menu
-Date:   Fri,  8 Mar 2019 21:56:26 -0800
-Message-Id: <20190309055628.21617-14-andi@firstfloor.org>
+Subject: [PATCH v5 08/15] perf tools report: Support running scripts for current time range
+Date:   Fri,  8 Mar 2019 21:56:21 -0800
+Message-Id: <20190309055628.21617-9-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
 References: <20190309055628.21617-1-andi@firstfloor.org>
@@ -49,80 +49,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add a way to define custom scripts through ~/.perfconfig, which
-are then added to the scripts menu. The scripts get the same
-arguments as perf script, in particular -i, --cpu, --tid.
+When using the time sort key, add new context menus to run
+scripts for only the currently selected time range. Compute
+the correct range for the selection add pass it as the --time option to
+perf script.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/Documentation/perf-config.txt |  8 ++++++++
- tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 2d0fb7613134..c3323228d3d0 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -590,6 +590,14 @@ samples.*::
- 		Define how many ns worth of time to show
- 		around samples in perf report sample context browser.
+---
+v2:
+Use symbol_conf.time_quantum
+v3:
+Work around broken gcc fortify code warning
+Use _NSEC defines
+---
+ tools/perf/ui/browsers/hists.c | 83 +++++++++++++++++++++++++++++-----
+ 1 file changed, 72 insertions(+), 11 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index aef800d97ea1..f98aeac607dd 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -7,6 +7,7 @@
+ #include <string.h>
+ #include <linux/rbtree.h>
+ #include <sys/ttydefaults.h>
++#include <linux/time64.h>
  
-+script.*::
-+
-+	Any option defines a script that is added to the scripts menu
-+	in the interactive perf browser and whose output is displayed.
-+	The name of the option is the name, the value is a script command line.
-+	The script gets the same options passed as a full perf script,
-+	in particular -i perfdata file, --cpu, --tid
-+
- SEE ALSO
- --------
- linkperf:perf[1]
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index cdba58447b85..5d407ab834b5 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -6,6 +6,7 @@
- #include "../../util/symbol.h"
- #include "../browser.h"
- #include "../libslang.h"
-+#include "config.h"
+ #include "../../util/callchain.h"
+ #include "../../util/evsel.h"
+@@ -30,6 +31,7 @@
+ #include "srcline.h"
+ #include "string2.h"
+ #include "units.h"
++#include "time-utils.h"
  
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
-@@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
+ #include "sane_ctype.h"
+ 
+@@ -2338,6 +2340,7 @@ static int switch_data_file(void)
+ }
+ 
+ struct popup_action {
++	unsigned long		time;
+ 	struct thread 		*thread;
+ 	struct map_symbol 	ms;
+ 	int			socket;
+@@ -2527,36 +2530,64 @@ static int
+ do_run_script(struct hist_browser *browser __maybe_unused,
+ 	      struct popup_action *act)
+ {
+-	char script_opt[64];
+-	memset(script_opt, 0, sizeof(script_opt));
++	char *script_opt;
++	int len;
++	int n = 0;
++
++	len = 100;
++	if (act->thread)
++		len += strlen(thread__comm_str(act->thread));
++	else if (act->ms.sym)
++		len += strlen(act->ms.sym->name);
++	script_opt = malloc(len);
++	if (!script_opt)
++		return -1;
+ 
++	script_opt[0] = 0;
+ 	if (act->thread) {
+-		scnprintf(script_opt, sizeof(script_opt), " -c %s ",
++		n = scnprintf(script_opt, len, " -c %s ",
+ 			  thread__comm_str(act->thread));
+ 	} else if (act->ms.sym) {
+-		scnprintf(script_opt, sizeof(script_opt), " -S %s ",
++		n = scnprintf(script_opt, len, " -S %s ",
+ 			  act->ms.sym->name);
+ 	}
+ 
++	if (act->time) {
++		char start[32], end[32];
++		unsigned long starttime = act->time;
++		unsigned long endtime = act->time + symbol_conf.time_quantum;
++
++		if (starttime == endtime) { /* Display 1ms as fallback */
++			starttime -= 1*NSEC_PER_MSEC;
++			endtime += 1*NSEC_PER_MSEC;
++		}
++		timestamp__scnprintf_usec(starttime, start, sizeof start);
++		timestamp__scnprintf_usec(endtime, end, sizeof end);
++		n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
++	}
++
+ 	script_browse(script_opt);
++	free(script_opt);
  	return 0;
  }
  
-+static int scripts_config(const char *var, const char *value, void *data)
-+{
-+	struct script_config *c = data;
+ static int
+-add_script_opt(struct hist_browser *browser __maybe_unused,
++add_script_opt_2(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act, char **optstr,
+-	       struct thread *thread, struct symbol *sym)
++	       struct thread *thread, struct symbol *sym,
++	       const char *tstr)
+ {
 +
-+	if (!strstarts(var, "script."))
-+		return -1;
-+	if (c->index >= SCRIPT_MAX_NO)
-+		return -1;
-+	c->names[c->index] = strdup(var + 7);
-+	if (!c->names[c->index])
-+		return -1;
-+	if (asprintf(&c->paths[c->index], "%s %s", value,
-+		     c->extra_format) < 0)
-+		return -1;
-+	c->index++;
-+	return 0;
+ 	if (thread) {
+-		if (asprintf(optstr, "Run scripts for samples of thread [%s]",
+-			     thread__comm_str(thread)) < 0)
++		if (asprintf(optstr, "Run scripts for samples of thread [%s]%s",
++			     thread__comm_str(thread), tstr) < 0)
+ 			return 0;
+ 	} else if (sym) {
+-		if (asprintf(optstr, "Run scripts for samples of symbol [%s]",
+-			     sym->name) < 0)
++		if (asprintf(optstr, "Run scripts for samples of symbol [%s]%s",
++			     sym->name, tstr) < 0)
+ 			return 0;
+ 	} else {
+-		if (asprintf(optstr, "Run scripts for all samples") < 0)
++		if (asprintf(optstr, "Run scripts for all samples%s", tstr) < 0)
+ 			return 0;
+ 	}
+ 
+@@ -2566,6 +2597,36 @@ add_script_opt(struct hist_browser *browser __maybe_unused,
+ 	return 1;
+ }
+ 
++static int
++add_script_opt(struct hist_browser *browser,
++	       struct popup_action *act, char **optstr,
++	       struct thread *thread, struct symbol *sym)
++{
++	int n, j;
++	struct hist_entry *he;
++
++	n = add_script_opt_2(browser, act, optstr, thread, sym, "");
++
++	he = hist_browser__selected_entry(browser);
++	if (sort_order && strstr(sort_order, "time")) {
++		char tstr[128];
++
++		optstr++;
++		act++;
++		j = sprintf(tstr, " in ");
++		j += timestamp__scnprintf_usec(he->time, tstr + j,
++					       sizeof tstr - j);
++		j += sprintf(tstr + j, "-");
++		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
++				          tstr + j,
++				          sizeof tstr - j);
++		n += add_script_opt_2(browser, act, optstr, thread, sym,
++					  tstr);
++		act->time = he->time;
++	}
++	return n;
 +}
 +
- /*
-  * When success, will copy the full path of the selected script
-  * into  the buffer pointed by script_name, and return 0.
-@@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
-+	perf_config(scripts_config, &scriptc);
- 	custom_perf = scriptc.index;
- 	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
- 	i = scriptc.index;
+ static int
+ do_switch_data(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act __maybe_unused)
 -- 
 2.20.1
 
