@@ -2,101 +2,123 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A796C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E45FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D0F20851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YoBz88fu"
+	by mail.kernel.org (Postfix) with ESMTP id CE61D20851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfCIDPh (ORCPT
+        id S1726506AbfCIDUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 22:15:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38800 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfCIDPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 22:15:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bAHUfleo3bR96OQM3eEUv1/TgtnFNmFFsvQHw36WTdI=; b=YoBz88fu8G6HmY9QLHusRoj07
-        +GBFtm67qvacZf8AmLNWpo2tNZBlZ5yGBz3xBBMyg64pxVSfM45w/JrY0gGBdYb+RFah9/+QjU85a
-        +REpGctF3DX1mCQpzwsGpIWifTF5ATNdj2ynY/0Xf5l0aVbTA93mk7Wkz3RG1ZsCjxcvjROZkmqde
-        OqK8kaWlIYSNB4SHMbplPzckpNtSXkw3q0zrOBaDMnbiwohlyZLgXjOoNGfCsKl9nwrlZNVwNjgNP
-        1evS7YInf1o88uEjzR5mnG6IbuKSugmET5BUys7GrUBvP03RTLe8/9rvM1oMQMceph/vnJCBeN+S0
-        sZKoKM5jQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h2SSU-0001lb-9t; Sat, 09 Mar 2019 03:15:34 +0000
-Subject: Re: [PATCH 3/4] Add header file,Kconfig and Makefile
-To:     Morris Ku <saumah@gmail.com>, gregkh@linuxfoundation.org
-Cc:     morris_ku@sunix.com, linux-kernel@vger.kernel.org, arnd@arndb.de
-References: <20190308123547.20578-1-saumah@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c23c156e-0493-96e2-f4eb-0171e8c8fc58@infradead.org>
-Date:   Fri, 8 Mar 2019 19:15:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190308123547.20578-1-saumah@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 8 Mar 2019 22:20:49 -0500
+Received: from mx.sdf.org ([205.166.94.20]:51593 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726375AbfCIDUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 22:20:48 -0500
+X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Mar 2019 22:20:48 EST
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x293CLHx021640
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Sat, 9 Mar 2019 03:12:22 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x293CKEm004086;
+        Sat, 9 Mar 2019 03:12:20 GMT
+Message-Id: <cover.1552097842.git.lkml@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Date:   Sat, 9 Mar 2019 02:17:22 +0000
+Subject: [PATCH 0/5] lib/sort & lib/list_sort: faster and smaller
+To:     linux-kernel@vger.kernel.org
+Cc:     George Spelvin <lkml@sdf.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Abramov <st5pub@yandex.ru>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Don Mullis <don.mullis@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/8/19 4:35 AM, Morris Ku wrote:
-> This patch add header file, Kconfig and Makefile. 
-> 
-> Signed-off-by: Morris Ku <saumah@gmail.com>
-> ---
+Because CONFIG_RETPOLINE has made indirect calls much more expensive,
+I thought I'd try to reduce the number made by the library sort
+functions.
 
-> diff --git a/char/snx/Kconfig b/char/snx/Kconfig
-> new file mode 100644
-> index 00000000..86f38352
-> --- /dev/null
-> +++ b/char/snx/Kconfig
-> @@ -0,0 +1,15 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Character device configuration
-> +#
-> +
-> +config SNX
-> +	tristate "SUNIX Multi-IO Board Drvier"
+The first three patches apply to lib/sort.c.
 
-	                               Driver
+Patch #1 is a simple optimization.  The built-in swap has rarely-used
+special cases for aligned 4- and 8-byte objects.  But that case almost
+never happens; most calls to sort() work on larger structures, which
+fall back to the byte-at-a-time loop.  This generalizes them to aligned
+*multiples* of 4 and 8 bytes.  (If nothing else, it saves an awful lot
+of energy by not thrashing the store buffers as much.)
 
-> +	Driver for SUNIX Multi-I/O Board device driver Based on
-> +	drivers/char/serial.c, parport_pc.c, ppdev.c and lp.c by Linus
-> +	Torvalds, Theodore Ts'o.
+(Issue for disussion: should the special-case swap loops be reduced to
+two, an aligned-word and generic byte verison?)
 
-kconfig does not like those 3 lines above.  That indicates some lack of
-testing.
+Patch #2 grabs a juicy piece of low-hanging fruit.  I agree that
+nice simple solid heapsort is preferable to more complex algorithms
+(sorry, Andrey), but it's possible to implement heapsort with 40% fewer
+comparisons than the way it's been done up to now.  And with some care,
+the code ends up smaller, as well.  This is the "big win" patch.
 
-They could be put under "help", but they really should just be deleted or
-moved to some source file if you think that they are needed.
+Patch #3 adds the same sort of indirect call bypass that has been added
+to the net code of late.  The great majority of the callers use the
+builtin swap functions, so replace the indirect call to sort_func with a
+(highly preditable) series of if() statements.  Rather surprisingly,
+this decreased code size, as the swap functions were inlined and their
+prologue & epilogue code eliminated.
 
-> +	help
-> +	   Say Y here if you have a SUNIX Multi-IO card.
+lib/list_sort.c is a bit trickier, as merge sort is already close to
+optimal, and we don't want to introduce triumphs of theory over
+practicality like the Ford-Johnson merge-insertion sort.
 
-Indent with tab + 2 spaces, not 3 spaces.
+Patch #4, without changing the algorithm, chops 32% off the code size and
+removes the part[MAX_LIST_LENGTH+1] pointer array (and the corresponding
+upper limit on efficiently sortable input size).
 
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called snx.
+Patch #5 improves the algorithm.  The previous code is already optimal
+for power-of-two (or slightly smaller) size inputs, but when the input
+size is just over a power of 2, there's a very unbalanced final merge.
 
+There are, in the literature, several algorithms which solve this, but
+they all depend on the "breadth-first" merge order which was replaced
+by commit 835cc0c8477f with a more cache-friendly "depth-first" order.
+Some hard thinking came up with a depth-first algorithm which defers
+merges as little as possible while avoiding bad merges.  This saves
+0.2*n compares, averaged over all sizes.
+
+The code size increase is minimal (80 bytes on x86-64, reducing the net
+savings to 24%), but the comments expanded significantly to document
+the clever algorithm.
+
+
+TESTING NOTES: I have some ugly user-space benchmarking code
+which I used for testing before moving this code into the kernel.
+Shout if you want a copy.
+
+I'm running this code right now, with CONFIG_TEST_SORT and
+CONFIG_TEST_LIST_SORT, but I confess I haven't rebooted since
+the last round of minor edits to quell checkpatch.  I figure there
+will be at least one round of comments and final testing.
+
+George Spelvin (5):
+  lib/sort: Make swap functions more generic
+  lib/sort: Use more efficient bottom-up heapsort variant
+  lib/sort: Avoid indirect calls to built-in swap
+  lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
+  lib/list_sort: Optimize number of calls to comparison function
+
+ include/linux/list_sort.h |   1 +
+ lib/list_sort.c           | 225 ++++++++++++++++++++++++----------
+ lib/sort.c                | 250 ++++++++++++++++++++++++++++++--------
+ 3 files changed, 365 insertions(+), 111 deletions(-)
 
 -- 
-~Randy
+2.20.1
+
