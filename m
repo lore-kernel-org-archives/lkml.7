@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFCAC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9743AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700732081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F45F207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfCIF5a (ORCPT
+        id S1726895AbfCIF5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 00:57:30 -0500
-Received: from mga05.intel.com ([192.55.52.43]:26854 "EHLO mga05.intel.com"
+        Sat, 9 Mar 2019 00:57:40 -0500
+Received: from mga12.intel.com ([192.55.52.136]:63276 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726176AbfCIF4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 00:56:44 -0500
+        id S1725768AbfCIF4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 00:56:43 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:41 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,458,1544515200"; 
-   d="scan'208";a="281138789"
+   d="scan'208";a="132845010"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga004.jf.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id B2815301CE1; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
+        id 9304F301CE6; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v5 09/15] perf tools report: Support builtin perf script in scripts menu
-Date:   Fri,  8 Mar 2019 21:56:22 -0800
-Message-Id: <20190309055628.21617-10-andi@firstfloor.org>
+Subject: [PATCH v5 05/15] perf tools report: Parse time quantum
+Date:   Fri,  8 Mar 2019 21:56:18 -0800
+Message-Id: <20190309055628.21617-6-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
 References: <20190309055628.21617-1-andi@firstfloor.org>
@@ -49,345 +49,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The scripts menu traditionally only showed custom perf scripts.
+Many workloads change over time. perf report currently aggregates
+the whole time range reported in perf.data.
 
-Allow to run standard perf script with useful default options too.
+This patch adds an option for a time quantum to quantisize the
+perf.data over time.
 
-- Normal perf script
-- perf script with assembler (needs xed installed)
-- perf script with source code output (needs debuginfo)
-- perf script with custom arguments
-
-Then we automatically select the right options to
-display the information in the perf.data file.
-
-For example with -b display branch contexts.
-
-It's not easily possible to check for xed's existence
-in advance.  perf script usually gives sensible error messages when
-it's not available.
+This just adds the option, will be used in follow on patches
+for a time sort key.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 v2:
-Pass --inline if needed
+Move time_quantum to symbol_conf. check for zero time quantum
 v3:
-Avoid compiler warnings. Allocate cmd buffer dynamically.
-Change formatting
+Document s unit
+v4:
+Use _NSEC defines
 ---
- tools/perf/ui/browsers/annotate.c |   2 +-
- tools/perf/ui/browsers/hists.c    |  23 +++---
- tools/perf/ui/browsers/scripts.c  | 127 +++++++++++++++++++++++-------
- tools/perf/util/hist.h            |   8 +-
- 4 files changed, 120 insertions(+), 40 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  4 +++
+ tools/perf/builtin-report.c              | 42 ++++++++++++++++++++++++
+ tools/perf/util/symbol.c                 |  2 ++
+ tools/perf/util/symbol_conf.h            |  1 +
+ 4 files changed, 49 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 35bdfd8b1e71..98d934a36d86 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -750,7 +750,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			continue;
- 		case 'r':
- 			{
--				script_browse(NULL);
-+				script_browse(NULL, NULL);
- 				continue;
- 			}
- 		case 'k':
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f98aeac607dd..fb4430f8982c 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2344,6 +2344,7 @@ struct popup_action {
- 	struct thread 		*thread;
- 	struct map_symbol 	ms;
- 	int			socket;
-+	struct perf_evsel	*evsel;
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 51dbc519dbce..9ec1702bccdd 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -497,6 +497,10 @@ include::itrace.txt[]
+ 	The period/hits keywords set the base the percentage is computed
+ 	on - the samples period or the number of samples (hits).
  
- 	int (*fn)(struct hist_browser *browser, struct popup_action *act);
- };
-@@ -2566,7 +2567,7 @@ do_run_script(struct hist_browser *browser __maybe_unused,
- 		n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
- 	}
++--time-quantum::
++	Configure time quantum for time sort key. Default 100ms.
++	Accepts s, us, ms, ns units.
++
+ include::callchain-overhead-calculation.txt[]
  
--	script_browse(script_opt);
-+	script_browse(script_opt, act->evsel);
- 	free(script_opt);
- 	return 0;
+ SEE ALSO
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 09180e559ad6..46bd80363c90 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -47,9 +47,11 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <regex.h>
++#include "sane_ctype.h"
+ #include <signal.h>
+ #include <linux/bitmap.h>
+ #include <linux/stringify.h>
++#include <linux/time64.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+@@ -926,6 +928,43 @@ report_parse_callchain_opt(const struct option *opt, const char *arg, int unset)
+ 	return parse_callchain_report_opt(arg);
  }
-@@ -2575,7 +2576,7 @@ static int
- add_script_opt_2(struct hist_browser *browser __maybe_unused,
- 	       struct popup_action *act, char **optstr,
- 	       struct thread *thread, struct symbol *sym,
--	       const char *tstr)
-+	       struct perf_evsel *evsel, const char *tstr)
- {
  
- 	if (thread) {
-@@ -2593,6 +2594,7 @@ add_script_opt_2(struct hist_browser *browser __maybe_unused,
- 
- 	act->thread = thread;
- 	act->ms.sym = sym;
-+	act->evsel = evsel;
- 	act->fn = do_run_script;
- 	return 1;
- }
-@@ -2600,12 +2602,13 @@ add_script_opt_2(struct hist_browser *browser __maybe_unused,
- static int
- add_script_opt(struct hist_browser *browser,
- 	       struct popup_action *act, char **optstr,
--	       struct thread *thread, struct symbol *sym)
-+	       struct thread *thread, struct symbol *sym,
-+	       struct perf_evsel *evsel)
- {
- 	int n, j;
- 	struct hist_entry *he;
- 
--	n = add_script_opt_2(browser, act, optstr, thread, sym, "");
-+	n = add_script_opt_2(browser, act, optstr, thread, sym, evsel, "");
- 
- 	he = hist_browser__selected_entry(browser);
- 	if (sort_order && strstr(sort_order, "time")) {
-@@ -2618,10 +2621,9 @@ add_script_opt(struct hist_browser *browser,
- 					       sizeof tstr - j);
- 		j += sprintf(tstr + j, "-");
- 		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
--				          tstr + j,
--				          sizeof tstr - j);
-+				          tstr + j, sizeof tstr - j);
- 		n += add_script_opt_2(browser, act, optstr, thread, sym,
--					  tstr);
-+					  evsel, tstr);
- 		act->time = he->time;
- 	}
- 	return n;
-@@ -3092,7 +3094,7 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- 				nr_options += add_script_opt(browser,
- 							     &actions[nr_options],
- 							     &options[nr_options],
--							     thread, NULL);
-+							     thread, NULL, evsel);
- 			}
- 			/*
- 			 * Note that browser->selection != NULL
-@@ -3107,11 +3109,12 @@ static int perf_evsel__hists_browse(struct perf_evsel *evsel, int nr_events,
- 				nr_options += add_script_opt(browser,
- 							     &actions[nr_options],
- 							     &options[nr_options],
--							     NULL, browser->selection->sym);
-+							     NULL, browser->selection->sym,
-+							     evsel);
- 			}
- 		}
- 		nr_options += add_script_opt(browser, &actions[nr_options],
--					     &options[nr_options], NULL, NULL);
-+					     &options[nr_options], NULL, NULL, evsel);
- 		nr_options += add_switch_opt(browser, &actions[nr_options],
- 					     &options[nr_options]);
- skip_scripting:
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 7f36630694bf..9e5f87558af6 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -17,36 +17,111 @@
-  */
- #define SCRIPT_FULLPATH_LEN	256
- 
-+struct script_config {
-+	const char **names;
-+	char **paths;
-+	int index;
-+	const char *perf;
-+	char extra_format[256];
-+};
-+
-+void attr_to_script(char *extra_format, struct perf_event_attr *attr)
++static int
++parse_time_quantum(const struct option *opt, const char *arg,
++		   int unset __maybe_unused)
 +{
-+	extra_format[0] = 0;
-+	if (attr->read_format & PERF_FORMAT_GROUP)
-+		strcat(extra_format, " -F +metric");
-+	if (attr->sample_type & PERF_SAMPLE_BRANCH_STACK)
-+		strcat(extra_format, " -F +brstackinsn --xed");
-+	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
-+		strcat(extra_format, " -F +iregs");
-+	if (attr->sample_type & PERF_SAMPLE_REGS_USER)
-+		strcat(extra_format, " -F +uregs");
-+	if (attr->sample_type & PERF_SAMPLE_PHYS_ADDR)
-+		strcat(extra_format, " -F +phys_addr");
-+}
++	unsigned long *time_q = opt->value;
++	char *end;
 +
-+static int add_script_option(const char *name, const char *opt,
-+			     struct script_config *c)
-+{
-+	c->names[c->index] = name;
-+	if (asprintf(&c->paths[c->index],
-+		     "%s script %s -F +metric %s %s",
-+		     c->perf, opt, symbol_conf.inline_name ? " --inline" : "",
-+		     c->extra_format) < 0)
++	*time_q = strtoul(arg, &end, 0);
++	if (end == arg)
++		goto parse_err;
++	if (*time_q == 0) {
++		pr_err("time quantum cannot be 0");
 +		return -1;
-+	c->index++;
-+	return 0;
-+}
-+
- /*
-  * When success, will copy the full path of the selected script
-  * into  the buffer pointed by script_name, and return 0.
-  * Return -1 on failure.
-  */
--static int list_scripts(char *script_name)
-+static int list_scripts(char *script_name, bool *custom,
-+			struct perf_evsel *evsel)
- {
--	char *buf, *names[SCRIPT_MAX_NO], *paths[SCRIPT_MAX_NO];
--	int i, num, choice, ret = -1;
-+	char *buf, *paths[SCRIPT_MAX_NO], *names[SCRIPT_MAX_NO];
-+	int i, num, choice;
-+	int ret = 0;
-+	int max_std, custom_perf;
-+	char pbuf[256];
-+	const char *perf = perf_exe(pbuf, sizeof pbuf);
-+	struct script_config scriptc = {
-+		.names = (const char **)names,
-+		.paths = paths,
-+		.perf = perf
-+	};
-+
-+	script_name[0] = 0;
- 
- 	/* Preset the script name to SCRIPT_NAMELEN */
- 	buf = malloc(SCRIPT_MAX_NO * (SCRIPT_NAMELEN + SCRIPT_FULLPATH_LEN));
- 	if (!buf)
--		return ret;
-+		return -1;
-+
-+	if (evsel)
-+		attr_to_script(scriptc.extra_format, &evsel->attr);
-+	add_script_option("Show individual samples", "", &scriptc);
-+	add_script_option("Show individual samples with assembler", "-F +insn --xed",
-+			  &scriptc);
-+	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
-+			  &scriptc);
-+	custom_perf = scriptc.index;
-+	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
-+	i = scriptc.index;
-+	max_std = i;
- 
--	for (i = 0; i < SCRIPT_MAX_NO; i++) {
--		names[i] = buf + i * (SCRIPT_NAMELEN + SCRIPT_FULLPATH_LEN);
-+	for (; i < SCRIPT_MAX_NO; i++) {
-+		names[i] = buf + (i - max_std) * (SCRIPT_NAMELEN + SCRIPT_FULLPATH_LEN);
- 		paths[i] = names[i] + SCRIPT_NAMELEN;
- 	}
- 
--	num = find_scripts(names, paths);
--	if (num > 0) {
--		choice = ui__popup_menu(num, names);
--		if (choice < num && choice >= 0) {
--			strcpy(script_name, paths[choice]);
--			ret = 0;
--		}
-+	num = find_scripts(names + max_std, paths + max_std);
-+	if (num < 0)
-+		num = 0;
-+	choice = ui__popup_menu(num + max_std, (char * const *)names);
-+	if (choice < 0) {
-+		ret = -1;
-+		goto out;
- 	}
-+	if (choice == custom_perf) {
-+		char script_args[50];
-+		int key = ui_browser__input_window("perf script command",
-+				"Enter perf script command line (without perf script prefix)",
-+				script_args, "", 0);
-+		if (key != K_ENTER)
-+			return -1;
-+		sprintf(script_name, "%s script %s", perf, script_args);
-+	} else if (choice < num + max_std) {
-+		strcpy(script_name, paths[choice]);
 +	}
-+	*custom = choice >= max_std;
- 
-+out:
- 	free(buf);
-+	for (i = 0; i < max_std; i++)
-+		free(paths[i]);
- 	return ret;
- }
- 
-@@ -66,27 +141,25 @@ static void run_script(char *cmd)
- 	SLsmg_refresh();
- }
- 
--int script_browse(const char *script_opt)
-+int script_browse(const char *script_opt, struct perf_evsel *evsel)
- {
--	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
-+	char *cmd, script_name[SCRIPT_FULLPATH_LEN];
-+	bool custom = false;
- 
- 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
--	if (list_scripts(script_name))
-+	if (list_scripts(script_name, &custom, evsel))
- 		return -1;
- 
--	sprintf(cmd, "perf script -s %s ", script_name);
--
--	if (script_opt)
--		strcat(cmd, script_opt);
--
--	if (input_name) {
--		strcat(cmd, " -i ");
--		strcat(cmd, input_name);
--	}
--
--	strcat(cmd, " 2>&1 | less");
-+	if (asprintf(&cmd, "%s%s %s %s%s 2>&1 | less",
-+			custom ? "perf script -s " : "",
-+			script_name,
-+			script_opt ? script_opt : "",
-+			input_name ? "-i " : "",
-+			input_name ? input_name : "") < 0)
-+		return -1;
- 
- 	run_script(cmd);
-+	free(cmd);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 6279eca56409..2113a6639cea 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -436,6 +436,8 @@ struct annotation_options;
- 
- #ifdef HAVE_SLANG_SUPPORT
- #include "../ui/keysyms.h"
-+void attr_to_script(char *buf, struct perf_event_attr *attr);
++	while (isspace(*end))
++		end++;
++	if (*end == 0)
++		return 0;
++	if (!strcmp(end, "s")) {
++		*time_q *= NSEC_PER_SEC;
++		return 0;
++	}
++	if (!strcmp(end, "ms")) {
++		*time_q *= NSEC_PER_MSEC;
++		return 0;
++	}
++	if (!strcmp(end, "us")) {
++		*time_q *= NSEC_PER_USEC;
++		return 0;
++	}
++	if (!strcmp(end, "ns"))
++		return 0;
++parse_err:
++	pr_err("Cannot parse time quantum `%s'\n", arg);
++	return -1;
++}
 +
- int map_symbol__tui_annotate(struct map_symbol *ms, struct perf_evsel *evsel,
- 			     struct hist_browser_timer *hbt,
- 			     struct annotation_options *annotation_opts);
-@@ -450,7 +452,8 @@ int perf_evlist__tui_browse_hists(struct perf_evlist *evlist, const char *help,
- 				  struct perf_env *env,
- 				  bool warn_lost_event,
- 				  struct annotation_options *annotation_options);
--int script_browse(const char *script_opt);
-+
-+int script_browse(const char *script_opt, struct perf_evsel *evsel);
- #else
- static inline
- int perf_evlist__tui_browse_hists(struct perf_evlist *evlist __maybe_unused,
-@@ -479,7 +482,8 @@ static inline int hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
- 	return 0;
- }
+ int
+ report_parse_ignore_callees_opt(const struct option *opt __maybe_unused,
+ 				const char *arg, int unset __maybe_unused)
+@@ -1148,6 +1187,9 @@ int cmd_report(int argc, const char **argv)
+ 		     "Set percent type local/global-period/hits",
+ 		     annotate_parse_percent_type),
+ 	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
++	OPT_CALLBACK(0, "time-quantum", &symbol_conf.time_quantum, "time (ms|us|ns|s)",
++		     "Set time quantum for time sort key (default 100ms)",
++		     parse_time_quantum),
+ 	OPT_END()
+ 	};
+ 	struct perf_data data = {
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index eb873ea1c405..913d24340d6b 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -29,6 +29,7 @@
+ #include <elf.h>
+ #include <limits.h>
+ #include <symbol/kallsyms.h>
++#include <linux/time64.h>
+ #include <sys/utsname.h>
  
--static inline int script_browse(const char *script_opt __maybe_unused)
-+static inline int script_browse(const char *script_opt __maybe_unused,
-+				struct perf_evsel *evsel __maybe_unused)
- {
- 	return 0;
- }
+ static int dso__load_kernel_sym(struct dso *dso, struct map *map);
+@@ -45,6 +46,7 @@ struct symbol_conf symbol_conf = {
+ 	.demangle		= true,
+ 	.demangle_kernel	= false,
+ 	.cumulate_callchain	= true,
++	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
+ 	.show_hist_headers	= true,
+ 	.symfs			= "",
+ 	.event_group		= true,
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 095a297c8b47..a5684a71b78e 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -56,6 +56,7 @@ struct symbol_conf {
+ 			*sym_list_str,
+ 			*col_width_list_str,
+ 			*bt_stop_list_str;
++	unsigned long	time_quantum;
+        struct strlist	*dso_list,
+ 			*comm_list,
+ 			*sym_list,
 -- 
 2.20.1
 
