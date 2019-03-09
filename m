@@ -7,43 +7,50 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7037C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A70C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2676207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA87F207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfCIUFG (ORCPT
+        id S1726532AbfCIUGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 15:05:06 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:35187 "EHLO
+        Sat, 9 Mar 2019 15:06:06 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:60605 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfCIUFF (ORCPT
+        with ESMTP id S1726298AbfCIUGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 15:05:05 -0500
+        Sat, 9 Mar 2019 15:06:05 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29K4t6h3205615
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29K5cKM3205722
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 12:04:55 -0800
+        Sat, 9 Mar 2019 12:05:38 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29K4t473205612;
-        Sat, 9 Mar 2019 12:04:55 -0800
-Date:   Sat, 9 Mar 2019 12:04:55 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29K5beh3205719;
+        Sat, 9 Mar 2019 12:05:37 -0800
+Date:   Sat, 9 Mar 2019 12:05:37 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Tony Jones <tipbot@zytor.com>
-Message-ID: <tip-fdf2460c297f1bb2f3bd20b3b52903b267af9050@git.kernel.org>
-Cc:     acme@redhat.com, adrian.hunter@intel.com, mingo@kernel.org,
-        tonyj@suse.de, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, s1seetee@linux.vnet.ibm.com
-Reply-To: tonyj@suse.de, mingo@kernel.org, adrian.hunter@intel.com,
-          acme@redhat.com, s1seetee@linux.vnet.ibm.com, hpa@zytor.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org
-In-Reply-To: <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
-References: <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-e34c940245437f36d2c492edd1f8237eff391064@git.kernel.org>
+Cc:     jolsa@kernel.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        jonas.rabenstein@studium.uni-erlangen.de,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        nasastry@in.ibm.com, namhyung@kernel.org, jolsa@redhat.com,
+        ak@linux.intel.com, peterz@infradead.org,
+        ravi.bangoria@linux.ibm.com
+Reply-To: ravi.bangoria@linux.ibm.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          ak@linux.intel.com, peterz@infradead.org, nasastry@in.ibm.com,
+          jolsa@redhat.com, namhyung@kernel.org,
+          jonas.rabenstein@studium.uni-erlangen.de,
+          alexander.shishkin@linux.intel.com, mingo@kernel.org,
+          jolsa@kernel.org, acme@redhat.com
+In-Reply-To: <20190305152536.21035-2-jolsa@kernel.org>
+References: <20190305152536.21035-2-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf script python: Add Python3 support to
- intel-pt-events.py
-Git-Commit-ID: fdf2460c297f1bb2f3bd20b3b52903b267af9050
+Subject: [tip:perf/urgent] perf c2c: Fix c2c report for empty numa node
+Git-Commit-ID: e34c940245437f36d2c492edd1f8237eff391064
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,141 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fdf2460c297f1bb2f3bd20b3b52903b267af9050
-Gitweb:     https://git.kernel.org/tip/fdf2460c297f1bb2f3bd20b3b52903b267af9050
-Author:     Tony Jones <tonyj@suse.de>
-AuthorDate: Tue, 5 Mar 2019 08:19:02 -0800
+Commit-ID:  e34c940245437f36d2c492edd1f8237eff391064
+Gitweb:     https://git.kernel.org/tip/e34c940245437f36d2c492edd1f8237eff391064
+Author:     Jiri Olsa <jolsa@redhat.com>
+AuthorDate: Tue, 5 Mar 2019 16:25:29 +0100
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 6 Mar 2019 18:12:33 -0300
+CommitDate: Wed, 6 Mar 2019 18:15:24 -0300
 
-perf script python: Add Python3 support to intel-pt-events.py
+perf c2c: Fix c2c report for empty numa node
 
-Support both Python2 and Python3 in the intel-pt-events.py script
+Ravi Bangoria reported that we fail with an empty NUMA node with the
+following message:
 
-There may be differences in the ordering of output lines due to
-differences in dictionary ordering etc.  However the format within lines
-should be unchanged.
+  $ lscpu
+  NUMA node0 CPU(s):
+  NUMA node1 CPU(s):   0-4
 
-The use of 'from __future__' implies the minimum supported Python2 version
-is now v2.6
+  $ sudo ./perf c2c report
+  node/cpu topology bugFailed setup nodes
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: http://lkml.kernel.org/r/fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Fix this by detecting the empty node and keeping its CPU set empty.
+
+Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190305152536.21035-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/intel-pt-events.py | 32 +++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ tools/perf/builtin-c2c.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-index 2177722f509e..a73847c8f548 100644
---- a/tools/perf/scripts/python/intel-pt-events.py
-+++ b/tools/perf/scripts/python/intel-pt-events.py
-@@ -10,6 +10,8 @@
- # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- # more details.
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 4272763a5e96..9e6cc868bdb4 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2056,6 +2056,12 @@ static int setup_nodes(struct perf_session *session)
+ 		if (!set)
+ 			return -ENOMEM;
  
-+from __future__ import print_function
++		nodes[node] = set;
 +
- import os
- import sys
- import struct
-@@ -22,34 +24,34 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
- #from Core import *
++		/* empty node, skip */
++		if (cpu_map__empty(map))
++			continue;
++
+ 		for (cpu = 0; cpu < map->nr; cpu++) {
+ 			set_bit(map->map[cpu], set);
  
- def trace_begin():
--	print "Intel PT Power Events and PTWRITE"
-+	print("Intel PT Power Events and PTWRITE")
+@@ -2064,8 +2070,6 @@ static int setup_nodes(struct perf_session *session)
  
- def trace_end():
--	print "End"
-+	print("End")
+ 			cpu2node[map->map[cpu]] = node;
+ 		}
+-
+-		nodes[node] = set;
+ 	}
  
- def trace_unhandled(event_name, context, event_fields_dict):
--		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
-+		print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
- 
- def print_ptwrite(raw_buf):
- 	data = struct.unpack_from("<IQ", raw_buf)
- 	flags = data[0]
- 	payload = data[1]
- 	exact_ip = flags & 1
--	print "IP: %u payload: %#x" % (exact_ip, payload),
-+	print("IP: %u payload: %#x" % (exact_ip, payload), end=' ')
- 
- def print_cbr(raw_buf):
- 	data = struct.unpack_from("<BBBBII", raw_buf)
- 	cbr = data[0]
- 	f = (data[4] + 500) / 1000
- 	p = ((cbr * 1000 / data[2]) + 5) / 10
--	print "%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p),
-+	print("%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p), end=' ')
- 
- def print_mwait(raw_buf):
- 	data = struct.unpack_from("<IQ", raw_buf)
- 	payload = data[1]
- 	hints = payload & 0xff
- 	extensions = (payload >> 32) & 0x3
--	print "hints: %#x extensions: %#x" % (hints, extensions),
-+	print("hints: %#x extensions: %#x" % (hints, extensions), end=' ')
- 
- def print_pwre(raw_buf):
- 	data = struct.unpack_from("<IQ", raw_buf)
-@@ -57,13 +59,14 @@ def print_pwre(raw_buf):
- 	hw = (payload >> 7) & 1
- 	cstate = (payload >> 12) & 0xf
- 	subcstate = (payload >> 8) & 0xf
--	print "hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-+	print("hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-+		end=' ')
- 
- def print_exstop(raw_buf):
- 	data = struct.unpack_from("<I", raw_buf)
- 	flags = data[0]
- 	exact_ip = flags & 1
--	print "IP: %u" % (exact_ip),
-+	print("IP: %u" % (exact_ip), end=' ')
- 
- def print_pwrx(raw_buf):
- 	data = struct.unpack_from("<IQ", raw_buf)
-@@ -71,18 +74,21 @@ def print_pwrx(raw_buf):
- 	deepest_cstate = payload & 0xf
- 	last_cstate = (payload >> 4) & 0xf
- 	wake_reason = (payload >> 8) & 0xf
--	print "deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason),
-+	print("deepest cstate: %u last cstate: %u wake reason: %#x" %
-+		(deepest_cstate, last_cstate, wake_reason), end=' ')
- 
- def print_common_start(comm, sample, name):
- 	ts = sample["time"]
- 	cpu = sample["cpu"]
- 	pid = sample["pid"]
- 	tid = sample["tid"]
--	print "%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-+	print("%16s %5u/%-5u [%03u] %9u.%09u %7s:" %
-+		(comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-+		end=' ')
- 
- def print_common_ip(sample, symbol, dso):
- 	ip = sample["ip"]
--	print "%16x %s (%s)" % (ip, symbol, dso)
-+	print("%16x %s (%s)" % (ip, symbol, dso))
- 
- def process_event(param_dict):
- 	event_attr = param_dict["attr"]
-@@ -92,12 +98,12 @@ def process_event(param_dict):
- 	name	   = param_dict["ev_name"]
- 
- 	# Symbol and dso info are not always resolved
--	if (param_dict.has_key("dso")):
-+	if "dso" in param_dict:
- 		dso = param_dict["dso"]
- 	else:
- 		dso = "[unknown]"
- 
--	if (param_dict.has_key("symbol")):
-+	if "symbol" in param_dict:
- 		symbol = param_dict["symbol"]
- 	else:
- 		symbol = "[unknown]"
+ 	setup_nodes_header();
