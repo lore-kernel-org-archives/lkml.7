@@ -3,188 +3,258 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CDBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 00:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26F6C10F0C
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E905820857
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 00:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6072D20866
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="P7e0si8E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tajq6JwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfCIA4e (ORCPT
+        id S1726661AbfCIBAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 19:56:34 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:34403 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfCIA4d (ORCPT
+        Fri, 8 Mar 2019 20:00:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37125 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfCIBAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 19:56:33 -0500
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x290uNv6012111;
-        Sat, 9 Mar 2019 09:56:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x290uNv6012111
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552092984;
-        bh=YCJOGg7/n+Ii+nstKuJhGWo4tk6hpYEdgpHRvOFVyHM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P7e0si8Eu+DkZ71IdcxPUjmzU6pXPKHZ5tjTqL8sO7YV6wGYPzl8LJ7sLjKl/hXO/
-         Fafwsf7SuaTT4QKbCUh3BCNsl3NlQqWVoXpp0cB0SavIz7qil53zqJ9bN2k1O8TUj1
-         3MRtvnIz2LTb0okPGGGzlmY2ki8PNaca1pzxvMz5/bMwyECEzCXg5E/5UdfthBaBTV
-         tZ88V9Z6kZ5lEzX2t6Y/sppOT9h7NcLU+VHeuVGzSlONVsNsWCYSFutK7yWcZF4Pgm
-         EwjhWY3FiwMIBca1WEOmkvqcQVfNXfruehxBLE0bgWM+zKC+h/kFTlH0QrwK1RXIYw
-         mUWdb3FKW6teA==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id v131so5002912vkd.3;
-        Fri, 08 Mar 2019 16:56:23 -0800 (PST)
-X-Gm-Message-State: APjAAAW/iLqkx5ACQp7IbcUC/WB49NQjULNqqde8/GcNOBz52c3HuBkQ
-        oM83VjtdKdMoVNXRbMqV/D43nB/XEVv1zXFhVWU=
-X-Google-Smtp-Source: APXvYqyeYVQIhYYqcPf0pOrsVd7xdZBJQGGmcjqv8jXG6mGcHTRhkw/LL8jOajshwynTwLc37EELvzZHmGboZu22UWg=
-X-Received: by 2002:a1f:9350:: with SMTP id v77mr10343366vkd.84.1552092982654;
- Fri, 08 Mar 2019 16:56:22 -0800 (PST)
+        Fri, 8 Mar 2019 20:00:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q206so15440517pgq.4;
+        Fri, 08 Mar 2019 17:00:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=z+fLqt8giOkjt0ea0c22JxCeYEPTH9AsKJLLHKYZZNI=;
+        b=Tajq6JwHeoajqpeDAcsa/iGQYbKVqmlxEVkJ4lJgwunqRqifKwPist04HM3ViNcGzs
+         OxV13XZUyoBkue05vIaRebIfNdYT15yUrh8DoBhdZ5lAvxV0PNV2WlKPGv2jobp0TNqa
+         J8IqA2+lIH0elUA2Tw//aeay3vSLgUlbA95FfRrs/aiI1li3wN+J+p+wSUgkmS7RcMYy
+         ohch1Ja5ScDosXiBYAQbR+zwzBFHrPXs454hnOZ667gDGILsFMHoLaVNN0e4zgspAmcq
+         VRqEhvMsbZxTTU3eJ6/hLyedXT0r2oYsN1yGH8pQbhigI4JuGBdMI+7VZIhZxzR5pJ+L
+         YCMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=z+fLqt8giOkjt0ea0c22JxCeYEPTH9AsKJLLHKYZZNI=;
+        b=TuKZoglHF/nvLJbaiDdfUOGzDQ3wv56mRMxuG26V7CWCtVyYyzLPUsqMmVZGxAX6zF
+         8hJPd0/H+sMqiZl9RzH7T/+3trXe9IcgWII8wspRijzZBvQnTrxnXxJ5HmMvESq2AE4p
+         nkpIZdp9m82xOKYalHnstuII6Xw2JrXXvLsAi70SO0L3A1rB5bq23fHL+gk0EANCArRt
+         7WUJdH/uCx/gjgDn/2xibkeSZjEoDRItDHpWD6Dr/NdCV+Czr8wzHJIcpcr2Q7JsO39X
+         d2Zgg2lAqPHALwRVmtW9VcQ72LRyeMOWnIhsUFJJRAnbfwoc1C1FfNC2+PlHwoadodwH
+         XxhA==
+X-Gm-Message-State: APjAAAX/8DDazzZcimEGuVLe5kG+Blly7Nx2d3sOOZISnXyZIF9rsReZ
+        SMgIV6cQ+cGQQqcWWdpuAyXlKmg3
+X-Google-Smtp-Source: APXvYqz6NKPYV4ziWCU8PuB9n7QJLs+U8W1JDNi8YixU0SA7cO42X4FulWm9OTj4rXzfWeoF8CoAwA==
+X-Received: by 2002:a63:fe0d:: with SMTP id p13mr18749935pgh.366.1552093220732;
+        Fri, 08 Mar 2019 17:00:20 -0800 (PST)
+Received: from ?IPv6:2605:e000:d445:6a00:2097:f23b:3b8f:e255? ([2605:e000:d445:6a00:2097:f23b:3b8f:e255])
+        by smtp.gmail.com with ESMTPSA id b8sm10293789pgq.33.2019.03.08.17.00.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 17:00:19 -0800 (PST)
+Subject: Re: [PATCH v6 2/7] gpu: ipu-v3: ipu-ic: Fix BT.601 coefficients
+To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
+Cc:     Tim Harvey <tharvey@gateworks.com>, stable@vger.kernel.org,
+        "open list:DRM DRIVERS FOR FREESCALE IMX" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190307233356.23748-1-slongerbeam@gmail.com>
+ <20190307233356.23748-3-slongerbeam@gmail.com>
+ <1552040639.4009.1.camel@pengutronix.de>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <d894d2a9-efeb-45ff-526c-05b4e57680cc@gmail.com>
+Date:   Fri, 8 Mar 2019 17:00:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190308212524.121126-1-dianders@chromium.org>
- <CABXOdTe6hGWCsRpQcc_coB-whvJR2XfPfdLuc9QHMMvoXDNW=w@mail.gmail.com> <CAD=FV=VGL-Z93WtU8LTQXeJtdUU085T+Vd_MXNuuvWnJ6-eyDw@mail.gmail.com>
-In-Reply-To: <CAD=FV=VGL-Z93WtU8LTQXeJtdUU085T+Vd_MXNuuvWnJ6-eyDw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 9 Mar 2019 09:55:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQEYiowBS9tKC7ND5sjB2qrVy28=bzE=5Bt5R9rfR_LXg@mail.gmail.com>
-Message-ID: <CAK7LNAQEYiowBS9tKC7ND5sjB2qrVy28=bzE=5Bt5R9rfR_LXg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Speed up install, modules_install and kernelrelease
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Guenter Roeck <groeck@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1552040639.4009.1.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 9, 2019 at 7:34 AM Doug Anderson <dianders@chromium.org> wrote:
+
+
+On 3/8/19 2:23 AM, Philipp Zabel wrote:
+> Hi Steve,
 >
-> Hi,
+> On Thu, 2019-03-07 at 15:33 -0800, Steve Longerbeam wrote:
+>> The ycbcr2rgb and inverse rgb2ycbcr tables define the BT.601 Y'CbCr
+>> encoding coefficients.
+>>
+>> The rgb2ycbcr table specifically describes the BT.601 encoding from
+>> full range RGB to full range YUV. Add table comments to make this more
+>> clear.
+>>
+>> The ycbcr2rgb inverse table describes encoding YUV limited range to RGB
+>> full range. To be consistent with the rgb2ycbcr table, convert this to
+>> YUV full range to RGB full range, and adjust/expand on the comments.
+>>
+>> The ic_csc_rgb2rgb table is just an identity matrix, so rename to
+>> ic_encode_identity.
+>>
+>> Fixes: 1aa8ea0d2bd5d ("gpu: ipu-v3: Add Image Converter unit")
+>>
+>> Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+>> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+>> Cc: stable@vger.kernel.org
+>> ---
+>>   drivers/gpu/ipu-v3/ipu-ic.c | 61 ++++++++++++++++++++++---------------
+>>   1 file changed, 37 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/gpu/ipu-v3/ipu-ic.c b/drivers/gpu/ipu-v3/ipu-ic.c
+>> index 18816ccf600e..b63a2826b629 100644
+>> --- a/drivers/gpu/ipu-v3/ipu-ic.c
+>> +++ b/drivers/gpu/ipu-v3/ipu-ic.c
+>> @@ -175,7 +175,7 @@ static inline void ipu_ic_write(struct ipu_ic *ic, u32 value, unsigned offset)
+>>   	writel(value, ic->priv->base + offset);
+>>   }
+>>   
+>> -struct ic_csc_params {
+>> +struct ic_encode_coeff {
+> This less accurate. These are called IC (Task) Parameters in the
+> reference manual, the 64-bit aligned words are called CSC words. Beside
+> the coefficients, this structure also contains the coefficient scale,
+> the offsets, and the saturation mode flag.
+
+It seemed to me the renaming was more clear, but I agree the former name 
+conforms better to the manual nomenclature. I will revert this renaming.
+
+
 >
-> On Fri, Mar 8, 2019 at 2:29 PM Guenter Roeck <groeck@google.com> wrote:
-> >
-> > On Fri, Mar 8, 2019 at 1:25 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > As per the description of the old commit 3298b690b21c ("kbuild: Add a
-> > > cache for generated variables"), calling the C compiler lots of times
-> > > during the parsing stage of the Makefile can be a little slow.  If you
-> > > happen to have a C compiler whose fork/exec time isn't optimized
-> > > (perhaps it was linked dynamically, or perhaps it's called through
-> > > several wrappers, or ...) then this can be more than a little slow, it
-> > > can be very slow.
-> > >
-> > > The above slowness was addressed with the old Makefile cache, but the
-> > > cache was reverted in commit e08d6de4e532 ("kbuild: remove kbuild
-> > > cache").  That commit indicated that we expected to get the speed
-> > > gains back because "the result of compiler tests will be naturally
-> > > cached in the .config file", but as of the latest mainline there are
-> > > still lots of direct calls to the C compiler that happen in the
-> > > Makefile parsing stage.
-> > >
-> > > Perhaps we could try re-introducing the Makefile cache and fix the
-> > > problems it was causing, but this patch codes up another solution that
-> > > gets some of the speed gains back, perhaps with less complexity.
-> > >
-> > > Specifically I observed that by timing the parsing stage of the
-> > > Makefile by adding statements like this to the beginning and end of
-> > > the Makefile:
-> > >   ZZZ := $(shell echo "$$(date '+%T.%N'): ..." >> /tmp/timing.txt)
-> > >
-> > > ...that three targets were spending 3 seconds each parsing the
-> > > Makefile in my environment (building a Chrome OS kernel with clang)
-> > > when it felt like they ought to be quick.  These were: install,
-> > > modules_install and kernelrelease
-> > >
-> > > I saw timings that looked like:
-> > >   09:23:08.903204451: Parsing Makefile, goals: install
-> > >   09:23:11.960515772: Done parsing Makefile, goals: install
-> > >
-> > > Given that the kbuild system doesn't sync the config for any of these
-> > > options I believe it is safe to say that it can't compile any code.
-> > > Thus if we can avoid the C compiler invocation here we'll save time.
-> > >
-> > > The simplest way to accomplish this is to neuter all the calls to the
-> > > compiler by stubbing them out.  After doing so (AKA applying this
-> > > change) the same timing looks like:
-> > >   09:28:04.929252271: Parsing Makefile, goals: install
-> > >   09:28:05.107468449: Done parsing Makefile, goals: install
-> > >
-> > > During an incremental kernel build/install on Chrome OS we call
-> > > install once, modules_install twice (once to keep unstripped), and
-> > > kernelrelease once.  Thus this saves ~12 seconds on an incremental
-> > > kernel build/install.  With my current setup, this brings it from ~40
-> > > seconds to ~28 seconds.  Re-introducing the Makefile cache would
-> > > likely save us an extra ~3 seconds since we'd avoid the parsing in the
-> > > compile stage.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > >
-> > >  Makefile | 14 ++++++++++++++
-> > >  1 file changed, 14 insertions(+)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index f070e0d65186..5f7532d9be65 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -304,6 +304,20 @@ else
-> > >  scripts/Kbuild.include: ;
-> > >  include scripts/Kbuild.include
-> > >
-> > > +# If we can't sync the config then we know we can't compile code.
-> > > +# Replace the slow option-testing commands with stubs to significantly
-> > > +# speed up the Makefile parsing stage of the build.
-> > > +ifeq ($(may-sync-config),0)
-> >
-> > I think that breaks KBUILD_EXTMOD, which sets the variable to 0.
+>>   	s16 coeff[3][3];	/* signed 9-bit integer coefficients */
+>>   	s16 offset[3];		/* signed 11+2-bit fixed point offset */
+>>   	u8 scale:2;		/* scale coefficients * 2^(scale-1) */
+>> @@ -183,13 +183,15 @@ struct ic_csc_params {
+>>   };
+>>   
+>>   /*
+>> - * Y = R *  .299 + G *  .587 + B *  .114;
+>> - * U = R * -.169 + G * -.332 + B *  .500 + 128.;
+>> - * V = R *  .500 + G * -.419 + B * -.0813 + 128.;
+>> + * BT.601 encoding from RGB full range to YUV full range:
+>> + *
+>> + * Y =  .2990 * R + .5870 * G + .1140 * B
+>> + * U = -.1687 * R - .3313 * G + .5000 * B + 128
+>> + * V =  .5000 * R - .4187 * G - .0813 * B + 128
+>>    */
+>> -static const struct ic_csc_params ic_csc_rgb2ycbcr = {
+>> +static const struct ic_encode_coeff ic_encode_rgb2ycbcr_601 = {
+>>   	.coeff = {
+>> -		{ 77, 150, 29 },
+>> +		{  77, 150,  29 },
+>>   		{ 469, 427, 128 },
+>>   		{ 128, 405, 491 },
+> We could subtract 512 from the negative values, to improve readability.
+
+Agreed.
+
 >
-> Yup, thanks for catching--I should have realized that from the code
-> but somehow skimmed over the KBUILD_EXTMOD bits.  I confirmed that
-> this is broken.
+>>   	},
+>> @@ -197,8 +199,11 @@ static const struct ic_csc_params ic_csc_rgb2ycbcr = {
+>>   	.scale = 1,
+>>   };
+>>   
+>> -/* transparent RGB->RGB matrix for graphics combining */
+>> -static const struct ic_csc_params ic_csc_rgb2rgb = {
+>> +/*
+>> + * identity matrix, used for transparent RGB->RGB graphics
+>> + * combining.
+>> + */
+>> +static const struct ic_encode_coeff ic_encode_identity = {
+>>   	.coeff = {
+>>   		{ 128, 0, 0 },
+>>   		{ 0, 128, 0 },
+>> @@ -208,17 +213,25 @@ static const struct ic_csc_params ic_csc_rgb2rgb = {
+>>   };
+>>   
+>>   /*
+>> - * R = (1.164 * (Y - 16)) + (1.596 * (Cr - 128));
+>> - * G = (1.164 * (Y - 16)) - (0.392 * (Cb - 128)) - (0.813 * (Cr - 128));
+>> - * B = (1.164 * (Y - 16)) + (2.017 * (Cb - 128);
+>> + * Inverse BT.601 encoding from YUV full range to RGB full range:
+>> + *
+>> + * R = 1. * Y +      0 * (Cb - 128) + 1.4020 * (Cr - 128)
+>> + * G = 1. * Y -  .3442 * (Cb - 128) - 0.7142 * (Cr - 128)
+> Should that be      ^^^^^ .3441   and     ^^^^^ .7141 ?
+> The coefficients and offsets after rounding should end up the same.
+
+Ok.
+
 >
-> I can certainly add an extra check to confirm that '$(KBUILD_EXTMOD)'
-> is unset and I'll do that in a v2 if I don't hear anything, but before
-> sending that I'll give folks a little bit of time to smack down my
-> general approach.  To be honest my approach is a bit of a hack so if
-> others can think of better ways to avoid all the unnecessary work
-> during install / modules_install / kernelrelease then I'm all ears!
-> :-)
+> Also, let's consistently either add the leading zero, or leave it out.
 
+Yes.
 
-I think 3 sec is better than your previous report.
+>
+>> + * B = 1. * Y + 1.7720 * (Cb - 128) +      0 * (Cr - 128)
+>> + *
+>> + * equivalently (factoring out the offsets):
+>> + *
+>> + * R = 1. * Y  +      0 * Cb + 1.4020 * Cr - 179.456
+>> + * G = 1. * Y  -  .3442 * Cb - 0.7142 * Cr + 135.475
+>> + * B = 1. * Y  + 1.7720 * Cb +      0 * Cr - 226.816
+>>    */
+>> -static const struct ic_csc_params ic_csc_ycbcr2rgb = {
+>> +static const struct ic_encode_coeff ic_encode_ycbcr2rgb_601 = {
+>>   	.coeff = {
+>> -		{ 149, 0, 204 },
+>> -		{ 149, 462, 408 },
+>> -		{ 149, 255, 0 },
+>> +		{ 128,   0, 179 },
+>> +		{ 128, 468, 421 },
+>> +		{ 128, 227,   0 },
+>>   	},
+>> -	.offset = { -446, 266, -554 },
+>> +	.offset = { -359, 271, -454 },
+> These seem to be correct. Again, I think this would be easier to read if
+> the negative coefficients were written with a sign as well.
+>
+>>   	.scale = 2,
+>>   };
+>>   
+>> @@ -228,7 +241,7 @@ static int init_csc(struct ipu_ic *ic,
+>>   		    int csc_index)
+>>   {
+>>   	struct ipu_ic_priv *priv = ic->priv;
+>> -	const struct ic_csc_params *params;
+>> +	const struct ic_encode_coeff *coeff;
+>>   	u32 __iomem *base;
+>>   	const u16 (*c)[3];
+>>   	const u16 *a;
+>> @@ -238,26 +251,26 @@ static int init_csc(struct ipu_ic *ic,
+>>   		(priv->tpmem_base + ic->reg->tpmem_csc[csc_index]);
+>>   
+>>   	if (inf == IPUV3_COLORSPACE_YUV && outf == IPUV3_COLORSPACE_RGB)
+>> -		params = &ic_csc_ycbcr2rgb;
+>> +		coeff = &ic_encode_ycbcr2rgb_601;
+>>   	else if (inf == IPUV3_COLORSPACE_RGB && outf == IPUV3_COLORSPACE_YUV)
+>> -		params = &ic_csc_rgb2ycbcr;
+>> +		coeff = &ic_encode_rgb2ycbcr_601;
+>>   	else if (inf == IPUV3_COLORSPACE_RGB && outf == IPUV3_COLORSPACE_RGB)
+>> -		params = &ic_csc_rgb2rgb;
+>> +		coeff = &ic_encode_identity;
+>>   	else {
+>>   		dev_err(priv->ipu->dev, "Unsupported color space conversion\n");
+>>   		return -EINVAL;
+>>   	}
+>>   
+>>   	/* Cast to unsigned */
+>> -	c = (const u16 (*)[3])params->coeff;
+>> -	a = (const u16 *)params->offset;
+>> +	c = (const u16 (*)[3])coeff->coeff;
+>> +	a = (const u16 *)coeff->offset;
+> This looks weird to me. I'd be in favor of not renaming the type.
 
-I do not think the current situation is painful level
-for other general users.
-The parse stage takes less than 0.5 sec even on my
-old, cheap machine.
+Ok.
 
-Upstream code will continue to improve, but the progress
-will be slow.
+Steve
 
-Given that this pain comes from wrapping CC with script,
-may I ask you to solve this on Chrome OS side meanwhile?
-
-
-For example, pass cc-option= from the command line etc.
-
-
- make modules_install cc-option=
-
-
-will give you better result.
-
-
-
---
-Best Regards
-Masahiro Yamada
