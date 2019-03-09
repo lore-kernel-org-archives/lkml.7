@@ -2,144 +2,120 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E02C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B17BC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840C7207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062E620851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552133508;
+	bh=4O16E9fNDZhBtoBg6LTzReQUn4q2mpiyZ1WU4MWSeG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kbnpU+hPBiV5zynwyXkqPa2IftEesaYweIuhkLyJjxOvfy0NaH35ueRQrK/vIB4Se
+	 Eji2Q+DAd/I0ghIir3U8/L+pqwmbknhknSskOIw0WAyml245gY3oHuO7WK22KBoIYb
+	 J1DmeSPDa1jDY0d4SQ8i728BxQPIuzVw7BkwFLc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfCIMJ0 (ORCPT
+        id S1726496AbfCIMLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 07:09:26 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38899 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbfCIMJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 07:09:25 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q81so210953oic.5;
-        Sat, 09 Mar 2019 04:09:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c7UpAUyQQ18vNNBqU8jOL9yVqrFx8Exq2BEdIWvuxA4=;
-        b=ABOPtUWZeyYm6R71LAad0jKXvKrR3JZPIVBi3D0le4O0SRAHHip9IPySdMS385hx/d
-         RZAuqfFCwLoCInyan/bK7yrOnigmqAG4BNi0bMHlcHWUCDmAQFECvz+vnjCX8krtWFok
-         bPyqZKqRQFlVszvmMnmBBlxLlcaUgcNSlopvjbEjuBe+zH0yM+4DNXaxOnsJANJw2Xba
-         /5kNAUGY3J7FBNgotoDJgGidCYmn4XsYEwDXnK5YVW73t1UhxH773SieY13wwwuo7nNS
-         n90vtvpReWZudL6W6uPqgtq8JHa5mhHKsz1rucEaiZmzFRNvEDvmrZJGBP30pEZMjM0m
-         qHKA==
-X-Gm-Message-State: APjAAAUEHNcOxbNmSa8iCyoUOdrt/XSLjVPgMeJkUx4BP96X6qhGSRSH
-        2f3tMo+J5eKWRwEZkBhVytJqLmCYL8g49O+RMdU=
-X-Google-Smtp-Source: APXvYqyNknI9lW3mXn/MS2NJlwUpPkzxzTu6OQl/NYk/6LydYX6nFrKXDzu2qW2A/3+0ChwHPMORCPtiuBsEBFYmtKY=
-X-Received: by 2002:aca:d6cc:: with SMTP id n195mr11369266oig.27.1552133363787;
- Sat, 09 Mar 2019 04:09:23 -0800 (PST)
+        Sat, 9 Mar 2019 07:11:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbfCIMLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 07:11:46 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A6D207E0;
+        Sat,  9 Mar 2019 12:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552133505;
+        bh=4O16E9fNDZhBtoBg6LTzReQUn4q2mpiyZ1WU4MWSeG4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UstQIxdr80vytCiqdZlJVcrGphHeWcdUfexy4LUrr5GqWDjmoI7gxcY2EBTd8Nlbl
+         L4WOSXka7zs6p0J1TUaV3dSE+OlroauC0wz6D820epoFGyfkSE5PwDTfkaL+hYqOUA
+         kp7m+OO9z5CEvudx4enMPddudprplFXfE3r4Vr/Y=
+Date:   Sat, 9 Mar 2019 13:11:41 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190309121141.GA30173@kroah.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+ <20190307150343.GB258852@google.com>
+ <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
+ <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
+ <20190308140251.GC25768@kroah.com>
+ <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+ <20190309071648.GE3882@kroah.com>
+ <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190215163220.20041-1-paul.kocialkowski@bootlin.com>
- <387ed483-b205-beda-319d-6f2b8ea55601@gmail.com> <38f6708476e9beca4583ccc2a62e238a4981b735.camel@bootlin.com>
- <958bb823-3dc8-607f-3c38-3d902acb85a8@gmail.com> <b0f700f85cd35bf26a97280f3bef7c4e87102d63.camel@bootlin.com>
- <20190219172515.GC13075@lunn.ch> <f0020e39-7ace-e1e0-e629-b84d6f92b841@xilinx.com>
- <adbb183836e22dfc4558beaa818677c24bacf3a8.camel@bootlin.com>
- <9cb2f7a8-a8cf-ef80-d260-cc67c072b5c5@xilinx.com> <8bb813fb-102b-00c9-fb6f-a3e928965051@xilinx.com>
- <CAFcVECJPtc3VQjK4WLCz1Wc4nopXnsLTKXFFY1ZpecgC+_PhyA@mail.gmail.com> <CAFcVECJ8G99XiqHpYYh=3Aj4Bt_2V4kfDdBmLQqpdo59BRjs-Q@mail.gmail.com>
-In-Reply-To: <CAFcVECJ8G99XiqHpYYh=3Aj4Bt_2V4kfDdBmLQqpdo59BRjs-Q@mail.gmail.com>
-From:   Harini Katakam <harinik@xilinx.com>
-Date:   Sat, 9 Mar 2019 17:39:12 +0530
-Message-ID: <CAFcVECKU7zD2ms76GH-mF2GxCtNr4RQ+2=jN_xppueQsUSq2wg@mail.gmail.com>
-Subject: Re: [PATCH RESEND net] net: phy: xgmiitorgmii: Support generic PHY
- status read
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-On Thu, Feb 28, 2019 at 1:03 PM Harini Katakam <harinik@xilinx.com> wrote:
->
-> Hi,
-> On Wed, Feb 27, 2019 at 2:35 PM Harini Katakam <harinik@xilinx.com> wrote:
-> >
-> > Hi Andrew, Paul,
-> >
-> > On Wed, Feb 27, 2019 at 2:15 PM Michal Simek <michal.simek@xilinx.com> wrote:
-> > >
-> > > On 21. 02. 19 12:03, Michal Simek wrote:
-> > > > On 21. 02. 19 11:24, Paul Kocialkowski wrote:
-> > > >> Hi,
-> > > >>
-> > > >> On Wed, 2019-02-20 at 07:58 +0100, Michal Simek wrote:
-> > > >>> Hi,
-> > > >>>
-> > > >>> On 19. 02. 19 18:25, Andrew Lunn wrote:
-> <snip>
-> > > >> Understood. I think we need to start a discussion about how the general
-> > > >> design of this driver can be improved.
-> > > >>
-> > > >> In particular, I wonder if it could work better to make this driver a
-> > > >> PHY driver that just redirects all its ops to the actual PHY driver,
-> > > >> except for read_status where it should also add some code.
-> >
-> > Thanks, I'm looking into this option and also a way to expose the correct
-> > interface mode setting as you mentioned below. I'll get back before the
-> > end of the week. Please do let me know if you have any further suggestions.
-> >
-> This IP does not have a PHY identifier or status register that can be accessed
-> from the phy framework. We could discuss with our design team to add these
-> in the future. But that would take sometime and this version should be still be
-> supported. Also, if this IP has a PHY driver, then two phy drivers would have
-> to be probed which are connected in a serial manner and I believe I'll have to
-> update the framework to support that. Could you please let me know if you have
-> any inputs on this?
-> OR since this is just a bridge IP, is it acceptable to address the error cases?
-> -> Module loading/unloading
-> -> Spinlocks for protection
-> -> Correct phy mode information to the driver.
-> -> Any other concerns
-> I could do a respin of this patch after addressing Andrew's comments:
-> https://patchwork.kernel.org/patch/9290231/
+On Sat, Mar 09, 2019 at 12:40:01PM +0100, Geert Uytterhoeven wrote:
+> > Signing keys should be kept secure, or better yet, just deleted entirely
+> > after creating and signing with them.  That's what I do for my kernels
+> > and I'm pretty sure that some distros also do this.  That way there's no
+> > chance that someone else can sign a module and have it loaded without
+> > detection, which is what signing is supposed to prevent from happening.
+> 
+> If you want that kind of security, there's no point in allowing to extend the
+> kernel by building more kernel modules after deployment.
 
-Related to this, I have a query on how the DT node for gmii2rgmii should look.
-One of the users of gmii2rgmii is Cadence macb driver. In Xilinx tree, we use
-this piece of code to register this mdiobus:
-+ mdio_np = of_get_child_by_name(np, "mdio");
-+ if (mdio_np) {
-+ of_node_put(mdio_np);
-+ err = of_mdiobus_register(bp->mii_bus, mdio_np);
-+ if (err)
-+ goto err_out_unregister_bus;
+That's not what these files are for (in the original user's case).  They
+want these for doing tracing/ebpf stuff, which require kernel headers to
+build against.
 
-And the DT node looks like this:
-ethernet {
-    phy-mode = "gmii";
-    phy-handle = <&extphy>;
+> "Raw kernel headers also cannot be copied into the filesystem like they
+>  can be on other distros, due to licensing and other issues. There's no
+>  linux-headers package on Android."
+> 
+> What's the licensing issue? What's the (legal) difference between having
+> the headers on the file system, and having a kernel module including the
+> headers on the file system?
 
-    mdio {
-        extphy {
-            reg = <x>;
-        };
-        gmii_to_rgmii{
-            compatible = "xlnx,gmii-to-rgmii-1.0";
-            phy-handle = <&extphy>;
-            reg = <x>;
-        };
-    };
-};
+There is no licensing issue, see my follow-up comment about that.
 
-Could you please clarify if phy-handle in ethernet should point to
-external PHY or gmii2rgmii?
+It's all in ease-of-use here.  You want to build a trace function
+against a running kernel, and now you have the header files for that
+specific kernel right there in the kernel itself to build against.  It
+doesn't get easier than that.
 
-Regards,
-Harini
+thanks,
+
+greg k-h
