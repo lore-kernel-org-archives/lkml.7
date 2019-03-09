@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601ADC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E04C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27758207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE97207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfCIT6M (ORCPT
+        id S1726619AbfCIT6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 14:58:12 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:55567 "EHLO
+        Sat, 9 Mar 2019 14:58:33 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:45715 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfCIT6M (ORCPT
+        with ESMTP id S1726340AbfCIT6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 14:58:12 -0500
+        Sat, 9 Mar 2019 14:58:32 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29JvbHY3203103
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29JwHgV3203130
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 11:57:37 -0800
+        Sat, 9 Mar 2019 11:58:17 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29JvaYQ3203100;
-        Sat, 9 Mar 2019 11:57:36 -0800
-Date:   Sat, 9 Mar 2019 11:57:36 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29JwF4S3203124;
+        Sat, 9 Mar 2019 11:58:15 -0800
+Date:   Sat, 9 Mar 2019 11:58:15 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-ybuf9wpkm30xk28iq7jbwb40@git.kernel.org>
-Cc:     jolsa@kernel.org, wangnan0@huawei.com, adrian.hunter@intel.com,
-        songliubraving@fb.com, kafai@fb.com, mingo@kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, acme@redhat.com,
-        lclaudio@redhat.com, andrii.nakryiko@gmail.com,
-        daniel@iogearbox.net, linux-kernel@vger.kernel.org, yhs@fb.com,
-        ast@fb.com, namhyung@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, daniel@iogearbox.net, yhs@fb.com,
-          ast@fb.com, namhyung@kernel.org, wangnan0@huawei.com,
-          adrian.hunter@intel.com, jolsa@kernel.org, songliubraving@fb.com,
-          kafai@fb.com, tglx@linutronix.de, hpa@zytor.com,
-          mingo@kernel.org, lclaudio@redhat.com, acme@redhat.com,
-          andrii.nakryiko@gmail.com
+From:   tip-bot for Yang Wei <tipbot@zytor.com>
+Message-ID: <tip-a53837a5458c5b84588dfa3fa510c6a29b7bd4d7@git.kernel.org>
+Cc:     yang.wei9@zte.com.cn, namhyung@kernel.org, hpa@zytor.com,
+        tglx@linutronix.de, peterz@infradead.org, jolsa@redhat.com,
+        acme@redhat.com, albin_yang@163.com, linux-kernel@vger.kernel.org,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org
+Reply-To: peterz@infradead.org, mingo@kernel.org,
+          alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, namhyung@kernel.org,
+          albin_yang@163.com, yang.wei9@zte.com.cn, acme@redhat.com,
+          jolsa@redhat.com
+In-Reply-To: <1551710174-3349-1-git-send-email-albin_yang@163.com>
+References: <1551710174-3349-1-git-send-email-albin_yang@163.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf bpf: Automatically add BTF ELF markers
-Git-Commit-ID: 3163613c5bc805dadac8ea157648eefd46747cae
+Subject: [tip:perf/urgent] perf clang: Remove needless extra semicolon
+Git-Commit-ID: a53837a5458c5b84588dfa3fa510c6a29b7bd4d7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,232 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3163613c5bc805dadac8ea157648eefd46747cae
-Gitweb:     https://git.kernel.org/tip/3163613c5bc805dadac8ea157648eefd46747cae
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Fri, 1 Mar 2019 16:09:31 -0300
+Commit-ID:  a53837a5458c5b84588dfa3fa510c6a29b7bd4d7
+Gitweb:     https://git.kernel.org/tip/a53837a5458c5b84588dfa3fa510c6a29b7bd4d7
+Author:     Yang Wei <yang.wei9@zte.com.cn>
+AuthorDate: Mon, 4 Mar 2019 22:36:14 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 6 Mar 2019 09:45:37 -0300
+CommitDate: Wed, 6 Mar 2019 09:47:48 -0300
 
-perf bpf: Automatically add BTF ELF markers
+perf clang: Remove needless extra semicolon
 
-The libbpf loader expects that some __btf_map_<MAP_NAME> structs be in
-place with the keys and values types of maps so that one can store the
-struct definitions and have them sent to the kernel via sys_bpf(fd, cmd
-= BTF_LOAD) and then later be retrievable via sys_bpf(fd, cmd =
-BPF_OBJ_GET_INFO_BY_FD) for use by tools such as 'bpftool map dump id
-MAP_ID'.
+Delete a superfluous semicolon in getBPFObjectFromModule().
 
-Since we already have this for defining maps in 'perf trace' BPF events:
-
-   bpf_map(name, _type, type_key, type_val, _max_entries)
-
-As used in the tools/perf/examples/bpf/augmented_raw_syscalls.c:
-
- --- 8< ---
-
-struct syscall {
-        bool    enabled;
-};
-
-bpf_map(syscalls, ARRAY, int, struct syscall, 512);
-
- --- 8< ---
-
-All we need is to get all that already available info, piggyback on the
-'bpf_map' define in tools/perf/include/bpf/bpf.h, that is included by
-'perf trace' BPF programs and do that without requiring changes to the
-BPF programs already defining maps using 'bpf_map()'.
-
-So this is what we have before this patch:
-
-1) With this in ~/.perfconfig to dump .c events as .o, aka save a copy
-   so that we can use the .o later as a pre-compiled BPF bytecode:
-
-  # grep '\[llvm\]' -A2 ~/.perfconfig
-  [llvm]
-	dump-obj = true
-	clang-opt = -g
-
-  #
-  # clang --version
-  clang version 9.0.0 (https://git.llvm.org/git/clang.git/ 7906282d3afec5dfdc2b27943fd6c0309086c507) (https://git.llvm.org/git/llvm.git/ a1b5de1ff8ae8bc79dc8e86e1f82565229bd0500)
-  Target: x86_64-unknown-linux-gnu
-  Thread model: posix
-  InstalledDir: /opt/llvm/bin
-
-2) Note the -g there so that we get clang to generate debuginfo, and
-   since the target is 'bpf' it will generate the BTF info in this
-   clang version (9.0).
-
-3) Run a simple 'perf record' specifiying as an event the augmented_raw_syscalls.c
-   source code:
-
-  # perf record -e /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c sleep 1
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.025 MB perf.data ]
-
-  # file /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o: ELF 64-bit LSB relocatable, eBPF, version 1 (SYSV), with debug_info, not stripped
-
-4) Look at the BTF structs encoded in it:
-
-  # pahole -F btf --sizes /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  syscall_enter_args	64	0
-  augmented_filename	264	0
-  syscall	1	0
-  syscall_exit_args	24	0
-  bpf_map	28	0
-  #
-  # pahole -F btf -C syscalls /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  # pahole -F btf -C syscall /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  struct syscall {
-	  bool                       enabled;              /*     0     1 */
-
-	  /* size: 1, cachelines: 1, members: 1 */
-	  /* last cacheline: 1 bytes */
-  };
-  #
-
-5) Ok, with just this we don't have the markers expected by the libbpf
-   loader and when we run with this BPF bytecode, because we have:
-
-  # grep '\[trace\]' -A1 ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  #
-
-6) Lets do a 'perf trace' system wide session using this BPF program:
-
-   # perf trace -e *mmsg,open*
-  Cache2 I/O/6885 openat(AT_FDCWD, "/home/acme/.cache/mozilla/firefox/ina67tev.default/cache2/entries/BA220AB2914006A7AE96D27BE6EA13DD77519FCA", O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR) = 106
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  DNS Res~ver #3/23340 openat(AT_FDCWD, "/etc/hosts", O_RDONLY|O_CLOEXEC) = 106
-  DNS Res~ver #3/23340 sendmmsg(106<socket:[3482690]>, 0x7f252f1fcaf0, 2, MSG_NOSIGNAL) = 2
-  Cache2 I/O/6885 openat(AT_FDCWD, "/home/acme/.cache/mozilla/firefox/ina67tev.default/cache2/entries/BA220AB2914006A7AE96D27BE6EA13DD77519FCA", O_RDWR) = 106
-  lighttpd/18915 openat(AT_FDCWD, "/proc/loadavg", O_RDONLY) = 12
-
-7) While it runs lets see the maps that 'perf trace' + libbpf's BPF
-  loader loaded into the kernel via sys_bpf(fd, BPF_BTF_LOAD, ...):
-
-  # bpftool map list | tail -6
-  149: perf_event_array  name __augmented_sys  flags 0x0
-	  key 4B  value 4B  max_entries 8  memlock 4096B
-  150: array  name syscalls  flags 0x0
-	  key 4B  value 1B  max_entries 512  memlock 8192B
-  151: hash  name pids_filtered  flags 0x0
-	  key 4B  value 1B  max_entries 64  memlock 8192B
-  #
-
-8) Dump the "pids_filtered", map, that will have one entry per PID that
-   'perf trace' wants filtered, which includes its own, to avoid a
-   tracing feedback loop (perf trace shows the syscalls it does which
-   generates more syscalls that it has to show that...), it also
-   auto-filters the 'gnome-terminal' and 'sshd' parent PIDs, for the
-   same reason:
-
-  # bpftool map dump id 151
-  key: a5 0c 00 00  value: 01
-  key: 14 63 00 00  value: 01
-  Found 2 elements
-  #
-
-9) Since there is no BTF info available, it does a generic hex dump :-\
-
-10) Now, with this patch applied, we'll do steps 3 to 6 again and look
-    with pahole if there are extra structs encoded in BTF:
-
-  # pahole -F btf --sizes /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  syscall_enter_args	64	0
-  augmented_filename	264	0
-  syscall	1	0
-  syscall_exit_args	24	0
-  bpf_map	28	0
-  ____btf_map___augmented_syscalls__	8	0
-  ____btf_map_syscalls	8	0
-  ____btf_map_pids_filtered	8	0
-  #
-
-11) Yes, those __btf_map_ + the map names, lets see how they look like:
-
-  # pahole -F btf -C ____btf_map_syscalls /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  struct ____btf_map_syscalls {
-	  int                        key;                  /*     0     4 */
-	  struct syscall             value;                /*     4     1 */
-
-	  /* size: 8, cachelines: 1, members: 2 */
-	  /* padding: 3 */
-	  /* last cacheline: 8 bytes */
-  };
-  #
-
-12) Lets repeat step 7 to get the new map ids:
-
-  # bpftool map list | tail -6
-  155: perf_event_array  name __augmented_sys  flags 0x0
-	  key 4B  value 4B  max_entries 8  memlock 4096B
-  156: array  name syscalls  flags 0x0
-	  key 4B  value 1B  max_entries 512  memlock 8192B
-  157: hash  name pids_filtered  flags 0x0
-	  key 4B  value 1B  max_entries 64  memlock 8192B
-  #
-
-13) And finally lets dump the 'pids_filtered':
-
-  # bpftool map dump id 157
-  [{
-        "key": 3237,
-        "value": true
-    },{
-        "key": 26435,
-        "value": true
-    }
-  ]
-  #
-
-Looks much better! BTF info was used to interpret the key as an integer
-and the value as a struct with just one boolean member, so to make it
-more compact, show just the 'true' value where we saw '01'.
-
-Now to make 'perf trace --dump-map' to use BTF!
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@fb.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Yang Wei <yang.wei9@zte.com.cn>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-ybuf9wpkm30xk28iq7jbwb40@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Yang Wei <albin_yang@163.com>
+Link: http://lkml.kernel.org/r/1551710174-3349-1-git-send-email-albin_yang@163.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/bpf.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/c++/clang.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index 5df7ed9d9020..2eac6d804b2d 100644
---- a/tools/perf/include/bpf/bpf.h
-+++ b/tools/perf/include/bpf/bpf.h
-@@ -24,7 +24,13 @@ struct bpf_map SEC("maps") name = {				\
- 	.key_size    = sizeof(type_key),			\
- 	.value_size  = sizeof(type_val),			\
- 	.max_entries = _max_entries,				\
--}
-+};								\
-+struct ____btf_map_##name {					\
-+	type_key key;						\
-+	type_val value;                                 	\
-+};								\
-+struct ____btf_map_##name __attribute__((section(".maps." #name), used)) \
-+	____btf_map_##name = { }
+diff --git a/tools/perf/util/c++/clang.cpp b/tools/perf/util/c++/clang.cpp
+index 39c0004f2886..fc361c3f8570 100644
+--- a/tools/perf/util/c++/clang.cpp
++++ b/tools/perf/util/c++/clang.cpp
+@@ -156,7 +156,7 @@ getBPFObjectFromModule(llvm::Module *Module)
+ #endif
+ 	if (NotAdded) {
+ 		llvm::errs() << "TargetMachine can't emit a file of this type\n";
+-		return std::unique_ptr<llvm::SmallVectorImpl<char>>(nullptr);;
++		return std::unique_ptr<llvm::SmallVectorImpl<char>>(nullptr);
+ 	}
+ 	PM.run(*Module);
  
- /*
-  * FIXME: this should receive .max_entries as a parameter, as careful
