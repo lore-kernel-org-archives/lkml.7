@@ -2,94 +2,121 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABACC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A79C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DAE20851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D4F2081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QcUllTfO"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PM96cNat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfCIKvL (ORCPT
+        id S1726422AbfCILCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 05:51:11 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39358 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfCIKvL (ORCPT
+        Sat, 9 Mar 2019 06:02:21 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45055 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726235AbfCILCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 05:51:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g80so120291ljg.6
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 02:51:10 -0800 (PST)
+        Sat, 9 Mar 2019 06:02:21 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q128so123286ljb.11
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 03:02:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ljXPcrxeWbpI5VtcQdRpGdRGFj0egxZjP9onQZeOcmw=;
-        b=QcUllTfO29nUEMy8YCzXGwD9hf5lgA0/OC3vwFZBml1EeWnaMBZxGHuEi1KeDCGNfi
-         Bci7LcgJAXmQse5L5ArnonrF1i5BvGLYSEJJyhu82vuRo+23ik68ugibVrmkZgF5S9B6
-         9AxvHRtS5sPd8oPpGmqRCkOk2ZkUP4kHd2iTX/rRzXLjhLcg79qERowkTPIqkrYrD0s4
-         /sPZ0yZaVsIUR0C/3W7RvUv20iYUOreEio29lFsN3817fGH+q/alSo4vTxH1NfYqb8yn
-         LKdF3ONcK9S/exoeVzlvIbUMTh9+ZvjI7UtKbEeHTzNaosRHIwfkj1b9swDVGLwF2WPa
-         KjbQ==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=q7EgyTKkBwCKENlJl+P4FiMkN5L+S2Lq9VbdUR33+dI=;
+        b=PM96cNatutYRGN+iq2u2T2qoRxxFuuER0zpWwSJkvqLaqkSGThHEpAJUuWllBn32UE
+         GmRqoXL86HU3mm+d3rFjVzQmqSFrtvEXn4ijiDMpXXYlU4AJ8PgaCrssqGmhH0mhAjxT
+         Q8eRYVYSP9u5jKrYQei76kYCudXNgPCmGE005d47QHvd70YAoGR7ZvsaQ+6i/ehGey0Y
+         hEjlB5n1O7dZ3f9rPeEATxlgHhuy/6oPQpzWoTBCIcryzUUIvf3tSiHLmq9lrp5yxXBo
+         NFoFxiR486MiWEtHdJ1UPn9rHeEVk5fh2yh783wvy73H39kcmHfY9CBleE+NS7Y35D9r
+         ArPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ljXPcrxeWbpI5VtcQdRpGdRGFj0egxZjP9onQZeOcmw=;
-        b=sjPKWbXVL8wJzcmIdVOuT3IiEsuzRTuJhIIGHt4YvHuJ4hNkYHA5CNxBaQHjtTvP7b
-         dXEg9uEu9hpEtlJUC6dL0iZQ1NYAX2neT5c5pXU/no0OyI/IhnES3kFv2QLIb9R036mG
-         dlRZuvsLd0j0WcT7prUte0D6wkIzGV0NRdg9yhEIywkxObk1CqZ3GtXOmNmpfO3U+Rqw
-         KC4QxGMmQ5f0fZutpxdOEMgNWx3VEHK6ZRAtMEhXgiIEnLEvJenF+uqxPNn3szg9axkq
-         l8prxNpuMgCer/ai6/wRJfdvWSjrtGhxRm0yBOS1vwTo+JIE3HvAJECT8KDik8hpyWDT
-         9kHQ==
-X-Gm-Message-State: APjAAAXcD8jBEE1JQZzZTyntoktl+Z5etCk7beF7wFLpBJ66oTd1Yv02
-        S6Hw6b8K5KPZSOupw9E35eFr1xuEOB0IDiZJf+A86A==
-X-Google-Smtp-Source: APXvYqy+vUGdKXrCCCeO/P0tIuqunYtGORXofzR963LwCrmh+uZlnT91D48vzhIa4kj7NqdGssDvbrsD74b3svdTf3o=
-X-Received: by 2002:a2e:b1c7:: with SMTP id e7mr3309900lja.107.1552128669410;
- Sat, 09 Mar 2019 02:51:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=q7EgyTKkBwCKENlJl+P4FiMkN5L+S2Lq9VbdUR33+dI=;
+        b=oK8mpbQBz82KHghaJkmYWGVB4w22gS76cr9H+6Q8h5juzSsDZvcuXTH/ssyHBCKYHT
+         0BYBAVCIC4+PfCJoknrQg1jMIZe5WAbDzrOWvvvxyCWSy9TWIXvxVqpb1nqx9a+n82E0
+         jyU6S/5lbiTO5Efxu7ikgLGfIeeRGF5U/gEwBH4opXWqaVcT6+O3xlg4xHkYzZ1y0PUi
+         Hw+D2ZZ6JCoYRHM0fMEjC6660aGJSkgaMFHVSUQni9JdOB2pjEx6kKCbxzW++zxzuoLe
+         WXVZA9dckAIquytH2oN3fVnvo6uEvHM3wQDgpqW2eHVtTlhV5p1Dqiz0RW7WwkMbAyky
+         8ozA==
+X-Gm-Message-State: APjAAAURE480EQqgNHakX64cAPrdJUAs4xxeBgHvmS8oKpPN+KSlCCSV
+        LYrG7/78moQO7DlG5u0NjCk1Sg==
+X-Google-Smtp-Source: APXvYqx2ApC9Ka/qjOXmF09vmAZsU6Nz2YoUaT9KO0tMBguw+S7Lk6IrSoXS1bGmWu6FsyEE4mTKwA==
+X-Received: by 2002:a2e:5d88:: with SMTP id v8mr11484224lje.150.1552129338883;
+        Sat, 09 Mar 2019 03:02:18 -0800 (PST)
+Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
+        by smtp.gmail.com with ESMTPSA id q2sm36232ljq.19.2019.03.09.03.02.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 09 Mar 2019 03:02:18 -0800 (PST)
+Date:   Sat, 9 Mar 2019 12:02:17 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: rcar-vin: fix a potential NULL pointer dereference
+Message-ID: <20190309110217.GA5281@bigcity.dyn.berto.se>
+References: <20190309070527.2657-1-kjlu@umn.edu>
 MIME-Version: 1.0
-References: <20190309015635.5401-1-manivannan.sadhasivam@linaro.org> <20190309015635.5401-2-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190309015635.5401-2-manivannan.sadhasivam@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 9 Mar 2019 11:50:57 +0100
-Message-ID: <CACRpkdboriy8xym-Czj5g6=3MpiZB8-W45Z62nNQER9S9XsrZQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] amba: Take device out of reset before reading pid and
- cid values
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Xu Wei <xuwei5@hisilicon.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Griffin <peter.griffin@linaro.org>,
-        Guodong Xu <guodong.xu@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190309070527.2657-1-kjlu@umn.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 9, 2019 at 2:59 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+Hi Kangjie,
 
-> For the AMBA Primecell devices having the reset lines wired, it is
-> necessary to take them out of reset before reading the pid and cid values.
-> Earlier we were dependent on the bootloader to do this but a more cleaner
-> approach would be to do it in the kernel itself. Hence, this commit
-> deasserts the reset line just before reading the pid and cid values.
->
-> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Thanks for your patch.
 
-This looks correct to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 2019-03-09 01:05:27 -0600, Kangjie Lu wrote:
+> In case of_match_node cannot find a match, the fix returns
+> -EINVAL to avoid NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> index f0719ce24b97..a058e2023ca8 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> @@ -266,6 +266,8 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+>  
+>  	match = of_match_node(vin->dev->driver->of_match_table,
+>  			      vin->dev->of_node);
+> +	if (unlikely(!match))
+> +		return -EINVAL;
 
-I think you can put it in Russell's patch tracker in some week.
+I don't think this is needed. The driver depends on selects OF and if we 
+get this far we it is because we had a match already. The reason to call 
+of_match_node() here is simply to retrieve which of the possible 
+compatible strings was matched.
 
-Yours,
-Linus Walleij
+Am I missing something? What scenario do you see where this can fail?
+
+>  
+>  	strscpy(mdev->driver_name, KBUILD_MODNAME, sizeof(mdev->driver_name));
+>  	strscpy(mdev->model, match->compatible, sizeof(mdev->model));
+> -- 
+> 2.17.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
