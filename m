@@ -7,120 +7,103 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E4FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88A4C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE9520866
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57A320868
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="TnxHbrAV"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="oD4V7bnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725797AbfCIF17 (ORCPT
+        id S1726257AbfCIFjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 00:27:59 -0500
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:50128 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfCIF17 (ORCPT
+        Sat, 9 Mar 2019 00:39:44 -0500
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:60084 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfCIFjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 00:27:59 -0500
+        Sat, 9 Mar 2019 00:39:43 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 61C8ED24
-        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 05:27:57 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 14A11CF8
+        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 05:39:42 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Tcr_jn_u82fg for <linux-kernel@vger.kernel.org>;
-        Fri,  8 Mar 2019 23:27:57 -0600 (CST)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id azuSvgrjRYts for <linux-kernel@vger.kernel.org>;
+        Fri,  8 Mar 2019 23:39:41 -0600 (CST)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 3034BD1A
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 23:27:57 -0600 (CST)
-Received: by mail-it1-f197.google.com with SMTP id y70so13627677itc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 21:27:57 -0800 (PST)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id D2DC7CE7
+        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 23:39:41 -0600 (CST)
+Received: by mail-it1-f198.google.com with SMTP id h3so13937383itb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 21:39:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=8V5mykk5+M/vqjEv8YFcfZki90BeEu3bJb4Xis1EIYY=;
-        b=TnxHbrAVnfyQpkFaRMRzaaJYKvl+30kdMpgqoJsManXu40sLsgW/ZINdDE3ogQVXYv
-         X20cAvTZjQ4EEQCR35s839GiZFNcua6PR5PuNkMdd0ogVPnAwn/ZxtHpXT4bsq5lTXuS
-         3zspFDCz4lJmtdRfiEdh+MmGyxeOtfv05CVD5t5YNwj0n3l3j46LmWM9qKjN/LrLFBVO
-         ZqvBh4wpgkyYfA/hiGk5alfE/TuOivlyZ68R3+i5oN4vY6kLyH9gQQUZfO67Llenjim/
-         GR06v3HlKvkWKZK36ZSGLATP3HO+QLsj1BWksc/V7UJpZiGMloHkCg57bnpUpIGUpfaZ
-         /yKw==
+        bh=DQEP0Ecrj0S52jv+NCt0UhJGFEyXuw7IK/qEbjIGKCA=;
+        b=oD4V7bnmUpUERlGamgt01MtaUmezofUy+swDi3wcOj+jFzoM3HqY+n0JhreC3OU7td
+         ZEIZX3sCs8QIwhKZedWitdJUKHJImX5FvVghEPzDYjYXqj8dBzUEguxbs+Nrrxv8hmc0
+         /Fo/imU0P0e8FfKBdvGQ2FI18a1uvGb4qxkOW2e2YkAIVvvkcMAWLowzUVShokpkucg8
+         WrX5FYMzsf69lCVRYSIwb9ZK974xZ995PDYnAy2tayQMZw28dJESN7uKndXLNXUZcSMz
+         z8y8pgDOBoCM+HjTG3GaD9anZ3zxkh+G6nmKRV21x4ITVAYtKJJiksKnVZGgoWOaVrom
+         vvng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8V5mykk5+M/vqjEv8YFcfZki90BeEu3bJb4Xis1EIYY=;
-        b=suSbtM2WDd8myeefAA/5nqf5l27w2DV/w6M//Q70g4KEAZPltijG+az59cyK3hbGNp
-         2omiJLTahywQpTKxzSAlVJdlVX8vuAqgCah+YO+WZUEQJixtmeQWsZAVCeB9h5LWWFBW
-         +k9L6yErDpql0LzQzKKHRTgeK81tUoIJsK8jEm8U4mSZiSZix4hz8ObLacS/2aL3ePYH
-         0pSFME7vKG7LlAcXBVXQ5SKfz09RL/dRD/qKGnBWShdGumoU8lKrROyk+kmSNsUw4zC4
-         QMuW8F5WoxYXDqOOyfNUw/ZmfXpfkCMTHgfZbPuSvmehFI4uzTG9+ZkT4gdwir9t6A+P
-         Lf8w==
-X-Gm-Message-State: APjAAAXSN31uPxC/2OA5cdM9SZj7ODp+Am1zYlUdYhkeLDJFprMydwxV
-        JIbhhJQv+x1119EOZTZmlHLBSn2cWNxweLsyk2SQ3CBH7cT2la31eAA++0/Di1ymEFUk6xqqO4y
-        dq+trdVhP0uiisF6CLr4xMO3H+Gjb
-X-Received: by 2002:a5e:cb01:: with SMTP id p1mr816959iom.100.1552109276749;
-        Fri, 08 Mar 2019 21:27:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw4ouVxHrPFz9Wf/O0KMZpZm6eJ3ypst4GQbQZT4uT2oYt7asN0uRv7leTzfhq0+DSB9etWYg==
-X-Received: by 2002:a5e:cb01:: with SMTP id p1mr816949iom.100.1552109276536;
-        Fri, 08 Mar 2019 21:27:56 -0800 (PST)
+        bh=DQEP0Ecrj0S52jv+NCt0UhJGFEyXuw7IK/qEbjIGKCA=;
+        b=nlAImYzl0OrjeAMvkx0y/JvHoqu3D8W9OaNn5avV/yopvUX7/HaHJSk0/ScpaGOzGY
+         cp8Eu/OEw7Jpcw0NSMuso7AqTSNAWJNatbKZMd/3p2U4yboPVLmL7W0dm9igLqMf1t8h
+         WDqz8mFPZ5tVa0wXhjUMuTuxBXLBKPgtrXKNbgRo2EpL1VTo4zdCn0gWb975eLfuO0Qq
+         qqKkGMu8lRFtSEi5TXmnSm6Sik9jI8A0UkYG8EJozqPLiucmbdAHTkNdb/Q5+b9ktkPL
+         47bQUsqPJ23sBem398iJaWrxg8oop53e7KbiJw0zf1PXltW2xeb5GeQ8A3D3+TVE8Zlw
+         tREA==
+X-Gm-Message-State: APjAAAUqZyraiQzKMU+2M83HG9HD1mMourkeQ/bwHCSxqFmtLZq4ChRe
+        1zr1eKEeqQQtyElc+fUUgbZuY/3LbW6g1Irfq4VDpq0W8h0uB4cW5JJD8yxqxPwYzkpfwKkbu8z
+        KJns/FaQU96im7dbn58x+GhlTKJMo
+X-Received: by 2002:a5e:8c0b:: with SMTP id n11mr4156684ioj.265.1552109981464;
+        Fri, 08 Mar 2019 21:39:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyckxRdIscGyNkbAWu6qHOffxv446t+588Mk+zAZ1TO1WHTZx7FQ2Cj4gqJl5vNxgxJv1o/Tg==
+X-Received: by 2002:a5e:8c0b:: with SMTP id n11mr4156681ioj.265.1552109981239;
+        Fri, 08 Mar 2019 21:39:41 -0800 (PST)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id e73sm4802512itc.39.2019.03.08.21.27.55
+        by smtp.gmail.com with ESMTPSA id b20sm4063706ioj.12.2019.03.08.21.39.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 21:27:55 -0800 (PST)
+        Fri, 08 Mar 2019 21:39:40 -0800 (PST)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] infiniband: i40iw: fix potential NULL pointer dereferences
-Date:   Fri,  8 Mar 2019 23:27:50 -0600
-Message-Id: <20190309052750.16139-1-kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] input: pm8xxx-vibrator: fix a potential NULL pointer dereference
+Date:   Fri,  8 Mar 2019 23:39:21 -0600
+Message-Id: <20190309053922.22212-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_ordered_workqueue may fail and return NULL. Let's check
-its return value to ensure it is not NULL so as to avoid
-potential NULL pointer dereferences.
+In case of_device_get_match_data fails to find the matched data,
+returns -ENODEV
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/infiniband/hw/i40iw/i40iw_cm.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/input/misc/pm8xxx-vibrator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-index 206cfb0016f8..ad9b4f235e30 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-@@ -3256,9 +3256,21 @@ void i40iw_setup_cm_core(struct i40iw_device *iwdev)
+diff --git a/drivers/input/misc/pm8xxx-vibrator.c b/drivers/input/misc/pm8xxx-vibrator.c
+index 7dd1c1fbe42a..740e59c11808 100644
+--- a/drivers/input/misc/pm8xxx-vibrator.c
++++ b/drivers/input/misc/pm8xxx-vibrator.c
+@@ -196,6 +196,8 @@ static int pm8xxx_vib_probe(struct platform_device *pdev)
+ 	vib->vib_input_dev = input_dev;
  
- 	cm_core->event_wq = alloc_ordered_workqueue("iwewq",
- 						    WQ_MEM_RECLAIM);
-+	if (!cm_core->event_wq) {
-+		i40iw_debug(cm_core->dev,
-+				I40IW_DEBUG_CM,
-+				"%s allocate event work queue failed\n",
-+				__func__);
-+	}
+ 	regs = of_device_get_match_data(&pdev->dev);
++	if (unlikely(!regs))
++		return -ENODEV;
  
- 	cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
- 						      WQ_MEM_RECLAIM);
-+	if (!cm_core->disconn_wq) {
-+		i40iw_debug(cm_core->dev,
-+				I40IW_DEBUG_CM,
-+				"%s allocate disconnect work queue failed\n",
-+				__func__);
-+	}
- }
- 
- /**
+ 	/* operate in manual mode */
+ 	error = regmap_read(vib->regmap, regs->drv_addr, &val);
 -- 
 2.17.1
 
