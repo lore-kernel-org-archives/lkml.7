@@ -2,106 +2,78 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76B0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B61C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D142081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBhID84i"
+	by mail.kernel.org (Postfix) with ESMTP id 2FEC920851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfCIKY5 (ORCPT
+        id S1726392AbfCIKrz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 05:24:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41481 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfCIKY5 (ORCPT
+        Sat, 9 Mar 2019 05:47:55 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:35369 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfCIKry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 05:24:57 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z25so85977ljk.8;
-        Sat, 09 Mar 2019 02:24:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gSsgWXFYalZQookWaCKR6wCk4xPTvnEbjw0C5FDjrdA=;
-        b=rBhID84iEmt/6sYgGpv4ay5RAHMWfMuXiq5g6whFVjaeq3bDgVGQUFPuJbxqYBhuUP
-         0g3r0DGEVuOqsWKfP2UdYMsobqxnqzGEta3QG1vP4Kv5BQXBpRP6bVhSxw6nAm2Qw7xi
-         9Xt3+JMUwZDL6Cba/NJuY2R4b4SuRGATbQRWiEZZIrFetzHUNWzokhUD9s0cEveSwUAB
-         Pw/Uueqv63l3U1Tkib3uwCDeK3Ok2FRWhoL8tlBlQVYVkbN+kaO/LPAAZYJZJdLXGP3H
-         wYGyPeu6WfAbl9TGhOYBdp4C5BFMVmimEah4+1cXN+7pkFLKISDBqNLgb7G8wCIbwT3L
-         Cg+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gSsgWXFYalZQookWaCKR6wCk4xPTvnEbjw0C5FDjrdA=;
-        b=V4pJnjctAVMtj0DIfXHH6F/LdNJ5EgCZBr2v60Uy+HhYTYJdumNQ5XhYX264nXv867
-         KcT+T9bMn2xw2VtzCPx550LsvSoywr3RvWeizhylaYiEY3vrhMj4Jw0W+oINB0o9PGl7
-         IscrsdKElT6wtdVbVeZC5SzND2wByFpQsVB468cZirw33cnRb/WLCcWztJfHTe66yr8X
-         P0kTUER48yzWm8c3aQPxnqkXFjRFaYt7DvrlLSgtIF24dmM7Oel+sID1qNJfiw2Z2eOB
-         mVjVDRbVNfIwnhtnNR9Juqs1prKZFHwTkrI4F8Q5lGcKh5S+Qu1KfMmkTMqpqw9cPnho
-         z2vw==
-X-Gm-Message-State: APjAAAUrLs37bWemr+y71PcjfzqNXlc+PxQee5F9spBLF30699sRiTW3
-        HJX8eF81Tw+Ot4cJJZt4/Oc=
-X-Google-Smtp-Source: APXvYqxaoCLG3ssnnjoXu3fUAiVfSdaNVgEfxhbQWOo7xTcXOUX3TMQg8qq2+ak8LyqHuoNidQp9NA==
-X-Received: by 2002:a2e:9b95:: with SMTP id z21mr3662250lji.155.1552127094701;
-        Sat, 09 Mar 2019 02:24:54 -0800 (PST)
-Received: from localhost (89-64-59-159.dynamic.chello.pl. [89.64.59.159])
-        by smtp.gmail.com with ESMTPSA id l11sm20771lja.38.2019.03.09.02.24.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 09 Mar 2019 02:24:54 -0800 (PST)
-Date:   Sat, 9 Mar 2019 11:24:28 +0100
-From:   Tomasz Duszynski <tduszyns@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Tomasz Duszynski <tduszyns@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: Re: [PATCH v2] iio: proximity: as3935: fix use-after-free on device
- remove
-Message-ID: <20190309102427.GA3565@arch>
-References: <20190308175935.21904-1-TheSven73@gmail.com>
- <20190308202936.GA32641@arch>
- <CAGngYiVgEDTQxynjPDMO_ZApAX6uyvUL+iqyK-QHnhDz=E4eCw@mail.gmail.com>
- <20190308223249.GC32641@arch>
- <CAGngYiWSaJqtzUA+nUNJTcssUq1Y=UzYc2u8hDcKDjF6944o1Q@mail.gmail.com>
+        Sat, 9 Mar 2019 05:47:54 -0500
+Received: from oxbaltgw09.schlund.de ([172.19.246.15]) by
+ mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MAORp-1hClzk3ICJ-00BqZW; Sat, 09 Mar 2019 11:47:39 +0100
+Date:   Sat, 9 Mar 2019 11:47:38 +0100 (CET)
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Message-ID: <387603168.348361.1552128458820@email.ionos.de>
+In-Reply-To: <20190308210738.10666-1-eric@anholt.net>
+References: <20190308210738.10666-1-eric@anholt.net>
+Subject: Re: [PATCH] arm64: bcm2835: Add missing dependency on MFD_CORE.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAGngYiWSaJqtzUA+nUNJTcssUq1Y=UzYc2u8hDcKDjF6944o1Q@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Priority: 3
+Importance: Medium
+X-Mailer: Open-Xchange Mailer v7.8.4-Rev51
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:oJ412IDsY8FCLiWyiXZZl6tQgmiQ7ydf2meQNqv39mznmcShx/6
+ M0R9MwJsM9Qaf/ht2fwKVpVTCIIj2Qn3T9M2xPT7ci1vdsMRjjY04Ju8BkaZfgDLYt4Zd9J
+ i3byBPYLkA2K1LNlq5jP6lLUrkfj1lUXhGn/nFtXYcjjeAqxxBy4mqMkriE+vom4eLt4UHT
+ HbJtlRePopHQQOykv55OA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:smhsKxxu7m0=:l8qSPar/9WRYyVgtRKZDug
+ AFcd+B6vcdIZvB4yM243dh5aktqRi7Tucqmx/4nNLlEqkpqle9YECZ32UxKOZ/0Lb0UaE0nk/
+ K60RlB3gVxZaYut2+5W7bIocNXqR1a7QRQtElA+iONAHnHrT91wW+HB9inKSe5OpD6o0E4FJw
+ 3adequUHv5MbXg6UwweZuHSgenduLhCsyJqYgsX1r13bY9LjiL8NjFmHoETi40V6K3uqbE9dI
+ vY0jZBIWD5jbKi1k5ipho88Vylu13scwF0dw1yAqtj6dR2DFS/GhHHt0xLL/D++s6bfLcITq0
+ PX4Upqrjz3IeZBKtbg0K4+Qst5xNwc480DEtn+frP+bLZnL+WaArojsvb0ppHAMUJDLfIFw19
+ IlrVzX7gaWnfUGO53JHO8dmpli/xeTWsfhVZNjB0HKnJvJW0nv2dcN9prJ4+HArqZKY7uTxWl
+ PzRAsFsVirog8lf6J6WMAdLYC8ct7MCe36ZW/K27pbgers7rnVhK/sad0wTSatDPh8DO8TuWH
+ KtQiaZAuuvqgl+uQTt2yzaQFIw3pj1E7EZPMi6XUpCTVI867NuUcI/XZ/9SoZdBSZMiImi/FC
+ WJfv3uhmCFCA3puCY1iI7yo8BDcqn9J6GqCOuCEYdpUmCB5p3JJT7P66uT3if54qtKVmvVfN5
+ OTLWAo794w4XkKQfOcWkCNGRQMiAcAuqc+dScbHacFYvrw0cc/KBk2ZrbbHN03YFH8IiowY/2
+ wG/yjtgz6DvUcSauBPCy1WNKCoc7LdISDUrK++qtBM/lWjbw4jY+nZp0YqA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 05:46:24PM -0500, Sven Van Asbroeck wrote:
-> On Fri, Mar 8, 2019 at 5:33 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> >
-> >
-> > So perhaps that change deserves a separate patch because it smells like
-> > a code cleanup.
->
-> Not really. This patch fixes the order in which resources are torn
-> down on release().
 
-What I meant is that delayed work initialization could stay where it was.
-The reason you moved it is readability improvement so to me it is more
-of a cleanup hence I suggested a separate patch. Up to you.
+> Eric Anholt <eric@anholt.net> hat am 8. März 2019 um 22:07 geschrieben:
+> 
+> 
+> When adding the MFD dependency for power domains and WDT in bcm2835, I
+> added it only on the arm32 side and missed it for arm64.
+> 
+> Fixes: 5e6acc3e678e ("bcm2835-pm: Move bcm2835-watchdog's DT probe to an MFD.")
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-> You do this by fixing the order by which devm-resources are allocated
-> on probe().
->
-> So it's a fundamental use-after-free fix, and not really a cleanup.
-> But I'm happy to split into multiple patches if you want ?
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
