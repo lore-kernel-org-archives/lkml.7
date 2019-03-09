@@ -2,57 +2,59 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A7CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFA4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220E42086A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF562081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BfL8kHY/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BgtvqWkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfCIB65 (ORCPT
+        id S1726781AbfCIB7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 20:58:57 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44068 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbfCIB64 (ORCPT
+        Fri, 8 Mar 2019 20:59:10 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45723 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbfCIB7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 20:58:56 -0500
-Received: by mail-pf1-f195.google.com with SMTP id a3so15411527pff.11
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 17:58:55 -0800 (PST)
+        Fri, 8 Mar 2019 20:59:09 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 125so15277001pgc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 17:59:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=G7FkEcnypMBPvT4q2ATZFH8XeVcIvhyGQ8lI3Q4OJWU=;
-        b=BfL8kHY/V+PnvPoN6GIOnQB4nkXmUoZp2j9+3Ko5gSsAQP5Iw4COXiaaYR1WYcfFcb
-         2MdDV++sxfrJ7pjqo68xYPY+e7w07dEML6xzoOZmFdRK5c24yft7wi3Kf3QYseNcuxCg
-         uoFLcWV9MV6pbXEi3SgS2sPuEnne51eOlgdZKrG+HegHiTqQrT/XczwA89SSUKcUmUaj
-         nfNGEc4dq2rsP/LebHWYvyPUWwJPLiaLpYXtJaP9E2roFPFlp+vudLr8hi2yWeeh+cgA
-         u9R8TZQfUpdkZxj4uwRcb8gWKuxlNN4cL18j8yY/XdzwwYZd3oA/SJ0wK7N6rR7ue+4I
-         Js2A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=y/pIRq3eoYMGqKuzxQRW6Xe3PFikDk+GOICmlrRtQ4w=;
+        b=BgtvqWkRjvb9c+Gh/OXuz6H7Ix6XfCEwIgrSWCB7ywmHqwpb8aRc3mFQwwBXErT+q/
+         GDEpx/TNa9emQWlTUAs9mo8BEipk3m9g25uP8fz+tbzx1sH4ULUOh5+Zy9RM9bcZkE6I
+         ayubrBHrd723F2B8TjPXhMOxuqW+nSK71cKU6ZM50eU99unmTBIiTj0uFe/m1XMQOpbp
+         S7YUcMfKUmw6bp4dVg8NAkURLowt+DeLEMiKiOB8LbxJ2k//Cq2u9mBCU2K3B3d8/ZtN
+         /M35HtmK8tjCRpeNcCyB9yq07gpdU1eikVExZ2hoIqPK8jL3zgSB65qF8LKTw9aP1nEK
+         YkrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=G7FkEcnypMBPvT4q2ATZFH8XeVcIvhyGQ8lI3Q4OJWU=;
-        b=lcifIxRfCCW3Lfsa+E/8dpfAnlNYub8f/7EQTFF5CEmlmhT5wnxUR4NeKGcK59Frrn
-         Fa5VrXJz9WyBJJ6KkyS5Y1YkfjZZcbEMsgcffGZrw+hh39XpouQiwGtVfqHSo/mtYZxX
-         /fInc2gEe/AjB1zJpfkrivfUsMQpY506AQeGmbLG4hNEl2utXFMq7hc/S+QKetmodnFf
-         29og7qX90GnJT5KW0YwnIJg/LcGu+JD1Vq3lI+8l3g3OoJLNSoEErFlZH7kHIhpdFf4e
-         3k75/u+j8nxOuo0kVE4B2zYTEEfqHw5lWFCNo4SPIfaxtdbEmNd4w1y/U3nQinyaT+YW
-         Llaw==
-X-Gm-Message-State: APjAAAV2N+ObgfedNa+p04OhLCikWYAu39hlYyITNDrXWiVo44tJLykr
-        tTFrGRj6XyBjWe8+jTZSX3PHg5QV4Q==
-X-Google-Smtp-Source: APXvYqyfAWOX9HKl5uweYLtR7YUk/MQlqUiadwQsGb3GaeMY03nuKRDBNxE5nzDSDAZ3KXK5L8jVWA==
-X-Received: by 2002:a63:2004:: with SMTP id g4mr19684261pgg.337.1552096735282;
-        Fri, 08 Mar 2019 17:58:55 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=y/pIRq3eoYMGqKuzxQRW6Xe3PFikDk+GOICmlrRtQ4w=;
+        b=F1Egl5kdHP+A2F//Ss2H1Rzxkmmjv/Iy5hDIOCpKHT9M+mF9pRI6I0a/7FsploEkW/
+         mULmn/WPkXbe+7WT+c8CMipAiGKZkak65PUmEz6MGRvL6PUsyBjS+lxKKYAavDNc8syP
+         05FVVLmb9CW4WaR0OBscuk0HQw9iLJ3Gfkb7sTjVJfzk6w9otb6EqhU5bT+fqbvhirb8
+         b6/UdSvWXOABo6tQKe6aV99Qdd/UiKg1gFOoVbGSLXqRW3UtvZ3YN3/l46gkCzwRoPTn
+         0T402Q9Qc59f+mKx+Gs/HeeHNw//z8A+DuVb4GRPL6vnTIziypf/tKstHenX4GLYl9T0
+         y/Jg==
+X-Gm-Message-State: APjAAAU0X8KSj5E+62s+mLwRzYmD+bAmmCyItfIdLzjEWVaGYOodu66V
+        E4MJW00TMvC/FFSfAayA4uEl
+X-Google-Smtp-Source: APXvYqw7CuEXXWxNJ0uqXcWyOAyvjrvSCwZpgL7bwgKagnDdpoUA6Sq6eUP7YwzTftQWnUpe1EzArQ==
+X-Received: by 2002:a17:902:ba8d:: with SMTP id k13mr22137540pls.15.1552096748923;
+        Fri, 08 Mar 2019 17:59:08 -0800 (PST)
 Received: from localhost.localdomain ([157.51.75.198])
-        by smtp.gmail.com with ESMTPSA id b65sm16040201pfm.127.2019.03.08.17.58.48
+        by smtp.gmail.com with ESMTPSA id b65sm16040201pfm.127.2019.03.08.17.59.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 17:58:54 -0800 (PST)
+        Fri, 08 Mar 2019 17:59:08 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     linux@armlinux.org.uk, xuwei5@hisilicon.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -60,42 +62,69 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         peter.griffin@linaro.org, guodong.xu@linaro.org,
         haojian.zhuang@linaro.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/2] Handle I2C and SPI reset on HI6220 SoC
-Date:   Sat,  9 Mar 2019 07:26:33 +0530
-Message-Id: <20190309015635.5401-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: hisilicon: Add reset properties for HI6220 I2C and SPI
+Date:   Sat,  9 Mar 2019 07:26:35 +0530
+Message-Id: <20190309015635.5401-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190309015635.5401-1-manivannan.sadhasivam@linaro.org>
+References: <20190309015635.5401-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Both I2C and SPI needs to be taken out of reset before being used. Earlier,
+we relied on the bootloader to do the job but a more cleaner approach would
+be to handle the reset in kernel. Hence, add the reset properties to
+the nodes to let the corresponding drivers take the peripherals out of
+reset.
 
-This small patchset adds the reset functionality to the I2C and SPI
-peripherals on HI6220 SoC from HiSilicon. Those peripherals needs to be
-taken out of reset before being used. But earlier we were depending on the
-bootloader to do the job but as suggested by Daniel Thompson, a more
-cleaner approach would be to handle the reset in corresponding drivers.
-
-Hence, one of the patch adds reset properties to the I2C and SPI nodes
-and the other one adds missing reset functionality to the AMBA Primecell
-bus driver. Because the AMBA devices are being accessed before the driver
-probe (reading pid and cid values), we need to deassert the reset line in
-the bus driver itself just before the read.
-
-I'd expect the patch 1 to go via arm tree and patch 2 via hisi tree.
-
-Thanks,
-Mani
-
-Manivannan Sadhasivam (2):
-  amba: Take device out of reset before reading pid and cid values
-  arm64: dts: hisilicon: Add reset properties for HI6220 I2C and SPI
-
+Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 8 ++++++++
- drivers/amba/bus.c                        | 9 +++++++++
- 2 files changed, 17 insertions(+)
+ 1 file changed, 8 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 108e2a4227f6..b071dc466374 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -730,6 +730,8 @@
+ 			pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
+ 			num-cs = <1>;
+ 			cs-gpios = <&gpio6 2 0>;
++			resets = <&sys_ctrl PERIPH_RSTEN3_SSP>;
++			reset-names = "reset";
+ 			status = "disabled";
+ 		};
+ 
+@@ -741,6 +743,8 @@
+ 			i2c-sda-hold-time-ns = <300>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
++			resets = <&sys_ctrl PERIPH_RSTEN3_I2C0>;
++			reset-names = "reset";
+ 			status = "disabled";
+ 		};
+ 
+@@ -752,6 +756,8 @@
+ 			i2c-sda-hold-time-ns = <300>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
++			resets = <&sys_ctrl PERIPH_RSTEN3_I2C1>;
++			reset-names = "reset";
+ 			status = "disabled";
+ 		};
+ 
+@@ -763,6 +769,8 @@
+ 			i2c-sda-hold-time-ns = <300>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
++			resets = <&sys_ctrl PERIPH_RSTEN3_I2C2>;
++			reset-names = "reset";
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.17.1
 
