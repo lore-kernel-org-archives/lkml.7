@@ -2,44 +2,41 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DC6C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD60C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4493F207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372CB207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfCIJtH (ORCPT
+        id S1726283AbfCIJys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 04:49:07 -0500
-Received: from sauhun.de ([88.99.104.3]:40032 "EHLO pokefinder.org"
+        Sat, 9 Mar 2019 04:54:48 -0500
+Received: from sauhun.de ([88.99.104.3]:40092 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfCIJtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 04:49:07 -0500
+        id S1725681AbfCIJys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 04:54:48 -0500
 Received: from localhost (p5486CD1C.dip0.t-ipconnect.de [84.134.205.28])
-        by pokefinder.org (Postfix) with ESMTPSA id 52A6F2E3551;
-        Sat,  9 Mar 2019 10:49:05 +0100 (CET)
-Date:   Sat, 9 Mar 2019 10:49:04 +0100
+        by pokefinder.org (Postfix) with ESMTPSA id 7B8712E3551;
+        Sat,  9 Mar 2019 10:54:46 +0100 (CET)
+Date:   Sat, 9 Mar 2019 10:54:46 +0100
 From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Shikai Wang <sxauwsk@163.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: cadence: try reset when master receive
- arbitration lost
-Message-ID: <20190309094904.GC1340@kunai>
-References: <20190219012447.5900-1-sxauwsk@163.com>
- <20190223094842.GF1018@kunai>
- <20190309094452.GB1340@kunai>
+To:     Louis Taylor <louis@kragniz.eu>
+Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        ndesaulniers@google.com, jflat@chromium.org
+Subject: Re: [PATCH] i2c: sis630: correct format strings
+Message-ID: <20190309095446.GE1340@kunai>
+References: <20190302141836.24638-1-louis@kragniz.eu>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
+        protocol="application/pgp-signature"; boundary="YkJPYEFdoxh/AXLE"
 Content-Disposition: inline
-In-Reply-To: <20190309094452.GB1340@kunai>
+In-Reply-To: <20190302141836.24638-1-louis@kragniz.eu>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -47,54 +44,55 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---JWEK1jqKZ6MHAcjA
+--YkJPYEFdoxh/AXLE
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 09, 2019 at 10:44:52AM +0100, Wolfram Sang wrote:
-> On Sat, Feb 23, 2019 at 10:48:43AM +0100, Wolfram Sang wrote:
-> > On Tue, Feb 19, 2019 at 09:24:47AM +0800, Shikai Wang wrote:
-> > > When the adapter receive arbitration lost error interrupts,
-> > > cdns_i2c_master_xfer return to the caller directly instead of resetti=
-ng
-> > > the adapter which resulted in the adapter being out of control.
-> > >=20
-> > > So when driver detect err_status such as arbitration lost,
-> > > then try to repair and fix it.
-> >=20
-> > Just checking because resetting looks like a big hammer to me: there is
-> > no way to gracefully recover form 'arbitration lost' interrupt?
+On Sat, Mar 02, 2019 at 02:18:36PM +0000, Louis Taylor wrote:
+> When compiling with -Wformat, clang warns:
 >=20
-> I am still wondering about this but since it is acked by the maintainer:
+> drivers/i2c/busses/i2c-sis630.c:482:4: warning: format specifies type
+>       'unsigned short' but the argument has type 'int' [-Wformat]
+>                         smbus_base + SMB_STS,
+>                         ^~~~~~~~~~~~~~~~~~~~
 >=20
-> Applied to for-current, thanks!
+> drivers/i2c/busses/i2c-sis630.c:483:4: warning: format specifies type
+>       'unsigned short' but the argument has type 'int' [-Wformat]
+>                         smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
+>                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> drivers/i2c/busses/i2c-sis630.c:531:37: warning: format specifies type
+>       'unsigned short' but the argument has type 'int' [-Wformat]
+>                  "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
+>                                           ~~~~~   ^~~~~~~~~~~~~~~~~~~~
+>=20
+> This patch fixes the format strings to use the format type for int.
+>=20
+> Link: https://github.com/ClangBuiltLinux/linux/issues/378
+> Signed-off-by: Louis Taylor <louis@kragniz.eu>
 
-Oops, I was mixing this up with
-
-[PATCHv4] i2c: cadence: Fix the driver in interrupt flurry case
-
-This one doesn't have an ack from Michal. Dropping it again.
+Changed Jean's SoB to Rev-by and applied to for-current, thanks!
 
 
---JWEK1jqKZ6MHAcjA
+--YkJPYEFdoxh/AXLE
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyDjBAACgkQFA3kzBSg
-KbaNaw//drTiJ6nzanbRXofjnVzseQyZs4VIU81qISXsTCU3yKYn2afB4Le7tWpd
-ke18r/D6tueNg+qCTGazP8hYGNz7FEyR5zvtCcpIVRh1vJG+J0R0us83NZJnmcVu
-TBcuaOpzFMxzYQ8y1jGI3uaNlvFvxw36u2jg/IAhoPK+Mc/1KVbKMyrbavp9B0E+
-eqN2vyfkHDC+RVNq3x5HnUyUdRQTDvoKEEBEP3YN1Z7tPpcW6b8ZnO4y5DWMXBnN
-hxC5O1Ba9t8rIPlEFIu2p43FEPbVvIVH7o2HKq5NYR6toEe8Z0cDIf9WFE2qwg+X
-d0QERdjFxK5lcni8XFN9cVe4u2h23gNiWbYdsfEMG9FOQ1c/qQM4BjdjMVATDv0o
-iQ4ExRqL5orBSAY5XJhWceSF0gbfFtiyizTVD2b5Z3jrAFDEVw0xfVEgMo3oN9qf
-hNX4hRcsxTz1Ayr4Y9qOjS4fMuLC2czoq0pxAprq2VmLlwSJ9rCBPrYeBEvJXHGu
-oFlmkkIVIIQlFh9065ub4PnxoLCiRzFt8ZWHVQ9hiPECA5XTgXxCHeces9EcAH1L
-lRQp5f9xpSMDIqZbyKnNmXKxD5BTzQE05AFxxv6P5WMea+Uc9r9Q8APr6J9dO3E2
-mai2zT2+MouaFOePNpjIb63bH6++7+9tvX1Uj6bcW+Hc36Ht8Ug=
-=Efbh
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyDjWUACgkQFA3kzBSg
+Kba4BA//URuSLZFn9QiesoENmp23IEa9uj3gb+Ur18/pJ7muucYLqj+GGrZ9HdD8
+NBbhUhqulclF1Cfwm354o/eoTl8JzMKUxwox0IMn93B5PdvIDxmTvmynleNVsSHp
+2biWLGIdgk+jKm9ylNUdhGDcc9FDq1p82rK2stWjq9iI+A1nSkabxauzh5res+ZT
+NWJEkhHi0GfXC0P/Xoec1D+m0EpV7ll16QrNkHeFADntZ00y7Z3wEx9Gw7zuIwGb
+h0vvWp/M+Pmx5d09dOYQT/+PjR0M5q0Dq7vCVx1bqb3/G8I/jt8QX2hkjLY3IFu2
+mzTMJC6hU9Wvm9zLLjXjC7osFS1QaAzx+dgGA4nTudOWlmiNsxYmGHzsr6BHCkbQ
+SlfnI+5WHqgKcxbgEofqHsXioawowMOJAV17YS7v2tAlarMLYRpHif5wu/nbmZxR
+i547iTLGtow8hgYJiYPmrd6LulJiYMKq+JLO4EQFV62LsPZGqXnvQwdr3dnOMmto
+14sLgYYsbf+m4tHoo6OaidBD//MHVDHOJ6yvEZYrEHWfo03Zp8CVPH4aBMaJL7hq
+wKdkIc+I0a+J/39NuOhgjYeRXjzt0bl3bYlyKD5ldiQ+eNML1DhXZU6eQ/TvT2vu
+dGZKwJdGEYGbcweoMoT6NZjPaO7v9J+qGXZ6/qhdykGYTMteprk=
+=5puZ
 -----END PGP SIGNATURE-----
 
---JWEK1jqKZ6MHAcjA--
+--YkJPYEFdoxh/AXLE--
