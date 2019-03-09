@@ -2,130 +2,91 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C30DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 17:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721E8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 17:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0AB20815
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 17:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552151252;
-	bh=1PUuWy4LpGpPsaoR0MKlYeiDvd9QGDPKNtDS4sjakEs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gKhA1aaXwxJmS4r5Ay/p9cyeieX9tIbPImDOrHWgKr9MYNfuSom+sL8OXMmUE0QFL
-	 09gMlaLWLTfd4rkhZN/YDzb5JP/xaCs8b9m2HbK9AF9Wnx161hxlR5aUZgK2jfFoAw
-	 dhCra1kGXTlrs5080iZMgWBKjwZKX/t5hbjIMSoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3221B20815
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 17:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwaCZvbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfCIRHa (ORCPT
+        id S1726392AbfCIRKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 12:07:30 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37973 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCIRHa (ORCPT
+        Sat, 9 Mar 2019 12:10:06 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45254 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfCIRKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 12:07:30 -0500
-Received: by mail-lf1-f65.google.com with SMTP id k136so541937lfg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 09:07:29 -0800 (PST)
+        Sat, 9 Mar 2019 12:10:06 -0500
+Received: by mail-qk1-f195.google.com with SMTP id h71so428392qke.12
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 09:10:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i1PYBIYx91Ep2tFRHYR2pbSt5PwsEKkKmx2LdfQ0lFg=;
-        b=TbaEiUxcvmKyQqPo6o9LnG+AwYGNR3jZANISTvxcHxko7EJj/PNm59cag4S8eIKTMY
-         /8CWfajtBTcHh4mtJo5k+TDjp6y7cUNhUUmjYzelLPfQ2s6xkhi6LrZxuptaShXv+a1f
-         uZKuXodyLX+kQ3OxQaJLt2QU4PgFVzEkM5b6w=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NH8QXcMMjhBsFyMRAq65Avqi1Qcz+azp11fj9GvyLqk=;
+        b=pwaCZvbJWsjRTL6pdc2IpV51cHj7L+Zwh+C454Ez+Bn66e2JWB29yj78zJKFP5RHby
+         lL3Z6oDcqffsrp7+sjLVFdlvhaAz3L27ZC2gfECKYHP7J55J5LtcQiZmY1VfDM9RFTyU
+         OW9tBJf2AUsOMaZUg7k0CGk8ab1z89cW0/cdBeAH8VfVDM7AYqW+kgi6hnDOCrFZru8f
+         66Rh/O4ldsP3KWFSYRAB/ypI/2ZH+e2Q5BJEHzjzrkzV7J+iqpsJ07eNb3riOuyPw3Jd
+         mGsfuavuoiVfMIxa2ID+UVNKvQ2zhxWq/fxWYT8uY7HvTNK1+cQts4bM+0RgC4JLUmyT
+         MTsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i1PYBIYx91Ep2tFRHYR2pbSt5PwsEKkKmx2LdfQ0lFg=;
-        b=RDmAMMytvAqO0GIimonc6j6nJ++2J4bRDUsRNn6Fq5duvvQ0GekJJ83QngM+Z3FvNA
-         bwxuFHcnH34JHZ6TlO5Df3yxMOOdvPO2xbzmQWjahu112kK3XLOX9i278A9Himv+pe5s
-         +30+3bc7a8WYJ5ZMgs7shfLiFcL8mn3o+xw5sXohUJuCZ6XKBua4JJHeFNc0QS0s9gTF
-         ZJB9HBH72io1XYfiNRJ/K7csHqnt16+saeZwk7NbkECQKGUIbokaCvroIDlqjpp64phG
-         Zz9t+gKt58bIwKzgRn6amSdLXUbmJGUyEjzYvNxgTt3p/qHUEggvE/kk311UF9iG48k4
-         chBg==
-X-Gm-Message-State: APjAAAW7OxTA2Y55uFPcGWLOVT6qrJCiQkok1jzq451h+dTnWkcJOL8y
-        gmq00szZ4ygZB5jMY6Vqg5FK5Hl2ZE8=
-X-Google-Smtp-Source: APXvYqzPBq1X8FIhYi8u+Eflx+9H2EZcnBd6h9L3Z1GjlSspxuveFWb8preJpyulWG8eiuKJoYivSA==
-X-Received: by 2002:a19:a417:: with SMTP id q23mr13954649lfc.27.1552151247789;
-        Sat, 09 Mar 2019 09:07:27 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id r190sm110252lfe.43.2019.03.09.09.07.27
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NH8QXcMMjhBsFyMRAq65Avqi1Qcz+azp11fj9GvyLqk=;
+        b=TQhWkskIpjJiHnO8CHPxGWq4DhfnLiKb2OWt5E33gBXqLEZqE7afJvLbCukZjdiBD3
+         KjcQV9ewyKqqJtC8nPJmzylIID0E3P+QRSetrAxZbAFwb6mhwIA3WtjKTn6pXLeJ63gP
+         L+mgzK1zNqCwReqvFcSEN+41492SzeGjQgIQ+tXMAOqXDXWTlJHQCf/+FpWcA2Y0Hshi
+         w8FmqEXYSJpG1LYkUdSsoANjpJpEEzYop4vcsIWfRBFxKs6obe49ijl+VyG08pffZ/Mp
+         DL/SnWHygn8m7S2+QHmCtvjcr0ghfrHGyr9yyQkuR5g64IgkShgx28nVoxMzgPti/Fzw
+         hP4A==
+X-Gm-Message-State: APjAAAWlIPvvaCImS2CzhNSpb8TKvJkgmio916jt0Q/1bhQ0CZ1TkTP8
+        fgwd3Zb7iWYsU8ZAVNp+/gc=
+X-Google-Smtp-Source: APXvYqzyMkrz4kmW6ZuOGMT0xSQxlxa0xs08wG6uigZSmyHsUtcvih/hgxjeNL6tf/mvyltr13g4zQ==
+X-Received: by 2002:a37:e209:: with SMTP id g9mr17601479qki.310.1552151405342;
+        Sat, 09 Mar 2019 09:10:05 -0800 (PST)
+Received: from jdev.famaf.unc.edu.ar (proxy-4.psi.unc.edu.ar. [200.16.16.13])
+        by smtp.gmail.com with ESMTPSA id f189sm500642qkb.79.2019.03.09.09.10.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Mar 2019 09:07:27 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id z7so607766lji.0
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 09:07:27 -0800 (PST)
-X-Received: by 2002:a2e:8510:: with SMTP id j16mr5128563lji.2.1552150873803;
- Sat, 09 Mar 2019 09:01:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20190306191244.8691-1-cyphar@cyphar.com> <20190306191244.8691-3-cyphar@cyphar.com>
-In-Reply-To: <20190306191244.8691-3-cyphar@cyphar.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 9 Mar 2019 09:00:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgGKWRTgSYKkgMEf1QOg0PZSpmBha+2LCHCBOar0e8cug@mail.gmail.com>
-Message-ID: <CAHk-=wgGKWRTgSYKkgMEf1QOg0PZSpmBha+2LCHCBOar0e8cug@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5 2/5] namei: O_BENEATH-style path resolution flags
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jann Horn <jannh@google.com>, Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 09 Mar 2019 09:10:04 -0800 (PST)
+From:   Julio Bianco <juliobianco@gmail.com>
+To:     gaoxiang25@huawei.com, yuchao0@huawei.com,
+        gregkh@linuxfoundation.org, linux-erofs@lists.ozlabs.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Julio Bianco <juliobianco@gmail.com>
+Subject: [PATCH] staging: erofs: add a new line after variable declaration
+Date:   Sat,  9 Mar 2019 14:08:53 -0300
+Message-Id: <20190309170853.8297-1-juliobianco@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 11:14 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
->
-> This is a refresh of Al's AT_NO_JUMPS patchset[1] (which was a variation
-> on David Drysdale's O_BENEATH patchset[2], which in turn was based on
-> the Capsicum project[3]). Input from Linus and Andy in the AT_NO_JUMPS
-> thread[4] determined most of the API changes made in this refresh.
+Add a new line after variable declaration
 
-So I still think this is likely a good idea...  BUT.
+Signed-off-by: Julio Bianco <juliobianco@gmail.com>
+---
+ drivers/staging/erofs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The absolutely huge BUT here is "are user space people actually
-interested in using it, or do they already have other solutions to
-this anyway?"
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index 924b8dfc7a8f..1cf1afe2d73a 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -270,6 +270,7 @@ struct inode *erofs_iget(struct super_block *sb,
+ 	if (inode->i_state & I_NEW) {
+ 		int err;
+ 		struct erofs_vnode *vi = EROFS_V(inode);
++
+ 		vi->nid = nid;
+ 
+ 		err = fill_inode(inode, isdir);
+-- 
+2.11.0
 
-The intent is obviously to make it easy and cheap to to the simple
-pathname lookup in a controlled manner, and then let user space fall
-back to "let's check things much more carefully" for paths that look
-iffy.
-
-But maybe the people who care already have their own solutions, and/or
-need something more anyway (ie samba looking up all names in user
-space first _anyway_ due to ICASE issues or whatever)?
-
-So this is easy and straightforward to do in the kernel, and it
-_feels_ like something that can be useful, and I'm not all that
-concerned about the maintenance overhead either because of the trivial
-semantics.
-
-But I'd still like to actually have some user space person say "yeah,
-we'd actually use this" since quite often non-portable solutions don't
-really end up being used simply because it's not worth the maintenance
-headache in user space..
-
-                     Linus
