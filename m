@@ -2,149 +2,179 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53CFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8E4C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB1620836
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D372207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:52:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="ApEVEy0n"
+	dkim=pass (2048-bit key) header.d=opersys-com.20150623.gappssmtp.com header.i=@opersys-com.20150623.gappssmtp.com header.b="vz9ldWAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCIQra (ORCPT
+        id S1726393AbfCIQwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 11:47:30 -0500
-Received: from imap.cs.msu.ru ([188.44.42.39]:62345 "EHLO mail.cs.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbfCIQr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 11:47:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
-         s=dkim; h=Subject:In-Reply-To:Content-Type:MIME-Version:References:
-        Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ulGqVDSUycX/BoqmH9Fe4QsVBAuubtWT/nsBLs94zsM=; b=ApEVEy0nOrrJ1Lmpwtx/8cwEmJ
-        OjLwX+hK8hZFfXZGGREEAG8UxHcbuiJjHtdIUywtKVQHcKx0U4xQWEZN/dkubfawNz9UZAErT2G37
-        D4TKrWAGhI0wB33S1AGFhjn+VA/XgQTz1I/G8Zlda67P42ty2cgCc5/9KWxJFyyoDTuRF9fAzdPX7
-        ZiJzbnS3haHSIr6SvC08OBn8n+5rgXcxcpNgTbeOcGrJyiH1PamRCAQdAmmhzpKSP7PI6ieE6kjQF
-        q2nLsBxwgxnLpccDZWxNynB0VgTB5Y53LP1suoDpZzWBDl/BmY9Bc0lYCjuiAOpCb5VBDyYzlXWlm
-        aOc4h3aQ==;
-Received: from [37.204.119.143] (port=57438 helo=cello)
-        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91 (FreeBSD))
-        (envelope-from <ar@cs.msu.ru>)
-        id 1h2f83-0007gt-AC; Sat, 09 Mar 2019 19:47:19 +0300
-Date:   Sat, 9 Mar 2019 19:47:18 +0300
-From:   Arseny Maslennikov <ar@cs.msu.ru>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Message-ID: <20190309164718.GD25561@cello>
-References: <20190309154307.23039-1-ar@cs.msu.ru>
+        Sat, 9 Mar 2019 11:52:00 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37425 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfCIQwA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 11:52:00 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m9so421321qkl.4
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 08:51:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=opersys-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CzCi6t3ZPQtB+NT+TKbpBOV2X5on6B/x2k+goTmH26U=;
+        b=vz9ldWAjDzpinsxnZw0qwZUvghaznfRMSSYJYyXiaQWsz08TTurhsT02ACDV2Ubp+X
+         DTxyOvW6+N+NHgJIboB7UgIEgigImyAm6YixJUppQVbi4oHw7mhNODz2JwPx1IWm+WQG
+         /EEJawDwPHUgqNBvo/ogahZvuxY9JDifxNJFkk8dmDBWxc01vhptbHd7xmf7EBsKV18K
+         4oOwzthm3efU2/jhaBgHA3jUpvDmmUJ4FpPccfh3USPF/c9obzdOTIXPynjhZnPPWdKL
+         M+lBEkcNjNjKO5x6PiQwmnsfGUcckRmc9P7YF79wftsXfAeBoF1rMJ+i/X/6zYKBIKQW
+         O9ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CzCi6t3ZPQtB+NT+TKbpBOV2X5on6B/x2k+goTmH26U=;
+        b=AH3BSpEaw/3MbX/AQgX9MNKm8DZGrkCzQAsRaL3HWCDLaJ/xh1+iNvAchIDaBNLyLs
+         Ec40FC2GlWFOOQY1syovVdoYFF00d0LoqOfaioWdfdzoxNXkKF4rAiQJyzifkmUT3+4I
+         wlPgT8UAar9UfkqS0v0TPk8upe/Z87IMILPkFt/ogPtMRX5QBi+2qLaoXvDvoWPCHTpm
+         GII8lX0dEKXqDqULj0t+WwAoAkTbCSd5486z+EpIGrCxvuQtJSfD6cswjE4F8az9/8g9
+         evGR07t90BcAutQ2DiQaYOS06rcEc/K4yIQnjqrhXrzPTK4IzQBUmUJ8Cdr9N5/BaeHA
+         eV7A==
+X-Gm-Message-State: APjAAAW2jLZPjzynTAQjY+b2BCM1HazePq/e8QiIohJj+7ZJWoiryRhj
+        Dqo4GERRejhm/8GpM9KPumOA8A==
+X-Google-Smtp-Source: APXvYqyKWPIAcW2u+9NM2t6v+1t+hfENGZw+lz5lg+opK/wMVn5lnWEUk8LPq7HRH/QuSyBhueprgw==
+X-Received: by 2002:a37:c40b:: with SMTP id d11mr3841605qki.62.1552150318441;
+        Sat, 09 Mar 2019 08:51:58 -0800 (PST)
+Received: from [192.168.202.103] (modemcable170.15-70-69.static.videotron.ca. [69.70.15.170])
+        by smtp.googlemail.com with ESMTPSA id x15sm467115qts.21.2019.03.09.08.51.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Mar 2019 08:51:57 -0800 (PST)
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+ <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+ <20190307150343.GB258852@google.com>
+ <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
+ <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
+ <20190308140251.GC25768@kroah.com>
+ <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+ <20190309071648.GE3882@kroah.com>
+ <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+ <20190309121141.GA30173@kroah.com>
+From:   Karim Yaghmour <karim.yaghmour@opersys.com>
+Message-ID: <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+Date:   Sat, 9 Mar 2019 11:51:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q9KOos5vDmpwPx9o"
-Content-Disposition: inline
-In-Reply-To: <20190309154307.23039-1-ar@cs.msu.ru>
-OpenPGP: url=http://grep.cs.msu.ru/~ar/pgp-key.asc
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 37.204.119.143
-X-SA-Exim-Mail-From: ar@cs.msu.ru
-Subject: Re: [PATCH v2 1/3] scripts/package/Makefile: put proper config in
- source tarball
-X-SA-Exim-Version: 4.2
-X-SA-Exim-Scanned: Yes (on mail.cs.msu.ru)
+In-Reply-To: <20190309121141.GA30173@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---q9KOos5vDmpwPx9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/9/19 7:11 AM, Greg KH wrote:
+> There is no licensing issue, see my follow-up comment about that.
+> 
+> It's all in ease-of-use here.  You want to build a trace function
+> against a running kernel, and now you have the header files for that
+> specific kernel right there in the kernel itself to build against.  It
+> doesn't get easier than that.
 
-On Sat, Mar 09, 2019 at 06:43:05PM +0300, Arseny Maslennikov wrote:
-> It is widely known that one can build a kernel without a .config in the
-> source tree by setting KCONFIG_CONFIG equal to the actual configuration
-> file path.
->=20
-> When making a *-pkg target, make(1) prepares a source tarball and tries
-> to pack `.config' in there regardless of the value of KCONFIG_CONFIG,
-> failing spectacularly if .config is absent and packing the wrong config
-> if it exists.
-> Let's fix that by including whatever KCONFIG_CONFIG points to in the
-> archive under the traditional name `.config'.
->=20
-> We have to pass --absolute-names to tar, since it seems to trim the
-> paths of archive members first and only then consider --transform, which
-> breaks KCONFIG_CONFIG=3D../../some.config, as well as absolute paths.
+Agreed.
 
-One way to avoid --absolute-names here is to do the dance below:
+It seems that opinions in this thread are split along two conceptions of 
+a "Linux system". On one side there's that of the conventional "Linux 
+distro" where the entity generating the distro has full control over the 
+entire process and the parts thereof. On the other side there's the 
+world that has evolved out of the multi-party ecosystem that Android 
+fostered. In the later, there isn't a single party that controls all 
+aspects of the "distro". Instead, there are a multitude of parties 
+contributing to creating a fully-functional Linux-based system.
 
->=20
-> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-> ---
->  scripts/package/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/scripts/package/Makefile b/scripts/package/Makefile
-> index 2c6de21e5152..134cefee068d 100644
-> --- a/scripts/package/Makefile
-> +++ b/scripts/package/Makefile
-> @@ -27,7 +27,7 @@ KDEB_SOURCENAME ?=3D linux-$(KERNELRELEASE)
->  KBUILD_PKG_ROOTCMD ?=3D"fakeroot -u"
->  export KDEB_SOURCENAME
->  # Include only those top-level files that are needed by make, plus the G=
-PL copy
-> -TAR_CONTENT :=3D $(KBUILD_ALLDIRS) .config .scmversion Makefile \
-> +TAR_CONTENT :=3D $(KBUILD_ALLDIRS) $(KCONFIG_CONFIG) .scmversion Makefil=
-e \
->                 Kbuild Kconfig COPYING $(wildcard localversion*)
->  MKSPEC     :=3D $(srctree)/scripts/package/mkspec
-> =20
-> @@ -44,6 +44,7 @@ if test "$(objtree)" !=3D "$(srctree)"; then \
->  fi ; \
->  $(srctree)/scripts/setlocalversion --save-scmversion; \
-  +cp $(KCONFIG_CONFIG) .tmp.config-tarball
->  tar -cz $(RCS_TAR_IGNORE) -f $(2).tar.gz \
-  +	--absolute-names --transform 's:^.tmp.config-tarball$$:.config:S' \
->  	--transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
-  +rm -f .tmp.config-tarball
->  rm -f $(objtree)/.scmversion
-> =20
-> --=20
-> 2.20.1
->=20
+In the latter ecosystem, the kernel and the filesystems (*plural*) used 
+with it do not necessarily come from the same place, are maintained by 
+the same parties or even required to be in lock-step. For all I know, 
+the filesystem images are coming from one party and the kernel is at one 
+point from one party and at another point can be substituted, possibly 
+for testing purposes, without userspace images ever changing. No 
+licensing issues at all involved, either with regards to the headers or 
+the distribution of the kernel itself, which, in as far as I've seen 
+when speaking of known industry players (those that matter here), are 
+always ultimately available in source from somewhere.
 
-I'm not sure if this is strictly better.
+Instead the issue is that I want to be able to give user-space access to 
+the headers that were used to build the kernel that they're running 
+over, regardless of where this kernel came from. And since I have to 
+assume that those two parts (kernel vs. user-space) are coming from 
+separate parties and can be arbitrarily replaced, there needs to be some 
+form of "contract" between them. The kernel's ABI already provides quite 
+a bit of that and, as Joel pointed out, Google can enforce a few more 
+things, such as default kernel configs, to "make things work". But one 
+option that doesn't exist in the world Android evolves in is to somehow 
+ensure that the filesystem images somehow have kernel-specific 
+tool-required artifacts for every possible kernel they may run against. 
+That's just not possible.
 
---q9KOos5vDmpwPx9o
-Content-Type: application/pgp-signature; name="signature.asc"
+That's especially true in the case of modern-day Android where the final 
+system is made of at least half a dozen filesystem images with each 
+image possibly coming from a different party. The /vendor partition 
+(with the hardware enablement), for example, could be coming from the 
+device vendor while the /system partition (with the Android framework), 
+for example, could be coming straight from Google in the form of 
+"Generic System Image" -- an image meant to run as-is on any 
+Treble-compliant system. /system might have the tools for eBPF, but 
+/vendor might have modules, while still the "boot" partition might have 
+the kernel. There's no reason I can't replace the boot partition 
+*without* changing /vendor. And there's no reason I can't replace 
+/vendor *without* replacing the boot partition. And all other 
+combinations with all other images.
 
------BEGIN PGP SIGNATURE-----
+That, in my view, is a big part of the problem Joel's patch solves: in a 
+system whose functionality requires multiple *independent* parties to 
+work together, I can still get the necessary kernel headers for 
+user-space tools to properly operate regardless of which part of the 
+system id being substituted or replaced.
 
-iQIzBAABCgAdFiEE56JD3UKTLEu/ddrm9dQjyAYL01AFAlyD7g8ACgkQ9dQjyAYL
-01DmLw/9FlAX3xDu+dLPStFypBfPNicW8tAAi1ivnlj+izOPUEcG+lxVmJsyXK+N
-WtwSL77RO3ARvABRWiVAikbEjx3dVxdqwXHPpcUgqgGON7FeNb86u0h9LkgWwdtY
-/wK2Ksyt4D8JZKnyeFk6UUvgn4egXt83dLzO6N2b6yAyWWDP4Kj8+WBoX5K+jN/8
-3DryL1PUz7NGsUbvntrAUNPhTiHzR1CA8kYLtvj7z38VMCuy5GEbGwwVbhvHUFaK
-LN93H0TDu93cm5TpPDxsfwDmHe3SU9LTyzbema2FU/LeTTB1cfeqY5EqBhul517o
-FiudifGkrrKcO+o0NyxuNT94rQiADrAPcvkl53NMEAs6R1hU+6RY/n8jiEi8ZfQX
-uCxQgQmzGyX+zLMzxf10goD1neGri2jqjTGe9PSXqlzCt+xYMmA/J9Oy2exT0w/s
-wSTHK5ukCelqrBfNX9sUVdDmTYEOpnyZbB8ndus+HgVi80eR3eCCEKbSMUH/vkSh
-b2eaTlJY3r71ouz16MViA03SXM7Necst9IeAdKjlnDtk8od657DJt9fYIHmgkvHo
-MMlhKgUzYg/YpJDsNOHEkdtcJSDUxqi2GHudSl3xyb9lXxuCpCz/D5BrDskP4K6w
-JV9SHRQeU9/U8tYpDXq34DWTA8Ilht42f5ZKgSdOMb1cDSIdZsE=
-=qdIx
------END PGP SIGNATURE-----
+Cheers,
 
---q9KOos5vDmpwPx9o--
+-- 
+Karim Yaghmour
+CEO - Opersys inc. / www.opersys.com
+http://twitter.com/karimyaghmour
