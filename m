@@ -2,121 +2,213 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A79C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001D7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D4F2081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70E1207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PM96cNat"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="16mz3cRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfCILCV (ORCPT
+        id S1726395AbfCILRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 06:02:21 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45055 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726235AbfCILCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 06:02:21 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q128so123286ljb.11
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 03:02:19 -0800 (PST)
+        Sat, 9 Mar 2019 06:17:24 -0500
+Received: from mail-eopbgr820070.outbound.protection.outlook.com ([40.107.82.70]:22064
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbfCILRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 06:17:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=q7EgyTKkBwCKENlJl+P4FiMkN5L+S2Lq9VbdUR33+dI=;
-        b=PM96cNatutYRGN+iq2u2T2qoRxxFuuER0zpWwSJkvqLaqkSGThHEpAJUuWllBn32UE
-         GmRqoXL86HU3mm+d3rFjVzQmqSFrtvEXn4ijiDMpXXYlU4AJ8PgaCrssqGmhH0mhAjxT
-         Q8eRYVYSP9u5jKrYQei76kYCudXNgPCmGE005d47QHvd70YAoGR7ZvsaQ+6i/ehGey0Y
-         hEjlB5n1O7dZ3f9rPeEATxlgHhuy/6oPQpzWoTBCIcryzUUIvf3tSiHLmq9lrp5yxXBo
-         NFoFxiR486MiWEtHdJ1UPn9rHeEVk5fh2yh783wvy73H39kcmHfY9CBleE+NS7Y35D9r
-         ArPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=q7EgyTKkBwCKENlJl+P4FiMkN5L+S2Lq9VbdUR33+dI=;
-        b=oK8mpbQBz82KHghaJkmYWGVB4w22gS76cr9H+6Q8h5juzSsDZvcuXTH/ssyHBCKYHT
-         0BYBAVCIC4+PfCJoknrQg1jMIZe5WAbDzrOWvvvxyCWSy9TWIXvxVqpb1nqx9a+n82E0
-         jyU6S/5lbiTO5Efxu7ikgLGfIeeRGF5U/gEwBH4opXWqaVcT6+O3xlg4xHkYzZ1y0PUi
-         Hw+D2ZZ6JCoYRHM0fMEjC6660aGJSkgaMFHVSUQni9JdOB2pjEx6kKCbxzW++zxzuoLe
-         WXVZA9dckAIquytH2oN3fVnvo6uEvHM3wQDgpqW2eHVtTlhV5p1Dqiz0RW7WwkMbAyky
-         8ozA==
-X-Gm-Message-State: APjAAAURE480EQqgNHakX64cAPrdJUAs4xxeBgHvmS8oKpPN+KSlCCSV
-        LYrG7/78moQO7DlG5u0NjCk1Sg==
-X-Google-Smtp-Source: APXvYqx2ApC9Ka/qjOXmF09vmAZsU6Nz2YoUaT9KO0tMBguw+S7Lk6IrSoXS1bGmWu6FsyEE4mTKwA==
-X-Received: by 2002:a2e:5d88:: with SMTP id v8mr11484224lje.150.1552129338883;
-        Sat, 09 Mar 2019 03:02:18 -0800 (PST)
-Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
-        by smtp.gmail.com with ESMTPSA id q2sm36232ljq.19.2019.03.09.03.02.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 09 Mar 2019 03:02:18 -0800 (PST)
-Date:   Sat, 9 Mar 2019 12:02:17 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: rcar-vin: fix a potential NULL pointer dereference
-Message-ID: <20190309110217.GA5281@bigcity.dyn.berto.se>
-References: <20190309070527.2657-1-kjlu@umn.edu>
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E2WNQWMaSqxjs03133fNOegFIGfBGZRBePZaNhPSbng=;
+ b=16mz3cRUBT80mJgcxqkJBPqL/mnzmUUI6eu0zn2l7Vxk1dNqtM+Y+g3u9UCM4iONGn4e/tbMYvge0pvGiCLt2y6XoNXt+F3x85joPLogp/lOrBBUpHRvKDAuDmnt0FVXtwmmmljXtjNyNOUhCCkmIXfFo7mP3b1EtUEGfw2tYek=
+Received: from BYAPR02CA0055.namprd02.prod.outlook.com (2603:10b6:a03:54::32)
+ by BN6PR02MB2371.namprd02.prod.outlook.com (2603:10b6:404:30::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1686.18; Sat, 9 Mar
+ 2019 11:17:17 +0000
+Received: from SN1NAM02FT062.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by BYAPR02CA0055.outlook.office365.com
+ (2603:10b6:a03:54::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1665.16 via Frontend
+ Transport; Sat, 9 Mar 2019 11:17:17 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ SN1NAM02FT062.mail.protection.outlook.com (10.152.72.208) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1686.19
+ via Frontend Transport; Sat, 9 Mar 2019 11:17:16 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:55281 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1h2Zye-00006q-0u; Sat, 09 Mar 2019 03:17:16 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1h2ZyY-000295-St; Sat, 09 Mar 2019 03:17:10 -0800
+Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x29BH4lS028366;
+        Sat, 9 Mar 2019 03:17:04 -0800
+Received: from [172.23.37.92] (helo=xhdharinik40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <harini.katakam@xilinx.com>)
+        id 1h2ZyR-0001zJ-LJ; Sat, 09 Mar 2019 03:17:04 -0800
+From:   Harini Katakam <harini.katakam@xilinx.com>
+To:     <robh+dt@kernel.org>, <=mark.rutland@arm.com>,
+        <michal.simek@xilinx.com>, <harini.katakam@xilinx.com>,
+        <sudeep.holla@arm.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <harinikatakamlinux@gmail.com>
+Subject: [PATCH] arm64: zynqmp: dt: Add TI PHY quirk
+Date:   Sat, 9 Mar 2019 16:46:58 +0530
+Message-ID: <1552130218-21505-1-git-send-email-harini.katakam@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(136003)(346002)(2980300002)(199004)(189003)(186003)(478600001)(36386004)(47776003)(5660300002)(50466002)(8936002)(50226002)(2906002)(48376002)(77096007)(16586007)(51416003)(6666004)(356004)(14444005)(63266004)(106466001)(7696005)(4326008)(26005)(2201001)(426003)(2616005)(486006)(476003)(305945005)(110136005)(126002)(316002)(9786002)(81166006)(81156014)(54906003)(44832011)(336012)(8676002)(36756003)(106002)(42866002)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2371;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190309070527.2657-1-kjlu@umn.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9cab4ae8-aa8c-48fc-9a20-08d6a480c9d6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BN6PR02MB2371;
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2371:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Exchange-Diagnostics: 1;BN6PR02MB2371;20:jtUbH0+G67QlEHQCfXL0XHsV6//NGo2mYGJvqCqo82B+YANEyljtUkRJb5tdwFX6ComEUjiEpya9tqTTemHufxSqzOdSSVxt2ruFfJCXBkFL6Mqe/plEgs1Fe6cV4CKaBtkUEadb/y5WAJ8dYX7llIrxsfJk/NwUubpr+e/GvB2r13K4O7/w7meShgQUpaxC31H6ItiDIEntQE+weNBKgbeGGl6PkOqXD0nCdNdsDD/apDxO1RWl4yOeIzQugjawCkULKK3IlRzTghfOClfCNzDCicIO9XfhvLzcToXc6Y7Emc/v5Wqz8d0G7WukXfLZplbi8kRkSVWGGpVjx+NLWb4cF+6Xv+I2hLYD0DN70trbGSoCZLRgYBxLhPDYVFhCp+Pm+S9vVQh87yc6FajYEB3SRew/Yrgr7B0Lx2HzY3ElsjyfkpmwFaZZkWuohhDiNdofGjvjZaINUQsjGEoKs1+gfceCRZuXnjnMUeFbi5SW24sqIqRLg2hZ9O4Hcosb
+X-Microsoft-Antispam-PRVS: <BN6PR02MB2371D4C350939FD8F7547EECC94E0@BN6PR02MB2371.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 0971922F40
+X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1;BN6PR02MB2371;23:J9MXeABIATk39Qrx+yQ2M1UW80UyHRr+pRT4fQa2/?=
+ =?us-ascii?Q?o5yJPDZ6/tyIRsSl3Aw7Tvet2Vswst8ieV7OBaBgtfLkaFYrol2y1rfQTpyJ?=
+ =?us-ascii?Q?pYTw3luaiXHwsOTiYpx3EiEC4roCOv2IkU+UMl6n7t5r+e4FA9N3oIYYFBT6?=
+ =?us-ascii?Q?gu4URotwMzbNtL3l6Lzk5E3C1u6mrgX50Z0IUWtdU/yHe779V95Iloawcv3O?=
+ =?us-ascii?Q?op3fC5rtja06JIEurzgQSF8v5iiB1G0KXYpQsVmAYRstNjPMRK+4gfQtJbOE?=
+ =?us-ascii?Q?+08HMIxHF+5PpcSnGSXZ46X6H6xnP8y5UPgJsdsF0kYRnkrzsyF9H2+FS3bU?=
+ =?us-ascii?Q?REUFxXx5/hm+bKgMSyyUNHH87XiNoD6VmFa9AlrN2nhLUxCcLy/AWdFETMux?=
+ =?us-ascii?Q?EJLXB7FSvcRKUHNheQkS1VMs042UmCSJNDM7h0taUGinn14CFakfKl+ixiix?=
+ =?us-ascii?Q?jqIHi9fLhdsS8Vn9iKBfXK0+nx8oFR9T1mXf2+tXqrI2cmvOf1aB0hYbmSDe?=
+ =?us-ascii?Q?wFCHS+RKXlwrOEWdKDQiqpdteslUWiOwRmkNr0LdRr4mjfrzcKVkxmObNyxK?=
+ =?us-ascii?Q?6kFGucjTUZsn3miDkt/0Q94C1YGfhGB3E92y5PZESUZKxQ3oUkjrDi83Iug0?=
+ =?us-ascii?Q?1jEDWK38kO6ELn0wb2w627QaqMgliX7MxOfDN7eUkuGMay3sOdrckXCAakmp?=
+ =?us-ascii?Q?dNSQmvYt9sDmXvv4VTS7tpSBoN2EMs7LgEClQn3hbkuZScaugCMl3oOT5z+Q?=
+ =?us-ascii?Q?O1lM1PC9Zax91CA2X5bCLsxLrgV9WBRkg9axcQxitf4H4V4oEIvzQdGlzSKY?=
+ =?us-ascii?Q?KRPQmdALEBKp1iwbHzrAUF17X5ynuIEF5Yn39MJ7YXgqNj1f64ARn9t3aFZZ?=
+ =?us-ascii?Q?TeBC92HzI8TymcEHDWpZ1+gXSYIcMHNp2Fb8KUMzhw05AtqWdQGVuXDy6olH?=
+ =?us-ascii?Q?gMDA75k+Fkc3lyTJFEo/OXtNFikUVgFmVHQBzSZndWqseQWKP3Kqf+QNmGha?=
+ =?us-ascii?Q?8IwkyDf+ERf9lEyH3/t7i5dKaxXtnX3E1HIEYegZVYR/Ijd3yfoO2dEjC5cK?=
+ =?us-ascii?Q?TZkDviBDyDhJCNtXuDMAWojTJKoTVRnqx1jxijZgxNQSda1ng=3D=3D?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: xJbr6Sp1yR74GJ+dFE5tSkZHuK8ebjm0bBzCLPtSwxB24QzC7Z1B/0j9ZgVneojZN1cNb1zB9pHKbiYqLJyOR1eVSsxgk8D7Dm8cpx20JT2yXNsEmw7D8/6XSRme+4n4IQ11kYEYnEQJ5XZxPi5e5B4kMY6rU/utm/RF2ZVViYkEBoGCthOk4Sxck6Q088T16R4lCq3HPoIcw7wcfGYR7oZe1nKDGqNgckz83LDuoWQdoeI6H2j/9jVt5oovAMl45D8fGpkAx05r8T0Eu7fuQeD38NZxKRSgaHZeK77cOrGYS1Rayn6afi5+oKGHdiLcodTiWL6xUeCnopmVpj6LEq0dC7wZlkJHBloMWnIx+SKZ0hAWI3aiAosuiByUX+nVgrR1OOTad3OHZgQ/mRT0Qzv/rAgQSn3S1cOyrwlMzfo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2019 11:17:16.4954
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cab4ae8-aa8c-48fc-9a20-08d6a480c9d6
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2371
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kangjie,
+Add TI PHY strap ctrl quirk for all the HW where applicable.
 
-Thanks for your patch.
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+---
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts      | 1 +
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts      | 1 +
+ 6 files changed, 6 insertions(+)
 
-On 2019-03-09 01:05:27 -0600, Kangjie Lu wrote:
-> In case of_match_node cannot find a match, the fix returns
-> -EINVAL to avoid NULL pointer dereference.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
->  drivers/media/platform/rcar-vin/rcar-core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index f0719ce24b97..a058e2023ca8 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -266,6 +266,8 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->  
->  	match = of_match_node(vin->dev->driver->of_match_table,
->  			      vin->dev->of_node);
-> +	if (unlikely(!match))
-> +		return -EINVAL;
-
-I don't think this is needed. The driver depends on selects OF and if we 
-get this far we it is because we had a match already. The reason to call 
-of_match_node() here is simply to retrieve which of the possible 
-compatible strings was matched.
-
-Am I missing something? What scenario do you see where this can fail?
-
->  
->  	strscpy(mdev->driver_name, KBUILD_MODNAME, sizeof(mdev->driver_name));
->  	strscpy(mdev->model, match->compatible, sizeof(mdev->model));
-> -- 
-> 2.17.1
-> 
-
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+index 11cc671..2421ec7 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+@@ -89,6 +89,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index cef8167..2a3b665 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -110,6 +110,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+index af4d868..1780ed2 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+@@ -21,6 +21,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ 	/* Cleanup from RevA */
+ 	/delete-node/ phy@21;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+index d4ad19a..8f45614 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+@@ -55,6 +55,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+index 94cf509..93ce7eb 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+@@ -111,6 +111,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+index 460adc3..8bb0001 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+@@ -106,6 +106,7 @@
+ 		ti,rx-internal-delay = <0x8>;
+ 		ti,tx-internal-delay = <0xa>;
+ 		ti,fifo-depth = <0x1>;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.7.4
+
