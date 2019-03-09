@@ -2,111 +2,128 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA92C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F04AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB58120815
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552155417;
-	bh=wg4B8WczmM1LQB4wVY05qmDc4v+aN9CL3r6Gic+SD7Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VeeohrBLZcDnxB3Huh5e374TbmLTcOyTCy+0Jwf5fcXvErrpmiKrORzjClchTi9t0
-	 PlVhd/IUVvvbQ458zRAyxCLivPXBGwGpQV/n4kJvuFIjHDSOmxdMMwcUwi4Bm9IxAa
-	 WPf0QsLQfh2hbge9pUgLRM3+rMfakD4IMXNKDBfI=
+	by mail.kernel.org (Postfix) with ESMTP id 03EB9206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:18:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TV7Q2MlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfCISQz (ORCPT
+        id S1726451AbfCISSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 13:16:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbfCISQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 13:16:55 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B52206DF;
-        Sat,  9 Mar 2019 18:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552155414;
-        bh=wg4B8WczmM1LQB4wVY05qmDc4v+aN9CL3r6Gic+SD7Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qWcgmXsr7Vsqmuev06onPcdpokRe3u7fMw/XWUTOGnigGLmeBP05rTBu3dlMheUpQ
-         h0WsTH51Z2zeUH/dWGr3t7PL+PZbD6H0yyNJgLGKa5OC6Q8YXpZFVlKMq9h+6PGyqy
-         eX1Xa16ryhqNkM8GOtAlrEqOHFLPARS6VrAHgRaI=
-Date:   Sat, 9 Mar 2019 18:16:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Robert Yang <decatf@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] iio: accel: kxcjk1013: Add device tree support
-Message-ID: <20190309181649.228507de@archlinux>
-In-Reply-To: <20190304151912.11485-4-decatf@gmail.com>
-References: <20190304151912.11485-1-decatf@gmail.com>
-        <20190304151912.11485-4-decatf@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 9 Mar 2019 13:18:35 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42277 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfCISSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 13:18:35 -0500
+Received: by mail-qt1-f194.google.com with SMTP id u7so834857qtg.9
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 10:18:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2CmTuRNh13ukFfv8JkGzVYuTGuI0E0y8s2qmHbJv9cs=;
+        b=TV7Q2MlQkA5ywISJTN/JaxwoibjQs7tnhSlmroLQA3gyTrNX3qk1Trao9Kc0EmtKLd
+         zpkGKuuW53YRohHShrbg6QDyrGVLf0bQs59+xXuZBteJC2RYjM6S4p+yvFR26DNpH27R
+         6coL0ppPZsjnNWbHcxRIJeUF6ilfgF8x+a3OdA1Ta81mGhlN+fj8UGMs0CI9PUYNJI0b
+         I081IIGHrm173YLQ1a93iw5Ip4NsyuTgWaFuxKVgYCDuNbo1C8LhwS4JXVGcGYfbMqhC
+         Pc4NAL418s0AOM8Y9BXR/YIL8MrZ/J0SyE1WdSV0l4YS0tK6InDaecYXWgM35IrHQBid
+         Abzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2CmTuRNh13ukFfv8JkGzVYuTGuI0E0y8s2qmHbJv9cs=;
+        b=kxWjjyGkN6H1GmUkI4MoDxlFD/RigpIzUzEHvITb/lEBbe7exSfrNcpXVOOywf0Vm5
+         IMUvgRRGQFCjNJJVfL002jBgVK2/1+H3TRPBHki86IGHMSwYct+kpviDJ6EzISpvm61D
+         CvE+B60TnaQKPSZnTmZcdhdtL+GDNnarS7QgwBsrE4Sg/uZWzvuzZ5zsXfdFzzgxBh+0
+         fsaczoQmAWaJxsnRLdO9Lf3c2dp3qwTIXSXujYARqvzRCzD3rBrq6SJBKwdFJIT/EC/o
+         Ufi3TJBuEMbFqyqkN8DzNUFgVIdIqiNDCnHU/4++WoObIjlpvg2fXWA/0RzGtk38GP0K
+         1Myg==
+X-Gm-Message-State: APjAAAX74oOTqZuxSnHNubaoBKCnYU3Gq7C/L3Qt7qQxmyvBxVwvry3+
+        3mu7Uunpl7ao2tN50T03/mw=
+X-Google-Smtp-Source: APXvYqxYSa7qALSG+rbi/EI7/SF39ulbqB0wGBOOXx7OZPlGVQUil4FMCD5MXet4GyquJcrz+etIog==
+X-Received: by 2002:ac8:33d7:: with SMTP id d23mr19625341qtb.243.1552155514466;
+        Sat, 09 Mar 2019 10:18:34 -0800 (PST)
+Received: from localhost.localdomain ([186.141.200.40])
+        by smtp.gmail.com with ESMTPSA id v2sm585175qkc.41.2019.03.09.10.18.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Mar 2019 10:18:33 -0800 (PST)
+From:   Laura Lazzati <laura.lazzati.15@gmail.com>
+To:     gregkh@linuxfoundation.org, tsotsos@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Laura Lazzati <laura.lazzati.15@gmail.com>
+Subject: [PATCH] staging: octeon-usb octeon-hcd: Fix several typos.
+Date:   Sat,  9 Mar 2019 15:18:27 -0300
+Message-Id: <20190309181827.9301-1-laura.lazzati.15@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 10:19:12 -0500
-Robert Yang <decatf@gmail.com> wrote:
+I found that the comments had several typos such as "aenable", "internaly" and some others.
+I fixed them all.
 
-> Add device tree support for kxcjk-1013 accelerometer sensors.
-> 
-> Signed-off-by: Robert Yang <decatf@gmail.com>
-One comment below. 
+Signed-off-by: Laura Lazzati <laura.lazzati.15@gmail.com>
+---
+ drivers/staging/octeon-usb/octeon-hcd.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Applied with that minor tweak to the togreg branch of iio.git
-and pushed out as testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/accel/kxcjk-1013.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
-> index 7096e577b23f..e4cbc443e6ed 100644
-> --- a/drivers/iio/accel/kxcjk-1013.c
-> +++ b/drivers/iio/accel/kxcjk-1013.c
-> @@ -1510,10 +1510,20 @@ static const struct i2c_device_id kxcjk1013_id[] = {
->  
->  MODULE_DEVICE_TABLE(i2c, kxcjk1013_id);
->  
-> +static const struct of_device_id kxcjk1013_of_match[] = {
-> +	{ .compatible = "kionix,kxcjk1013", },
-> +	{ .compatible = "kionix,kxcj91008", },
-> +	{ .compatible = "kionix,kxtj21009", },
-> +	{ .compatible = "kionix,kxtf9", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, kxcjk1013_of_match);
-> +
->  static struct i2c_driver kxcjk1013_driver = {
->  	.driver = {
->  		.name	= KXCJK1013_DRV_NAME,
->  		.acpi_match_table = ACPI_PTR(kx_acpi_match),
-> +		.of_match_table = of_match_ptr(kxcjk1013_of_match),
-Sorry. I'd missed this before, but general preference is to not
-use of_match_table any more because it stops people using the
-somewhat odd ACPI object that lets you used dt bindings
-via ACPI.
-
-I'll drop it.
-
->  		.pm	= &kxcjk1013_pm_ops,
->  	},
->  	.probe		= kxcjk1013_probe,
+diff --git a/drivers/staging/octeon-usb/octeon-hcd.h b/drivers/staging/octeon-usb/octeon-hcd.h
+index 769c36cf6614..9ed619c93a4e 100644
+--- a/drivers/staging/octeon-usb/octeon-hcd.h
++++ b/drivers/staging/octeon-usb/octeon-hcd.h
+@@ -1711,7 +1711,7 @@ union cvmx_usbnx_usbp_ctl_status {
+ 	 *	Indicates an internal error was detected during
+ 	 *	the BIST sequence.
+ 	 * @tdata_out: PHY Test Data Out.
+-	 *	Presents either internaly generated signals or
++	 *	Presents either internally generated signals or
+ 	 *	test register contents, based upon the value of
+ 	 *	test_data_out_sel.
+ 	 * @siddq: Drives the USBP (USB-PHY) SIDDQ input.
+@@ -1737,7 +1737,7 @@ union cvmx_usbnx_usbp_ctl_status {
+ 	 *	to D+. When an A/B device is acting as a host
+ 	 *	(downstream-facing port), dp_pulldown and
+ 	 *	dm_pulldown are enabled. This must not toggle
+-	 *	during normal opeartion.
++	 *	during normal operation.
+ 	 * @dm_pulld: PHY DM_PULLDOWN input to the USB-PHY.
+ 	 *	This signal enables the pull-down resistance on
+ 	 *	the D- line. '1' pull down-resistance is connected
+@@ -1745,7 +1745,7 @@ union cvmx_usbnx_usbp_ctl_status {
+ 	 *	to D-. When an A/B device is acting as a host
+ 	 *	(downstream-facing port), dp_pulldown and
+ 	 *	dm_pulldown are enabled. This must not toggle
+-	 *	during normal opeartion.
++	 *	during normal operation.
+ 	 * @hst_mode: When '0' the USB is acting as HOST, when '1'
+ 	 *	USB is acting as device. This field needs to be
+ 	 *	set while the USB is in reset.
+@@ -1784,7 +1784,7 @@ union cvmx_usbnx_usbp_ctl_status {
+ 	 *	Used to activate BIST in the PHY.
+ 	 * @tdata_sel: Test Data Out Select.
+ 	 *	'1' test_data_out[3:0] (PHY) register contents
+-	 *	are output. '0' internaly generated signals are
++	 *	are output. '0' internally generated signals are
+ 	 *	output.
+ 	 * @taddr_in: Mode Address for Test Interface.
+ 	 *	Specifies the register address for writing to or
+@@ -1797,7 +1797,7 @@ union cvmx_usbnx_usbp_ctl_status {
+ 	 *	This is a test signal. When the USB Core is
+ 	 *	powered up (not in Susned Mode), an automatic
+ 	 *	tester can use this to disable phy_clock and
+-	 *	free_clk, then re-eanable them with an aligned
++	 *	free_clk, then re-enable them with an aligned
+ 	 *	phase.
+ 	 *	'1': The phy_clk and free_clk outputs are
+ 	 *	disabled. "0": The phy_clock and free_clk outputs
+-- 
+2.17.1
 
