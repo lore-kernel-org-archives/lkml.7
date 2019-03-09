@@ -2,114 +2,126 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DD9C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ADFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8638E20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F397F20836
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPX6agXX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u5LEYekO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfCIOWF (ORCPT
+        id S1726490AbfCIOYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 09:22:05 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55792 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726235AbfCIOWF (ORCPT
+        Sat, 9 Mar 2019 09:24:12 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33582 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfCIOYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 09:22:05 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q187so356910wme.5;
-        Sat, 09 Mar 2019 06:22:03 -0800 (PST)
+        Sat, 9 Mar 2019 09:24:12 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c13so10770361wmb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 06:24:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iJ7GVdFMJfD8adgjPNS/jtJI5VRP32URLIKXbn+1+xk=;
-        b=aPX6agXXsAP+BbmV31OmamXKwzTHjikmD8qvmHdL+QYnCB6WC+ocdYOlDQ+pzWIxKG
-         kCUaSU/lt7ij3s2p7ZS6j6lHR29EJjEgECJ/vzJo9ESZ2wGQ4gfkalSQcA1E7pM5LiPo
-         7TdfUHZFWbyiHBtuwImAKMNaFQh5EVJRbkQsGkCrmPa5Wv3k1Scq8NXxaKNVHnIjz8Ks
-         W+vc2/Y7afsAeztaWl6Gty1l2kekRoQV5mmaJ17Fp/MdD8qdWJmTfW+VEIceq4REHChN
-         WxSmptyzEhIgjBZzSlrJIXqTx0Ny+Z4Xb2/YFBgWXWF/2PixizmbprWjv2tXaOpLq+nx
-         lyPA==
+        bh=7rIjTkYfaChn3AQWHIf5YKtHs717sQSf2y9a/O/XINI=;
+        b=u5LEYekOKK7ofyfnbVGs2s0Q4VKLB8c02GYS0tLXmkA8kc061B0SUSdRzseQv7VstQ
+         eutXXU5akGztqPt2ZnK8rNYsQlGlGjBCzVGjvc6sAOgBbN32hFEGECEXOfYjhGpJVliH
+         DEyNc3SMpTc9aFyIchWqXfWIIxzneLircl3JO9NzgQx/a5CW9ucIWsClW9eQRLewtVaW
+         vRkVDQMhzBEfTqUTHN3IeT8qgO+QmgrbiWPsONnKvx4D6J5k5unCb7r6bfhAvNsah6jO
+         1YPRoHaaxt7G1wLd2vRmpm6fOmQ6XWy/YlsAlTM5W599X2aZeZkltrvxazenQNvcd8sY
+         Q1Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iJ7GVdFMJfD8adgjPNS/jtJI5VRP32URLIKXbn+1+xk=;
-        b=jnXly0OunTFMeEUAccfzB3MU5RxeoO96kfov4GCVNW5eaRc4iYAjqVGAMVadeGFaXF
-         CLH6fBHEWNy3E2Q97hOno6jVBMZw+Bid+ekrd7E2nTd9rAASH+eL6r1D/FvzqGWxG8jo
-         OU28RcHq7q1RULAO1Ve3nyavGIiEo6L6ePasBMUCCHq94JnNpkgA9oIyg1yrefDEFy6y
-         ysqybrTb8yum/0JXX47jPk0f5TVbkaqXaBtmuFnvlQa8PizneuPQOYBw0vAj/uqABlzY
-         pAz7FxfxukPraHCScgmew9nLyG0kvCD0macqbumdZ4VpxrmnbcvdNCX4tgySJZfE37QA
-         L1xA==
-X-Gm-Message-State: APjAAAU2M6w+JsrgLM0uDYarrKVYFJoqTKaNEK86cTaEApVmMhFGcSU4
-        UMabVMtUx4iI0b4AzWRyKcI039x9cxc=
-X-Google-Smtp-Source: APXvYqy+2wqlDbVp8k3Iud2wYmBxOCBwCKgtQox8ivsYJtOB5BLu1Xn+bnd+Lx4A/XMz75AtOQNFMg==
-X-Received: by 2002:a1c:7ed0:: with SMTP id z199mr11679355wmc.89.1552141322032;
-        Sat, 09 Mar 2019 06:22:02 -0800 (PST)
-Received: from ?IPv6:2003:ee:f27:ae00:bc3a:186e:8458:23ed? (p200300EE0F27AE00BC3A186E845823ED.dip0.t-ipconnect.de. [2003:ee:f27:ae00:bc3a:186e:8458:23ed])
-        by smtp.googlemail.com with ESMTPSA id g15sm634222wrw.78.2019.03.09.06.22.01
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Mar 2019 06:22:01 -0800 (PST)
-Subject: Re: [PATCH] net: can: Increase tx queue length
-To:     Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
-        wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1552140446-31535-1-git-send-email-appana.durga.rao@xilinx.com>
-From:   Andre Naujoks <nautsch2@gmail.com>
-Message-ID: <cd71079c-664f-b1b6-bb21-ecda639ecbed@gmail.com>
-Date:   Sat, 9 Mar 2019 15:22:00 +0100
+        bh=7rIjTkYfaChn3AQWHIf5YKtHs717sQSf2y9a/O/XINI=;
+        b=uK0s+I+PwbK/odxeejEV7B+XbG50nUvDTF6E3eLiBaSp0symn64g1JHzpTZcIGI9c3
+         EeQPouscSxKsSlNYzyaHHuN181pgJfZ3FOckLIVd5CncypbZoC99o9BSwpT+SE77mSrX
+         Z92WsInak8VVUYO3wDXkVohzsSSxt50vUI/JCXJFVQHJ7euB889tXf89INbWG/QXYNCr
+         XyVYBBxDj7+Bz693LqoJtlYBmsXKvQb0HROD+Bmytqs8qm+RAjy6G30vrn8WCO1r4fz+
+         qvuSvEclxasMkIX0/mkK1J4F9htvckxL5yRmNN765vLiVROds67u0BMBKSBh7PzBoqd9
+         oOPg==
+X-Gm-Message-State: APjAAAVSWGN1OJA5w62UKJjooHc/uiwlvXGZMUwsXKaqbXy77CYfJwyS
+        azGqyxzECEr77G92JfWJu+DDnN4jxTU=
+X-Google-Smtp-Source: APXvYqyfOFA7S2SDjsucGTsRJp2AR6H2HGz2w4eRhmIPKYWRKJYJ4RGC0/gD4kqTMTPhkskz5Rvmzw==
+X-Received: by 2002:a1c:c60b:: with SMTP id w11mr12165999wmf.39.1552141449441;
+        Sat, 09 Mar 2019 06:24:09 -0800 (PST)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id t9sm1653485wrx.73.2019.03.09.06.24.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Mar 2019 06:24:08 -0800 (PST)
+Subject: Re: [PATCH] clocksource: cadence_ttc: fix memory leak in
+ ttc_setup_clockevent
+To:     Yue Haibing <yuehaibing@huawei.com>, michal.simek@xilinx.com,
+        tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190309131958.17996-1-yuehaibing@huawei.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b9831ea9-3230-6f63-8c73-b3b2cd28c59f@linaro.org>
+Date:   Sat, 9 Mar 2019 15:24:08 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1552140446-31535-1-git-send-email-appana.durga.rao@xilinx.com>
+In-Reply-To: <20190309131958.17996-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/19 3:07 PM, Appana Durga Kedareswara rao wrote:
-> While stress testing the CAN interface on xilinx axi can
-> in loopback mode getting message "write: no buffer space available"
-> Increasing device tx queue length resolved the above mentioned issue.
 
-No need to patch the kernel:
+Hi Yue,
 
-$ ip link set <dev-name> txqueuelen 500
+I appreciate the fix but usually we add a rollback for all the
+operations done in the init function.
 
-does the same thing.
+Please, migrate the init function to the timer-of API, so the rollback
+will be automatically handled.
 
+Example here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clocksource/timer-sprd.c#n197
+
+On 09/03/2019 14:19, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> Signed-off-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
+> Add the missing kfree() in ttc_setup_clockevent() to free the
+> mem before error return.
+> 
+> Fixes: 70504f311d4b ("clocksource/drivers/cadence_ttc: Convert init function to return error")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> --> Network devices default tx_queue_len is 1000 but for socket
-> can device it is 10 any reason for it?? 
->  
->  drivers/net/can/dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/clocksource/timer-cadence-ttc.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-> index c05e4d5..32bd5be 100644
-> --- a/drivers/net/can/dev.c
-> +++ b/drivers/net/can/dev.c
-> @@ -642,7 +642,7 @@ static void can_setup(struct net_device *dev)
->  	dev->mtu = CAN_MTU;
->  	dev->hard_header_len = 0;
->  	dev->addr_len = 0;
-> -	dev->tx_queue_len = 10;
-> +	dev->tx_queue_len = 500;
+> diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksource/timer-cadence-ttc.c
+> index b334029..b664af8 100644
+> --- a/drivers/clocksource/timer-cadence-ttc.c
+> +++ b/drivers/clocksource/timer-cadence-ttc.c
+> @@ -432,6 +432,7 @@ static int __init ttc_setup_clockevent(struct clk *clk,
+>  				    &ttcce->ttc.clk_rate_change_nb);
+>  	if (err) {
+>  		pr_warn("Unable to register clock notifier.\n");
+> +		kfree(ttcce);
+>  		return err;
+>  	}
 >  
->  	/* New-style flags. */
->  	dev->flags = IFF_NOARP;
 > 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
