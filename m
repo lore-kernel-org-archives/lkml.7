@@ -2,102 +2,144 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BC9C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E02C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D5A207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 11:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="LI/tzB8Q"
+	by mail.kernel.org (Postfix) with ESMTP id 840C7207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfCIL6e (ORCPT
+        id S1726443AbfCIMJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 06:58:34 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37564 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfCIL6e (ORCPT
+        Sat, 9 Mar 2019 07:09:26 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38899 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbfCIMJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 06:58:34 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q206so281388pgq.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 03:58:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=MJYs8vdlU6mHCQvMnerk2SFu391jt9PTuFpBk4+0bAs=;
-        b=LI/tzB8QO6frlax2ZEcCnbKPySE3vtfuY6YThw6r208fgH0zcDb6cx3sZEENNe5pIg
-         mXYKHc4b7DYbSWhqqG3D7Ffz3rN8Pu8qqfGzezYEKw++Rjm7W/k91W4/eyojGxWtcjCd
-         kh73YkJ29gMpFLkmsV9qLOIiNdzFbdZ3ZW2lmGRDREOwW35op35ciPxN2c58HxhBQ2g1
-         44h/rT1mwCWX8XnLa5Phz96qjGxIL2dSb/g498z5JggwGNCGrnZGwQv81aZha6BI269a
-         hto1+qUYpt8lpRe5L8RMTuLZAXQRiAsGYwnekCibB+a5hD4eHEwlxeZgR7y4cAMVOgcj
-         hj7Q==
+        Sat, 9 Mar 2019 07:09:25 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q81so210953oic.5;
+        Sat, 09 Mar 2019 04:09:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=MJYs8vdlU6mHCQvMnerk2SFu391jt9PTuFpBk4+0bAs=;
-        b=VPCkRFWo2DaiblMzkBWXUWEfXVC7dqAVM4K5R5tyotMszsLS5CjqFYxA6Sge+Ec4Uj
-         P5PtfoJAcYq1zS8ai00gHRvS9HGEqyZMMpgXJDQed0oQIR5fRXr4s3pXWYWG/fOiatKV
-         JQkCYL0H5a7B8G1zrDocNtSkEt4kfU/UydgK5+uyHT4A9aper2HqKpFssORBigthPPlv
-         gbTJSNMBHrrhHbksdu+jSTwyeWLmAPDrHl2v5N32hJKZsdjQ1uZHGu6Z7QFWFAEDv6eS
-         UClOn3C4cd357RqPIDuqQHOSloEvEpOI324OtZ2DkCkCTOnCMl6h2OwvIqGj5BVwiMhs
-         dVdQ==
-X-Gm-Message-State: APjAAAWQr4aYb0vcirLuZEHTDtn4RvMyIXVaSRrQUww2mFgcQfkmRTbr
-        TRh0B+UbAQppd6Cn3HUan9qhMw==
-X-Google-Smtp-Source: APXvYqwAqQr8rpZduGzSaTKZHWh0qfMy6l8//0Pm4wgcd9vsOzhiFuAQJjm3cTFiT6HC0odupcZw9Q==
-X-Received: by 2002:a17:902:a702:: with SMTP id w2mr24097313plq.341.1552132713755;
-        Sat, 09 Mar 2019 03:58:33 -0800 (PST)
-Received: from ?IPv6:2a02:8084:2842:c580:551e:cd48:ead0:f847? ([2a02:8084:2842:c580:551e:cd48:ead0:f847])
-        by smtp.gmail.com with ESMTPSA id v5sm760974pfn.81.2019.03.09.03.58.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Mar 2019 03:58:33 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH 3/4] iommu/vt-d: Allow IOMMU_DOMAIN_DMA and
- IOMMU_DOMAIN_IDENTITY to be allocated
-From:   James Sewart <jamessewart@arista.com>
-In-Reply-To: <171d70d2-5988-9f25-7e2c-cddb217f63ad@arista.com>
-Date:   Sat, 9 Mar 2019 11:57:27 +0000
-Cc:     iommu@lists.linux-foundation.org, Tom Murphy <tmurphy@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <718BFBD9-F03B-4887-84FB-A21B97DAC9E4@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <2C75F46E-78FE-45E9-9E7D-280B3138EA13@arista.com>
- <F83456DB-81DD-4E9B-9204-12ED9972D2FA@arista.com>
- <171d70d2-5988-9f25-7e2c-cddb217f63ad@arista.com>
-To:     Dmitry Safonov <dima@arista.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c7UpAUyQQ18vNNBqU8jOL9yVqrFx8Exq2BEdIWvuxA4=;
+        b=ABOPtUWZeyYm6R71LAad0jKXvKrR3JZPIVBi3D0le4O0SRAHHip9IPySdMS385hx/d
+         RZAuqfFCwLoCInyan/bK7yrOnigmqAG4BNi0bMHlcHWUCDmAQFECvz+vnjCX8krtWFok
+         bPyqZKqRQFlVszvmMnmBBlxLlcaUgcNSlopvjbEjuBe+zH0yM+4DNXaxOnsJANJw2Xba
+         /5kNAUGY3J7FBNgotoDJgGidCYmn4XsYEwDXnK5YVW73t1UhxH773SieY13wwwuo7nNS
+         n90vtvpReWZudL6W6uPqgtq8JHa5mhHKsz1rucEaiZmzFRNvEDvmrZJGBP30pEZMjM0m
+         qHKA==
+X-Gm-Message-State: APjAAAUEHNcOxbNmSa8iCyoUOdrt/XSLjVPgMeJkUx4BP96X6qhGSRSH
+        2f3tMo+J5eKWRwEZkBhVytJqLmCYL8g49O+RMdU=
+X-Google-Smtp-Source: APXvYqyNknI9lW3mXn/MS2NJlwUpPkzxzTu6OQl/NYk/6LydYX6nFrKXDzu2qW2A/3+0ChwHPMORCPtiuBsEBFYmtKY=
+X-Received: by 2002:aca:d6cc:: with SMTP id n195mr11369266oig.27.1552133363787;
+ Sat, 09 Mar 2019 04:09:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20190215163220.20041-1-paul.kocialkowski@bootlin.com>
+ <387ed483-b205-beda-319d-6f2b8ea55601@gmail.com> <38f6708476e9beca4583ccc2a62e238a4981b735.camel@bootlin.com>
+ <958bb823-3dc8-607f-3c38-3d902acb85a8@gmail.com> <b0f700f85cd35bf26a97280f3bef7c4e87102d63.camel@bootlin.com>
+ <20190219172515.GC13075@lunn.ch> <f0020e39-7ace-e1e0-e629-b84d6f92b841@xilinx.com>
+ <adbb183836e22dfc4558beaa818677c24bacf3a8.camel@bootlin.com>
+ <9cb2f7a8-a8cf-ef80-d260-cc67c072b5c5@xilinx.com> <8bb813fb-102b-00c9-fb6f-a3e928965051@xilinx.com>
+ <CAFcVECJPtc3VQjK4WLCz1Wc4nopXnsLTKXFFY1ZpecgC+_PhyA@mail.gmail.com> <CAFcVECJ8G99XiqHpYYh=3Aj4Bt_2V4kfDdBmLQqpdo59BRjs-Q@mail.gmail.com>
+In-Reply-To: <CAFcVECJ8G99XiqHpYYh=3Aj4Bt_2V4kfDdBmLQqpdo59BRjs-Q@mail.gmail.com>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Sat, 9 Mar 2019 17:39:12 +0530
+Message-ID: <CAFcVECKU7zD2ms76GH-mF2GxCtNr4RQ+2=jN_xppueQsUSq2wg@mail.gmail.com>
+Subject: Re: [PATCH RESEND net] net: phy: xgmiitorgmii: Support generic PHY
+ status read
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Dmitry,
+Hi Andrew,
+On Thu, Feb 28, 2019 at 1:03 PM Harini Katakam <harinik@xilinx.com> wrote:
+>
+> Hi,
+> On Wed, Feb 27, 2019 at 2:35 PM Harini Katakam <harinik@xilinx.com> wrote:
+> >
+> > Hi Andrew, Paul,
+> >
+> > On Wed, Feb 27, 2019 at 2:15 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> > >
+> > > On 21. 02. 19 12:03, Michal Simek wrote:
+> > > > On 21. 02. 19 11:24, Paul Kocialkowski wrote:
+> > > >> Hi,
+> > > >>
+> > > >> On Wed, 2019-02-20 at 07:58 +0100, Michal Simek wrote:
+> > > >>> Hi,
+> > > >>>
+> > > >>> On 19. 02. 19 18:25, Andrew Lunn wrote:
+> <snip>
+> > > >> Understood. I think we need to start a discussion about how the general
+> > > >> design of this driver can be improved.
+> > > >>
+> > > >> In particular, I wonder if it could work better to make this driver a
+> > > >> PHY driver that just redirects all its ops to the actual PHY driver,
+> > > >> except for read_status where it should also add some code.
+> >
+> > Thanks, I'm looking into this option and also a way to expose the correct
+> > interface mode setting as you mentioned below. I'll get back before the
+> > end of the week. Please do let me know if you have any further suggestions.
+> >
+> This IP does not have a PHY identifier or status register that can be accessed
+> from the phy framework. We could discuss with our design team to add these
+> in the future. But that would take sometime and this version should be still be
+> supported. Also, if this IP has a PHY driver, then two phy drivers would have
+> to be probed which are connected in a serial manner and I believe I'll have to
+> update the framework to support that. Could you please let me know if you have
+> any inputs on this?
+> OR since this is just a bridge IP, is it acceptable to address the error cases?
+> -> Module loading/unloading
+> -> Spinlocks for protection
+> -> Correct phy mode information to the driver.
+> -> Any other concerns
+> I could do a respin of this patch after addressing Andrew's comments:
+> https://patchwork.kernel.org/patch/9290231/
 
-> On 8 Mar 2019, at 01:20, Dmitry Safonov <dima@arista.com> wrote:
-> 
-> On 3/4/19 3:46 PM, James Sewart wrote:
->> +static inline int domain_is_initialised(struct dmar_domain *domain)
->> +{
->> +	return domain->flags & DOMAIN_FLAG_INITIALISED;
->> +}
-> 
-> Maybe check it in intel_iommu_domain_free(), eh?
+Related to this, I have a query on how the DT node for gmii2rgmii should look.
+One of the users of gmii2rgmii is Cadence macb driver. In Xilinx tree, we use
+this piece of code to register this mdiobus:
++ mdio_np = of_get_child_by_name(np, "mdio");
++ if (mdio_np) {
++ of_node_put(mdio_np);
++ err = of_mdiobus_register(bp->mii_bus, mdio_np);
++ if (err)
++ goto err_out_unregister_bus;
 
-Good shout, freeing a non attached IOMMU_DOMAIN_DMA domain is now 
-different to an attached one.
+And the DT node looks like this:
+ethernet {
+    phy-mode = "gmii";
+    phy-handle = <&extphy>;
 
-> 
-> Thanks,
->          Dmitry
+    mdio {
+        extphy {
+            reg = <x>;
+        };
+        gmii_to_rgmii{
+            compatible = "xlnx,gmii-to-rgmii-1.0";
+            phy-handle = <&extphy>;
+            reg = <x>;
+        };
+    };
+};
 
+Could you please clarify if phy-handle in ethernet should point to
+external PHY or gmii2rgmii?
 
-Cheers,
-James.
+Regards,
+Harini
