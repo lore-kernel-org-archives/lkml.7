@@ -2,188 +2,149 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA0DC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53CFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C4520836
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB1620836
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKxReUwq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="ApEVEy0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfCIQaE (ORCPT
+        id S1726446AbfCIQra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 11:30:04 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40430 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfCIQaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 11:30:04 -0500
-Received: by mail-lf1-f68.google.com with SMTP id u68so501097lff.7;
-        Sat, 09 Mar 2019 08:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twice60yMWFlD1k7/REA4lgd8Jp312s+vCTW7daibBY=;
-        b=kKxReUwqEJ6N+WpDvKtKQhL4P9c5Mq9JY1fMOkerbVJpbFJAVb/dHawU+l+VDWjUju
-         qf4GLkymrzZQkSV+6fKqFI+RSD7YhRXxSpHqJ/oUAe/PsnnBCekhk77jTOWaiQUMnzsS
-         T6XlkyVck4KuaPXMDt+k63VSCDyWjURAtjHFlhlDW1Ut3cMKonSk1moE2awiCiLdZcqZ
-         6bRPXMz1gmxNIouOK5729451m5PpTfzDfcaxkafmRGRP0sfB7wXSmnUa/jLItz3wMeQk
-         sn5nycPVh51tHeZkLq8oAiYXgBzr5JnaRnLkH0q7EE9yfBbghd5z4cVQQGKs4TWMoaqv
-         YHVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twice60yMWFlD1k7/REA4lgd8Jp312s+vCTW7daibBY=;
-        b=NkCyAiakbjPhVDk3csDlEl35eSpreYVdTrVSFFT33lCOb3lqlPQq0iG0QTAUEVBr4T
-         TAuc/3z5lw/I0hhHjgWVaFwOGvjPHBHnSwm+6kQk3xhL52lPwL8QWUK3+zdrcYw56USx
-         w/FO+FghhOKEas84UM1FOC0NZaS/FWBxcSKDhoyMzXzktY0nG4DA+nV5Sc5m2gKY0lPz
-         vdZZ4/uQjpxF1EOvt6yjUJw/i/NefDikSHNybx3RVxX1eEW+RCDLctSwyz7fwEDvSfYY
-         6nAPHTAdAMzYRwWEJr1deaAyeRxsY5toWC7voeyjaTMnTDmcGRBS6p1a/Dx98JTgvtTi
-         L4+Q==
-X-Gm-Message-State: APjAAAWG0finuBYoz9MOK6Epqi5cYTiLnfnIg2vBDJYWKZQlDhg9i6MN
-        zhtePhIRJB3NTdZq6iwl2fQ=
-X-Google-Smtp-Source: APXvYqymA0Kw6CaoxcAbnj4xhW6UhrmtO24JULfBGYimp/rOHEic+t+XirpPVUVkwexcRexlc9CrCQ==
-X-Received: by 2002:a19:198d:: with SMTP id 135mr4383429lfz.92.1552149001729;
-        Sat, 09 Mar 2019 08:30:01 -0800 (PST)
-Received: from localhost (89-64-59-159.dynamic.chello.pl. [89.64.59.159])
-        by smtp.gmail.com with ESMTPSA id a23sm152212ljd.20.2019.03.09.08.30.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 09 Mar 2019 08:30:00 -0800 (PST)
-Date:   Sat, 9 Mar 2019 17:29:36 +0100
-From:   Tomasz Duszynski <tduszyns@gmail.com>
-To:     justinpopo6@gmail.com
-Cc:     linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] iio: adc: ti-ads7950: Fix improper use of mlock
-Message-ID: <20190309162935.GC7820@arch>
-References: <1552082608-42603-1-git-send-email-justinpopo6@gmail.com>
- <1552082608-42603-2-git-send-email-justinpopo6@gmail.com>
+        Sat, 9 Mar 2019 11:47:30 -0500
+Received: from imap.cs.msu.ru ([188.44.42.39]:62345 "EHLO mail.cs.msu.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726332AbfCIQr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 11:47:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
+         s=dkim; h=Subject:In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ulGqVDSUycX/BoqmH9Fe4QsVBAuubtWT/nsBLs94zsM=; b=ApEVEy0nOrrJ1Lmpwtx/8cwEmJ
+        OjLwX+hK8hZFfXZGGREEAG8UxHcbuiJjHtdIUywtKVQHcKx0U4xQWEZN/dkubfawNz9UZAErT2G37
+        D4TKrWAGhI0wB33S1AGFhjn+VA/XgQTz1I/G8Zlda67P42ty2cgCc5/9KWxJFyyoDTuRF9fAzdPX7
+        ZiJzbnS3haHSIr6SvC08OBn8n+5rgXcxcpNgTbeOcGrJyiH1PamRCAQdAmmhzpKSP7PI6ieE6kjQF
+        q2nLsBxwgxnLpccDZWxNynB0VgTB5Y53LP1suoDpZzWBDl/BmY9Bc0lYCjuiAOpCb5VBDyYzlXWlm
+        aOc4h3aQ==;
+Received: from [37.204.119.143] (port=57438 helo=cello)
+        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.91 (FreeBSD))
+        (envelope-from <ar@cs.msu.ru>)
+        id 1h2f83-0007gt-AC; Sat, 09 Mar 2019 19:47:19 +0300
+Date:   Sat, 9 Mar 2019 19:47:18 +0300
+From:   Arseny Maslennikov <ar@cs.msu.ru>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
+        Riku Voipio <riku.voipio@linaro.org>
+Message-ID: <20190309164718.GD25561@cello>
+References: <20190309154307.23039-1-ar@cs.msu.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="q9KOos5vDmpwPx9o"
 Content-Disposition: inline
-In-Reply-To: <1552082608-42603-2-git-send-email-justinpopo6@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190309154307.23039-1-ar@cs.msu.ru>
+OpenPGP: url=http://grep.cs.msu.ru/~ar/pgp-key.asc
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 37.204.119.143
+X-SA-Exim-Mail-From: ar@cs.msu.ru
+Subject: Re: [PATCH v2 1/3] scripts/package/Makefile: put proper config in
+ source tarball
+X-SA-Exim-Version: 4.2
+X-SA-Exim-Scanned: Yes (on mail.cs.msu.ru)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 02:03:27PM -0800, justinpopo6@gmail.com wrote:
-> From: Justin Chen <justinpopo6@gmail.com>
->
-> Indio->mlock is used for protecting the different iio device modes.
-> It is currently not being used in this way. Replace the lock with
-> an internal lock specifically used for protecting the SPI transfer
-> buffer.
->
-> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+
+--q9KOos5vDmpwPx9o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Mar 09, 2019 at 06:43:05PM +0300, Arseny Maslennikov wrote:
+> It is widely known that one can build a kernel without a .config in the
+> source tree by setting KCONFIG_CONFIG equal to the actual configuration
+> file path.
+>=20
+> When making a *-pkg target, make(1) prepares a source tarball and tries
+> to pack `.config' in there regardless of the value of KCONFIG_CONFIG,
+> failing spectacularly if .config is absent and packing the wrong config
+> if it exists.
+> Let's fix that by including whatever KCONFIG_CONFIG points to in the
+> archive under the traditional name `.config'.
+>=20
+> We have to pass --absolute-names to tar, since it seems to trim the
+> paths of archive members first and only then consider --transform, which
+> breaks KCONFIG_CONFIG=3D../../some.config, as well as absolute paths.
+
+One way to avoid --absolute-names here is to do the dance below:
+
+>=20
+> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
 > ---
->  drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-> index 0ad6359..1e47bef 100644
-> --- a/drivers/iio/adc/ti-ads7950.c
-> +++ b/drivers/iio/adc/ti-ads7950.c
-> @@ -56,6 +56,9 @@ struct ti_ads7950_state {
->  	struct spi_message	ring_msg;
->  	struct spi_message	scan_single_msg;
->
-> +	/* Lock to protect the spi xfer buffers */
-> +	struct mutex		slock;
-> +
->  	struct regulator	*reg;
->  	unsigned int		vref_mv;
->
-> @@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
->  	struct ti_ads7950_state *st = iio_priv(indio_dev);
->  	int ret;
->
-> +	mutex_lock(&st->slock);
->  	ret = spi_sync(st->spi, &st->ring_msg);
->  	if (ret < 0)
->  		goto out;
-> @@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
->  					   iio_get_time_ns(indio_dev));
->
->  out:
-> +	mutex_unlock(&st->slock);
->  	iio_trigger_notify_done(indio_dev->trig);
->
->  	return IRQ_HANDLED;
-> @@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
->  	struct ti_ads7950_state *st = iio_priv(indio_dev);
->  	int ret, cmd;
->
-> -	mutex_lock(&indio_dev->mlock);
-> +	mutex_lock(&st->slock);
->
->  	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
->  	st->single_tx = cmd;
-> @@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
->  	ret = st->single_rx;
->
->  out:
-> -	mutex_unlock(&indio_dev->mlock);
-> +	mutex_unlock(&st->slock);
->
->  	return ret;
->  }
-> @@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
->  	if (ACPI_COMPANION(&spi->dev))
->  		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
->
-> +	mutex_init(&st->slock);
-> +
->  	st->reg = devm_regulator_get(&spi->dev, "vref");
->  	if (IS_ERR(st->reg)) {
->  		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
-> -		return PTR_ERR(st->reg);
-> +		ret = PTR_ERR(st->reg);
-> +		goto error_destroy_mutex;
->  	}
->
->  	ret = regulator_enable(st->reg);
->  	if (ret) {
->  		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
-> -		return ret;
-> +		goto error_destroy_mutex;
->  	}
->
->  	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> @@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
->  	iio_triggered_buffer_cleanup(indio_dev);
->  error_disable_reg:
->  	regulator_disable(st->reg);
-> +error_destroy_mutex:
-> +	mutex_destroy(&st->slock);
+>  scripts/package/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/scripts/package/Makefile b/scripts/package/Makefile
+> index 2c6de21e5152..134cefee068d 100644
+> --- a/scripts/package/Makefile
+> +++ b/scripts/package/Makefile
+> @@ -27,7 +27,7 @@ KDEB_SOURCENAME ?=3D linux-$(KERNELRELEASE)
+>  KBUILD_PKG_ROOTCMD ?=3D"fakeroot -u"
+>  export KDEB_SOURCENAME
+>  # Include only those top-level files that are needed by make, plus the G=
+PL copy
+> -TAR_CONTENT :=3D $(KBUILD_ALLDIRS) .config .scmversion Makefile \
+> +TAR_CONTENT :=3D $(KBUILD_ALLDIRS) $(KCONFIG_CONFIG) .scmversion Makefil=
+e \
+>                 Kbuild Kconfig COPYING $(wildcard localversion*)
+>  MKSPEC     :=3D $(srctree)/scripts/package/mkspec
+> =20
+> @@ -44,6 +44,7 @@ if test "$(objtree)" !=3D "$(srctree)"; then \
+>  fi ; \
+>  $(srctree)/scripts/setlocalversion --save-scmversion; \
+  +cp $(KCONFIG_CONFIG) .tmp.config-tarball
+>  tar -cz $(RCS_TAR_IGNORE) -f $(2).tar.gz \
+  +	--absolute-names --transform 's:^.tmp.config-tarball$$:.config:S' \
+>  	--transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
+  +rm -f .tmp.config-tarball
+>  rm -f $(objtree)/.scmversion
+> =20
+> --=20
+> 2.20.1
+>=20
 
-If your intention was to do resources cleanup then this is not
-what this api was designed for. This is actually for debugging unwanted
-subsequent mutex usage.
+I'm not sure if this is strictly better.
 
->
->  	return ret;
->  }
-> @@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
->  	iio_device_unregister(indio_dev);
->  	iio_triggered_buffer_cleanup(indio_dev);
->  	regulator_disable(st->reg);
-> +	mutex_destroy(&st->slock);
->
->  	return 0;
->  }
-> --
-> 2.7.4
->
+--q9KOos5vDmpwPx9o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE56JD3UKTLEu/ddrm9dQjyAYL01AFAlyD7g8ACgkQ9dQjyAYL
+01DmLw/9FlAX3xDu+dLPStFypBfPNicW8tAAi1ivnlj+izOPUEcG+lxVmJsyXK+N
+WtwSL77RO3ARvABRWiVAikbEjx3dVxdqwXHPpcUgqgGON7FeNb86u0h9LkgWwdtY
+/wK2Ksyt4D8JZKnyeFk6UUvgn4egXt83dLzO6N2b6yAyWWDP4Kj8+WBoX5K+jN/8
+3DryL1PUz7NGsUbvntrAUNPhTiHzR1CA8kYLtvj7z38VMCuy5GEbGwwVbhvHUFaK
+LN93H0TDu93cm5TpPDxsfwDmHe3SU9LTyzbema2FU/LeTTB1cfeqY5EqBhul517o
+FiudifGkrrKcO+o0NyxuNT94rQiADrAPcvkl53NMEAs6R1hU+6RY/n8jiEi8ZfQX
+uCxQgQmzGyX+zLMzxf10goD1neGri2jqjTGe9PSXqlzCt+xYMmA/J9Oy2exT0w/s
+wSTHK5ukCelqrBfNX9sUVdDmTYEOpnyZbB8ndus+HgVi80eR3eCCEKbSMUH/vkSh
+b2eaTlJY3r71ouz16MViA03SXM7Necst9IeAdKjlnDtk8od657DJt9fYIHmgkvHo
+MMlhKgUzYg/YpJDsNOHEkdtcJSDUxqi2GHudSl3xyb9lXxuCpCz/D5BrDskP4K6w
+JV9SHRQeU9/U8tYpDXq34DWTA8Ilht42f5ZKgSdOMb1cDSIdZsE=
+=qdIx
+-----END PGP SIGNATURE-----
+
+--q9KOos5vDmpwPx9o--
