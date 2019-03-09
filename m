@@ -2,71 +2,185 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66422C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 02:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE018C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 02:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256BD20857
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 02:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D21D20857
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 02:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="Ilyk0mXM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yz+3dqmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCICQ3 (ORCPT
+        id S1726732AbfCICRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 21:16:29 -0500
-Received: from sonic310-25.consmr.mail.ne1.yahoo.com ([66.163.186.206]:45139
-        "EHLO sonic310-25.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726392AbfCICQ3 (ORCPT
+        Fri, 8 Mar 2019 21:17:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36394 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfCICRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 21:16:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1552097788; bh=d+psNcDho3ZCAnLoMbfDKz4j8mOWd9/eE+NvRT5aktA=; h=Date:From:Subject:To:From:Subject; b=Ilyk0mXMUhBOXCAJ/C7eZ3ItzKZ6sDQtKNRLkWVyB6NK6rrvKzKzn7IqP19eTgugqBV8E61/nOsUSFEi/F0CNQzSqrxT34THhedsQyM93seezt1fK75ZycXEP8cU6tuIGFps6ionieMOTQeCdw2i9y8FYeiX8tIYKLwicHOHjm8+8AHjP0xNqWJZPw4PabOkMijSWHwZGgqJS1rNTC/3UAjodGf6XGsMrKZAqjCOKQG366J5E1KbbsNyn5OEXoXaxgrA6DmyRHHESP0pBf51p4twgNGYkSd9yQzO5xA6oy8jnTWNl5KjU5OqldKQLo/2Iot0EfFbWpxI5qMIHn5Njw==
-X-YMail-OSG: cEQ3BDAVM1n2sZsMA02ON_iHB_IFQRj_Wn3DD3igwuYhMF4uB8b74jAzRM_jerW
- f6GPme3EbOAyeeaxR.sIpfMUv1P0.5BEEoque47hppQ__CSIbwCzGBMGzV5kZnNqWa5YB1WpjjtN
- XqOZAzxUqeuf0a7ee5I4YvE3P14x1NRE_JkhJ3FHdBiVjVhlyE.vneQy85ms2dHIgdUXvZogiEXK
- aXjcf0MXsSYZ.6MlhI0wBPmcIAwiZ6w8e4nXAdSyCUgahVmKEFK_LKSzVhlKUsyAXDoWVrDzVZ.k
- CJ9JvmgIJixvMPoDkVhoqHhB1WgajEpUiqGIi._zHbHZgrrz2QhWF6UxtYpKsAvdxEb.fhEi2W.F
- tF8fs1xzyLE4.gAw25HLZ5b.A1IRAkgSSLRngsLzEs9LLSzcYoL4hL3nobv1x779fn1FHKcHLkeU
- GKRP7GJNXymT0qccOnVigWA_cXmXIvG83Y8JZC5HidF9KmegnovUg6IPFhnyKeBRrpC83p_rijfm
- eLywZpHa5Ap5xgwjcGxn4j0nFMzXF7kUszUQTPAb.OQeVwHr81b60Wp29A1J.cqQhuxCic7MaWss
- hRQuUNxB3Vh3._s.oEBcUnpq5m34OGDSju6FaHuwOuEgaOaS1rVTj1pb5_bJjQhiNqIVSJFAdk6v
- 0lIfpO3Efm..7rvbVTSlnfmk1ny1.WBQi6YL9t4yQ_ICIWmtY4XCxZBdM5aUSzu7jlX8cNmd84cw
- 03NK.JgCnHssDYcBrZulj6RzWQapkC5GUJBKLKwnxjosXyM3kknX_aHCBoFoZjax1OftS6z_sGon
- _EoxGgGh7NNk1lrVyDpKNWQdY93FFqFlSaBYN4cOYbZC.u0RMiSn.E4jEGtd9c9FmwByUs5AYcCa
- .MW8ZHV0TzH9lY.3rhNZCNMe1ixCaWAaHrl9liyzaHuTjpNQXIKdtsbHEh5l8752BFdTGEUMCoXh
- PQwiDX8Us95j0Ts_oNpXKlejffWTksAyDgyy2wrI6EE5_aNyxnTNx4c4cpmLuXy73CLkU.5d3KD9
- yvDk42gIgB74.V2yA
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Sat, 9 Mar 2019 02:16:28 +0000
-Received: from CPE00fc8de26033-CM00fc8de26030.cpe.net.cable.rogers.com (EHLO localhost) ([99.228.156.240])
-          by smtp405.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID abdfffb5bfc943dcc12609af88228335;
-          Sat, 09 Mar 2019 02:16:24 +0000 (UTC)
-Date:   Fri, 08 Mar 2019 21:16:20 -0500
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: r8169 only works in promisc mode
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 8 Mar 2019 21:17:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n22so15440533pfa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 18:17:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=LWU1MdRnb2VUKD0yC9of3vgG/47n3sRrwmND8NfGd4s=;
+        b=Yz+3dqmK+1R/fURhktJmOoxzwAUcrBhy7kMqISUG5NtCqpr4VSgzvLPf4v7jZIYikG
+         Wqrvp1KDkrkVoqB3smHhNazFSKQClohchIo7dLj+gmuUB1itb0YaD6KVU/9VqTZBsgIy
+         x9+pYq72aLQHBQ4jEnR8IZXzyZaKJ0ZNoYqnTWirjvxBUR3NRIoD/bXouNOYrvzv5FGC
+         klHmOnfwNf68iKTMPo9XcVVjXotobrZnGEadi2soiOL3+GsTzT+upTlp8dMo7974b4R6
+         i53tdSPNtChpi3eOU1I95usMMWWp9E7gFN7C0oK6O31ZdQ4icN300uTg/f3GbkSjg7+Q
+         sKMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LWU1MdRnb2VUKD0yC9of3vgG/47n3sRrwmND8NfGd4s=;
+        b=Rk5Ic8gh+xXF5L/bPaY6/HioseIMk7bJbGRR1hmD46P9bAdVlX9KEKEEKsg5rvKDWV
+         mGjWJjf8o3+GeWSrhtkuxPonRa9vJAdgaf1EHokvyNxj++S8PwTfISkh4e9UDSQ422gl
+         N1G3hMwQV3UQFCtN38CseEfLA/xoCSQ4QhBKEfR0NIJFi0pxxtaMr9tnLGq5Wyuzlt58
+         iIEGGXcpCDEGq0swZELJecmYFt9QWuJo6/qV5M6RIQ2GzxVFf3p0b6pWAb9A8tcVv9R+
+         PsxK9dMAtLj2iZ33DWWxIUuc3KKHuwCpStrcuckOvBtPxe7SbJyPfbop1QaIeEKh6P9B
+         GAjQ==
+X-Gm-Message-State: APjAAAUdBEd2tiZgH4q96yb86uDVCvtG1sk8AKTlwaQB8GDxD2PlMDgR
+        cRhE9C6JbVDLhP1J1sjhb3Du
+X-Google-Smtp-Source: APXvYqya9UDjiu9GHaX8oUU1TI6Q1dLRENXsEsRyjnjD1vW2yH9mOdY/a1jn9HH1gjvGsmvAh7yvrg==
+X-Received: by 2002:aa7:81d7:: with SMTP id c23mr22326689pfn.146.1552097869215;
+        Fri, 08 Mar 2019 18:17:49 -0800 (PST)
+Received: from Mani-XPS-13-9360 ([2405:204:730b:185a:e100:cbb9:245b:912c])
+        by smtp.gmail.com with ESMTPSA id p11sm30212941pfi.10.2019.03.08.18.17.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 Mar 2019 18:17:48 -0800 (PST)
+Date:   Sat, 9 Mar 2019 07:47:42 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org,
+        wang.yi59@zte.com.cn,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 01/15] ARM: actions: fix a leaked reference by adding
+ missing of_node_put
+Message-ID: <20190309021742.GA5664@Mani-XPS-13-9360>
+References: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
+ <20190305114048.egpbeddy4pqbwl5b@shell.armlinux.org.uk>
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1552097324.u2rpi5lxaz.astroid@alex-desktop.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190305114048.egpbeddy4pqbwl5b@shell.armlinux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After suspending, my r8169 (not actually 8169, just that driver) only=20
-receives packets when in promiscuous mode. I have tried disabling all=20
-offload features except highdma [fixed], and it doesn't fix the issue.
+Hi Russel,
 
-I am using torvalds/linux, compiled about two days ago (not sure which=20
-commit). I think this happened after a recent upgrade (some time in the=20
-past week). Given the long testing cycle, I don't really want to bisect;=20
-I am hoping someone has some idea of where the issue could be.
+On Tue, Mar 05, 2019 at 11:40:48AM +0000, Russell King - ARM Linux admin wrote:
+> On Tue, Mar 05, 2019 at 07:33:52PM +0800, Wen Yang wrote:
+> > The call to of_get_next_child returns a node pointer with refcount
+> > incremented thus it must be explicitly decremented after the last
+> > usage.
+> > 
+> > Detected by coccinelle with the following warnings:
+> > ./arch/arm/mach-actions/platsmp.c:112:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 103, but without a corresponding object release within this function.
+> > ./arch/arm/mach-actions/platsmp.c:124:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 115, but without a corresponding object release within this function.
+> > ./arch/arm/mach-actions/platsmp.c:137:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 128, but without a corresponding object release within this function.
+> 
+> I question this.  Your reasoning is that the node is no longer used
+> so the reference count needs to be put.
+> 
+> However, in all these cases, data is read from the nodes properties
+> and the device remains in-use for the life of the kernel.  There is
+> a big difference here.
+> 
+> With normal drivers, each device is bound to their associated device
+> node associated with the device.  When the device node goes away, then
+> the corresponding device goes away too, which causes the driver to be
+> unbound from the device.
+> 
+> However, there is another class of "driver" which are the ones below,
+> where they are "permanent" devices.  These can never go away, even if
+> the device node refcount hits zero and the device node is freed - the
+> device is still present and in-use in the system.  So, having the
+> device node refcount hit zero is actually a bug: what that's saying
+> is the system device (eg, SCU) has gone away.  If you somehow were to
+> remove the SCU from the system, you'd end up severing the connection
+> between the CPU cores and the rest of the system - obviously resulting
+> in a dead system!
+> 
+> So, what is the point of dropping these refcounts for devices that can
+> never go away - and thus their associated device_node should also never
+> go away?
+> 
 
-Please CC me on replies.
+Yes, practically we would never hit this case but theoretically we should
+decrement the refcount for nodes/properties whenever we are done with it.
+As you know, there are 'n' number of places in kernel where we can see the
+refcount not being put after use. So I would welcome these kind of patches
+to set an example for someone who tries to use the of_* calls in future.
+
+IMO, DT should've handled the refcount internally without exposing the
+pointers to external world.
 
 Thanks,
-Alex.
+Mani
+
+> > 
+> > Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Cc: "Andreas Färber" <afaerber@suse.de>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> > v2->v1: add a missing space between "adding" and "missing"
+> > 
+> >  arch/arm/mach-actions/platsmp.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/arch/arm/mach-actions/platsmp.c b/arch/arm/mach-actions/platsmp.c
+> > index 4fd479c..1a8e078 100644
+> > --- a/arch/arm/mach-actions/platsmp.c
+> > +++ b/arch/arm/mach-actions/platsmp.c
+> > @@ -107,6 +107,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+> >  	}
+> >  
+> >  	timer_base_addr = of_iomap(node, 0);
+> > +	of_node_put(node);
+> >  	if (!timer_base_addr) {
+> >  		pr_err("%s: could not map timer registers\n", __func__);
+> >  		return;
+> > @@ -119,6 +120,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+> >  	}
+> >  
+> >  	sps_base_addr = of_iomap(node, 0);
+> > +	of_node_put(node);
+> >  	if (!sps_base_addr) {
+> >  		pr_err("%s: could not map sps registers\n", __func__);
+> >  		return;
+> > @@ -132,6 +134,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+> >  		}
+> >  
+> >  		scu_base_addr = of_iomap(node, 0);
+> > +		of_node_put(node);
+> >  		if (!scu_base_addr) {
+> >  			pr_err("%s: could not map scu registers\n", __func__);
+> >  			return;
+> > -- 
+> > 2.9.5
+> > 
+> > 
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
