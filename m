@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F5CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E57FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC51320815
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB3620815
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfCITrH (ORCPT
+        id S1726439AbfCITrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 14:47:07 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:47781 "EHLO
+        Sat, 9 Mar 2019 14:47:15 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:51473 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbfCITrG (ORCPT
+        with ESMTP id S1726348AbfCITrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 14:47:06 -0500
+        Sat, 9 Mar 2019 14:47:15 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29JkM7J3200265
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29Jl6Fv3200300
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 11:46:22 -0800
+        Sat, 9 Mar 2019 11:47:07 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29JkKhO3200262;
-        Sat, 9 Mar 2019 11:46:20 -0800
-Date:   Sat, 9 Mar 2019 11:46:20 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29Jl6hP3200297;
+        Sat, 9 Mar 2019 11:47:06 -0800
+Date:   Sat, 9 Mar 2019 11:47:06 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Song Liu <tipbot@zytor.com>
-Message-ID: <tip-21038f2baa05a0550f56f010f609a5c871b6a274@git.kernel.org>
-Cc:     namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        acme@redhat.com, songliubraving@fb.com, hpa@zytor.com,
-        peterz@infradead.org, mingo@kernel.org
-Reply-To: tglx@linutronix.de, namhyung@kernel.org, acme@redhat.com,
-          songliubraving@fb.com, ast@kernel.org, hpa@zytor.com,
-          jolsa@kernel.org, peterz@infradead.org, daniel@iogearbox.net,
-          linux-kernel@vger.kernel.org, mingo@kernel.org
-In-Reply-To: <20190226002019.3748539-2-songliubraving@fb.com>
-References: <20190226002019.3748539-2-songliubraving@fb.com>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-q4njvk9mshra00jacqjbzfn5@git.kernel.org>
+Cc:     acme@redhat.com, mleitner@redhat.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        mhiramat@kernel.org, tglx@linutronix.de, jolsa@kernel.org,
+        hpa@zytor.com, namhyung@kernel.org
+Reply-To: namhyung@kernel.org, jolsa@kernel.org, hpa@zytor.com,
+          adrian.hunter@intel.com, tglx@linutronix.de, mhiramat@kernel.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          mleitner@redhat.com, acme@redhat.com
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf, bpf: Consider events with attr.bpf_event as
- side-band events
-Git-Commit-ID: 21038f2baa05a0550f56f010f609a5c871b6a274
+Subject: [tip:perf/urgent] perf probe: Clarify error message about not
+ finding kernel modules debuginfo
+Git-Commit-ID: 4d6101f5fd5d996060eb59f7a01d3d1f842407c1
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -59,44 +57,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  21038f2baa05a0550f56f010f609a5c871b6a274
-Gitweb:     https://git.kernel.org/tip/21038f2baa05a0550f56f010f609a5c871b6a274
-Author:     Song Liu <songliubraving@fb.com>
-AuthorDate: Mon, 25 Feb 2019 16:20:05 -0800
+Commit-ID:  4d6101f5fd5d996060eb59f7a01d3d1f842407c1
+Gitweb:     https://git.kernel.org/tip/4d6101f5fd5d996060eb59f7a01d3d1f842407c1
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Thu, 28 Feb 2019 11:22:45 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Thu, 28 Feb 2019 14:20:35 -0300
 
-perf, bpf: Consider events with attr.bpf_event as side-band events
+perf probe: Clarify error message about not finding kernel modules debuginfo
 
-Events with attr.bpf_event set should be considered as side-band events,
-as they carry information about BPF programs.
+'perf probe' supports using just the kernel module name, but that will
+work only when the module is loaded, or using the full pathname to the
+file with the DWARF debug info, but the warning was cryptic:
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
+Before:
+
+  # perf probe -m cls_flower -L fl_change
+  Failed to find the path for cls_flower: No such file or directory
+    Error: Failed to show lines.
+  #
+
+After:
+
+  # perf probe -m cls_flower -L fl_change
+  Module cls_flower is not loaded, please specify its full path name.
+    Error: Failed to show lines.
+  # perf probe -m /lib/modules/5.0.0-rc7+/kernel/net/sched/cls_flower.ko -L fl_change | head -7
+  <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
+        0  static int fl_change(struct net *net, struct sk_buff *in_skb,
+         		       struct tcf_proto *tp, unsigned long base,
+         		       u32 handle, struct nlattr **tca,
+         		       void **arg, bool ovr, struct netlink_ext_ack *extack)
+        4  {
+        5  	struct cls_fl_head *head = rtnl_dereference(tp->root);
+  #
+
+The behaviour doesn't change when the module is loaded:
+
+  # modprobe cls_flower
+  # perf probe -m cls_flower -L fl_change | head -7
+  <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
+        0  static int fl_change(struct net *net, struct sk_buff *in_skb,
+                               struct tcf_proto *tp, unsigned long base,
+                               u32 handle, struct nlattr **tca,
+                               void **arg, bool ovr, struct netlink_ext_ack *extack)
+        4  {
+        5         struct cls_fl_head *head = rtnl_dereference(tp->root);
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-team@fb.com
-Cc: netdev@vger.kernel.org
-Fixes: 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
-Link: http://lkml.kernel.org/r/20190226002019.3748539-2-songliubraving@fb.com
+Link: https://lkml.kernel.org/n/tip-q4njvk9mshra00jacqjbzfn5@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/probe-event.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5f59d848171e..dd9698ad3d66 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4238,7 +4238,8 @@ static bool is_sb_event(struct perf_event *event)
- 	if (attr->mmap || attr->mmap_data || attr->mmap2 ||
- 	    attr->comm || attr->comm_exec ||
- 	    attr->task || attr->ksymbol ||
--	    attr->context_switch)
-+	    attr->context_switch ||
-+	    attr->bpf_event)
- 		return true;
- 	return false;
- }
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 0030f9b9bf7e..a1b8d9649ca7 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -472,9 +472,12 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
+ 					strcpy(reason, "(unknown)");
+ 			} else
+ 				dso__strerror_load(dso, reason, STRERR_BUFSIZE);
+-			if (!silent)
+-				pr_err("Failed to find the path for %s: %s\n",
+-					module ?: "kernel", reason);
++			if (!silent) {
++				if (module)
++					pr_err("Module %s is not loaded, please specify its full path name.\n", module);
++				else
++					pr_err("Failed to find the path for the kernel: %s\n", reason);
++			}
+ 			return NULL;
+ 		}
+ 		path = dso->long_name;
