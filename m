@@ -2,112 +2,167 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A44C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F69C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B657920652
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E8120652
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 20:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCIUcU (ORCPT
+        id S1726463AbfCIUdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 15:32:20 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33534 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbfCIUcU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 15:32:20 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1h2idh-0001WA-Bt; Sat, 09 Mar 2019 20:32:13 +0000
-Received: from ben by deadeye with local (Exim 4.92-RC6)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1h2idh-0000WK-4B; Sat, 09 Mar 2019 20:32:13 +0000
-Message-ID: <342abfaaff17af76aec43ae36ca09ebc43ea64ad.camel@decadent.org.uk>
-Subject: Re: [PATCH] kbuild: add workaround for Debian make-kpkg
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Manoj Srivastava <manoj.srivastava.1962@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Liz Zhang <lizzha@microsoft.com>,
-        Lili Deng <v-lide@microsoft.com>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Sat, 09 Mar 2019 20:32:08 +0000
-In-Reply-To: <CAK7LNAQzfiZejYKKtFSineEwB5M_GcUktBmLgAGs2iC7i4Cbfw@mail.gmail.com>
-References: <1551888035-13329-1-git-send-email-yamada.masahiro@socionext.com>
-         <5760e0a210c7c39b486aa932ccbe7f3f2c210d62.camel@decadent.org.uk>
-         <CAK7LNAQFWWzki-MvmhDpAn46XkDAu4_EGCQotbi5qAk5oJrgUQ@mail.gmail.com>
-         <788870e550cb3cecafd9db14c081ddb0225edfde.camel@decadent.org.uk>
-         <CABkpOEUqJWn62VZoTA5UEnbDieiYR9y3diRQhZuOVe6hOoBNhA@mail.gmail.com>
-         <c93a7273c89c649373761f2ba26a6ef05787d08d.camel@decadent.org.uk>
-         <CAK7LNAQzfiZejYKKtFSineEwB5M_GcUktBmLgAGs2iC7i4Cbfw@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-598Bn8y58ZNKN8Spruiz"
-User-Agent: Evolution 3.30.5-1 
+        Sat, 9 Mar 2019 15:33:25 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:46320 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726340AbfCIUdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 15:33:24 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2202B308403E;
+        Sat,  9 Mar 2019 20:33:24 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-116-119.phx2.redhat.com [10.3.116.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8AC005D704;
+        Sat,  9 Mar 2019 20:33:23 +0000 (UTC)
+Date:   Sat, 9 Mar 2019 15:33:21 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     bsegall@google.com
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
+Message-ID: <20190309203320.GA24464@lorien.usersys.redhat.com>
+References: <20190301145209.GA9304@pauld.bos.csb>
+ <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
+ <20190304190510.GB5366@lorien.usersys.redhat.com>
+ <xm268sxtyx5u.fsf@bsegall-linux.svl.corp.google.com>
+ <20190305200554.GA8786@pauld.bos.csb>
+ <xm261s3lyrrl.fsf@bsegall-linux.svl.corp.google.com>
+ <20190306162313.GB8786@pauld.bos.csb>
+ <xm26wolbyfe9.fsf@bsegall-linux.svl.corp.google.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xm26wolbyfe9.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sat, 09 Mar 2019 20:33:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 06, 2019 at 11:25:02AM -0800 bsegall@google.com wrote:
+> Phil Auld <pauld@redhat.com> writes:
+> 
+> > On Tue, Mar 05, 2019 at 12:45:34PM -0800 bsegall@google.com wrote:
+> >> Phil Auld <pauld@redhat.com> writes:
+> >> 
+> >> > Interestingly, if I limit the number of child cgroups to the number of 
+> >> > them I'm actually putting processes into (16 down from 2500) the problem
+> >> > does not reproduce.
+> >> 
+> >> That is indeed interesting, and definitely not something we'd want to
+> >> matter. (Particularly if it's not root->a->b->c...->throttled_cgroup or
+> >> root->throttled->a->...->thread vs root->throttled_cgroup, which is what
+> >> I was originally thinking of)
+> >> 
+> >
+> > The locking may be a red herring.
+> >
+> > The setup is root->throttled->a where a is 1-2500. There are 4 threads in
+> > each of the first 16 a groups.  The parent, throttled, is where the 
+> > cfs_period/quota_us are set. 
+> >
+> > I wonder if the problem is the walk_tg_tree_from() call in unthrottle_cfs_rq(). 
+> >
+> > The distribute_cfg_runtime looks to be O(n * m) where n is number of 
+> > throttled cfs_rqs and m is the number of child cgroups. But I'm not 
+> > completely clear on how the hierarchical cgroups play together here. 
+> >
+> > I'll pull on this thread some. 
+> >
+> > Thanks for your input.
+> >
+> >
+> > Cheers,
+> > Phil
+> 
+> Yeah, that isn't under the cfs_b lock, but is still part of distribute
+> (and under rq lock, which might also matter). I was thinking too much
+> about just the cfs_b regions. I'm not sure there's any good general
+> optimization there.
+>
 
---=-598Bn8y58ZNKN8Spruiz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+It's really an edge case, but the watchdog NMI is pretty painful.
 
-On Fri, 2019-03-08 at 15:42 +0900, Masahiro Yamada wrote:
-> On Fri, Mar 8, 2019 at 6:56 AM Ben Hutchings <ben@decadent.org.uk> wrote:
-[...]
-> > I take it that you don't want kernel-package to be included in buster,
-> > so can you open an RC bug to say so?
->=20
-> Also, could you make sure it won't come back to bullseye or later ?
+> I suppose cfs_rqs (tgs/cfs_bs?) could have "nearest
+> ancestor with a quota" pointer and ones with quota could have
+> "descendants with quota" list, parallel to the children/parent lists of
+> tgs. Then throttle/unthrottle would only have to visit these lists, and
+> child cgroups/cfs_rqs without their own quotas would just check
+> cfs_rq->nearest_quota_cfs_rq->throttle_count. throttled_clock_task_time
+> can also probably be tracked there.
 
-An RC (release-critical) bug will normally block a package from being
-considered for any future release.
+That seems like it would add a lot of complexity for this edge case. Maybe
+it would be acceptible to use the safety valve like my first example, or
+something like the below which will tune the period up until it doesn't
+overrun for ever.  The down side of this one is it does change the user's
+settings, but that could be preferable to an NMI crash.
 
-> How about Ubuntu? Is it out of your control?
+Cheers,
+Phil
 
-Ubuntu's release management is independent of Debian's.  I don't know
-whether they consider RC bugs in Debian.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 310d0637fe4b..78f9e28adc7b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4859,16 +4859,42 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
+ 
++extern const u64 max_cfs_quota_period;
++s64 cfs_quota_period_autotune_thresh = 100 * NSEC_PER_MSEC;
++int cfs_quota_period_autotune_shift  = 4; /* 100 / 16 = 6.25% */
++
+ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ {
+ 	struct cfs_bandwidth *cfs_b =
+ 		container_of(timer, struct cfs_bandwidth, period_timer);
++	s64 nsprev, nsnow, new_period;
++	ktime_t now;
+ 	int overrun;
+ 	int idle = 0;
+ 
+ 	raw_spin_lock(&cfs_b->lock);
++	nsprev = ktime_to_ns(hrtimer_cb_get_time(timer));
+ 	for (;;) {
+-		overrun = hrtimer_forward_now(timer, cfs_b->period);
++		/* 
++		 * Note this reverts the change to use hrtimer_forward_now, which avoids calling hrtimer_cb_get_time
++		 * for a value we already have
++		 */
++		now = hrtimer_cb_get_time(timer);
++		nsnow = ktime_to_ns(now);
++		if (nsnow - nsprev >= cfs_quota_period_autotune_thresh) {
++			new_period = ktime_to_ns(cfs_b->period);
++			new_period += new_period >> cfs_quota_period_autotune_shift;
++			if (new_period <= max_cfs_quota_period) {
++				cfs_b->period = ns_to_ktime(new_period);
++				cfs_b->quota += cfs_b->quota >> cfs_quota_period_autotune_shift;
++				pr_warn_ratelimited(
++					"cfs_period_timer [cpu%d] : Running too long, scaling up (new period %lld, new quota = %lld)\n", 
++					smp_processor_id(), cfs_b->period/NSEC_PER_USEC, cfs_b->quota/NSEC_PER_USEC);
++			}
++			nsprev = nsnow;
++		}
++
++		overrun = hrtimer_forward(timer, now, cfs_b->period);
+ 		if (!overrun)
+ 			break;
+ 
 
-Ben.
 
---=20
-Ben Hutchings
-Knowledge is power.  France is bacon.
-
-
-
---=-598Bn8y58ZNKN8Spruiz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlyEIsgACgkQ57/I7JWG
-EQkoCBAAzUnkTN8eTiute3VDGS62H33aPiMOVkLXO0qRgiEOUKQ6ZFi+nGFO43lT
-j1JA2ngy9HyCPb0dfGCPA21GbOaSS7fhZJ3Eni5hTrbmLfyHPFGs4s9uSjsG6BQL
-ZcD/zCmqtOp6e6fvUG7f32L2EJD1bbEYCI1i0oCDfKnsVWF1YVgZTi2ShxcJht1/
-xRELAQoNm1vSK1yVD0vIsz9jQJBg2SFRUGcyM1Jv6wuWB7CUCSobsfIlljyfCP4I
-taHa/IM2KvOcLli1VS1HRHVAUsLVB3tPFJjXt9M9F6O3ZnPfEIse/CWRFh2MOPMj
-SwhPigARthZ6HtZo5EEcfG65GHQpxWwCUbXy5I/5Wx/mqC8TArzncyKFlvOH2Uaj
-6Si/QZswgLoK6MDabfrE3AEggacXkL8Y5VsPFXArKrAEII0wCamuspPlx+XxJn5w
-P6h4k3V72HLZ6pQppYcbHR4BPOpiRL2HlEt7E5yS5GCSytvIuQSwSpPqcyJMeXbM
-FmKqV1vn0T6ZUEgtXJIZfDVOb2EZ32toqk7J+MYHdYBJ4cyxxu/Wjx86kflizR62
-q2BqeisbCyGCvv+r3zHE92rQABEBlvSENbamDvXQabCNKO5DxvXZ+nEY/0Dd+OZK
-uzwXUYpl9h6Q4Zb+djefTuDzi4iyTtjQAS0KGWGOXPognDEk2yA=
-=eNt0
------END PGP SIGNATURE-----
-
---=-598Bn8y58ZNKN8Spruiz--
+-- 
