@@ -2,69 +2,83 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC04BC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5E9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA8320836
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552173317;
-	bh=rerwvCREAWCea6IKEtYgW4w18VuIv4790HI8FPdbJC4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=SdClSkgs57XyPD86stm4lgbdO1yInEf0AWP/JWf18JLw3dbnUeOIJX9E2ELsJm/Yq
-	 E8BfeOT0pXW/qKNl8XebSkTjf2Q52ZDRLc/M9IioGlwkSYlZZGXU4ErHe3FY8VZUKz
-	 1qZUqA+c8iIryjeMDNq3TbEA3IDzy604F8GpVfRM=
+	by mail.kernel.org (Postfix) with ESMTP id 2FFBA20657
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 23:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfCIXPQ (ORCPT
+        id S1726637AbfCIXTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 18:15:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726886AbfCIXPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 18:15:15 -0500
-Subject: Re: [GIT PULL] PCI changes for v5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552173315;
-        bh=rerwvCREAWCea6IKEtYgW4w18VuIv4790HI8FPdbJC4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tdUNKG7Z4uP8Vj2xPQEvYTwGRh4xke6uDt6ySehVVtGMIvgE/AzZUxIbC5MWdQybq
-         Krhopoc2dfm+RfTbgwkH1Sb4w6FEdzx6FF/KnHaii4pWMCi6ArsxpDVw4w6XOVHpZ5
-         tyGAyYsE3s3r1l5FhrxRBoKqyqMnjuSVbwWjCkRQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190308173154.GC214730@google.com>
-References: <20190308173154.GC214730@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190308173154.GC214730@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
- tags/pci-v5.1-changes
-X-PR-Tracked-Commit-Id: dd92b6677e3d0d78e261a7f00f28e753bab41d24
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2901752c14b8e1b7dd898d2e5245c93e531aa624
-Message-Id: <155217331537.3273.469447299803230387.pr-tracker-bot@kernel.org>
-Date:   Sat, 09 Mar 2019 23:15:15 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        Sat, 9 Mar 2019 18:19:11 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:32903 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfCIXTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 18:19:11 -0500
+Received: by mail-qk1-f194.google.com with SMTP id x9so726035qkf.0
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 15:19:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2IctX6Lc+WsgET9r+Z5B19nTNPXzqoQl3ARLlRVXlxA=;
+        b=irZ+NepYs7IlQtjT7D/32ktN931Wi+YRrhK24t4PcgNmuuNZL8SaT685QFrOF+vvdn
+         nGH/AQlj7rUhvobezRneeeOwGHqaOHMR3kQYQwr9h8GrMW7aa3lWq4Ov0oZBjeyfibco
+         Cn9R+fN9Pk4ulh/cIjZA7HeWqBattpzPzqXp1xFar8Y2MuAullqd9qYGSvDhILWk4Ac4
+         0MANTMv3nMTZZIY0BJ/CAy8facw0wMfsyIhCQoTMI6eQn394nOwBE4kqBmd/AsjisNuG
+         gafyknzDqRmquvAw1FkkXshduGmxRQWPy5t1ZrZJ+RmEtL+awxwrStuSwasw3luIfHsN
+         TKFw==
+X-Gm-Message-State: APjAAAVhDY9S+GJeIP2QSgPDgskNBgp2xHoI+hYUqDj2k+oUv2wzRKMl
+        7PmibU2DBqqu3ZeUOcyM12bQHQ==
+X-Google-Smtp-Source: APXvYqyhn7x8tjFgHqERe/TtlptF7Bnm4+QNGPEuYhY0YmP8XjRpTaFC5jm61To+R0wnsLrZ5gfFsg==
+X-Received: by 2002:ae9:f10e:: with SMTP id k14mr7706097qkg.328.1552173550591;
+        Sat, 09 Mar 2019 15:19:10 -0800 (PST)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id b21sm858727qkl.17.2019.03.09.15.19.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 09 Mar 2019 15:19:09 -0800 (PST)
+Date:   Sat, 9 Mar 2019 18:19:07 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     arnd@arndb.de, jasowang@redhat.com, stefanha@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vhost: silence an unused-variable warning
+Message-ID: <20190309181754-mutt-send-email-mst@kernel.org>
+References: <20190306110602.2529137-1-arnd@arndb.de>
+ <20190308.151726.1373226353046701716.davem@davemloft.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190308.151726.1373226353046701716.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 8 Mar 2019 11:31:54 -0600:
+On Fri, Mar 08, 2019 at 03:17:26PM -0800, David Miller wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> Date: Wed,  6 Mar 2019 12:05:49 +0100
+> 
+> > On some architectures, the MMU can be disabled, leading to access_ok()
+> > becoming an empty macro that does not evaluate its size argument,
+> > which in turn produces an unused-variable warning:
+> > 
+> > drivers/vhost/vhost.c:1191:9: error: unused variable 's' [-Werror,-Wunused-variable]
+> >         size_t s = vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX) ? 2 : 0;
+> > 
+> > Mark the variable as __maybe_unused to shut up that warning.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> I'll apply this, thanks Arnd.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.1-changes
+I queued this for next linux already and it's been in linux-next
+for a while. Sorry that I didn't reply, will try to remember to do it
+next time.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2901752c14b8e1b7dd898d2e5245c93e531aa624
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
