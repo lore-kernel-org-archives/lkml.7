@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8ABC43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37274C10F00
 	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 22:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7422206DF
+	by mail.kernel.org (Postfix) with ESMTP id 0036C207E0
 	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 22:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVuGnJ9x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpQj26Nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCIWD1 (ORCPT
+        id S1726531AbfCIWDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 17:03:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40618 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbfCIWD1 (ORCPT
+        Sat, 9 Mar 2019 17:03:35 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41635 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbfCIWDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 17:03:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u9so981814pgo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 14:03:27 -0800 (PST)
+        Sat, 9 Mar 2019 17:03:34 -0500
+Received: by mail-pf1-f193.google.com with SMTP id d25so787697pfn.8
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 14:03:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Cx2d8mter60+jb2rcPSITW+svSlqh6wPI9dhc3GxDqY=;
-        b=XVuGnJ9xX8gpPEC/KGEIJcNoL5T8ZP0v1hVSX55v1uvSfB6jdmu7/3gChyOnbLmXhH
-         S9d4CnBCDoEbD2W0U8lhMDq00VIBWix0pjZrvKJupRgfIeHgQFgb3QAssXe0BULl0QAT
-         S6naPDRto8hfk6xN6wR460Wyr0J+Papdx5iNinI3EleC9FDkTuFwGNgKohds/iM6utwh
-         8pvBGjU04eLwewG+u6IOm8t92hvk3i5/8JQGMbhZjioCzZbPIQB90r3PA9fGO7QpwGGh
-         v6aIoFFcJGeege5eq4IcU5B1/LaqYcRBnIc7LAnujxaqYb/bA72Yx/9LcNvmopMh+64c
-         SIeA==
+        bh=SlDMbagQcGDNc2igxBfQt50QWoGD2RbgPl1lrtEBvtE=;
+        b=OpQj26NkOwQBRi+aqBpsK/L3dySu6SUOXji4oeC2g7QCZvjvEdz6xc/8lwQbjMoxQV
+         ExqwX2zJ18hjG1eBpFelvMzx6PgJYeWXGutaCuv/QFxKlec41Xye7LCefLxD9s4RbbAj
+         RWk/IVrsKoLdqlk9TT/fDIega559H9mvJKM9Q+dP+p8O8m9hpZtxbR0Zpo0eLcRsQWnp
+         EBctzu3tpTlOXs0/Pn/bzGVA94HN6/Ie/aIOPxuBVd/KbLoFV5JGS9et+8yaBnjbsNNZ
+         uzK51MuZEQpCfgKqxzGiUaS/r+Qr63qPBhyYrdr86gz+pxk4/cmXg4jG10yIKB5iasZX
+         ok4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Cx2d8mter60+jb2rcPSITW+svSlqh6wPI9dhc3GxDqY=;
-        b=cJ5N4xZeEPZzvRccIC4dP7ftWM8umCl4R3WtkN5PU6XZCLVxIyJ0hhC4Gp4GxuCCIb
-         n02KW+drDwr4QIMcWkFAInEBQVnDC6YHOKN3C0lHdy0yPdYbhlg6xKPkSI/qRTzoGan0
-         2oL1zRzgkNxiCw9QrdlN44Mg6kqIrQ0Qjjj8YgGTDQsFqqgZ9oRDOWtLy+1AqCviELg2
-         L981qLi0BjArOuw2GXrJuUttSUu3Rcb9U1xiUKl+s865TpRUxeORMJMYjHuMmgBI/4zF
-         9oyt6at2XNmRc7GG6pTJ1+lSpaq8QzlTJbRaNWYhyWN6ahUz/z44jX0uxbvNm5tKKzIE
-         oZSg==
-X-Gm-Message-State: APjAAAVe2GnWMnQ0KRnd1gx098vH+bFpgoPE0AZh3DcGpRRWCjNxtsGv
-        BbCfCksD5f48xuKT/d+lCq4=
-X-Google-Smtp-Source: APXvYqxXm/1u05lWgsnDA6MBR01qZ8dOMqr2qeC9+CMMMSJHZwEGeWyO37UR1qJFnsntqeBRmxvu8Q==
-X-Received: by 2002:a63:1c02:: with SMTP id c2mr23504405pgc.351.1552169006832;
-        Sat, 09 Mar 2019 14:03:26 -0800 (PST)
+        bh=SlDMbagQcGDNc2igxBfQt50QWoGD2RbgPl1lrtEBvtE=;
+        b=LJCirAgoGqD6WJqbWryKa1tm5IzZYBSVY/4vE6UYivL3jOnAsdkvEALSlPu0Rs6/r8
+         ukSW4J6+ON4jLdRkyZTdPNda1TRHjZZ11ylq2ot+VMxA0brpQkbLIfobEg8HMre6mIhz
+         Bo7MsxMfAdsJf5tRBZV+gLjScBcOnQAx3zZFMPC4LyUtyla8XnNymyqBFK9Y8F3qdXHi
+         0iRQxjVKRIBNHyPs8nggawkEneiWcVqG2Uk32g0RxiekqHSVQf7CuoMQyPuq5GEJOjPc
+         vXSrP+QSmvokz/0CFEqE/Q6ly7WcEzsr50SyXtnoNguKntxMeqDDspvPakknjqMsbCKP
+         BYPg==
+X-Gm-Message-State: APjAAAUXmaAH8tL9tmXhMzYI63hLdwze1nhEJ7JN5dtsd9R7j1opgJmL
+        5wZ0WyPtexS1UhbC+onkmwVgsX1l
+X-Google-Smtp-Source: APXvYqyaM9GMo3h0yZDd2NhazNzD1p8H9bNv2TxYkkD7MMubTQru0K+pcsj24DYc13gM0Nrv0hXDvA==
+X-Received: by 2002:a63:6e8d:: with SMTP id j135mr23161539pgc.160.1552169014119;
+        Sat, 09 Mar 2019 14:03:34 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id p34sm3938270pgb.18.2019.03.09.14.03.25
+        by smtp.gmail.com with ESMTPSA id e5sm2134255pfd.73.2019.03.09.14.03.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Mar 2019 14:03:26 -0800 (PST)
+        Sat, 09 Mar 2019 14:03:33 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     bcm-kernel-feedback-list@broadcom.com,
         Markus Mayer <code@mmayer.net>,
@@ -63,24 +63,29 @@ To:     bcm-kernel-feedback-list@broadcom.com,
 Cc:     Markus Mayer <mmayer@broadcom.com>,
         ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] soc: brcmstb: dpfe: optimize generic_show()
-Date:   Sat,  9 Mar 2019 14:03:24 -0800
-Message-Id: <20190309220324.26015-1-f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/3] soc: brcmstb: dpfe: use byte 3 of registers MR4-MR8
+Date:   Sat,  9 Mar 2019 14:03:32 -0800
+Message-Id: <20190309220332.26100-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190212012443.21819-3-code@mmayer.net>
-References: <20190212012443.21819-1-code@mmayer.net> <20190212012443.21819-3-code@mmayer.net>
+In-Reply-To: <20190212012443.21819-4-code@mmayer.net>
+References: <20190212012443.21819-1-code@mmayer.net> <20190212012443.21819-4-code@mmayer.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Feb 2019 17:24:42 -0800, Markus Mayer <code@mmayer.net> wrote:
+On Mon, 11 Feb 2019 17:24:43 -0800, Markus Mayer <code@mmayer.net> wrote:
 > From: Markus Mayer <mmayer@broadcom.com>
 > 
-> We can pass a (struct priv_data *) to generic_show() rather than a
-> (struct device *). For two of the three callers of this function, the
-> change means one less call to dev_get_drvdata(). For the third caller,
-> it makes no difference.
+> For dual-rank LPDDR4, result data for any command is placed in byte 0
+> and byte 3 of the corresponding MR register by the firmware.
+> Single-rank RAM was supposed to work the same way. However, due to a
+> firmware bug, result values are only placed in byte 3 of the
+> corresponding MR register.
+> 
+> Since byte 3 works for single-rank and dual-rank setups, we change the
+> Linux driver to always use byte 3, thus returning the correct value in
+> either case.
 > 
 > Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 > ---
