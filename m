@@ -2,96 +2,72 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C03CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 02:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8ACC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0509A2081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 02:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E07420851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfCICw0 (ORCPT
+        id S1726498AbfCIDNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 21:52:26 -0500
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:58654 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfCICw0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 21:52:26 -0500
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x292q9oe055929;
-        Sat, 9 Mar 2019 11:52:10 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Sat, 09 Mar 2019 11:52:09 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from [192.168.1.2] (119.104.232.153.ap.dti.ne.jp [153.232.104.119])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x292q9SR055926
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 9 Mar 2019 11:52:09 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix vcc_host1_5v GPIO polarity on
- rk3328-rock64
-To:     Tomohiro Mayama <parly-gh@iris.mystia.org>, heiko@sntech.de
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <4e9800cd-ac6d-9eb8-60d4-8e4b1aa761b9@iris.mystia.org>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <164d616b-f445-2aa6-e57a-e6db446eb121@katsuster.net>
-Date:   Sat, 9 Mar 2019 11:52:09 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Fri, 8 Mar 2019 22:13:24 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36822 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726338AbfCIDNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 22:13:23 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8701EA4BE16447BC2733;
+        Sat,  9 Mar 2019 11:13:21 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.408.0; Sat, 9 Mar 2019 11:13:16 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <Larry.Finger@lwfinger.net>, <gregkh@linuxfoundation.org>,
+        <straube.linux@gmail.com>, <jananis37@gmail.com>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, <davem@davemloft.net>
+Subject: [PATCH net] staging: rtl8188eu: use is_zero_ether_addr() instead of memcmp()
+Date:   Sat, 9 Mar 2019 11:26:00 +0800
+Message-ID: <20190309032600.98732-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <4e9800cd-ac6d-9eb8-60d4-8e4b1aa761b9@iris.mystia.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mayama-san,
+Using is_zero_ether_addr() instead of directly use
+memcmp() to determine if the ethernet address is all
+zeros.
 
-On 2019/03/08 1:18, Tomohiro Mayama wrote:
-> This patch makes USB ports functioning again.
-> 
-> Signed-off-by: Tomohiro Mayama <parly-gh@iris.mystia.org>
-> ---
->   arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> index 21107d0f4378..7f365e448867 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> @@ -45,8 +45,7 @@
->   
->   	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
->   		compatible = "regulator-fixed";
-> -		enable-active-high;
-> -		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> +		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&usb20_host_drv>;
->   		regulator-name = "vcc_host1_5v";
-> 
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_mlme.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-After this patch applied, USB and S/PDIF both work well.
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+index 714f7a70ed64..beae367df93b 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+@@ -180,9 +180,8 @@ struct wlan_network *rtw_find_network(struct __queue *scanned_queue, u8 *addr)
+ {
+ 	struct list_head *phead, *plist;
+ 	struct wlan_network *pnetwork = NULL;
+-	u8 zero_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
+ 
+-	if (!memcmp(zero_addr, addr, ETH_ALEN)) {
++	if (is_zero_ether_addr(addr)) {
+ 		pnetwork = NULL;
+ 		goto exit;
+ 	}
+-- 
+2.20.1
 
-Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-
-
-$ lsusb
-Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
-Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-Bus 001 Device 002: ID 046d:c526 Logitech, Inc. Nano Receiver
-Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-
-
-Best Regards,
-Katsuhiro Suzuki
