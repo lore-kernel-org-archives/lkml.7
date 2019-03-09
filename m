@@ -2,104 +2,120 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504F0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A1DC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 15:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192AC207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 15:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8588207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 15:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=iris.mystia.org header.i=@iris.mystia.org header.b="Gnd+Y6+e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ineb8Wgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCIPQw (ORCPT
+        id S1726469AbfCIPTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 10:16:52 -0500
-Received: from lyra.margatroid.com ([118.27.33.189]:57844 "EHLO
-        lyra.margatroid.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfCIPQv (ORCPT
+        Sat, 9 Mar 2019 10:19:46 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38124 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfCIPTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 10:16:51 -0500
-From:   Tomohiro Mayama <parly-gh@iris.mystia.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iris.mystia.org;
-        s=lyra-20180701; t=1552144603;
-        h=from:subject:date:message-id:to:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=TMlsqd59wyGOj5P0i+MecLazjmJwEuO3mA75sXbSqKI=;
-        b=Gnd+Y6+eJY4+pKVqf0tkw4e+vkK2+jWgj7HcwfUO9AFcTzUU4IS74qbg4OtCWPyK8zROzM
-        7JEKBsIuPl6kPA2mvcTLrSrfHBMXu6UK2DHkWYiS8ERmCcuPg2OqFC/egHkvXdNJke5KYG
-        zDB7ElsFlNMb750hqaXYuuCD7rfZBqZv+HuH35eN2Tstb9DpryEXgxc9ZqiStJaM+YMSBo
-        4OAufudpQeuVFwlfC1hBtRQpU0mmFszw0QZ+aUMeMjLfWy6iJp993y2U68LhEqEd7QAhMx
-        e+yOmPcIq91NbqwCNi+32dYMi7Zh9myK29bvb6zNnLGe2jDNuaRUMgqRQPxoLA==
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix vcc_host1_5v GPIO polarity on
- rk3328-rock64
-To:     katsuhiro@katsuster.net, heiko@sntech.de
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <4e9800cd-ac6d-9eb8-60d4-8e4b1aa761b9@iris.mystia.org>
- <164d616b-f445-2aa6-e57a-e6db446eb121@katsuster.net>
-Message-ID: <4a72a4b1-003e-800c-743f-86f8333ed0c2@iris.mystia.org>
-Date:   Sun, 10 Mar 2019 00:16:48 +0900
+        Sat, 9 Mar 2019 10:19:46 -0500
+Received: by mail-lj1-f195.google.com with SMTP id 199so455510ljj.5;
+        Sat, 09 Mar 2019 07:19:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fDxE/HEDyJoD5tX+9P8Nq9NwskV+Yl6zaHGMjoV6/Yw=;
+        b=ineb8WgbsY1bRzUL6isp8eJf1wP8C25M/7IzzFe+V6sqsdUY9/ayWJmzq6WanZkFmn
+         0a7fFk/HoEHFkoVvbqLSX1KKi0yWkIeTTxIEic2BQ6iapxNg1sq5qP0rsu8Ux1YKRtXJ
+         WzmOIt2u3Y5wgs04BaIRzu+goHoKFP6BUD+ZM2pilU1Lyq+Zai2UaTm3OdG2cuqCC8Ng
+         R2+6MaSgmeED43GxcUXVzhlwU3b9tkdOF5y0MLK6uqGGkRg9TVQ4wbECPivu2I5Xosp2
+         nsIuxUB/ZofLy4eJS/LQynhiapD8gC2E2Igs95YcAqybu9Axuy8OgjRD+7dbKz4acttq
+         eXcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fDxE/HEDyJoD5tX+9P8Nq9NwskV+Yl6zaHGMjoV6/Yw=;
+        b=X1XLzkgBUGLb4bmmyjBvUyeOqk5wmXUQmTRvuK+BS/J1CnZMkfg65krMVa0lg09CCZ
+         9rFGUxyfxR+Pzwop3LPtcTQV2gMsnKp2W73EuBMwk3J2PEisgJYVNvs1xGbPUC7jzw9J
+         WBR8Gl615Tml61Rps6WNNElBVj/spEiAAp4EB7vt3ijSpk2LBSonAanteicFv86NzZul
+         OflzDxvk3X9SsSV+9EePXxh1xdLnPeyspckM33rvRKzsjRJp5pLQ/o5WxURLURcUn1rV
+         nd+yxQoq1LCBhYYfmjA9zDYSc6FnfPIwjhZhqwnUWs09P/Hts5jztZAGQ4lnZKWHQydX
+         rb5w==
+X-Gm-Message-State: APjAAAWgjFPT0I93OU20R/PsUEolmBob0E8Gf2PbFzN2SYJIyDar1pEM
+        2WI2vBF85E/84uz8bgmdckI=
+X-Google-Smtp-Source: APXvYqwomoFR+RcMzNK+swVGqgHSfo0zDuHpqXXS/Q2CYI/vmJ+K9kXfV8A4fvWsExdkqYkd7YYrZg==
+X-Received: by 2002:a2e:93ca:: with SMTP id p10mr2982844ljh.16.1552144783334;
+        Sat, 09 Mar 2019 07:19:43 -0800 (PST)
+Received: from localhost (89-64-59-159.dynamic.chello.pl. [89.64.59.159])
+        by smtp.gmail.com with ESMTPSA id c26sm157122lfi.96.2019.03.09.07.19.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 09 Mar 2019 07:19:42 -0800 (PST)
+Date:   Sat, 9 Mar 2019 16:19:17 +0100
+From:   Tomasz Duszynski <tduszyns@gmail.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stefan Agner <stefan@agner.ch>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: max9611: fix a NULL pointer dereference
+Message-ID: <20190309151916.GB7820@arch>
+References: <20190309045141.8015-1-kjlu@umn.edu>
 MIME-Version: 1.0
-In-Reply-To: <164d616b-f445-2aa6-e57a-e6db446eb121@katsuster.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20190309045141.8015-1-kjlu@umn.edu>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/09 11:52, Katsuhiro Suzuki wrote:
-> Hello Mayama-san,
-> 
-> On 2019/03/08 1:18, Tomohiro Mayama wrote:
->> This patch makes USB ports functioning again.
->>
->> Signed-off-by: Tomohiro Mayama <parly-gh@iris.mystia.org>
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 3 +--
->>   1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->> index 21107d0f4378..7f365e448867 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
->> @@ -45,8 +45,7 @@
->>         vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
->>           compatible = "regulator-fixed";
->> -        enable-active-high;
->> -        gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
->> +        gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
->>           pinctrl-names = "default";
->>           pinctrl-0 = <&usb20_host_drv>;
->>           regulator-name = "vcc_host1_5v";
->>
-> 
-> After this patch applied, USB and S/PDIF both work well.
-> 
-> Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> 
-> 
-> $ lsusb
-> Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
-> Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-> Bus 001 Device 002: ID 046d:c526 Logitech, Inc. Nano Receiver
-> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-> 
-> 
-> Best Regards,
-> Katsuhiro Suzuki
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+On Fri, Mar 08, 2019 at 10:51:40PM -0600, Kangjie Lu wrote:
+> of_match_device may return NULL when it fails, and in this case,
+> there will be a NULL pointer dereference. The fix returns
+> EINVAL when of_match_device returns NULL.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/iio/adc/max9611.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+> index 917223d5ff5b..531b6614ea29 100644
+> --- a/drivers/iio/adc/max9611.c
+> +++ b/drivers/iio/adc/max9611.c
+> @@ -524,13 +524,16 @@ static int max9611_probe(struct i2c_client *client,
+>  {
+>  	const char * const shunt_res_prop = "shunt-resistor-micro-ohms";
+>  	const struct device_node *of_node = client->dev.of_node;
+> -	const struct of_device_id *of_id =
+> -		of_match_device(max9611_of_table, &client->dev);
 
-Thank you for testing my patch, Suzuki-san!
+Given we got to this point how this can go wrong?
 
-Regards,
-Tomohiro Mayama
+> +	const struct of_device_id *of_id;
+>  	struct max9611_dev *max9611;
+>  	struct iio_dev *indio_dev;
+>  	unsigned int of_shunt;
+>  	int ret;
+>
+> +	of_id = of_match_device(max9611_of_table, &client->dev);
+> +	if (!of_id)
+> +		return -EINVAL;
+> +
+>  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*max9611));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+> --
+> 2.17.1
+>
