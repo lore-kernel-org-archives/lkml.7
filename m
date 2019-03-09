@@ -2,102 +2,113 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BC6C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08032C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD69120815
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF83920815
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552155310;
-	bh=uQFDsEVA9D57jAhFepjb7Qd4OqqXeasfpOGAwTekmTE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rudgwFt4Hr5g7MKOzwh5w6TXJsmnoZmE3Ykv8GxE7Se5hqria45bos4Lx6SCTSGSU
-	 dccYphAGEtgzjJeehd03RdX3OtH2G3J5yLSHK/uDVSrbxg76RK1R4gh0eEaxfxN54+
-	 0z2V1LLioh4mpqTXV6m7u1F3HHon/p5GS+89JPd8=
+	s=default; t=1552155384;
+	bh=nqSMDFt99UIHu8LrdBPeqsVJwsG9eB6rSRf+vZtNN7w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PufK/pBZW+EPl1kU8fT3B7FToszMMXLDyFFnMIaNjgRJVlqpPg88qCL0rjtlg1ZUL
+	 l6Zv8VmWn8Vl2DQOvb+VhNjozdKajPbrWe7cRj2TduzOESTIgx4dIlGMfsUfXHTxZm
+	 82wYMgcZnaHPvQ9HAJHNqSEYnRtxPrz0MSok2nGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfCISPI (ORCPT
+        id S1726502AbfCISQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 13:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbfCISPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 13:15:08 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849D5206DF;
-        Sat,  9 Mar 2019 18:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552155308;
-        bh=uQFDsEVA9D57jAhFepjb7Qd4OqqXeasfpOGAwTekmTE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=st9d5y0TX4vteeK+BX3KIye3TJGRUcTtbvks3LENvsCU/8p8uvhwtR9LkbO/Bkdjg
-         tq0/MQJQ/6dnNuNN9qXUZXnRLAmet9imhefsGTxx4W6QaUUHZD3iMp0MqAiyLT3gPJ
-         Sd646OR8nujZXK6eGRvusAf8ZGJORaOjPwQXNNLk=
-Date:   Sat, 9 Mar 2019 18:15:02 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Robert Yang <decatf@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: accel: kxcjk1013: Add device
- tree binding documentation
-Message-ID: <20190309181502.0ba185fd@archlinux>
-In-Reply-To: <20190304151912.11485-3-decatf@gmail.com>
-References: <20190304151912.11485-1-decatf@gmail.com>
-        <20190304151912.11485-3-decatf@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 9 Mar 2019 13:16:23 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36224 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbfCISQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 13:16:22 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 197so612868lfz.3
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 10:16:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0/PlK7wNBa6EZ0JOE2V9Wm27AX+5iyxV4H0wnT9W3zo=;
+        b=AjZmVZkOQcBB9u8SHXCF0UiVkyA8JvvALO4xP76q3B/H0gwxpGHxBEXDnH0GJeuoRW
+         3JA/56849O1/kJLAqrJIugjnpi8GuqkM+yPkYSkLiv/LxXp2sr/hNkAzPRt0/UXujkMN
+         YFjEahIgbrn+A13I5emBjzJXMzC51MtcVReo8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0/PlK7wNBa6EZ0JOE2V9Wm27AX+5iyxV4H0wnT9W3zo=;
+        b=PUGAXDhxdZsyWY5vA+URGOY+48/I0f4y/LKzQMojEGdLV+S2nTTPRXQ3XwBKOdaufv
+         ahnFIKLMDuyI8fOFHFys8N1Hidn15ep7+YHkfz/oZyEzloFmVqmyDqTdiJTPi4exkRdp
+         hrfKyH60qoKFI8rBuy+Oc4jq9kk+0hucgR3OMEiGg93vVl0PG7JuNV6QkKn5astwOR8n
+         QrgIaWw+8PnJCYcm3uDcRUTV/1ii7DOGL8rxmi5v04Xiy1xY6swMczE/Swg/jF74qwza
+         BJxvPhp7aj4IpWhrWOCBRJPjLCTg7mCc8/0bKXDvkRb4debWFFDrbN1TLWtVUsNkxHUf
+         GGIg==
+X-Gm-Message-State: APjAAAX5kih3MSaCmKSPkxTIwaLk6AZquAClUndGILujemh8p2Q8hjWU
+        Cz45adlnA+UiJgb7tXuJ+FKEiArvKpk=
+X-Google-Smtp-Source: APXvYqxyGNwDADv/pXzA0k7BNadkBVaDgfn3lY8+MmMt3o+gD3ebKCYaIB/mE5Hrgk5TKIJtk8KzSA==
+X-Received: by 2002:a19:5503:: with SMTP id n3mr14354051lfe.35.1552155380080;
+        Sat, 09 Mar 2019 10:16:20 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id 13sm202695lju.27.2019.03.09.10.16.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Mar 2019 10:16:19 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id h6so618183lfc.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 10:16:19 -0800 (PST)
+X-Received: by 2002:ac2:424c:: with SMTP id m12mr14199023lfl.62.1552154904904;
+ Sat, 09 Mar 2019 10:08:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190306191244.8691-1-cyphar@cyphar.com> <20190306191244.8691-3-cyphar@cyphar.com>
+ <CAHk-=wgGKWRTgSYKkgMEf1QOg0PZSpmBha+2LCHCBOar0e8cug@mail.gmail.com> <20190309172631.ygfdhrn4rcwkgfmk@brauner.io>
+In-Reply-To: <20190309172631.ygfdhrn4rcwkgfmk@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 9 Mar 2019 10:08:08 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whMuk-b6rzhbF2=vVNOuEZk8-opRJ1fD07a9ztQ+V97Aw@mail.gmail.com>
+Message-ID: <CAHk-=whMuk-b6rzhbF2=vVNOuEZk8-opRJ1fD07a9ztQ+V97Aw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5 2/5] namei: O_BENEATH-style path resolution flags
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jann Horn <jannh@google.com>, Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 10:19:11 -0500
-Robert Yang <decatf@gmail.com> wrote:
+On Sat, Mar 9, 2019 at 9:26 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> Aside from that I want to point out that it is non-trivial to do this in
+> user space.
 
-> Document device tree bindings for Kionix KXCJK-1013 Accelerometer driver.
-> 
-> Signed-off-by: Robert Yang <decatf@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+Oh, absolutely agreed. It's easy to do it in the kernel, and doing it
+anywhere else ends up having horrible races that the kernel has to
+deal with and has long solved anyway.
 
-thanks,
+I've only seen this (2/5) patch, so I won't comment on the other ones,
+but this still makes sense to me.
 
-Jonathan
+Al, comments?
 
-> ---
->  .../bindings/iio/accel/kionix,kxcjk1013.txt     | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt b/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
-> new file mode 100644
-> index 000000000000..eb76a02e2a82
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
-> @@ -0,0 +1,17 @@
-> +Kionix KXCJK-1013 Accelerometer device tree bindings
-> +
-> +Required properties:
-> +
-> +- compatible: Must be one of:
-> +    "kionix,kxcjk1013"
-> +    "kionix,kxcj91008"
-> +    "kionix,kxtj21009"
-> +    "kionix,kxtf9"
-> + - reg: i2c slave address
-> +
-> +Example:
-> +
-> +kxtf9@f {
-> +	compatible = "kionix,kxtf9";
-> +	reg = <0x0F>;
-> +};
-
+                  Linus
