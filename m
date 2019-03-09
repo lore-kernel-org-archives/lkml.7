@@ -2,95 +2,106 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA31C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEFEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45CD207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="daSkRwPq"
+	by mail.kernel.org (Postfix) with ESMTP id 8EB0D2064A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552150455;
+	bh=80dXcCEq0zA84w0FbRo4dlLAnEMrJuRx6BxPJzg+gsQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Z1Ok7PANxY1fzH+7JtcMW2A6RA5bjXK3kIiLFUovFQmes35Jnvte1Tyc1FTM2Sgxv
+	 BU3cCB2j9xKeOHM7dHZdu85nWYkaud5vmXo4kpJGRjQ2zqRAuizUaosNLX/cRyCZA2
+	 oMvib5lj+8p1P8ZWejguB//GBIL7UbN0kHGBIRJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfCIQx2 (ORCPT
+        id S1726471AbfCIQyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 11:53:28 -0500
-Received: from sonic301-22.consmr.mail.gq1.yahoo.com ([98.137.64.148]:45719
-        "EHLO sonic301-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726289AbfCIQx1 (ORCPT
+        Sat, 9 Mar 2019 11:54:13 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44135 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfCIQyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 11:53:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1552150406; bh=xhy3yalomi8I5dC34d7A89iergpT6boHfVUWML3NtEc=; h=In-Reply-To:References:Subject:From:To:Date:From:Subject; b=daSkRwPqNsqZaK4x+klOuBf05O1zrNI90cV/rZhozt2AZu/KEwUfw2nNSPgS5C1bDDm28q21m7YNsSsO3hnV1ZErBsHIousJy1ZNVfaPcD1NlVDANDxze3SMVLRAzr/JO7X1a9mS1RMfZaQ9sjdHWwaDXf9jGbXAqMOaj4a+jz/Oa5rWocLq4a3qdbx5XPbNU1P0oXy12ZIgFCbeMF7dDkP9p29o+KXpr4XA5Q0YyDI9tYcDSWv4iDi/Kqbg8NFfuvA63z/BkGFrw6G/IykjUYTSHASWoOutw1fP8XzvzLmFgAtIygnNsuTPV3tzkU34cDm4I3HpxEszQHrxCx1mGw==
-X-YMail-OSG: 1qmSNLsVM1mKQrjoUZXW0e4U97VgIQtlbshBYx_tgD90zQfsRMstIHk0CY2s7fi
- JUismcr7gfaqSSEoNyzG80JhJQvUXvXicwdaQFB5qmX.XSyyXXXNbJiQUt3BA.0AjjiT_EeXdjZw
- wW9RbFXQs9sY25PVGfto18TZHo0d6EW1QcT5I0_.GkLrVMM7EU18oiJkt1VWUd7ct.eYdqoltqRf
- pihj0xxPXpuJkfcER6f4ONyGBIRV65LUZ8re9MExEHLNGpsJGs3xT_0sZPsSObyuBbvFf4PmLasQ
- qzie_5n1kvbHDkVvKnIy2vx2jeIgHfVbyP.Kn7jUm0DrGu8Bdt0czR3JHDk1qD4x9UTgNHUjqFm3
- JJuF4tpRep2kJZ7TjYTBEsCSsUhe9aGBqO3Y7H.rM4rStXxI9rMfQK5.mP_cGrnLxENHGG6.LV62
- 1hMnGyRnfVfLOp.aWo7dPYpZAfUQpbXXtNZsaDZXXz9vB1VbnschWr2w5tLAeNEpm2h2iGEtAmeW
- nLXlSU3YVg3JppEPa7oQ4bfvixsCPg0GogHqisaeVFW9.wIqKCZKC25yMJlBd8EcMTEtEWiKsRGG
- wdw4BSeUpQj6lJLdbHeMmaLhtL6asdPZxuwfJiknMwVwfTdLBaNiHDtEJeUURdDABjMyaBKI3fgi
- pNBDF21ULM8qUsyEnRAQSoIkltt3bKkPbiKdaHOuzAQ6J44ro0IFAOw5uRy_nLRRjkxx5c9FAstx
- L4kLPFN5LXe8_5Zp5bz4CnG6CGfqrFNu1ehDYgBw6XqhfnJRJxm0EA1LjvzHzVzQI2X.diygbJDa
- ie2IgFVihTrs7GKQ0Mws3RG7w_VUrKsDyHvW2yMy3kwZJCVqZtc2pJC1tZPGhyZcyTIZNJsZmJzg
- m25VP_JPKq56nnJ525mMfi5vvvOn3tI6wgEz4.kCsUcjHlooRoWjBv.AtYvonVrRmj99Q0MEc3Qi
- nypzT58ciAqdQ6vt7WDKLrF7GJ9f34DLBsZaSnZwiMXznQs3qflWV996XXvA1AVsUzgRuPbV9mKy
- lPmK9vJ1K4J7_2mj_YKoUaGWnzPcMBr0PnIac
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Sat, 9 Mar 2019 16:53:26 +0000
-Received: from pink.alxu.ca (EHLO localhost) ([198.98.62.56])
-          by smtp424.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f55f8f68db29febaad90b7206f995093;
-          Sat, 09 Mar 2019 16:53:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 9 Mar 2019 11:54:13 -0500
+Received: by mail-lf1-f65.google.com with SMTP id u9so516066lfe.11
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 08:54:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8nS/lk8A81pkD+2fljOTlYL+nQ4SnSSZkiN26ES9CJs=;
+        b=CZ3rOn3GPwFOfxnLDMNaGjr8n5f1YrWoh1zA962LIUR9OBeJasmMnAl4pi8BlgnXzp
+         4kIiTQ0obTUZ2heVpdvDrw59sf8p9Ym0wW3ErL+G0dFZE4bwIhys+QTuhFJh0whsyKBG
+         976yXRGJiqF0Hbdf7sbBXP9V67fQSGk719sI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8nS/lk8A81pkD+2fljOTlYL+nQ4SnSSZkiN26ES9CJs=;
+        b=T8KKIqQJx/b6rV++5zOt2xcCP1NlFOkcGIeQzwJlOefUB2QzAFkzugILbhrpL7MIcQ
+         JosWI9u2w+/haLsm6Z55mOTOZuF31ES/dQhKkjfBX9oJqi45qbTV9oLQN+b3wab+XyB6
+         NECrzdZ4Lq29iwvCdIlvnuQsGgmZhgl0+lQXOOXbIoGTkfW4D2gWqzRNVCCVwao5lJj5
+         /45985crWzos7e6t3Qh0i6+vfruwfq5WtLwvv8TtkgZ1dpm+o48inmHRtvdwV0P2gbgi
+         La+z5g7rFMvM1oQbS7b1ysL+uYzotwiIMXyIGu+R96osu73iTz2zpYIarEn0YjqzNV9D
+         OWdQ==
+X-Gm-Message-State: APjAAAVNJZyE+sVHMX6I309atC74kGYVnb39GhZ0QSmjj0WQnw14yMA3
+        eotdYN6Rog1c2KMTPRCSkUnmHwCflmQ=
+X-Google-Smtp-Source: APXvYqxPqCR9wOHXSp+8lK/UhTZTHElYgHlZ4gv66fPXCqlpCTR2Ki3xwiFHmFZpdHE68UP7G7WDJA==
+X-Received: by 2002:ac2:5325:: with SMTP id f5mr1243413lfh.77.1552150450617;
+        Sat, 09 Mar 2019 08:54:10 -0800 (PST)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id r124sm194077lfr.93.2019.03.09.08.54.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Mar 2019 08:54:09 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id k136so527611lfg.5
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 08:54:08 -0800 (PST)
+X-Received: by 2002:a19:48cb:: with SMTP id v194mr13725272lfa.166.1552150448462;
+ Sat, 09 Mar 2019 08:54:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <82c0ba0d-c7cb-32fb-8e0b-2191b8678c16@gmail.com>
-References: <1552097324.u2rpi5lxaz.astroid@alex-desktop.none> <82c0ba0d-c7cb-32fb-8e0b-2191b8678c16@gmail.com>
-Subject: Re: r8169 only works in promisc mode
-From:   Alex Xu <alex_y_xu@yahoo.ca>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Message-ID: <155215040086.15555.14542326670795337549@pink.alxu.ca>
-User-Agent: alot/0.8.1
-Date:   Sat, 09 Mar 2019 16:53:20 +0000
+References: <nycvar.YFH.7.76.1901051817390.16954@cbobk.fhfr.pm>
+ <20190130124420.1834-1-vbabka@suse.cz> <nycvar.YFH.7.76.1903061310170.19912@cbobk.fhfr.pm>
+ <20190306143547.c686225447822beaf3b6e139@linux-foundation.org>
+ <nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm> <20190306152337.e06cbc530fbfbcfcfe0dc37c@linux-foundation.org>
+ <20190306233209.GA7753@nautica> <20190306153819.3510a19ffe510b674a7890ce@linux-foundation.org>
+In-Reply-To: <20190306153819.3510a19ffe510b674a7890ce@linux-foundation.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 9 Mar 2019 08:53:52 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgFY+yu=mQU=WqAC-_2aU+A6dFcY3D-Um-Q3hXobB8JfA@mail.gmail.com>
+Message-ID: <CAHk-=wgFY+yu=mQU=WqAC-_2aU+A6dFcY3D-Um-Q3hXobB8JfA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] mincore() and IOCB_NOWAIT adjustments
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Cyril Hrubis <chrubis@suse.cz>, Daniel Gruss <daniel@gruss.cc>,
+        Dave Chinner <david@fromorbit.com>,
+        Kevin Easton <kevin@guarana.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Heiner Kallweit (2019-03-09 09:33:40)
-> On 09.03.2019 03:16, Alex Xu (Hello71) wrote:
-> > After suspending, my r8169 (not actually 8169, just that driver) only=20
-> > receives packets when in promiscuous mode. I have tried disabling all=20
-> > offload features except highdma [fixed], and it doesn't fix the issue.
-> >=20
-> > I am using torvalds/linux, compiled about two days ago (not sure which =
+On Wed, Mar 6, 2019 at 3:38 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> Linus, do you have thoughts on
+> http://lkml.kernel.org/r/20190130124420.1834-4-vbabka@suse.cz ?
 
-> > commit). I think this happened after a recent upgrade (some time in the=
-=20
-> > past week). Given the long testing cycle, I don't really want to bisect=
-;=20
-> > I am hoping someone has some idea of where the issue could be.
-> >=20
-> The provided information isn't enough to say anything. Please create a
-> bug ticket in bugzilla. Needed information:
-> - Last working and first failing kernel version (as reported by uname -a)
-> - Is 5.0 ok?
-> - Full dmesg log
-> - lspci -vv output for the network card
-> - If the issue happens only after resume from suspend, diff of the
->   chip registers (ethtool -d) before and after suspend.
-> - Does removing / reloading the r8169 module fix the issue?
->=20
-> > Please CC me on replies.
-> >=20
-> > Thanks,
-> > Alex.
-> >=20
-> Heiner
+I think that's fine, and probably the right thing to do, but I also
+suspect that nobody actually cares ;(
 
-I filed bug 202851 with some of the requested information.
-
-Alex.
+                 Linus
