@@ -2,131 +2,106 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F36FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE55FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8BB20851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAE62081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 01:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfCIBs5 (ORCPT
+        id S1726588AbfCIB6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 20:48:57 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5228 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726311AbfCIBs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 20:48:57 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BCF83ED97B2D36D545CD;
-        Sat,  9 Mar 2019 09:48:53 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Sat, 9 Mar 2019
- 09:48:48 +0800
-Subject: Re: [PATCH] proc/sysctl: Fix NULL pointer dereference in put_links
-To:     <mcgrof@kernel.org>, <keescook@chromium.org>,
-        <adobriyan@gmail.com>, <ast@kernel.org>, <daniel@iogearbox.net>
-References: <20190304135438.29792-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <bpf@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <07200563-9b07-1311-e13b-07813a41acd5@huawei.com>
-Date:   Sat, 9 Mar 2019 09:48:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 8 Mar 2019 20:58:53 -0500
+Received: from mga11.intel.com ([192.55.52.93]:45619 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726311AbfCIB6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 20:58:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 17:58:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,458,1544515200"; 
+   d="scan'208";a="124395894"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga006.jf.intel.com with ESMTP; 08 Mar 2019 17:58:50 -0800
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] iommu/vt-d: Remove lazy allocation of domains
+To:     James Sewart <jamessewart@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <2C75F46E-78FE-45E9-9E7D-280B3138EA13@arista.com>
+ <F83456DB-81DD-4E9B-9204-12ED9972D2FA@arista.com>
+ <7F6B5F6A-EC76-4A9F-8EB6-AEAB9994D91A@arista.com>
+ <fdd74d83-acd4-23da-6c0c-b52573d999bb@linux.intel.com>
+ <4B054B40-0B13-4F1E-87D6-8D2F072B5B9C@arista.com>
+ <06aa306a-278a-a22f-7718-200f6f9e5e87@linux.intel.com>
+ <A8A495EE-D3EA-4D84-AB92-9B4742E6E500@arista.com>
+ <4b3e29ce-1dff-eb7d-9b7e-1cde54a24dec@linux.intel.com>
+ <8ED1B579-C6B9-49E0-BD9A-5751474682D1@arista.com>
+ <bb9c941b-05b6-27aa-d0ca-1d9c56f8f277@linux.intel.com>
+ <A5E61244-386C-4FD8-AAF8-3135F471B92E@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <de8f306a-f7f9-f1f4-a8f6-97897b4c78e7@linux.intel.com>
+Date:   Sat, 9 Mar 2019 09:53:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190304135438.29792-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <A5E61244-386C-4FD8-AAF8-3135F471B92E@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping.
+Hi James,
 
-On 2019/3/4 21:54, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
+On 3/9/19 12:57 AM, James Sewart wrote:
+> Hey Lu,
 > 
-> Syzkaller report this:
-> 
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN PTI
-> CPU: 1 PID: 5373 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> RIP: 0010:put_links+0x101/0x440 fs/proc/proc_sysctl.c:1599
-> Code: 00 0f 85 3a 03 00 00 48 8b 43 38 48 89 44 24 20 48 83 c0 38 48 89 c2 48 89 44 24 28 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 fe 02 00 00 48 8b 74 24 20 48 c7 c7 60 2a 9d 91
-> RSP: 0018:ffff8881d828f238 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffff8881e01b1140 RCX: ffffffff8ee98267
-> RDX: 0000000000000007 RSI: ffffc90001479000 RDI: ffff8881e01b1178
-> RBP: dffffc0000000000 R08: ffffed103ee27259 R09: ffffed103ee27259
-> R10: 0000000000000001 R11: ffffed103ee27258 R12: fffffffffffffff4
-> R13: 0000000000000006 R14: ffff8881f59838c0 R15: dffffc0000000000
-> FS:  00007f072254f700(0000) GS:ffff8881f7100000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fff8b286668 CR3: 00000001f0542002 CR4: 00000000007606e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  drop_sysctl_table+0x152/0x9f0 fs/proc/proc_sysctl.c:1629
->  get_subdir fs/proc/proc_sysctl.c:1022 [inline]
->  __register_sysctl_table+0xd65/0x1090 fs/proc/proc_sysctl.c:1335
->  ? 0xffffffffc1a18000
->  br_netfilter_init+0xbc/0x1000 [br_netfilter]
->  ? 0xffffffffc1a18000
->  ? 0xffffffffc1a18000
->  do_one_initcall+0xfa/0x5ca init/main.c:887
->  do_init_module+0x204/0x5f6 kernel/module.c:3460
->  load_module+0x66b2/0x8570 kernel/module.c:3808
->  __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
->  do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462e99
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f072254ec58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-> RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-> RBP: 00007f072254ec70 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f072254f6bc
-> R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-> Modules linked in: br_netfilter(+) dvb_usb_dibusb_mc_common dib3000mc dibx000_common dvb_usb_dibusb_common dvb_usb_dw2102 dvb_usb classmate_laptop palmas_regulator cn videobuf2_v4l2 v4l2_common snd_soc_bd28623 mptbase snd_usb_usx2y snd_usbmidi_lib snd_rawmidi wmi libnvdimm lockd sunrpc grace rc_kworld_pc150u rc_core rtc_da9063 sha1_ssse3 i2c_cros_ec_tunnel adxl34x_spi adxl34x nfnetlink lib80211 i5500_temp dvb_as102 dvb_core videobuf2_common videodev media videobuf2_vmalloc videobuf2_memops udc_core lnbp22 leds_lp3952 hid_roccat_ryos s1d13xxxfb mtd vport_geneve openvswitch nf_conncount nf_nat_ipv6 nsh geneve udp_tunnel ip6_udp_tunnel snd_soc_mt6351 sis_agp phylink snd_soc_adau1761_spi snd_soc_adau1761 snd_soc_adau17x1 snd_soc_core snd_pcm_dmaengine ac97_bus snd_compress snd_soc_adau_utils snd_soc_sigmadsp_regmap snd_soc_sigmadsp raid_class hid_roccat_konepure hid_roccat_common hid_roccat c2port_duramar2150 core mdio_bcm_unimac iptable_security iptable_raw iptable_mangle
->  iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim devlink vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel joydev mousedev ide_pci_generic piix aesni_intel aes_x86_64 ide_core crypto_simd atkbd cryptd glue_helper serio_raw ata_generic pata_acpi i2c_piix4 floppy sch_fq_codel ip_tables x_tables ipv6 [last unloaded: lm73]
-> Dumping ftrace buffer:
->    (ftrace buffer empty)
-> ---[ end trace 770020de38961fd0 ]---
-> 
-> A new dir entry can be created in get_subdir and its header->parent is set
-> to NULL. Only after insert_header success, it will be set to 'dir'.
-> However in err handling path of get_subdir, drop_sysctl_table maybe called
-> on 'new->header' regardless value of header->parent. Then put_links
-> be called, which triggers NULL-ptr deref when access the member of
-> header->parent in xlate_dir.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 0e47c99d7fe25 ("sysctl: Replace root_list with links between sysctl_table_sets")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  fs/proc/proc_sysctl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index 4d598a3..4c2a05a 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -1626,7 +1626,8 @@ static void drop_sysctl_table(struct ctl_table_header *header)
->  	if (--header->nreg)
->  		return;
->  
-> -	put_links(header);
-> +	if (parent)
-> +		put_links(header);
->  	start_unregistering(header);
->  	if (!--header->count)
->  		kfree_rcu(header, rcu);
+>> On 8 Mar 2019, at 03:09, Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>>>>
+>>>> Do you mind if I work on top of your patches for further cleanups and
+>>>> sign off a v2 together with you?
+>>> Sure, sounds good. I’ll fixup patch 3 and have a go at integrating
+>>> iommu_prepare_isa into get_resv_regions. This should make the initial
+>>> domain logic here quite concise.
+>> Here attached three extra patches which I think should be added before
+>> PATCH 3/4, and some further cleanup changes which you can merge with
+>> PATCH 4/4.
+>>
+>> ----------------
+>>
+>> 0006-iommu-Add-ops-entry-for-vendor-specific-default-doma.patch
+>> 0007-iommu-vt-d-Add-is_identity_map-ops-entry.patch
+>>
+>> These two patches aim to add a generic method for vendor specific iommu
+>> drivers to specify the type of the default domain for a device. Intel
+>> iommu driver will register an ops for this since it already has its own
+>> identity map adjudicator for a long time.
+> This seems like a good idea, but as domain alloc is only called for the
+> default domain on first device attached to a group, we may miss checking
+> whether a device added later should have an identity domain. Should there
+> be paths to downgrade a groups domain if one of the devices requires one?
 > 
 
+Good catch!
+
+This is supposed to be handled in iommu_no_mapping(). But, obviously
+current code sticks to lazy domain allocation. I'm not sure whether
+there are any real such cases, but we should handle it in a clean way.
+My idea is that we could downgrade to multiple domains per group (just
+like what we have now) in this case and print a kernel message for this.
+
+Or any other thoughts?
+
+Best regards,
+Lu Baolu
