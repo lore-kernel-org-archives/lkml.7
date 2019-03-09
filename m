@@ -2,180 +2,110 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFAFC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E22C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D752081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552156631;
-	bh=Nfz403lDd8pt7WEkj5q1Ikgohgob4/USeawIX9xlPmg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=F7yWt9GRj/0Apqht9ZIJ+/IiZHSExiELTqd5+upJDf3252ujqQ8alf0m31mie1rKy
-	 8DYsWZnUEQn5GiM8T9jTn9xI+bvOYDUr95Xxg14MkVi8Sc0R31xCVr2QomdR7aAIHo
-	 h++aagE2TiB+fpos6aLZCEOvDnJmteHHbPNpjXLo=
+	by mail.kernel.org (Postfix) with ESMTP id 0AE1F207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 18:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfCIShJ (ORCPT
+        id S1726425AbfCISjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 13:37:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbfCIShJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 13:37:09 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A1CE207E0;
-        Sat,  9 Mar 2019 18:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552156627;
-        bh=Nfz403lDd8pt7WEkj5q1Ikgohgob4/USeawIX9xlPmg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KSJJWmiirvgOuIWEC+pfGANJYcEA/bA9D601nSTx5L+EelcRAJZg4GHN2CtOAFvOc
-         Qq4PCU9jQ+CmchNGx05wSUAGrF94vKbA7i+1A3tsWI5c6wuzwAiAn7fH8URaADDu5c
-         8l3FqIRrflQ0xlKMvi+Bd+mIVo26xgLV63f2sVSc=
-Date:   Sat, 9 Mar 2019 18:37:01 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomasz Duszynski <tduszyns@gmail.com>
-Cc:     justinpopo6@gmail.com, linux-iio@vger.kernel.org,
-        linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        f.fainelli@gmail.com, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] iio: adc: ti-ads7950: Fix improper use of mlock
-Message-ID: <20190309183701.03afd62b@archlinux>
-In-Reply-To: <20190309162935.GC7820@arch>
-References: <1552082608-42603-1-git-send-email-justinpopo6@gmail.com>
-        <1552082608-42603-2-git-send-email-justinpopo6@gmail.com>
-        <20190309162935.GC7820@arch>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 9 Mar 2019 13:39:36 -0500
+Received: from smtprelay0186.hostedemail.com ([216.40.44.186]:53199 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbfCISjg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 13:39:36 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B2DBC180A812C;
+        Sat,  9 Mar 2019 18:39:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: key04_709d79fe7bf02
+X-Filterd-Recvd-Size: 2564
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  9 Mar 2019 18:39:33 +0000 (UTC)
+Message-ID: <d57e41f96a23f63aeb720d0ea73ba2b2bed0a938.camel@perches.com>
+Subject: Re: [PATCH 1/5] Staging: rtl8723bs: os_dep: Fix assignment in if
+ condition
+From:   Joe Perches <joe@perches.com>
+To:     Guilherme Tadashi Maeoka <gui.maeoka@gmail.com>,
+        gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Sat, 09 Mar 2019 10:39:32 -0800
+In-Reply-To: <20190309183047.10781-2-gui.maeoka@gmail.com>
+References: <20190309183047.10781-1-gui.maeoka@gmail.com>
+         <20190309183047.10781-2-gui.maeoka@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 Mar 2019 17:29:36 +0100
-Tomasz Duszynski <tduszyns@gmail.com> wrote:
-
-> On Fri, Mar 08, 2019 at 02:03:27PM -0800, justinpopo6@gmail.com wrote:
-> > From: Justin Chen <justinpopo6@gmail.com>
-> >
-> > Indio->mlock is used for protecting the different iio device modes.
-> > It is currently not being used in this way. Replace the lock with
-> > an internal lock specifically used for protecting the SPI transfer
-> > buffer.
-> >
-> > Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-> > ---
-> >  drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
-> >  1 file changed, 15 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-> > index 0ad6359..1e47bef 100644
-> > --- a/drivers/iio/adc/ti-ads7950.c
-> > +++ b/drivers/iio/adc/ti-ads7950.c
-> > @@ -56,6 +56,9 @@ struct ti_ads7950_state {
-> >  	struct spi_message	ring_msg;
-> >  	struct spi_message	scan_single_msg;
-> >
-> > +	/* Lock to protect the spi xfer buffers */
-> > +	struct mutex		slock;
-> > +
-> >  	struct regulator	*reg;
-> >  	unsigned int		vref_mv;
-> >
-> > @@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
-> >  	struct ti_ads7950_state *st = iio_priv(indio_dev);
-> >  	int ret;
-> >
-> > +	mutex_lock(&st->slock);
-> >  	ret = spi_sync(st->spi, &st->ring_msg);
-> >  	if (ret < 0)
-> >  		goto out;
-> > @@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
-> >  					   iio_get_time_ns(indio_dev));
-> >
-> >  out:
-> > +	mutex_unlock(&st->slock);
-> >  	iio_trigger_notify_done(indio_dev->trig);
-> >
-> >  	return IRQ_HANDLED;
-> > @@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
-> >  	struct ti_ads7950_state *st = iio_priv(indio_dev);
-> >  	int ret, cmd;
-> >
-> > -	mutex_lock(&indio_dev->mlock);
-> > +	mutex_lock(&st->slock);
-> >
-> >  	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
-> >  	st->single_tx = cmd;
-> > @@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
-> >  	ret = st->single_rx;
-> >
-> >  out:
-> > -	mutex_unlock(&indio_dev->mlock);
-> > +	mutex_unlock(&st->slock);
-> >
-> >  	return ret;
-> >  }
-> > @@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
-> >  	if (ACPI_COMPANION(&spi->dev))
-> >  		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
-> >
-> > +	mutex_init(&st->slock);
-> > +
-> >  	st->reg = devm_regulator_get(&spi->dev, "vref");
-> >  	if (IS_ERR(st->reg)) {
-> >  		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
-> > -		return PTR_ERR(st->reg);
-> > +		ret = PTR_ERR(st->reg);
-> > +		goto error_destroy_mutex;
-> >  	}
-> >
-> >  	ret = regulator_enable(st->reg);
-> >  	if (ret) {
-> >  		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
-> > -		return ret;
-> > +		goto error_destroy_mutex;
-> >  	}
-> >
-> >  	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> > @@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
-> >  	iio_triggered_buffer_cleanup(indio_dev);
-> >  error_disable_reg:
-> >  	regulator_disable(st->reg);
-> > +error_destroy_mutex:
-> > +	mutex_destroy(&st->slock);  
+On Sat, 2019-03-09 at 15:30 -0300, Guilherme Tadashi Maeoka wrote:
+> Fix an assignment in if condition.
 > 
-> If your intention was to do resources cleanup then this is not
-> what this api was designed for. This is actually for debugging unwanted
-> subsequent mutex usage.
-
-Yes. In a case like this where it is the last thing in a remove
-it adds little value as there should be nothing left to take the mutex
-anyway.  This is the reason (I guess) there has never been a 
-devm_mutex_init function to tidy this up automatically...
-
+> Signed-off-by: Guilherme Tadashi Maeoka <gui.maeoka@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/os_dep/osdep_service.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> >
-> >  	return ret;
-> >  }
-> > @@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
-> >  	iio_device_unregister(indio_dev);
-> >  	iio_triggered_buffer_cleanup(indio_dev);
-> >  	regulator_disable(st->reg);
-> > +	mutex_destroy(&st->slock);
-> >
-> >  	return 0;
-> >  }
-> > --
-> > 2.7.4
-> >  
+> diff --git a/drivers/staging/rtl8723bs/os_dep/osdep_service.c b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+> index 73b87da15eb2..c7fdcc6bbae3 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/osdep_service.c
+> @@ -162,7 +162,9 @@ static int retriveFromFile(char *path, u8 *buf, u32 sz)
+>  	struct file *fp;
+>  
+>  	if (path && buf) {
+> -		if (0 == (ret =openFile(&fp, path, O_RDONLY, 0))) {
+> +		ret = openFile(&fp, path, O_RDONLY, 0);
+> +
+> +		if (ret == 0) {
+>  			DBG_871X("%s openFile path:%s fp =%p\n", __func__, path , fp);
+>  
+>  			oldfs = get_fs(); set_fs(KERNEL_DS);
+
+More common kernel style would be to rewrite the function
+(and to fix the typo of retrieve) to something like:  
+
+static int retrieveFromFile(char *path, u8 *buf, u32 sz)
+{
+	int ret;
+	mm_segment_t oldfs;
+	struct file *fp;
+
+	if (!path || !buf) {
+		DBG_871X("%s NULL pointer\n", __func__);
+		return -EINVAL;
+	}
+
+	ret = openFile(&fp, path, O_RDONLY, 0);
+	if (ret) {
+		DBG_871X("%s openFile path:%s Fail, ret:%d\n",
+			 __func__, path, ret);
+		return ret;
+	}
+
+	DBG_871X("%s openFile path:%s fp =%p\n", __func__, path , fp);
+
+	oldfs = get_fs();
+	set_fs(KERNEL_DS);
+	ret = readFile(fp, buf, sz);
+	set_fs(oldfs);
+	closeFile(fp);
+
+	DBG_871X("%s readFile, ret:%d\n", __func__, ret);
+
+	return ret;
+}
+
 
