@@ -2,81 +2,92 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8EDC10F0C
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 00:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B779C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 00:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1786020851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 00:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C5820851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 00:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCIA2p (ORCPT
+        id S1726696AbfCIAaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 19:28:45 -0500
-Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:49083 "EHLO
-        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726381AbfCIA2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 19:28:44 -0500
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id 30F1B1C2BA1
-        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 00:28:43 +0000 (GMT)
-Received: (qmail 8266 invoked from network); 9 Mar 2019 00:28:43 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 Mar 2019 00:28:42 -0000
-Date:   Sat, 9 Mar 2019 00:28:41 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/compaction: fix an undefined behaviour
-Message-ID: <20190309002841.GL9565@techsingularity.net>
-References: <20190308224650.68955-1-cai@lca.pw>
+        Fri, 8 Mar 2019 19:30:01 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:40320 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbfCIAaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 19:30:00 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C63C33082128;
+        Sat,  9 Mar 2019 00:30:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2C20600C1;
+        Sat,  9 Mar 2019 00:29:59 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix client call queueing, waiting for channel
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Sat, 09 Mar 2019 00:29:58 +0000
+Message-ID: <155209139894.21860.5649266453556857318.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20190308224650.68955-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 09 Mar 2019 00:30:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 05:46:50PM -0500, Qian Cai wrote:
-> In a low-memory situation, cc->fast_search_fail can keep increasing as
-> it is unable to find an available page to isolate in
-> fast_isolate_freepages(). As the result, it could trigger an error
-> below, so just compare with the maximum bits can be shifted first.
-> 
-> UBSAN: Undefined behaviour in mm/compaction.c:1160:30
-> shift exponent 64 is too large for 64-bit type 'unsigned long'
-> CPU: 131 PID: 1308 Comm: kcompactd1 Kdump: loaded Tainted: G
-> W    L    5.0.0+ #17
-> Call trace:
->  dump_backtrace+0x0/0x450
->  show_stack+0x20/0x2c
->  dump_stack+0xc8/0x14c
->  __ubsan_handle_shift_out_of_bounds+0x7e8/0x8c4
->  compaction_alloc+0x2344/0x2484
->  unmap_and_move+0xdc/0x1dbc
->  migrate_pages+0x274/0x1310
->  compact_zone+0x26ec/0x43bc
->  kcompactd+0x15b8/0x1a24
->  kthread+0x374/0x390
->  ret_from_fork+0x10/0x18
-> 
-> Fixes: 70b44595eafe ("mm, compaction: use free lists to quickly locate a migration source")
-> Signed-off-by: Qian Cai <cai@lca.pw>
+rxrpc_get_client_conn() adds a new call to the front of the waiting_calls
+queue if the connection it's going to use already exists.  This is bad as
+it allows calls to get starved out.
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Fix this by adding to the tail instead.
 
-FWIW, I had seen the same message when trying to isolate potential
-corruption (still unsuccessful, the tests always complete) but
-considered it relatively benign and harmless. Still worth fixing so
-thanks.
+Also change the other enqueue point in the same function to put it on the
+front (ie. when we have a new connection).  This makes the point that in
+the case of a new connection the new call goes at the front (though it
+doesn't actually matter since the queue should be unoccupied).
 
--- 
-Mel Gorman
-SUSE Labs
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+---
+
+ net/rxrpc/conn_client.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
+index 505690dbd0be..04e62afea063 100644
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -354,7 +354,7 @@ static int rxrpc_get_client_conn(struct rxrpc_sock *rx,
+ 	 * normally have to take channel_lock but we do this before anyone else
+ 	 * can see the connection.
+ 	 */
+-	list_add_tail(&call->chan_wait_link, &candidate->waiting_calls);
++	list_add(&call->chan_wait_link, &candidate->waiting_calls);
+ 
+ 	if (cp->exclusive) {
+ 		call->conn = candidate;
+@@ -433,7 +433,7 @@ static int rxrpc_get_client_conn(struct rxrpc_sock *rx,
+ 	call->conn = conn;
+ 	call->security_ix = conn->security_ix;
+ 	call->service_id = conn->service_id;
+-	list_add(&call->chan_wait_link, &conn->waiting_calls);
++	list_add_tail(&call->chan_wait_link, &conn->waiting_calls);
+ 	spin_unlock(&conn->channel_lock);
+ 	_leave(" = 0 [extant %d]", conn->debug_id);
+ 	return 0;
+
