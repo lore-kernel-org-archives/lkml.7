@@ -2,120 +2,188 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B17BC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B77C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062E620851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552133508;
-	bh=4O16E9fNDZhBtoBg6LTzReQUn4q2mpiyZ1WU4MWSeG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kbnpU+hPBiV5zynwyXkqPa2IftEesaYweIuhkLyJjxOvfy0NaH35ueRQrK/vIB4Se
-	 Eji2Q+DAd/I0ghIir3U8/L+pqwmbknhknSskOIw0WAyml245gY3oHuO7WK22KBoIYb
-	 J1DmeSPDa1jDY0d4SQ8i728BxQPIuzVw7BkwFLc4=
+	by mail.kernel.org (Postfix) with ESMTP id 2BD1E2081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 12:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCIMLr (ORCPT
+        id S1726485AbfCIM2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 07:11:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbfCIMLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 07:11:46 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A6D207E0;
-        Sat,  9 Mar 2019 12:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552133505;
-        bh=4O16E9fNDZhBtoBg6LTzReQUn4q2mpiyZ1WU4MWSeG4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UstQIxdr80vytCiqdZlJVcrGphHeWcdUfexy4LUrr5GqWDjmoI7gxcY2EBTd8Nlbl
-         L4WOSXka7zs6p0J1TUaV3dSE+OlroauC0wz6D820epoFGyfkSE5PwDTfkaL+hYqOUA
-         kp7m+OO9z5CEvudx4enMPddudprplFXfE3r4Vr/Y=
-Date:   Sat, 9 Mar 2019 13:11:41 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190309121141.GA30173@kroah.com>
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
- <20190307150343.GB258852@google.com>
- <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
- <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
- <20190308140251.GC25768@kroah.com>
- <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
- <20190309071648.GE3882@kroah.com>
- <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+        Sat, 9 Mar 2019 07:28:00 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46136 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726257AbfCIM2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 07:28:00 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 45F9126514A9D249D6DC;
+        Sat,  9 Mar 2019 20:27:54 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Sat, 9 Mar 2019
+ 20:27:51 +0800
+Subject: Re: [PATCH] proc/sysctl: Fix NULL pointer dereference in put_links
+To:     Luis Chamberlain <mcgrof@kernel.org>
+References: <20190304135438.29792-1-yuehaibing@huawei.com>
+ <03aafd33-f9d5-4a48-b123-7a6b2e7f16e7@huawei.com>
+ <CAB=NE6UF=2pWzOFY2PqpXyuDV3qSa7R8bpMAw-6qF9Z7Ly=PEw@mail.gmail.com>
+CC:     Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, Al Viro <viro@zeniv.linux.org.uk>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <bpf@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <43f6b8c5-a9eb-c77d-0c52-dbc3c45b4dc7@huawei.com>
+Date:   Sat, 9 Mar 2019 20:27:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAB=NE6UF=2pWzOFY2PqpXyuDV3qSa7R8bpMAw-6qF9Z7Ly=PEw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 12:40:01PM +0100, Geert Uytterhoeven wrote:
-> > Signing keys should be kept secure, or better yet, just deleted entirely
-> > after creating and signing with them.  That's what I do for my kernels
-> > and I'm pretty sure that some distros also do this.  That way there's no
-> > chance that someone else can sign a module and have it loaded without
-> > detection, which is what signing is supposed to prevent from happening.
-> 
-> If you want that kind of security, there's no point in allowing to extend the
-> kernel by building more kernel modules after deployment.
+T24gMjAxOS8zLzkgMTE6NTgsIEx1aXMgQ2hhbWJlcmxhaW4gd3JvdGU6DQo+IEkgc28gZXhj
+aXRlZCBhYm91dCB0aGUgcmVwb3J0LCB0aGFua3MgdGhpcyBpcyBhd2Vzb21lIHdvcmshISBI
+b3dldmVyIGl0IHNlZW1lZCBwb3NzaWJseSBsaWtlIGEgcGFwZXItb3ZlciBhIGRpZmZlcmVu
+dCBpc3N1ZS4gSSdtIG5vdCBjb252aW5jZWQgeWV0Lg0KPiANCj4gSWYgcHJlZmVyIGEgYml0
+IG1vcmUgaW52ZXN0aWdhdGlvbiB1bnRpbCB3ZSBjYW4gYmUgMTAwJSBzdXJlLiBBdCB0aGlz
+IHBvaW50IG15IHBvc2l0aW9uIHdvdWxkIGJlIHRoaXMgaXMgbW9yZSBvZiBhIHJpc2sgZm9y
+IG1vcmUgcmVncmVzc2lvbnMgYW5kIHRoYXQncyBhbiBvZmYgZmVlbGluZyBmb3IgYSBmaXgu
+DQo+IA0KPiAgIEx1aXMNCg0KVGhpcyBpc3N1ZSBvY2N1cnMgbGlrZSB0aGlzOg0KDQpfX3Jl
+Z2lzdGVyX3N5c2N0bF90YWJsZQ0KICAgICAtLT5nZXRfc3ViZGlyDQogICAgIAktLT5uZXdf
+ZGlyICAvL2NyZWF0ZSAnbmV3JyBkaXINCiAgICAgICAgICAgIC0tPmluaXRfaGVhZGVyICAv
+LyAmbmV3LT5oZWFkZXItPnBhcmVudCA9IE5VTEwNCiAgICAgICAgLS0+aW5zZXJ0X2hlYWRl
+cg0KICAgICAgICAgICAgLS0+IGluc2VydF9saW5rcw0KCQktLT5uZXdfbGlua3MNCgkJCS0t
+Pmt6YWxsb2MgIC8vZmFpbGVkDQoJCS0tPiZuZXctPmhlYWRlci0+cGFyZW50ID0gTlVMTA0K
+CS0tPmRyb3Bfc3lzY3RsX3RhYmxlKCZuZXctPmhlYWRlcikgLy9JbiBlcnIgcGF0aCBvZiBn
+ZXRfc3ViZGlyDQoJCS0tPnB1dF9saW5rcyAvL2NhbGwgeGxhdGVfZGlyIHdob3NlIDJuZCBw
+YXJhbSBpcyAnJm5ldy0+aGVhZGVyLT5wYXJlbnQnDQoJCQktLT4geGxhdGVfZGlyICAvL2Fj
+Y2VzcyBkaXItPmhlYWRlcixob3dldmVyICdkaXInIGlzIE5VTEwgd2hpY2ggY29tZXMgZnJv
+bSAnJm5ldy0+aGVhZGVyLT5wYXJlbnQnDQoNClBsZWFzZSBjb3JyZWN0IG1lIGlmIHRoaXMg
+aXMgaW5jb3JyZWN0Lg0KCQ0KPiANCj4gT24gRnJpLCBNYXIgOCwgMjAxOSwgODowNCBQTSBZ
+dWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20gPG1haWx0bzp5dWVoYWliaW5nQGh1
+YXdlaS5jb20+PiB3cm90ZToNCj4gDQo+ICAgICArY2MgQWwgVmlybw0KPiANCj4gICAgIE9u
+IDIwMTkvMy80IDIxOjU0LCBZdWUgSGFpYmluZyB3cm90ZToNCj4gICAgID4gRnJvbTogWXVl
+SGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tIDxtYWlsdG86eXVlaGFpYmluZ0BodWF3
+ZWkuY29tPj4NCj4gICAgID4NCj4gICAgID4gU3l6a2FsbGVyIHJlcG9ydCB0aGlzOg0KPiAg
+ICAgPg0KPiAgICAgPiBrYXNhbjogR1BGIGNvdWxkIGJlIGNhdXNlZCBieSBOVUxMLXB0ciBk
+ZXJlZiBvciB1c2VyIG1lbW9yeSBhY2Nlc3MNCj4gICAgID4gZ2VuZXJhbCBwcm90ZWN0aW9u
+IGZhdWx0OiAwMDAwIFsjMV0gU01QIEtBU0FOIFBUSQ0KPiAgICAgPiBDUFU6IDEgUElEOiA1
+MzczIENvbW06IHN5ei1leGVjdXRvci4wIE5vdCB0YWludGVkIDUuMC4wLXJjOCsgIzMNCj4g
+ICAgID4gSGFyZHdhcmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwg
+MTk5NiksIEJJT1MgMS4xMC4yLTF1YnVudHUxIDA0LzAxLzIwMTQNCj4gICAgID4gUklQOiAw
+MDEwOnB1dF9saW5rcysweDEwMS8weDQ0MCBmcy9wcm9jL3Byb2Nfc3lzY3RsLmM6MTU5OQ0K
+PiAgICAgPiBDb2RlOiAwMCAwZiA4NSAzYSAwMyAwMCAwMCA0OCA4YiA0MyAzOCA0OCA4OSA0
+NCAyNCAyMCA0OCA4MyBjMCAzOCA0OCA4OSBjMiA0OCA4OSA0NCAyNCAyOCA0OCBiOCAwMCAw
+MCAwMCAwMCAwMCBmYyBmZiBkZiA0OCBjMSBlYSAwMyA8ODA+IDNjIDAyIDAwIDBmIDg1IGZl
+IDAyIDAwIDAwIDQ4IDhiIDc0IDI0IDIwIDQ4IGM3IGM3IDYwIDJhIDlkIDkxDQo+ICAgICA+
+IFJTUDogMDAxODpmZmZmODg4MWQ4MjhmMjM4IEVGTEFHUzogMDAwMTAyMDINCj4gICAgID4g
+UkFYOiBkZmZmZmMwMDAwMDAwMDAwIFJCWDogZmZmZjg4ODFlMDFiMTE0MCBSQ1g6IGZmZmZm
+ZmZmOGVlOTgyNjcNCj4gICAgID4gUkRYOiAwMDAwMDAwMDAwMDAwMDA3IFJTSTogZmZmZmM5
+MDAwMTQ3OTAwMCBSREk6IGZmZmY4ODgxZTAxYjExNzgNCj4gICAgID4gUkJQOiBkZmZmZmMw
+MDAwMDAwMDAwIFIwODogZmZmZmVkMTAzZWUyNzI1OSBSMDk6IGZmZmZlZDEwM2VlMjcyNTkN
+Cj4gICAgID4gUjEwOiAwMDAwMDAwMDAwMDAwMDAxIFIxMTogZmZmZmVkMTAzZWUyNzI1OCBS
+MTI6IGZmZmZmZmZmZmZmZmZmZjQNCj4gICAgID4gUjEzOiAwMDAwMDAwMDAwMDAwMDA2IFIx
+NDogZmZmZjg4ODFmNTk4MzhjMCBSMTU6IGRmZmZmYzAwMDAwMDAwMDANCj4gICAgID4gRlM6
+ICAwMDAwN2YwNzIyNTRmNzAwKDAwMDApIEdTOmZmZmY4ODgxZjcxMDAwMDAoMDAwMCkga25s
+R1M6MDAwMDAwMDAwMDAwMDAwMA0KPiAgICAgPiBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAw
+MDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQo+ICAgICA+IENSMjogMDAwMDdmZmY4YjI4NjY2
+OCBDUjM6IDAwMDAwMDAxZjA1NDIwMDIgQ1I0OiAwMDAwMDAwMDAwNzYwNmUwDQo+ICAgICA+
+IERSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAw
+MDAwMDAwMDAwMDAwDQo+ICAgICA+IERSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAw
+MDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwDQo+ICAgICA+IFBLUlU6IDU1NTU1
+NTU0DQo+ICAgICA+IENhbGwgVHJhY2U6DQo+ICAgICA+ICBkcm9wX3N5c2N0bF90YWJsZSsw
+eDE1Mi8weDlmMCBmcy9wcm9jL3Byb2Nfc3lzY3RsLmM6MTYyOQ0KPiAgICAgPiAgZ2V0X3N1
+YmRpciBmcy9wcm9jL3Byb2Nfc3lzY3RsLmM6MTAyMiBbaW5saW5lXQ0KPiAgICAgPiAgX19y
+ZWdpc3Rlcl9zeXNjdGxfdGFibGUrMHhkNjUvMHgxMDkwIGZzL3Byb2MvcHJvY19zeXNjdGwu
+YzoxMzM1DQo+ICAgICA+ICA/IDB4ZmZmZmZmZmZjMWExODAwMA0KPiAgICAgPiAgYnJfbmV0
+ZmlsdGVyX2luaXQrMHhiYy8weDEwMDAgW2JyX25ldGZpbHRlcl0NCj4gICAgID4gID8gMHhm
+ZmZmZmZmZmMxYTE4MDAwDQo+ICAgICA+ICA/IDB4ZmZmZmZmZmZjMWExODAwMA0KPiAgICAg
+PiAgZG9fb25lX2luaXRjYWxsKzB4ZmEvMHg1Y2EgaW5pdC9tYWluLmM6ODg3DQo+ICAgICA+
+ICBkb19pbml0X21vZHVsZSsweDIwNC8weDVmNiBrZXJuZWwvbW9kdWxlLmM6MzQ2MA0KPiAg
+ICAgPiAgbG9hZF9tb2R1bGUrMHg2NmIyLzB4ODU3MCBrZXJuZWwvbW9kdWxlLmM6MzgwOA0K
+PiAgICAgPiAgX19kb19zeXNfZmluaXRfbW9kdWxlKzB4MjM4LzB4MmEwIGtlcm5lbC9tb2R1
+bGUuYzozOTAyDQo+ICAgICA+ICBkb19zeXNjYWxsXzY0KzB4MTQ3LzB4NjAwIGFyY2gveDg2
+L2VudHJ5L2NvbW1vbi5jOjI5MA0KPiAgICAgPiAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9o
+d2ZyYW1lKzB4NDkvMHhiZQ0KPiAgICAgPiBSSVA6IDAwMzM6MHg0NjJlOTkNCj4gICAgID4g
+Q29kZTogZjcgZDggNjQgODkgMDIgYjggZmYgZmYgZmYgZmYgYzMgNjYgMGYgMWYgNDQgMDAg
+MDAgNDggODkgZjggNDggODkgZjcgNDggODkgZDYgNDggODkgY2EgNGQgODkgYzIgNGQgODkg
+YzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiBmZiA3MyAwMSBjMyA0
+OCBjNyBjMSBiYyBmZiBmZiBmZiBmNyBkOCA2NCA4OSAwMSA0OA0KPiAgICAgPiBSU1A6IDAw
+MmI6MDAwMDdmMDcyMjU0ZWM1OCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAwMDAw
+MDAwMDAwMTM5DQo+ICAgICA+IFJBWDogZmZmZmZmZmZmZmZmZmZkYSBSQlg6IDAwMDAwMDAw
+MDA3M2JmMDAgUkNYOiAwMDAwMDAwMDAwNDYyZTk5DQo+ICAgICA+IFJEWDogMDAwMDAwMDAw
+MDAwMDAwMCBSU0k6IDAwMDAwMDAwMjAwMDAyODAgUkRJOiAwMDAwMDAwMDAwMDAwMDAzDQo+
+ICAgICA+IFJCUDogMDAwMDdmMDcyMjU0ZWM3MCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5
+OiAwMDAwMDAwMDAwMDAwMDAwDQo+ICAgICA+IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6
+IDAwMDAwMDAwMDAwMDAyNDYgUjEyOiAwMDAwN2YwNzIyNTRmNmJjDQo+ICAgICA+IFIxMzog
+MDAwMDAwMDAwMDRiY2VmYSBSMTQ6IDAwMDAwMDAwMDA2ZjZmYjAgUjE1OiAwMDAwMDAwMDAw
+MDAwMDA0DQo+ICAgICA+IE1vZHVsZXMgbGlua2VkIGluOiBicl9uZXRmaWx0ZXIoKykgZHZi
+X3VzYl9kaWJ1c2JfbWNfY29tbW9uIGRpYjMwMDBtYyBkaWJ4MDAwX2NvbW1vbiBkdmJfdXNi
+X2RpYnVzYl9jb21tb24gZHZiX3VzYl9kdzIxMDIgZHZiX3VzYiBjbGFzc21hdGVfbGFwdG9w
+IHBhbG1hc19yZWd1bGF0b3IgY24gdmlkZW9idWYyX3Y0bDIgdjRsMl9jb21tb24gc25kX3Nv
+Y19iZDI4NjIzIG1wdGJhc2Ugc25kX3VzYl91c3gyeSBzbmRfdXNibWlkaV9saWIgc25kX3Jh
+d21pZGkgd21pIGxpYm52ZGltbSBsb2NrZCBzdW5ycGMgZ3JhY2UgcmNfa3dvcmxkX3BjMTUw
+dSByY19jb3JlIHJ0Y19kYTkwNjMgc2hhMV9zc3NlMyBpMmNfY3Jvc19lY190dW5uZWwgYWR4
+bDM0eF9zcGkgYWR4bDM0eCBuZm5ldGxpbmsgbGliODAyMTEgaTU1MDBfdGVtcCBkdmJfYXMx
+MDIgZHZiX2NvcmUgdmlkZW9idWYyX2NvbW1vbiB2aWRlb2RldiBtZWRpYSB2aWRlb2J1ZjJf
+dm1hbGxvYyB2aWRlb2J1ZjJfbWVtb3BzIHVkY19jb3JlIGxuYnAyMiBsZWRzX2xwMzk1MiBo
+aWRfcm9jY2F0X3J5b3MgczFkMTN4eHhmYiBtdGQgdnBvcnRfZ2VuZXZlIG9wZW52c3dpdGNo
+IG5mX2Nvbm5jb3VudCBuZl9uYXRfaXB2NiBuc2ggZ2VuZXZlIHVkcF90dW5uZWwgaXA2X3Vk
+cF90dW5uZWwgc25kX3NvY19tdDYzNTEgc2lzX2FncCBwaHlsaW5rIHNuZF9zb2NfYWRhdTE3
+NjFfc3BpIHNuZF9zb2NfYWRhdTE3NjEgc25kX3NvY19hZGF1MTd4MSBzbmRfc29jX2NvcmUg
+c25kX3BjbV9kbWFlbmdpbmUgYWM5N19idXMgc25kX2NvbXByZXNzIHNuZF9zb2NfYWRhdV91
+dGlscyBzbmRfc29jX3NpZ21hZHNwX3JlZ21hcCBzbmRfc29jX3NpZ21hZHNwIHJhaWRfY2xh
+c3MgaGlkX3JvY2NhdF9rb25lcHVyZSBoaWRfcm9jY2F0X2NvbW1vbiBoaWRfcm9jY2F0IGMy
+cG9ydF9kdXJhbWFyMjE1MCBjb3JlIG1kaW9fYmNtX3VuaW1hYyBpcHRhYmxlX3NlY3VyaXR5
+IGlwdGFibGVfcmF3IGlwdGFibGVfbWFuZ2xlDQo+ICAgICA+ICBpcHRhYmxlX25hdCBuZl9u
+YXRfaXB2NCBuZl9uYXQgbmZfY29ubnRyYWNrIG5mX2RlZnJhZ19pcHY2IG5mX2RlZnJhZ19p
+cHY0IGlwdGFibGVfZmlsdGVyIGJwZmlsdGVyIGlwNl92dGkgaXBfdnRpIGlwX2dyZSBpcGlw
+IHNpdCB0dW5uZWw0IGlwX3R1bm5lbCBoc3IgdmV0aCBuZXRkZXZzaW0gZGV2bGluayB2eGNh
+biBiYXRtYW5fYWR2IGNmZzgwMjExIHJma2lsbCBjaG5sX25ldCBjYWlmIG5sbW9uIGR1bW15
+IHRlYW0gYm9uZGluZyB2Y2FuIGJyaWRnZSBzdHAgbGxjIGlwNl9ncmUgZ3JlIGlwNl90dW5u
+ZWwgdHVubmVsNiB0dW4gY3JjdDEwZGlmX3BjbG11bCBjcmMzMl9wY2xtdWwgY3JjMzJjX2lu
+dGVsIGdoYXNoX2NsbXVsbmlfaW50ZWwgam95ZGV2IG1vdXNlZGV2IGlkZV9wY2lfZ2VuZXJp
+YyBwaWl4IGFlc25pX2ludGVsIGFlc194ODZfNjQgaWRlX2NvcmUgY3J5cHRvX3NpbWQgYXRr
+YmQgY3J5cHRkIGdsdWVfaGVscGVyIHNlcmlvX3JhdyBhdGFfZ2VuZXJpYyBwYXRhX2FjcGkg
+aTJjX3BpaXg0IGZsb3BweSBzY2hfZnFfY29kZWwgaXBfdGFibGVzIHhfdGFibGVzIGlwdjYg
+W2xhc3QgdW5sb2FkZWQ6IGxtNzNdDQo+ICAgICA+IER1bXBpbmcgZnRyYWNlIGJ1ZmZlcjoN
+Cj4gICAgID4gICAgKGZ0cmFjZSBidWZmZXIgZW1wdHkpDQo+ICAgICA+IC0tLVsgZW5kIHRy
+YWNlIDc3MDAyMGRlMzg5NjFmZDAgXS0tLQ0KPiAgICAgPg0KPiAgICAgPiBBIG5ldyBkaXIg
+ZW50cnkgY2FuIGJlIGNyZWF0ZWQgaW4gZ2V0X3N1YmRpciBhbmQgaXRzIGhlYWRlci0+cGFy
+ZW50IGlzIHNldA0KPiAgICAgPiB0byBOVUxMLiBPbmx5IGFmdGVyIGluc2VydF9oZWFkZXIg
+c3VjY2VzcywgaXQgd2lsbCBiZSBzZXQgdG8gJ2RpcicuDQo+ICAgICA+IEhvd2V2ZXIgaW4g
+ZXJyIGhhbmRsaW5nIHBhdGggb2YgZ2V0X3N1YmRpciwgZHJvcF9zeXNjdGxfdGFibGUgbWF5
+YmUgY2FsbGVkDQo+ICAgICA+IG9uICduZXctPmhlYWRlcicgcmVnYXJkbGVzcyB2YWx1ZSBv
+ZiBoZWFkZXItPnBhcmVudC4gVGhlbiBwdXRfbGlua3MNCj4gICAgID4gYmUgY2FsbGVkLCB3
+aGljaCB0cmlnZ2VycyBOVUxMLXB0ciBkZXJlZiB3aGVuIGFjY2VzcyB0aGUgbWVtYmVyIG9m
+DQo+ICAgICA+IGhlYWRlci0+cGFyZW50IGluIHhsYXRlX2Rpci4NCj4gICAgID4NCj4gICAg
+ID4gUmVwb3J0ZWQtYnk6IEh1bGsgUm9ib3QgPGh1bGtjaUBodWF3ZWkuY29tIDxtYWlsdG86
+aHVsa2NpQGh1YXdlaS5jb20+Pg0KPiAgICAgPiBGaXhlczogMGU0N2M5OWQ3ZmUyNSAoInN5
+c2N0bDogUmVwbGFjZSByb290X2xpc3Qgd2l0aCBsaW5rcyBiZXR3ZWVuIHN5c2N0bF90YWJs
+ZV9zZXRzIikNCj4gICAgID4gU2lnbmVkLW9mZi1ieTogWXVlSGFpYmluZyA8eXVlaGFpYmlu
+Z0BodWF3ZWkuY29tIDxtYWlsdG86eXVlaGFpYmluZ0BodWF3ZWkuY29tPj4NCj4gICAgID4g
+LS0tDQo+ICAgICA+ICBmcy9wcm9jL3Byb2Nfc3lzY3RsLmMgfCAzICsrLQ0KPiAgICAgPiAg
+MSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgICAg
+Pg0KPiAgICAgPiBkaWZmIC0tZ2l0IGEvZnMvcHJvYy9wcm9jX3N5c2N0bC5jIGIvZnMvcHJv
+Yy9wcm9jX3N5c2N0bC5jDQo+ICAgICA+IGluZGV4IDRkNTk4YTMuLjRjMmEwNWEgMTAwNjQ0
+DQo+ICAgICA+IC0tLSBhL2ZzL3Byb2MvcHJvY19zeXNjdGwuYw0KPiAgICAgPiArKysgYi9m
+cy9wcm9jL3Byb2Nfc3lzY3RsLmMNCj4gICAgID4gQEAgLTE2MjYsNyArMTYyNiw4IEBAIHN0
+YXRpYyB2b2lkIGRyb3Bfc3lzY3RsX3RhYmxlKHN0cnVjdCBjdGxfdGFibGVfaGVhZGVyICpo
+ZWFkZXIpDQo+ICAgICA+ICAgICAgIGlmICgtLWhlYWRlci0+bnJlZykNCj4gICAgID4gICAg
+ICAgICAgICAgICByZXR1cm47DQo+ICAgICA+IA0KPiAgICAgPiAtICAgICBwdXRfbGlua3Mo
+aGVhZGVyKTsNCj4gICAgID4gKyAgICAgaWYgKHBhcmVudCkNCj4gICAgID4gKyAgICAgICAg
+ICAgICBwdXRfbGlua3MoaGVhZGVyKTsNCj4gICAgID4gICAgICAgc3RhcnRfdW5yZWdpc3Rl
+cmluZyhoZWFkZXIpOw0KPiAgICAgPiAgICAgICBpZiAoIS0taGVhZGVyLT5jb3VudCkNCj4g
+ICAgID4gICAgICAgICAgICAgICBrZnJlZV9yY3UoaGVhZGVyLCByY3UpOw0KPiAgICAgPg0K
+PiANCg==
 
-That's not what these files are for (in the original user's case).  They
-want these for doing tracing/ebpf stuff, which require kernel headers to
-build against.
-
-> "Raw kernel headers also cannot be copied into the filesystem like they
->  can be on other distros, due to licensing and other issues. There's no
->  linux-headers package on Android."
-> 
-> What's the licensing issue? What's the (legal) difference between having
-> the headers on the file system, and having a kernel module including the
-> headers on the file system?
-
-There is no licensing issue, see my follow-up comment about that.
-
-It's all in ease-of-use here.  You want to build a trace function
-against a running kernel, and now you have the header files for that
-specific kernel right there in the kernel itself to build against.  It
-doesn't get easier than that.
-
-thanks,
-
-greg k-h
