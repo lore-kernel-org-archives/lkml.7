@@ -4,122 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F53C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 04:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BF1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 04:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE5820866
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 04:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4696F20866
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 04:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gE2ITjOQ"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="qwUETuKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfCIEvu (ORCPT
+        id S1726696AbfCIEyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 23:51:50 -0500
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:49162 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfCIEvu (ORCPT
+        Fri, 8 Mar 2019 23:54:08 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:42350 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfCIEyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 23:51:50 -0500
+        Fri, 8 Mar 2019 23:54:08 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 9A83BCF0
-        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 04:51:48 +0000 (UTC)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 68F79D3F
+        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 04:54:06 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7Jpq37UoaYME for <linux-kernel@vger.kernel.org>;
-        Fri,  8 Mar 2019 22:51:48 -0600 (CST)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fJSEMFZuCHQw for <linux-kernel@vger.kernel.org>;
+        Fri,  8 Mar 2019 22:54:06 -0600 (CST)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 62C39CCC
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 22:51:48 -0600 (CST)
-Received: by mail-io1-f72.google.com with SMTP id l10so16969142iob.22
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 20:51:48 -0800 (PST)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 3851DCE5
+        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 22:54:06 -0600 (CST)
+Received: by mail-io1-f70.google.com with SMTP id r21so17330593ioa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 20:54:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=KeNhd+E2bDF8zX/IZPB7tqFnEXniWINKXyUoEIyOmAk=;
-        b=gE2ITjOQpV6XyzLKNYiHc3mtkXOxRKKUDS30AcLbnVj3jc6o5h9RkKvfkcxauYrZsX
-         cqdnatZTI5tiLpK+sAIMns2BHx/zz7LXqa+NsNNKOs9+gIO032r0ZR5db1tbzyLw+LBt
-         k5uVZcyPjbHTjYiit6pnvxCsY4FgRXSrPefL+KPMMq+BVNLu7v6bLZNukDcHFAVWFJ7p
-         HrkNcnuWhJ1yaNDxY2JdA/Kg9iSs0cksgKUAmTFvVUxdKIcsJY2pHNvGZ2mENTKqnff3
-         yv0BrjHuxGHvxQg9heXHAOmOiMM+odbdA4JUZVDeQLZ3d4e0R+sJgFxrplzG8Gteb2si
-         cQ2Q==
+        bh=3JMsAjn5exKlEerExLOrVHDarRBcXTjOMDi86JDw2+U=;
+        b=qwUETuKDZcJpVArTZNRUR7RtzUtuWhESAeC/SVjN5jngLhqSRyOtseAcd7y66Y+eKi
+         C5o478MXZGkVEUW2mD9//BO8XDwnuihewujQl8MYZXMhbvfvqy/bbyTOTB9DwczowoUd
+         Uec5IE93ZK8X+O4cIRhlD29+3Z1QH8ppnqDgxzuXLW6d0hNzrDtcPLpq2PUK0rjTXkPb
+         9vsXpCoOIC8LOLQcYRrWmWm/jf5hnjz0gQRMfzkw9P0nGTombENY5Q3/z+/PMQcOV5DV
+         C5wEDGjDBXj5mFFPf/dqAjqorJvqcmB/PngazNu1322quyNbh2FiID4zktaf/U+ci4ii
+         pw3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KeNhd+E2bDF8zX/IZPB7tqFnEXniWINKXyUoEIyOmAk=;
-        b=QjXl/GDyt1/sCkSN3auCOivA8nOXdLw4uruUvrJT64zLMLPV63OjZD3mS9GTKxVoxl
-         k3eWQsyEOQ/qje2210ZSHWsdzwybew3lbndRPGKThOcaNvo9vBhEG1p6lVvkp9daE7yV
-         hAk4Unln7+xNpozHeDoEiGCI0MD/C6BerpaXBC15GRN/H50hvSz0mdNI+Qcvb3ci+p/k
-         oNiCzx0IkSe+lxrD7ltwpJu5+5x4JNpLbkE1BQDeRSdSqC21bZyZ0ccqNpMJvhPSh/JF
-         EmntV3V3fyfsoyChx5wln78IA3joFqNBpN2ZFJk0W7WwJ2YIGHFgAJiJnBD9cgiFAyeJ
-         CppQ==
-X-Gm-Message-State: APjAAAV2Hi6mqXgNAtJbWbdqk0PHd+x4fMKzBBMe96icevp0HyfRlRDe
-        czq8qn09C1C6bk21BL9GBtRYAErUun1ctt/6ykaJ3C69pYhI6gnFMstoF5vxXD5lIMd3nn/mh9D
-        3u1ZjvA+5a7ABPEmYwJk9yYN3yiJU
-X-Received: by 2002:a24:56c2:: with SMTP id o185mr10086087itb.57.1552107107928;
-        Fri, 08 Mar 2019 20:51:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyeWKVIzpKibJh/vjJcpXYxKT6CUmQ2bYAxg+0H8/FVA8bEYatyXYRRHXMbqPI/DWmjK3ozLg==
-X-Received: by 2002:a24:56c2:: with SMTP id o185mr10086077itb.57.1552107107687;
-        Fri, 08 Mar 2019 20:51:47 -0800 (PST)
+        bh=3JMsAjn5exKlEerExLOrVHDarRBcXTjOMDi86JDw2+U=;
+        b=mKAeMuMfaXchBhS4xl0kP/XF/S7/KhRAmTgjEowP7Eg/8hoEPLt6df+9miZMQTt+W+
+         T5tmScvZu81rCsYjQ0AcTYGH+8NLHFHGRaIKQoYxrUIAN/SXnIVGpjcyxXVRCoQAcbVV
+         dhdPU507a+6xQ6OSoaC8veHJz09O4kUODxI+svmFg2vf4WlPD7mFJZ9Gk35g4M23QR+k
+         Xn9j2gWPg79aZOYxSbKQVOwBvpu6At/dp95Clsg8UYFktXa7siBZMcT6SSWD3CmIuu5U
+         ou6c4/H0MS27JS3RfeHuR/c0i6eBOTnc9AZhr+gyITqCqPZm6782lEHIGv90arGmC5Sa
+         VPpA==
+X-Gm-Message-State: APjAAAVMihkrhEbY4nKmvLFTO3xSu9Z0YGY/nqkgZ+oqQNeiaOlhWHG1
+        kBB96aX5N/JO7yO48PYoO01XU3AHI7ZIDR3Tdh13Z6XCv7OMnfpvt7E79nZeuIih9EuJ6SDjobF
+        q58fBZGAFe9KFCfQZOoZjTd8R8kfg
+X-Received: by 2002:a6b:ef12:: with SMTP id k18mr4326323ioh.171.1552107245822;
+        Fri, 08 Mar 2019 20:54:05 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy981E6VHOFnqLjR1hxMuSwXGxvkzEZIe67wYpWJ8FCYIcLhFDQIYTmuWZJ0uxZXqEzYJQvRQ==
+X-Received: by 2002:a6b:ef12:: with SMTP id k18mr4326311ioh.171.1552107245568;
+        Fri, 08 Mar 2019 20:54:05 -0800 (PST)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id v14sm3865118iol.61.2019.03.08.20.51.46
+        by smtp.gmail.com with ESMTPSA id x84sm4827153ita.32.2019.03.08.20.54.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 20:51:46 -0800 (PST)
+        Fri, 08 Mar 2019 20:54:04 -0800 (PST)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
 Cc:     pakki001@umn.edu, Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stefan Agner <stefan@agner.ch>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: max9611: fix a NULL pointer dereference
-Date:   Fri,  8 Mar 2019 22:51:40 -0600
-Message-Id: <20190309045141.8015-1-kjlu@umn.edu>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: adc: fix a potential NULL pointer dereference
+Date:   Fri,  8 Mar 2019 22:53:55 -0600
+Message-Id: <20190309045356.8892-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_match_device may return NULL when it fails, and in this case,
-there will be a NULL pointer dereference. The fix returns
-EINVAL when of_match_device returns NULL.
+devm_iio_trigger_alloc may fail and return NULL. The fix returns
+ENOMEM when it fails.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/iio/adc/max9611.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/iio/adc/mxs-lradc-adc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index 917223d5ff5b..531b6614ea29 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -524,13 +524,16 @@ static int max9611_probe(struct i2c_client *client,
- {
- 	const char * const shunt_res_prop = "shunt-resistor-micro-ohms";
- 	const struct device_node *of_node = client->dev.of_node;
--	const struct of_device_id *of_id =
--		of_match_device(max9611_of_table, &client->dev);
-+	const struct of_device_id *of_id;
- 	struct max9611_dev *max9611;
- 	struct iio_dev *indio_dev;
- 	unsigned int of_shunt;
- 	int ret;
+diff --git a/drivers/iio/adc/mxs-lradc-adc.c b/drivers/iio/adc/mxs-lradc-adc.c
+index c627513d9f0f..5384472b6c4d 100644
+--- a/drivers/iio/adc/mxs-lradc-adc.c
++++ b/drivers/iio/adc/mxs-lradc-adc.c
+@@ -465,6 +465,8 @@ static int mxs_lradc_adc_trigger_init(struct iio_dev *iio)
  
-+	of_id = of_match_device(max9611_of_table, &client->dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*max9611));
- 	if (!indio_dev)
- 		return -ENOMEM;
+ 	trig = devm_iio_trigger_alloc(&iio->dev, "%s-dev%i", iio->name,
+ 				      iio->id);
++	if (!trig)
++		return -ENOMEM;
+ 
+ 	trig->dev.parent = adc->dev;
+ 	iio_trigger_set_drvdata(trig, iio);
 -- 
 2.17.1
 
