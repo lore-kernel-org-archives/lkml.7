@@ -2,179 +2,324 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309AEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 15:55:00 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82AA20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 15:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E54C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:02:37 +0000 (UTC)
+Received: from vger.kernel.org (unknown [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 93BF9207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 16:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="evPyUVFE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u0tGEUKB"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 93BF9207E0
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=linux-kernel-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCIPy6 (ORCPT
+        id S1726351AbfCIQC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 10:54:58 -0500
-Received: from mx.sdf.org ([205.166.94.20]:61194 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfCIPy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 10:54:57 -0500
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x29FrgP5007001
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Sat, 9 Mar 2019 15:53:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
-        t=1552146828; bh=bQ9irM/uJfpxPrlxxFE0aX6Te0Hsh5KTGyQI5Qd+f3A=;
-        h=Date:From:To:Subject:Cc:In-Reply-To:References;
-        b=evPyUVFEHYE8qP1ROiJnTCvqWqat5hQEYp1lL+uPdnSPMIVc9UI8u4Mg7fD1qcvex
-         X16RgJnAzSEVB7+LtdZE63yVToIKO5A4nLS9IWiYm3qWscAj1B3YYR6gG49v2e567E
-         /2NFLAJ/akQz5dr3CtgS6KCdvrauYqXeFs1QxrOE=
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x29FrfMR018600;
-        Sat, 9 Mar 2019 15:53:41 GMT
-Date:   Sat, 9 Mar 2019 15:53:41 GMT
-From:   lkml@sdf.org
-Message-Id: <201903091553.x29FrfMR018600@sdf.org>
-To:     andriy.shevchenko@linux.intel.com, lkml@sdf.org
-Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
-Cc:     akpm@linux-foundation.org, daniel.wagner@siemens.com,
-        dchinner@redhat.com, don.mullis@gmail.com, geert@linux-m68k.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        st5pub@yandex.ru
-In-Reply-To: <20190309140653.GO9224@smile.fi.intel.com>
-References: <cover.1552097842.git.lkml@sdf.org>,
-    <dc6cc09e71f8687ff2ef4cbfc2b11accc9aba8aa.1552097842.git.lkml@sdf.org>,
-    <20190309140653.GO9224@smile.fi.intel.com>
+        Sat, 9 Mar 2019 11:02:27 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54831 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfCIQC1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 11:02:27 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f3so490237wmj.4;
+        Sat, 09 Mar 2019 08:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nNq5A3asM28axkwfqJBXMc5C12l0WKv9/7wAsTsuKrI=;
+        b=u0tGEUKBuzvlm9m5illJAYxNTMyR1mVgx9b3W2ZrH65SrSUteFRFgQWrxvPOh2zjBn
+         bdUYpisaJvlcUdUgBAyhhnSKBC20J7Lrxc7rfpHFgvR1hoq8sWFwwLvXmkpAdCiYfwmh
+         MQGLNoqv9Gzg1jYa7yvgDMbOoHe4vlQ5yZVS7ALdfKuakTejN8cktKASOL7LIpP8uqFJ
+         gBKJtSVKK/Pyz5nLF/FZeiWxQyz3vbHRahcJRY7Qq9fe49KLunTXdRqA35wgv5qaNap1
+         Mub01Pd42LEo0T1E9W1ESoO9Y4jpeie6Cob2bG3xmLKAqQt+jD70/qAT7O+DaTDANK3I
+         cK2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nNq5A3asM28axkwfqJBXMc5C12l0WKv9/7wAsTsuKrI=;
+        b=WFHBHOR6UcXPoLNJnUWs11ZnCTtLTj+5NPBl85NCeZMOzE7wre+9iWv0rFCfVpcysD
+         +YuhXeVEkWzSVdtpO3KvKDChnz5zvq2BsSFcB4Vm8LYXJmTLD77sIuJcHqnpHmBhRb3r
+         7vacEw8/4CXI6z3y4sjMr37uOtykPBJa+j6MXdj9OkEOJTn3DBHwV6Wzp+N2m8fnSN+u
+         +dw/CD/x/A1+ef9m80MBd4U6ockLmsAo2tU+KkXJwswqVHdQyaHIFEZ4TCAFcjk1QIHh
+         2s1o+V7qExy8od1+ksxTD2AlzBrTOEpXxXQOdVAjJQw3Z/gN1GfnOO5+RK4qkb4maSo/
+         fO3Q==
+X-Gm-Message-State: APjAAAVABrgO/jsLSQCp+83GEL+iefsR6Uz+CFu1nwiXidm9T1T1fMYJ
+        GvWBxm+hLNJ8Ps7ks7Xkq0o=
+X-Google-Smtp-Source: APXvYqxNPz9nc7PrxmZpNlpe4t6bqSeRCGzdFItViJYRFK8gGrY56uQfphS4VwvnuW/68CL7FpLM/w==
+X-Received: by 2002:a1c:7a1a:: with SMTP id v26mr11988557wmc.129.1552147344081;
+        Sat, 09 Mar 2019 08:02:24 -0800 (PST)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id k6sm3449579wrq.82.2019.03.09.08.02.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 09 Mar 2019 08:02:23 -0800 (PST)
+Date:   Sat, 9 Mar 2019 17:02:20 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Mathias Krause <minipli@googlemail.com>,
+        Michael Sartain <mikesart@fastmail.com>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        Song Liu <songliubraving@fb.com>, Tony Jones <tonyj@suse.de>,
+        Travis Downs <travis.downs@gmail.com>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL 00/35] perf/core improvements and fixes
+Message-ID: <20190309160220.GA118776@gmail.com>
+References: <20190307174433.28819-1-acme@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thnk you for the feedback!
 
-Andy Shevchenko wrote:
-> On Thu, Feb 21, 2019 at 06:30:28AM +0000, George Spelvin wrote:
->> +#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
-> Why #ifdef is better than if (IS_ENABLED()) ?
-
-Because CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is bool and not
-tristate.  IS_ENABLED tests for 'y' or 'm' but we don't need it
-for something that's only on or off.
-
-Looking through the kernel, I see both, but #ifdef or #if defined()
-are definitely in the majority:
-
-lib/lzo/lzo1x_compress.c:#if defined(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS) && defined(LZO_USE_CTZ64)
-lib/siphash.c:#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-lib/string.c:#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-lib/strncpy_from_user.c:#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-lib/zlib_inflate/inffast.c:#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-
-I see a few IS_ENABLED uses in include/crypto/ and kernel/bpf/.
-
-It makes no real difference; #ifdef is simpler to me.
-
->> +	(void)base;
+> 	Please consider pulling,
 > 
-> I understand the possible weirdness of the case, but 0 pointer is also good, no?
-
-I don't quite understand the question.  A NULL pointer is aligned
-as far as alignment_ok is concerned.  In other words, word accesses to
-*NULL will (not) work just as well as byte accesses.
-
-None of this matters because the callers never pass in NULL pointers.
-
->> +#else
->> +	lsbits |= (unsigned int)(size_t)base;
+> - Arnaldo
 > 
-> Perhaps you meant simple (uintptr_t) here and maybe above as well.
-
-No, I meant to truncate it to the same type as "align".  We only
-care about the low few bits; I could have used (unsigned char) just
-as well.
-
-My reason or choosing unsigned int rather than unsigned char was
-that both x86 and ARM are a tiny bit more efficient at 32-bit
-operations (x86 avoids a REX prefix; ARM gates off the high half
-of the ALU to save power), but only x86 does byte operations
-natively.
-
-Still, compilers know how to promote to word operations, so
-maybe using unsigned char would make it clearer to the
-reader that "yes, I meant to do that!".
-
-I've changed it to:
-
-static bool __attribute_const__
-is_aligned(const void *base, size_t size, unsigned char align)
-{
-	unsigned char lsbits = (unsigned char)size;
-#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-	(void)base;
-#else
-	lsbits |= (unsigned char)(uintptr_t)base;
-#endif
-	return (lsbits & (align - 1)) == 0;
-}
-
-Although I'm thinking of:
-
-static bool __attribute_const__
-is_aligned(const void *base, size_t size, unsigned char align)
-{
-	unsigned char lsbits = (unsigned char)size;
-
-	(void)base;
-#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-	lsbits |= (unsigned char)(uintptr_t)base;
-#endif
-	return (lsbits & (align - 1)) == 0;
-}
-
-Any preference?
-
->> +#endif
->> +	lsbits &= align - 1;
->> +	return lsbits == 0;
+> Test results at the end of this message, as usual.
 > 
-> and this can be one return operation.
-
-It was just to avoid some annoying parentheses because C's precendence
-rules and GCC's warnings are fighting me here.  If others prefer
-"return (lsbits & (align - 1)) == 0;" I'm happy to change.
-
->>  static void u32_swap(void *a, void *b, int size)
+> The following changes since commit c978b9460fe1d4a1e1effa0abd6bd69b18a098a8:
 > 
-> For such primitives that operates on top of an arrays we usually append 's' to
-> the name. Currently the name is misleading.
+>   Merge tag 'perf-core-for-mingo-5.1-20190225' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2019-02-28 08:29:50 +0100)
 > 
-> Perhaps u32s_swap().
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.1-20190307
+> 
+> for you to fetch changes up to b8f7d86b5849ea7bb84bddc0345a3799049764d4:
+> 
+>   perf data: Force perf_data__open|close zero data->file.path (2019-03-06 18:21:00 -0300)
+> 
+> ----------------------------------------------------------------
+> perf bpf:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Automatically add BTF ELF markers to 'perf trace' BPF programs, so that
+>     tools such as 'bpftool map dump' can pretty print map keys and values.
+> 
+> perf c2c:
+> 
+>   Jiri Olsa:
+> 
+>   - Fix report for empty NUMA node.
+> 
+> perf diff:
+> 
+>   Jin Yao:
+> 
+>   - Support --time, --cpu, --pid and --tid filter options.
+> 
+> perf probe:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Clarify error message about not finding kernel modules debuginfo.
+> 
+> perf record:
+> 
+>   Jiri Olsa:
+> 
+>   - Fixup probing for max attr.precise_ip.
+> 
+> perf trace:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Add missing %s lost in the 'msg_flags' recvmmsg arg when adding prefix suppression logic.
+> 
+> perf annotate:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Calculate the max instruction name, align column to that, removing the
+>     hardcoded max 6 chars and cope with instructions with names longer than that,
+>     such as vpmovmskb, vpcmpeqb, etc.
+> 
+> kernel:
+> 
+>   Song Liu:
+> 
+>   - Consider events with attr.bpf_event set as side-band.
+> 
+>   Gustavo A. R. Silva:
+> 
+>   - Mark expected switch fall-through in perf_event_parse_addr_filter().
+> 
+> Libraries:
+> 
+>   Jiri Olsa:
+> 
+>   - Fix leaks and double frees on error paths.
+> 
+> libtraceevent:
+> 
+>   Tony Jones:
+> 
+>   - Fix buffer overflow in arg_eval().
+> 
+> python scripting:
+> 
+>   Tony Jones:
+> 
+>   - More python3 fixes.
+> 
+> Trivial:
+> 
+>   Yang Wei:
+> 
+>   - Remove needless extra semicolon in clang C++ glue code.
+> 
+> Intel PT/BTS:
+> 
+>   Adrian Hunter:
+> 
+>   - Improve auxtrace address filter error message when there is no DSO.
+> 
+>   - Fix divide by zero when TSC is not available.
+> 
+>   - Further improvements to the export to sqlite/posgresql python scripts
+>     and to the GUI sqlviewer, exporting 'parent_id' so that we have enable
+>     the creation of call trees.
+> 
+>   Andi Kleen:
+> 
+>   - Generalize function to copy from thread addr space from intel-bts code.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (10):
+>       perf auxtrace: Improve address filter error message when there is no DSO
+>       perf intel-pt: Fix divide by zero when TSC is not available
+>       perf db-export: Add calls parent_id to enable creation of call trees
+>       perf scripts python: export-to-sqlite.py: Export calls parent_id
+>       perf scripts python: export-to-postgresql.py: Fix invalid input syntax for integer error
+>       perf scripts python: export-to-postgresql.py: Export calls parent_id
+>       perf scripts python: exported-sql-viewer.py: Factor out TreeWindowBase
+>       perf scripts python: exported-sql-viewer.py: Improve TreeModel abstraction
+>       perf scripts python: exported-sql-viewer.py: Factor out CallGraphModelBase
+>       perf scripts python: exported-sql-viewer.py: Add call tree
+> 
+> Andi Kleen (1):
+>       perf thread: Generalize function to copy from thread addr space from intel-bts code
+> 
+> Arnaldo Carvalho de Melo (4):
+>       perf probe: Clarify error message about not finding kernel modules debuginfo
+>       perf beauty msg_flags: Add missing %s lost when adding prefix suppression logic
+>       perf bpf: Automatically add BTF ELF markers
+>       perf annotate: Calculate the max instruction name, align column to that
+> 
+> Gustavo A. R. Silva (1):
+>       perf: Mark expected switch fall-through
+> 
+> Jin Yao (4):
+>       perf time-utils: Refactor time range parsing code
+>       perf diff: Support --time filter option
+>       perf diff: Support --cpu filter option
+>       perf diff: Support --pid/--tid filter options
+> 
+> Jiri Olsa (7):
+>       perf c2c: Fix c2c report for empty numa node
+>       perf hist: Add error path into hist_entry__init
+>       perf hist: Fix memory leak of srcline
+>       perf tools: Read and store caps/max_precise in perf_pmu
+>       perf evsel: Probe for precise_ip with simple attr
+>       perf session: Fix double free in perf_data__close
+>       perf data: Force perf_data__open|close zero data->file.path
+> 
+> Song Liu (1):
+>       perf, bpf: Consider events with attr.bpf_event as side-band events
+> 
+> Tony Jones (6):
+>       tools lib traceevent: Fix buffer overflow in arg_eval
+>       perf script python: Remove mixed indentation
+>       perf script python: Add Python3 support to futex-contention.py
+>       perf script python: add Python3 support to check-perf-trace.py
+>       perf script python: Add Python3 support to event_analyzing_sample.py
+>       perf script python: Add Python3 support to intel-pt-events.py
+> 
+> Yang Wei (1):
+>       perf clang: Remove needless extra semicolon
+> 
+>  kernel/events/core.c                               |   4 +-
+>  tools/lib/traceevent/event-parse.c                 |   2 +-
+>  tools/perf/Documentation/perf-diff.txt             |  56 ++++
+>  tools/perf/arch/arm64/annotate/instructions.c      |   2 +-
+>  tools/perf/arch/s390/annotate/instructions.c       |   2 +-
+>  tools/perf/builtin-c2c.c                           |   8 +-
+>  tools/perf/builtin-diff.c                          | 168 +++++++++-
+>  tools/perf/builtin-report.c                        |  38 +--
+>  tools/perf/builtin-script.c                        |  39 +--
+>  tools/perf/include/bpf/bpf.h                       |   8 +-
+>  tools/perf/scripts/python/check-perf-trace.py      |  76 ++---
+>  tools/perf/scripts/python/compaction-times.py      |   8 +-
+>  .../perf/scripts/python/event_analyzing_sample.py  |  48 +--
+>  tools/perf/scripts/python/export-to-postgresql.py  |  16 +-
+>  tools/perf/scripts/python/export-to-sqlite.py      |  12 +-
+>  tools/perf/scripts/python/exported-sql-viewer.py   | 354 ++++++++++++++++-----
+>  .../perf/scripts/python/failed-syscalls-by-pid.py  |  38 +--
+>  tools/perf/scripts/python/futex-contention.py      |  10 +-
+>  tools/perf/scripts/python/intel-pt-events.py       |  60 ++--
+>  tools/perf/scripts/python/mem-phys-addr.py         |   7 +-
+>  tools/perf/scripts/python/net_dropmonitor.py       |   2 +-
+>  tools/perf/scripts/python/netdev-times.py          |  12 +-
+>  tools/perf/scripts/python/sched-migration.py       |   6 +-
+>  tools/perf/scripts/python/sctop.py                 |  13 +-
+>  tools/perf/scripts/python/stackcollapse.py         |   2 +-
+>  tools/perf/scripts/python/syscall-counts-by-pid.py |  47 ++-
+>  tools/perf/scripts/python/syscall-counts.py        |  31 +-
+>  tools/perf/trace/beauty/msg_flags.c                |   2 +-
+>  tools/perf/util/annotate.c                         |  74 +++--
+>  tools/perf/util/annotate.h                         |   7 +-
+>  tools/perf/util/auxtrace.c                         |   3 +-
+>  tools/perf/util/c++/clang.cpp                      |   2 +-
+>  tools/perf/util/data.c                             |   4 +-
+>  tools/perf/util/db-export.c                        |  15 +-
+>  tools/perf/util/db-export.h                        |   3 +-
+>  tools/perf/util/evlist.c                           |  25 +-
+>  tools/perf/util/evsel.c                            |   8 -
+>  tools/perf/util/hist.c                             |  51 +--
+>  tools/perf/util/intel-bts.c                        |  20 +-
+>  tools/perf/util/intel-pt.c                         |   2 +
+>  tools/perf/util/pmu.c                              |  14 +
+>  tools/perf/util/pmu.h                              |   1 +
+>  tools/perf/util/probe-event.c                      |   9 +-
+>  .../util/scripting-engines/trace-event-python.c    |   8 +-
+>  tools/perf/util/session.c                          |   4 +-
+>  tools/perf/util/thread-stack.c                     |  16 +-
+>  tools/perf/util/thread-stack.h                     |   6 +-
+>  tools/perf/util/thread.c                           |  23 ++
+>  tools/perf/util/thread.h                           |   3 +
+>  tools/perf/util/time-utils.c                       |  51 ++-
+>  tools/perf/util/time-utils.h                       |   6 +
+>  51 files changed, 978 insertions(+), 448 deletions(-)
 
-I don't worry much about the naming of static helper functions.
-If they were exported, it would be a whole lot more important!
+Pulled, thanks a lot Arnaldo!
 
-I find "u32s" confusing; I keep reading the "s" as "signed" rather
-than a plural.
-
-How about one of:
-swap_bytes / swap_ints / swap_longs
-swap_1 / swap_4 / swap_8
-
-> Shouldn't simple memcpy cover these case for both 32- and 64-bit architectures?
-
-This isn't a memcpy, it's a memory *swap*.  To do it with memcpy
-requires:
-	memcpy(temp_buffer, a, size);
-	memcpy(a, b, size);
-	memcpy(b, temp_buffer, size);
-
-This is 1.5x as much memory access, and you have to find a large
-enough temp_buffer.  (I didn't think a variable-length array on
-the stack would make people happy.)
-
-Also, although it is a predictable branch, memcpy() has to check the
-alignment of its inputs each call.  The reason for these helpers is
-to factor that out.
+	Ingo
