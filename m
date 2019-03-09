@@ -2,70 +2,76 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172F5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 08:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246FAC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACF0207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 08:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E62207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfCII5O (ORCPT
+        id S1726286AbfCIJFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 03:57:14 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33030 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfCII5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 03:57:13 -0500
-Received: from [114.245.43.129] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1h2Xn3-0006iC-I4; Sat, 09 Mar 2019 08:57:10 +0000
-From:   Aaron Ma <aaron.ma@canonical.com>
-To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, aaron.ma@canonical.com
-Subject: [PATCH] iommu/amd: Fix NULL dereference bug in match_hid_uid
-Date:   Sat,  9 Mar 2019 16:57:03 +0800
-Message-Id: <1552121823-28967-1-git-send-email-aaron.ma@canonical.com>
-X-Mailer: git-send-email 1.8.5.5
+        Sat, 9 Mar 2019 04:05:43 -0500
+Received: from mxhk.zte.com.cn ([63.217.80.70]:31290 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725681AbfCIJFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 04:05:43 -0500
+Received: from mse01.zte.com.cn (unknown [10.30.3.20])
+        by Forcepoint Email with ESMTPS id A660571295D84B6B793D;
+        Sat,  9 Mar 2019 17:05:38 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse01.zte.com.cn with ESMTP id x29958p5011259;
+        Sat, 9 Mar 2019 17:05:08 +0800 (GMT-8)
+        (envelope-from peng.hao2@zte.com.cn)
+Received: from localhost.localdomain.localdomain ([10.74.120.59])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019030917055521-4083774 ;
+          Sat, 9 Mar 2019 17:05:55 +0800 
+From:   Peng Hao <peng.hao2@zte.com.cn>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peng Hao <peng.hao2@zte.com.cn>
+Subject: [PATCH]  x86/resctrl: remove unused variable
+Date:   Sun, 10 Mar 2019 01:29:44 +0800
+Message-Id: <1552152584-26087-1-git-send-email-peng.hao2@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-03-09 17:05:55,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-03-09 17:04:48,
+        Serialize complete at 2019-03-09 17:04:48
+X-MAIL: mse01.zte.com.cn x29958p5011259
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a non-NULL check to fix potential NULL pointer dereference
-Cleanup code to call function once.
+Variable "struct rdt_resource *r" is set but not used. So remove it.
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/iommu/amd_iommu.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 2a7b78bb98b4..dbda5b86f979 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -140,9 +140,14 @@ static inline int match_hid_uid(struct device *dev,
- 				struct acpihid_map_entry *entry)
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index f33f11f..1573a0a 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -501,11 +501,8 @@ void cqm_handle_limbo(struct work_struct *work)
+ void cqm_setup_limbo_handler(struct rdt_domain *dom, unsigned long delay_ms)
  {
- 	const char *hid, *uid;
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	unsigned long delay = msecs_to_jiffies(delay_ms);
+-	struct rdt_resource *r;
+ 	int cpu;
  
--	hid = acpi_device_hid(ACPI_COMPANION(dev));
--	uid = acpi_device_uid(ACPI_COMPANION(dev));
-+	if (!adev) {
-+		return -ENODEV;
-+	}
-+
-+	hid = acpi_device_hid(adev);
-+	uid = acpi_device_uid(adev);
+-	r = &rdt_resources_all[RDT_RESOURCE_L3];
+-
+ 	cpu = cpumask_any(&dom->cpu_mask);
+ 	dom->cqm_work_cpu = cpu;
  
- 	if (!hid || !(*hid))
- 		return -ENODEV;
 -- 
-2.20.1
+1.8.3.1
 
