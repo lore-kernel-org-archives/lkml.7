@@ -2,102 +2,90 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45D4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27986C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A091020868
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="qds21/pq"
+	by mail.kernel.org (Postfix) with ESMTP id ED8A72081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 10:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfCIKEI (ORCPT
+        id S1726411AbfCIKNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 05:04:08 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:52154 "EHLO fd.dlink.ru"
+        Sat, 9 Mar 2019 05:13:43 -0500
+Received: from sauhun.de ([88.99.104.3]:40232 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfCIKEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 05:04:07 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id DF50F1B21879; Sat,  9 Mar 2019 12:54:21 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru DF50F1B21879
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1552125261; bh=ZB+kpNUL7sfUS1P1cCsq0z8W9CajczsSspuJO2Dzhac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=qds21/pqPkmxQJC2K+3S5Y34vrBSBzLcrChiLDnP5IaZLwsHEn1avaV2qGhtrYpFB
-         JgicufcNR0PvOOAtHzpzjzYo6lre08bNn62EkNT9YGrmBOVbuujcTBg3L+pkobOhys
-         QL/DHAl69muyC6eMhiuQqSVeog0qwCR5KL7KUOTI=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 2E09A1B21812;
-        Sat,  9 Mar 2019 12:54:17 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 2E09A1B21812
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 0EA101B20755;
-        Sat,  9 Mar 2019 12:54:17 +0300 (MSK)
-Received: from localhost (unknown [176.112.142.79])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPSA;
-        Sat,  9 Mar 2019 12:54:17 +0300 (MSK)
-From:   Maxim Zhukov <mussitantesmortem@gmail.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Maxim Zhukov <mussitantesmortem@gmail.com>
-Subject: [PATCH 1/2] staging, mt7621-eth: fix api for linkmode bitmap
-Date:   Sat,  9 Mar 2019 12:53:59 +0300
-Message-Id: <20190309095400.26930-2-mussitantesmortem@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190309095400.26930-1-mussitantesmortem@gmail.com>
-References: <20190309095400.26930-1-mussitantesmortem@gmail.com>
+        id S1725794AbfCIKNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 05:13:43 -0500
+Received: from localhost (p5486CD1C.dip0.t-ipconnect.de [84.134.205.28])
+        by pokefinder.org (Postfix) with ESMTPSA id 4E4592E3551;
+        Sat,  9 Mar 2019 11:13:41 +0100 (CET)
+Date:   Sat, 9 Mar 2019 11:13:40 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bich HEMON <bich.hemon@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Message-ID: <20190309101340.GH1340@kunai>
+References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dDnEQgWzhgf+8aPe"
+Content-Disposition: inline
+In-Reply-To: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Start using new api for linkmode bitmap
 
-Fixed build after 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+--dDnEQgWzhgf+8aPe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Maxim Zhukov <mussitantesmortem@gmail.com>
----
- drivers/staging/mt7621-eth/mdio.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+On Wed, Mar 06, 2019 at 03:12:16PM +0000, Bich HEMON wrote:
+> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+>=20
+> It conforms with Reference Manual I2C timing section.
+>=20
+> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+> Signed-off-by: Bich Hemon <bich.hemon@st.com>
 
-diff --git a/drivers/staging/mt7621-eth/mdio.c b/drivers/staging/mt7621-eth/mdio.c
-index 5fea6a447eed..142d7a082dd3 100644
---- a/drivers/staging/mt7621-eth/mdio.c
-+++ b/drivers/staging/mt7621-eth/mdio.c
-@@ -89,8 +89,12 @@ int mtk_connect_phy_node(struct mtk_eth *eth, struct mtk_mac *mac,
- 		return -ENODEV;
- 	}
- 
--	phydev->supported &= PHY_1000BT_FEATURES;
--	phydev->advertising = phydev->supported;
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
-+			 phydev->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-+			 phydev->supported);
-+
-+	linkmode_copy(phydev->advertising, phydev->supported);
- 
- 	dev_info(eth->dev,
- 		 "connected port %d to PHY at %s [uid=%08x, driver=%s]\n",
-@@ -113,7 +117,9 @@ static void phy_init(struct mtk_eth *eth, struct mtk_mac *mac,
- 	phy->speed = 0;
- 	phy->duplex = 0;
- 	phy_set_max_speed(phy, SPEED_100);
--	phy->advertising = phy->supported | ADVERTISED_Autoneg;
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-+			 phy->advertising);
-+
- 
- 	phy_start_aneg(phy);
- }
--- 
-2.21.0
+Applied to for-current, thanks!
 
+
+--dDnEQgWzhgf+8aPe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyDkdEACgkQFA3kzBSg
+KbbSphAAskJuy5T8s8xTMRUdsSM01BnbclYC/krVWBZ6DI/8iTD43g3iycVYzrPZ
+GsqMQ8p4u+Iaz2od7b3ktJimjjNYamVn0NZjEj4+12WXijm4hg+uG6b/Z/HQsWWX
+gXnrBck0Z1CUMvHRbRXl1B58eDu3RY5tmLAUa+FpDtyKopc+yzK5lZuZaL93ZlgE
+MR6NWVyBHzx7tShkgNja5riQKaBMX1hNtE3Av1pFSMtYtsIQT+AaQf+QMI5FTtSw
+5HTOQw9zg7VGervtttN4N6FxQCLb9xeWVjxuO0oz7ue9nztUG5HqA1FLYTa5pYCJ
+Web44xspncMJF+2tmVki57CnICinQqBdtbiH567wHClDuPeW/U7/r9l5q0v7DPEs
+xZzneg4LPE9AoLxlkVNY4jYQZQwnJ1Vv5weiOlfEZpZLwDN6ESaNbH/l2QkeryRG
+f2eahSSLJW4T6osEoTA0pA4B5ipcL//7MSnZftsNFSfC9bzLWXfUuY5na+/KW3V8
+dk62VmP6LBUqysYxjKASvtu3aNV0ibCwKoI/j5iAVOvbXWAKsQ+EenZMmTWmSK68
+/lfbLc7X2TZ3gHHVrzvkiYTWV19ZlN+24NgaIFOraAzf3U/aHJi2G4fppBGs3i0O
+74gbgKqHMwwxgPfnfSJJcHs31ekm9aiwS/kVdWl8t8amQRD/vOI=
+=ihtV
+-----END PGP SIGNATURE-----
+
+--dDnEQgWzhgf+8aPe--
