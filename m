@@ -2,228 +2,123 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D00C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45869C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 06:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EAE207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F437207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 06:04:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="GE9NBVjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfCIF55 (ORCPT
+        id S1726164AbfCIGEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 00:57:57 -0500
-Received: from mga17.intel.com ([192.55.52.151]:50712 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfCIF4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 00:56:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,458,1544515200"; 
-   d="scan'208";a="325624967"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 7B5D2301CE3; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v5 02/15] perf tools script: Support insn output for normal samples
-Date:   Fri,  8 Mar 2019 21:56:15 -0800
-Message-Id: <20190309055628.21617-3-andi@firstfloor.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
-References: <20190309055628.21617-1-andi@firstfloor.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 9 Mar 2019 01:04:20 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:56958 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfCIGEU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 01:04:20 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 9DD6ACE5
+        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 06:04:18 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NKB9cux2UNEp for <linux-kernel@vger.kernel.org>;
+        Sat,  9 Mar 2019 00:04:18 -0600 (CST)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 6C5D2C8C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 00:04:18 -0600 (CST)
+Received: by mail-io1-f69.google.com with SMTP id a9so17169155iol.6
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 22:04:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=S1WWEVNKEuoBCxpQFSA9u5EyfataTRVhovdmrNkOjAQ=;
+        b=GE9NBVjoNlcSTMTLDoJ4BrYm+aqx117kEMCtxO6EKSNNKKfqAsbe4/0biFgOpTY4qM
+         c9QdSV0inb1xsleVoH5RPqIIqJ0IOo1T7eMngLqYvC5s9Mm2JUy0pDCkFI3jWYP3AY1o
+         Fm1iLyzQ4LuaUG81s6qX5j/OsWNjUaoeeMbGYXfsYA2U7dUyxwtZLUhdyx47x+zhyPdz
+         oPQY74Dcv6CIqlRsWnC1ekALjPgUMCPBQwH20vN1X/cvuqSEwOFjP6Kp5hRuTRNkJ/Ms
+         HDFIspuqSGqpMMmLMw1oPYXwIDrFs6B8GtnVbVxeEAK9ejMiccK3WXwM0rK1fRIMr1MS
+         sbdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=S1WWEVNKEuoBCxpQFSA9u5EyfataTRVhovdmrNkOjAQ=;
+        b=hA2tMUNxlJz9Oce+XYmheWV++vfVL4tGqJXM+9wgH1lwRJgKYMgxWk7W8iSWrit4oe
+         VxsZ84ysGbjR16eGsl/ua+FiWm5VDzInjeqDp15fcgC+UNfMxGi2NCuM+Ttb7iR4UBKc
+         kcFswyd/mLp0omRK5WIisxSGUmALVWoTmWz0d5Mjp5i1WRfA3nfhNbzZqRcgl7X2X5mD
+         HBG/nlgY+eZAspjRR/1oppJitrfcrWQOLkn+NhPER6JT9nTBU4v/0leVZoYddBqAgYUh
+         unQk8Da3TU2+MDcb2AEQax/nMe0gR6xUztKfSRiavu91trzCkhQvdBlLvMQADXAZHgbb
+         +O8w==
+X-Gm-Message-State: APjAAAU6UdlBFF3t7VDpouHm3MzNzkMb+WjvmBHobJFsr582L+WMErpA
+        5ELV9ukJKMkoYcKCQCWbjHb7HhwHMmEApUWYC+dXuma0wc/9GYZpu+vxdR3F9JlBbwHxxMAO2Ec
+        QYyCmtm+abG3STUIe5KRrRz5+ZW24
+X-Received: by 2002:a5d:9157:: with SMTP id y23mr11703391ioq.129.1552111457640;
+        Fri, 08 Mar 2019 22:04:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyg30LRVtQ+HlIoy45Pn8SbGrArhpjMlyYY1v0bLr+DJiS7B4dRHSX37xLf/44jyBRXcuPJRw==
+X-Received: by 2002:a5d:9157:: with SMTP id y23mr11703385ioq.129.1552111457417;
+        Fri, 08 Mar 2019 22:04:17 -0800 (PST)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id s26sm4200941iol.41.2019.03.08.22.04.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 22:04:16 -0800 (PST)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Riku Voipio <riku.voipio@iki.fi>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] leds: fix a potential NULL pointer dereference
+Date:   Sat,  9 Mar 2019 00:04:11 -0600
+Message-Id: <20190309060411.29074-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+In case of_match_device cannot find a match, the fixes returns
+-EINVAL to avoid NULL pointer dereference.
 
-perf script -F +insn was only working for PT traces because
-the PT instruction decoder was filling in the insn/insn_len
-sample attributes. Support it for non PT samples too on x86
-using the existing x86 instruction decoder.
-
-This adds some extra checking to ensure that we don't try
-to decode instructions when using perf.data from a different
-architecture.
-
-% perf record -a sleep 1
-% perf script -F ip,sym,insn --xed
- ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
- ffffffff8100bb50 intel_bts_enable_local                retq
- ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
- ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
- ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
- ffffffff810f1f79 generic_exec_single           xor %eax, %eax
- ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
- ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
- ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
-...
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
-v2:
-Avoid printing instruction when empty
-Only decode when perf.data file was collected on same architecture
----
- tools/perf/arch/x86/util/Build      |  1 +
- tools/perf/arch/x86/util/archinsn.c | 28 ++++++++++++++++++++++++++++
- tools/perf/builtin-script.c         | 21 ++++++++++++++++++++-
- tools/perf/util/archinsn.h          | 12 ++++++++++++
- 4 files changed, 61 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/arch/x86/util/archinsn.c
- create mode 100644 tools/perf/util/archinsn.h
+ drivers/leds/leds-pca9532.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-index 7aab0be5fc5f..7b8e69bbbdfe 100644
---- a/tools/perf/arch/x86/util/Build
-+++ b/tools/perf/arch/x86/util/Build
-@@ -6,6 +6,7 @@ perf-y += perf_regs.o
- perf-y += group.o
- perf-y += machine.o
- perf-y += event.o
-+perf-y += archinsn.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
-diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
-new file mode 100644
-index 000000000000..10b3c2a08b8f
---- /dev/null
-+++ b/tools/perf/arch/x86/util/archinsn.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "perf.h"
-+#include "archinsn.h"
-+#include "fetch.h"
-+#include "util/intel-pt-decoder/insn.h"
-+#include "machine.h"
-+#include "thread.h"
-+#include "symbol.h"
-+
-+void arch_fetch_insn(struct perf_sample *sample,
-+		     struct thread *thread,
-+		     struct machine *machine)
-+{
-+	struct insn insn;
-+	int len;
-+	bool is64bit = false;
-+
-+	if (!sample->ip)
-+		return;
-+	len = fetch_exe(sample->ip, thread, machine, sample->insn,
-+			sizeof(sample->insn), &is64bit);
-+	if (len <= 0)
-+		return;
-+	insn_init(&insn, sample->insn, len, is64bit);
-+	insn_get_length(&insn);
-+	if (insn_complete(&insn) && insn.length <= len)
-+		sample->insn_len = insn.length;
-+}
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2d8cb1d1682c..fbc440bdf880 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -29,10 +29,12 @@
- #include "util/time-utils.h"
- #include "util/path.h"
- #include "print_binary.h"
-+#include "archinsn.h"
- #include <linux/bitmap.h>
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-+#include <sys/utsname.h>
- #include "asm/bug.h"
- #include "util/mem-events.h"
- #include "util/dump-insn.h"
-@@ -63,6 +65,7 @@ static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- static struct perf_stat_config	stat_config;
- static int			max_blocks;
-+static bool			native_arch;
- 
- unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
- 
-@@ -1227,6 +1230,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
- 	return len + dlen;
- }
- 
-+__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
-+			    struct thread *thread __maybe_unused,
-+			    struct machine *machine __maybe_unused)
-+{
-+}
-+
- static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 				     struct perf_event_attr *attr,
- 				     struct thread *thread,
-@@ -1234,9 +1243,12 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+index 7fea18b0c15d..4b0335591728 100644
+--- a/drivers/leds/leds-pca9532.c
++++ b/drivers/leds/leds-pca9532.c
+@@ -513,6 +513,7 @@ static int pca9532_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
  {
- 	int printed = 0;
- 
-+	if (sample->insn_len == 0 && native_arch)
-+		arch_fetch_insn(sample, thread, machine);
-+
- 	if (PRINT_FIELD(INSNLEN))
- 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
--	if (PRINT_FIELD(INSN)) {
-+	if (PRINT_FIELD(INSN) && sample->insn_len) {
- 		int i;
- 
- 		printed += fprintf(fp, " insn:");
-@@ -3277,6 +3289,7 @@ int cmd_script(int argc, const char **argv)
- 		.set = false,
- 		.default_no_sample = true,
- 	};
-+	struct utsname uts;
- 	char *script_path = NULL;
- 	const char **__argv;
- 	int i, j, err = 0;
-@@ -3615,6 +3628,12 @@ int cmd_script(int argc, const char **argv)
- 	if (symbol__init(&session->header.env) < 0)
- 		goto out_delete;
- 
-+	uname(&uts);
-+	if (!strcmp(uts.machine, session->header.env.arch) ||
-+		(!strcmp(uts.machine, "x86_64") &&
-+		 !strcmp(session->header.env.arch, "i386")))
-+		native_arch = true;
-+
- 	script.session = session;
- 	script__setup_sample_type(&script);
- 
-diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
-new file mode 100644
-index 000000000000..448cbb6b8d7e
---- /dev/null
-+++ b/tools/perf/util/archinsn.h
-@@ -0,0 +1,12 @@
-+#ifndef INSN_H
-+#define INSN_H 1
-+
-+struct perf_sample;
-+struct machine;
-+struct thread;
-+
-+void arch_fetch_insn(struct perf_sample *sample,
-+		     struct thread *thread,
-+		     struct machine *machine);
-+
-+#endif
+ 	int devid;
++	const struct of_device_id *of_id;
+ 	struct pca9532_data *data = i2c_get_clientdata(client);
+ 	struct pca9532_platform_data *pca9532_pdata =
+ 			dev_get_platdata(&client->dev);
+@@ -528,8 +529,11 @@ static int pca9532_probe(struct i2c_client *client,
+ 			dev_err(&client->dev, "no platform data\n");
+ 			return -EINVAL;
+ 		}
+-		devid = (int)(uintptr_t)of_match_device(
+-			of_pca9532_leds_match, &client->dev)->data;
++		of_id = of_match_device(of_pca9532_leds_match,
++				&client->dev);
++		if (unlikely(!of_id))
++			return -EINVAL;
++		devid = (int)of_id->data;
+ 	} else {
+ 		devid = id->driver_data;
+ 	}
 -- 
-2.20.1
+2.17.1
 
