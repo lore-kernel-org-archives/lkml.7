@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C0CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34469C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416CA20851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF213207E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 14:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfCIOkS (ORCPT
+        id S1726526AbfCIOk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 09:40:18 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:37151 "EHLO
+        Sat, 9 Mar 2019 09:40:26 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:38935 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbfCIOkS (ORCPT
+        with ESMTP id S1725841AbfCIOk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 09:40:18 -0500
+        Sat, 9 Mar 2019 09:40:26 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29EdeZ93109332
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29Ecx0h3109058
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 06:39:40 -0800
+        Sat, 9 Mar 2019 06:38:59 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29Edbbg3109322;
-        Sat, 9 Mar 2019 06:39:37 -0800
-Date:   Sat, 9 Mar 2019 06:39:37 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29EcutD3109054;
+        Sat, 9 Mar 2019 06:38:56 -0800
+Date:   Sat, 9 Mar 2019 06:38:56 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-8041ffd36f42d8521d66dd1e236feb58cecd68bc@git.kernel.org>
-Cc:     acme@redhat.com, bp@alien8.de, alexander.shishkin@linux.intel.com,
-        torvalds@linux-foundation.org, dave.hansen@linux.intel.com,
-        kan.liang@linux.intel.com, tglx@linutronix.de, luto@kernel.org,
-        peterz@infradead.org, riel@surriel.com, yao.jin@linux.intel.com,
-        hpa@zytor.com, mingo@kernel.org, eranian@google.com,
-        vincent.weaver@maine.edu, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org
-Reply-To: yao.jin@linux.intel.com, mingo@kernel.org, hpa@zytor.com,
-          jolsa@redhat.com, eranian@google.com, vincent.weaver@maine.edu,
-          linux-kernel@vger.kernel.org, bp@alien8.de,
-          alexander.shishkin@linux.intel.com,
-          torvalds@linux-foundation.org, acme@redhat.com,
-          dave.hansen@linux.intel.com, kan.liang@linux.intel.com,
-          peterz@infradead.org, tglx@linutronix.de, luto@kernel.org,
-          riel@surriel.com
-In-Reply-To: <20190227165729.1861-1-kan.liang@linux.intel.com>
-References: <20190227165729.1861-1-kan.liang@linux.intel.com>
+From:   tip-bot for Alexander Shishkin <tipbot@zytor.com>
+Message-ID: <tip-5768402fd9c6e872252b5268ad85e3fbae4fe26b@git.kernel.org>
+Cc:     jolsa@redhat.com, acme@redhat.com, vincent.weaver@maine.edu,
+        riel@surriel.com, mingo@kernel.org, hpa@zytor.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, bp@alien8.de, peterz@infradead.org,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, eranian@google.com
+Reply-To: alexander.shishkin@linux.intel.com, hpa@zytor.com,
+          mingo@kernel.org, acme@redhat.com, jolsa@redhat.com,
+          riel@surriel.com, vincent.weaver@maine.edu,
+          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+          tglx@linutronix.de, eranian@google.com,
+          dave.hansen@linux.intel.com, peterz@infradead.org, bp@alien8.de,
+          luto@kernel.org
+In-Reply-To: <20190215114727.62648-2-alexander.shishkin@linux.intel.com>
+References: <20190215114727.62648-2-alexander.shishkin@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf/x86/intel/uncore: Fix client IMC events
- return huge result
-Git-Commit-ID: 8041ffd36f42d8521d66dd1e236feb58cecd68bc
+Subject: [tip:perf/urgent] perf/ring_buffer: Use high order allocations for
+ AUX buffers optimistically
+Git-Commit-ID: 5768402fd9c6e872252b5268ad85e3fbae4fe26b
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -66,56 +64,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8041ffd36f42d8521d66dd1e236feb58cecd68bc
-Gitweb:     https://git.kernel.org/tip/8041ffd36f42d8521d66dd1e236feb58cecd68bc
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Wed, 27 Feb 2019 08:57:29 -0800
+Commit-ID:  5768402fd9c6e872252b5268ad85e3fbae4fe26b
+Gitweb:     https://git.kernel.org/tip/5768402fd9c6e872252b5268ad85e3fbae4fe26b
+Author:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+AuthorDate: Fri, 15 Feb 2019 13:47:27 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Sat, 9 Mar 2019 14:10:31 +0100
+CommitDate: Sat, 9 Mar 2019 14:10:30 +0100
 
-perf/x86/intel/uncore: Fix client IMC events return huge result
+perf/ring_buffer: Use high order allocations for AUX buffers optimistically
 
-The client IMC bandwidth events currently return very large values:
+Currently, the AUX buffer allocator will use high-order allocations
+for PMUs that don't support hardware scatter-gather chaining to ensure
+large contiguous blocks of pages, and always use an array of single
+pages otherwise.
 
-  $ perf stat -e uncore_imc/data_reads/ -e uncore_imc/data_writes/ -I 10000 -a
+There is, however, a tangible performance benefit in using larger chunks
+of contiguous memory even in the latter case, that comes from not having
+to fetch the next page's address at every page boundary. In particular,
+a task running under Intel PT on an Atom CPU shows 1.5%-2% less runtime
+penalty with a single multi-page output region in snapshot mode (no PMI)
+than with multiple single-page output regions, from ~6% down to ~4%. For
+the snapshot mode it does make a difference as it is intended to run over
+long periods of time.
 
-  10.000117222 34,788.76 MiB uncore_imc/data_reads/
-  10.000117222 8.26 MiB uncore_imc/data_writes/
-  20.000374584 34,842.89 MiB uncore_imc/data_reads/
-  20.000374584 10.45 MiB uncore_imc/data_writes/
-  30.000633299 37,965.29 MiB uncore_imc/data_reads/
-  30.000633299 323.62 MiB uncore_imc/data_writes/
-  40.000891548 41,012.88 MiB uncore_imc/data_reads/
-  40.000891548 6.98 MiB uncore_imc/data_writes/
-  50.001142480 1,125,899,906,621,494.75 MiB uncore_imc/data_reads/
-  50.001142480 6.97 MiB uncore_imc/data_writes/
+For this reason, change the allocation policy to always optimistically
+start with the highest possible order when allocating pages for the AUX
+buffer, desceding until the allocation succeeds or order zero allocation
+fails.
 
-The client IMC events are freerunning counters. They still use the
-old event encoding format (0x1 for data_read and 0x2 for data write).
-The counter bit width is calculated by common code, which assume that
-the standard encoding format is used for the freerunning counters.
-Error bit width information is calculated.
-
-The patch intends to convert the old client IMC event encoding to the
-standard encoding format.
-
-Current common code uses event->attr.config which directly copy from
-user space. We should not implicitly modify it for a converted event.
-The event->hw.config is used to replace the event->attr.config in
-common code.
-
-For client IMC events, the event->attr.config is used to calculate a
-converted event with standard encoding format in the custom
-event_init(). The converted event is stored in event->hw.config.
-For other events of freerunning counters, they already use the standard
-encoding format. The same value as event->attr.config is assigned to
-event->hw.config in common event_init().
-
-Reported-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Jin Yao <yao.jin@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Borislav Petkov <bp@alien8.de>
@@ -128,86 +106,58 @@ Cc: Rik van Riel <riel@surriel.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: stable@kernel.org # v4.18+
-Fixes: 9aae1780e7e8 ("perf/x86/intel/uncore: Clean up client IMC uncore")
-Link: https://lkml.kernel.org/r/20190227165729.1861-1-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/20190215114727.62648-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/uncore.c     |  1 +
- arch/x86/events/intel/uncore.h     | 12 ++++++------
- arch/x86/events/intel/uncore_snb.c |  4 +++-
- 3 files changed, 10 insertions(+), 7 deletions(-)
+ kernel/events/ring_buffer.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index d516161c00c4..9fe64c01a2e5 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -732,6 +732,7 @@ static int uncore_pmu_event_init(struct perf_event *event)
- 		/* fixed counters have event field hardcoded to zero */
- 		hwc->config = 0ULL;
- 	} else if (is_freerunning_event(event)) {
-+		hwc->config = event->attr.config;
- 		if (!check_valid_freerunning_event(box, event))
- 			return -EINVAL;
- 		event->hw.idx = UNCORE_PMC_IDX_FREERUNNING;
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index cb46d602a6b8..853a49a8ccf6 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -292,8 +292,8 @@ static inline
- unsigned int uncore_freerunning_counter(struct intel_uncore_box *box,
- 					struct perf_event *event)
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 678ccec60d8f..a4047321d7d8 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -598,29 +598,27 @@ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
  {
--	unsigned int type = uncore_freerunning_type(event->attr.config);
--	unsigned int idx = uncore_freerunning_idx(event->attr.config);
-+	unsigned int type = uncore_freerunning_type(event->hw.config);
-+	unsigned int idx = uncore_freerunning_idx(event->hw.config);
- 	struct intel_uncore_pmu *pmu = box->pmu;
+ 	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
+ 	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
+-	int ret = -ENOMEM, max_order = 0;
++	int ret = -ENOMEM, max_order;
  
- 	return pmu->type->freerunning[type].counter_base +
-@@ -377,7 +377,7 @@ static inline
- unsigned int uncore_freerunning_bits(struct intel_uncore_box *box,
- 				     struct perf_event *event)
- {
--	unsigned int type = uncore_freerunning_type(event->attr.config);
-+	unsigned int type = uncore_freerunning_type(event->hw.config);
+ 	if (!has_aux(event))
+ 		return -EOPNOTSUPP;
  
- 	return box->pmu->type->freerunning[type].bits;
- }
-@@ -385,7 +385,7 @@ unsigned int uncore_freerunning_bits(struct intel_uncore_box *box,
- static inline int uncore_num_freerunning(struct intel_uncore_box *box,
- 					 struct perf_event *event)
- {
--	unsigned int type = uncore_freerunning_type(event->attr.config);
-+	unsigned int type = uncore_freerunning_type(event->hw.config);
+-	if (event->pmu->capabilities & PERF_PMU_CAP_AUX_NO_SG) {
+-		/*
+-		 * We need to start with the max_order that fits in nr_pages,
+-		 * not the other way around, hence ilog2() and not get_order.
+-		 */
+-		max_order = ilog2(nr_pages);
++	/*
++	 * We need to start with the max_order that fits in nr_pages,
++	 * not the other way around, hence ilog2() and not get_order.
++	 */
++	max_order = ilog2(nr_pages);
  
- 	return box->pmu->type->freerunning[type].num_counters;
- }
-@@ -399,8 +399,8 @@ static inline int uncore_num_freerunning_types(struct intel_uncore_box *box,
- static inline bool check_valid_freerunning_event(struct intel_uncore_box *box,
- 						 struct perf_event *event)
- {
--	unsigned int type = uncore_freerunning_type(event->attr.config);
--	unsigned int idx = uncore_freerunning_idx(event->attr.config);
-+	unsigned int type = uncore_freerunning_type(event->hw.config);
-+	unsigned int idx = uncore_freerunning_idx(event->hw.config);
+-		/*
+-		 * PMU requests more than one contiguous chunks of memory
+-		 * for SW double buffering
+-		 */
+-		if ((event->pmu->capabilities & PERF_PMU_CAP_AUX_SW_DOUBLEBUF) &&
+-		    !overwrite) {
+-			if (!max_order)
+-				return -EINVAL;
++	/*
++	 * PMU requests more than one contiguous chunks of memory
++	 * for SW double buffering
++	 */
++	if ((event->pmu->capabilities & PERF_PMU_CAP_AUX_SW_DOUBLEBUF) &&
++	    !overwrite) {
++		if (!max_order)
++			return -EINVAL;
  
- 	return (type < uncore_num_freerunning_types(box, event)) &&
- 	       (idx < uncore_num_freerunning(box, event));
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index b12517fae77a..13493f43b247 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -442,9 +442,11 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
+-			max_order--;
+-		}
++		max_order--;
+ 	}
  
- 	/* must be done before validate_group */
- 	event->hw.event_base = base;
--	event->hw.config = cfg;
- 	event->hw.idx = idx;
- 
-+	/* Convert to standard encoding format for freerunning counters */
-+	event->hw.config = ((cfg - 1) << 8) | 0x10ff;
-+
- 	/* no group validation needed, we have free running counters */
- 
- 	return 0;
+ 	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
