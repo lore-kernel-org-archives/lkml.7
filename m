@@ -4,45 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D72C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209F7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6778206BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE05206BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 19:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfCIT7G (ORCPT
+        id S1726588AbfCIT7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 14:59:06 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:43539 "EHLO
+        Sat, 9 Mar 2019 14:59:42 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:45153 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfCIT7G (ORCPT
+        with ESMTP id S1726411AbfCIT7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 14:59:06 -0500
+        Sat, 9 Mar 2019 14:59:41 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29Jwtoe3203178
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x29JxYF13203236
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 9 Mar 2019 11:58:55 -0800
+        Sat, 9 Mar 2019 11:59:34 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29Jwt343203175;
-        Sat, 9 Mar 2019 11:58:55 -0800
-Date:   Sat, 9 Mar 2019 11:58:55 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x29JxY6R3203233;
+        Sat, 9 Mar 2019 11:59:34 -0800
+Date:   Sat, 9 Mar 2019 11:59:34 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-89wsdd9h9g6bvq52sgp6d0u4@git.kernel.org>
-Cc:     travis.downs@gmail.com, mingo@kernel.org, tglx@linutronix.de,
-        adrian.hunter@intel.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org, acme@redhat.com,
-        hpa@zytor.com
-Reply-To: tglx@linutronix.de, mingo@kernel.org, adrian.hunter@intel.com,
-          travis.downs@gmail.com, namhyung@kernel.org, hpa@zytor.com,
-          acme@redhat.com, jolsa@kernel.org, linux-kernel@vger.kernel.org
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-153259382633ecbbc0af4f3f0b6515757ebe2984@git.kernel.org>
+Cc:     namhyung@kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        ak@linux.intel.com, acme@redhat.com, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, hpa@zytor.com
+Reply-To: mingo@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+          hpa@zytor.com, jolsa@kernel.org, acme@redhat.com,
+          linux-kernel@vger.kernel.org, ak@linux.intel.com
+In-Reply-To: <20190305144758.12397-2-andi@firstfloor.org>
+References: <20190305144758.12397-2-andi@firstfloor.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf annotate: Calculate the max instruction
- name, align column to that
-Git-Commit-ID: bc3bb795345891509b4a3cbff824cbef8c130f20
+Subject: [tip:perf/urgent] perf thread: Generalize function to copy from
+ thread addr space from intel-bts code
+Git-Commit-ID: 153259382633ecbbc0af4f3f0b6515757ebe2984
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -56,346 +57,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bc3bb795345891509b4a3cbff824cbef8c130f20
-Gitweb:     https://git.kernel.org/tip/bc3bb795345891509b4a3cbff824cbef8c130f20
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 6 Mar 2019 16:40:15 -0300
+Commit-ID:  153259382633ecbbc0af4f3f0b6515757ebe2984
+Gitweb:     https://git.kernel.org/tip/153259382633ecbbc0af4f3f0b6515757ebe2984
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Wed, 6 Mar 2019 17:55:35 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 6 Mar 2019 16:40:15 -0300
+CommitDate: Wed, 6 Mar 2019 17:55:35 -0300
 
-perf annotate: Calculate the max instruction name, align column to that
+perf thread: Generalize function to copy from thread addr space from intel-bts code
 
-We were hardcoding '6' as the max instruction name, and we have lots
-that are longer than that, see the diff from two 'P' printed TUI
-annotations for a libc function that uses instructions with long names,
-such as 'vpmovmskb' with its 9 chars:
+Add a utility function to fetch executable code. Convert one
+user over to it. There are more places doing that, but they
+do significantly different actions, so they are not
+easy to fit into a single library function.
 
-  --- __strcmp_avx2.annotation.before	2019-03-06 16:31:39.368020425 -0300
-  +++ __strcmp_avx2.annotation	2019-03-06 16:32:12.079450508 -0300
-  @@ -2,284 +2,284 @@
-   Event: cycles:ppp
+Committer changes:
 
-   Percent        endbr64
-  -  0.10         mov    %edi,%eax
-  +  0.10         mov        %edi,%eax
-  -               xor    %edx,%edx
-  +               xor        %edx,%edx
-  -  3.54         vpxor  %ymm7,%ymm7,%ymm7
-  +  3.54         vpxor      %ymm7,%ymm7,%ymm7
-  -               or     %esi,%eax
-  +               or         %esi,%eax
-  -               and    $0xfff,%eax
-  +               and        $0xfff,%eax
-  -               cmp    $0xf80,%eax
-  +               cmp        $0xf80,%eax
-  -             ↓ jg     370
-  +             ↓ jg         370
-  - 27.07         vmovdqu (%rdi),%ymm1
-  + 27.07         vmovdqu    (%rdi),%ymm1
-  -  7.97         vpcmpeqb (%rsi),%ymm1,%ymm0
-  +  7.97         vpcmpeqb   (%rsi),%ymm1,%ymm0
-  -  2.15         vpminub %ymm1,%ymm0,%ymm0
-  +  2.15         vpminub    %ymm1,%ymm0,%ymm0
-  -  4.09         vpcmpeqb %ymm7,%ymm0,%ymm0
-  +  4.09         vpcmpeqb   %ymm7,%ymm0,%ymm0
-  -  0.43         vpmovmskb %ymm0,%ecx
-  +  0.43         vpmovmskb  %ymm0,%ecx
-  -  1.53         test   %ecx,%ecx
-  +  1.53         test       %ecx,%ecx
-  -             ↓ je     b0
-  +             ↓ je         b0
-  -  5.26         tzcnt  %ecx,%edx
-  +  5.26         tzcnt      %ecx,%edx
-  - 18.40         movzbl (%rdi,%rdx,1),%eax
-  + 18.40         movzbl     (%rdi,%rdx,1),%eax
-  -  7.09         movzbl (%rsi,%rdx,1),%edx
-  +  7.09         movzbl     (%rsi,%rdx,1),%edx
-  -  3.34         sub    %edx,%eax
-  +  3.34         sub        %edx,%eax
-     2.37         vzeroupper
-                ← retq
-                  nop
-  -         50:   tzcnt  %ecx,%edx
-  +         50:   tzcnt      %ecx,%edx
-  -               movzbl 0x20(%rdi,%rdx,1),%eax
-  +               movzbl     0x20(%rdi,%rdx,1),%eax
-  -               movzbl 0x20(%rsi,%rdx,1),%edx
-  +               movzbl     0x20(%rsi,%rdx,1),%edx
-  -               sub    %edx,%eax
-  +               sub        %edx,%eax
-                  vzeroupper
-                ← retq
-  -               data16 nopw %cs:0x0(%rax,%rax,1)
-  +               data16     nopw %cs:0x0(%rax,%rax,1)
+. No need to cast around, make 'buf' be a void pointer.
 
-Reported-by: Travis Downs <travis.downs@gmail.com>
-LPU-Reference: CAOBGo4z1KfmWeOm6Et0cnX5Z6DWsG2PQbAvRn1MhVPJmXHrc5g@mail.gmail.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+. Rename it to thread__memcpy() to reflect the fact it is about copying
+  a chunk of memory from a thread, i.e. from its address space.
+
+. No need to have it in a separate object file, move it to thread.[ch]
+
+. Check the return of map__load(), the original code didn't do it, but
+  since we're moving this around, check that as well.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-89wsdd9h9g6bvq52sgp6d0u4@git.kernel.org
+Link: https://lkml.kernel.org/r/20190305144758.12397-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/annotate/instructions.c |  2 +-
- tools/perf/arch/s390/annotate/instructions.c  |  2 +-
- tools/perf/util/annotate.c                    | 74 +++++++++++++++++----------
- tools/perf/util/annotate.h                    |  7 +--
- 4 files changed, 52 insertions(+), 33 deletions(-)
+ tools/perf/util/intel-bts.c | 20 ++------------------
+ tools/perf/util/thread.c    | 23 +++++++++++++++++++++++
+ tools/perf/util/thread.h    |  3 +++
+ 3 files changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-index 76c6345a57d5..8f70a1b282df 100644
---- a/tools/perf/arch/arm64/annotate/instructions.c
-+++ b/tools/perf/arch/arm64/annotate/instructions.c
-@@ -58,7 +58,7 @@ out_free_source:
- }
- 
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
--			  struct ins_operands *ops);
-+			  struct ins_operands *ops, int max_ins_name);
- 
- static struct ins_ops arm64_mov_ops = {
- 	.parse	   = arm64_mov__parse,
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index de0dd66dbb48..89bb8f2c54ce 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -46,7 +46,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- }
- 
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops);
-+			   struct ins_operands *ops, int max_ins_name);
- 
- static struct ins_ops s390_call_ops = {
- 	.parse	   = s390_call__parse,
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 11a8a447a3af..5f6dbbf5d749 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -198,18 +198,18 @@ static void ins__delete(struct ins_operands *ops)
- }
- 
- static int ins__raw_scnprintf(struct ins *ins, char *bf, size_t size,
--			      struct ins_operands *ops)
-+			      struct ins_operands *ops, int max_ins_name)
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 0c0180c67574..47025bc727e1 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -328,35 +328,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
  {
--	return scnprintf(bf, size, "%-6s %s", ins->name, ops->raw);
-+	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->raw);
+ 	struct machine *machine = btsq->bts->machine;
+ 	struct thread *thread;
+-	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
+-	uint8_t cpumode;
++	bool x86_64;
+ 	int err = -1;
+ 
+-	if (machine__kernel_ip(machine, ip))
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
+-
+ 	thread = machine__find_thread(machine, -1, btsq->tid);
+ 	if (!thread)
+ 		return -1;
+ 
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
+-		goto out_put;
+-
+-	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
+-				  INTEL_PT_INSN_BUF_SZ);
++	len = thread__memcpy(thread, machine, buf, ip, INTEL_PT_INSN_BUF_SZ, &x86_64);
+ 	if (len <= 0)
+ 		goto out_put;
+ 
+-	/* Load maps to ensure dso->is_64_bit has been updated */
+-	map__load(al.map);
+-
+-	x86_64 = al.map->dso->is_64_bit;
+-
+ 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
+ 		goto out_put;
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 4c179fef442d..50678d318185 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -12,6 +12,7 @@
+ #include "debug.h"
+ #include "namespaces.h"
+ #include "comm.h"
++#include "map.h"
+ #include "symbol.h"
+ #include "unwind.h"
+ 
+@@ -393,3 +394,25 @@ struct thread *thread__main_thread(struct machine *machine, struct thread *threa
+ 
+ 	return machine__find_thread(machine, thread->pid_, thread->pid_);
  }
- 
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
--		  struct ins_operands *ops)
-+		   struct ins_operands *ops, int max_ins_name)
- {
- 	if (ins->ops->scnprintf)
--		return ins->ops->scnprintf(ins, bf, size, ops);
-+		return ins->ops->scnprintf(ins, bf, size, ops, max_ins_name);
- 
--	return ins__raw_scnprintf(ins, bf, size, ops);
-+	return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- }
- 
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
-@@ -273,18 +273,18 @@ indirect_call:
- }
- 
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	if (ops->target.sym)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.sym->name);
- 
- 	if (ops->target.addr == 0)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
- 	if (ops->target.name)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.name);
- 
--	return scnprintf(bf, size, "%-6s *%" PRIx64, ins->name, ops->target.addr);
-+	return scnprintf(bf, size, "%-*s *%" PRIx64, max_ins_name, ins->name, ops->target.addr);
- }
- 
- static struct ins_ops call_ops = {
-@@ -388,15 +388,15 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	const char *c;
- 
- 	if (!ops->target.addr || ops->target.offset < 0)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
- 	if (ops->target.outside && ops->target.sym != NULL)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.sym->name);
- 
- 	c = strchr(ops->raw, ',');
- 	c = validate_comma(c, ops);
-@@ -415,7 +415,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			c++;
- 	}
- 
--	return scnprintf(bf, size, "%-6s %.*s%" PRIx64,
-+	return scnprintf(bf, size, "%-*s %.*s%" PRIx64, max_ins_name,
- 			 ins->name, c ? c - ops->raw : 0, ops->raw,
- 			 ops->target.offset);
- }
-@@ -483,16 +483,16 @@ out_free_ops:
- }
- 
- static int lock__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	int printed;
- 
- 	if (ops->locked.ins.ops == NULL)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
--	printed = scnprintf(bf, size, "%-6s ", ins->name);
-+	printed = scnprintf(bf, size, "%-*s ", max_ins_name, ins->name);
- 	return printed + ins__scnprintf(&ops->locked.ins, bf + printed,
--					size - printed, ops->locked.ops);
-+					size - printed, ops->locked.ops, max_ins_name);
- }
- 
- static void lock__delete(struct ins_operands *ops)
-@@ -564,9 +564,9 @@ out_free_source:
- }
- 
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s,%s", ins->name,
-+	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
- 			 ops->source.name ?: ops->source.raw,
- 			 ops->target.name ?: ops->target.raw);
- }
-@@ -604,9 +604,9 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
- }
- 
- static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s", ins->name,
-+	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name,
- 			 ops->target.name ?: ops->target.raw);
- }
- 
-@@ -616,9 +616,9 @@ static struct ins_ops dec_ops = {
- };
- 
- static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
--			  struct ins_operands *ops __maybe_unused)
-+			  struct ins_operands *ops __maybe_unused, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s", "nop");
-+	return scnprintf(bf, size, "%-*s", max_ins_name, "nop");
- }
- 
- static struct ins_ops nop_ops = {
-@@ -1232,12 +1232,12 @@ void disasm_line__free(struct disasm_line *dl)
- 	annotation_line__delete(&dl->al);
- }
- 
--int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw)
-+int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name)
- {
- 	if (raw || !dl->ins.ops)
--		return scnprintf(bf, size, "%-6s %s", dl->ins.name, dl->ops.raw);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, dl->ins.name, dl->ops.raw);
- 
--	return ins__scnprintf(&dl->ins, bf, size, &dl->ops);
-+	return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
- }
- 
- static void annotation_line__add(struct annotation_line *al, struct list_head *head)
-@@ -2414,12 +2414,30 @@ static inline int width_jumps(int n)
- 	return 1;
- }
- 
-+static int annotation__max_ins_name(struct annotation *notes)
++
++int thread__memcpy(struct thread *thread, struct machine *machine,
++		   void *buf, u64 ip, int len, bool *is64bit)
 +{
-+	int max_name = 0, len;
-+	struct annotation_line *al;
++       u8 cpumode = PERF_RECORD_MISC_USER;
++       struct addr_location al;
++       long offset;
 +
-+        list_for_each_entry(al, &notes->src->source, node) {
-+		if (al->offset == -1)
-+			continue;
++       if (machine__kernel_ip(machine, ip))
++               cpumode = PERF_RECORD_MISC_KERNEL;
 +
-+		len = strlen(disasm_line(al)->ins.name);
-+		if (max_name < len)
-+			max_name = len;
-+	}
++       if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso ||
++	   al.map->dso->data.status == DSO_DATA_STATUS_ERROR ||
++	   map__load(al.map) < 0)
++               return -1;
 +
-+	return max_name;
++       offset = al.map->map_ip(al.map, ip);
++       if (is64bit)
++               *is64bit = al.map->dso->is_64_bit;
++
++       return dso__data_read_offset(al.map->dso, machine, offset, buf, len);
 +}
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 8276ffeec556..cf8375c017a0 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -113,6 +113,9 @@ struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
+ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+ 					struct addr_location *al);
+ 
++int thread__memcpy(struct thread *thread, struct machine *machine,
++		   void *buf, u64 ip, int len, bool *is64bit);
 +
- void annotation__init_column_widths(struct annotation *notes, struct symbol *sym)
+ static inline void *thread__priv(struct thread *thread)
  {
- 	notes->widths.addr = notes->widths.target =
- 		notes->widths.min_addr = hex_width(symbol__size(sym));
- 	notes->widths.max_addr = hex_width(sym->end);
- 	notes->widths.jumps = width_jumps(notes->max_jump_sources);
-+	notes->widths.max_ins_name = annotation__max_ins_name(notes);
- }
- 
- void annotation__update_column_widths(struct annotation *notes)
-@@ -2583,7 +2601,7 @@ call_like:
- 		obj__printf(obj, "  ");
- 	}
- 
--	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset);
-+	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset, notes->widths.max_ins_name);
- }
- 
- static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 95053cab41fe..df34fe483164 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -59,14 +59,14 @@ struct ins_ops {
- 	void (*free)(struct ins_operands *ops);
- 	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms);
- 	int (*scnprintf)(struct ins *ins, char *bf, size_t size,
--			 struct ins_operands *ops);
-+			 struct ins_operands *ops, int max_ins_name);
- };
- 
- bool ins__is_jump(const struct ins *ins);
- bool ins__is_call(const struct ins *ins);
- bool ins__is_ret(const struct ins *ins);
- bool ins__is_lock(const struct ins *ins);
--int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops);
-+int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops, int max_ins_name);
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
- 
- #define ANNOTATION__IPC_WIDTH 6
-@@ -219,7 +219,7 @@ int __annotation__scnprintf_samples_period(struct annotation *notes,
- 					   struct perf_evsel *evsel,
- 					   bool show_freq);
- 
--int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw);
-+int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name);
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
- void symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel);
- 
-@@ -289,6 +289,7 @@ struct annotation {
- 		u8		target;
- 		u8		min_addr;
- 		u8		max_addr;
-+		u8		max_ins_name;
- 	} widths;
- 	bool			have_cycles;
- 	struct annotated_source *src;
+ 	return thread->priv;
