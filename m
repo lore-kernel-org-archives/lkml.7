@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87413C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AC4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558E52081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B8C2081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfCIF4o (ORCPT
+        id S1726808AbfCIF4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 00:56:44 -0500
-Received: from mga12.intel.com ([192.55.52.136]:63276 "EHLO mga12.intel.com"
+        Sat, 9 Mar 2019 00:56:51 -0500
+Received: from mga05.intel.com ([192.55.52.43]:26854 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfCIF4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 00:56:42 -0500
+        id S1726484AbfCIF4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 00:56:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:41 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,458,1544515200"; 
-   d="scan'208";a="132845008"
+   d="scan'208";a="281138795"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
+  by orsmga004.jf.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 763813001F2; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
+        id E0E37301CBD; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v5 01/15] perf tools: Add utility function to fetch executable
-Date:   Fri,  8 Mar 2019 21:56:14 -0800
-Message-Id: <20190309055628.21617-2-andi@firstfloor.org>
+Subject: [PATCH v5 15/15] perf tools ui: Fix ui popup browser for many entries
+Date:   Fri,  8 Mar 2019 21:56:28 -0800
+Message-Id: <20190309055628.21617-16-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
 References: <20190309055628.21617-1-andi@firstfloor.org>
@@ -49,130 +49,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add a utility function to fetch executable code. Convert one
-user over to it. There are more places doing that, but they
-do significantly different actions, so they are not
-easy to fit into a single library function.
+Fix the argv ui browser code to correctly display more entries
+than fit on the screen without crashing. The problem was some type
+confusion with pointer types in the ->seek function. Do
+the argv arithmetic correctly with char ** pointers. Also
+add some asserts to find overruns and limit the display function
+correctly.
+
+Then finally remove a workaround for this in the res sample
+browser.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/Build       |  1 +
- tools/perf/util/fetch.c     | 28 ++++++++++++++++++++++++++++
- tools/perf/util/fetch.h     |  7 +++++++
- tools/perf/util/intel-bts.c | 21 +++------------------
- 4 files changed, 39 insertions(+), 18 deletions(-)
- create mode 100644 tools/perf/util/fetch.c
- create mode 100644 tools/perf/util/fetch.h
+ tools/perf/ui/browser.c             | 10 +++++++---
+ tools/perf/ui/browsers/res_sample.c |  3 ---
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dd3102301ea..649321fc3fb9 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -65,6 +65,7 @@ perf-y += trace-event-scripting.o
- perf-y += trace-event.o
- perf-y += svghelper.o
- perf-y += sort.o
-+perf-y += fetch.o
- perf-y += hist.o
- perf-y += util.o
- perf-y += xyarray.o
-diff --git a/tools/perf/util/fetch.c b/tools/perf/util/fetch.c
-new file mode 100644
-index 000000000000..1430083e7eca
---- /dev/null
-+++ b/tools/perf/util/fetch.c
-@@ -0,0 +1,28 @@
-+#include "perf.h"
-+#include "machine.h"
-+#include "thread.h"
-+#include "symbol.h"
-+#include "map.h"
-+#include "fetch.h"
-+
-+int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
-+	      char *buf, int len, bool *is64bit)
-+{
-+	struct addr_location al;
-+	u8 cpumode;
-+	long offset;
-+
-+	if (machine__kernel_ip(machine, ip))
-+		cpumode = PERF_RECORD_MISC_KERNEL;
-+	else
-+		cpumode = PERF_RECORD_MISC_USER;
-+	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
-+		return -1;
-+	if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR)
-+		return -1;
-+	map__load(al.map);
-+	offset = al.map->map_ip(al.map, ip);
-+	if (is64bit)
-+		*is64bit = al.map->dso->is_64_bit;
-+	return dso__data_read_offset(al.map->dso, machine, offset, (u8 *)buf, len);
-+}
-diff --git a/tools/perf/util/fetch.h b/tools/perf/util/fetch.h
-new file mode 100644
-index 000000000000..7b77b8cee55a
---- /dev/null
-+++ b/tools/perf/util/fetch.h
-@@ -0,0 +1,7 @@
-+#ifndef FETCH_H
-+#define FETCH_H 1
-+
-+int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
-+	      char *buf, int len, bool *is64bit);
-+
-+#endif
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 0c0180c67574..915f4662e52e 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -38,6 +38,7 @@
- #include "auxtrace.h"
- #include "intel-pt-decoder/intel-pt-insn-decoder.h"
- #include "intel-bts.h"
-+#include "fetch.h"
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index 4f75561424ed..4ad37d8c7d6a 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -611,14 +611,16 @@ void ui_browser__argv_seek(struct ui_browser *browser, off_t offset, int whence)
+ 		browser->top = browser->entries;
+ 		break;
+ 	case SEEK_CUR:
+-		browser->top = browser->top + browser->top_idx + offset;
++		browser->top = (char **)browser->top + offset;
+ 		break;
+ 	case SEEK_END:
+-		browser->top = browser->top + browser->nr_entries - 1 + offset;
++		browser->top = (char **)browser->entries + browser->nr_entries - 1 + offset;
+ 		break;
+ 	default:
+ 		return;
+ 	}
++	assert((char **)browser->top < (char **)browser->entries + browser->nr_entries);
++	assert((char **)browser->top >= (char **)browser->entries);
+ }
  
- #define MAX_TIMESTAMP (~0ULL)
+ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
+@@ -630,7 +632,9 @@ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
+ 		browser->top = browser->entries;
  
-@@ -328,35 +329,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
- {
- 	struct machine *machine = btsq->bts->machine;
- 	struct thread *thread;
--	struct addr_location al;
- 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
- 	ssize_t len;
--	int x86_64;
--	uint8_t cpumode;
-+	bool x86_64;
- 	int err = -1;
+ 	pos = (char **)browser->top;
+-	while (idx < browser->nr_entries) {
++	while (idx < browser->nr_entries &&
++	       row < (unsigned)SLtt_Screen_Rows - 1) {
++		assert(pos < (char **)browser->entries + browser->nr_entries);
+ 		if (!browser->filter || !browser->filter(browser, *pos)) {
+ 			ui_browser__gotorc(browser, row, 0);
+ 			browser->write(browser, pos, row);
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index c2a8536904bc..8befd8e984ab 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -37,9 +37,6 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 	struct res_sample *r;
+ 	char extra_format[256];
  
--	if (machine__kernel_ip(machine, ip))
--		cpumode = PERF_RECORD_MISC_KERNEL;
--	else
--		cpumode = PERF_RECORD_MISC_USER;
+-	/* For now since ui__popup_menu doesn't like lists that don't fit */
+-	num_res = max(min(SLtt_Screen_Rows - 4, num_res), 0);
 -
- 	thread = machine__find_thread(machine, -1, btsq->tid);
- 	if (!thread)
+ 	names = calloc(num_res, sizeof(char *));
+ 	if (!names)
  		return -1;
- 
--	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
--		goto out_put;
--
--	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
--				  INTEL_PT_INSN_BUF_SZ);
-+	len = fetch_exe(ip, thread, machine, (char*)buf, INTEL_PT_INSN_BUF_SZ, &x86_64);
- 	if (len <= 0)
- 		goto out_put;
- 
--	/* Load maps to ensure dso->is_64_bit has been updated */
--	map__load(al.map);
--
--	x86_64 = al.map->dso->is_64_bit;
--
- 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
- 		goto out_put;
- 
 -- 
 2.20.1
 
