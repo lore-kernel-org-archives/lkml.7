@@ -2,114 +2,177 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF294C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87413C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C532081B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:49:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="TSlntLE/"
+	by mail.kernel.org (Postfix) with ESMTP id 558E52081B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 05:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfCIFts (ORCPT
+        id S1726426AbfCIF4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 00:49:48 -0500
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:33444 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfCIFtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 00:49:47 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 2AC0ECF4
-        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 05:49:46 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zUoukoAKWrgF for <linux-kernel@vger.kernel.org>;
-        Fri,  8 Mar 2019 23:49:46 -0600 (CST)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id E9220C98
-        for <linux-kernel@vger.kernel.org>; Fri,  8 Mar 2019 23:49:45 -0600 (CST)
-Received: by mail-it1-f198.google.com with SMTP id z131so13651625itb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 21:49:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=O96fONrE+kQXwreD9x0PMCN0fUD5949Yh6FwwievkFM=;
-        b=TSlntLE/+GUqK+WucPC+CEGjIJw/FRV60NjB80uJZBZyuPU+qDabWSs/iobJbxaLE/
-         9uotZzWLaumFnS9WVTvFSKZ4BE+O2PoPXTYsy9yWveeo+1kS93jeqySCgyQS1YvDVCUf
-         wNw6A1wUBPBPSu1u0/qzJhv+1bNRbcUITRjqSGZKey3emE3je85JuIUyclRPJpfLz/pN
-         xWZIHdFfalxXKMv029KDtLytJSDGcsxwFpAGNUO1Ey6hCTT4bb56kIQdJ44HVjXPcUcB
-         c9+6DZY/BvuI1TCaL/yPjhDopUcf2xuV/YiLpwnGcE7D3GR9sg8rw8Q/r4vE8fKHHFOA
-         tKFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=O96fONrE+kQXwreD9x0PMCN0fUD5949Yh6FwwievkFM=;
-        b=lpA4LVUk9oqRdtAQj1o7QTsm/P8VTYaM97HRMLrrbIk5zdfNldXMm0HvhuyBbgB8nW
-         cqSTjM1pHYSt2D1CLvc29Nbw7BxkNIQVGVpT7K12UPdZlLN47FH22u105z4KqGO4dfw6
-         JlCYobDO2EykcS07fxbsMNQcFYp2k4peGYXOMxFG+jyySguO42HENe5W+nPVBP3XMmUr
-         0bXGz0wGovpymreb7/JXHguT/uToCpDmqzMO068WCuDvAYaBEuq4I37YhTBNm+xPzOuS
-         ES6lwKbSdc71gDT3PHrPLcAGMXABjtOiOP6QgCAx2uTxrIObnsP5XPWqgKcSU93xlCPA
-         Fr9w==
-X-Gm-Message-State: APjAAAU+D3zj96ZXqwbGXDRnW5j+jUrJJRRb/p1FjMk5Xr8IGfBckASI
-        rpyw4xEikgWUbgIcr0tJEY1l9ATG0++oY4gdWyMgjePL0DvInS4WYcEjScrF+5ojNG+SyeJLFK0
-        l/E7lSv8za47wrNUYG22PrC6UwRfM
-X-Received: by 2002:a6b:7112:: with SMTP id q18mr1360927iog.5.1552110585578;
-        Fri, 08 Mar 2019 21:49:45 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw0tMc8yAMoN0xHl9fs33DHGhKeXLxXJ8rCkhoSlFMxaDAOuU1YRnm1AYZD62hkc8X+ojlgsQ==
-X-Received: by 2002:a6b:7112:: with SMTP id q18mr1360921iog.5.1552110585374;
-        Fri, 08 Mar 2019 21:49:45 -0800 (PST)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id b20sm4068924ioj.12.2019.03.08.21.49.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Mar 2019 21:49:44 -0800 (PST)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Karsten Keil <isdn@linux-pingi.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] isdn: mISDNinfineon: fix potential NULL pointer dereference
-Date:   Fri,  8 Mar 2019 23:49:34 -0600
-Message-Id: <20190309054936.24784-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 9 Mar 2019 00:56:44 -0500
+Received: from mga12.intel.com ([192.55.52.136]:63276 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbfCIF4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 00:56:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2019 21:56:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,458,1544515200"; 
+   d="scan'208";a="132845008"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Mar 2019 21:56:41 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 763813001F2; Fri,  8 Mar 2019 21:56:41 -0800 (PST)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v5 01/15] perf tools: Add utility function to fetch executable
+Date:   Fri,  8 Mar 2019 21:56:14 -0800
+Message-Id: <20190309055628.21617-2-andi@firstfloor.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
+References: <20190309055628.21617-1-andi@firstfloor.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case ioremap fails, the fix returns -ENOMEM to avoid NULL
-pointer dereference.
+From: Andi Kleen <ak@linux.intel.com>
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Add a utility function to fetch executable code. Convert one
+user over to it. There are more places doing that, but they
+do significantly different actions, so they are not
+easy to fit into a single library function.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- drivers/isdn/hardware/mISDN/mISDNinfineon.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/Build       |  1 +
+ tools/perf/util/fetch.c     | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/fetch.h     |  7 +++++++
+ tools/perf/util/intel-bts.c | 21 +++------------------
+ 4 files changed, 39 insertions(+), 18 deletions(-)
+ create mode 100644 tools/perf/util/fetch.c
+ create mode 100644 tools/perf/util/fetch.h
 
-diff --git a/drivers/isdn/hardware/mISDN/mISDNinfineon.c b/drivers/isdn/hardware/mISDN/mISDNinfineon.c
-index 3e01012be4ab..0fe6ddcb3fdc 100644
---- a/drivers/isdn/hardware/mISDN/mISDNinfineon.c
-+++ b/drivers/isdn/hardware/mISDN/mISDNinfineon.c
-@@ -712,8 +712,11 @@ setup_io(struct inf_hw *hw)
- 				(ulong)hw->addr.start, (ulong)hw->addr.size);
- 			return err;
- 		}
--		if (hw->ci->addr_mode == AM_MEMIO)
-+		if (hw->ci->addr_mode == AM_MEMIO) {
- 			hw->addr.p = ioremap(hw->addr.start, hw->addr.size);
-+			if (unlikely(!hw->addr.p))
-+				return -ENOMEM;
-+		}
- 		hw->addr.mode = hw->ci->addr_mode;
- 		if (debug & DEBUG_HW)
- 			pr_notice("%s: IO addr %lx (%lu bytes) mode%d\n",
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 8dd3102301ea..649321fc3fb9 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -65,6 +65,7 @@ perf-y += trace-event-scripting.o
+ perf-y += trace-event.o
+ perf-y += svghelper.o
+ perf-y += sort.o
++perf-y += fetch.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += xyarray.o
+diff --git a/tools/perf/util/fetch.c b/tools/perf/util/fetch.c
+new file mode 100644
+index 000000000000..1430083e7eca
+--- /dev/null
++++ b/tools/perf/util/fetch.c
+@@ -0,0 +1,28 @@
++#include "perf.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
++#include "map.h"
++#include "fetch.h"
++
++int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
++	      char *buf, int len, bool *is64bit)
++{
++	struct addr_location al;
++	u8 cpumode;
++	long offset;
++
++	if (machine__kernel_ip(machine, ip))
++		cpumode = PERF_RECORD_MISC_KERNEL;
++	else
++		cpumode = PERF_RECORD_MISC_USER;
++	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
++		return -1;
++	if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR)
++		return -1;
++	map__load(al.map);
++	offset = al.map->map_ip(al.map, ip);
++	if (is64bit)
++		*is64bit = al.map->dso->is_64_bit;
++	return dso__data_read_offset(al.map->dso, machine, offset, (u8 *)buf, len);
++}
+diff --git a/tools/perf/util/fetch.h b/tools/perf/util/fetch.h
+new file mode 100644
+index 000000000000..7b77b8cee55a
+--- /dev/null
++++ b/tools/perf/util/fetch.h
+@@ -0,0 +1,7 @@
++#ifndef FETCH_H
++#define FETCH_H 1
++
++int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
++	      char *buf, int len, bool *is64bit);
++
++#endif
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 0c0180c67574..915f4662e52e 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -38,6 +38,7 @@
+ #include "auxtrace.h"
+ #include "intel-pt-decoder/intel-pt-insn-decoder.h"
+ #include "intel-bts.h"
++#include "fetch.h"
+ 
+ #define MAX_TIMESTAMP (~0ULL)
+ 
+@@ -328,35 +329,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
+ {
+ 	struct machine *machine = btsq->bts->machine;
+ 	struct thread *thread;
+-	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
+-	uint8_t cpumode;
++	bool x86_64;
+ 	int err = -1;
+ 
+-	if (machine__kernel_ip(machine, ip))
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
+-
+ 	thread = machine__find_thread(machine, -1, btsq->tid);
+ 	if (!thread)
+ 		return -1;
+ 
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
+-		goto out_put;
+-
+-	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
+-				  INTEL_PT_INSN_BUF_SZ);
++	len = fetch_exe(ip, thread, machine, (char*)buf, INTEL_PT_INSN_BUF_SZ, &x86_64);
+ 	if (len <= 0)
+ 		goto out_put;
+ 
+-	/* Load maps to ensure dso->is_64_bit has been updated */
+-	map__load(al.map);
+-
+-	x86_64 = al.map->dso->is_64_bit;
+-
+ 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
+ 		goto out_put;
+ 
 -- 
-2.17.1
+2.20.1
 
