@@ -2,97 +2,122 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD60C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31DDC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372CB207E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB66320851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 09:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfCIJys (ORCPT
+        id S1726352AbfCIJ5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 04:54:48 -0500
-Received: from sauhun.de ([88.99.104.3]:40092 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfCIJys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 04:54:48 -0500
-Received: from localhost (p5486CD1C.dip0.t-ipconnect.de [84.134.205.28])
-        by pokefinder.org (Postfix) with ESMTPSA id 7B8712E3551;
-        Sat,  9 Mar 2019 10:54:46 +0100 (CET)
-Date:   Sat, 9 Mar 2019 10:54:46 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Louis Taylor <louis@kragniz.eu>
-Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ndesaulniers@google.com, jflat@chromium.org
-Subject: Re: [PATCH] i2c: sis630: correct format strings
-Message-ID: <20190309095446.GE1340@kunai>
-References: <20190302141836.24638-1-louis@kragniz.eu>
+        Sat, 9 Mar 2019 04:57:32 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:37625 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfCIJ5c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 04:57:32 -0500
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 48924240008;
+        Sat,  9 Mar 2019 09:57:28 +0000 (UTC)
+Date:   Sat, 9 Mar 2019 10:58:03 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: renesas-ceu: fix a potential NULL pointer
+ dereference
+Message-ID: <20190309095803.edauvethw232h45t@uno.localdomain>
+References: <20190309071424.3600-1-kjlu@umn.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YkJPYEFdoxh/AXLE"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jyth2wtasn7sfcer"
 Content-Disposition: inline
-In-Reply-To: <20190302141836.24638-1-louis@kragniz.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190309071424.3600-1-kjlu@umn.edu>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---YkJPYEFdoxh/AXLE
-Content-Type: text/plain; charset=us-ascii
+--jyth2wtasn7sfcer
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 02, 2019 at 02:18:36PM +0000, Louis Taylor wrote:
-> When compiling with -Wformat, clang warns:
->=20
-> drivers/i2c/busses/i2c-sis630.c:482:4: warning: format specifies type
->       'unsigned short' but the argument has type 'int' [-Wformat]
->                         smbus_base + SMB_STS,
->                         ^~~~~~~~~~~~~~~~~~~~
->=20
-> drivers/i2c/busses/i2c-sis630.c:483:4: warning: format specifies type
->       'unsigned short' but the argument has type 'int' [-Wformat]
->                         smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
->                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> drivers/i2c/busses/i2c-sis630.c:531:37: warning: format specifies type
->       'unsigned short' but the argument has type 'int' [-Wformat]
->                  "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
->                                           ~~~~~   ^~~~~~~~~~~~~~~~~~~~
->=20
-> This patch fixes the format strings to use the format type for int.
->=20
-> Link: https://github.com/ClangBuiltLinux/linux/issues/378
-> Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Hi Kangjie,
+   thanks for the patch.
 
-Changed Jean's SoB to Rev-by and applied to for-current, thanks!
+On Sat, Mar 09, 2019 at 01:14:24AM -0600, Kangjie Lu wrote:
+> In case of_match_device cannot find a match, the check returns
+> -EINVAL to avoid a potential NULL pointer dereference
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/media/platform/renesas-ceu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
+> index 150196f7cf96..4aa807c0b6c7 100644
+> --- a/drivers/media/platform/renesas-ceu.c
+> +++ b/drivers/media/platform/renesas-ceu.c
+> @@ -1682,7 +1682,10 @@ static int ceu_probe(struct platform_device *pdev)
+>
+>  	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+>  		ceu_data = of_match_device(ceu_of_match, dev)->data;
+> -		num_subdevs = ceu_parse_dt(ceudev);
+> +		if (unlikely(!ceu_data))
+> +			num_subdevs = -EINVAL;
+> +		else
+> +			num_subdevs = ceu_parse_dt(ceudev);
 
+I don't think this fix is required to be honest.
 
---YkJPYEFdoxh/AXLE
+If we call of_match_device() here we're sure CONFIG_OF is enabled, and
+if the driver probed, so a matching compatible string has proved to
+exist.
+
+Furthermore, if you want to protect against of_match_device()
+returning a NULL pointer, you should change this line first, as it
+would dereference an invalid pointer:
+
+  		ceu_data = of_match_device(ceu_of_match, dev)->data;
+
+but again, I don't think this might happen.
+
+Thanks
+   j
+
+>  	} else if (dev->platform_data) {
+>  		/* Assume SH4 if booting with platform data. */
+>  		ceu_data = &ceu_data_sh4;
+> --
+> 2.17.1
+>
+
+--jyth2wtasn7sfcer
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyDjWUACgkQFA3kzBSg
-Kba4BA//URuSLZFn9QiesoENmp23IEa9uj3gb+Ur18/pJ7muucYLqj+GGrZ9HdD8
-NBbhUhqulclF1Cfwm354o/eoTl8JzMKUxwox0IMn93B5PdvIDxmTvmynleNVsSHp
-2biWLGIdgk+jKm9ylNUdhGDcc9FDq1p82rK2stWjq9iI+A1nSkabxauzh5res+ZT
-NWJEkhHi0GfXC0P/Xoec1D+m0EpV7ll16QrNkHeFADntZ00y7Z3wEx9Gw7zuIwGb
-h0vvWp/M+Pmx5d09dOYQT/+PjR0M5q0Dq7vCVx1bqb3/G8I/jt8QX2hkjLY3IFu2
-mzTMJC6hU9Wvm9zLLjXjC7osFS1QaAzx+dgGA4nTudOWlmiNsxYmGHzsr6BHCkbQ
-SlfnI+5WHqgKcxbgEofqHsXioawowMOJAV17YS7v2tAlarMLYRpHif5wu/nbmZxR
-i547iTLGtow8hgYJiYPmrd6LulJiYMKq+JLO4EQFV62LsPZGqXnvQwdr3dnOMmto
-14sLgYYsbf+m4tHoo6OaidBD//MHVDHOJ6yvEZYrEHWfo03Zp8CVPH4aBMaJL7hq
-wKdkIc+I0a+J/39NuOhgjYeRXjzt0bl3bYlyKD5ldiQ+eNML1DhXZU6eQ/TvT2vu
-dGZKwJdGEYGbcweoMoT6NZjPaO7v9J+qGXZ6/qhdykGYTMteprk=
-=5puZ
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAlyDjisACgkQcjQGjxah
+VjxnLQ/9FLHdKAf5dcDs5iXjjQwELSi774qjj3K7vK+gXjTRbizfRiKBAg8swQ7r
++CJL0hBEfGsKOTYX+Yi6ITXQ80hdDLfatkXXnyTqjrC1W+vv8u9G5of0/mL0zbSH
+MjDIOSOE1zQ+seSwbh15MSciXuRGE+C7LrIALlSmjUg/IFhVosW87q7jXdfxHZEm
+IfJi2L0+Xyr7gLolLLqYjzEl84pax6heRLFsWMmMwo4jFmdQZVBhn3PohUFt8W0h
+qCUlWp7+z+a7/0GB4OyMTprWqgJ1ou0i4MMgOFP4zhVjKxXAXhdnOcI63UA/Iy9U
+Y0CbweOmjpgS+orUu1ZwzIVD6jQfq0t+9Ype4ARZOftjVyVQAHn+iAhc4jvaQH5k
+8Z6FuSakuyvrWo6rDLxXJRIjiAhcxiI1d2zFfZfQcKsg0w435IAjlJUeE3mk+nTj
+pSahEAyqHfMK5Yprfq48FsR9vHUsu2gF7YIB94oFeb+N7TrnoCAi8NjNyrEUm08x
+mVt6gAYwBnN6SMSg5QasmO+z7+S7/ve5vqne3jr7RSDUtAue9abVwNnQG6vlX7qF
+Ro4hfvw+5kWIGc1lS7xQ8FOTDX0RwhbczZepmfNXshMum8GYZNnmlzy6nx5T5FVz
+bUhhHE/8RRrHbW+SGkUyiDijHlaz00NOzA1v20Txyutj6/6USEU=
+=rU7t
 -----END PGP SIGNATURE-----
 
---YkJPYEFdoxh/AXLE--
+--jyth2wtasn7sfcer--
