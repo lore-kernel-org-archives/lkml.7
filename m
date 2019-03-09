@@ -2,134 +2,112 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E04C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D677C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32EE420868
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFB120866
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 07:42:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ZDH29pyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfCIHjI (ORCPT
+        id S1726625AbfCIHmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 02:39:08 -0500
-Received: from mail-it1-f200.google.com ([209.85.166.200]:40457 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfCIHjG (ORCPT
+        Sat, 9 Mar 2019 02:42:40 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:42888 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfCIHmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 02:39:06 -0500
-Received: by mail-it1-f200.google.com with SMTP id 127so14081873itk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 23:39:06 -0800 (PST)
+        Sat, 9 Mar 2019 02:42:40 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 4A346D43
+        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 07:42:38 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rDhUb6xYsqAn for <linux-kernel@vger.kernel.org>;
+        Sat,  9 Mar 2019 01:42:38 -0600 (CST)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 1C634D36
+        for <linux-kernel@vger.kernel.org>; Sat,  9 Mar 2019 01:42:38 -0600 (CST)
+Received: by mail-io1-f70.google.com with SMTP id r21so17544001ioa.13
+        for <linux-kernel@vger.kernel.org>; Fri, 08 Mar 2019 23:42:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=yqBKTjuQAlpMccG/uYBRHQdcAenQYeNaV0PQuyDoSh4=;
+        b=ZDH29pydESGmaZBepsX5lG0vuWqe+rWbDSRUgo5utgbe/5GJaI7BtthTwx9TW5h9JM
+         rCUzoHPABXPfk9OGtNneZdhxx3ZM02mNOPgnBzykaBAUGl1FP8QVxXfVfUa+9kQhyw8Q
+         k5VSe/OOnA47EIF7cwzBzuWx3UxHJUEIOtlWTeqIQ7KnK/zHivd2gn6e7WreJ/P5OF1b
+         2S4RKrtdXTrV7giYZqbopyGMWbIZr2VDwojvn5R7wASclau4Ocwknz/65N8mStSn/sJx
+         ddfIj9mtS3wbEQqxCemcxO+QvUN51tuV0mXkSDvsTeIM8Zumgo5TDo9JpkVLM3DERIKB
+         9UuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=tx0HUSOsuANDsMa+R4BebE6mt1q06I4uykacPNvdWvQ=;
-        b=TkwNrCpY0Lm0aww695Fs8FF8x7cJAueVvEuQKO1wWQd0gEGG6cDbZS1J169vGq1FZp
-         LS2wqjWZrU70NkxTtT0DtWwCRvg6QYv2kRV/QbMk9mt6DBPPO+KAzJqMfhWtInSjVskV
-         qLGL7BFofuvqxi9p5Q9ZT38FDU8eArb7mlKAg2D0pzCAas0M7qBWNXfCmnM/b9Yk9XnK
-         32cOmm84Du6ozY+2fcwbrG1f3kpTg1tna5cFlEuJ+s7vstkMK607XP77fex+dHmlH3Ih
-         7y8Wp5QSl6fxy2qcbfTNLpyYQqQISa0o4PUaKJZ6WVZLy7Ya0lqh1/nwDUd43bfX6jGk
-         6dQA==
-X-Gm-Message-State: APjAAAXQSsZaCjvFyVIDDk9xSXaNJL40Hae5UzCvXGNSz90l6dUfOE7f
-        v+2JmkAht/NfIlPj8We/n/DX0D9wTH/P0fjhIts3szkiXlGp
-X-Google-Smtp-Source: APXvYqx03Geg8zbo/Qgn7ZxT9Xiq93K9kpT4FsQh7elU5nbrlCr9/5//f60HdM3J9ryncK67/632j8nMF/ax9+pXQmr+MrV392Tg
-MIME-Version: 1.0
-X-Received: by 2002:a24:1c0c:: with SMTP id c12mr14088842itc.19.1552117145468;
- Fri, 08 Mar 2019 23:39:05 -0800 (PST)
-Date:   Fri, 08 Mar 2019 23:39:05 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001b05b40583a46fd7@google.com>
-Subject: general protection fault in ipv6_rcv
-From:   syzbot <syzbot+6c54e67cc0b0c896aa4b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yqBKTjuQAlpMccG/uYBRHQdcAenQYeNaV0PQuyDoSh4=;
+        b=nFbEcgm1w6eYOhfJtwcRPJDrlWPxxKJYCYx0v8zKz2gYxYJ+XYNHDIMgOTXnQNYDfO
+         XcB1Zi3BblkkJh9UmmwI/3aw8o5Yl+OJiQ+VoNVthcVOL6NYnmnTUVNheHWvxFz2TejK
+         40EATfCtkNwoIwLapRnXEdaFV7jGtP6/AGAvkjLU4nL2rpsGZA3EgknhNToc0DDmwWzy
+         faPRL2RUohCG6JYT0nM8J2Bj1epbRln1RF3YunT33PzAqy85stxO+VcQZmQ1DwOXQmQM
+         zw15oOyjBVsFvPGwDjPkFKgoPHRo5LfT4iLwyKBKze5gWfvJZvbBfN+mT3SPNExxBM3v
+         EfOw==
+X-Gm-Message-State: APjAAAWbBct7vh4P+Kn3q+s6huzCcscdT0c9ZoC/+gsKjKk8bhvi0xcc
+        wy5eIFQC/t7xey+/taccplTUS4ZA9sGm6Pyul89j5+6lzYXbxwsjKRO8oON0ZZdID7ghlpfbP4I
+        ztjFE/8B0gxrHluPNwC+X/4BEDzKx
+X-Received: by 2002:a02:5145:: with SMTP id s66mr12032748jaa.109.1552117357698;
+        Fri, 08 Mar 2019 23:42:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxecZ54wEETSB+xHARO4IL1pc6XoAVwJB1sdTs8pe3K/zZDh1XKs1RKJQ0hSPcGQ5FOLYqJSQ==
+X-Received: by 2002:a02:5145:: with SMTP id s66mr12032744jaa.109.1552117357430;
+        Fri, 08 Mar 2019 23:42:37 -0800 (PST)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id p141sm5165412itb.39.2019.03.08.23.42.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 Mar 2019 23:42:36 -0800 (PST)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: usbvision: fix a potential NULL pointer dereference
+Date:   Sat,  9 Mar 2019 01:42:26 -0600
+Message-Id: <20190309074228.5723-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgZDk4NjJjZmIgTWVyZ2UgdGFnICdtaXBzXzUuMScgb2YgZ2l0Oi8vZ2l0Lmtlcm5l
-bC5vcmcvcHViLy4uDQpnaXQgdHJlZTogICAgICAgbmV0LW5leHQNCmNvbnNvbGUgb3V0cHV0OiBo
-dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xNWQxZTVhZDIwMDAwMA0K
-a2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94
-PTczZDg4YTQyMjM4ODI1YWQNCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBz
-cG90LmNvbS9idWc/ZXh0aWQ9NmM1NGU2N2NjMGIwYzg5NmFhNGINCmNvbXBpbGVyOiAgICAgICBn
-Y2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCnVzZXJzcGFjZSBhcmNoOiBh
-bWQ2NA0KDQpVbmZvcnR1bmF0ZWx5LCBJIGRvbid0IGhhdmUgYW55IHJlcHJvZHVjZXIgZm9yIHRo
-aXMgY3Jhc2ggeWV0Lg0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhlIGJ1ZywgcGxlYXNlIGFk
-ZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0ZWQtYnk6IHN5emJvdCs2
-YzU0ZTY3Y2MwYjBjODk2YWE0YkBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tDQoNCm5ldGxpbms6
-IDMgYnl0ZXMgbGVmdG92ZXIgYWZ0ZXIgcGFyc2luZyBhdHRyaWJ1dGVzIGluIHByb2Nlc3MgIA0K
-YHN5ei1leGVjdXRvci4zJy4NCmthc2FuOiBDT05GSUdfS0FTQU5fSU5MSU5FIGVuYWJsZWQNCmth
-c2FuOiBHUEYgY291bGQgYmUgY2F1c2VkIGJ5IE5VTEwtcHRyIGRlcmVmIG9yIHVzZXIgbWVtb3J5
-IGFjY2Vzcw0KRW5hYmxpbmcgb2YgYmVhcmVyIDw6Ou+/vT4gcmVqZWN0ZWQsIGlsbGVnYWwgbmFt
-ZQ0KZ2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0OiAwMDAwIFsjMV0gUFJFRU1QVCBTTVAgS0FTQU4N
-CkNQVTogMSBQSUQ6IDE2IENvbW06IGtzb2Z0aXJxZC8xIE5vdCB0YWludGVkIDUuMC4wKyAjOTcN
-CkhhcmR3YXJlIG5hbWU6IEdvb2dsZSBHb29nbGUgQ29tcHV0ZSBFbmdpbmUvR29vZ2xlIENvbXB1
-dGUgRW5naW5lLCBCSU9TICANCkdvb2dsZSAwMS8wMS8yMDExDQpSSVA6IDAwMTA6X194ODZfaW5k
-aXJlY3RfdGh1bmtfcmF4KzB4MTAvMHgyMCBhcmNoL3g4Ni9saWIvcmV0cG9saW5lLlM6MzINCm5l
-dGxpbms6IDMgYnl0ZXMgbGVmdG92ZXIgYWZ0ZXIgcGFyc2luZyBhdHRyaWJ1dGVzIGluIHByb2Nl
-c3MgIA0KYHN5ei1leGVjdXRvci4zJy4NCkNvZGU6IGM0IGZmIDQ4IDhkIDBjIGNhIGU5IGJkIDQy
-IGM0IGZmIGJiIGYyIGZmIGZmIGZmIDQ1IDMwIGZmIGU5IDYzIDQ3IGM0ICANCmZmIDkwIDkwIGU4
-IDA3IDAwIDAwIDAwIGYzIDkwIDBmIGFlIGU4IGViIGY5IDQ4IDg5IDA0IDI0IDxjMz4gMGYgMWYg
-NDQgMDAgIA0KMDAgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgZTggMDcgMDAgMDAgMDAg
-ZjMNClJTUDogMDAxODpmZmZmODg4MGFhMmM3YTIwIEVGTEFHUzogMDAwMTAyNDYNClJBWDogMDAw
-MGZmZmZmZmZmODYwNyBSQlg6IGZmZmY4ODgwOTZlMjc2Y2EgUkNYOiBmZmZmZmZmZjg2MDdlZTIy
-DQpSRFg6IDFmZmZmMTEwMTJkYzRlZGUgUlNJOiBmZmZmZmZmZjg2MDdlZGM4IFJESTogZmZmZjg4
-ODA2NTA5ZmQ0MA0KUkJQOiBmZmZmODg4MGFhMmM3YTU4IFIwODogZmZmZjg4ODBhYTJiMjQ0MCBS
-MDk6IGZmZmZlZDEwMTVkMjViZDANClIxMDogZmZmZmVkMTAxNWQyNWJjZiBSMTE6IGZmZmY4ODgw
-YWU5MmRlN2IgUjEyOiBmZmZmODg4MDY1MDlmZDQwDQpSMTM6IDAwMDAwMDAwMDAwMDAwMDEgUjE0
-OiBmZmZmODg4MDY1MDlmZDk4IFIxNTogMDAwMDAwMDAwMDAwMDAwMA0KRlM6ICAwMDAwMDAwMDAw
-MDAwMDAwKDAwMDApIEdTOmZmZmY4ODgwYWU5MDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAw
-MDAwMA0KQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0K
-Q1IyOiAwMDAwN2ZlZDdjNTFhNTE4IENSMzogMDAwMDAwMDA0NjU0YzAwMCBDUjQ6IDAwMDAwMDAw
-MDAxNDA2ZTANCkRSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIy
-OiAwMDAwMDAwMDAwMDAwMDAwDQpEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZm
-ZmUwZmYwIERSNzogMDAwMDAwMDAwMDAwMDQwMA0KQ2FsbCBUcmFjZToNCiAgTkZfSE9PSyBpbmNs
-dWRlL2xpbnV4L25ldGZpbHRlci5oOjI4OSBbaW5saW5lXQ0KICBORl9IT09LIGluY2x1ZGUvbGlu
-dXgvbmV0ZmlsdGVyLmg6MjgzIFtpbmxpbmVdDQogIGlwdjZfcmN2KzB4MTBlLzB4NDIwIG5ldC9p
-cHY2L2lwNl9pbnB1dC5jOjI3Mg0KICBfX25ldGlmX3JlY2VpdmVfc2tiX29uZV9jb3JlKzB4MTE1
-LzB4MWEwIG5ldC9jb3JlL2Rldi5jOjQ5NzMNCiAgX19uZXRpZl9yZWNlaXZlX3NrYisweDJjLzB4
-MWMwIG5ldC9jb3JlL2Rldi5jOjUwODMNCiAgcHJvY2Vzc19iYWNrbG9nKzB4MjA2LzB4NzUwIG5l
-dC9jb3JlL2Rldi5jOjU5MjMNCiAgbmFwaV9wb2xsIG5ldC9jb3JlL2Rldi5jOjYzNDYgW2lubGlu
-ZV0NCiAgbmV0X3J4X2FjdGlvbisweDRmYS8weDEwNzAgbmV0L2NvcmUvZGV2LmM6NjQxMg0KICBf
-X2RvX3NvZnRpcnErMHgyNjYvMHg5NWEga2VybmVsL3NvZnRpcnEuYzoyOTINCiAgcnVuX2tzb2Z0
-aXJxZCBrZXJuZWwvc29mdGlycS5jOjY1NCBbaW5saW5lXQ0KICBydW5fa3NvZnRpcnFkKzB4OGUv
-MHgxMTAga2VybmVsL3NvZnRpcnEuYzo2NDYNCiAgc21wYm9vdF90aHJlYWRfZm4rMHg2YWIvMHhh
-MTAga2VybmVsL3NtcGJvb3QuYzoxNjQNCiAga3RocmVhZCsweDM1Ny8weDQzMCBrZXJuZWwva3Ro
-cmVhZC5jOjI0Ng0KICByZXRfZnJvbV9mb3JrKzB4M2EvMHg1MCBhcmNoL3g4Ni9lbnRyeS9lbnRy
-eV82NC5TOjM1Mg0KTW9kdWxlcyBsaW5rZWQgaW46DQotLS1bIGVuZCB0cmFjZSAxZWJhZWY5ZThj
-MzYwMGU0IF0tLS0NClJJUDogMDAxMDpfX3g4Nl9pbmRpcmVjdF90aHVua19yYXgrMHgxMC8weDIw
-IGFyY2gveDg2L2xpYi9yZXRwb2xpbmUuUzozMg0KQ29kZTogYzQgZmYgNDggOGQgMGMgY2EgZTkg
-YmQgNDIgYzQgZmYgYmIgZjIgZmYgZmYgZmYgNDUgMzAgZmYgZTkgNjMgNDcgYzQgIA0KZmYgOTAg
-OTAgZTggMDcgMDAgMDAgMDAgZjMgOTAgMGYgYWUgZTggZWIgZjkgNDggODkgMDQgMjQgPGMzPiAw
-ZiAxZiA0NCAwMCAgDQowMCA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCBlOCAwNyAwMCAw
-MCAwMCBmMw0KRW5hYmxpbmcgb2YgYmVhcmVyIDw6Ou+/vT4gcmVqZWN0ZWQsIGlsbGVnYWwgbmFt
-ZQ0KUlNQOiAwMDE4OmZmZmY4ODgwYWEyYzdhMjAgRUZMQUdTOiAwMDAxMDI0Ng0KUkFYOiAwMDAw
-ZmZmZmZmZmY4NjA3IFJCWDogZmZmZjg4ODA5NmUyNzZjYSBSQ1g6IGZmZmZmZmZmODYwN2VlMjIN
-ClJEWDogMWZmZmYxMTAxMmRjNGVkZSBSU0k6IGZmZmZmZmZmODYwN2VkYzggUkRJOiBmZmZmODg4
-MDY1MDlmZDQwDQpSQlA6IGZmZmY4ODgwYWEyYzdhNTggUjA4OiBmZmZmODg4MGFhMmIyNDQwIFIw
-OTogZmZmZmVkMTAxNWQyNWJkMA0KUjEwOiBmZmZmZWQxMDE1ZDI1YmNmIFIxMTogZmZmZjg4ODBh
-ZTkyZGU3YiBSMTI6IGZmZmY4ODgwNjUwOWZkNDANClIxMzogMDAwMDAwMDAwMDAwMDAwMSBSMTQ6
-IGZmZmY4ODgwNjUwOWZkOTggUjE1OiAwMDAwMDAwMDAwMDAwMDAwDQpGUzogIDAwMDAwMDAwMDAw
-MDAwMDAoMDAwMCkgR1M6ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAw
-MDAwDQpDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpD
-UjI6IDAwMDA3ZmVkN2M1MWE1MTggQ1IzOiAwMDAwMDAwMDQ2NTRjMDAwIENSNDogMDAwMDAwMDAw
-MDE0MDZlMA0KRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6
-IDAwMDAwMDAwMDAwMDAwMDANCmtvYmplY3Q6ICdsb29wMCcgKDAwMDAwMDAwMTUyNDI4YjMpOiBr
-b2JqZWN0X3VldmVudF9lbnYNCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZm
-ZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwDQoNCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5lcmF0
-ZWQgYnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5nbC90
-cHNtRUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2luZWVy
-cyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6Ym90
-IHdpbGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29vLmds
-L3Rwc21FSiNidWctc3RhdHVzLXRyYWNraW5nIGZvciBob3cgdG8gY29tbXVuaWNhdGUgd2l0aCAg
-DQpzeXpib3QuDQo=
+In case usb_alloc_coherent fails, the fix returns -ENOMEM to
+avoid a potential NULL pointer dereference.
+
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/media/usb/usbvision/usbvision-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/media/usb/usbvision/usbvision-core.c b/drivers/media/usb/usbvision/usbvision-core.c
+index 31e0e98d6daf..1b0d0a0f0e87 100644
+--- a/drivers/media/usb/usbvision/usbvision-core.c
++++ b/drivers/media/usb/usbvision/usbvision-core.c
+@@ -2302,6 +2302,9 @@ int usbvision_init_isoc(struct usb_usbvision *usbvision)
+ 					   sb_size,
+ 					   GFP_KERNEL,
+ 					   &urb->transfer_dma);
++		if (!usbvision->sbuf[buf_idx].data)
++			return -ENOMEM;
++
+ 		urb->dev = dev;
+ 		urb->context = usbvision;
+ 		urb->pipe = usb_rcvisocpipe(dev, usbvision->video_endp);
+-- 
+2.17.1
+
