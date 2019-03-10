@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F02FC10F03
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2654C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44AD920657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709D220657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YW+PNz9w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXzkVbie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfCJRqF (ORCPT
+        id S1726825AbfCJRqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 13:46:05 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39635 "EHLO
+        Sun, 10 Mar 2019 13:46:46 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40219 "EHLO
         mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfCJRqE (ORCPT
+        with ESMTP id S1726546AbfCJRqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 13:46:04 -0400
-Received: by mail-qt1-f194.google.com with SMTP id i14so2647044qtp.6;
-        Sun, 10 Mar 2019 10:46:03 -0700 (PDT)
+        Sun, 10 Mar 2019 13:46:46 -0400
+Received: by mail-qt1-f194.google.com with SMTP id f11so2645858qti.7;
+        Sun, 10 Mar 2019 10:46:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=1dWlSdF/VUs9/9K5esBtgLKSgLb9YgXrY3lBZ+V781M=;
-        b=YW+PNz9wMKDGle/+pZjLroqEbxn/1SdTfz5xkyN7+ow/sTRRpsH8frIkLB0g9MDxGk
-         K6dIaHg5T6ICn7SRDy3aD4fT0Nkvnc8mdglrp1TfhM7BzGFGPMbCJL4ddDVPepCchT9/
-         xXDy9mTOGp/RcYj+zSXEi607qMDlHTOViyCq0lp/2d0GDrAIYvFAtVVczw/6hCUYWocZ
-         QfrWvl7PyEdH2FvudxImS35G6gTLpNhw0evveK8bI7mIREi8Ys3HQXWl49DaqdHauLKw
-         YwWRByOLulYx44MRNTqhgB/kVfGR6I/Yqv0gSQfT82hEQj1U5SbbBOv3uhGcwNB7Z6LV
-         N3aw==
+        bh=hbbIv4Vo3awyWNnS89ULbDFSxYn6LzfN95WMByYY4YQ=;
+        b=nXzkVbieUAPZWlevcCZli84Ay/onIUf9XII0o1nL27SwJt0kRkz4VrS5QyaH422W7S
+         5gCYwou+Son2Koq9dnmcRwzOsyJkWiUdM21ULrEZfmwV9oR39bYnmdOluXnM/DwRvpOm
+         f06lwZySpRQh9N5n5XI+uXFcUjYtsG9NUsTeeLvBWPpiqyYdW5f2H2e63KmBDeSTVHAS
+         c2IFydQ6UttxqhKBw/S/oODCi4nihZSzAsPBFKKgpyRCr2I+pz/tML0g9kQTyINHNKxa
+         MvqvDkQTXW7vDa8fhiDUShxabvK/uMEpYyuU/oovC7SFQKsXhJ87uphOFc73PFj+OLpv
+         lW6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=1dWlSdF/VUs9/9K5esBtgLKSgLb9YgXrY3lBZ+V781M=;
-        b=e9qDVQXyi1yhkbMjLhHHKCQDWDmXEXoT1+OfqwgwA6JdmaBVDChiNM80QkX8Qus4oi
-         zSS79sm3vPOxkATN7ITRnfK4WC9UBllsNtpjluHVQRrYYIA2sO2SqsC59O0WKf+n6qlz
-         DHF7b7EbGtH7qSo49Qp9AW+7caPMlnXbmz0GmQ+PlwU184UtsYF+sLR1hsOs8gerQHm5
-         lsE36sIdiPdho0Q4/19l48/DVKxWbDb9YIpxtoz1ZRs9psmM1TTdCYqxrZNBEZQwuhgA
-         jfjqKkdOGLpJnfW7CFAcTQroWpVSH/UftcVS4n73jagfMfnlt0Et5ImzqWknvuTj69XR
-         FK1A==
-X-Gm-Message-State: APjAAAVigsEnt0Uku1IeltOij0qVBao9bdv8xrw+Nrq9PnFlhglw3e3j
-        TsB3Xi6qOlLeMw3YQTbn7XE=
-X-Google-Smtp-Source: APXvYqwE/4WvCwW5YFbzOqni0L6BSw+OV8ZnH7yYKbSnCpzunCQdnpo/3s74B7YiEIGhFAr8TeBfiA==
-X-Received: by 2002:ac8:2392:: with SMTP id q18mr22657620qtq.11.1552239963470;
-        Sun, 10 Mar 2019 10:46:03 -0700 (PDT)
+        bh=hbbIv4Vo3awyWNnS89ULbDFSxYn6LzfN95WMByYY4YQ=;
+        b=EJBYBE56MJVQWn2keUA2R38OWlt6Wtw6GmC5hVsuD42xtrJu/zWRnUasl1uIo1TUB1
+         Cs0fTEpXsjuDjo+7ZfhAJE4YeXIKX3nkmDFeIRkY85lF4nmJbrr8Yr7FmkM9CNJVl8JI
+         UN7H+d1HjRhTLqXOa8271oVZfJNx962RrIuSxZ3yrlvJBfceMayauFAd5gZWJYfs7Pa9
+         G2LPRDzxZlo5zuLrRW5FKOOz0ZKiDq4dReih4JPesxVp6NtU9RDEm1LpKUxDt6pT1XfM
+         M0aa1zXeDrIKjILhScn/irejtRQU2vLz5d0AJKFCsZ6PRQrSCSqiRbWenbL70jBMdxo9
+         B5Ew==
+X-Gm-Message-State: APjAAAWiJ6M8ClLNlM42ojQggx8Ejky5Z+7M5Zssh/1ws4OC13NOJWSE
+        U5N/0h1KVI1Kqb7tdir9dZQ=
+X-Google-Smtp-Source: APXvYqwZjx/QWMxdBPYnnOz03fp2NwxodHwGfqMCWrebN5WP/MWwCVI0XMzguROizvhfD59snGRwOw==
+X-Received: by 2002:ad4:5103:: with SMTP id g3mr296575qvp.214.1552240004890;
+        Sun, 10 Mar 2019 10:46:44 -0700 (PDT)
 Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id l36sm1957319qte.82.2019.03.10.10.46.01
+        by smtp.gmail.com with ESMTPSA id i1sm2001897qtb.0.2019.03.10.10.46.42
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 10 Mar 2019 10:46:03 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 14:45:59 -0300
+        Sun, 10 Mar 2019 10:46:44 -0700 (PDT)
+Date:   Sun, 10 Mar 2019 14:46:40 -0300
 From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
         knaack.h@gmx.de, pmeerw@pmeerw.net
 Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-usp@googlegroups.com
-Subject: [PATCH v3 4/7] staging: iio: ad5933: change help rule message
-Message-ID: <20190310174559.dq33lxdg4omdvhmg@smtp.gmail.com>
+Subject: [PATCH v3 5/7] staging: iio: ad5933: add ABI documentation
+Message-ID: <20190310174640.dksy7pfkptrbcdgj@smtp.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -74,27 +74,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the previous comment about direct access via sysfs which would
-lead one think ad5933 driver has limitations it actually doesn't.
+Add an ABI documentation for the ad5933 driver.
 
 Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 ---
- drivers/staging/iio/impedance-analyzer/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ABI/testing/sysfs-bus-iio-ad5933          | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-ad5933
 
-diff --git a/drivers/staging/iio/impedance-analyzer/Kconfig b/drivers/staging/iio/impedance-analyzer/Kconfig
-index dd97b6bb3fd0..b9a679cdd146 100644
---- a/drivers/staging/iio/impedance-analyzer/Kconfig
-+++ b/drivers/staging/iio/impedance-analyzer/Kconfig
-@@ -10,7 +10,7 @@ config AD5933
- 	select IIO_KFIFO_BUF
- 	help
- 	  Say yes here to build support for Analog Devices Impedance Converter,
--	  Network Analyzer, AD5933/4, provides direct access via sysfs.
-+	  Network Analyzer, AD5933/4.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ad5933.
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-ad5933 b/Documentation/ABI/testing/sysfs-bus-iio-ad5933
+new file mode 100644
+index 000000000000..8a60dd178b1f
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-iio-ad5933
+@@ -0,0 +1,39 @@
++What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_start
++Date:		March 2019
++KernelVersion:	Kernel 4.19
++Contact:	linux-iio@vger.kernel.org
++Description:
++		The start frequency. Set this to define the frequency point at
++		which the device should start the next frequency sweep.
++
++What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_increment
++Date:		March 2019
++KernelVersion:	Kernel 4.19
++Contact:	linux-iio@vger.kernel.org
++Description:
++		The frequency sweep increment. Set this to define the amount by
++		which the frequency is incremented after each scan point. After
++		the measurement at a frequency point is completed, the next
++		measurement will be made at a frequency point 
++		'frequency increment'Hz	higher than the previous one unless a
++		repeat frequency command is issued. This behavior will follow
++		until the defined number of frequency points have been measured
++		or frequency sweep is somewhat reset.
++
++What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_points
++Date:		March 2019
++KernelVersion:	Kernel 4.19
++Contact:	linux-iio@vger.kernel.org
++Description:
++		The number of increments. This defines the number of frequency
++		points in the frequency sweep.
++
++What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_settling_cycles
++Date:		March 2019
++KernelVersion:	Kernel 4.19
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Number of settling time cycles. This sets the delay between a
++		start frequency sweep/increment frequency /repeat frequency to
++		be proportional to the excitation signal frequency times the
++		number of settling time cycles.
 -- 
 2.20.1
 
