@@ -2,131 +2,106 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URI_HEX autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC0BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 13:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3860AC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 14:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42008206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 13:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E392F207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 14:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=post.cz header.i=@post.cz header.b="WgfI/0y/"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="vUSkaB7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfCJNt4 (ORCPT
+        id S1726620AbfCJOS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 09:49:56 -0400
-Received: from mxc2.seznam.cz ([77.75.77.23]:26042 "EHLO mxc2.seznam.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbfCJNt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 09:49:56 -0400
-X-Greylist: delayed 813 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 Mar 2019 09:49:54 EDT
-Received: from email.seznam.cz
-        by email-smtpc6a.ng.seznam.cz (email-smtpc6a.ng.seznam.cz [10.23.10.165])
-        id 61f4d8e60e7863d462bdf3b2;
-        Sun, 10 Mar 2019 14:49:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=post.cz; s=beta;
-        t=1552225793; bh=wtsxlbBjcxVfZ0eiSnungx+cQTrDHHozfu4bX+E0+Q4=;
-        h=Received:Subject:To:Cc:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WgfI/0y/CnNMYTow8FARdJ6F7z2ou6aEDw7P4fMwp8dscIIhJh5/EN78Prja0SEoP
-         vQfHfbKCH+rRvMX3TItWSnjbk6hfTo6NylNAJ1MZyUGPcHoZh508cIMH5LgGhP4Am8
-         nKBg4/W+0UC/eiPL6cLZt1nR/BQItNL9mQW9vdnU=
-Received: from [192.168.1.81] (static-cl188134234222.unet.cz [188.134.234.222])
-        by email-relay5.ng.seznam.cz (Seznam SMTPD 1.3.103) with ESMTP;
-        Sun, 10 Mar 2019 14:36:12 +0100 (CET)  
-Subject: Re: [PATCH] net: can: Increase tx queue length
-To:     Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        Andre Naujoks <nautsch2@gmail.com>,
-        "wg@grandegger.com" <wg@grandegger.com>,
-        "mkl@pengutronix.de" <mkl@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Cc:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Sojka <sojkam1@fel.cvut.cz>
-References: <1552140446-31535-1-git-send-email-appana.durga.rao@xilinx.com>
- <cd71079c-664f-b1b6-bb21-ecda639ecbed@gmail.com>
- <CY4PR02MB2183E0667CF67DEE6A297FF8DC4E0@CY4PR02MB2183.namprd02.prod.outlook.com>
-From:   Martin Jerabek <ma.jer@post.cz>
-Message-ID: <61d9d998-37f7-6f99-60d4-b1973e13e6ef@post.cz>
-Date:   Sun, 10 Mar 2019 14:36:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Sun, 10 Mar 2019 10:18:58 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40801 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfCJOS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 10:18:58 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h1so1738142pfo.7
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 07:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0UBeUuahz3SwIwun6oNZ77/CNFgLCx63eAhQ8j9KOEQ=;
+        b=vUSkaB7+XZAhNGnQjz0LcmB0Io1giHwCp34YiOZOg0MbTTw1XN9jh5sh+3fbYU1W1Y
+         2vB9SMwM27xpI4+gi5x1d6r3vnTIjN/NWMT+LTIgz5bePYcGe13kp+SoILLPe+QSo4CA
+         DUm6jeqS5t0lky5QkW0ksLLPyV/nu4h9D1yVEbdNhjMB3G0xcLlpfGJGRJj1ai+9cpce
+         NAuCTVnP/A/fzPSSLKArot7f+slPWAuFHPqS0xeVbmcDYmQz+/I7Z7o5r/892D04mWGi
+         ydcXYRJMoNvJYNNBNhz3j3Z1rVabD0IxfTpGaL3MNav2XRjU8D9FpQBpk1ifzpj+3KZa
+         KNDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0UBeUuahz3SwIwun6oNZ77/CNFgLCx63eAhQ8j9KOEQ=;
+        b=DQJM6lUxcVdjt1D9ZHka0zBZe6ToYCeevTdf+UpbxvK9Jv0op2ud4ZQSopmypa1C0n
+         Ed2FTQUnj+P1loBAHxFj4JwrTVyfUaP0TJe6bIKh5goFT7Bh4scriMkUyc93X6vnv70t
+         1t32BWTvDlzvOBV/TutymzXvMBIuY7SAx8tKP3ZlSd81Ome7qJHrUThW1g599vVe4kRN
+         xWeTk1ET3P9aHYnvhpbHv1mvCQsYJl/nrimQWXHI8Y1SWKz1+L3qfGcm5XbXBpQlp6/y
+         fQn9AreOUGeYuBq0OOk7RNZP1I2A399laf5E44ZzNGQndjfOeMUkmELVM4yZttR3g6bt
+         Qfbw==
+X-Gm-Message-State: APjAAAUPlvYHdmZGc8Tr6Qxq+lTnupHJRQaj7KbZMfzxDrul7VaNxuXw
+        H04Tnp1V6OMTQzLRMnlw++TQrA==
+X-Google-Smtp-Source: APXvYqyvGnneuIPFHXVn7uMgE94hlt4YmXU/r4wDHiIbl1yjaSEYJ3v58DCo84qMjkLgOTgu5GPtww==
+X-Received: by 2002:a62:1752:: with SMTP id 79mr28241583pfx.127.1552227536973;
+        Sun, 10 Mar 2019 07:18:56 -0700 (PDT)
+Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id g3sm4481846pgg.41.2019.03.10.07.18.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 10 Mar 2019 07:18:56 -0700 (PDT)
+Date:   Sun, 10 Mar 2019 07:18:53 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: r8169 only works in promisc mode
+Message-ID: <20190310071853.3c726dbc@shemminger-XPS-13-9360>
+In-Reply-To: <82c0ba0d-c7cb-32fb-8e0b-2191b8678c16@gmail.com>
+References: <1552097324.u2rpi5lxaz.astroid@alex-desktop.none>
+        <82c0ba0d-c7cb-32fb-8e0b-2191b8678c16@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CY4PR02MB2183E0667CF67DEE6A297FF8DC4E0@CY4PR02MB2183.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09. 03. 19 15:40, Appana Durga Kedareswara Rao wrote:
-> Hi Andre,
+On Sat, 9 Mar 2019 10:33:40 +0100
+Heiner Kallweit <hkallweit1@gmail.com> wrote:
+
+> On 09.03.2019 03:16, Alex Xu (Hello71) wrote:
+> > After suspending, my r8169 (not actually 8169, just that driver) only 
+> > receives packets when in promiscuous mode. I have tried disabling all 
+> > offload features except highdma [fixed], and it doesn't fix the issue.
+> > 
+> > I am using torvalds/linux, compiled about two days ago (not sure which 
+> > commit). I think this happened after a recent upgrade (some time in the 
+> > past week). Given the long testing cycle, I don't really want to bisect; 
+> > I am hoping someone has some idea of where the issue could be.
+> >   
+> The provided information isn't enough to say anything. Please create a
+> bug ticket in bugzilla. Needed information:
+> - Last working and first failing kernel version (as reported by uname -a)
+> - Is 5.0 ok?
+> - Full dmesg log
+> - lspci -vv output for the network card
+> - If the issue happens only after resume from suspend, diff of the
+>   chip registers (ethtool -d) before and after suspend.
+> - Does removing / reloading the r8169 module fix the issue?
 > 
-> <Snip> 
->>
->> On 3/9/19 3:07 PM, Appana Durga Kedareswara rao wrote:
->>> While stress testing the CAN interface on xilinx axi can in loopback
->>> mode getting message "write: no buffer space available"
->>> Increasing device tx queue length resolved the above mentioned issue.
->>
->> No need to patch the kernel:
->>
->> $ ip link set <dev-name> txqueuelen 500
->>
->> does the same thing.
-> 
-> Thanks for the review... 
-> Agree but it is not an out of box solution right?? 
-> Do you have any idea for socket can devices why the tx queue length is 10 whereas
-> for other network devices (ex: ethernet) it is 1000 ?? 
-> 
-> Regards,
-> Kedar.
+> > Please CC me on replies.
+> > 
+> > Thanks,
+> > Alex.
+> >   
+> Heiner
 
-There was already a patch for this in the past [1], together with a thorough
-analysis, but for some reason the discussion died out.
-
-Even if the defaults are not changed, it would be nice to at least see it
-mentioned in Documentation/networking/can.txt to save people some time while
-looking for the solution.
-
-Regards,
-Martin
-
-
-[1] http://socket-can.996257.n3.nabble.com/Solving-ENOBUFS-returned-by-write-td2886.html
-
-
->>
->>>
->>> Signed-off-by: Appana Durga Kedareswara rao
->>> <appana.durga.rao@xilinx.com>
->>> ---
->>> --> Network devices default tx_queue_len is 1000 but for socket
->>> can device it is 10 any reason for it??
->>>
->>>  drivers/net/can/dev.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c index
->>> c05e4d5..32bd5be 100644
->>> --- a/drivers/net/can/dev.c
->>> +++ b/drivers/net/can/dev.c
->>> @@ -642,7 +642,7 @@ static void can_setup(struct net_device *dev)
->>>  	dev->mtu = CAN_MTU;
->>>  	dev->hard_header_len = 0;
->>>  	dev->addr_len = 0;
->>> -	dev->tx_queue_len = 10;
->>> +	dev->tx_queue_len = 500;
->>>
->>>  	/* New-style flags. */
->>>  	dev->flags = IFF_NOARP;
->>>
-> 
+Bugzilla is not really used by Linux network developers.
+I just filter/forward mail from bugzilla into netdev.
