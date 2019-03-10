@@ -6,95 +6,83 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4E6C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86644C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FED0206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4993020657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="YXksFClc"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="aimmYDKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfCJVGb (ORCPT
+        id S1726793AbfCJVTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 17:06:31 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40333 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfCJVGa (ORCPT
+        Sun, 10 Mar 2019 17:19:41 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45606 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfCJVTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 17:06:30 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c17so1536137eds.7
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:06:29 -0700 (PDT)
+        Sun, 10 Mar 2019 17:19:40 -0400
+Received: by mail-ed1-f67.google.com with SMTP id f19so2349805eds.12
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SFyFxE0EvyDINPrnH4i7HvpY4i5ywd12Et6Irs3iXSs=;
-        b=YXksFClcvj6ySnKqo4e07WzKKRnKBfxRzSHuRjW1s3D1cqF85ht+tjfh3lgENlAtJg
-         iFO5ZBjwfbMj9eLNsM5BFgmWCvOVqDDH8ocwH7VxKQBCuNiGxi/hFg0oQkZFg2Hpdudu
-         5j/u73seg8MFuPVmb/RUP0hMpi18TH6XcY8xc=
+        bh=JKG5xdlN5NKxquHkjkAuYuyTauOUTcmnssUoglNZYPs=;
+        b=aimmYDKRx0j4HNw4oE8ktvwvViTAS/3d2e4oR+DOP7hkuhiC45pigimGr2+qq6aYBn
+         wDAYBMLFPe7ersE5FwQ6VaDWdGbZcS9zgNkl9aLVvsuswinA/71FlNf3Bljl5D2qxepF
+         MXoPQB1qVC0tZjpiITH2ClR61gbURrEFbTSYk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SFyFxE0EvyDINPrnH4i7HvpY4i5ywd12Et6Irs3iXSs=;
-        b=uDRRkK5UB1ISjKUUFs4thz/YTkhDD0nLGiRp7ErcOBdoCNgniUjDhSwFunP3FiyMOb
-         ldqxkgChOOlOvIQCETuDePc5rCj6yZWCIsuDqaFpcwmY9/zAFNqvaRO2V4TmIYYDZv9b
-         0vVUJajEgURKyjasM+zXSRz1vh7krVvTOMRgx9ufSNGEZp8vyjSKP7lVAs6cpDTirtjU
-         1C6BSZjdjya4XIkVE1jxuyPGvR0wQj1Z+kFGTV7sIBYfZAR40xN18ifjAiwVb81WQ6nT
-         sjpyDyMrhZkTtOLelg0ueH0synxz4s3LkHQ3Z7YKqbwzobZdJ9KQI6fI2seBwiY5R4Ji
-         Ttrg==
-X-Gm-Message-State: APjAAAUZ9G+tcQpcxRZcKq/lbVg1biOid8UerBF0bm8M3E6lZlR9+iFM
-        UMtCGwimQHBq05i6r89X1NPJVQ==
-X-Google-Smtp-Source: APXvYqy+O63ndFAlMcMF60sMt+2f1oZcnZl5r29LNDcacccz3l8W6O7cR295RR0uAbtKRooiZvRXGA==
-X-Received: by 2002:a50:d8c2:: with SMTP id y2mr42231593edj.65.1552251988608;
-        Sun, 10 Mar 2019 14:06:28 -0700 (PDT)
+        bh=JKG5xdlN5NKxquHkjkAuYuyTauOUTcmnssUoglNZYPs=;
+        b=n8osNrs5ieuQ8ZK2b8KmF4X4i8WhvcVooR0C2l7Hnh0dMcuQ1Y+r7mPCc5vl9snKwz
+         mUadgXNshwsq/hqd7qd2YJV3u5a29jQMG8cAVHcE8WqvDjUKNDx74aO+Y9N2S1FcPT8J
+         F9ekuNQOAkhh6Wig6koNgYk7DD4xaIRxG34B1ySmDjYLErNKVJjZxivgF/7hPzs1S8Vu
+         19Df/FPuTiZBHmHNyeU/RR1N3Fff2FLStPuG9/8mNDtlGJZSl5/neGJi+sxBc7/wj+Vz
+         Zzf497/wo55g8zSolUFMqugBqvLI/C7GhmXCR8jwp3cffdCb+LqYzv2RvbktqW0I8H/P
+         +klA==
+X-Gm-Message-State: APjAAAXCwA3PNSQVk6S06xOB+p27AUVAOy5/WkvcTB9Z0PcQi1q5OXG/
+        /v8rzsvvBNL+cGEc0dtDC7+68rPC8Jl2IQ==
+X-Google-Smtp-Source: APXvYqwe2fXd6j2H2Dr+bqjGl2sjVWEG8kX552HjIlPxmw8tZDXDFezbBYaJWD+3n2tGk4bhvhHvNQ==
+X-Received: by 2002:a17:906:13c8:: with SMTP id g8mr1423550ejc.49.1552252778959;
+        Sun, 10 Mar 2019 14:19:38 -0700 (PDT)
 Received: from [192.168.1.149] (ip-5-186-117-145.cgn.fibianet.dk. [5.186.117.145])
-        by smtp.gmail.com with ESMTPSA id g3sm1387274edh.83.2019.03.10.14.06.27
+        by smtp.gmail.com with ESMTPSA id l15sm2608112ejn.77.2019.03.10.14.19.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 14:06:28 -0700 (PDT)
-Subject: Re: [PATCH v1 2/6] lib: scanf: handle integer overflows in vsscanf
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-kernel@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-References: <155223448227.4075.6846910559654700796.stgit@buzz>
- <155223699287.4075.13184771244455866778.stgit@buzz>
+        Sun, 10 Mar 2019 14:19:38 -0700 (PDT)
+Subject: Re: [PATCH] static_assert: move before people start using it
+To:     Alexey Dobriyan <adobriyan@gmail.com>, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
+References: <20190310105157.GA15039@avx2>
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <9da44b6b-49c1-3383-e272-d61065f81de4@rasmusvillemoes.dk>
-Date:   Sun, 10 Mar 2019 22:06:27 +0100
+Message-ID: <1d957ac2-3423-2471-6b7f-f6f25dd0273d@rasmusvillemoes.dk>
+Date:   Sun, 10 Mar 2019 22:19:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <155223699287.4075.13184771244455866778.stgit@buzz>
+In-Reply-To: <20190310105157.GA15039@avx2>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/2019 17.56, Konstantin Khlebnikov wrote:
-> Traditional scanf implementations ignore integer overflows because
-> C language standard allows here undefined behavior (§7.21.6.2 #10).
+On 10/03/2019 11.51, Alexey Dobriyan wrote:
+> Userspace places static_assert() macro at <assert.h>
 > 
-> So, sane and safe behavior wouldn't harm anything.
-> 
-> This patch carefully checks integer overflows and stops matching if result
-> does not fit into appropriate type before assigning it into argument.
 
-IIRC, this has been attempted before, causing a userspace regression
-because some sysfs/procfs file matched with %u or %x, and somebody wrote
--1 to get 0xffffffff .
+So? That seems a rather weak argument. We have lots of interfaces that
+also exist in userspace which are not declared in similar-named headers
+(e.g. we have no stdio.h, which is where snprintf lives). Not to mention
+that memcpy and friends are in <linux/string.h>, not a bare <string.h>.
+Your assert.h would be the first and only header to live directly in
+include/.
 
-I can't remember or find a reference right now, making the above a
-rather weak argument. However, please start the series with your test
-cases, before any refactoring. That makes it easier to see what
-behaviour you're changing (i.e., what used to be allowed is now treated
-as non-match, etc.).
+If you can somehow convince Andrew to take it you can add a Meh'ed-by me.
 
 Rasmus
