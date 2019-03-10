@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE11C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 11:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF46C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 11:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5682087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 11:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F95207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 11:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfCJLeA (ORCPT
+        id S1726579AbfCJLd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 07:34:00 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:36429 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfCJLd6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 10 Mar 2019 07:33:58 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:36421 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfCJLd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 07:33:57 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1h2wiI-00006g-CM; Sun, 10 Mar 2019 12:33:54 +0100
-Subject: [GIT pull] x86 fixes for 5.1
-Message-ID: <155221755097.13878.7155925164144552845.tglx@nanos.tec.linutronix.de>
+        id 1h2wiH-00006R-4J; Sun, 10 Mar 2019 12:33:53 +0100
+Subject: [GIT pull] x86/asm for 5.1
+Message-ID: <155221755097.13878.5173016541431155948.tglx@nanos.tec.linutronix.de>
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
 References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
-Date:   Sun, 10 Mar 2019 12:33:54 +0100
+Date:   Sun, 10 Mar 2019 12:33:53 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -38,241 +38,427 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest x86-urgent-for-linus git tree from:
+please pull the latest x86-asm-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-for-linus
 
-A set of fixes for x86:
+The following updates for 5.1 are available:
 
- - Make the unwinder more robust when it encounters a NULL pointer call, so
-   the backtrace becomes more useful
+ - Add pinning of sensitive CR0/CR4 bits, i.e. WP and SMAP/SMEP as these
+   have been targets of recent exploits. This includes a lktdm test.
 
- - Fix the bogus ORC unwind table alignment
-
- - Prevent kernel panic during kexec on HyperV caused by a cleared but not
-   disabled hypercall page.
-
- - Remove the now pointless stacksize increase for KASAN_EXTRA, as
-   KASAN_EXTRA is gone.
-
- - Remove unused variables from the x86 memory management code.
+ - Remove unused macros/inlines and obsolete __GNUC__ conditionals.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Jann Horn (2):
-      x86/unwind: Handle NULL pointer calls better in frame unwinder
-      x86/unwind: Add hardcoded ORC entry for NULL
+Kees Cook (4):
+      x86/asm: Pin sensitive CR4 bits
+      x86/asm: Avoid taking an exception before cr4 restore
+      x86/asm: Pin sensitive CR0 bits
+      lkdtm: Check for SMEP clearing protections
 
-Josh Poimboeuf (1):
-      x86/unwind/orc: Fix ORC unwind table alignment
-
-Kairui Song (1):
-      x86/hyperv: Fix kernel panic when kexec on HyperV
-
-Qian Cai (3):
-      Revert "x86_64: Increase stack size for KASAN_EXTRA"
-      x86/mm: Remove unused variable 'cpu'
-      x86/mm: Remove unused variable 'old_pte'
+Rasmus Villemoes (2):
+      x86/asm: Remove dead __GNUC__ conditionals
+      x86/asm: Remove unused __constant_c_x_memset() macro and inlines
 
 
- arch/x86/hyperv/hv_init.c            |  7 +++++++
- arch/x86/include/asm/page_64_types.h |  4 ----
- arch/x86/include/asm/unwind.h        |  6 ++++++
- arch/x86/kernel/unwind_frame.c       | 25 ++++++++++++++++++++++---
- arch/x86/kernel/unwind_orc.c         | 17 +++++++++++++++++
- arch/x86/mm/pageattr.c               |  4 ++--
- arch/x86/mm/tlb.c                    |  3 ---
- include/asm-generic/vmlinux.lds.h    |  2 +-
- 8 files changed, 55 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/bitops.h        |   6 --
+ arch/x86/include/asm/special_insns.h |  43 ++++++++++++++-
+ arch/x86/include/asm/string_32.h     | 104 -----------------------------------
+ arch/x86/include/asm/string_64.h     |  15 -----
+ arch/x86/kernel/cpu/common.c         |  12 +++-
+ drivers/misc/lkdtm/bugs.c            |  61 ++++++++++++++++++++
+ drivers/misc/lkdtm/core.c            |   1 +
+ drivers/misc/lkdtm/lkdtm.h           |   1 +
+ 8 files changed, 116 insertions(+), 127 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 7abb09e2eeb8..d3f42b6bbdac 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -406,6 +406,13 @@ void hyperv_cleanup(void)
- 	/* Reset our OS id */
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index ad7b210aa3f6..d153d570bb04 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -36,13 +36,7 @@
+  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
+  */
  
-+	/*
-+	 * Reset hypercall page reference before reset the page,
-+	 * let hypercall operations fail safely rather than
-+	 * panic the kernel for using invalid hypercall page
-+	 */
-+	hv_hypercall_pg = NULL;
-+
- 	/* Reset the hypercall page */
- 	hypercall_msr.as_uint64 = 0;
- 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index 0ce558a8150d..8f657286d599 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -7,11 +7,7 @@
- #endif
- 
- #ifdef CONFIG_KASAN
--#ifdef CONFIG_KASAN_EXTRA
--#define KASAN_STACK_ORDER 2
+-#if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 1)
+-/* Technically wrong, but this avoids compilation errors on some gcc
+-   versions. */
+-#define BITOP_ADDR(x) "=m" (*(volatile long *) (x))
 -#else
- #define KASAN_STACK_ORDER 1
+ #define BITOP_ADDR(x) "+m" (*(volatile long *) (x))
 -#endif
- #else
- #define KASAN_STACK_ORDER 0
- #endif
-diff --git a/arch/x86/include/asm/unwind.h b/arch/x86/include/asm/unwind.h
-index 1f86e1b0a5cd..499578f7e6d7 100644
---- a/arch/x86/include/asm/unwind.h
-+++ b/arch/x86/include/asm/unwind.h
-@@ -23,6 +23,12 @@ struct unwind_state {
- #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
- 	bool got_irq;
- 	unsigned long *bp, *orig_sp, ip;
-+	/*
-+	 * If non-NULL: The current frame is incomplete and doesn't contain a
-+	 * valid BP. When looking for the next frame, use this instead of the
-+	 * non-existent saved BP.
-+	 */
-+	unsigned long *next_bp;
- 	struct pt_regs *regs;
- #else
- 	unsigned long *sp;
-diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
-index 3dc26f95d46e..9b9fd4826e7a 100644
---- a/arch/x86/kernel/unwind_frame.c
-+++ b/arch/x86/kernel/unwind_frame.c
-@@ -320,10 +320,14 @@ bool unwind_next_frame(struct unwind_state *state)
- 	}
  
- 	/* Get the next frame pointer: */
--	if (state->regs)
-+	if (state->next_bp) {
-+		next_bp = state->next_bp;
-+		state->next_bp = NULL;
-+	} else if (state->regs) {
- 		next_bp = (unsigned long *)state->regs->bp;
--	else
-+	} else {
- 		next_bp = (unsigned long *)READ_ONCE_TASK_STACK(state->task, *state->bp);
-+	}
+ #define ADDR				BITOP_ADDR(addr)
  
- 	/* Move to the next frame if it's safe: */
- 	if (!update_stack_state(state, next_bp))
-@@ -398,6 +402,21 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 43c029cdc3fe..7fa4fe880395 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -5,6 +5,7 @@
  
- 	bp = get_frame_pointer(task, regs);
+ #ifdef __KERNEL__
  
-+	/*
-+	 * If we crash with IP==0, the last successfully executed instruction
-+	 * was probably an indirect function call with a NULL function pointer.
-+	 * That means that SP points into the middle of an incomplete frame:
-+	 * *SP is a return pointer, and *(SP-sizeof(unsigned long)) is where we
-+	 * would have written a frame pointer if we hadn't crashed.
-+	 * Pretend that the frame is complete and that BP points to it, but save
-+	 * the real BP so that we can use it when looking for the next frame.
-+	 */
-+	if (regs && regs->ip == 0 &&
-+	    (unsigned long *)kernel_stack_pointer(regs) >= first_frame) {
-+		state->next_bp = bp;
-+		bp = ((unsigned long *)kernel_stack_pointer(regs)) - 1;
-+	}
-+
- 	/* Initialize stack info and make sure the frame data is accessible: */
- 	get_stack_info(bp, state->task, &state->stack_info,
- 		       &state->stack_mask);
-@@ -410,7 +429,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 	 */
- 	while (!unwind_done(state) &&
- 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
--			state->bp < first_frame))
-+			(state->next_bp == NULL && state->bp < first_frame)))
- 		unwind_next_frame(state);
- }
- EXPORT_SYMBOL_GPL(__unwind_start);
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 26038eacf74a..89be1be1790c 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -113,6 +113,20 @@ static struct orc_entry *orc_ftrace_find(unsigned long ip)
- }
- #endif
++#include <asm/processor-flags.h>
+ #include <asm/nops.h>
  
-+/*
-+ * If we crash with IP==0, the last successfully executed instruction
-+ * was probably an indirect function call with a NULL function pointer,
-+ * and we don't have unwind information for NULL.
-+ * This hardcoded ORC entry for IP==0 allows us to unwind from a NULL function
-+ * pointer into its parent and then continue normally from there.
-+ */
-+static struct orc_entry null_orc_entry = {
-+	.sp_offset = sizeof(long),
-+	.sp_reg = ORC_REG_SP,
-+	.bp_reg = ORC_REG_UNDEFINED,
-+	.type = ORC_TYPE_CALL
-+};
-+
- static struct orc_entry *orc_find(unsigned long ip)
+ /*
+@@ -25,7 +26,28 @@ static inline unsigned long native_read_cr0(void)
+ 
+ static inline void native_write_cr0(unsigned long val)
  {
- 	static struct orc_entry *orc;
-@@ -120,6 +134,9 @@ static struct orc_entry *orc_find(unsigned long ip)
- 	if (!orc_init)
- 		return NULL;
- 
-+	if (ip == 0)
-+		return &null_orc_entry;
+-	asm volatile("mov %0,%%cr0": : "r" (val), "m" (__force_order));
++	bool warn = false;
 +
- 	/* For non-init vmlinux addresses, use the fast lookup table: */
- 	if (ip >= LOOKUP_START_IP && ip < LOOKUP_STOP_IP) {
- 		unsigned int idx, start, stop;
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 14e6119838a6..4c570612e24e 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -738,7 +738,7 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
++again:
++	val |= X86_CR0_WP;
++	/*
++	 * In order to have the compiler not optimize away the check
++	 * after the cr4 write, mark "val" as being also an output ("+r")
++	 * by this asm() block so it will perform an explicit check, as
++	 * if it were "volatile".
++	 */
++	asm volatile("mov %0,%%cr0" : "+r" (val) : "m" (__force_order) : );
++	/*
++	 * If the MOV above was used directly as a ROP gadget we can
++	 * notice the lack of pinned bits in "val" and start the function
++	 * from the beginning to gain the WP bit for sure. And do it
++	 * without first taking the exception for a WARN().
++	 */
++	if ((val & X86_CR0_WP) != X86_CR0_WP) {
++		warn = true;
++		goto again;
++	}
++	WARN_ONCE(warn, "Attempt to unpin X86_CR0_WP, cr0 bypass attack?!\n");
+ }
+ 
+ static inline unsigned long native_read_cr2(void)
+@@ -72,9 +94,28 @@ static inline unsigned long native_read_cr4(void)
+ 	return val;
+ }
+ 
++extern volatile unsigned long cr4_pin;
++
+ static inline void native_write_cr4(unsigned long val)
  {
- 	unsigned long numpages, pmask, psize, lpaddr, pfn, old_pfn;
- 	pgprot_t old_prot, new_prot, req_prot, chk_prot;
--	pte_t new_pte, old_pte, *tmp;
-+	pte_t new_pte, *tmp;
- 	enum pg_level level;
- 
- 	/*
-@@ -781,7 +781,7 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
- 	 * Convert protection attributes to 4k-format, as cpa->mask* are set
- 	 * up accordingly.
- 	 */
--	old_pte = *kpte;
++	unsigned long warn = 0;
 +
- 	/* Clear PSE (aka _PAGE_PAT) and move PAT bit to correct position */
- 	req_prot = pgprot_large_2_4k(old_prot);
++again:
++	val |= cr4_pin;
+ 	asm volatile("mov %0,%%cr4": : "r" (val), "m" (__force_order));
++	/*
++	 * If the MOV above was used directly as a ROP gadget we can
++	 * notice the lack of pinned bits in "val" and start the function
++	 * from the beginning to gain the cr4_pin bits for sure. Note
++	 * that "val" must be volatile to keep the compiler from
++	 * optimizing away this check.
++	 */
++	if ((val & cr4_pin) != cr4_pin) {
++		warn = ~val & cr4_pin;
++		goto again;
++	}
++	WARN_ONCE(warn, "Attempt to unpin cr4 bits: %lx; bypass attack?!\n",
++		  warn);
+ }
  
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 999d6d8f0bef..bc4bc7b2f075 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -685,9 +685,6 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
- 		 * that UV should be updated so that smp_call_function_many(),
- 		 * etc, are optimal on UV.
- 		 */
--		unsigned int cpu;
+ #ifdef CONFIG_X86_64
+diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
+index 55d392c6bd29..f74362b05619 100644
+--- a/arch/x86/include/asm/string_32.h
++++ b/arch/x86/include/asm/string_32.h
+@@ -179,14 +179,7 @@ static inline void *__memcpy3d(void *to, const void *from, size_t len)
+  *	No 3D Now!
+  */
+ 
+-#if (__GNUC__ >= 4)
+ #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+-#else
+-#define memcpy(t, f, n)				\
+-	(__builtin_constant_p((n))		\
+-	 ? __constant_memcpy((t), (f), (n))	\
+-	 : __memcpy((t), (f), (n)))
+-#endif
+ 
+ #endif
+ #endif /* !CONFIG_FORTIFY_SOURCE */
+@@ -216,29 +209,6 @@ static inline void *__memset_generic(void *s, char c, size_t count)
+ /* we might want to write optimized versions of these later */
+ #define __constant_count_memset(s, c, count) __memset_generic((s), (c), (count))
+ 
+-/*
+- * memset(x, 0, y) is a reasonably common thing to do, so we want to fill
+- * things 32 bits at a time even when we don't know the size of the
+- * area at compile-time..
+- */
+-static __always_inline
+-void *__constant_c_memset(void *s, unsigned long c, size_t count)
+-{
+-	int d0, d1;
+-	asm volatile("rep ; stosl\n\t"
+-		     "testb $2,%b3\n\t"
+-		     "je 1f\n\t"
+-		     "stosw\n"
+-		     "1:\ttestb $1,%b3\n\t"
+-		     "je 2f\n\t"
+-		     "stosb\n"
+-		     "2:"
+-		     : "=&c" (d0), "=&D" (d1)
+-		     : "a" (c), "q" (count), "0" (count/4), "1" ((long)s)
+-		     : "memory");
+-	return s;
+-}
 -
--		cpu = smp_processor_id();
- 		cpumask = uv_flush_tlb_others(cpumask, info);
- 		if (cpumask)
- 			smp_call_function_many(cpumask, flush_tlb_func_remote,
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 3d7a6a9c2370..f8f6f04c4453 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -733,7 +733,7 @@
- 		KEEP(*(.orc_unwind_ip))					\
- 		__stop_orc_unwind_ip = .;				\
- 	}								\
--	. = ALIGN(6);							\
-+	. = ALIGN(2);							\
- 	.orc_unwind : AT(ADDR(.orc_unwind) - LOAD_OFFSET) {		\
- 		__start_orc_unwind = .;					\
- 		KEEP(*(.orc_unwind))					\
+ /* Added by Gertjan van Wingerde to make minix and sysv module work */
+ #define __HAVE_ARCH_STRNLEN
+ extern size_t strnlen(const char *s, size_t count);
+@@ -247,72 +217,6 @@ extern size_t strnlen(const char *s, size_t count);
+ #define __HAVE_ARCH_STRSTR
+ extern char *strstr(const char *cs, const char *ct);
+ 
+-/*
+- * This looks horribly ugly, but the compiler can optimize it totally,
+- * as we by now know that both pattern and count is constant..
+- */
+-static __always_inline
+-void *__constant_c_and_count_memset(void *s, unsigned long pattern,
+-				    size_t count)
+-{
+-	switch (count) {
+-	case 0:
+-		return s;
+-	case 1:
+-		*(unsigned char *)s = pattern & 0xff;
+-		return s;
+-	case 2:
+-		*(unsigned short *)s = pattern & 0xffff;
+-		return s;
+-	case 3:
+-		*(unsigned short *)s = pattern & 0xffff;
+-		*((unsigned char *)s + 2) = pattern & 0xff;
+-		return s;
+-	case 4:
+-		*(unsigned long *)s = pattern;
+-		return s;
+-	}
+-
+-#define COMMON(x)							\
+-	asm volatile("rep ; stosl"					\
+-		     x							\
+-		     : "=&c" (d0), "=&D" (d1)				\
+-		     : "a" (eax), "0" (count/4), "1" ((long)s)	\
+-		     : "memory")
+-
+-	{
+-		int d0, d1;
+-#if __GNUC__ == 4 && __GNUC_MINOR__ == 0
+-		/* Workaround for broken gcc 4.0 */
+-		register unsigned long eax asm("%eax") = pattern;
+-#else
+-		unsigned long eax = pattern;
+-#endif
+-
+-		switch (count % 4) {
+-		case 0:
+-			COMMON("");
+-			return s;
+-		case 1:
+-			COMMON("\n\tstosb");
+-			return s;
+-		case 2:
+-			COMMON("\n\tstosw");
+-			return s;
+-		default:
+-			COMMON("\n\tstosw\n\tstosb");
+-			return s;
+-		}
+-	}
+-
+-#undef COMMON
+-}
+-
+-#define __constant_c_x_memset(s, c, count)			\
+-	(__builtin_constant_p(count)				\
+-	 ? __constant_c_and_count_memset((s), (c), (count))	\
+-	 : __constant_c_memset((s), (c), (count)))
+-
+ #define __memset(s, c, count)				\
+ 	(__builtin_constant_p(count)			\
+ 	 ? __constant_count_memset((s), (c), (count))	\
+@@ -321,15 +225,7 @@ void *__constant_c_and_count_memset(void *s, unsigned long pattern,
+ #define __HAVE_ARCH_MEMSET
+ extern void *memset(void *, int, size_t);
+ #ifndef CONFIG_FORTIFY_SOURCE
+-#if (__GNUC__ >= 4)
+ #define memset(s, c, count) __builtin_memset(s, c, count)
+-#else
+-#define memset(s, c, count)						\
+-	(__builtin_constant_p(c)					\
+-	 ? __constant_c_x_memset((s), (0x01010101UL * (unsigned char)(c)), \
+-				 (count))				\
+-	 : __memset((s), (c), (count)))
+-#endif
+ #endif /* !CONFIG_FORTIFY_SOURCE */
+ 
+ #define __HAVE_ARCH_MEMSET16
+diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+index 4e4194e21a09..75314c3dbe47 100644
+--- a/arch/x86/include/asm/string_64.h
++++ b/arch/x86/include/asm/string_64.h
+@@ -14,21 +14,6 @@
+ extern void *memcpy(void *to, const void *from, size_t len);
+ extern void *__memcpy(void *to, const void *from, size_t len);
+ 
+-#ifndef CONFIG_FORTIFY_SOURCE
+-#if (__GNUC__ == 4 && __GNUC_MINOR__ < 3) || __GNUC__ < 4
+-#define memcpy(dst, src, len)					\
+-({								\
+-	size_t __len = (len);					\
+-	void *__ret;						\
+-	if (__builtin_constant_p(len) && __len >= 64)		\
+-		__ret = __memcpy((dst), (src), __len);		\
+-	else							\
+-		__ret = __builtin_memcpy((dst), (src), __len);	\
+-	__ret;							\
+-})
+-#endif
+-#endif /* !CONFIG_FORTIFY_SOURCE */
+-
+ #define __HAVE_ARCH_MEMSET
+ void *memset(void *s, int c, size_t n);
+ void *__memset(void *s, int c, size_t n);
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index cb28e98a0659..7e0ea4470f8e 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -312,10 +312,16 @@ static __init int setup_disable_smep(char *arg)
+ }
+ __setup("nosmep", setup_disable_smep);
+ 
++volatile unsigned long cr4_pin __ro_after_init;
++EXPORT_SYMBOL_GPL(cr4_pin);
++
+ static __always_inline void setup_smep(struct cpuinfo_x86 *c)
+ {
+-	if (cpu_has(c, X86_FEATURE_SMEP))
++	if (cpu_has(c, X86_FEATURE_SMEP)) {
++		if (!(cr4_pin & X86_CR4_SMEP))
++			cr4_pin |= X86_CR4_SMEP;
+ 		cr4_set_bits(X86_CR4_SMEP);
++	}
+ }
+ 
+ static __init int setup_disable_smap(char *arg)
+@@ -334,6 +340,8 @@ static __always_inline void setup_smap(struct cpuinfo_x86 *c)
+ 
+ 	if (cpu_has(c, X86_FEATURE_SMAP)) {
+ #ifdef CONFIG_X86_SMAP
++		if (!(cr4_pin & X86_CR4_SMAP))
++			cr4_pin |= X86_CR4_SMAP;
+ 		cr4_set_bits(X86_CR4_SMAP);
+ #else
+ 		cr4_clear_bits(X86_CR4_SMAP);
+@@ -351,6 +359,8 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+ 	if (!cpu_has(c, X86_FEATURE_UMIP))
+ 		goto out;
+ 
++	if (!(cr4_pin & X86_CR4_UMIP))
++		cr4_pin |= X86_CR4_UMIP;
+ 	cr4_set_bits(X86_CR4_UMIP);
+ 
+ 	pr_info_once("x86/cpu: User Mode Instruction Prevention (UMIP) activated\n");
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 7eebbdfbcacd..6176384b4f85 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -255,3 +255,64 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+ 
+ 	pr_err("FAIL: accessed page after stack!\n");
+ }
++
++void lkdtm_UNSET_SMEP(void)
++{
++#ifdef CONFIG_X86_64
++#define MOV_CR4_DEPTH	64
++	void (*direct_write_cr4)(unsigned long val);
++	unsigned char *insn;
++	unsigned long cr4;
++	int i;
++
++	cr4 = native_read_cr4();
++
++	if ((cr4 & X86_CR4_SMEP) != X86_CR4_SMEP) {
++		pr_err("FAIL: SMEP not in use\n");
++		return;
++	}
++	cr4 &= ~(X86_CR4_SMEP);
++
++	pr_info("trying to clear SMEP normally\n");
++	native_write_cr4(cr4);
++	if (cr4 == native_read_cr4()) {
++		pr_err("FAIL: pinning SMEP failed!\n");
++		cr4 |= X86_CR4_SMEP;
++		pr_info("restoring SMEP\n");
++		native_write_cr4(cr4);
++		return;
++	}
++	pr_info("ok: SMEP did not get cleared\n");
++
++	/*
++	 * To test the post-write pinning verification we need to call
++	 * directly into the the middle of native_write_cr4() where the
++	 * cr4 write happens, skipping the pinning. This searches for
++	 * the cr4 writing instruction.
++	 */
++	insn = (unsigned char *)native_write_cr4;
++	for (i = 0; i < MOV_CR4_DEPTH; i++) {
++		/* mov %rdi, %cr4 */
++		if (insn[i] == 0x0f && insn[i+1] == 0x22 && insn[i+2] == 0xe7)
++			break;
++	}
++	if (i >= MOV_CR4_DEPTH) {
++		pr_info("ok: cannot locate cr4 writing call gadget\n");
++		return;
++	}
++	direct_write_cr4 = (void *)(insn + i);
++
++	pr_info("trying to clear SMEP with call gadget\n");
++	direct_write_cr4(cr4);
++	if (native_read_cr4() & X86_CR4_SMEP) {
++		pr_info("ok: SMEP removal was reverted\n");
++	} else {
++		pr_err("FAIL: cleared SMEP not detected!\n");
++		cr4 |= X86_CR4_SMEP;
++		pr_info("restoring SMEP\n");
++		native_write_cr4(cr4);
++	}
++#else
++	pr_err("FAIL: this test is x86_64-only\n");
++#endif
++}
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index 2837dc77478e..fd668776414b 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -132,6 +132,7 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(CORRUPT_LIST_ADD),
+ 	CRASHTYPE(CORRUPT_LIST_DEL),
+ 	CRASHTYPE(CORRUPT_USER_DS),
++	CRASHTYPE(UNSET_SMEP),
+ 	CRASHTYPE(CORRUPT_STACK),
+ 	CRASHTYPE(CORRUPT_STACK_STRONG),
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 3c6fd327e166..9c78d7e21c13 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -26,6 +26,7 @@ void lkdtm_CORRUPT_LIST_DEL(void);
+ void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
++void lkdtm_UNSET_SMEP(void);
+ 
+ /* lkdtm_heap.c */
+ void lkdtm_OVERWRITE_ALLOCATION(void);
 
