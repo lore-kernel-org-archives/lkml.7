@@ -2,119 +2,120 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627DAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44E4C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2731020657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD1E2084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OjAJMld4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="po+ELMug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfCJSbE (ORCPT
+        id S1727088AbfCJSbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:31:04 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33670 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfCJSbA (ORCPT
+        Sun, 10 Mar 2019 14:31:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37930 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCJS3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:31:00 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x9so1475382qkf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:30:59 -0700 (PDT)
+        Sun, 10 Mar 2019 14:29:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a188so2192120wmf.3;
+        Sun, 10 Mar 2019 11:29:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=YM0Wn0jbNjB6y9zmP7dH8GmfHqq62eVgozcbKGDoac8=;
-        b=OjAJMld40/KT0JAIPx6soIHP89Ze06bD3MGxvBqLe0oL0B5vScTMZQDwEvoGkWyKlW
-         V/WKCVRTYFZMJxGUhADvY53i+Xe5Esz2rieFZF5o+7VhP8Z7qV6djQmUAbRfsmiXnRrX
-         mkayBOoOtusSvWAwZNV/lAU2/w/6TzNx4geFcwC2ho4gEhBFQS6WHpkelbNE9+vZGcMk
-         aXvHLjAntJDwLvn1k1nGiG5y9SoATsC66EQU3RT27so82LXlLpTfU1HPWJpiTCrJHF2F
-         mq4s8RtdFsw/KU/YvzIUZp9HGomr7sD9pb30prqzyfTxVFLPrPrJ0L+fFCzu8/X2xSSM
-         8MZg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=PymmEnRdwIKr9YKH2uBcUo/Frl2MK1Mw0y8FSvhA2qQ=;
+        b=po+ELMugPVb21mcV11zAkjR54B4g2lzDmrcM1aAG+hLHgSOO/Wc298gkNf/r8OU737
+         fNJ63yl+ZMqP8tswI8fThBY2QWQfsQdINtqBqX/lx910DbOZxxs5wV3RExEw6BpQwEFC
+         UVCXNE3Ehb4VUIk2Yxo1ZB/BX+TJ0XO7wOc2HzzOIY/EgC4Ah/JqX7ir+ftpiIs/3aoe
+         H65OcL7CDxdxArpGpVarApEzONHTKeFC+LphF1tpsVuhrXW9HgbryO9MRsXVgo0AEy4q
+         Joz0yQx65F78EhvtSucHFlHZx0jOnStDbOqY/KhAY8cYozcY5NCYH94KgL5nItKE4Pkx
+         SgAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YM0Wn0jbNjB6y9zmP7dH8GmfHqq62eVgozcbKGDoac8=;
-        b=kmscjjHOI8ifg/b2auIBznJgTmcQiWLOHye6fGGg9lACYS5A1Y+OCknUIdb2saT65B
-         tV6kqCKG0Awy8m7Y2Pxxw6InIO1jDaLSunlpv106K93Dfo3/MaN1qRsABsfa2/V1xrES
-         MoV7lgeJjEU2h6ga+G+dfsrn+ByJ1Wv62KWZH9i3agodOxoudRbGSMJk8mmMjW8RzQHw
-         mpwvDIC7WA0RKBaCWblFTyRaRuj0BO8LTQ0Gf6UETZwzn5eSW9ug4l26W+wMH45XFWVc
-         iQAeKuNcT0CU1bbDmGm3mjufIvH+gp61L5bmLicQFSPpzXiqQMlXM4DeodrjyOvq6A8u
-         tAnw==
-X-Gm-Message-State: APjAAAVmvt3Ro0QJnHGUR5WRj/sTGqln4w3HnEXvjSx8l5pdRttYOqtN
-        vpDluzr+zFABbOIvEh0yqHS5XA==
-X-Google-Smtp-Source: APXvYqzs6RndkrdSCNp7wEidhbaphcHOOi4/scuDQle7s3Fl1752DQ6Dc/9nQA5DkP+RbvDT0EZAUA==
-X-Received: by 2002:ae9:ed4c:: with SMTP id c73mr1564173qkg.192.1552242659537;
-        Sun, 10 Mar 2019 11:30:59 -0700 (PDT)
-Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id f7sm2042200qtb.35.2019.03.10.11.30.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=PymmEnRdwIKr9YKH2uBcUo/Frl2MK1Mw0y8FSvhA2qQ=;
+        b=I5IMnhplFJPJBPAXWZpxFNzs89UNjPnzIM6MHt2bAtua5COIkzNA5kPyFBigjScz3T
+         B/epINYV/jQPjwgtv7YOZ+E22HEptxTWUA5TglPcQGMT1TnwTjeUKaroQMtQvIjp1Px4
+         u7YGd46oFBGeoZhdSjTNEH9fk4ejc8UxBqrQLkgWL5UFM+8yEpIQOIYaBTovD0bjKrQb
+         m9Z2Zdp1dSuVGUjBKdfg6gUcEz+dqxR2qiejhHrz/fqPzEw/KQeDnp4Vtvc+cvYBMy8x
+         GjPHlGg8RJI5r9m96VUvAIhIp2M8z3IdAg36otgSmv6p5y075SHlrbaG1cdkoc8oWjif
+         DeQQ==
+X-Gm-Message-State: APjAAAXNygOL8PMrC3WlRakjrOcoPNWqkKg0rPZpd8dAguX7A6lVo/PF
+        g/lwehEOAO80BFV740Sk/7w93Mb+
+X-Google-Smtp-Source: APXvYqw9InWk/sgQKl60d8DNdGh8welZSF6R2wEZ/LWNPX5Ck9I7hMRaqwqH9LaiY8GcdqvV0ABcRw==
+X-Received: by 2002:a7b:cc86:: with SMTP id p6mr15806833wma.101.1552242545152;
+        Sun, 10 Mar 2019 11:29:05 -0700 (PDT)
+Received: from myhost.home (bgt124.neoplus.adsl.tpnet.pl. [83.28.83.124])
+        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 11:30:58 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     dave@stgolabs.net, jgg@mellanox.com, arnd@arndb.de,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/debug: add a cast to u64 for atomic64_read()
-Date:   Sun, 10 Mar 2019 14:30:51 -0400
-Message-Id: <20190310183051.87303-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Sun, 10 Mar 2019 11:29:04 -0700 (PDT)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
+        Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 06/25] dt-bindings: sc27xx-blt: Add function and color properties
+Date:   Sun, 10 Mar 2019 19:28:17 +0100
+Message-Id: <20190310182836.20841-7-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-atomic64_read() on ppc64le returns "long int", so fix the same way as
-the commit d549f545e690 ("drm/virtio: use %llu format string form
-atomic64_t") by adding a cast to u64, which makes it work on all arches.
+Refer to new "function" and "color" properties and mark "label"
+as deprecated.
 
-In file included from ./include/linux/printk.h:7,
-                 from ./include/linux/kernel.h:15,
-                 from mm/debug.c:9:
-mm/debug.c: In function 'dump_mm':
-./include/linux/kern_levels.h:5:18: warning: format '%llx' expects
-argument of type 'long long unsigned int', but argument 19 has type
-'long int' [-Wformat=]
- #define KERN_SOH "\001"  /* ASCII Start Of Header */
-                  ^~~~~~
-./include/linux/kern_levels.h:8:20: note: in expansion of macro
-'KERN_SOH'
- #define KERN_EMERG KERN_SOH "0" /* system is unusable */
-                    ^~~~~~~~
-./include/linux/printk.h:297:9: note: in expansion of macro 'KERN_EMERG'
-  printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
-         ^~~~~~~~~~
-mm/debug.c:133:2: note: in expansion of macro 'pr_emerg'
-  pr_emerg("mm %px mmap %px seqnum %llu task_size %lu\n"
-  ^~~~~~~~
-mm/debug.c:140:17: note: format string is defined here
-   "pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
-              ~~~^
-              %lx
-
-Fixes: 70f8a3ca68d3 ("mm: make mm->pinned_vm an atomic64 counter")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Baolin Wang <baolin.wang@linaro.org>
 ---
- mm/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/mm/debug.c b/mm/debug.c
-index c0b31b6c3877..45d9eb77b84e 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -168,7 +168,7 @@ void dump_mm(const struct mm_struct *mm)
- 		mm_pgtables_bytes(mm),
- 		mm->map_count,
- 		mm->hiwater_rss, mm->hiwater_vm, mm->total_vm, mm->locked_vm,
--		atomic64_read(&mm->pinned_vm),
-+		(u64)atomic64_read(&mm->pinned_vm),
- 		mm->data_vm, mm->exec_vm, mm->stack_vm,
- 		mm->start_code, mm->end_code, mm->start_data, mm->end_data,
- 		mm->start_brk, mm->brk, mm->start_stack,
+diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+index dddf84f9c7ea..0073dcea0761 100644
+--- a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
++++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+@@ -14,7 +14,9 @@ Required child properties:
+ - reg: Port this LED is connected to.
+ 
+ Optional child properties:
+-- label: See Documentation/devicetree/bindings/leds/common.txt.
++- function: See Documentation/devicetree/bindings/leds/common.txt.
++- color: See Documentation/devicetree/bindings/leds/common.txt.
++- label: See Documentation/devicetree/bindings/leds/common.txt (deprecated).
+ 
+ Examples:
+ 
+@@ -25,17 +27,17 @@ led-controller@200 {
+ 	reg = <0x200>;
+ 
+ 	led@0 {
+-		label = "red";
++		color = LED_COLOR_NAME_RED;
+ 		reg = <0x0>;
+ 	};
+ 
+ 	led@1 {
+-		label = "green";
++		color = LED_COLOR_NAME_GREEN;
+ 		reg = <0x1>;
+ 	};
+ 
+ 	led@2 {
+-		label = "blue";
++		color = LED_COLOR_NAME_BLUE;
+ 		reg = <0x2>;
+ 	};
+ };
 -- 
-2.17.2 (Apple Git-113)
+2.11.0
 
