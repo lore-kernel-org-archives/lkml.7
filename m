@@ -2,97 +2,106 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F995C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B256EC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FF4206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552254745;
-	bh=270oAS8jwhkTZYClGebtp4naBFwLokvfN7qNCMTBJZg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bm5FrTgdfeIyW+mcHjA5IcUwfCPu3oj8W8+KcQn4iwKvnerVJhnx4Q3g7W+WD0j7R
-	 n+LKXulVajsHQ7Q8EJYiUAmGj+eUrtRAUQkGi1lv9f7x1WfxAIHUxo5ZYqwDAXB7HQ
-	 svQFvfILRikY0LOoJusbUea8dzVSD79JaAXqKQAk=
+	by mail.kernel.org (Postfix) with ESMTP id 7B093206BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfCJVwX (ORCPT
+        id S1726931AbfCJVyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 17:52:23 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36198 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfCJVwX (ORCPT
+        Sun, 10 Mar 2019 17:54:01 -0400
+Received: from ipmail03.adl2.internode.on.net ([150.101.137.141]:41959 "EHLO
+        ipmail03.adl2.internode.on.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726687AbfCJVyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 17:52:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 197so1950109lfz.3
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NyeJ7Cz7OVFFVWx5bQAkAfhDav0AeXJ87ovkml/Ry9o=;
-        b=GGohqfGO+4FAdoxntll7ioOcao5K/rrK8kwyEUll3oPId7UrDO1pZ61E+WgCOxEzJJ
-         x+1jhKsCXCA4/MqCXqP7zQxhHautgZC2JGwM+21sbJbLyFes0DwErKrjlcgIZYlOMJx1
-         zZ7H7BNC4OEAFbX9Io0/M9/joAQq0FTQau9Pw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NyeJ7Cz7OVFFVWx5bQAkAfhDav0AeXJ87ovkml/Ry9o=;
-        b=MMPtLy7G7EA1azoxMwwMr7Bzg6pAytkOavABECUucYCBdVv+7KTdOAlz3+KRDiYkCZ
-         9UDSCmKvWgDWzlKqIK3/rTJDIvUaTj3/9CwVOeGUZM1x5F9QTpZF7DnlpH7sZFhXOW6d
-         TGcDI1D7xQQ9dSAp1cx2KJTXbTxAGseXK3XN20wvsTRpYpoEvXrYQdHE2okQcYpIntmA
-         rH09i+LNgRtiRjYw0co69Rpa7y5W6WVlRuVUBvCoSyXZVcDNPJ3M2o/+OtH1oPH4n3fN
-         2fpLzHCLjcD8qOCte58QsSKJtjNlFEVblfEQ6NpiAlcYk/puYm/DqPqpzTNvbd3whGbF
-         G4ZQ==
-X-Gm-Message-State: APjAAAWjJ4irXViF86vZECSqBi8SvLB34IBO+u0kvX6tKC6mUSsEHWHi
-        GMglrEjcExSGZImlowReq3vgszG/GYc=
-X-Google-Smtp-Source: APXvYqylWPAyN6D+mMjgFMwSCXYddAyBYp3w4ktwocaz80EcSXefUZU9Od/p7AZ2AY0SR5OQP+nvXQ==
-X-Received: by 2002:a19:40c8:: with SMTP id n191mr2491132lfa.22.1552254740163;
-        Sun, 10 Mar 2019 14:52:20 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id r18sm696652ljd.35.2019.03.10.14.52.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 14:52:19 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id h6so1952838lfc.2
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:52:18 -0700 (PDT)
-X-Received: by 2002:a19:700e:: with SMTP id h14mr15359334lfc.67.1552254738370;
- Sun, 10 Mar 2019 14:52:18 -0700 (PDT)
+        Sun, 10 Mar 2019 17:54:01 -0400
+Received: from ppp59-167-129-252.static.internode.on.net (HELO dastard) ([59.167.129.252])
+  by ipmail03.adl2.internode.on.net with ESMTP; 11 Mar 2019 08:23:57 +1030
+Received: from dave by dastard with local (Exim 4.80)
+        (envelope-from <david@fromorbit.com>)
+        id 1h36OJ-00074U-Nd; Mon, 11 Mar 2019 08:53:55 +1100
+Date:   Mon, 11 Mar 2019 08:53:55 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Sean Fu <fxinrong@gmail.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Use kmem_zalloc for bp->b_pages.
+Message-ID: <20190310215355.GC23020@dastard>
+References: <20190309153636.14154-1-fxinrong@gmail.com>
+ <20190309173230.GA4359@magnolia>
+ <20190310050608.dtidrfuqepze6uoh@linux-xjtn>
 MIME-Version: 1.0
-References: <155223448227.4075.6846910559654700796.stgit@buzz>
- <155223699287.4075.13184771244455866778.stgit@buzz> <9da44b6b-49c1-3383-e272-d61065f81de4@rasmusvillemoes.dk>
-In-Reply-To: <9da44b6b-49c1-3383-e272-d61065f81de4@rasmusvillemoes.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 10 Mar 2019 14:52:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj95tXzuox8eXPhBtJtV_NzWksxyQ+nPPty1atWH2T-xg@mail.gmail.com>
-Message-ID: <CAHk-=wj95tXzuox8eXPhBtJtV_NzWksxyQ+nPPty1atWH2T-xg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] lib: scanf: handle integer overflows in vsscanf
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190310050608.dtidrfuqepze6uoh@linux-xjtn>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 2:06 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> IIRC, this has been attempted before, causing a userspace regression
-> because some sysfs/procfs file matched with %u or %x, and somebody wrote
-> -1 to get 0xffffffff .
+On Sun, Mar 10, 2019 at 01:07:32PM +0800, Sean Fu wrote:
+> On Sat, Mar 09, 2019 at 09:32:30AM -0800, Darrick J. Wong wrote:
+> > On Sat, Mar 09, 2019 at 11:36:36PM +0800, Sean Fu wrote:
+> > > Change the allocation of bp->b_pages to use kmem_zalloc instead of
+> > > kmem_alloc.
+> > > Remove unnecessary memset for bp->b_pages.
+> > >
+> > > This reduces text size by 42 bytes.
+> > > Before:
+> > >    text	   data	    bss	    dec	    hex	filename
+> > >   23335	    588	      8	  23931	   5d7b	./fs/xfs/xfs_buf.o
+> > > After:
+> > >    text	   data	    bss	    dec	    hex	filename
+> > >   23293	    588	      8	  23889	   5d51	./fs/xfs/xfs_buf.o
+> > >
+> > > Signed-off-by: Sean Fu <fxinrong@gmail.com>
+> > > ---
+> > >  fs/xfs/xfs_buf.c | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > >
+> > > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> > > index 4f5f2ff3f70f..be4f740b97c1 100644
+> > > --- a/fs/xfs/xfs_buf.c
+> > > +++ b/fs/xfs/xfs_buf.c
+> > > @@ -289,12 +289,11 @@ _xfs_buf_get_pages(
+> > >  		if (page_count <= XB_PAGES) {
+> > >  			bp->b_pages = bp->b_page_array;
+> > >  		} else {
+> > > -			bp->b_pages = kmem_alloc(sizeof(struct page *) *
+> > > +			bp->b_pages = kmem_zalloc(sizeof(struct page *) *
+> > >  						 page_count, KM_NOFS);
+> > >  			if (bp->b_pages == NULL)
+> > >  				return -ENOMEM;
+> > >  		}
+> > > -		memset(bp->b_pages, 0, sizeof(struct page *) * page_count);
+> >
+> > Does this leave b_pages uninitialized in the page_count <= XB_PAGES
+> > case?
+> bp is allocated by kmem_zone_zalloc, But i will take a deep look at xfs_buf_associate_memory.
 
-.. which is correct anyway. That's how scanf is supposed to work.
+We can (and do) reuse buffers with different memory buffers via
+xfs_buf_associate_memory() (e.g. see the split log buffer code in
+xlog_sync()].
 
-If somebody needs overflow checking, they shouldn't be using scanf.
+I'd prefer that we leave the explicit memset here for this re-use
+case - leaving the page pointer array with stale page pointers (even
+though beyond b_page_count) means any page array overrun turns into
+a memory corruption (via access of a stale page) rather than a NULL
+pointer dereference and immediate fail.
 
-                  Linus
+IMO, a small decrease in binary size is not worth changing the
+failure behaviour from a definite, immediate fail to a random memory
+corruption failure some time in the future...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
