@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3A8C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADBDC4360F
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 01:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA0720815
+	by mail.kernel.org (Postfix) with ESMTP id 8CB022081B
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 01:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1552182018;
-	bh=Qb56sKpD0CAfhOVnUB0ZZ6FAcPqcAnL6bs//0j1lk5Q=;
+	bh=5952Len6JdIc9hD45tdMyV51iMR+Hg5atfwVnkdu8zw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=CyRelw3Fai1kCdVCOFI6a8htG5fG5W/3SwoW7uTX+4W+l06qDRv5GiTvWWaVGKi0g
-	 pZ7571aXUyMDb2tgP1xdiugfzWsMQf/9R9FOeDNYiczfvSXnCjkXlzYHY5jpkxW7fn
-	 24aLxAUHXPEVUmFJFgZIOajm6JhAnP6xpsKhQFTY=
+	b=CKsnB47jQsQyYoT+1uHsstCWpMmRUJ0KgC3UeYskzBZs51BbI+uwqeOfXd+th/ip3
+	 bxEsUHQLh/eui33uO9jdBegIm+3jN3rPP7pLDfDF11CsQDEQmaiY7JHSBHYeb8CIsa
+	 cWGFfCEK46UPacbjnqkNKMq5VSK4p/cQm7Xiohsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfCJBkP (ORCPT
+        id S1726488AbfCJBkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 Mar 2019 20:40:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33674 "EHLO mail.kernel.org"
+        Sat, 9 Mar 2019 20:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfCJBkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 Mar 2019 20:40:15 -0500
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+        id S1726363AbfCJBkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 Mar 2019 20:40:16 -0500
+Subject: Re: [GIT PULL] first round of SCSI updates for the 5.0+ merge window
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552182014;
-        bh=Qb56sKpD0CAfhOVnUB0ZZ6FAcPqcAnL6bs//0j1lk5Q=;
+        s=default; t=1552182015;
+        bh=5952Len6JdIc9hD45tdMyV51iMR+Hg5atfwVnkdu8zw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xDx+C/7iVnWEYGjuG8lsxIZP/T9F+byBKeCekLhaxoWnsu5D44R+8Ndo+Nd9NlTfu
-         fOaHU7wOxeNagSFXt6gDSBZLQIVwEtEjSvQ3nSrPyIWNMG9w1Ul8SFfK4u61e3n99o
-         FABG8SWGbQSvNMSkvrcyWT98VzDKhnut48posq58=
+        b=q/aEB7qc5yqroRyhX1gzqYbmuoU2EBnhnhKJqdugrblXfaI6Et1t88SKzdfI5OlgZ
+         W05jCQZndgS8L4lbbU5UQ/pjxPbeBisrtFSMGA92LBsRJewcZZ9G6BVQKIWJ2skbTb
+         l9Mz+U6bi0e7vgVw9F8dCxJLuKCMPAcop3RWolsc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190307013411.GA6010@ziepe.ca>
-References: <20190307013411.GA6010@ziepe.ca>
+In-Reply-To: <1551940186.8289.60.camel@HansenPartnership.com>
+References: <1551940186.8289.60.camel@HansenPartnership.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190307013411.GA6010@ziepe.ca>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: fca22e7e595f1799cfbfdfa13e16d48ece0d136c
+X-PR-Tracked-Message-Id: <1551940186.8289.60.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: 26af1a368e40618d67956b1f883fbcfec292c5d8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a50243b1ddcdd766d0d17fbfeeb1a22e62fdc461
-Message-Id: <155218201474.32026.5898256217262679744.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Mar 2019 01:40:14 +0000
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 92fff53b7191cae566be9ca6752069426c7f8241
+Message-Id: <155218201567.32026.11525951372374565619.pr-tracker-bot@kernel.org>
+Date:   Sun, 10 Mar 2019 01:40:15 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 7 Mar 2019 01:34:16 +0000:
+The pull request you sent on Wed, 06 Mar 2019 22:29:46 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a50243b1ddcdd766d0d17fbfeeb1a22e62fdc461
+https://git.kernel.org/torvalds/c/92fff53b7191cae566be9ca6752069426c7f8241
 
 Thank you!
 
