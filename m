@@ -2,844 +2,257 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1265BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D9EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A769120657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C46205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IirkcpSO"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SnRvf29k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfCJTtX (ORCPT
+        id S1726903AbfCJTyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 15:49:23 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37874 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfCJTtX (ORCPT
+        Sun, 10 Mar 2019 15:54:15 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39058 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfCJTyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 15:49:23 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u2so1836700lfd.4;
-        Sun, 10 Mar 2019 12:49:19 -0700 (PDT)
+        Sun, 10 Mar 2019 15:54:15 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e15so2165175otk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 12:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oWdkaA9SXcVxx9E419bNwiMxrjnCDeu0doq+pLBEU58=;
-        b=IirkcpSONmVoRC9/faMZLZRAu/naIzSEMkVeIMWeLV1x4ceD12wllnU6CtFpX3PTeg
-         opIoCZMPshxXVGljJQk4C3EjO/kjOfpGKasX9IJW9DokzOSYFqA3wqa1m5faUkPvVrhk
-         4V7IBLewemXaYuHc8HGYsa46+5fC0t1aU7t9MOtmAz/b76Cv70S7+9PqKd1dpha168GA
-         g5UG9k8L4+Kl3dfB4kvOgx66JyoMMlJnc+dJ/Z+fag0xkxl1iyYhJUty5OfLtusrrsR+
-         edXP4B0U6T+FIDho7mWjanBGn0zRTKqd4tAk0KNWKqXzMwNQSQOwkgKRqNHXUR+Qqn3N
-         AZUQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=FlUXFEns5UtJwRic4qH/JXwTb0drcGEOPbRmIE5r6vY=;
+        b=SnRvf29kXXovTvKK/X3pnvWp1mej2HF1z7WjLwENt/nkJizzzEW1WIot6dv48Feyja
+         xpH1rmQbhzL94vZMprrYweqOBiY93RDXXvkSKvzoHc8jzZ88kL5HZV4U3e1vb0ZTPmCX
+         0ZYjEfZBeiMyuN4rS4QKekhR22FqgVaOiZ2/OtukiCAZs1IiVt3D9balwM0TK1gwg79o
+         8eo32jbYAJzmo+tbcFvt1fwX1ck93GEzZlNUjVqLsRGKbUfdXe9VSsySjO9kiUkp0DLn
+         kGo13SQOeKUorzodN8+PGn/nS7KY0VsycPK2QY+zN89NZE+juuHPEj3dyMRc6kC7jwc6
+         dciA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oWdkaA9SXcVxx9E419bNwiMxrjnCDeu0doq+pLBEU58=;
-        b=LC/3Ns2qYQFjBHU0cti02lKMF4E4jCzadQuTBWjJfGyIS6jFSJHs/gtFvRR4qsYABZ
-         oJhvuaBeoYt8KnqHaB52e/mr1fXchkwvD7qiViW6Ir+qeC95QPWduV6bxsMjvqoxsD3I
-         brguH1gAPXgDggB7zi6eMLXaXpdRty7qaAgdZT3fjtu2B1obugllEPtNfDMjPXZayNVK
-         ajOtNN8IkW9f25ifJ32RoUbUMlejncBwAwBJsvzvOTYBTDq+lo4mnqgdqFp+WKPLtJJ1
-         hF8qjY7D7pB9W5Ikfg54wGJ+xj14B2wwr0uf0/4fUfsITIcJDYySDu4yJjFHsSeWbVBS
-         DfRA==
-X-Gm-Message-State: APjAAAULYNS3GvjhEKno1pHGRz/ookBUYjURBG4Jzpn1hYm+RdDbCSwG
-        UjZkDdod/QKprUyD7wLFHC8wKe5B
-X-Google-Smtp-Source: APXvYqw5QkshSRNTHArW0gmTLzizbsWy8VCDLNHt9JnaOL8qkus3XgR3+CUYyhuHmoRVmjXzt9vVag==
-X-Received: by 2002:a19:57c6:: with SMTP id l189mr4070013lfb.0.1552247357844;
-        Sun, 10 Mar 2019 12:49:17 -0700 (PDT)
-Received: from [192.168.1.18] (bgt124.neoplus.adsl.tpnet.pl. [83.28.83.124])
-        by smtp.gmail.com with ESMTPSA id p3sm777601lfc.64.2019.03.10.12.49.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 12:49:17 -0700 (PDT)
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-To:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz,
-        tony@atomide.com, lee.jones@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-4-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <8ac4d84f-c792-893d-fbae-fac88fac8631@gmail.com>
-Date:   Sun, 10 Mar 2019 20:49:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=FlUXFEns5UtJwRic4qH/JXwTb0drcGEOPbRmIE5r6vY=;
+        b=HsKM14ihlofOY3FShCanQNbi3EV3M/Cuf5aEUtpqK2Qt2PLqFr97KGR+yEmTB0+7uZ
+         Sx5G9u0Aau8wGz+aWnxtdT+TOMtm+kD4yNiuVnM+SF95q2g9pmJF+JW8+M4130S3Rrto
+         N0NG0Gdr+Yk+OlzXihv3ecINNCixeQLXIOqWJ9rW10K0Ihj6TBbx61KHUS0+PbKUH0C0
+         g6JoyLBVNrNhPlnf3n8CtuUSKIrmGIyOd6bPCklMQEpkIRjk47NAYevqRKi0/qOpTZ9h
+         +mdlMyG3+1AQkBb/fAZu70mC+tKR81qEtvC0MEqNfxs527mTkfF9Bq6b7yKvut2YgYzm
+         BQEQ==
+X-Gm-Message-State: APjAAAWqFMiEOTjDqFJRcD9Y1y3ZTIXkvN4vEy091W7Aklwyu8eNkytS
+        PCUaXHqkryPWnEpbV4r2PsY3rZTu1opdTwN9W8qIQg==
+X-Google-Smtp-Source: APXvYqzpMq+w+S3vTSGCvE8igAd0nxHnEpWSZ87yTQo1MeS/03fV3Uk5EpQsak5+CzSvbi39K6DnTeAmr268o31ZdTQ=
+X-Received: by 2002:a9d:224a:: with SMTP id o68mr5709060ota.214.1552247653800;
+ Sun, 10 Mar 2019 12:54:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190307220947.20057-4-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 10 Mar 2019 12:54:01 -0700
+Message-ID: <CAPcyv4he0q_FdqqiXarp0bXjcggs8QZX8Od560E2iFxzCU3Qag@mail.gmail.com>
+Subject: [GIT PULL] device-dax for 5.1: PMEM as RAM
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Hi Linus, please pull from:
 
-Thank your for the patch.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/devdax-for-5.1
 
-I have some comments below, please take a look.
+...to receive new device-dax infrastructure to allow persistent memory
+and other "reserved" / performance differentiated memories, to be
+assigned to the core-mm as "System RAM".
 
-On 3/7/19 11:09 PM, Dan Murphy wrote:
-> Introduce the Texas Instruments LM3532 White LED driver.
-> The driver supports ALS configurability or manual brightness
-> control.
-> 
-> The driver also supports associating LED strings with specific
-> control banks in a group or as individually controlled strings.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   drivers/leds/Kconfig                   |  10 +
->   drivers/leds/Makefile                  |   1 +
->   drivers/leds/leds-lm3532.c             | 595 +++++++++++++++++++++++++
->   include/dt-bindings/leds/leds-lm3532.h |  72 +++
->   4 files changed, 678 insertions(+)
->   create mode 100644 drivers/leds/leds-lm3532.c
->   create mode 100644 include/dt-bindings/leds/leds-lm3532.h
-> 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index a72f97fca57b..da00b9ed5a5c 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -138,6 +138,16 @@ config LEDS_LM3530
->   	  controlled manually or using PWM input or using ambient
->   	  light automatically.
->   
-> +config LEDS_LM3532
-> +	tristate "LCD Backlight driver for LM3532"
-> +	depends on LEDS_CLASS
-> +	depends on I2C
-> +	help
-> +	  This option enables support for the LCD backlight using
-> +	  LM3532 ambient light sensor chip. This ALS chip can be
-> +	  controlled manually or using PWM input or using ambient
-> +	  light automatically.
-> +
->   config LEDS_LM3533
->   	tristate "LED support for LM3533"
->   	depends on LEDS_CLASS
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 4c1b0054f379..7a8b1f55d459 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
->   obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
->   obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
->   obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-> +obj-$(CONFIG_LEDS_LM3532)		+= leds-lm3532.o
->   obj-$(CONFIG_LEDS_LM3533)		+= leds-lm3533.o
->   obj-$(CONFIG_LEDS_LM3642)		+= leds-lm3642.o
->   obj-$(CONFIG_LEDS_MIKROTIK_RB532)	+= leds-rb532.o
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> new file mode 100644
-> index 000000000000..005478359d06
-> --- /dev/null
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -0,0 +1,595 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// TI LM3532 LED driver
-> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/leds.h>
-> +#include <linux/slab.h>
-> +#include <linux/regmap.h>
-> +#include <linux/input.h>
-> +#include <linux/types.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/module.h>
-> +#include <uapi/linux/uleds.h>
-> +#include <linux/gpio/consumer.h>
-> +
-> +#include <dt-bindings/leds/leds-lm3532.h>
-> +
-> +#define LM3532_NAME "lm3532-led"
-> +
-> +#define LM3532_REG_OUTPUT_CFG	0x10
-> +#define LM3532_REG_STARTSHUT_RAMP	0x11
-> +#define LM3532_REG_RT_RAMP	0x12
-> +#define LM3532_REG_PWM_A_CFG	0x13
-> +#define LM3532_REG_PWM_B_CFG	0x14
-> +#define LM3532_REG_PWM_C_CFG	0x15
-> +#define LM3532_REG_ZONE_CFG_A	0x16
-> +#define LM3532_REG_CTRL_A_BRT	0x17
-> +#define LM3532_REG_ZONE_CFG_B	0x18
-> +#define LM3532_REG_CTRL_B_BRT	0x19
-> +#define LM3532_REG_ZONE_CFG_C	0x1a
-> +#define LM3532_REG_CTRL_C_BRT	0x1b
-> +#define LM3532_REG_ENABLE	0x1d
-> +#define LM3532_ALS_CONFIG	0x23
-> +#define LM3532_REG_ZN_0_HI	0x60
-> +#define LM3532_REG_ZN_0_LO	0x61
-> +#define LM3532_REG_ZN_1_HI	0x62
-> +#define LM3532_REG_ZN_1_LO	0x63
-> +#define LM3532_REG_ZN_2_HI	0x64
-> +#define LM3532_REG_ZN_2_LO	0x65
-> +#define LM3532_REG_ZN_3_HI	0x66
-> +#define LM3532_REG_ZN_3_LO	0x67
-> +#define LM3532_REG_MAX		0x7e
-> +
-> +/* Contorl Enable */
-> +#define LM3532_CTRL_A_ENABLE	BIT(0)
-> +#define LM3532_CTRL_B_ENABLE	BIT(1)
-> +#define LM3532_CTRL_C_ENABLE	BIT(2)
-> +
-> +/* PWM Zone Control */
-> +#define LM3532_PWM_ZONE_MASK	0x7c
-> +#define LM3532_PWM_ZONE_0_EN	BIT(2)
-> +#define LM3532_PWM_ZONE_1_EN	BIT(3)
-> +#define LM3532_PWM_ZONE_2_EN	BIT(4)
-> +#define LM3532_PWM_ZONE_3_EN	BIT(5)
-> +#define LM3532_PWM_ZONE_4_EN	BIT(6)
-> +
-> +/* Brightness Configuration */
-> +#define LM3532_I2C_CTRL		BIT(0)
-> +#define LM3532_LINEAR_MAP	BIT(1)
-> +#define LM3532_ZONE_MASK	(BIT(2) | BIT(3) | BIT(4))
-> +#define LM3532_ZONE_0		0
-> +#define LM3532_ZONE_1		BIT(2)
-> +#define LM3532_ZONE_2		BIT(3)
-> +#define LM3532_ZONE_3		(BIT(2) | BIT(3))
-> +#define LM3532_ZONE_4		BIT(4)
-> +
-> +#define LM3532_ENABLE_ALS	BIT(3)
-> +#define LM3532_ALS_SEL_SHIFT	6
-> +
-> +/* Zone Boundary Register */
-> +#define LM3532_ALS_WINDOW_mV	2000
-> +#define LM3532_ALS_ZB_MAX	4
-> +#define LM3532_ALS_OFFSET_mV	2
-> +
-> +#define LM3532_CONTROL_A	0
-> +#define LM3532_CONTROL_B	1
-> +#define LM3532_CONTROL_C	2
-> +#define LM3532_MAX_CONTROL_BANKS 3
-> +#define LM3532_MAX_LED_STRINGS	3
-> +
-> +#define LM3532_OUTPUT_CFG_MASK	0x3
-> +#define LM3532_BRT_VAL_ADJUST	8
-> +#define LM3532_RAMP_DOWN_SHIFT	3
-> +
-> +/*
-> + * struct lm3532_als_data
-> + * @config - value of ALS configuration register
-> + * @als1_imp_sel - value of ALS1 resistor select register
-> + * @als2_imp_sel - value of ALS2 resistor select register
-> + * @als_avrg_time - ALS averaging time
-> + * @als_input_mode - ALS input mode for brightness control
-> + * @als_vmin - Minimum ALS voltage
-> + * @als_vmax - Maximum ALS voltage
-> + * @zone_lo - values of ALS lo ZB(Zone Boundary) registers
-> + * @zone_hi - values of ALS hi ZB(Zone Boundary) registers
-> + */
-> +struct lm3532_als_data {
-> +	u8 config;
-> +	u8 als1_imp_sel;
-> +	u8 als2_imp_sel;
-> +	u8 als_avrg_time;
-> +	u8 als_input_mode;
-> +	u32 als_vmin;
-> +	u32 als_vmax;
-> +	u8 zones_lo[LM3532_ALS_ZB_MAX];
-> +	u8 zones_hi[LM3532_ALS_ZB_MAX];
-> +};
-> +
-> +/**
-> + * struct lm3532_led
-> + * @led_dev: led class device
-> + * @priv - Pointer the device data structure
-> + * @control_bank - Control bank the LED is associated to
-> + * @mode - Mode of the LED string
-> + * @num_leds - Number of LED strings are supported in this array
-> + * @led_strings - The LED strings supported in this array
-> + * @label - LED label
-> + */
-> +struct lm3532_led {
-> +	struct led_classdev led_dev;
-> +	struct lm3532_data *priv;
-> +
-> +	int control_bank;
-> +	int mode;
-> +	int num_leds;
-> +	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
-> +	char label[LED_MAX_NAME_SIZE];
-> +};
-> +
-> +/**
-> + * struct lm3532_data
-> + * @enable_gpio - Hardware enable gpio
-> + * @regulator: regulator
-> + * @client: i2c client
-> + * @regmap - Devices register map
-> + * @dev - Pointer to the devices device struct
-> + * @lock - Lock for reading/writing the device
-> + * @als_data - Pointer to the als data struct
-> + * @runtime_ramp_up - Runtime ramp up setting
-> + * @runtime_ramp_down - Runtime ramp down setting
-> + * @leds - Array of LED strings
-> + */
-> +struct lm3532_data {
-> +	struct gpio_desc *enable_gpio;
-> +	struct regulator *regulator;
-> +	struct i2c_client *client;
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +	struct mutex lock;
-> +
-> +	struct lm3532_als_data *als_data;
-> +
-> +	u32 runtime_ramp_up;
-> +	u32 runtime_ramp_down;
-> +
-> +	struct lm3532_led leds[];
-> +};
-> +
-> +static const struct reg_default lm3532_reg_defs[] = {
-> +	{LM3532_REG_OUTPUT_CFG, 0xe4},
-> +	{LM3532_REG_STARTSHUT_RAMP, 0xc0},
-> +	{LM3532_REG_RT_RAMP, 0xc0},
-> +	{LM3532_REG_PWM_A_CFG, 0x82},
-> +	{LM3532_REG_PWM_B_CFG, 0x82},
-> +	{LM3532_REG_PWM_C_CFG, 0x82},
-> +	{LM3532_REG_ZONE_CFG_A, 0xf1},
-> +	{LM3532_REG_CTRL_A_BRT, 0xf3},
-> +	{LM3532_REG_ZONE_CFG_B, 0xf1},
-> +	{LM3532_REG_CTRL_B_BRT, 0xf3},
-> +	{LM3532_REG_ZONE_CFG_C, 0xf1},
-> +	{LM3532_REG_CTRL_C_BRT, 0xf3},
-> +	{LM3532_REG_ENABLE, 0xf8},
-> +	{LM3532_ALS_CONFIG, 0x44},
-> +	{LM3532_REG_ZN_0_HI, 0x35},
-> +	{LM3532_REG_ZN_0_LO, 0x33},
-> +	{LM3532_REG_ZN_1_HI, 0x6a},
-> +	{LM3532_REG_ZN_1_LO, 0x66},
-> +	{LM3532_REG_ZN_2_HI, 0xa1},
-> +	{LM3532_REG_ZN_2_LO, 0x99},
-> +	{LM3532_REG_ZN_3_HI, 0xdc},
-> +	{LM3532_REG_ZN_3_LO, 0xcc},
-> +};
-> +
-> +static const struct regmap_config lm3532_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +
-> +	.max_register = LM3532_REG_MAX,
-> +	.reg_defaults = lm3532_reg_defs,
-> +	.num_reg_defaults = ARRAY_SIZE(lm3532_reg_defs),
-> +	.cache_type = REGCACHE_FLAT,
-> +};
-> +
-> +static int lm3532_led_enable(struct lm3532_led *led_data)
-> +{
-> +	int ctrl_en_val;
-> +	int ret;
-> +
-> +	switch (led_data->control_bank) {
-> +	case LM3532_CONTROL_A:
-> +		ctrl_en_val = LM3532_CTRL_A_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_B:
-> +		ctrl_en_val = LM3532_CTRL_B_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_C:
-> +		ctrl_en_val = LM3532_CTRL_C_ENABLE;
-> +		break;
-> +	default:
-> +		dev_err(led_data->priv->dev, "Invalid control bank\n");
+While it has soaked in -next with only a simple conflict reported, and
+Michal looked at this and said "overall design of this feature makes a
+lot of sense to me" [1], it's lacking non-Intel review/ack tags. For
+that reason, here's some more commentary on the motivation and
+implications:
 
-If control_bank was validated in lm3532_parse_node(), then you wouldn't
-have to take into account this option here.
+[1]: https://lore.kernel.org/lkml/20190123170518.GC4087@dhcp22.suse.cz/
 
-Besides, you don't need this switch statement, but can easily calculate
-ctrl_en_val:
+Some users want to use persistent memory as additional volatile
+memory. They are willing to cope with potential performance
+differences, for example between DRAM and 3D Xpoint, and want to use
+typical Linux memory management apis rather than a userspace memory
+allocator layered over an mmap() of a dax file. The administration
+model is to decide how much Persistent Memory (pmem) to use as System
+RAM, create a device-dax-mode namespace of that size, and then assign
+it to the core-mm. The rationale for device-dax is that it is a
+generic memory-mapping driver that can be layered over any "special
+purpose" memory, not just pmem. On subsequent boots udev rules can be
+used to restore the memory assignment.
 
-#define LM3532_GET_CTRL_BANK_EN_VAL(bank_id) BIT(bank_id)
+One implication of using pmem as RAM is that mlock() no longer keeps
+data off persistent media. For this reason it is recommended to enable
+NVDIMM Security (previously merged for 5.0) to encrypt pmem contents
+at rest. We considered making this recommendation an actively enforced
+requirement, but in the end decided to leave it as a distribution /
+administrator policy to allow for emulation and test environments that
+lack security capable NVDIMMs.
 
-> +		return -EINVAL;
-> +	};
-> +
-> +	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
-> +					 ctrl_en_val, ctrl_en_val);
-> +	if (ret) {
-> +		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return regulator_enable(led_data->priv->regulator);
-> +}
-> +
-> +static int lm3532_led_disable(struct lm3532_led *led_data)
-> +{
-> +	int ctrl_en_val;
-> +	int ret;
-> +
-> +	switch (led_data->control_bank) {
-> +	case LM3532_CONTROL_A:
-> +		ctrl_en_val = LM3532_CTRL_A_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_B:
-> +		ctrl_en_val = LM3532_CTRL_B_ENABLE;
-> +		break;
-> +	case LM3532_CONTROL_C:
-> +		ctrl_en_val = LM3532_CTRL_C_ENABLE;
-> +		break;
-> +	default:
-> +		dev_err(led_data->priv->dev, "Invalid control bank\n");
-> +		return -EINVAL;
-> +	};
+Here is the resolution for the aforementioned conflict:
 
-Ditto.
+diff --cc mm/memory_hotplug.c
+index a9d5787044e1,b37f3a5c4833..c4f59ac21014
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@@ -102,28 -99,21 +102,24 @@@ u64 max_mem_size = U64_MAX
+  /* add this memory to iomem resource */
+  static struct resource *register_memory_resource(u64 start, u64 size)
+  {
+-       struct resource *res, *conflict;
++       struct resource *res;
++       unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++       char *resource_name = "System RAM";
 
-> +
-> +	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
-> +					 ctrl_en_val, ~ctrl_en_val);
-> +	if (ret) {
-> +		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return regulator_disable(led_data->priv->regulator);
-> +}
-> +
-> +static int lm3532_brightness_set(struct led_classdev *led_cdev,
-> +				 enum led_brightness brt_val)
-> +{
-> +	struct lm3532_led *led =
-> +			container_of(led_cdev, struct lm3532_led, led_dev);
-> +	u8 brightnes_reg;
-> +	int ret;
-> +
-> +	mutex_lock(&led->priv->lock);
-> +
-> +	if (led->mode == LM3532_BL_MODE_ALS) {
-> +		ret = 0;
-> +		goto unlock;
-> +	}
-> +
-> +	switch (led->control_bank) {
-> +	case LM3532_CONTROL_A:
-> +		brightnes_reg = LM3532_REG_CTRL_A_BRT;
-> +		break;
-> +	case LM3532_CONTROL_B:
-> +		brightnes_reg = LM3532_REG_CTRL_B_BRT;
-> +		break;
-> +	case LM3532_CONTROL_C:
-> +		brightnes_reg = LM3532_REG_CTRL_C_BRT;
-> +		break;
-> +	default:
-> +		dev_err(led->priv->dev, "Invalid control bank\n");
-> +		ret = -EINVAL;
-> +		goto unlock;
-> +	};
+ +      if (start + size > max_mem_size)
+ +              return ERR_PTR(-E2BIG);
+ +
+-       res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+-       if (!res)
+-               return ERR_PTR(-ENOMEM);
+-
+-       res->name = "System RAM";
+-       res->start = start;
+-       res->end = start + size - 1;
+-       res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+-       conflict =  request_resource_conflict(&iomem_resource, res);
+-       if (conflict) {
+-               if (conflict->desc == IORES_DESC_DEVICE_PRIVATE_MEMORY) {
+-                       pr_debug("Device unaddressable memory block "
+-                                "memory hotplug at %#010llx !\n",
+-                                (unsigned long long)start);
+-               }
+-               pr_debug("System RAM resource %pR cannot be added\n", res);
+-               kfree(res);
++       /*
++        * Request ownership of the new memory range.  This might be
++        * a child of an existing resource that was present but
++        * not marked as busy.
++        */
++       res = __request_region(&iomem_resource, start, size,
++                              resource_name, flags);
++
++       if (!res) {
++               pr_debug("Unable to reserve System RAM region:
+%016llx->%016llx\n",
++                               start, start + size);
+                return ERR_PTR(-EEXIST);
+        }
+        return res;
 
-Similarly here. use following macro:
 
-#define LM3532_GET_CTRL_BANK_BRT_REG (bank_id) 
-BIT((LM3532_REG_CTRL_A_BRT + bank_id*2))
+* Note, I'm sending this with Gmail rather than Evolution (which goes
+through my local Exchange server) as the latter mangles the message
+into something the pr-tracker-bot decides to ignore. As a result,
+please forgive white-space damage.
 
-> +	if (brt_val == LED_OFF) {
-> +		ret = lm3532_led_disable(led);
-> +		goto unlock;
-> +	}
-> +
-> +	lm3532_led_enable(led);
-> +	brt_val = brt_val / LM3532_BRT_VAL_ADJUST;
-> +
-> +	ret = regmap_write(led->priv->regmap, brightnes_reg, brt_val);
-> +
-> +unlock:
-> +	mutex_unlock(&led->priv->lock);
-> +	return ret;
-> +}
-> +
-> +static int lm3532_init_registers(struct lm3532_led *led)
-> +{
-> +	struct lm3532_data *drvdata = led->priv;
-> +	unsigned int runtime_ramp_val;
-> +	unsigned int output_cfg_val = 0;
-> +	unsigned int output_cfg_shift = 0;
-> +	unsigned int output_cfg_mask = 0;
-> +	int ret, i;
-> +
-> +	for (i = 0; i < led->num_leds; i++) {
-> +		output_cfg_shift = led->led_strings[i] * 2;
-> +		output_cfg_val |= (led->control_bank << output_cfg_shift);
-> +		output_cfg_mask |= LM3532_OUTPUT_CFG_MASK << output_cfg_shift;
-> +	}
-> +
-> +	ret = regmap_update_bits(drvdata->regmap, LM3532_REG_OUTPUT_CFG,
-> +				 output_cfg_mask, output_cfg_val);
-> +
-> +	runtime_ramp_val = drvdata->runtime_ramp_up |
-> +			 (drvdata->runtime_ramp_down << LM3532_RAMP_DOWN_SHIFT);
-> +
-> +	return regmap_write(drvdata->regmap, LM3532_REG_RT_RAMP,
-> +			    runtime_ramp_val);
-> +}
-> +
-> +static int lm3532_als_configure(struct lm3532_data *priv)
-> +{
-> +	struct lm3532_als_data *als = priv->als_data;
-> +	u32 als_vmin, als_vmax, als_vstep;
-> +	int zone_reg = LM3532_REG_ZN_0_HI;
-> +	int ret;
-> +	int i;
-> +
-> +	als_vmin = als->als_vmin;
-> +	als_vmax = als->als_vmax;
-> +
-> +	als_vstep = (als_vmax - als_vmin) / ((LM3532_ALS_ZB_MAX + 1) * 2);
-> +
-> +	for (i = 0; i < LM3532_ALS_ZB_MAX; i++) {
-> +		als->zones_lo[i] = ((als_vmin + als_vstep + (i * als_vstep)) *
-> +				LED_FULL) / 1000;
-> +		als->zones_hi[i] = ((als_vmin + LM3532_ALS_OFFSET_mV +
-> +				als_vstep + (i * als_vstep)) * LED_FULL) / 1000;
-> +
-> +		zone_reg = LM3532_REG_ZN_0_HI + i * 2;
-> +		ret = regmap_write(priv->regmap, zone_reg, als->zones_lo[i]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		zone_reg += 1;
-> +		ret = regmap_write(priv->regmap, zone_reg, als->zones_hi[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	als->config = (als->als_avrg_time | (LM3532_ENABLE_ALS) |
-> +		(als->als_input_mode << LM3532_ALS_SEL_SHIFT));
-> +
-> +	return regmap_write(priv->regmap, LM3532_ALS_CONFIG, als->config);
-> +}
-> +
-> +static int lm3532_parse_als(struct lm3532_data *priv)
-> +{
-> +	struct lm3532_als_data *als;
-> +	int ret;
-> +
-> +	als = devm_kzalloc(priv->dev, sizeof(*als), GFP_KERNEL);
-> +	if (als == NULL)
-> +		return -ENOMEM;
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "als-vmin",
-> +				       &als->als_vmin);
-> +	if (ret)
-> +		als->als_vmin = 0;
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "als-vmax",
-> +				       &als->als_vmax);
-> +	if (ret)
-> +		als->als_vmax = LM3532_ALS_WINDOW_mV;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als1-imp-sel",
-> +				      &als->als1_imp_sel);
-> +	if (ret)
-> +		als->als1_imp_sel = 0;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als2-imp-sel",
-> +				      &als->als2_imp_sel);
-> +	if (ret)
-> +		als->als2_imp_sel = 0;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als-avrg-time",
-> +				      &als->als_avrg_time);
-> +	if (ret)
-> +		als->als_avrg_time = 0;
-> +
-> +	ret = device_property_read_u8(&priv->client->dev, "als-input-mode",
-> +				      &als->als_input_mode);
-> +	if (ret)
-> +		als->als_input_mode = 0;
-> +
-> +	priv->als_data = als;
-> +
-> +	return ret;
-> +}
-> +
-> +static int lm3532_parse_node(struct lm3532_data *priv)
-> +{
-> +	struct fwnode_handle *child = NULL;
-> +	struct lm3532_led *led;
-> +	const char *name;
-> +	int control_bank;
-> +	size_t i = 0;
-> +	int ret;
-> +
-> +	priv->enable_gpio = devm_gpiod_get_optional(&priv->client->dev,
-> +						   "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(priv->enable_gpio))
-> +		priv->enable_gpio = NULL;
-> +
-> +	priv->regulator = devm_regulator_get(&priv->client->dev, "vin");
-> +	if (IS_ERR(priv->regulator))
-> +		priv->regulator = NULL;
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "ramp-down-ms",
-> +				       &priv->runtime_ramp_up);
-> +	if (ret)
-> +		dev_info(&priv->client->dev, "ramp-down-ms property missing\n");
-> +
-> +	ret = device_property_read_u32(&priv->client->dev, "ramp-down-ms",
-> +				       &priv->runtime_ramp_down);
-> +	if (ret)
-> +		dev_info(&priv->client->dev, "ramp-down-ms property missing\n");
-> +
-> +	device_for_each_child_node(priv->dev, child) {
-> +		led = &priv->leds[i];
-> +
-> +		ret = fwnode_property_read_u32(child, "reg", &control_bank);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "reg property missing\n");
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		if (control_bank > LM3532_CONTROL_C) {
-> +			dev_err(&priv->client->dev, "Control bank invalid\n");
-> +			continue;
-> +		}
-> +
-> +		led->control_bank = control_bank;
-> +
-> +		ret = fwnode_property_read_u32(child, "ti,led-mode",
-> +					       &led->mode);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "ti,led-mode property missing\n");
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		if (led->mode == LM3532_BL_MODE_ALS) {
-> +			ret = lm3532_parse_als(priv);
-> +			if (ret)
-> +				dev_err(&priv->client->dev, "Failed to parse als\n");
-> +			else
-> +				lm3532_als_configure(priv);
-> +		}
-> +
-> +		led->num_leds = fwnode_property_read_u32_array(child,
-> +							       "led-sources",
-> +							       NULL, 0);
-> +
-> +		if (led->num_leds > LM3532_MAX_LED_STRINGS) {
-> +			dev_err(&priv->client->dev, "To many LED string defined\n");
-> +			continue;
-> +		}
-> +
-> +		ret = fwnode_property_read_u32_array(child, "led-sources",
-> +						    led->led_strings,
-> +						    led->num_leds);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "led-sources property missing\n");
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		fwnode_property_read_string(child, "linux,default-trigger",
-> +					    &led->led_dev.default_trigger);
-> +
-> +		ret = fwnode_property_read_string(child, "label", &name);
-> +		if (ret)
-> +			snprintf(led->label, sizeof(led->label),
-> +				"%s::", priv->client->name);
-> +		else
-> +			snprintf(led->label, sizeof(led->label),
-> +				 "%s:%s", priv->client->name, name);
-> +
-> +		led->priv = priv;
-> +		led->led_dev.name = led->label;
-> +		led->led_dev.brightness_set_blocking = lm3532_brightness_set;
-> +
-> +		ret = devm_led_classdev_register(priv->dev, &led->led_dev);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "led register err: %d\n",
-> +				ret);
-> +			fwnode_handle_put(child);
-> +			goto child_out;
-> +		}
-> +
-> +		lm3532_init_registers(led);
-> +
-> +		i++;
-> +	}
-> +
-> +child_out:
-> +	return ret;
-> +}
-> +
-> +static int lm3532_probe(struct i2c_client *client,
-> +			   const struct i2c_device_id *id)
-> +{
-> +	struct lm3532_data *drvdata;
-> +	int ret = 0;
-> +	int count;
-> +
-> +	count = device_get_child_node_count(&client->dev);
-> +	if (!count) {
-> +		dev_err(&client->dev, "LEDs are not defined in device tree!");
-> +		return -ENODEV;
-> +	}
-> +
-> +	drvdata = devm_kzalloc(&client->dev, struct_size(drvdata, leds, count),
-> +			   GFP_KERNEL);
-> +	if (drvdata == NULL)
-> +		return -ENOMEM;
-> +
-> +	drvdata->client = client;
-> +	drvdata->dev = &client->dev;
-> +
-> +	drvdata->regmap = devm_regmap_init_i2c(client, &lm3532_regmap_config);
-> +	if (IS_ERR(drvdata->regmap)) {
-> +		ret = PTR_ERR(drvdata->regmap);
-> +		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	mutex_init(&drvdata->lock);
-> +	i2c_set_clientdata(client, drvdata);
-> +
-> +	ret = lm3532_parse_node(drvdata);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Failed to parse node\n");
-> +		return ret;
-> +	}
-> +
-> +	if (drvdata->enable_gpio)
-> +		gpiod_direction_output(drvdata->enable_gpio, 1);
-> +
-> +	return ret;
-> +}
-> +
-> +static int lm3532_remove(struct i2c_client *client)
-> +{
-> +	struct lm3532_data *drvdata = i2c_get_clientdata(client);
+---
 
-mutex_destroy() is missing here.
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
 
-> +	if (drvdata->enable_gpio)
-> +		gpiod_direction_output(drvdata->enable_gpio, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_lm3532_leds_match[] = {
-> +	{ .compatible = "ti,lm3532", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, of_lm3532_leds_match);
-> +
-> +static const struct i2c_device_id lm3532_id[] = {
-> +	{LM3532_NAME, 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, lm3532_id);
-> +
-> +static struct i2c_driver lm3532_i2c_driver = {
-> +	.probe = lm3532_probe,
-> +	.remove = lm3532_remove,
-> +	.id_table = lm3532_id,
-> +	.driver = {
-> +		.name = LM3532_NAME,
-> +		.of_match_table = of_lm3532_leds_match,
-> +	},
-> +};
-> +module_i2c_driver(lm3532_i2c_driver);
-> +
-> +MODULE_DESCRIPTION("Back Light driver for LM3532");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
-> diff --git a/include/dt-bindings/leds/leds-lm3532.h b/include/dt-bindings/leds/leds-lm3532.h
-> new file mode 100644
-> index 000000000000..724dbc0cb395
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/leds-lm3532.h
+  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
 
-This should go in a separate patch, with DT bindings - see checkpatch.pl
-complaint.
+are available in the Git repository at:
 
-> @@ -0,0 +1,72 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* TI LM3532 LED driver
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#ifndef __DT_BINDINGS_LEDS_LM3532_H
-> +#define __DT_BINDINGS_LEDS_LM3532_H
-> +
-> +#define LM3532_BL_MODE_MANUAL	0x00 /* "man" */
-> +#define LM3532_BL_MODE_ALS	0x01 /* "als" */
-> +
-> +/* ALS Resistor Select */
-> +#define LM3532_IMP_HIGH		0x00
-> +#define LM3532_IMP_37K		0x01
-> +#define LM3532_IMP_18_5K	0x02
-> +#define LM3532_IMP_12_33K	0x03
-> +#define LM3532_IMP_9_25K	0x04
-> +#define LM3532_IMP_7_4K		0x05
-> +#define LM3532_IMP_6_17K	0x06
-> +#define LM3532_IMP_5_29K	0x07
-> +#define LM3532_IMP_4_63K	0x08
-> +#define LM3532_IMP_4_11K	0x09
-> +#define LM3532_IMP_3_7K		0x0a
-> +#define LM3532_IMP_3_36K	0x0b
-> +#define LM3532_IMP_3_08K	0x0c
-> +#define LM3532_IMP_2_85K	0x0d
-> +#define LM3532_IMP_2_64K	0x0e
-> +#define LM3532_IMP_2_44K	0x0f
-> +#define LM3532_IMP_2_31K	0x10
-> +#define LM3532_IMP_2_18K	0x11
-> +#define LM3532_IMP_2_06K	0x12
-> +#define LM3532_IMP_1_95K	0x13
-> +#define LM3532_IMP_1_85K	0x14
-> +#define LM3532_IMP_1_76K	0x15
-> +#define LM3532_IMP_1_68K	0x16
-> +#define LM3532_IMP_1_61K	0x17
-> +#define LM3532_IMP_1_54K	0x18
-> +#define LM3532_IMP_1_48K	0x19
-> +#define LM3532_IMP_1_42K	0x1a
-> +#define LM3532_IMP_1_37K	0x1b
-> +#define LM3532_IMP_1_32K	0x1c
-> +#define LM3532_IMP_1_28K	0x1d
-> +#define LM3532_IMP_1_23K	0x1e
-> +#define LM3532_IMP_1_19K	0x1f
-> +
-> +/* ALS Averaging Time */
-> +#define LM3532_ALS_AVRG_TIME_17_92ms	0x00
-> +#define LM3532_ALS_AVRG_TIME_35_84ms	0x01
-> +#define LM3532_ALS_AVRG_TIME_71_68ms	0x02
-> +#define LM3532_ALS_AVRG_TIME_143_36ms	0x03
-> +#define LM3532_ALS_AVRG_TIME_286_72ms	0x04
-> +#define LM3532_ALS_AVRG_TIME_573_44ms	0x05
-> +#define LM3532_ALS_AVRG_TIME_1146_88ms	0x06
-> +#define LM3532_ALS_AVRG_TIME_2293_76ms	0x07
-> +
-> +/* ALS input select */
-> +#define LM3532_ALS_INPUT_AVRG	0x00 /* ALS1 and ALS2 input average */
-> +#define LM3532_ALS_INPUT_ALS1	0x01 /* ALS1 Input */
-> +#define LM3532_ALS_INPUT_ALS2	0x02 /* ALS2 Input */
-> +#define LM3532_ALS_INPUT_CEIL	0x03 /* Max of ALS1 and ALS2 */
-> +
-> +/* Ramp Times */
-> +#define LM3532_RAMP_8us		0x00
-> +#define LM3532_RAMP_1024us	0x01
-> +#define LM3532_RAMP_2048us	0x02
-> +#define LM3532_RAMP_4096us	0x03
-> +#define LM3532_RAMP_8192us	0x04
-> +#define LM3532_RAMP_16384us	0x05
-> +#define LM3532_RAMP_32768us	0x06
-> +#define LM3532_RAMP_65536us	0x07
-> +
-> +#endif /* __DT_BINDINGS_LEDS_LM3532_H */
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/devdax-for-5.1
 
--- 
-Best regards,
-Jacek Anaszewski
+for you to fetch changes up to c221c0b0308fd01d9fb33a16f64d2fd95f8830a4:
+
+  device-dax: "Hotplug" persistent memory for use like normal RAM
+(2019-02-28 10:41:23 -0800)
+
+----------------------------------------------------------------
+device-dax for 5.1
+* Replace the /sys/class/dax device model with /sys/bus/dax, and include
+  a compat driver so distributions can opt-in to the new ABI.
+
+* Allow for an alternative driver for the device-dax address-range
+
+* Introduce the 'kmem' driver to hotplug / assign a device-dax
+  address-range to the core-mm.
+
+* Arrange for the device-dax target-node to be onlined so that the newly
+  added memory range can be uniquely referenced by numa apis.
+
+----------------------------------------------------------------
+Dan Williams (11):
+      device-dax: Kill dax_region ida
+      device-dax: Kill dax_region base
+      device-dax: Remove multi-resource infrastructure
+      device-dax: Start defining a dax bus model
+      device-dax: Introduce bus + driver model
+      device-dax: Move resource pinning+mapping into the common driver
+      device-dax: Add support for a dax override driver
+      device-dax: Add /sys/class/dax backwards compatibility
+      acpi/nfit, device-dax: Identify differentiated memory with a
+unique numa-node
+      device-dax: Auto-bind device after successful new_id
+      device-dax: Add a 'target_node' attribute
+
+Dave Hansen (5):
+      mm/resource: Return real error codes from walk failures
+      mm/resource: Move HMM pr_debug() deeper into resource code
+      mm/memory-hotplug: Allow memory resources to be children
+      mm/resource: Let walk_system_ram_range() search child resources
+      device-dax: "Hotplug" persistent memory for use like normal RAM
+
+Vishal Verma (1):
+      device-dax: Add a 'modalias' attribute to DAX 'bus' devices
+
+ Documentation/ABI/obsolete/sysfs-class-dax |  22 ++
+ arch/powerpc/platforms/pseries/papr_scm.c  |   1 +
+ drivers/acpi/nfit/core.c                   |   8 +-
+ drivers/acpi/numa.c                        |   1 +
+ drivers/base/memory.c                      |   1 +
+ drivers/dax/Kconfig                        |  28 +-
+ drivers/dax/Makefile                       |   6 +-
+ drivers/dax/bus.c                          | 503 +++++++++++++++++++++++++++++
+ drivers/dax/bus.h                          |  61 ++++
+ drivers/dax/dax-private.h                  |  34 +-
+ drivers/dax/dax.h                          |  18 --
+ drivers/dax/device-dax.h                   |  25 --
+ drivers/dax/device.c                       | 363 +++++----------------
+ drivers/dax/kmem.c                         | 108 +++++++
+ drivers/dax/pmem.c                         | 153 ---------
+ drivers/dax/pmem/Makefile                  |   7 +
+ drivers/dax/pmem/compat.c                  |  73 +++++
+ drivers/dax/pmem/core.c                    |  71 ++++
+ drivers/dax/pmem/pmem.c                    |  40 +++
+ drivers/dax/super.c                        |  41 ++-
+ drivers/nvdimm/e820.c                      |   1 +
+ drivers/nvdimm/nd.h                        |   2 +-
+ drivers/nvdimm/of_pmem.c                   |   1 +
+ drivers/nvdimm/region_devs.c               |   1 +
+ include/linux/acpi.h                       |   5 +
+ include/linux/libnvdimm.h                  |   1 +
+ kernel/resource.c                          |  18 +-
+ mm/memory_hotplug.c                        |  33 +-
+ tools/testing/nvdimm/Kbuild                |   7 +-
+ tools/testing/nvdimm/dax-dev.c             |  16 +-
+ 30 files changed, 1112 insertions(+), 537 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-class-dax
+ create mode 100644 drivers/dax/bus.c
+ create mode 100644 drivers/dax/bus.h
+ delete mode 100644 drivers/dax/dax.h
+ delete mode 100644 drivers/dax/device-dax.h
+ create mode 100644 drivers/dax/kmem.c
+ delete mode 100644 drivers/dax/pmem.c
+ create mode 100644 drivers/dax/pmem/Makefile
+ create mode 100644 drivers/dax/pmem/compat.c
+ create mode 100644 drivers/dax/pmem/core.c
+ create mode 100644 drivers/dax/pmem/pmem.c
