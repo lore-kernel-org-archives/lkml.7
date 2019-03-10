@@ -2,131 +2,98 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F19C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D378CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF3E20657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928D2207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:30:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fh/Pf83L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfCJV1B (ORCPT
+        id S1726851AbfCJVaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 17:27:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46567 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfCJV1B (ORCPT
+        Sun, 10 Mar 2019 17:30:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46116 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfCJVaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 17:27:01 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j10so2097601oij.13
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:27:00 -0700 (PDT)
+        Sun, 10 Mar 2019 17:30:10 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i16so2927680wrs.13
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XayYu6osvInJUJaPOufT68C1ORPD1W8ysng6inaqvaQ=;
+        b=Fh/Pf83LKiO6+VD4ejwXfiscN+RzAkpxRa8HBzTFaxuzxFlGUN47TEj01XrnL9yG5C
+         99UFE5Q/5/C3JXPIn1DM38XVeEG3BMcibuDzrDPR0lv/E7G/FUzF3sTxVly6svrWw/m6
+         OVqDkTN9P3w0c9cc0FURA2vnseP6GuvjuT8wt3pYabMbz23Z9BH9OXqMLqrYbV3csJ4V
+         D/PrWFWTUbvHj+42V48ZLl9cKLBx5Q8fhamygsZCaQVZg4aPrAylpOvc9AF5xeth7c5g
+         W4sD/0QPFvEi7SyrcvlFVZmGyOk8igeYeZ3sVtv1Np0uI8JAqfj2b/ZPwgwXS6MejrHA
+         s6KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4u1OcIKNyiAZm/99ALlppfHz2fZU/SI9CMTqcRRtHzs=;
-        b=fQXtmXUdAWaoLdmmAh5/S5SNEMyH5XLtMZturn3E/4PFk/L1T1Ub+xBxFMVT5KL6Rh
-         LjQP4UEUr7MCZR0UmZCe0TNBaAM19gY20YvPkqXXCYumvqsGGIt7iORw7xiQrZF1o1EI
-         7iwcwszyJ4yXd0KFRkB8YO52HEXsgVee18e0fN777xLMyu2NtOo7PB7m/mFsrBka7jMJ
-         9a99kns82GBAQ5gWUCXztaMy6kp977eYkEX6FRSkhsYvc+Fqr8zqUzq4Q4bYAgAJ6PeF
-         LCgbjzUPBSmRsh3xgVfJY9rPRQuAO2ITweGnmpkaBTho79gawhIiitjlagUwh3NTHls+
-         CCvA==
-X-Gm-Message-State: APjAAAU5G+NKfMCvteKNMXe/CqeGk6ePHSQx+SF/SHNExEHcOZgEWxV4
-        X/HwDS38brDta2UqYjt4M6Y=
-X-Google-Smtp-Source: APXvYqxjcCjnFU3RfO/1hwx3pHB+Yb48/5V7ITu0oaflmB41chl6Xwpbn9jCqKcryoCjKc9W4RYkzQ==
-X-Received: by 2002:aca:51cb:: with SMTP id f194mr14997826oib.6.1552253220128;
-        Sun, 10 Mar 2019 14:27:00 -0700 (PDT)
-Received: from sultan-box.localdomain ([107.193.118.89])
-        by smtp.gmail.com with ESMTPSA id j21sm1626192otr.28.2019.03.10.14.26.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Mar 2019 14:26:59 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 14:26:55 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190310212655.GA30695@sultan-box.localdomain>
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190310210335.GA5504@kroah.com>
+        bh=XayYu6osvInJUJaPOufT68C1ORPD1W8ysng6inaqvaQ=;
+        b=ZSXyUDP50uhU+eIV6KRsGef4S2drS9j2CrRmvPJGU0oPxrbrYDZeg8iqzz7jMiwBdp
+         QMCVvWWSUcSlVFsPxgxGmkA8UcYYltBCEnuRoLv9opLJZsiNIcF6qzZ1nqnUpHu08b2Q
+         WXnUBTm6ZG1vJL7qlEPU1xvlxnFLGssGj5ZiCFJ7x9rEp/n/HtMwyvodn8sGD3isjr1B
+         Av3aNwsrftuuwZBZVPpbUodJlAfkXlABqH1YCLEkwZ9HeP6/JpEJr24R+iQ6UhoGU2zU
+         3bzEz9/E6Ib6eAlfc0YT5e2JQDNAtusSH2aTY44C4+Y8FITEa5Mx+oobhmfbX+U8ATyS
+         msXg==
+X-Gm-Message-State: APjAAAV6Dtq/lfT6TRDpKtfeY4Z2wH6F8kAoCUcXywqGi9Ita46+RBTn
+        JfNM1s0xI/Fc21+BE0kW6WVXdPY=
+X-Google-Smtp-Source: APXvYqzjnzXpLrMFEQBC5WSIBLtp7LlPRrR0Hq9t2Z1+LiahM1HMEVdkV7yVia/er5diqImcxxWnxQ==
+X-Received: by 2002:adf:fe83:: with SMTP id l3mr1298114wrr.229.1552253408743;
+        Sun, 10 Mar 2019 14:30:08 -0700 (PDT)
+Received: from avx2 ([46.53.246.68])
+        by smtp.gmail.com with ESMTPSA id s13sm826058wrw.47.2019.03.10.14.30.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 14:30:08 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 00:30:06 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] static_assert: move before people start using it
+Message-ID: <20190310213006.GA18349@avx2>
+References: <20190310105157.GA15039@avx2>
+ <1d957ac2-3423-2471-6b7f-f6f25dd0273d@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190310210335.GA5504@kroah.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1d957ac2-3423-2471-6b7f-f6f25dd0273d@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 10:03:35PM +0100, Greg Kroah-Hartman wrote:
-> On Sun, Mar 10, 2019 at 01:34:03PM -0700, Sultan Alsawaf wrote:
-> > From: Sultan Alsawaf <sultan@kerneltoast.com>
+On Sun, Mar 10, 2019 at 10:19:37PM +0100, Rasmus Villemoes wrote:
+> On 10/03/2019 11.51, Alexey Dobriyan wrote:
+> > Userspace places static_assert() macro at <assert.h>
 > > 
-> > This is a complete low memory killer solution for Android that is small
-> > and simple. It kills the largest, least-important processes it can find
-> > whenever a page allocation has completely failed (right after direct
-> > reclaim). Processes are killed according to the priorities that Android
-> > gives them, so that the least important processes are always killed
-> > first. Killing larger processes is preferred in order to free the most
-> > memory possible in one go.
-> > 
-> > Simple LMK is integrated deeply into the page allocator in order to
-> > catch exactly when a page allocation fails and exactly when a page is
-> > freed. Failed page allocations that have invoked Simple LMK are placed
-> > on a queue and wait for Simple LMK to satisfy them. When a page is about
-> > to be freed, the failed page allocations are given priority over normal
-> > page allocations by Simple LMK to see if they can immediately use the
-> > freed page.
-> > 
-> > Additionally, processes are continuously killed by failed small-order
-> > page allocations until they are satisfied.
-> > 
-> > Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
 > 
-> Wait, why?  We just removed the in-kernel android memory killer, we
-> don't want to add another one back again, right?  Android Go devices
-> work just fine with the userspace memory killer code, and those are "low
-> memory" by design.
+> So? That seems a rather weak argument. We have lots of interfaces that
+> also exist in userspace which are not declared in similar-named headers
+> (e.g. we have no stdio.h, which is where snprintf lives). Not to mention
+> that memcpy and friends are in <linux/string.h>, not a bare <string.h>.
+
+Linux 0.01 had memcpy() in <string.h> in fact. :^)
+I don't know what happened.
+
+> Your assert.h would be the first and only header to live directly in
+> include/.
 > 
-> Why do we need kernel code here at all?
-> 
-> thanks,
-> 
-> greg k-h
+> If you can somehow convince Andrew to take it you can add a Meh'ed-by me.
 
-Hi Greg,
-
-Thanks for replying. It has not been my experience and the experience of many
-others that Android's userspace low memory memory killer works "just fine." On
-my Pixel 3 XL with a meager 4GB of memory, the userspace killer has had issues
-with killing too many processes, which has resulted in a noticeably poor user
-experience for all Pixel owners. From the looks of lmkd on the master branch,
-there still isn't really any definitive solution for this, aside from a 100ms
-delay in between process kills.
-
-I think that the userspace low memory killer is more complex than necessary,
-especially since in the kernel we can detect exactly when we run out of memory
-and react far more quickly than any userspace daemon.
-
-The original reasoning behind why the old kernel low memory killer was removed
-is also a bit vague to me. It just seemed to be abandonware, and all of a sudden
-a userspace daemon was touted as the solution.
-
-This driver is like an Android-flavored version of the kernel's oom killer, and
-has proven quite effective for me on my Pixel. Processes are killed exactly when
-a page allocation fails, so memory use is maximized. There is no complexity to
-try and estimate how full memory is either.
-
-Thanks,
-Sultan
+The whole BUILD_BUG() thing is a misnomer. Userspace has assert() forever
+and it doesn't require double negating (which is why assert is good
+and BUILD_BUG is bad). Once everything is converted to static_assert(),
+it will live in build_bug.h, so might as well put it into right place
+immediately.
