@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADED3C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04440C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752472084F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4BE20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552231844;
-	bh=TsvNBLcnOftsvSMlfWDOrff+Rl4m9ocTFD9DIP04u6U=;
+	s=default; t=1552231847;
+	bh=scbumLhSN+yEY/1O9Gv6xKzuv4zSMvw5WfMTCDfck0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HtokLcpzq5xvrQTLXCVsx9S4kaQ90gVW13CeGKo5YdspIAQfxfgqC4DbcpgPNQD3l
-	 w+AgWdHfDjnhrBx/W4oj8s919L57ICS0DtO0beOytI5d5N3wa6J7rc6bm5Grn8xXw6
-	 wyAMOQ2CA/hX6ZlMBI4uGEndcyxw2vunStCqG2gk=
+	b=dFrtWyr2IWipd702ji6Zgb7eJ5TChTcleu8Eloa93IPvImn7SkuWlBVOhVFjCVuld
+	 49xdkfrfg2YdtB5eohSz3Z0x4Brs9Xk5dqznFfTu9h+y4f2cb0ibquMvQoik0ARe9A
+	 HFVJcSKRIEtFeg4rW/JSUjHNRfR1ob00Gx3Ll1cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfCJPam (ORCPT
+        id S1726687AbfCJPaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 11:30:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41216 "EHLO mx1.redhat.com"
+        Sun, 10 Mar 2019 11:30:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59016 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbfCJPal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 11:30:41 -0400
+        id S1726651AbfCJPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 11:30:44 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 062223083394;
-        Sun, 10 Mar 2019 15:30:41 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8843DC049E24;
+        Sun, 10 Mar 2019 15:30:43 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8CDE60863;
-        Sun, 10 Mar 2019 15:30:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5764260863;
+        Sun, 10 Mar 2019 15:30:41 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,102 +46,88 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH 4/5] perf record: Add --output-dir option to store data in directory
-Date:   Sun, 10 Mar 2019 16:30:25 +0100
-Message-Id: <20190310153026.8661-5-jolsa@kernel.org>
+Subject: [PATCH 5/5] perf record: Describe perf.data directory format
+Date:   Sun, 10 Mar 2019 16:30:26 +0100
+Message-Id: <20190310153026.8661-6-jolsa@kernel.org>
 In-Reply-To: <20190310153026.8661-1-jolsa@kernel.org>
 References: <20190310153026.8661-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 10 Mar 2019 15:30:41 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Sun, 10 Mar 2019 15:30:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding --output-dir option to mimic -o and --dir options.
-following commands do the same:
+Adding perf.data-directory-format.txt to describe the
+directory data layout.
 
-  $ perf record -o perf.dir.data --dir ...
-  $ perf record --output-dir perf.dir.data ...
-
-User cannot use both -o and output-dir together,
-error is displayed.
-
-Link: http://lkml.kernel.org/n/tip-76ldd2ss6vjvlnjgwy7wxfzt@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-1c8u1thx63v2ldwfdas4xc5d@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/lib/subcmd/parse-options.h         |  4 ++++
- tools/perf/Documentation/perf-record.txt |  3 +++
- tools/perf/builtin-record.c              | 13 +++++++++++--
- 3 files changed, 18 insertions(+), 2 deletions(-)
+ .../perf.data-directory-format.txt            | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 tools/perf/Documentation/perf.data-directory-format.txt
 
-diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
-index af9def589863..8a3be77a3346 100644
---- a/tools/lib/subcmd/parse-options.h
-+++ b/tools/lib/subcmd/parse-options.h
-@@ -146,6 +146,10 @@ struct option {
- 	  .value = check_vtype(v, const char **), .argh = (a), .help = (h), \
- 	  .flags = PARSE_OPT_OPTARG, .defval = (intptr_t)(d), \
- 	  .set = check_vtype(os, bool *)}
-+#define OPT_STRING_SET(s, l, v, os, a, h) \
-+	{ .type = OPTION_STRING, .short_name = (s), .long_name = (l), \
-+	  .value = check_vtype(v, const char **), .argh = (a), .help = (h), \
-+	  .set = check_vtype(os, bool *)}
- #define OPT_STRING_NOEMPTY(s, l, v, a, h)   { .type = OPTION_STRING,  .short_name = (s), .long_name = (l), .value = check_vtype(v, const char **), .argh = (a), .help = (h), .flags = PARSE_OPT_NOEMPTY}
- #define OPT_DATE(s, l, v, h) \
- 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = "time", .help = (h), .callback = parse_opt_approxidate_cb }
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 445b7a4eb130..aac609887fb7 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -527,6 +527,9 @@ Implies --tail-synthesize.
- --dir::
- Store data into directory with one data file for cpu.
- 
-+--output-dir::
-+Same as --dir option, can't be used together with -o option.
+diff --git a/tools/perf/Documentation/perf.data-directory-format.txt b/tools/perf/Documentation/perf.data-directory-format.txt
+new file mode 100644
+index 000000000000..bbd6d31b10c8
+--- /dev/null
++++ b/tools/perf/Documentation/perf.data-directory-format.txt
+@@ -0,0 +1,54 @@
++perf.data directory format
 +
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 26981be13aa0..115316e94b34 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -80,6 +80,7 @@ struct record {
- 	bool			buildid_all;
- 	bool			timestamp_filename;
- 	bool			timestamp_boundary;
-+	bool			output_is_file;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
- 	cpu_set_t		affinity_mask;
-@@ -1921,8 +1922,10 @@ static struct option __record_options[] = {
- 	OPT_STRING('C', "cpu", &record.opts.target.cpu_list, "cpu",
- 		    "list of cpus to monitor"),
- 	OPT_U64('c', "count", &record.opts.user_interval, "event period to sample"),
--	OPT_STRING('o', "output", &record.data.path, "file",
--		    "output file name"),
-+	OPT_STRING_SET('o', "output", &record.data.path, &record.output_is_file,
-+		       "file", "output file name"),
-+	OPT_STRING_SET(0, "output-dir", &record.data.path, &record.data.is_dir,
-+		       "file", "output directory name"),
- 	OPT_BOOLEAN_SET('i', "no-inherit", &record.opts.no_inherit,
- 			&record.opts.no_inherit_set,
- 			"child tasks do not inherit counters"),
-@@ -2101,6 +2104,12 @@ int cmd_record(int argc, const char **argv)
- 			"cgroup monitoring only available in system-wide mode");
- 
- 	}
++DISCLAIMER This is not ABI yet and is subject to possible change
++           in following versions of perf. We will remove this
++           disclaimer once the directory format soaks in.
 +
-+	if (perf_data__is_dir(&rec->data) && record.output_is_file) {
-+		ui__error("cannot use both -o and --output-dir\n");
-+		return -EINVAL;
-+	}
 +
- 	if (rec->opts.record_switch_events &&
- 	    !perf_can_record_switch_events()) {
- 		ui__error("kernel does not support recording context switch events\n");
++This document describes the on-disk perf.data format, generated
++by perf record with --dir option and consumed by the other perf
++tools.
++
++The directory perf.data is created by perf record command by
++using the --dir option:
++
++  $ perf record --dir perf bench sched messaging
++  $ ls -l perf.data
++      total 344
++      -rw-------. 1 jolsa jolsa 43864 Jan 20 22:26 data.0
++      -rw-------. 1 jolsa jolsa 30464 Jan 20 22:26 data.1
++      -rw-------. 1 jolsa jolsa 53816 Jan 20 22:26 data.2
++      -rw-------. 1 jolsa jolsa 30368 Jan 20 22:26 data.3
++      -rw-------. 1 jolsa jolsa 40088 Jan 20 22:26 data.4
++      -rw-------. 1 jolsa jolsa 42592 Jan 20 22:26 data.5
++      -rw-------. 1 jolsa jolsa 56136 Jan 20 22:26 data.6
++      -rw-------. 1 jolsa jolsa 25992 Jan 20 22:26 data.7
++      -rw-------. 1 jolsa jolsa  8832 Jan 20 22:26 header
++
++The header file keeps the standard perf.data file header,
++and the data.* files keep data.
++
++header file
++-----------
++The header file following the standard format describe in
++Documentation/perf.data-file-format doc. Including its data
++portion that is used to store manually synthesized events.
++
++data file
++---------
++The data files layout is described by HEADER_DIR_FORMAT feature.
++Currently it holds only version number (1):
++
++  HEADER_DIR_FORMAT = 24
++
++  struct {
++     uint64_t version;
++  }
++
++The current only only version value 1 means that data files:
++  - follow the 'data.*' format
++  - contain raw events data in standard perf format as read
++    from kernel (and need to be sorted)
++
++Future versions are expected to describe different data files
++layout according to special needs.
 -- 
 2.17.2
 
