@@ -2,68 +2,79 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4B3C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F173C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A241206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552257042;
-	bh=4VcDd5YcpOAsRA/ewAGG7zW/+zuxXVEvtU+mVee2J8U=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RVjYkr8h0i7WGUCflzgHf3lua1xZvXNzUeRW22Ggg/Nvq7IOt04iwdIMq6TDJyxte
-	 hyj+drxi4gcqLWdUZ9LVS1li8sTQTxnIvq4lRk+SmapX3S7Fc36fNjCrPIlBhqF493
-	 kKbGHpJIeGphgwAknTmvG9Q6FOyrJH48IpcK9pHI=
+	by mail.kernel.org (Postfix) with ESMTP id 33AD220652
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfCJWal (ORCPT
+        id S1727269AbfCJWap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 18:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        Sun, 10 Mar 2019 18:30:45 -0400
+Received: from mx.sdf.org ([205.166.94.20]:56997 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbfCJWaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 18:30:22 -0400
-Subject: Re: [GIT pull] x86/boot fix for 5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552257021;
-        bh=4VcDd5YcpOAsRA/ewAGG7zW/+zuxXVEvtU+mVee2J8U=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=CzBo9riKOYjFYjUD+IkfIMZwQQaL7l+Pz6kKEpyMo51C1hAVBQVrJUu60k+8RcRCj
-         5Am9jQs5yGMU7RhRf+CyuMOlv0w01Ei0pcUpSLHKCHhapeVZAF2Z8KWTgCSCCiD9cS
-         XRa5nF0CxxDa9q/OkPlmBF8i8ofsTdt98XOeBRYA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <155221755097.13878.8902608678756592835.tglx@nanos.tec.linutronix.de>
-References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
- <155221755097.13878.8902608678756592835.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <155221755097.13878.8902608678756592835.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
-X-PR-Tracked-Commit-Id: e4a0bd0308f05c1354d28feec8439e869eae6372
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b6e3cb4e8679dd971eed33f6a08d62c66a4230c9
-Message-Id: <155225702190.14748.6835841419950531921.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Mar 2019 22:30:21 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        id S1727192AbfCJWam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 18:30:42 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2AMTP6K001770
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Sun, 10 Mar 2019 22:29:25 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x2AMTOoU009609;
+        Sun, 10 Mar 2019 22:29:24 GMT
+Date:   Sun, 10 Mar 2019 22:29:24 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201903102229.x2AMTOoU009609@sdf.org>
+To:     linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        lkml@sdf.org
+Subject: Re: [PATCH 4/5] lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
+Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        daniel.wagner@siemens.com, dchinner@redhat.com,
+        don.mullis@gmail.com, geert@linux-m68k.org, st5pub@yandex.ru
+In-Reply-To: <3194949c-6e04-da01-68df-60ae344db099@rasmusvillemoes.dk>
+References: <cover.1552097842.git.lkml@sdf.org>,
+    <dd447448384883bd42c41f0de6a83430b6435dc1.1552097842.git.lkml@sdf.org>,
+    <3194949c-6e04-da01-68df-60ae344db099@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 10 Mar 2019 12:33:53 +0100:
+Rasmus Villemoes wrote:
+> On 05/03/2019 04.06, George Spelvin wrote:
+>> + * (Actually, it is always called with @a being the element which was
+>> + * originally first, so it is not necessary to to distinguish the @a < @b
+>> + * and @a == @b cases; the return value may be a simple boolean.  But if
+>> + * you ever *use* this freedom, be sure to update this comment to document
+>> + * that code now depends on preserving this property!)
+>
+> This was and still is used at least by the block layer, and likely
+> others as well. While 3110fc79606fb introduced a bunch of if() return -1
+> else if () ... stuff, it still ends with a 0/1 result. Before
+> 3110fc79606fb, it was even more obvious that this property was used.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
+Ah, thank you!  I actually read through every list_sort caller in
+the kernel to see if I could find anywhere that used it and couldn't,
+but I didn't study this code carefully enough to see that it does
+in the last step.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b6e3cb4e8679dd971eed33f6a08d62c66a4230c9
+Since someone *does* use this, I'll change the comment signiicantly.
 
-Thank you!
+> Grepping around shows that this could probably be used in more places,
+> gaining a cycle or two per cmp callback, e.g. xfs_buf_cmp. But that's of
+> course outside the scope of this series.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+The one that misled me at first was _xfs_buf_obj_cmp, which returns 0/1,
+but that's not used by list_sort().  xfs_buf_cmp returns -1/0/+1.
+
+As you might see from the comment around the cmp_func typedef,
+there are other things that could be cleaned up if we did a pass
+over all the call sites.
+
+(I'm almost tempted to tell the compiler than cmp_func is const,
+since it's supposed to be independent of the pointer frobbing that
+list_sort does, but then I remember Henry Spencer's maxim about
+lying to the compiler.)
