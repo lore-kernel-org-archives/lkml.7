@@ -2,153 +2,131 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEB4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF2FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2E92086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552198728;
-	bh=z5QReKz+CxjyUuLwQnpNvSIDkA9ajgLKi1EzjlWsxxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0j8o0msrJ3aYO4MiJ5KSuatl3fiZVSPScIElhpO8fNtKNQTjFjFjCioiaq6Wkn0wU
-	 zuK8knqp+3PxgZH4pSy7GzfzYxeoijlpFfwR+hSa1lG2yYpvDZMZPtj6sBHvTrATeb
-	 6jINdMEnJvSM6I1edgtQyvFBAr25oIjMvC1lFQg0=
+	by mail.kernel.org (Postfix) with ESMTP id D664A20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbfCJGSo (ORCPT
+        id S1726280AbfCJGss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 01:18:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfCJGSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 01:18:43 -0500
-Received: from localhost (unknown [89.248.140.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555F2207E0;
-        Sun, 10 Mar 2019 06:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552198722;
-        bh=z5QReKz+CxjyUuLwQnpNvSIDkA9ajgLKi1EzjlWsxxg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EPIHBbseocxGIHZNuEzW7+43ssvUK4fOO3qqRn4H2Dqv5f6IiaRBIrzUlEdZ/6c5k
-         uriBlKuUBTDqIle36S5cnwiU6pzSKisFOkeIy470EoUdSn0dyBuhnqXWWTCZl+wta4
-         bOsqt+YbFdDnemdI/lx2KwZOAzspW1QPqzIblSkk=
-Date:   Sun, 10 Mar 2019 07:18:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     hpa@zytor.com
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pitam Mitra <pitamm@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bockjoo Kim <bockjoo@phys.ufl.edu>, bp@alien8.de
-Subject: Re: [PATCH 5.0 30/46] x86/boot/compressed/64: Do not read legacy ROM
- on EFI system
-Message-ID: <20190310061840.GA21641@kroah.com>
-References: <20190308124902.257040783@linuxfoundation.org>
- <20190308124904.216497374@linuxfoundation.org>
- <CED6E6E5-00E5-4FFD-A8C9-254EA3A5288E@zytor.com>
+        Sun, 10 Mar 2019 01:48:48 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34440 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725778AbfCJGss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 01:48:48 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9AFA95C5316F36977C78;
+        Sun, 10 Mar 2019 14:48:43 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.408.0; Sun, 10 Mar 2019 14:48:37 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net] net: hns3: fix to stop multiple HNS reset due to the AER changes
+Date:   Sun, 10 Mar 2019 14:47:51 +0800
+Message-ID: <1552200471-47492-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CED6E6E5-00E5-4FFD-A8C9-254EA3A5288E@zytor.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 10:10:19PM -0800, hpa@zytor.com wrote:
-> On March 8, 2019 4:50:03 AM PST, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >5.0-stable review patch.  If anyone has any objections, please let me
-> >know.
-> >
-> >------------------
-> >
-> >From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> >
-> >commit 6f913de3231e1d70a871135b38219da7810df218 upstream.
-> >
-> >EFI systems do not necessarily provide a legacy ROM. If the ROM is
-> >missing
-> >the memory is not mapped at all.
-> >
-> >Trying to dereference values in the legacy ROM area leads to a crash on
-> >Macbook Pro.
-> >
-> >Only look for values in the legacy ROM area for non-EFI system.
-> >
-> >Fixes: 3548e131ec6a ("x86/boot/compressed/64: Find a place for 32-bit
-> >trampoline")
-> >Reported-by: Pitam Mitra <pitamm@gmail.com>
-> >Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> >Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> >Tested-by: Bockjoo Kim <bockjoo@phys.ufl.edu>
-> >Cc: bp@alien8.de
-> >Cc: hpa@zytor.com
-> >Cc: stable@vger.kernel.org
-> >Link:
-> >https://lkml.kernel.org/r/20190219075224.35058-1-kirill.shutemov@linux.intel.com
-> >Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202351
-> >Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> >---
-> > arch/x86/boot/compressed/pgtable_64.c |   19 ++++++++++++++++---
-> > 1 file changed, 16 insertions(+), 3 deletions(-)
-> >
-> >--- a/arch/x86/boot/compressed/pgtable_64.c
-> >+++ b/arch/x86/boot/compressed/pgtable_64.c
-> >@@ -1,5 +1,7 @@
-> >+#include <linux/efi.h>
-> > #include <asm/e820/types.h>
-> > #include <asm/processor.h>
-> >+#include <asm/efi.h>
-> > #include "pgtable.h"
-> > #include "../string.h"
-> > 
-> >@@ -37,9 +39,10 @@ int cmdline_find_option_bool(const char
-> > 
-> > static unsigned long find_trampoline_placement(void)
-> > {
-> >-	unsigned long bios_start, ebda_start;
-> >+	unsigned long bios_start = 0, ebda_start = 0;
-> > 	unsigned long trampoline_start;
-> > 	struct boot_e820_entry *entry;
-> >+	char *signature;
-> > 	int i;
-> > 
-> > 	/*
-> >@@ -47,8 +50,18 @@ static unsigned long find_trampoline_pla
-> > 	 * This code is based on reserve_bios_regions().
-> > 	 */
-> > 
-> >-	ebda_start = *(unsigned short *)0x40e << 4;
-> >-	bios_start = *(unsigned short *)0x413 << 10;
-> >+	/*
-> >+	 * EFI systems may not provide legacy ROM. The memory may not be
-> >mapped
-> >+	 * at all.
-> >+	 *
-> >+	 * Only look for values in the legacy ROM for non-EFI system.
-> >+	 */
-> >+	signature = (char *)&boot_params->efi_info.efi_loader_signature;
-> >+	if (strncmp(signature, EFI32_LOADER_SIGNATURE, 4) &&
-> >+	    strncmp(signature, EFI64_LOADER_SIGNATURE, 4)) {
-> >+		ebda_start = *(unsigned short *)0x40e << 4;
-> >+		bios_start = *(unsigned short *)0x413 << 10;
-> >+	}
-> > 
-> > 	if (bios_start < BIOS_START_MIN || bios_start > BIOS_START_MAX)
-> > 		bios_start = BIOS_START_MAX;
-> 
-> Only one objection: the explanation is nonsensical. 
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Heh, take it up with the original submitter, I don't change the
-changelog text after it hits Linus's tree :)
+The commit bfcb79fca19d
+("PCI/ERR: Run error recovery callbacks for all affected devices")
+affected the non-fatal error recovery logic for the HNS and RDMA devices.
+This is because each HNS PF under PCIe bus receive callbacks
+from the AER driver when an error is reported for one of the PF.
+This causes unwanted PF resets because
+the HNS decides which PF to reset based on the reset type set.
+The HNS error handling code sets the reset type based on the hw error
+type detected.
 
-greg k-h
+This patch provides fix for the above issue for the recovery of
+the hw errors in the HNS and RDMA devices.
+
+This patch needs backporting to the kernel v5.0+
+
+Fixes: 332fbf576579 ("net: hns3: add handling of hw ras errors using new set of commands")
+Reported-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h            | 1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c        | 4 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 9 +++++++--
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index 66d7a8b..38b430f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -194,6 +194,7 @@ struct hnae3_ae_dev {
+ 	const struct hnae3_ae_ops *ops;
+ 	struct list_head node;
+ 	u32 flag;
++	u8 override_pci_need_reset; /* fix to stop multiple reset happening */
+ 	enum hnae3_dev_type dev_type;
+ 	enum hnae3_reset_type reset_type;
+ 	void *priv;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0d1ae15..1c1f17e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1850,7 +1850,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
+ 
+ 	/* request the reset */
+ 	if (ae_dev->ops->reset_event) {
+-		ae_dev->ops->reset_event(pdev, NULL);
++		if (!ae_dev->override_pci_need_reset)
++			ae_dev->ops->reset_event(pdev, NULL);
++
+ 		return PCI_ERS_RESULT_RECOVERED;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 1feceff..1f52d11 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1317,8 +1317,10 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
+ 		hclge_handle_all_ras_errors(hdev);
+ 	} else {
+ 		if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
+-		    hdev->pdev->revision < 0x21)
++		    hdev->pdev->revision < 0x21) {
++			ae_dev->override_pci_need_reset = 1;
+ 			return PCI_ERS_RESULT_RECOVERED;
++		}
+ 	}
+ 
+ 	if (status & HCLGE_RAS_REG_ROCEE_ERR_MASK) {
+@@ -1327,8 +1329,11 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
+ 	}
+ 
+ 	if (status & HCLGE_RAS_REG_NFE_MASK ||
+-	    status & HCLGE_RAS_REG_ROCEE_ERR_MASK)
++	    status & HCLGE_RAS_REG_ROCEE_ERR_MASK) {
++		ae_dev->override_pci_need_reset = 0;
+ 		return PCI_ERS_RESULT_NEED_RESET;
++	}
++	ae_dev->override_pci_need_reset = 1;
+ 
+ 	return PCI_ERS_RESULT_RECOVERED;
+ }
+-- 
+2.7.4
+
