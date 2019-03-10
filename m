@@ -3,25 +3,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F0AC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339D4C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0052C207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A72207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfCJHLp (ORCPT
+        id S1726588AbfCJHMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 03:11:45 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35512 "EHLO
+        Sun, 10 Mar 2019 03:12:05 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35534 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfCJHLp (ORCPT
+        with ESMTP id S1726364AbfCJHMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 03:11:45 -0400
+        Sun, 10 Mar 2019 03:12:05 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h2sbY-0003BI-O1; Sun, 10 Mar 2019 07:10:49 +0000
+        id 1h2sc1-0003D7-Dq; Sun, 10 Mar 2019 07:11:17 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
@@ -35,9 +35,9 @@ Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
         zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
         houtao1@huawei.com, yi.zhang@huawei.com
-Subject: [PATCH 6/8] move dropping ->ki_eventfd into iocb_destroy()
-Date:   Sun, 10 Mar 2019 07:08:20 +0000
-Message-Id: <20190310070822.11564-6-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 7/8] deal with get_reqs_available() in aio_get_req() itself
+Date:   Sun, 10 Mar 2019 07:08:21 +0000
+Message-Id: <20190310070822.11564-7-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190310070822.11564-1-viro@ZenIV.linux.org.uk>
 References: <20190310070606.GA10138@ZenIV.linux.org.uk>
@@ -51,69 +51,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+simplifies the caller
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/aio.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ fs/aio.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/fs/aio.c b/fs/aio.c
-index f9e8f1edfe36..595c19965a8b 100644
+index 595c19965a8b..66ca52c57cca 100644
 --- a/fs/aio.c
 +++ b/fs/aio.c
-@@ -1071,6 +1071,8 @@ static struct kioctx *lookup_ioctx(unsigned long ctx_id)
+@@ -1033,6 +1033,11 @@ static inline struct aio_kiocb *aio_get_req(struct kioctx *ctx)
+ 	if (unlikely(!req))
+ 		return NULL;
  
- static inline void iocb_destroy(struct aio_kiocb *iocb)
- {
-+	if (iocb->ki_eventfd)
-+		eventfd_ctx_put(iocb->ki_eventfd);
- 	if (iocb->ki_filp)
- 		fput(iocb->ki_filp);
- 	percpu_ref_put(&iocb->ki_ctx->reqs);
-@@ -1138,10 +1140,8 @@ static void aio_complete(struct aio_kiocb *iocb)
- 	 * eventfd. The eventfd_signal() function is safe to be called
- 	 * from IRQ context.
- 	 */
--	if (iocb->ki_eventfd) {
-+	if (iocb->ki_eventfd)
- 		eventfd_signal(iocb->ki_eventfd, 1);
--		eventfd_ctx_put(iocb->ki_eventfd);
--	}
- 
- 	/*
- 	 * We have to order our ring_info tail store above and test
-@@ -1810,18 +1810,19 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		goto out_put_req;
- 
- 	if (iocb->aio_flags & IOCB_FLAG_RESFD) {
-+		struct eventfd_ctx *eventfd;
- 		/*
- 		 * If the IOCB_FLAG_RESFD flag of aio_flags is set, get an
- 		 * instance of the file* now. The file descriptor must be
- 		 * an eventfd() fd, and will be signaled for each completed
- 		 * event using the eventfd_signal() function.
- 		 */
--		req->ki_eventfd = eventfd_ctx_fdget((int) iocb->aio_resfd);
--		if (IS_ERR(req->ki_eventfd)) {
--			ret = PTR_ERR(req->ki_eventfd);
--			req->ki_eventfd = NULL;
-+		eventfd = eventfd_ctx_fdget((int) iocb->aio_resfd);
-+		if (IS_ERR(eventfd)) {
-+			ret = PTR_ERR(eventfd);
- 			goto out_put_req;
- 		}
-+		req->ki_eventfd = eventfd;
++	if (unlikely(!get_reqs_available(ctx))) {
++		kfree(req);
++		return NULL;
++	}
++
+ 	percpu_ref_get(&ctx->reqs);
+ 	req->ki_ctx = ctx;
+ 	INIT_LIST_HEAD(&req->ki_list);
+@@ -1796,13 +1801,9 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
+ 		return -EINVAL;
  	}
  
- 	ret = put_user(KIOCB_KEY, &user_iocb->aio_key);
-@@ -1875,8 +1876,6 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		return 0;
+-	if (!get_reqs_available(ctx))
+-		return -EAGAIN;
+-
+-	ret = -EAGAIN;
+ 	req = aio_get_req(ctx);
+ 	if (unlikely(!req))
+-		goto out_put_reqs_available;
++		return -EAGAIN;
+ 
+ 	req->ki_filp = fget(iocb->aio_fildes);
+ 	ret = -EBADF;
+@@ -1877,7 +1878,6 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
  
  out_put_req:
--	if (req->ki_eventfd)
--		eventfd_ctx_put(req->ki_eventfd);
  	iocb_destroy(req);
- out_put_reqs_available:
+-out_put_reqs_available:
  	put_reqs_available(ctx, 1);
+ 	return ret;
+ }
 -- 
 2.11.0
 
