@@ -2,232 +2,113 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74008C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD38C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B135206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B942E207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:53:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="aKLFTBO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfCJHMe (ORCPT
+        id S1725875AbfCJHxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 03:12:34 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35566 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfCJHMd (ORCPT
+        Sun, 10 Mar 2019 03:53:16 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38474 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfCJHxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 03:12:33 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h2scS-0003Ex-U4; Sun, 10 Mar 2019 07:11:45 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
-        ktkhai@virtuozzo.com, kyeongdon.kim@lge.com,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        houtao1@huawei.com, yi.zhang@huawei.com
-Subject: [PATCH 8/8] aio: move sanity checks and request allocation to io_submit_one()
-Date:   Sun, 10 Mar 2019 07:08:22 +0000
-Message-Id: <20190310070822.11564-8-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190310070822.11564-1-viro@ZenIV.linux.org.uk>
-References: <20190310070606.GA10138@ZenIV.linux.org.uk>
- <20190310070822.11564-1-viro@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 10 Mar 2019 03:53:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 052FAB74
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 07:53:14 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GKMeaEhy_dQw for <linux-kernel@vger.kernel.org>;
+        Sun, 10 Mar 2019 01:53:13 -0600 (CST)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id D04BEC00
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 01:53:13 -0600 (CST)
+Received: by mail-io1-f72.google.com with SMTP id k24so1667821ioa.18
+        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 23:53:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9+d/3RmFm/YVmk9EkJcnxokw+bFW2JJa2RfH9W+dLLE=;
+        b=aKLFTBO4gWYR0dausejhX7bng9Ji/nX0TYpFIIYCqTIYKmg/QaS+gfZ4UGWmiwWYLo
+         ge6LPg9VUHXGVwi4seailr0HdObbqkE33apSvf0/xWY1ISHNpLn0Cgwq8OFCWg13SrgV
+         B9DJohvpV5AgrkSZuyi9xnx9VXRrE+5l+fPNSarkrMJk+JU23/pNPsxCacdydQ7tyQbq
+         nCP4KblC7m1cyOYT/21QHVNzAnEXgcynXBVSLxhiVHD/0OqCZQsiSCdg5zeGiQYsLM9e
+         +xwluASQ1S73GDWu4bNGC42/MCE36gm9abIYLCjoi4qOGEHfZvUD24xAAmzu3v7dpgJF
+         r/YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9+d/3RmFm/YVmk9EkJcnxokw+bFW2JJa2RfH9W+dLLE=;
+        b=GS5l/Ip8n7C/cu7wpK0+vMQU+n4EC6Y7cMXJWC6X5YP58EUtGRN/fZg+7YSoddWZWA
+         WTuSzRPu1lMESB1d/829WjWyPWgIOBDUQww1EgM5pB+gcD8qFS9ik2cxpIjBa9W+XIWO
+         f/FHe7W1rZoa9t+j5RiWMgKTcOHOPCgt6nY2mBVxKbWk8uthZ0u8QnFzXf3l6JAO+x1Q
+         XyKyOPhmdt1K7f4CI9m/G28a8NhVj2+1rZI/gRKjhsdaWxoLbFgZw2/dlUbb6UF4eyBS
+         x3ipPdBI5Qqqd/TGl4AEg4T4f9LL5Ht4X/+zfHDFAonklCoGTpfwd67oANlXeQj1u6a3
+         juMw==
+X-Gm-Message-State: APjAAAW+l1TAZ7E8Q6qTT2er3c7L/5j+Ef9+w+wwr+E/s8/1dR85ueKg
+        wum2WkQr8cYm5A/Cm5sVXpZhm5YHYeQstocPnBlFmRKj+s05UDIYuUJnzaRiXluQJGJbkAMy+oo
+        drcniFRPfzN5qhqb1U03kNMvYR+5Q
+X-Received: by 2002:a24:4750:: with SMTP id t77mr14531102itb.107.1552204393346;
+        Sat, 09 Mar 2019 23:53:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyQzBKgdesRsdidCOBa2kREKB2qC+J19OjHF9fb8Xe/yCMTp6Eq3DduCVMQhzWcI8heEdM7sg==
+X-Received: by 2002:a24:4750:: with SMTP id t77mr14531094itb.107.1552204393065;
+        Sat, 09 Mar 2019 23:53:13 -0800 (PST)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id s10sm123342ioc.54.2019.03.09.23.53.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 Mar 2019 23:53:12 -0800 (PST)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc_spi: add a status check for spi_sync_locked
+Date:   Sun, 10 Mar 2019 01:53:05 -0600
+Message-Id: <20190310075306.2193-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+In case spi_sync_locked fails, the fix reports the error and
+returns the error code upstream.
 
-makes for somewhat cleaner control flow in __io_submit_one()
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- fs/aio.c | 119 ++++++++++++++++++++++++++++-----------------------------------
- 1 file changed, 53 insertions(+), 66 deletions(-)
+ drivers/mmc/host/mmc_spi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 66ca52c57cca..2d1db52b1268 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1780,35 +1780,12 @@ static int aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
- }
- 
- static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
--			   struct iocb __user *user_iocb, bool compat)
-+			   struct iocb __user *user_iocb, struct aio_kiocb *req,
-+			   bool compat)
- {
--	struct aio_kiocb *req;
--	int ret;
--
--	/* enforce forwards compatibility on users */
--	if (unlikely(iocb->aio_reserved2)) {
--		pr_debug("EINVAL: reserve field set\n");
--		return -EINVAL;
--	}
--
--	/* prevent overflows */
--	if (unlikely(
--	    (iocb->aio_buf != (unsigned long)iocb->aio_buf) ||
--	    (iocb->aio_nbytes != (size_t)iocb->aio_nbytes) ||
--	    ((ssize_t)iocb->aio_nbytes < 0)
--	   )) {
--		pr_debug("EINVAL: overflow check\n");
--		return -EINVAL;
--	}
--
--	req = aio_get_req(ctx);
--	if (unlikely(!req))
--		return -EAGAIN;
--
- 	req->ki_filp = fget(iocb->aio_fildes);
--	ret = -EBADF;
- 	if (unlikely(!req->ki_filp))
--		goto out_put_req;
-+		return -EBADF;
- 
- 	if (iocb->aio_flags & IOCB_FLAG_RESFD) {
- 		struct eventfd_ctx *eventfd;
-@@ -1819,17 +1796,15 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		 * event using the eventfd_signal() function.
- 		 */
- 		eventfd = eventfd_ctx_fdget((int) iocb->aio_resfd);
--		if (IS_ERR(eventfd)) {
--			ret = PTR_ERR(eventfd);
--			goto out_put_req;
--		}
-+		if (IS_ERR(eventfd))
-+			return PTR_ERR(req->ki_eventfd);
-+
- 		req->ki_eventfd = eventfd;
+diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+index 1b1498805972..32fea585262b 100644
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -819,6 +819,10 @@ mmc_spi_readblock(struct mmc_spi_host *host, struct spi_transfer *t,
  	}
  
--	ret = put_user(KIOCB_KEY, &user_iocb->aio_key);
--	if (unlikely(ret)) {
-+	if (unlikely(put_user(KIOCB_KEY, &user_iocb->aio_key))) {
- 		pr_debug("EFAULT: aio_key\n");
--		goto out_put_req;
-+		return -EFAULT;
- 	}
- 
- 	req->ki_res.obj = (u64)(unsigned long)user_iocb;
-@@ -1839,58 +1814,70 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 
- 	switch (iocb->aio_lio_opcode) {
- 	case IOCB_CMD_PREAD:
--		ret = aio_read(&req->rw, iocb, false, compat);
--		break;
-+		return aio_read(&req->rw, iocb, false, compat);
- 	case IOCB_CMD_PWRITE:
--		ret = aio_write(&req->rw, iocb, false, compat);
--		break;
-+		return aio_write(&req->rw, iocb, false, compat);
- 	case IOCB_CMD_PREADV:
--		ret = aio_read(&req->rw, iocb, true, compat);
--		break;
-+		return aio_read(&req->rw, iocb, true, compat);
- 	case IOCB_CMD_PWRITEV:
--		ret = aio_write(&req->rw, iocb, true, compat);
--		break;
-+		return aio_write(&req->rw, iocb, true, compat);
- 	case IOCB_CMD_FSYNC:
--		ret = aio_fsync(&req->fsync, iocb, false);
--		break;
-+		return aio_fsync(&req->fsync, iocb, false);
- 	case IOCB_CMD_FDSYNC:
--		ret = aio_fsync(&req->fsync, iocb, true);
--		break;
-+		return aio_fsync(&req->fsync, iocb, true);
- 	case IOCB_CMD_POLL:
--		ret = aio_poll(req, iocb);
--		break;
-+		return aio_poll(req, iocb);
- 	default:
- 		pr_debug("invalid aio operation %d\n", iocb->aio_lio_opcode);
--		ret = -EINVAL;
--		break;
-+		return -EINVAL;
- 	}
--
--	/* Done with the synchronous reference */
--	iocb_put(req);
--
--	/*
--	 * If ret is 0, we'd either done aio_complete() ourselves or have
--	 * arranged for that to be done asynchronously.  Anything non-zero
--	 * means that we need to destroy req ourselves.
--	 */
--	if (!ret)
--		return 0;
--
--out_put_req:
--	iocb_destroy(req);
--	put_reqs_available(ctx, 1);
--	return ret;
- }
- 
- static int io_submit_one(struct kioctx *ctx, struct iocb __user *user_iocb,
- 			 bool compat)
- {
-+	struct aio_kiocb *req;
- 	struct iocb iocb;
-+	int err;
- 
- 	if (unlikely(copy_from_user(&iocb, user_iocb, sizeof(iocb))))
- 		return -EFAULT;
- 
--	return __io_submit_one(ctx, &iocb, user_iocb, compat);
-+	/* enforce forwards compatibility on users */
-+	if (unlikely(iocb.aio_reserved2)) {
-+		pr_debug("EINVAL: reserve field set\n");
-+		return -EINVAL;
+ 	status = spi_sync_locked(spi, &host->m);
++	if (status < 0) {
++		dev_dbg(&spi->dev, "read error %02x (%d)\n", status, status);
++		return status;
 +	}
-+
-+	/* prevent overflows */
-+	if (unlikely(
-+	    (iocb.aio_buf != (unsigned long)iocb.aio_buf) ||
-+	    (iocb.aio_nbytes != (size_t)iocb.aio_nbytes) ||
-+	    ((ssize_t)iocb.aio_nbytes < 0)
-+	   )) {
-+		pr_debug("EINVAL: overflow check\n");
-+		return -EINVAL;
-+	}
-+
-+	req = aio_get_req(ctx);
-+	if (unlikely(!req))
-+		return -EAGAIN;
-+
-+	err = __io_submit_one(ctx, &iocb, user_iocb, req, compat);
-+
-+	/* Done with the synchronous reference */
-+	iocb_put(req);
-+
-+	/*
-+	 * If err is 0, we'd either done aio_complete() ourselves or have
-+	 * arranged for that to be done asynchronously.  Anything non-zero
-+	 * means that we need to destroy req ourselves.
-+	 */
-+	if (unlikely(err)) {
-+		iocb_destroy(req);
-+		put_reqs_available(ctx, 1);
-+	}
-+	return err;
- }
  
- /* sys_io_submit:
+ 	if (host->dma_dev) {
+ 		dma_sync_single_for_cpu(host->dma_dev,
 -- 
-2.11.0
+2.17.1
 
