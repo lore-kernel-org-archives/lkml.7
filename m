@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE6C10F03
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAB2C10F0D
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 11:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A012087C
+	by mail.kernel.org (Postfix) with ESMTP id 58297207E0
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 11:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfCJLdy (ORCPT
+        id S1726559AbfCJLd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 07:33:54 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:36417 "EHLO
+        Sun, 10 Mar 2019 07:33:56 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:36425 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfCJLdx (ORCPT
+        with ESMTP id S1726530AbfCJLdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 07:33:53 -0400
+        Sun, 10 Mar 2019 07:33:55 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1h2wiF-00006K-Ei; Sun, 10 Mar 2019 12:33:51 +0100
-Subject: [GIT pull] timer fix for 5.1
-Message-ID: <155221755097.13878.12825399479786913123.tglx@nanos.tec.linutronix.de>
+        id 1h2wiH-00006Z-QB; Sun, 10 Mar 2019 12:33:53 +0100
+Subject: [GIT pull] x86/boot fix for 5.1
+Message-ID: <155221755097.13878.8902608678756592835.tglx@nanos.tec.linutronix.de>
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
 References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
-Date:   Sun, 10 Mar 2019 12:33:51 +0100
+Date:   Sun, 10 Mar 2019 12:33:53 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -38,35 +38,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest timers-urgent-for-linus git tree from:
+please pull the latest x86-boot-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
 
-
-A single fix to prevent a unmet dependencies warning in Kconfig.
+A trivial fix for the previous x86/boot pull request which did not make it
+in time.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Arnd Bergmann (1):
-      time: Make VIRT_CPU_ACCOUNTING_GEN depend on GENERIC_CLOCKEVENTS
+Louis Taylor (1):
+      x86/boot/KASLR: Always return a value from process_mem_region
 
 
- init/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/boot/compressed/kaslr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index c9386a365eea..acbde4ef2395 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -382,6 +382,7 @@ config VIRT_CPU_ACCOUNTING_GEN
- 	bool "Full dynticks CPU time accounting"
- 	depends on HAVE_CONTEXT_TRACKING
- 	depends on HAVE_VIRT_CPU_ACCOUNTING_GEN
-+	depends on GENERIC_CLOCKEVENTS
- 	select VIRT_CPU_ACCOUNTING
- 	select CONTEXT_TRACKING
- 	help
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index fa0332dda9f2..2e53c056ba20 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -697,8 +697,8 @@ static bool process_mem_region(struct mem_vector *region,
+ 			return 1;
+ 		}
+ 	}
+-	return 0;
+ #endif
++	return 0;
+ }
+ 
+ #ifdef CONFIG_EFI
 
