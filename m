@@ -8,67 +8,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB491C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1BBC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9978E2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A4A20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVu+qpIc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lbd8DSEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfCJS3O (ORCPT
+        id S1726966AbfCJS3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:29:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46720 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfCJS3G (ORCPT
+        Sun, 10 Mar 2019 14:29:16 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41282 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfCJS3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:29:06 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i16so2650199wrs.13;
-        Sun, 10 Mar 2019 11:29:04 -0700 (PDT)
+        Sun, 10 Mar 2019 14:29:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n2so2666578wrw.8;
+        Sun, 10 Mar 2019 11:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gIXPiGOH4LW1MoGaybgap4r7othESitSAvXiWK6FST8=;
-        b=GVu+qpIceZh67TBD5N3iJ1gqYfCgNfjRjp+uQ1znX48lHEpIK9D7HhbpVJKvWWo5Ax
-         qNiakDtXNtw3UJwjayGGcqbmefcd3FFS2kSYIK6E7dMrSJ+yevptAZVkrpLUS3Vcq/iL
-         9HRC66IEBX/GODscuKCHCpngwJvpsxaODn+1Xy3tumh4wcSjI7EAMsPi2kiqfX3sctG2
-         BVILDu9GjDawqkmgPvEe/HNUvEscfacPqb4B7fjNk0YFEXq/dG4GVRhMGDBMdvrjcTGg
-         AJ6LkGA6zwUexPDXMb0jA3QB5YvLr+SRmh+OZgbT4iwSFcO1p6+8BtxlFwLSsyhq0or5
-         SpAA==
+        bh=wGHWm6Eb/CJnWIPjw9B7FHEk4fQHOl9O5NsClGKYlsg=;
+        b=Lbd8DSEseGHgC/KWg0pnJqkQHz9NvLBKGE8h0Sm/vPmo8Qlggqm9IL3EGmk66V00bG
+         ZXXZrENYSt1fMzvc3dMeiduUNXdLirmuw2IS3nwHwFF7+NqWxvSK2aQNse3+eKOrsI1C
+         k3R4arj4sK3DM8V2pepGdG01as0zZ2XVScxmtElI9mffE4xyLKoZYtbDtC0QSOJnC4l7
+         JWTicQTJjR1u14QXxg49Sla6kqesw2op6qW2WUh5ZhSBI/DLIZc30Rh9hBdibV5ZXaHw
+         /Z4p/BaJ9CtNoHtqT/mTbJo8fsWWDW5n/sQK1DLxI1Oeo3XT93pxfByZOisNEvdTMNIO
+         7Chw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=gIXPiGOH4LW1MoGaybgap4r7othESitSAvXiWK6FST8=;
-        b=bkoDnyzqE0BhkuLdYLkDVEbEQFszqItH7r6p4Q63NIGDkFy9fhWIGwPP4wNdH4D5Si
-         51RisNZ0Sn4tAcBzQJncP050yitX2cv7UTXmxTwYUrbrIPaa5IzkEpNNPr6olicRu4mH
-         t66SgIhNyfIoMZbSEzYi6p592txwlbCzwFy+XpJIjFiE3IIjD2FzemTPd/KcZ2OF760l
-         RwhsHGjyWv98Ib8SbItVqnlMoHsbGchkWBUNDgS6f+SnKUoFA2BCiZXWcD/fmQu86uPf
-         esQcsmg6D60CHY5b+BlzEueBnl/OwALIELZ4SL6b/YMCNene6sRcmOsN3Nm87LZ0vNLq
-         cr8w==
-X-Gm-Message-State: APjAAAXS6hPN0nfKCTJU56c8kFEf3sAyyutpwnmlcgKStP7CGeWDAVcg
-        CJLbFn3uFWnoW1GCUmBGO2J4o3Z5
-X-Google-Smtp-Source: APXvYqzS4WrvaE+blcePE/ahvRi3pVnEd+rHz/lBHtlrvP5IWn/Ot8i+LKW/xXZFhFEKvrkCB/yQqw==
-X-Received: by 2002:adf:dc10:: with SMTP id t16mr18276616wri.40.1552242543854;
-        Sun, 10 Mar 2019 11:29:03 -0700 (PDT)
+        bh=wGHWm6Eb/CJnWIPjw9B7FHEk4fQHOl9O5NsClGKYlsg=;
+        b=N+NUDMiMdWEDd5mLJb9LxUs6Yv9JgTL1icw9SoRuAGYZSGoirr5XQp2BbudbRtkR1R
+         Ek7LsUDP++afZL9MSbC3zeHh9dLiBzQGg27CwnyvPCwOLql9OKCe0n0G+oZwszW1P4sh
+         3F8fqamrDIIvbKVp7CGq2JjnVeYrSC/CWK3/sO6Y5rtjX7wZQXfwDqDXQKz3i4IXeyyL
+         mZn3vvPe0t51tu/4kO7JQaqIJYvZpic6nBsEDVt/G9ItufVNQd3HuOL2PdtKgBSW5dxN
+         92tEgP8njT1CbznOOQ+wLe331vr8a4cq4ihZJQKL+NHrcOQxkd5jzSlVBd+9lfdWgEmi
+         6ZOA==
+X-Gm-Message-State: APjAAAV2OjDKxE8uLS0r4v1OMXgXP0/FVgnjWeiS/UC9q6eBk3ZR2i2l
+        U0Xwh7xseYfTtgQeBQM4pSDyj5uOB5g=
+X-Google-Smtp-Source: APXvYqx/zdUhS0fhjKGT/4ltGeCJn4hVwGX3xirdaCghSBOFP5B7BM2PTxcIzNoipngiX2aFleRsFw==
+X-Received: by 2002:adf:d0c9:: with SMTP id z9mr17541972wrh.132.1552242551453;
+        Sun, 10 Mar 2019 11:29:11 -0700 (PDT)
 Received: from myhost.home (bgt124.neoplus.adsl.tpnet.pl. [83.28.83.124])
-        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.02
+        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 11:29:03 -0700 (PDT)
+        Sun, 10 Mar 2019 11:29:10 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Subject: [PATCH 05/25] dt-bindings: leds: Add function and color properties
-Date:   Sun, 10 Mar 2019 19:28:16 +0100
-Message-Id: <20190310182836.20841-6-jacek.anaszewski@gmail.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 11/25] leds: lp8860: Use led_compose_name()
+Date:   Sun, 10 Mar 2019 19:28:22 +0100
+Message-Id: <20190310182836.20841-12-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
 References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
@@ -77,117 +72,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce dedicated properties for conveying information about
-LED function and color. Mark old "label" property as deprecated.
+Switch to using generic LED support for composing LED class
+device name.
+
+While at it, avoid iterating through available child of nodes
+in favor of obtaining single expected child node using single
+call to of_get_next_available_child().
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Cc: Daniel Mack <daniel@zonque.org>
 Cc: Dan Murphy <dmurphy@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Simon Shields <simon@lineageos.org>
 ---
- Documentation/devicetree/bindings/leds/common.txt | 55 +++++++++++++++++++----
- 1 file changed, 47 insertions(+), 8 deletions(-)
+ drivers/leds/leds-lp8860.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index aa1399814a2a..3402b0e1cec9 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -10,14 +10,23 @@ can influence the way of the LED device initialization, the LED components
- have to be tightly coupled with the LED device binding. They are represented
- by child nodes of the parent LED device binding.
+diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+index 39c72a908f3b..7c12ccdc1f2f 100644
+--- a/drivers/leds/leds-lp8860.c
++++ b/drivers/leds/leds-lp8860.c
+@@ -22,7 +22,6 @@
+ #include <linux/of_gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
+-#include <uapi/linux/uleds.h>
  
+ #define LP8860_DISP_CL1_BRT_MSB		0x00
+ #define LP8860_DISP_CL1_BRT_LSB		0x01
+@@ -87,6 +86,8 @@
+ 
+ #define LP8860_CLEAR_FAULTS		0x01
+ 
++#define LP8860_NAME			"lp8860"
 +
- Optional properties for child nodes:
- - led-sources : List of device current outputs the LED is connected to. The
- 		outputs are identified by the numbers that must be defined
- 		in the LED device binding documentation.
-+- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
-+	    from the header include/dt-bindings/leds/common.h.
-+	    If there is no matching LED_FUNCTION available, add a new one.
-+- color : Color of the LED. Use one of the LED_COLOR_NAME_* prefixed definitions
-+	    from the header include/dt-bindings/leds/common.h.
-+	    If there is no matching LED_COLOR_NAME available, add a new one.
-+
- - label : The label for this LED. If omitted, the label is taken from the node
- 	  name (excluding the unit address). It has to uniquely identify
- 	  a device, i.e. no other LED class device can be assigned the same
--	  label.
-+	  label. This property is deprecated - use 'function' and 'color'
-+	  properties instead.
- 
- - default-state : The initial state of the LED. Valid values are "on", "off",
-   and "keep". If the LED is already on or off and the default-state property is
-@@ -87,29 +96,59 @@ Required properties for trigger source:
- 
- * Examples
- 
--gpio-leds {
-+#include <dt-bindings/leds/common.h>
-+
-+led-controller@0 {
- 	compatible = "gpio-leds";
- 
--	system-status {
--		label = "Status";
-+	led0 {
-+		function = LED_FUNCTION_STATUS;
- 		linux,default-trigger = "heartbeat";
- 		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
- 	};
- 
--	usb {
-+	led1 {
-+		function = LED_FUNCTION_USB;
- 		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
- 		trigger-sources = <&ohci_port1>, <&ehci_port1>;
- 	};
+ /**
+  * struct lp8860_led -
+  * @lock - Lock for reading/writing the device
+@@ -96,7 +97,6 @@
+  * @eeprom_regmap - EEPROM register map
+  * @enable_gpio - VDDIO/EN gpio to enable communication interface
+  * @regulator - LED supply regulator pointer
+- * @label - LED label
+  */
+ struct lp8860_led {
+ 	struct mutex lock;
+@@ -106,7 +106,6 @@ struct lp8860_led {
+ 	struct regmap *eeprom_regmap;
+ 	struct gpio_desc *enable_gpio;
+ 	struct regulator *regulator;
+-	char label[LED_MAX_NAME_SIZE];
  };
  
--max77693-led {
-+led-controller@0 {
- 	compatible = "maxim,max77693-led";
+ struct lp8860_eeprom_reg {
+@@ -387,25 +386,26 @@ static int lp8860_probe(struct i2c_client *client,
+ 	struct lp8860_led *led;
+ 	struct device_node *np = client->dev.of_node;
+ 	struct device_node *child_node;
+-	const char *name;
++	struct led_init_data init_data;
  
--	camera-flash {
--		label = "Flash";
-+	led {
-+		function = LED_FUNCTION_FLASH;
-+		color = LED_COLOR_NAME_WHITE;
- 		led-sources = <0>, <1>;
- 		led-max-microamp = <50000>;
- 		flash-max-microamp = <320000>;
- 		flash-max-timeout-us = <500000>;
- 	};
- };
+ 	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+ 	if (!led)
+ 		return -ENOMEM;
+ 
+-	for_each_available_child_of_node(np, child_node) {
+-		led->led_dev.default_trigger = of_get_property(child_node,
+-						    "linux,default-trigger",
+-						    NULL);
+-
+-		ret = of_property_read_string(child_node, "label", &name);
+-		if (!ret)
+-			snprintf(led->label, sizeof(led->label), "%s:%s",
+-				 id->name, name);
+-		else
+-			snprintf(led->label, sizeof(led->label),
+-				"%s::display_cluster", id->name);
+-	}
++	child_node = of_get_next_available_child(np, NULL);
++	if (!child_node)
++		return -EINVAL;
 +
-+led-controller@30 {
-+        compatible = "panasonic,an30259a";
-+        reg = <0x30>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++	init_data.fwnode = of_fwnode_handle(child_node),
 +
-+        led@1 {
-+                reg = <1>;
-+                linux,default-trigger = "heartbeat";
-+                function = LED_FUNCTION_INDICATOR;
-+                color = LED_COLOR_NAME_RED;
-+        };
++	led->led_dev.default_trigger = of_get_property(child_node,
++					    "linux,default-trigger",
++					    NULL);
 +
-+        led@2 {
-+                reg = <2>;
-+                function = LED_FUNCTION_INDICATOR;
-+                color = LED_COLOR_NAME_GREEN;
-+        };
-+
-+        led@3 {
-+                reg = <3>;
-+                function = LED_FUNCTION_INDICATOR;
-+                color = LED_COLOR_NAME_BLUE;
-+        };
-+};
++	ret = led_compose_name(init_data.fwnode, LP8860_NAME,
++			       ":display_cluster", init_data.name);
++	if (ret)
++		return ret;
+ 
+ 	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+ 						   "enable", GPIOD_OUT_LOW);
+@@ -420,7 +420,6 @@ static int lp8860_probe(struct i2c_client *client,
+ 		led->regulator = NULL;
+ 
+ 	led->client = client;
+-	led->led_dev.name = led->label;
+ 	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
+ 
+ 	mutex_init(&led->lock);
+@@ -447,7 +446,8 @@ static int lp8860_probe(struct i2c_client *client,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
++	ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
++					     &init_data);
+ 	if (ret) {
+ 		dev_err(&client->dev, "led register err: %d\n", ret);
+ 		return ret;
 -- 
 2.11.0
 
