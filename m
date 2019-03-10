@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CB4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA7DC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113B020657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7905F20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WT/qx71H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiGI1fkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfCJSaf (ORCPT
+        id S1727195AbfCJSam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:30:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37938 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfCJS3P (ORCPT
+        Sun, 10 Mar 2019 14:30:42 -0400
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:38983 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfCJS3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:29:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a188so2192281wmf.3;
-        Sun, 10 Mar 2019 11:29:13 -0700 (PDT)
+        Sun, 10 Mar 2019 14:29:12 -0400
+Received: by mail-wm1-f45.google.com with SMTP id z84so2203670wmg.4;
+        Sun, 10 Mar 2019 11:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yMTlUNNmUOMV1zYadWHv3Crjm4aF5ceU1QT1t1CeYUA=;
-        b=WT/qx71H722tMedjlMl/jPlfLJeg6jWNjClddkP9FNiDB1v1WOJM4hROcVbTA7Jcj5
-         UU825NYDzGl7kWDz2jdGNFMVTnmNQssJ8OE8GFgHBHTLtP6doJmcxkcLHA4Gs2nk8d+T
-         JKECH320jtDkGgvnESffVrnY2rrhfwL3ttjLrKOyg79Wkfs0nNsqoVwbzHkNhyXdDu3k
-         8nbncSpwiDTo1yaVmoYARYhgrQ3/O1cIMCKksoy13546uhzKBDNNAQi5G/h/0nu//2hn
-         /u///PR9UwvRFDL5oVuxLh21DSrBtgG1GxBstIKNwtbyTbMu972pftm/rOOqfh6kk+Mm
-         /w1Q==
+        bh=AhQIwe/gxRnDRcjlbe2VznqprPge1pjrgW8dTQ2ChFE=;
+        b=TiGI1fkwyx5dcwV5PMpQDAvWcHdDPohVGv1eW9EXRCLzNKbkVOKK13M4f+BDC5xXse
+         U6rtsbjhVJdIMwyvvUAkEF5ybm+SKkF/9rihayXTkQ0Cm9Ex3NQbA/4dCCJCiafe5OFl
+         3rH7aok85w7m5ii/O4Z6ogufbmXgcrAB9UXyyhEpwzAKO5jMW3Ts8rlSAplnrqIwXDzX
+         zNqIaLRI4XkIp5nvBSbXMwOo5I+ER0a2EPEEbotVfnMqDejQCIjgHadJ4AnftgcPHXU8
+         FgtDP0tIayfCyTdsuutzBCWziGhdKV/N1pLFSK6+o2MS2RksjIam70rNXHnXSA31SviR
+         LoMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yMTlUNNmUOMV1zYadWHv3Crjm4aF5ceU1QT1t1CeYUA=;
-        b=cTXAnx91MlERYI7tqrdG1nQs4nj+F2Mnh2TgQEsiC1meW2waQHLsupUxHdLuAmbh2e
-         9BdVgPX9Aio2xXz59SrmN10jIGio0HgwZdUtX3cWpH5DnS5wlNgZfIE8Hg/7TVwzxFtw
-         Eld6nf2OiVIpIKcGziQcG0NGLL7GbLodQqC7avBtxd1laVkcqNjtD9mI5qH86OhVsKTt
-         G8ge0PGTO9/exU8TwalG5x1HJuoO3O9IlMMdeRMoCxaPo3DV9HpcQJAX15X3CSV+w0Jn
-         9DxapeDbdoxDxdXBZ4mph5GXRTocVVgGpFtCDsw8Vq7kld0uDUmLjsJV6c8NsPN8b2Fy
-         9O7A==
-X-Gm-Message-State: APjAAAVf3I1v8zUdYl2Jk3jhq9KDymglMk44rayvYh2y6Z5qCmDjWb+E
-        ta9BNn8eW5+Ai+sjFiCq8odtGBuiS0Y=
-X-Google-Smtp-Source: APXvYqxWMbu27yegvWknnX1SkozlMp7y3FwXuzLRqWt1WLq4gYh03o3sUMsQk50wWuA3KsAhWCc73Q==
-X-Received: by 2002:a05:600c:2143:: with SMTP id v3mr14741461wml.14.1552242552921;
-        Sun, 10 Mar 2019 11:29:12 -0700 (PDT)
+        bh=AhQIwe/gxRnDRcjlbe2VznqprPge1pjrgW8dTQ2ChFE=;
+        b=ose2fsK4EnjZCfUc4jHy5faimqqIhPAAf7Or5OVCgho0VVRl/vcajsgW3z7HIeJYhW
+         IozhzQ+WtcNjPYBbpOrZ9fPXS8AXvoHsMwhkH3LvEDMzJx3ilhrmvdNYPRc6MUyFwXq+
+         CIae1PdOmZT/Fcqr1eR2YCCyzdPMcFFmAI8JcIpGLzOr8VoFUOlaZo9I6RCqOdZYQK9k
+         /vIEOjqRNfoAiUQr9MMdNQ2NO9o6tH+UaUp+xyNDSsz4nnKbhmUZkNF8MgfaiBw2038C
+         6Ofv6V2tr4Z1D7sboq9iOTC2LZ+mEg8IG8dB/MReVN8dukA9oNPAGlHbQQHlOPbZF8xF
+         a1Mw==
+X-Gm-Message-State: APjAAAVQonwifDHg1hkzbl5DVrJ1tp4Ngp5ietSwkFqxYzOh8JT/oadh
+        v9U4vYNC//3KMVKHyq/MPmBisMsX
+X-Google-Smtp-Source: APXvYqzExIUvVpmnnFETqdkekEm4KcurQ0lWKVMM0U5ikog0dIGsG4AFkeg1eacBVK5N2/U4paISKQ==
+X-Received: by 2002:a1c:4844:: with SMTP id v65mr16019379wma.66.1552242550099;
+        Sun, 10 Mar 2019 11:29:10 -0700 (PDT)
 Received: from myhost.home (bgt124.neoplus.adsl.tpnet.pl. [83.28.83.124])
-        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.11
+        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 11:29:12 -0700 (PDT)
+        Sun, 10 Mar 2019 11:29:09 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 12/25] dt-bindings: lm3692x: Add function and color properties
-Date:   Sun, 10 Mar 2019 19:28:23 +0100
-Message-Id: <20190310182836.20841-13-jacek.anaszewski@gmail.com>
+        pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com
+Subject: [PATCH 10/25] dt-bindings: lp8860: Add function and color properties
+Date:   Sun, 10 Mar 2019 19:28:21 +0100
+Message-Id: <20190310182836.20841-11-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
 References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
@@ -75,17 +74,17 @@ Refer to new "function" and "color" properties and mark "label"
 as deprecated.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>
+Acked-by: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 9 +++++++--
+ Documentation/devicetree/bindings/leds/leds-lp8860.txt | 9 +++++++--
  1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-index 08b352840bd7..c15806235e85 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-@@ -26,12 +26,16 @@ Required child properties:
- 		3 - Will enable the LED3 sync (LM36923 only)
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+index 5f0e892ad759..623065a55ed8 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+@@ -20,12 +20,16 @@ Required child properties:
+ 	- reg : 0
  
  Optional child properties:
 -	- label : see Documentation/devicetree/bindings/leds/common.txt
@@ -99,15 +98,15 @@ index 08b352840bd7..c15806235e85 100644
  
 +#include <dt-bindings/leds/common.h>
 +
- led-controller@36 {
- 	compatible = "ti,lm3692x";
- 	reg = <0x36>;
-@@ -43,7 +47,8 @@ led-controller@36 {
+ led-controller@2d {
+ 	compatible = "ti,lp8860";
+ 	#address-cells = <1>;
+@@ -36,7 +40,8 @@ led-controller@2d {
  
  	led@0 {
  		reg = <0>;
--		label = "white:backlight_cluster";
-+		function = LED_BACKLIGHT_CLUSTER;
+-		label = "white:backlight";
++		function = LED_FUNCTION_BACKLIGHT;
 +		color = LED_COLOR_NAME_WHITE;
  		linux,default-trigger = "backlight";
  	};
