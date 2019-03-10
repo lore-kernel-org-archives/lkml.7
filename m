@@ -2,102 +2,109 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1AC10F03
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA755C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909D1207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D5A206BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJqCBFHq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnPYRDGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfCJUDM (ORCPT
+        id S1726741AbfCJUPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 16:03:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39188 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbfCJUDL (ORCPT
+        Sun, 10 Mar 2019 16:15:46 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51874 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfCJUPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 16:03:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p8so1209652wrq.6
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:03:10 -0700 (PDT)
+        Sun, 10 Mar 2019 16:15:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n19so2385919wmi.1;
+        Sun, 10 Mar 2019 13:15:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=zbMhExhcQYCOyIfAYk0sSo4FJ/ZfISUCR/GKSvOcuA0=;
-        b=DJqCBFHq1Z/2wpyTFMWdNEeVhm9QIBqFLuM98VctOaaNcOZ1C13s3/1J5IN+lWqs/x
-         jV3tygdNoTupLVYBWZG1r7PFgvzag+Q4Zce8pg2q6QsjOKAkvi4RocDtirXoUYPCJecf
-         M7SStV/ewhYudbmw5QxxcYrV0zVHPULcce52VSz8kDfR8XhduyiROmVA0mRK0gjukyLk
-         3lJvA3aWEWQLrVHl3yQ2ASzwKeZJF4IgPXhLsVZhkQHsvbwhPWDnVDh5P9Vb9ecDdK/Q
-         EQ89tFuARFukEDRnMy+B7/WnmIWY0OA55sTR6gHjNjqW7XhwXRHgWqg7ZHdGoYhfKG/H
-         Lpxg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EnWDpHuOgdQ0iXw9pdsPOTmJTjkA4lmWSUM7khczrDE=;
+        b=WnPYRDGY3Ha2jc6fQmq0Yun1WQS4O6+u69NqssDT0uW2HVb9g08mdpazNleLpG2hnG
+         CuQqN7cH7i0e4YJko6yjlubn5zCZL/kUfHzP2PlBiN0+t4RiJLwozZXcvSJ0EQqAGcLm
+         VjLwG8bCVtEL8Ex7D9mbmqSgv1OkmLZ+cgDOd1DjG1i+g5oQX9gJT+9XXL3czIVPxvKL
+         LiAZOPKIzNPTIYHfy9SzWWt4iq1ORivN0JeqTr+9RUPVfr24t1Rye3Hfzq3wwSxXozWB
+         yJL9QHRm1nn6RuqMJ0IgRyQjh0xCWErWb3yOUqmvcdnwohcLXC42cbpb6SXxC8Jd1TgP
+         ER+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zbMhExhcQYCOyIfAYk0sSo4FJ/ZfISUCR/GKSvOcuA0=;
-        b=mXqvXvhBCy7SYWPv2kL6DkCgwF+1TndnnUvDfBcWBlKiIBwvM2t3TFRX7ejANw0+wD
-         VL7rv8BJpC8sGJxW0rhBZJpJH7dHtq7U8WYBQxEDWT6zSjhdZbc4qWdlZzof3J/12fUv
-         ZKxhPMFBhE+be88hcSd9pZNlSI5PnHC89n60LQWmx43YuQGxdJkTxLtSGrOcY/d78/3X
-         2V17YhWZZmNdi+zsqdcbS5AXTWyoO0xsjiMe5StkjOoqB2ovPyPsixH2H6zc8e7x9Lj5
-         +ntl9aLWYvZk37vP0mAUpXvP8irYYjYx1B2YYHf4BfaS4ETo802DftOmdece2FNdSj0n
-         9OpA==
-X-Gm-Message-State: APjAAAWrkWJkkYpgzna2JiEn4EicG5oIKp9uugiU4CJa+0gA0/9R4i09
-        +Z5LYS7Sohq9X0t0t8SaHDI=
-X-Google-Smtp-Source: APXvYqwgEuPpARCbJr6BnqO5Ic8J3u9AM2SW5sXtYNirSn5GdLQ1Y1ACeTZzvesuDnxrTuus/2fKVg==
-X-Received: by 2002:adf:e5c5:: with SMTP id a5mr17866239wrn.13.1552248190003;
-        Sun, 10 Mar 2019 13:03:10 -0700 (PDT)
-Received: from darwi-home-pc (ip-109-42-1-116.web.vodafone.de. [109.42.1.116])
-        by smtp.gmail.com with ESMTPSA id f68sm41533105wmg.5.2019.03.10.13.03.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Mar 2019 13:03:08 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 21:03:02 +0100
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] printk: kmsg_dump: Mark registered flag as private
-Message-ID: <20190310200302.GA11096@darwi-home-pc>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EnWDpHuOgdQ0iXw9pdsPOTmJTjkA4lmWSUM7khczrDE=;
+        b=jqjzX10f200RdZ0dzgJEdHwnqVq6FiviraeVXaINBjzhcxuu4cAuiaFTIZYxmdCLoF
+         Z+mAuSKHdYgAAMrUdJiY3dBTonfdLOIpR8pOIM7kKvkyA5H3RMDtFhzWFZsWELP8YeXw
+         9rmLzE5njlabFzikFA4QOgji97L2+vlEOqgYAeRO4xJGY2hg9aj1PBhm8R5YDI4mLt1s
+         XKZ/wL+fS25bwHU1h8VrWa7lOMCiLSOw+MkY1eEyS8CWe81XbqEnthWQvDh6PJHkYGIZ
+         +c1e1qXuk5wCoTKs3jxnarOdy//wxwRfv/sHOXKwpq5TZSPTQhg7CL0+fhrdK19anSCs
+         hCjQ==
+X-Gm-Message-State: APjAAAXMl1BRfmJjUjy+KTqNhyp68aln2VnS8e0GSf3uoyH5Hlg2np9p
+        EHMPr6SJRHYBN2uLoVX1RQNSUZIW
+X-Google-Smtp-Source: APXvYqw1/AfBIMOD9WOr5dMLV0DTOhQlnhX1Tyb6wGPexhG65e5pQJnyS9JFJUPohOCSfgcjwA5UAA==
+X-Received: by 2002:a1c:4946:: with SMTP id w67mr14289244wma.20.1552248944138;
+        Sun, 10 Mar 2019 13:15:44 -0700 (PDT)
+Received: from [192.168.1.18] (bgt124.neoplus.adsl.tpnet.pl. [83.28.83.124])
+        by smtp.gmail.com with ESMTPSA id j10sm3866877wrt.58.2019.03.10.13.15.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 13:15:43 -0700 (PDT)
+Subject: Re: [PATCH] drivers: leds: Kconfig: pedantic cleanups
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+References: <1551896146-17719-1-git-send-email-info@metux.net>
+ <20190306211914.GA355@amd> <eae77715-ec42-ae26-3b77-300c32c329f2@metux.net>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <35855254-4561-d496-31f4-e3fbfd075bdf@gmail.com>
+Date:   Sun, 10 Mar 2019 21:15:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <eae77715-ec42-ae26-3b77-300c32c329f2@metux.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'registered' flag is internally used by kmsg_dump_register()
-and kmsg_dump_unregister() to track multiple registrations of the
-same dumper.
+Hi Enrico,
 
-It's protected by printk's internal dump_list_lock, and must thus
-be accessed only from there. Mark it as private.
+Thank you for the patch.
 
-Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
----
- include/linux/kmsg_dump.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/7/19 10:04 PM, Enrico Weigelt, metux IT consult wrote:
+> On 06.03.19 22:19, Pavel Machek wrote:
+>> On Wed 2019-03-06 19:15:46, Enrico Weigelt, metux IT consult wrote:
+>>
+>> Would be nice if changelog here said what you did. AFAICT it cleans up
+>> spaces before tabs...
+> 
+> I assumed that would be obvious (my editor explicitly shows tabs) :o
+> 
+> 
+>>> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+>>
+>> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> thx.
+> 
+> 
+> --mtx
+> 
 
-diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-index 2e7a1e032c71..7c08cb58259a 100644
---- a/include/linux/kmsg_dump.h
-+++ b/include/linux/kmsg_dump.h
-@@ -36,7 +36,7 @@ enum kmsg_dump_reason {
-  * @dump:	Call into dumping code which will retrieve the data with
-  * 		through the record iterator
-  * @max_reason:	filter for highest reason number that should be dumped
-- * @registered:	Flag that specifies if this is already registered
-+ * @registered:	Flag that specifies if this is already registered (private)
-  */
- struct kmsg_dumper {
- 	struct list_head list;
---
-2.21.0
+Applied to the for-5.2 branch of linux-leds.git.
+
+-- 
+Best regards,
+Jacek Anaszewski
