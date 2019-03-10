@@ -2,60 +2,60 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A1C10F03
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AFAC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08399206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F662206DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QippPLGl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nO3pUx4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfCJSMp (ORCPT
+        id S1727019AbfCJSMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:12:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39524 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfCJSM0 (ORCPT
+        Sun, 10 Mar 2019 14:12:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54506 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfCJSMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:12:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p8so1036910wrq.6
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:12:24 -0700 (PDT)
+        Sun, 10 Mar 2019 14:12:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f3so2221634wmj.4
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:12:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Rzi6we5rwF3Y64l19PsLoFd2B5RuM9WGk0GjrjaWejk=;
-        b=QippPLGlc/JE4mt1hPQnApMT6VQ2+P2ihx/NcxK9/f1FpFPKP6s5TLVUVYacaKqkkC
-         6ebcAHsbiy82QhweTPwXTB/zkESgxYcXWN553XYhhc6OOAQzfid12lBW6S3VvuwB7C0W
-         ZFRop+pnOxeU3G3u7OIoMC4COenmsodLBR0srU32+t6oZ+GBBVIVoFE1phTqrZhzjKPR
-         qVkIo2nkL6qfuXTYFUxwUZX85iDscB7A6ivF062zY3zDhCjRxJOs/W6teMBfpT/msHii
-         cSnGfOX4CNw45oQ5vfZd+0sD2U5CP8dRhrTgLGrw+dqn1pe8U/Jor5QQeGdGHKH8s4L+
-         0g/A==
+        bh=9QZLgskSCrdBD9un8CU62IVDYuz5MmLQQB3oIqrmxZE=;
+        b=nO3pUx4OMmDgoQO5L2YrY+nrS1Hq8rf5ZJP8jui67Shle2skP7E8ufW5Ep0Dm654C2
+         i/kkCc2op5YOwwSamzjNbgbCeVkC9dHweYik0iOrudeQXruBK9F6/P0goq27qVnlpbiE
+         NfxDNVVcNCpM5XAqBjV93Bt3ji4ua2B+vYf3KxZkohaPe9SlMLsk28f60ok7OYQNmzmz
+         jg52gentUnxoRJBCy0oHphDHHSYOW6i5SxKgCDNCAgGSMMidgQgZ+jEPTRF3g5U4Os6s
+         jxrzI7OcoS8tru1H2l8w62YgSCnLJbqyuPD8MoPFPPvTXzzdSxAh3EbAsmC4ozXy8ByF
+         lHXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Rzi6we5rwF3Y64l19PsLoFd2B5RuM9WGk0GjrjaWejk=;
-        b=SvZ7p5tt9vATBzMOLcjpB/wgCn+wKcLERtvNTy6MMsadNZfVns/iBvgouGllgLNqoN
-         DVqQKnfq1QoIZyq+W3GK+W0boUOetxbiAiCgeH2KhkxIT4Ct5Xbd5CqmerUlfmd+STVB
-         y8MsKfc9YW8lyVUWW4VA8JLZLJSJG1xXI15Gxvll44y/ZLkEiL6BDVrLqviHJMZw7IpZ
-         wjxyGGwp0RsUpaFt2KqcFr3S26O4e0Dtik1OqCnzYh16SA8Z77eQCnLAw9uKXOZ6s3Cs
-         NOhIyRseRoFzTHrjJH7JsrHdLcaA8v/yd9GKF2DWnt/EBQFjaYoJKdF5VF8Ss9+c1K/W
-         2xAw==
-X-Gm-Message-State: APjAAAX45eWY8YoQ2Uusu+q30rUFOyKqKsgVkch9oubvKqetg/BaQ4El
-        ixeoA9NpLpNcDNnXm6X33pJnUQ==
-X-Google-Smtp-Source: APXvYqzt69rIVwa0wx69Dl5HZ6knOrjTSUsruLoYIkTns+WZm68RyXA+tLG2Kx/FWWuRFU6LvPKAVQ==
-X-Received: by 2002:adf:ec41:: with SMTP id w1mr18411906wrn.184.1552241544158;
-        Sun, 10 Mar 2019 11:12:24 -0700 (PDT)
+        bh=9QZLgskSCrdBD9un8CU62IVDYuz5MmLQQB3oIqrmxZE=;
+        b=n8aCL1ePmCbo7HPi3CF+zkOKWEa0Ri5CAXROncvpgAPojNDgBIGH9VnkyYXlohWWD+
+         dyrfLuZvF26cWKNCAo4I1iFATjxaxJMFg4G1a22GSrQL5LEWKkHzY6gYEpIX2gD77++L
+         imYHrKNm2SJxQTib+hZ/m7Hk13F1W5nY4C2HEm7abTz00UvzNJnL5E5N/NSQ56VZsJ9c
+         VtDSU8ODAODTjggxPo5xoejbk3cSM0bYh1PHGVX6Cr4oKVxAlufJoE8nW0jfWpp2nYtv
+         GDvFY9XR5R3MHgtG/Xjds3ZIGHT5C58zQByrcOm1UyLJYjMIgdUgjv0m93HyuoIxIrvm
+         Frug==
+X-Gm-Message-State: APjAAAWe06iLLExwgcIgZ9uufBQVJQXpAZ+43VBStvFB/Sd6tGQhwm0J
+        BaSjVHQpu4j8C7OboChEdLYFBA==
+X-Google-Smtp-Source: APXvYqxK91pUlXI2fHCDWIVw/PB6Vzd2bv9CU8NN5ffGWdsSvAu+HiGL6ZgGKDuypEPdnFIGfTm6kw==
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr14919968wmf.65.1552241538035;
+        Sun, 10 Mar 2019 11:12:18 -0700 (PDT)
 Received: from localhost.localdomain (146-241-67-113.dyn.eolo.it. [146.241.67.113])
-        by smtp.gmail.com with ESMTPSA id d206sm24906368wmc.11.2019.03.10.11.12.22
+        by smtp.gmail.com with ESMTPSA id d206sm24906368wmc.11.2019.03.10.11.12.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 11:12:23 -0700 (PDT)
+        Sun, 10 Mar 2019 11:12:17 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         broonie@kernel.org, bfq-iosched@googlegroups.com,
         oleksandr@natalenko.name, fra.fra.800@gmail.com,
         alessio.masola@gmail.com, Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT V2 7/9] block, bfq: print SHARED instead of pid for shared queues in logs
-Date:   Sun, 10 Mar 2019 19:11:35 +0100
-Message-Id: <20190310181137.2604-8-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V2 4/9] block, bfq: do not merge queues on flash storage with queueing
+Date:   Sun, 10 Mar 2019 19:11:32 +0100
+Message-Id: <20190310181137.2604-5-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190310181137.2604-1-paolo.valente@linaro.org>
 References: <20190310181137.2604-1-paolo.valente@linaro.org>
@@ -76,105 +76,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Pollicino <fra.fra.800@gmail.com>
+To boost throughput with a set of processes doing interleaved I/O
+(i.e., a set of processes whose individual I/O is random, but whose
+merged cumulative I/O is sequential), BFQ merges the queues associated
+with these processes, i.e., redirects the I/O of these processes into a
+common, shared queue. In the shared queue, I/O requests are ordered by
+their position on the medium, thus sequential I/O gets dispatched to
+the device when the shared queue is served.
 
-The function "bfq_log_bfqq" prints the pid of the process
-associated with the queue passed as input.
+Queue merging costs execution time, because, to detect which queues to
+merge, BFQ must maintain a list of the head I/O requests of active
+queues, ordered by request positions. Measurements showed that this
+costs about 10% of BFQ's total per-request processing time.
 
-Unfortunately, if the queue is shared, then more than one process
-is associated with the queue. The pid that gets printed in this
-case is the pid of one of the associated processes.
-Which process gets printed depends on the exact sequence of merge
-events the queue underwent. So printing such a pid is rather
-useless and above all is often rather confusing because it
-reports a random pid between those of the associated processes.
+Request processing time becomes more and more critical as the speed of
+the underlying storage device grows. Yet, fortunately, queue merging
+is basically useless on the very devices that are so fast to make
+request processing time critical. To reach a high throughput, these
+devices must have many requests queued at the same time. But, in this
+configuration, the internal scheduling algorithms of these devices do
+also the job of queue merging: they reorder requests so as to obtain
+as much as possible a sequential I/O pattern. As a consequence, with
+processes doing interleaved I/O, the throughput reached by one such
+device is likely to be the same, with and without queue merging.
 
-This commit addresses this issue by printing SHARED instead of a pid
-if the queue is shared.
+In view of this fact, this commit disables queue merging, and all
+related housekeeping, for non-rotational devices with internal
+queueing. The total, single-lock-protected, per-request processing
+time of BFQ drops to, e.g., 1.9 us on an Intel Core i7-2760QM@2.40GHz
+(time measured with simple code instrumentation, and using the
+throughput-sync.sh script of the S suite [1], in performance-profiling
+mode). To put this result into context, the total,
+single-lock-protected, per-request execution time of the lightest I/O
+scheduler available in blk-mq, mq-deadline, is 0.7 us (mq-deadline is
+~800 LOC, against ~10500 LOC for BFQ).
 
-Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
+Disabling merging provides a further, remarkable benefit in terms of
+throughput. Merging tends to make many workloads artificially more
+uneven, mainly because of shared queues remaining non empty for
+incomparably more time than normal queues. So, if, e.g., one of the
+queues in a set of merged queues has a higher weight than a normal
+queue, then the shared queue may inherit such a high weight and, by
+staying almost always active, may force BFQ to perform I/O plugging
+most of the time. This evidently makes it harder for BFQ to let the
+device reach a high throughput.
+
+As a practical example of this problem, and of the benefits of this
+commit, we measured again the throughput in the nasty scenario
+considered in previous commit messages: dbench test (in the Phoronix
+suite), with 6 clients, on a filesystem with journaling, and with the
+journaling daemon enjoying a higher weight than normal processes. With
+this commit, the throughput grows from ~150 MB/s to ~200 MB/s on a
+PLEXTOR PX-256M5 SSD. This is the same peak throughput reached by any
+of the other I/O schedulers. As such, this is also likely to be the
+maximum possible throughput reachable with this workload on this
+device, because I/O is mostly random, and the other schedulers
+basically just pass I/O requests to the drive as fast as possible.
+
+[1] https://github.com/Algodev-github/S
+
+Tested-by: Francesco Pollicino <fra.fra.800@gmail.com>
+Signed-off-by: Alessio Masola <alessio.masola@gmail.com>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 10 ++++++++++
- block/bfq-iosched.h | 23 +++++++++++++++++++----
- 2 files changed, 29 insertions(+), 4 deletions(-)
+ block/bfq-cgroup.c  |  3 +-
+ block/bfq-iosched.c | 73 +++++++++++++++++++++++++++++++++++++++++----
+ block/bfq-iosched.h |  3 ++
+ 3 files changed, 73 insertions(+), 6 deletions(-)
 
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index c6113af31960..2a74a3f2a8f7 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -578,7 +578,8 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 	bfqg_and_blkg_get(bfqg);
+ 
+ 	if (bfq_bfqq_busy(bfqq)) {
+-		bfq_pos_tree_add_move(bfqd, bfqq);
++		if (unlikely(!bfqd->nonrot_with_queueing))
++			bfq_pos_tree_add_move(bfqd, bfqq);
+ 		bfq_activate_bfqq(bfqd, bfqq);
+ 	}
+ 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 500b04df9efa..7d95d9c01036 100644
+index 41364c0cca8c..b96be3764b8a 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -2590,6 +2590,16 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
- 	 *   assignment causes no harm).
+@@ -595,7 +595,16 @@ static bool bfq_too_late_for_merging(struct bfq_queue *bfqq)
+ 				       bfq_merge_time_limit);
+ }
+ 
+-void bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq)
++/*
++ * The following function is not marked as __cold because it is
++ * actually cold, but for the same performance goal described in the
++ * comments on the likely() at the beginning of
++ * bfq_setup_cooperator(). Unexpectedly, to reach an even lower
++ * execution time for the case where this function is not invoked, we
++ * had to add an unlikely() in each involved if().
++ */
++void __cold
++bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+ 	struct rb_node **p, *parent;
+ 	struct bfq_queue *__bfqq;
+@@ -1849,8 +1858,9 @@ static void bfq_add_request(struct request *rq)
+ 
+ 	/*
+ 	 * Adjust priority tree position, if next_rq changes.
++	 * See comments on bfq_pos_tree_add_move() for the unlikely().
  	 */
- 	new_bfqq->bic = NULL;
+-	if (prev != bfqq->next_rq)
++	if (unlikely(!bfqd->nonrot_with_queueing && prev != bfqq->next_rq))
+ 		bfq_pos_tree_add_move(bfqd, bfqq);
+ 
+ 	if (!bfq_bfqq_busy(bfqq)) /* switching to busy ... */
+@@ -1990,7 +2000,9 @@ static void bfq_remove_request(struct request_queue *q,
+ 			bfqq->pos_root = NULL;
+ 		}
+ 	} else {
+-		bfq_pos_tree_add_move(bfqd, bfqq);
++		/* see comments on bfq_pos_tree_add_move() for the unlikely() */
++		if (unlikely(!bfqd->nonrot_with_queueing))
++			bfq_pos_tree_add_move(bfqd, bfqq);
+ 	}
+ 
+ 	if (rq->cmd_flags & REQ_META)
+@@ -2075,7 +2087,12 @@ static void bfq_request_merged(struct request_queue *q, struct request *req,
+ 		 */
+ 		if (prev != bfqq->next_rq) {
+ 			bfq_updated_next_req(bfqd, bfqq);
+-			bfq_pos_tree_add_move(bfqd, bfqq);
++			/*
++			 * See comments on bfq_pos_tree_add_move() for
++			 * the unlikely().
++			 */
++			if (unlikely(!bfqd->nonrot_with_queueing))
++				bfq_pos_tree_add_move(bfqd, bfqq);
+ 		}
+ 	}
+ }
+@@ -2357,6 +2374,46 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ {
+ 	struct bfq_queue *in_service_bfqq, *new_bfqq;
+ 
 +	/*
-+	 * If the queue is shared, the pid is the pid of one of the associated
-+	 * processes. Which pid depends on the exact sequence of merge events
-+	 * the queue underwent. So printing such a pid is useless and confusing
-+	 * because it reports a random pid between those of the associated
-+	 * processes.
-+	 * We mark such a queue with a pid -1, and then print SHARED instead of
-+	 * a pid in logging messages.
++	 * Do not perform queue merging if the device is non
++	 * rotational and performs internal queueing. In fact, such a
++	 * device reaches a high speed through internal parallelism
++	 * and pipelining. This means that, to reach a high
++	 * throughput, it must have many requests enqueued at the same
++	 * time. But, in this configuration, the internal scheduling
++	 * algorithm of the device does exactly the job of queue
++	 * merging: it reorders requests so as to obtain as much as
++	 * possible a sequential I/O pattern. As a consequence, with
++	 * the workload generated by processes doing interleaved I/O,
++	 * the throughput reached by the device is likely to be the
++	 * same, with and without queue merging.
++	 *
++	 * Disabling merging also provides a remarkable benefit in
++	 * terms of throughput. Merging tends to make many workloads
++	 * artificially more uneven, because of shared queues
++	 * remaining non empty for incomparably more time than
++	 * non-merged queues. This may accentuate workload
++	 * asymmetries. For example, if one of the queues in a set of
++	 * merged queues has a higher weight than a normal queue, then
++	 * the shared queue may inherit such a high weight and, by
++	 * staying almost always active, may force BFQ to perform I/O
++	 * plugging most of the time. This evidently makes it harder
++	 * for BFQ to let the device reach a high throughput.
++	 *
++	 * Finally, the likely() macro below is not used because one
++	 * of the two branches is more likely than the other, but to
++	 * have the code path after the following if() executed as
++	 * fast as possible for the case of a non rotational device
++	 * with queueing. We want it because this is the fastest kind
++	 * of device. On the opposite end, the likely() may lengthen
++	 * the execution time of BFQ for the case of slower devices
++	 * (rotational or at least without queueing). But in this case
++	 * the execution time of BFQ matters very little, if not at
++	 * all.
 +	 */
-+	new_bfqq->pid = -1;
- 	bfqq->bic = NULL;
- 	/* release process reference to bfqq */
- 	bfq_put_queue(bfqq);
++	if (likely(bfqd->nonrot_with_queueing))
++		return NULL;
++
+ 	/*
+ 	 * Prevent bfqq from being merged if it has been created too
+ 	 * long ago. The idea is that true cooperating processes, and
+@@ -2986,8 +3043,10 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ 		bfq_requeue_bfqq(bfqd, bfqq, true);
+ 		/*
+ 		 * Resort priority tree of potential close cooperators.
++		 * See comments on bfq_pos_tree_add_move() for the unlikely().
+ 		 */
+-		bfq_pos_tree_add_move(bfqd, bfqq);
++		if (unlikely(!bfqd->nonrot_with_queueing))
++			bfq_pos_tree_add_move(bfqd, bfqq);
+ 	}
+ 
+ 	/*
+@@ -5051,6 +5110,9 @@ static void bfq_update_hw_tag(struct bfq_data *bfqd)
+ 	bfqd->hw_tag = bfqd->max_rq_in_driver > BFQ_HW_QUEUE_THRESHOLD;
+ 	bfqd->max_rq_in_driver = 0;
+ 	bfqd->hw_tag_samples = 0;
++
++	bfqd->nonrot_with_queueing =
++		blk_queue_nonrot(bfqd->queue) && bfqd->hw_tag;
+ }
+ 
+ static void bfq_completed_request(struct bfq_queue *bfqq, struct bfq_data *bfqd)
+@@ -5882,6 +5944,7 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
+ 	INIT_HLIST_HEAD(&bfqd->burst_list);
+ 
+ 	bfqd->hw_tag = -1;
++	bfqd->nonrot_with_queueing = blk_queue_nonrot(bfqd->queue);
+ 
+ 	bfqd->bfq_max_budget = bfq_default_max_budget;
+ 
 diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 829730b96fb2..6410cc9a064d 100644
+index 26869cfbbfa9..829730b96fb2 100644
 --- a/block/bfq-iosched.h
 +++ b/block/bfq-iosched.h
-@@ -32,6 +32,8 @@
- #define BFQ_DEFAULT_GRP_IOPRIO	0
- #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
+@@ -497,6 +497,9 @@ struct bfq_data {
+ 	/* number of requests dispatched and waiting for completion */
+ 	int rq_in_driver;
  
-+#define MAX_PID_STR_LENGTH 12
++	/* true if the device is non rotational and performs queueing */
++	bool nonrot_with_queueing;
 +
- /*
-  * Soft real-time applications are extremely more latency sensitive
-  * than interactive ones. Over-raise the weight of the former to
-@@ -1016,13 +1018,23 @@ void bfq_add_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq);
- /* --------------- end of interface of B-WF2Q+ ---------------- */
- 
- /* Logging facilities. */
-+static void bfq_pid_to_str(int pid, char *str, int len)
-+{
-+	if (pid != -1)
-+		snprintf(str, len, "%d", pid);
-+	else
-+		snprintf(str, len, "SHARED-");
-+}
-+
- #ifdef CONFIG_BFQ_GROUP_IOSCHED
- struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
- 
- #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			\
-+	char pid_str[MAX_PID_STR_LENGTH];	\
-+	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
- 	blk_add_cgroup_trace_msg((bfqd)->queue,				\
- 			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		\
--			"bfq%d%c " fmt, (bfqq)->pid,			\
-+			"bfq%s%c " fmt, pid_str,			\
- 			bfq_bfqq_sync((bfqq)) ? 'S' : 'A', ##args);	\
- } while (0)
- 
-@@ -1033,10 +1045,13 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
- 
- #else /* CONFIG_BFQ_GROUP_IOSCHED */
- 
--#define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	\
--	blk_add_trace_msg((bfqd)->queue, "bfq%d%c " fmt, (bfqq)->pid,	\
-+#define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
-+	char pid_str[MAX_PID_STR_LENGTH];	\
-+	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
-+	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	\
- 			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		\
--				##args)
-+				##args)		\
-+} while (0)
- #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)		do {} while (0)
- 
- #endif /* CONFIG_BFQ_GROUP_IOSCHED */
+ 	/*
+ 	 * Maximum number of requests in driver in the last
+ 	 * @hw_tag_samples completed requests.
 -- 
 2.20.1
 
