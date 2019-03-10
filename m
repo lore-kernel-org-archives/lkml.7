@@ -2,121 +2,140 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E3AC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651D5C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0F620657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E1E20643
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="n4uDvpv/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="svjzZd1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfCJS75 (ORCPT
+        id S1726696AbfCJTUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:59:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33248 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfCJS74 (ORCPT
+        Sun, 10 Mar 2019 15:20:48 -0400
+Received: from nala.villavu.com ([188.165.243.101]:50304 "EHLO
+        nala.villavu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfCJTUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:59:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h11so2285352pgl.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=naRzgdJ8jUvVYH8uTyqd/CYWmmwuTDSS8+rRRSXIaiA=;
-        b=n4uDvpv/Ew13GkxFjmbxnFc8gUGqHnNwnERV6hA67Z0N0ovHa0dxHjxa48ZhzOf7dY
-         jATjxarUIxYV8KJ60jc6skC3UnKcCHEKvoaTnFlIec4V5F3r8gvZKxA81ul7HuLh0Dk/
-         8MP8vw6P0o3BjQnEihO1stzHigtLE/KM2N7BCC8LdiOvZyrrb8XJ2uh7QvChQAJ7USPM
-         +abtAgdKGJ3mPTFjFShgWKR+z79CnD/3xXeyHUgU3RhRs9haQ+O2S7VQI6zbGC+V4BQD
-         tt9cdyXHpISG3ON6e7z3VepB6Ingcd59UX8lMNXA3VfJBq8EuQYkODSsOQfqiWWQ0LiT
-         9cqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=naRzgdJ8jUvVYH8uTyqd/CYWmmwuTDSS8+rRRSXIaiA=;
-        b=hhbgfufcBY+ZVI4s48hiPS2QZGg8feEzDgiWvFcLOGZ1bHB28aj6XNidq72yj9d4CQ
-         5edybkklM4IPK7ueoUqoOSni2li/YJf5Gh0UHkJOCbQlAfeqzUfSbuLNQmR/Z53SHwjF
-         5j3ktGvnPu+jHSFe64hiQBJeZ02W91HELFxTRt87Rkqa/7qqUuwFEdm/xV9eeorkeOwd
-         g5+droc4aE55+U15CSRczv+rIy11cD+1F+5FW2zlAJWyx0UqPaSQY+DLp31oWB0HykpW
-         itN1nsikytcctB/Ef6NzAHhA2voECLLVOQ2kIRzQP2mLpr4fkHoSNw6iLv7NT1FAMZBh
-         kFcA==
-X-Gm-Message-State: APjAAAW34b0Q7I1qxYQRlFyS8aLo/xFa91QHX6mhyynSPGmDipCKlYmz
-        ge5YIVIFI0cW7k0mrumQNFLA3A==
-X-Google-Smtp-Source: APXvYqyluAC31/q3nmbc3LlyWKDp/+k6dIO4sc3PoMHKduo2TBx5AZ4EX+qbn8Z7VeMzhjYQzdZkIg==
-X-Received: by 2002:a17:902:523:: with SMTP id 32mr2477435plf.249.1552244395466;
-        Sun, 10 Mar 2019 11:59:55 -0700 (PDT)
-Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id n18sm6886491pfh.93.2019.03.10.11.59.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Mar 2019 11:59:55 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 11:59:53 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: r8169 only works in promisc mode
-Message-ID: <20190310115953.2ea3a0e5@shemminger-XPS-13-9360>
-In-Reply-To: <2fbb9488-198f-0a9c-af3b-bb45bf424884@gmail.com>
-References: <1552097324.u2rpi5lxaz.astroid@alex-desktop.none>
-        <82c0ba0d-c7cb-32fb-8e0b-2191b8678c16@gmail.com>
-        <20190310071853.3c726dbc@shemminger-XPS-13-9360>
-        <2fbb9488-198f-0a9c-af3b-bb45bf424884@gmail.com>
+        Sun, 10 Mar 2019 15:20:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
+         s=mail; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
+        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=KgsJQM+U1u3RzhVTkHvQX4KPVXh3TLeOWUiTJEjb6b0=; b=svjzZd1wHejU3NthmaVeholnAn
+        DfH9M5F/P6mMRXPQFkD4CfPHr8D+ZGSvD7/ijMLTvXrs3YuyFPF4xdgNNYjgilSqRuSaU7tvgWsYs
+        NTy/8GGyJHRa6iM2Anc/ShkL9UiTMIOdm5KN/sNaADACHcwhvpbsSyFuqQi4/pkt46bsP+BBvP8Ar
+        EFwSi7/TdoSCRXnix4FIOk8fw6ckb/SvhP2PuVzVlzPoFHd0lghUXg3ci+X+Wgf8XaQk03Yrwg/nB
+        NLWBDpSDASNeNPyWQFeqcqZomSC/jrBwILpbpa8B1mkKjELkIa+2mNwaUMzBTGTy9ZtRYcZvzIsjX
+        008p+p3A==;
+Received: from a82-161-36-93.adsl.xs4all.nl ([82.161.36.93] helo=[0.0.0.0])
+        by nala.villavu.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <merlijn@wizzup.org>)
+        id 1h3403-0001lT-Fv; Sun, 10 Mar 2019 20:20:43 +0100
+Subject: Re: Nokia N900: wl1251 spi3.0: EOW timed out on
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+Cc:     linux-omap <linux-omap@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>
+References: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
+ <436a9a35-539a-3fe8-2225-36b45c7e5412@wizzup.org>
+ <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
+From:   Merlijn Wajer <merlijn@wizzup.org>
+Openpgp: preference=signencrypt
+Message-ID: <1b2918b4-1765-5aba-4752-1d04bdfea925@wizzup.org>
+Date:   Sun, 10 Mar 2019 20:23:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 Mar 2019 15:26:16 +0100
-Heiner Kallweit <hkallweit1@gmail.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ
+Content-Type: multipart/mixed; boundary="2ZZSGR0B291btdmnZREGnbu4O8UcrdOY1";
+ protected-headers="v1"
+From: Merlijn Wajer <merlijn@wizzup.org>
+To: Vignesh Raghavendra <vigneshr@ti.com>,
+ "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+Cc: linux-omap <linux-omap@vger.kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "broonie@kernel.org" <broonie@kernel.org>
+Message-ID: <1b2918b4-1765-5aba-4752-1d04bdfea925@wizzup.org>
+Subject: Re: Nokia N900: wl1251 spi3.0: EOW timed out on
+References: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
+ <436a9a35-539a-3fe8-2225-36b45c7e5412@wizzup.org>
+ <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
+In-Reply-To: <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
 
-> On 10.03.2019 15:18, Stephen Hemminger wrote:
-> > On Sat, 9 Mar 2019 10:33:40 +0100
-> > Heiner Kallweit <hkallweit1@gmail.com> wrote:
-> >   
-> >> On 09.03.2019 03:16, Alex Xu (Hello71) wrote:  
-> >>> After suspending, my r8169 (not actually 8169, just that driver) only 
-> >>> receives packets when in promiscuous mode. I have tried disabling all 
-> >>> offload features except highdma [fixed], and it doesn't fix the issue.
-> >>>
-> >>> I am using torvalds/linux, compiled about two days ago (not sure which 
-> >>> commit). I think this happened after a recent upgrade (some time in the 
-> >>> past week). Given the long testing cycle, I don't really want to bisect; 
-> >>> I am hoping someone has some idea of where the issue could be.
-> >>>     
-> >> The provided information isn't enough to say anything. Please create a
-> >> bug ticket in bugzilla. Needed information:
-> >> - Last working and first failing kernel version (as reported by uname -a)
-> >> - Is 5.0 ok?
-> >> - Full dmesg log
-> >> - lspci -vv output for the network card
-> >> - If the issue happens only after resume from suspend, diff of the
-> >>   chip registers (ethtool -d) before and after suspend.
-> >> - Does removing / reloading the r8169 module fix the issue?
-> >>  
-> >>> Please CC me on replies.
-> >>>
-> >>> Thanks,
-> >>> Alex.
-> >>>     
-> >> Heiner  
-> > 
-> > Bugzilla is not really used by Linux network developers.
-> > I just filter/forward mail from bugzilla into netdev.
-> >   
-> To make sure I understand you correctly:
-> Are you just saying "network developers don't actively scan bugzilla"
-> or do you want to say that bugzilla shouldn't be used in general for
-> netdev bugs/issues? What would be the right tool then?
+--2ZZSGR0B291btdmnZREGnbu4O8UcrdOY1
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-both.
+Hi,
 
-Please use the netdev@vger.kernel.org mailing list for discussions.
+On 10/03/2019 05:16, Vignesh Raghavendra wrote:
+> Hi.
+>=20
+> On 10-Mar-19 6:23 AM, Merlijn Wajer wrote:
+>>
+>> Hi,
+>>
+>> On 10/03/2019 00:22, Merlijn Wajer wrote:
+>>> Hi,
+>>>
+>>> I just migrated to Linux 5.0  (from 4.15) on my Nokia N900, and I'm
+>>> getting a lot of messages like this:
+>>>
+>>>> wl1251 spi3.0: EOW timed out
+>=20
+>=20
+> Could you try if this patch fixes the issue? This is part of latest mai=
+nline tree but not part of 5.0:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?id=3Dbaf8b9f8d260c55a86405f70a384c29cda888476
+
+This seems to fix the issue. Would it make sense to queue this for an
+upcoming fixes release for 5.0?
+
+Cheers,
+Merlijn
+
+
+--2ZZSGR0B291btdmnZREGnbu4O8UcrdOY1--
+
+--4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXIVkIAAKCRAGN09rynK8
+WnkAAQCQ5LxFtM6fUlPxlz97ruW7Bmn6wgtOaXP15aWuNyBlSwEAw78y5s0Ap8mb
+UlcR3FQ9iaPKvji170PUkYQgXOeCLAU=
+=48NK
+-----END PGP SIGNATURE-----
+
+--4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ--
