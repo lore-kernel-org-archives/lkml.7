@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0801CC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41950C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC2E220657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113702084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSQRfQ7j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+CnZ2zh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfCJS3f (ORCPT
+        id S1727072AbfCJS3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:29:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43762 "EHLO
+        Sun, 10 Mar 2019 14:29:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38173 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbfCJS3b (ORCPT
+        with ESMTP id S1726912AbfCJS3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:29:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d17so2658309wre.10;
-        Sun, 10 Mar 2019 11:29:29 -0700 (PDT)
+        Sun, 10 Mar 2019 14:29:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g12so2674577wrm.5;
+        Sun, 10 Mar 2019 11:29:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=P3Eq/z9XqnlDZWCHRvBje1On9BdD/KWeXqb9HES1aUU=;
-        b=oSQRfQ7jak75Xitm00/NVx/exgml8xfLReYDZBo3DxQGFBH5YNwSCvQXqUae2t/6q8
-         eW7pl55PBXQSkHU7Dhv9u415rLM42p5Ln8BeGJeBIhpYycyMwtrXya2Avd2x23MzYFO/
-         v+cA6WpPKLSogQgcA5F/41O08pEkidg5Lu7Tsi+gQL8jBGNrP9Ljzz6mI7p/miNZXShP
-         0JkFDAwwK2Z+cavRT7mHP2L7QW/DTiEPd4Q8H/9KdQ/+Dzv8Jc3bQNiXBMak+J721Ga+
-         JIBukG8ICrd9Jde9VoooCjBAnHq75Tx3N78vE4BJWZ58RCrsh7w4izhKCTCXkOrX/6Zv
-         nKxQ==
+        bh=pkqGDpmkVPFNDWyaBj0ikJkJ8vB3SYx3bkaTDNEKdpo=;
+        b=J+CnZ2zhkkkbFjn2n/mTVwcGReZ+c43Rg/DLZkTnU820/0sPWRAZl8Jj6vsBfJTdH3
+         mL/veqfMNRaCLzGi2bgn55s21N6GjjDqOx8bl7Us4eNKKFXTErDbr8qx/srSdgDZJeCh
+         XODzMJyYOZqesK+7vUpFaKMnZU5jsr1BgCHf4PaoQ0CyXn3y1sX1U24lbIiIixaB8yIY
+         ee0hWlUIq7M9xTftewdbhdwQ8R+koG/fn+vW98xZfB4hiGKkTNTjENTtx1sT5ctmt9ym
+         fUQftbTNh/qflgrBg0UmA5zHK3UhNK3mbylnCLXC9GKiyOcMyAArt2MS3LHkgTZ/L9uv
+         wqzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=P3Eq/z9XqnlDZWCHRvBje1On9BdD/KWeXqb9HES1aUU=;
-        b=ubzryWuFIuNUj+K/SQxXBVJ95p+6BNDhQr3/Ij96/Jfqh/yaPLHA2wbmjnq7HdC4GE
-         mKtXmjfd46+SZxP9VGFrEI8WzTtdjU8mATJh0Tpu6Gl0VrqOmyEL7Ad7rafoqgVMDtPD
-         YI4f3HkB/019ZKpfwZA2KDvkc1mFwksNBF5OmtfFWurK7NgognYhgdy16aazEJX/cHHG
-         hbjChJwmw203J/e5Ky4kHjXqYWvTB4PHOce7FShlivbdZwUaP+/1iYYMhhTmurqmoOb3
-         tO6phDpgt/wUFh/QSDJwFhqgy7nLIjXLUapIsrU27HxK98lzv7J8l/l+KTe/oPi2Hm2i
-         Z4uA==
-X-Gm-Message-State: APjAAAUvyxbm6BiEg+M7ooE05XPf1UFF7iLWw95Z1+Oo6Ei8qZUirX8W
-        5JNfYOvU2+rM2jEWM7xtJr7yFeRt2VQ=
-X-Google-Smtp-Source: APXvYqwxjnl4aWv5UpAEq5+N6fj5eXm37ZB4innNXD1j8k3raev86rbioP8egwqrmOoHCeiVPU5t1A==
-X-Received: by 2002:a5d:6749:: with SMTP id l9mr13576611wrw.315.1552242568802;
-        Sun, 10 Mar 2019 11:29:28 -0700 (PDT)
+        bh=pkqGDpmkVPFNDWyaBj0ikJkJ8vB3SYx3bkaTDNEKdpo=;
+        b=iXjXp3u1ZwV8pGqbeJW397RwcRllRtAlxfAi5ABkegoqrbWOXXpEeJ0bcXc1fftyNx
+         8FPH8yztX9epadUxbDaJPbGNGldqQd8irKqIxFyxl/Z5PSnPlbfwYbZYiul5NgbPJ3g7
+         aCP9XJf26BEzZ9w6qNclzK6H+hi2Z+y8YyZ7yyxW/+yS+O7TDJsJ544cNLnbAYMXLEIx
+         DNq1UXQT8e9DEcSm0TIn12lodS+rfCDj6vg+UJ6dT4l0/QVZU09uOhEzp36b4YjGF7WD
+         N0ucvxMGW6600Zr2wMHO3vg/TGR5Tb89IlfEsaORTu8B4M4jsOe2LlCFHsRqSIGEsICD
+         8Uig==
+X-Gm-Message-State: APjAAAUubqGP2gRdxDKegG1GKYCrH7ORdIZMUKwtNrbojhwpZcYpTtsJ
+        rRX+mvyIpGa5qv1z4zknii8cs2XY1TQ=
+X-Google-Smtp-Source: APXvYqzC44Cg4e/B55n9EL+Q7RrU35sfj+gSCQib1gRFP5J2EP2MXZ3wONtuylSK6x71yD+dpcwf7Q==
+X-Received: by 2002:adf:e50e:: with SMTP id j14mr18464549wrm.262.1552242570037;
+        Sun, 10 Mar 2019 11:29:30 -0700 (PDT)
 Received: from myhost.home (bgt124.neoplus.adsl.tpnet.pl. [83.28.83.124])
-        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.27
+        by smtp.gmail.com with ESMTPSA id h13sm5807469wrt.89.2019.03.10.11.29.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 11:29:28 -0700 (PDT)
+        Sun, 10 Mar 2019 11:29:29 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
         Simon Shields <simon@lineageos.org>
-Subject: [PATCH 24/25] dt-bindings: an30259a: Add function and color properties
-Date:   Sun, 10 Mar 2019 19:28:35 +0100
-Message-Id: <20190310182836.20841-25-jacek.anaszewski@gmail.com>
+Subject: [PATCH 25/25] leds: an30259a: Use led_compose_name()
+Date:   Sun, 10 Mar 2019 19:28:36 +0100
+Message-Id: <20190310182836.20841-26-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
 References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
@@ -72,64 +72,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refer to new "function" and "color" properties and mark "label"
-as deprecated.
+Switch to using generic LED support for composing LED class
+device name.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: Simon Shields <simon@lineageos.org>
 ---
- .../devicetree/bindings/leds/leds-an30259a.txt     | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/leds/leds-an30259a.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-index 6ffb861083c0..0e894c9b80ad 100644
---- a/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-@@ -15,10 +15,19 @@ Required sub-node properties:
- 	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
+diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
+index 1c1f0c8c56f4..d714ee8322c0 100644
+--- a/drivers/leds/leds-an30259a.c
++++ b/drivers/leds/leds-an30259a.c
+@@ -13,7 +13,6 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/regmap.h>
+-#include <uapi/linux/uleds.h>
  
- Optional sub-node properties:
--	- label: see Documentation/devicetree/bindings/leds/common.txt
--	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-+	- function :
-+		see Documentation/devicetree/bindings/leds/common.txt
-+	- color :
-+		see Documentation/devicetree/bindings/leds/common.txt
-+	- label :
-+		see Documentation/devicetree/bindings/leds/common.txt (deprecated)
-+	- linux,default-trigger :
-+		see Documentation/devicetree/bindings/leds/common.txt
+ #define AN30259A_MAX_LEDS 3
  
- Example:
+@@ -54,6 +53,8 @@
+ #define AN30259A_BLINK_MAX_TIME 7500 /* ms */
+ #define AN30259A_SLOPE_RESOLUTION 500 /* ms */
+ 
++#define AN30259A_NAME "an30259a"
 +
-+#include <dt-bindings/leds/common.h>
-+
- led-controller@30 {
- 	compatible = "panasonic,an30259a";
- 	reg = <0x30>;
-@@ -28,16 +37,19 @@ led-controller@30 {
- 	led@1 {
- 		reg = <1>;
- 		linux,default-trigger = "heartbeat";
--		label = "red:indicator";
-+		function = LED_FUNCTION_INDICATOR;
-+		color = LED_COLOR_NAME_RED;
- 	};
+ #define STATE_OFF 0
+ #define STATE_KEEP 1
+ #define STATE_ON 2
+@@ -62,11 +63,11 @@ struct an30259a;
  
- 	led@2 {
- 		reg = <2>;
--		label = "green:indicator";
-+		function = LED_FUNCTION_INDICATOR;
-+		color = LED_COLOR_NAME_GREEN;
- 	};
- 
- 	led@3 {
- 		reg = <3>;
--		label = "blue:indicator";
-+		function = LED_FUNCTION_INDICATOR;
-+		color = LED_COLOR_NAME_BLUE;
- 	};
+ struct an30259a_led {
+ 	struct an30259a *chip;
++	struct fwnode_handle *fwnode;
+ 	struct led_classdev cdev;
+ 	u32 num;
+ 	u32 default_state;
+ 	bool sloping;
+-	char label[LED_MAX_NAME_SIZE];
  };
+ 
+ struct an30259a {
+@@ -226,14 +227,7 @@ static int an30259a_dt_init(struct i2c_client *client,
+ 
+ 		led->num = source;
+ 		led->chip = chip;
+-
+-		if (of_property_read_string(child, "label", &str))
+-			snprintf(led->label, sizeof(led->label), "an30259a::");
+-		else
+-			snprintf(led->label, sizeof(led->label), "an30259a:%s",
+-				 str);
+-
+-		led->cdev.name = led->label;
++		led->fwnode = of_fwnode_handle(child);
+ 
+ 		if (!of_property_read_string(child, "default-state", &str)) {
+ 			if (!strcmp(str, "on"))
+@@ -312,13 +306,21 @@ static int an30259a_probe(struct i2c_client *client)
+ 	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
+ 
+ 	for (i = 0; i < chip->num_leds; i++) {
++		struct led_init_data init_data = { chip->leds[i].fwnode };
++
++		int ret = led_compose_name(init_data.fwnode, AN30259A_NAME, ":",
++					   init_data.name);
++		if (ret)
++			return ret;
++
+ 		an30259a_init_default_state(&chip->leds[i]);
+ 		chip->leds[i].cdev.brightness_set_blocking =
+ 			an30259a_brightness_set;
+ 		chip->leds[i].cdev.blink_set = an30259a_blink_set;
+ 
+-		err = devm_led_classdev_register(&client->dev,
+-						 &chip->leds[i].cdev);
++		err = devm_led_classdev_register_ext(&client->dev,
++						 &chip->leds[i].cdev,
++						 &init_data);
+ 		if (err < 0)
+ 			goto exit;
+ 	}
 -- 
 2.11.0
 
