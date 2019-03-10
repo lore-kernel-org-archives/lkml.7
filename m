@@ -2,93 +2,131 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URI_HEX autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED6C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 13:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC0BC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 13:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C9E2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 13:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42008206DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 13:50:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdiWmcAK"
+	dkim=pass (1024-bit key) header.d=post.cz header.i=@post.cz header.b="WgfI/0y/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfCJNfk (ORCPT
+        id S1726607AbfCJNt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 09:35:40 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:41143 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbfCJNfk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 09:35:40 -0400
-Received: by mail-wr1-f44.google.com with SMTP id n2so2198473wrw.8
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 06:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=dJ+izyAvBoNsJoCYKxWa+TqdQdOvtC1yiWpCu+r5xaY=;
-        b=cdiWmcAKtwYN4DjMSnilvEMUH+e0Z33aolBWcwE3SvY+JFlC4XNII5IWuLAjC89meK
-         FWUjXI3vgEKkj73kSy4Al0L2WNc5W65zvPDiJysMtAtdPm6s5fDBt+asSM6gXcZd873w
-         4Mml0EabCi0uCUk8PV1LVmCefoQwnM/BZWKKsAyDjxaLW9SMUWfia2jAxZgaKpH1f5gp
-         SVnbODGqmzS/fy7JF9L7cZyTAJ/uSSjj8ihff8ySbpHyAiKoY02rloSGsYZGY3JnfLUV
-         q/2gj4V8l3vDvuKbWzxhKWvlRZdQOGwLR2FgpTL0hVWutChsz1qiAso2MHBrvko1cKBl
-         C2Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=dJ+izyAvBoNsJoCYKxWa+TqdQdOvtC1yiWpCu+r5xaY=;
-        b=OxFjS2aicGXjw2l8aIMffb+H4n13l4Kn2qa8MU0HLeZQLgWzGbtHWGNidnkC2V0ur7
-         ctwY9CJppkG5/nnB+xvOdgH3zrCjV/9WIGREqrz/FozvAYF0PqZWrWYCYKIVUH8rmw7Y
-         ONNsfjYRT9xpVbzQ7wBiky6XmbNPm6LMqY+A7kF1sEyCG21Vz8P2KqHQcfB/sbcWo/vG
-         A9hz2H+vHs2g1Bml+YXx8CeqTG6wuTTpfh1LxWpvjon9JIwV3M0ILMgN78r71B8nmkFb
-         rT/6FZ11B3fkJD4fxR1DWWGP0EdNoiwI0kuR8ol7GTangEUQfZpqvKh1XsifFtm2xrzp
-         NcLA==
-X-Gm-Message-State: APjAAAVrfjZyktvpmw/JkidOGdcOB9dwKBwjDjnyc10eh+PqFxmLWadp
-        EfyNNnXDJ+zz+qhemOgZDT5E8T0=
-X-Google-Smtp-Source: APXvYqzmowPjzjTHUaEaOyLax2fxGz3INXjP2T1qxWAjQ/KTvJXnPGEsB/iuTunBarqdkS30h8IZWQ==
-X-Received: by 2002:a5d:690d:: with SMTP id t13mr16700138wru.135.1552224938580;
-        Sun, 10 Mar 2019 06:35:38 -0700 (PDT)
-Received: from avx2 ([46.53.246.68])
-        by smtp.gmail.com with ESMTPSA id c1sm6561241wrw.7.2019.03.10.06.35.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 06:35:37 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 16:35:35 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] Drop -Wdeclaration-after-statement
-Message-ID: <20190310133535.GA20473@avx2>
+        Sun, 10 Mar 2019 09:49:56 -0400
+Received: from mxc2.seznam.cz ([77.75.77.23]:26042 "EHLO mxc2.seznam.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbfCJNt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 09:49:56 -0400
+X-Greylist: delayed 813 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 Mar 2019 09:49:54 EDT
+Received: from email.seznam.cz
+        by email-smtpc6a.ng.seznam.cz (email-smtpc6a.ng.seznam.cz [10.23.10.165])
+        id 61f4d8e60e7863d462bdf3b2;
+        Sun, 10 Mar 2019 14:49:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=post.cz; s=beta;
+        t=1552225793; bh=wtsxlbBjcxVfZ0eiSnungx+cQTrDHHozfu4bX+E0+Q4=;
+        h=Received:Subject:To:Cc:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WgfI/0y/CnNMYTow8FARdJ6F7z2ou6aEDw7P4fMwp8dscIIhJh5/EN78Prja0SEoP
+         vQfHfbKCH+rRvMX3TItWSnjbk6hfTo6NylNAJ1MZyUGPcHoZh508cIMH5LgGhP4Am8
+         nKBg4/W+0UC/eiPL6cLZt1nR/BQItNL9mQW9vdnU=
+Received: from [192.168.1.81] (static-cl188134234222.unet.cz [188.134.234.222])
+        by email-relay5.ng.seznam.cz (Seznam SMTPD 1.3.103) with ESMTP;
+        Sun, 10 Mar 2019 14:36:12 +0100 (CET)  
+Subject: Re: [PATCH] net: can: Increase tx queue length
+To:     Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        Andre Naujoks <nautsch2@gmail.com>,
+        "wg@grandegger.com" <wg@grandegger.com>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Cc:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Sojka <sojkam1@fel.cvut.cz>
+References: <1552140446-31535-1-git-send-email-appana.durga.rao@xilinx.com>
+ <cd71079c-664f-b1b6-bb21-ecda639ecbed@gmail.com>
+ <CY4PR02MB2183E0667CF67DEE6A297FF8DC4E0@CY4PR02MB2183.namprd02.prod.outlook.com>
+From:   Martin Jerabek <ma.jer@post.cz>
+Message-ID: <61d9d998-37f7-6f99-60d4-b1973e13e6ef@post.cz>
+Date:   Sun, 10 Mar 2019 14:36:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
+In-Reply-To: <CY4PR02MB2183E0667CF67DEE6A297FF8DC4E0@CY4PR02MB2183.namprd02.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newly added static_assert() is formally a declaration, which will give
-a warning if used in the middle of the function.
+On 09. 03. 19 15:40, Appana Durga Kedareswara Rao wrote:
+> Hi Andre,
+> 
+> <Snip> 
+>>
+>> On 3/9/19 3:07 PM, Appana Durga Kedareswara rao wrote:
+>>> While stress testing the CAN interface on xilinx axi can in loopback
+>>> mode getting message "write: no buffer space available"
+>>> Increasing device tx queue length resolved the above mentioned issue.
+>>
+>> No need to patch the kernel:
+>>
+>> $ ip link set <dev-name> txqueuelen 500
+>>
+>> does the same thing.
+> 
+> Thanks for the review... 
+> Agree but it is not an out of box solution right?? 
+> Do you have any idea for socket can devices why the tx queue length is 10 whereas
+> for other network devices (ex: ethernet) it is 1000 ?? 
+> 
+> Regards,
+> Kedar.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+There was already a patch for this in the past [1], together with a thorough
+analysis, but for some reason the discussion died out.
 
- Makefile |    3 ---
- 1 file changed, 3 deletions(-)
+Even if the defaults are not changed, it would be nice to at least see it
+mentioned in Documentation/networking/can.txt to save people some time while
+looking for the solution.
 
---- a/Makefile
-+++ b/Makefile
-@@ -792,9 +792,6 @@ endif
- # arch Makefile may override CC so keep this after arch Makefile is included
- NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
- 
--# warn about C99 declaration after statement
--KBUILD_CFLAGS += -Wdeclaration-after-statement
--
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += $(call cc-option,-Wvla)
- 
+Regards,
+Martin
+
+
+[1] http://socket-can.996257.n3.nabble.com/Solving-ENOBUFS-returned-by-write-td2886.html
+
+
+>>
+>>>
+>>> Signed-off-by: Appana Durga Kedareswara rao
+>>> <appana.durga.rao@xilinx.com>
+>>> ---
+>>> --> Network devices default tx_queue_len is 1000 but for socket
+>>> can device it is 10 any reason for it??
+>>>
+>>>  drivers/net/can/dev.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c index
+>>> c05e4d5..32bd5be 100644
+>>> --- a/drivers/net/can/dev.c
+>>> +++ b/drivers/net/can/dev.c
+>>> @@ -642,7 +642,7 @@ static void can_setup(struct net_device *dev)
+>>>  	dev->mtu = CAN_MTU;
+>>>  	dev->hard_header_len = 0;
+>>>  	dev->addr_len = 0;
+>>> -	dev->tx_queue_len = 10;
+>>> +	dev->tx_queue_len = 500;
+>>>
+>>>  	/* New-style flags. */
+>>>  	dev->flags = IFF_NOARP;
+>>>
+> 
