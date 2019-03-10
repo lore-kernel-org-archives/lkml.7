@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B2C10F03
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F02FC10F03
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F78C20657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AD920657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 17:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hn4IZHV2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YW+PNz9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfCJRps (ORCPT
+        id S1726824AbfCJRqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 13:45:48 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46125 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfCJRpr (ORCPT
+        Sun, 10 Mar 2019 13:46:05 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39635 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfCJRqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 13:45:47 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i5so1425438qkd.13;
-        Sun, 10 Mar 2019 10:45:47 -0700 (PDT)
+        Sun, 10 Mar 2019 13:46:04 -0400
+Received: by mail-qt1-f194.google.com with SMTP id i14so2647044qtp.6;
+        Sun, 10 Mar 2019 10:46:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=Et0COeORfa9jig2CdFxD5Z1J1otj4MFOV8zBbjVTkA0=;
-        b=Hn4IZHV2Ztq8qOc63lkCyyA/k5ZDuoLAYMKpyRk3o6WZsKjEXW3dXlLNyinM8LwG7d
-         4XXOP3BbJVodiflFdPXUsaIyfCqNA95O9rImvs6X/p0LwtskeCk69zKU6ePBRyRuVAsX
-         uRMK1Xnm2UOToh4A+gkCfZM+LtsaVP/OSgCJTs5scCFhUyTvY/U9V/tF4LPIc9smo5RC
-         /CSucwZep7xZ1A+/qk2nFFZ09E6MJ7YR54CEtX8EKwsdOksNXmz/QYIzsmFsjt4/APFK
-         IHBldEYSa6lMmOCydBUUbQMCTh9flsn9gfObM0SalvO5LX5p9tXsRfMyGo2KZvaA4N3z
-         o1Pw==
+        bh=1dWlSdF/VUs9/9K5esBtgLKSgLb9YgXrY3lBZ+V781M=;
+        b=YW+PNz9wMKDGle/+pZjLroqEbxn/1SdTfz5xkyN7+ow/sTRRpsH8frIkLB0g9MDxGk
+         K6dIaHg5T6ICn7SRDy3aD4fT0Nkvnc8mdglrp1TfhM7BzGFGPMbCJL4ddDVPepCchT9/
+         xXDy9mTOGp/RcYj+zSXEi607qMDlHTOViyCq0lp/2d0GDrAIYvFAtVVczw/6hCUYWocZ
+         QfrWvl7PyEdH2FvudxImS35G6gTLpNhw0evveK8bI7mIREi8Ys3HQXWl49DaqdHauLKw
+         YwWRByOLulYx44MRNTqhgB/kVfGR6I/Yqv0gSQfT82hEQj1U5SbbBOv3uhGcwNB7Z6LV
+         N3aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=Et0COeORfa9jig2CdFxD5Z1J1otj4MFOV8zBbjVTkA0=;
-        b=Voe/Atu3nqzsmTj7Vf7Z6HeH3nIa1v9Cb/HvdB6CalCbOfWt5ff3MVTiSlewru15WO
-         XM7skgUC87DnWCxa9gnbAJlGXSoRbDhTKOLBZohYw1yho1++iAzFOuMaEy/BNuSyNsoY
-         PbuYlD4WvQycFqMYjwwZ/kY2nVhH4j+nHCz/vsQHbMmJPZ6FL4/atDwlnoi/YtD3VbVL
-         4cf4pMldfqDAQd6hOshvI+vpqXx/+4UW1dOcw/F9VQ5Bc2etM74MTWGfK+mPBcK6KcUg
-         0XesvKMWp9vn9jD76gzFvo7b50x70VTFdagSPQYmWMPD7GxYZmqQplztKu6WCaxQlHXK
-         B50Q==
-X-Gm-Message-State: APjAAAW0CzyObyPckpaGDzj0U7mPZlEE3DqhF0rJtgB6VIiH+odYvewM
-        C4HInREx4gSPCeGdYfCqnAA=
-X-Google-Smtp-Source: APXvYqzf5fv2XmEyyIv8Vkhz/TAsvx+pzbVKflA1aVfO7r63+EU6+x0QAac8mKYXctOwYYjiwnRqEw==
-X-Received: by 2002:a05:620a:14b2:: with SMTP id x18mr21143480qkj.82.1552239946660;
-        Sun, 10 Mar 2019 10:45:46 -0700 (PDT)
+        bh=1dWlSdF/VUs9/9K5esBtgLKSgLb9YgXrY3lBZ+V781M=;
+        b=e9qDVQXyi1yhkbMjLhHHKCQDWDmXEXoT1+OfqwgwA6JdmaBVDChiNM80QkX8Qus4oi
+         zSS79sm3vPOxkATN7ITRnfK4WC9UBllsNtpjluHVQRrYYIA2sO2SqsC59O0WKf+n6qlz
+         DHF7b7EbGtH7qSo49Qp9AW+7caPMlnXbmz0GmQ+PlwU184UtsYF+sLR1hsOs8gerQHm5
+         lsE36sIdiPdho0Q4/19l48/DVKxWbDb9YIpxtoz1ZRs9psmM1TTdCYqxrZNBEZQwuhgA
+         jfjqKkdOGLpJnfW7CFAcTQroWpVSH/UftcVS4n73jagfMfnlt0Et5ImzqWknvuTj69XR
+         FK1A==
+X-Gm-Message-State: APjAAAVigsEnt0Uku1IeltOij0qVBao9bdv8xrw+Nrq9PnFlhglw3e3j
+        TsB3Xi6qOlLeMw3YQTbn7XE=
+X-Google-Smtp-Source: APXvYqwE/4WvCwW5YFbzOqni0L6BSw+OV8ZnH7yYKbSnCpzunCQdnpo/3s74B7YiEIGhFAr8TeBfiA==
+X-Received: by 2002:ac8:2392:: with SMTP id q18mr22657620qtq.11.1552239963470;
+        Sun, 10 Mar 2019 10:46:03 -0700 (PDT)
 Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id g7sm1352838qkd.12.2019.03.10.10.45.44
+        by smtp.gmail.com with ESMTPSA id l36sm1957319qte.82.2019.03.10.10.46.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 10 Mar 2019 10:45:46 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 14:45:42 -0300
+        Sun, 10 Mar 2019 10:46:03 -0700 (PDT)
+Date:   Sun, 10 Mar 2019 14:45:59 -0300
 From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 To:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
         knaack.h@gmx.de, pmeerw@pmeerw.net
 Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-usp@googlegroups.com
-Subject: [PATCH v3 3/7] staging: iio: ad5933: add SPDX identifier
-Message-ID: <20190310174542.3qsy6bmb654ej3a7@smtp.gmail.com>
+Subject: [PATCH v3 4/7] staging: iio: ad5933: change help rule message
+Message-ID: <20190310174559.dq33lxdg4omdvhmg@smtp.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -74,28 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SPDX identifier of GPL-2.0 for the ad5933 driver.
+Remove the previous comment about direct access via sysfs which would
+lead one think ad5933 driver has limitations it actually doesn't.
 
 Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 ---
- drivers/staging/iio/impedance-analyzer/ad5933.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/iio/impedance-analyzer/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
-index c2a7a59e469c..d75bdfbf93de 100644
---- a/drivers/staging/iio/impedance-analyzer/ad5933.c
-+++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
-@@ -1,9 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * AD5933 AD5934 Impedance Converter, Network Analyzer
-  *
-  * Copyright 2011 Analog Devices Inc.
-- *
-- * Licensed under the GPL-2.
-  */
+diff --git a/drivers/staging/iio/impedance-analyzer/Kconfig b/drivers/staging/iio/impedance-analyzer/Kconfig
+index dd97b6bb3fd0..b9a679cdd146 100644
+--- a/drivers/staging/iio/impedance-analyzer/Kconfig
++++ b/drivers/staging/iio/impedance-analyzer/Kconfig
+@@ -10,7 +10,7 @@ config AD5933
+ 	select IIO_KFIFO_BUF
+ 	help
+ 	  Say yes here to build support for Analog Devices Impedance Converter,
+-	  Network Analyzer, AD5933/4, provides direct access via sysfs.
++	  Network Analyzer, AD5933/4.
  
- #include <linux/clk.h>
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ad5933.
 -- 
 2.20.1
 
