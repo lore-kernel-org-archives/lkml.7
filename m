@@ -2,140 +2,125 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651D5C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E3CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E1E20643
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED37B20652
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="svjzZd1w"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="h11Kd8me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfCJTUs (ORCPT
+        id S1726766AbfCJT0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 15:20:48 -0400
-Received: from nala.villavu.com ([188.165.243.101]:50304 "EHLO
-        nala.villavu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfCJTUr (ORCPT
+        Sun, 10 Mar 2019 15:26:12 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42821 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbfCJT0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 15:20:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
-         s=mail; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
-        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=KgsJQM+U1u3RzhVTkHvQX4KPVXh3TLeOWUiTJEjb6b0=; b=svjzZd1wHejU3NthmaVeholnAn
-        DfH9M5F/P6mMRXPQFkD4CfPHr8D+ZGSvD7/ijMLTvXrs3YuyFPF4xdgNNYjgilSqRuSaU7tvgWsYs
-        NTy/8GGyJHRa6iM2Anc/ShkL9UiTMIOdm5KN/sNaADACHcwhvpbsSyFuqQi4/pkt46bsP+BBvP8Ar
-        EFwSi7/TdoSCRXnix4FIOk8fw6ckb/SvhP2PuVzVlzPoFHd0lghUXg3ci+X+Wgf8XaQk03Yrwg/nB
-        NLWBDpSDASNeNPyWQFeqcqZomSC/jrBwILpbpa8B1mkKjELkIa+2mNwaUMzBTGTy9ZtRYcZvzIsjX
-        008p+p3A==;
-Received: from a82-161-36-93.adsl.xs4all.nl ([82.161.36.93] helo=[0.0.0.0])
-        by nala.villavu.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <merlijn@wizzup.org>)
-        id 1h3403-0001lT-Fv; Sun, 10 Mar 2019 20:20:43 +0100
-Subject: Re: Nokia N900: wl1251 spi3.0: EOW timed out on
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
-Cc:     linux-omap <linux-omap@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>
-References: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
- <436a9a35-539a-3fe8-2225-36b45c7e5412@wizzup.org>
- <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
-From:   Merlijn Wajer <merlijn@wizzup.org>
-Openpgp: preference=signencrypt
-Message-ID: <1b2918b4-1765-5aba-4752-1d04bdfea925@wizzup.org>
-Date:   Sun, 10 Mar 2019 20:23:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Sun, 10 Mar 2019 15:26:12 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u7so2790403qtg.9;
+        Sun, 10 Mar 2019 12:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OoL9XEI9fQDaF/BNmKrMzNbBnKchcPQ513u4QH8nENk=;
+        b=h11Kd8meciJCBSpcAEiRW5DH6pBfNunBD0Lx8oAGucO7806RwCw8/qMllph5Fpqsm0
+         jsNVb6Lst41s/VBy8OndyMZQ0CHk6DdMt303pLEhD5hyMBUnJUXqPymh84sHnYylNxoC
+         EG9ISev6DtXgt9Lzt2uzNrt9Mf8fQvlI455ggddeEb9ZWYeUEN4ge+JKWpKM4/IEJi78
+         5MVOFsEbwavyZJlMdqG46ZciX6o28sLQA0307xw26ynjRJ47rIp2aTfd5lRnRvdXK22e
+         /Zdwk9fWNLzkwXzDwqkHDMGomw9ig8iOGekKlO39HeGP47RiYtrSwCitteIc/hbJmUjv
+         taTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OoL9XEI9fQDaF/BNmKrMzNbBnKchcPQ513u4QH8nENk=;
+        b=XD+BuAwx/4WtLXDPHSyIcIDBTATn2q3QmN74q2QxAaiwS8XJ5wFVSaoVLAzWfUzOBQ
+         C+LQ2Qt/7zUT38mR7Sss5uIY8R+FztwvEJ+Dn1eXS7L/RnAMRfM4rnzRKarTi2aCCach
+         6JfoNeaTaslPFIMW2vZMj5EEAUbGYO2l+24G61X+brtBNy80MznNV+73Wqh1t1mn/fO2
+         EPhgD3dqO/84shtmAjm56OLsYe2BzZB9o+2dqD8Ne0t6v2E5oM4H40J+UiNno6dnP3cs
+         hUAUM8yr1RMovw3fCFK1/VLkXevq9mws7+qbTKsX4GYjoUyVEO+xSBjd55zpMMhy1Ed0
+         1pqg==
+X-Gm-Message-State: APjAAAWtqtpi3X+1hxUuHmLEySPqpXhZkyLH8Cw8vXlYcf4iODOd/5oe
+        W6JDJkhbx6K1jLnDnP8brOorYeULoJbf8oA68NM=
+X-Google-Smtp-Source: APXvYqwSI4EYsiWj5hkBffbRSXkceGmd1yGOstkFnDVqHdzC5hRi1ovQeu+nDfwirtkH3DFaQBKtzHHddXB2Nv9kpew=
+X-Received: by 2002:ac8:48cd:: with SMTP id l13mr4054789qtr.330.1552245970960;
+ Sun, 10 Mar 2019 12:26:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ"
+References: <1546173604-26066-1-git-send-email-minipli@googlemail.com>
+ <20190102202938.GA26600@linux-8ccs> <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
+In-Reply-To: <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
+From:   Mathias Krause <minipli@googlemail.com>
+Date:   Sun, 10 Mar 2019 20:26:00 +0100
+Message-ID: <CA+rthh_OnmvQQbKAG55rha56HCp2vjhZMv0ahRdgJjbjmG=xRA@mail.gmail.com>
+Subject: Re: [PATCH] vmlinux.lds.h: drop unused __vermagic
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ
-Content-Type: multipart/mixed; boundary="2ZZSGR0B291btdmnZREGnbu4O8UcrdOY1";
- protected-headers="v1"
-From: Merlijn Wajer <merlijn@wizzup.org>
-To: Vignesh Raghavendra <vigneshr@ti.com>,
- "kvalo@codeaurora.org" <kvalo@codeaurora.org>
-Cc: linux-omap <linux-omap@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>,
- Pavel Machek <pavel@ucw.cz>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "broonie@kernel.org" <broonie@kernel.org>
-Message-ID: <1b2918b4-1765-5aba-4752-1d04bdfea925@wizzup.org>
-Subject: Re: Nokia N900: wl1251 spi3.0: EOW timed out on
-References: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
- <436a9a35-539a-3fe8-2225-36b45c7e5412@wizzup.org>
- <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
-In-Reply-To: <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
+Hi Jessica,
 
---2ZZSGR0B291btdmnZREGnbu4O8UcrdOY1
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+On Mon, 21 Jan 2019 at 12:39, Mathias Krause <minipli@googlemail.com> wrote:
+>
+> On Wed, 2 Jan 2019 at 21:29, Jessica Yu <jeyu@kernel.org> wrote:
+> >
+> > +++ Mathias Krause [30/12/18 13:40 +0100]:
+> > >The reference to '__vermagic' is a relict from v2.5 times. And even
+> > >there it had a very short life time, from v2.5.59 (commit 1d411b80ee18
+> > >("Module Sanity Check") in the historic tree) to v2.5.69 (commit
+> > >67ac5b866bda ("[PATCH] complete modinfo section")).
+> > >
+> > >Neither current kernels nor modules contain a '__vermagic' section any
+> > >more, so get rid of it.
+> > >
+> > >Signed-off-by: Mathias Krause <minipli@googlemail.com>
+> > >Cc: Rusty Russell <rusty@rustcorp.com.au>
+> > >Cc: Jessica Yu <jeyu@kernel.org>
+> >
+> > Thanks for the cleanup.
+> >
+> > Reviewed-by: Jessica Yu <jeyu@kernel.org>
+> >
+>
+> Arnd, will you carry this patch through your asm-generic tree or did
+> the MAINTAINERS file mislead me here?
+>
 
-Hi,
+looks like Arnd keeps ignoring my Emails. :/ Can you carry this patch
+through your module tree? Or do you think I should ask Andrew Morton
+instead?
 
-On 10/03/2019 05:16, Vignesh Raghavendra wrote:
-> Hi.
->=20
-> On 10-Mar-19 6:23 AM, Merlijn Wajer wrote:
->>
->> Hi,
->>
->> On 10/03/2019 00:22, Merlijn Wajer wrote:
->>> Hi,
->>>
->>> I just migrated to Linux 5.0  (from 4.15) on my Nokia N900, and I'm
->>> getting a lot of messages like this:
->>>
->>>> wl1251 spi3.0: EOW timed out
->=20
->=20
-> Could you try if this patch fixes the issue? This is part of latest mai=
-nline tree but not part of 5.0:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3Dbaf8b9f8d260c55a86405f70a384c29cda888476
+Thanks,
+Mathias
 
-This seems to fix the issue. Would it make sense to queue this for an
-upcoming fixes release for 5.0?
-
-Cheers,
-Merlijn
-
-
---2ZZSGR0B291btdmnZREGnbu4O8UcrdOY1--
-
---4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXIVkIAAKCRAGN09rynK8
-WnkAAQCQ5LxFtM6fUlPxlz97ruW7Bmn6wgtOaXP15aWuNyBlSwEAw78y5s0Ap8mb
-UlcR3FQ9iaPKvji170PUkYQgXOeCLAU=
-=48NK
------END PGP SIGNATURE-----
-
---4An5W0rzu4eZ1JGXKN0lH2xxU2O359vYZ--
+> > >---
+> > > include/asm-generic/vmlinux.lds.h | 1 -
+> > > 1 file changed, 1 deletion(-)
+> > >
+> > >diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > >index 3d7a6a9c2370..530ce1e7a1ec 100644
+> > >--- a/include/asm-generic/vmlinux.lds.h
+> > >+++ b/include/asm-generic/vmlinux.lds.h
+> > >@@ -332,7 +332,6 @@
+> > >               __start_rodata = .;                                     \
+> > >               *(.rodata) *(.rodata.*)                                 \
+> > >               RO_AFTER_INIT_DATA      /* Read only after init */      \
+> > >-              KEEP(*(__vermagic))     /* Kernel version magic */      \
+> > >               . = ALIGN(8);                                           \
+> > >               __start___tracepoints_ptrs = .;                         \
+> > >               KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
+> > >--
+> > >2.19.2
+> > >
