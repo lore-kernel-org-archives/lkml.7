@@ -3,25 +3,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2158C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B3EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA669207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3633D207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfCJHJu (ORCPT
+        id S1726518AbfCJHKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 03:09:50 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35382 "EHLO
+        Sun, 10 Mar 2019 03:10:18 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35416 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfCJHJu (ORCPT
+        with ESMTP id S1725852AbfCJHKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 03:09:50 -0400
+        Sun, 10 Mar 2019 03:10:18 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h2sZj-00033E-Tc; Sun, 10 Mar 2019 07:08:59 +0000
+        id 1h2sa6-000354-Hz; Sun, 10 Mar 2019 07:09:21 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
@@ -35,9 +35,9 @@ Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
         zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
         houtao1@huawei.com, yi.zhang@huawei.com
-Subject: [PATCH 2/8] keep io_event in aio_kiocb
-Date:   Sun, 10 Mar 2019 07:08:16 +0000
-Message-Id: <20190310070822.11564-2-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 3/8] aio: store event at final iocb_put()
+Date:   Sun, 10 Mar 2019 07:08:17 +0000
+Message-Id: <20190310070822.11564-3-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190310070822.11564-1-viro@ZenIV.linux.org.uk>
 References: <20190310070606.GA10138@ZenIV.linux.org.uk>
@@ -51,130 +51,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+Instead of having aio_complete() set ->ki_res.{res,res2}, do that
+explicitly in its callers, drop the reference (as aio_complete()
+used to do) and delay the rest until the final iocb_put().
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/aio.c | 56 +++++++++++++++++++++-----------------------------------
- 1 file changed, 21 insertions(+), 35 deletions(-)
+ fs/aio.c | 45 ++++++++++++++++++++-------------------------
+ 1 file changed, 20 insertions(+), 25 deletions(-)
 
 diff --git a/fs/aio.c b/fs/aio.c
-index 363d7d7c8bff..2249a7a1d6b3 100644
+index 2249a7a1d6b3..b9c4c1894020 100644
 --- a/fs/aio.c
 +++ b/fs/aio.c
-@@ -204,8 +204,7 @@ struct aio_kiocb {
- 	struct kioctx		*ki_ctx;
- 	kiocb_cancel_fn		*ki_cancel;
- 
--	struct iocb __user	*ki_user_iocb;	/* user's aiocb */
--	__u64			ki_user_data;	/* user's data for completion */
-+	struct io_event		ki_res;
- 
- 	struct list_head	ki_list;	/* the aio core uses this
- 						 * for cancellation */
-@@ -1087,10 +1086,9 @@ static inline void iocb_put(struct aio_kiocb *iocb)
- static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
- 			   long res, long res2)
- {
--	ev->obj = (u64)(unsigned long)iocb->ki_user_iocb;
--	ev->data = iocb->ki_user_data;
--	ev->res = res;
--	ev->res2 = res2;
-+	iocb->ki_res.res = res;
-+	iocb->ki_res.res2 = res2;
-+	*ev = iocb->ki_res;
+@@ -1077,24 +1077,10 @@ static inline void iocb_destroy(struct aio_kiocb *iocb)
+ 	kmem_cache_free(kiocb_cachep, iocb);
  }
  
- /* aio_complete
-@@ -1126,7 +1124,7 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
- 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 
- 	pr_debug("%p[%u]: %p: %p %Lx %lx %lx\n",
--		 ctx, tail, iocb, iocb->ki_user_iocb, iocb->ki_user_data,
-+		 ctx, tail, iocb, (void __user *)iocb->ki_res.obj, iocb->ki_res.data,
- 		 res, res2);
- 
- 	/* after flagging the request as done, we
-@@ -1674,13 +1672,13 @@ static int aio_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
- 	__poll_t mask = key_to_poll(key);
- 	unsigned long flags;
- 
-+	/* for instances that support it check for an event match first: */
-+	if (mask && !(mask & req->events))
-+		return 0;
-+
- 	req->woken = true;
- 
--	/* for instances that support it check for an event match first: */
- 	if (mask) {
--		if (!(mask & req->events))
--			return 0;
--
- 		/*
- 		 * Try to complete the iocb inline if we can. Use
- 		 * irqsave/irqrestore because not all filesystems (e.g. fuse)
-@@ -1844,8 +1842,10 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		goto out_put_req;
- 	}
- 
--	req->ki_user_iocb = user_iocb;
--	req->ki_user_data = iocb->aio_data;
-+	req->ki_res.obj = (u64)(unsigned long)user_iocb;
-+	req->ki_res.data = iocb->aio_data;
-+	req->ki_res.res = 0;
-+	req->ki_res.res2 = 0;
- 
- 	switch (iocb->aio_lio_opcode) {
- 	case IOCB_CMD_PREAD:
-@@ -2002,24 +2002,6 @@ COMPAT_SYSCALL_DEFINE3(io_submit, compat_aio_context_t, ctx_id,
- }
- #endif
- 
--/* lookup_kiocb
-- *	Finds a given iocb for cancellation.
-- */
--static struct aio_kiocb *
--lookup_kiocb(struct kioctx *ctx, struct iocb __user *iocb)
+-static inline void iocb_put(struct aio_kiocb *iocb)
 -{
--	struct aio_kiocb *kiocb;
--
--	assert_spin_locked(&ctx->ctx_lock);
--
--	/* TODO: use a hash or array, this sucks. */
--	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
--		if (kiocb->ki_user_iocb == iocb)
--			return kiocb;
--	}
--	return NULL;
+-	if (refcount_dec_and_test(&iocb->ki_refcnt))
+-		iocb_destroy(iocb);
 -}
 -
- /* sys_io_cancel:
-  *	Attempts to cancel an iocb previously passed to io_submit.  If
-  *	the operation is successfully cancelled, the resulting event is
-@@ -2037,6 +2019,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, struct iocb __user *, iocb,
- 	struct aio_kiocb *kiocb;
- 	int ret = -EINVAL;
- 	u32 key;
-+	u64 obj = (u64)(unsigned long)iocb;
+-static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
+-			   long res, long res2)
+-{
+-	iocb->ki_res.res = res;
+-	iocb->ki_res.res2 = res2;
+-	*ev = iocb->ki_res;
+-}
+-
+ /* aio_complete
+  *	Called when the io request on the given iocb is complete.
+  */
+-static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
++static void aio_complete(struct aio_kiocb *iocb)
+ {
+ 	struct kioctx	*ctx = iocb->ki_ctx;
+ 	struct aio_ring	*ring;
+@@ -1118,14 +1104,14 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
+ 	ev_page = kmap_atomic(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
+ 	event = ev_page + pos % AIO_EVENTS_PER_PAGE;
  
- 	if (unlikely(get_user(key, &iocb->aio_key)))
- 		return -EFAULT;
-@@ -2048,10 +2031,13 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, struct iocb __user *, iocb,
- 		return -EINVAL;
+-	aio_fill_event(event, iocb, res, res2);
++	*event = iocb->ki_res;
  
- 	spin_lock_irq(&ctx->ctx_lock);
--	kiocb = lookup_kiocb(ctx, iocb);
--	if (kiocb) {
--		ret = kiocb->ki_cancel(&kiocb->rw);
--		list_del_init(&kiocb->ki_list);
-+	/* TODO: use a hash or array, this sucks. */
-+	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
-+		if (kiocb->ki_res.obj == obj) {
-+			ret = kiocb->ki_cancel(&kiocb->rw);
-+			list_del_init(&kiocb->ki_list);
-+			break;
-+		}
+ 	kunmap_atomic(ev_page);
+ 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
+ 
+-	pr_debug("%p[%u]: %p: %p %Lx %lx %lx\n",
++	pr_debug("%p[%u]: %p: %p %Lx %Lx %Lx\n",
+ 		 ctx, tail, iocb, (void __user *)iocb->ki_res.obj, iocb->ki_res.data,
+-		 res, res2);
++		 iocb->ki_res.res, iocb->ki_res.res2);
+ 
+ 	/* after flagging the request as done, we
+ 	 * must never even look at it again
+@@ -1167,7 +1153,14 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
+ 
+ 	if (waitqueue_active(&ctx->wait))
+ 		wake_up(&ctx->wait);
+-	iocb_put(iocb);
++}
++
++static inline void iocb_put(struct aio_kiocb *iocb)
++{
++	if (refcount_dec_and_test(&iocb->ki_refcnt)) {
++		aio_complete(iocb);
++		iocb_destroy(iocb);
++	}
+ }
+ 
+ /* aio_read_events_ring
+@@ -1441,7 +1434,9 @@ static void aio_complete_rw(struct kiocb *kiocb, long res, long res2)
+ 		file_end_write(kiocb->ki_filp);
  	}
- 	spin_unlock_irq(&ctx->ctx_lock);
  
+-	aio_complete(iocb, res, res2);
++	iocb->ki_res.res = res;
++	iocb->ki_res.res2 = res2;
++	iocb_put(iocb);
+ }
+ 
+ static int aio_prep_rw(struct kiocb *req, const struct iocb *iocb)
+@@ -1589,11 +1584,10 @@ static ssize_t aio_write(struct kiocb *req, const struct iocb *iocb,
+ 
+ static void aio_fsync_work(struct work_struct *work)
+ {
+-	struct fsync_iocb *req = container_of(work, struct fsync_iocb, work);
+-	int ret;
++	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
+ 
+-	ret = vfs_fsync(req->file, req->datasync);
+-	aio_complete(container_of(req, struct aio_kiocb, fsync), ret, 0);
++	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
++	iocb_put(iocb);
+ }
+ 
+ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+@@ -1614,7 +1608,8 @@ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+ 
+ static inline void aio_poll_complete(struct aio_kiocb *iocb, __poll_t mask)
+ {
+-	aio_complete(iocb, mangle_poll(mask), 0);
++	iocb->ki_res.res = mangle_poll(mask);
++	iocb_put(iocb);
+ }
+ 
+ static void aio_poll_complete_work(struct work_struct *work)
 -- 
 2.11.0
 
