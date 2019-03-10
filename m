@@ -2,219 +2,131 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AFEC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F19C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1829420657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF3E20657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfCJVYp (ORCPT
+        id S1726895AbfCJV1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 17:24:45 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:37806 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbfCJVYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 17:24:45 -0400
-Received: from sf.home (host86-142-46-103.range86-142.btcentralplus.com [86.142.46.103])
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: slyfox)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 56873335D1A;
-        Sun, 10 Mar 2019 21:24:43 +0000 (UTC)
-Received: by sf.home (Postfix, from userid 1000)
-        id 1187A237455AD; Sun, 10 Mar 2019 21:24:38 +0000 (GMT)
-From:   Sergei Trofimovich <slyfox@gentoo.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [RESEND, PATCH] tty/vt: fix write/write race in ioctl(KDSKBSENT) handler
-Date:   Sun, 10 Mar 2019 21:24:15 +0000
-Message-Id: <20190310212415.12162-1-slyfox@gentoo.org>
-X-Mailer: git-send-email 2.21.0
+        Sun, 10 Mar 2019 17:27:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46567 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfCJV1B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 17:27:01 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j10so2097601oij.13
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:27:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4u1OcIKNyiAZm/99ALlppfHz2fZU/SI9CMTqcRRtHzs=;
+        b=fQXtmXUdAWaoLdmmAh5/S5SNEMyH5XLtMZturn3E/4PFk/L1T1Ub+xBxFMVT5KL6Rh
+         LjQP4UEUr7MCZR0UmZCe0TNBaAM19gY20YvPkqXXCYumvqsGGIt7iORw7xiQrZF1o1EI
+         7iwcwszyJ4yXd0KFRkB8YO52HEXsgVee18e0fN777xLMyu2NtOo7PB7m/mFsrBka7jMJ
+         9a99kns82GBAQ5gWUCXztaMy6kp977eYkEX6FRSkhsYvc+Fqr8zqUzq4Q4bYAgAJ6PeF
+         LCgbjzUPBSmRsh3xgVfJY9rPRQuAO2ITweGnmpkaBTho79gawhIiitjlagUwh3NTHls+
+         CCvA==
+X-Gm-Message-State: APjAAAU5G+NKfMCvteKNMXe/CqeGk6ePHSQx+SF/SHNExEHcOZgEWxV4
+        X/HwDS38brDta2UqYjt4M6Y=
+X-Google-Smtp-Source: APXvYqxjcCjnFU3RfO/1hwx3pHB+Yb48/5V7ITu0oaflmB41chl6Xwpbn9jCqKcryoCjKc9W4RYkzQ==
+X-Received: by 2002:aca:51cb:: with SMTP id f194mr14997826oib.6.1552253220128;
+        Sun, 10 Mar 2019 14:27:00 -0700 (PDT)
+Received: from sultan-box.localdomain ([107.193.118.89])
+        by smtp.gmail.com with ESMTPSA id j21sm1626192otr.28.2019.03.10.14.26.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 10 Mar 2019 14:26:59 -0700 (PDT)
+Date:   Sun, 10 Mar 2019 14:26:55 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190310212655.GA30695@sultan-box.localdomain>
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+ <20190310210335.GA5504@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190310210335.GA5504@kroah.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bug manifests as an attempt to access deallocated memory:
+On Sun, Mar 10, 2019 at 10:03:35PM +0100, Greg Kroah-Hartman wrote:
+> On Sun, Mar 10, 2019 at 01:34:03PM -0700, Sultan Alsawaf wrote:
+> > From: Sultan Alsawaf <sultan@kerneltoast.com>
+> > 
+> > This is a complete low memory killer solution for Android that is small
+> > and simple. It kills the largest, least-important processes it can find
+> > whenever a page allocation has completely failed (right after direct
+> > reclaim). Processes are killed according to the priorities that Android
+> > gives them, so that the least important processes are always killed
+> > first. Killing larger processes is preferred in order to free the most
+> > memory possible in one go.
+> > 
+> > Simple LMK is integrated deeply into the page allocator in order to
+> > catch exactly when a page allocation fails and exactly when a page is
+> > freed. Failed page allocations that have invoked Simple LMK are placed
+> > on a queue and wait for Simple LMK to satisfy them. When a page is about
+> > to be freed, the failed page allocations are given priority over normal
+> > page allocations by Simple LMK to see if they can immediately use the
+> > freed page.
+> > 
+> > Additionally, processes are continuously killed by failed small-order
+> > page allocations until they are satisfied.
+> > 
+> > Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> 
+> Wait, why?  We just removed the in-kernel android memory killer, we
+> don't want to add another one back again, right?  Android Go devices
+> work just fine with the userspace memory killer code, and those are "low
+> memory" by design.
+> 
+> Why do we need kernel code here at all?
+> 
+> thanks,
+> 
+> greg k-h
 
-    BUG: unable to handle kernel paging request at ffff9c8735448000
-    #PF error: [PROT] [WRITE]
-    PGD 288a05067 P4D 288a05067 PUD 288a07067 PMD 7f60c2063 PTE 80000007f5448161
-    Oops: 0003 [#1] PREEMPT SMP
-    CPU: 6 PID: 388 Comm: loadkeys Tainted: G         C        5.0.0-rc6-00153-g5ded5871030e #91
-    Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M-D3H, BIOS F12 11/14/2013
-    RIP: 0010:__memmove+0x81/0x1a0
-    Code: 4c 89 4f 10 4c 89 47 18 48 8d 7f 20 73 d4 48 83 c2 20 e9 a2 00 00 00 66 90 48 89 d1 4c 8b 5c 16 f8 4c 8d 54 17 f8 48 c1 e9 03 <f3> 48 a5 4d 89 1a e9 0c 01 00 00 0f 1f 40 00 48 89 d1 4c 8b 1e 49
-    RSP: 0018:ffffa1b9002d7d08 EFLAGS: 00010203
-    RAX: ffff9c873541af43 RBX: ffff9c873541af43 RCX: 00000c6f105cd6bf
-    RDX: 0000637882e986b6 RSI: ffff9c8735447ffb RDI: ffff9c8735447ffb
-    RBP: ffff9c8739cd3800 R08: ffff9c873b802f00 R09: 00000000fffff73b
-    R10: ffffffffb82b35f1 R11: 00505b1b004d5b1b R12: 0000000000000000
-    R13: ffff9c873541af3d R14: 000000000000000b R15: 000000000000000c
-    FS:  00007f450c390580(0000) GS:ffff9c873f180000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffff9c8735448000 CR3: 00000007e213c002 CR4: 00000000000606e0
-    Call Trace:
-     vt_do_kdgkb_ioctl+0x34d/0x440
-     vt_ioctl+0xba3/0x1190
-     ? __bpf_prog_run32+0x39/0x60
-     ? mem_cgroup_commit_charge+0x7b/0x4e0
-     tty_ioctl+0x23f/0x920
-     ? preempt_count_sub+0x98/0xe0
-     ? __seccomp_filter+0x67/0x600
-     do_vfs_ioctl+0xa2/0x6a0
-     ? syscall_trace_enter+0x192/0x2d0
-     ksys_ioctl+0x3a/0x70
-     __x64_sys_ioctl+0x16/0x20
-     do_syscall_64+0x54/0xe0
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Hi Greg,
 
-The bug manifests on systemd systems with multiple vtcon devices:
-  # cat /sys/devices/virtual/vtconsole/vtcon0/name
-  (S) dummy device
-  # cat /sys/devices/virtual/vtconsole/vtcon1/name
-  (M) frame buffer device
+Thanks for replying. It has not been my experience and the experience of many
+others that Android's userspace low memory memory killer works "just fine." On
+my Pixel 3 XL with a meager 4GB of memory, the userspace killer has had issues
+with killing too many processes, which has resulted in a noticeably poor user
+experience for all Pixel owners. From the looks of lmkd on the master branch,
+there still isn't really any definitive solution for this, aside from a 100ms
+delay in between process kills.
 
-There systemd runs 'loadkeys' tool in tapallel for each vtcon
-instance. This causes two parallel ioctl(KDSKBSENT) calls to
-race into adding the same entry into 'func_table' array at:
+I think that the userspace low memory killer is more complex than necessary,
+especially since in the kernel we can detect exactly when we run out of memory
+and react far more quickly than any userspace daemon.
 
-    drivers/tty/vt/keyboard.c:vt_do_kdgkb_ioctl()
+The original reasoning behind why the old kernel low memory killer was removed
+is also a bit vague to me. It just seemed to be abandonware, and all of a sudden
+a userspace daemon was touted as the solution.
 
-The function has no locking around writes to 'func_table'.
+This driver is like an Android-flavored version of the kernel's oom killer, and
+has proven quite effective for me on my Pixel. Processes are killed exactly when
+a page allocation fails, so memory use is maximized. There is no complexity to
+try and estimate how full memory is either.
 
-The simplest reproducer is to have initrams with the following
-init on a 8-CPU machine x86_64:
-
-    #!/bin/sh
-
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    wait
-
-The change adds lock on write path only. Reads are still racy.
-
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Jiri Slaby <jslaby@suse.com>
-Link: https://lkml.org/lkml/2019/2/17/256
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
----
- drivers/tty/vt/keyboard.c | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-index 88312c6c92cc..0617e87ab343 100644
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -123,6 +123,7 @@ static const int NR_TYPES = ARRAY_SIZE(max_vals);
- static struct input_handler kbd_handler;
- static DEFINE_SPINLOCK(kbd_event_lock);
- static DEFINE_SPINLOCK(led_lock);
-+static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
- static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
- static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
- static bool dead_key_next;
-@@ -1990,11 +1991,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
- 	char *p;
- 	u_char *q;
- 	u_char __user *up;
--	int sz;
-+	int sz, fnw_sz;
- 	int delta;
- 	char *first_free, *fj, *fnw;
- 	int i, j, k;
- 	int ret;
-+	unsigned long flags;
- 
- 	if (!capable(CAP_SYS_TTY_CONFIG))
- 		perm = 0;
-@@ -2037,7 +2039,14 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
- 			goto reterr;
- 		}
- 
-+		fnw = NULL;
-+		fnw_sz = 0;
-+		/* race aginst other writers */
-+		again:
-+		spin_lock_irqsave(&func_buf_lock, flags);
- 		q = func_table[i];
-+
-+		/* fj pointer to next entry after 'q' */
- 		first_free = funcbufptr + (funcbufsize - funcbufleft);
- 		for (j = i+1; j < MAX_NR_FUNC && !func_table[j]; j++)
- 			;
-@@ -2045,10 +2054,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
- 			fj = func_table[j];
- 		else
- 			fj = first_free;
--
-+		/* buffer usage increase by new entry */
- 		delta = (q ? -strlen(q) : 1) + strlen(kbs->kb_string);
-+
- 		if (delta <= funcbufleft) { 	/* it fits in current buf */
- 		    if (j < MAX_NR_FUNC) {
-+			/* make enough space for new entry at 'fj' */
- 			memmove(fj + delta, fj, first_free - fj);
- 			for (k = j; k < MAX_NR_FUNC; k++)
- 			    if (func_table[k])
-@@ -2061,20 +2072,28 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
- 		    sz = 256;
- 		    while (sz < funcbufsize - funcbufleft + delta)
- 		      sz <<= 1;
--		    fnw = kmalloc(sz, GFP_KERNEL);
--		    if(!fnw) {
--		      ret = -ENOMEM;
--		      goto reterr;
-+		    if (fnw_sz != sz) {
-+		      spin_unlock_irqrestore(&func_buf_lock, flags);
-+		      kfree(fnw);
-+		      fnw = kmalloc(sz, GFP_KERNEL);
-+		      fnw_sz = sz;
-+		      if (!fnw) {
-+			ret = -ENOMEM;
-+			goto reterr;
-+		      }
-+		      goto again;
- 		    }
- 
- 		    if (!q)
- 		      func_table[i] = fj;
-+		    /* copy data before insertion point to new location */
- 		    if (fj > funcbufptr)
- 			memmove(fnw, funcbufptr, fj - funcbufptr);
- 		    for (k = 0; k < j; k++)
- 		      if (func_table[k])
- 			func_table[k] = fnw + (func_table[k] - funcbufptr);
- 
-+		    /* copy data after insertion point to new location */
- 		    if (first_free > fj) {
- 			memmove(fnw + (fj - funcbufptr) + delta, fj, first_free - fj);
- 			for (k = j; k < MAX_NR_FUNC; k++)
-@@ -2087,7 +2106,9 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
- 		    funcbufleft = funcbufleft - delta + sz - funcbufsize;
- 		    funcbufsize = sz;
- 		}
-+		/* finally insert item itself */
- 		strcpy(func_table[i], kbs->kb_string);
-+		spin_unlock_irqrestore(&func_buf_lock, flags);
- 		break;
- 	}
- 	ret = 0;
--- 
-2.20.1
-
+Thanks,
+Sultan
