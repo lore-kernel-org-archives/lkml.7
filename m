@@ -2,107 +2,100 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CCEC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F229EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA281207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12A3207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552251435;
-	bh=/fEN5sjshP6ff6jac0rg2K1r1hwrVDXmAxFe33hWHcw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A4yKGgS1pqLoqslRseJFYvVBtzdo6v1vNBW2sIK7np2aynP5JA0RywjId8J11DYyE
-	 Ju0Q/vspBOyKegO7O4V6T+Xyr6qHbvrIw7sdHpDLE26FgTmOcVBpeTUtTqHVcUvYmX
-	 q+ckxSwLN2LC0cJJCgHJ3KEnUCnNuAimZmyK/yJU=
+	s=default; t=1552251826;
+	bh=q0PUVwOut6IVrnZMVAnvSVuPugbFv1l0jGrQRBXv2MY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZZNk4qDsbHocNBb8nmEpxbKCDidWVxuzIeL4vXVmzluvGQrsrPKaPHldgfJ2d9s+r
+	 ZN1u8l9etci1Qqn2Pjiz51cYPQikHpTnFVrucoDuCG7zaR7iNyYtXq61Hz7ncydkVJ
+	 GkG0A8EQAjX2P6T+PrbEJHuJq9o2YHG/VGb0K8ZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfCJU5O (ORCPT
+        id S1726713AbfCJVDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 16:57:14 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34524 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfCJU5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 16:57:13 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l5so2273426lje.1
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qHiR6gPXeg10SwEpHN0+CjKSur/FxoCWo3IdUEkd6SY=;
-        b=gKbdElyUQV2x8LhYF620kTTfMWnRH7XYSVm+RqCb9PYvmTwQdrlYqia9lJNkeru0Fg
-         WdewtiTLhB67DO/iYk0Y1EOqPS1Is2n+l/e8YZSBPawDLEFDV/g7hfuYDW7skX/oxNYK
-         2GiC6sV6KWFUCB2yk88j1beg7QeTckF5w487I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qHiR6gPXeg10SwEpHN0+CjKSur/FxoCWo3IdUEkd6SY=;
-        b=XHtH2qNdFasXt0/rZ3InRQf3Yb0jNUC0kWGDxsrFo5SAhCyyX/o0RjV+UVPDx0DV9+
-         H99kd0rLFoM8woKAwsRF0e3bw1XuNK4wN9SxKDtAnK1+RAurIsLwUXmT4E3GPXFyc6Xb
-         5pawQKDAHho3HWQltJgtoKLAbemS8LOG4qoa5cTIm0yhF3zOXANvVXNb6qvX59B6k2IA
-         +bFTJqjfv5EUo1O1cb1sXgyO81pBFWwzK8eEbj4iqe2zv7ntZCzthVGNWGfDC/ncnm9j
-         AdYWSrVUbf0h3jm6jAXFNH4u5wueoNfy9B4Ci4dtzpwEg1KWnwiAjv9+qaJpYMZQf4WI
-         luog==
-X-Gm-Message-State: APjAAAWAmYJEbH0sq7n8LmZNJ+at/2fuLU4S/EPYC2dRxrntxa5GkLdA
-        hkq55ZNe7k1M3y5xk1ReDVufWB2u43I=
-X-Google-Smtp-Source: APXvYqyJB7wOUThofx+AgN5sKpoNqLtTxirR8CFrwuNr5TbYHE15l6DiKNR8ZqrBrDwjrHsqnCOyxA==
-X-Received: by 2002:a2e:9117:: with SMTP id m23mr14543028ljg.94.1552251430885;
-        Sun, 10 Mar 2019 13:57:10 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id a26sm883083lfl.45.2019.03.10.13.57.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 13:57:09 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id k136so1899202lfg.5
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:57:09 -0700 (PDT)
-X-Received: by 2002:ac2:5088:: with SMTP id f8mr15437434lfm.11.1552251429063;
- Sun, 10 Mar 2019 13:57:09 -0700 (PDT)
+        Sun, 10 Mar 2019 17:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbfCJVDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 17:03:44 -0400
+Received: from localhost (unknown [104.153.224.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB108206BA;
+        Sun, 10 Mar 2019 21:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552251823;
+        bh=q0PUVwOut6IVrnZMVAnvSVuPugbFv1l0jGrQRBXv2MY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w0J12NO7pJBumbfQjHBiN3c7+guKb1CsNQER8w6nokTEfrC3lHAyuqSc6KiDMXPSO
+         vxgIkAy0avn0LAFTGqfqezpRqDKfvPbTGUIe4UZIlB2GG6GugnIxTWg/gs+LhAxkfm
+         0jEf+AO0gd6VPsDh/wC81p9mKudaiP+LJ8KgydGk=
+Date:   Sun, 10 Mar 2019 22:03:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190310210335.GA5504@kroah.com>
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
-References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
- <155221755097.13878.2888459223557668046.tglx@nanos.tec.linutronix.de>
-In-Reply-To: <155221755097.13878.2888459223557668046.tglx@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 10 Mar 2019 13:56:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi_krg9B2B0i7+mV4rRCdowiNw3bOC9rssaZTVFQvKMxQ@mail.gmail.com>
-Message-ID: <CAHk-=wi_krg9B2B0i7+mV4rRCdowiNw3bOC9rssaZTVFQvKMxQ@mail.gmail.com>
-Subject: Re: [GIT pull] scheduler updates for 5.1
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190310203403.27915-1-sultan@kerneltoast.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 4:33 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> A small set of fixes for the scheduler:
+On Sun, Mar 10, 2019 at 01:34:03PM -0700, Sultan Alsawaf wrote:
+> From: Sultan Alsawaf <sultan@kerneltoast.com>
+> 
+> This is a complete low memory killer solution for Android that is small
+> and simple. It kills the largest, least-important processes it can find
+> whenever a page allocation has completely failed (right after direct
+> reclaim). Processes are killed according to the priorities that Android
+> gives them, so that the least important processes are always killed
+> first. Killing larger processes is preferred in order to free the most
+> memory possible in one go.
+> 
+> Simple LMK is integrated deeply into the page allocator in order to
+> catch exactly when a page allocation fails and exactly when a page is
+> freed. Failed page allocations that have invoked Simple LMK are placed
+> on a queue and wait for Simple LMK to satisfy them. When a page is about
+> to be freed, the failed page allocations are given priority over normal
+> page allocations by Simple LMK to see if they can immediately use the
+> freed page.
+> 
+> Additionally, processes are continuously killed by failed small-order
+> page allocations until they are satisfied.
+> 
+> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
 
-What? No.
+Wait, why?  We just removed the in-kernel android memory killer, we
+don't want to add another one back again, right?  Android Go devices
+work just fine with the userspace memory killer code, and those are "low
+memory" by design.
 
-This is completely broken, and even warns loudly about it.
+Why do we need kernel code here at all?
 
-  kernel/sched/cpufreq_schedutil.c: In function =E2=80=98sugov_iowait_boost=
-=E2=80=99:
-  ./include/linux/kernel.h:827:29: warning: comparison of distinct
-pointer types lacks a cast
-  kernel/sched/cpufreq_schedutil.c:346:26: note: in expansion of macro =E2=
-=80=98min=E2=80=99
-     sg_cpu->iowait_boost =3D min(sg_cpu->iowait_boost << 1,
-SCHED_CAPACITY_SCALE);
-                            ^~~
+thanks,
 
-because 'SCHED_CAPACITY_SCALE' is of type 'long' and 'iowait_boost' is
-'unsigned int'.
-
-Why are you sending me code that hasn't even been compiled, and call it a "=
-fix"?
-
-                   Linus
+greg k-h
