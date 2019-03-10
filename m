@@ -2,125 +2,120 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E3CC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56762C10F03
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED37B20652
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23009206BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 19:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="h11Kd8me"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CefmRJ5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfCJT0M (ORCPT
+        id S1726829AbfCJTdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 15:26:12 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42821 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbfCJT0M (ORCPT
+        Sun, 10 Mar 2019 15:33:00 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:36745 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfCJTdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 15:26:12 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u7so2790403qtg.9;
-        Sun, 10 Mar 2019 12:26:11 -0700 (PDT)
+        Sun, 10 Mar 2019 15:33:00 -0400
+Received: by mail-it1-f195.google.com with SMTP id v83so4034880itf.1;
+        Sun, 10 Mar 2019 12:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OoL9XEI9fQDaF/BNmKrMzNbBnKchcPQ513u4QH8nENk=;
-        b=h11Kd8meciJCBSpcAEiRW5DH6pBfNunBD0Lx8oAGucO7806RwCw8/qMllph5Fpqsm0
-         jsNVb6Lst41s/VBy8OndyMZQ0CHk6DdMt303pLEhD5hyMBUnJUXqPymh84sHnYylNxoC
-         EG9ISev6DtXgt9Lzt2uzNrt9Mf8fQvlI455ggddeEb9ZWYeUEN4ge+JKWpKM4/IEJi78
-         5MVOFsEbwavyZJlMdqG46ZciX6o28sLQA0307xw26ynjRJ47rIp2aTfd5lRnRvdXK22e
-         /Zdwk9fWNLzkwXzDwqkHDMGomw9ig8iOGekKlO39HeGP47RiYtrSwCitteIc/hbJmUjv
-         taTg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=u+DoI4sI+hMVW166TNGuic0psX3hAbOUaR7E0HZK7I0=;
+        b=CefmRJ5jnqnTC6+suGK+V3lL5Fdyf3x20xpF2m1h0Yp/4na6BEJsEVwe0c+ReE88TJ
+         ePoMYjY0fpr/4IePni2vJFisQPxx5t+FiHG9S2yJXODhIDY5nr17Qiln+EY1pYKUhOws
+         wWe/+PCSXV1O8DnAK9P/+HC2LussSXnDVGFVwkWUtKP9zmWkBca1WKHKSxIpLI4DvMsT
+         fN+o0mF48unpUnzO0qWh7TUA5C7hr48KoaDkOTr6z99mCV3/1BBNjSTEaO53ZU5VHXQi
+         rotkgR4rjtPtlW+nobzBHp+/oe3cc7Q1+2fKoVjqv0xAlQEKuTfIYDpAQJqB85UtX4rW
+         vXhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OoL9XEI9fQDaF/BNmKrMzNbBnKchcPQ513u4QH8nENk=;
-        b=XD+BuAwx/4WtLXDPHSyIcIDBTATn2q3QmN74q2QxAaiwS8XJ5wFVSaoVLAzWfUzOBQ
-         C+LQ2Qt/7zUT38mR7Sss5uIY8R+FztwvEJ+Dn1eXS7L/RnAMRfM4rnzRKarTi2aCCach
-         6JfoNeaTaslPFIMW2vZMj5EEAUbGYO2l+24G61X+brtBNy80MznNV+73Wqh1t1mn/fO2
-         EPhgD3dqO/84shtmAjm56OLsYe2BzZB9o+2dqD8Ne0t6v2E5oM4H40J+UiNno6dnP3cs
-         hUAUM8yr1RMovw3fCFK1/VLkXevq9mws7+qbTKsX4GYjoUyVEO+xSBjd55zpMMhy1Ed0
-         1pqg==
-X-Gm-Message-State: APjAAAWtqtpi3X+1hxUuHmLEySPqpXhZkyLH8Cw8vXlYcf4iODOd/5oe
-        W6JDJkhbx6K1jLnDnP8brOorYeULoJbf8oA68NM=
-X-Google-Smtp-Source: APXvYqwSI4EYsiWj5hkBffbRSXkceGmd1yGOstkFnDVqHdzC5hRi1ovQeu+nDfwirtkH3DFaQBKtzHHddXB2Nv9kpew=
-X-Received: by 2002:ac8:48cd:: with SMTP id l13mr4054789qtr.330.1552245970960;
- Sun, 10 Mar 2019 12:26:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <1546173604-26066-1-git-send-email-minipli@googlemail.com>
- <20190102202938.GA26600@linux-8ccs> <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
-In-Reply-To: <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
-From:   Mathias Krause <minipli@googlemail.com>
-Date:   Sun, 10 Mar 2019 20:26:00 +0100
-Message-ID: <CA+rthh_OnmvQQbKAG55rha56HCp2vjhZMv0ahRdgJjbjmG=xRA@mail.gmail.com>
-Subject: Re: [PATCH] vmlinux.lds.h: drop unused __vermagic
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u+DoI4sI+hMVW166TNGuic0psX3hAbOUaR7E0HZK7I0=;
+        b=nrTMph6DntEqGyMenog4KKrehjpvJCxnmgn6OcWjIJfAvCiEtENn1F1OahLCB0G5hb
+         guBJi4mLtQCgCtY9Dj+26KHdUXpm28aTMYpyGyphBubr1JhszsPaxZ7mH9uz+Kxi+rJ/
+         bdF5GF6K1INpt1Li3t7QataEDe9WEtnfrfmpwsu5fyTnxXgp2bc1FTmHHE8b8iD/idGD
+         eMmtFwzQq41P9OZWwYn4vjZKKtlJ27lOkz7O2kjp+mRE6UGztVc/nTRr9KcXJBjdCBxg
+         DraYbN/dY5QCDbs1vA2sJa/wDgnY4anfJVx2ckiU0c9jWEz8yvGO+v8j21AHaK55GI9K
+         UDtA==
+X-Gm-Message-State: APjAAAXqmTpvHdm/eI2BvNmhdUi7592sPpm8ny8RWfLnI/bNedLugd+h
+        vpySIi4JDpKpZZ4WgPeWpVs=
+X-Google-Smtp-Source: APXvYqydBApxDLyKgcWQWctp+hyrCtPmRfUuwKSXCeeunLwJja/XvGr7WBg2/bGL8Tgy8rh0AwRn2w==
+X-Received: by 2002:a24:21d5:: with SMTP id e204mr14309614ita.56.1552246379241;
+        Sun, 10 Mar 2019 12:32:59 -0700 (PDT)
+Received: from localhost.localdomain ([198.52.185.227])
+        by smtp.gmail.com with ESMTPSA id w74sm7160856itb.44.2019.03.10.12.32.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 12:32:58 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: envelope-detector: fix use-after-free on device remove
+Date:   Sun, 10 Mar 2019 15:32:46 -0400
+Message-Id: <20190310193246.31761-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica,
+This driver's remove path never explicitly cancels the
+delayed work. So it is possible for the delayed work to
+run after the core has freed the private structure
+(struct envelope). This is a potential use-after-free.
 
-On Mon, 21 Jan 2019 at 12:39, Mathias Krause <minipli@googlemail.com> wrote:
->
-> On Wed, 2 Jan 2019 at 21:29, Jessica Yu <jeyu@kernel.org> wrote:
-> >
-> > +++ Mathias Krause [30/12/18 13:40 +0100]:
-> > >The reference to '__vermagic' is a relict from v2.5 times. And even
-> > >there it had a very short life time, from v2.5.59 (commit 1d411b80ee18
-> > >("Module Sanity Check") in the historic tree) to v2.5.69 (commit
-> > >67ac5b866bda ("[PATCH] complete modinfo section")).
-> > >
-> > >Neither current kernels nor modules contain a '__vermagic' section any
-> > >more, so get rid of it.
-> > >
-> > >Signed-off-by: Mathias Krause <minipli@googlemail.com>
-> > >Cc: Rusty Russell <rusty@rustcorp.com.au>
-> > >Cc: Jessica Yu <jeyu@kernel.org>
-> >
-> > Thanks for the cleanup.
-> >
-> > Reviewed-by: Jessica Yu <jeyu@kernel.org>
-> >
->
-> Arnd, will you carry this patch through your asm-generic tree or did
-> the MAINTAINERS file mislead me here?
->
+Fix by adding a devm_add_action callback to the remove
+path, called right after iio_device_unregister(), which
+explicitly cancels the delayed work.
 
-looks like Arnd keeps ignoring my Emails. :/ Can you carry this patch
-through your module tree? Or do you think I should ask Andrew Morton
-instead?
+This issue was detected with the help of Coccinelle.
 
-Thanks,
-Mathias
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/iio/adc/envelope-detector.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> > >---
-> > > include/asm-generic/vmlinux.lds.h | 1 -
-> > > 1 file changed, 1 deletion(-)
-> > >
-> > >diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > >index 3d7a6a9c2370..530ce1e7a1ec 100644
-> > >--- a/include/asm-generic/vmlinux.lds.h
-> > >+++ b/include/asm-generic/vmlinux.lds.h
-> > >@@ -332,7 +332,6 @@
-> > >               __start_rodata = .;                                     \
-> > >               *(.rodata) *(.rodata.*)                                 \
-> > >               RO_AFTER_INIT_DATA      /* Read only after init */      \
-> > >-              KEEP(*(__vermagic))     /* Kernel version magic */      \
-> > >               . = ALIGN(8);                                           \
-> > >               __start___tracepoints_ptrs = .;                         \
-> > >               KEEP(*(__tracepoints_ptrs)) /* Tracepoints: pointer array */ \
-> > >--
-> > >2.19.2
-> > >
+diff --git a/drivers/iio/adc/envelope-detector.c b/drivers/iio/adc/envelope-detector.c
+index 2f2b563c1162..2f1c78b3ff44 100644
+--- a/drivers/iio/adc/envelope-detector.c
++++ b/drivers/iio/adc/envelope-detector.c
+@@ -321,6 +321,14 @@ static const struct iio_info envelope_detector_info = {
+ 	.read_raw = &envelope_detector_read_raw,
+ };
+ 
++static void envelope_detector_stop_work(void *data)
++{
++	struct iio_dev *indio_dev = data;
++	struct envelope *env = iio_priv(indio_dev);
++
++	cancel_delayed_work_sync(&env->comp_timeout);
++}
++
+ static int envelope_detector_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -395,6 +403,10 @@ static int envelope_detector_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = devm_add_action(dev, envelope_detector_stop_work, indio_dev);
++	if (ret)
++		return ret;
++
+ 	return devm_iio_device_register(dev, indio_dev);
+ }
+ 
+-- 
+2.17.1
+
