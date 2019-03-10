@@ -2,106 +2,102 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCC6C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1AC10F03
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D6620652
+	by mail.kernel.org (Postfix) with ESMTP id 909D1207E0
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552248193;
-	bh=IPjWXHu28vDMQa+swho0159XmNN3IoTuEQIXJluLquo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TTMhM3avUNAyo7AK5tLWrWtQvqHH0f2uZelQICweeYxBfDgDFAGxhj1PG9YYs1O9c
-	 zkfTKBRmUDWaFAwdKkVzBEoJac/8BsLt2rBSRAyokuk+aHotlSbel5NdFE+5g9/aR8
-	 jZOHmTSzN8JaoPg6Njxdlji96cZ1I38mh651yldU=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJqCBFHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfCJUCE (ORCPT
+        id S1726972AbfCJUDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 16:02:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44811 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfCJUCE (ORCPT
+        Sun, 10 Mar 2019 16:03:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39188 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfCJUDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 16:02:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u9so1836502lfe.11
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:02:02 -0700 (PDT)
+        Sun, 10 Mar 2019 16:03:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p8so1209652wrq.6
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RwbjVaBjZI45PpSmnw9Xlin3P9fcUPM1xOoSmpv1WFs=;
-        b=ewyfIUGwAK2fYQ0/fgJSxZvDXnRz/KigyMZQj+N5yGgaFqZxUL+cfJsHlOyxSc+d8w
-         r5M7lHrUm9YEBxmcstuML6Xz/zsJYfmknk2kx+lyrYsY/LWN1M/PoNRgKYFkKXTbLwuQ
-         e3tfBZKnQNUPLaadV6RptIF3zc1xiEs0OaTQ4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zbMhExhcQYCOyIfAYk0sSo4FJ/ZfISUCR/GKSvOcuA0=;
+        b=DJqCBFHq1Z/2wpyTFMWdNEeVhm9QIBqFLuM98VctOaaNcOZ1C13s3/1J5IN+lWqs/x
+         jV3tygdNoTupLVYBWZG1r7PFgvzag+Q4Zce8pg2q6QsjOKAkvi4RocDtirXoUYPCJecf
+         M7SStV/ewhYudbmw5QxxcYrV0zVHPULcce52VSz8kDfR8XhduyiROmVA0mRK0gjukyLk
+         3lJvA3aWEWQLrVHl3yQ2ASzwKeZJF4IgPXhLsVZhkQHsvbwhPWDnVDh5P9Vb9ecDdK/Q
+         EQ89tFuARFukEDRnMy+B7/WnmIWY0OA55sTR6gHjNjqW7XhwXRHgWqg7ZHdGoYhfKG/H
+         Lpxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RwbjVaBjZI45PpSmnw9Xlin3P9fcUPM1xOoSmpv1WFs=;
-        b=EE5amlTdwT2e5VBMnc9baOsy4gpxJmwYo3RDBpIqoS3eayTwJMzEjXHZHiIsrM0L6H
-         VIW4KAH9/y19wMCzk/Zsl2tDetfjj1gfqMzPYLjRP8frh0WjAhJ2oqgJG4z6Z6MkRFzh
-         ofMTFbnWr145qdzilqHSrj74CEAc4XG5aiMFFO2up78MKdevh+4t+lbeC8hCvUg+gOMV
-         x/rx4Fcame6DUUWcZWPNC1eMa8aj5zpX9x80+rH9sMOkr4Z2nuIyUjXwZeNIdK3f+Ea6
-         dFWo25By6pcNeYtR4XZY4yDHwBJBmnhLoFoPlp7VrJuyHVAOcBOs5CDsTKRn0HlbkaTT
-         pfvA==
-X-Gm-Message-State: APjAAAWOWrtavTcHvyfGULLVmYgIUGdqqFXtfwwLMlWmf7uH1KmR8lmv
-        O+Ao1pJubHP+dlA7nVFS13sQK+4jyF8=
-X-Google-Smtp-Source: APXvYqxAJvI8iAG2sc1+yR5CNqIFvaV0gRfiwBQGAIjAQzqxalXNWCiZqHEc7UXYsAa92KXsjtJkqg==
-X-Received: by 2002:a19:f017:: with SMTP id p23mr15361730lfc.103.1552248120775;
-        Sun, 10 Mar 2019 13:02:00 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id f1sm666877ljf.40.2019.03.10.13.01.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 13:02:00 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id p1so1840107lfk.9
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:01:59 -0700 (PDT)
-X-Received: by 2002:ac2:5542:: with SMTP id l2mr13312531lfk.136.1552248119399;
- Sun, 10 Mar 2019 13:01:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zbMhExhcQYCOyIfAYk0sSo4FJ/ZfISUCR/GKSvOcuA0=;
+        b=mXqvXvhBCy7SYWPv2kL6DkCgwF+1TndnnUvDfBcWBlKiIBwvM2t3TFRX7ejANw0+wD
+         VL7rv8BJpC8sGJxW0rhBZJpJH7dHtq7U8WYBQxEDWT6zSjhdZbc4qWdlZzof3J/12fUv
+         ZKxhPMFBhE+be88hcSd9pZNlSI5PnHC89n60LQWmx43YuQGxdJkTxLtSGrOcY/d78/3X
+         2V17YhWZZmNdi+zsqdcbS5AXTWyoO0xsjiMe5StkjOoqB2ovPyPsixH2H6zc8e7x9Lj5
+         +ntl9aLWYvZk37vP0mAUpXvP8irYYjYx1B2YYHf4BfaS4ETo802DftOmdece2FNdSj0n
+         9OpA==
+X-Gm-Message-State: APjAAAWrkWJkkYpgzna2JiEn4EicG5oIKp9uugiU4CJa+0gA0/9R4i09
+        +Z5LYS7Sohq9X0t0t8SaHDI=
+X-Google-Smtp-Source: APXvYqwgEuPpARCbJr6BnqO5Ic8J3u9AM2SW5sXtYNirSn5GdLQ1Y1ACeTZzvesuDnxrTuus/2fKVg==
+X-Received: by 2002:adf:e5c5:: with SMTP id a5mr17866239wrn.13.1552248190003;
+        Sun, 10 Mar 2019 13:03:10 -0700 (PDT)
+Received: from darwi-home-pc (ip-109-42-1-116.web.vodafone.de. [109.42.1.116])
+        by smtp.gmail.com with ESMTPSA id f68sm41533105wmg.5.2019.03.10.13.03.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 10 Mar 2019 13:03:08 -0700 (PDT)
+Date:   Sun, 10 Mar 2019 21:03:02 +0100
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] printk: kmsg_dump: Mark registered flag as private
+Message-ID: <20190310200302.GA11096@darwi-home-pc>
 MIME-Version: 1.0
-References: <CAPcyv4he0q_FdqqiXarp0bXjcggs8QZX8Od560E2iFxzCU3Qag@mail.gmail.com>
-In-Reply-To: <CAPcyv4he0q_FdqqiXarp0bXjcggs8QZX8Od560E2iFxzCU3Qag@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 10 Mar 2019 13:01:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjvmwD_0=CRQtNs5RBh8oJwrriXDn+XNWOU=wk8OyQ5ew@mail.gmail.com>
-Message-ID: <CAHk-=wjvmwD_0=CRQtNs5RBh8oJwrriXDn+XNWOU=wk8OyQ5ew@mail.gmail.com>
-Subject: Re: [GIT PULL] device-dax for 5.1: PMEM as RAM
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 12:54 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Hi Linus, please pull from:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-> tags/devdax-for-5.1
->
-> ...to receive new device-dax infrastructure to allow persistent memory
-> and other "reserved" / performance differentiated memories, to be
-> assigned to the core-mm as "System RAM".
+The 'registered' flag is internally used by kmsg_dump_register()
+and kmsg_dump_unregister() to track multiple registrations of the
+same dumper.
 
-I'm not pulling this until I get official Intel clarification on the
-whole "pmem vs rep movs vs machine check" behavior.
+It's protected by printk's internal dump_list_lock, and must thus
+be accessed only from there. Mark it as private.
 
-Last I saw it was deadly and didn't work, and we have a whole "mc-safe
-memory copy" thing for it in the kernel because repeat string
-instructions didn't work correctly on nvmem.
+Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
+---
+ include/linux/kmsg_dump.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No way am I exposing any users to something like that.
-
-We need a way to know when it works and when it doesn't, and only do
-it when it's safe.
-
-                    Linus
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index 2e7a1e032c71..7c08cb58259a 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -36,7 +36,7 @@ enum kmsg_dump_reason {
+  * @dump:	Call into dumping code which will retrieve the data with
+  * 		through the record iterator
+  * @max_reason:	filter for highest reason number that should be dumped
+- * @registered:	Flag that specifies if this is already registered
++ * @registered:	Flag that specifies if this is already registered (private)
+  */
+ struct kmsg_dumper {
+ 	struct list_head list;
+--
+2.21.0
