@@ -2,131 +2,103 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF2FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D169C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D664A20657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5171620657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 06:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552200675;
+	bh=HDxNBiW8SI0DSD9vh2GBMMSswPfZf3pA4tlj9JLPPjw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xT1pPxTHcwDZe/3suOSUXS9p/czpqRNfqE/0/Wd8kBaCS6cS0H2Dgutqyx29fpmpr
+	 6O6Auc3tqF3h3fVlh+2KnXL/UyAtk26XlcOrvjDgohPHQMvQ4KzJKa+VQHZRqiVeX+
+	 YIOweUPnTWnHtXiexJ4xAVMX6lGTicwCeLi4zGP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfCJGss (ORCPT
+        id S1726340AbfCJGvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 01:48:48 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34440 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725778AbfCJGss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 01:48:48 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9AFA95C5316F36977C78;
-        Sun, 10 Mar 2019 14:48:43 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.408.0; Sun, 10 Mar 2019 14:48:37 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net] net: hns3: fix to stop multiple HNS reset due to the AER changes
-Date:   Sun, 10 Mar 2019 14:47:51 +0800
-Message-ID: <1552200471-47492-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 10 Mar 2019 01:51:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbfCJGvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 01:51:13 -0500
+Received: from localhost (unknown [89.248.140.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F28720657;
+        Sun, 10 Mar 2019 06:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552200672;
+        bh=HDxNBiW8SI0DSD9vh2GBMMSswPfZf3pA4tlj9JLPPjw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=AUdiEBxF3ZrGy25EONLAo1u96MW/HrC/dHoGMruz3njQT9fRXDr540/DRLPgdA8Qu
+         rJUD/XGd796sGKifR8f/X+URNReCbdpU9Lbx9AEitTpJ90tAYJK1/DYcE/JA872Ciz
+         OZix23c/P+Szw3vWkscXiXcCwojSle4cPpFVnBbQ=
+Date:   Sun, 10 Mar 2019 07:51:10 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.0.1
+Message-ID: <20190310065110.GA24816@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
 
-The commit bfcb79fca19d
-("PCI/ERR: Run error recovery callbacks for all affected devices")
-affected the non-fatal error recovery logic for the HNS and RDMA devices.
-This is because each HNS PF under PCIe bus receive callbacks
-from the AER driver when an error is reported for one of the PF.
-This causes unwanted PF resets because
-the HNS decides which PF to reset based on the reset type set.
-The HNS error handling code sets the reset type based on the hw error
-type detected.
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch provides fix for the above issue for the recovery of
-the hw errors in the HNS and RDMA devices.
+I'm announcing the release of the 5.0.1 kernel.
 
-This patch needs backporting to the kernel v5.0+
+All users of the 5.0.1 kernel series must upgrade.
 
-Fixes: 332fbf576579 ("net: hns3: add handling of hw ras errors using new set of commands")
-Reported-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h            | 1 +
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c        | 4 +++-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 9 +++++++--
- 3 files changed, 11 insertions(+), 3 deletions(-)
+The updated 5.0.1.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.0.1.y
+and can be browsed at the normal kernel.org git web browser:
+	http://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 66d7a8b..38b430f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -194,6 +194,7 @@ struct hnae3_ae_dev {
- 	const struct hnae3_ae_ops *ops;
- 	struct list_head node;
- 	u32 flag;
-+	u8 override_pci_need_reset; /* fix to stop multiple reset happening */
- 	enum hnae3_dev_type dev_type;
- 	enum hnae3_reset_type reset_type;
- 	void *priv;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 0d1ae15..1c1f17e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1850,7 +1850,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
- 
- 	/* request the reset */
- 	if (ae_dev->ops->reset_event) {
--		ae_dev->ops->reset_event(pdev, NULL);
-+		if (!ae_dev->override_pci_need_reset)
-+			ae_dev->ops->reset_event(pdev, NULL);
-+
- 		return PCI_ERS_RESULT_RECOVERED;
- 	}
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 1feceff..1f52d11 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1317,8 +1317,10 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 		hclge_handle_all_ras_errors(hdev);
- 	} else {
- 		if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
--		    hdev->pdev->revision < 0x21)
-+		    hdev->pdev->revision < 0x21) {
-+			ae_dev->override_pci_need_reset = 1;
- 			return PCI_ERS_RESULT_RECOVERED;
-+		}
- 	}
- 
- 	if (status & HCLGE_RAS_REG_ROCEE_ERR_MASK) {
-@@ -1327,8 +1329,11 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 	}
- 
- 	if (status & HCLGE_RAS_REG_NFE_MASK ||
--	    status & HCLGE_RAS_REG_ROCEE_ERR_MASK)
-+	    status & HCLGE_RAS_REG_ROCEE_ERR_MASK) {
-+		ae_dev->override_pci_need_reset = 0;
- 		return PCI_ERS_RESULT_NEED_RESET;
-+	}
-+	ae_dev->override_pci_need_reset = 1;
- 
- 	return PCI_ERS_RESULT_RECOVERED;
- }
--- 
-2.7.4
+thanks,
 
+greg k-h
+
+------------
+
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlyEs9kACgkQONu9yGCS
+aT4w1Q//TJtliFGhxYQqRBxzynmURUG82fDh3o3/ayjENTGn26Hpza9Kkbfi+bGw
+i5Fbq0wcjb47H9iFu6g9jsGZ8TGLXTksE2FmSVTSQytnfn0yGw1Qhzgw9bc2k2U8
+nJrcWzdjiWF0CfWpDeIuLUlsApS71zS7n6/qhbx0oHGic3fGvV/y3/d6zllV8yQk
+WPacDxk13R0ZVhctvIzssD6xU28wsOnfBKsNS7A4S1EMxb5EFQRbWX+T7PtkmQWH
+d38EVENnrk2vX8SwXVq1jAgGTUeP2+pwLOo/WqN8vd4Zm3UKpE8ULE5WCp+ggPLW
+641rlowmRhBjHdUFeQyhtD0MlP/NpgYqKNd36TRowlkPLmseJmy3dqQUMm/mzM9Z
+izUK55Dwew9IjWp6jBdx07FELcMRzIf5fd1BKTEVTLDKUGgWm8ajFRYqjKx0yCwV
+KNVp8usrIxTiF28EIOleJwy03yJQ47DVq8KCi+/sa9D2i+NAabq/e49Hq16QmZU2
+hyBP7IUjEbT1zVhe6COf13z5lbxuqwAYcMePy4iPbkP303dDTXHFJDL2O0iHS6u6
+0J61uaahqW8maQ4JDYGpXVCeNwJVcAhqeqSMmyc26yYF30KRZO/6Vu5Th1b/GFQo
+LakulYIentB9GAHWPqP2aZdCOEV6ChLNXKW973B86Wn4rh3rHgI=
+=wuBd
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
