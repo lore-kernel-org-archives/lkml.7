@@ -2,295 +2,557 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CD5C10F03
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77F0C10F0E
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D860207E0
+	by mail.kernel.org (Postfix) with ESMTP id 79FF820657
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 20:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tnhuvbRy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9BRnbMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfCJUfM (ORCPT
+        id S1726884AbfCJUgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 16:35:12 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46389 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfCJUfM (ORCPT
+        Sun, 10 Mar 2019 16:36:24 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42134 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbfCJUgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 16:35:12 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z25so2886293qti.13
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:35:11 -0700 (PDT)
+        Sun, 10 Mar 2019 16:36:23 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i5so2210195oto.9
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 13:36:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=BJpjV2zMYyI2iypQGgXFuxmY9q4KzTrjBtn9MNt+Ivo=;
-        b=tnhuvbRyF4CDv9incE31fqWQ1jO5kQCkVpbcHsTXdxhfRwcufKe2x4mRF5EV2gek43
-         D89PY3jVccznnkhkKn/rT2E0Y+QSqSupUQnaJhoeZzWwt+y4tVRvEZxzhap2NIgPIiKC
-         iqau/fnNg15iNBZGuRPSDnTf/EMvGCJalfBPs7lbvPVastBb9VyctUlrn1/7R7gzHKdX
-         Cte8y+XGDuzXYcomcx4yjJDxYgIxSgnjqmH/GodWfLglC1hanTVswaVt1k1PRGpFH9GK
-         WaqwgzFMSHgRfa0BcAZduciNaZ37IjpGo3p9f0Kuna4tBdPTKQzOMjB9f/e0TPq6h60J
-         gMQg==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=msEacjDz5M6OUOQGXHmIrsAVNZHK9dO1Yt39evrOWj4=;
+        b=d9BRnbMDHhqqgaK3q/LPw0KEdtMuUAMHUe8q0Mp9J+PE7rdgWWH71ktcyQBbR9AqDz
+         BqYH4diJG9cqYgOD5agS+7PRQqAbkjh+pUz73fBKLERQ+IDHmjSUUb+aGv7CVnVT7lmp
+         Cyad55DyECed2+z1LMLdty0sAWmKLkfrOsfYGYnjefuKg0xR7qmfpivuCFxSALA4z7n9
+         hHHNJpZslkivxMmi8zG2vMLkjd8FeVYpQLDhPO1V+pRnMh+BW9Xr16CS87byO2jMmtiC
+         gNraLhErfsqS+kyZaPM+TCgLYoskcLz9AFxXTPuYdrbSDTbnA6YpgzxiVOEIdFUqKRHY
+         ruTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=BJpjV2zMYyI2iypQGgXFuxmY9q4KzTrjBtn9MNt+Ivo=;
-        b=TCYDeuV4kDssIBhLAh6MMOyp1iq4/h/VgG06jdzI01vrsQFwdgCcOfVhqZ/tBvG7bV
-         BnHPtYAJeymtE0XPIR2tewZksHddnGpgHWO8E10zQu/rCa1EK2wLmKxj0/jZlxNPtjUR
-         ltPgxureVFXyuHiD3Z6IArpPqHPl7grEqIn5utwdMX+DJch+59pLByPFFS0j9knj6x9p
-         oKvywolD/ktTVq9+EFKWSMqa0Fenrq5euzpLnr+2LkWsHPMhws5YIJg3H9K26YOF8GKr
-         mnVATwKkYgaC63Ulqf2J+RLfXXu+ZUheTPSZjrg/LaCrYLEoIovN55y2bjTSOlv2Ua+x
-         d0Bw==
-X-Gm-Message-State: APjAAAXc+LlPjCXgbjkJsj6IAZFrAwzMuvG7IgTBisqbaZnHGSXZPPmU
-        LmCKufujgWO5Zld7TR8scKg=
-X-Google-Smtp-Source: APXvYqxtMjJr/xJzFj64lw+aXAPPDDhgZ7TPpj3r3BqZTu20cseMQV9qfs/BqHKDyk6D+kLG3z1scw==
-X-Received: by 2002:a0c:93d5:: with SMTP id g21mr23656464qvg.10.1552250110487;
-        Sun, 10 Mar 2019 13:35:10 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id p67sm2149993qkd.39.2019.03.10.13.35.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 10 Mar 2019 13:35:08 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 17:35:05 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/vkms: Solve bug on kms_crc_cursor tests
-Message-ID: <20190310203505.2needmil76a4rc74@smtp.gmail.com>
-References: <20190225142606.gov32asdq3qe375q@smtp.gmail.com>
- <20190228101107.GL2665@phenom.ffwll.local>
- <20190228140341.GG20097@intel.com>
- <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com>
- <20190301152558.GR20097@intel.com>
- <CAKkTe8HbgkVm1i2xAFT6ecgv2jFjyoqrSEYUpx_40Uj=ogKYPQ@mail.gmail.com>
- <20190301184147.GS20097@intel.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=msEacjDz5M6OUOQGXHmIrsAVNZHK9dO1Yt39evrOWj4=;
+        b=Xmf9dsD5d2UgOLbFyRA6RfXJIR/JBouGQXSId6JqJ+NGFgXhqwxawW8+XcORRmK9V1
+         JUyKccFi9YgAZvDyyCDPh4M5RzT6D5++++YDsfFayURA6gtn4Ao6RoQNo62rmOOhEQyF
+         eE2JVf4rFVgxWJRRyRuDylcKz+O0HdOg+rMFC18Ff9SrPS/3osm4O4NneyPhnEPtBLAA
+         FaAYdwa9EcLy6fcx5F3LGOeSoHJZCjVN6EGEfIoZZn0wIrQaErhHdjbV7vruh+TKBXpY
+         RmaPGjZeZ+ATdt7T0ifJkmW+qcPaplKY1S52m2uhCrq8PTCpmALlo957bz3TR4Sh3dUm
+         8Lrg==
+X-Gm-Message-State: APjAAAXLa4v0JsFW3MaTj12t+2GPQbrIRWUqJnRT1Aw5Hy8fAMDPDe13
+        oWPw7SZlGtFO2o1wpDRR+cI=
+X-Google-Smtp-Source: APXvYqwrFXOdWjnEeXVSHltt6nWHWtmdpZENWZDleM13BmF8lTVKab1N0a4yTPi3awrLlCu+XUwi2Q==
+X-Received: by 2002:a05:6830:1505:: with SMTP id k5mr17376174otp.190.1552250182573;
+        Sun, 10 Mar 2019 13:36:22 -0700 (PDT)
+Received: from sultan-box.localdomain ([107.193.118.89])
+        by smtp.gmail.com with ESMTPSA id q67sm1556846oif.40.2019.03.10.13.36.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 13:36:21 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sultan Alsawaf <sultan@kerneltoast.com>
+Subject: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Date:   Sun, 10 Mar 2019 13:34:03 -0700
+Message-Id: <20190310203403.27915-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190301184147.GS20097@intel.com>
-User-Agent: NeoMutt/20180716
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/01, Ville Syrjälä wrote:
-> On Fri, Mar 01, 2019 at 03:35:35PM -0300, Shayenne Moura wrote:
-> > Em sex, 1 de mar de 2019 às 12:26, Ville Syrjälä
-> > <ville.syrjala@linux.intel.com> escreveu:
-> > >
-> > > On Fri, Mar 01, 2019 at 11:55:11AM -0300, Shayenne Moura wrote:
-> > > > Em qui, 28 de fev de 2019 às 11:03, Ville Syrjälä
-> > > > <ville.syrjala@linux.intel.com> escreveu:
-> > > > >
-> > > > > On Thu, Feb 28, 2019 at 11:11:07AM +0100, Daniel Vetter wrote:
-> > > > > > On Mon, Feb 25, 2019 at 11:26:06AM -0300, Shayenne Moura wrote:
-> > > > > > > vkms_crc_work_handle needs the value of the actual frame to
-> > > > > > > schedule the workqueue that calls periodically the vblank
-> > > > > > > handler and the destroy state functions. However, the frame
-> > > > > > > value returned from vkms_vblank_simulate is updated and
-> > > > > > > diminished in vblank_get_timestamp because it is not in a
-> > > > > > > vblank interrupt, and return an inaccurate value.
-> > > > > > >
-> > > > > > > Solve this getting the actual vblank frame directly from the
-> > > > > > > vblank->count inside the `struct drm_crtc`, instead of using
-> > > > > > > the `drm_accurate_vblank_count` function.
-> > > > > > >
-> > > > > > > Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
-> > > > > >
-> > > > > > Sorry for the delay, I'm a bit swamped right now :-/
-> > > > > >
-> > > > > > Debug work you're doing here is really impressive! But I have no idea
-> > > > > > what's going on. It doesn't look like it's just papering over a bug (like
-> > > > > > the in_vblank_irq check we've discussed on irc), but I also have no idea
-> > > > > > why it works.
-> > > > > >
-> > > > > > I'll pull in Ville, he understands this better than me.
-> > > > >
-> > > > > It's not entirely clear what we're trying to fix. From what I can see
-> > > > > the crc work seems to be in no way synchronized with page flips, so
-> > > > > I'm not sure how all this is really supposed to work.
-> > > > >
-> > > >
-> > > > Hi, Ville!
-> > > >
-> > > > Thank you for the review! :)
-> > > >
-> > > > I do not understand well what crc code is doing, but the issue that I found
-> > > > is related to the vblank timestamp and frame count.
-> > > >
-> > > > When vkms handles the crc_cursor it uses the start frame and end frame
-> > > > values to verify if it needs to call the function 'drm_crtc_add_crc_entry()'
-> > > > for each frame.
-> > > >
-> > > > However, when getting the frame count, the code is calling the function
-> > > > drm_update_vblank_count(dev, pipe, false) and, because of the 'false',
-> > > > subtracting the actual vblank timestamp (consequently, the frame count
-> > > > value), causing conflicts.
-> > >
-> > > The in_vblank_irq behavour looks sane to me. What are these conflicts?
-> > >
-> > 
-> > The entire history was:
-> >  - I sent the patch with bugfix for vblank extra frame. The patch changed
-> >    our function vkms_get_vblank_timestamp() to look like this:
-> > 
-> > bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
-> >                    int *max_error, ktime_t *vblank_time,
-> >                    bool in_vblank_irq)
-> > {
-> >     struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
-> >     struct vkms_output *output = &vkmsdev->output;
-> > 
-> >     *vblank_time = output->vblank_hrtimer.node.expires;
-> > 
-> > +   if (!in_vblank_irq)
-> > +        *vblank_time -= output->period_ns;
-> > 
-> >     return true;
-> > }
-> > 
-> >  - This patch solve the issue that I was looking for (extra vblank
-> > frames on kms_flip).
-> > 
-> >  - However, kms_cursor_crc tests, which passed before my patch, started to fail.
-> > 
-> >  - Debugging them, I found that the problem was inside of function
-> > `vkms_vblank_simulate()`
-> > when it was handling the crc_enabled (inside  if (state && output->crc_enabled))
-> > and inside the function vkms_crc_work_handle() too.
-> > 
-> >  - Following the steps:
-> > 1. Inside vkms_vblank_simulate() we call drm_crtc_accurate_vblank_count()
-> > 2. In its turn, drm_crtc_accurate_vblank_count() calls the function
-> >    drm_update_vblank_count(dev, pipe, false).  /* This false is default */
-> > 3. Finally, the “false” used in drm_update_vblank_count(), will be
-> >   passed to vkms_get_vblank_timestamp() and the condition “if
-> >   (!in_vblank_irq)” will be executed multiple times (we don’t want it).
-> > 
-> >  - Inside vkms_crc, the issue is that the returned frame value change for
-> > every call of drm_crtc_accurate_vblank_count() because
-> > in_vblank_irq == false.
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-Hi Ville,
+This is a complete low memory killer solution for Android that is small
+and simple. It kills the largest, least-important processes it can find
+whenever a page allocation has completely failed (right after direct
+reclaim). Processes are killed according to the priorities that Android
+gives them, so that the least important processes are always killed
+first. Killing larger processes is preferred in order to free the most
+memory possible in one go.
+
+Simple LMK is integrated deeply into the page allocator in order to
+catch exactly when a page allocation fails and exactly when a page is
+freed. Failed page allocations that have invoked Simple LMK are placed
+on a queue and wait for Simple LMK to satisfy them. When a page is about
+to be freed, the failed page allocations are given priority over normal
+page allocations by Simple LMK to see if they can immediately use the
+freed page.
+
+Additionally, processes are continuously killed by failed small-order
+page allocations until they are satisfied.
+
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+ drivers/android/Kconfig      |  28 ++++
+ drivers/android/Makefile     |   1 +
+ drivers/android/simple_lmk.c | 301 +++++++++++++++++++++++++++++++++++
+ include/linux/sched.h        |   3 +
+ include/linux/simple_lmk.h   |  11 ++
+ kernel/fork.c                |   3 +
+ mm/page_alloc.c              |  13 ++
+ 7 files changed, 360 insertions(+)
+ create mode 100644 drivers/android/simple_lmk.c
+ create mode 100644 include/linux/simple_lmk.h
+
+diff --git a/drivers/android/Kconfig b/drivers/android/Kconfig
+index 6fdf2abe4..7469d049d 100644
+--- a/drivers/android/Kconfig
++++ b/drivers/android/Kconfig
+@@ -54,6 +54,34 @@ config ANDROID_BINDER_IPC_SELFTEST
+ 	  exhaustively with combinations of various buffer sizes and
+ 	  alignments.
  
-> OK. So why is it changing? AFAICS it should not change unless the
-> timer was moved forward in between the calls.
-
-Yes Ville, you’re right. We have to update it only when the function
-vkms_vblank_simulate() is invoked (timer move forward), and FWIU we do
-it when we call drm_crtc_handle_vblank(). However, the current
-implementation of vkms, has a call to drm_crtc_accurate_vblank_count()
-inside the vkms_vblank_simulate() which is a problem because it also
-update the vblank value. FWIU, this patch fixes this issue by taking the
-count value in the data struct instead of call
-drm_crtc_accurate_vblank_count() which will avoid the extra update.
-
-Thanks,
-Best Regards
++config ANDROID_SIMPLE_LMK
++	bool "Simple Android Low Memory Killer"
++	depends on !MEMCG
++	---help---
++	  This is a complete low memory killer solution for Android that is
++	  small and simple. It is integrated deeply into the page allocator to
++	  know exactly when a page allocation hits OOM and exactly when a page
++	  is freed. Processes are killed according to the priorities that
++	  Android gives them, so that the least important processes are always
++	  killed first.
++
++if ANDROID_SIMPLE_LMK
++
++config ANDROID_SIMPLE_LMK_MINFREE
++	int "Minimum MiB of memory to free per reclaim"
++	default "64"
++	help
++	  Simple LMK will free at least this many MiB of memory per reclaim.
++
++config ANDROID_SIMPLE_LMK_KILL_TIMEOUT
++	int "Kill timeout in milliseconds"
++	default "50"
++	help
++	  Simple LMK will only perform memory reclaim at most once per this
++	  amount of time.
++
++endif # if ANDROID_SIMPLE_LMK
++
+ endif # if ANDROID
  
-> > 
-> >  - To solve this, I used the value already calculated on vblank->count,
-> > instead of using the helper function that updates the value.
-> > 
-> > Shayenne
-> > 
-> > > >
-> > > > Does it make sense? I am not sure about this crc code behavior.
-> > > >
-> > > > Shayenne
-> > > >
-> > > > > > -Daniel
-> > > > > >
-> > > > > > > ---
-> > > > > > >  drivers/gpu/drm/vkms/vkms_crc.c  | 4 +++-
-> > > > > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 4 +++-
-> > > > > > >  2 files changed, 6 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
-> > > > > > > index d7b409a3c0f8..09a8b00ef1f1 100644
-> > > > > > > --- a/drivers/gpu/drm/vkms/vkms_crc.c
-> > > > > > > +++ b/drivers/gpu/drm/vkms/vkms_crc.c
-> > > > > > > @@ -161,6 +161,8 @@ void vkms_crc_work_handle(struct work_struct *work)
-> > > > > > >     struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
-> > > > > > >     struct vkms_device *vdev = container_of(out, struct vkms_device,
-> > > > > > >                                             output);
-> > > > > > > +   unsigned int pipe = drm_crtc_index(crtc);
-> > > > > > > +   struct drm_vblank_crtc *vblank = &crtc->dev->vblank[pipe];
-> > > > > > >     struct vkms_crc_data *primary_crc = NULL;
-> > > > > > >     struct vkms_crc_data *cursor_crc = NULL;
-> > > > > > >     struct drm_plane *plane;
-> > > > > > > @@ -196,7 +198,7 @@ void vkms_crc_work_handle(struct work_struct *work)
-> > > > > > >     if (primary_crc)
-> > > > > > >             crc32 = _vkms_get_crc(primary_crc, cursor_crc);
-> > > > > > >
-> > > > > > > -   frame_end = drm_crtc_accurate_vblank_count(crtc);
-> > > > > > > +   frame_end = vblank->count;
-> > > > > > >
-> > > > > > >     /* queue_work can fail to schedule crc_work; add crc for
-> > > > > > >      * missing frames
-> > > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > > > > > index 8a9aeb0a9ea8..9bf3268e2e92 100644
-> > > > > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > > > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > > > > > @@ -10,6 +10,8 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
-> > > > > > >                                               vblank_hrtimer);
-> > > > > > >     struct drm_crtc *crtc = &output->crtc;
-> > > > > > >     struct vkms_crtc_state *state = to_vkms_crtc_state(crtc->state);
-> > > > > > > +   unsigned int pipe = drm_crtc_index(crtc);
-> > > > > > > +   struct drm_vblank_crtc *vblank = &crtc->dev->vblank[pipe];
-> > > > > > >     u64 ret_overrun;
-> > > > > > >     bool ret;
-> > > > > > >
-> > > > > > > @@ -20,7 +22,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
-> > > > > > >             DRM_ERROR("vkms failure on handling vblank");
-> > > > > > >
-> > > > > > >     if (state && output->crc_enabled) {
-> > > > > > > -           u64 frame = drm_crtc_accurate_vblank_count(crtc);
-> > > > > > > +           u64 frame = vblank->count;
-> > > > > > >
-> > > > > > >             /* update frame_start only if a queued vkms_crc_work_handle()
-> > > > > > >              * has read the data
-> > > > > > > --
-> > > > > > > 2.17.1
-> > > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Daniel Vetter
-> > > > > > Software Engineer, Intel Corporation
-> > > > > > http://blog.ffwll.ch
-> > > > > > _______________________________________________
-> > > > > > dri-devel mailing list
-> > > > > > dri-devel@lists.freedesktop.org
-> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > > >
-> > > > > --
-> > > > > Ville Syrjälä
-> > > > > Intel
-> > >
-> > > --
-> > > Ville Syrjälä
-> > > Intel
-> 
-> -- 
-> Ville Syrjälä
-> Intel
-
+ endmenu
+diff --git a/drivers/android/Makefile b/drivers/android/Makefile
+index c7856e320..7c91293b6 100644
+--- a/drivers/android/Makefile
++++ b/drivers/android/Makefile
+@@ -3,3 +3,4 @@ ccflags-y += -I$(src)			# needed for trace events
+ obj-$(CONFIG_ANDROID_BINDERFS)		+= binderfs.o
+ obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o binder_alloc.o
+ obj-$(CONFIG_ANDROID_BINDER_IPC_SELFTEST) += binder_alloc_selftest.o
++obj-$(CONFIG_ANDROID_SIMPLE_LMK)	+= simple_lmk.o
+diff --git a/drivers/android/simple_lmk.c b/drivers/android/simple_lmk.c
+new file mode 100644
+index 000000000..8a441650a
+--- /dev/null
++++ b/drivers/android/simple_lmk.c
+@@ -0,0 +1,301 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Sultan Alsawaf <sultan@kerneltoast.com>.
++ */
++
++#define pr_fmt(fmt) "simple_lmk: " fmt
++
++#include <linux/mm.h>
++#include <linux/moduleparam.h>
++#include <linux/oom.h>
++#include <linux/sched.h>
++#include <linux/sizes.h>
++#include <linux/sort.h>
++
++#define MIN_FREE_PAGES (CONFIG_ANDROID_SIMPLE_LMK_MINFREE * SZ_1M / PAGE_SIZE)
++
++struct oom_alloc_req {
++	struct page *page;
++	struct completion done;
++	struct list_head lh;
++	unsigned int order;
++	int migratetype;
++};
++
++struct victim_info {
++	struct task_struct *tsk;
++	unsigned long size;
++};
++
++enum {
++	DISABLED,
++	STARTING,
++	READY,
++	KILLING
++};
++
++/* Pulled from the Android framework */
++static const short int adj_prio[] = {
++	906, /* CACHED_APP_MAX_ADJ */
++	905, /* Cached app */
++	904, /* Cached app */
++	903, /* Cached app */
++	902, /* Cached app */
++	901, /* Cached app */
++	900, /* CACHED_APP_MIN_ADJ */
++	800, /* SERVICE_B_ADJ */
++	700, /* PREVIOUS_APP_ADJ */
++	600, /* HOME_APP_ADJ */
++	500, /* SERVICE_ADJ */
++	400, /* HEAVY_WEIGHT_APP_ADJ */
++	300, /* BACKUP_APP_ADJ */
++	200, /* PERCEPTIBLE_APP_ADJ */
++	100, /* VISIBLE_APP_ADJ */
++	0    /* FOREGROUND_APP_ADJ */
++};
++
++/* Make sure that PID_MAX_DEFAULT isn't too big, or these arrays will be huge */
++static struct victim_info victim_array[PID_MAX_DEFAULT];
++static struct victim_info *victim_ptr_array[ARRAY_SIZE(victim_array)];
++static atomic_t simple_lmk_state = ATOMIC_INIT(DISABLED);
++static atomic_t oom_alloc_count = ATOMIC_INIT(0);
++static unsigned long last_kill_expires;
++static unsigned long kill_expires;
++static DEFINE_SPINLOCK(oom_queue_lock);
++static LIST_HEAD(oom_alloc_queue);
++
++static int victim_info_cmp(const void *lhs, const void *rhs)
++{
++	const struct victim_info **lhs_ptr = (typeof(lhs_ptr))lhs;
++	const struct victim_info **rhs_ptr = (typeof(rhs_ptr))rhs;
++
++	if ((*lhs_ptr)->size > (*rhs_ptr)->size)
++		return -1;
++
++	if ((*lhs_ptr)->size < (*rhs_ptr)->size)
++		return 1;
++
++	return 0;
++}
++
++static unsigned long scan_and_kill(int min_adj, int max_adj,
++				   unsigned long pages_needed)
++{
++	unsigned long pages_freed = 0;
++	unsigned int i, vcount = 0;
++	struct task_struct *tsk;
++
++	rcu_read_lock();
++	for_each_process(tsk) {
++		struct task_struct *vtsk;
++		unsigned long tasksize;
++		short oom_score_adj;
++
++		/* Don't commit suicide or kill kthreads */
++		if (same_thread_group(tsk, current) || tsk->flags & PF_KTHREAD)
++			continue;
++
++		vtsk = find_lock_task_mm(tsk);
++		if (!vtsk)
++			continue;
++
++		/* Don't kill tasks that have been killed or lack memory */
++		if (vtsk->slmk_sigkill_sent ||
++		    test_tsk_thread_flag(vtsk, TIF_MEMDIE)) {
++			task_unlock(vtsk);
++			continue;
++		}
++
++		oom_score_adj = vtsk->signal->oom_score_adj;
++		if (oom_score_adj < min_adj || oom_score_adj > max_adj) {
++			task_unlock(vtsk);
++			continue;
++		}
++
++		tasksize = get_mm_rss(vtsk->mm);
++		task_unlock(vtsk);
++		if (!tasksize)
++			continue;
++
++		/* Store this potential victim away for later */
++		get_task_struct(vtsk);
++		victim_array[vcount].tsk = vtsk;
++		victim_array[vcount].size = tasksize;
++		victim_ptr_array[vcount] = &victim_array[vcount];
++		vcount++;
++
++		/* The victim array is so big that this should never happen */
++		if (unlikely(vcount == ARRAY_SIZE(victim_array)))
++			break;
++	}
++	rcu_read_unlock();
++
++	/* No potential victims for this adj range means no pages freed */
++	if (!vcount)
++		return 0;
++
++	/*
++	 * Sort the victims in descending order of size in order to target the
++	 * largest ones first.
++	 */
++	sort(victim_ptr_array, vcount, sizeof(victim_ptr_array[0]),
++	     victim_info_cmp, NULL);
++
++	for (i = 0; i < vcount; i++) {
++		struct victim_info *victim = victim_ptr_array[i];
++		struct task_struct *vtsk = victim->tsk;
++
++		if (pages_freed >= pages_needed) {
++			put_task_struct(vtsk);
++			continue;
++		}
++
++		pr_info("killing %s with adj %d to free %lu MiB\n",
++			vtsk->comm, vtsk->signal->oom_score_adj,
++			victim->size * PAGE_SIZE / SZ_1M);
++
++		if (!do_send_sig_info(SIGKILL, SEND_SIG_PRIV, vtsk, true))
++			pages_freed += victim->size;
++
++		/* Unconditionally mark task as killed so it isn't reused */
++		vtsk->slmk_sigkill_sent = true;
++		put_task_struct(vtsk);
++	}
++
++	return pages_freed;
++}
++
++static void kill_processes(unsigned long pages_needed)
++{
++	unsigned long pages_freed = 0;
++	int i;
++
++	for (i = 1; i < ARRAY_SIZE(adj_prio); i++) {
++		pages_freed += scan_and_kill(adj_prio[i], adj_prio[i - 1],
++					     pages_needed - pages_freed);
++		if (pages_freed >= pages_needed)
++			break;
++	}
++}
++
++static void do_memory_reclaim(void)
++{
++	/* Only one reclaim can occur at a time */
++	if (atomic_cmpxchg(&simple_lmk_state, READY, KILLING) != READY)
++		return;
++
++	if (time_after_eq(jiffies, last_kill_expires)) {
++		kill_processes(MIN_FREE_PAGES);
++		last_kill_expires = jiffies + kill_expires;
++	}
++
++	atomic_set(&simple_lmk_state, READY);
++}
++
++static long reclaim_once_or_more(struct completion *done, unsigned int order)
++{
++	long ret;
++
++	/* Don't allow costly allocations to do memory reclaim more than once */
++	if (order > PAGE_ALLOC_COSTLY_ORDER) {
++		do_memory_reclaim();
++		return wait_for_completion_killable(done);
++	}
++
++	do {
++		do_memory_reclaim();
++		ret = wait_for_completion_killable_timeout(done, kill_expires);
++	} while (!ret);
++
++	return ret;
++}
++
++struct page *simple_lmk_oom_alloc(unsigned int order, int migratetype)
++{
++	struct oom_alloc_req page_req = {
++		.done = COMPLETION_INITIALIZER_ONSTACK(page_req.done),
++		.order = order,
++		.migratetype = migratetype
++	};
++	long ret;
++
++	if (atomic_read(&simple_lmk_state) <= STARTING)
++		return NULL;
++
++	spin_lock(&oom_queue_lock);
++	list_add_tail(&page_req.lh, &oom_alloc_queue);
++	spin_unlock(&oom_queue_lock);
++
++	atomic_inc(&oom_alloc_count);
++
++	/* Do memory reclaim and wait */
++	ret = reclaim_once_or_more(&page_req.done, order);
++	if (ret == -ERESTARTSYS) {
++		/* Give up since this process is dying */
++		spin_lock(&oom_queue_lock);
++		if (!page_req.page)
++			list_del(&page_req.lh);
++		spin_unlock(&oom_queue_lock);
++	}
++
++	atomic_dec(&oom_alloc_count);
++
++	return page_req.page;
++}
++
++bool simple_lmk_page_in(struct page *page, unsigned int order, int migratetype)
++{
++	struct oom_alloc_req *page_req;
++	bool matched = false;
++	int try_order;
++
++	if (atomic_read(&simple_lmk_state) <= STARTING ||
++	    !atomic_read(&oom_alloc_count))
++		return false;
++
++	/* Try to match this free page with an OOM allocation request */
++	spin_lock(&oom_queue_lock);
++	for (try_order = order; try_order >= 0; try_order--) {
++		list_for_each_entry(page_req, &oom_alloc_queue, lh) {
++			if (page_req->order == try_order &&
++			    page_req->migratetype == migratetype) {
++				matched = true;
++				break;
++			}
++		}
++
++		if (matched)
++			break;
++	}
++
++	if (matched) {
++		__ClearPageBuddy(page);
++		page_req->page = page;
++		list_del(&page_req->lh);
++		complete(&page_req->done);
++	}
++	spin_unlock(&oom_queue_lock);
++
++	return matched;
++}
++
++/* Enable Simple LMK when LMKD in Android writes to the minfree parameter */
++static int simple_lmk_init_set(const char *val, const struct kernel_param *kp)
++{
++	if (atomic_cmpxchg(&simple_lmk_state, DISABLED, STARTING) != DISABLED)
++		return 0;
++
++	/* Store the calculated kill timeout jiffies for frequent reuse */
++	kill_expires = msecs_to_jiffies(CONFIG_ANDROID_SIMPLE_LMK_KILL_TIMEOUT);
++	atomic_set(&simple_lmk_state, READY);
++	return 0;
++}
++
++static const struct kernel_param_ops simple_lmk_init_ops = {
++	.set = simple_lmk_init_set
++};
++
++/* Needed to prevent Android from thinking there's no LMK and thus rebooting */
++#undef MODULE_PARAM_PREFIX
++#define MODULE_PARAM_PREFIX "lowmemorykiller."
++module_param_cb(minfree, &simple_lmk_init_ops, NULL, 0200);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 1549584a1..d290f9ece 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1199,6 +1199,9 @@ struct task_struct {
+ 	unsigned long			lowest_stack;
+ 	unsigned long			prev_lowest_stack;
+ #endif
++#ifdef CONFIG_ANDROID_SIMPLE_LMK
++	bool slmk_sigkill_sent;
++#endif
+ 
+ 	/*
+ 	 * New fields for task_struct should be added above here, so that
+diff --git a/include/linux/simple_lmk.h b/include/linux/simple_lmk.h
+new file mode 100644
+index 000000000..64c26368a
+--- /dev/null
++++ b/include/linux/simple_lmk.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2019 Sultan Alsawaf <sultan@kerneltoast.com>.
++ */
++#ifndef _SIMPLE_LMK_H_
++#define _SIMPLE_LMK_H_
++
++struct page *simple_lmk_oom_alloc(unsigned int order, int migratetype);
++bool simple_lmk_page_in(struct page *page, unsigned int order, int migratetype);
++
++#endif /* _SIMPLE_LMK_H_ */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 9dcd18aa2..162c45392 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1881,6 +1881,9 @@ static __latent_entropy struct task_struct *copy_process(
+ 	p->sequential_io	= 0;
+ 	p->sequential_io_avg	= 0;
+ #endif
++#ifdef CONFIG_ANDROID_SIMPLE_LMK
++	p->slmk_sigkill_sent = false;
++#endif
+ 
+ 	/* Perform scheduler related setup. Assign this task to a CPU. */
+ 	retval = sched_fork(clone_flags, p);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3eb01dedf..fd0d697c6 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -67,6 +67,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/nmi.h>
+ #include <linux/psi.h>
++#include <linux/simple_lmk.h>
+ 
+ #include <asm/sections.h>
+ #include <asm/tlbflush.h>
+@@ -967,6 +968,11 @@ static inline void __free_one_page(struct page *page,
+ 		}
+ 	}
+ 
++#ifdef CONFIG_ANDROID_SIMPLE_LMK
++	if (simple_lmk_page_in(page, order, migratetype))
++		return;
++#endif
++
+ 	list_add(&page->lru, &zone->free_area[order].free_list[migratetype]);
+ out:
+ 	zone->free_area[order].nr_free++;
+@@ -4427,6 +4433,13 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 	if (costly_order && !(gfp_mask & __GFP_RETRY_MAYFAIL))
+ 		goto nopage;
+ 
++#ifdef CONFIG_ANDROID_SIMPLE_LMK
++	page = simple_lmk_oom_alloc(order, ac->migratetype);
++	if (page)
++		prep_new_page(page, order, gfp_mask, alloc_flags);
++	goto got_pg;
++#endif
++
+ 	if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
+ 				 did_some_progress > 0, &no_progress_loops))
+ 		goto retry;
 -- 
-Rodrigo Siqueira
-https://siqueira.tech
-Graduate Student
-Department of Computer Science
-University of São Paulo
+2.21.0
+
