@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDD4C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADED3C4360F
 	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5F420657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752472084F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 15:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1552231844;
-	bh=gKwavJztgwRqG8NGtZglngruY4eZ+Rq1QSPqqBxI89c=;
+	bh=TsvNBLcnOftsvSMlfWDOrff+Rl4m9ocTFD9DIP04u6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=daw9gr99dAVHNcTQFd/fm/0tuQ+N/91r/gogiqv1NKCYvCM5Pzg+RMTQuBUl2pHlR
-	 UTu8DPtZTx1CNJW/dTGD6iy0ISX44SrI8dCIPWtIzExTEMSmlOawL/a5i0dZNwhxsd
-	 PwpUpxd79lvNiI7QiQCw8Uk7rnZEJP6rqIfauroc=
+	b=HtokLcpzq5xvrQTLXCVsx9S4kaQ90gVW13CeGKo5YdspIAQfxfgqC4DbcpgPNQD3l
+	 w+AgWdHfDjnhrBx/W4oj8s919L57ICS0DtO0beOytI5d5N3wa6J7rc6bm5Grn8xXw6
+	 wyAMOQ2CA/hX6ZlMBI4uGEndcyxw2vunStCqG2gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfCJPaf (ORCPT
+        id S1726672AbfCJPam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 11:30:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51938 "EHLO mx1.redhat.com"
+        Sun, 10 Mar 2019 11:30:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41216 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfCJPae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 11:30:34 -0400
+        id S1726651AbfCJPal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 11:30:41 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 59C79307E049;
-        Sun, 10 Mar 2019 15:30:33 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 062223083394;
+        Sun, 10 Mar 2019 15:30:41 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D268A60863;
-        Sun, 10 Mar 2019 15:30:30 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8CDE60863;
+        Sun, 10 Mar 2019 15:30:38 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,159 +46,102 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH 1/5] perf session: Add __perf_session__process_dir_events function
-Date:   Sun, 10 Mar 2019 16:30:22 +0100
-Message-Id: <20190310153026.8661-2-jolsa@kernel.org>
+Subject: [PATCH 4/5] perf record: Add --output-dir option to store data in directory
+Date:   Sun, 10 Mar 2019 16:30:25 +0100
+Message-Id: <20190310153026.8661-5-jolsa@kernel.org>
 In-Reply-To: <20190310153026.8661-1-jolsa@kernel.org>
 References: <20190310153026.8661-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sun, 10 Mar 2019 15:30:33 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 10 Mar 2019 15:30:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding __perf_session__process_dir_events function
-to process events over the directory data.
+Adding --output-dir option to mimic -o and --dir options.
+following commands do the same:
 
-All directory events are pushed into sessions ordered
-data and flushed for processing.
+  $ perf record -o perf.dir.data --dir ...
+  $ perf record --output-dir perf.dir.data ...
 
-Link: http://lkml.kernel.org/n/tip-n3zl0wo3z18tatv5x7epmjrh@git.kernel.org
+User cannot use both -o and output-dir together,
+error is displayed.
+
+Link: http://lkml.kernel.org/n/tip-76ldd2ss6vjvlnjgwy7wxfzt@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/util/session.c | 104 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 102 insertions(+), 2 deletions(-)
+ tools/lib/subcmd/parse-options.h         |  4 ++++
+ tools/perf/Documentation/perf-record.txt |  3 +++
+ tools/perf/builtin-record.c              | 13 +++++++++++--
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 0ec34227bd60..b0c29a19f189 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1876,8 +1876,6 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 	file_offset = page_offset;
- 	head = rd->data_offset - page_offset;
+diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
+index af9def589863..8a3be77a3346 100644
+--- a/tools/lib/subcmd/parse-options.h
++++ b/tools/lib/subcmd/parse-options.h
+@@ -146,6 +146,10 @@ struct option {
+ 	  .value = check_vtype(v, const char **), .argh = (a), .help = (h), \
+ 	  .flags = PARSE_OPT_OPTARG, .defval = (intptr_t)(d), \
+ 	  .set = check_vtype(os, bool *)}
++#define OPT_STRING_SET(s, l, v, os, a, h) \
++	{ .type = OPTION_STRING, .short_name = (s), .long_name = (l), \
++	  .value = check_vtype(v, const char **), .argh = (a), .help = (h), \
++	  .set = check_vtype(os, bool *)}
+ #define OPT_STRING_NOEMPTY(s, l, v, a, h)   { .type = OPTION_STRING,  .short_name = (s), .long_name = (l), .value = check_vtype(v, const char **), .argh = (a), .help = (h), .flags = PARSE_OPT_NOEMPTY}
+ #define OPT_DATE(s, l, v, h) \
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = "time", .help = (h), .callback = parse_opt_approxidate_cb }
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 445b7a4eb130..aac609887fb7 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -527,6 +527,9 @@ Implies --tail-synthesize.
+ --dir::
+ Store data into directory with one data file for cpu.
  
--	ui_progress__init_size(prog, data_size, "Processing events...");
--
- 	data_size += rd->data_offset;
- 
- 	mmap_size = MMAP_SIZE;
-@@ -2006,6 +2004,105 @@ static int __perf_session__process_events(struct perf_session *session)
- 	return err;
- }
- 
-+static s64 process_index(struct perf_session *session,
-+			 union perf_event *event,
-+			 u64 file_offset)
-+{
-+	struct perf_evlist *evlist = session->evlist;
-+	u64 timestamp;
-+	s64 ret;
++--output-dir::
++Same as --dir option, can't be used together with -o option.
 +
-+	if (session->header.needs_swap)
-+		event_swap(event, perf_evlist__sample_id_all(evlist));
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 26981be13aa0..115316e94b34 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -80,6 +80,7 @@ struct record {
+ 	bool			buildid_all;
+ 	bool			timestamp_filename;
+ 	bool			timestamp_boundary;
++	bool			output_is_file;
+ 	struct switch_output	switch_output;
+ 	unsigned long long	samples;
+ 	cpu_set_t		affinity_mask;
+@@ -1921,8 +1922,10 @@ static struct option __record_options[] = {
+ 	OPT_STRING('C', "cpu", &record.opts.target.cpu_list, "cpu",
+ 		    "list of cpus to monitor"),
+ 	OPT_U64('c', "count", &record.opts.user_interval, "event period to sample"),
+-	OPT_STRING('o', "output", &record.data.path, "file",
+-		    "output file name"),
++	OPT_STRING_SET('o', "output", &record.data.path, &record.output_is_file,
++		       "file", "output file name"),
++	OPT_STRING_SET(0, "output-dir", &record.data.path, &record.data.is_dir,
++		       "file", "output directory name"),
+ 	OPT_BOOLEAN_SET('i', "no-inherit", &record.opts.no_inherit,
+ 			&record.opts.no_inherit_set,
+ 			"child tasks do not inherit counters"),
+@@ -2101,6 +2104,12 @@ int cmd_record(int argc, const char **argv)
+ 			"cgroup monitoring only available in system-wide mode");
+ 
+ 	}
 +
-+	if (event->header.type >= PERF_RECORD_HEADER_MAX)
++	if (perf_data__is_dir(&rec->data) && record.output_is_file) {
++		ui__error("cannot use both -o and --output-dir\n");
 +		return -EINVAL;
-+
-+	events_stats__inc(&evlist->stats, event->header.type);
-+
-+	if (event->header.type >= PERF_RECORD_USER_TYPE_START)
-+		return perf_session__process_user_event(session, event, file_offset);
-+
-+	ret = perf_evlist__parse_sample_timestamp(evlist, event, &timestamp);
-+	if (ret)
-+		return ret;
-+
-+	return ordered_events__queue(&session->ordered_events, event,
-+				     timestamp, file_offset);
-+}
-+
-+/*
-+ * This function reads, merge and process directory data.
-+ * It assumens the version 1 of directory data, where each
-+ * data file holds per-cpu data, already sorted by kernel.
-+ */
-+static int __perf_session__process_dir_events(struct perf_session *session)
-+{
-+	struct perf_data *data = session->data;
-+	struct perf_tool *tool = session->tool;
-+	struct reader rd = {
-+		.fd		= perf_data__fd(session->data),
-+		.data_size	= session->header.data_size,
-+		.data_offset	= session->header.data_offset,
-+		.process	= process_simple,
-+	};
-+	int i, ret = 0;
-+	struct ui_progress prog;
-+	u64 total_size = perf_data__size(session->data);
-+
-+	perf_tool__fill_defaults(tool);
-+
-+	ui_progress__init_size(&prog, total_size, "Processing events...");
-+
-+	/*
-+	 * The data are sequentially read into session->ordered_events
-+	 * queue, without no flushing during the reading. When all of
-+	 * data is merged in, we flush the whole queue.
-+	 *
-+	 * Note, that we don't store PERF_RECORD_FINISHED_ROUND events
-+	 * for directory data, so there are no 'middle' flushes of the
-+	 * queue, just the final, when all is in.
-+	 *
-+	 * Read first data from the header file..
-+	 */
-+	ret = reader__process_events(&rd, session, &prog);
-+	if (ret)
-+		goto out_err;
-+
-+	/* ... and continue with data files.. */
-+	for (i = 0; i < data->dir.nr ; i++) {
-+		struct perf_data_file *file = &data->dir.files[i];
-+
-+		if (file->size == 0)
-+			continue;
-+
-+		rd = (struct reader) {
-+			.fd		= file->fd,
-+			.data_size	= file->size,
-+			.data_offset	= 0,
-+			.process	= process_index,
-+		};
-+
-+		ret = reader__process_events(&rd, session, &prog);
-+		if (ret)
-+			goto out_err;
 +	}
 +
-+	/* ... and flush everything out. */
-+	ret = ordered_events__flush(&session->ordered_events, OE_FLUSH__FINAL);
-+
-+out_err:
-+	if (!tool->no_warn)
-+		perf_session__warn_about_errors(session);
-+
-+	/*
-+	 * We may switching perf.data output, make ordered_events
-+	 * reusable.
-+	 */
-+	ordered_events__reinit(&session->ordered_events);
-+	return ret;
-+}
-+
- int perf_session__process_events(struct perf_session *session)
- {
- 	if (perf_session__register_idle_thread(session) < 0)
-@@ -2014,6 +2111,9 @@ int perf_session__process_events(struct perf_session *session)
- 	if (perf_data__is_pipe(session->data))
- 		return __perf_session__process_pipe_events(session);
- 
-+	if (perf_data__is_dir(session->data))
-+		return __perf_session__process_dir_events(session);
-+
- 	return __perf_session__process_events(session);
- }
- 
+ 	if (rec->opts.record_switch_events &&
+ 	    !perf_can_record_switch_events()) {
+ 		ui__error("kernel does not support recording context switch events\n");
 -- 
 2.17.2
 
