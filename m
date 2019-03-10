@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F4BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48FDC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782ED206DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DE2206DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1MI6x7r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lr4ertf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfCJSMb (ORCPT
+        id S1726982AbfCJSMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:12:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45159 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfCJSM2 (ORCPT
+        Sun, 10 Mar 2019 14:12:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41288 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfCJSMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:12:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o7so2622599wrp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:12:27 -0700 (PDT)
+        Sun, 10 Mar 2019 14:12:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n2so2639890wrw.8
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=l1TfFyjmju0trauNzj8mLdRPLJSW2/vzxX4W6lPtYQU=;
-        b=K1MI6x7r3euOnbBHikS92atb94FGWXGGScoBwetmCeXSMUrKI1PH3sC+IShkd/WY3f
-         2SqVuUnAZ1m5d0KfSuxwS/SB+pldGFkmA/2rlvw9FhRRwOj7Maq9RFsSN0hOnoT41MV+
-         21ffC/1GjDBd5l8UR6JxhLVxTSgLBokO9FwrPnZ7ymK+4geUdmpoaaVekP7qtfGgRVvf
-         9Xhq6J8Tw5bWYagtmkcpF6TJLbXIAPxdsMpyJW8Ok7YeU2nskO2Wx/t0hisq2f4HypEm
-         Tl320rPWZWNj/YkId116uWGHmeBh+RlPgQLpVCzQL4ds6GXqG8odFFi8E5bOPAagrE2B
-         hBKg==
+        bh=7PDjwfDL/90N589WNTZ9R1L1ulLSIazVR8UDi7lsijE=;
+        b=Lr4ertf0tzp5hH0U25sR+JkJzcx66Ugrnyw3/M1VV8GpvKJ+srbt6fPHavCY+BIWXY
+         zSDDAHt8Dbmdch71AW3EN9EesYKa4GWuIna+Z8H4tBUaAPvo/hTcIy1gwIsifbV7zcyT
+         VMSuiE1aXZkhP43vwfIWg/DfMK8ND7/njZSkh4rnokOcxi6TmiY0JkR812RZjk23T5F2
+         t87hNhejsy4WZo76g5XJX78Am5+W1eaJFEhgAv8XGjkriqcUtKBPXDRu3JJ8RJsPkzYc
+         V9ymFUgmxysjmid36aZEOfqIp/e/1MNweHbxJHgRo3CZ9cX1fIm2fbMLEc7LC8geg9b8
+         kiKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=l1TfFyjmju0trauNzj8mLdRPLJSW2/vzxX4W6lPtYQU=;
-        b=pHqqFYiXbk78/LjHGKoL+HEh9iJP+QNu8m03qc0ol1cqzPx5ATuMfAubsqg66h/k+U
-         Y4ZUA54VAWwKAHVw0WWGBZX7aQ7F02AdCe2NLeb5DvsZifefNTSsbi7M8HJvj63dt/hC
-         eEOKhbXtFti3E+m65XdCm0c43zsELqUGRk+eXcNcCeV+1Emcm8NgSBYSMz9QmDryOQZ9
-         Gv131uFfgjphI9zmY+GIElhjzmAPu1cruakwsxTx5KVNZV9/w6vm5v5fisqTizZvv8ST
-         /FbkLxImD8zw/2sB3GQlMCBq4eWkOxCL0l5bWSfeD3BnfDzQHXODOZKSjku7hpEBgec5
-         hNMw==
-X-Gm-Message-State: APjAAAW7Q/Yu1cM8Mlev7z6TLnsj0lF6etwoGfgByRChg75OGhSM7bg0
-        ysQ3cP3jNkPJfYdd5be7EpcYOA==
-X-Google-Smtp-Source: APXvYqylKw74GOhyIvjXfI0KuxScRGKe0OQZl+Ajt1lnsEprRpSq/SXprnSDc1heL75HIW8wE80ncw==
-X-Received: by 2002:adf:e442:: with SMTP id t2mr4773085wrm.256.1552241546350;
-        Sun, 10 Mar 2019 11:12:26 -0700 (PDT)
+        bh=7PDjwfDL/90N589WNTZ9R1L1ulLSIazVR8UDi7lsijE=;
+        b=lRGjEyiMbcQ/BlhCaG36JnQoK1o6yrcitTlSfs48yrM4ysy2zSNOAFgM34edfrMTwg
+         NUz1I/vQOtGwJ7MaYC0OWN2mA40yOoLqaqanjfKUh8ETSuM0PxPHAK4YdlvQsxQGatsw
+         Jtj5/lvBz5GreWl5UL5FaNGcRgdm0EzubEg/O0F7n7Q9mHKNqulMvPpPYj6TddUcZXMJ
+         IU5QeYyZc4lKK0oM3efe9iygJ/Kai9eKNPGq9BZztLlHh4t7XLxhMa59ifRUyj+S9sAM
+         0Vkqz9UwVb0cBXZtGkDgTUAFmilCDMfmN2MDHgrlQf7a0y50+hZgl1DPecLM59E50fg5
+         BSxQ==
+X-Gm-Message-State: APjAAAV7o0ymJ33lbAErWUehdm30bjIuzebSzMtjSp5KwvRlvfBD6vfX
+        5bu/s6H2+RPnQs5sTiddOa64D6CTiWc=
+X-Google-Smtp-Source: APXvYqy1mWP2noMS44y+gLtCtrBGyqLftIM+m3wzS00/ZOhkuAbiXrZdlgRHBpUTGy7Afrb5BZbiMQ==
+X-Received: by 2002:adf:e64c:: with SMTP id b12mr8935701wrn.112.1552241542338;
+        Sun, 10 Mar 2019 11:12:22 -0700 (PDT)
 Received: from localhost.localdomain (146-241-67-113.dyn.eolo.it. [146.241.67.113])
-        by smtp.gmail.com with ESMTPSA id d206sm24906368wmc.11.2019.03.10.11.12.24
+        by smtp.gmail.com with ESMTPSA id d206sm24906368wmc.11.2019.03.10.11.12.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 11:12:25 -0700 (PDT)
+        Sun, 10 Mar 2019 11:12:21 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         broonie@kernel.org, bfq-iosched@googlegroups.com,
         oleksandr@natalenko.name, fra.fra.800@gmail.com,
         alessio.masola@gmail.com, Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT V2 8/9] block, bfq: save & resume weight on a queue merge/split
-Date:   Sun, 10 Mar 2019 19:11:36 +0100
-Message-Id: <20190310181137.2604-9-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V2 6/9] block, bfq: always protect newly-created queues from existing active queues
+Date:   Sun, 10 Mar 2019 19:11:34 +0100
+Message-Id: <20190310181137.2604-7-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190310181137.2604-1-paolo.valente@linaro.org>
 References: <20190310181137.2604-1-paolo.valente@linaro.org>
@@ -76,66 +76,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Pollicino <fra.fra.800@gmail.com>
+If many bfq_queues belonging to the same group happen to be created
+shortly after each other, then the processes associated with these
+queues have typically a common goal. In particular, bursts of queue
+creations are usually caused by services or applications that spawn
+many parallel threads/processes. Examples are systemd during boot, or
+git grep. If there are no other active queues, then, to help these
+processes get their job done as soon as possible, the best thing to do
+is to reach a high throughput. To this goal, it is usually better to
+not grant either weight-raising or device idling to the queues
+associated with these processes. And this is exactly what BFQ
+currently does.
 
-bfq saves the state of a queue each time a merge occurs, to be
-able to resume such a state when the queue is associated again
-with its original process, on a split.
+There is however a drawback: if, in contrast, some other queues are
+already active, then the newly created queues must be protected from
+the I/O flowing through the already existing queues. In this case, the
+best thing to do is the opposite as in the other case: it is much
+better to grant weight-raising and device idling to the newly-created
+queues, if they deserve it. This commit addresses this issue by doing
+so if there are already other active queues.
 
-Unfortunately bfq does not save & restore also the weight of the
-queue. If the weight is not correctly resumed when the queue is
-recycled, then the weight of the recycled queue could differ
-from the weight of the original queue.
+This change also helps eliminating false positives, which occur when
+the newly-created queues do not belong to an actual large burst of
+creations, but some background task (e.g., a service) happens to
+trigger the creation of new queues in the middle, i.e., very close to
+when the victim queues are created. These false positive may cause
+total loss of control on process latencies.
 
-This commit adds the missing save & resume of the weight.
-
-Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 2 ++
- block/bfq-iosched.h | 9 +++++++++
- 2 files changed, 11 insertions(+)
+ block/bfq-iosched.c | 64 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 51 insertions(+), 13 deletions(-)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 7d95d9c01036..1712d12340c0 100644
+index d34b80e5c47d..500b04df9efa 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -1028,6 +1028,7 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
- 	else
- 		bfq_clear_bfqq_IO_bound(bfqq);
+@@ -1075,8 +1075,18 @@ static void bfq_reset_burst_list(struct bfq_data *bfqd, struct bfq_queue *bfqq)
  
-+	bfqq->entity.new_weight = bic->saved_weight;
- 	bfqq->ttime = bic->saved_ttime;
- 	bfqq->wr_coeff = bic->saved_wr_coeff;
- 	bfqq->wr_start_at_switch_to_srt = bic->saved_wr_start_at_switch_to_srt;
-@@ -2502,6 +2503,7 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
- 	if (!bic)
- 		return;
- 
-+	bic->saved_weight = bfqq->entity.orig_weight;
- 	bic->saved_ttime = bfqq->ttime;
- 	bic->saved_has_short_ttime = bfq_bfqq_has_short_ttime(bfqq);
- 	bic->saved_IO_bound = bfq_bfqq_IO_bound(bfqq);
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 6410cc9a064d..1e34cce59ba7 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -404,6 +404,15 @@ struct bfq_io_cq {
- 	 */
- 	bool was_in_burst_list;
- 
-+	/*
-+	 * Save the weight when a merge occurs, to be able
-+	 * to restore it in case of split. If the weight is not
-+	 * correctly resumed when the queue is recycled,
-+	 * then the weight of the recycled queue could differ
-+	 * from the weight of the original queue.
-+	 */
-+	unsigned int saved_weight;
+ 	hlist_for_each_entry_safe(item, n, &bfqd->burst_list, burst_list_node)
+ 		hlist_del_init(&item->burst_list_node);
+-	hlist_add_head(&bfqq->burst_list_node, &bfqd->burst_list);
+-	bfqd->burst_size = 1;
 +
- 	/*
- 	 * Similar to previous fields: save wr information.
- 	 */
++	/*
++	 * Start the creation of a new burst list only if there is no
++	 * active queue. See comments on the conditional invocation of
++	 * bfq_handle_burst().
++	 */
++	if (bfq_tot_busy_queues(bfqd) == 0) {
++		hlist_add_head(&bfqq->burst_list_node, &bfqd->burst_list);
++		bfqd->burst_size = 1;
++	} else
++		bfqd->burst_size = 0;
++
+ 	bfqd->burst_parent_entity = bfqq->entity.parent;
+ }
+ 
+@@ -1132,7 +1142,8 @@ static void bfq_add_to_burst(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+  * many parallel threads/processes. Examples are systemd during boot,
+  * or git grep. To help these processes get their job done as soon as
+  * possible, it is usually better to not grant either weight-raising
+- * or device idling to their queues.
++ * or device idling to their queues, unless these queues must be
++ * protected from the I/O flowing through other active queues.
+  *
+  * In this comment we describe, firstly, the reasons why this fact
+  * holds, and, secondly, the next function, which implements the main
+@@ -1144,7 +1155,10 @@ static void bfq_add_to_burst(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+  * cumulatively served, the sooner the target job of these queues gets
+  * completed. As a consequence, weight-raising any of these queues,
+  * which also implies idling the device for it, is almost always
+- * counterproductive. In most cases it just lowers throughput.
++ * counterproductive, unless there are other active queues to isolate
++ * these new queues from. If there no other active queues, then
++ * weight-raising these new queues just lowers throughput in most
++ * cases.
+  *
+  * On the other hand, a burst of queue creations may be caused also by
+  * the start of an application that does not consist of a lot of
+@@ -1178,14 +1192,16 @@ static void bfq_add_to_burst(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+  * are very rare. They typically occur if some service happens to
+  * start doing I/O exactly when the interactive task starts.
+  *
+- * Turning back to the next function, it implements all the steps
+- * needed to detect the occurrence of a large burst and to properly
+- * mark all the queues belonging to it (so that they can then be
+- * treated in a different way). This goal is achieved by maintaining a
+- * "burst list" that holds, temporarily, the queues that belong to the
+- * burst in progress. The list is then used to mark these queues as
+- * belonging to a large burst if the burst does become large. The main
+- * steps are the following.
++ * Turning back to the next function, it is invoked only if there are
++ * no active queues (apart from active queues that would belong to the
++ * same, possible burst bfqq would belong to), and it implements all
++ * the steps needed to detect the occurrence of a large burst and to
++ * properly mark all the queues belonging to it (so that they can then
++ * be treated in a different way). This goal is achieved by
++ * maintaining a "burst list" that holds, temporarily, the queues that
++ * belong to the burst in progress. The list is then used to mark
++ * these queues as belonging to a large burst if the burst does become
++ * large. The main steps are the following.
+  *
+  * . when the very first queue is created, the queue is inserted into the
+  *   list (as it could be the first queue in a possible burst)
+@@ -5695,7 +5711,29 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
+ 		}
+ 	}
+ 
+-	if (unlikely(bfq_bfqq_just_created(bfqq)))
++	/*
++	 * Consider bfqq as possibly belonging to a burst of newly
++	 * created queues only if:
++	 * 1) A burst is actually happening (bfqd->burst_size > 0)
++	 * or
++	 * 2) There is no other active queue. In fact, if, in
++	 *    contrast, there are active queues not belonging to the
++	 *    possible burst bfqq may belong to, then there is no gain
++	 *    in considering bfqq as belonging to a burst, and
++	 *    therefore in not weight-raising bfqq. See comments on
++	 *    bfq_handle_burst().
++	 *
++	 * This filtering also helps eliminating false positives,
++	 * occurring when bfqq does not belong to an actual large
++	 * burst, but some background task (e.g., a service) happens
++	 * to trigger the creation of new queues very close to when
++	 * bfqq and its possible companion queues are created. See
++	 * comments on bfq_handle_burst() for further details also on
++	 * this issue.
++	 */
++	if (unlikely(bfq_bfqq_just_created(bfqq) &&
++		     (bfqd->burst_size > 0 ||
++		      bfq_tot_busy_queues(bfqd) == 0)))
+ 		bfq_handle_burst(bfqd, bfqq);
+ 
+ 	return bfqq;
 -- 
 2.20.1
 
