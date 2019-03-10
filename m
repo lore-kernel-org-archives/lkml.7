@@ -2,123 +2,88 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366EAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 12:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21820C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 12:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036C0206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 12:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D976D2084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 12:47:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ljWOUTfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCJMMv (ORCPT
+        id S1726505AbfCJMrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 08:12:51 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:16014 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfCJMMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 08:12:50 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id AA3DDA1119;
-        Sun, 10 Mar 2019 13:12:46 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id XhzdcrBNJiZw; Sun, 10 Mar 2019 13:12:37 +0100 (CET)
-Date:   Sun, 10 Mar 2019 23:12:22 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jann Horn <jannh@google.com>, Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RESEND v5 2/5] namei: O_BENEATH-style path resolution
- flags
-Message-ID: <20190310121222.p5x5gxi3t3sy7p23@yavin>
-References: <20190306191244.8691-1-cyphar@cyphar.com>
- <20190306191244.8691-3-cyphar@cyphar.com>
- <CAHk-=wgGKWRTgSYKkgMEf1QOg0PZSpmBha+2LCHCBOar0e8cug@mail.gmail.com>
- <20190309172631.ygfdhrn4rcwkgfmk@brauner.io>
- <CAHk-=whMuk-b6rzhbF2=vVNOuEZk8-opRJ1fD07a9ztQ+V97Aw@mail.gmail.com>
+        Sun, 10 Mar 2019 08:47:07 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42970 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbfCJMrH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 08:47:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IYURsCA7wYU7KPGkG0eMg3FFUlv0OL24IBlYWRvSY80=; b=ljWOUTfjUyWPg+/2qW6nDZE3e
+        RywceWyEes4pVx64URDPE0Rdd1Mu0vUVhQbeFSPhy4amXha92byt+57j1ksXFcNzOjc0w0zHhhUtb
+        ZBIZZWusAUMeauUNEQiX9PTUXAS/PAmOxoTBuG/KTggDFTUparVVp2eU5JFW9kyT2Gf/1T/KBN3m2
+        9cwku/ehcVLJ/QeHfRVwrcKZhlMA4yMu2PKwobCcK8LWiYTSpcuSJqz3Iyp+lirYy0Mm+8zV6KXwN
+        kaPGqgdi/wpvYKD7FHRh0ZNiWY+hLRsU2XqR/kjmtHZ5ITrQ+g+UWjabc++JzJo39IFbdDj4r8pG8
+        Lp5XUUhZw==;
+Received: from [188.207.104.17] (helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h2xqv-0003uw-Lr; Sun, 10 Mar 2019 12:46:53 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F202981BBE; Sun, 10 Mar 2019 13:46:50 +0100 (CET)
+Date:   Sun, 10 Mar 2019 13:46:50 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/5] x86/percpu semantics and fixes
+Message-ID: <20190310124650.GA6840@worktop.programming.kicks-ass.net>
+References: <20190227101252.413192716@infradead.org>
+ <20190308145031.GY32494@hirez.programming.kicks-ass.net>
+ <64526663-1F10-42A6-A005-92657264D587@vmware.com>
+ <20190308205637.GC2482@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qidgb2d5gkyjstpk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whMuk-b6rzhbF2=vVNOuEZk8-opRJ1fD07a9ztQ+V97Aw@mail.gmail.com>
+In-Reply-To: <20190308205637.GC2482@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 08, 2019 at 09:56:37PM +0100, Peter Zijlstra wrote:
 
---qidgb2d5gkyjstpk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Anyway, can anybody explain percpu_stable_op() vs percpu_from_op() ?
+> 
+> I'm thinking of a variant of Linus' patch, but I'm confused about the
+> above.
 
-On 2019-03-09, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Sat, Mar 9, 2019 at 9:26 AM Christian Brauner <christian@brauner.io> w=
-rote:
-> > Aside from that I want to point out that it is non-trivial to do this in
-> > user space.
->=20
-> Oh, absolutely agreed. It's easy to do it in the kernel, and doing it
-> anywhere else ends up having horrible races that the kernel has to
-> deal with and has long solved anyway.
+So whatever I tried with +m only made things worse and always affects
+thousands of symbols.
 
-We've seen in the past few years, there are also plenty of CVEs from the
-container runtime side of things which show that some of these races are
-also exploitable. Even with some of the most convoluted O_PATH "fd
-re-opening" trickery, it's incredibly difficult to both scope symlinks
-inside a container and safely detect cases where you've been tricked by
-a malicious actor.
+Now, afaict the whole percpu_stable_op thing is an ugly hack becaues some
+earlier compiler would not CSE the regular percpu_from_op. But since it
+does do that today; esp. after my first patch, I tried implementing
+this_cpu_read_stable() with percpu_from_op() (no volatile, obv).
 
-> I've only seen this (2/5) patch, so I won't comment on the other ones,
-> but this still makes sense to me.
+That also affects _lots_ of sites, but also significantly shrinks the
+kernel image.
 
-I'll make sure to add you to the series Cc if/when there's a v6.
+It's 2307 symbols affected, but:
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+17642871        2157438  747808 20548117        1398a15 defconfig-build1/vmlinux.o (patch 1)
+17639081        2157438  747808 20544327        1397b47 defconfig-build0/vmlinux.o (patch 1 - percpu_stable_op)
 
---qidgb2d5gkyjstpk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlyE/yEACgkQSnvnv3De
-m5/PhQ//VnslIB/uTSS+k6C/M/G8DH5OUhDYC0DJNwIEFBKgXKY9COO28DKVpoWO
-iLYAqhbYXgTKqpjOi5bYJvX7kCuz4zHpMhMXgpWwbXg8dJ748D/qZTmdr/N8I75M
-eQwqxh5Io/2/8EjXXyhDdkq4lSPDT+iPjbrmeaZlKLpqVwFufJb2pAkrJNjWkkgE
-CKKYl6rqaXBy9QFcVrSbCqCsnE+HdNfhRxfO/VfcyjAfEDHQxMKzO/+X2JBBh34B
-+vxBHyZ5vlwNCUXEg4qfkeeRN8EZYcvh+aq95cwxlWbNw8FKVyAIb+tCF9VD25+z
-ta4FfwnCd2mOumQErw57dkqAiwAIeWnVIFqzazGfkFAWEXWBVzq6/4KfKmK3U6Lq
-zWxI2JnnR8XViL18EhKg2l2hQfeU0Ba1WUu46AMJM2VLBSivG65ADNktM2Vl8PZM
-WqinqScExdUxa47uzrfbiUZBBzzekm77Th/a773RoaG6ap/sL0lrwSVnQS+nU5HE
-TnDrnWu/hdqaJSgMYpMaftKE04q9MEyr8VAnKaHc44mnLCZziwAEGcRArngRi5PZ
-1rZ6OcmQf5DkluGyJfg/gzZ47XOpu91JNAXKQFihVERUzSFocncylDvlPMw5LdEZ
-qIOEX+6dPXo+g9SODVO1T4XI8qBZ9VPKEyMbORarpgIKMRGaQbQ=
-=4U9I
------END PGP SIGNATURE-----
-
---qidgb2d5gkyjstpk--
+So I think I'll add a patch removing percpu_stable_op and all its users.
