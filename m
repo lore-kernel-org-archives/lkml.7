@@ -2,87 +2,140 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86644C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA1BC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4993020657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797D320657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="aimmYDKR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="YiF51NDg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfCJVTl (ORCPT
+        id S1726870AbfCJVVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 17:19:41 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45606 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfCJVTk (ORCPT
+        Sun, 10 Mar 2019 17:21:49 -0400
+Received: from vulcan.natalenko.name ([104.207.131.136]:40404 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfCJVVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 17:19:40 -0400
-Received: by mail-ed1-f67.google.com with SMTP id f19so2349805eds.12
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JKG5xdlN5NKxquHkjkAuYuyTauOUTcmnssUoglNZYPs=;
-        b=aimmYDKRx0j4HNw4oE8ktvwvViTAS/3d2e4oR+DOP7hkuhiC45pigimGr2+qq6aYBn
-         wDAYBMLFPe7ersE5FwQ6VaDWdGbZcS9zgNkl9aLVvsuswinA/71FlNf3Bljl5D2qxepF
-         MXoPQB1qVC0tZjpiITH2ClR61gbURrEFbTSYk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JKG5xdlN5NKxquHkjkAuYuyTauOUTcmnssUoglNZYPs=;
-        b=n8osNrs5ieuQ8ZK2b8KmF4X4i8WhvcVooR0C2l7Hnh0dMcuQ1Y+r7mPCc5vl9snKwz
-         mUadgXNshwsq/hqd7qd2YJV3u5a29jQMG8cAVHcE8WqvDjUKNDx74aO+Y9N2S1FcPT8J
-         F9ekuNQOAkhh6Wig6koNgYk7DD4xaIRxG34B1ySmDjYLErNKVJjZxivgF/7hPzs1S8Vu
-         19Df/FPuTiZBHmHNyeU/RR1N3Fff2FLStPuG9/8mNDtlGJZSl5/neGJi+sxBc7/wj+Vz
-         Zzf497/wo55g8zSolUFMqugBqvLI/C7GhmXCR8jwp3cffdCb+LqYzv2RvbktqW0I8H/P
-         +klA==
-X-Gm-Message-State: APjAAAXCwA3PNSQVk6S06xOB+p27AUVAOy5/WkvcTB9Z0PcQi1q5OXG/
-        /v8rzsvvBNL+cGEc0dtDC7+68rPC8Jl2IQ==
-X-Google-Smtp-Source: APXvYqwe2fXd6j2H2Dr+bqjGl2sjVWEG8kX552HjIlPxmw8tZDXDFezbBYaJWD+3n2tGk4bhvhHvNQ==
-X-Received: by 2002:a17:906:13c8:: with SMTP id g8mr1423550ejc.49.1552252778959;
-        Sun, 10 Mar 2019 14:19:38 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-117-145.cgn.fibianet.dk. [5.186.117.145])
-        by smtp.gmail.com with ESMTPSA id l15sm2608112ejn.77.2019.03.10.14.19.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 14:19:38 -0700 (PDT)
-Subject: Re: [PATCH] static_assert: move before people start using it
-To:     Alexey Dobriyan <adobriyan@gmail.com>, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
-References: <20190310105157.GA15039@avx2>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <1d957ac2-3423-2471-6b7f-f6f25dd0273d@rasmusvillemoes.dk>
-Date:   Sun, 10 Mar 2019 22:19:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sun, 10 Mar 2019 17:21:47 -0400
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id 980C34F961F;
+        Sun, 10 Mar 2019 22:21:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1552252903;
+        h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZDXGufe+RVvE9rLnjl0k6TurgSY39BAFEAfs/tNsDR4=;
+        b=YiF51NDgew/mr73S+1gLlsm2+EA6heU/pKeK1wwBmR6UEROqosLvKPyZwYei8duAezVuiw
+        Uh3/0yEmAfwCpL/ceo0VlLBam0Sm+Vh/mbyUCjkkU27Sk2UqkqtYn6mXZ9eGTO+Sz4phuG
+        YMyon6Pwh+6KdAcuUJPGMHREslCq4ow=
 MIME-Version: 1.0
-In-Reply-To: <20190310105157.GA15039@avx2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Sun, 10 Mar 2019 22:21:43 +0100
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, broonie@kernel.org,
+        bfq-iosched@googlegroups.com, fra.fra.800@gmail.com,
+        alessio.masola@gmail.com
+Subject: Re: [PATCH BUGFIX IMPROVEMENT V2 0/9] block, bfq: fix bugs, reduce
+ exec time and boost performance
+In-Reply-To: <20190310181137.2604-1-paolo.valente@linaro.org>
+References: <20190310181137.2604-1-paolo.valente@linaro.org>
+Message-ID: <8325fa983ce0e4aec257704861cfe87b@natalenko.name>
+X-Sender: oleksandr@natalenko.name
+User-Agent: Roundcube Webmail/1.3.8
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=arc-20170712; t=1552252903;
+        h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZDXGufe+RVvE9rLnjl0k6TurgSY39BAFEAfs/tNsDR4=;
+        b=w+tILmqk+ayGZc25yKL03Tj2SaWacu9v+MzylUjqeVKrjJ80eIZ6a4ExsmCRqwsmscbld6
+        6GcK2blWjQnk/vmbCFKqbDT6c4zxaunYo2K3icheJ5W3I6lZosB8Z4mI+AbSnJbOYYpC0J
+        Jxb1HDi0GcsTnmIf4lDU5e5om6R2upM=
+ARC-Seal: i=1; s=arc-20170712; d=natalenko.name; t=1552252903; a=rsa-sha256;
+        cv=none;
+        b=yVLjaJTzVgzYsssEIHLpzxDcY7iAv8XJOPlyZCOL9hCrNGASX/4PgJuSu4r/IoHCfTh88J
+        Ijyjuu7JGmgnCroiOKP4o6H1xP64pIH3Iju0FvDsquF3aXg5b3582BEnDJA34nqwiB7QBW
+        EZYDhQUUq2xi5JTNONNgUAkkzNKJYhk=
+ARC-Authentication-Results: i=1;
+        vulcan.natalenko.name;
+        auth=pass smtp.auth=oleksandr@natalenko.name smtp.mailfrom=oleksandr@natalenko.name
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/2019 11.51, Alexey Dobriyan wrote:
-> Userspace places static_assert() macro at <assert.h>
+Hi.
+
+On 10.03.2019 19:11, Paolo Valente wrote:
+> this is the v2 of the series
+> https://lkml.org/lkml/2019/3/7/461
+> that fixes some bug affecting performance, reduces execution time a
+> little bit, and boosts throughput and responsiveness.
 > 
+> The difference w.r.t. v1 is that Francesco has fixed compilation
+> issues of patch "block, bfq: print SHARED instead of pid for shared
+> queues in logs".
+> 
+> I took the opportunity of this v2 to also add BFQ's execution time to
+> the documentation.
+> 
+> Let me remind again that these patches are meant to be applied on top
+> of the last series I submitted:
+> https://lkml.org/lkml/2019/1/29/368
+> 
+> Thanks,
+> Paolo
+> 
+> Francesco Pollicino (2):
+>   block, bfq: print SHARED instead of pid for shared queues in logs
+>   block, bfq: save & resume weight on a queue merge/split
+> 
+> Paolo Valente (7):
+>   block, bfq: increase idling for weight-raised queues
+>   block, bfq: do not idle for lowest-weight queues
+>   block, bfq: tune service injection basing on request service times
+>   block, bfq: do not merge queues on flash storage with queueing
+>   block, bfq: do not tag totally seeky queues as soft rt
+>   block, bfq: always protect newly-created queues from existing active
+>     queues
+>   doc, block, bfq: add information on bfq execution time
+> 
+>  Documentation/block/bfq-iosched.txt |  29 +-
+>  block/bfq-cgroup.c                  |   3 +-
+>  block/bfq-iosched.c                 | 786 +++++++++++++++++++++++-----
+>  block/bfq-iosched.h                 |  92 ++--
+>  block/bfq-wf2q.c                    |   2 +-
+>  5 files changed, 729 insertions(+), 183 deletions(-)
+> 
+> --
+> 2.20.1
 
-So? That seems a rather weak argument. We have lots of interfaces that
-also exist in userspace which are not declared in similar-named headers
-(e.g. we have no stdio.h, which is where snprintf lives). Not to mention
-that memcpy and friends are in <linux/string.h>, not a bare <string.h>.
-Your assert.h would be the first and only header to live directly in
-include/.
+Builds fine this time, thanks :).
 
-If you can somehow convince Andrew to take it you can add a Meh'ed-by me.
+I'm running v1 series since the submission just fine (with a fix from 
+zen-kernel guys [1]), and since v2 is functionally equivalent, feel free 
+to add Tested-by once it is accepted.
 
-Rasmus
+[1] 
+https://github.com/zen-kernel/zen-kernel/commit/0665ba81203c196b649d325e4ec2491d7ff1be01
+
+-- 
+   Oleksandr Natalenko (post-factum)
