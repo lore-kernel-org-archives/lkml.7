@@ -4,119 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151C4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 08:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044B0C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 08:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA2520657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 08:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD26620657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 08:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gbWVThzw"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="VD82JrKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbfCJIPO (ORCPT
+        id S1726340AbfCJITY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 04:15:14 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:35004 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfCJIPO (ORCPT
+        Sun, 10 Mar 2019 04:19:24 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:36990 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfCJITX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 04:15:14 -0400
+        Sun, 10 Mar 2019 04:19:23 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id B8953BA8
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 08:15:12 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id F3EDEB63
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 08:19:21 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cxTKBlgv7H-3 for <linux-kernel@vger.kernel.org>;
-        Sun, 10 Mar 2019 03:15:12 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GMBqES2V9iiZ for <linux-kernel@vger.kernel.org>;
+        Sun, 10 Mar 2019 03:19:21 -0500 (CDT)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 8467EB62
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 03:15:12 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id q184so2159875itd.6
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 00:15:12 -0800 (PST)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id BFBAC75E
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 03:19:21 -0500 (CDT)
+Received: by mail-it1-f198.google.com with SMTP id 142so2179605itx.0
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 00:19:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=sR+0KRmiIOct8yRErYNoAixuC5XPvKpQ/5YDnFmMUgM=;
-        b=gbWVThzw59QbPRiQ4grseBbz1WwJaZmS1q/VXYIgQCmMDC5py2zVQdLvD2A6P/uOU8
-         2YlDaN0wmvblBJIG3q18kSYnSHVMChoak+xtlUYlvC6CB/htYYaXimP/vAmDl0rvKFBz
-         uSYDVftkEWAAyepPHDNr2nmpwJFElvHesZkXT+/lfkZoOD+/RNvkt4LyJtiMUjznPVRq
-         96cYH1+O5G3uec8SPqt0CjhyQbKn3YHKTJ7DjRDPevfjkk5nBs1g0Fz2X0cQCzXT+1F8
-         zOOgFIBpa1+3S19a2AJcN2NPbAZE1eFekPxlbwv7mi7Lu/50Mtmp3ZR3xRv+NdhTKupU
-         eN5g==
+        bh=qyyGdfejw+uEXBzWeHy1i/Jtc6c84bzQtX7dUxo4/3I=;
+        b=VD82JrKRzMB3jlX9fdcBDZ5vlX02nvtC/2YuMsZIdPCl0CHPzco65jYDa3teitLd/x
+         uO6ABOulNpalsSB/ydzgiPRq3BSfx5aIHMQXxfAxT9f2Djsr1CNrymclSbvA6q0XIv9y
+         HDwbQkmSnGU7I/KyOEFPr0u+5ZEbfU8OrwYRmnWaFI91siA8YVjtaCqQPhxPomGbGRKf
+         F3zxqrohJdoeYhpMzKzAolRkH1BMNka5E3Kkd8HhPfMJZXVMsvCjScVmfD82yKS+9Vu9
+         YtbWFdxmoF7bSsocqyJ61VJgyxGBTzfratozCCG7TGqLLXp1RFdeVAP8k+TdduwSnPVw
+         xGYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sR+0KRmiIOct8yRErYNoAixuC5XPvKpQ/5YDnFmMUgM=;
-        b=ZhK9R0lx8lSMgVcumTUlEPG4rkOBkkTuVPRm0snbkIkElJ3AwO7+Ca1Xao7seNWcjy
-         obHMeRKu7RgYcYQFAqEZY+V8h8Wlt6G6W3/8Jy8Sp0tA/Tbm8Ys+i+xDmWoHBlkAFPau
-         lH03mAyLNICOeHi7yBv+/52OPGLfuW4zFcSiQ+3JanfDwKiVrJutksjhEJSKjJFzF7f0
-         QYYOXAyMUFZoIyPJKBvzmpxhNNG4zyeLSYI7KXE3C+diZukAIalzfwtSKq3b59UR4qOn
-         /cUhoOSYie5IBbPVMAKSoE9I73SuJLGReL6Q3+B9z4stKRFRi9goovW4FM/+yYMfqU3B
-         RnXQ==
-X-Gm-Message-State: APjAAAUChvDmVs4ypQIe92MRPiQsRWKojoOAb5RAb9sW9WluC3xVwSpk
-        1JFKh6y+WEwucTc7MFOFv36pp5pESenhNett+fAIIGheC6UhZFb+UDScAMNpttafirnH5LcEbyY
-        Rih/KWJ+VnlwugtpQzfT7RW4w9KhM
-X-Received: by 2002:a02:b901:: with SMTP id v1mr7072959jan.13.1552205711874;
-        Sun, 10 Mar 2019 00:15:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwfj0oTWA3dA5cVBJN2dWkNEchzkMM9FLo2/Gw3FtjaGFBJ2mnMBPp6quButsmqj7yIf7dtCw==
-X-Received: by 2002:a02:b901:: with SMTP id v1mr7072951jan.13.1552205711610;
-        Sun, 10 Mar 2019 00:15:11 -0800 (PST)
+        bh=qyyGdfejw+uEXBzWeHy1i/Jtc6c84bzQtX7dUxo4/3I=;
+        b=J8ojRKJ+HzIDAHx8fWRIcEVpdjNgw1S/06AWtLuggfZNpfAhNiRh8OAB0JUMp91EF6
+         UxYwJ15b+CGWe07NetTU2dLpvQv7MgAOERxT0bOe1B+xci/FUBeur78bVk+d89IED/zd
+         4kxw2Qr3QJnR+OPxX4EorA+auv16bDK4zFe81Kk60iPIYvOUIKPOnseC7svWTpzhjAuv
+         vUTZQA45wiLS9W7cipdS4Na5IU2AHCEO5cMGmLe2R8kxF4tZDzjjGomF7CCjB3ep+4u8
+         U07gJtnM9o0WJhd4pinc6Sg0z4/xJdvWiqMIYiNMSajad5EVteAozSwV6J/HWKO8YdQl
+         UuBw==
+X-Gm-Message-State: APjAAAXd3yQliIF2ZKqhJBnasBW5L8NraiomxHWx4QyextQLpQMfL7yD
+        W7dGkSLh/RO7lOIcMiD50VZ+Io2LmPLdzDzciHyhIqCJwJXDRKmSCCypLXoYul+IjJjzOkwh70e
+        vW8ozjtaQjdJe88BZxQcsuYA/yVsA
+X-Received: by 2002:a6b:7517:: with SMTP id l23mr14351862ioh.74.1552205961405;
+        Sun, 10 Mar 2019 00:19:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw2Qj20TzgXNjfEIydtuqveosdeZT7qIvMwfwl+rQ0Fk10WQVtfAvtzqItRYcW1K+4/k+ANIg==
+X-Received: by 2002:a6b:7517:: with SMTP id l23mr14351857ioh.74.1552205961149;
+        Sun, 10 Mar 2019 00:19:21 -0800 (PST)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id o7sm938882ioh.87.2019.03.10.00.15.10
+        by smtp.gmail.com with ESMTPSA id y18sm953507ioa.56.2019.03.10.00.19.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 00:15:10 -0800 (PST)
+        Sun, 10 Mar 2019 00:19:20 -0800 (PST)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: 8390: fix potential NULL pointer dereferences
-Date:   Sun, 10 Mar 2019 03:14:53 -0500
-Message-Id: <20190310081455.6097-1-kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: liquidio: fix a NULL pointer dereference
+Date:   Sun, 10 Mar 2019 03:19:15 -0500
+Message-Id: <20190310081915.7024-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case ioremap fails, the fix returns to avoid NULL pointer
-dereferences.
+In case octeon_alloc_soft_command fails, the fix reports the
+error and returns to avoid NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/net/ethernet/8390/pcnet_cs.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/cavium/liquidio/lio_main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/8390/pcnet_cs.c b/drivers/net/ethernet/8390/pcnet_cs.c
-index 61e43802b9a5..d82ecedf7366 100644
---- a/drivers/net/ethernet/8390/pcnet_cs.c
-+++ b/drivers/net/ethernet/8390/pcnet_cs.c
-@@ -289,6 +289,9 @@ static struct hw_info *get_hwinfo(struct pcmcia_device *link)
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+index 9b7819fdc9de..a3781d7a7b5c 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+@@ -1192,6 +1192,11 @@ static void send_rx_ctrl_cmd(struct lio *lio, int start_stop)
+ 	sc = (struct octeon_soft_command *)
+ 		octeon_alloc_soft_command(oct, OCTNET_CMD_SIZE,
+ 					  16, 0);
++	if (!sc) {
++		netif_info(lio, rx_err, lio->netdev,
++				"Failed to allocate octeon_soft_command\n");
++		return;
++	}
  
-     virt = ioremap(link->resource[2]->start,
- 	    resource_size(link->resource[2]));
-+		if (unlikely(!virt))
-+			return NULL;
-+
-     for (i = 0; i < NR_INFO; i++) {
- 	pcmcia_map_mem_page(link, link->resource[2],
- 		hw_info[i].offset & ~(resource_size(link->resource[2])-1));
-@@ -1423,6 +1426,11 @@ static int setup_shmem_window(struct pcmcia_device *link, int start_pg,
-     /* Try scribbling on the buffer */
-     info->base = ioremap(link->resource[3]->start,
- 			resource_size(link->resource[3]));
-+		if (unlikely(!info->base)) {
-+			ret = -ENOMEM;
-+			goto failed;
-+		}
-+
-     for (i = 0; i < (TX_PAGES<<8); i += 2)
- 	__raw_writew((i>>1), info->base+offset+i);
-     udelay(100);
+ 	ncmd = (union octnet_cmd *)sc->virtdptr;
+ 
 -- 
 2.17.1
 
