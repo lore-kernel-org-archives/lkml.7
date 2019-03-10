@@ -2,67 +2,84 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948B5C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309FBC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE26206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552257059;
-	bh=51hM4CQqdV2f78d5jrbXdhcrvb2/VAEZ1wXCHPXBInw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=J2ydAsAhX0tet/nD5+1cJD5e8LUZhhTcJm2AHURMpJfzNUuzvSGE49E8mhmRA/toY
-	 A4YplJj/tT3HkJZSvw0h/p50vAZI+hqQOjrmggBxV8d/7z5ltOnUqHAITirHWzckNl
-	 WpYewC4Yns8bmms0aq1SG+iaRJhLpG1764BCZpRk=
+	by mail.kernel.org (Postfix) with ESMTP id E46DF20652
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 22:33:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qJQplevQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfCJWa6 (ORCPT
+        id S1726974AbfCJWdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 18:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfCJWaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 18:30:19 -0400
-Subject: Re: [GIT pull] core udpate for 5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552257019;
-        bh=51hM4CQqdV2f78d5jrbXdhcrvb2/VAEZ1wXCHPXBInw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=NAc3Vvii3VmIw+Uz+mNQSog5oFoTDr6hnQlcf2xvE38dLeHYD+9FLWM93PAsHEs+R
-         Z9Tm0uKxoj2NWgFt17RYUL3JsbItkmeVtk+JkbHMloSg5dT7TTKCW58BKBjhaV3cjb
-         Pomz+IANxkYkYkncFv+x2vpa60xD2GF2NzQkcvnI=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
-References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-core-for-linus
-X-PR-Tracked-Commit-Id: 11295055526308ee71d82dc97f0a9ca2dd61c3b9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 077d3dafe63cb26653f2b171fa102dbefd242fa8
-Message-Id: <155225701920.14748.1114245126266144868.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Mar 2019 22:30:19 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        Sun, 10 Mar 2019 18:33:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36436 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfCJWdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 18:33:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ILE+dReU18qLLQD53qirAs2RLv3SDxPITmPtxE3ds5k=; b=qJQplevQsx5Pn4h6bzYRVlVx1
+        oEwWR1h7x7E4xlkffTrmU2EZjVqsulY8Yuv7a4xYz/HWIEajoginar7VptymrV8NkT/x02HAr8Rgo
+        cxxWI6fIzEaaOqE85hCRMWTPsECUVIdHB7Egq1ar9LBDKiK+lnvkJ+KqsvFKrRV+Xy/t48/wLj0FM
+        8tJv6IAv9TE2xKyapJS2poe6Ax7XTtPBhSJXdtroWhNKSSwNcV9TfQSy+F4DosOYPcPZ/bAayJdpo
+        B4lB4ir6U899NONKpZxBH50sJ24Y76YfujHWLEcBzeVP2ShJEW8NJA41cpwdzYcYEbmzhjqVvzHuP
+        b/1KnRsPg==;
+Received: from dvhart by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h370h-0005wx-Td; Sun, 10 Mar 2019 22:33:35 +0000
+Date:   Sun, 10 Mar 2019 15:33:34 -0700
+From:   Darren Hart <dvhart@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.1-1
+Message-ID: <20190310223334.GA22126@wrath>
+References: <20190308203326.GA48374@wrath>
+ <CAHk-=whvQKUtE1fzTPMwSjNR3nLQBw_DVRVvZEqW5tdTvG63HQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whvQKUtE1fzTPMwSjNR3nLQBw_DVRVvZEqW5tdTvG63HQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 10 Mar 2019 12:33:47 +0100:
+On Sun, Mar 10, 2019 at 01:22:24PM -0700, Linus Torvalds wrote:
+> On Fri, Mar 8, 2019 at 12:33 PM Darren Hart <dvhart@infradead.org> wrote:
+> >
+> > The wmi mod alias changes collide with a similar series for TEE based devices.
+> 
+> Anyway, you also used a *very* new subkey. Can you please mention it,
+> so that I don't then get taken by surprise when I find a key that was
+> used to sign this and I don't have it?
+> 
+> Yes, yes, I will download it anyway, but basically I want the pull
+> request to give me enough information that when I do the pull I'm not
+> surprised by the result.
+> 
+> That's why the shortlog and diffstat exists of course, but that "don't
+> surprise Linus" also covers things like "oh, and the tag will be
+> signed with a key you've never seen before".
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-core-for-linus
+Will do. Apologies. I almost sent you a note - but didn't after
+verifying with others that git-verify-tag still reported "Good
+Signature" as the subkey is automatically associated with the master
+key - but, point taken - don't surprise Linus. Will err on the side of
+more explanation in the future.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/077d3dafe63cb26653f2b171fa102dbefd242fa8
-
-Thank you!
+Thanks,
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Darren Hart
+VMware Open Source Technology Center
