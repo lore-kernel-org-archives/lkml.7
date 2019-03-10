@@ -2,114 +2,219 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC3BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AFEC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB67320657
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:22:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQqHqNlb"
+	by mail.kernel.org (Postfix) with ESMTP id 1829420657
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 21:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfCJVWq (ORCPT
+        id S1726860AbfCJVYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 17:22:46 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45522 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfCJVWp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 17:22:45 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d18so2955356qtg.12
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 14:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=tY5ndg9ty18rlikudHknRC51BZ9hqezjKFxag+QBIs0=;
-        b=VQqHqNlb+EtDiSotVv3QJj7UO+e5X32urpF6o3KQVUi8Y2qU+7tbhGD0PljFBQHtG9
-         E/G5XpX9MRVuRQmU8ePMJEby5E2mCShon6adEAWCrrOrh0sNZIdOeG2pV2ylK948WlyP
-         wi5tTmYmxV0pKARSOpDMEv6FYalGdiUZ/xwsjw7wS5SlXop8pyeaSAS5RAttQIjNhBgk
-         kENCyYoYdgeHjaafp36GnaayUGkHQXkhMhSzOe8XDAbes1dSwvA2hDbfXv+zzktYOnTL
-         YCUGQNq7w3AIKXYZHaE9dYHNepzpjIZob9IbCeL+UuD38gTHedwHkBZHcpDXPnDMDQho
-         RSdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tY5ndg9ty18rlikudHknRC51BZ9hqezjKFxag+QBIs0=;
-        b=i1+/jjsfS40IJyo5mVXvlf/53JGnVGfMpGMvGG13Dm95gYvbrhalHgS2p7cw+vhA9t
-         2097nnXrHBwogco2IdiRemEm2C+sxf/fgAlP0EG9vyouuADhvGkT1fx5BNCyTUqXIYvq
-         8kpgEvmnk/gKfXtQCdyIsOO7fKVdk8SeTwjHYRRElNJcTQN9690ylbu8dqAtlKDLl6X5
-         aXg6GR3nQLLBKpUMDOQGMMuCi+ycer0ELGtvpSWz/LCBvs2KaO0B1EkLi3s3h6PxQtpq
-         GbvaBWq0A05+ZIJSMzWb+ONj6z+U1JVTS90qWrhGaLatu2dEvNMKqPb091dXBbnF+F28
-         pchw==
-X-Gm-Message-State: APjAAAXfVUsBTrDCVcJ3CEe4bn6mAlNV3qDhBd73Eklr7j99ghLrhJVr
-        JLMpUFf3YHVy/0uMnQFbwLVhnUbyLSU=
-X-Google-Smtp-Source: APXvYqzOqvt3O8HnJkZ0SM25hDFXsRCQc1oKpjAXEsdoEVnOZHm5ak0SR6HJ/UsvcaXRoSoHrcXBHw==
-X-Received: by 2002:a0c:9ae5:: with SMTP id k37mr24437826qvf.128.1552252963786;
-        Sun, 10 Mar 2019 14:22:43 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id h11sm1293302qth.13.2019.03.10.14.22.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 10 Mar 2019 14:22:43 -0700 (PDT)
-Date:   Sun, 10 Mar 2019 18:22:41 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vkms: Remove useless call to drm_connector_register()
-Message-ID: <20190310212241.4fsqejz5rlnp7m2k@smtp.gmail.com>
+        Sun, 10 Mar 2019 17:24:45 -0400
+Received: from smtp.gentoo.org ([140.211.166.183]:37806 "EHLO smtp.gentoo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726759AbfCJVYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 17:24:45 -0400
+Received: from sf.home (host86-142-46-103.range86-142.btcentralplus.com [86.142.46.103])
+        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: slyfox)
+        by smtp.gentoo.org (Postfix) with ESMTPSA id 56873335D1A;
+        Sun, 10 Mar 2019 21:24:43 +0000 (UTC)
+Received: by sf.home (Postfix, from userid 1000)
+        id 1187A237455AD; Sun, 10 Mar 2019 21:24:38 +0000 (GMT)
+From:   Sergei Trofimovich <slyfox@gentoo.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: [RESEND, PATCH] tty/vt: fix write/write race in ioctl(KDSKBSENT) handler
+Date:   Sun, 10 Mar 2019 21:24:15 +0000
+Message-Id: <20190310212415.12162-1-slyfox@gentoo.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function vkms_output_init() is invoked during the module
-initialization, and it handles the creation/configuration of the vkms
-essential elements (e.g., connectors, encoder, etc). Among the
-initializations, this function tries to initialize a connector and
-register it by calling drm_connector_register(). However, inside the
-drm_connector_register(), at the beginning of this function there is the
-following validation:
+The bug manifests as an attempt to access deallocated memory:
 
- if (!connector->dev->registered)
-   return 0;
+    BUG: unable to handle kernel paging request at ffff9c8735448000
+    #PF error: [PROT] [WRITE]
+    PGD 288a05067 P4D 288a05067 PUD 288a07067 PMD 7f60c2063 PTE 80000007f5448161
+    Oops: 0003 [#1] PREEMPT SMP
+    CPU: 6 PID: 388 Comm: loadkeys Tainted: G         C        5.0.0-rc6-00153-g5ded5871030e #91
+    Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M-D3H, BIOS F12 11/14/2013
+    RIP: 0010:__memmove+0x81/0x1a0
+    Code: 4c 89 4f 10 4c 89 47 18 48 8d 7f 20 73 d4 48 83 c2 20 e9 a2 00 00 00 66 90 48 89 d1 4c 8b 5c 16 f8 4c 8d 54 17 f8 48 c1 e9 03 <f3> 48 a5 4d 89 1a e9 0c 01 00 00 0f 1f 40 00 48 89 d1 4c 8b 1e 49
+    RSP: 0018:ffffa1b9002d7d08 EFLAGS: 00010203
+    RAX: ffff9c873541af43 RBX: ffff9c873541af43 RCX: 00000c6f105cd6bf
+    RDX: 0000637882e986b6 RSI: ffff9c8735447ffb RDI: ffff9c8735447ffb
+    RBP: ffff9c8739cd3800 R08: ffff9c873b802f00 R09: 00000000fffff73b
+    R10: ffffffffb82b35f1 R11: 00505b1b004d5b1b R12: 0000000000000000
+    R13: ffff9c873541af3d R14: 000000000000000b R15: 000000000000000c
+    FS:  00007f450c390580(0000) GS:ffff9c873f180000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: ffff9c8735448000 CR3: 00000007e213c002 CR4: 00000000000606e0
+    Call Trace:
+     vt_do_kdgkb_ioctl+0x34d/0x440
+     vt_ioctl+0xba3/0x1190
+     ? __bpf_prog_run32+0x39/0x60
+     ? mem_cgroup_commit_charge+0x7b/0x4e0
+     tty_ioctl+0x23f/0x920
+     ? preempt_count_sub+0x98/0xe0
+     ? __seccomp_filter+0x67/0x600
+     do_vfs_ioctl+0xa2/0x6a0
+     ? syscall_trace_enter+0x192/0x2d0
+     ksys_ioctl+0x3a/0x70
+     __x64_sys_ioctl+0x16/0x20
+     do_syscall_64+0x54/0xe0
+     entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-In this sense, invoke drm_connector_register() after initializing the
-connector has no effect because the register field is false. The
-connector register happens when drm_dev_register() is invoked.
-Therefore, this commit removes the drm_connector_register() from
-vkms_output_init().
+The bug manifests on systemd systems with multiple vtcon devices:
+  # cat /sys/devices/virtual/vtconsole/vtcon0/name
+  (S) dummy device
+  # cat /sys/devices/virtual/vtconsole/vtcon1/name
+  (M) frame buffer device
 
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+There systemd runs 'loadkeys' tool in tapallel for each vtcon
+instance. This causes two parallel ioctl(KDSKBSENT) calls to
+race into adding the same entry into 'func_table' array at:
+
+    drivers/tty/vt/keyboard.c:vt_do_kdgkb_ioctl()
+
+The function has no locking around writes to 'func_table'.
+
+The simplest reproducer is to have initrams with the following
+init on a 8-CPU machine x86_64:
+
+    #!/bin/sh
+
+    loadkeys -q windowkeys ru4 &
+    loadkeys -q windowkeys ru4 &
+    loadkeys -q windowkeys ru4 &
+    loadkeys -q windowkeys ru4 &
+
+    loadkeys -q windowkeys ru4 &
+    loadkeys -q windowkeys ru4 &
+    loadkeys -q windowkeys ru4 &
+    loadkeys -q windowkeys ru4 &
+    wait
+
+The change adds lock on write path only. Reads are still racy.
+
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Jiri Slaby <jslaby@suse.com>
+Link: https://lkml.org/lkml/2019/2/17/256
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
 ---
- drivers/gpu/drm/vkms/vkms_output.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/tty/vt/keyboard.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 3b162b25312e..a6cee4c279c2 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -71,12 +71,6 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
+index 88312c6c92cc..0617e87ab343 100644
+--- a/drivers/tty/vt/keyboard.c
++++ b/drivers/tty/vt/keyboard.c
+@@ -123,6 +123,7 @@ static const int NR_TYPES = ARRAY_SIZE(max_vals);
+ static struct input_handler kbd_handler;
+ static DEFINE_SPINLOCK(kbd_event_lock);
+ static DEFINE_SPINLOCK(led_lock);
++static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
+ static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
+ static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
+ static bool dead_key_next;
+@@ -1990,11 +1991,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
+ 	char *p;
+ 	u_char *q;
+ 	u_char __user *up;
+-	int sz;
++	int sz, fnw_sz;
+ 	int delta;
+ 	char *first_free, *fj, *fnw;
+ 	int i, j, k;
+ 	int ret;
++	unsigned long flags;
  
- 	drm_connector_helper_add(connector, &vkms_conn_helper_funcs);
+ 	if (!capable(CAP_SYS_TTY_CONFIG))
+ 		perm = 0;
+@@ -2037,7 +2039,14 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
+ 			goto reterr;
+ 		}
  
--	ret = drm_connector_register(connector);
--	if (ret) {
--		DRM_ERROR("Failed to register connector\n");
--		goto err_connector_register;
--	}
++		fnw = NULL;
++		fnw_sz = 0;
++		/* race aginst other writers */
++		again:
++		spin_lock_irqsave(&func_buf_lock, flags);
+ 		q = func_table[i];
++
++		/* fj pointer to next entry after 'q' */
+ 		first_free = funcbufptr + (funcbufsize - funcbufleft);
+ 		for (j = i+1; j < MAX_NR_FUNC && !func_table[j]; j++)
+ 			;
+@@ -2045,10 +2054,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
+ 			fj = func_table[j];
+ 		else
+ 			fj = first_free;
 -
- 	ret = drm_encoder_init(dev, encoder, &vkms_encoder_funcs,
- 			       DRM_MODE_ENCODER_VIRTUAL, NULL);
- 	if (ret) {
++		/* buffer usage increase by new entry */
+ 		delta = (q ? -strlen(q) : 1) + strlen(kbs->kb_string);
++
+ 		if (delta <= funcbufleft) { 	/* it fits in current buf */
+ 		    if (j < MAX_NR_FUNC) {
++			/* make enough space for new entry at 'fj' */
+ 			memmove(fj + delta, fj, first_free - fj);
+ 			for (k = j; k < MAX_NR_FUNC; k++)
+ 			    if (func_table[k])
+@@ -2061,20 +2072,28 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
+ 		    sz = 256;
+ 		    while (sz < funcbufsize - funcbufleft + delta)
+ 		      sz <<= 1;
+-		    fnw = kmalloc(sz, GFP_KERNEL);
+-		    if(!fnw) {
+-		      ret = -ENOMEM;
+-		      goto reterr;
++		    if (fnw_sz != sz) {
++		      spin_unlock_irqrestore(&func_buf_lock, flags);
++		      kfree(fnw);
++		      fnw = kmalloc(sz, GFP_KERNEL);
++		      fnw_sz = sz;
++		      if (!fnw) {
++			ret = -ENOMEM;
++			goto reterr;
++		      }
++		      goto again;
+ 		    }
+ 
+ 		    if (!q)
+ 		      func_table[i] = fj;
++		    /* copy data before insertion point to new location */
+ 		    if (fj > funcbufptr)
+ 			memmove(fnw, funcbufptr, fj - funcbufptr);
+ 		    for (k = 0; k < j; k++)
+ 		      if (func_table[k])
+ 			func_table[k] = fnw + (func_table[k] - funcbufptr);
+ 
++		    /* copy data after insertion point to new location */
+ 		    if (first_free > fj) {
+ 			memmove(fnw + (fj - funcbufptr) + delta, fj, first_free - fj);
+ 			for (k = j; k < MAX_NR_FUNC; k++)
+@@ -2087,7 +2106,9 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
+ 		    funcbufleft = funcbufleft - delta + sz - funcbufsize;
+ 		    funcbufsize = sz;
+ 		}
++		/* finally insert item itself */
+ 		strcpy(func_table[i], kbs->kb_string);
++		spin_unlock_irqrestore(&func_buf_lock, flags);
+ 		break;
+ 	}
+ 	ret = 0;
 -- 
-2.21.0
+2.20.1
+
