@@ -2,71 +2,117 @@ Return-Path: <SRS0=imS1=RN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC0BC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15699C10F03
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277DC207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552241122;
-	bh=PztkmH7IMHY2oZ4di8DhxydCrr3mH2AFqCLrg1h6BUw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=EEMdGuDNGzQFXV/k3CGnizCvYWQD1VKWGywf0b5D8zSCWqfao4VLCMBIWBMPEN8Jz
-	 ccaOjf9ZdvWFCnWikzNX0L/mKr493J3m7O29xeZeS8YpKpvbzX2zHTk4jd9jXHtvtH
-	 aSOhfpeKJyM69kcBrnfeqWGh72JvsXWkXWa+nKao=
+	by mail.kernel.org (Postfix) with ESMTP id D1C5E206DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:12:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqamRj0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfCJSFV (ORCPT
+        id S1726867AbfCJSMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbfCJSFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:05:15 -0400
-Subject: Re: [GIT PULL] Devicetree for 5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552241115;
-        bh=PztkmH7IMHY2oZ4di8DhxydCrr3mH2AFqCLrg1h6BUw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=wahhMh5obyoT1sNsE5o4Guu44ajRPZhqo5t8I1wNugJemi6u2cOYX730hjxZvZx9J
-         uY9KetkfBBnKF56bKtqiC/lOMEq+imc/KxUBoERkD8agw07XOJQdZNknTY6o7CbIx/
-         9bTHlDzH1OVHLuYD6AlxGcan+9v8BsFRdi4sJoFk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
-References: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-for-5.1
-X-PR-Tracked-Commit-Id: 935665c1a117f34662549f01e1c9bc5ea7132556
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 065b6c4c913d3986c2118acb7e7fb364ce4fb625
-Message-Id: <155224111507.12168.14824564284095575465.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Mar 2019 18:05:15 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
+        Sun, 10 Mar 2019 14:12:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43692 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfCJSMH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 14:12:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d17so2630304wre.10
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 11:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H88sdlUkeF0SgIUzFqNM+Be+vdLABi7IVAQP8mI4xOk=;
+        b=qqamRj0eRTo8Oc0l1xnaMl2P824rS6v0Hxmvnnq6PpkF3WhMDYx2AEQIRx31irQOIw
+         7by5LfsWeYtLcGG39QCBg+JeoAVfe8CBZxj/j435FzKzeh2ctosXpw7LAehbOj0KBJeQ
+         Uia+Cwv8FIYnqYpyzL31R+zbKWKR3+uVSkGD3gm+LCCSpehZSvxQ/aKD+1Jt01hJom8c
+         GmPxS3wPr22XuTNaPiIG494FG7DxGiWOHWWjZVZFi8FgiTbh3V32fm3BNiSAeHG2EOLC
+         /Wg8mG7atOBoleVOQA48sJ97tL3juD2voAVI2T7cEj+jReItbWee7xBHRg1RLQwUye3b
+         DFHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H88sdlUkeF0SgIUzFqNM+Be+vdLABi7IVAQP8mI4xOk=;
+        b=LeCHwxmGIR+Ri3wARNLRbAYnOKUdXl1bY9fCbkDxBC5UaXFl7LavDJbK2rFJee3Fto
+         8vd9S3VUVZom6GImdN7iqXvs28kccsv+uPMGmizs5XHsV8o409+gyjhVElokLMDE+Otf
+         u+iAqDgtssb0ZzpWmhecyPrJQGa6tDvh9fW0XSL8ihuQJ7a6OcOaMPuGPFSlBHKGrQLK
+         B1laECbZFFylpdFoawnL0wiV/TDSbl6aPa6g6h7NKHtB6Bz0G6e3AUPauyeIVr5GvQGd
+         AfGPEnAEDEXbbklkXiy9s9LYWs0xyefNnFUPEcFQChvF9fT9YRG+Po+1s1Csk241tXOy
+         wXvw==
+X-Gm-Message-State: APjAAAUBgy0vjznVqdwGXfxOQroeatGShnWM1yuY+ooeQ/Y8xYdHoN06
+        NyVkjZQ1TwkghBlJmGzayuh1+A==
+X-Google-Smtp-Source: APXvYqzhBfC2rkbKKiNiKnqIN+mZn6mmoDOItjF2YX7MDn45J8lYSo/fAx0OznwzMVznbYFwXMhA9A==
+X-Received: by 2002:a5d:5042:: with SMTP id h2mr17701425wrt.12.1552241525872;
+        Sun, 10 Mar 2019 11:12:05 -0700 (PDT)
+Received: from localhost.localdomain (146-241-67-113.dyn.eolo.it. [146.241.67.113])
+        by smtp.gmail.com with ESMTPSA id d206sm24906368wmc.11.2019.03.10.11.12.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 11:12:04 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        broonie@kernel.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name, fra.fra.800@gmail.com,
+        alessio.masola@gmail.com, Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V2 0/9] block, bfq: fix bugs, reduce exec time and boost performance
+Date:   Sun, 10 Mar 2019 19:11:28 +0100
+Message-Id: <20190310181137.2604-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 8 Mar 2019 14:37:47 -0600:
+Hi,
+this is the v2 of the series
+https://lkml.org/lkml/2019/3/7/461
+that fixes some bug affecting performance, reduces execution time a
+little bit, and boosts throughput and responsiveness.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.1
+The difference w.r.t. v1 is that Francesco has fixed compilation
+issues of patch "block, bfq: print SHARED instead of pid for shared
+queues in logs".
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/065b6c4c913d3986c2118acb7e7fb364ce4fb625
+I took the opportunity of this v2 to also add BFQ's execution time to
+the documentation.
 
-Thank you!
+Let me remind again that these patches are meant to be applied on top
+of the last series I submitted:
+https://lkml.org/lkml/2019/1/29/368
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks,
+Paolo
+
+Francesco Pollicino (2):
+  block, bfq: print SHARED instead of pid for shared queues in logs
+  block, bfq: save & resume weight on a queue merge/split
+
+Paolo Valente (7):
+  block, bfq: increase idling for weight-raised queues
+  block, bfq: do not idle for lowest-weight queues
+  block, bfq: tune service injection basing on request service times
+  block, bfq: do not merge queues on flash storage with queueing
+  block, bfq: do not tag totally seeky queues as soft rt
+  block, bfq: always protect newly-created queues from existing active
+    queues
+  doc, block, bfq: add information on bfq execution time
+
+ Documentation/block/bfq-iosched.txt |  29 +-
+ block/bfq-cgroup.c                  |   3 +-
+ block/bfq-iosched.c                 | 786 +++++++++++++++++++++++-----
+ block/bfq-iosched.h                 |  92 ++--
+ block/bfq-wf2q.c                    |   2 +-
+ 5 files changed, 729 insertions(+), 183 deletions(-)
+
+--
+2.20.1
