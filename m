@@ -6,61 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A17FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC0BC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A0C2087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277DC207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 18:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552241120;
-	bh=UAGqjIAiRQv2iBIhyAADNKeFU2IbfvZHlaIr3FjXrt0=;
+	s=default; t=1552241122;
+	bh=PztkmH7IMHY2oZ4di8DhxydCrr3mH2AFqCLrg1h6BUw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tqXGrTzOvu4p7kb5bhn+dOj50VhY2k963jPSxhfs+osMQwJfT+YqmLRpN9vtuWvY6
-	 u+RrDhgOH0rOVZhaQfasCW/byDh64YmT7Smbr/t0J/nfi2ratQtU89ttnuNVdwBeM+
-	 C7wGdiFFnbtaZhoiW9YwrlHC6ikuPaHlL30jK/qE=
+	b=EEMdGuDNGzQFXV/k3CGnizCvYWQD1VKWGywf0b5D8zSCWqfao4VLCMBIWBMPEN8Jz
+	 ccaOjf9ZdvWFCnWikzNX0L/mKr493J3m7O29xeZeS8YpKpvbzX2zHTk4jd9jXHtvtH
+	 aSOhfpeKJyM69kcBrnfeqWGh72JvsXWkXWa+nKao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfCJSFS (ORCPT
+        id S1726976AbfCJSFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 14:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
+        Sun, 10 Mar 2019 14:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbfCJSFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 14:05:14 -0400
-Subject: Re: [GIT PULL] arm64 updates for 5.1-rc1
+        id S1726951AbfCJSFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 14:05:15 -0400
+Subject: Re: [GIT PULL] Devicetree for 5.1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552241114;
-        bh=UAGqjIAiRQv2iBIhyAADNKeFU2IbfvZHlaIr3FjXrt0=;
+        s=default; t=1552241115;
+        bh=PztkmH7IMHY2oZ4di8DhxydCrr3mH2AFqCLrg1h6BUw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=AvRM/WWbeD3Q8GP+8QAX7F7ZMMygFOtFX7I/uf8yavV3hqMEmgrGcusnZy4WGOuQl
-         YJiddQcp/yxSfL7DIGc85dCugJO5U11rD62/5JC34nBTxMvWOUMbTWaXAO4j1jvb7R
-         G/h1TrqX5M6RZc91tHVRhpPmQIPn87uVqC+iZJ0Y=
+        b=wahhMh5obyoT1sNsE5o4Guu44ajRPZhqo5t8I1wNugJemi6u2cOYX730hjxZvZx9J
+         uY9KetkfBBnKF56bKtqiC/lOMEq+imc/KxUBoERkD8agw07XOJQdZNknTY6o7CbIx/
+         9bTHlDzH1OVHLuYD6AlxGcan+9v8BsFRdi4sJoFk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190308164221.GA126180@arrakis.emea.arm.com>
-References: <20190308164221.GA126180@arrakis.emea.arm.com>
+In-Reply-To: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
+References: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190308164221.GA126180@arrakis.emea.arm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-upstream
-X-PR-Tracked-Commit-Id: b855b58ac1b7891b219e1d9ef60c45c774cadefe
+X-PR-Tracked-Message-Id: <CAL_JsqLkW7OYJEaONK3Uh9Ly0iXaaOMpwKPgP8EpdBCc9i3UJA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-for-5.1
+X-PR-Tracked-Commit-Id: 935665c1a117f34662549f01e1c9bc5ea7132556
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3d8dfe75ef69f4dd4ba35c09b20a5aa58b4a5078
-Message-Id: <155224111416.12168.42921658416874256.pr-tracker-bot@kernel.org>
-Date:   Sun, 10 Mar 2019 18:05:14 +0000
-To:     Catalin Marinas <catalin.marinas@arm.com>
+X-PR-Merge-Commit-Id: 065b6c4c913d3986c2118acb7e7fb364ce4fb625
+Message-Id: <155224111507.12168.14824564284095575465.pr-tracker-bot@kernel.org>
+Date:   Sun, 10 Mar 2019 18:05:15 +0000
+To:     Rob Herring <robh@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Frank Rowand <frowand.list@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 8 Mar 2019 16:42:23 +0000:
+The pull request you sent on Fri, 8 Mar 2019 14:37:47 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-upstream
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3d8dfe75ef69f4dd4ba35c09b20a5aa58b4a5078
+https://git.kernel.org/torvalds/c/065b6c4c913d3986c2118acb7e7fb364ce4fb625
 
 Thank you!
 
