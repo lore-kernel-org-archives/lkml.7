@@ -7,113 +7,116 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C14C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87709C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 08:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A64A206BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 07:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469EA206BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 Mar 2019 08:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="fEPJm+X4"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gP3TUJwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfCJH5o (ORCPT
+        id S1726329AbfCJIJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 03:57:44 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:53226 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfCJH5n (ORCPT
+        Sun, 10 Mar 2019 04:09:04 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:33284 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfCJIJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 03:57:43 -0400
+        Sun, 10 Mar 2019 04:09:04 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 17A23BB8
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 07:57:42 +0000 (UTC)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id ADBFB956
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 08:09:02 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IORPG7gCRqcZ for <linux-kernel@vger.kernel.org>;
-        Sun, 10 Mar 2019 01:57:41 -0600 (CST)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 82zoxFo0DPwr for <linux-kernel@vger.kernel.org>;
+        Sun, 10 Mar 2019 03:09:02 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id DE16FBC0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 01:57:41 -0600 (CST)
-Received: by mail-io1-f72.google.com with SMTP id w19so1691431ioa.15
-        for <linux-kernel@vger.kernel.org>; Sat, 09 Mar 2019 23:57:41 -0800 (PST)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 7984D938
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 03:09:02 -0500 (CDT)
+Received: by mail-io1-f69.google.com with SMTP id f10so1732422ioj.9
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 00:09:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=MzOTGNaM6xKyCz979o1NCUtyTJWBfNLq000kVLZMQPI=;
-        b=fEPJm+X4LANPfNMBb7r4sXN14RyQnFbjVDgwIUXMudFiqPioevD4vvfLvsjAWfWIe7
-         H8di3L/mFU2gt18AFKpTOi69CkLn4P6gfwloJo1w3fCHa7H0mckgvpFcH7X0HxCCeEJJ
-         GL0Aje+cXbCZxDasYEGhWKumzTt0XtF8cG6Y+gUYAEGoJPtwBPUaAHlg3bKgCsXor4ru
-         UIOmVqbhbxROzg9tH0vdQ8B1MFHgMbQGSDOCHHhI6IV97yAXlPpq8hf5gsgnJbPU3qVs
-         xBxyB7aRQu0z2ZCLNh5fpucyWaOLJRZc7Qe4dC/JaWnWRqXcfid1xjbR9nceBf7Nl7V4
-         a9Yw==
+        bh=UA+r0i/2/g9hcSMLNzAL0Ejv+ZZ8EOzLQPzPSXxyBdQ=;
+        b=gP3TUJwITBxralS50u2r2ilu6AX6TUZdty/+e8+4eCy21D41SN9C5xy0nEU5CTx9Um
+         IWcpoq08sgCUX7r5WbrCrQHqnGhT3yQr6rKnkljHY+2ZNtoraoWe47fFF/GH7YSJtl6E
+         NsFfNo1JNRWL45Sgstb9f14ixwuu/SycYgPBBdLY/D7CzdPhjurlIqiCMB0bSXpDM73l
+         Ovpcn0Co2s6TXtByweXJCzUQERQ2AFdWBbSLbSLYRNEVTuctJGdI1jSA1sdLnbEjjDVF
+         Nf+PlSKPRzt5vz05etIROPFC3l5Q9vE/NdZ4IRTxsYP/w7XEx+NujDunBj8E715nt77u
+         BBOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MzOTGNaM6xKyCz979o1NCUtyTJWBfNLq000kVLZMQPI=;
-        b=PrruHmYJhk4O0iT3+aGvg+Nkro3rKqSoa2DZAma4B/PSGLPOThXCTmsMU4IBI7HKEM
-         hwLbWmvdtzoWx+8qGip8OURAlT/KRLksqvixzPlo01sWwno2QrAqVvx7CtGFdQPiF5VB
-         OiL1+/I6GGUV4Hdvy1zyFaMDPkFQfMwszX/aR8RCIrdISaMBpblj4VuZjFMKLbjd1pPG
-         Jp0mBS1hTKqDjeuw6lpYeth3vYncmLbvEEA1iYlKI7a9XqJiKn9OgDZbwBuNTeD5/faF
-         sJFm3ENuRao9TmKsQwIGAZG6QG6jAx3USD52zs8jCXdyv60wXCF+JH0nmRrEq5d/u67N
-         EgQQ==
-X-Gm-Message-State: APjAAAXvKsJa3+M7T5TpTOVIxkO0fTMQqiQzKopOwiTcmyXlq9Ko4gJo
-        nDE20EAfvtBcwK8kUCiTS73aTEvobLuX9xfKcS5G268fhS/pe6loJ4CQlex1XOt6HLTKMpI2ri5
-        3dNtMsZFZBS/+NxudyPhWW82HKTiV
-X-Received: by 2002:a02:1e13:: with SMTP id m19mr14061642jad.94.1552204661450;
-        Sat, 09 Mar 2019 23:57:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzz7ERUcOzQ/s5R4J83FTgwYZ9sFaGRad8qxA/ZC/7L2dl/Z23Tk4ypi7KswRJjpEqjqiWnIA==
-X-Received: by 2002:a02:1e13:: with SMTP id m19mr14061633jad.94.1552204661064;
-        Sat, 09 Mar 2019 23:57:41 -0800 (PST)
+        bh=UA+r0i/2/g9hcSMLNzAL0Ejv+ZZ8EOzLQPzPSXxyBdQ=;
+        b=fMTpUvQ1urdZ45MnnsbUWbOsFmEx7AKqgypOZqWtl5jJXFAruIgPyCaGN9vvyj+wO8
+         WaLxc6/ZbTIpOSfZ/nt3xeskJGCukze/pXnfZA838K2wNGLHqrLgFK/8zPtU8muUX9+m
+         UHnVYhVOuLiJRvinzdf6XX02vamohGgcJy0EULNv9ivU2It4p6u6gu6raRmrvjjmVkW6
+         Z+HsJsRWxa6hl1Lk9EOsZYkS6p9szYeOL4Tx/GYVodnmCYCz3OEBEctNYXmG1b9VK+9L
+         ojCVw3Ufo+/aiQ+9F/sCKfvjpNCAjlO8qz7Gnm4Y9seCzO5Ce3SSL6Go1L5u7eyuyWun
+         QGqw==
+X-Gm-Message-State: APjAAAXAMGumcRUdJRUbSDjB32NgdJXyzUjp7hBUatXzqUMWFLJZ9Hc3
+        pcDBfAJHjhSSgb1ZKv0KRg8dLkhro+3ruZU395FLhThS7d0D0/+njxU6WoGn59eFRQ43D38KnLv
+        iQ6MQ9VFF63VEsMG4lTLFWcz1a6q+
+X-Received: by 2002:a05:660c:128e:: with SMTP id s14mr14396898ita.158.1552205342029;
+        Sun, 10 Mar 2019 00:09:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzB+Vg1iwUpvaJs2gWzWHCS9ywq4s+YCEzrZRxoKsxo8GmChVPCcTTtXh47+fCiI80zcz8emA==
+X-Received: by 2002:a05:660c:128e:: with SMTP id s14mr14396886ita.158.1552205341809;
+        Sun, 10 Mar 2019 00:09:01 -0800 (PST)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id v14sm959667iol.61.2019.03.09.23.57.39
+        by smtp.gmail.com with ESMTPSA id b36sm5462256itd.2.2019.03.10.00.09.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 Mar 2019 23:57:40 -0800 (PST)
+        Sun, 10 Mar 2019 00:09:01 -0800 (PST)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wei Liu <wei.liu2@citrix.com>, Joe Perches <joe@perches.com>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+Cc:     pakki001@umn.edu, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] net: spi: fix a potential NULL pointer dereference
-Date:   Sun, 10 Mar 2019 01:57:33 -0600
-Message-Id: <20190310075735.3392-1-kjlu@umn.edu>
+Subject: [PATCH] net: lan9303: fix missing error handling
+Date:   Sun, 10 Mar 2019 03:08:56 -0500
+Message-Id: <20190310080856.4440-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case alloc_workqueue fails to allocate the work queue and
-returns NULL, the fix releases the resources and returns
--ENOMEM.
+Both lan9303_phy_write and regmap_write may fail. The fix adds
+the error handling to print error messages upon failure.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/net/can/spi/mcp251x.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/dsa/lan9303-core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-index e90817608645..2737b9a20dfe 100644
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -962,6 +962,14 @@ static int mcp251x_open(struct net_device *net)
+diff --git a/drivers/net/dsa/lan9303-core.c b/drivers/net/dsa/lan9303-core.c
+index 2ffab7ee3d80..3f5e89f431f9 100644
+--- a/drivers/net/dsa/lan9303-core.c
++++ b/drivers/net/dsa/lan9303-core.c
+@@ -1072,6 +1072,10 @@ static void lan9303_adjust_link(struct dsa_switch *ds, int port,
+ 		ctl &= ~BMCR_FULLDPLX;
  
- 	priv->wq = alloc_workqueue("mcp251x_wq", WQ_FREEZABLE | WQ_MEM_RECLAIM,
- 				   0);
-+	if (unlikely(!priv->wq)) {
-+		dev_err(&spi->dev, "failed to allocate work queue\n");
-+		mcp251x_power_enable(priv->transceiver, 0);
-+		close_candev(net);
-+		ret = -ENOMEM;
-+		goto open_unlock;
+ 	res =  lan9303_phy_write(ds, port, MII_BMCR, ctl);
++	if (res) {
++		dev_err(ds->dev, "lan9303_phy_write failed: %d\n", res);
++		return;
 +	}
-+
- 	INIT_WORK(&priv->tx_work, mcp251x_tx_work_handler);
- 	INIT_WORK(&priv->restart_work, mcp251x_restart_work_handler);
+ 
+ 	if (port == chip->phy_addr_base) {
+ 		/* Virtual Phy: Remove Turbo 200Mbit mode */
+@@ -1080,6 +1084,8 @@ static void lan9303_adjust_link(struct dsa_switch *ds, int port,
+ 		ctl &= ~LAN9303_VIRT_SPECIAL_TURBO;
+ 		res =  regmap_write(chip->regmap,
+ 				    LAN9303_VIRT_SPECIAL_CTRL, ctl);
++		if (res)
++			dev_err(ds->dev, "regmap_write failed: %d\n", res);
+ 	}
+ }
  
 -- 
 2.17.1
