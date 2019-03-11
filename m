@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DFF2087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3E320857
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfCKNWF (ORCPT
+        id S1727938AbfCKNW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:22:05 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:44909 "EHLO
+        Mon, 11 Mar 2019 09:22:26 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:35919 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727673AbfCKNTn (ORCPT
+        with ESMTP id S1727677AbfCKNTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:43 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MY60J-1hZR4q36IX-00YRWw for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 1MbAYo-1gWU3p3Wo4-00basd for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
  14:19:41 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 106/114] drivers: rtc: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:58 +0100
-Message-Id: <1552310346-7629-107-git-send-email-info@metux.net>
+Subject: [PATCH 107/114] drivers: xen: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:59 +0100
+Message-Id: <1552310346-7629-108-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:RtSsGSe+iPDM5jrlu+q0mtrtZRU95GNGQ1XK5GLhBFZJ8mdZnLR
- eV9J3xAXTWax04FuSs77NVBQO25GD1DCBnXA4W02rhLdb9P+veKNhk/6JGWsnp2L6uJkh++
- EZp2AjqswlQPVaaV9gQA7rfkNUjnJQaISdI2fLGGu8ldoAMzh8RwPYpltIt6SCHx3X/F9EC
- 3PVUYWux2Eaf2tT5Y/zEQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/qeUXCUQN+o=:ex7CMY0mVgu+nS8eNQXWa/
- Snss1QljC8MEUUuSA5qr5vCfRvlIFKvDJWoTGG4YXcBnNOY0TH0pvFTPzOOkOFz5HeI8Vrn9N
- 07wcZ56bL/AYh1bXB4qJjFceEOMfe12H6/lBpWH+tpayt7V2hmibH8bzcJQjMizPULnboSQ/4
- uXoQyXWQ9TTRbcWFwM6FrNNm0CAsUlkgsdvckbcymZy40LKIycnLGK2Mqsb1BFfeejhCyNxhu
- 9BzpxlxEoWSiHGywp58B4BKJpt43/MrOoFc8uK/ZF4XY0v56YztDSD+bYljWykGbsK8AHNQLM
- 2fnPeXTeZWASmWVGu0ScgtrPOQ3epbNl3ReoLkDueoMpATeaMH46VcjBG50CK8UnHRaI73Wr2
- E+We6EHFqxhrJp/jMKLifyjBpJGeCgW7j5n4a0NiwvBWTy7wXHRV1PrFBwuRv78zGTjDlKojw
- Agqi1O6KiK/+8NItnsbCQx1CMmwm/t/JsVdQtj6E+B9Wtzlx7X0BMWqaeX/cBHHL/wwj0T4To
- YDRq4NAeYn3GuX7awsPvaFTBOqmGsendcnlWdutGL1QZRxzmmAy3dfDW05uVhglXiYjrhhEH2
- TC0mz5YnHZSDJGYcjBidO+RJhA/igO2WxNnqPB/E9+83E0iNoQt7XCwAc1aWUTbz4vLtgHhvX
- oAe2Q9Mze3EhHCUS58YlbtjC61h2b+2Pj0dHcJ9K2UlsCjI+qmgkA9C76vsjrrUbGv4vIS7OI
- A+DxiqNwZCfT8W26PxoMcYBUBZIH5PgkhWpm4Q==
+X-Provags-ID: V03:K1:tQg7mSIN4D/yzP9rI0CXzZFLVsVb2VddHm2yaZWUyvcCGaQDpRp
+ kIhnvuLk9Jxatp+dArOuysg59tR5r/ZqrO01Z4BCI9BvevIMG0yYdWlsG8kX6/iHpdSHzNf
+ 8pVUrCHitf1pOvoI85nLRaSt4h1/Srm8BYwxkUtwVw5eIrFIrNsJyFvj6owJomlZMDYQKrD
+ pkEwKnenXfKsgGViIVwLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ObQ5vKofyro=:hvZdw+W4IY6zUBjhOO3dgi
+ CD3p4r4Aki3n58Bnkwf2zP8a80Yxn7P9vXGKLFW/47BCflcouUi8IBhnE5eULG0ish2csPzZv
+ sbYWMAGF0bYTtDC63oyYZwhqTR63So6DwFREJWdU/wq7O33ly2qcUKfrgl6RkmSYz9aWO23e/
+ Uzo48LSFm9+qoXYsnfnPfK0i0BoTxJOf+dblrZLu1R+sIbOoP9C6JHMttcs4zUfr0bAxasEmI
+ wETGfFQI0PHkSb6qhJxGQqiu5VDT2yKQtbpJxr2dEIFzH04A7RfnRhEMeskUuJxbVeJ1PKQoA
+ QwHOVfT9IBUjPt9/I5VFICSg6VZ/l2r2Ts4nW3+8YGpjkvJGKlwZEcncm7BBK1/g0tKiVGF6w
+ 6cHHueeYAQ1NvpZXGeKzxYMvTiDNLBVVUdoGyPt/EjW53YG6NA5az9nrNTDCu9FgV+Kewj9Mi
+ pAiUsm1IeVTkeHbnZBVttkhE7og6E+NV21lXbccolBPn9fEYup9sqy9vUnVIxcy/S0D98J2nc
+ Er4nDZ87vIhRv1zDd6knzFuxCT8NNgTgmHJ0zunH84jkwC5779Rm8aVEVC6ZyUV7HAoIiTQkq
+ GkJKAebat7K1UFy0cEWKtYZeiiv6UKnC4iRFNbLw3pk4R/T1iGjEDqa6FNmVDAY4uBpsFZHZC
+ HMStVMuzA/GhFp0e7Xb5Dv3rbqRy9weIPdozin5FT2VCWHKjmGw/RNWd7ui6Ck1fVGvPKXncd
+ oUvmBkZaZd39oTu90VMzX3o7Z9Md1Ek8JNazgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,181 +58,121 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/rtc/Kconfig | 82 ++++++++++++++++++++++++++---------------------------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+ drivers/xen/Kconfig | 62 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e1a1f2b..f7d2553 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1211,8 +1211,8 @@ config RTC_DRV_SPEAR
- 	depends on PLAT_SPEAR || COMPILE_TEST
- 	default y
+diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+index 838b66a..22a8a14 100644
+--- a/drivers/xen/Kconfig
++++ b/drivers/xen/Kconfig
+@@ -53,8 +53,8 @@ config XEN_BALLOON_MEMORY_HOTPLUG
+ 	  the newly added memory can be manually onlined in the target domain
+ 	  by doing the following:
+ 
+-		for i in /sys/devices/system/memory/memory*/state; do \
+-		  [ "`cat "$i"`" = offline ] && echo online > "$i"; done
++	        for i in /sys/devices/system/memory/memory*/state; do \
++	          [ "`cat "$i"`" = offline ] && echo online > "$i"; done
+ 
+ 	  or by adding the following line to udev rules:
+ 
+@@ -120,27 +120,27 @@ config XENFS
+ 	  If in doubt, say yes.
+ 
+ config XEN_COMPAT_XENFS
+-       bool "Create compatibility mount point /proc/xen"
+-       depends on XENFS
+-       default y
+-       help
+-         The old xenstore userspace tools expect to find "xenbus"
+-         under /proc/xen, but "xenbus" is now found at the root of the
+-         xenfs filesystem.  Selecting this causes the kernel to create
+-         the compatibility mount point /proc/xen if it is running on
+-         a xen platform.
+-         If in doubt, say yes.
++	bool "Create compatibility mount point /proc/xen"
++	depends on XENFS
++	default y
++	help
++	  The old xenstore userspace tools expect to find "xenbus"
++	  under /proc/xen, but "xenbus" is now found at the root of the
++	  xenfs filesystem.  Selecting this causes the kernel to create
++	  the compatibility mount point /proc/xen if it is running on
++	  a xen platform.
++	  If in doubt, say yes.
+ 
+ config XEN_SYS_HYPERVISOR
+-       bool "Create xen entries under /sys/hypervisor"
+-       depends on SYSFS
+-       select SYS_HYPERVISOR
+-       default y
+-       help
+-         Create entries under /sys/hypervisor describing the Xen
+-	 hypervisor environment.  When running native or in another
+-	 virtual environment, /sys/hypervisor will still be present,
+-	 but will have no xen contents.
++	bool "Create xen entries under /sys/hypervisor"
++	depends on SYSFS
++	select SYS_HYPERVISOR
++	default y
++	help
++	  Create entries under /sys/hypervisor describing the Xen
++	  hypervisor environment.  When running native or in another
++	  virtual environment, /sys/hypervisor will still be present,
++	  but will have no xen contents.
+ 
+ config XEN_XENBUS_FRONTEND
+ 	tristate
+@@ -292,7 +292,7 @@ config XEN_ACPI_PROCESSOR
+ 	depends on XEN && XEN_DOM0 && X86 && ACPI_PROCESSOR && CPU_FREQ
+ 	default m
  	help
--	 If you say Y here you will get support for the RTC found on
--	 spear
-+	  If you say Y here you will get support for the RTC found on
-+	  spear
+-          This ACPI processor uploads Power Management information to the Xen
++	  This ACPI processor uploads Power Management information to the Xen
+ 	  hypervisor.
  
- config RTC_DRV_PCF50633
- 	depends on MFD_PCF50633
-@@ -1309,10 +1309,10 @@ config RTC_DRV_IMXDI
- 	tristate "Freescale IMX DryIce Real Time Clock"
- 	depends on ARCH_MXC
- 	help
--	   Support for Freescale IMX DryIce RTC
-+	  Support for Freescale IMX DryIce RTC
+ 	  To do that the driver parses the Power Management data and uploads
+@@ -301,7 +301,7 @@ config XEN_ACPI_PROCESSOR
+ 	  SMM so that other drivers (such as ACPI cpufreq scaling driver) will
+ 	  not load.
  
--	   This driver can also be built as a module, if so, the module
--	   will be called "rtc-imxdi".
-+	  This driver can also be built as a module, if so, the module
-+	  will be called "rtc-imxdi".
+-          To compile this driver as a module, choose M here: the module will be
++	  To compile this driver as a module, choose M here: the module will be
+ 	  called xen_acpi_processor  If you do not know what to choose, select
+ 	  M here. If the CPUFREQ drivers are built in, select Y here.
  
- config RTC_DRV_MESON
- 	tristate "Amlogic Meson RTC"
-@@ -1475,12 +1475,12 @@ config RTC_DRV_PXA
- 	depends on ARCH_PXA
- 	select RTC_DRV_SA1100
- 	help
--         If you say Y here you will get access to the real time clock
--         built into your PXA27x or PXA3xx CPU. This RTC is actually 2 RTCs
--         consisting of an SA1100 compatible RTC and the extended PXA RTC.
-+	  If you say Y here you will get access to the real time clock
-+	  built into your PXA27x or PXA3xx CPU. This RTC is actually 2 RTCs
-+	  consisting of an SA1100 compatible RTC and the extended PXA RTC.
+@@ -313,7 +313,7 @@ config XEN_MCE_LOG
+ 	  converting it into Linux mcelog format for mcelog tools
  
--	 This RTC driver uses PXA RTC registers available since pxa27x
--	 series (RDxR, RYxR) instead of legacy RCNR, RTAR.
-+	  This RTC driver uses PXA RTC registers available since pxa27x
-+	  series (RDxR, RYxR) instead of legacy RCNR, RTAR.
+ config XEN_HAVE_PVMMU
+-       bool
++	bool
  
- config RTC_DRV_VT8500
- 	tristate "VIA/WonderMedia 85xx SoC RTC"
-@@ -1699,21 +1699,21 @@ config RTC_DRV_MXC
- 	tristate "Freescale MXC Real Time Clock"
- 	depends on ARCH_MXC
- 	help
--	   If you say yes here you get support for the Freescale MXC
--	   RTC module.
-+	  If you say yes here you get support for the Freescale MXC
-+	  RTC module.
+ config XEN_EFI
+ 	def_bool y
+@@ -330,15 +330,15 @@ config XEN_ACPI
+ 	depends on X86 && ACPI
  
--	   This driver can also be built as a module, if so, the module
--	   will be called "rtc-mxc".
-+	  This driver can also be built as a module, if so, the module
-+	  will be called "rtc-mxc".
+ config XEN_SYMS
+-       bool "Xen symbols"
+-       depends on X86 && XEN_DOM0 && XENFS
+-       default y if KALLSYMS
+-       help
+-          Exports hypervisor symbols (along with their types and addresses) via
+-          /proc/xen/xensyms file, similar to /proc/kallsyms
++	bool "Xen symbols"
++	depends on X86 && XEN_DOM0 && XENFS
++	default y if KALLSYMS
++	help
++	  Exports hypervisor symbols (along with their types and addresses) via
++	  /proc/xen/xensyms file, similar to /proc/kallsyms
  
- config RTC_DRV_MXC_V2
- 	tristate "Freescale MXC Real Time Clock for i.MX53"
- 	depends on ARCH_MXC
- 	help
--	   If you say yes here you get support for the Freescale MXC
--	   SRTC module in i.MX53 processor.
-+	  If you say yes here you get support for the Freescale MXC
-+	  SRTC module in i.MX53 processor.
+ config XEN_HAVE_VPMU
+-       bool
++	bool
  
--	   This driver can also be built as a module, if so, the module
--	   will be called "rtc-mxc_v2".
-+	  This driver can also be built as a module, if so, the module
-+	  will be called "rtc-mxc_v2".
- 
- config RTC_DRV_SNVS
- 	tristate "Freescale SNVS RTC support"
-@@ -1721,19 +1721,19 @@ config RTC_DRV_SNVS
- 	depends on HAS_IOMEM
- 	depends on OF
- 	help
--	   If you say yes here you get support for the Freescale SNVS
--	   Low Power (LP) RTC module.
-+	  If you say yes here you get support for the Freescale SNVS
-+	  Low Power (LP) RTC module.
- 
--	   This driver can also be built as a module, if so, the module
--	   will be called "rtc-snvs".
-+	  This driver can also be built as a module, if so, the module
-+	  will be called "rtc-snvs".
- 
- config RTC_DRV_IMX_SC
- 	depends on IMX_SCU
- 	depends on HAVE_ARM_SMCCC
- 	tristate "NXP i.MX System Controller RTC support"
- 	help
--	   If you say yes here you get support for the NXP i.MX System
--	   Controller RTC module.
-+	  If you say yes here you get support for the NXP i.MX System
-+	  Controller RTC module.
- 
- config RTC_DRV_SIRFSOC
- 	tristate "SiRFSOC RTC"
-@@ -1757,11 +1757,11 @@ config RTC_DRV_MOXART
- 	tristate "MOXA ART RTC"
- 	depends on ARCH_MOXART || COMPILE_TEST
- 	help
--	   If you say yes here you get support for the MOXA ART
--	   RTC module.
-+	  If you say yes here you get support for the MOXA ART
-+	  RTC module.
- 
--	   This driver can also be built as a module. If so, the module
--	   will be called rtc-moxart
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-moxart
- 
- config RTC_DRV_MT6397
- 	tristate "MediaTek PMIC based RTC"
-@@ -1799,39 +1799,39 @@ config RTC_DRV_PIC32
- 	depends on MACH_PIC32
- 	default y
- 	help
--	   If you say yes here you get support for the PIC32 RTC module.
-+	  If you say yes here you get support for the PIC32 RTC module.
- 
--	   This driver can also be built as a module. If so, the module
--	   will be called rtc-pic32
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-pic32
- 
- config RTC_DRV_R7301
- 	tristate "EPSON TOYOCOM RTC-7301SF/DG"
- 	select REGMAP_MMIO
- 	depends on OF && HAS_IOMEM
- 	help
--	   If you say yes here you get support for the EPSON TOYOCOM
--	   RTC-7301SF/DG chips.
-+	  If you say yes here you get support for the EPSON TOYOCOM
-+	  RTC-7301SF/DG chips.
- 
--	   This driver can also be built as a module. If so, the module
--	   will be called rtc-r7301.
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-r7301.
- 
- config RTC_DRV_STM32
- 	tristate "STM32 RTC"
- 	select REGMAP_MMIO
- 	depends on ARCH_STM32 || COMPILE_TEST
- 	help
--	   If you say yes here you get support for the STM32 On-Chip
--	   Real Time Clock.
-+	  If you say yes here you get support for the STM32 On-Chip
-+	  Real Time Clock.
- 
--	   This driver can also be built as a module, if so, the module
--	   will be called "rtc-stm32".
-+	  This driver can also be built as a module, if so, the module
-+	  will be called "rtc-stm32".
- 
- config RTC_DRV_CPCAP
- 	depends on MFD_CPCAP
- 	tristate "Motorola CPCAP RTC"
- 	help
--	   Say y here for CPCAP rtc found on some Motorola phones
--	   and tablets such as Droid 4.
-+	  Say y here for CPCAP rtc found on some Motorola phones
-+	  and tablets such as Droid 4.
- 
- config RTC_DRV_RTD119X
- 	bool "Realtek RTD129x RTC"
+ config XEN_FRONT_PGDIR_SHBUF
+ 	tristate
 -- 
 1.9.1
 
