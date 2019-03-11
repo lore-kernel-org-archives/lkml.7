@@ -2,80 +2,79 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A9CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E04BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAE2206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PO39Y+g/"
+	by mail.kernel.org (Postfix) with ESMTP id 694492075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfCKDwi (ORCPT
+        id S1727236AbfCKD6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 23:52:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37492 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbfCKDwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 23:52:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=R/JJY+Fzox0n6gWzJmHh8OwouUibGB3HPKZVPqj4BSs=; b=PO39Y+g/N/jDwcale0v9WuudH
-        FLZYsm4Cw2GlhIJRu/YLUIPtUuvjmAPiKqxlFAV0X23XhdFAQInIVzXwIt6Hr13zsDckxsRQsCVD7
-        gq+5wSdA9+eUmv+KZKV60TKGhWOH2qvMtr1naqLzmMca89/CN27HjhPDoYGgN/IQQYQdLBu6KPZUe
-        hZt93qIcZlptWeoJwaptRBzZjGrG6jB68+2i0o3ghki1vAQCeeXto3c/d1TDB2t9Etq8em4ec/jmP
-        ulfgkoY7PhvQozWU2Qwu7tNETE8e1gzkYquOXJ96gpfW5OGvGf0N3ec7XW1IS142gTaevbmFI5Ig3
-        yws5/w//Q==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h3BzR-0004VI-3O; Mon, 11 Mar 2019 03:52:37 +0000
-Subject: Re: [PATCH 3/4] Add header file,Kconfig and Makefile
-To:     =?UTF-8?B?TW9ycmlzIEt1IOWPpOaWh+S/ig==?= <morris_ku@sunix.com>,
-        Morris Ku <saumah@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>
-References: <20190308123547.20578-1-saumah@gmail.com>
- <c23c156e-0493-96e2-f4eb-0171e8c8fc58@infradead.org>
- <HK2PR03MB45297EB467A0A7550CCBB94795480@HK2PR03MB4529.apcprd03.prod.outlook.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ae1cd94e-9c1c-e05c-ab82-73003fa1ab0e@infradead.org>
-Date:   Sun, 10 Mar 2019 20:52:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 10 Mar 2019 23:58:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37052 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726976AbfCKD6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 23:58:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F110BACA8;
+        Mon, 11 Mar 2019 03:58:21 +0000 (UTC)
+Date:   Sun, 10 Mar 2019 20:58:15 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, jgg@mellanox.com, arnd@arndb.de,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/debug: add a cast to u64 for atomic64_read()
+Message-ID: <20190311035815.kq7ftc6vphy6vwen@linux-r8p5>
+Mail-Followup-To: Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        jgg@mellanox.com, arnd@arndb.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190310183051.87303-1-cai@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <HK2PR03MB45297EB467A0A7550CCBB94795480@HK2PR03MB4529.apcprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190310183051.87303-1-cai@lca.pw>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/19 8:25 PM, Morris Ku 古文俊 wrote:
-> Hi,
-> 
->> This patch add header file, Kconfig and Makefile. 
->> 
->> Signed-off-by: Morris Ku <saumah@gmail.com>
->> ---
-> ok , I'll delete Kconfig  in next version.
+On Sun, 10 Mar 2019, Qian Cai wrote:
 
-Hi,
-Please just send plain text emails -- no html.
+>atomic64_read() on ppc64le returns "long int", so fix the same way as
+>the commit d549f545e690 ("drm/virtio: use %llu format string form
+>atomic64_t") by adding a cast to u64, which makes it work on all arches.
+>
+>In file included from ./include/linux/printk.h:7,
+>                 from ./include/linux/kernel.h:15,
+>                 from mm/debug.c:9:
+>mm/debug.c: In function 'dump_mm':
+>./include/linux/kern_levels.h:5:18: warning: format '%llx' expects
+>argument of type 'long long unsigned int', but argument 19 has type
+>'long int' [-Wformat=]
+> #define KERN_SOH "\001"  /* ASCII Start Of Header */
+>                  ^~~~~~
+>./include/linux/kern_levels.h:8:20: note: in expansion of macro
+>'KERN_SOH'
+> #define KERN_EMERG KERN_SOH "0" /* system is unusable */
+>                    ^~~~~~~~
+>./include/linux/printk.h:297:9: note: in expansion of macro 'KERN_EMERG'
+>  printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
+>         ^~~~~~~~~~
+>mm/debug.c:133:2: note: in expansion of macro 'pr_emerg'
+>  pr_emerg("mm %px mmap %px seqnum %llu task_size %lu\n"
+>  ^~~~~~~~
+>mm/debug.c:140:17: note: format string is defined here
+>   "pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
+>              ~~~^
+>              %lx
+>
+>Fixes: 70f8a3ca68d3 ("mm: make mm->pinned_vm an atomic64 counter")
+>Signed-off-by: Qian Cai <cai@lca.pw>
 
-vger.kernel.org (the mailing list server) ignores emails
-that contain html.
-
-thanks.
--- 
-~Randy
+Acked-by: Davidlohr Bueso <dbueso@suse.de>
