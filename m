@@ -2,159 +2,101 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856D4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C55C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597D02075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEA02075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfCKMK4 convert rfc822-to-8bit (ORCPT
+        id S1727353AbfCKMLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 08:10:56 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6093 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbfCKMKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 08:10:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 05:10:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,467,1544515200"; 
-   d="scan'208";a="140971751"
-Received: from jlahtine-desk.ger.corp.intel.com (HELO localhost) ([10.252.10.139])
-  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2019 05:10:50 -0700
-Content-Type: text/plain; charset="utf-8"
+        Mon, 11 Mar 2019 08:11:41 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43554 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfCKMLk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 08:11:40 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d16so4653424qtn.10;
+        Mon, 11 Mar 2019 05:11:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H3QAA+O90f7r8NbQtZhP9wtU1gR8JJm3JN1WpqCkIhs=;
+        b=FV49cDltVrBVWvPj3TWqMv/62BEH/TA1JKG3iRvZAi6Mg6ZQ67sABTMRPLPiRrgjDx
+         q6JjCNGPTHH5PcCKvVkahzjzBCfWxQl1jRkDPv+gAbPb0zKts52rbZlibDKQIYAO9c2A
+         CbJW86a6L+ixiLNpMIIR5rR3eVA88+Px4J4oVNsWSU9XQlaVKGseLeLnbdmpSLb5UfuY
+         6Xi+ttmtHkluCdY7RCg4KdTHYy7/X2JmKbG1VeLnwkUxxvZcdKDYVVaqXUw1FwF0Td8K
+         7kj/h0+5IcO9EUK3fgOlkvLXZ58SjJpavvZJJQZrUWQ7qnAtowL6UqbDV2eJSUDRBy8A
+         AqAA==
+X-Gm-Message-State: APjAAAXRHOeH+ihM+jWISMRMktspDuTATD4RxI8BX3gq8RdiC58SFeJG
+        j4SHq1YQ0PngoVd5jHWZ/XDGk3lY565UElXFJCU=
+X-Google-Smtp-Source: APXvYqxsVqRI//5TTfbN2YueL6jap/wwPHgqW0M34D5qzKflQc762i4r94eWFx0oPJHBo/qF2WEV5+/w87BpTr9E1n8=
+X-Received: by 2002:a0c:b05a:: with SMTP id l26mr25236520qvc.40.1552306299491;
+ Mon, 11 Mar 2019 05:11:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        David Zhou <David1.Zhou@amd.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-In-Reply-To: <20190310013142.GA3376@darwi-home-pc>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20190310013142.GA3376@darwi-home-pc>
-Message-ID: <155230624946.5208.5177271872742391668@jlahtine-desk.ger.corp.intel.com>
-User-Agent: alot/0.7
-Subject: Re: DRM-based Oops viewer
-Date:   Mon, 11 Mar 2019 14:10:49 +0200
+References: <1546173604-26066-1-git-send-email-minipli@googlemail.com>
+ <20190102202938.GA26600@linux-8ccs> <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
+ <CA+rthh_OnmvQQbKAG55rha56HCp2vjhZMv0ahRdgJjbjmG=xRA@mail.gmail.com> <20190311115523.GA30951@linux-8ccs>
+In-Reply-To: <20190311115523.GA30951@linux-8ccs>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Mar 2019 13:11:22 +0100
+Message-ID: <CAK8P3a2w0B50Nb1gu6nJ2BJJsPFyOyXXOqn5SaTZnRBS=vD+Yg@mail.gmail.com>
+Subject: Re: [PATCH] vmlinux.lds.h: drop unused __vermagic
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Mathias Krause <minipli@googlemail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rusty Russell <rusty@rustcorp.com.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Ahmed S. Darwish (2019-03-10 03:31:42)
-> Hello DRM/UEFI maintainers,
-> 
-> Several years ago, I wrote a set of patches to dump the kernel
-> log to disk upon panic -- through BIOS INT 0x13 services. [1]
-> 
-> The overwhelming response was that it's unsafe to do this in a
-> generic manner. Linus proposed a video-based viewer instead: [2]
-> 
->     If you want to do the BIOS services thing, do it for video: copy the
->     oops to low RAM, return to real mode, re-run the graphics card POST
->     routines to initialize text-mode, and use the BIOS to print out the
->     oops.  That is WAY less scary than writing to disk.
-> 
-> Of course it's 2019 now though, and it's quite known that
-> Intel is officially obsoleting the PC/AT BIOS by 2020.. [3]
-> 
-> Researching whether this can be done from UEFI, it was also clear
-> that UEFI "Runtime Services" do not provide any re-initialization
-> routines. [4]
-> 
-> The maximum possible that UEFI can provide is a GOP-provided
-> framebuffer that's ready to use by the OS -- even after the UEFI
-> boot phase is marked as done through ExitBootServices(). [5]
-> 
-> Of course, once native drivers like i915 or radeon take over,
-> such a framebuffer is toast... [6]
-> 
-> Thus a possible remaining option, is to display the oops through
-> "minimal" DRM drivers provided for each HW variant... Since
-> these special drivers will run only and fully under a panic()
-> context though, several constraints exist:
-> 
->   - The code should be fully synchronous (irqs are disabled)
->   - It should not allocate any dynamic memory
->   - It should make minimal assumptions about HW state
->   - It should not chain into any other kernel subsystem
->   - It has ample freedom to use delay-based loops and the
->     like, the kernel is already dead.
-> 
-> How feasible is it to have such a special "DRM viewoops"
-> framework + its minimal drivers in the kernel?
+On Mon, Mar 11, 2019 at 12:55 PM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Mathias Krause [10/03/19 20:26 +0100]:
+> >Hi Jessica,
+> >
+> >On Mon, 21 Jan 2019 at 12:39, Mathias Krause <minipli@googlemail.com> wrote:
+> >>
+> >> On Wed, 2 Jan 2019 at 21:29, Jessica Yu <jeyu@kernel.org> wrote:
+> >> >
+> >> > +++ Mathias Krause [30/12/18 13:40 +0100]:
+> >> > >The reference to '__vermagic' is a relict from v2.5 times. And even
+> >> > >there it had a very short life time, from v2.5.59 (commit 1d411b80ee18
+> >> > >("Module Sanity Check") in the historic tree) to v2.5.69 (commit
+> >> > >67ac5b866bda ("[PATCH] complete modinfo section")).
+> >> > >
+> >> > >Neither current kernels nor modules contain a '__vermagic' section any
+> >> > >more, so get rid of it.
+> >> > >
+> >> > >Signed-off-by: Mathias Krause <minipli@googlemail.com>
+> >> > >Cc: Rusty Russell <rusty@rustcorp.com.au>
+> >> > >Cc: Jessica Yu <jeyu@kernel.org>
+> >> >
+> >> > Thanks for the cleanup.
+> >> >
+> >> > Reviewed-by: Jessica Yu <jeyu@kernel.org>
+> >> >
+> >>
+> >> Arnd, will you carry this patch through your asm-generic tree or did
+> >> the MAINTAINERS file mislead me here?
+> >>
+> >
+> >looks like Arnd keeps ignoring my Emails. :/ Can you carry this patch
+> >through your module tree? Or do you think I should ask Andrew Morton
+> >instead?
 
-There is already (efi-)pstore, and I believe it could be already
-integrated to distros so that the captured error is displayed on
-next boot.
+Oops, sorry about this.
 
-So the user experience difference would only be seeing the error
-immediately vs. on boot?
+> Sure, I'll queue this up in modules-next shortly after the merge window.
 
-For that gain, it might be bit much work to create failsafe mode
-to each driver, but others may disagree.
+Ok, thanks for picking it up!
 
-Regards, Joonas
-
-> The target is to start from i915, since that's what in my
-> laptop now, and work from there..
-> 
-> Some final notes:
-> 
->   - The NT kernel has a similar concept, but for storage instead.
->     They're used to dump core under kernel panic() situations,
->     and are called "Minoport storage drivers". [7]
-> 
->   - Since Windows 7+, a very fancy Blue Screen of Death is
->     displayed, with Unicode and whatnot, implying GPU drivers
->     involvement. [8]
-> 
->   - Mac OS X also does something similar [9]
-> 
->   - On Linux laptops, the current situation is _really_ bad.
-> 
->     In any graphical session, type "echo c > /proc/sysrq-trigger";
->     the screen will just completely freeze...
-> 
->     Desired first goal: just print the panic() log
-> 
-> Thanks a lot,
-> 
-> [1] https://lore.kernel.org/lkml/20110125134748.GA10051@laptop
-> [2] https://lore.kernel.org/lkml/AANLkTinU0KYiCd4p=z+=ojbkeEoT2G+CAYvdRU02KJEn@mail.gmail.com
-> 
-> [3] https://uefi.org/sites/default/files/resources/Brian_Richardson_Intel_Final.pdf
-> 
-> [4] UEFI v2.7 spec, Chapter 8, "Services — Runtime Services"
-> [5] UEFI v2.7 spec, Section 12.9, "Graphics Output Protocol"
->     "The Graphics Output Protocol supports this capability by
->      providing the EFI OS loader access to a hardware frame buffer
->      and enough information to allow the OS to draw directly to
->      the graphics output device."
-> 
-> [6] linux/drivers/gpu/drm/i915/i915_drv.c::i915_kick_out_firmware_fb()
->     linux/drivers/gpu/drm/radeon/radeon_drv.c::radeon_pci_probe()
-> 
-> [7] https://docs.microsoft.com/en-us/windows-hardware/drivers/storage/restrictions-on-miniport-drivers-that-manage-the-boot-drive
-> 
-> [8] https://upload.wikimedia.org/wikipedia/commons/archive/5/56/20181019151937%21Bsodwindows10.png
-> [9] https://upload.wikimedia.org/wikipedia/commons/4/4a/Mac_OS_X_10.2_Kernel_Panic.jpg
-> 
-> --darwi
-> http://darwish.chasingpointers.com
+     Arnd
