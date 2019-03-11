@@ -6,51 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAEDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE650C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E92214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E2C2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335169;
-	bh=FUNfKDtCuuKG1liltAUT0dTNRRzBvcL5HRPRT4K8Qng=;
+	s=default; t=1552335179;
+	bh=ROaLtZk8kj1SmO3araqgnqACVW24Kd7X8sfKJd2cUpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bq500M4c2IkUacU4slgTyHRYqYGw/bwK0JI3/+DpIdLt99ej0/FbmQqMH8D0u+YBi
-	 JXTt1zf9lowmoSaRRQdq7SkP01rycR9qtHv2Cw1GFBwRzf/MpQ2/c6v71QYCMXy7Pw
-	 ce79QGzIuJWDJtQd7GlKGNTtz9ZXVlRQOz8xRO9A=
+	b=vCcwiz8T/SyUryIMAFFirlpO1yVAAkBGNtQ71MJWLYlbxfom17ObhzXY08LkirhKz
+	 x2gZtRiFu8HR+S8J4pV9F+MoL2CaiYgozvDujX64LyDg1c07daQKpGwXKoPVZWzUoC
+	 iDpH9etqmycUR6El4AowmtE2j8OUzzuGZQbJRbYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbfCKUMr (ORCPT
+        id S1728946AbfCKUM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:12:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728469AbfCKT4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:03 -0400
+        id S1728372AbfCKTz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:55:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 693AE214AE;
-        Mon, 11 Mar 2019 19:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A352171F;
+        Mon, 11 Mar 2019 19:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334162;
-        bh=FUNfKDtCuuKG1liltAUT0dTNRRzBvcL5HRPRT4K8Qng=;
+        s=default; t=1552334154;
+        bh=ROaLtZk8kj1SmO3araqgnqACVW24Kd7X8sfKJd2cUpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lJr5WIv6LYHNUaD2PFb7cmYXp2KqUP6EKvuUHrxIsrXpTQQGIL/YFaaDtBHuJ9XNX
-         lxqqNYeub+JcTGcw8S45m0y3NoTtcBXufPR+iVfMpPG5YiQqGXp5F+0wZ10zPyLUo3
-         wAbVKh6Z5NBgJQchJ8e/20AAbrs27Kfd9Ay7GjOk=
+        b=v9HsR5jMV9krNhDb/GfklorHHC2sit4Vzw44Zm4ZoMqs6QKvfJNvaoomlqkMRWNdE
+         OYDMojWnh0sJCUbuM5pvFEr2qgXn0umK/d3iFCkthssU0c0JYFM9c+IBAb6+GCdOSy
+         ixDNPdqpK2UO2lAtkgwMiLAskZ4xqsSQsk/h7fRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 23/52] ASoC: samsung: Prevent clk_get_rate() calls in atomic context
-Date:   Mon, 11 Mar 2019 15:54:47 -0400
-Message-Id: <20190311195516.137772-23-sashal@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.20 19/52] arm/arm64: KVM: Allow a VCPU to fully reset itself
+Date:   Mon, 11 Mar 2019 15:54:43 -0400
+Message-Id: <20190311195516.137772-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,159 +57,282 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit 860b454c2c0cbda6892954f5cdbbb48931b3c8db ]
+[ Upstream commit 358b28f09f0ab074d781df72b8a671edb1547789 ]
 
-This patch moves clk_get_rate() call from trigger() to hw_params()
-callback to avoid calling sleeping clk API from atomic context
-and prevent deadlock as indicated below.
+The current kvm_psci_vcpu_on implementation will directly try to
+manipulate the state of the VCPU to reset it.  However, since this is
+not done on the thread that runs the VCPU, we can end up in a strangely
+corrupted state when the source and target VCPUs are running at the same
+time.
 
-Before this change clk_get_rate() was being called with same
-spinlock held as the one passed to the clk API when registering
-clocks exposed by the I2S driver.
+Fix this by factoring out all reset logic from the PSCI implementation
+and forwarding the required information along with a request to the
+target VCPU.
 
-[   82.109780] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:908
-[   82.117009] in_atomic(): 1, irqs_disabled(): 128, pid: 1554, name: speaker-test
-[   82.124235] 3 locks held by speaker-test/1554:
-[   82.128653]  #0: cc8c5328 (snd_pcm_link_rwlock){...-}, at: snd_pcm_stream_lock_irq+0x20/0x38
-[   82.137058]  #1: ec9eda17 (&(&substream->self_group.lock)->rlock){..-.}, at: snd_pcm_ioctl+0x900/0x1268
-[   82.146417]  #2: 6ac279bf (&(&pri_dai->spinlock)->rlock){..-.}, at: i2s_trigger+0x64/0x6d4
-[   82.154650] irq event stamp: 8144
-[   82.157949] hardirqs last  enabled at (8143): [<c0a0f574>] _raw_read_unlock_irq+0x24/0x5c
-[   82.166089] hardirqs last disabled at (8144): [<c0a0f6a8>] _raw_read_lock_irq+0x18/0x58
-[   82.174063] softirqs last  enabled at (8004): [<c01024e4>] __do_softirq+0x3a4/0x66c
-[   82.181688] softirqs last disabled at (7997): [<c012d730>] irq_exit+0x140/0x168
-[   82.188964] Preemption disabled at:
-[   82.188967] [<00000000>]   (null)
-[   82.195728] CPU: 6 PID: 1554 Comm: speaker-test Not tainted 5.0.0-rc5-00192-ga6e6caca8f03 #191
-[   82.204302] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[   82.210376] [<c0111a54>] (unwind_backtrace) from [<c010d8f4>] (show_stack+0x10/0x14)
-[   82.218084] [<c010d8f4>] (show_stack) from [<c09ef004>] (dump_stack+0x90/0xc8)
-[   82.225278] [<c09ef004>] (dump_stack) from [<c0152980>] (___might_sleep+0x22c/0x2c8)
-[   82.232990] [<c0152980>] (___might_sleep) from [<c0a0a2e4>] (__mutex_lock+0x28/0xa3c)
-[   82.240788] [<c0a0a2e4>] (__mutex_lock) from [<c0a0ad80>] (mutex_lock_nested+0x1c/0x24)
-[   82.248763] [<c0a0ad80>] (mutex_lock_nested) from [<c04923dc>] (clk_prepare_lock+0x78/0xec)
-[   82.257079] [<c04923dc>] (clk_prepare_lock) from [<c049538c>] (clk_core_get_rate+0xc/0x5c)
-[   82.265309] [<c049538c>] (clk_core_get_rate) from [<c0766b18>] (i2s_trigger+0x490/0x6d4)
-[   82.273369] [<c0766b18>] (i2s_trigger) from [<c074fec4>] (soc_pcm_trigger+0x100/0x140)
-[   82.281254] [<c074fec4>] (soc_pcm_trigger) from [<c07378a0>] (snd_pcm_do_start+0x2c/0x30)
-[   82.289400] [<c07378a0>] (snd_pcm_do_start) from [<c07376cc>] (snd_pcm_action_single+0x38/0x78)
-[   82.298065] [<c07376cc>] (snd_pcm_action_single) from [<c073a450>] (snd_pcm_ioctl+0x910/0x1268)
-[   82.306734] [<c073a450>] (snd_pcm_ioctl) from [<c0292344>] (do_vfs_ioctl+0x90/0x9ec)
-[   82.314443] [<c0292344>] (do_vfs_ioctl) from [<c0292cd4>] (ksys_ioctl+0x34/0x60)
-[   82.321808] [<c0292cd4>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-[   82.329431] Exception stack(0xeb875fa8 to 0xeb875ff0)
-[   82.334459] 5fa0:                   00033c18 b6e31000 00000004 00004142 00033d80 00033d80
-[   82.342605] 5fc0: 00033c18 b6e31000 00008000 00000036 00008000 00000000 beea38a8 00008000
-[   82.350748] 5fe0: b6e3142c beea384c b6da9a30 b6c9212c
-[   82.355789]
-[   82.357245] ======================================================
-[   82.363397] WARNING: possible circular locking dependency detected
-[   82.369551] 5.0.0-rc5-00192-ga6e6caca8f03 #191 Tainted: G        W
-[   82.376395] ------------------------------------------------------
-[   82.382548] speaker-test/1554 is trying to acquire lock:
-[   82.387834] 6d2007f4 (prepare_lock){+.+.}, at: clk_prepare_lock+0x78/0xec
-[   82.394593]
-[   82.394593] but task is already holding lock:
-[   82.400398] 6ac279bf (&(&pri_dai->spinlock)->rlock){..-.}, at: i2s_trigger+0x64/0x6d4
-[   82.408197]
-[   82.408197] which lock already depends on the new lock.
-[   82.416343]
-[   82.416343] the existing dependency chain (in reverse order) is:
-[   82.423795]
-[   82.423795] -> #1 (&(&pri_dai->spinlock)->rlock){..-.}:
-[   82.430472]        clk_mux_set_parent+0x34/0xb8
-[   82.434975]        clk_core_set_parent_nolock+0x1c4/0x52c
-[   82.440347]        clk_set_parent+0x38/0x6c
-[   82.444509]        of_clk_set_defaults+0xc8/0x308
-[   82.449186]        of_clk_add_provider+0x84/0xd0
-[   82.453779]        samsung_i2s_probe+0x408/0x5f8
-[   82.458376]        platform_drv_probe+0x48/0x98
-[   82.462879]        really_probe+0x224/0x3f4
-[   82.467037]        driver_probe_device+0x70/0x1c4
-[   82.471716]        bus_for_each_drv+0x44/0x8c
-[   82.476049]        __device_attach+0xa0/0x138
-[   82.480382]        bus_probe_device+0x88/0x90
-[   82.484715]        deferred_probe_work_func+0x6c/0xbc
-[   82.489741]        process_one_work+0x200/0x740
-[   82.494246]        worker_thread+0x2c/0x4c8
-[   82.498408]        kthread+0x128/0x164
-[   82.502131]        ret_from_fork+0x14/0x20
-[   82.506204]          (null)
-[   82.508976]
-[   82.508976] -> #0 (prepare_lock){+.+.}:
-[   82.514264]        __mutex_lock+0x60/0xa3c
-[   82.518336]        mutex_lock_nested+0x1c/0x24
-[   82.522756]        clk_prepare_lock+0x78/0xec
-[   82.527088]        clk_core_get_rate+0xc/0x5c
-[   82.531421]        i2s_trigger+0x490/0x6d4
-[   82.535494]        soc_pcm_trigger+0x100/0x140
-[   82.539913]        snd_pcm_do_start+0x2c/0x30
-[   82.544246]        snd_pcm_action_single+0x38/0x78
-[   82.549012]        snd_pcm_ioctl+0x910/0x1268
-[   82.553345]        do_vfs_ioctl+0x90/0x9ec
-[   82.557417]        ksys_ioctl+0x34/0x60
-[   82.561229]        ret_fast_syscall+0x0/0x28
-[   82.565477]        0xbeea384c
-[   82.568421]
-[   82.568421] other info that might help us debug this:
-[   82.568421]
-[   82.576394]  Possible unsafe locking scenario:
-[   82.576394]
-[   82.582285]        CPU0                    CPU1
-[   82.586792]        ----                    ----
-[   82.591297]   lock(&(&pri_dai->spinlock)->rlock);
-[   82.595977]                                lock(prepare_lock);
-[   82.601782]                                lock(&(&pri_dai->spinlock)->rlock);
-[   82.608975]   lock(prepare_lock);
-[   82.612268]
-[   82.612268]  *** DEADLOCK ***
-
-Fixes: 647d04f8e07a ("ASoC: samsung: i2s: Ensure the RCLK rate is properly determined")
-Reported-by: Krzysztof Kozłowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/i2s.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/include/asm/kvm_host.h   | 10 +++++++++
+ arch/arm/kvm/reset.c              | 24 +++++++++++++++++++++
+ arch/arm64/include/asm/kvm_host.h | 11 ++++++++++
+ arch/arm64/kvm/reset.c            | 24 +++++++++++++++++++++
+ virt/kvm/arm/arm.c                | 10 +++++++++
+ virt/kvm/arm/psci.c               | 36 ++++++++++++++-----------------
+ 6 files changed, 95 insertions(+), 20 deletions(-)
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index d6c62aa13041..ce00fe2f6aae 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -700,6 +700,7 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- {
- 	struct i2s_dai *i2s = to_info(dai);
- 	u32 mod, mask = 0, val = 0;
-+	struct clk *rclksrc;
- 	unsigned long flags;
+diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+index 5ca5d9af0c26..4ecd426e9b1c 100644
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -48,6 +48,7 @@
+ #define KVM_REQ_SLEEP \
+ 	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+ #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
++#define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
  
- 	WARN_ON(!pm_runtime_active(dai->dev));
-@@ -782,6 +783,10 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
+ DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
  
- 	i2s->frmclk = params_rate(params);
+@@ -147,6 +148,13 @@ struct kvm_cpu_context {
  
-+	rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
-+	if (rclksrc && !IS_ERR(rclksrc))
-+		i2s->rclk_srcrate = clk_get_rate(rclksrc);
+ typedef struct kvm_cpu_context kvm_cpu_context_t;
+ 
++struct vcpu_reset_state {
++	unsigned long	pc;
++	unsigned long	r0;
++	bool		be;
++	bool		reset;
++};
 +
- 	return 0;
+ struct kvm_vcpu_arch {
+ 	struct kvm_cpu_context ctxt;
+ 
+@@ -186,6 +194,8 @@ struct kvm_vcpu_arch {
+ 	/* Cache some mmu pages needed inside spinlock regions */
+ 	struct kvm_mmu_memory_cache mmu_page_cache;
+ 
++	struct vcpu_reset_state reset_state;
++
+ 	/* Detect first run of a vcpu */
+ 	bool has_run_once;
+ };
+diff --git a/arch/arm/kvm/reset.c b/arch/arm/kvm/reset.c
+index 5ed0c3ee33d6..e53327912adc 100644
+--- a/arch/arm/kvm/reset.c
++++ b/arch/arm/kvm/reset.c
+@@ -26,6 +26,7 @@
+ #include <asm/cputype.h>
+ #include <asm/kvm_arm.h>
+ #include <asm/kvm_coproc.h>
++#include <asm/kvm_emulate.h>
+ 
+ #include <kvm/arm_arch_timer.h>
+ 
+@@ -69,6 +70,29 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 	/* Reset CP15 registers */
+ 	kvm_reset_coprocs(vcpu);
+ 
++	/*
++	 * Additional reset state handling that PSCI may have imposed on us.
++	 * Must be done after all the sys_reg reset.
++	 */
++	if (READ_ONCE(vcpu->arch.reset_state.reset)) {
++		unsigned long target_pc = vcpu->arch.reset_state.pc;
++
++		/* Gracefully handle Thumb2 entry point */
++		if (target_pc & 1) {
++			target_pc &= ~1UL;
++			vcpu_set_thumb(vcpu);
++		}
++
++		/* Propagate caller endianness */
++		if (vcpu->arch.reset_state.be)
++			kvm_vcpu_set_be(vcpu);
++
++		*vcpu_pc(vcpu) = target_pc;
++		vcpu_set_reg(vcpu, 0, vcpu->arch.reset_state.r0);
++
++		vcpu->arch.reset_state.reset = false;
++	}
++
+ 	/* Reset arch_timer context */
+ 	return kvm_timer_vcpu_reset(vcpu);
+ }
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 52fbc823ff8c..4fc7c8f0b717 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -48,6 +48,7 @@
+ #define KVM_REQ_SLEEP \
+ 	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+ #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
++#define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
+ 
+ DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+ 
+@@ -208,6 +209,13 @@ struct kvm_cpu_context {
+ 
+ typedef struct kvm_cpu_context kvm_cpu_context_t;
+ 
++struct vcpu_reset_state {
++	unsigned long	pc;
++	unsigned long	r0;
++	bool		be;
++	bool		reset;
++};
++
+ struct kvm_vcpu_arch {
+ 	struct kvm_cpu_context ctxt;
+ 
+@@ -297,6 +305,9 @@ struct kvm_vcpu_arch {
+ 	/* Virtual SError ESR to restore when HCR_EL2.VSE is set */
+ 	u64 vsesr_el2;
+ 
++	/* Additional reset state */
++	struct vcpu_reset_state	reset_state;
++
+ 	/* True when deferrable sysregs are loaded on the physical CPU,
+ 	 * see kvm_vcpu_load_sysregs and kvm_vcpu_put_sysregs. */
+ 	bool sysregs_loaded_on_cpu;
+diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+index f21a2a575939..f16a5f8ff2b4 100644
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -32,6 +32,7 @@
+ #include <asm/kvm_arm.h>
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_coproc.h>
++#include <asm/kvm_emulate.h>
+ #include <asm/kvm_mmu.h>
+ 
+ /* Maximum phys_shift supported for any VM on this host */
+@@ -146,6 +147,29 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 	/* Reset system registers */
+ 	kvm_reset_sys_regs(vcpu);
+ 
++	/*
++	 * Additional reset state handling that PSCI may have imposed on us.
++	 * Must be done after all the sys_reg reset.
++	 */
++	if (vcpu->arch.reset_state.reset) {
++		unsigned long target_pc = vcpu->arch.reset_state.pc;
++
++		/* Gracefully handle Thumb2 entry point */
++		if (vcpu_mode_is_32bit(vcpu) && (target_pc & 1)) {
++			target_pc &= ~1UL;
++			vcpu_set_thumb(vcpu);
++		}
++
++		/* Propagate caller endianness */
++		if (vcpu->arch.reset_state.be)
++			kvm_vcpu_set_be(vcpu);
++
++		*vcpu_pc(vcpu) = target_pc;
++		vcpu_set_reg(vcpu, 0, vcpu->arch.reset_state.r0);
++
++		vcpu->arch.reset_state.reset = false;
++	}
++
+ 	/* Reset PMU */
+ 	kvm_pmu_vcpu_reset(vcpu);
+ 
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index abcd29db2d7a..e914e585fa8c 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -626,6 +626,13 @@ static void vcpu_req_sleep(struct kvm_vcpu *vcpu)
+ 		/* Awaken to handle a signal, request we sleep again later. */
+ 		kvm_make_request(KVM_REQ_SLEEP, vcpu);
+ 	}
++
++	/*
++	 * Make sure we will observe a potential reset request if we've
++	 * observed a change to the power state. Pairs with the smp_wmb() in
++	 * kvm_psci_vcpu_on().
++	 */
++	smp_rmb();
  }
  
-@@ -886,11 +891,6 @@ static int config_setup(struct i2s_dai *i2s)
- 		return 0;
+ static int kvm_vcpu_initialized(struct kvm_vcpu *vcpu)
+@@ -639,6 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+ 		if (kvm_check_request(KVM_REQ_SLEEP, vcpu))
+ 			vcpu_req_sleep(vcpu);
  
- 	if (!(i2s->quirks & QUIRK_NO_MUXPSR)) {
--		struct clk *rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
++		if (kvm_check_request(KVM_REQ_VCPU_RESET, vcpu))
++			kvm_reset_vcpu(vcpu);
++
+ 		/*
+ 		 * Clear IRQ_PENDING requests that were made to guarantee
+ 		 * that a VCPU sees new virtual interrupts.
+diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c
+index 9b73d3ad918a..34d08ee63747 100644
+--- a/virt/kvm/arm/psci.c
++++ b/virt/kvm/arm/psci.c
+@@ -104,12 +104,10 @@ static void kvm_psci_vcpu_off(struct kvm_vcpu *vcpu)
+ 
+ static unsigned long kvm_psci_vcpu_on(struct kvm_vcpu *source_vcpu)
+ {
++	struct vcpu_reset_state *reset_state;
+ 	struct kvm *kvm = source_vcpu->kvm;
+ 	struct kvm_vcpu *vcpu = NULL;
+-	struct swait_queue_head *wq;
+ 	unsigned long cpu_id;
+-	unsigned long context_id;
+-	phys_addr_t target_pc;
+ 
+ 	cpu_id = smccc_get_arg1(source_vcpu) & MPIDR_HWID_BITMASK;
+ 	if (vcpu_mode_is_32bit(source_vcpu))
+@@ -130,32 +128,30 @@ static unsigned long kvm_psci_vcpu_on(struct kvm_vcpu *source_vcpu)
+ 			return PSCI_RET_INVALID_PARAMS;
+ 	}
+ 
+-	target_pc = smccc_get_arg2(source_vcpu);
+-	context_id = smccc_get_arg3(source_vcpu);
++	reset_state = &vcpu->arch.reset_state;
+ 
+-	kvm_reset_vcpu(vcpu);
 -
--		if (rclksrc && !IS_ERR(rclksrc))
--			i2s->rclk_srcrate = clk_get_rate(rclksrc);
--
- 		psr = i2s->rclk_srcrate / i2s->frmclk / rfs;
- 		writel(((psr - 1) << 8) | PSR_PSREN, i2s->addr + I2SPSR);
- 		dev_dbg(&i2s->pdev->dev,
+-	/* Gracefully handle Thumb2 entry point */
+-	if (vcpu_mode_is_32bit(vcpu) && (target_pc & 1)) {
+-		target_pc &= ~((phys_addr_t) 1);
+-		vcpu_set_thumb(vcpu);
+-	}
++	reset_state->pc = smccc_get_arg2(source_vcpu);
+ 
+ 	/* Propagate caller endianness */
+-	if (kvm_vcpu_is_be(source_vcpu))
+-		kvm_vcpu_set_be(vcpu);
++	reset_state->be = kvm_vcpu_is_be(source_vcpu);
+ 
+-	*vcpu_pc(vcpu) = target_pc;
+ 	/*
+ 	 * NOTE: We always update r0 (or x0) because for PSCI v0.1
+ 	 * the general puspose registers are undefined upon CPU_ON.
+ 	 */
+-	smccc_set_retval(vcpu, context_id, 0, 0, 0);
+-	vcpu->arch.power_off = false;
+-	smp_mb();		/* Make sure the above is visible */
++	reset_state->r0 = smccc_get_arg3(source_vcpu);
++
++	WRITE_ONCE(reset_state->reset, true);
++	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
+ 
+-	wq = kvm_arch_vcpu_wq(vcpu);
+-	swake_up_one(wq);
++	/*
++	 * Make sure the reset request is observed if the change to
++	 * power_state is observed.
++	 */
++	smp_wmb();
++
++	vcpu->arch.power_off = false;
++	kvm_vcpu_wake_up(vcpu);
+ 
+ 	return PSCI_RET_SUCCESS;
+ }
 -- 
 2.19.1
 
