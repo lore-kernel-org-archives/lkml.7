@@ -2,200 +2,170 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606E5C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D85CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371A12087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE187214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BFCdEpjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbfCKXKP (ORCPT
+        id S1726673AbfCKXKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 19:10:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35674 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726415AbfCKXKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 19:10:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3E4A3B15C;
-        Mon, 11 Mar 2019 23:10:12 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Tue, 12 Mar 2019 10:09:37 +1100
-Subject: [PATCH 2/2] staging: mt7621-dts: update ethernet settings.
-Cc:     devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>
-Message-ID: <155234577702.4958.16102949327222755790.stgit@noble.brown>
-In-Reply-To: <155234569479.4958.3984850739390042194.stgit@noble.brown>
-References: <155234569479.4958.3984850739390042194.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 11 Mar 2019 19:10:24 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51845 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfCKXKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 19:10:23 -0400
+Received: by mail-it1-f195.google.com with SMTP id e24so1431375itl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 16:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JhWeojvwTBz9Aj5xfVVwnx7e9iYd5cVRUTneoT1n0Xc=;
+        b=BFCdEpjpz6/5eZxfAWUzbb7WEdlvYQT0pMsvyKFuhE4KY5Gkq2K/1BymERTER4MfgR
+         5FjA4AHs6caoW3r0PP/P70NTh7d8LNawALOlZoikT5heWcO3L+sq/NgyykmapadiSY68
+         y5igodO4a2m54Diz5epJvv2vfS/KOXSY/9tgYMYEvv2uGjOxDkH3bWv6GtbT+KPXCNW9
+         Gfq1E4YLFi3BBhj/YismuquVQuXKMx8gm5uPl6hxgqmhy2D7QgNy8dyuNAXVRHZNyDTE
+         o3G1G8B9ENnfKwHKMVkWktHtvSj+k6OuQymXB8shWe8/011mt4rQJrSAEv/nlImshexE
+         2vuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JhWeojvwTBz9Aj5xfVVwnx7e9iYd5cVRUTneoT1n0Xc=;
+        b=qNJF+OzpCe+8QpVOtu2rKYC6XSlscFP0goaSFqjCYLC5e9gkDCJqRH1zpNpU6+uHSc
+         f0WXtRbeN5kuAUEYU3gpy76WOY7OFh7b6UW+qPBWtQt1Lqha485sTlOZX/kyIhx5hV72
+         leEbZOjmYpoIGIlJVCiJ88s+EZwmFgVN7vJVzVb1tMfYk+5eX5dejE0lY0LCIR/URkx7
+         5uRXIX3gDtGETCxrEC8MDx6Y3hIFTmaLioef5FCFZnGpff1XM69sRzcjR9xW7sir1YY6
+         lVq9sf+EJe4gNuRj/tfWiPtuoOUZj2xOvbkdHbh7j38Ea6JCsCbuGmhw243nQTRwQbfw
+         dvxA==
+X-Gm-Message-State: APjAAAVYUwzJrTc3HvzuMmPNHvkspyVlhH+7zjWtP0yMMQFMW5zAo7xz
+        rVpCMXjRORUVSbflZv8Zjw3bmg==
+X-Google-Smtp-Source: APXvYqx9zcbjCN/V0nVy+yl1+y41Oy1hqNkxzFW0Tj557B/z8cz2nER+NmYJRrM/iVJJLRTq7G+jSw==
+X-Received: by 2002:a24:7f04:: with SMTP id r4mr406191itc.17.1552345822341;
+        Mon, 11 Mar 2019 16:10:22 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:a0c3:519e:9276:fc96])
+        by smtp.gmail.com with ESMTPSA id b202sm357295itb.36.2019.03.11.16.10.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 11 Mar 2019 16:10:21 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 17:10:17 -0600
+From:   Yu Zhao <yuzhao@google.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 3/3] arm64: mm: enable per pmd page table lock
+Message-ID: <20190311231017.GA207964@google.com>
+References: <20190218231319.178224-1-yuzhao@google.com>
+ <20190310011906.254635-1-yuzhao@google.com>
+ <20190310011906.254635-3-yuzhao@google.com>
+ <dfc727b4-0806-4867-2f9c-0bb8fdd459ad@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfc727b4-0806-4867-2f9c-0bb8fdd459ad@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ethernet in mt7621 is now supported by
- drivers/net/ethernet/mediatek/
+On Mon, Mar 11, 2019 at 01:58:27PM +0530, Anshuman Khandual wrote:
+> On 03/10/2019 06:49 AM, Yu Zhao wrote:
+> > Switch from per mm_struct to per pmd page table lock by enabling
+> > ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
+> > large system.
+> > 
+> > I'm not sure if there is contention on mm->page_table_lock. Given
+> > the option comes at no cost (apart from initializing more spin
+> > locks), why not enable it now.
+> > 
+> > We only do so when pmd is not folded, so we don't mistakenly call
+> > pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc(). (We
+> > check shift against PMD_SHIFT, which is same as PUD_SHIFT when pmd
+> > is folded).
+> > 
+> > Signed-off-by: Yu Zhao <yuzhao@google.com>
+> > ---
+> >  arch/arm64/Kconfig               |  3 +++
+> >  arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+> >  arch/arm64/include/asm/tlb.h     |  5 ++++-
+> >  3 files changed, 18 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index cfbf307d6dc4..a3b1b789f766 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
+> >  config ARCH_HAS_CACHE_LINE_SIZE
+> >  	def_bool y
+> >  
+> > +config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+> > +	def_bool y if PGTABLE_LEVELS > 2
+> > +
+> >  config SECCOMP
+> >  	bool "Enable seccomp to safely compute untrusted bytecode"
+> >  	---help---
+> > diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+> > index 52fa47c73bf0..dabba4b2c61f 100644
+> > --- a/arch/arm64/include/asm/pgalloc.h
+> > +++ b/arch/arm64/include/asm/pgalloc.h
+> > @@ -33,12 +33,22 @@
+> >  
+> >  static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
+> >  {
+> > -	return (pmd_t *)__get_free_page(PGALLOC_GFP);
+> > +	struct page *page;
+> > +
+> > +	page = alloc_page(PGALLOC_GFP);
+> > +	if (!page)
+> > +		return NULL;
+> > +	if (!pgtable_pmd_page_ctor(page)) {
+> > +		__free_page(page);
+> > +		return NULL;
+> > +	}
+> > +	return page_address(page);
+> >  }
+> >  
+> >  static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
+> >  {
+> >  	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
+> > +	pgtable_pmd_page_dtor(virt_to_page(pmdp));
+> >  	free_page((unsigned long)pmdp);
+> >  }
+> 
+> There is just one problem here. ARM KVM's stage2_pmd_free() calls into pmd_free() on a page
+> originally allocated with __get_free_page() and never went through pgtable_pmd_page_ctor().
+> So when ARCH_ENABLE_SPLIT_PMD_PTLOCK is enabled
+> 
+> stage2_pmd_free()
+> 	pgtable_pmd_page_dtor()
+> 		ptlock_free()
+> 			kmem_cache_free(page_ptl_cachep, page->ptl)
+> 
+> Though SLUB implementation for kmem_cache_free() seems to be handling NULL page->ptl (as the
+> page never got it's lock allocated or initialized) correctly I am not sure if it is a right
+> thing to do.
 
-which provides support for the integrated switch through DSA.
-
-This requires some devicetree changes, and particularly allows
-a board dts to identify which switch ports are present.
-
-The second CPU interface - gmac1 - doesn't work yet, so the device
-tree information may not be correct.  The phy (which is present on the
-gnubee-pc2) can negotiate and report connection speed etc, but no
-traffic flows.
-
-The gnubee-pc1 has two network ports which are 'black' and 'blue'.
-There are connected to switch ports 0 and 4 respectively.
-
-Signed-off-by: NeilBrown <neil@brown.name>
----
- drivers/staging/mt7621-dts/gbpc1.dts   |   29 ++++++-------
- drivers/staging/mt7621-dts/mt7621.dtsi |   73 +++++++++++++++++++++++++++++++-
- 2 files changed, 83 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/staging/mt7621-dts/gbpc1.dts b/drivers/staging/mt7621-dts/gbpc1.dts
-index b73385540216..250c15ace2a7 100644
---- a/drivers/staging/mt7621-dts/gbpc1.dts
-+++ b/drivers/staging/mt7621-dts/gbpc1.dts
-@@ -117,22 +117,6 @@
- 	status = "okay";
- };
- 
--&ethernet {
--	//mtd-mac-address = <&factory 0xe000>;
--	gmac1: mac@0 {
--		compatible = "mediatek,eth-mac";
--		reg = <0>;
--		phy-handle = <&phy1>;
--	};
--
--	mdio-bus {
--		phy1: ethernet-phy@1 {
--			reg = <1>;
--			phy-mode = "rgmii";
--		};
--	};
--};
--
- &pinctrl {
- 	state_default: pinctrl0 {
- 		gpio {
-@@ -141,3 +125,16 @@
- 		};
- 	};
- };
-+
-+&switch0 {
-+	ports {
-+		port@0 {
-+			label = "ethblack";
-+			status = "ok";
-+		};
-+		port@4 {
-+			label = "ethblue";
-+			status = "ok";
-+		};
-+	};
-+};
-diff --git a/drivers/staging/mt7621-dts/mt7621.dtsi b/drivers/staging/mt7621-dts/mt7621.dtsi
-index 6aff3680ce4b..17020e24abd2 100644
---- a/drivers/staging/mt7621-dts/mt7621.dtsi
-+++ b/drivers/staging/mt7621-dts/mt7621.dtsi
-@@ -372,16 +372,83 @@
- 
- 		mediatek,ethsys = <&ethsys>;
- 
--		mediatek,switch = <&gsw>;
- 
-+		gmac0: mac@0 {
-+			compatible = "mediatek,eth-mac";
-+			reg = <0>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+		gmac1: mac@1 {
-+			compatible = "mediatek,eth-mac";
-+			reg = <1>;
-+			status = "off";
-+			phy-mode = "rgmii";
-+			phy-handle = <&phy5>;
-+		};
- 		mdio-bus {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
--			phy1f: ethernet-phy@1f {
--				reg = <0x1f>;
-+			phy5: ethernet-phy@5 {
-+				reg = <5>;
- 				phy-mode = "rgmii";
- 			};
-+
-+			switch0: switch0@0 {
-+				compatible = "mediatek,mt7621";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+				mediatek,mcm;
-+				resets = <&rstctrl 2>;
-+				reset-names = "mcm";
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+					port@0 {
-+						status = "off";
-+						reg = <0>;
-+						label = "lan0";
-+					};
-+					port@1 {
-+						status = "off";
-+						reg = <1>;
-+						label = "lan1";
-+					};
-+					port@2 {
-+						status = "off";
-+						reg = <2>;
-+						label = "lan2";
-+					};
-+					port@3 {
-+						status = "off";
-+						reg = <3>;
-+						label = "lan3";
-+					};
-+					port@4 {
-+						status = "off";
-+						reg = <4>;
-+						label = "lan4";
-+					};
-+					port@6 {
-+						reg = <6>;
-+						label = "cpu";
-+						ethernet = <&gmac0>;
-+						phy-mode = "trgmii";
-+						fixed-link {
-+							speed = <1000>;
-+							full-duplex;
-+						};
-+					};
-+				};
-+			};
- 		};
- 	};
- 
-
-
+Thanks for reminding me. This should be fixed as well. Will do it
+in a separate patch.
