@@ -2,131 +2,109 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EA8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A44EC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A962087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E802084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Jbr9GUCr"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="T4n27hZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfCKQUL (ORCPT
+        id S1727708AbfCKQUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:20:11 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:40533 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfCKQUL (ORCPT
+        Mon, 11 Mar 2019 12:20:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38210 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKQUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:20:11 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x2BGK473001869;
-        Tue, 12 Mar 2019 01:20:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2BGK473001869
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552321205;
-        bh=J2EdVSMmdVb73H7hclqhuXeBYWCnyXXRAAl39GsBCyU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jbr9GUCrbDqCMDuTMdRmqH0KTMCkskLwi9Ya5m0mLdFbZo2Oub59T6hLLURA1oqK8
-         6FbHfQGBHqScjvs7XBenKXupoH0427lazeYw51SfIgWrvJbrjHCi0FXCKn7KSPRNAl
-         IQmmmkiqLR9zVE+rbT08sjcRRVKTn6pcrqQgxBc3zlBaHkTAzivb7dpYiH4liIDFum
-         0dkOvqrtoN44sToT7hmb7lBlr2Ny2QKAaGPkbnEhFoO2wke2FIKVospdOS3SeM3rbF
-         uG596JuI48+HixMgOCu+9mWLnbzWBPvRaG+JjRFjbG9FAAb7ZrUVc7rrJYyyKYcyOQ
-         DS6aFdDvB4x6w==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id b17so3060619vsr.13;
-        Mon, 11 Mar 2019 09:20:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAWw+O5Z2AItegNRCWRIVpFxz1OCbaIc2GVBP8vi9mMJW+qaRYdn
-        uEvMTimM75YQ1ukHg9Ebnq8CfGzneFlAUobjrVY=
-X-Google-Smtp-Source: APXvYqy8Hp4yuoC9tjYEKoLSVSOg7YGAF2RZugJBbadOrjo58qsbNZdSq7uwdIITP/hALlq2dVQK6TEwY+Gy/AD3IAw=
-X-Received: by 2002:a67:7bd3:: with SMTP id w202mr17253529vsc.179.1552321203680;
- Mon, 11 Mar 2019 09:20:03 -0700 (PDT)
+        Mon, 11 Mar 2019 12:20:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id n125so4054063pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=GUbJ6a4YWCnXI1lu5AXSGN1EPdoNE69oEyeV4fxW80E=;
+        b=T4n27hZI8Gc7IBx5Mm0mxyj3Sfx3Iy+C87ezvMsTiFPDR2Qkse2Kx5SIXcMWMi59T4
+         sIy78OTumY11BaAlMFX4PS9XPc61vFBKKK7UOEaeSzRvNrH9Mjyolg9KSLtsAd3T/3df
+         pi3WqQw1BvM+2Up7DIJQwQA7mJyGL6uulRAA0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=GUbJ6a4YWCnXI1lu5AXSGN1EPdoNE69oEyeV4fxW80E=;
+        b=i+TEU8vjXD7hnsnIW02wBroLB6EZ2F+93axw7aPIhV756o7mUl7MDP05Yj0fLWHCc+
+         VXGp00XkRSXXUKg8YZ+fxqpjiOZzdpN/DwBoV5ARBpVKQuqJX6Vponwvlaq9ZWGg4P9R
+         VWqY2H2s9aKkALp7RLNQw27T2LK+AKYPpOlqsdRoKEJrwRTSygD5ijrYOqFwGGVx3Xsj
+         T9QualwujWlRVXoo7w+rgEoqAUOA3M1OsD6n6kDPMg97cZFErYONg15zFUrUTBz60C/1
+         65lF2UjLbbN/GIeySmBOZipr3GqtJCweDcVnNA9M25L7WkGEeGElFb87dVmrLs0/jwZg
+         icZg==
+X-Gm-Message-State: APjAAAWwD8XK/GHde2MehBabL0FA5KjCbVzvpcScZxXM8aY/7JRG7aBu
+        C9YmUSFAdTngouHB/fdq5V+xGQ==
+X-Google-Smtp-Source: APXvYqy44AsYYWqyxSJ038OsOcxaJ/+q/wJad4B4APzO6+Hifrv1Hhoa4iIOcoubmuWXf0RqjkvQ+Q==
+X-Received: by 2002:a17:902:4c08:: with SMTP id a8mr35036621ple.294.1552321239946;
+        Mon, 11 Mar 2019 09:20:39 -0700 (PDT)
+Received: from [10.69.37.149] ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id b15sm13519306pfj.167.2019.03.11.09.20.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 09:20:38 -0700 (PDT)
+Subject: Re: general protection fault in skb_put
+To:     syzbot <syzbot+65788f9af9d54844389e@syzkaller.appspotmail.com>,
+        axboe@fb.com, hch@lst.de, johan.hedberg@gmail.com,
+        jsmart2021@gmail.com, keith.busch@intel.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, marcel@holtmann.org,
+        sagi@grimberg.me, syzkaller-bugs@googlegroups.com
+References: <000000000000032b7f0583d16e0e@google.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <b17bcabf-5f2c-083a-91a9-6d99f5111a3f@broadcom.com>
+Date:   Mon, 11 Mar 2019 09:20:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-References: <1552049064-32044-1-git-send-email-info@metux.net>
-In-Reply-To: <1552049064-32044-1-git-send-email-info@metux.net>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 12 Mar 2019 01:19:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARUc3CQXDKogH0MVWCbWatQK0-0PRrG5QbOaz+bb_rMsA@mail.gmail.com>
-Message-ID: <CAK7LNARUc3CQXDKogH0MVWCbWatQK0-0PRrG5QbOaz+bb_rMsA@mail.gmail.com>
-Subject: Re: Debian build polishing
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000000000000032b7f0583d16e0e@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+CC more debian folks)
+On 3/11/2019 6:20 AM, syzbot wrote:
+> syzbot has bisected this bug to:
+>
+> commit 97faec531460c949d7120672b8c77e2f41f8d6d7
+> Author: James Smart <jsmart2021@gmail.com>
+> Date:   Thu Sep 13 23:17:38 2018 +0000
+>
+>     nvme_fc: add 'nvme_discovery' sysfs attribute to fc transport device
+>
+> bisection log: 
+> https://syzkaller.appspot.com/x/bisect.txt?x=121f55db200000
+> start commit:   97faec53 nvme_fc: add 'nvme_discovery' sysfs attribute 
+> to ..
+> git tree:       linux-next
+> final crash: https://syzkaller.appspot.com/x/report.txt?x=111f55db200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=161f55db200000
+> kernel config: https://syzkaller.appspot.com/x/.config?x=59aefae07c771af6
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=65788f9af9d54844389e
+> userspace arch: amd64
+> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=178e0798c00000
+> C reproducer: https://syzkaller.appspot.com/x/repro.c?x=11b4f0b0c00000
+>
+> Reported-by: syzbot+65788f9af9d54844389e@syzkaller.appspotmail.com
+> Fixes: 97faec53 ("nvme_fc: add 'nvme_discovery' sysfs attribute to fc 
+> transport device")
 
+can someone contact me as to what this thing is doing and how to 
+interpret all the logs.  nvme_fc isn't remotely in any of the logs and 
+doesn't use skb's unless the underlying udev_uevents are using them.
 
-On Fri, Mar 8, 2019 at 9:45 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Hi folks,
->
->
-> here're some patches for polishing up the Debian packaging stuff,
-> so it can be directly used w/ usual Debian machinery like
-> pbuilder, git-buildpackage, dck-buildpackage, etc.
->
-> These expect debian/rules to exist in the unpacked/patched tree
-> and drive the whole build. Currently 'make deb-pkg' does it in
-> the opposite direction - it creates debian/rules and fills in
-> some data, that's derived from .config etc.
->
-> My goal is building the kernel package in exactly the same way as
-> any other Debian package - so there must be a debian/rules as the
-> primary entry point. To do that, w/ minimal change and w/o breaking
-> the existing machinery, I'm going in several steps:
->
-> #1: add Makefile rules for retrieving missing makefile-internal
->     variables kernel config system .config (eg. kernel arch).
->
->     this could be used for other build systems, too.
->     just call: `make kernelarch` or `make kernellocalversion`
->
-> #2: add an env variable for changing the name of the rules file
->     generated by mkdebian. When coming from an existing rules
->     file, we can prevent this from being overwritten.
->
-> #3: add a generic debian/rules file, that calls mkdebian to
->     create the remaining debian control files (w/ rules redirected
->     into nirvana)
->
-> The existing `make deb-pkg` is bypassed and remains ontouched.
->
-> One point still puzzling me: once the debian/rules is applied and
-> somebody calls `make deb-pkg`, he'll end up w/ unclean tree, as
-> now a git-tracked file is changed.
-
-
-Then, setlocalversion will set -dirty flag.
-
-Committing debian/rules looks questionable to me.
-
-
-> Perhaps I just change deb-pkg to call debian/rules then, but I'd
-> like to hear your oppinions about this, before.
->
->
-> What do you think about that ?
->
->
-> --mtx
->
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+-- james
