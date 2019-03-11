@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0F8C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AE3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEFC2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E209D2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334589;
-	bh=Qqw5E0jowqj2BSqx8AnJtPT+6VfE8ziDEpX7XBXDxYo=;
+	s=default; t=1552334605;
+	bh=jjmgwTV3pVQtY4uvk5kwsUgFdYYYHBN8EYFFBi9A2jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajZg2lqwP2CL1gQ2ShgkuVgb+2T2xdz09g6MCH+VnqtSfmo6W7jWLwva+FrU4wW+S
-	 WmQns3onY8cIldmJCNJzh/Fh15kWTT9RcJ8yDLlksO+cWlBQuB/XZ6jdEFLAFdwhZW
-	 fvQ2YD6NsbftDL3WXtTdd20W7vXKTsjs5WrFFFlE=
+	b=tyj6hJp/bzwgTPrxMvNSV5QPl+j554NLr5cjEZuGKGZ/QwHZ+sl6GbaM87GlrVrMx
+	 WCtJlZXmprDEQAv0MQwFV5M2z92olNweqb/l2g0OqrZDgWCwt9d/7MH4GLqXQUROel
+	 oWChx+hRZN/mo+K7EhBcAHtqaZT4MAt7SJgmHgnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfCKUDI (ORCPT
+        id S1729663AbfCKUDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:03:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:03:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729446AbfCKT6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:52 -0400
+        id S1729445AbfCKT6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EB6E2084F;
-        Mon, 11 Mar 2019 19:58:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD33F2084F;
+        Mon, 11 Mar 2019 19:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334331;
-        bh=Qqw5E0jowqj2BSqx8AnJtPT+6VfE8ziDEpX7XBXDxYo=;
+        s=default; t=1552334328;
+        bh=jjmgwTV3pVQtY4uvk5kwsUgFdYYYHBN8EYFFBi9A2jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/aVJjVF3MX+2pzeuZsZLY9s0v4mZacay0bDmy+JYl7gRhRgRF7wkSv3k37lCC0dt
-         uvdlC3EJixyCn8bHSLTRDKZtDuGuHLMWKcDvIxvjHsWlTYhAZq7iAGgJQh5AF4C6cE
-         LppGPKg9q46DdUeszipR7r2++wPG2IsJPPBQoHvM=
+        b=Ae9ikXZtkTEMTiLsbqXXLw9UmlkCx8NY5p6cqGP2z/lkp8m91l+w6wJhLMPVuUDyE
+         Jz+gHk/jcRY2lPi7G7X3WARW1fxjwuvJ0DUFPoMJt8YcIj1imE+ysew+H6cY6khdyc
+         2e9jG3rxOpl+F+6oh2KOWG+Bd2zaRxOOyS2F737Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Claudi <aclaudi@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: [PATCH AUTOSEL 4.14 17/27] ipvs: fix dependency on nf_defrag_ipv6
-Date:   Mon, 11 Mar 2019 15:58:14 -0400
-Message-Id: <20190311195824.139043-17-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 15/27] Input: matrix_keypad - use flush_delayed_work()
+Date:   Mon, 11 Mar 2019 15:58:12 -0400
+Message-Id: <20190311195824.139043-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195824.139043-1-sashal@kernel.org>
 References: <20190311195824.139043-1-sashal@kernel.org>
@@ -59,109 +56,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Claudi <aclaudi@redhat.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit 098e13f5b21d3398065fce8780f07a3ef62f4812 ]
+[ Upstream commit a342083abe576db43594a32d458a61fa81f7cb32 ]
 
-ipvs relies on nf_defrag_ipv6 module to manage IPv6 fragmentation,
-but lacks proper Kconfig dependencies and does not explicitly
-request defrag features.
+We should be using flush_delayed_work() instead of flush_work() in
+matrix_keypad_stop() to ensure that we are not missing work that is
+scheduled but not yet put in the workqueue (i.e. its delay timer has not
+expired yet).
 
-As a result, if netfilter hooks are not loaded, when IPv6 fragmented
-packet are handled by ipvs only the first fragment makes through.
-
-Fix it properly declaring the dependency on Kconfig and registering
-netfilter hooks on ip_vs_add_service() and ip_vs_new_dest().
-
-Reported-by: Li Shuang <shuali@redhat.com>
-Signed-off-by: Andrea Claudi <aclaudi@redhat.com>
-Acked-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/Kconfig      |  1 +
- net/netfilter/ipvs/ip_vs_core.c | 10 ++++------
- net/netfilter/ipvs/ip_vs_ctl.c  | 10 ++++++++++
- 3 files changed, 15 insertions(+), 6 deletions(-)
+ drivers/input/keyboard/matrix_keypad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
-index b32fb0dbe237..3f8e490d1133 100644
---- a/net/netfilter/ipvs/Kconfig
-+++ b/net/netfilter/ipvs/Kconfig
-@@ -29,6 +29,7 @@ config	IP_VS_IPV6
- 	bool "IPv6 support for IPVS"
- 	depends on IPV6 = y || IP_VS = IPV6
- 	select IP6_NF_IPTABLES
-+	select NF_DEFRAG_IPV6
- 	---help---
- 	  Add IPv6 support to IPVS.
+diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+index 782dda68d93a..c04559a232f7 100644
+--- a/drivers/input/keyboard/matrix_keypad.c
++++ b/drivers/input/keyboard/matrix_keypad.c
+@@ -222,7 +222,7 @@ static void matrix_keypad_stop(struct input_dev *dev)
+ 	keypad->stopped = true;
+ 	spin_unlock_irq(&keypad->lock);
  
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 1bd53b1e7672..4278f5c947ab 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -1524,14 +1524,12 @@ ip_vs_try_to_schedule(struct netns_ipvs *ipvs, int af, struct sk_buff *skb,
- 		/* sorry, all this trouble for a no-hit :) */
- 		IP_VS_DBG_PKT(12, af, pp, skb, iph->off,
- 			      "ip_vs_in: packet continues traversal as normal");
--		if (iph->fragoffs) {
--			/* Fragment that couldn't be mapped to a conn entry
--			 * is missing module nf_defrag_ipv6
--			 */
--			IP_VS_DBG_RL("Unhandled frag, load nf_defrag_ipv6\n");
-+
-+		/* Fragment couldn't be mapped to a conn entry */
-+		if (iph->fragoffs)
- 			IP_VS_DBG_PKT(7, af, pp, skb, iph->off,
- 				      "unhandled fragment");
--		}
-+
- 		*verdict = NF_ACCEPT;
- 		return 0;
- 	}
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 2f45c3ce77ef..a683d7f52bcb 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -43,6 +43,7 @@
- #ifdef CONFIG_IP_VS_IPV6
- #include <net/ipv6.h>
- #include <net/ip6_route.h>
-+#include <net/netfilter/ipv6/nf_defrag_ipv6.h>
- #endif
- #include <net/route.h>
- #include <net/sock.h>
-@@ -888,6 +889,7 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
- {
- 	struct ip_vs_dest *dest;
- 	unsigned int atype, i;
-+	int ret = 0;
- 
- 	EnterFunction(2);
- 
-@@ -898,6 +900,10 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
- 			atype & IPV6_ADDR_LINKLOCAL) &&
- 			!__ip_vs_addr_is_local_v6(svc->ipvs->net, &udest->addr.in6))
- 			return -EINVAL;
-+
-+		ret = nf_defrag_ipv6_enable(svc->ipvs->net);
-+		if (ret)
-+			return ret;
- 	} else
- #endif
- 	{
-@@ -1221,6 +1227,10 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
- 			ret = -EINVAL;
- 			goto out_err;
- 		}
-+
-+		ret = nf_defrag_ipv6_enable(ipvs->net);
-+		if (ret)
-+			goto out_err;
- 	}
- #endif
- 
+-	flush_work(&keypad->work.work);
++	flush_delayed_work(&keypad->work);
+ 	/*
+ 	 * matrix_keypad_scan() will leave IRQs enabled;
+ 	 * we should disable them now.
 -- 
 2.19.1
 
