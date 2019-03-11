@@ -7,125 +7,120 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B27C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3935A2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92D12075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:38:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Pf6rZ2+w"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="pUtXmU+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfCKHcl (ORCPT
+        id S1726772AbfCKHiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 03:32:41 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:56274 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbfCKHck (ORCPT
+        Mon, 11 Mar 2019 03:38:18 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:53056 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbfCKHiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 03:32:40 -0400
+        Mon, 11 Mar 2019 03:38:17 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 0FBF7965
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:32:39 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id EB5767AA
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:38:15 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pz8d2AMwrX7p for <linux-kernel@vger.kernel.org>;
-        Mon, 11 Mar 2019 02:32:38 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PDuRrk7Qo03Z for <linux-kernel@vger.kernel.org>;
+        Mon, 11 Mar 2019 02:38:15 -0500 (CDT)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id D2A7A976
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:32:38 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id 68so3500819iov.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:32:38 -0700 (PDT)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id B78B66F7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:38:15 -0500 (CDT)
+Received: by mail-it1-f198.google.com with SMTP id w200so4333149itc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=CM+4RBks3zB8YoMv1kToRz9kjid3SKHwPTdosXxlMMQ=;
-        b=Pf6rZ2+wVJl1u83ZrPv8+Y3fPITKkQJu83onS0XZJvTGeVhuummygSfhZYoXaVYga8
-         eDFM1LC+ARoVcaCwnaXP6ZCqcDGM27Aw/jRMRbOvxnI3XwF0ECQCmji5uBME5nPFeJmS
-         ezr77Y8xpH9cbWKkoX9D5XogZCQ0viG8cjZfUrZTMATBMKKSASbU7MtJ+j/2zJlHBze4
-         uaJ1ouvMnCSnlL0oNZUPkKzOI2RNrIgl2ZjK/YhqNcO6h9eOCoeIDcLag8aO8vz+bXtE
-         veQF04ExJGlT3z2rnUM9iO5TQHwGFxeFVHY2zUG4xo7piF/lU41bcce9yRqIp2WHAGrR
-         iC/Q==
+        bh=t2u+k+1lf2yxQwwxdGnoBM7qwW0LxgJjzCrp1mwq8jU=;
+        b=pUtXmU+kvD7hKowimvcLtlRIGxficvLngQAKJIzeLOH59fvQTIuUemnVUvtS7Z3FKd
+         IFxbqxioRXqukwnJooVRSIaccCtewLiHdjTzs/FkaSx1YQoDe4HSYNxaXjVnki1jR+AQ
+         FYs+zN/FQVjseujvexwMJm0+wFwQEAzJdt3oVNm1bOUJ+dUMG4gd4xMnALN/m65kymFi
+         pAOg4BFNTeDa4X3f72hrtoiw30cm9RhQQ0Dtlao3dhnh8BulPxhruePxERcMAMJj/itu
+         P2moWWVVSHGnYmlrmfarOqf3qyrItAErVD76m5l/BDPC8fh2s8X5pR3wM+Kxnx/7KrWw
+         PQQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CM+4RBks3zB8YoMv1kToRz9kjid3SKHwPTdosXxlMMQ=;
-        b=OLzr11YWJfRJfOtji4GxjAeZgm4uLqMEJHp/UyNoM93PWTyyqwhZaCFqjgsvrXsi1p
-         7IXUYZe3b46x+hV4oqJfCJIEHYw8JP7fIa7zl/TOi2OhvAq8Mj5E3XVjGmHx2asREi1m
-         th+umQa6cytGU8BkBiSUndP1wD3ZLDrO9DF4UfIierCAOx5gMzKnMRCZm6Aah13X6aXl
-         MNiDCH8LBSkepNG1KXkojAU/YfOVfKdLZ34lzRMajHR3AN1FYeQp7of1T6bUxZdUW3b8
-         ZxpqU+ql/GxbWCAAIssvsLyvYuP49/5mv6DrKgsdfeVlMrrGGsKK9PPBoW0Z3M368iMf
-         4UjQ==
-X-Gm-Message-State: APjAAAWuODz1wgpkQ18oKgJYpyfjvKxK55TYKP/y8/oCb9Bzm89bwlHB
-        I1dlSrq5rAoJaTQM6raQTr/8yw3FcXThPg4hHWL+gi4asmHJfKCHf8/O0nk6XmvIPeHmxCooivt
-        rGOEBoLGoU4HXWM6c3wrLbviUZsgY
-X-Received: by 2002:a5d:848b:: with SMTP id t11mr14549777iom.270.1552289558379;
-        Mon, 11 Mar 2019 00:32:38 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy2IlAuIJDZJ4VVzbYlX0bdyI2uAAPSg7dw5V/E9C3/RZPFfmhxbtJNnhBtgejDrY2IdxUfbw==
-X-Received: by 2002:a5d:848b:: with SMTP id t11mr14549767iom.270.1552289558135;
-        Mon, 11 Mar 2019 00:32:38 -0700 (PDT)
+        bh=t2u+k+1lf2yxQwwxdGnoBM7qwW0LxgJjzCrp1mwq8jU=;
+        b=dyUq891pgb0TuulG9TRJ03s50zXROsLu8NtFiDa/PHfq1d3RsnBFpkvIQzRUz2L6Il
+         X8TPa+k26uZ6QUxtM1N/EfaQq5ECeXi71l7E3qraiiSiNSP3qUCujsZAqTbPynRwRsFW
+         /v7r67b9D/K04GkNE9Qp+m1i1ATez+BolUYSOPX+XVxTYz36f2MAqKmHkGQkYCrg0prl
+         Ar51+fp2ECrs0E0YHGFEYbbMB94QL1YcCbfX57OommKFmiM1C2aWQpPRJG8D6wNEx6xM
+         KZmGLskgi/t1AZgnuYok2eJrtZJiQ0ElMEIzYzQZwv5qxUOlUT8dnAXJlTf/5PX+Tth3
+         zf3w==
+X-Gm-Message-State: APjAAAUpA+uZzxb+2PQr8aJA6C8H7RqmotPTRbzsXBVEPk05vZF0N6sl
+        gE7Dr9PPxuSF+LYAvW7MoRq1oALIUIegzSk/kfqOigUoX4Yl+iAxLtfPdlVARhcvkZECbyJ0PEx
+        kh88KmrX2abq9pIC6sJmsOQwm2DYQ
+X-Received: by 2002:a6b:f201:: with SMTP id q1mr351400ioh.197.1552289895337;
+        Mon, 11 Mar 2019 00:38:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwoWZ0Oa20v+BcKj7fhpbi64/UlR5Yp89qS45DPTBEralAWQPfRB09AkPviqrtpVPkWmUL9Aw==
+X-Received: by 2002:a6b:f201:: with SMTP id q1mr351392ioh.197.1552289895117;
+        Mon, 11 Mar 2019 00:38:15 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id q2sm359638ioh.4.2019.03.11.00.32.36
+        by smtp.gmail.com with ESMTPSA id y16sm1902555ion.64.2019.03.11.00.38.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 00:32:37 -0700 (PDT)
+        Mon, 11 Mar 2019 00:38:14 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
+Cc:     pakki001@umn.edu, Stanislaw Gruszka <sgruszka@redhat.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] net: brcm80211: fix potential NULL pointer dereferences
-Date:   Mon, 11 Mar 2019 02:32:30 -0500
-Message-Id: <20190311073232.30807-1-kjlu@umn.edu>
+Subject: [PATCH] net: iwlegacy: fix potential NULL pointer dereferences
+Date:   Mon, 11 Mar 2019 02:37:57 -0500
+Message-Id: <20190311073758.31038-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case kmemdup fails, the fix returns -ENOMEM to avoid NULL
-pointer dereferences.
+In case create_singlethread_workqueue fails, the fix immediately
+return to avoid NULL pointer dereferences.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 2 ++
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index e92f6351bd22..d903a45e7b68 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -5464,6 +5464,9 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
- 		conn_info->req_ie =
- 		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
- 			    GFP_KERNEL);
-+		if (!conn_info->req_ie)
-+			return -ENOMEM;
-+
- 	} else {
- 		conn_info->req_ie_len = 0;
- 		conn_info->req_ie = NULL;
-@@ -5480,6 +5483,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
- 		conn_info->resp_ie =
- 		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
- 			    GFP_KERNEL);
-+		if (!conn_info->resp_ie)
-+			return -ENOMEM;
- 	} else {
- 		conn_info->resp_ie_len = 0;
- 		conn_info->resp_ie = NULL;
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 271977f7fbb0..d23ee2ca0c8e 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -3403,6 +3403,8 @@ static void
+ il3945_setup_deferred_work(struct il_priv *il)
+ {
+ 	il->workqueue = create_singlethread_workqueue(DRV_NAME);
++	if (!il->workqueue)
++		return;
+ 
+ 	init_waitqueue_head(&il->wait_command_queue);
+ 
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index 94222ae464ae..2c555c9f1ff4 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -6236,6 +6236,8 @@ static void
+ il4965_setup_deferred_work(struct il_priv *il)
+ {
+ 	il->workqueue = create_singlethread_workqueue(DRV_NAME);
++	if (!il->workqueue)
++		return;
+ 
+ 	init_waitqueue_head(&il->wait_command_queue);
+ 
 -- 
 2.17.1
 
