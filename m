@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EBAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3846C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C30920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB4220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfCKNVo (ORCPT
+        id S1727976AbfCKNVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:21:44 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:53337 "EHLO
+        Mon, 11 Mar 2019 09:21:52 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:53491 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbfCKNTo (ORCPT
+        with ESMTP id S1727684AbfCKNTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:44 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MZkxd-1hWgBt1XSp-00Wndc for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 1MPooP-1hP0hB22xH-00MwHY for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
  14:19:42 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 111/114] drivers: mcb: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:19:03 +0100
-Message-Id: <1552310346-7629-112-git-send-email-info@metux.net>
+Subject: [PATCH 112/114] drivers: misc: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:19:04 +0100
+Message-Id: <1552310346-7629-113-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:kufdwtvauh3WOTZmDCvBTsLL9sGFJyqFHrhNc6mekNElo8AjgoZ
- Lw8ycjLqMbdElAzWHW74vUbpQpNuaOsLnUFapM7gyf58EqTkbcqO9fmVQLSwiJn7cxcyz5h
- 0AhzbNEbVLfYuydMlE3kov5TNv6ngHSWKUa7Lqgobo37ZVr3RpAU/HEZ92Qbonn225L0cKv
- Bt9hBfrOSxvKidnD4Ko0A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7qq78YANZTw=:GiiP5dNGc7nsJWX2wrZ4pf
- RETak7TBUOZ+Qvqa6PB0lShzMHqZbVv8kaT/G+gA3sCS4+w5DxMr5hmD6vwo1+ae00MBDoUwR
- MjvvQ7z2KbCJC2mc2OhlJPyDPwNMX0t7HdFI+8QzBrIaUwyAPdbs0lNNOFg8Mf7pMjiEJw9Bi
- AJHMJkn/lY4emuWwOeVNaUkCNOh2TgmexnPj/oooXBoRRYGS5Nk3APK7jUmEu17V+Ux0aB9hM
- dSv53JNNN51Ov/3s6hWa7rY8/7HPZ5hm6qofIbs++tod6DtoX1b3jyOWrVmECuUuRUMoytuaN
- 0dcXteB1zdPxfrHgg9o0oA/FwmZA/BnYeRzzgYt5X6NhrYicwtjeIMdeOkZ8fXvGKYhirjzV3
- 6WzMOe5ah7+r3BbH6NZMrPJ48V3xr6naC9NDq3TFb5pvUBdliC8kkJt19GJqHkQsNDp4vnhKt
- HIwqRHHfgqYgwNgSviutsYP4wieg5KcjM+Vxup8O+in9cU6/9JlkiAeoLClyurUJBPGukzuh0
- zxtdCPT4FLLmu/+o/sqX71DRgqcRb1zdPJ/hSmmlv4zFWaIC/6t7jYYbRkk6bcz27IQyz5Aav
- zL00Wff9qPt5rvIdhpPVtM8lxfSqzrumVTiU48PTa18LlNsgJSirPIUH/QMmTBnvCY9TsbRoj
- dxw/hlBSN1ZKF6yYle5X5Js2OyJoAjr85aB6ijYjOekrkPGNSpdumHnUUQNwa75WNm8Jc27pS
- KTCYMjsL9NqWRLtLd2SxlpBX3ZjVoLMiB6b6mw==
+X-Provags-ID: V03:K1:TiZV94vPlncTFQ0XFXHl46uWsgOeV5uIb8kQzE+lX0WRZOzL0fy
+ OrP0cqPQfahT8FHFUSajGyVKO46pemkTQG4JK410iiOdIhdupdrhWk5uzEqLHEenRE+/5OA
+ 9SMbg/GuDpMbA0qVdYICTghe3NqE+pokrzoUjIYtDLt0LhmzuXpc5R8CBK/DtGzXAs/sKdn
+ 0cV0bD5xkHJlI87A6f3UQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:E7b1o7vkQVg=:r/Tzd7idP9MdbyfydHTcht
+ CmLvK1zpwAxa6qY/99/re8SAWJXndM4dq+ZvaZtp04ePrANIRliSVeYrvOGCZwXis1Q7hC/Yv
+ j1wKMrvHtj3Fden+ZRirp4uShFrOtIZs+6c4wEhbWrWPpOV0y4Oyn7OF1zL/bI7CEptp5g8+y
+ bPwDKsYNNB48xd0lV1W7GTThtmRl4+h4x1kJyA66vFPIRJmsUDKi8tD6hFVdLUOpJALhjgwJv
+ oBhK/ajlYyQ/dQMM4Rxm/OeffwIGQ+XUK/sZSKoFChNZEngBG7Fi8RNUivgaWGbwVuFxEsgpa
+ 7pLb8fzBMVg2LDCeVlPbKRFEQJ8JXkTplbjbqWp076vpUoWqwKGz3MnziXOzO6AeYF9yztYVk
+ QnobJignuMAw21ehxGbLAA2YphIdrh/5G0fb4TFvrtBhabusdZhjlWzDG4GJDx+35iCptK0b+
+ ZfQjIHU4cZ7TS+UnFuBXTbnw+/Nmb33/fOGBO6lLKA0DagWc2C/P31DvbYplFHf20tz9dmDNh
+ ess5pjKnz5ImA1PumaSZIi4R+3re5eQE+2fmDzn6N8ZvWV3biW7AewtFDvY3sJWin84wLWF4b
+ yITGeP5dK9srFeaZFxs/yPh26Wx4LRIO+5y7dm4dtl9X/hyv+cEer3Y0NZPHw7k+bN0SGZb2N
+ KBhoSL2s76K6uS/37eGCFfNK+lb5U3ZZAOjEWlAlgSzbKuAzfBQrSLf+ozfZPFFC1AyJZNlZ6
+ Kv0MBKyvhcDNvn4xTYEOtbzMYtIKl2uhusRBRg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,74 +58,89 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/mcb/Kconfig | 47 ++++++++++++++++++++++-------------------------
- 1 file changed, 22 insertions(+), 25 deletions(-)
+ drivers/misc/Kconfig | 44 ++++++++++++++++++++++----------------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/mcb/Kconfig b/drivers/mcb/Kconfig
-index 76d9c51..85b4f22 100644
---- a/drivers/mcb/Kconfig
-+++ b/drivers/mcb/Kconfig
-@@ -3,38 +3,35 @@
- #
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 42ab8ec..4cc60aa 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -370,25 +370,25 @@ config SENSORS_TSL2550
+ 	  will be called tsl2550.
  
- menuconfig MCB
--	   tristate "MCB support"
--	   default n
--	   depends on HAS_IOMEM
--	   help
-+	tristate "MCB support"
+ config SENSORS_BH1770
+-         tristate "BH1770GLC / SFH7770 combined ALS - Proximity sensor"
+-         depends on I2C
+-         ---help---
+-           Say Y here if you want to build a driver for BH1770GLC (ROHM) or
+-	   SFH7770 (Osram) combined ambient light and proximity sensor chip.
++	tristate "BH1770GLC / SFH7770 combined ALS - Proximity sensor"
++	depends on I2C
++	---help---
++	  Say Y here if you want to build a driver for BH1770GLC (ROHM) or
++	  SFH7770 (Osram) combined ambient light and proximity sensor chip.
+ 
+-           To compile this driver as a module, choose M here: the
+-           module will be called bh1770glc. If unsure, say N here.
++	  To compile this driver as a module, choose M here: the
++	  module will be called bh1770glc. If unsure, say N here.
+ 
+ config SENSORS_APDS990X
+-	 tristate "APDS990X combined als and proximity sensors"
+-	 depends on I2C
+-	 default n
+-	 ---help---
+-	   Say Y here if you want to build a driver for Avago APDS990x
+-	   combined ambient light and proximity sensor chip.
++	tristate "APDS990X combined als and proximity sensors"
++	depends on I2C
 +	default n
-+	depends on HAS_IOMEM
-+	help
-+	  The MCB (MEN Chameleon Bus) is a Bus specific to MEN Mikroelektronik
-+	  FPGA based devices. It is used to identify MCB based IP-Cores within
-+	  an FPGA and provide the necessary framework for instantiating drivers
-+	  for these devices.
++	---help---
++	  Say Y here if you want to build a driver for Avago APDS990x
++	  combined ambient light and proximity sensor chip.
  
--	   The MCB (MEN Chameleon Bus) is a Bus specific to MEN Mikroelektronik
--	   FPGA based devices. It is used to identify MCB based IP-Cores within
--	   an FPGA and provide the necessary framework for instantiating drivers
--	   for these devices.
--
--	   If build as a module, the module is called mcb.ko
-+	  If build as a module, the module is called mcb.ko
+-	   To compile this driver as a module, choose M here: the
+-	   module will be called apds990x. If unsure, say N here.
++	  To compile this driver as a module, choose M here: the
++	  module will be called apds990x. If unsure, say N here.
  
- if MCB
- config MCB_PCI
--	   tristate "PCI based MCB carrier"
--	   default n
--	   depends on PCI
--	   help
--
--	   This is a MCB carrier on a PCI device. Both PCI attached on-board
--	   FPGAs as well as CompactPCI attached MCB FPGAs are supported with
--	   this driver.
-+	tristate "PCI based MCB carrier"
+ config HMC6352
+ 	tristate "Honeywell HMC6352 compass"
+@@ -412,10 +412,10 @@ config SPEAR13XX_PCIE_GADGET
+ 	depends on ARCH_SPEAR13XX && BROKEN
+ 	default n
+ 	help
+-	 This option enables gadget support for PCIe controller. If
+-	 board file defines any controller as PCIe endpoint then a sysfs
+-	 entry will be created for that controller. User can use these
+-	 sysfs node to configure PCIe EP as per his requirements.
++	  This option enables gadget support for PCIe controller. If
++	  board file defines any controller as PCIe endpoint then a sysfs
++	  entry will be created for that controller. User can use these
++	  sysfs node to configure PCIe EP as per his requirements.
+ 
+ config VMWARE_BALLOON
+ 	tristate "VMware Balloon Driver"
+@@ -467,7 +467,7 @@ config LATTICE_ECP3_CONFIG
+ 	tristate "Lattice ECP3 FPGA bitstream configuration via SPI"
+ 	depends on SPI && SYSFS
+ 	select FW_LOADER
+-	default	n
 +	default n
-+	depends on PCI
-+	help
-+	  This is a MCB carrier on a PCI device. Both PCI attached on-board
-+	  FPGAs as well as CompactPCI attached MCB FPGAs are supported with
-+	  this driver.
+ 	help
+ 	  This option enables support for bitstream configuration (programming
+ 	  or loading) of the Lattice ECP3 FPGA family via SPI.
+@@ -517,8 +517,8 @@ config PCI_ENDPOINT_TEST
+ 	select CRC32
+ 	tristate "PCI Endpoint Test driver"
+ 	---help---
+-           Enable this configuration option to enable the host side test driver
+-           for PCI Endpoint.
++	  Enable this configuration option to enable the host side test driver
++	  for PCI Endpoint.
  
--	   If build as a module, the module is called mcb-pci.ko
-+	  If build as a module, the module is called mcb-pci.ko
- 
- config MCB_LPC
--	   tristate "LPC (non PCI) based MCB carrier"
--	   default n
--	   help
--
--	   This is a MCB carrier on a LPC or non PCI device.
-+	tristate "LPC (non PCI) based MCB carrier"
-+	default n
-+	help
-+	  This is a MCB carrier on a LPC or non PCI device.
- 
--	   If build as a module, the module is called mcb-lpc.ko
-+	  If build as a module, the module is called mcb-lpc.ko
- 
- endif # MCB
+ config MISC_RTSX
+ 	tristate
 -- 
 1.9.1
 
