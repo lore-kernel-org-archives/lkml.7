@@ -2,360 +2,167 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085A5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F327AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98A620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B623620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pT0uILkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfCKCm1 (ORCPT
+        id S1727273AbfCKCok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 22:42:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34638 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727028AbfCKCm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 22:42:26 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2496273D382448E223EB;
-        Mon, 11 Mar 2019 10:42:24 +0800 (CST)
-Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.202)
- with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 10:42:15
- +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     <stable@vger.kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH for-4.20] staging: erofs: keep corrupted fs from crashing kernel in erofs_namei()
-Date:   Mon, 11 Mar 2019 10:40:23 +0800
-Message-ID: <20190311024023.46037-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.14.5
+        Sun, 10 Mar 2019 22:44:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49570 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfCKCok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 22:44:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/dFFqFiVvZ+jMYp5fFQQsVonfVwdzNJx8R7//lKsY7c=; b=pT0uILkBlj109LdICSP+UhnrU
+        0w3jathVdK05wCFrghEzTEBt6Do+vy8zN5Eun7tHj6tmVnRLZFZ/QzSXZdZhFBKg2XbfAKrG8G1WG
+        fn6QUwST+70dEY7+HMML3wKaZrYurT+DvtnuHT9nRGbvQiQrFMRWDnpaAN6xJEDtMvA+iymacFjQK
+        xsn4w3hEZqJh7IiBv7ycsYfiwvumYGVXjwLg975sp4CWrk4/0LJro8MBBWp+oMIP5ANKOwZPFiRkY
+        KZif88qN0nSFowc+Ms1JeVm9OWtpURrFmSmfcveVcaYvUTLn/ZS/Ej3O9ONKNOavZw37KBkIotUt5
+        nDRyJevtA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h3Ava-0006Cx-DR; Mon, 11 Mar 2019 02:44:34 +0000
+Date:   Sun, 10 Mar 2019 19:44:34 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Leon Romanovsky <leonro@mellanox.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the xarray tree
+Message-ID: <20190311024434.GA19508@bombadil.infradead.org>
+References: <20190221171332.262cf619@canb.auug.org.au>
+ <20190221123440.GD17501@mtr-leonro.mtl.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190221123440.GD17501@mtr-leonro.mtl.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
+On Thu, Feb 21, 2019 at 12:34:42PM +0000, Leon Romanovsky wrote:
+> On Thu, Feb 21, 2019 at 05:13:32PM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > After merging the xarray tree, today's linux-next build (powerpc
+> > ppc64_defconfig) failed like this:
 
-As Al pointed out, "
-... and while we are at it, what happens to
-	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
-	unsigned int matched = min(startprfx, endprfx);
+[API change]
 
-	struct qstr dname = QSTR_INIT(data + nameoff,
-		unlikely(mid >= ndirents - 1) ?
-			maxsize - nameoff :
-			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
+So I ended up being really busy last week and not having time to send
+my merge request for XArray yet.  I'm going to send a request this week;
+Leon and Jason, how does this merge resolution look?
 
-	/* string comparison without already matched prefix */
-	int ret = dirnamecmp(name, &dname, &matched);
-if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
-what's to prevent e.g. (unsigned)-1 ending up in dname.len?
+Compile tested only.
 
-Corrupted fs image shouldn't oops the kernel.. "
-
-Revisit the related lookup flow to address the issue.
-
-Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
-Cc: <stable@vger.kernel.org> # 4.19+
-Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-
-This series resolves the following conflicts:
- FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 4.20-stable tree
-
- drivers/staging/erofs/namei.c | 183 ++++++++++++++++++++++--------------------
- 1 file changed, 97 insertions(+), 86 deletions(-)
-
-diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
-index 5596c52e246d..ecc51ef0753f 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -15,74 +15,77 @@
- 
- #include <trace/events/erofs.h>
- 
--/* based on the value of qn->len is accurate */
--static inline int dirnamecmp(struct qstr *qn,
--	struct qstr *qd, unsigned int *matched)
-+struct erofs_qstr {
-+	const unsigned char *name;
-+	const unsigned char *end;
-+};
-+
-+/* based on the end of qn is accurate and it must have the trailing '\0' */
-+static inline int dirnamecmp(const struct erofs_qstr *qn,
-+			     const struct erofs_qstr *qd,
-+			     unsigned int *matched)
- {
--	unsigned int i = *matched, len = min(qn->len, qd->len);
--loop:
--	if (unlikely(i >= len)) {
--		*matched = i;
--		if (qn->len < qd->len) {
--			/*
--			 * actually (qn->len == qd->len)
--			 * when qd->name[i] == '\0'
--			 */
--			return qd->name[i] == '\0' ? 0 : -1;
-+	unsigned int i = *matched;
-+
-+	/*
-+	 * on-disk error, let's only BUG_ON in the debugging mode.
-+	 * otherwise, it will return 1 to just skip the invalid name
-+	 * and go on (in consideration of the lookup performance).
-+	 */
-+	DBG_BUGON(qd->name > qd->end);
-+
-+	/* qd could not have trailing '\0' */
-+	/* However it is absolutely safe if < qd->end */
-+	while (qd->name + i < qd->end && qd->name[i] != '\0') {
-+		if (qn->name[i] != qd->name[i]) {
-+			*matched = i;
-+			return qn->name[i] > qd->name[i] ? 1 : -1;
- 		}
--		return (qn->len > qd->len);
-+		++i;
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index a9f29156e486..8a93c0c95953 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -668,19 +668,10 @@ static int assign_name(struct ib_device *device, const char *name)
  	}
+ 	strlcpy(device->name, dev_name(&device->dev), IB_DEVICE_NAME_MAX);
+ 
+-	/* Cyclically allocate a user visible ID for the device */
+-	device->index = last_id;
+-	ret = xa_alloc(&devices, &device->index, INT_MAX, device, GFP_KERNEL);
+-	if (ret == -ENOSPC) {
+-		device->index = 0;
+-		ret = xa_alloc(&devices, &device->index, INT_MAX, device,
+-			       GFP_KERNEL);
+-	}
+-	if (ret)
+-		goto out;
+-	last_id = device->index + 1;
 -
--	if (qn->name[i] != qd->name[i]) {
--		*matched = i;
--		return qn->name[i] > qd->name[i] ? 1 : -1;
+-	ret = 0;
++	ret = xa_alloc_cyclic(&devices, &device->index, device, xa_limit_31b,
++			&last_id, GFP_KERNEL);
++	if (ret > 0)
++		ret = 0;
+ 
+ out:
+ 	up_write(&devices_rwsem);
+@@ -1059,14 +1050,14 @@ static int assign_client_id(struct ib_client *client)
+ 	 * to get the LIFO order. The extra linked list can go away if xarray
+ 	 * learns to reverse iterate.
+ 	 */
+-	if (list_empty(&client_list))
++	if (list_empty(&client_list)) {
+ 		client->client_id = 0;
+-	else
+-		client->client_id =
+-			list_last_entry(&client_list, struct ib_client, list)
+-				->client_id;
+-	ret = xa_alloc(&clients, &client->client_id, INT_MAX, client,
+-		       GFP_KERNEL);
++	} else {
++		struct ib_client *last = list_last_entry(&client_list,
++				struct ib_client, list);
++		client->client_id = last->client_id + 1;
++	}
++	ret = xa_insert(&clients, client->client_id, client, GFP_KERNEL);
+ 	if (ret)
+ 		goto out;
+ 
+diff --git a/drivers/infiniband/core/restrack.c b/drivers/infiniband/core/restrack.c
+index fa804093fafb..3b5ff2f7b5f8 100644
+--- a/drivers/infiniband/core/restrack.c
++++ b/drivers/infiniband/core/restrack.c
+@@ -13,28 +13,6 @@
+ #include "cma_priv.h"
+ #include "restrack.h"
+ 
+-static int rt_xa_alloc_cyclic(struct xarray *xa, u32 *id, void *entry,
+-			      u32 *next)
+-{
+-	int err;
+-
+-	*id = *next;
+-	if (*next == U32_MAX)
+-		*id = 0;
+-
+-	xa_lock(xa);
+-	err = __xa_alloc(xa, id, U32_MAX, entry, GFP_KERNEL);
+-	if (err && *next != U32_MAX) {
+-		*id = 0;
+-		err = __xa_alloc(xa, id, *next, entry, GFP_KERNEL);
 -	}
 -
--	++i;
--	goto loop;
-+	*matched = i;
-+	/* See comments in __d_alloc on the terminating NUL character */
-+	return qn->name[i] == '\0' ? 0 : 1;
- }
- 
--static struct erofs_dirent *find_target_dirent(
--	struct qstr *name,
--	u8 *data, int maxsize)
-+#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
-+
-+static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
-+					       u8 *data,
-+					       unsigned int dirblksize,
-+					       const int ndirents)
- {
--	unsigned int ndirents, head, back;
-+	int head, back;
- 	unsigned int startprfx, endprfx;
- 	struct erofs_dirent *const de = (struct erofs_dirent *)data;
- 
--	/* make sure that maxsize is valid */
--	BUG_ON(maxsize < sizeof(struct erofs_dirent));
+-	if (!err)
+-		*next = *id + 1;
+-	xa_unlock(xa);
+-	return err;
+-}
 -
--	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
--
--	/* corrupted dir (may be unnecessary...) */
--	BUG_ON(!ndirents);
--
--	head = 0;
-+	/* since the 1st dirent has been evaluated previously */
-+	head = 1;
- 	back = ndirents - 1;
- 	startprfx = endprfx = 0;
- 
- 	while (head <= back) {
--		unsigned int mid = head + (back - head) / 2;
--		unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
-+		const int mid = head + (back - head) / 2;
-+		const int nameoff = nameoff_from_disk(de[mid].nameoff,
-+						      dirblksize);
- 		unsigned int matched = min(startprfx, endprfx);
--
--		struct qstr dname = QSTR_INIT(data + nameoff,
--			unlikely(mid >= ndirents - 1) ?
--				maxsize - nameoff :
--				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
-+		struct erofs_qstr dname = {
-+			.name = data + nameoff,
-+			.end = unlikely(mid >= ndirents - 1) ?
-+				data + dirblksize :
-+				data + nameoff_from_disk(de[mid + 1].nameoff,
-+							 dirblksize)
-+		};
- 
- 		/* string comparison without already matched prefix */
- 		int ret = dirnamecmp(name, &dname, &matched);
- 
--		if (unlikely(!ret))
-+		if (unlikely(!ret)) {
- 			return de + mid;
--		else if (ret > 0) {
-+		} else if (ret > 0) {
- 			head = mid + 1;
- 			startprfx = matched;
--		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
--			break;
--		else {
-+		} else {
- 			back = mid - 1;
- 			endprfx = matched;
- 		}
-@@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_dirent(
- 	return ERR_PTR(-ENOENT);
- }
- 
--static struct page *find_target_block_classic(
--	struct inode *dir,
--	struct qstr *name, int *_diff)
-+static struct page *find_target_block_classic(struct inode *dir,
-+					      struct erofs_qstr *name,
-+					      int *_ndirents)
- {
- 	unsigned int startprfx, endprfx;
--	unsigned int head, back;
-+	int head, back;
- 	struct address_space *const mapping = dir->i_mapping;
- 	struct page *candidate = ERR_PTR(-ENOENT);
- 
-@@ -105,41 +108,43 @@ static struct page *find_target_block_classic(
- 	back = inode_datablocks(dir) - 1;
- 
- 	while (head <= back) {
--		unsigned int mid = head + (back - head) / 2;
-+		const int mid = head + (back - head) / 2;
- 		struct page *page = read_mapping_page(mapping, mid, NULL);
- 
--		if (IS_ERR(page)) {
--exact_out:
--			if (!IS_ERR(candidate)) /* valid candidate */
--				put_page(candidate);
--			return page;
--		} else {
--			int diff;
--			unsigned int ndirents, matched;
--			struct qstr dname;
-+		if (!IS_ERR(page)) {
- 			struct erofs_dirent *de = kmap_atomic(page);
--			unsigned int nameoff = le16_to_cpu(de->nameoff);
--
--			ndirents = nameoff / sizeof(*de);
-+			const int nameoff = nameoff_from_disk(de->nameoff,
-+							      EROFS_BLKSIZ);
-+			const int ndirents = nameoff / sizeof(*de);
-+			int diff;
-+			unsigned int matched;
-+			struct erofs_qstr dname;
- 
--			/* corrupted dir (should have one entry at least) */
--			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
-+			if (unlikely(!ndirents)) {
-+				DBG_BUGON(1);
-+				kunmap_atomic(de);
-+				put_page(page);
-+				page = ERR_PTR(-EIO);
-+				goto out;
-+			}
- 
- 			matched = min(startprfx, endprfx);
- 
- 			dname.name = (u8 *)de + nameoff;
--			dname.len = ndirents == 1 ?
--				/* since the rest of the last page is 0 */
--				EROFS_BLKSIZ - nameoff
--				: le16_to_cpu(de[1].nameoff) - nameoff;
-+			if (ndirents == 1)
-+				dname.end = (u8 *)de + EROFS_BLKSIZ;
-+			else
-+				dname.end = (u8 *)de +
-+					nameoff_from_disk(de[1].nameoff,
-+							  EROFS_BLKSIZ);
- 
- 			/* string comparison without already matched prefix */
- 			diff = dirnamecmp(name, &dname, &matched);
- 			kunmap_atomic(de);
- 
- 			if (unlikely(!diff)) {
--				*_diff = 0;
--				goto exact_out;
-+				*_ndirents = 0;
-+				goto out;
- 			} else if (diff > 0) {
- 				head = mid + 1;
- 				startprfx = matched;
-@@ -147,45 +152,51 @@ static struct page *find_target_block_classic(
- 				if (likely(!IS_ERR(candidate)))
- 					put_page(candidate);
- 				candidate = page;
-+				*_ndirents = ndirents;
- 			} else {
- 				put_page(page);
- 
--				if (unlikely(mid < 1))	/* fix "mid" overflow */
--					break;
--
- 				back = mid - 1;
- 				endprfx = matched;
- 			}
-+			continue;
- 		}
-+out:		/* free if the candidate is valid */
-+		if (!IS_ERR(candidate))
-+			put_page(candidate);
-+		return page;
- 	}
--	*_diff = 1;
- 	return candidate;
- }
- 
- int erofs_namei(struct inode *dir,
--	struct qstr *name,
--	erofs_nid_t *nid, unsigned int *d_type)
-+		struct qstr *name,
-+		erofs_nid_t *nid, unsigned int *d_type)
- {
--	int diff;
-+	int ndirents;
- 	struct page *page;
--	u8 *data;
-+	void *data;
- 	struct erofs_dirent *de;
-+	struct erofs_qstr qn;
- 
- 	if (unlikely(!dir->i_size))
- 		return -ENOENT;
- 
--	diff = 1;
--	page = find_target_block_classic(dir, name, &diff);
-+	qn.name = name->name;
-+	qn.end = name->name + name->len;
-+
-+	ndirents = 0;
-+	page = find_target_block_classic(dir, &qn, &ndirents);
- 
- 	if (unlikely(IS_ERR(page)))
- 		return PTR_ERR(page);
- 
- 	data = kmap_atomic(page);
- 	/* the target page has been mapped */
--	de = likely(diff) ?
--		/* since the rest of the last page is 0 */
--		find_target_dirent(name, data, EROFS_BLKSIZ) :
--		(struct erofs_dirent *)data;
-+	if (ndirents)
-+		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
-+	else
-+		de = (struct erofs_dirent *)data;
- 
- 	if (likely(!IS_ERR(de))) {
- 		*nid = le64_to_cpu(de->nid);
--- 
-2.14.5
-
+ /**
+  * rdma_restrack_init() - initialize and allocate resource tracking
+  * @dev:  IB device
+@@ -226,7 +204,8 @@ static void rdma_restrack_add(struct rdma_restrack_entry *res)
+ 	kref_init(&res->kref);
+ 	init_completion(&res->comp);
+ 	if (res->type != RDMA_RESTRACK_QP)
+-		ret = rt_xa_alloc_cyclic(&rt->xa, &res->id, res, &rt->next_id);
++		ret = xa_alloc_cyclic(&rt->xa, &res->id, res, xa_limit_32b,
++				&rt->next_id, GFP_KERNEL);
+ 	else {
+ 		/* Special case to ensure that LQPN points to right QP */
+ 		struct ib_qp *qp = container_of(res, struct ib_qp, res);
