@@ -7,92 +7,93 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED17C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F88C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CC12084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A8E206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYQwLOvs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFrDtf/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfCKQDB (ORCPT
+        id S1727590AbfCKQEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:03:01 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45354 "EHLO
+        Mon, 11 Mar 2019 12:04:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45491 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfCKQDB (ORCPT
+        with ESMTP id S1726625AbfCKQEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:03:01 -0400
-Received: by mail-lf1-f67.google.com with SMTP id f16so3826030lfk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:03:00 -0700 (PDT)
+        Mon, 11 Mar 2019 12:04:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id f16so3830730lfk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9ua4KOzq2dPCHdLI0iUSBP2EY8iPR6sAOnZK2+63CNc=;
-        b=CYQwLOvsX5HPcmtp4CrvNxZf2U7RhK3pFL3EmIRs/fpXb1YPsxHG4CbAp1MU4McbJd
-         bmxXNXk8r2M3BHGh0OFAv3rSc74rnat8iCjaq0NCwDZEiYyhVgjNpmUtb3pnkHDU2bNM
-         k2DNKsgHTDKmINcSJLRXA5iqtXJKmHykw15j/nMowEuBAt6sobFvD9XR1AI7vLP8Oz+C
-         hhL4wRQBXKV+GEzlEw+1WotQ4gEe/b5QZKjVl/pyn0ZJIzdZypbV9J5E84wFB4h4Q7Kl
-         l1T4sb1NBE3UkG5PWA4Xe3PjS1k/3oLcPsktNw0UCQd7dltJdjI3BMcDuZVuO8stv+ZL
-         7x1A==
+        bh=Y/4qEUcYdrj81JAUOKKSkmmZfLbmLspDvwoI6v3CsUs=;
+        b=FFrDtf/7kNu/XOmX25bQ4E9GpZ+MwHodPG9Z2bb07eDXEML4eZsferx/jpDfvkHxod
+         fLjCFZGsCNtvsL5WwvOP9vXKkZbj7WaqKLGIOyTt2MqBAkN6F332zNPuZIxnClAfHZ6z
+         rLwqKZFWmtBgTLTzq5kV2xlnC1tPs/ZAELMWg4sPK8yh9IBTT7Ixx7Z3iCjzrDP0Uc5C
+         rkoakoFT+/aFDxbcDDyxSYaNqUv1zf4DFATGIw9LFXKmRU+0zxeV1XBlspak46aA8Tzf
+         F3wb2NlSR/iAUPfYq6LlDkbG5+ayEib+ewWqZMMbSNqfngu+wtAmyPrRLzNQ4y78jpRj
+         TtMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9ua4KOzq2dPCHdLI0iUSBP2EY8iPR6sAOnZK2+63CNc=;
-        b=pS+FVn4pEYuwt3e3OPTXDsshWm7AxrLv1RGh8F7pfbB4DxBKGADCJjS21+3hfTWk3f
-         Euj5qSL76pX2bmr9d0QL3xc371U+FjOVpe9JUwC9wAVGny2HjBnT897O3gsO1iu8q3ra
-         Csj2nBBeqo7tBK8TKbf4FPT9d8HjVw60iIXNEGIR72ehQgiTItr8hDEHvkjRAe9wARPZ
-         uDVzvQrpuvMAAK4kfA4yu+ePAfR7SsT9qcqvlQhvuZB5rcZ91x3vBPZMk2v2gO48Cp36
-         8vRRfgumTa86jObfBwHOxsOo756gjzdbdjEon/VsuQIKLxRnodThbwViSv8cg2PHJAM0
-         Lx0w==
-X-Gm-Message-State: APjAAAXnNx7CHDDme/mlg0D4IVAfLzTL6jH357AmTQ2kZRifHnPO8bFA
-        w48f8bH5zlJAiGE2yQRjPqRWgCJaTNbLpL9lKdY=
-X-Google-Smtp-Source: APXvYqwP+kDs0curejsikHA3wuO+VxI91/7Sg1icewpXSMc7sCbmgtCGzHt9tTUKbRIol/4Rxh2s/XxyceTxEdJwgv8=
-X-Received: by 2002:a19:a417:: with SMTP id q23mr18847390lfc.27.1552320179719;
- Mon, 11 Mar 2019 09:02:59 -0700 (PDT)
+        bh=Y/4qEUcYdrj81JAUOKKSkmmZfLbmLspDvwoI6v3CsUs=;
+        b=eMjY7vduxj4vU58RGhr1MvbvE9awuVZOeZJNBmHMB1ummZZB76Uic0U3CGpnmm2biq
+         pKqi0gbXwFc2R9/iz8zK5v9iKHWS75wVK/f0XxWfKOSK2SIwyx+dbkt0C+NlYmxTR5X4
+         jE0X3AmDn7qFAL8+/HCppOpX7k3C1CmRqzIl26C4X2C4LlFyQQiUbN2Vyr3WXbo29Gru
+         BrzbcL0PieGIbWwOd/sajkU0QX0ZPpqyIPM4rkGYmFEIP20puXkLhqC1fTS/YrYjhkk0
+         aUkfWrUsyec8UP5JURGa5YFBYM+qLCZ4bp00BlzejBJNvBzzcF0k5u/mL1HeOMW0xOSR
+         Z6kw==
+X-Gm-Message-State: APjAAAX57BmI6yiDYYf5rNeNOIJxmnF/5ZPxcbAti/GzZ50Y2y6PPTXw
+        rdmjY0Y+C8JF/aGl3REif+quSUmJPHIFchHsB8M=
+X-Google-Smtp-Source: APXvYqxxtKQqVhh7npHuAp/daNaCYhRcGLczu9jWIkCjCbhvvfyhr2IJ3OUa/p0cSX528rh3DPT70bZQ9/D/VJrSmP4=
+X-Received: by 2002:a19:aa44:: with SMTP id t65mr16335222lfe.31.1552320281395;
+ Mon, 11 Mar 2019 09:04:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <5c86803d.1c69fb81.1a7c6.2b78@mx.google.com>
-In-Reply-To: <5c86803d.1c69fb81.1a7c6.2b78@mx.google.com>
+References: <5c86820f.1c69fb81.149f0.0834@mx.google.com>
+In-Reply-To: <5c86820f.1c69fb81.149f0.0834@mx.google.com>
 From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Mon, 11 Mar 2019 21:32:48 +0530
-Message-ID: <CAFqt6zb1AYsmUyokgwAAx5QU7fky3TrB+th9y5n4W1p6fnokpg@mail.gmail.com>
-Subject: Re: [PATCH] fs/cachefiles/namei.c: Remove duplicate header
+Date:   Mon, 11 Mar 2019 21:34:28 +0530
+Message-ID: <CAFqt6zZ6RmhyTmfgSRW-tAAFc=ESBcOng8NcL1KrBKY13LOaig@mail.gmail.com>
+Subject: Re: [PATCH] fs/coda/psdev.c: Remove duplicate header
 To:     Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, dhowells@redhat.com,
-        linux-cachefs@redhat.com, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, jaharkes@cs.cmu.edu,
+        coda@cs.cmu.edu, codalist@coda.cs.cmu.edu,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 9:05 PM Sabyasachi Gupta
+On Mon, Mar 11, 2019 at 9:13 PM Sabyasachi Gupta
 <sabyasachi.linux@gmail.com> wrote:
 >
-> Remove linux/xattr.h which is included more than once
+> Remove linux/poll.h which is included more than once
 >
 > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
 
 Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
 
 > ---
->  fs/cachefiles/namei.c | 1 -
+>  fs/coda/psdev.c | 1 -
 >  1 file changed, 1 deletion(-)
 >
-> diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-> index 95983c7..edecb7f 100644
-> --- a/fs/cachefiles/namei.c
-> +++ b/fs/cachefiles/namei.c
-> @@ -20,7 +20,6 @@
->  #include <linux/namei.h>
->  #include <linux/security.h>
->  #include <linux/slab.h>
-> -#include <linux/xattr.h>
->  #include "internal.h"
+> diff --git a/fs/coda/psdev.c b/fs/coda/psdev.c
+> index c5234c2..f2bb798 100644
+> --- a/fs/coda/psdev.c
+> +++ b/fs/coda/psdev.c
+> @@ -39,7 +39,6 @@
+>  #include <linux/device.h>
+>  #include <linux/pid_namespace.h>
+>  #include <asm/io.h>
+> -#include <linux/poll.h>
+>  #include <linux/uaccess.h>
 >
->  #define CACHEFILES_KEYBUF_SIZE 512
+>  #include <linux/coda.h>
 > --
 > 2.7.4
 >
