@@ -2,144 +2,166 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F81FC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E13C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8862075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qid6xTOQ"
+	by mail.kernel.org (Postfix) with ESMTP id A6C892075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfCKI7X (ORCPT
+        id S1727023AbfCKJCc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:59:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33859 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfCKI7W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:59:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 98so3251708oty.1;
-        Mon, 11 Mar 2019 01:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lqQ/4lIi+se9SSbWVvecDZQVa0ImY33ObgKGWqsK5Q8=;
-        b=qid6xTOQ/2AOEzRO5jqsehMOkeur6kb5gVpOLIDIGKiommyjQCqc+LqkPUcxIphLhw
-         OuOM7WjQczuqMJjTvW9Wi24A1jMG/nsXEXZMSsEcS+sFCXnDZuhwLeFH9Z3aBiEF4aE+
-         gXg+CbrIOGK2SujKvZp7+I4QY1sojhb1E/YdIrC7LcKjM2/YiQQ5AG0ov80rQUmmYYGE
-         K3pxhU0j7KcgBRNlsCp4r9XKl2nLLEONabIzfslDidBnw74t6kd7nqAzHJidQeCnGzgk
-         4mrcQsrBFB6kObpqDJAXHYQCoFG8OHkEcLMgfaWS9Y4zaK8yfsjqkQLPwwbuCAJ+HqfI
-         Khsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lqQ/4lIi+se9SSbWVvecDZQVa0ImY33ObgKGWqsK5Q8=;
-        b=IcWIc28eumAOdwfip9gyB6sbyr+bIC6I/7YvR1K8I5Iw7ok24hb1uW16zUlGn4Ja9H
-         KOuaHXKsyiA8Kp7e2fj+FIgjXW+uf/lPfhiULjLzvpg4vEltjubnKbVc9ykoKkYM50aI
-         P+CY1396+K6t3T5QhyRFO9ePQszX1Dbc41+2SkdwBam5B7/3xZmSGQVou1geXZpZl+L6
-         Az9qe+pHpRTnBfzY3ouioRLee2YviXxGgNr77nqtz9JWvozG+aPrpt6jbvNUrLz7KBT0
-         hSOE4gsglNAwl9C7r9pkBS4SVMSwOZ3CA+B/KGzWEGaMfSoutnxo10bKoXs/p4H4xB3X
-         l90g==
-X-Gm-Message-State: APjAAAVuEyouZRK1/s4va8ONafUDuow2ounEPUeqHQ72eucUfeX9V2tb
-        eRBQmQaYUdoBKW8CuiKMaIHZvf6NkdrCk7huE5k=
-X-Google-Smtp-Source: APXvYqy2W7VawzA1Mh2rHyBJ6gce/KFnIyscKYfDeXbUY9O8RqriRvsR141NrXWmgY1dxcvFCZYo76IL7GeN/95vz4c=
-X-Received: by 2002:a9d:69d4:: with SMTP id v20mr20740196oto.41.1552294762076;
- Mon, 11 Mar 2019 01:59:22 -0700 (PDT)
+        Mon, 11 Mar 2019 05:02:32 -0400
+Received: from mga09.intel.com ([134.134.136.24]:59742 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbfCKJCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:02:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 02:02:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,467,1544515200"; 
+   d="scan'208";a="153885151"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.172])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Mar 2019 02:02:27 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: DRM-based Oops viewer
+In-Reply-To: <20190310013142.GA3376@darwi-home-pc>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190310013142.GA3376@darwi-home-pc>
+Date:   Mon, 11 Mar 2019 11:04:19 +0200
+Message-ID: <87mum1lr3g.fsf@intel.com>
 MIME-Version: 1.0
-References: <20190310174640.dksy7pfkptrbcdgj@smtp.gmail.com>
-In-Reply-To: <20190310174640.dksy7pfkptrbcdgj@smtp.gmail.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Mon, 11 Mar 2019 10:59:11 +0200
-Message-ID: <CA+U=DsoTGLtnbkKoffm8TW6p_OhTfe2ViE3fEshKX9wJMPUzww@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] staging: iio: ad5933: add ABI documentation
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc:     lars@metafoo.de,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-usp@googlegroups.com,
-        "Ardelean, Alexandru" <alex.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 7:47 PM Marcelo Schmitt
-<marcelo.schmitt1@gmail.com> wrote:
+On Sun, 10 Mar 2019, "Ahmed S. Darwish" <darwish.07@gmail.com> wrote:
+> Hello DRM/UEFI maintainers,
 >
-> Add an ABI documentation for the ad5933 driver.
+> Several years ago, I wrote a set of patches to dump the kernel
+> log to disk upon panic -- through BIOS INT 0x13 services. [1]
+>
+> The overwhelming response was that it's unsafe to do this in a
+> generic manner. Linus proposed a video-based viewer instead: [2]
+>
+>     If you want to do the BIOS services thing, do it for video: copy the
+>     oops to low RAM, return to real mode, re-run the graphics card POST
+>     routines to initialize text-mode, and use the BIOS to print out the
+>     oops.  That is WAY less scary than writing to disk.
+>
+> Of course it's 2019 now though, and it's quite known that
+> Intel is officially obsoleting the PC/AT BIOS by 2020.. [3]
+>
+> Researching whether this can be done from UEFI, it was also clear
+> that UEFI "Runtime Services" do not provide any re-initialization
+> routines. [4]
+>
+> The maximum possible that UEFI can provide is a GOP-provided
+> framebuffer that's ready to use by the OS -- even after the UEFI
+> boot phase is marked as done through ExitBootServices(). [5]
+>
+> Of course, once native drivers like i915 or radeon take over,
+> such a framebuffer is toast... [6]
+>
+> Thus a possible remaining option, is to display the oops through
+> "minimal" DRM drivers provided for each HW variant... Since
+> these special drivers will run only and fully under a panic()
+> context though, several constraints exist:
+>
+>   - The code should be fully synchronous (irqs are disabled)
+>   - It should not allocate any dynamic memory
+>   - It should make minimal assumptions about HW state
+>   - It should not chain into any other kernel subsystem
+>   - It has ample freedom to use delay-based loops and the
+>     like, the kernel is already dead.
+>
+> How feasible is it to have such a special "DRM viewoops"
+> framework + its minimal drivers in the kernel?
 
-There's already an ABI documentation for this driver.
-See:
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/drivers/staging/iio/Documentation/sysfs-bus-iio-impedance-analyzer-ad5933
+Please first better define what you want to achieve.
 
-Apologies for not mentioning this sooner.
+Do you want to store the dmesg or oops (like your original series
+suggests) or do you want to display the oops? Do you want the facility
+to be functioning at all times, or only when specifically requested in
+advance by the user? If you want to display the oops, do you want it to
+also work when the display is disabled at the time of the oops? What if
+the display is at attached to a port on a dock?
 
-Could you check for other references for ad5933 in the kernel (in staging) ?
-I don't think I missed other stuff, but it's good to check.
+There's at least kdump, ramoops, and netconsole that can be used to
+achieve some of what you want. How do they fall short for you?
+
+BR,
+Jani.
+
 
 >
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> ---
->  .../ABI/testing/sysfs-bus-iio-ad5933          | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-ad5933
+> The target is to start from i915, since that's what in my
+> laptop now, and work from there..
 >
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-ad5933 b/Documentation/ABI/testing/sysfs-bus-iio-ad5933
-> new file mode 100644
-> index 000000000000..8a60dd178b1f
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-ad5933
-> @@ -0,0 +1,39 @@
-> +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_start
-> +Date:          March 2019
-> +KernelVersion: Kernel 4.19
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               The start frequency. Set this to define the frequency point at
-> +               which the device should start the next frequency sweep.
-> +
-> +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_increment
-> +Date:          March 2019
-> +KernelVersion: Kernel 4.19
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               The frequency sweep increment. Set this to define the amount by
-> +               which the frequency is incremented after each scan point. After
-> +               the measurement at a frequency point is completed, the next
-> +               measurement will be made at a frequency point
-> +               'frequency increment'Hz higher than the previous one unless a
-> +               repeat frequency command is issued. This behavior will follow
-> +               until the defined number of frequency points have been measured
-> +               or frequency sweep is somewhat reset.
-> +
-> +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_points
-> +Date:          March 2019
-> +KernelVersion: Kernel 4.19
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               The number of increments. This defines the number of frequency
-> +               points in the frequency sweep.
-> +
-> +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_settling_cycles
-> +Date:          March 2019
-> +KernelVersion: Kernel 4.19
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               Number of settling time cycles. This sets the delay between a
-> +               start frequency sweep/increment frequency /repeat frequency to
-> +               be proportional to the excitation signal frequency times the
-> +               number of settling time cycles.
-> --
-> 2.20.1
+> Some final notes:
 >
+>   - The NT kernel has a similar concept, but for storage instead.
+>     They're used to dump core under kernel panic() situations,
+>     and are called "Minoport storage drivers". [7]
+>
+>   - Since Windows 7+, a very fancy Blue Screen of Death is
+>     displayed, with Unicode and whatnot, implying GPU drivers
+>     involvement. [8]
+>
+>   - Mac OS X also does something similar [9]
+>
+>   - On Linux laptops, the current situation is _really_ bad.
+>
+>     In any graphical session, type "echo c > /proc/sysrq-trigger";
+>     the screen will just completely freeze...
+>
+>     Desired first goal: just print the panic() log
+>
+> Thanks a lot,
+>
+> [1] https://lore.kernel.org/lkml/20110125134748.GA10051@laptop
+> [2] https://lore.kernel.org/lkml/AANLkTinU0KYiCd4p=z+=ojbkeEoT2G+CAYvdRU02KJEn@mail.gmail.com
+>
+> [3] https://uefi.org/sites/default/files/resources/Brian_Richardson_Intel_Final.pdf
+>
+> [4] UEFI v2.7 spec, Chapter 8, "Services — Runtime Services"
+> [5] UEFI v2.7 spec, Section 12.9, "Graphics Output Protocol"
+>     "The Graphics Output Protocol supports this capability by
+>      providing the EFI OS loader access to a hardware frame buffer
+>      and enough information to allow the OS to draw directly to
+>      the graphics output device."
+>
+> [6] linux/drivers/gpu/drm/i915/i915_drv.c::i915_kick_out_firmware_fb()
+>     linux/drivers/gpu/drm/radeon/radeon_drv.c::radeon_pci_probe()
+>
+> [7] https://docs.microsoft.com/en-us/windows-hardware/drivers/storage/restrictions-on-miniport-drivers-that-manage-the-boot-drive
+>
+> [8] https://upload.wikimedia.org/wikipedia/commons/archive/5/56/20181019151937%21Bsodwindows10.png
+> [9] https://upload.wikimedia.org/wikipedia/commons/4/4a/Mac_OS_X_10.2_Kernel_Panic.jpg
+>
+> --darwi
+> http://darwish.chasingpointers.com
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
