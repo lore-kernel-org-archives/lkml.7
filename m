@@ -2,157 +2,90 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DC2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0812C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96A6205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D13205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zTkFa9QA"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="cbnTo9uh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfCKRMS (ORCPT
+        id S1727548AbfCKROG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:12:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42490 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfCKRMR (ORCPT
+        Mon, 11 Mar 2019 13:14:06 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:34610 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726625AbfCKROF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:12:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2BH3dTk114781;
-        Mon, 11 Mar 2019 17:12:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=vAw2Ni0hsorzbpiuWPxTumSrl8r5Pf2nz6NOWAcSetM=;
- b=zTkFa9QAHBeuss380D1KdCVZPihfe+XgCHWkE5UqWG6aV78sgAX6Lcc42zZGroeL1q2D
- +9shWyb5hi0vYg3CY5CrwPQbEJhVqM5V2MpyJ3cg6ONXd7S0k9HNEy1fklLlv4y8iUpj
- M4UKGeXSwSuuKn0Y3YYSl0F3reygzulggeSe5UVQ/fM/LgkZLal0wiMafeWIs1Y2NDo3
- QwVtDih0gabtVEcE1y6JlroD4C6955zFnb0AprvGKClXMCxt5sXWH3RgmaHQQgTxZRg2
- CUkdX1DXaEwDihXfYtcC/B0CqKTf6/b1o70aNzcH5+idH06+ydGD3DoaQ9sdqvlkXsKb Rg== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2r44wtyts7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 17:12:10 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2BHC9Y9004956
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 17:12:09 GMT
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2BHC9fB022101;
-        Mon, 11 Mar 2019 17:12:09 GMT
-Received: from [192.168.1.226] (/70.176.225.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Mar 2019 10:12:09 -0700
-Subject: Re: [PATCH 2/2] xfs: clean up xfs_dir2_leaf_addname
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-References: <20190311161948.GC4359@magnolia> <20190311162232.GD4359@magnolia>
-From:   Allison Henderson <allison.henderson@oracle.com>
-Message-ID: <b8f9eb73-f29e-9df1-f885-a630cee01e0c@oracle.com>
-Date:   Mon, 11 Mar 2019 10:12:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 11 Mar 2019 13:14:05 -0400
+Received: by mail-yw1-f68.google.com with SMTP id x129so3532937ywc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y58oEk6VFS6vSzvCUZ1rAopBEFvhw4rM0vVvFY79z3w=;
+        b=cbnTo9uhVT9wL0/pDjHdpqDCQAmDqAAWTT5Y5z3BS8FgIRZRCmrMBSupLQtrmwiEU7
+         KNWY5PgO92GOlMjDPP0UOCN5cJxUoHP6F0cYtfYBH0kvGx0Df9p0KqeMeAinp7e6Hn7H
+         qFeICoJOIUdbPnLvus51stmzJXaJ/+uInYfSGDOxkAxWBeJKtUvW2rdohxe2yz7qvTQ6
+         0O1D0M5XS3k4/pk8AY5EFdwCn5gOgS7J1ZsHZ45xqR571yERkeULGtH3An/Fy/czxlTE
+         94o1WvQc7t0r8iKPOxsSvgeCImOhz2aSP1OZVo2zCD6Jtc2HJuGJIQcB4TXESbv9wLGo
+         hUUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y58oEk6VFS6vSzvCUZ1rAopBEFvhw4rM0vVvFY79z3w=;
+        b=l2FVBKH4oASXao64eC+Ytlck0YNm7Aa4bknIcWHrCy5GG48JMesa+KtrfPEK9SgSVh
+         u23iPPcXZ6RVS0nkaYt0Ad+bUp3FKQSQ2kISfb9Kk3y/5iPsXWyFs+EMHThipDv/Uckc
+         DlByEq4H4kb41on/Vn4zHXuZEKrLsDjiNLBIIF3G+gRvunSMU10xUwVj0ZwiW0tXI28p
+         Pe8JkzhosBnNljnsZU39PYFsVdO3nZ+SMvAZ+i3jeqb+UehJlyJa4GZkQBd8iAI1nQ5L
+         LlV6tTVfv7GgGf/ldeGPoqLhiNb+CBQPCW8DXDiojyCEYQkDNeDC9jXS0i5QpD/iRYdZ
+         s2JA==
+X-Gm-Message-State: APjAAAWN5tpt9GXtCFIn3VOAHlJ2UoNIZagt/PSjYPPQRM8SjcGMmzbl
+        ci/4ilJ2cro2u2TFuQ0/mxj4JA==
+X-Google-Smtp-Source: APXvYqwbksG6pV6NHQrSLAiG/AmNqN4B0KIeTZpNK2uAn6ch6pNfdQ5TPs6pHjzKEEq0BGkEHZCHyA==
+X-Received: by 2002:a81:a055:: with SMTP id x82mr26386742ywg.177.1552324444748;
+        Mon, 11 Mar 2019 10:14:04 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::1:3c60])
+        by smtp.gmail.com with ESMTPSA id j10sm1933530ywb.39.2019.03.11.10.14.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 10:14:03 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 13:14:02 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guroan@gmail.com>
+Cc:     linux-mm@kvack.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH 1/5] mm: prepare to premature release of
+ memcg->vmstats_percpu
+Message-ID: <20190311171402.GA10823@cmpxchg.org>
+References: <20190307230033.31975-1-guro@fb.com>
+ <20190307230033.31975-2-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190311162232.GD4359@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9192 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903110122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190307230033.31975-2-guro@fb.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks ok to me.  Thanks for the clean up.
+On Thu, Mar 07, 2019 at 03:00:29PM -0800, Roman Gushchin wrote:
+> Prepare to handle premature release of memcg->vmstats_percpu data.
+> Currently it's a generic pointer which is expected to be non-NULL
+> during the whole life time of a memcg. Switch over to the
+> rcu-protected pointer, and carefully check it for being non-NULL.
+> 
+> This change is a required step towards dynamic premature release
+> of percpu memcg data.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-
-On 3/11/19 9:22 AM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Remove typedefs and consolidate local variable initialization.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->   fs/xfs/libxfs/xfs_dir2_leaf.c |   33 +++++++++++++++------------------
->   1 file changed, 15 insertions(+), 18 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
-> index 2abf945e5844..9c2a0a13ed61 100644
-> --- a/fs/xfs/libxfs/xfs_dir2_leaf.c
-> +++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
-> @@ -563,43 +563,40 @@ xfs_dir3_leaf_find_entry(
->    */
->   int						/* error */
->   xfs_dir2_leaf_addname(
-> -	xfs_da_args_t		*args)		/* operation arguments */
-> +	struct xfs_da_args	*args)		/* operation arguments */
->   {
-> +	struct xfs_dir3_icleaf_hdr leafhdr;
-> +	struct xfs_trans	*tp = args->trans;
->   	__be16			*bestsp;	/* freespace table in leaf */
-> -	int			compact;	/* need to compact leaves */
-> -	xfs_dir2_data_hdr_t	*hdr;		/* data block header */
-> +	__be16			*tagp;		/* end of data entry */
->   	struct xfs_buf		*dbp;		/* data block buffer */
-> -	xfs_dir2_data_entry_t	*dep;		/* data block entry */
-> -	xfs_inode_t		*dp;		/* incore directory inode */
-> -	xfs_dir2_data_unused_t	*dup;		/* data unused entry */
-> +	struct xfs_buf		*lbp;		/* leaf's buffer */
-> +	struct xfs_dir2_leaf	*leaf;		/* leaf structure */
-> +	struct xfs_inode	*dp = args->dp;	/* incore directory inode */
-> +	struct xfs_dir2_data_hdr *hdr;		/* data block header */
-> +	struct xfs_dir2_data_entry *dep;	/* data block entry */
-> +	struct xfs_dir2_leaf_entry *lep;	/* leaf entry table pointer */
-> +	struct xfs_dir2_leaf_entry *ents;
-> +	struct xfs_dir2_data_unused *dup;	/* data unused entry */
-> +	struct xfs_dir2_leaf_tail *ltp;		/* leaf tail pointer */
-> +	struct xfs_dir2_data_free *bf;		/* bestfree table */
-> +	int			compact;	/* need to compact leaves */
->   	int			error;		/* error return value */
->   	int			grown;		/* allocated new data block */
->   	int			highstale = 0;	/* index of next stale leaf */
->   	int			i;		/* temporary, index */
->   	int			index;		/* leaf table position */
-> -	struct xfs_buf		*lbp;		/* leaf's buffer */
-> -	xfs_dir2_leaf_t		*leaf;		/* leaf structure */
->   	int			length;		/* length of new entry */
-> -	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry table pointer */
->   	int			lfloglow;	/* low leaf logging index */
->   	int			lfloghigh;	/* high leaf logging index */
->   	int			lowstale = 0;	/* index of prev stale leaf */
-> -	xfs_dir2_leaf_tail_t	*ltp;		/* leaf tail pointer */
->   	int			needbytes;	/* leaf block bytes needed */
->   	int			needlog;	/* need to log data header */
->   	int			needscan;	/* need to rescan data free */
-> -	__be16			*tagp;		/* end of data entry */
-> -	xfs_trans_t		*tp;		/* transaction pointer */
->   	xfs_dir2_db_t		use_block;	/* data block number */
-> -	struct xfs_dir2_data_free *bf;		/* bestfree table */
-> -	struct xfs_dir2_leaf_entry *ents;
-> -	struct xfs_dir3_icleaf_hdr leafhdr;
->   
->   	trace_xfs_dir2_leaf_addname(args);
->   
-> -	dp = args->dp;
-> -	tp = args->trans;
-> -
->   	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk, -1, &lbp);
->   	if (error)
->   		return error;
-> 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
