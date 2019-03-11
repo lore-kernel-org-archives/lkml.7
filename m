@@ -7,55 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5C3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343F9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2F42063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038912063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325047;
-	bh=KXmNYuneVJx2HWZpa+HrCKIHuau95X1OcFvZRGtbzwI=;
+	s=default; t=1552325052;
+	bh=d4UdD16OQq8BCqz38LiAC7H1j/rVITfCm0tW1YIvEhI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hNJsmL+AaNI1Ze8QMmOPwCulWRMS0qoqI5B755Of6PvcCV7hyQ8WlYKAHcRC/MBOY
-	 0WOi/DR5myxA+UTxvazWo41U0qQN8aPr3XZu0wNqzKp6mBNSE5Ky3BG1Uttqb3RBT4
-	 yyLxpwkqNUqyWeRx2GCryOTDK9Dkl8B8G2odGYSY=
+	b=Awz9xxifl6Nw2E30ne5OjoOvDajlhwTzcI27kD2PVKiacKplxGtEFgx6iXHkYMFpK
+	 NCMT4y5fcKt6eIug7TaQXSmkk5lk4KQOJBM+upo599ReDeFZmGceCfA6OUNPC9x+6e
+	 iltIzVDaGVJtPr4ZWID+TaM5PUeM+9a5gwC0R638=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfCKRYG (ORCPT
+        id S1728163AbfCKRYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50598 "EHLO
+        Mon, 11 Mar 2019 13:24:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50596 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfCKRYD (ORCPT
+        with ESMTP id S1728108AbfCKRYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:24:03 -0400
+        Mon, 11 Mar 2019 13:24:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=R5DR9y30jZMKClaIL1Pi8wrCFozuYTS9KKdV/+GXeOY=; b=HC3bssdXVvxx
-        u3Vc7ifXB3UeiMBZRiEwQQ/DnGoCzar121UYMUymUWo1nJm97NXO8ifvxeZN3uD6v3BNnLa1VQUUe
-        c9gc5G2LlXfXcRdKmGJv/fWPWyY7s22aEhYKbgwyraujOjqUCnkZgf92Oy6gT4LLwyk5FAT8/blCY
-        pyV3c=;
+        List-Archive; bh=7WFL3W2M3ADq+FKR8oU8nBzoFiliH+Io6Beopa2Nrfg=; b=UVMgXSueIeGm
+        sputoW48Y/0d0GNr0se4/xabf1aKiEeG8Xa5W/idLYVi5UPzVmT56JpzEZZ8a1+/eJD3QKy0yuMt5
+        jtN7y2ODUnfZg0U8L6963iX+WfsQxriqzN1WNViADkpIzMXjcl+2qg67Jx3CF5BTichJjDj51yIz8
+        5II1I=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3Oeb-0005Ng-VZ; Mon, 11 Mar 2019 17:23:58 +0000
+        id 1h3OeX-0005N9-NY; Mon, 11 Mar 2019 17:23:53 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 85BCB1128896; Mon, 11 Mar 2019 17:23:57 +0000 (GMT)
+        id 349AB1128896; Mon, 11 Mar 2019 17:23:53 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Mark Brown <broonie@kernel.org>, broonie@kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
-        sbkim73@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org,
-        m.szyprowski@samsung.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: samsung: i2s: Fix DAPM routes for capture stream" to the asoc tree
-In-Reply-To:  <20190306102445.1640-1-s.nawrocki@samsung.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Vishal Thanki <vishalthanki@gmail.com>,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM" to the asoc tree
+In-Reply-To:  <20190307101145.636705-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172357.85BCB1128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:57 +0000 (GMT)
+Message-Id: <20190311172353.349AB1128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:23:53 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: samsung: i2s: Fix DAPM routes for capture stream
+   ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
 
 has been applied to the asoc tree at
 
@@ -88,64 +94,49 @@ to this mail.
 Thanks,
 Mark
 
-From 42e4cedd67e4eb2abaa5e684353a55d4a01a913e Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Wed, 6 Mar 2019 11:24:45 +0100
-Subject: [PATCH] ASoC: samsung: i2s: Fix DAPM routes for capture stream
+From 8ca5104715cfd14254ea5aecc390ae583b707607 Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 7 Mar 2019 11:11:30 +0100
+Subject: [PATCH] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
 
-This patch sets missing stream_name of capture part of the DAI driver
-so we can define DAPM routing properly also for the capture stream.
+Building with clang shows a variable that is only used by the
+suspend/resume functions but defined outside of their #ifdef block:
 
-While at it "Playback" suffix is added to the playback stream names
-to clearly identify playback/capture.
+sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
 
-Together with related dts patch this fixes NULL pointer dereference
-when opening ALSA device for recording on Odroid XU3.
+We commonly fix these by marking the PM functions as __maybe_unused,
+but here that would grow the davinci_mcasp structure, so instead
+add another #ifdef here.
 
-Fixes: 64aba9bca5bd ("ASoC: samsung: i2s: Add widgets and routes for DPCM support")
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/samsung/i2s.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ sound/soc/ti/davinci-mcasp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index 4231001226f4..ab471d550d17 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -1130,11 +1130,11 @@ static const struct snd_soc_dapm_widget samsung_i2s_widgets[] = {
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index a3a67a8f0f54..9fbc759fdefe 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -45,6 +45,7 @@
+ 
+ #define MCASP_MAX_AFIFO_DEPTH	64
+ 
++#ifdef CONFIG_PM
+ static u32 context_regs[] = {
+ 	DAVINCI_MCASP_TXFMCTL_REG,
+ 	DAVINCI_MCASP_RXFMCTL_REG,
+@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
+ 	u32	*xrsr_regs; /* for serializer configuration */
+ 	bool	pm_state;
  };
++#endif
  
- static const struct snd_soc_dapm_route samsung_i2s_dapm_routes[] = {
--	{ "Playback Mixer", NULL, "Primary" },
--	{ "Playback Mixer", NULL, "Secondary" },
-+	{ "Playback Mixer", NULL, "Primary Playback" },
-+	{ "Playback Mixer", NULL, "Secondary Playback" },
- 
- 	{ "Mixer DAI TX", NULL, "Playback Mixer" },
--	{ "Playback Mixer", NULL, "Mixer DAI RX" },
-+	{ "Primary Capture", NULL, "Mixer DAI RX" },
- };
- 
- static const struct snd_soc_component_driver samsung_i2s_component = {
-@@ -1155,7 +1155,8 @@ static int i2s_alloc_dais(struct samsung_i2s_priv *priv,
- 			  int num_dais)
- {
- 	static const char *dai_names[] = { "samsung-i2s", "samsung-i2s-sec" };
--	static const char *stream_names[] = { "Primary", "Secondary" };
-+	static const char *stream_names[] = { "Primary Playback",
-+					      "Secondary Playback" };
- 	struct snd_soc_dai_driver *dai_drv;
- 	struct i2s_dai *dai;
- 	int i;
-@@ -1201,6 +1202,7 @@ static int i2s_alloc_dais(struct samsung_i2s_priv *priv,
- 	dai_drv->capture.channels_max = 2;
- 	dai_drv->capture.rates = i2s_dai_data->pcm_rates;
- 	dai_drv->capture.formats = SAMSUNG_I2S_FMTS;
-+	dai_drv->capture.stream_name = "Primary Capture";
- 
- 	return 0;
- }
+ struct davinci_mcasp_ruledata {
+ 	struct davinci_mcasp *mcasp;
 -- 
 2.20.1
 
