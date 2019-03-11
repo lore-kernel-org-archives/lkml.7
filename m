@@ -2,136 +2,169 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEB6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9209FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB9D20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="XgmsI9M9"
+	by mail.kernel.org (Postfix) with ESMTP id 5CC29206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfCKK7u (ORCPT
+        id S1727314AbfCKLAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:59:50 -0400
-Received: from mail-eopbgr80105.outbound.protection.outlook.com ([40.107.8.105]:4848
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726605AbfCKK7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:59:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QD/tiev8hH1Qd31Kc7mGToPJVU97kH+dwDLV+95vEaM=;
- b=XgmsI9M9Kc0wX7W/MmZH+EvpKrcuTITTS5UkgdBfoMUeB2SEhfX4gwXwbg/EROIydwHS0xQ+FCJDNgXgfLn2AIRK5rJIJGI5pQ41QTxDzdk8Q+M6TtPWH7+hCO0GWFqLaJq7LW9Nc9bYojSL6n9GVgB1rdICECv6EOZP8BgnDOw=
-Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
- VI1PR10MB0752.EURPRD10.PROD.OUTLOOK.COM (10.167.203.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.20; Mon, 11 Mar 2019 10:59:45 +0000
-Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51c2:2f6a:3148:4a1f]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51c2:2f6a:3148:4a1f%3]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 10:59:45 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>, Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "Per N. Christensen" <pnc@deif.com>, Thomas Winding <twi@deif.com>
-Subject: replacement for CAN_LEDS
-Thread-Topic: replacement for CAN_LEDS
-Thread-Index: AQHU1/mJxZiRQLZ/JEmSksIg8zngHQ==
-Date:   Mon, 11 Mar 2019 10:59:45 +0000
-Message-ID: <729bdb48-8253-282a-2e0b-860ec5ff345c@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0402CA0015.eurprd04.prod.outlook.com
- (2603:10a6:3:d0::25) To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e3::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c428b70f-2b90-42b3-b0ed-08d6a610ac12
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0752;
-x-ms-traffictypediagnostic: VI1PR10MB0752:
-x-microsoft-antispam-prvs: <VI1PR10MB0752CF34F5FD945B6CB86AD88A480@VI1PR10MB0752.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(39850400004)(376002)(366004)(189003)(199004)(6436002)(54906003)(2906002)(31696002)(316002)(106356001)(110136005)(7736002)(486006)(476003)(31686004)(6512007)(305945005)(97736004)(4326008)(53936002)(25786009)(105586002)(6116002)(7116003)(3846002)(6486002)(74482002)(66066001)(478600001)(71200400001)(71190400001)(14454004)(72206003)(44832011)(14444005)(256004)(5660300002)(81156014)(26005)(8676002)(36756003)(8976002)(81166006)(186003)(8936002)(102836004)(68736007)(386003)(6506007)(2616005)(52116002)(42882007)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB0752;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjEwTUIwNzUyOzIzOm9Jd3JYL2lEbGc5RzVhSDd6SlMvenVwVHlh?=
- =?utf-8?B?ZFRMQkQ2OGlIaWhWYVRlampLbE9JcllPQyt5ZEdsMkZ1cXN4bHlpQU8yU3Ex?=
- =?utf-8?B?TVU5TkZ0OW4va1lrZEF0a3UwcXhrVGwwck5jZVl0VzlLazM5bFpmK3Y2aHlV?=
- =?utf-8?B?blFzVDF6TjZ3eG15eWlDQ1Y3SHAzMkx2WEpUT2Fxb1FFNURSS2hxVzdhbW5M?=
- =?utf-8?B?MUU5VUl3VHNBTUNvV0Q1Rzk0Zm54UEJPcXA4S2t1YWRacnlNV25JTHc1b1d0?=
- =?utf-8?B?TVhiSXdnOHdhQ3IyL0kxWGxVK2xCTGdhVGNESlVYK2Q2WEZ4TjRsV1oxam5q?=
- =?utf-8?B?ZnJBZk9WWGRPc0R2WFRyM1V1TXoyS1NpdDV4amJBOUZ2MitlV09uVlJUV05a?=
- =?utf-8?B?aEdUQm11OUozZ3ZIa0phZUEvNG8yd0VsR3NRdE1wNFFkZDJnZHh3SGFZa1RN?=
- =?utf-8?B?eXVJaS9jcHErbHl4U0dWREZGMjI1QWtYeVE4dko0QkZ1d2hFZ0o4WjNicTc3?=
- =?utf-8?B?Nmg1UlhGY0c4UmN5MXh5ZzNGMC80SHJYNkFrRzF6YUpka3pFb2JHRU95K0dp?=
- =?utf-8?B?Q2o4eTErTGM0UThrYVBSS0ZXbzhTaVJJUW1SSHowRm5LdXRnYW5UMERFNlpG?=
- =?utf-8?B?a0x3cFVzWHcvUCs1Yk1LSWh5UkU0cjJlcDJMbjFLQXdpTVVPclNvT1c5d1hx?=
- =?utf-8?B?QVRGUzZ3SExaR3RPRTUrTWU1UUNiZThmTEgxWFBHc255VWNIeTk1Wmx1elUw?=
- =?utf-8?B?aXZVWlFNSWtWNFU4czRySjh4SzA2OVV6Ym1kNU5GVjZIK1p4ZGZQYkpLVmcx?=
- =?utf-8?B?QWh2aWhDRUpTVUhPNEY0NlgzOCtsVzkzelJjdVpralE1bFpGRjQ5V0JlWGVS?=
- =?utf-8?B?b0VyQm90a3dabzl1UDd2SGczYzN1bVlQK3ptM3h3Z3pZTUN4dlpqa2lqZWxz?=
- =?utf-8?B?U1FKWFlYK0o4S3ZwU09HczBWTFlGTzlydEFtSVRSVUJVeFhuMkozUUorQ3JI?=
- =?utf-8?B?czJQWUs5dlRLUUJFNU50aHlCSm1WZUQxaTQ1amNOSWNsTkVOeDg0L01odXc2?=
- =?utf-8?B?SHMreTRJT2ZzdERlandHL2JucGpSODRIK0ZjTFpOc0FpVzBpOXJtWm9UcHk5?=
- =?utf-8?B?aWcrUzNoRC9iQlFFUFhLeks5eWhubXlId0poTWNQSGt6ZkJZK0NULzNhTHlB?=
- =?utf-8?B?d3VReittS3oxZDhkOGJuVzg2bUptUG1wdjl3TytYcEQ2TjR0OGFHV1BLNHNx?=
- =?utf-8?B?L3dmcjhrbXA0YzNBekx5cWtOeEdDNkN4TFJGMy9sNHUzVTROMzV4OGJYV3VJ?=
- =?utf-8?B?S1ZDWWd0aG9LVGw0VTc3YUk1dmRjZnBSSGhwaG1rbWpMTmpiYmZabzh0RUNp?=
- =?utf-8?B?SWNvTEFzSHNNTmZ1RDg3ZnJnSHRRUFdVcFFGQ29Fa1JLSFZVUFpRNkdReVVh?=
- =?utf-8?B?bWJzS1pjb241SjdaTGJSSGVsbkUwZ1N2eS93UndkQjVaL0VoY241dzZnSXJi?=
- =?utf-8?B?QmlKOThDVTFDckQzTitjdTRURWdXRHNZczdCOHdNUDVwUXVQYjZNR1BYV254?=
- =?utf-8?B?ZXNwcUNLSkY5bkY1NktkU0g2YnpNaUFlZkxtSStaeWVBMW8ycjBjVU5ESXB6?=
- =?utf-8?B?cEh2OC9KVlQ1dzJmYjU4a2tRZ0xoVEFQOGRKOWl0SnVuVWFVY1NSOEg1WnhZ?=
- =?utf-8?Q?qBVtE7BA5ZM66PuaN7KOgY0VtPMjT/VpJUHEjAV?=
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mNwkI3HKW72jR7T+WmCEuhWKZsdgqH009FO3iO0BCL52O8aLKDWYwDnnKMkQbbdq9E2d+Lp6MuBltS0E7rb0Xt5ApnP0qxDkSm3NgYSZjPU+cnYMo7f4ajSs8O/pF4bdrZmQbz/RUEqT3WLWVAchXjt9RIncGeJ6EMpK9qNTQ++0QTRPGZZ/mANcW+v02BV0qIIET6W3Kot9MB04aGjAKlc5HcooYDPTNR03yUoRUEIoqN9qD6ACHJs38nc/fcndqGF4Svw1ivSih44tRB0WR/jPFGUc5fzbYJOEmhGfb1n4M22TNxyGfis5lU7RcP9B5CdHlNmv5sHUwOAAWYTggkE847j7pvBVQWhamwgoyMWSB2MHEPzGLziUkNj08KYTs7AA3KdTGa4NlHz1k+JN6mLhPkdP8+XheaR8swt2s1c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7DEA274D7774CC48BAC6F0672FE6BAF0@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Mon, 11 Mar 2019 07:00:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39847 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfCKLAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:00:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z84so3797253wmg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 04:00:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VCnTSCtxXAWQzg0NoAwSXilAgObaVi1CrMaTl57GpNM=;
+        b=f0Iovj2FZFxqORbSR1TebdSGeHcEcvKO3Ljiv6+AX7IiPDmGg1iT3D9lr7R+oYXHD5
+         Pdg0dEyUJc7i+NsuI6PJj1oF9XE+CiE3TnTPMmxXHHIc8fFylccrMSHDRWkmp3ClRXT7
+         jUC6tO0i+zfx3dl+gKWBAl6/lbleNPz/ANAjCeGpMFmY3phdTPfH1NUdD2DJPnL9xnhT
+         zC4zq8HhNjhGmNqUPqFBGsv/jxAkLVN7YM/Hw5V1LnQfZCY8L/K82lRYPFV2LguvjfLy
+         dQffCiipkd1+rBFeZjap8oPACxcc/T3oSaKhcldXOdcWhm4GUf4+7HAdsR/w3Nv5TGS8
+         cK0A==
+X-Gm-Message-State: APjAAAUG2bBb+3Xp+WoE1Zpx0v86ZvQWK/YQWuihbaNKhj2u8frL6Oj/
+        EHcmKk79bfkKEC8RVDY2TNlH0w==
+X-Google-Smtp-Source: APXvYqyIhbXpeicb0xXJCChgjU8qVzqjzM7R1EkUporyfPDJnW2+1wwQfMTy/LS5CQ52I7lVqFTViA==
+X-Received: by 2002:a7b:c413:: with SMTP id k19mr17363420wmi.75.1552302011846;
+        Mon, 11 Mar 2019 04:00:11 -0700 (PDT)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id p68sm25042699wme.45.2019.03.11.04.00.10
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 04:00:11 -0700 (PDT)
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+ <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
+ <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+Message-ID: <3684aa62-68ad-13ef-7c6e-2b57f7cd62b8@redhat.com>
+Date:   Mon, 11 Mar 2019 12:00:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: c428b70f-2b90-42b3-b0ed-08d6a610ac12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 10:59:45.8729
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0752
+In-Reply-To: <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkNCg0KSSdtIGluIHRoZSBwcm9jZXNzIG9mIHVwZ3JhZGluZyBhbiBvbGQgQlNQIHRvIGEgNC4x
-OSBrZXJuZWwsIGFuZCBub3RpY2VkDQp0aGF0IENBTl9MRURTIGhhcyBiZWVuIG1hcmtlZCBicm9r
-ZW4uIFRoZSBjb21tZW50cyBzYXkgdGhhdCB0aGUgbmV0ZGV2DQp0cmlnZ2VyIGNhbiBkbyBldmVy
-eXRoaW5nLCBidXQgZG9lc24ndCBwcm92aWRlIG11Y2ggZ3VpZGFuY2Ugb24gaG93IHRvDQphY3R1
-YWxseSBkbyB0aGUgdHJhbnNpdGlvbi4NCg0KSW4gbXkgY2FzZSwgSSB1c2VkIHRvIGhhdmUgYSBk
-ZXZpY2UgdHJlZSBub2RlDQoNCiAgICAgICAgICAgICAgICBjYW5iIHsNCiAgICAgICAgICAgICAg
-ICAgICAgICAgIGxhYmVsID0gImNhbmI6Z3JlZW46YWN0aXZpdHkiOw0KICAgICAgICAgICAgICAg
-ICAgICAgICAgZ3Bpb3MgPSA8JmdwaW8wIDUgMD47DQogICAgICAgICAgICAgICAgICAgICAgICBk
-ZWZhdWx0LXN0YXRlID0gIm9mZiI7DQogICAgICAgICAgICAgICAgICAgICAgICBsaW51eCxkZWZh
-dWx0LXRyaWdnZXIgPSAiY2FuMS1yeHR4IjsNCiAgICAgICAgICAgICAgICB9Ow0KDQphbmQgaWYg
-SSBjaGFuZ2UgdGhlIGRlZmF1bHQtdHJpZ2dlciB0byBuZXRkZXYsIEkgZ2V0IHN5c2ZzIGZpbGVz
-IGluDQovc3lzL2NsYXNzL2xlZHMvY2FuYjpncmVlbjphY3Rpdml0eSA7IGlmIEkgdGhlbiBlY2hv
-IGNhbjEgdG8gZGV2aWNlX25hbWUNCmFuZCAxIHRvIHJ4LHR4LCBhbmQgbGluaywgSSBnZXQgdGhl
-IGJlaGF2aW91ciBJIHVzZWQgdG8gaGF2ZS4NCg0KUXVlc3Rpb25zOiBtdXN0IHRoaXMgc2V0dXAg
-YmUgZG9uZSBpbiB1c2Vyc3BhY2UgbGlrZSB0aGlzPyBJcyB0aGVyZSBzb21lDQp1ZGV2IHJ1bGUg
-dGVtcGxhdGUgSSBjb3VsZCBjb3B5PyBJIGNhbiBhbHNvIGp1c3QgaGFyZGNvZGUgdGhlIGFib3Zl
-DQpkYW5jZSBpbiBzb21lIGluaXQgc2NyaXB0Lg0KDQpJJ2QgYWN0dWFsbHkgcHJlZmVyIGtlZXBp
-bmcgdGhlIGVudGlyZSBzZXR1cCBpbiBkZXZpY2UgdHJlZS4gU28gd291bGQgaXQNCmJlIHBvc3Np
-YmxlIHRvIGhhdmUgbmV0ZGV2X3RyaWdfYWN0aXZhdGUoKSBsb29rIGZvciBzb21lIHByb3BlcnRp
-ZXMgaW4NCnRoZSBEVCBub2RlIGZvciB0aGUgbGVkX2NsYXNzZGV2IGFuZCBwb3B1bGF0ZSAtPmRl
-dmljZV9uYW1lIGFuZCAtPm1vZGUNCmJhc2VkIG9uIHRoZW0/DQoNClJhc211cw0K
+Hi,
+
+On 11-03-19 09:06, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-03-19 06:33, Chunfeng Yun wrote:
+>> Hi,
+>>
+>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+>>>> usb-b-connector
+>>>>
+>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>>>> ---
+>>>>    .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+>>>>    1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>> @@ -17,6 +17,16 @@ Optional properties:
+>>>>    - self-powered: Set this property if the usb device that has its own power
+>>>>      source.
+>>>> +Optional properties for usb-b-connector:
+>>>> +- id-gpios: gpio for USB ID pin.
+>>>
+>>> What about boards where the ID pin is *not* connected to a GPIO,
+>>> but e.g. to a special pin on the PMIC which can also detect
+>>> an ACA adapter ? Currently this case is handled by extcon
+>>> drivers, but we have no way to set e.g. vbus-supply for the
+>>> connector. Maybe in this case the usb-connector node should
+>>> be a child of the PMIC node ?
+>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> 
+> Ok, then I think this should be documented too.
+> 
+>>> And in many cases there also is a mux to switch the datalines
+>>> between the host and device(gadget) controllers, how should
+>>> that be described in this model?  See the new usb-role-switch
+>>> code under drivers/usb/roles
+>>>
+>>> In some cases the mux is controlled through a gpio, so we
+>>> may want to add a "mux-gpios" here in which case we also
+>>> need to define what 0/1 means.
+>> I'm not sure, the mux seems not belong to this connector,
+>> and may need another driver to register usb-role-switch,
+>> similar to:
+>>
+>> [v2,2/2] usb: typec: add typec switch via GPIO control
+>> https://patchwork.kernel.org/patch/10834327/
+> 
+> Right the mux/role-switch will need a driver, but the "owner"
+> of the usb_connector, e.g. the PMIC or the owner of the
+> id GPIO pin needs to know which device is the role-switch so
+> that it can set the role correctly based on the id-pin.
+> 
+> Your binding already contains Vbus info, allowing the owner
+> of the usb_connector to enable/disable Vbus based on the id-pin,
+> but the owner will also be responsible for setting the role-switch.
+> 
+> Note we cannot simply assume there will be only one role-switch,
+> we really need some link from the usb_connector to the role-switch
+> (or if it is a GPIO driven role-switch simply a role-switch-gpios
+> member in the usb_connector).
+
+I see now in your "[PATCH v3 1/2] dt-bindings: usb: add documentation for
+typec switch via GPIO" that you plan to use a
+Documentation/devicetree/bindings/graph.txt style binding for this,
+adding a remote-endpoint to the orientation-switch (in that patch), or
+to the role-switch.
+
+But a Type-C port can have both an orientation-switch and a role-switch
+(and a mux if it supports e.g. DP-altmode), how is the driver driving
+the device which has the actual usb_c_connecter child-node to which
+the remote-endpoints for both the orientation- and the role-switch points
+supposed to figure out which is which ?
+
+Also it feels the wrong-way around to me to have the orientation-switch
+point to the usb_c_connector, to me it would make more sense to have
+the usb_c_connector point to a port on the orientation-switch.
+
+Regards,
+
+Hans
+
