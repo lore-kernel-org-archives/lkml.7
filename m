@@ -2,104 +2,139 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3566FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A629CC10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B09321738
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A5721773
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:32:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="UiFtWTE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfCKQbi (ORCPT
+        id S1727762AbfCKQch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:31:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34232 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726675AbfCKQbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:31:38 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 405269064B4B43CFC3F3;
-        Tue, 12 Mar 2019 00:31:36 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.32) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Tue, 12 Mar 2019
- 00:31:29 +0800
-To:     <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <suzuki.poulose@arm.com>, <james.morse@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-        <lious.lilei@hisilicon.com>, <lishuo1@hisilicon.com>
-From:   Zheng Xiang <zhengxiang9@huawei.com>
-Subject: [RFC] Question about TLB flush while set Stage-2 huge pages
-Message-ID: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
-Date:   Tue, 12 Mar 2019 00:31:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Mon, 11 Mar 2019 12:32:37 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46082 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKQcg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 12:32:36 -0400
+Received: by mail-qk1-f196.google.com with SMTP id i5so3065283qkd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pyQXcLatuiGi/bo6uxJQUtm3dUmwK7WB5Ls/qmNHhso=;
+        b=UiFtWTE1bEHCF2u3/E+AHCJsZr1xHyCgmuO83rSAJ75cHRKVt7ZV7WFfEifuAI5DAg
+         JEHST3DheMpzW9st3pHb2jWx/2NzQeFxTxZ3x6eUFokWc1vhDU4RTGQQohR4PNKiuJMx
+         mnPqswekcDWQ/SHL6b7Nm97cSTd/UZOu6mPNY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pyQXcLatuiGi/bo6uxJQUtm3dUmwK7WB5Ls/qmNHhso=;
+        b=sQ9UT7yp7RqRzauSoJwCk9cBQHEMjV7pTTZgi7ein4DwQuu0GuOueEXauJGczZLFtI
+         9dOsNkxv9xQmb7Rvnzm/YpY/OVE/Cqq4uaQWAspMG0L9t8kLl0qJoDNBD5lNUsKQNK+D
+         QL9s3zw83WIk1aJjPSU/oF5AYpr0qnGxpxKfA3y7U6B+b326fV485reTKukBmAH+lZ3y
+         6L1t7ej0lCiovuWK9mrgt92m7KQdCNDIByRyzdCjech/19/woJvbDi2d6+f0NG7faK0Z
+         QaypwsbDVThyvfHJm55PovlXCQ2uK362g4NS6pWRLnBxLcu2iqRCnuXZrOdhFXDFlthz
+         60tg==
+X-Gm-Message-State: APjAAAU55R/na3ERiy/jsd/JfNjedJlXnLs8WSHF15Psgc2Wf1GQvbV8
+        BUUhMlMDOZ6Io3DchF/qiUJaxw==
+X-Google-Smtp-Source: APXvYqxC/RiGc1suxXWZsaP2ROw/MyYAIx55Y8nZU9zXj9fZPIx0Tp4vCZU3eG8qbd82nyJDKL4R5g==
+X-Received: by 2002:ae9:e901:: with SMTP id x1mr25640741qkf.124.1552321955265;
+        Mon, 11 Mar 2019 09:32:35 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id e4sm4037396qta.84.2019.03.11.09.32.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 09:32:34 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 12:32:33 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>, mhocko@kernel.org,
+        vbabka@suse.cz, hannes@cmpxchg.org
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190311163233.GA34252@google.com>
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.32]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190310203403.27915-1-sultan@kerneltoast.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Sun, Mar 10, 2019 at 01:34:03PM -0700, Sultan Alsawaf wrote:
+[...]
+>  
+>  	/* Perform scheduler related setup. Assign this task to a CPU. */
+>  	retval = sched_fork(clone_flags, p);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3eb01dedf..fd0d697c6 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -67,6 +67,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/nmi.h>
+>  #include <linux/psi.h>
+> +#include <linux/simple_lmk.h>
+>  
+>  #include <asm/sections.h>
+>  #include <asm/tlbflush.h>
+> @@ -967,6 +968,11 @@ static inline void __free_one_page(struct page *page,
+>  		}
+>  	}
+>  
+> +#ifdef CONFIG_ANDROID_SIMPLE_LMK
+> +	if (simple_lmk_page_in(page, order, migratetype))
+> +		return;
+> +#endif
+> +
+>  	list_add(&page->lru, &zone->free_area[order].free_list[migratetype]);
+>  out:
+>  	zone->free_area[order].nr_free++;
+> @@ -4427,6 +4433,13 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  	if (costly_order && !(gfp_mask & __GFP_RETRY_MAYFAIL))
+>  		goto nopage;
+>  
+> +#ifdef CONFIG_ANDROID_SIMPLE_LMK
+> +	page = simple_lmk_oom_alloc(order, ac->migratetype);
+> +	if (page)
+> +		prep_new_page(page, order, gfp_mask, alloc_flags);
+> +	goto got_pg;
+> +#endif
+> +
 
-While a page is merged into a transparent huge page, KVM will invalidate Stage-2 for
-the base address of the huge page and the whole of Stage-1.
-However, this just only invalidates the first page within the huge page and the other
-pages are not invalidated, see bellow:
+Hacking generic MM code with Android-specific callback is probably a major
+issue with your patch. Also I CC'd -mm maintainers and lists since your patch
+touches page_alloc.c. Always run get_maintainer.pl before sending a patch. I
+added them this time.
 
-    +---------------+--------------+
-    |abcde       2MB-Page          |
-    +---------------+--------------+
+Have you looked at the recent PSI work that Suren and Johannes have been
+doing [1]?  As I understand, userspace lmkd may be migrated to use that at some
+point.  Suren can provide more details. I am sure AOSP contributions to make
+LMKd better by using the PSI backend would be appreciated. Please consider
+collaborating on that and help out, thanks. Check the cover-letter of that
+patch [1] where LMKd is mentioned.
 
-    TLB before setting new pmd:
-    +---------------+--------------+
-    |      VA       |    PAGESIZE  |
-    +---------------+--------------+
-    |      a        |      4KB     |
-    +---------------+--------------+
-    |      b        |      4KB     |
-    +---------------+--------------+
-    |      c        |      4KB     |
-    +---------------+--------------+
-    |      d        |      4KB     |
-    +---------------+--------------+
+thanks,
 
-    TLB after setting new pmd:
-    +---------------+--------------+
-    |      VA       |    PAGESIZE  |
-    +---------------+--------------+
-    |      a        |      2MB     |
-    +---------------+--------------+
-    |      b        |      4KB     |
-    +---------------+--------------+
-    |      c        |      4KB     |
-    +---------------+--------------+
-    |      d        |      4KB     |
-    +---------------+--------------+
+ - Joel
 
-When VM access *b* address, it will hit the TLB and result in TLB conflict aborts or other potential exceptions.
-
-For example, we need to keep tracking of the VM memory dirty pages when VM is in live migration.
-KVM will set the memslot READONLY and split the huge pages.
-After live migration is canceled and abort, the pages will be merged into THP.
-The later access to these pages which are READONLY will cause level-3 Permission Fault until they are invalidated.
-
-So should we invalidate the tlb entries for all relative pages(e.g a,b,c,d), like __flush_tlb_range()?
-Or we can call __kvm_tlb_flush_vmid() to invalidate all tlb entries.
-
-
-
--- 
-
-Thanks,
-Xiang
+[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1951257.html
 
