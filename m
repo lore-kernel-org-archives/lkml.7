@@ -2,95 +2,166 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1950C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3DAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A098F2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD792075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsExb3dX"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="aYCKIJPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfCKO7L (ORCPT
+        id S1727014AbfCKPDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:59:11 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37727 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfCKO7L (ORCPT
+        Mon, 11 Mar 2019 11:03:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46897 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfCKPDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:59:11 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z17so5361394qtn.4;
-        Mon, 11 Mar 2019 07:59:10 -0700 (PDT)
+        Mon, 11 Mar 2019 11:03:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s23so1786509pfe.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 08:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZeNXlhRe36+7xYWVjT8tpzBUmk4PuZMnszNDboEKFwE=;
-        b=SsExb3dX+6+ywqzz7GlxFpJkZyyf42ysIdP20m1F5c3J4B8DS5fvzNH8jk9ZGtBPDd
-         tqj+LBkt05kCWU066b8VPA/NgU2s5pSsbcx2OQMDdF7ClQUL8eFD0Poj4SBpMeHRqPz/
-         eyF1OYfIOqb9nP2n9GZmQub5bvWyCwEjDtbzFusFh9GIkgNglofNSiGMADi1ODS27yLH
-         apMliYgDnXd7KPQ05peUxoz1MW1vJL+iJbkPl1zoylW+yEF8SX6bdwFhjvtYJtAQuw7W
-         h5yDdqcH3YLanj9Wx/nJmUHIKmyuLhAFss+sy2NBOxFSqaTnEwZz0nHc39IF2KAAiAgu
-         aojw==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ysitMl37W5wvDTaO55M/bquP5eX6f+fWiuhxScsiSvI=;
+        b=aYCKIJPbDtW9gx9YYp4eNdKogfeqwQGkAF+HXkZUilq/ur0wRb9mGjt5qMyAeYOuI3
+         f6rFiPJPWuMzfl5Ew6k5sgsCVn+NzmK//CJSnMLny2rxGRbU3mphM4onrDwvbbfUyw+t
+         lF4eW4i4Dh3DrmV1tUt9OHspuYz9ByhCgOzvw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZeNXlhRe36+7xYWVjT8tpzBUmk4PuZMnszNDboEKFwE=;
-        b=UkeYd9JfIiclGfY2avp8rVBQ++BkbXtq5f0eZhsPht7cUG4Cy2BcVxaFuwFwbe+J2o
-         SZmcuN9iNUNB8TxaE/fxuDwfgSOl0yxfMxNHgO6v7JCMsKN19NDElIJLg1uvw7r0hj+P
-         Q7yaxfmDx+f2HLVkfZdtqD94xL44uy2Yv0+rO8m/q66ia9fwhoqQkF5Vi+J2mtzDVBTp
-         t+afAdAaBXacv+9xZfCjGAPP/G6OE46+TRTvIsCouLwLCOV0AJWpq1ABGyTrEd0qn8WP
-         n/K0NDIWgHBGhvBmsqoN5nKxF3dFsjpzCs6WX/iFCoCqhsKDIiGqivNZTP5qNngf4lEm
-         Ohnw==
-X-Gm-Message-State: APjAAAXa7EdeW4lUankLvvCSOD8ojRW6xSmLiUvgY5/gGqt/X2zTBulj
-        R+zA0zH/khKaTtaDHWQlBIg=
-X-Google-Smtp-Source: APXvYqzfAixFooeaDmKhwj39mqFh6hHDBEollZMwK+k4gn70xTrY8+ESNfPB01eJ4lfaanUeMWVObQ==
-X-Received: by 2002:a0c:8850:: with SMTP id 16mr9455519qvm.111.1552316350015;
-        Mon, 11 Mar 2019 07:59:10 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id t38sm5097408qtc.12.2019.03.11.07.59.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 07:59:09 -0700 (PDT)
-From:   "acme@kernel.org" <arnaldo.melo@gmail.com>
-X-Google-Original-From: "acme@kernel.org" <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7CDC74039C; Mon, 11 Mar 2019 11:59:06 -0300 (-03)
-Date:   Mon, 11 Mar 2019 11:59:06 -0300
-To:     "Hunter, Adrian" <adrian.hunter@intel.com>
-Cc:     Tony Jones <tonyj@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 0/4] perf script python: add Python3 support
-Message-ID: <20190311145906.GM10690@kernel.org>
-References: <20190309000518.2438-1-tonyj@suse.de>
- <363DA0ED52042842948283D2FC38E4649C48CE08@IRSMSX106.ger.corp.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ysitMl37W5wvDTaO55M/bquP5eX6f+fWiuhxScsiSvI=;
+        b=RIJZz5qwy+90fU6HS/JrzaoowQ1Apj0841yRRMAXyz9i/zobtWVgllSre7Aj1arFEg
+         tL2UiDYHqe+AS9ACHoDxpGZK0s4bkA7/KQSRHIFy5hcEpPHGmQXCip2wdXnDxnUfi7uD
+         SpG8CJBz8tEXxiQNWI1T9X2mlUZ1F7Dbv138ZXA/WOxGunmCs92nKiOqKtCFVzGXmLLC
+         BxuPUKej4V0QQSpACh/DEPBjScMLPeeXZj3/6lmzDaVmtUoQxwKbza+z6Ke/PQD5Gir+
+         7zpQycHxSpg9t+MFt5963VdBxu0SCgyk4z4Re1tWu3w/0ZucP7ZDfyuLVgWtV4el9qhn
+         /Myg==
+X-Gm-Message-State: APjAAAUVWXE7TDX9VsroiHi3c3XqHrQ53MvUHVblsK7pMXFoJGGBG6Nm
+        /xnCwEN6tixLRfqGzCPG/tqAUQ==
+X-Google-Smtp-Source: APXvYqxMKPWhmDkwbjkdOybHYp9nV7KRRh/NXpzDkZzZQ/QbrK9DlEkC1IbXWY1n+h0coxmTqbz6Xg==
+X-Received: by 2002:a63:561f:: with SMTP id k31mr2962862pgb.319.1552316628400;
+        Mon, 11 Mar 2019 08:03:48 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.224.199])
+        by smtp.gmail.com with ESMTPSA id x5sm7594531pgp.68.2019.03.11.08.03.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 08:03:47 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Akash Gajjar <akash@openedev.com>
+Subject: [PATCH 1/3] arm64: dts: rockchip: rk3399: rock960: Rename vcc_sys into vcc5v0_sys
+Date:   Mon, 11 Mar 2019 20:33:30 +0530
+Message-Id: <20190311150332.19492-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <363DA0ED52042842948283D2FC38E4649C48CE08@IRSMSX106.ger.corp.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 11, 2019 at 09:27:07AM +0000, Hunter, Adrian escreveu:
-> > From: Tony Jones [mailto:tonyj@suse.de]
-> > Once these are applied I believe this is everything needed to run on a system
-> > without Python2.
- 
-> All look fine to me.  Here is my ack as needed:
- 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+It is always better practice to follow regulator naming conventions
+as per the schematics for future references.
 
-Thanks, applied.
+So, rename vcc_sys into vcc5v0_sys as per rk3399 power diagram of
+rock960 schematics.
 
-- Arnaldo
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Akash Gajjar <akash@openedev.com>
+---
+ .../boot/dts/rockchip/rk3399-rock960.dtsi     | 30 +++++++++----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+index 2927db4dda9d..a268ec9f6b5e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+@@ -26,9 +26,9 @@
+ 		regulator-always-on;
+ 	};
+ 
+-	vcc_sys: vcc-sys {
++	vcc5v0_sys: vcc5v0-sys {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "vcc_sys";
++		regulator-name = "vcc5v0_sys";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+@@ -40,7 +40,7 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+-		vin-supply = <&vcc_sys>;
++		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+ 	vcc3v3_pcie: vcc3v3-pcie-regulator {
+@@ -64,7 +64,7 @@
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+-		vin-supply = <&vcc_sys>;
++		vin-supply = <&vcc5v0_sys>;
+ 	};
+ };
+ 
+@@ -123,7 +123,7 @@
+ 		regulator-ramp-delay = <1000>;
+ 		regulator-always-on;
+ 		regulator-boot-on;
+-		vin-supply = <&vcc_sys>;
++		vin-supply = <&vcc5v0_sys>;
+ 		status = "okay";
+ 
+ 		regulator-state-mem {
+@@ -141,7 +141,7 @@
+ 		regulator-ramp-delay = <1000>;
+ 		regulator-always-on;
+ 		regulator-boot-on;
+-		vin-supply = <&vcc_sys>;
++		vin-supply = <&vcc5v0_sys>;
+ 		regulator-state-mem {
+ 			regulator-off-in-suspend;
+ 		};
+@@ -159,16 +159,16 @@
+ 		#clock-cells = <1>;
+ 		clock-output-names = "xin32k", "rk808-clkout2";
+ 
+-		vcc1-supply = <&vcc_sys>;
+-		vcc2-supply = <&vcc_sys>;
+-		vcc3-supply = <&vcc_sys>;
+-		vcc4-supply = <&vcc_sys>;
+-		vcc6-supply = <&vcc_sys>;
+-		vcc7-supply = <&vcc_sys>;
++		vcc1-supply = <&vcc5v0_sys>;
++		vcc2-supply = <&vcc5v0_sys>;
++		vcc3-supply = <&vcc5v0_sys>;
++		vcc4-supply = <&vcc5v0_sys>;
++		vcc6-supply = <&vcc5v0_sys>;
++		vcc7-supply = <&vcc5v0_sys>;
+ 		vcc8-supply = <&vcc3v3_sys>;
+-		vcc9-supply = <&vcc_sys>;
+-		vcc10-supply = <&vcc_sys>;
+-		vcc11-supply = <&vcc_sys>;
++		vcc9-supply = <&vcc5v0_sys>;
++		vcc10-supply = <&vcc5v0_sys>;
++		vcc11-supply = <&vcc5v0_sys>;
+ 		vcc12-supply = <&vcc3v3_sys>;
+ 		vddio-supply = <&vcc_1v8>;
+ 
+-- 
+2.18.0.321.gffc6fa0e3
+
