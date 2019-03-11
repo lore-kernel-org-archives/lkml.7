@@ -2,296 +2,178 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A62C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C266620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E012084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:40:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GS9FAhbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfCKLjC (ORCPT
+        id S1727324AbfCKLk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:39:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5232 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726914AbfCKLjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:39:02 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DF62EE70C7920DBA5E05;
-        Mon, 11 Mar 2019 19:38:58 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
- 19:38:54 +0800
-Date:   Mon, 11 Mar 2019 11:38:43 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Keith Busch <keith.busch@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCHv7 10/10] doc/mm: New documentation for memory
- performance
-Message-ID: <20190311113843.00006b47@huawei.com>
-In-Reply-To: <20190227225038.20438-11-keith.busch@intel.com>
-References: <20190227225038.20438-1-keith.busch@intel.com>
-        <20190227225038.20438-11-keith.busch@intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 Mar 2019 07:40:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39679 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfCKLk4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:40:56 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g80so3719361ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 04:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XGeJu/yu28g981aZh9oEIyoO4PFUefFkvw/uajggBOc=;
+        b=GS9FAhbNTX/8qMo8nHBu/ttexA19N/g6p56NBzYZxXSkQj3YnRxQt/wmwLjoPd3GIX
+         HV53MiK5YhP+ZJOudnCYZtKg7r/wL026rlOV9qqTpSqW81t1PsyewmrFiqCnMht2O2tF
+         HsD1NBlZaG2f1h3DADSBqv+cvmlYr7KXWTmvrL8aucQehIsgwb+LAVRSlPOUQTwg89N1
+         zgu7s5Ecp5Td7kBYl4UJT99ibIzYPG5k33NJuZEs6zZnR6exGC3zq+qWl5ROF44alzj0
+         MsnNeGSJjbqvS3wd8ShsaJ98vf9IJARaRXTWMqAhtL6Ap58ThzGquNxz2b/0oVe4vp2s
+         Eg4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XGeJu/yu28g981aZh9oEIyoO4PFUefFkvw/uajggBOc=;
+        b=dTWR/vBWXWRjTenbZaTKmwFhXE6aEi1W3TBKdK0Xb1Xv2+PSSFaEcF+p8PBAoVZoX5
+         TJ60xd/B551FCsQ+folyJDBzc1XsOuVk6nMMsDS/nFi4U+5CSCyZvrFEznbVp2Mr5TGS
+         2suzzWqjBEnqaqPIZx02qoC+8pqFDF/ZIL2S1h315GzqcGTftlECGW2vc/2N7WojL3US
+         DhBY0hNvKpHjH9SN3L1WRsgAKarYQAHb4bSzOtYW3yMqVYVkjFPz7fCbomwwkxIxS2WO
+         iqmINC2KyzdogpF8h5HmJKvec8efAt47GkeBpbSJ8dKbiumVOXpvpwhu6iqnwjohoF2W
+         73rA==
+X-Gm-Message-State: APjAAAUBoS4caYaR/5GfK3FmgSH4PnxJCiHBCBpbvw+jffkcdv0lIA33
+        k96T6NngcUByqD1rBN9V1ch56vprwhRlnvB2lDMhCA==
+X-Google-Smtp-Source: APXvYqzqKkXivrFt8lFMFearykPYQ2344Dz1MEZFxmM6UyCkScX0jEkaEvwcCv33Eexb8RjxwaKb/sY2Q8cYaZnE+5A=
+X-Received: by 2002:a2e:9843:: with SMTP id e3mr14492844ljj.57.1552304454297;
+ Mon, 11 Mar 2019 04:40:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+References: <1551437599-29509-1-git-send-email-yash.shah@sifive.com>
+ <1551437599-29509-3-git-send-email-yash.shah@sifive.com> <20190307152745.kaiv6q4ygf2apmuv@pengutronix.de>
+ <CAJ2_jOFvr=sw7mWR53JbzMJa1jxwjhJSTibCsKYsxrht+PLPWw@mail.gmail.com> <20190308115726.smgooacsr37fmxwg@pengutronix.de>
+In-Reply-To: <20190308115726.smgooacsr37fmxwg@pengutronix.de>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Mon, 11 Mar 2019 17:10:17 +0530
+Message-ID: <CAJ2_jOFtg2_MAUYkTQM-=6KE2RN+FMxfEhLjZZfzM0k3A5RQiA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Feb 2019 15:50:38 -0700
-Keith Busch <keith.busch@intel.com> wrote:
+On Fri, Mar 8, 2019 at 5:27 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> On Fri, Mar 08, 2019 at 04:59:36PM +0530, Yash Shah wrote:
+> > On Thu, Mar 7, 2019 at 8:57 PM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_devi=
+ce *dev,
+> > > > +                         struct pwm_state *state)
+> > > > +{
+> > > > +     struct pwm_sifive_ddata *pwm =3D pwm_sifive_chip_to_ddata(chi=
+p);
+> > > > +     unsigned int duty_cycle, x;
+> > > > +     u32 frac;
+> > > > +     struct pwm_state cur_state;
+> > > > +     bool enabled;
+> > > > +     int ret =3D 0;
+> > > > +     unsigned long num;
+> > > > +
+> > > > +     if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> > > > +             return -EINVAL;
+> > > > +
+> > > > +     mutex_lock(&pwm->lock);
+> > > > +     pwm_get_state(dev, &cur_state);
+> > > > +     enabled =3D cur_state.enabled;
+> > > > +
+> > > > +     if (state->period !=3D cur_state.period) {
+> > >
+> > > Did you test this with more than one consumer? For sure the following
+> > > should work:
+> > >
+> > >         pwm1 =3D pwm_get(.. the first ..);
+> > >         pwm_apply_state(pwm1, { .enabled =3D true, .period =3D 100000=
+00, .... });
+> > >
+> > >         pwm2 =3D pwm_get(.. the second ..);
+> > >         pwm_apply_state(pwm2, { .enabled =3D true, .period =3D 100000=
+00, .... });
+> > >
+> > > but for the second pwm_apply_state() run state->period is likely not
+> > > exactly 10000000.
+> >
+> > Yes, I have tested multiple consumers using sysfs interface. It is work=
+ing.
+>
+> Can you provide details about your testing here? What is the parent clk
+> rate? Which settings did you test? Can you confirm my claim that the
+> above sequence would fail or point out my error in reasoning?
+>
 
-> Platforms may provide system memory where some physical address ranges
-> perform differently than others, or is side cached by the system.
-The magic 'side cached' term still here in the patch description, ideally
-wants cleaning up.
+I have tested on HiFive Unleashed board using sysfs interface.
+Parent clk rate is around 512 Mhz.
+I have tested scenarios as you mentioned above with various period and
+duty_cycle values.
 
-> 
-> Add documentation describing a high level overview of such systems and the
-> perforamnce and caching attributes the kernel provides for applications
-performance
+After considering your below suggestion,
+ | To get the result independent of the prior configuration you better use
+ | the real targeted period length as input instead of the last configured
+ | approximation
+I will introduce approx_period feild, which will be used as the
+targeted period length.
+Also, in pwm_sifive_get_state, I will make below change
+- state->period =3D pwm->real_period;
++ state->period =3D pwm->approx_period.
+So with this change in place, I believe the cur_state.period for the
+second pwm_apply_state() above (pwm2) will be exactly 10000000
 
-> wishing to query this information.
-> 
-> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
+> > > > +     x =3D 1U << PWM_SIFIVE_CMPWIDTH;
+> > > > +     num =3D (u64)duty_cycle * x + x / 2;
+> > > > +     frac =3D div_u64(num, state->period);
+> > >
+> > > I don't understand the "+ x / 2" part. Should this better be
+> > > "+ state->period / 2"? Something like
+> >
+> > This eqn is as per your comments against v5 of this patch series.
+> >  frac =3D (duty_cycle * (1 << PWM_SIFIVE_CMPWIDTH) + (1 <<
+> > PWM_SIFIVE_CMPWIDTH) / 2) / period;
+>
+> OK, then not only the code is wrong, but also my suggestion was. :-)
+>
+> > > #define div_u64_round(a, b) ({typeof(b) __b =3D b; div_u64(a + __b / =
+2, __b)})
+> > >
+> > > would make this less error prone.
+>
+> This still stands. It makes it easier to get the code right and makes it
+> easier to understand.
 
-A few comments inline. Mostly the weird corner cases that I miss understood
-in one of the earlier versions of the code.
+Sure, will implement this.
 
-Whilst I think perhaps that one section could be tweaked a tiny bit I'm basically
-happy with this if you don't want to.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  Documentation/admin-guide/mm/numaperf.rst | 164 ++++++++++++++++++++++++++++++
->  1 file changed, 164 insertions(+)
->  create mode 100644 Documentation/admin-guide/mm/numaperf.rst
-> 
-> diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
-> new file mode 100644
-> index 000000000000..d32756b9be48
-> --- /dev/null
-> +++ b/Documentation/admin-guide/mm/numaperf.rst
-> @@ -0,0 +1,164 @@
-> +.. _numaperf:
-> +
-> +=============
-> +NUMA Locality
-> +=============
-> +
-> +Some platforms may have multiple types of memory attached to a compute
-> +node. These disparate memory ranges may share some characteristics, such
-> +as CPU cache coherence, but may have different performance. For example,
-> +different media types and buses affect bandwidth and latency.
-> +
-> +A system supports such heterogeneous memory by grouping each memory type
-> +under different domains, or "nodes", based on locality and performance
-> +characteristics.  Some memory may share the same node as a CPU, and others
-> +are provided as memory only nodes. While memory only nodes do not provide
-> +CPUs, they may still be local to one or more compute nodes relative to
-> +other nodes. The following diagram shows one such example of two compute
-> +nodes with local memory and a memory only node for each of compute node:
-> +
-> + +------------------+     +------------------+
-> + | Compute Node 0   +-----+ Compute Node 1   |
-> + | Local Node0 Mem  |     | Local Node1 Mem  |
-> + +--------+---------+     +--------+---------+
-> +          |                        |
-> + +--------+---------+     +--------+---------+
-> + | Slower Node2 Mem |     | Slower Node3 Mem |
-> + +------------------+     +--------+---------+
-> +
-> +A "memory initiator" is a node containing one or more devices such as
-> +CPUs or separate memory I/O devices that can initiate memory requests.
-> +A "memory target" is a node containing one or more physical address
-> +ranges accessible from one or more memory initiators.
-> +
-> +When multiple memory initiators exist, they may not all have the same
-> +performance when accessing a given memory target. Each initiator-target
-> +pair may be organized into different ranked access classes to represent
-> +this relationship. 
-
-This concept is a bit vague at the moment. Largely because only access0
-is actually defined.  We should definitely keep a close eye on any others
-that are defined in future to make sure this text is still valid.
-
-I can certainly see it being used for different ideas of 'best' rather
-than simply best and second best etc.
-
-> The highest performing initiator to a given target
-> +is considered to be one of that target's local initiators, and given
-> +the highest access class, 0. Any given target may have one or more
-> +local initiators, and any given initiator may have multiple local
-> +memory targets.
-> +
-> +To aid applications matching memory targets with their initiators, the
-> +kernel provides symlinks to each other. The following example lists the
-> +relationship for the access class "0" memory initiators and targets, which is
-> +the of nodes with the highest performing access relationship::
-> +
-> +	# symlinks -v /sys/devices/system/node/nodeX/access0/targets/
-> +	relative: /sys/devices/system/node/nodeX/access0/targets/nodeY -> ../../nodeY
-
-So this one perhaps needs a bit more description - I would put it after initiators
-which precisely fits the description you have here now.
-
-"targets contains those nodes for which this initiator is the best possible initiator."
-
-which is subtly different form
-
-"targets contains those nodes to which this node has the highest
-performing access characteristics."
-
-For example in my test case:
-* 4 nodes with local memory and cpu, 1 node remote and equal distant from all of the
-  initiators,
-
-targets for the compute nodes contains both themselves and the remote node, to which
-the characteristics are of course worse. As you point out before, we need to look
-in 
-node0/access0/targets/node0/access0/initiators 
-node0/access0/targets/node4/access0/initiators 
-to get the relevant characteristics and work out that node0 is 'nearer' itself
-(obviously this is a bit of a silly case, but we could have no memory node0 and
-be talking about node4 and node5.
-
-I am happy with the actual interface, this is just a question about whether we can tweak
-this text to be slightly clearer.
-
-> +
-> +	# symlinks -v /sys/devices/system/node/nodeY/access0/initiators/
-> +	relative: /sys/devices/system/node/nodeY/access0/initiators/nodeX -> ../../nodeX
-> +
-> +================
-> +NUMA Performance
-> +================
-> +
-> +Applications may wish to consider which node they want their memory to
-> +be allocated from based on the node's performance characteristics. If
-> +the system provides these attributes, the kernel exports them under the
-> +node sysfs hierarchy by appending the attributes directory under the
-> +memory node's access class 0 initiators as follows::
-> +
-> +	/sys/devices/system/node/nodeY/access0/initiators/
-> +
-> +These attributes apply only when accessed from nodes that have the
-> +are linked under the this access's inititiators.
-> +
-> +The performance characteristics the kernel provides for the local initiators
-> +are exported are as follows::
-> +
-> +	# tree -P "read*|write*" /sys/devices/system/node/nodeY/access0/initiators/
-> +	/sys/devices/system/node/nodeY/access0/initiators/
-> +	|-- read_bandwidth
-> +	|-- read_latency
-> +	|-- write_bandwidth
-> +	`-- write_latency
-> +
-> +The bandwidth attributes are provided in MiB/second.
-> +
-> +The latency attributes are provided in nanoseconds.
-> +
-> +The values reported here correspond to the rated latency and bandwidth
-> +for the platform.
-> +
-> +==========
-> +NUMA Cache
-> +==========
-> +
-> +System memory may be constructed in a hierarchy of elements with various
-> +performance characteristics in order to provide large address space of
-> +slower performing memory cached by a smaller higher performing memory. The
-> +system physical addresses memory  initiators are aware of are provided
-> +by the last memory level in the hierarchy. The system meanwhile uses
-> +higher performing memory to transparently cache access to progressively
-> +slower levels.
-> +
-> +The term "far memory" is used to denote the last level memory in the
-> +hierarchy. Each increasing cache level provides higher performing
-> +initiator access, and the term "near memory" represents the fastest
-> +cache provided by the system.
-> +
-> +This numbering is different than CPU caches where the cache level (ex:
-> +L1, L2, L3) uses the CPU-side view where each increased level is lower
-> +performing. In contrast, the memory cache level is centric to the last
-> +level memory, so the higher numbered cache level corresponds to  memory
-> +nearer to the CPU, and further from far memory.
-> +
-> +The memory-side caches are not directly addressable by software. When
-> +software accesses a system address, the system will return it from the
-> +near memory cache if it is present. If it is not present, the system
-> +accesses the next level of memory until there is either a hit in that
-> +cache level, or it reaches far memory.
-> +
-> +An application does not need to know about caching attributes in order
-> +to use the system. Software may optionally query the memory cache
-> +attributes in order to maximize the performance out of such a setup.
-> +If the system provides a way for the kernel to discover this information,
-> +for example with ACPI HMAT (Heterogeneous Memory Attribute Table),
-> +the kernel will append these attributes to the NUMA node memory target.
-> +
-> +When the kernel first registers a memory cache with a node, the kernel
-> +will create the following directory::
-
-Real nitpick but more precisely, "If relevant, the kernel..."  Otherwise
-we say it's always there but then say it isn't below.
-
-> +
-> +	/sys/devices/system/node/nodeX/memory_side_cache/
-> +
-> +If that directory is not present, the system either does not not provide
-> +a memory-side cache, or that information is not accessible to the kernel.
-> +
-> +The attributes for each level of cache is provided under its cache
-> +level index::
-> +
-> +	/sys/devices/system/node/nodeX/memory_side_cache/indexA/
-> +	/sys/devices/system/node/nodeX/memory_side_cache/indexB/
-> +	/sys/devices/system/node/nodeX/memory_side_cache/indexC/
-> +
-> +Each cache level's directory provides its attributes. For example, the
-> +following shows a single cache level and the attributes available for
-> +software to query::
-> +
-> +	# tree sys/devices/system/node/node0/memory_side_cache/
-> +	/sys/devices/system/node/node0/memory_side_cache/
-> +	|-- index1
-> +	|   |-- indexing
-> +	|   |-- line_size
-> +	|   |-- size
-> +	|   `-- write_policy
-> +
-> +The "indexing" will be 0 if it is a direct-mapped cache, and non-zero
-> +for any other indexed based, multi-way associativity.
-> +
-> +The "line_size" is the number of bytes accessed from the next cache
-> +level on a miss.
-> +
-> +The "size" is the number of bytes provided by this cache level.
-> +
-> +The "write_policy" will be 0 for write-back, and non-zero for
-> +write-through caching.
-> +
-> +========
-> +See Also
-> +========
-> +.. [1] https://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
-> +       Section 5.2.27
-
-
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
