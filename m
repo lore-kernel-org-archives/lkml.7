@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE6C10F0C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14376C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC6420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB552084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfCKGLH (ORCPT
+        id S1726675AbfCKGLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 02:11:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43676 "EHLO huawei.com"
+        Mon, 11 Mar 2019 02:11:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43838 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfCKGLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726502AbfCKGLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 02:11:07 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AEF322CFC8245E962ED7;
-        Mon, 11 Mar 2019 14:11:00 +0800 (CST)
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C53A8887BB9543DE2624;
+        Mon, 11 Mar 2019 14:11:05 +0800 (CST)
 Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.211)
- with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 14:10:54
+ with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 14:10:56
  +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <stable@vger.kernel.org>
@@ -32,10 +32,11 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
         Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
+        Sheng Yong <shengyong1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 4.19 2/5] staging: erofs: fix fast symlink w/o xattr when fs xattr is on
-Date:   Mon, 11 Mar 2019 14:08:55 +0800
-Message-ID: <20190311060858.28654-2-gaoxiang25@huawei.com>
+Subject: [PATCH 4.19 3/5] staging: erofs: fix memleak of inode's shared xattr array
+Date:   Mon, 11 Mar 2019 14:08:56 +0800
+Message-ID: <20190311060858.28654-3-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20190311060858.28654-1-gaoxiang25@huawei.com>
 References: <20190311060858.28654-1-gaoxiang25@huawei.com>
@@ -48,124 +49,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 7077fffcb0b0b65dc75e341306aeef4d0e7f2ec6 upstream.
+From: Sheng Yong <shengyong1@huawei.com>
 
-Currently, this will hit a BUG_ON for these symlinks as follows:
+commit 3b1b5291f79d040d549d7c746669fc30e8045b9b upstream.
 
-- kernel message
-------------[ cut here ]------------
-kernel BUG at drivers/staging/erofs/xattr.c:59!
-SMP PTI
-CPU: 1 PID: 1170 Comm: getllxattr Not tainted 4.20.0-rc6+ #92
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
-RIP: 0010:init_inode_xattrs+0x22b/0x270
-Code: 48 0f 45 ea f0 ff 4d 34 74 0d 41 83 4c 24 e0 01 31 c0 e9 00 fe ff ff 48 89 ef e8 e0 31 9e ff eb e9 89 e8 e9 ef fd ff ff 0f 0$
- <0f> 0b 48 89 ef e8 fb f6 9c ff 48 8b 45 08 a8 01 75 24 f0 ff 4d 34
-RSP: 0018:ffffa03ac026bdf8 EFLAGS: 00010246
-------------[ cut here ]------------
-...
-Call Trace:
- erofs_listxattr+0x30/0x2c0
- ? selinux_inode_listxattr+0x5a/0x80
- ? kmem_cache_alloc+0x33/0x170
- ? security_inode_listxattr+0x27/0x40
- listxattr+0xaf/0xc0
- path_listxattr+0x5a/0xa0
- do_syscall_64+0x43/0xf0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-...
----[ end trace 3c24b49408dc0c72 ]---
+If it fails to read a shared xattr page, the inode's shared xattr array
+is not freed. The next time the inode's xattr is accessed, the previously
+allocated array is leaked.
 
-Fix it by checking ->xattr_isize in init_inode_xattrs(),
-and it also fixes improper return value -ENOTSUPP
-(it should be -ENODATA if xattr is enabled) for those inodes.
-
+Signed-off-by: Sheng Yong <shengyong1@huawei.com>
 Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
 Cc: <stable@vger.kernel.org> # 4.19+
-Reported-by: Li Guifu <bluce.liguifu@huawei.com>
-Tested-by: Li Guifu <bluce.liguifu@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/inode.c |  8 ++++----
- drivers/staging/erofs/xattr.c | 25 ++++++++++++++++++++-----
- 2 files changed, 24 insertions(+), 9 deletions(-)
+ drivers/staging/erofs/xattr.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 9e7815f55a17..7448744cc515 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -184,16 +184,16 @@ static int fill_inode(struct inode *inode, int isdir)
- 		/* setup the new inode */
- 		if (S_ISREG(inode->i_mode)) {
- #ifdef CONFIG_EROFS_FS_XATTR
--			if (vi->xattr_isize)
--				inode->i_op = &erofs_generic_xattr_iops;
-+			inode->i_op = &erofs_generic_xattr_iops;
- #endif
- 			inode->i_fop = &generic_ro_fops;
- 		} else if (S_ISDIR(inode->i_mode)) {
- 			inode->i_op =
- #ifdef CONFIG_EROFS_FS_XATTR
--				vi->xattr_isize ? &erofs_dir_xattr_iops :
--#endif
-+				&erofs_dir_xattr_iops;
-+#else
- 				&erofs_dir_iops;
-+#endif
- 			inode->i_fop = &erofs_dir_fops;
- 		} else if (S_ISLNK(inode->i_mode)) {
- 			/* by default, page_get_link is used for symlink */
 diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
-index d4bccb57e7c3..ac2567576335 100644
+index ac2567576335..890fa06bbcbb 100644
 --- a/drivers/staging/erofs/xattr.c
 +++ b/drivers/staging/erofs/xattr.c
-@@ -55,7 +55,26 @@ static int init_inode_xattrs(struct inode *inode)
- 		return 0;
+@@ -109,8 +109,11 @@ static int init_inode_xattrs(struct inode *inode)
  
- 	vi = EROFS_V(inode);
--	BUG_ON(!vi->xattr_isize);
-+
-+	/*
-+	 * bypass all xattr operations if ->xattr_isize is not greater than
-+	 * sizeof(struct erofs_xattr_ibody_header), in detail:
-+	 * 1) it is not enough to contain erofs_xattr_ibody_header then
-+	 *    ->xattr_isize should be 0 (it means no xattr);
-+	 * 2) it is just to contain erofs_xattr_ibody_header, which is on-disk
-+	 *    undefined right now (maybe use later with some new sb feature).
-+	 */
-+	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
-+		errln("xattr_isize %d of nid %llu is not supported yet",
-+		      vi->xattr_isize, vi->nid);
-+		return -ENOTSUPP;
-+	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
-+		if (unlikely(vi->xattr_isize)) {
-+			DBG_BUGON(1);
-+			return -EIO;	/* xattr ondisk layout error */
-+		}
-+		return -ENOATTR;
-+	}
+ 			it.page = erofs_get_meta_page(inode->i_sb,
+ 				++it.blkaddr, S_ISDIR(inode->i_mode));
+-			if (IS_ERR(it.page))
++			if (IS_ERR(it.page)) {
++				kfree(vi->xattr_shared_xattrs);
++				vi->xattr_shared_xattrs = NULL;
+ 				return PTR_ERR(it.page);
++			}
  
- 	sbi = EROFS_I_SB(inode);
- 	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
-@@ -414,7 +433,6 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
- 		struct dentry *unused, struct inode *inode,
- 		const char *name, void *buffer, size_t size)
- {
--	struct erofs_vnode *const vi = EROFS_V(inode);
- 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
- 
- 	switch (handler->flags) {
-@@ -432,9 +450,6 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
- 		return -EINVAL;
- 	}
- 
--	if (!vi->xattr_isize)
--		return -ENOATTR;
--
- 	return erofs_getxattr(inode, handler->flags, name, buffer, size);
- }
- 
+ 			it.kaddr = kmap_atomic(it.page);
+ 			atomic_map = true;
 -- 
 2.14.5
 
