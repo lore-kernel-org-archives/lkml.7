@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FE8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2B1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE3A520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F7520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfCKGLO (ORCPT
+        id S1726754AbfCKGLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 02:11:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46432 "EHLO huawei.com"
+        Mon, 11 Mar 2019 02:11:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43836 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726502AbfCKGLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 02:11:13 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CF2EB9FDD7C71AB1DAC1;
-        Mon, 11 Mar 2019 14:11:10 +0800 (CST)
+        id S1725891AbfCKGLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 02:11:08 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BF4FA1FDF6EAB83CA4;
+        Mon, 11 Mar 2019 14:11:05 +0800 (CST)
 Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.211)
- with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 14:11:00
+ with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 14:10:58
  +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <stable@vger.kernel.org>
@@ -33,9 +33,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 4.19 5/5] staging: erofs: keep corrupted fs from crashing kernel in erofs_namei()
-Date:   Mon, 11 Mar 2019 14:08:58 +0800
-Message-ID: <20190311060858.28654-5-gaoxiang25@huawei.com>
+Subject: [PATCH 4.19 4/5] staging: erofs: fix race of initializing xattrs of a inode at the same time
+Date:   Mon, 11 Mar 2019 14:08:57 +0800
+Message-ID: <20190311060858.28654-4-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20190311060858.28654-1-gaoxiang25@huawei.com>
 References: <20190311060858.28654-1-gaoxiang25@huawei.com>
@@ -48,315 +48,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
+commit 62dc45979f3f8cb0ea67302a93bff686f0c46c5a upstream.
 
-As Al pointed out, "
-... and while we are at it, what happens to
-	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
-	unsigned int matched = min(startprfx, endprfx);
+In real scenario, there could be several threads accessing xattrs
+of the same xattr-uninitialized inode, and init_inode_xattrs()
+almost at the same time.
 
-	struct qstr dname = QSTR_INIT(data + nameoff,
-		unlikely(mid >= ndirents - 1) ?
-			maxsize - nameoff :
-			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
+That's actually an unexpected behavior, this patch closes the race.
 
-	/* string comparison without already matched prefix */
-	int ret = dirnamecmp(name, &dname, &matched);
-if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
-what's to prevent e.g. (unsigned)-1 ending up in dname.len?
-
-Corrupted fs image shouldn't oops the kernel.. "
-
-Revisit the related lookup flow to address the issue.
-
-Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
+Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
 Cc: <stable@vger.kernel.org> # 4.19+
-Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/namei.c | 189 ++++++++++++++++++++++--------------------
- 1 file changed, 100 insertions(+), 89 deletions(-)
+ drivers/staging/erofs/internal.h | 11 ++++++++---
+ drivers/staging/erofs/xattr.c    | 41 ++++++++++++++++++++++++++++------------
+ 2 files changed, 37 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
-index 546a47156101..023f64fa2c87 100644
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -15,74 +15,77 @@
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index 1c048c412fb2..c70f0c5237ea 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -327,12 +327,17 @@ static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
+ 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
+ }
  
- #include <trace/events/erofs.h>
- 
--/* based on the value of qn->len is accurate */
--static inline int dirnamecmp(struct qstr *qn,
--	struct qstr *qd, unsigned *matched)
-+struct erofs_qstr {
-+	const unsigned char *name;
-+	const unsigned char *end;
-+};
+-#define inode_set_inited_xattr(inode)   (EROFS_V(inode)->flags |= 1)
+-#define inode_has_inited_xattr(inode)   (EROFS_V(inode)->flags & 1)
++/* atomic flag definitions */
++#define EROFS_V_EA_INITED_BIT	0
 +
-+/* based on the end of qn is accurate and it must have the trailing '\0' */
-+static inline int dirnamecmp(const struct erofs_qstr *qn,
-+			     const struct erofs_qstr *qd,
-+			     unsigned int *matched)
++/* bitlock definitions (arranged in reverse order) */
++#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
+ 
+ struct erofs_vnode {
+ 	erofs_nid_t nid;
+-	unsigned int flags;
++
++	/* atomic flags (including bitlocks) */
++	unsigned long flags;
+ 
+ 	unsigned char data_mapping_mode;
+ 	/* inline size in bytes */
+diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+index 890fa06bbcbb..955d024bf5a9 100644
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -44,17 +44,24 @@ static inline void xattr_iter_end_final(struct xattr_iter *it)
+ 
+ static int init_inode_xattrs(struct inode *inode)
  {
--	unsigned i = *matched, len = min(qn->len, qd->len);
--loop:
--	if (unlikely(i >= len)) {
--		*matched = i;
--		if (qn->len < qd->len) {
--			/*
--			 * actually (qn->len == qd->len)
--			 * when qd->name[i] == '\0'
--			 */
--			return qd->name[i] == '\0' ? 0 : -1;
-+	unsigned int i = *matched;
++	struct erofs_vnode *const vi = EROFS_V(inode);
+ 	struct xattr_iter it;
+ 	unsigned i;
+ 	struct erofs_xattr_ibody_header *ih;
+ 	struct erofs_sb_info *sbi;
+-	struct erofs_vnode *vi;
+ 	bool atomic_map;
++	int ret = 0;
+ 
+-	if (likely(inode_has_inited_xattr(inode)))
++	/* the most case is that xattrs of this inode are initialized. */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
+ 		return 0;
+ 
+-	vi = EROFS_V(inode);
++	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
++		return -ERESTARTSYS;
 +
-+	/*
-+	 * on-disk error, let's only BUG_ON in the debugging mode.
-+	 * otherwise, it will return 1 to just skip the invalid name
-+	 * and go on (in consideration of the lookup performance).
-+	 */
-+	DBG_BUGON(qd->name > qd->end);
-+
-+	/* qd could not have trailing '\0' */
-+	/* However it is absolutely safe if < qd->end */
-+	while (qd->name + i < qd->end && qd->name[i] != '\0') {
-+		if (qn->name[i] != qd->name[i]) {
-+			*matched = i;
-+			return qn->name[i] > qd->name[i] ? 1 : -1;
++	/* someone has initialized xattrs for us? */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
++		goto out_unlock;
+ 
+ 	/*
+ 	 * bypass all xattr operations if ->xattr_isize is not greater than
+@@ -67,13 +74,16 @@ static int init_inode_xattrs(struct inode *inode)
+ 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
+ 		errln("xattr_isize %d of nid %llu is not supported yet",
+ 		      vi->xattr_isize, vi->nid);
+-		return -ENOTSUPP;
++		ret = -ENOTSUPP;
++		goto out_unlock;
+ 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
+ 		if (unlikely(vi->xattr_isize)) {
+ 			DBG_BUGON(1);
+-			return -EIO;	/* xattr ondisk layout error */
++			ret = -EIO;
++			goto out_unlock;	/* xattr ondisk layout error */
  		}
--		return (qn->len > qd->len);
-+		++i;
+-		return -ENOATTR;
++		ret = -ENOATTR;
++		goto out_unlock;
  	}
--
--	if (qn->name[i] != qd->name[i]) {
--		*matched = i;
--		return qn->name[i] > qd->name[i] ? 1 : -1;
--	}
--
--	++i;
--	goto loop;
-+	*matched = i;
-+	/* See comments in __d_alloc on the terminating NUL character */
-+	return qn->name[i] == '\0' ? 0 : 1;
- }
  
--static struct erofs_dirent *find_target_dirent(
--	struct qstr *name,
--	u8 *data, int maxsize)
-+#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
-+
-+static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
-+					       u8 *data,
-+					       unsigned int dirblksize,
-+					       const int ndirents)
- {
--	unsigned ndirents, head, back;
--	unsigned startprfx, endprfx;
-+	int head, back;
-+	unsigned int startprfx, endprfx;
- 	struct erofs_dirent *const de = (struct erofs_dirent *)data;
+ 	sbi = EROFS_I_SB(inode);
+@@ -81,8 +91,10 @@ static int init_inode_xattrs(struct inode *inode)
+ 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
  
--	/* make sure that maxsize is valid */
--	BUG_ON(maxsize < sizeof(struct erofs_dirent));
--
--	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
--
--	/* corrupted dir (may be unnecessary...) */
--	BUG_ON(!ndirents);
--
--	head = 0;
-+	/* since the 1st dirent has been evaluated previously */
-+	head = 1;
- 	back = ndirents - 1;
- 	startprfx = endprfx = 0;
+ 	it.page = erofs_get_inline_page(inode, it.blkaddr);
+-	if (IS_ERR(it.page))
+-		return PTR_ERR(it.page);
++	if (IS_ERR(it.page)) {
++		ret = PTR_ERR(it.page);
++		goto out_unlock;
++	}
  
- 	while (head <= back) {
--		unsigned mid = head + (back - head) / 2;
--		unsigned nameoff = le16_to_cpu(de[mid].nameoff);
--		unsigned matched = min(startprfx, endprfx);
--
--		struct qstr dname = QSTR_INIT(data + nameoff,
--			unlikely(mid >= ndirents - 1) ?
--				maxsize - nameoff :
--				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
-+		const int mid = head + (back - head) / 2;
-+		const int nameoff = nameoff_from_disk(de[mid].nameoff,
-+						      dirblksize);
-+		unsigned int matched = min(startprfx, endprfx);
-+		struct erofs_qstr dname = {
-+			.name = data + nameoff,
-+			.end = unlikely(mid >= ndirents - 1) ?
-+				data + dirblksize :
-+				data + nameoff_from_disk(de[mid + 1].nameoff,
-+							 dirblksize)
-+		};
+ 	/* read in shared xattr array (non-atomic, see kmalloc below) */
+ 	it.kaddr = kmap(it.page);
+@@ -95,7 +107,8 @@ static int init_inode_xattrs(struct inode *inode)
+ 						sizeof(uint), GFP_KERNEL);
+ 	if (vi->xattr_shared_xattrs == NULL) {
+ 		xattr_iter_end(&it, atomic_map);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_unlock;
+ 	}
  
- 		/* string comparison without already matched prefix */
- 		int ret = dirnamecmp(name, &dname, &matched);
- 
--		if (unlikely(!ret))
-+		if (unlikely(!ret)) {
- 			return de + mid;
--		else if (ret > 0) {
-+		} else if (ret > 0) {
- 			head = mid + 1;
- 			startprfx = matched;
--		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
--			break;
--		else {
-+		} else {
- 			back = mid - 1;
- 			endprfx = matched;
- 		}
-@@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_dirent(
- 	return ERR_PTR(-ENOENT);
- }
- 
--static struct page *find_target_block_classic(
--	struct inode *dir,
--	struct qstr *name, int *_diff)
-+static struct page *find_target_block_classic(struct inode *dir,
-+					      struct erofs_qstr *name,
-+					      int *_ndirents)
- {
--	unsigned startprfx, endprfx;
--	unsigned head, back;
-+	unsigned int startprfx, endprfx;
-+	int head, back;
- 	struct address_space *const mapping = dir->i_mapping;
- 	struct page *candidate = ERR_PTR(-ENOENT);
- 
-@@ -105,41 +108,43 @@ static struct page *find_target_block_classic(
- 	back = inode_datablocks(dir) - 1;
- 
- 	while (head <= back) {
--		unsigned mid = head + (back - head) / 2;
-+		const int mid = head + (back - head) / 2;
- 		struct page *page = read_mapping_page(mapping, mid, NULL);
- 
--		if (IS_ERR(page)) {
--exact_out:
--			if (!IS_ERR(candidate)) /* valid candidate */
--				put_page(candidate);
--			return page;
--		} else {
--			int diff;
--			unsigned ndirents, matched;
--			struct qstr dname;
-+		if (!IS_ERR(page)) {
- 			struct erofs_dirent *de = kmap_atomic(page);
--			unsigned nameoff = le16_to_cpu(de->nameoff);
--
--			ndirents = nameoff / sizeof(*de);
-+			const int nameoff = nameoff_from_disk(de->nameoff,
-+							      EROFS_BLKSIZ);
-+			const int ndirents = nameoff / sizeof(*de);
-+			int diff;
-+			unsigned int matched;
-+			struct erofs_qstr dname;
- 
--			/* corrupted dir (should have one entry at least) */
--			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
-+			if (unlikely(!ndirents)) {
-+				DBG_BUGON(1);
-+				kunmap_atomic(de);
-+				put_page(page);
-+				page = ERR_PTR(-EIO);
-+				goto out;
-+			}
- 
- 			matched = min(startprfx, endprfx);
- 
- 			dname.name = (u8 *)de + nameoff;
--			dname.len = ndirents == 1 ?
--				/* since the rest of the last page is 0 */
--				EROFS_BLKSIZ - nameoff
--				: le16_to_cpu(de[1].nameoff) - nameoff;
-+			if (ndirents == 1)
-+				dname.end = (u8 *)de + EROFS_BLKSIZ;
-+			else
-+				dname.end = (u8 *)de +
-+					nameoff_from_disk(de[1].nameoff,
-+							  EROFS_BLKSIZ);
- 
- 			/* string comparison without already matched prefix */
- 			diff = dirnamecmp(name, &dname, &matched);
- 			kunmap_atomic(de);
- 
- 			if (unlikely(!diff)) {
--				*_diff = 0;
--				goto exact_out;
-+				*_ndirents = 0;
-+				goto out;
- 			} else if (diff > 0) {
- 				head = mid + 1;
- 				startprfx = matched;
-@@ -147,45 +152,51 @@ static struct page *find_target_block_classic(
- 				if (likely(!IS_ERR(candidate)))
- 					put_page(candidate);
- 				candidate = page;
-+				*_ndirents = ndirents;
- 			} else {
- 				put_page(page);
- 
--				if (unlikely(mid < 1))	/* fix "mid" overflow */
--					break;
--
- 				back = mid - 1;
- 				endprfx = matched;
+ 	/* let's skip ibody header */
+@@ -112,7 +125,8 @@ static int init_inode_xattrs(struct inode *inode)
+ 			if (IS_ERR(it.page)) {
+ 				kfree(vi->xattr_shared_xattrs);
+ 				vi->xattr_shared_xattrs = NULL;
+-				return PTR_ERR(it.page);
++				ret = PTR_ERR(it.page);
++				goto out_unlock;
  			}
-+			continue;
- 		}
-+out:		/* free if the candidate is valid */
-+		if (!IS_ERR(candidate))
-+			put_page(candidate);
-+		return page;
+ 
+ 			it.kaddr = kmap_atomic(it.page);
+@@ -125,8 +139,11 @@ static int init_inode_xattrs(struct inode *inode)
  	}
--	*_diff = 1;
- 	return candidate;
+ 	xattr_iter_end(&it, atomic_map);
+ 
+-	inode_set_inited_xattr(inode);
+-	return 0;
++	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
++
++out_unlock:
++	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
++	return ret;
  }
  
- int erofs_namei(struct inode *dir,
--	struct qstr *name,
--	erofs_nid_t *nid, unsigned *d_type)
-+		struct qstr *name,
-+		erofs_nid_t *nid, unsigned int *d_type)
- {
--	int diff;
-+	int ndirents;
- 	struct page *page;
--	u8 *data;
-+	void *data;
- 	struct erofs_dirent *de;
-+	struct erofs_qstr qn;
- 
- 	if (unlikely(!dir->i_size))
- 		return -ENOENT;
- 
--	diff = 1;
--	page = find_target_block_classic(dir, name, &diff);
-+	qn.name = name->name;
-+	qn.end = name->name + name->len;
-+
-+	ndirents = 0;
-+	page = find_target_block_classic(dir, &qn, &ndirents);
- 
- 	if (unlikely(IS_ERR(page)))
- 		return PTR_ERR(page);
- 
- 	data = kmap_atomic(page);
- 	/* the target page has been mapped */
--	de = likely(diff) ?
--		/* since the rest of the last page is 0 */
--		find_target_dirent(name, data, EROFS_BLKSIZ) :
--		(struct erofs_dirent *)data;
-+	if (ndirents)
-+		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
-+	else
-+		de = (struct erofs_dirent *)data;
- 
- 	if (likely(!IS_ERR(de))) {
- 		*nid = le64_to_cpu(de->nid);
+ struct xattr_iter_handlers {
 -- 
 2.14.5
 
