@@ -2,97 +2,83 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E643C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41991C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035D620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D40F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ty92g9pH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5A2tsH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfCKPq5 (ORCPT
+        id S1727576AbfCKPrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 11:46:57 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38506 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfCKPq4 (ORCPT
+        Mon, 11 Mar 2019 11:47:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36908 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKPq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 11:46:56 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m2so4336107pgl.5;
-        Mon, 11 Mar 2019 08:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
-         :user-agent;
-        bh=+9UZa4gubbzy5gZyM/W6ZF4dGbmRy5L5BvhJE4XaD/E=;
-        b=ty92g9pHGOKuF+ZeMj17hTGQzy15RR0OoLT1C5j0MfTgC25KbQzIsGOGMgc4jMIEwi
-         mb0XqJkrNFYn79Gyb2WkF/2JdvHjzGQBI2zREudaFqXs2fojZEXNWi5Wp3PUh1Yk7ebj
-         inlaWhkuJ2LZDIcP76aKeLHLZuKRlrF+1ET1WbTIgwIgFAfeqBmv6S4n/XQ1RMzDb2FP
-         B9gmcIIG+sYlpYppLhhE0JNj6RQibqQ4jC8NWZiDzrC6D8VLnEb0CL/sfoZ1pAZvzI/R
-         bX8PMz0vpbOAl5QFym+RF5lr3j9faa9tZOqHQXPZPZZY1tPSWFK0WS8agdZcuxIP9oxo
-         Y6FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
-         :content-disposition:user-agent;
-        bh=+9UZa4gubbzy5gZyM/W6ZF4dGbmRy5L5BvhJE4XaD/E=;
-        b=t8BxULQiUs1vkYhsryuYobl4M46ZKstahyrp2N6KKZFZxHiG/qvfpr02NFQFlkrIkb
-         0ffR2BKnf1WIl06h7wDs2I7EVakJ+vL0JxhbKY8WtSSngN5f+k6p6JLnSK4d1TE6g2a3
-         it2vlUp7IvzhlA6srR7gD6xJ3mbJ5Dn3IO/9KmumuYDDroZY8y9uiTUkV8KPqEEW5d7K
-         jhKfhTWP8x8QXFTTR6aF1cNVAIqHr5nhYYeUrsGXmlSEX601ymF2Dl+VbcLAdDQWgJTk
-         FwZOh2gCyTuLBbw3GF/ZgujWAgD0QEnSWDVIXBc6QeM0ZGSLAfnk1JcWjDcRlb2HxbDo
-         6YJg==
-X-Gm-Message-State: APjAAAVj+//BG5UxL8LSWH8SS9xLP2ybPEUumNPdYAzdJ+/3KM4pNSWN
-        Cutp+jvbj+a0vaV6Y+jODlLLxASkIHI=
-X-Google-Smtp-Source: APXvYqxFBSyBbmoDAJBOXWg4z8sJ1E8lBFrLOIggDrIJJN3iOGGJhvz7Mor/drz8m3nS0L/Do1lDDA==
-X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr35391502plo.265.1552319216133;
-        Mon, 11 Mar 2019 08:46:56 -0700 (PDT)
-Received: from sabyasachi ([2405:205:6194:e788:a4f9:f674:88cd:e152])
-        by smtp.gmail.com with ESMTPSA id c18sm8355820pfo.44.2019.03.11.08.46.54
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 11 Mar 2019 08:46:55 -0700 (PDT)
-Message-ID: <5c8682ef.1c69fb81.5a1ea.2e7f@mx.google.com>
-X-Google-Original-Message-ID: <20190311154649.GA8946@sabyasachi.linux@gmail.com>
-Date:   Mon, 11 Mar 2019 21:16:49 +0530
-From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     ysato@users.sourceforge.jp, dalias@libc.org,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jrdr.linux@gmail.com
-Subject: [PATCH] arch/sh/boards/mach-dreamcast/irq.c: Remove duplicate header
+        Mon, 11 Mar 2019 11:46:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=C+qz6JiqwVYBZHajEVbScMdi8y6lSsNbkpQ6wInWVNs=; b=B5A2tsH2s/+vYQnPvr/LRR6Dx
+        Z5uiQJzXB9gwg0KsLj6S6y8u0u0YZWi6mcxC+pni5lM5cG2miMxbDXUaUE9ywb/JrPY2Wg0FgVLFt
+        6mqceM8aQ5VKpMvNOIZsgpn3MCFBlqr/XBheAE1+v7lZ/dSLoZGuw65Le+Qw04h2DEoPlbn2jI9ig
+        16bGF1MXB76CskTKW+MSMAXKYbjm4374MkcEKQOiYXcAS7MS+bxRBs+dSx3ScvCaHz+lqa/Xr2BT1
+        IGTIOIjYCL+XnLzpWuwXxpumWJpIwwm1wH/DSQPWYVhbBRu5wxEAG7jvLB4jfA09DwIvB577riITu
+        3xGzxdrQw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h3N8h-0002i5-88; Mon, 11 Mar 2019 15:46:55 +0000
+Date:   Mon, 11 Mar 2019 08:46:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Brian Brooks <brian.brooks@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        maxime.chevallier@bootlin.com, ymarkman@marvell.com,
+        stefanc@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.topel@intel.com,
+        brian.brooks@arm.com
+Subject: Re: [PATCH] net: mvpp2: avoid bouncing buffers
+Message-ID: <20190311154655.GB28982@infradead.org>
+References: <20180820024730.9147-1-brian.brooks@linaro.org>
+ <20180819.195505.1988137313680465320.davem@davemloft.net>
+ <20180820062326.GA22222@infradead.org>
+ <20180827135524.fv4mxkwjn5bv7p5e@di3>
+ <20180827154843.GA25821@infradead.org>
+ <20190301142602.GC3554@kwain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190301142602.GC3554@kwain>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove  linux/irq.h which is included more than once.
+On Fri, Mar 01, 2019 at 03:26:02PM +0100, Antoine Tenart wrote:
+> Hi Christoph,
+> 
+> I saw you sent this patch as part of another series back in August, but
+> it seems it was never applied and I can't find it even in -next. We made
+> some tests and this patch is helping a lot the PPv2 engine driver in
+> improving its performances.
+> 
+> Do you plan on re-sending it, or reworking it? Are there current issues
+> with it that prevent it from being merged upstream? Can we help in any
+> way?
 
-Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
----
- arch/sh/boards/mach-dreamcast/irq.c | 1 -
- 1 file changed, 1 deletion(-)
+Hi Antoine,
 
-diff --git a/arch/sh/boards/mach-dreamcast/irq.c b/arch/sh/boards/mach-dreamcast/irq.c
-index 2789647..69fa91c 100644
---- a/arch/sh/boards/mach-dreamcast/irq.c
-+++ b/arch/sh/boards/mach-dreamcast/irq.c
-@@ -10,7 +10,6 @@
-  */
- #include <linux/irq.h>
- #include <linux/io.h>
--#include <linux/irq.h>
- #include <linux/export.h>
- #include <linux/err.h>
- #include <mach/sysasic.h>
--- 
-2.7.4
-
+it's been a while, but my vague memory is that this caused failures
+in some ARM setups, and I was tought why for AMBA setting up the
+default mask is a bad idea.  I don't really remember more, though.
