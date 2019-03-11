@@ -7,58 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F42EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5C3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FA92063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2F42063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325045;
-	bh=Pqe5qUPixoz51dE/iPu56iH0L7KMyaaRw9jdITC4IKM=;
+	s=default; t=1552325047;
+	bh=KXmNYuneVJx2HWZpa+HrCKIHuau95X1OcFvZRGtbzwI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qa++lNyYwe7bkIJ0tUh6WKHv8rKt7tZDsYDTq24+TV+3IE61ttnBqfb8XeFjsFWul
-	 SUpJkTpOy6QVl3LlvrcjoV/a3IsQSV+3HILo+ky/sZszrWpUGmCIyGvPPcMPhhcVSO
-	 zfwXqox+tuFCpu8CjwTSPNaVJssA/1pXSwY0K11E=
+	b=hNJsmL+AaNI1Ze8QMmOPwCulWRMS0qoqI5B755Of6PvcCV7hyQ8WlYKAHcRC/MBOY
+	 0WOi/DR5myxA+UTxvazWo41U0qQN8aPr3XZu0wNqzKp6mBNSE5Ky3BG1Uttqb3RBT4
+	 yyLxpwkqNUqyWeRx2GCryOTDK9Dkl8B8G2odGYSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfCKRYD (ORCPT
+        id S1728148AbfCKRYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50496 "EHLO
+        Mon, 11 Mar 2019 13:24:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50598 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728088AbfCKRX7 (ORCPT
+        with ESMTP id S1728109AbfCKRYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:23:59 -0400
+        Mon, 11 Mar 2019 13:24:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=e66MHKtgtjsKcdJyO3q9b1HmidwPpQhR0oda6cXIg6I=; b=kDdemKIgXsXe
-        2Zb+JuUD5j9o0o9E16V2xfyiiEkEK9rP7N4cQkRjfBbxavpH4ciZu6ei+Q9ux8+T3X5N/74PRMJjx
-        d1M7G2MvuzAZI0d2l8WKQYXpUVX8/5wYvLZg04IwlHEOvviCyZR/54qQX6aGex+6pf21if43x3P1t
-        kVfFg=;
+        List-Archive; bh=R5DR9y30jZMKClaIL1Pi8wrCFozuYTS9KKdV/+GXeOY=; b=HC3bssdXVvxx
+        u3Vc7ifXB3UeiMBZRiEwQQ/DnGoCzar121UYMUymUWo1nJm97NXO8ifvxeZN3uD6v3BNnLa1VQUUe
+        c9gc5G2LlXfXcRdKmGJv/fWPWyY7s22aEhYKbgwyraujOjqUCnkZgf92Oy6gT4LLwyk5FAT8/blCY
+        pyV3c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3OeR-0005Mj-3e; Mon, 11 Mar 2019 17:23:47 +0000
+        id 1h3Oeb-0005Ng-VZ; Mon, 11 Mar 2019 17:23:58 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id A663B1128896; Mon, 11 Mar 2019 17:23:46 +0000 (GMT)
+        id 85BCB1128896; Mon, 11 Mar 2019 17:23:57 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: stm32: i2s: improve channel capabilities handling" to the asoc tree
-In-Reply-To:  <1552317990-24219-3-git-send-email-olivier.moysan@st.com>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Mark Brown <broonie@kernel.org>, broonie@kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
+        sbkim73@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org,
+        m.szyprowski@samsung.com, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: samsung: i2s: Fix DAPM routes for capture stream" to the asoc tree
+In-Reply-To:  <20190306102445.1640-1-s.nawrocki@samsung.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172346.A663B1128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:46 +0000 (GMT)
+Message-Id: <20190311172357.85BCB1128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:23:57 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: i2s: improve channel capabilities handling
+   ASoC: samsung: i2s: Fix DAPM routes for capture stream
 
 has been applied to the asoc tree at
 
@@ -91,49 +88,64 @@ to this mail.
 Thanks,
 Mark
 
-From c2dc8b2c114c22d7a04cf26a7c7d04faaa757143 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 11 Mar 2019 16:26:29 +0100
-Subject: [PATCH] ASoC: stm32: i2s: improve channel capabilities handling
+From 42e4cedd67e4eb2abaa5e684353a55d4a01a913e Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Wed, 6 Mar 2019 11:24:45 +0100
+Subject: [PATCH] ASoC: samsung: i2s: Fix DAPM routes for capture stream
 
-Use alsa snd_pcm_hw_constraint_single service to manage
-channels restriction. This provides better status on driver
-limitations, to the application.
+This patch sets missing stream_name of capture part of the DAI driver
+so we can define DAPM routing properly also for the capture stream.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+While at it "Playback" suffix is added to the playback stream names
+to clearly identify playback/capture.
+
+Together with related dts patch this fixes NULL pointer dereference
+when opening ALSA device for recording on Odroid XU3.
+
+Fixes: 64aba9bca5bd ("ASoC: samsung: i2s: Add widgets and routes for DPCM support")
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_i2s.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ sound/soc/samsung/i2s.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 783b33497435..06bbbef74b3a 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -496,12 +496,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
- 	unsigned int fthlv;
- 	int ret;
+diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+index 4231001226f4..ab471d550d17 100644
+--- a/sound/soc/samsung/i2s.c
++++ b/sound/soc/samsung/i2s.c
+@@ -1130,11 +1130,11 @@ static const struct snd_soc_dapm_widget samsung_i2s_widgets[] = {
+ };
  
--	if ((params_channels(params) == 1) &&
--	    ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)) {
--		dev_err(cpu_dai->dev, "Mono mode supported only by DSP_A\n");
--		return -EINVAL;
--	}
--
- 	switch (format) {
- 	case 16:
- 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_16);
-@@ -551,6 +545,10 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
- 	i2s->substream = substream;
- 	spin_unlock_irqrestore(&i2s->irq_lock, flags);
+ static const struct snd_soc_dapm_route samsung_i2s_dapm_routes[] = {
+-	{ "Playback Mixer", NULL, "Primary" },
+-	{ "Playback Mixer", NULL, "Secondary" },
++	{ "Playback Mixer", NULL, "Primary Playback" },
++	{ "Playback Mixer", NULL, "Secondary Playback" },
  
-+	if ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)
-+		snd_pcm_hw_constraint_single(substream->runtime,
-+					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
-+
- 	ret = clk_prepare_enable(i2s->i2sclk);
- 	if (ret < 0) {
- 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
+ 	{ "Mixer DAI TX", NULL, "Playback Mixer" },
+-	{ "Playback Mixer", NULL, "Mixer DAI RX" },
++	{ "Primary Capture", NULL, "Mixer DAI RX" },
+ };
+ 
+ static const struct snd_soc_component_driver samsung_i2s_component = {
+@@ -1155,7 +1155,8 @@ static int i2s_alloc_dais(struct samsung_i2s_priv *priv,
+ 			  int num_dais)
+ {
+ 	static const char *dai_names[] = { "samsung-i2s", "samsung-i2s-sec" };
+-	static const char *stream_names[] = { "Primary", "Secondary" };
++	static const char *stream_names[] = { "Primary Playback",
++					      "Secondary Playback" };
+ 	struct snd_soc_dai_driver *dai_drv;
+ 	struct i2s_dai *dai;
+ 	int i;
+@@ -1201,6 +1202,7 @@ static int i2s_alloc_dais(struct samsung_i2s_priv *priv,
+ 	dai_drv->capture.channels_max = 2;
+ 	dai_drv->capture.rates = i2s_dai_data->pcm_rates;
+ 	dai_drv->capture.formats = SAMSUNG_I2S_FMTS;
++	dai_drv->capture.stream_name = "Primary Capture";
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
