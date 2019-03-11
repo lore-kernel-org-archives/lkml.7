@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8868C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8734FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B922063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5929820643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325032;
-	bh=iKPbDtV2ehekjU9FuKSCg2EQ6eqNnVdLo/DiPYX5xOU=;
+	s=default; t=1552325037;
+	bh=32sY2VJ2fJRT9iOczDrV9SLBbZfg2AesWyy4JKgrT9Y=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=QxwUSuDc/i7TGVAxZHssdjKUR7lDRMEppfdP8mS9fD4DE6lqHf+SXllZX29/ubESY
-	 Xr0p/thTA39S7mcEe5N4GlCJj66dKrBoxewoIjpBhBtSJB97yTv1z5Rx8/m3SD0r8I
-	 Y8h8hYY6ZfX4ywChgObVePqjA75EKytAVcQq1nyk=
+	b=z/nfa3phnIxFwyaBoIGczMpu7f9Dc+U5j0HetdRKGNA40YychYGP7CEylywPDlAP8
+	 9QdVsP/D8qOyf/yyRpSt/ABFHTt75gkkYTaEvmyb6nvz3FnbRiXyehHKg5ID7erMFM
+	 Imyfqr6khAU292hfJSZrL0jLIeBkOMiX2H/XSfXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbfCKRXv (ORCPT
+        id S1728086AbfCKRX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:23:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50096 "EHLO
+        Mon, 11 Mar 2019 13:23:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50158 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfCKRXs (ORCPT
+        with ESMTP id S1727905AbfCKRXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:23:48 -0400
+        Mon, 11 Mar 2019 13:23:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Lnj13rR0ecnnQ8FeiqxHVUJkOqCrxg3GN407eFSZnH4=; b=qC9uv5AqsMKf
-        QPy995zpFNj58mxXls8/KnsF/qqE0zRET+X1B1EGTneQGwcTWq6ob+0nCvDBaDjqCN3j8CKQkXfSI
-        wa4rsXIub8EqUaW2POjcKbcnV4vCGbGt5v0oLBaFjGsQVLuTEaL9/aoD57cMIjz2CFdz0u6n9vbyB
-        An26E=;
+        List-Archive; bh=ZfrutqsiZJ38u1YCAk4p/vLQ5O1cgNIaeMLtaQ47Fi0=; b=OLVJ+wxo/+Pa
+        6J9jZhvoPG28yOOJuLgOVsEpn/gQc8BLGm4gu12Qdt4Q1aF0JxMFn6qo0YZeu+irrcfj7g5hZyWmf
+        d+opItX+bzDP/w9T6OLSLDKo0H6mFFk+AgTl28emf62rr+YiJORIIhB4WfzBGH+jvRnpPDFdBKeDE
+        zAJQQ=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3OeM-0005MF-OC; Mon, 11 Mar 2019 17:23:42 +0000
+        id 1h3OeK-0005M9-Lb; Mon, 11 Mar 2019 17:23:40 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 47D561128896; Mon, 11 Mar 2019 17:23:42 +0000 (GMT)
+        id 133D41128896; Mon, 11 Mar 2019 17:23:40 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        Tony Lindgren <tony@atomide.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
+Cc:     Mark Brown <broonie@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-omap@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Jarkko Nikula <jarkko.nikula@bitmer.com>,
         alsa-devel@alsa-project.org
-Subject: Applied "ASoC: ti: remove compat dma probing" to the asoc tree
-In-Reply-To:  <20190307151646.1016966-1-arnd@arndb.de>
+Subject: Applied "ASoC: ams-delta: remove duplicate 'const'" to the asoc tree
+In-Reply-To:  <20190307101101.613881-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172342.47D561128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:42 +0000 (GMT)
+Message-Id: <20190311172340.133D41128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:23:40 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: ti: remove compat dma probing
+   ASoC: ams-delta: remove duplicate 'const'
 
 has been applied to the asoc tree at
 
@@ -94,101 +92,41 @@ to this mail.
 Thanks,
 Mark
 
-From 642aafea8889b712fe8e57aaa706d6c05d295059 Mon Sep 17 00:00:00 2001
+From c9fbc1c02ec881c8bb037f87efb706d22589fdab Mon Sep 17 00:00:00 2001
 From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 16:16:08 +0100
-Subject: [PATCH] ASoC: ti: remove compat dma probing
+Date: Thu, 7 Mar 2019 11:10:49 +0100
+Subject: [PATCH] ASoC: ams-delta: remove duplicate 'const'
 
-After running into a link error:
+clang points out that SOC_ENUM_SINGLE_EXT_DECL() contains a 'const'
+modifier already, so adding another one does not make it more const:
 
-sound/soc/ti/edma-pcm.o:(.rodata+0x18): undefined reference to `edma_filter_fn'
+sound/soc/ti/ams-delta.c:203:14: error: duplicate 'const' declaration specifier [-Werror,-Wduplicate-decl-specifier]
+static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+             ^
+include/sound/soc.h:351:2: note: expanded from macro 'SOC_ENUM_SINGLE_EXT_DECL'
+        const struct soc_enum name = SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(xtexts), xtexts)
 
-I checked all users of this, and they have new-style 'dma_slave_map' tables,
-so none of them should still need it. Removing the associated lines
-simplifies the code and avoids the build-time dependency on the
-respective dmaengine drivers.
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/edma-pcm.c | 5 +----
- sound/soc/ti/sdma-pcm.c | 9 +++------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ sound/soc/ti/ams-delta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ti/edma-pcm.c b/sound/soc/ti/edma-pcm.c
-index 59e588abe54b..fdffb801b185 100644
---- a/sound/soc/ti/edma-pcm.c
-+++ b/sound/soc/ti/edma-pcm.c
-@@ -23,7 +23,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
--#include <linux/edma.h>
- 
- #include "edma-pcm.h"
- 
-@@ -43,14 +42,12 @@ static const struct snd_pcm_hardware edma_pcm_hardware = {
- static const struct snd_dmaengine_pcm_config edma_dmaengine_pcm_config = {
- 	.pcm_hardware = &edma_pcm_hardware,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = edma_filter_fn,
- 	.prealloc_buffer_size = 128 * 1024,
- };
- 
- int edma_pcm_platform_register(struct device *dev)
- {
--	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config,
--					SND_DMAENGINE_PCM_FLAG_COMPAT);
-+	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config, 0);
+diff --git a/sound/soc/ti/ams-delta.c b/sound/soc/ti/ams-delta.c
+index 4dce494dfbd3..b9611db14c86 100644
+--- a/sound/soc/ti/ams-delta.c
++++ b/sound/soc/ti/ams-delta.c
+@@ -200,7 +200,7 @@ static int ams_delta_get_audio_mode(struct snd_kcontrol *kcontrol,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(edma_pcm_platform_register);
  
-diff --git a/sound/soc/ti/sdma-pcm.c b/sound/soc/ti/sdma-pcm.c
-index 21a9c2499d48..a236350beb10 100644
---- a/sound/soc/ti/sdma-pcm.c
-+++ b/sound/soc/ti/sdma-pcm.c
-@@ -11,7 +11,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
--#include <linux/omap-dmaengine.h>
+-static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
++static SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
+ 				      ams_delta_audio_mode);
  
- #include "sdma-pcm.h"
- 
-@@ -31,7 +30,6 @@ static const struct snd_pcm_hardware sdma_pcm_hardware = {
- static const struct snd_dmaengine_pcm_config sdma_dmaengine_pcm_config = {
- 	.pcm_hardware = &sdma_pcm_hardware,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = omap_dma_filter_fn,
- 	.prealloc_buffer_size = 128 * 1024,
- };
- 
-@@ -39,13 +37,12 @@ int sdma_pcm_platform_register(struct device *dev,
- 			       char *txdmachan, char *rxdmachan)
- {
- 	struct snd_dmaengine_pcm_config *config;
--	unsigned int flags = SND_DMAENGINE_PCM_FLAG_COMPAT;
-+	unsigned int flags = 0;
- 
- 	/* Standard names for the directions: 'tx' and 'rx' */
- 	if (!txdmachan && !rxdmachan)
- 		return devm_snd_dmaengine_pcm_register(dev,
--						&sdma_dmaengine_pcm_config,
--						flags);
-+						&sdma_dmaengine_pcm_config, 0);
- 
- 	config = devm_kzalloc(dev, sizeof(*config), GFP_KERNEL);
- 	if (!config)
-@@ -65,7 +62,7 @@ int sdma_pcm_platform_register(struct device *dev,
- 	config->chan_names[0] = txdmachan;
- 	config->chan_names[1] = rxdmachan;
- 
--	return devm_snd_dmaengine_pcm_register(dev, config, flags);
-+	return devm_snd_dmaengine_pcm_register(dev, config, 0);
- }
- EXPORT_SYMBOL_GPL(sdma_pcm_platform_register);
- 
+ static const struct snd_kcontrol_new ams_delta_audio_controls[] = {
 -- 
 2.20.1
 
