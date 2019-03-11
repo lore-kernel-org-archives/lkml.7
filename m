@@ -2,177 +2,192 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92627C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959DAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BFA214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670762173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfCKO1R (ORCPT
+        id S1727670AbfCKO3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:27:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:44866 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbfCKO1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:27:14 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 07:27:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="133333978"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga007.fm.intel.com with SMTP; 11 Mar 2019 07:27:11 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 11 Mar 2019 16:27:10 +0200
-Date:   Mon, 11 Mar 2019 16:27:10 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/vkms: Solve bug on kms_crc_cursor tests
-Message-ID: <20190311142710.GY3888@intel.com>
-References: <20190225142606.gov32asdq3qe375q@smtp.gmail.com>
- <20190228101107.GL2665@phenom.ffwll.local>
- <20190228140341.GG20097@intel.com>
- <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com>
- <20190301152558.GR20097@intel.com>
- <CAKkTe8HbgkVm1i2xAFT6ecgv2jFjyoqrSEYUpx_40Uj=ogKYPQ@mail.gmail.com>
- <20190301184147.GS20097@intel.com>
- <20190310203505.2needmil76a4rc74@smtp.gmail.com>
+        Mon, 11 Mar 2019 10:29:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727462AbfCKO3D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 10:29:03 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BESxqc012465
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:29:02 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5rg13pcx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:29:01 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Mon, 11 Mar 2019 14:28:55 -0000
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 11 Mar 2019 14:28:53 -0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BESnds59375856
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 14:28:49 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0E94136053;
+        Mon, 11 Mar 2019 14:28:49 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CAA4136051;
+        Mon, 11 Mar 2019 14:28:48 +0000 (GMT)
+Received: from [9.60.75.235] (unknown [9.60.75.235])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Mar 2019 14:28:48 +0000 (GMT)
+Subject: Re: [PATCH v3] zcrypt: handle AP Info notification from CHSC SEI
+ command
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        pmorel@linux.vnet.ibm.com, pasic@linux.vnet.ibm.com,
+        akrowiak@linux.vnet.ibm.com, oberpar@linux.ibm.com,
+        sebott@linux.ibm.com
+References: <1550509295-1199-1-git-send-email-akrowiak@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Mon, 11 Mar 2019 10:28:48 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190310203505.2needmil76a4rc74@smtp.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1550509295-1199-1-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031114-0004-0000-0000-000014ECA398
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010739; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01172844; UDB=6.00613161; IPR=6.00953498;
+ MB=3.00025928; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 14:28:54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031114-0005-0000-0000-00008ADE12A6
+Message-Id: <9224eca6-6d2c-7089-1fb2-618a04d7286b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903110105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 05:35:05PM -0300, Rodrigo Siqueira wrote:
-> On 03/01, Ville Syrjälä wrote:
-> > On Fri, Mar 01, 2019 at 03:35:35PM -0300, Shayenne Moura wrote:
-> > > Em sex, 1 de mar de 2019 às 12:26, Ville Syrjälä
-> > > <ville.syrjala@linux.intel.com> escreveu:
-> > > >
-> > > > On Fri, Mar 01, 2019 at 11:55:11AM -0300, Shayenne Moura wrote:
-> > > > > Em qui, 28 de fev de 2019 às 11:03, Ville Syrjälä
-> > > > > <ville.syrjala@linux.intel.com> escreveu:
-> > > > > >
-> > > > > > On Thu, Feb 28, 2019 at 11:11:07AM +0100, Daniel Vetter wrote:
-> > > > > > > On Mon, Feb 25, 2019 at 11:26:06AM -0300, Shayenne Moura wrote:
-> > > > > > > > vkms_crc_work_handle needs the value of the actual frame to
-> > > > > > > > schedule the workqueue that calls periodically the vblank
-> > > > > > > > handler and the destroy state functions. However, the frame
-> > > > > > > > value returned from vkms_vblank_simulate is updated and
-> > > > > > > > diminished in vblank_get_timestamp because it is not in a
-> > > > > > > > vblank interrupt, and return an inaccurate value.
-> > > > > > > >
-> > > > > > > > Solve this getting the actual vblank frame directly from the
-> > > > > > > > vblank->count inside the `struct drm_crtc`, instead of using
-> > > > > > > > the `drm_accurate_vblank_count` function.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
-> > > > > > >
-> > > > > > > Sorry for the delay, I'm a bit swamped right now :-/
-> > > > > > >
-> > > > > > > Debug work you're doing here is really impressive! But I have no idea
-> > > > > > > what's going on. It doesn't look like it's just papering over a bug (like
-> > > > > > > the in_vblank_irq check we've discussed on irc), but I also have no idea
-> > > > > > > why it works.
-> > > > > > >
-> > > > > > > I'll pull in Ville, he understands this better than me.
-> > > > > >
-> > > > > > It's not entirely clear what we're trying to fix. From what I can see
-> > > > > > the crc work seems to be in no way synchronized with page flips, so
-> > > > > > I'm not sure how all this is really supposed to work.
-> > > > > >
-> > > > >
-> > > > > Hi, Ville!
-> > > > >
-> > > > > Thank you for the review! :)
-> > > > >
-> > > > > I do not understand well what crc code is doing, but the issue that I found
-> > > > > is related to the vblank timestamp and frame count.
-> > > > >
-> > > > > When vkms handles the crc_cursor it uses the start frame and end frame
-> > > > > values to verify if it needs to call the function 'drm_crtc_add_crc_entry()'
-> > > > > for each frame.
-> > > > >
-> > > > > However, when getting the frame count, the code is calling the function
-> > > > > drm_update_vblank_count(dev, pipe, false) and, because of the 'false',
-> > > > > subtracting the actual vblank timestamp (consequently, the frame count
-> > > > > value), causing conflicts.
-> > > >
-> > > > The in_vblank_irq behavour looks sane to me. What are these conflicts?
-> > > >
-> > > 
-> > > The entire history was:
-> > >  - I sent the patch with bugfix for vblank extra frame. The patch changed
-> > >    our function vkms_get_vblank_timestamp() to look like this:
-> > > 
-> > > bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
-> > >                    int *max_error, ktime_t *vblank_time,
-> > >                    bool in_vblank_irq)
-> > > {
-> > >     struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
-> > >     struct vkms_output *output = &vkmsdev->output;
-> > > 
-> > >     *vblank_time = output->vblank_hrtimer.node.expires;
-> > > 
-> > > +   if (!in_vblank_irq)
-> > > +        *vblank_time -= output->period_ns;
-> > > 
-> > >     return true;
-> > > }
-> > > 
-> > >  - This patch solve the issue that I was looking for (extra vblank
-> > > frames on kms_flip).
-> > > 
-> > >  - However, kms_cursor_crc tests, which passed before my patch, started to fail.
-> > > 
-> > >  - Debugging them, I found that the problem was inside of function
-> > > `vkms_vblank_simulate()`
-> > > when it was handling the crc_enabled (inside  if (state && output->crc_enabled))
-> > > and inside the function vkms_crc_work_handle() too.
-> > > 
-> > >  - Following the steps:
-> > > 1. Inside vkms_vblank_simulate() we call drm_crtc_accurate_vblank_count()
-> > > 2. In its turn, drm_crtc_accurate_vblank_count() calls the function
-> > >    drm_update_vblank_count(dev, pipe, false).  /* This false is default */
-> > > 3. Finally, the “false” used in drm_update_vblank_count(), will be
-> > >   passed to vkms_get_vblank_timestamp() and the condition “if
-> > >   (!in_vblank_irq)” will be executed multiple times (we don’t want it).
-> > > 
-> > >  - Inside vkms_crc, the issue is that the returned frame value change for
-> > > every call of drm_crtc_accurate_vblank_count() because
-> > > in_vblank_irq == false.
-> 
-> Hi Ville,
->  
-> > OK. So why is it changing? AFAICS it should not change unless the
-> > timer was moved forward in between the calls.
-> 
-> Yes Ville, you’re right. We have to update it only when the function
-> vkms_vblank_simulate() is invoked (timer move forward), and FWIU we do
-> it when we call drm_crtc_handle_vblank(). However, the current
-> implementation of vkms, has a call to drm_crtc_accurate_vblank_count()
-> inside the vkms_vblank_simulate() which is a problem because it also
-> update the vblank value. FWIU, this patch fixes this issue by taking the
-> count value in the data struct instead of call
-> drm_crtc_accurate_vblank_count() which will avoid the extra update.
+On 2/18/19 12:01 PM, Tony Krowiak wrote:
+> The current AP bus implementation periodically polls the AP configuration
+> to detect changes. When the AP configuration is dynamically changed via the
+> SE or an SCLP instruction, the changes will not be reflected to sysfs until
+> the next time the AP configuration is polled. The CHSC architecture
+> provides a Store Event Information (SEI) command to make notification of an
+> AP configuration change. This patch introduces a handler to process
+> notification from the CHSC SEI command by immediately kicking off an AP bus
+> scan-after-event.
 
-But why does that extra update change the vblank count?
+Ping
 
--- 
-Ville Syrjälä
-Intel
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> Reviewed-by: Harald Freudenberger <FREUDE@de.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>   arch/s390/include/asm/ap.h   | 11 +++++++++++
+>   drivers/s390/cio/chsc.c      | 13 +++++++++++++
+>   drivers/s390/crypto/ap_bus.c | 10 ++++++++++
+>   3 files changed, 34 insertions(+)
+> 
+> diff --git a/arch/s390/include/asm/ap.h b/arch/s390/include/asm/ap.h
+> index 1a6a7092d942..e94a0a28b5eb 100644
+> --- a/arch/s390/include/asm/ap.h
+> +++ b/arch/s390/include/asm/ap.h
+> @@ -360,4 +360,15 @@ static inline struct ap_queue_status ap_dqap(ap_qid_t qid,
+>   	return reg1;
+>   }
+>   
+> +/*
+> + * Interface to tell the AP bus code that a configuration
+> + * change has happened. The bus code should at least do
+> + * an ap bus resource rescan.
+> + */
+> +#if IS_ENABLED(CONFIG_ZCRYPT)
+> +void ap_bus_cfg_chg(void);
+> +#else
+> +static inline void ap_bus_cfg_chg(void){};
+> +#endif
+> +
+>   #endif /* _ASM_S390_AP_H_ */
+> diff --git a/drivers/s390/cio/chsc.c b/drivers/s390/cio/chsc.c
+> index a0baee25134c..eaf4699be2c5 100644
+> --- a/drivers/s390/cio/chsc.c
+> +++ b/drivers/s390/cio/chsc.c
+> @@ -24,6 +24,7 @@
+>   #include <asm/crw.h>
+>   #include <asm/isc.h>
+>   #include <asm/ebcdic.h>
+> +#include <asm/ap.h>
+>   
+>   #include "css.h"
+>   #include "cio.h"
+> @@ -586,6 +587,15 @@ static void chsc_process_sei_scm_avail(struct chsc_sei_nt0_area *sei_area)
+>   			      " failed (rc=%d).\n", ret);
+>   }
+>   
+> +static void chsc_process_sei_ap_cfg_chg(struct chsc_sei_nt0_area *sei_area)
+> +{
+> +	CIO_CRW_EVENT(3, "chsc: ap config changed\n");
+> +	if (sei_area->rs != 5)
+> +		return;
+> +
+> +	ap_bus_cfg_chg();
+> +}
+> +
+>   static void chsc_process_sei_nt2(struct chsc_sei_nt2_area *sei_area)
+>   {
+>   	switch (sei_area->cc) {
+> @@ -612,6 +622,9 @@ static void chsc_process_sei_nt0(struct chsc_sei_nt0_area *sei_area)
+>   	case 2: /* i/o resource accessibility */
+>   		chsc_process_sei_res_acc(sei_area);
+>   		break;
+> +	case 3: /* ap config changed */
+> +		chsc_process_sei_ap_cfg_chg(sei_area);
+> +		break;
+>   	case 7: /* channel-path-availability information */
+>   		chsc_process_sei_chp_avail(sei_area);
+>   		break;
+> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+> index 5a699746c357..d0d415954142 100644
+> --- a/drivers/s390/crypto/ap_bus.c
+> +++ b/drivers/s390/crypto/ap_bus.c
+> @@ -861,6 +861,16 @@ void ap_bus_force_rescan(void)
+>   EXPORT_SYMBOL(ap_bus_force_rescan);
+>   
+>   /*
+> +* A config change has happened, force an ap bus rescan.
+> +*/
+> +void ap_bus_cfg_chg(void)
+> +{
+> +	AP_DBF(DBF_INFO, "%s config change, forcing bus rescan\n", __func__);
+> +
+> +	ap_bus_force_rescan();
+> +}
+> +
+> +/*
+>    * hex2bitmap() - parse hex mask string and set bitmap.
+>    * Valid strings are "0x012345678" with at least one valid hex number.
+>    * Rest of the bitmap to the right is padded with 0. No spaces allowed
+> 
+
